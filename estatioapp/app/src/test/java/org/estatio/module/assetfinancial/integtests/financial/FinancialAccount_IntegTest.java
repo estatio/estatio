@@ -35,20 +35,19 @@ import org.junit.rules.ExpectedException;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.sudo.SudoService;
 
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
-import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForHelloWorldGb;
-import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForHelloWorldNl;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.assetfinancial.integtests.AssetFinancialModuleIntegTestAbstract;
-import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.base.dom.EstatioRole;
+import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldNl;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -61,7 +60,8 @@ public class FinancialAccount_IntegTest extends AssetFinancialModuleIntegTestAbs
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new BankAccountAndFaFaForHelloWorldGb());
+                    executionContext.executeChild(this, BankAccount_enum.HelloWorldGb.toFixtureScript());
+                    executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldGb.toFixtureScript());
                 }
             });
         }
@@ -75,7 +75,7 @@ public class FinancialAccount_IntegTest extends AssetFinancialModuleIntegTestAbs
 
         @Before
         public void setUp() throws Exception {
-            party = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
+            party = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
         }
 
         // this test really just makes an assertion about the fixture.
@@ -100,16 +100,6 @@ public class FinancialAccount_IntegTest extends AssetFinancialModuleIntegTestAbs
 
     public static class RemoveBankAccount extends FinancialAccount_IntegTest {
 
-        @Before
-        public void setupData() {
-            runFixtureScript(new FixtureScript() {
-                @Override
-                protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new BankAccountAndFaFaForHelloWorldNl());
-                }
-            });
-        }
-
         @Inject
         private FinancialAccountRepository financialAccountRepository;
 
@@ -130,11 +120,14 @@ public class FinancialAccount_IntegTest extends AssetFinancialModuleIntegTestAbs
 
         @Before
         public void setUp() throws Exception {
-            owner = partyRepository.findPartyByReference(OrganisationForHelloWorldNl.REF);
-            FinancialAccount financialAccount = financialAccountRepository.findByOwnerAndReference(owner, BankAccountAndFaFaForHelloWorldNl.REF);
 
-            Assert.assertTrue(financialAccount instanceof BankAccount);
-            bankAccount = (BankAccount) financialAccount;
+            runFixtureScript(
+                    BankAccountFaFa_enum.HelloWorldNl.toFixtureScript(),
+                    Organisation_enum.HelloWorldNl.toFixtureScript()
+            );
+
+            bankAccount = BankAccountFaFa_enum.HelloWorldNl.getBankAccount_d().findUsing(serviceRegistry);
+            owner = Organisation_enum.HelloWorldNl.findUsing(serviceRegistry);
         }
 
         @Rule
@@ -148,20 +141,19 @@ public class FinancialAccount_IntegTest extends AssetFinancialModuleIntegTestAbs
             fixedAssetFinancialAccount = results.get(0);
 
             Assert.assertThat(fixedAssetFinancialAccount.getFixedAsset().getReference(), is(
-                    PropertyAndUnitsAndOwnerAndManagerForKalNl.REF));
+                    Property_enum.KalNl.getRef()));
 
             // When
-            sudoService.sudo("estatio-admin", Lists.newArrayList(EstatioRole.ADMINISTRATOR.getRoleName()), new Runnable() {
-                @Override public void run() {
-                    wrap(fixedAssetFinancialAccount).remove();
-                    Assert.assertThat(fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccount).size(), is(0));
-                    wrap(bankAccount).remove("Some reason");
-                }
-            });
+            sudoService.sudo("estatio-admin", Lists.newArrayList(EstatioRole.ADMINISTRATOR.getRoleName()),
+                    () -> {
+                        wrap(fixedAssetFinancialAccount).remove();
+                        Assert.assertThat(fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccount).size(), is(0));
+                        wrap(bankAccount).remove("Some reason");
+                    });
 
             // Then
             Assert.assertThat(fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccount).size(), is(0));
-            Assert.assertNull(financialAccountRepository.findByOwnerAndReference(owner, BankAccountAndFaFaForHelloWorldNl.REF));
+            Assert.assertNull(financialAccountRepository.findByOwnerAndReference(owner, BankAccountFaFa_enum.HelloWorldNl.getBankAccount_d().getIban()));
 
         }
     }

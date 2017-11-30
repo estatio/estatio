@@ -34,9 +34,7 @@ import org.apache.isis.applib.services.wrapper.HiddenException;
 import org.apache.isis.applib.value.Blob;
 
 import org.estatio.module.application.integtests.ApplicationModuleIntegTestAbstract;
-import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
-import org.estatio.module.financial.dom.BankAccount;
-import org.estatio.module.financial.dom.BankAccountRepository;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.capex.contributions.BankAccount_attachPdfAsIbanProof;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
@@ -48,12 +46,14 @@ import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.integtests.document.IncomingDocumentPresentationSubscriber_IntegTest;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccountRepository;
+import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState.AWAITING_PROOF;
@@ -122,19 +122,20 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
                 @Override
                 protected void execute(final FixtureScript.ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new OrganisationForTopModelGb());
+                    executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
                 }
             });
 
             // given
-            seller = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
+            seller = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
         }
 
         @Test
         public void happy_case() throws Exception {
 
             // when
-            BankAccount bankAccount = bankAccountRepository.newBankAccount(seller, BankAccountAndFaFaForTopModelGb.REF, "12345");
+            BankAccount bankAccount = bankAccountRepository.newBankAccount(seller,
+                    BankAccount_enum.TopModelGb.getIban(), "12345");
 
             // then
             assertState(bankAccount, NOT_VERIFIED);
@@ -183,13 +184,14 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
 
                     executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
                     executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-                    executionContext.executeChild(this, new BankAccountAndFaFaForTopModelGb());
+                    executionContext.executeChild(this, BankAccount_enum.TopModelGb.toFixtureScript());
                 }
             });
 
             // given
-            seller = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
-            bankAccount = bankAccountRepository.findBankAccountByReference(seller, BankAccountAndFaFaForTopModelGb.REF);
+            seller = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+            bankAccount = bankAccountRepository.findBankAccountByReference(seller,
+                    BankAccount_enum.TopModelGb.getIban());
             // bank accounts now need BICs so can verify
             bankAccount.setBic("123456789");
 

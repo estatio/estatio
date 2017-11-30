@@ -18,11 +18,11 @@
  */
 package org.estatio.module.capex.fixtures.project.personas;
 
-import org.estatio.module.capex.fixtures.project.ProjectAbstract;
+import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
 import org.estatio.module.capex.fixtures.project.ProjectBuilder;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 
-public class Project1ForKal extends ProjectAbstract {
+public class Project1ForKal extends PersonaScriptAbstract {
 
     public static final Project_enum data = Project_enum.KalProject1;
 

@@ -15,10 +15,10 @@ import org.estatio.module.agreement.dom.AgreementRole;
 import org.estatio.module.agreement.dom.AgreementRoleRepository;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseAgreementTypeEnum;
-import org.estatio.module.lease.fixtures.lease.LeaseForKalPoison001Nl;
+import org.estatio.module.lease.fixtures.lease.personas.LeaseForKalPoison001Nl;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -64,8 +64,8 @@ public class Agreement_IntegTest extends LeaseModuleIntegTestAbstract {
                 LeaseAgreementTypeEnum.LEASE.getTitle()), LeaseForKalPoison001Nl.REF);
         assertNotNull(agreement);
 
-        party = partyRepository.findPartyByReference(PersonAndRolesForJohnDoeNl.REF);
-        assertThat(party.getReference(), is(PersonAndRolesForJohnDoeNl.REF));
+        party = partyRepository.findPartyByReference(Person_enum.JohnDoeNl.getRef());
+        assertThat(party.getReference(), is(Person_enum.JohnDoeNl.getRef()));
     }
 
     public static class NewRole extends Agreement_IntegTest {

@@ -34,9 +34,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"reference"})
+@EqualsAndHashCode(of={"reference"}, callSuper = false)
 @Accessors(chain = true)
-public class ProjectBuilder extends BuilderScriptAbstract<ProjectBuilder> {
+public final class ProjectBuilder extends BuilderScriptAbstract<Project, ProjectBuilder> {
 
     @Getter @Setter
     private String reference;
@@ -54,12 +54,16 @@ public class ProjectBuilder extends BuilderScriptAbstract<ProjectBuilder> {
     private Project parent;
 
     @Getter
-    private Project project;
+    private Project object;
 
     @Override
-    protected void execute(final ExecutionContext executionContext) {
-        this.project = projectRepository.create(reference, name, startDate, endDate, atPath, parent);
-        executionContext.addResult(this, project.getReference(), project);
+    protected void execute(final ExecutionContext ec) {
+
+        checkParam("reference", ec, String.class);
+        checkParam("name", ec, String.class);
+
+        object = projectRepository.create(reference, name, startDate, endDate, atPath, parent);
+        ec.addResult(this, reference, object);
     }
 
 

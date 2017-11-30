@@ -25,15 +25,8 @@ public class PersonAndRolesForThibaultOfficerAdministratorFr extends PersonAndRo
 
     public static final Person_enum data = Person_enum.ThibaultOfficerAdministratorFr;
 
-    public static final String REF = data.getRef();
-    public static final String AT_PATH = data.getApplicationTenancy().getPath();
-
     public PersonAndRolesForThibaultOfficerAdministratorFr() {
         super(data);
     }
 
-    @Override
-    protected void execute(ExecutionContext executionContext) {
-        executionContext.executeChild(this, data.toFixtureScript());
-    }
 }

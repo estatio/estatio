@@ -32,7 +32,7 @@ import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.incode.module.base.integtests.VT;
 
-import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccountType;
@@ -44,7 +44,7 @@ import org.estatio.module.guarantee.fixtures.personas.GuaranteeForOxfTopModel001
 import org.estatio.module.guarantee.integtests.GuaranteeModuleIntegTestAbstract;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 
@@ -59,7 +59,7 @@ public class GuaranteeRepository_IntegTest extends GuaranteeModuleIntegTestAbstr
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new GuaranteeForOxfTopModel001Gb());
                 executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-                executionContext.executeChild(this, new BankAccountAndFaFaForTopModelGb());
+                executionContext.executeChild(this, BankAccount_enum.TopModelGb.toFixtureScript());
             }
         });
 

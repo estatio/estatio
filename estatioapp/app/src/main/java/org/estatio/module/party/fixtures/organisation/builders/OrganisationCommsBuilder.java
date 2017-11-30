@@ -22,31 +22,27 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
-
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.communications.dom.impl.commchannel.PhoneOrFaxNumber;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.incode.module.country.dom.impl.Country;
-import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.dom.impl.State;
 import org.incode.module.country.dom.impl.StateRepository;
 
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.party.dom.Organisation;
-import org.estatio.module.party.dom.OrganisationRepository;
-import org.estatio.module.party.dom.PersonRepository;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"organisation", "address1", "phone", "email", "fax"})
+@EqualsAndHashCode(of={"organisation", "address1", "phone", "emailAddress", "fax"}, callSuper = false)
 @Accessors(chain = true)
-public class OrganisationCommsBuilder extends BuilderScriptAbstract<OrganisationCommsBuilder> {
+public final class OrganisationCommsBuilder
+        extends BuilderScriptAbstract<Organisation, OrganisationCommsBuilder> {
 
     @Getter @Setter
     private Organisation organisation;
@@ -67,7 +63,7 @@ public class OrganisationCommsBuilder extends BuilderScriptAbstract<Organisation
     private String stateReference;
 
     @Getter @Setter
-    private Country_enum country;
+    private Country_enum country_d;
 
     @Getter @Setter
     private Boolean legalAddress;
@@ -82,6 +78,9 @@ public class OrganisationCommsBuilder extends BuilderScriptAbstract<Organisation
     private String emailAddress;
 
     @Getter
+    private Organisation object;
+
+    @Getter
     private PostalAddress postalAddress;
 
     @Getter
@@ -94,81 +93,81 @@ public class OrganisationCommsBuilder extends BuilderScriptAbstract<Organisation
     private EmailAddress emailAddressObj;
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void execute(ExecutionContext ec) {
 
-        checkParam("organisation", executionContext, Organisation.class);
+        checkParam("organisation", ec, Organisation.class);
 
         if (address1 != null) {
-
-            defaultParam("legalAddress", executionContext, true);
-
-            final Country country = this.country.upsertUsing(serviceRegistry);
-
-            final State state = stateRepository.findState(stateReference);
-            this.postalAddress = communicationChannelRepository.newPostal(
-                    organisation,
-                    CommunicationChannelType.POSTAL_ADDRESS,
-                    address1,
-                    address2,
-                    null,
-                    postalCode,
-                    city,
-                    state,
-                    country);
-            postalAddress.setLegal(legalAddress);
-            transactionService.flushTransaction();
-            executionContext.addResult(this, organisation.getReference() + "/postalAddress", postalAddress);
+            createPostalAddress(ec);
         }
 
         if (phone != null) {
-            this.phoneObj = communicationChannelRepository.newPhoneOrFax(
-                    organisation,
-                    CommunicationChannelType.PHONE_NUMBER,
-                    phone);
-            transactionService.flushTransaction();
-            executionContext.addResult(this, organisation.getReference() + "/phone", phoneObj);
+            createPhone(ec);
         }
         if (fax != null) {
-            this.faxObj = communicationChannelRepository.newPhoneOrFax(
-                    organisation,
-                    CommunicationChannelType.FAX_NUMBER,
-                    this.fax);
-            transactionService.flushTransaction();
-            executionContext.addResult(this, organisation.getReference() + "/fax", faxObj);
+            createFax(ec);
         }
         if (emailAddress != null) {
-            this.emailAddressObj = communicationChannelRepository.newEmail(
-                    organisation,
-                    CommunicationChannelType.EMAIL_ADDRESS,
-                    this.emailAddress);
-            transactionService.flushTransaction();
-            executionContext.addResult(this, organisation.getReference() + "/email", emailAddressObj);
+            createEmailAddress(ec);
         }
 
-        executionContext.addResult(this, organisation.getReference(), organisation);
+        object = organisation;
     }
 
-    protected boolean defined(String[] values, int i) {
-        return values.length > i && !values[i].isEmpty();
+    private void createPostalAddress(final ExecutionContext ec) {
+        defaultParam("legalAddress", ec, true);
+
+        final Country country = objectFor(this.country_d, ec);
+
+        final State state = stateRepository.findState(stateReference);
+
+        this.postalAddress = communicationChannelRepository.newPostal(
+                organisation,
+                CommunicationChannelType.POSTAL_ADDRESS,
+                address1,
+                address2,
+                null,
+                postalCode,
+                city,
+                state,
+                country);
+        postalAddress.setLegal(legalAddress);
+        transactionService.flushTransaction();
+        ec.addResult(this, organisation.getReference() + "/postalAddress", postalAddress);
+    }
+
+    private void createPhone(final ExecutionContext ec) {
+        this.phoneObj = communicationChannelRepository.newPhoneOrFax(
+                organisation,
+                CommunicationChannelType.PHONE_NUMBER,
+                phone);
+        transactionService.flushTransaction();
+        ec.addResult(this, organisation.getReference() + "/phone", phoneObj);
+    }
+
+    private void createFax(final ExecutionContext ec) {
+        this.faxObj = communicationChannelRepository.newPhoneOrFax(
+                organisation,
+                CommunicationChannelType.FAX_NUMBER,
+                this.fax);
+        transactionService.flushTransaction();
+        ec.addResult(this, organisation.getReference() + "/fax", faxObj);
+    }
+
+    private void createEmailAddress(final ExecutionContext ec) {
+        this.emailAddressObj = communicationChannelRepository.newEmail(
+                organisation,
+                CommunicationChannelType.EMAIL_ADDRESS,
+                this.emailAddress);
+        transactionService.flushTransaction();
+        ec.addResult(this, organisation.getReference() + "/email", emailAddressObj);
     }
 
 
     @Inject
-    protected CountryRepository countryRepository;
+    StateRepository stateRepository;
 
     @Inject
-    protected StateRepository stateRepository;
-
-    @Inject
-    protected OrganisationRepository organisationRepository;
-
-    @Inject
-    protected PersonRepository personRepository;
-
-    @Inject
-    protected CommunicationChannelRepository communicationChannelRepository;
-
-    @Inject
-    protected ApplicationTenancies applicationTenancies;
+    CommunicationChannelRepository communicationChannelRepository;
 
 }

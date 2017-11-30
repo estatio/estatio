@@ -35,6 +35,7 @@ import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 import org.estatio.module.base.EstatioBaseModule;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRate;
+import org.estatio.module.tax.fixtures.builders.TaxBuilder;
 import org.estatio.module.tax.fixtures.data.Tax_enum;
 
 @XmlRootElement(name = "module")
@@ -55,7 +56,7 @@ public final class EstatioTaxModule extends ModuleAbstract {
         }
         // else
         refData.set(true);
-        return new DataEnumPersist<Tax_enum, Tax, FixtureScript>(Tax_enum.class) {};
+        return new DataEnumPersist<Tax_enum, Tax, TaxBuilder>(Tax_enum.class) {};
     }
 
     @Override

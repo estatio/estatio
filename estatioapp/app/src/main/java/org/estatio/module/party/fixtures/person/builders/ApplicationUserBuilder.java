@@ -20,12 +20,12 @@ package org.estatio.module.party.fixtures.person.builders;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 import org.apache.isis.applib.value.Password;
 
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 import org.isisaddons.module.security.dom.user.ApplicationUserRepository;
 
-import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 import org.estatio.module.party.dom.Person;
 
 import lombok.EqualsAndHashCode;
@@ -33,10 +33,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"person"})
+@EqualsAndHashCode(of={"person"}, callSuper = false)
 @Accessors(chain = true)
-public class ApplicationUserBuilder
-        extends BuilderScriptAbstract<ApplicationUserBuilder> {
+public final class ApplicationUserBuilder
+        extends BuilderScriptAbstract<ApplicationUser, ApplicationUserBuilder> {
 
     @Getter @Setter
     private Person person;
@@ -48,7 +48,7 @@ public class ApplicationUserBuilder
     private String securityUserAccountCloneFrom;
 
     @Getter
-    ApplicationUser applicationUser;
+    ApplicationUser object;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
@@ -65,11 +65,11 @@ public class ApplicationUserBuilder
                 throw new IllegalArgumentException("Could not find any user with username: " + securityUserAccountCloneFrom);
             }
 
-            applicationUser = applicationUserRepository.newLocalUserBasedOn(
+            object = applicationUserRepository.newLocalUserBasedOn(
                     securityUsername,
                     new Password("pass"), new Password("pass"),
                     userToCloneFrom, true, null);
-            applicationUser.setAtPath(person.getAtPath());
+            object.setAtPath(person.getAtPath());
             person.setUsername(securityUsername);
 
             executionContext.addResult(this, securityUsername, userToCloneFrom);

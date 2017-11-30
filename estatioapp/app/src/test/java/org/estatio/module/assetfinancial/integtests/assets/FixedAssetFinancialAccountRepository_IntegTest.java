@@ -34,18 +34,21 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.FixedAssetRepository;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
-import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForOxford;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.assetfinancial.integtests.AssetFinancialModuleIntegTestAbstract;
-import org.estatio.module.financial.dom.BankAccount;
-import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
+import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -59,10 +62,11 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
-                executionContext.executeChild(this, new BankAccountAndFaFaForOxford());
+                executionContext.executeChild(this, BankAccount_enum.Oxford.toFixtureScript());
+                executionContext.executeChild(this, BankAccountFaFa_enum.Oxford.toFixtureScript());
             }
         });
-        owner = partyRepository.findPartyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.PARTY_REF_OWNER);
+        owner = PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.getOwner_d().findUsing(serviceRegistry);
     }
 
     @Inject
@@ -88,7 +92,7 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
         public void findByFixedAsset() throws Exception {
             // given
             List<FixedAsset> fixedAsset = fixedAssetRepository.matchAssetsByReferenceOrName(
-                    PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
+                    Property_enum.OxfGb.getRef());
             assertThat(fixedAsset.size(), is(1));
 
             // when
@@ -105,12 +109,12 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
         public void findByFinancialAccount() throws Exception {
             // given
             List<FixedAsset> fixedAsset = fixedAssetRepository.matchAssetsByReferenceOrName(
-                    PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
+                    Property_enum.OxfGb.getRef());
             assertThat(fixedAsset.size(), is(1));
 
             // when
             final List<FixedAssetFinancialAccount> results = fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccountRepository.findBankAccountByReference(owner,
-                    BankAccountAndFaFaForOxford.REF));
+                    BankAccountFaFa_enum.Oxford.getBankAccount_d().getIban()));
 
             // then
             assertThat(results.size(), is(1));
@@ -123,12 +127,12 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
         public void find() throws Exception {
             // given
             List<FixedAsset> fixedAsset = fixedAssetRepository.matchAssetsByReferenceOrName(
-                    PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
+                    Property_enum.OxfGb.getRef());
             assertThat(fixedAsset.size(), is(1));
 
             // when
             final FixedAssetFinancialAccount result = fixedAssetFinancialAccountRepository.find(fixedAsset.get(0), bankAccountRepository.findBankAccountByReference(owner,
-                    BankAccountAndFaFaForOxford.REF));
+                    BankAccountFaFa_enum.Oxford.getBankAccount_d().getIban()));
 
             // then
             assertNotNull(result);
@@ -145,8 +149,8 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
 
         @Before
         public void setUp() throws Exception {
-            oldBankAccount = bankAccountRepository.findBankAccountByReference(owner, BankAccountAndFaFaForOxford.REF);
-            newBankAccount = bankAccountRepository.newBankAccount(partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF), "NEWBANKACCOUNT", null);
+            oldBankAccount = bankAccountRepository.findBankAccountByReference(owner, BankAccountFaFa_enum.Oxford.getBankAccount_d().getIban());
+            newBankAccount = bankAccountRepository.newBankAccount(Organisation_enum.HelloWorldGb.findUsing(serviceRegistry), "NEWBANKACCOUNT", null);
         }
 
         @Test
@@ -168,11 +172,7 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
 
             // WHen
             sudoService.sudo(EstatioAdmin.USER_NAME, Lists.newArrayList(EstatioRole.ADMINISTRATOR.getRoleName()),
-                    new Runnable() {
-                        @Override public void run() {
-                            wrap(oldBankAccount).remove("Some reason");
-                        }
-                    });
+                    () -> wrap(oldBankAccount).remove("Some reason"));
         }
     }
 }

@@ -42,16 +42,17 @@ import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGlobal;
+import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForIt;
+import org.estatio.module.invoice.dom.DocumentTypeData;
+import org.estatio.module.invoice.dom.Invoice;
+import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.module.lease.spiimpl.document.binders.AttachToNone;
 import org.estatio.module.lease.spiimpl.document.binders.ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments;
 import org.estatio.module.lease.spiimpl.document.binders.FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover;
 import org.estatio.module.lease.spiimpl.document.binders.StringInterpolatorToSsrsUrlOfInvoice;
 import org.estatio.module.lease.spiimpl.document.binders.StringInterpolatorToSsrsUrlOfInvoiceSummary;
-import org.estatio.module.invoice.dom.DocumentTypeData;
-import org.estatio.module.invoice.dom.Invoice;
-import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGlobal;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForIt;
 
 public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemplateFSAbstract {
 
@@ -123,7 +124,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         String subjLneText = loadResource("PrelimLetterEmailCoverNoteSubjectLine.ftl");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForPrelimCoverNote,
-                templateDate, ApplicationTenancyForGlobal.PATH, null,
+                templateDate, ApplicationTenancy_enum.Global.getPath(), null,
                 contentText, fmkRenderingStrategy,
                 subjLneText, fmkRenderingStrategy,
                 Document.class,
@@ -135,7 +136,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         subjLneText = loadResource("PrelimLetterEmailCoverNoteSubjectLine-ITA.ftl");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForPrelimCoverNote,
-                templateDate, ApplicationTenancyForIt.PATH, " (Italy)",
+                templateDate, ApplicationTenancy_enum.It.getPath(), " (Italy)",
                 contentText, fmkRenderingStrategy,
                 subjLneText, fmkRenderingStrategy,
                 Document.class,
@@ -150,7 +151,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         String titleText = loadResource("PrelimLetterTitle.ftl");
         upsertTemplateForPdfWithApplicability(
                 docTypeForPrelim,
-                templateDate, ApplicationTenancyForGlobal.PATH, null,
+                templateDate, ApplicationTenancy_enum.Global.getPath(), null,
                 false,
                 url
                         + "PreliminaryLetterV2"
@@ -169,7 +170,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         titleText = loadResource("PrelimLetterTitle-ITA.ftl");
         upsertTemplateForPdfWithApplicability(
                 docTypeForPrelim,
-                templateDate, ApplicationTenancyForIt.PATH, " (Italy)",
+                templateDate, ApplicationTenancy_enum.It.getPath(), " (Italy)",
                 false,
                 url
                         + "PreliminaryLetterV2"
@@ -197,7 +198,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         subjLneText = loadResource("InvoiceEmailCoverNoteSubjectLine.ftl");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForInvoiceCoverNote,
-                templateDate, ApplicationTenancyForGlobal.PATH, null,
+                templateDate, ApplicationTenancy_enum.Global.getPath(), null,
                 contentText, fmkRenderingStrategy,
                 subjLneText, fmkRenderingStrategy,
                 Document.class,
@@ -209,7 +210,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         subjLneText = loadResource("InvoiceEmailCoverNoteSubjectLine-ITA.ftl");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForInvoiceCoverNote,
-                templateDate, ApplicationTenancyForIt.PATH, " (Italy)",
+                templateDate, ApplicationTenancy_enum.It.getPath(), " (Italy)",
                 contentText, fmkRenderingStrategy,
                 subjLneText, fmkRenderingStrategy,
                 Document.class,
@@ -225,7 +226,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         titleText = loadResource("InvoiceTitle.ftl");
         upsertTemplateForPdfWithApplicability(
                 docTypeForInvoice,
-                templateDate, ApplicationTenancyForGlobal.PATH, null,
+                templateDate, ApplicationTenancy_enum.Global.getPath(), null,
                 false,
                 url
                 + "InvoiceItaly"
@@ -243,7 +244,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         titleText = loadResource("InvoiceTitle-ITA.ftl");
         upsertTemplateForPdfWithApplicability(
                 docTypeForInvoice,
-                templateDate, ApplicationTenancyForIt.PATH, "( Italy)",
+                templateDate, ApplicationTenancy_enum.It.getPath(), "( Italy)",
                 false,
                 url
                 + "InvoiceItaly"
@@ -278,7 +279,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
         upsertTemplateForPdfWithApplicability(
                 upsertType(DocumentTypeData.INVOICES, executionContext),
-                templateDate, ApplicationTenancyForGlobal.PATH, null,
+                templateDate, ApplicationTenancy_enum.Global.getPath(), null,
                 true,
                 URL
                 + "Invoices"
@@ -295,7 +296,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
         upsertTemplateForPdfWithApplicability(
                 upsertType(DocumentTypeData.INVOICES_PRELIM, executionContext),
-                templateDate, ApplicationTenancyForGlobal.PATH, null,
+                templateDate, ApplicationTenancy_enum.Global.getPath(), null,
                 true,
                 URL
                 + "PreliminaryLetterV2"
@@ -312,7 +313,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
         upsertTemplateForPdfWithApplicability(
                 upsertType(DocumentTypeData.INVOICES_FOR_SELLER, executionContext),
-                templateDate, ApplicationTenancyForGlobal.PATH, null,
+                templateDate, ApplicationTenancy_enum.Global.getPath(), null,
                 true,
                 URL
                 + "PreliminaryLetterV2"

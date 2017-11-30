@@ -18,15 +18,12 @@
  */
 package org.estatio.module.party.fixtures.organisation.enums;
 
+import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.EnumWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
-
-import org.isisaddons.module.base.platform.fixturesupport.EnumWithFixtureScript;
-import org.isisaddons.module.base.platform.fixturesupport.EnumWithUpsert;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.party.dom.Organisation;
-import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
@@ -42,8 +39,7 @@ import static org.estatio.module.base.fixtures.security.apptenancy.enums.Applica
 @Getter
 @Accessors(chain = true)
 public enum Organisation_enum
-        implements EnumWithUpsert<Organisation>,
-                   EnumWithFixtureScript<Organisation, OrganisationAndCommsBuilder> {
+        implements EnumWithBuilderScript<Organisation, OrganisationAndCommsBuilder>, EnumWithFinder<Organisation> {
 
     AcmeNl          ("ACME_NL", "ACME Properties International", Nl,
             new OrganisationComms_enum[] { OrganisationComms_enum.AcmeNl }),
@@ -131,26 +127,13 @@ public enum Organisation_enum
 
     @Override
     public OrganisationAndCommsBuilder toFixtureScript() {
-        final OrganisationAndCommsBuilder organisationAndCommsBuilder = new OrganisationAndCommsBuilder();
-
-        return organisationAndCommsBuilder
+        return new OrganisationAndCommsBuilder()
                 .setAtPath(getApplicationTenancy().getPath())
                 .setPartyName(getName())
                 .setPartyReference(getRef())
                 .setComms(getComms());
     }
 
-    @Override
-    public Organisation upsertUsing(final ServiceRegistry2 serviceRegistry) {
-        final OrganisationRepository organisationRepository = serviceRegistry
-                .lookupService(OrganisationRepository.class);
-        Organisation organisation = findUsing(serviceRegistry);
-        if(organisation == null) {
-            final ApplicationTenancy applicationTenancy = getApplicationTenancy().findUsing(serviceRegistry);
-            organisation = organisationRepository.newOrganisation(ref, false, name, applicationTenancy);
-        }
-        return organisation;
-    }
 
     @Override
     public Organisation findUsing(final ServiceRegistry2 serviceRegistry) {

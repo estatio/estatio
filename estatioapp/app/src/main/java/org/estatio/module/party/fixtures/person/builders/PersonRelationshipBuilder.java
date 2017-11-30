@@ -21,8 +21,8 @@ package org.estatio.module.party.fixtures.person.builders;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
+
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.relationship.PartyRelationship;
 import org.estatio.module.party.dom.relationship.PartyRelationshipRepository;
@@ -32,40 +32,36 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"person"})
+@EqualsAndHashCode(of={"person", "fromParty", "relationshipType"}, callSuper = false)
 @Accessors(chain = true)
-public class PersonRelationshipBuilder
-        extends BuilderScriptAbstract<PersonRelationshipBuilder> {
+public final class PersonRelationshipBuilder
+        extends BuilderScriptAbstract<PartyRelationship, PersonRelationshipBuilder> {
 
     @Getter @Setter
     private Person person;
 
     @Getter @Setter
-    private String fromPartyStr;
+    private Party fromParty;
 
     @Getter @Setter
     private String relationshipType;
 
     @Getter
-    PartyRelationship partyRelationship;
+    PartyRelationship object;
 
     @Override
     public void execute(ExecutionContext executionContext) {
 
         checkParam("person", executionContext, Person.class);
-        checkParam("fromPartyStr", executionContext, String.class);
+        checkParam("fromParty", executionContext, String.class);
         checkParam("relationshipType", executionContext, String.class);
 
         // associate person
-        Party from = partyRepository.findPartyByReference(fromPartyStr);
-        partyRelationship = partyRelationshipRepository
-                .newRelationship(from, person, relationshipType, null);
+        object = partyRelationshipRepository
+                .newRelationship(fromParty, person, relationshipType, null);
 
-        executionContext.addResult(this, relationshipType, partyRelationship);
+        executionContext.addResult(this, relationshipType, object);
     }
-
-    @Inject
-    PartyRepository partyRepository;
 
     @Inject
     PartyRelationshipRepository partyRelationshipRepository;

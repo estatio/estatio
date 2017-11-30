@@ -18,9 +18,10 @@
  */
 package org.estatio.module.party.fixtures.person.builders;
 
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
+
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 
-import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 
@@ -29,10 +30,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"reference"})
+@EqualsAndHashCode(of={"reference"}, callSuper = false)
 @Accessors(chain = true)
-public class PersonAndApplicationUserBuilder
-        extends BuilderScriptAbstract<PersonAndApplicationUserBuilder> {
+public final class PersonAndApplicationUserBuilder
+        extends BuilderScriptAbstract<Person, PersonAndApplicationUserBuilder> {
 
     @Getter @Setter
     private String atPath;
@@ -58,38 +59,36 @@ public class PersonAndApplicationUserBuilder
     @Getter @Setter
     private String securityUserAccountCloneFrom;
 
+    @Getter
+    private Person object;
+
+    @Getter
+    private ApplicationUser applicationUser;
+
+
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        PersonBuilder personBuilder = new PersonBuilder();
-        ApplicationUserBuilder applicationUserBuilder = new ApplicationUserBuilder();
-
-        // person
-        person = personBuilder.setAtPath(atPath)
+        object = new PersonBuilder()
+                .setAtPath(atPath)
                 .setReference(reference)
                 .setFirstName(firstName)
                 .setInitials(initials)
                 .setLastName(lastName)
                 .setPersonGenderType(personGenderType)
                 .build(this, executionContext)
-                .getPerson();
+                .getObject();
 
 
         // application user
         if(securityUsername != null) {
-            applicationUser = applicationUserBuilder
+            applicationUser = new ApplicationUserBuilder()
                     .setSecurityUsername(securityUsername)
                     .setSecurityUserAccountCloneFrom(securityUserAccountCloneFrom)
                     .build(this, executionContext)
-                    .getApplicationUser();
+                    .getObject();
         }
     }
-
-    @Getter
-    private Person person;
-
-    @Getter
-    private ApplicationUser applicationUser;
 
 
 }

@@ -25,16 +25,8 @@ public class PersonAndRolesForBrunoTreasurerFr extends PersonAndRolesAbstract {
 
     public static final Person_enum data = Person_enum.BrunoTreasurerFr;
 
-    public static final String REF = data.getRef();
-    public static final String AT_PATH = data.getApplicationTenancy().getPath();
-
     public PersonAndRolesForBrunoTreasurerFr() {
         super(data);
-    }
-
-    @Override
-    protected void execute(ExecutionContext executionContext) {
-        executionContext.executeChild(this, data.toFixtureScript());
     }
 
 }

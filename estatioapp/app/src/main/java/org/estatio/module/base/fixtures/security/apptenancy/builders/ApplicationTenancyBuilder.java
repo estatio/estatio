@@ -1,32 +1,52 @@
 package org.estatio.module.base.fixtures.security.apptenancy.builders;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import javax.inject.Inject;
 
-import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"data"})
+@EqualsAndHashCode(of={"path"}, callSuper = false)
 @Accessors(chain = true)
-public class ApplicationTenancyBuilder extends BuilderScriptAbstract<ApplicationTenancyBuilder> {
+public final class ApplicationTenancyBuilder
+        extends BuilderScriptAbstract<ApplicationTenancy, ApplicationTenancyBuilder> {
 
     @Getter @Setter
-    ApplicationTenancy_enum data;
+    String path;
+    @Getter @Setter
+    String name;
+    @Getter @Setter
+    String pathOfParent;
 
     @Getter
-    private ApplicationTenancy applicationTenancy;
+    private ApplicationTenancy object;
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
-        checkParam("data", executionContext, ApplicationTenancy_enum.class);
+        checkParam("path", executionContext, String.class);
+        checkParam("name", executionContext, String.class);
 
-        applicationTenancy = data.upsertUsing(serviceRegistry);
+        ApplicationTenancy applicationTenancy = repository.findByPath(path);
+        if(applicationTenancy == null) {
+            final ApplicationTenancy parent =
+                    path.length() > 1
+                            ? repository.findByPath(pathOfParent)
+                            : null;
+            applicationTenancy = repository.newTenancy(name, path, parent);
+        }
 
-        executionContext.addResult(this, data.getPath(), applicationTenancy);
+        executionContext.addResult(this, path, applicationTenancy);
+
+        object = applicationTenancy;
     }
+
+    @Inject
+    ApplicationTenancyRepository repository;
 }

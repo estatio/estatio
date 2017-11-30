@@ -27,11 +27,11 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexBase;
 import org.estatio.module.index.dom.IndexValue;
 import org.estatio.module.index.dom.api.IndexCreator;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForIt;
 
 import static org.incode.module.base.integtests.VT.ld;
 
@@ -39,14 +39,15 @@ public class IndexRefData extends FixtureScript {
 
     public static final String IT_REF = "ISTAT-FOI";
 
-    public static final String AT_PATH = ApplicationTenancyForIt.PATH;
+    private static final ApplicationTenancy_enum applicationTenancy_d = ApplicationTenancy_enum.It;
 
+    public static final String AT_PATH = applicationTenancy_d.getPath();
+
+    // Source http://www.istat.it/it/archivio/30440
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
-        // Source http://www.istat.it/it/archivio/30440
-
-        final ApplicationTenancy applicationTenancy = applicationTenancies.findByPath(AT_PATH);
+        final ApplicationTenancy applicationTenancy = executionContext.executeChildT(this, ApplicationTenancy_enum.It.toFixtureScript()).getObject();
 
         final Index index = createIndex(applicationTenancy, IT_REF, "ISTAT FOI", executionContext);
 

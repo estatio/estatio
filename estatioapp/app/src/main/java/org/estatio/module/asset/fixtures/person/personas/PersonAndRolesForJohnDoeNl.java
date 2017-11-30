@@ -26,15 +26,10 @@ public class PersonAndRolesForJohnDoeNl extends PersonAndRolesAbstract {
     public static final Person_enum data = Person_enum.JohnDoeNl;
 
     public static final String REF = data.getRef();
-    public static final String AT_PATH = data.getApplicationTenancy().getPath();
 
     public PersonAndRolesForJohnDoeNl() {
         super(data);
     }
 
-    @Override
-    protected void execute(ExecutionContext executionContext) {
-        executionContext.executeChild(this, data.toFixtureScript());
-    }
 
 }

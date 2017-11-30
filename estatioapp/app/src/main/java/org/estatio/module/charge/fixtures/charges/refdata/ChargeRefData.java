@@ -21,6 +21,7 @@ package org.estatio.module.charge.fixtures.charges.refdata;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.fixtures.charges.builders.ChargeBuilder;
 import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 
 public class ChargeRefData extends FixtureScript {
@@ -95,7 +96,8 @@ public class ChargeRefData extends FixtureScript {
     private void createCharges(final ExecutionContext executionContext) {
 
         for (Charge_enum data : Charge_enum.values()) {
-            final Charge charge = data.upsertUsing(serviceRegistry);
+            final ChargeBuilder chargeBuilder = data.toFixtureScript();
+            final Charge charge = executionContext.executeChildT(this, chargeBuilder).getObject();
             executionContext.addResult(this, charge.getReference(), charge);
         }
     }

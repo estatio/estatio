@@ -18,13 +18,14 @@
  */
 package org.estatio.module.charge.fixtures.chargegroups.enums;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.fixturescripts.EnumWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.isisaddons.module.base.platform.fixturesupport.EnumWithUpsert;
+import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
 
 import org.estatio.module.charge.dom.ChargeGroup;
 import org.estatio.module.charge.dom.ChargeGroupRepository;
+import org.estatio.module.charge.fixtures.chargegroups.builders.ChargeGroupBuilder;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,7 +34,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum ChargeGroup_enum implements EnumWithUpsert<ChargeGroup> {
+public enum ChargeGroup_enum implements EnumWithBuilderScript<ChargeGroup, ChargeGroupBuilder>, EnumWithFinder<ChargeGroup> {
 
     Rent                    ("RENT", "Rent"),
     ServiceCharge           ("SERVICE_CHARGE", "Service Charge"),
@@ -57,21 +58,10 @@ public enum ChargeGroup_enum implements EnumWithUpsert<ChargeGroup> {
         return repository.findChargeGroup(ref);
     }
 
-    @Override
-    public ChargeGroup upsertUsing(final ServiceRegistry2 serviceRegistry) {
-        final ChargeGroupRepository repository =
-                serviceRegistry.lookupService(ChargeGroupRepository.class);
-        return repository.upsert(getRef(), getDescription());
-    }
-
-    public FixtureScript toFixtureScript() {
-        return new FixtureScript() {
-            @Override
-            protected void execute(final ExecutionContext executionContext) {
-                final ChargeGroup chargeGroup = upsertUsing(serviceRegistry);
-                executionContext.addResult(this, chargeGroup.getReference(), chargeGroup);
-            }
-        };
+    public ChargeGroupBuilder toFixtureScript() {
+        return new ChargeGroupBuilder()
+                        .setRef(ref)
+                        .setDescription(description);
     }
 
 }

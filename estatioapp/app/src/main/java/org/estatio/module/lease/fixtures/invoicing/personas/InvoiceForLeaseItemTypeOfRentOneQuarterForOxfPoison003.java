@@ -24,34 +24,37 @@ import org.apache.isis.core.commons.ensure.Ensure;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.estatio.module.currency.fixtures.CurrenciesRefData;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
-import org.estatio.module.currency.fixtures.CurrenciesRefData;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfPoison003Gb;
-import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.invoice.InvoiceAbstract;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldNl;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPoisonGb;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGbOxf;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.lease.fixtures.leaseitems.rent.personas.LeaseItemAndLeaseTermForRentOf2ForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.leaseitems.servicecharge.personas.LeaseItemAndLeaseTermForServiceChargeForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas.LeaseItemAndLeaseTermForTurnoverRentForOxfPoison003Gb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.incode.module.base.integtests.VT.ldix;
 
 public class InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003 extends InvoiceAbstract {
 
-    public static final String PARTY_REF_SELLER = OrganisationForHelloWorldGb.REF;
-    public static final String PARTY_REF_BUYER = OrganisationForPoisonGb.REF;
+    private static final Organisation_enum seller_d = Organisation_enum.HelloWorldGb;
+    private static final Organisation_enum buyer_d = Organisation_enum.PoisonGb;
+    private static final Lease_enum lease_d = Lease_enum.OxfPoison003Gb;
+    private static final ApplicationTenancy_enum applicationTenancy_d = ApplicationTenancy_enum.GbOxf;
 
-    public static final String LEASE_REF = LeaseForOxfPoison003Gb.REF;
-
-    public static final String AT_PATH = ApplicationTenancyForGbOxf.PATH;
+    public static final String PARTY_REF_SELLER = seller_d.getRef();
+    public static final String PARTY_REF_BUYER = buyer_d.getRef();
+    public static final String LEASE_REF = lease_d.getRef();
+    public static final String AT_PATH = applicationTenancy_d.getPath();
 
     // simply within the lease's start/end date
     public static LocalDate startDateFor(final Lease lease) {
-        Ensure.ensureThatArg(lease.getReference(), is(LEASE_REF));
+        Ensure.ensureThatArg(lease.getReference(), is(lease_d.getRef()));
         return lease.getStartDate().plusYears(1);
     }
 
@@ -67,8 +70,11 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003 extends Invo
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new OrganisationForHelloWorldNl());
-        executionContext.executeChild(this, new LeaseItemAndTermsForOxfPoison003Gb());
+        executionContext.executeChild(this, Organisation_enum.HelloWorldNl.toFixtureScript());
+
+        executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentOf2ForOxfPoison003Gb());
+        executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfPoison003Gb());
+        executionContext.executeChild(this, new LeaseItemAndLeaseTermForTurnoverRentForOxfPoison003Gb());
 
         // exec
 

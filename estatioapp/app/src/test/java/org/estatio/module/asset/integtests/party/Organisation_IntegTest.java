@@ -39,14 +39,14 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
-import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.country.fixtures.enums.Country_enum;
+import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationPreviousName;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.numerator.personas.NumeratorForOrganisationFra;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -78,11 +78,11 @@ public class Organisation_IntegTest extends AssetModuleIntegTestAbstract {
         public void setupData() {
             runFixtureScript(new FixtureScript() {
                 @Override protected void execute(final ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new OrganisationForTopModelGb());
+                    executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
                 }
             });
 
-            organisation = (Organisation) partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
+            organisation = (Organisation) Organisation_enum.TopModelGb.findUsing(serviceRegistry);
         }
 
         @Test

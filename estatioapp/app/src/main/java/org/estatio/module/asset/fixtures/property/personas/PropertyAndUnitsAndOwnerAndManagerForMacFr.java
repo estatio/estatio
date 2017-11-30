@@ -18,77 +18,15 @@
  */
 package org.estatio.module.asset.fixtures.property.personas;
 
-import javax.inject.Inject;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
-
-import org.incode.module.country.dom.impl.Country;
-import org.incode.module.country.dom.impl.CountryRepository;
-
-import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.PropertyAndUnitsAndOwnerAndManagerAbstract;
-import org.estatio.module.asset.fixtures.property.builders.PropertyAndUnitsAndOwnerAndManagerBuilder;
-import org.estatio.module.asset.fixtures.property.enums.PropertyAndOwnerAndManager_enum;
-import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
-
-import lombok.Getter;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 
 public class PropertyAndUnitsAndOwnerAndManagerForMacFr extends PropertyAndUnitsAndOwnerAndManagerAbstract {
 
-    public static final PropertyAndOwnerAndManager_enum data = PropertyAndOwnerAndManager_enum.MacFr;
+    public static final PropertyAndUnitsAndOwnerAndManager_enum data = PropertyAndUnitsAndOwnerAndManager_enum.MacFr;
 
-    public static final String REF = data.getRef();
-    public static final String PARTY_REF_OWNER = data.getOwner().getRef();
-    public static final String PARTY_REF_MANAGER = data.getManager().getRef();
-    public static final String AT_PATH_COUNTRY = data.getApplicationTenancy().getPath();
-
-    @Getter
-    public Property property;
-
-    public static String unitReference(String suffix) {
-        return REF + "-" + suffix;
+    public PropertyAndUnitsAndOwnerAndManagerForMacFr() {
+        super(data);
     }
 
-    @Override
-    protected void execute(final ExecutionContext executionContext) {
-
-        // prereqs
-        executionContext.executeChild(this, data.getOwner().toFixtureScript());
-        executionContext.executeChild(this, data.getManager().toFixtureScript());
-
-        // exec
-        final Party owner = partyRepository.findPartyByReference(data.getOwner().getRef());
-        final Party manager = partyRepository.findPartyByReference(data.getManager().getRef());
-        final Country country = data.getCountry().upsertUsing(serviceRegistry);
-
-        PropertyAndUnitsAndOwnerAndManagerBuilder propertyAndUnitsAndOwnerAndManagerBuilder = new PropertyAndUnitsAndOwnerAndManagerBuilder();
-
-        property = propertyAndUnitsAndOwnerAndManagerBuilder
-                .setReference(data.getRef())
-                .setName(data.getName())
-                .setCity(data.getCity())
-                .setCountry(country)
-                .setPropertyType(data.getShoppingCenter())
-                .setNumberOfUnits(data.getNumberOfUnits())
-                .setOpeningDate(data.getOpeningDate())
-                .setAcquireDate(data.getAcquireDate())
-                .setOwner(owner)
-                .setOwnerStartDate(data.getOwnerStartDate())
-                .setOwnerEndDate(data.getOwnerEndDate())
-                .setManager(manager)
-                .setManagerStartDate(data.getManagerStartDate())
-                .setManagerEndDate(data.getManagerEndDate())
-                .setLocationStr(data.getLocationStr())
-                .build(this, executionContext)
-                .getProperty();
-    }
-
-    @Inject
-    protected PartyRepository partyRepository;
-
-    public Property getProperty() {
-        return this.property;
-    }
 }

@@ -20,31 +20,13 @@ package org.estatio.module.asset.fixtures.person.personas;
 
 import org.estatio.module.asset.fixtures.person.PersonAndRolesAbstract;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForMnsFr;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForVivFr;
-import org.estatio.module.party.dom.Person;
-
-import lombok.Getter;
 
 public class PersonAndRolesForFifineLacroixFr extends PersonAndRolesAbstract {
 
     public static final Person_enum data = Person_enum.FifineLacroixFr;
 
-    public static final String REF = data.getRef();
-    public static final String AT_PATH = data.getApplicationTenancy().getPath();
-
     public PersonAndRolesForFifineLacroixFr() {
         super(data);
-    }
-
-    @Override
-    protected void execute(ExecutionContext executionContext) {
-
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForVivFr());
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForMnsFr());
-
-        super.execute(executionContext);
-
     }
 
 }

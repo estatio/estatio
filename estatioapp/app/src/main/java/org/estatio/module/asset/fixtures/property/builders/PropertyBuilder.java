@@ -22,6 +22,8 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
+
 import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 
 import org.incode.module.country.dom.impl.Country;
@@ -30,17 +32,16 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.PropertyType;
 import org.estatio.module.base.platform.fake.EstatioFakeDataService;
-import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"reference"})
+@EqualsAndHashCode(of={"reference"}, callSuper = false)
 @Accessors(chain = true)
-public class PropertyBuilder
-        extends BuilderScriptAbstract<PropertyBuilder> {
+public final class PropertyBuilder
+        extends BuilderScriptAbstract<Property,PropertyBuilder> {
 
     @Getter @Setter
     private String reference;
@@ -67,7 +68,7 @@ public class PropertyBuilder
     private String locationStr;
 
     @Getter
-    private Property property;
+    private Property object;
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
@@ -79,11 +80,10 @@ public class PropertyBuilder
         defaultParam("country", executionContext, fakeDataService.collections().aBounded(Country.class));
         defaultParam("acquireDate", executionContext, fakeDataService.dates().before(fakeDataService.periods().days(100, 200)));
 
-
-        this.property = propertyRepository
+        this.object = propertyRepository
                 .newProperty(getReference(), getName(), getPropertyType(), getCity(), getCountry(), getAcquireDate());
-        property.setOpeningDate(openingDate);
-        property.setLocation(Location.fromString(locationStr));
+        object.setOpeningDate(openingDate);
+        object.setLocation(Location.fromString(locationStr));
 
 
     }

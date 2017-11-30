@@ -18,9 +18,9 @@
  */
 package org.estatio.module.capex.fixtures.project.personas;
 
-import org.estatio.module.capex.fixtures.project.ProjectAbstract;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public class ProjectsForKal extends ProjectAbstract {
+public class ProjectsForKal extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {

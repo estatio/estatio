@@ -1,13 +1,14 @@
 package org.estatio.module.base.fixtures.security.apptenancy.enums;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.EnumWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.isisaddons.module.base.platform.fixturesupport.EnumWithFixtureScript;
-import org.isisaddons.module.base.platform.fixturesupport.EnumWithUpsert;
 import org.isisaddons.module.base.platform.fixturesupport.DataEnumPersist;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+
+import org.estatio.module.base.fixtures.security.apptenancy.builders.ApplicationTenancyBuilder;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,8 +18,8 @@ import lombok.experimental.Accessors;
 @Getter
 @Accessors(chain = true)
 public enum ApplicationTenancy_enum
-        implements EnumWithUpsert<ApplicationTenancy>,
-                   EnumWithFixtureScript<ApplicationTenancy, FixtureScript> {
+        implements EnumWithFinder<ApplicationTenancy>,
+        EnumWithBuilderScript<ApplicationTenancy, ApplicationTenancyBuilder> {
 
     Global      ("/",           "Global"),
     GlobalOnly  ("/_",          "Global only"),
@@ -57,21 +58,13 @@ public enum ApplicationTenancy_enum
     private final String path;
     private final String name;
 
-
-
-    @Override
-    public ApplicationTenancy upsertUsing(final ServiceRegistry2 serviceRegistry) {
-        final ApplicationTenancyRepository repository =
-                serviceRegistry.lookupService(ApplicationTenancyRepository.class);
-        ApplicationTenancy applicationTenancy = repository.findByPath(path);
-        if(applicationTenancy == null) {
-            final ApplicationTenancy parent =
-                    path.length() > 1
-                            ? repository.findByPath(getParentPath())
-                            : null;
-            applicationTenancy = repository.newTenancy(name, path, parent);
+    private String getPathOfParent() {
+        final int lastSlash = path.lastIndexOf("/");
+        String parentPath = path.substring(0, lastSlash);
+        if(parentPath.length() == 0) {
+            parentPath = "/";
         }
-        return applicationTenancy;
+        return parentPath;
     }
 
     @Override
@@ -82,27 +75,15 @@ public enum ApplicationTenancy_enum
     }
 
     @Override
-    public FixtureScript toFixtureScript() {
-        return new FixtureScript() {
-            @Override
-            protected void execute(final ExecutionContext executionContext) {
-                final ApplicationTenancy applicationTenancy = upsertUsing(serviceRegistry);
-                executionContext.addResult(this, applicationTenancy);
-            }
-        };
-    }
-
-    private String getParentPath() {
-        final int lastSlash = path.lastIndexOf("/");
-        String parentPath = path.substring(0, lastSlash);
-        if(parentPath.length() == 0) {
-            parentPath = "/";
-        }
-        return parentPath;
+    public ApplicationTenancyBuilder toFixtureScript() {
+        return new ApplicationTenancyBuilder()
+                .setName(name)
+                .setPath(path)
+                .setPathOfParent(getPathOfParent());
     }
 
     public static class PersistScript
-            extends DataEnumPersist<ApplicationTenancy_enum, ApplicationTenancy, FixtureScript> {
+            extends DataEnumPersist<ApplicationTenancy_enum, ApplicationTenancy, ApplicationTenancyBuilder> {
         public PersistScript() {
             super(ApplicationTenancy_enum.class);
         }

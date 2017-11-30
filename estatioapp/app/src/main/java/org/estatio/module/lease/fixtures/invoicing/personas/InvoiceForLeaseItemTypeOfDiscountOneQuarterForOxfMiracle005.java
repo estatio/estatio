@@ -24,32 +24,36 @@ import org.apache.isis.core.commons.ensure.Ensure;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.estatio.module.currency.fixtures.CurrenciesRefData;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
-import org.estatio.module.currency.fixtures.CurrenciesRefData;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfMiracl005Gb;
-import org.estatio.module.lease.fixtures.lease.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;
 import org.estatio.module.lease.fixtures.invoice.InvoiceAbstract;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForMiracleGb;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGbOxf;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.incode.module.base.integtests.VT.ldix;
 
 public class InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005 extends InvoiceAbstract {
 
-    public static final String PARTY_REF_SELLER = OrganisationForHelloWorldGb.REF;
-    public static final String PARTY_REF_BUYER = OrganisationForMiracleGb.REF;
-    public static final String LEASE_REF = LeaseForOxfMiracl005Gb.REF;
+    private static final Lease_enum lease_d = Lease_enum.OxfMiracl005Gb;
+    private static final Organisation_enum seller_d = Organisation_enum.HelloWorldGb;
+    private static final Organisation_enum buyer_d = Organisation_enum.MiracleGb;
+    private static final ApplicationTenancy_enum applicationTenancy_d = ApplicationTenancy_enum.GbOxf;
 
-    public static final String AT_PATH = ApplicationTenancyForGbOxf.PATH;
+    public static final String PARTY_REF_SELLER = seller_d.getRef();
+    public static final String PARTY_REF_BUYER = buyer_d.getRef();
+    public static final String LEASE_REF = lease_d.getRef();
+
+    public static final String AT_PATH = applicationTenancy_d.getPath();
 
     // simply within the lease's start/end date
     public static LocalDate startDateFor(final Lease lease) {
-        Ensure.ensureThatArg(lease.getReference(), is(LEASE_REF));
+        Ensure.ensureThatArg(lease.getReference(), is(lease_d.getRef()));
         return lease.getStartDate().plusYears(1);
     }
 
@@ -65,12 +69,12 @@ public class InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005 extends
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new OrganisationForHelloWorldGb());
+        executionContext.executeChild(this, Organisation_enum.HelloWorldGb.toFixtureScript());
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb());
 
         // exec
-        final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(AT_PATH);
-        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
+        final ApplicationTenancy applicationTenancy = applicationTenancy_d.findUsing(serviceRegistry);
+        final Lease lease = lease_d.findUsing(serviceRegistry);
         final LocalDate invoiceStartDate = startDateFor(lease);
 
         final InvoiceForLease invoice = createInvoiceAndNumerator(

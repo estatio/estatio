@@ -38,7 +38,7 @@ import org.estatio.module.lease.fixtures.bankaccount.personas.FinancialAccountTr
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -72,7 +72,7 @@ public class FinancialAccountTransactionRepository_IntegTest extends LeaseModule
 
     @Before
     public void setup() throws Exception {
-        party = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
+        party = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
         List<FinancialAccount> accounts = financialAccountRepository.findAccountsByOwner(party);
         assertThat(accounts.size(), is(1));
         financialAccount = accounts.get(0);

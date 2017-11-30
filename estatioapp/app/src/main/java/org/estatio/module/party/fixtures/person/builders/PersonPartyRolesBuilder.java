@@ -36,16 +36,17 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"person"})
+@EqualsAndHashCode(of={"person", "partyRoleTypes"}, callSuper = false)
 @Accessors(chain = true)
-public class PersonPartyRolesBuilder
-        extends BuilderScriptAbstract<PersonPartyRolesBuilder> {
+public final class PersonPartyRolesBuilder
+        extends BuilderScriptAbstract<List<PartyRole>,PersonPartyRolesBuilder> {
 
     @Getter @Setter
     private Person person;
 
     @Getter
     private List<IPartyRoleType> partyRoleTypes = Lists.newArrayList();
+
     public PersonPartyRolesBuilder addPartyRoleType(IPartyRoleType partyRoleType) {
         partyRoleTypes.add(partyRoleType);
         return this;
@@ -56,7 +57,7 @@ public class PersonPartyRolesBuilder
     }
 
     @Getter
-    private List<PartyRole> partyRoles = Lists.newArrayList();
+    private List<PartyRole> object = Lists.newArrayList();
 
     @Override
     public void execute(ExecutionContext executionContext) {
@@ -65,7 +66,7 @@ public class PersonPartyRolesBuilder
 
         for (IPartyRoleType partyRoleType : partyRoleTypes) {
             final PartyRole partyRole = partyRoleTypeService.createRole(person, partyRoleType);
-            partyRoles.add(partyRole);
+            object.add(partyRole);
         }
     }
 

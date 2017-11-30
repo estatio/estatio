@@ -30,6 +30,7 @@ import org.junit.rules.ExpectedException;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.sudo.SudoService;
 
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForGinoVannelliGb;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
@@ -37,8 +38,7 @@ import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForAcmeNl;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.junit.Assert.assertNull;
 
@@ -61,26 +61,26 @@ public class Party_IntegTest extends AssetModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     // linked together:
-                    executionContext.executeChild(this, new OrganisationForTopModelGb());
+                    executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
                     executionContext.executeChild(this, new PersonAndRolesForGinoVannelliGb());
                     // only relationship
                     executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
                     // only comm channels
-                    executionContext.executeChild(this, new OrganisationForAcmeNl());
+                    executionContext.executeChild(this, Organisation_enum.AcmeNl.toFixtureScript());
                 }
             });
         }
 
         @Test
         public void happyCase() {
-            Party party = partyRepository.findPartyByReference(PersonAndRolesForJohnDoeNl.REF);
+            Party party = partyRepository.findPartyByReference(Person_enum.JohnDoeNl.getRef());
             // WHen
             sudoService.sudo(EstatioAdmin.USER_NAME, Lists.newArrayList(EstatioRole.SUPERUSER.getRoleName()),
                     () -> {
                         wrap(party).delete(null);
                     });
 
-            assertNull(partyRepository.findPartyByReferenceOrNull(PersonAndRolesForJohnDoeNl.REF));
+            assertNull(partyRepository.findPartyByReferenceOrNull(Person_enum.JohnDoeNl.getRef()));
         }
 
     }

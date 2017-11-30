@@ -21,11 +21,10 @@ import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForEmmaTreasurerGb;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
-import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
-import org.estatio.module.financial.dom.BankAccount;
-import org.estatio.module.financial.dom.BankAccountRepository;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccount_verificationState;
@@ -43,6 +42,8 @@ import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.country.fixtures.enums.Country_enum;
+import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
@@ -50,8 +51,7 @@ import org.estatio.module.party.dom.role.PartyRole;
 import org.estatio.module.party.dom.role.PartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState.NOT_VERIFIED;
@@ -79,7 +79,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
                 executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
                 executionContext.executeChild(this, new IncomingChargeFixture());
                 executionContext.executeChild(this, new IncomingInvoiceFixture());
-                executionContext.executeChild(this, new BankAccountAndFaFaForTopModelGb());
+                executionContext.executeChild(this, BankAccount_enum.TopModelGb.toFixtureScript());
                 executionContext.executeChild(this, new PersonAndRolesForEmmaTreasurerGb());
             }
         });
@@ -89,17 +89,17 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
 
     @Before
     public void setUp() {
-        propertyForOxf = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
+        propertyForOxf = Property_enum.OxfGb.findUsing(serviceRegistry);
 
-        buyer = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
-        seller = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
+        buyer = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
+        seller = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
 
         greatBritain = countryRepository.findCountry(Country_enum.GBR.getRef3());
         charge_for_works = chargeRepository.findByReference("WORKS");
 
         project = projectRepository.findByReference("OXF-02");
 
-        bankAccount = bankAccountRepository.findBankAccountByReference(seller, BankAccountAndFaFaForTopModelGb.REF);
+        bankAccount = BankAccount_enum.TopModelGb.findUsing(serviceRegistry);
 
         incomingInvoice = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate("65432", seller, new LocalDate(2014,5,13));
         incomingInvoice.setBankAccount(bankAccount);
@@ -125,7 +125,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
 
         // given
         Person personEmmaWithNoRoleAsPropertyManager = (Person) partyRepository.findPartyByReference(
-                PersonAndRolesForEmmaTreasurerGb.REF);
+                Person_enum.EmmaTreasurerGb.getRef());
         SortedSet<PartyRole> rolesforEmma = personEmmaWithNoRoleAsPropertyManager.getRoles();
         assertThat(rolesforEmma.size()).isEqualTo(1);
         assertThat(rolesforEmma.first().getRoleType()).isEqualTo(partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.TREASURER.getKey()));
@@ -133,7 +133,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         // when
         try {
             queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-            sudoService.sudo(PersonAndRolesForEmmaTreasurerGb.REF.toLowerCase(), (Runnable) () ->
+            sudoService.sudo(Person_enum.EmmaTreasurerGb.getRef().toLowerCase(), (Runnable) () ->
                     wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
         } catch (DisabledException e){
             error = e;
@@ -150,7 +150,8 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         Exception error = new Exception();
 
         // given
-        Person personEmma = (Person) partyRepository.findPartyByReference(PersonAndRolesForEmmaTreasurerGb.REF);
+        Person personEmma = (Person) partyRepository.findPartyByReference(
+                Person_enum.EmmaTreasurerGb.getRef());
         PartyRoleType roleAsPropertyManager = partyRoleTypeRepository.findByKey("PROPERTY_MANAGER");
         personEmma.addRole(roleAsPropertyManager);
         transactionService.nextTransaction();
@@ -161,7 +162,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         // when
         try {
             queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-            sudoService.sudo(PersonAndRolesForEmmaTreasurerGb.REF.toLowerCase(), (Runnable) () ->
+            sudoService.sudo(Person_enum.EmmaTreasurerGb.getRef().toLowerCase(), (Runnable) () ->
                     wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
         } catch (DisabledException e){
             error = e;

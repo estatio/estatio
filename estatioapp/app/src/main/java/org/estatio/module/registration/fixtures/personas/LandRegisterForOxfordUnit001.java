@@ -26,6 +26,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.Unit;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.registration.dom.LandRegister;
 import org.estatio.module.registration.dom.LandRegisters;
@@ -38,7 +39,7 @@ public class LandRegisterForOxfordUnit001 extends FixtureScript {
         // prereqs
         executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
 
-        Unit unit = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF).getUnits().first();
+        Unit unit = Property_enum.OxfGb.findUsing(serviceRegistry).getUnits().first();
 
         LandRegister landRegister = landRegisters.newRegistration(
                 unit,

@@ -414,12 +414,12 @@ msgid "All States"
 msgstr ""
 
 
-#: org.estatio.dom.tax.TaxRates#allTaxRates()
+#: org.estatio.dom.tax_d.TaxRates#allTaxRates()
 msgid "All Tax Rates"
 msgstr ""
 
 
-#: org.estatio.dom.tax.Taxes#allTaxes()
+#: org.estatio.dom.tax_d.Taxes#allTaxes()
 msgid "All Taxes"
 msgstr ""
 
@@ -691,7 +691,7 @@ msgstr ""
 #: org.estatio.dom.lease.tags.UnitSize#change()
 #: org.estatio.dom.party.Organisation#change()
 #: org.estatio.dom.party.Person#change()
-#: org.estatio.dom.tax.TaxRate#change()
+#: org.estatio.dom.tax_d.TaxRate#change()
 msgid "Change"
 msgstr ""
 
@@ -750,7 +750,7 @@ msgstr ""
 #: org.estatio.dom.party.PartyRegistration#changeDates()
 #: org.estatio.dom.party.relationship.PartyRelationship#changeDates()
 #: org.estatio.dom.party.relationship.PartyRelationshipView#changeDates()
-#: org.estatio.dom.tax.TaxRate#changeDates()
+#: org.estatio.dom.tax_d.TaxRate#changeDates()
 msgid "Change Dates"
 msgstr ""
 
@@ -1092,9 +1092,9 @@ msgid "Delete"
 msgstr ""
 
 
-#: org.estatio.dom.charge.Charge#change(java.lang.String,org.estatio.dom.tax.Tax,java.lang.String,org.estatio.dom.charge.ChargeGroup,java.lang.String,java.lang.String)
+#: org.estatio.dom.charge.Charge#change(java.lang.String,org.estatio.dom.tax_d.Tax,java.lang.String,org.estatio.dom.charge.ChargeGroup,java.lang.String,java.lang.String)
 #: org.estatio.dom.charge.ChargeGroups#newChargeGroup(java.lang.String,java.lang.String)
-#: org.estatio.dom.charge.Charges#newCharge(java.lang.String,java.lang.String,java.lang.String,org.estatio.dom.tax.Tax,org.estatio.dom.charge.ChargeGroup)
+#: org.estatio.dom.charge.Charges#newCharge(java.lang.String,java.lang.String,java.lang.String,org.estatio.dom.tax_d.Tax,org.estatio.dom.charge.ChargeGroup)
 #: org.estatio.dom.communicationchannel.CommunicationChannel#change(java.lang.String,boolean,org.estatio.dom.communicationchannel.CommunicationChannelPurposeType)
 #: org.estatio.dom.communicationchannel.EmailAddress#change(java.lang.String,boolean,org.estatio.dom.communicationchannel.CommunicationChannelPurposeType)
 #: org.estatio.dom.communicationchannel.PhoneOrFaxNumber#change(java.lang.String,boolean,org.estatio.dom.communicationchannel.CommunicationChannelPurposeType)
@@ -1302,7 +1302,7 @@ msgstr ""
 #: org.estatio.dom.lease.Occupancy#changeDates(org.joda.time.LocalDate,org.joda.time.LocalDate)
 #: org.estatio.dom.lease.Occupancy#terminate(org.joda.time.LocalDate)
 #: org.estatio.dom.party.PartyRegistration#changeDates(org.joda.time.LocalDate,org.joda.time.LocalDate)
-#: org.estatio.dom.tax.TaxRate#changeDates(org.joda.time.LocalDate,org.joda.time.LocalDate)
+#: org.estatio.dom.tax_d.TaxRate#changeDates(org.joda.time.LocalDate,org.joda.time.LocalDate)
 #: org.estatio.dom.valuetypes.AbstractInterval#endDate()
 #: org.estatio.dom.valuetypes.LocalDateInterval#endDate()
 msgid "End Date"
@@ -1391,9 +1391,9 @@ msgstr ""
 
 
 #: org.estatio.dom.asset.Unit#changeAsset(java.lang.String,org.estatio.dom.asset.UnitType,java.lang.String)
-#: org.estatio.dom.charge.Charge#change(java.lang.String,org.estatio.dom.tax.Tax,java.lang.String,org.estatio.dom.charge.ChargeGroup,java.lang.String,java.lang.String)
+#: org.estatio.dom.charge.Charge#change(java.lang.String,org.estatio.dom.tax_d.Tax,java.lang.String,org.estatio.dom.charge.ChargeGroup,java.lang.String,java.lang.String)
 #: org.estatio.dom.financial.bankaccount.BankAccount#change(java.lang.String,java.lang.String,java.lang.String)
-#: org.estatio.dom.tax.TaxRate#change(org.estatio.dom.tax.Tax,java.math.BigDecimal,java.lang.String)
+#: org.estatio.dom.tax_d.TaxRate#change(org.estatio.dom.tax_d.Tax,java.math.BigDecimal,java.lang.String)
 msgid "External Reference"
 msgstr ""
 
@@ -1888,7 +1888,7 @@ msgid "Given Name"
 msgstr ""
 
 
-#: org.estatio.dom.charge.Charge#change(java.lang.String,org.estatio.dom.tax.Tax,java.lang.String,org.estatio.dom.charge.ChargeGroup,java.lang.String,java.lang.String)
+#: org.estatio.dom.charge.Charge#change(java.lang.String,org.estatio.dom.tax_d.Tax,java.lang.String,org.estatio.dom.charge.ChargeGroup,java.lang.String,java.lang.String)
 msgid "Group"
 msgstr ""
 
@@ -2379,8 +2379,8 @@ msgstr ""
 #: org.estatio.dom.asset.Properties#newProperty(java.lang.String,java.lang.String,org.estatio.dom.asset.PropertyType,java.lang.String,org.estatio.dom.geography.Country,org.joda.time.LocalDate)
 #: org.estatio.dom.asset.Unit#changeAsset(java.lang.String,org.estatio.dom.asset.UnitType,java.lang.String)
 #: org.estatio.dom.bankmandate.BankMandate#change(java.lang.String,java.lang.String)
-#: org.estatio.dom.charge.Charge#change(java.lang.String,org.estatio.dom.tax.Tax,java.lang.String,org.estatio.dom.charge.ChargeGroup,java.lang.String,java.lang.String)
-#: org.estatio.dom.charge.Charges#newCharge(java.lang.String,java.lang.String,java.lang.String,org.estatio.dom.tax.Tax,org.estatio.dom.charge.ChargeGroup)
+#: org.estatio.dom.charge.Charge#change(java.lang.String,org.estatio.dom.tax_d.Tax,java.lang.String,org.estatio.dom.charge.ChargeGroup,java.lang.String,java.lang.String)
+#: org.estatio.dom.charge.Charges#newCharge(java.lang.String,java.lang.String,java.lang.String,org.estatio.dom.tax_d.Tax,org.estatio.dom.charge.ChargeGroup)
 #: org.estatio.dom.currency.Currencies#newCurrency(java.lang.String,java.lang.String)
 #: org.estatio.dom.financial.bankaccount.BankAccount#change(java.lang.String,java.lang.String,java.lang.String)
 #: org.estatio.dom.financial.contributed.FinancialAccountContributions#addAccount(org.estatio.dom.party.Party,org.estatio.dom.financial.FinancialAccountType,java.lang.String,java.lang.String)
@@ -2399,7 +2399,7 @@ msgstr ""
 #: org.estatio.dom.lease.tags.UnitSize#change(java.lang.String)
 #: org.estatio.dom.party.Organisation#change(java.lang.String,java.lang.String,java.lang.String)
 #: org.estatio.dom.party.Organisations#newOrganisation(java.lang.String,java.lang.String)
-#: org.estatio.dom.tax.Taxes#newTax(java.lang.String,java.lang.String)
+#: org.estatio.dom.tax_d.Taxes#newTax(java.lang.String,java.lang.String)
 #: org.isisaddons.module.security.dom.role.ApplicationRole#updateName(java.lang.String)
 #: org.isisaddons.module.security.dom.role.ApplicationRoles#findRoleByName(java.lang.String)
 #: org.isisaddons.module.security.dom.role.ApplicationRoles#newRole(java.lang.String,java.lang.String)
@@ -2664,8 +2664,8 @@ msgid "New Property"
 msgstr ""
 
 
-#: org.estatio.dom.tax.Tax#newRate()
-#: org.estatio.dom.tax.TaxRate#newRate()
+#: org.estatio.dom.tax_d.Tax#newRate()
+#: org.estatio.dom.tax_d.TaxRate#newRate()
 msgid "New Rate"
 msgstr ""
 
@@ -2721,7 +2721,7 @@ msgid "New String"
 msgstr ""
 
 
-#: org.estatio.dom.tax.Taxes#newTax()
+#: org.estatio.dom.tax_d.Taxes#newTax()
 msgid "New Tax"
 msgstr ""
 
@@ -2773,7 +2773,7 @@ msgid "Next Agreement"
 msgstr ""
 
 
-#: org.estatio.dom.tax.TaxRate#next
+#: org.estatio.dom.tax_d.TaxRate#next
 msgid "Next Rate"
 msgstr ""
 
@@ -2872,8 +2872,8 @@ msgstr ""
 #: org.estatio.dom.lease.LeaseTypes
 #: org.estatio.dom.lease.tags.Brands
 #: org.estatio.dom.lease.tags.UnitSizes
-#: org.estatio.dom.tax.TaxRates
-#: org.estatio.dom.tax.Taxes
+#: org.estatio.dom.tax_d.TaxRates
+#: org.estatio.dom.tax_d.Taxes
 msgid "Other"
 msgstr ""
 
@@ -2991,9 +2991,9 @@ msgid "Payment date"
 msgstr ""
 
 
-#: org.estatio.dom.tax.Tax#newRate(org.joda.time.LocalDate,java.math.BigDecimal)
-#: org.estatio.dom.tax.TaxRate#change(org.estatio.dom.tax.Tax,java.math.BigDecimal,java.lang.String)
-#: org.estatio.dom.tax.TaxRate#newRate(org.joda.time.LocalDate,java.math.BigDecimal)
+#: org.estatio.dom.tax_d.Tax#newRate(org.joda.time.LocalDate,java.math.BigDecimal)
+#: org.estatio.dom.tax_d.TaxRate#change(org.estatio.dom.tax_d.Tax,java.math.BigDecimal,java.lang.String)
+#: org.estatio.dom.tax_d.TaxRate#newRate(org.joda.time.LocalDate,java.math.BigDecimal)
 msgid "Percentage"
 msgstr ""
 
@@ -3106,7 +3106,7 @@ msgid "Previous Base"
 msgstr ""
 
 
-#: org.estatio.dom.tax.TaxRate#previous
+#: org.estatio.dom.tax_d.TaxRate#previous
 msgid "Previous Rate"
 msgstr ""
 
@@ -3177,7 +3177,7 @@ msgstr ""
 #: org.estatio.dom.lease.Lease#suspendAll(java.lang.String)
 #: org.estatio.dom.lease.LeaseItem#cancelOverrideTax(java.lang.String)
 #: org.estatio.dom.lease.LeaseItem#changePaymentMethod(org.estatio.dom.invoiceForLease.PaymentMethod,java.lang.String)
-#: org.estatio.dom.lease.LeaseItem#overrideTax(org.estatio.dom.tax.Tax,java.lang.String)
+#: org.estatio.dom.lease.LeaseItem#overrideTax(org.estatio.dom.tax_d.Tax,java.lang.String)
 #: org.estatio.dom.lease.LeaseItem#resume(java.lang.String)
 #: org.estatio.dom.lease.LeaseItem#suspend(java.lang.String)
 #: org.estatio.dom.lease.LeaseTermForTax#disableInvoicing(java.lang.String)
@@ -3196,7 +3196,7 @@ msgstr ""
 
 #: org.estatio.dom.asset.Properties#newProperty(java.lang.String,java.lang.String,org.estatio.dom.asset.PropertyType,java.lang.String,org.estatio.dom.geography.Country,org.joda.time.LocalDate)
 #: org.estatio.dom.charge.ChargeGroups#newChargeGroup(java.lang.String,java.lang.String)
-#: org.estatio.dom.charge.Charges#newCharge(java.lang.String,java.lang.String,java.lang.String,org.estatio.dom.tax.Tax,org.estatio.dom.charge.ChargeGroup)
+#: org.estatio.dom.charge.Charges#newCharge(java.lang.String,java.lang.String,java.lang.String,org.estatio.dom.tax_d.Tax,org.estatio.dom.charge.ChargeGroup)
 #: org.estatio.dom.currency.Currencies#newCurrency(java.lang.String,java.lang.String)
 #: org.estatio.dom.financial.FinancialAccounts#findAccountByReference(java.lang.String)
 #: org.estatio.dom.financial.contributed.FinancialAccountContributions#addAccount(org.estatio.dom.party.Party,org.estatio.dom.financial.FinancialAccountType,java.lang.String,java.lang.String)
@@ -3211,7 +3211,7 @@ msgstr ""
 #: org.estatio.dom.lease.Leases#newLease(java.lang.String,java.lang.String,org.estatio.dom.lease.LeaseType,org.joda.time.LocalDate,java.lang.String,org.joda.time.LocalDate,org.estatio.dom.party.Party,org.estatio.dom.party.Party)
 #: org.estatio.dom.party.Organisations#newOrganisation(java.lang.String,java.lang.String)
 #: org.estatio.dom.party.relationship.PartyRelationships#newRelatedPerson(org.estatio.dom.party.Party,java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.estatio.dom.party.PersonGenderType,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
-#: org.estatio.dom.tax.Taxes#newTax(java.lang.String,java.lang.String)
+#: org.estatio.dom.tax_d.Taxes#newTax(java.lang.String,java.lang.String)
 msgid "Reference"
 msgstr ""
 
@@ -3443,8 +3443,8 @@ msgstr ""
 #: org.estatio.dom.party.relationship.PartyRelationship#openLink()
 #: org.estatio.dom.party.relationship.PartyRelationshipView#openLink()
 #: org.estatio.dom.tag.Tag#openLink()
-#: org.estatio.dom.tax.Tax#openLink()
-#: org.estatio.dom.tax.TaxRate#openLink()
+#: org.estatio.dom.tax_d.Tax#openLink()
+#: org.estatio.dom.tax_d.TaxRate#openLink()
 #: org.estatio.dom.valuetypes.LocalDateInterval#openLink()
 #: org.estatio.services.links.Link#openLink()
 #: org.estatio.services.links.LinkContributions#openLink()
@@ -3617,7 +3617,7 @@ msgid "Size"
 msgstr ""
 
 
-#: org.estatio.dom.charge.Charge#change(java.lang.String,org.estatio.dom.tax.Tax,java.lang.String,org.estatio.dom.charge.ChargeGroup,java.lang.String,java.lang.String)
+#: org.estatio.dom.charge.Charge#change(java.lang.String,org.estatio.dom.tax_d.Tax,java.lang.String,org.estatio.dom.charge.ChargeGroup,java.lang.String,java.lang.String)
 msgid "Sort Order"
 msgstr ""
 
@@ -3646,9 +3646,9 @@ msgstr ""
 #: org.estatio.dom.lease.Leases#newLease(java.lang.String,java.lang.String,org.estatio.dom.lease.LeaseType,org.joda.time.LocalDate,java.lang.String,org.joda.time.LocalDate,org.estatio.dom.party.Party,org.estatio.dom.party.Party)
 #: org.estatio.dom.lease.Occupancy#changeDates(org.joda.time.LocalDate,org.joda.time.LocalDate)
 #: org.estatio.dom.party.PartyRegistration#changeDates(org.joda.time.LocalDate,org.joda.time.LocalDate)
-#: org.estatio.dom.tax.Tax#newRate(org.joda.time.LocalDate,java.math.BigDecimal)
-#: org.estatio.dom.tax.TaxRate#changeDates(org.joda.time.LocalDate,org.joda.time.LocalDate)
-#: org.estatio.dom.tax.TaxRate#newRate(org.joda.time.LocalDate,java.math.BigDecimal)
+#: org.estatio.dom.tax_d.Tax#newRate(org.joda.time.LocalDate,java.math.BigDecimal)
+#: org.estatio.dom.tax_d.TaxRate#changeDates(org.joda.time.LocalDate,org.joda.time.LocalDate)
+#: org.estatio.dom.tax_d.TaxRate#newRate(org.joda.time.LocalDate,java.math.BigDecimal)
 #: org.estatio.dom.valuetypes.AbstractInterval#startDate()
 #: org.estatio.dom.valuetypes.LocalDateInterval#startDate()
 msgid "Start Date"
@@ -3754,8 +3754,8 @@ msgid "System Currency"
 msgstr ""
 
 
-#: org.estatio.dom.charge.Charge#change(java.lang.String,org.estatio.dom.tax.Tax,java.lang.String,org.estatio.dom.charge.ChargeGroup,java.lang.String,java.lang.String)
-#: org.estatio.dom.tax.TaxRate#change(org.estatio.dom.tax.Tax,java.math.BigDecimal,java.lang.String)
+#: org.estatio.dom.charge.Charge#change(java.lang.String,org.estatio.dom.tax_d.Tax,java.lang.String,org.estatio.dom.charge.ChargeGroup,java.lang.String,java.lang.String)
+#: org.estatio.dom.tax_d.TaxRate#change(org.estatio.dom.tax_d.Tax,java.math.BigDecimal,java.lang.String)
 msgid "Tax"
 msgstr ""
 
@@ -4425,7 +4425,7 @@ msgid "Viewing"
 msgstr ""
 
 
-#: org.estatio.dom.lease.LeaseItem#tax
+#: org.estatio.dom.lease.LeaseItem#tax_d
 msgid "When left empty the tax of the charge will be used"
 msgstr ""
 

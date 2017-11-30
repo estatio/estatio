@@ -12,7 +12,7 @@ import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccountType;
 import org.estatio.module.financial.integtests.FinancialModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,9 +21,10 @@ public class FinancialAccountRepository_create_IntegTest extends FinancialModule
 
     @Before
     public void setUp() throws Exception {
-        final OrganisationForHelloWorldGb fs = new OrganisationForHelloWorldGb();
-        runFixtureScript(fs);
-        this.party = fs.getOrganisation();
+        runFixtureScript(
+                Organisation_enum.HelloWorldGb.toFixtureScript()
+        );
+        this.party = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
     }
 
     private Party party;

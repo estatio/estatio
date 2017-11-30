@@ -33,8 +33,7 @@ import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldNl;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
@@ -52,7 +51,7 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
-                    executionContext.executeChild(this, new OrganisationForHelloWorldNl());
+                    executionContext.executeChild(this, Organisation_enum.HelloWorldNl.toFixtureScript());
                 }
             });
         }
@@ -90,7 +89,7 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new OrganisationForHelloWorldNl());
+                    executionContext.executeChild(this, Organisation_enum.HelloWorldNl.toFixtureScript());
                 }
             });
         }
@@ -98,7 +97,7 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
         @Test
         public void happyCase() throws Exception {
             //Given
-            Party party = partyRepository.findPartyByReference(OrganisationForHelloWorldNl.REF);
+            Party party = Organisation_enum.HelloWorldNl.findUsing(serviceRegistry);
             assertThat(party).isNotNull();
 
             //When
@@ -119,7 +118,7 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new OrganisationForHelloWorldNl());
+                    executionContext.executeChild(this, Organisation_enum.HelloWorldNl.toFixtureScript());
                 }
             });
         }
@@ -127,7 +126,7 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
         @Test
         public void happyCase() throws Exception {
             //Given
-            Party party = partyRepository.findPartyByReference(OrganisationForHelloWorldNl.REF);
+            Party party = Organisation_enum.HelloWorldNl.findUsing(serviceRegistry);
 
             //When
             party.addRole(PartyRoleTypeEnum.TREASURER);
@@ -149,15 +148,15 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
                 protected void execute(ExecutionContext executionContext) {
 
                     executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
-                    executionContext.executeChild(this, new OrganisationForHelloWorldNl());
-                    executionContext.executeChild(this, new OrganisationForTopModelGb());
+                    executionContext.executeChild(this, Organisation_enum.HelloWorldNl.toFixtureScript());
+                    executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
                 }
             });
         }
 
         @Test
         public void happyCase() throws Exception {
-            Party party = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
+            Party party = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
             assertThat(party).isNotNull();
         }
 
@@ -176,14 +175,14 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new OrganisationForHelloWorldNl());
+                    executionContext.executeChild(this, Organisation_enum.HelloWorldNl.toFixtureScript());
                 }
             });
         }
 
         @Test
         public void happyCase() throws Exception {
-            Assert.assertNotNull(partyRepository.matchPartyByReferenceOrName(OrganisationForHelloWorldNl.REF));
+            Assert.assertNotNull(partyRepository.matchPartyByReferenceOrName(Organisation_enum.HelloWorldNl.getRef()));
         }
 
         @Test

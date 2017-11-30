@@ -34,7 +34,7 @@ import org.estatio.module.agreement.dom.AgreementRole;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.base.platform.fake.EstatioFakeDataService;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
@@ -46,125 +46,40 @@ import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class LeaseBuilder extends FixtureScript {
 
-    //region > reference
+    @Getter @Setter
     private String reference;
 
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(final String reference) {
-        this.reference = reference;
-    }
-    //endregion
-
-    //region > name
+    @Getter @Setter
     private String name;
 
-    public String getName() {
-        return name;
-    }
-    //endregion
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    //region > leaseType
+    @Getter @Setter
     private LeaseType leaseType;
 
-    public LeaseType getLeaseType() {
-        return leaseType;
-    }
-
-    public void setLeaseType(final LeaseType leaseType) {
-        this.leaseType = leaseType;
-    }
-    //endregion
-
-    //region > startDate
+    @Getter @Setter
     private LocalDate startDate;
 
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(final LocalDate startDate) {
-        this.startDate = startDate;
-    }
-    //endregion
-
-    //region > duration
+    @Getter @Setter
     private String duration;
 
-    public String getDuration() {
-        return duration;
-    }
-
-    public void setDuration(final String duration) {
-        this.duration = duration;
-    }
-    //endregion
-
-    //region > endDate
+    @Getter @Setter
     private LocalDate endDate;
 
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(final LocalDate endDate) {
-        this.endDate = endDate;
-    }
-    //endregion
-
-    //region > landlord
+    @Getter @Setter
     private Party landlord;
 
-    public Party getLandlord() {
-        return landlord;
-    }
-
-    public void setLandlord(final Party landlord) {
-        this.landlord = landlord;
-    }
-    //endregion
-
-    //region > tenant
+    @Getter @Setter
     private Party tenant;
 
-    public Party getTenant() {
-        return tenant;
-    }
-
-    public void setTenant(final Party tenant) {
-        this.tenant = tenant;
-    }
-    //endregion
-
-    //region > atPath (input property)
+    @Getter @Setter
     private String atPath;
 
-    public String getAtPath() {
-        return atPath;
-    }
-
-    public void setAtPath(final String atPath) {
-        this.atPath = atPath;
-    }
-    //endregion
-
-
-    //region > lease (output)
+    @Getter
     private Lease lease;
-
-    public Lease getLease() {
-        return lease;
-    }
-
-    //endregion
 
     protected Lease createLease(
             String reference, String name,
@@ -222,7 +137,7 @@ public class LeaseBuilder extends FixtureScript {
         defaultParam("reference", executionContext, fakeDataService.lorem().fixedString(3));
         defaultParam("name", executionContext, fakeDataService.name().lastName() + " Mall");
         defaultParam("leaseType", executionContext, fakeDataService.collections().aBounded(LeaseType.class));
-        defaultParam("atPath", executionContext, ApplicationTenancyForGb.PATH);
+        defaultParam("atPath", executionContext, ApplicationTenancy_enum.Gb.getPath());
 
         defaultParam("startDate", executionContext, fakeDataService
                 .dates().before(fakeDataService.periods().daysUpTo(2 * 365)));
