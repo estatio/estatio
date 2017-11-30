@@ -20,52 +20,25 @@ package org.estatio.module.lease.fixtures.lease.personas2;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
-import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.LeaseAbstract;
-import org.estatio.module.party.dom.Party;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.incode.module.base.integtests.VT.ld;
 
 public class LeasesForBudNl extends LeaseAbstract {
 
-    public static final String REF1 = "BUD-POISON-001";
-    public static final String REF2 = "BUD-MIRACLE-002";
-    public static final String REF3 = "BUD-HELLO-003";
-    public static final String REF4 = "BUD-DAGO-004";
-    public static final String REF4A = "BUD-NLBANK-004";
-    public static final String REF5 = "BUD-HYPER-005";
-    public static final String REF6 = "BUD-HELLO-006";
+    public static final String REF1 = Lease_enum.BudPoison001Nl.getRef();
+    public static final String REF2 = Lease_enum.BudMiracle002Nl.getRef();
+    public static final String REF3 = Lease_enum.BudHello003Nl.getRef();
+    public static final String REF4 = Lease_enum.BudDago004Nl.getRef();
+    public static final String REF4A = Lease_enum.BudNlBank004Nl.getRef();
+    public static final String REF5 = Lease_enum.BudHyper005Nl.getRef();
+    public static final String REF6 = Lease_enum.BudHello006Nl.getRef();
 
-    public static final String UNIT_REF1 = Property_enum.BudNl.unitRef("001");
-    public static final String UNIT_REF2 = Property_enum.BudNl.unitRef("002");
-    public static final String UNIT_REF3 = Property_enum.BudNl.unitRef("003");
-    public static final String UNIT_REF4 = Property_enum.BudNl.unitRef("004");
-    public static final String UNIT_REF5 = Property_enum.BudNl.unitRef("005");
-    public static final String UNIT_REF6 = Property_enum.BudNl.unitRef("006");
-    public static final String UNIT_REF7 = Property_enum.BudNl.unitRef("007");
-
-    public static final String PARTY_REF_TENANT1 = OrganisationAndComms_enum.PoisonNl.getRef();
-    public static final String PARTY_REF_TENANT2 = OrganisationAndComms_enum.MiracleNl.getRef();
-    public static final String PARTY_REF_TENANT3 = OrganisationAndComms_enum.HelloWorldNl.getRef();
-    public static final String PARTY_REF_TENANT4 = OrganisationAndComms_enum.DagoBankNl.getRef();
-    public static final String PARTY_REF_TENANT4A = OrganisationAndComms_enum.NlBankNl.getRef();
-    public static final String PARTY_REF_TENANT5 = OrganisationAndComms_enum.HyperNl.getRef();
-
-    public static final String PARTY_REF_LANDLORD = OrganisationAndComms_enum.AcmeNl.getRef();
-    public static final String PARTY_REF_MANAGER = Person_enum.JohnDoeNl.getRef();
-
-    public static final String BRAND1 = "Poison";
-    public static final String BRAND2 = "Miracle";
-    public static final String BRAND3 = "Hello";
-    public static final String BRAND4 = "Dago Bank";
-    public static final String BRAND4A = "Nl Bank";
-    public static final String BRAND5 = "Nl Hypermarkt";
-
-    public static final BrandCoverage BRAND_COVERAGE = BrandCoverage.INTERNATIONAL;
-    public static final String COUNTRY_OF_ORIGIN_REF = Country_enum.NLD.getRef3();
+    private static final String UNIT_REF7 = Lease_enum.BudHello006Nl.getPropertyAndUnits_d().getProperty_d().unitRef("007");
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
@@ -81,88 +54,97 @@ public class LeasesForBudNl extends LeaseAbstract {
         executionContext.executeChild(this, OrganisationAndComms_enum.HyperNl.toFixtureScript());
         executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.BudNl.toFixtureScript());
 
+
+        executionContext.executeChildT(this, Lease_enum.BudPoison001Nl.toFixtureScript());
+        executionContext.executeChildT(this, Lease_enum.BudMiracle002Nl.toFixtureScript());
+        executionContext.executeChildT(this, Lease_enum.BudHello003Nl.toFixtureScript());
+        executionContext.executeChildT(this, Lease_enum.BudDago004Nl.toFixtureScript());
+        executionContext.executeChildT(this, Lease_enum.BudNlBank004Nl.toFixtureScript());
+        executionContext.executeChildT(this, Lease_enum.BudHyper005Nl.toFixtureScript());
+        executionContext.executeChildT(this, Lease_enum.BudHello006Nl.toFixtureScript());
+
         // exec
-        final Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);
-        createLease(
-                REF1,
-                "Poison Amsterdam",
-                UNIT_REF1,
-                BRAND1,
-                BRAND_COVERAGE,
-                COUNTRY_OF_ORIGIN_REF,
-                "HEALT&BEAUTY",
-                "PERFUMERIE",
-                PARTY_REF_LANDLORD,
-                PARTY_REF_TENANT1,
-                ld(2011, 1, 1),
-                ld(2020, 12, 31),
-                true,
-                true,
-                manager,
-                executionContext);
+//        final Party manager = partyRepository.findPartyByReference(Person_enum.JohnDoeNl.getRef());
+//        createLease(
+//                REF1,
+//                "Poison Amsterdam",
+//                UNIT_REF1,
+//                "Poison",
+//                BrandCoverage.INTERNATIONAL,
+//                Country_enum.NLD.getRef3(),
+//                "HEALT&BEAUTY",
+//                "PERFUMERIE",
+//                OrganisationAndComms_enum.AcmeNl.getRef(),
+//                Lease_enum.BudPoison001Nl.getTenant_d().getRef(),
+//                ld(2011, 1, 1),
+//                ld(2020, 12, 31),
+//                true,
+//                true,
+//                manager,
+//                executionContext);
+//
+//        createLeaseWithOccupancyEndDate(
+//                REF2,
+//                "Miracle Amsterdam",
+//                UNIT_REF2,
+//                "Miracle",
+//                BrandCoverage.INTERNATIONAL,
+//                Country_enum.NLD.getRef3(),
+//                "HEALT&BEAUTY",
+//                "PERFUMERIE",
+//                OrganisationAndComms_enum.AcmeNl.getRef(),
+//                Lease_enum.BudMiracle002Nl.getTenant_d().getRef(),
+//                ld(2011, 1, 1),
+//                ld(2015, 06, 30),
+//                ld(2015, 06, 30),
+//                true,
+//                true,
+//                manager,
+//                executionContext);
 
-        createLeaseWithOccupancyEndDate(
-                REF2,
-                "Miracle Amsterdam",
-                UNIT_REF2,
-                BRAND2,
-                BRAND_COVERAGE,
-                COUNTRY_OF_ORIGIN_REF,
-                "HEALT&BEAUTY",
-                "PERFUMERIE",
-                PARTY_REF_LANDLORD,
-                PARTY_REF_TENANT2,
-                ld(2011, 1, 1),
-                ld(2015, 06, 30),
-                ld(2015, 06, 30),
-                true,
-                true,
-                manager,
-                executionContext);
+//        createLease(
+//                REF3,
+//                "Hello Amsterdam",
+//                UNIT_REF3,
+//                "Hello",
+//                BrandCoverage.INTERNATIONAL,
+//                Country_enum.NLD.getRef3(),
+//                "IT",
+//                "TELECOM",
+//                OrganisationAndComms_enum.AcmeNl.getRef(),
+//                Lease_enum.BudHello003Nl.getTenant_d().getRef(),
+//                ld(2015, 4, 1),
+//                ld(2020, 12, 31),
+//                true,
+//                true,
+//                manager,
+//                executionContext);
 
-        createLease(
-                REF3,
-                "Hello Amsterdam",
-                UNIT_REF3,
-                BRAND3,
-                BRAND_COVERAGE,
-                COUNTRY_OF_ORIGIN_REF,
-                "IT",
-                "TELECOM",
-                PARTY_REF_LANDLORD,
-                PARTY_REF_TENANT3,
-                ld(2015, 4, 1),
-                ld(2020, 12, 31),
-                true,
-                true,
-                manager,
-                executionContext);
-
-        createLeaseWithOccupancyEndDate(
-                REF4,
-                "Dago Bank Amsterdam",
-                UNIT_REF4,
-                BRAND4,
-                BRAND_COVERAGE,
-                COUNTRY_OF_ORIGIN_REF,
-                "BANK",
-                "LOANS",
-                PARTY_REF_LANDLORD,
-                PARTY_REF_TENANT4,
-                ld(2011, 1, 1),
-                ld(2015, 6, 30),
-                ld(2015, 6, 30),
-                true,
-                true,
-                manager,
-                executionContext);
+//        createLeaseWithOccupancyEndDate(
+//                REF4,
+//                "Dago Bank Amsterdam",
+//                UNIT_REF4,
+//                "Dago Bank",
+//                BrandCoverage.INTERNATIONAL,
+//                Country_enum.NLD.getRef3(),
+//                "BANK",
+//                "LOANS",
+//                OrganisationAndComms_enum.AcmeNl.getRef(),
+//                Lease_enum.BudDago004Nl.getTenant_d().getRef(),
+//                ld(2011, 1, 1),
+//                ld(2015, 6, 30),
+//                ld(2015, 6, 30),
+//                true,
+//                true,
+//                manager,
+//                executionContext);
 
         createOccupancyWithEndDate(
                 REF4,
                 UNIT_REF7,
-                BRAND4,
-                BRAND_COVERAGE,
-                COUNTRY_OF_ORIGIN_REF,
+                "Dago Bank",
+                BrandCoverage.INTERNATIONAL,
+                Country_enum.NLD.getRef3(),
                 "BANK",
                 "LOANS",
                 ld(2011, 1, 1),
@@ -170,61 +152,61 @@ public class LeasesForBudNl extends LeaseAbstract {
                 executionContext
                 );
 
-        createLease(
-                REF4A,
-                "NL Bank Amsterdam",
-                UNIT_REF4,
-                BRAND4A,
-                BRAND_COVERAGE,
-                COUNTRY_OF_ORIGIN_REF,
-                "BANK",
-                "LOANS",
-                PARTY_REF_LANDLORD,
-                PARTY_REF_TENANT4A,
-                ld(2015, 10, 1),
-                ld(2020, 6, 30),
-                true,
-                true,
-                manager,
-                executionContext);
+//        createLease(
+//                REF4A,
+//                "NL Bank Amsterdam",
+//                UNIT_REF4,
+//                "Nl Bank",
+//                BrandCoverage.INTERNATIONAL,
+//                Country_enum.NLD.getRef3(),
+//                "BANK",
+//                "LOANS",
+//                OrganisationAndComms_enum.AcmeNl.getRef(),
+//                Lease_enum.BudNlBank004Nl.getTenant_d().getRef(),
+//                ld(2015, 10, 1),
+//                ld(2020, 6, 30),
+//                true,
+//                true,
+//                manager,
+//                executionContext);
 
-        createLeaseWithOccupancyEndDate(
-                REF5,
-                "Hypermarkt Amsterdam",
-                UNIT_REF5,
-                BRAND5,
-                BRAND_COVERAGE,
-                COUNTRY_OF_ORIGIN_REF,
-                "SUPERMARKET",
-                "RETAIL",
-                PARTY_REF_LANDLORD,
-                PARTY_REF_TENANT5,
-                ld(2015, 4, 1),
-                ld(2015, 6, 30),
-                ld(2015, 6, 30),
-                true,
-                true,
-                manager,
-                executionContext);
+//        createLeaseWithOccupancyEndDate(
+//                REF5,
+//                "Hypermarkt Amsterdam",
+//                UNIT_REF5,
+//                "Nl Hypermarkt",
+//                BrandCoverage.INTERNATIONAL,
+//                Country_enum.NLD.getRef3(),
+//                "SUPERMARKET",
+//                "RETAIL",
+//                OrganisationAndComms_enum.AcmeNl.getRef(),
+//                Lease_enum.BudHello006Nl.getTenant_d().getRef(),
+//                ld(2015, 4, 1),
+//                ld(2015, 6, 30),
+//                ld(2015, 6, 30),
+//                true,
+//                true,
+//                manager,
+//                executionContext);
 
-        createLeaseWithOccupancyEndDate(
-                REF6,
-                "Hello Amsterdam",
-                UNIT_REF6,
-                BRAND4,
-                BRAND_COVERAGE,
-                COUNTRY_OF_ORIGIN_REF,
-                "BANK",
-                "LOANS",
-                PARTY_REF_LANDLORD,
-                PARTY_REF_TENANT4,
-                ld(2011, 1, 1),
-                ld(2014, 12, 31),
-                ld(2014, 12, 31),
-                true,
-                true,
-                manager,
-                executionContext);
+//        createLeaseWithOccupancyEndDate(
+//                REF6,
+//                "Hello Amsterdam",
+//                UNIT_REF6,
+//                "Dago Bank",
+//                BrandCoverage.INTERNATIONAL,
+//                Country_enum.NLD.getRef3(),
+//                "BANK",
+//                "LOANS",
+//                OrganisationAndComms_enum.AcmeNl.getRef(),
+//                Lease_enum.BudDago004Nl.getTenant_d().getRef(),
+//                ld(2011, 1, 1),
+//                ld(2014, 12, 31),
+//                ld(2014, 12, 31),
+//                true,
+//                true,
+//                manager,
+//                executionContext);
     }
 
 }

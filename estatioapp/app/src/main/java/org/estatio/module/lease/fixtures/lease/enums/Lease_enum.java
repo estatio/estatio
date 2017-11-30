@@ -33,7 +33,7 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
     KalPoison001Nl  (
             "KAL-POISON-001", "Poison Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.KalNl, "001",
             OrganisationAndComms_enum.AcmeNl, OrganisationAndComms_enum.PoisonNl,
-            ld(2011, 1, 1), ld(2020, 12, 31),
+            ld(2011, 1, 1), ld(2020, 12, 31), null,
             OccupancyCreationPolicy.CREATE,
             "Poison", BrandCoverage.INTERNATIONAL, Country_enum.NLD, "HEALT&BEAUTY", "PERFUMERIE",
             ManagerRoleCreationPolicy.CREATE, Person_enum.JohnDoeNl,
@@ -42,7 +42,7 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
     OxfMediaX002Gb  (
             "OXF-MEDIAX-002", "Mediax Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb, "002",
             OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.MediaXGb,
-            ld(2008, 1, 1), ld(2017, 12, 31),
+            ld(2008, 1, 1), ld(2017, 12, 31), null,
             OccupancyCreationPolicy.CREATE,
             "Mediax", BrandCoverage.NATIONAL, Country_enum.GBR, "ELECTRIC", "ELECTRIC",
             ManagerRoleCreationPolicy.CREATE, Person_enum.JohnSmithGb,
@@ -51,7 +51,7 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
     OxfMiracl005Gb  (
             "OXF-MIRACL-005", "Miracle lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb, "005",
             OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.MiracleGb,
-            ld(2013, 11, 7), ld(2023, 11, 6),
+            ld(2013, 11, 7), ld(2023, 11, 6), null,
             OccupancyCreationPolicy.CREATE,
             "Miracle", BrandCoverage.NATIONAL, Country_enum.GBR, "FASHION", "ALL",
             ManagerRoleCreationPolicy.DONT_CREATE, Person_enum.JohnSmithGb,
@@ -60,7 +60,7 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
     OxfPoison003Gb  (
             "OXF-POISON-003", "Poison Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb, "003",
             OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.PoisonGb,
-            ld(2011, 1, 1), ld(2020, 12, 31),
+            ld(2011, 1, 1), ld(2020, 12, 31), null,
             OccupancyCreationPolicy.CREATE,
             "Poison", BrandCoverage.INTERNATIONAL, Country_enum.NLD, "HEALT&BEAUTY", "PERFUMERIE",
             ManagerRoleCreationPolicy.CREATE, Person_enum.JohnSmithGb,
@@ -69,7 +69,7 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
     OxfPret004Gb    (
             "OXF-PRET-004", "Pret-a-Partir lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb, "004",
             OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.PretGb,
-            ld(2011, 7, 1), ld(2014, 6, 30),
+            ld(2011, 7, 1), ld(2014, 6, 30), null,
             OccupancyCreationPolicy.DONT_CREATE,
             "Pret-a-Partir", BrandCoverage.REGIONAL, Country_enum.FRA,
             "FASHION", "ALL",
@@ -79,13 +79,77 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
     OxfTopModel001Gb(
             "OXF-TOPMODEL-001", "Topmodel Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb, "001",
             OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.TopModelGb,
-            ld(2010, 7, 15), ld(2022, 7, 14),
+            ld(2010, 7, 15), ld(2022, 7, 14), null,
             OccupancyCreationPolicy.CREATE,
             "Topmodel", BrandCoverage.NATIONAL, Country_enum.GBR, "FASHION", "WOMEN",
             ManagerRoleCreationPolicy.CREATE, Person_enum.GinoVannelliGb,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.CREATE
     ),
+    BudPoison001Nl(
+            "BUD-POISON-001", "Poison Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl, "001",
+            OrganisationAndComms_enum.AcmeNl, OrganisationAndComms_enum.PoisonNl,
+            ld(2011, 1, 1), ld(2020, 12, 31), null,
+            OccupancyCreationPolicy.CREATE,
+            "Poison", BrandCoverage.INTERNATIONAL, Country_enum.NLD, "HEALT&BEAUTY", "PERFUMERIE",
+            ManagerRoleCreationPolicy.CREATE, Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
+    ),
+    BudMiracle002Nl(
+            "BUD-MIRACLE-002", "Miracle Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl, "002",
+            OrganisationAndComms_enum.AcmeNl, OrganisationAndComms_enum.MiracleNl,
+            ld(2011, 1, 1), ld(2015, 6, 30), ld(2015, 6, 30),
+            OccupancyCreationPolicy.CREATE,
+            "Miracle", BrandCoverage.INTERNATIONAL, Country_enum.NLD, "HEALT&BEAUTY", "PERFUMERIE",
+            ManagerRoleCreationPolicy.CREATE, Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
+    ),
+    BudHello003Nl(
+            "BUD-HELLO-003", "Hello Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl, "003",
+            OrganisationAndComms_enum.AcmeNl, OrganisationAndComms_enum.HelloWorldNl,
+            ld(2015, 4, 1), ld(2020, 12, 31), null,
+            OccupancyCreationPolicy.CREATE,
+            "Hello", BrandCoverage.INTERNATIONAL, Country_enum.NLD, "IT", "TELECOM",
+            ManagerRoleCreationPolicy.CREATE, Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
+    ),
+    BudDago004Nl(
+            "BUD-DAGO-004", "Dago Bank Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl, "004",
+            OrganisationAndComms_enum.AcmeNl, OrganisationAndComms_enum.DagoBankNl,
+            ld(2011, 1, 1), ld(2015, 6, 30), ld(2015, 6, 30),
+            OccupancyCreationPolicy.CREATE,
+            "Dago Bank", BrandCoverage.INTERNATIONAL, Country_enum.NLD, "BANK", "LOANS",
+            ManagerRoleCreationPolicy.CREATE, Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
+    ),
+    BudNlBank004Nl(
+            "BUD-NLBANK-004", "NL Bank Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl, "004",
+            OrganisationAndComms_enum.AcmeNl, OrganisationAndComms_enum.NlBankNl,
+            ld(2015, 10, 1), ld(2020, 6, 30), null,
+            OccupancyCreationPolicy.CREATE,
+            "Nl Bank", BrandCoverage.INTERNATIONAL, Country_enum.NLD, "BANK", "LOANS",
+            ManagerRoleCreationPolicy.CREATE, Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
+    ),
+    BudHyper005Nl(
+            "BUD-HYPER-005", "Hypermarkt Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl, "005",
+            OrganisationAndComms_enum.AcmeNl, OrganisationAndComms_enum.HyperNl,
+            ld(2015, 4, 1), ld(2015, 6, 30), ld(2015, 6, 30),
+            OccupancyCreationPolicy.CREATE,
+            "Nl Hypermarkt", BrandCoverage.INTERNATIONAL, Country_enum.NLD, "SUPERMARKET", "RETAIL",
+            ManagerRoleCreationPolicy.CREATE, Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
+    ),
+    BudHello006Nl(
+            "BUD-HELLO-006", "Hello Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl, "006",
+            OrganisationAndComms_enum.AcmeNl, OrganisationAndComms_enum.DagoBankNl, // tenant looks wrong here...
+            ld(2011, 1, 1), ld(2014, 12, 31), ld(2014, 12, 31),
+            OccupancyCreationPolicy.CREATE,
+            "Dago Bank", BrandCoverage.INTERNATIONAL, Country_enum.NLD, "BANK", "LOANS",
+            ManagerRoleCreationPolicy.CREATE, Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.CREATE
+    ),
     ;
+
 
     private final String ref;
     private final String name;
@@ -95,6 +159,7 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
     private final OrganisationAndComms_enum tenant_d;
     private final LocalDate startDate;
     private final LocalDate endDate;
+    private final LocalDate occupancyEndDate;
 
     private final LeaseBuilder.OccupancyCreationPolicy occupancyCreationPolicy;
     private final String brand;
@@ -132,6 +197,7 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
                 .setPrereq((f,ec) -> f.setTenant(f.objectFor(tenant_d, ec)))
                 .setStartDate(startDate)
                 .setEndDate(endDate)
+                .setOccupancyEndDate(occupancyEndDate)
 
                 .setOccupancyCreationPolicy(occupancyCreationPolicy)
                 .setBrand(brand)

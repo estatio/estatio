@@ -89,6 +89,8 @@ public final class LeaseBuilder
     LocalDate startDate;
     @Getter @Setter
     LocalDate endDate;
+    @Getter @Setter
+    LocalDate occupancyEndDate;
 
     @Getter @Setter
     OccupancyCreationPolicy occupancyCreationPolicy;
@@ -183,7 +185,7 @@ public final class LeaseBuilder
             checkParam("activity", executionContext, String.class);
 
             Occupancy occupancy = occupancyRepository.newOccupancy(lease, unit, startDate);
-            occupancy.setEndDate(null);
+            occupancy.setEndDate(occupancyEndDate);
             occupancy.setBrandName(brand, brandCoverage, countryOfOrigin);
             occupancy.setSectorName(sector);
             occupancy.setActivityName(activity);
