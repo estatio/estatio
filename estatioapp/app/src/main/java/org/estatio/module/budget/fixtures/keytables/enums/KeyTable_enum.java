@@ -19,8 +19,17 @@ package org.estatio.module.budget.fixtures.keytables.enums;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.EnumWithFinder;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
+
+import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
+import org.estatio.module.budget.dom.keytable.KeyTable;
+import org.estatio.module.budget.dom.keytable.KeyTableRepository;
 import org.estatio.module.budget.dom.keytable.KeyValueMethod;
+import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
+import org.estatio.module.budget.fixtures.keytables.builders.KeyTableBuilder;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,15 +38,41 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum KeyTable_enum {
+public enum KeyTable_enum implements EnumWithBuilderScript<KeyTable, KeyTableBuilder>, EnumWithFinder<KeyTable> {
 
-    Oxf2015Area ("Service Charges By Area year 2015", FoundationValueType.AREA, KeyValueMethod.PROMILLE, new LocalDate(2015, 1, 1), 3),
-    Oxf2015Count("Service Charges By Count year 2015", FoundationValueType.COUNT, KeyValueMethod.PROMILLE, new LocalDate(2015, 1, 1), 3),
-    ;
+    Oxf2015Area(
+            Budget_enum.OxfBudget2015, "Service Charges By Area year 2015",
+            FoundationValueType.AREA, KeyValueMethod.PROMILLE, 3),
+    Oxf2015Count(
+            Budget_enum.OxfBudget2015, "Service Charges By Count year 2015",
+            FoundationValueType.COUNT, KeyValueMethod.PROMILLE, 3),;
 
+    private final Budget_enum budget_d;
     private final String name;
     private final FoundationValueType foundationValueType;
     private final KeyValueMethod keyValueMethod;
-    private final LocalDate startDate;
     private final int numberOfDigits;
+
+    public LocalDate getStartDate() {
+        return budget_d.getStartDate();
+    }
+
+    @Override public KeyTableBuilder toFixtureScript() {
+        return new KeyTableBuilder()
+                .setPrereq((f,ec) -> f.setBudget(f.objectFor(budget_d, ec)))
+                .setName(name)
+                .setFoundationValueType(foundationValueType)
+                .setKeyValueMethod(keyValueMethod)
+                .setNumberOfDigits(numberOfDigits)
+                ;
+    }
+
+    @Override
+    public KeyTable findUsing(final ServiceRegistry2 serviceRegistry) {
+
+        final Budget budget = budget_d.findUsing(serviceRegistry);
+        final KeyTableRepository keyTableRepository = serviceRegistry.lookupService(KeyTableRepository.class);
+
+        return keyTableRepository.findByBudgetAndName(budget, name);
+    }
 }

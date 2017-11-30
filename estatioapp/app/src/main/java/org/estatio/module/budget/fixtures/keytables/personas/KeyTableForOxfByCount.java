@@ -17,13 +17,7 @@
 
 package org.estatio.module.budget.fixtures.keytables.personas;
 
-import org.joda.time.LocalDate;
-
-import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.budget.dom.budget.Budget;
-import org.estatio.module.budget.dom.keytable.FoundationValueType;
-import org.estatio.module.budget.dom.keytable.KeyValueMethod;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.keytables.KeyTableAbstract;
 import org.estatio.module.budget.fixtures.keytables.enums.KeyTable_enum;
@@ -32,27 +26,20 @@ public class KeyTableForOxfByCount extends KeyTableAbstract {
 
     public static final KeyTable_enum data = KeyTable_enum.Oxf2015Count;
 
-    public static final String NAME = data.getName();
-    public static final FoundationValueType FOUNDATION_VALUE_TYPE = data.getFoundationValueType();
-    public static final KeyValueMethod KEY_VALUE_METHOD = data.getKeyValueMethod();
-    public static final LocalDate START_DATE = data.getStartDate();
-
-    public static final int NUMBER_OF_DIGITS = data.getNumberOfDigits();
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
         executionContext.executeChild(this, Budget_enum.OxfBudget2015.toFixtureScript());
-        executionContext.executeChild(this, Budget_enum.OxfBudget2016.toFixtureScript());
 
 
         // exec
-        Property property = propertyRepository.findPropertyByReference(
-                Property_enum.OxfGb.getRef());
-        Budget budget = budgetRepository.findByPropertyAndStartDate(property, data.getStartDate());
+        Budget budget = Budget_enum.OxfBudget2015.findUsing(serviceRegistry);
 
-        createKeyTable(budget, data.getName(), data.getFoundationValueType(), data.getKeyValueMethod(),
-                data.getNumberOfDigits(), executionContext);
+        createKeyTable(budget,
+                data.getName(), data.getFoundationValueType(), data.getKeyValueMethod(),
+                data.getNumberOfDigits(),
+                executionContext);
     }
 }

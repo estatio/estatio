@@ -29,7 +29,7 @@ import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.partioning.Partitioning;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
-import org.estatio.module.budget.fixtures.keytables.personas.KeyTablesForOxf;
+import org.estatio.module.budget.fixtures.keytables.enums.KeyTable_enum;
 import org.estatio.module.budget.fixtures.partitioning.PartitioningAndItemsAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
@@ -41,7 +41,8 @@ public class PartitioningAndItemsForOxf extends PartitioningAndItemsAbstract {
 
         // prereqs
         executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toFixtureScript());
-        executionContext.executeChild(this, new KeyTablesForOxf());
+        executionContext.executeChild(this, KeyTable_enum.Oxf2015Area.toFixtureScript());
+        executionContext.executeChild(this, KeyTable_enum.Oxf2015Count.toFixtureScript());
 
         // exec
         Property property = propertyRepository.findPropertyByReference(
@@ -54,8 +55,8 @@ public class PartitioningAndItemsForOxf extends PartitioningAndItemsAbstract {
         BudgetItem budgetItem2 = budgetItemRepository.findByBudgetAndCharge(budget, incomingCharge2);
 
         Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
-        KeyTable keyTable1 = keyTableRepository.findByBudgetAndName(budget, KeyTablesForOxf.NAME_BY_AREA);
-        KeyTable keyTable2 = keyTableRepository.findByBudgetAndName(budget, KeyTablesForOxf.NAME_BY_COUNT);
+        KeyTable keyTable1 = keyTableRepository.findByBudgetAndName(budget, KeyTable_enum.Oxf2015Area.getName());
+        KeyTable keyTable2 = keyTableRepository.findByBudgetAndName(budget, KeyTable_enum.Oxf2015Count.getName());
 
 
         Partitioning partitioning = createPartitioning(budget, executionContext);
