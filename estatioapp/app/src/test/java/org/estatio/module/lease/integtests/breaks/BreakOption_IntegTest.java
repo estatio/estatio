@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -99,42 +100,85 @@ public class BreakOption_IntegTest extends LeaseModuleIntegTestAbstract {
     public static class ChangeDates extends BreakOption_IntegTest {
 
         Lease lease;
-        BreakOption breakOption;
 
         @Before
         public void setup() {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
+                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
                 }
             });
 
             lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
 
-            assertThat(breakOptionRepository.allBreakOptions().size(), is(2));
-            final List<BreakOption> breakOptionList = breakOptionRepository.findByLease(lease);
-            assertThat(breakOptionList.size(), is(2));
-            breakOption = breakOptionList.get(0);
+
         }
 
         @Test
         public void happyCase() throws Exception {
             // given
-            assertThat(breakOption.getType(), is(BreakType.FIXED));
-            assertThat(breakOption.getExerciseType(), is(BreakExerciseType.MUTUAL));
-            assertThat(breakOption.getBreakDate(), is(lease.getStartDate().plusYears(5)));
-            assertThat(breakOption.getExerciseDate(), is(lease.getStartDate().plusYears(5).minusMonths(6)));
-            assertThat(eventRepository.allEvents().size(), is(3));
+            final LocalDate breakDate = this.lease.getStartDate().plusYears(1);
+            final BreakOption breakOption = breakOptionRepository.newBreakOption(
+                    this.lease,
+                    breakDate,
+                    "5m",
+                    BreakType.FIXED,
+                    BreakExerciseType.MUTUAL,
+                    "IntegTest");
 
             // when
-            breakOption.changeDates(lease.getStartDate().plusYears(2), lease.getStartDate().plusYears(2).minusMonths(6));
+            final LocalDate newBreakDate = lease.getStartDate().plusYears(2);
+            breakOption.changeDates(
+                    newBreakDate,
+                    newBreakDate.minusMonths(6) );
 
             // then
-            assertThat(breakOption.getBreakDate(), is(lease.getStartDate().plusYears(2)));
-            assertThat(breakOption.getExerciseDate(), is(lease.getStartDate().plusYears(2).minusMonths(6)));
-            assertThat(eventRepository.allEvents().size(), is(3));
+            assertThat(breakOption.getBreakDate(), is(newBreakDate));
+            assertThat(breakOption.getExerciseDate(), is(newBreakDate.minusMonths(6)));
+            assertThat(breakOption.getNotificationPeriod(), is("6m"));
         }
+
+    }
+
+    public static class ChangeNotificationPeriod extends BreakOption_IntegTest {
+
+        Lease lease;
+
+        @Before
+        public void setup() {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(final ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                }
+            });
+
+            lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        }
+
+        @Test
+        public void happyCase() throws Exception {
+            // given
+            final LocalDate breakDate = this.lease.getStartDate().plusYears(1);
+            final BreakOption breakOption = breakOptionRepository.newBreakOption(
+                    this.lease,
+                    breakDate,
+                    "5m",
+                    BreakType.FIXED,
+                    BreakExerciseType.MUTUAL,
+                    "IntegTest");
+
+            assertThat(breakOption.getExerciseDate(), is(breakDate.minusMonths(5)));
+
+
+            // when
+            breakOption.changeNotificationPeriod("6m");
+
+            // then
+            assertThat(breakOption.getExerciseDate(), is(breakDate.minusMonths(6)));
+        }
+
     }
 
     public static class Remove extends BreakOption_IntegTest {

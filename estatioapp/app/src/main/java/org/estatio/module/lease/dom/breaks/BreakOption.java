@@ -33,10 +33,12 @@ import com.google.common.collect.Maps;
 
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
+import org.joda.time.PeriodType;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -51,6 +53,8 @@ import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
 import org.incode.module.base.dom.types.DescriptionType;
 import org.incode.module.base.dom.utils.JodaPeriodUtils;
 import org.incode.module.base.dom.utils.TitleBuilder;
+import org.incode.module.base.dom.valuetypes.AbstractInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
@@ -240,11 +244,15 @@ public abstract class BreakOption
         return getDescription();
     }
 
+    @MemberOrder(name = "breakDate", sequence = "1")
     public BreakOption changeDates(
             final LocalDate breakDate,
             final LocalDate excerciseDate) {
         setBreakDate(breakDate);
         setExerciseDate(excerciseDate);
+        LocalDateInterval ldi = new LocalDateInterval(excerciseDate, breakDate, AbstractInterval.IntervalEnding.EXCLUDING_END_DATE);
+        final String s = JodaPeriodUtils.asSimpleString(new Period(ldi.asInterval(), PeriodType.yearMonthDay()));
+        setNotificationPeriod(s);
 
         // re-create events
         removeExistingEvents();
@@ -260,6 +268,39 @@ public abstract class BreakOption
     public LocalDate default1ChangeDates() {
         return getExerciseDate();
     }
+
+    public String validateChangeDates(
+            final LocalDate breakDate,
+            final LocalDate excerciseDate) {
+        return null;
+    }
+
+    @MemberOrder(name = "notificationPeriod", sequence = "1")
+    public BreakOption changeNotificationPeriod(
+            final String notificationPeriod
+    ){
+        final Period p = JodaPeriodUtils.asPeriod(notificationPeriod);
+        setExerciseDate(getBreakDate().minus(p));
+
+        // re-create events
+        removeExistingEvents();
+        createEvents();
+        return this;
+    }
+
+    public String default0ChangeNotificationPeriod() {
+        return getNotificationPeriod();
+    }
+
+    public String validateChangeNotificationPeriod(
+            final String notificationPeriod
+    ) {
+        if (notificationPeriod != null && JodaPeriodUtils.asPeriod(notificationPeriod) == null) {
+            return "Notification period is not valid, examples 1y, 1y2m, 30d";
+        }
+        return null;
+    }
+
 
     // //////////////////////////////////////
 

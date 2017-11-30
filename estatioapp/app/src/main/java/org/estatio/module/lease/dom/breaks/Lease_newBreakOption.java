@@ -61,7 +61,8 @@ public class Lease_newBreakOption extends UdoDomainService<Lease_newBreakOption>
             final BreakExerciseType breakExerciseType,
             final @Parameter(optionality = Optionality.OPTIONAL) String description
     ) {
-        return breakOptionRepository.newBreakOption(lease, breakDate, notificationPeriod, breakType, breakExerciseType, description);
+        breakOptionRepository.newBreakOption(lease, breakDate, notificationPeriod, breakType, breakExerciseType, description);
+        return lease;
     }
 
     public String validateNewBreakOption(

@@ -45,7 +45,7 @@ public class BreakOptionRepository extends UdoDomainRepositoryAndFactory<BreakOp
     }
 
     @Programmatic
-    public Lease newBreakOption(
+    public BreakOption newBreakOption(
             final Lease lease,
             final LocalDate breakDate,
             final String notificationPeriod,
@@ -62,7 +62,7 @@ public class BreakOptionRepository extends UdoDomainRepositoryAndFactory<BreakOp
         breakOption.setExerciseDate(breakDate.minus(JodaPeriodUtils.asPeriod(notificationPeriod)));
         breakOption.setDescription(description);
         persist(breakOption);
-        return lease;
+        return breakOption;
     }
 
     @Programmatic
