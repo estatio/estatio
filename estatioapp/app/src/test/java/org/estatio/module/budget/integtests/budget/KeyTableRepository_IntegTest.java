@@ -18,7 +18,7 @@ import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.KeyTableRepository;
 import org.estatio.module.budget.dom.keytable.KeyValueMethod;
-import org.estatio.module.budget.fixtures.budgets.personas.BudgetsForOxf;
+import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.integtests.BudgetModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,7 +42,9 @@ public class KeyTableRepository_IntegTest extends BudgetModuleIntegTestAbstract 
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new BudgetsForOxf());
+                executionContext.executeChild(this, Budget_enum.OxfBudget2015.toFixtureScript());
+                executionContext.executeChild(this, Budget_enum.OxfBudget2016.toFixtureScript());
+
             }
         });
     }
@@ -54,7 +56,8 @@ public class KeyTableRepository_IntegTest extends BudgetModuleIntegTestAbstract 
         public void happyCase() throws Exception {
             // given
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
-            Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
+            Budget budget = budgetRepository.findByPropertyAndStartDate(property,
+                    Budget_enum.OxfBudget2015.getStartDate());
             budget.createKeyTable(TABLE_NAME_1, FoundationValueType.AREA, KeyValueMethod.PROMILLE);
 
             // when
@@ -73,7 +76,8 @@ public class KeyTableRepository_IntegTest extends BudgetModuleIntegTestAbstract 
         public void happyCase() throws Exception {
             // given
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
-            Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
+            Budget budget = budgetRepository.findByPropertyAndStartDate(property,
+                    Budget_enum.OxfBudget2015.getStartDate());
             budget.createKeyTable(TABLE_NAME_1, FoundationValueType.AREA, KeyValueMethod.PROMILLE);
             budget.createKeyTable(TABLE_NAME_2, FoundationValueType.AREA, KeyValueMethod.PROMILLE);
 

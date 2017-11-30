@@ -36,9 +36,11 @@ import org.estatio.module.base.platform.fake.EstatioFakeDataService;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"reference"}, callSuper = false)
+@ToString(of={"reference"})
 @Accessors(chain = true)
 public final class PropertyBuilder
         extends BuilderScriptAbstract<Property,PropertyBuilder> {

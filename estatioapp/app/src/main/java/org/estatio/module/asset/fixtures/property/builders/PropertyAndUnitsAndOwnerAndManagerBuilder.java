@@ -49,9 +49,11 @@ import org.estatio.module.party.dom.PartyRepository;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"reference"}, callSuper = false)
+@ToString(of={"reference"})
 @Accessors(chain = true)
 public final class PropertyAndUnitsAndOwnerAndManagerBuilder
         extends BuilderScriptAbstract<Property, PropertyAndUnitsAndOwnerAndManagerBuilder> {

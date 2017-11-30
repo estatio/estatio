@@ -45,9 +45,11 @@ import org.estatio.module.party.fixtures.person.builders.PersonRelationshipBuild
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"reference"}, callSuper = false)
+@ToString(of={"reference"})
 @Accessors(chain = true)
 public final class PersonAndRolesBuilder extends BuilderScriptAbstract<Person, PersonAndRolesBuilder> {
 

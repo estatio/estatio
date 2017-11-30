@@ -22,7 +22,7 @@ import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemRepository;
-import org.estatio.module.budget.fixtures.budgets.personas.BudgetsForOxf;
+import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.integtests.BudgetModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
@@ -49,7 +49,9 @@ public class BudgetItemRepository_IntegTest extends BudgetModuleIntegTestAbstrac
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new BudgetsForOxf());
+                executionContext.executeChild(this, Budget_enum.OxfBudget2015.toFixtureScript());
+                executionContext.executeChild(this, Budget_enum.OxfBudget2016.toFixtureScript());
+
             }
         });
     }
@@ -64,7 +66,8 @@ public class BudgetItemRepository_IntegTest extends BudgetModuleIntegTestAbstrac
             final List<BudgetItem> budgetItemList = budgetItemRepository.findByProperty(property);
             // then
             assertThat(budgetItemList.size()).isEqualTo(4);
-            assertThat(budgetItemList.get(0).getBudget().getStartDate()).isEqualTo(BudgetsForOxf.BUDGET_2016_START_DATE);
+            assertThat(budgetItemList.get(0).getBudget().getStartDate()).isEqualTo(
+                    Budget_enum.OxfBudget2016.getStartDate());
 
         }
 
@@ -76,7 +79,7 @@ public class BudgetItemRepository_IntegTest extends BudgetModuleIntegTestAbstrac
         public void happyCase() throws Exception {
             // given
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
-            LocalDate startDate = BudgetsForOxf.BUDGET_2016_START_DATE;
+            LocalDate startDate = Budget_enum.OxfBudget2016.getStartDate();
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, startDate);
             Charge charge = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1);
             // when
@@ -100,7 +103,7 @@ public class BudgetItemRepository_IntegTest extends BudgetModuleIntegTestAbstrac
 
             // given
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
-            LocalDate startDate = BudgetsForOxf.BUDGET_2016_START_DATE;
+            LocalDate startDate = Budget_enum.OxfBudget2016.getStartDate();
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, startDate);
             Charge charge = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_3);
             budgetedValue = new BigDecimal("1234.56");
@@ -129,7 +132,7 @@ public class BudgetItemRepository_IntegTest extends BudgetModuleIntegTestAbstrac
 
             // given
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
-            LocalDate startDate = BudgetsForOxf.BUDGET_2016_START_DATE;
+            LocalDate startDate = Budget_enum.OxfBudget2016.getStartDate();
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, startDate);
             Charge charge = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1);
             budgetedValue = new BigDecimal("1234.56");

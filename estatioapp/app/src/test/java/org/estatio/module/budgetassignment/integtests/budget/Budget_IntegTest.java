@@ -23,7 +23,7 @@ import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyTable;
-import org.estatio.module.budget.fixtures.budgets.personas.BudgetsForOxf;
+import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.partitioning.personas.PartitioningAndItemsForOxf;
 import org.estatio.module.budgetassignment.fixtures.budget.personas.BudgetForBud;
 import org.estatio.module.budgetassignment.fixtures.partitioning.personas.PartitioningAndItemsForBud;
@@ -122,7 +122,8 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
         public void setUp() throws Exception {
             propertyOxf = Property_enum.OxfGb.findUsing(serviceRegistry);
             budgetsForOxf = budgetRepository.findByProperty(propertyOxf);
-            budget2015 = budgetRepository.findByPropertyAndStartDate(propertyOxf, BudgetsForOxf.BUDGET_2015_START_DATE);
+            budget2015 = budgetRepository.findByPropertyAndStartDate(propertyOxf,
+                    Budget_enum.OxfBudget2015.getStartDate());
         }
 
         @Rule

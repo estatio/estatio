@@ -35,14 +35,14 @@ import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
+
+import static org.incode.module.base.integtests.VT.bd;
 
 public class BudgetForOxf2016 extends FixtureScript {
 
     public static final Budget_enum data = Budget_enum.OxfBudget2016;
 
-    public static final LocalDate START_DATE = data.getStartDate();
-    public static final String PROPERTY_REF = data.getProperty().getRef();
 
     @Override
     protected void execute(ExecutionContext executionContext) {
@@ -51,11 +51,15 @@ public class BudgetForOxf2016 extends FixtureScript {
         executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toFixtureScript());
 
         // exec
-        Property property = propertyRepository.findPropertyByReference(data.getProperty().getRef());
-        Charge charge1 = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1);
-        Charge charge2 = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_2);
 
-        createBudget(property, START_DATE, charge1, new BigDecimal("30500.99"), charge2, new BigDecimal("40600.01"), executionContext);
+        createBudget(
+                propertyRepository.findPropertyByReference(Budget_enum.OxfBudget2016.getProperty_d().getRef()),
+                Budget_enum.OxfBudget2016.getStartDate(),
+                chargeRepository.findByReference(Charge_enum.GbIncomingCharge1.getRef()),
+                bd("30500.99"),
+                chargeRepository.findByReference(Charge_enum.GbIncomingCharge2.getRef()),
+                bd("40600.01"),
+                executionContext);
 
     }
     

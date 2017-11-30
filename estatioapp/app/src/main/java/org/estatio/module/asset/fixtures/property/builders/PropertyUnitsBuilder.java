@@ -35,9 +35,11 @@ import org.estatio.module.base.platform.fake.EstatioFakeDataService;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"property"}, callSuper = false)
+@ToString(of={"property"})
 @Accessors(chain = true)
 public final class PropertyUnitsBuilder
         extends BuilderScriptAbstract<List<Unit>, PropertyUnitsBuilder> {

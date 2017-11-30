@@ -14,7 +14,7 @@ import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetcalculation.Status;
-import org.estatio.module.budget.fixtures.budgets.personas.BudgetsForOxf;
+import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLink;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLinkRepository;
@@ -68,12 +68,14 @@ public class BudgetCalculationResultLinkRepository_IntegTest extends BudgetAssig
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new BudgetsForOxf());
+                executionContext.executeChild(this, Budget_enum.OxfBudget2015.toFixtureScript());
+                executionContext.executeChild(this, Budget_enum.OxfBudget2016.toFixtureScript());
+
                 executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
             }
         });
         propertyOxf = Property_enum.OxfGb.findUsing(serviceRegistry);
-        budget2015 = budgetRepository.findByPropertyAndStartDate(propertyOxf, BudgetsForOxf.BUDGET_2015_START_DATE);
+        budget2015 = budgetRepository.findByPropertyAndStartDate(propertyOxf, Budget_enum.OxfBudget2015.getStartDate());
         charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
         leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
         run = budgetCalculationRunRepository.createBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.BUDGETED, Status.NEW);

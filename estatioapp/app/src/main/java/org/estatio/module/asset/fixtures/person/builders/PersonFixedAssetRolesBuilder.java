@@ -36,12 +36,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /**
  * A superset of {@link PersonPartyRolesBuilder}, adding a {@link FixedAssetRole} and a corresponding {@link PartyRole}.
  */
 @EqualsAndHashCode(of={"person", "fixedAssetRoleSpecs"}, callSuper = false)
+@ToString(of={"person", "fixedAssetRoleSpecs"})
 @Accessors(chain = true)
 public final class PersonFixedAssetRolesBuilder
         extends BuilderScriptAbstract<List<FixedAssetRole>, PersonFixedAssetRolesBuilder> {

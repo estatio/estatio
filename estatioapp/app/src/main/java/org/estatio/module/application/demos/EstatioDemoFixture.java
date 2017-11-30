@@ -30,7 +30,7 @@ import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwner
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.base.platform.applib.TickingFixtureClock;
-import org.estatio.module.budget.fixtures.budgets.personas.BudgetsForOxf;
+import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.keytables.personas.KeyTablesForOxf;
 import org.estatio.module.budget.fixtures.partitioning.personas.PartitioningAndItemsForOxf;
 import org.estatio.module.capex.fixtures.IncomingInvoiceFixture;
@@ -164,7 +164,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new ProjectsForKal());
         executionContext.executeChild(this, new ProjectForGra());
 
-        executionContext.executeChild(this, new BudgetsForOxf());
+        executionContext.executeChild(this, Budget_enum.OxfBudget2015.toFixtureScript());
+        executionContext.executeChild(this, Budget_enum.OxfBudget2016.toFixtureScript());
         executionContext.executeChild(this, new KeyTablesForOxf());
         executionContext.executeChild(this, new PartitioningAndItemsForOxf());
 

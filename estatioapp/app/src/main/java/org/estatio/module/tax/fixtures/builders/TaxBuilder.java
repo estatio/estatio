@@ -39,9 +39,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"ref"}, callSuper = false)
+@ToString(of={"ref"})
 @Accessors(chain = true)
 public final class TaxBuilder extends BuilderScriptAbstract<Tax, TaxBuilder> {
 

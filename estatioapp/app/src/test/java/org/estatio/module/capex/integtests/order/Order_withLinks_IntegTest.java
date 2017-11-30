@@ -22,7 +22,7 @@ import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemRepository;
-import org.estatio.module.budget.fixtures.budgets.personas.BudgetsForOxf;
+import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
@@ -54,7 +54,9 @@ public class Order_withLinks_IntegTest extends CapexModuleIntegTestAbstract {
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new IncomingChargeFixture());
                 executionContext.executeChild(this, orderFixture);
-                executionContext.executeChild(this, new BudgetsForOxf());
+                executionContext.executeChild(this, Budget_enum.OxfBudget2015.toFixtureScript());
+                executionContext.executeChild(this, Budget_enum.OxfBudget2016.toFixtureScript());
+
                 executionContext.executeChild(this, new IncomingInvoiceFixture());
                 executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.toFixtureScript());
             }

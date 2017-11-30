@@ -21,7 +21,7 @@ import org.estatio.module.budget.dom.keytable.KeyTableRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
 import org.estatio.module.budget.dom.partioning.Partitioning;
-import org.estatio.module.budget.fixtures.budgets.personas.BudgetsForOxf;
+import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.partitioning.personas.PartitioningAndItemsForOxf;
 import org.estatio.module.budget.integtests.BudgetModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
@@ -64,7 +64,8 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
 
             // given
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
-            Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
+            Budget budget = budgetRepository.findByPropertyAndStartDate(property,
+                    Budget_enum.OxfBudget2015.getStartDate());
             PartitionItem partitionItem = budget.getItems().first().getPartitionItems().get(0);
 
             //when, then
@@ -87,7 +88,8 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
         public void happyCase() throws Exception {
             // given
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
-            Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
+            Budget budget = budgetRepository.findByPropertyAndStartDate(property,
+                    Budget_enum.OxfBudget2015.getStartDate());
             BudgetItem budgetItem = budget.getItems().last();
             // when
             final List<PartitionItem> partitionItemList = partitionItemRepository.findByBudgetItem(budgetItem);
@@ -105,7 +107,8 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
             // given
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
 
-            Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
+            Budget budget = budgetRepository.findByPropertyAndStartDate(property,
+                    Budget_enum.OxfBudget2015.getStartDate());
             BudgetItem budgetItem = budget.getItems().first();
             KeyTable keyTable = keytablesRepository.findByBudget(budget).get(0);
             Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
@@ -131,7 +134,8 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
             // given
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
 
-            Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
+            Budget budget = budgetRepository.findByPropertyAndStartDate(property,
+                    Budget_enum.OxfBudget2015.getStartDate());
             BudgetItem budgetItem = budget.getItems().first();
             KeyTable keyTable = keytablesRepository.findByBudget(budget).get(0);
             Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);

@@ -18,7 +18,7 @@ import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
-import org.estatio.module.budget.fixtures.budgets.personas.BudgetsForOxf;
+import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.integtests.BudgetModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,7 +38,9 @@ public class BudgetRepository_IntegTest extends BudgetModuleIntegTestAbstract {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new BudgetsForOxf());
+                executionContext.executeChild(this, Budget_enum.OxfBudget2015.toFixtureScript());
+                executionContext.executeChild(this, Budget_enum.OxfBudget2016.toFixtureScript());
+
             }
         });
     }

@@ -10,9 +10,11 @@ import org.incode.module.country.dom.impl.CountryRepository;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"ref3"}, callSuper = false)
+@ToString(of={"ref3"})
 @Accessors(chain = true)
 public final class CountryBuilder extends BuilderScriptAbstract<Country, CountryBuilder> {
 

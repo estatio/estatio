@@ -18,9 +18,11 @@ import org.estatio.module.capex.app.DocumentMenu;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"contextClass", "resourceName"}, callSuper = false)
+@ToString(of={"contextClass", "resourceName"})
 @Accessors(chain = true)
 public final class IncomingPdfBuilder
         extends BuilderScriptAbstract<Document, IncomingPdfBuilder> {

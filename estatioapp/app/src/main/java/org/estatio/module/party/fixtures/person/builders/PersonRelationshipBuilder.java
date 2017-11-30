@@ -30,9 +30,11 @@ import org.estatio.module.party.dom.relationship.PartyRelationshipRepository;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"person", "fromParty", "relationshipType"}, callSuper = false)
+@ToString(of={"person", "fromParty", "relationshipType"})
 @Accessors(chain = true)
 public final class PersonRelationshipBuilder
         extends BuilderScriptAbstract<PartyRelationship, PersonRelationshipBuilder> {

@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @AllArgsConstructor
@@ -41,6 +42,7 @@ public enum NumeratorExampleObject_enum
     }
 
     @EqualsAndHashCode(of={"name"}, callSuper = false)
+    @ToString(of={"name"})
     @Accessors(chain = true)
     public final static class Builder extends BuilderScriptAbstract<NumeratorExampleObject, NumeratorExampleObject_enum.Builder> {
 

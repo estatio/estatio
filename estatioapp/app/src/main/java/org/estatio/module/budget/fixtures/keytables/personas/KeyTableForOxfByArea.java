@@ -24,7 +24,7 @@ import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyValueMethod;
-import org.estatio.module.budget.fixtures.budgets.personas.BudgetsForOxf;
+import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.keytables.KeyTableAbstract;
 import org.estatio.module.budget.fixtures.keytables.enums.KeyTable_enum;
 
@@ -43,7 +43,9 @@ public class KeyTableForOxfByArea extends KeyTableAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new BudgetsForOxf());
+        executionContext.executeChild(this, Budget_enum.OxfBudget2015.toFixtureScript());
+        executionContext.executeChild(this, Budget_enum.OxfBudget2016.toFixtureScript());
+
 
         // exec
         Property property = propertyRepository.findPropertyByReference(
