@@ -40,7 +40,7 @@ import org.estatio.module.budgetassignment.dom.service.BudgetAssignmentService;
 import org.estatio.module.budgetassignment.dom.service.CalculationResultViewModel;
 import org.estatio.module.budgetassignment.dom.service.DetailedCalculationResultViewmodel;
 import org.estatio.module.budgetassignment.fixtures.budget.personas.BudgetForBud;
-import org.estatio.module.budgetassignment.fixtures.partitioning.personas.PartitioningAndItemsForBud;
+import org.estatio.module.budgetassignment.fixtures.partitioning.personas.PartitioningAndItemsForBudBudget2015;
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
@@ -105,7 +105,7 @@ ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModuleIntegTestAbs
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new PartitioningAndItemsForBud());
+                executionContext.executeChild(this, new PartitioningAndItemsForBudBudget2015());
             }
         });
     }

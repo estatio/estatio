@@ -45,7 +45,8 @@ public enum KeyTable_enum implements EnumWithBuilderScript<KeyTable, KeyTableBui
             FoundationValueType.AREA, KeyValueMethod.PROMILLE, 3),
     Oxf2015Count(
             Budget_enum.OxfBudget2015, "Service Charges By Count year 2015",
-            FoundationValueType.COUNT, KeyValueMethod.PROMILLE, 3),;
+            FoundationValueType.COUNT, KeyValueMethod.PROMILLE, 3)
+    ,;
 
     private final Budget_enum budget_d;
     private final String name;

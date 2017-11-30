@@ -57,9 +57,9 @@ public enum Budget_enum implements EnumWithBuilderScript<Budget, BudgetBuilder>,
 
     private final PropertyAndUnitsAndOwnerAndManager_enum property_d;
     private final LocalDate startDate;
-    private final Charge_enum charge1;
+    private final Charge_enum charge1_d;
     private final BigDecimal value1;
-    private final Charge_enum charge2;
+    private final Charge_enum charge2_d;
     private final BigDecimal value2;
 
     @Override
@@ -67,9 +67,9 @@ public enum Budget_enum implements EnumWithBuilderScript<Budget, BudgetBuilder>,
         return new BudgetBuilder()
                 .setPrereq((f,ec) -> f.setProperty(f.objectFor(property_d, ec)))
                 .setStartDate(startDate)
-                .setPrereq((f,ec) -> f.setCharge1(f.objectFor(charge1, ec)))
+                .setPrereq((f,ec) -> f.setCharge1(f.objectFor(charge1_d, ec)))
                 .setValue1(value1)
-                .setPrereq((f,ec) -> f.setCharge2(f.objectFor(charge2, ec)))
+                .setPrereq((f,ec) -> f.setCharge2(f.objectFor(charge2_d, ec)))
                 .setValue2(value2)
                 ;
     }

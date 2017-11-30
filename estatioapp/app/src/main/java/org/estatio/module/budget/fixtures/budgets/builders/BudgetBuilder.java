@@ -25,14 +25,10 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
-import org.incode.module.country.dom.impl.CountryRepository;
-
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.charge.dom.Charge;
-import org.estatio.module.charge.dom.ChargeRepository;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -77,6 +73,8 @@ public class BudgetBuilder extends BuilderScriptAbstract<Budget, BudgetBuilder> 
         budget.newBudgetItem(value2, charge2);
 
         executionContext.addResult(this, startDate.toString("yyyy-MM-dd"), budget);
+
+        object = budget;
     }
 
     @Inject

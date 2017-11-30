@@ -22,7 +22,7 @@ import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
 import org.estatio.module.budget.dom.partioning.Partitioning;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
-import org.estatio.module.budget.fixtures.partitioning.personas.PartitioningAndItemsForOxf;
+import org.estatio.module.budget.fixtures.partitioning.personas.PartitioningAndItemsForOxfBudget2015;
 import org.estatio.module.budget.integtests.BudgetModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
@@ -52,7 +52,7 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new PartitioningAndItemsForOxf());
+                executionContext.executeChild(this, new PartitioningAndItemsForOxfBudget2015());
             }
         });
     }

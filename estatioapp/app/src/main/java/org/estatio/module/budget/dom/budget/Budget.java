@@ -142,6 +142,11 @@ public class Budget extends UdoDomainObject2<Budget>
     @Getter @Setter
     private SortedSet<BudgetItem> items = new TreeSet<>();
 
+    @Programmatic
+    public BudgetItem findByCharge(final Charge charge) {
+        return budgetItemRepository.findByBudgetAndCharge(this, charge);
+    }
+
     @Persistent(mappedBy = "budget", dependentElement = "true")
     @Getter @Setter
     private SortedSet<Partitioning> partitionings = new TreeSet<>();
@@ -353,6 +358,5 @@ public class Budget extends UdoDomainObject2<Budget>
 
     @Inject
     private ChargeRepository chargeRepository;
-
 
 }

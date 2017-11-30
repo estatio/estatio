@@ -33,7 +33,7 @@ import org.estatio.module.budgetassignment.fixtures.keytables.personas.KeyTables
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
 
-public class PartitioningAndItemsForBud extends PartitioningAndItemsAbstract {
+public class PartitioningAndItemsForBudBudget2015 extends PartitioningAndItemsAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {

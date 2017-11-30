@@ -21,6 +21,8 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
+import org.isisaddons.module.fakedata.dom.FakeDataService;
+
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyTable;
@@ -55,6 +57,13 @@ public class KeyTableBuilder extends BuilderScriptAbstract<KeyTable, KeyTableBui
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
+        checkParam("budget", executionContext, Budget.class);
+        checkParam("name", executionContext, String.class);
+
+        defaultParam("foundationValueType", executionContext, fakeDataService.enums().anyOf(FoundationValueType.class));
+        defaultParam("keyValueMethod", executionContext, fakeDataService.enums().anyOf(KeyValueMethod.class));
+        defaultParam("numberOfDigits", executionContext, 3);
+
         final KeyTable keyTable =
                 keyTableRepository.newKeyTable(
                         budget, name, foundationValueType, keyValueMethod, numberOfDigits);
@@ -67,6 +76,8 @@ public class KeyTableBuilder extends BuilderScriptAbstract<KeyTable, KeyTableBui
 
     @Inject
     KeyTableRepository keyTableRepository;
+    @Inject
+    FakeDataService fakeDataService;
 
 
 }

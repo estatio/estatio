@@ -23,7 +23,7 @@ import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
-import org.estatio.module.budget.fixtures.partitioning.personas.PartitioningAndItemsForOxf;
+import org.estatio.module.budget.fixtures.partitioning.personas.PartitioningAndItemsForOxfBudget2015;
 import org.estatio.module.budget.integtests.BudgetModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,7 +50,7 @@ public class BudgetCalculationRepository_IntegTest extends BudgetModuleIntegTest
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new PartitioningAndItemsForOxf());
+                executionContext.executeChild(this, new PartitioningAndItemsForOxfBudget2015());
             }
         });
     }
