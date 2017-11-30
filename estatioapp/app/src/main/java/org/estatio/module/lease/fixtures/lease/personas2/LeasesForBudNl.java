@@ -19,7 +19,6 @@
 package org.estatio.module.lease.fixtures.lease.personas2;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.country.fixtures.enums.Country_enum;
@@ -72,7 +71,7 @@ public class LeasesForBudNl extends LeaseAbstract {
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
+        executionContext.executeChild(this, Person_enum.JohnDoeNl.toFixtureScript());
         executionContext.executeChild(this, OrganisationAndComms_enum.AcmeNl.toFixtureScript());
         executionContext.executeChild(this, OrganisationAndComms_enum.PoisonNl.toFixtureScript());
         executionContext.executeChild(this, OrganisationAndComms_enum.MiracleNl.toFixtureScript());

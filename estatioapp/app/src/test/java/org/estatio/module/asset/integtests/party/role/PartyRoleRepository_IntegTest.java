@@ -29,17 +29,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForBrunoTreasurerFr;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForDylanOfficeAdministratorGb;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForEmmaTreasurerGb;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForFaithConwayGb;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForFifineLacroixFr;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForGabrielHerveFr;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJonathanPropertyManagerGb;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForOlivePropertyManagerFr;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForOscarCountryDirectorGb;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForRosaireEvrardFr;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForThibaultOfficerAdministratorFr;
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleRepository;
@@ -65,18 +55,17 @@ public class PartyRoleRepository_IntegTest extends AssetModuleIntegTestAbstract 
                 @Override
                 protected void execute(FixtureScript.ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new PersonAndRolesForDylanOfficeAdministratorGb()); // gb mailroom
-                    executionContext.executeChild(this, new PersonAndRolesForJonathanPropertyManagerGb());  // gb property mgr for OXF
-                    executionContext.executeChild(this, new PersonAndRolesForFaithConwayGb());  // gb (no role)
-                    executionContext.executeChild(this, new PersonAndRolesForOscarCountryDirectorGb());  // gb country director
-                    executionContext.executeChild(this, new PersonAndRolesForEmmaTreasurerGb());   // gb treasurer
-
-                    executionContext.executeChild(this, new PersonAndRolesForThibaultOfficerAdministratorFr());  // fr mailroom
-                    executionContext.executeChild(this, new PersonAndRolesForFifineLacroixFr());  // fr property mgr for VIV and MNS
-                    executionContext.executeChild(this, new PersonAndRolesForOlivePropertyManagerFr());  // fr property mgr for MAC
-                    executionContext.executeChild(this, new PersonAndRolesForRosaireEvrardFr());  // fr (no role)
-                    executionContext.executeChild(this, new PersonAndRolesForGabrielHerveFr());  // fr country director
-                    executionContext.executeChild(this, new PersonAndRolesForBrunoTreasurerFr()); // fr treasurer
+                    executionContext.executeChild(this, Person_enum.DylanOfficeAdministratorGb.toFixtureScript()); // gb mailroom
+                    executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.toFixtureScript());  // gb property mgr for OXF
+                    executionContext.executeChild(this, Person_enum.FaithConwayGb.toFixtureScript());  // gb (no role)
+                    executionContext.executeChild(this, Person_enum.OscarCountryDirectorGb.toFixtureScript());  // gb country director
+                    executionContext.executeChild(this, Person_enum.EmmaTreasurerGb.toFixtureScript());   // gb treasurer
+                    executionContext.executeChild(this, Person_enum.ThibaultOfficerAdministratorFr.toFixtureScript());  // fr mailroom
+                    executionContext.executeChild(this, Person_enum.FifineLacroixFr.toFixtureScript());  // fr property mgr for VIV and MNS
+                    executionContext.executeChild(this, Person_enum.OlivePropertyManagerFr.toFixtureScript());  // fr property mgr for MAC
+                    executionContext.executeChild(this, Person_enum.RosaireEvrardFr.toFixtureScript());  // fr (no role)
+                    executionContext.executeChild(this, Person_enum.GabrielHerveFr.toFixtureScript());  // fr country director
+                    executionContext.executeChild(this, Person_enum.BrunoTreasurerFr.toFixtureScript()); // fr treasurer
                 }
             });
         }

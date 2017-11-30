@@ -19,7 +19,6 @@ import org.isisaddons.module.fakedata.dom.FakeDataService;
 
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJonathanPropertyManagerGb;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemRepository;
@@ -57,7 +56,7 @@ public class Order_withLinks_IntegTest extends CapexModuleIntegTestAbstract {
                 executionContext.executeChild(this, orderFixture);
                 executionContext.executeChild(this, new BudgetsForOxf());
                 executionContext.executeChild(this, new IncomingInvoiceFixture());
-                executionContext.executeChild(this, new PersonAndRolesForJonathanPropertyManagerGb());
+                executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.toFixtureScript());
             }
         });
         order = orderFixture.getOrder();

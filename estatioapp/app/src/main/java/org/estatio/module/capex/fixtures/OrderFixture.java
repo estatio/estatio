@@ -18,7 +18,6 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForDylanOfficeAdministratorGb;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.capex.app.order.IncomingDocAsOrderViewModel;
 import org.estatio.module.capex.app.order.Order_switchView;
@@ -50,7 +49,7 @@ public class OrderFixture extends FixtureScript {
         // prereqs
         executionContext.executeChild(this, new ProjectForOxf());
         executionContext.executeChild(this, new IncomingPdfForFakeOrder2().setRunAs("estatio-user-gb"));
-        executionContext.executeChild(this, new PersonAndRolesForDylanOfficeAdministratorGb());
+        executionContext.executeChild(this, Person_enum.DylanOfficeAdministratorGb.toFixtureScript());
 
         // given a document has been scanned and uploaded
         Document fakeOrder2Doc = incomingDocumentRepository.matchAllIncomingDocumentsByName(IncomingPdfForFakeOrder2.resourceName).get(0);

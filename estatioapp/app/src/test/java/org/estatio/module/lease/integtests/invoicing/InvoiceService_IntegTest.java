@@ -31,7 +31,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.base.integtests.VT;
 
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexRepository;
@@ -117,7 +117,7 @@ public class InvoiceService_IntegTest extends LeaseModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
+                    executionContext.executeChild(this, Person_enum.JohnDoeNl.toFixtureScript());
                     executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toFixtureScript());
                     executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.KalNl.toFixtureScript());
                     executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());

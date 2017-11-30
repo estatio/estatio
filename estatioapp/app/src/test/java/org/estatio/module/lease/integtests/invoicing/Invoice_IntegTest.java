@@ -36,7 +36,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.integtests.VT;
 
 import org.estatio.module.asset.dom.FixedAsset;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForLinusTorvaldsNl;
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.charge.dom.Charge;
@@ -159,7 +159,7 @@ public class Invoice_IntegTest extends LeaseModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new PersonAndRolesForLinusTorvaldsNl());
+                    executionContext.executeChild(this, Person_enum.LinusTorvaldsNl.toFixtureScript());
 
                     executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toFixtureScript());
                     executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.KalNl.toFixtureScript());

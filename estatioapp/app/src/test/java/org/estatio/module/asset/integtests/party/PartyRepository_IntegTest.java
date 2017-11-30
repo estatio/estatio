@@ -28,7 +28,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -50,7 +50,7 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
+                    executionContext.executeChild(this, Person_enum.JohnDoeNl.toFixtureScript());
                     executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldNl.toFixtureScript());
                 }
             });
@@ -147,7 +147,7 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
+                    executionContext.executeChild(this, Person_enum.JohnDoeNl.toFixtureScript());
                     executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldNl.toFixtureScript());
                     executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toFixtureScript());
                 }

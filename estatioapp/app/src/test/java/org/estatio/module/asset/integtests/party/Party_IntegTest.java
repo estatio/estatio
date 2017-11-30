@@ -31,8 +31,6 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.sudo.SudoService;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForGinoVannelliGb;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
@@ -62,9 +60,9 @@ public class Party_IntegTest extends AssetModuleIntegTestAbstract {
                 protected void execute(ExecutionContext executionContext) {
                     // linked together:
                     executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toFixtureScript());
-                    executionContext.executeChild(this, new PersonAndRolesForGinoVannelliGb());
+                    executionContext.executeChild(this, Person_enum.GinoVannelliGb.toFixtureScript());
                     // only relationship
-                    executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
+                    executionContext.executeChild(this, Person_enum.JohnDoeNl.toFixtureScript());
                     // only comm channels
                     executionContext.executeChild(this, OrganisationAndComms_enum.AcmeNl.toFixtureScript());
                 }

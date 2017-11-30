@@ -34,8 +34,6 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForGinoVannelliGb;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForLinusTorvaldsNl;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.Party.DeleteEvent;
@@ -59,8 +57,8 @@ public class PartyRelationshipRepository_IntegTest extends AssetModuleIntegTestA
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toFixtureScript());
-                executionContext.executeChild(this, new PersonAndRolesForGinoVannelliGb());
-                executionContext.executeChild(this, new PersonAndRolesForLinusTorvaldsNl());
+                executionContext.executeChild(this, Person_enum.GinoVannelliGb.toFixtureScript());
+                executionContext.executeChild(this, Person_enum.LinusTorvaldsNl.toFixtureScript());
             }
         });
     }

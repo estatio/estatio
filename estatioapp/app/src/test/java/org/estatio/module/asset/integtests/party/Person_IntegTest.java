@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
@@ -40,7 +40,7 @@ public class Person_IntegTest extends AssetModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
+                    executionContext.executeChild(this, Person_enum.JohnDoeNl.toFixtureScript());
                 }
             });
         }
