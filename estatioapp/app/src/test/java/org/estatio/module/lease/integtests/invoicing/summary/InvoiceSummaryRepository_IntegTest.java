@@ -42,7 +42,6 @@ import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyD
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForKalPoison001Nl;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -84,7 +83,7 @@ public class InvoiceSummaryRepository_IntegTest extends LeaseModuleIntegTestAbst
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new LeaseForKalPoison001Nl());
+                    executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toFixtureScript());
                 }
             });
         }

@@ -23,7 +23,6 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 
 import static org.incode.module.base.integtests.VT.bd;
 
@@ -40,7 +39,7 @@ public class LeaseItemAndLeaseTermForMarketingForOxfTopModel001Gb extends LeaseI
     private void createLeaseTermsForOxfTopModel001(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+        executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
 
         // exec
         final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);

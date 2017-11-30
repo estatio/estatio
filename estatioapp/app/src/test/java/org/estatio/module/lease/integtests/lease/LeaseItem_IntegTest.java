@@ -54,8 +54,6 @@ import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForKalPoison001Nl;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.entryfee.personas.LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001Gb;
@@ -81,7 +79,7 @@ public class LeaseItem_IntegTest extends LeaseModuleIntegTestAbstract {
             @Override
             protected void execute(ExecutionContext executionContext) {
 
-                executionContext.executeChild(this, new LeaseForKalPoison001Nl());
+                executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toFixtureScript());
                 executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
                 executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
 

@@ -42,12 +42,6 @@ import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.BrandRepository;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForKalPoison001Nl;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMediaX002Gb;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMiracl005Gb;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPoison003Gb;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPret004Gb;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -66,12 +60,12 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-                    executionContext.executeChild(this, new LeaseForOxfMediaX002Gb());
-                    executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
-                    executionContext.executeChild(this, new LeaseForKalPoison001Nl());
-                    executionContext.executeChild(this, new LeaseForOxfPret004Gb());
-                    executionContext.executeChild(this, new LeaseForOxfMiracl005Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfPret004Gb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.toFixtureScript());
                 }
             });
         }
@@ -98,7 +92,7 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
                 protected void execute(ExecutionContext executionContext) {
 
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
                 }
             });
         }
@@ -123,7 +117,7 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
                 protected void execute(ExecutionContext executionContext) {
 
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
                 }
             });
         }
@@ -144,12 +138,12 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
                 protected void execute(ExecutionContext executionContext) {
 
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-                    executionContext.executeChild(this, new LeaseForOxfMediaX002Gb());
-                    executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
-                    executionContext.executeChild(this, new LeaseForKalPoison001Nl());
-                    executionContext.executeChild(this, new LeaseForOxfPret004Gb());
-                    executionContext.executeChild(this, new LeaseForOxfMiracl005Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfPret004Gb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.toFixtureScript());
                 }
             });
         }
@@ -204,12 +198,12 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
                 protected void execute(ExecutionContext executionContext) {
 
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-                    executionContext.executeChild(this, new LeaseForOxfMediaX002Gb());
-                    executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
-                    executionContext.executeChild(this, new LeaseForKalPoison001Nl());
-                    executionContext.executeChild(this, new LeaseForOxfPret004Gb());
-                    executionContext.executeChild(this, new LeaseForOxfMiracl005Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfPret004Gb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.toFixtureScript());
                 }
             });
         }
@@ -239,7 +233,7 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
                 }
             });
         }
@@ -274,7 +268,7 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
                 }
             });
         }
@@ -301,7 +295,7 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
                 }
             });
         }

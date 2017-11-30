@@ -22,20 +22,20 @@ import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTen
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMediaX002Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 
 import static org.incode.module.base.integtests.VT.bd;
 
 public class LeaseItemAndLeaseTermForServiceChargeForOxfMediax002Gb extends LeaseItemAndTermsAbstract {
 
-    public static final String LEASE_REF = LeaseForOxfMediaX002Gb.REF;
+    public static final String LEASE_REF = Lease_enum.OxfMediaX002Gb.getRef();
     public static final String AT_PATH = ApplicationTenancy_enum.GbOxfDefault.getPath();
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new LeaseForOxfMediaX002Gb());
+        executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.toFixtureScript());
 
         // exec
         final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);

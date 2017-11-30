@@ -55,7 +55,7 @@ import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfMediax002Gb;
 import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfTopModel001;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPret004Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfMiracl005Gb;
 import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;
 import org.estatio.module.lease.fixtures.leaseitems.percentage.personas.LeaseItemAndLeaseTermForPercentageForOxfMiracl005Gb;
@@ -68,6 +68,8 @@ import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+
+se_enum;
 
 public class InvoiceCalculationService_normalRun_IntegTest extends LeaseModuleIntegTestAbstract {
 
@@ -107,7 +109,7 @@ public class InvoiceCalculationService_normalRun_IntegTest extends LeaseModuleIn
                 executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002Gb());
                 executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003Gb());
                 executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
-                executionContext.executeChild(this, new LeaseForOxfPret004Gb());
+                executionContext.executeChild(this, Lease_enum.OxfPret004Gb.toFixtureScript());
 
                 executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentOf2ForOxfMiracl005Gb());
                 executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeOf2ForOxfMiracl005Gb());

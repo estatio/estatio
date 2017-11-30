@@ -23,7 +23,6 @@ import org.estatio.module.lease.dom.Fraction;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMiracl005Gb;
 
 public class LeaseItemAndLeaseTermForDepositForOxfMiracl005Gb extends LeaseItemAndTermsAbstract {
 
@@ -38,7 +37,7 @@ public class LeaseItemAndLeaseTermForDepositForOxfMiracl005Gb extends LeaseItemA
     private void createLeaseTermsForOxfMiracl005Gb(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new LeaseForOxfMiracl005Gb());
+        executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.toFixtureScript());
 
         // exec
         final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);

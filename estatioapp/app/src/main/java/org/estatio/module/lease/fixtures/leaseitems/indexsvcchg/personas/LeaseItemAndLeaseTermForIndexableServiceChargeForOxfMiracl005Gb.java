@@ -23,7 +23,6 @@ import org.estatio.module.index.fixtures.IndexRefData;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMiracl005Gb;
 
 import static org.incode.module.base.integtests.VT.bd;
 import static org.incode.module.base.integtests.VT.ld;
@@ -42,7 +41,7 @@ public class LeaseItemAndLeaseTermForIndexableServiceChargeForOxfMiracl005Gb ext
     private void createLeaseTermsForOxfMiracl005(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new LeaseForOxfMiracl005Gb());
+        executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.toFixtureScript());
 
         // exec
 

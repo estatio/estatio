@@ -36,7 +36,6 @@ import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.lease.dom.LeaseTermForPercentage;
 import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.entryfee.personas.LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001Gb;
@@ -71,7 +70,7 @@ public class LeaseTermsForPercentage_IntegTest extends LeaseModuleIntegTestAbstr
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
 
                     executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForOxfTopModel001Gb());
                     executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001Gb());
@@ -129,7 +128,7 @@ public class LeaseTermsForPercentage_IntegTest extends LeaseModuleIntegTestAbstr
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
 
                     executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForOxfTopModel001Gb());
                     executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001Gb());

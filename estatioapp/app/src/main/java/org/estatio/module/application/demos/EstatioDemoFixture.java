@@ -72,11 +72,7 @@ import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptions
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForKalPoison001Nl;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMediaX002Gb;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMiracl005Gb;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPret004Gb;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfMiracl005Gb;
 import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;
 import org.estatio.module.lease.fixtures.leaseitems.percentage.personas.LeaseItemAndLeaseTermForPercentageForOxfMiracl005Gb;
@@ -137,12 +133,12 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, BankAccount_enum.TopModelGb.toFixtureScript());
         executionContext.executeChild(this, new BankAccountAndMandateForTopModelGb());
         executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
-        executionContext.executeChild(this, new LeaseForOxfMediaX002Gb());
+        executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.toFixtureScript());
         executionContext.executeChild(this, BankAccount_enum.MediaXGb.toFixtureScript());
         executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002Gb());
-        executionContext.executeChild(this, new LeaseForOxfPret004Gb());
+        executionContext.executeChild(this, Lease_enum.OxfPret004Gb.toFixtureScript());
         executionContext.executeChild(this, BankAccount_enum.PretGb.toFixtureScript());
-        executionContext.executeChild(this, new LeaseForOxfMiracl005Gb());
+        executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.toFixtureScript());
         executionContext.executeChild(this, BankAccount_enum.MiracleGb.toFixtureScript());
 
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentOf2ForOxfMiracl005Gb());
@@ -152,7 +148,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForPercentageForOxfMiracl005Gb());
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForDepositForOxfMiracl005Gb());
 
-        executionContext.executeChild(this, new LeaseForKalPoison001Nl());
+        executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toFixtureScript());
         executionContext.executeChild(this, new BankAccountAndMandateForPoisonNl());
         executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003Gb());
         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
@@ -160,7 +156,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005());
         executionContext.executeChild(this, new GuaranteeForOxfTopModel001Gb());
-        executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+        executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
         executionContext.executeChild(this, BankAccount_enum.TopModelGb.toFixtureScript());
         executionContext.executeChild(this, new PersonAndRolesForGinoVannelliGb());
 

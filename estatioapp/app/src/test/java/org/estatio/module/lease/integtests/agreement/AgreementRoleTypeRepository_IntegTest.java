@@ -18,7 +18,6 @@ import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseAgreementTypeEnum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -51,7 +50,7 @@ public class AgreementRoleTypeRepository_IntegTest extends LeaseModuleIntegTestA
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
             }
         });
     }

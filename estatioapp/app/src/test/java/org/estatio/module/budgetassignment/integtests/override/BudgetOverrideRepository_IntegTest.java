@@ -24,7 +24,6 @@ import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -47,7 +46,7 @@ public class BudgetOverrideRepository_IntegTest extends BudgetAssignmentModuleIn
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
             }
         });
     }

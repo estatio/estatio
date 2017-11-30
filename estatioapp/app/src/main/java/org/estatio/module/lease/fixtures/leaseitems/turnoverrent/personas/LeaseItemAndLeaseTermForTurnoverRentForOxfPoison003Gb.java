@@ -22,7 +22,6 @@ import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTen
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPoison003Gb;
 
 public class LeaseItemAndLeaseTermForTurnoverRentForOxfPoison003Gb extends LeaseItemAndTermsAbstract {
 
@@ -38,7 +37,7 @@ public class LeaseItemAndLeaseTermForTurnoverRentForOxfPoison003Gb extends Lease
     private void createLeaseTermsForOxfPoison003(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
+        executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.toFixtureScript());
 
         // exec
         final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);

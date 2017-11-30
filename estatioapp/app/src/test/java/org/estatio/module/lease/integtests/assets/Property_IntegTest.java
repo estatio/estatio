@@ -43,7 +43,7 @@ import org.estatio.module.base.platform.fake.EstatioFakeDataService;
 import org.estatio.module.lease.contributions.Property_vacantUnits;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -57,7 +57,7 @@ public class Property_IntegTest extends LeaseModuleIntegTestAbstract {
             protected void execute(ExecutionContext executionContext) {
 
                 executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
-                executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
             }
         });
     }

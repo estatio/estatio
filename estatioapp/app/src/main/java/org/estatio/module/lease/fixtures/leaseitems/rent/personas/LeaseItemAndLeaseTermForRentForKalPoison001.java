@@ -27,7 +27,6 @@ import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForKalPoison001Nl;
 
 import static org.incode.module.base.integtests.VT.bd;
 
@@ -43,7 +42,7 @@ public class LeaseItemAndLeaseTermForRentForKalPoison001 extends LeaseItemAndTer
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new LeaseForKalPoison001Nl());
+        executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toFixtureScript());
 
         // exec
 

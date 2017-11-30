@@ -28,7 +28,6 @@ import org.estatio.module.guarantee.fixtures.GuaranteeAbstract;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
@@ -44,7 +43,7 @@ public class GuaranteeForOxfTopModel001Gb extends GuaranteeAbstract {
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
-        executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+        executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
         executionContext.executeChild(this, OrganisationAndComms_enum.DagoBankGb.toFixtureScript());
 
         createGuaranteeForOxfTopModel001(executionContext);

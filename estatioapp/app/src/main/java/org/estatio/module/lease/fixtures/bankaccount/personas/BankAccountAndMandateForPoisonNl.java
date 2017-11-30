@@ -22,7 +22,6 @@ import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAcco
 import org.estatio.module.bankmandate.dom.Scheme;
 import org.estatio.module.bankmandate.dom.SequenceType;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForKalPoison001Nl;
 
 public class BankAccountAndMandateForPoisonNl extends BankAccountAndMandateAbstract {
 
@@ -43,7 +42,7 @@ public class BankAccountAndMandateForPoisonNl extends BankAccountAndMandateAbstr
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new LeaseForKalPoison001Nl());
+        executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toFixtureScript());
         executionContext.executeChild(this, BankAccount_enum.PoisonNl.toFixtureScript());
 
         // exec

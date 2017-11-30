@@ -33,7 +33,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -50,7 +50,7 @@ public class CommunicationChannel_IntegTest extends LeaseModuleIntegTestAbstract
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
                 }
             });
         }

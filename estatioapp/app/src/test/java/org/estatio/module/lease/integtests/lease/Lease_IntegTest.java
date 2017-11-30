@@ -54,9 +54,6 @@ import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMediaX002Gb;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPoison003Gb;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.entryfee.personas.LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001Gb;
@@ -274,7 +271,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.toFixtureScript());
                 }
             });
         }
@@ -413,7 +410,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
             // TODO: what is the variation being tested here ?
 
             // given
-            Lease leaseMediax = leaseRepository.findLeaseByReference(LeaseForOxfMediaX002Gb.REF);
+            Lease leaseMediax = Lease_enum.OxfMediaX002Gb.findUsing(serviceRegistry);
 
             LeaseItem leaseMediaXServiceChargeItem = leaseMediax.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2008, 1, 1), VT.bi(1));
             LeaseTerm leaseMediaXServiceChargeTerm = leaseMediaXServiceChargeItem.findTerm(VT.ld(2008, 1, 1));
@@ -484,7 +481,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                 protected void execute(ExecutionContext executionContext) {
 
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
                 }
             });
         }
@@ -521,7 +518,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                 protected void execute(ExecutionContext executionContext) {
 
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
                 }
             });
         }
@@ -561,7 +558,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
                 }
             });
             leaseTopModel1 = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
@@ -629,7 +626,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
                 }
             });
             leaseTopModel1 = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
@@ -670,7 +667,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.toFixtureScript());
                 }
             });
         }
