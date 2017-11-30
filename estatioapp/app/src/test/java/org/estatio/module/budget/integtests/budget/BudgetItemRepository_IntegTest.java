@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,9 +25,10 @@ import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.integtests.BudgetModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.incode.module.base.integtests.VT.bd;
 
 public class BudgetItemRepository_IntegTest extends BudgetModuleIntegTestAbstract {
 
@@ -78,10 +78,8 @@ public class BudgetItemRepository_IntegTest extends BudgetModuleIntegTestAbstrac
         @Test
         public void happyCase() throws Exception {
             // given
-            Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
-            LocalDate startDate = Budget_enum.OxfBudget2016.getStartDate();
-            Budget budget = budgetRepository.findByPropertyAndStartDate(property, startDate);
-            Charge charge = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1);
+            Budget budget = Budget_enum.OxfBudget2016.findUsing(serviceRegistry);
+            Charge charge = Charge_enum.GbIncomingCharge1.findUsing(serviceRegistry);
             // when
             final BudgetItem item = budgetItemRepository.findByBudgetAndCharge(budget, charge);
             // then
@@ -102,11 +100,9 @@ public class BudgetItemRepository_IntegTest extends BudgetModuleIntegTestAbstrac
             BigDecimal budgetedValue;
 
             // given
-            Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
-            LocalDate startDate = Budget_enum.OxfBudget2016.getStartDate();
-            Budget budget = budgetRepository.findByPropertyAndStartDate(property, startDate);
-            Charge charge = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_3);
-            budgetedValue = new BigDecimal("1234.56");
+            Budget budget = Budget_enum.OxfBudget2016.findUsing(serviceRegistry);
+            Charge charge = Charge_enum.GbIncomingCharge3.findUsing(serviceRegistry);
+            budgetedValue = bd("1234.56");
 
             assertThat(budget.getItems().size()).isEqualTo(2);
 
@@ -131,11 +127,9 @@ public class BudgetItemRepository_IntegTest extends BudgetModuleIntegTestAbstrac
             BigDecimal budgetedValue;
 
             // given
-            Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
-            LocalDate startDate = Budget_enum.OxfBudget2016.getStartDate();
-            Budget budget = budgetRepository.findByPropertyAndStartDate(property, startDate);
-            Charge charge = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1);
-            budgetedValue = new BigDecimal("1234.56");
+            Budget budget = Budget_enum.OxfBudget2016.findUsing(serviceRegistry);
+            Charge charge = Charge_enum.GbIncomingCharge1.findUsing(serviceRegistry);
+            budgetedValue = bd("1234.56");
 
             // expect
             expectedException.expect(InvalidException.class);

@@ -19,6 +19,7 @@
 package org.estatio.module.charge.fixtures.chargegroups.enums;
 
 import org.apache.isis.applib.fixturescripts.EnumWithFinder;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
@@ -64,4 +65,13 @@ public enum ChargeGroup_enum implements EnumWithBuilderScript<ChargeGroup, Charg
                         .setDescription(description);
     }
 
+    public static class PersistAll extends FixtureScript {
+
+        @Override
+        protected void execute(final ExecutionContext executionContext) {
+            for (final ChargeGroup_enum datum : values()) {
+                executionContext.executeChild(this, datum.toFixtureScript());
+            }
+        }
+    }
 }

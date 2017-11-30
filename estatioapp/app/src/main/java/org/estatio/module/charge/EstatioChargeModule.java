@@ -33,8 +33,8 @@ import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeGroup;
-import org.estatio.module.charge.fixtures.chargegroups.refdata.ChargeGroupRefData;
-import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
+import org.estatio.module.charge.fixtures.chargegroups.enums.ChargeGroup_enum;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.countryapptenancy.EstatioCountryAppTenancyModule;
 import org.estatio.module.tax.EstatioTaxModule;
 
@@ -59,8 +59,8 @@ public final class EstatioChargeModule extends ModuleAbstract {
         return new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new ChargeGroupRefData());
-                executionContext.executeChild(this, new ChargeRefData());
+                executionContext.executeChild(this, new ChargeGroup_enum.PersistAll());
+                executionContext.executeChild(this, new Charge_enum.PersistAll());
             }
         };
     }

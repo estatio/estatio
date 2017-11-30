@@ -44,7 +44,7 @@ import org.estatio.module.budgetassignment.fixtures.partitioning.personas.Partit
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
@@ -53,7 +53,7 @@ import org.estatio.module.lease.dom.LeaseItemStatus;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
-import org.estatio.module.lease.fixtures.lease.personas2.LeasesForBudNl;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -140,16 +140,16 @@ ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModuleIntegTestAbs
             KeyTable key2 = budget.getKeyTables().last();
             key2.getItems().last().deleteBudgetKeyItem();
 
-            leasePoison = leaseRepository.findLeaseByReference(LeasesForBudNl.REF1);
-            leaseMiracle = leaseRepository.findLeaseByReference(LeasesForBudNl.REF2);
-            leaseHello3 = leaseRepository.findLeaseByReference(LeasesForBudNl.REF3);
-            leaseDago = leaseRepository.findLeaseByReference(LeasesForBudNl.REF4);
-            leaseNlBank = leaseRepository.findLeaseByReference(LeasesForBudNl.REF4A);
-            leaseHyper = leaseRepository.findLeaseByReference(LeasesForBudNl.REF5);
-            leaseHello6 = leaseRepository.findLeaseByReference(LeasesForBudNl.REF6);
-            invoiceCharge1 = chargeRepository.findByReference(ChargeRefData.NL_SERVICE_CHARGE);
-            invoiceCharge2 = chargeRepository.findByReference(ChargeRefData.NL_SERVICE_CHARGE2);
-            incomingCharge = chargeRepository.findByReference(ChargeRefData.NL_INCOMING_CHARGE_1);
+            leasePoison = Lease_enum.BudPoison001Nl.findUsing(serviceRegistry);
+            leaseMiracle = Lease_enum.BudMiracle002Nl.findUsing(serviceRegistry);
+            leaseHello3 = Lease_enum.BudHello003Nl.findUsing(serviceRegistry);
+            leaseDago = Lease_enum.BudDago004Nl.findUsing(serviceRegistry);
+            leaseNlBank = Lease_enum.BudNlBank004Nl.findUsing(serviceRegistry);
+            leaseHyper = Lease_enum.BudHyper005Nl.findUsing(serviceRegistry);
+            leaseHello6 = Lease_enum.BudHello006Nl.findUsing(serviceRegistry);
+            invoiceCharge1 = Charge_enum.NlServiceCharge.findUsing(serviceRegistry);
+            invoiceCharge2 = Charge_enum.NlServiceCharge2.findUsing(serviceRegistry);
+            incomingCharge = Charge_enum.NlIncomingCharge1.findUsing(serviceRegistry);
         }
 
         @Test

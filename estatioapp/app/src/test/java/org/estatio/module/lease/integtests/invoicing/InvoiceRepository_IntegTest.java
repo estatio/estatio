@@ -47,7 +47,7 @@ import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.currency.fixtures.CurrenciesRefData;
 import org.estatio.module.invoice.dom.Constants;
 import org.estatio.module.invoice.dom.Invoice;
@@ -601,7 +601,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
             itemStartDate = new LocalDate(2015, 01, 01);
             itemEndDate = new LocalDate(2015, 12, 31);
             paymentMethodStr = "DIRECT_DEBIT";
-            itemChargeReference = ChargeRefData.IT_SERVICE_CHARGE;
+            itemChargeReference = Charge_enum.ItServiceCharge.getRef();
             itemDescription = "Some description";
             netAmount = new BigDecimal("100.23");
 

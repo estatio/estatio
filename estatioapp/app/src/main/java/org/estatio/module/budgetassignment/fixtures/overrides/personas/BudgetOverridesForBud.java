@@ -27,10 +27,10 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budgetassignment.fixtures.overrides.BudgetOverrideAbstact;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
-import org.estatio.module.lease.fixtures.lease.personas2.LeasesForBudNl;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 
 public class BudgetOverridesForBud extends BudgetOverrideAbstact {
 
@@ -40,13 +40,19 @@ public class BudgetOverridesForBud extends BudgetOverrideAbstact {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new LeasesForBudNl());
+        executionContext.executeChildT(this, Lease_enum.BudPoison001Nl.toFixtureScript());
+        executionContext.executeChildT(this, Lease_enum.BudMiracle002Nl.toFixtureScript());
+        executionContext.executeChildT(this, Lease_enum.BudHello003Nl.toFixtureScript());
+        executionContext.executeChildT(this, Lease_enum.BudDago004Nl.toFixtureScript());
+        executionContext.executeChildT(this, Lease_enum.BudNlBank004Nl.toFixtureScript());
+        executionContext.executeChildT(this, Lease_enum.BudHyper005Nl.toFixtureScript());
+        executionContext.executeChildT(this, Lease_enum.BudHello006Nl.toFixtureScript());
 
         // exec
-        Lease leaseForPoison = leaseRepository.findLeaseByReference(LeasesForBudNl.REF1);
-        Lease leaseForMiracle = leaseRepository.findLeaseByReference(LeasesForBudNl.REF2);
-        Charge invoiceCharge1 = chargeRepository.findByReference(ChargeRefData.NL_SERVICE_CHARGE);
-        Charge incomingCharge1 = chargeRepository.findByReference(ChargeRefData.NL_INCOMING_CHARGE_1);
+        Lease leaseForPoison = Lease_enum.BudPoison001Nl.findUsing(serviceRegistry);
+        Lease leaseForMiracle = Lease_enum.BudMiracle002Nl.findUsing(serviceRegistry);
+        Charge invoiceCharge1 = Charge_enum.NlServiceCharge.findUsing(serviceRegistry);
+        Charge incomingCharge1 = Charge_enum.NlIncomingCharge1.findUsing(serviceRegistry);
 
         createBudgetOverrideForMax(
                 new BigDecimal("350.00"),

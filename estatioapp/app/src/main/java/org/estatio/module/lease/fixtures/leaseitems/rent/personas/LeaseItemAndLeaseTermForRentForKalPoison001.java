@@ -19,7 +19,7 @@
 package org.estatio.module.lease.fixtures.leaseitems.rent.personas;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.index.fixtures.IndexRefData;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
@@ -36,7 +36,7 @@ public class LeaseItemAndLeaseTermForRentForKalPoison001 extends LeaseItemAndTer
     public static final String AT_PATH = ApplicationTenancy_enum.NlKalDefault.getPath();
 
     public static final String INDEX_REF_IT = IndexRefData.IT_REF;
-    public static final String CHARGE_REF_IT = ChargeRefData.IT_RENT;
+    public static final String CHARGE_REF_IT = Charge_enum.ItRent.getRef();
 
     @Override
     protected void execute(ExecutionContext executionContext) {

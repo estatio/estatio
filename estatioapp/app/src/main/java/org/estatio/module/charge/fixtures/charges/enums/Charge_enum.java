@@ -20,6 +20,7 @@ package org.estatio.module.charge.fixtures.charges.enums;
 
 import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.EnumWithFinder;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
@@ -168,4 +169,15 @@ public enum Charge_enum implements EnumWithBuilderScript<Charge, ChargeBuilder>,
                 ;
     }
 
+    public static class PersistAll extends FixtureScript {
+
+        @Override
+        protected void execute(final ExecutionContext executionContext) {
+            for (Charge_enum datum : values()) {
+                final ChargeBuilder chargeBuilder = datum.toFixtureScript();
+                final Charge charge = executionContext.executeChildT(this, chargeBuilder).getObject();
+                executionContext.addResult(this, charge.getReference(), charge);
+            }
+        }
+    }
 }

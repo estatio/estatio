@@ -26,7 +26,7 @@ import org.estatio.module.budget.fixtures.partitioning.personas.PartitioningAndI
 import org.estatio.module.budget.integtests.BudgetModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -111,7 +111,7 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
                     Budget_enum.OxfBudget2015.getStartDate());
             BudgetItem budgetItem = budget.getItems().first();
             KeyTable keyTable = keytablesRepository.findByBudget(budget).get(0);
-            Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
+            Charge charge = Charge_enum.GbServiceCharge.findUsing(serviceRegistry);
             Partitioning partitioning = budget.getPartitionings().first();
             // when
             final PartitionItem partitionItem = partitionItemRepository.findUnique(partitioning, charge, budgetItem, keyTable);
@@ -138,7 +138,7 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
                     Budget_enum.OxfBudget2015.getStartDate());
             BudgetItem budgetItem = budget.getItems().first();
             KeyTable keyTable = keytablesRepository.findByBudget(budget).get(0);
-            Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
+            Charge charge = Charge_enum.GbServiceCharge.findUsing(serviceRegistry);
             Partitioning partitioning = budget.getPartitionings().first();
 
             origPercentage = new BigDecimal("100").setScale(6, BigDecimal.ROUND_HALF_UP);

@@ -32,7 +32,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.invoice.dom.InvoiceRunType;
@@ -210,10 +210,16 @@ public class LeaseTermsForDeposit_IntegTest extends LeaseModuleIntegTestAbstract
         public void depositInvoicedInArrearsTest() {
 
             // given 2 identical deposit items: 1 invoice in arrears, 1 invoiced in advance
-            LeaseItem depositItemInArrears = wrap(leaseForMedia).newItem(LeaseItemType.DEPOSIT, LeaseAgreementRoleTypeEnum.LANDLORD, chargeRepository.findByReference(ChargeRefData.GB_DEPOSIT), InvoicingFrequency.QUARTERLY_IN_ARREARS, PaymentMethod.DIRECT_DEBIT, startDateDeposit);
+            LeaseItem depositItemInArrears = wrap(leaseForMedia).newItem(
+                    LeaseItemType.DEPOSIT, LeaseAgreementRoleTypeEnum.LANDLORD,
+                    Charge_enum.GbDeposit.findUsing(serviceRegistry),
+                    InvoicingFrequency.QUARTERLY_IN_ARREARS, PaymentMethod.DIRECT_DEBIT, startDateDeposit);
             wrap(depositItemInArrears).newSourceItem(rentItem);
 
-            LeaseItem depositItemInAdvance = leaseForMedia.newItem(LeaseItemType.DEPOSIT, LeaseAgreementRoleTypeEnum.LANDLORD, chargeRepository.findByReference(ChargeRefData.GB_DEPOSIT), InvoicingFrequency.QUARTERLY_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT, startDateDeposit);
+            LeaseItem depositItemInAdvance = leaseForMedia.newItem(
+                    LeaseItemType.DEPOSIT, LeaseAgreementRoleTypeEnum.LANDLORD,
+                    Charge_enum.GbDeposit.findUsing(serviceRegistry),
+                    InvoicingFrequency.QUARTERLY_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT, startDateDeposit);
             wrap(depositItemInAdvance).newSourceItem(rentItem);
 
             LeaseTermForDeposit termInArrears = (LeaseTermForDeposit) wrap(depositItemInArrears).newTerm(startDateDeposit, null);

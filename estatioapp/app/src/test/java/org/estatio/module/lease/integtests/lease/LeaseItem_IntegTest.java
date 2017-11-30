@@ -39,7 +39,7 @@ import org.incode.module.base.integtests.VT;
 
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.lease.dom.InvoicingFrequency;
@@ -167,7 +167,7 @@ public class LeaseItem_IntegTest extends LeaseModuleIntegTestAbstract {
 
             // given
             LeaseItem leaseItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), LeaseAgreementRoleTypeEnum.LANDLORD);
-            final Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
+            final Charge charge = Charge_enum.GbServiceCharge.findUsing(serviceRegistry);
             assertThat(leaseItem.getInvoicedBy()).isEqualTo(LeaseAgreementRoleTypeEnum.LANDLORD);
 
             // when
@@ -202,11 +202,11 @@ public class LeaseItem_IntegTest extends LeaseModuleIntegTestAbstract {
 
             // given
             LeaseItem leaseItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));
-            final Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
+            final Charge charge = Charge_enum.GbServiceCharge.findUsing(serviceRegistry);
             assertThat(leaseItem.getCharge()).isEqualTo(charge);
 
             // when
-            final Charge newCharge = chargeRepository.findByReference(ChargeRefData.IT_SERVICE_CHARGE);
+            final Charge newCharge = Charge_enum.ItServiceCharge.findUsing(serviceRegistry);
             final LeaseItem leaseItemReturned = wrap(leaseItem).changeCharge(newCharge);
 
             // then

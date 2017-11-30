@@ -24,7 +24,7 @@ import org.junit.Test;
 
 import org.estatio.module.charge.dom.ChargeGroup;
 import org.estatio.module.charge.dom.ChargeGroupRepository;
-import org.estatio.module.charge.fixtures.chargegroups.refdata.ChargeGroupRefData;
+import org.estatio.module.charge.fixtures.chargegroups.enums.ChargeGroup_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,7 +37,7 @@ public class ChargeGroupRepository_IntegTest extends ChargeModuleIntegTestAbstra
 
         @Test
         public void whenExists() throws Exception {
-            ChargeGroup chargeGroup = chargeGroupRepository.findChargeGroup(ChargeGroupRefData.REF_RENT);
+            ChargeGroup chargeGroup = ChargeGroup_enum.Rent.findUsing(serviceRegistry);
             assertThat(chargeGroup).isNotNull();
         }
 

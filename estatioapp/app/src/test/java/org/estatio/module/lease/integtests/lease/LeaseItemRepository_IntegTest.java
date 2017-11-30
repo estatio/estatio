@@ -32,7 +32,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
@@ -127,7 +127,7 @@ public class LeaseItemRepository_IntegTest extends LeaseModuleIntegTestAbstract 
         @Test
         public void happy_case() throws Exception {
             //given
-            Charge charge = chargeRepository.findByReference(ChargeRefData.GB_RENT);
+            Charge charge = Charge_enum.GbRent.findUsing(serviceRegistry);
             Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
             final LeaseItemType leaseItemType = LeaseItemType.RENT;
             final LeaseAgreementRoleTypeEnum agreementRoleType = LeaseAgreementRoleTypeEnum.TENANTS_ASSOCIATION;

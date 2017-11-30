@@ -18,7 +18,7 @@ import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValueRepos
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
@@ -60,7 +60,7 @@ public class BudgetOverrideValueRepository_IntegTest extends BudgetAssignmentMod
 
         // given
         Lease leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
-        Charge invoiceCharge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
+        Charge invoiceCharge = Charge_enum.GbServiceCharge.findUsing(serviceRegistry);
         BigDecimal overrideValue = new BigDecimal("1234.56");
         String reason = "Some reason";
         budgetOverrideForFixed = wrap(budgetOverrideRepository).newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge, null, null, reason);

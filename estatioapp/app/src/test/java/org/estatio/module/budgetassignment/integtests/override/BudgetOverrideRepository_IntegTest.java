@@ -20,7 +20,7 @@ import org.estatio.module.budgetassignment.dom.override.BudgetOverrideRepository
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
@@ -61,7 +61,7 @@ public class BudgetOverrideRepository_IntegTest extends BudgetAssignmentModuleIn
 
             // given
             Lease leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
-            Charge invoiceCharge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
+            Charge invoiceCharge = Charge_enum.GbServiceCharge.findUsing(serviceRegistry);
 
             overrideValue = new BigDecimal("1234.56");
             reason = "Some reason";
@@ -90,7 +90,7 @@ public class BudgetOverrideRepository_IntegTest extends BudgetAssignmentModuleIn
         public void sameInvoiceChargeAndTypeInOverlappingIntervalIsInvalid() {
             // given
             Lease leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
-            Charge invoiceCharge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
+            Charge invoiceCharge = Charge_enum.GbServiceCharge.findUsing(serviceRegistry);
             BigDecimal overrideValue = new BigDecimal("1234.56");
             String reason = "Some reason";
             LocalDate endDate = new LocalDate(2014,12,31);
@@ -116,9 +116,9 @@ public class BudgetOverrideRepository_IntegTest extends BudgetAssignmentModuleIn
         public void sameInvoiceChargeAndIncomingChargeIsInvalid() {
             // given
             Lease leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
-            Charge invoiceCharge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
-            Charge incomingCharge1 = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1);
-            Charge incomingCharge2 = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_2);
+            Charge invoiceCharge = Charge_enum.GbServiceCharge.findUsing(serviceRegistry);
+            Charge incomingCharge1 = Charge_enum.GbIncomingCharge1.findUsing(serviceRegistry);
+            Charge incomingCharge2 = Charge_enum.GbIncomingCharge2.findUsing(serviceRegistry);
             BigDecimal overrideValue = new BigDecimal("1234.56");
             String reason = "Some reason";
             wrap(budgetOverrideRepository).newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge, incomingCharge1, null, reason);
@@ -150,7 +150,7 @@ public class BudgetOverrideRepository_IntegTest extends BudgetAssignmentModuleIn
 
             // given
             leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
-            Charge invoiceCharge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
+            Charge invoiceCharge = Charge_enum.GbServiceCharge.findUsing(serviceRegistry);
             BigDecimal overrideValue = new BigDecimal("1234.56");
             String reason = "Some reason";
             assertThat(budgetOverrideRepository.findByLease(leaseTopModel).size()).isEqualTo(0);
@@ -171,7 +171,7 @@ public class BudgetOverrideRepository_IntegTest extends BudgetAssignmentModuleIn
 
         // given
         Lease leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
-        Charge invoiceCharge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
+        Charge invoiceCharge = Charge_enum.GbServiceCharge.findUsing(serviceRegistry);
         BigDecimal overrideValue = new BigDecimal("1234.56");
         String reason = "Some reason";
 

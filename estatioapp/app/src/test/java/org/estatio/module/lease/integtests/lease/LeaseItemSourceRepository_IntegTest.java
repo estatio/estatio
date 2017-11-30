@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
@@ -125,7 +125,10 @@ public class LeaseItemSourceRepository_IntegTest extends LeaseModuleIntegTestAbs
     public void findByItemTest() throws Exception {
 
         // given
-        LeaseItem newDeposit = lease.newItem(LeaseItemType.DEPOSIT, LeaseAgreementRoleTypeEnum.LANDLORD, chargeRepository.findByReference(ChargeRefData.GB_DEPOSIT), InvoicingFrequency.QUARTERLY_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT, new LocalDate(2016, 01, 01));
+        LeaseItem newDeposit = lease.newItem(
+                LeaseItemType.DEPOSIT, LeaseAgreementRoleTypeEnum.LANDLORD,
+                Charge_enum.GbDeposit.findUsing(serviceRegistry),
+                InvoicingFrequency.QUARTERLY_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT, new LocalDate(2016, 1, 1));
 
         // when
         newDeposit.newSourceItem(serviceChargeItem);

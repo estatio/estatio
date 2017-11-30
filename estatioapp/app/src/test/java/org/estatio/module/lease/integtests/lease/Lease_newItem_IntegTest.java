@@ -34,7 +34,7 @@ import org.incode.module.base.integtests.VT;
 
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
@@ -102,7 +102,7 @@ public class Lease_newItem_IntegTest extends LeaseModuleIntegTestAbstract {
         public void happyCase() throws Exception {
 
             // given
-            final Charge charge = chargeRepository.findByReference(ChargeRefData.GB_DISCOUNT);
+            final Charge charge = Charge_enum.GbDiscount.findUsing(serviceRegistry);
             final ApplicationTenancy leaseAppTenancy = leasePoison.getApplicationTenancy();
             final ApplicationTenancy firstChildAppTenancy = leaseAppTenancy.getChildren().first();
 
@@ -129,7 +129,7 @@ public class Lease_newItem_IntegTest extends LeaseModuleIntegTestAbstract {
         public void invalidCharge() throws Exception {
 
             // given
-            final Charge charge = chargeRepository.findByReference(ChargeRefData.IT_DISCOUNT);
+            final Charge charge = Charge_enum.ItDiscount.findUsing(serviceRegistry);
 
             // then
             expectedExceptions.expect(InvalidException.class);

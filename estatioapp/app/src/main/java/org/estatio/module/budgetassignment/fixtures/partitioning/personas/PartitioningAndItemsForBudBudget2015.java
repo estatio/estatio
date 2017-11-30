@@ -31,7 +31,7 @@ import org.estatio.module.budget.fixtures.partitioning.PartitioningAndItemsAbstr
 import org.estatio.module.budgetassignment.fixtures.budget.personas.BudgetForBud;
 import org.estatio.module.budgetassignment.fixtures.keytables.personas.KeyTablesForBud;
 import org.estatio.module.charge.dom.Charge;
-import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 
 public class PartitioningAndItemsForBudBudget2015 extends PartitioningAndItemsAbstract {
 
@@ -45,14 +45,14 @@ public class PartitioningAndItemsForBudBudget2015 extends PartitioningAndItemsAb
         Property property = Property_enum.BudNl.findUsing(serviceRegistry);
         LocalDate startDate = BudgetForBud.BUDGET_2015_START_DATE;
         Budget budget = budgetRepository.findByPropertyAndStartDate(property, startDate);
-        Charge incomingCharge1 = chargeRepository.findByReference(ChargeRefData.NL_INCOMING_CHARGE_1);
-        Charge incomingCharge2 = chargeRepository.findByReference(ChargeRefData.NL_INCOMING_CHARGE_2);
-        Charge incomingCharge3 = chargeRepository.findByReference(ChargeRefData.NL_INCOMING_CHARGE_3);
+        Charge incomingCharge1 = Charge_enum.NlIncomingCharge1.findUsing(serviceRegistry);
+        Charge incomingCharge2 = Charge_enum.NlIncomingCharge2.findUsing(serviceRegistry);
+        Charge incomingCharge3 = Charge_enum.NlIncomingCharge3.findUsing(serviceRegistry);
         BudgetItem budgetItem1 = budgetItemRepository.findByBudgetAndCharge(budget, incomingCharge1);
         BudgetItem budgetItem2 = budgetItemRepository.findByBudgetAndCharge(budget, incomingCharge2);
         BudgetItem budgetItem3 = budgetItemRepository.findByBudgetAndCharge(budget, incomingCharge3);
-        Charge invoiceCharge1 = chargeRepository.findByReference(ChargeRefData.NL_SERVICE_CHARGE);
-        Charge invoiceCharge2 = chargeRepository.findByReference(ChargeRefData.NL_SERVICE_CHARGE2);
+        Charge invoiceCharge1 = Charge_enum.NlServiceCharge.findUsing(serviceRegistry);
+        Charge invoiceCharge2 = Charge_enum.NlServiceCharge2.findUsing(serviceRegistry);
         KeyTable keyTable1 = keyTableRepository.findByBudgetAndName(budget, KeyTablesForBud.NAME_BY_AREA);
         KeyTable keyTable2 = keyTableRepository.findByBudgetAndName(budget, KeyTablesForBud.NAME_BY_COUNT);
 
