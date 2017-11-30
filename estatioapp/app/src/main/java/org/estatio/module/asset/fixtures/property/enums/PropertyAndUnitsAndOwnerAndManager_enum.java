@@ -2,8 +2,14 @@ package org.estatio.module.asset.fixtures.property.enums;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.EnumWithFinder;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
+
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.estatio.module.asset.fixtures.property.builders.PropertyAndUnitsAndOwnerAndManagerBuilder;
 import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import lombok.Getter;
@@ -13,7 +19,8 @@ import static org.incode.module.base.integtests.VT.ld;
 //@AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum PropertyAndUnitsAndOwnerAndManager_enum /*implements DataEnum<Property, PropertyAndUnitsAndOwnerAndManagerBuilder>*/ {
+public enum PropertyAndUnitsAndOwnerAndManager_enum implements EnumWithBuilderScript<Property, PropertyAndUnitsAndOwnerAndManagerBuilder>,
+        EnumWithFinder<Property> {
 
     BudNl   (Property_enum.BudNl,
             7,
@@ -64,7 +71,6 @@ public enum PropertyAndUnitsAndOwnerAndManager_enum /*implements DataEnum<Proper
 
     private final Property_enum property_d;
     public String getRef() { return property_d.getRef(); }
-    public ApplicationTenancy_enum getApplicationTenancy_d() { return property_d.getCountry_d().getApplicationTenancy_d(); }
 
     private final int numberOfUnits;
     private final OrganisationAndComms_enum owner_d;
@@ -94,5 +100,37 @@ public enum PropertyAndUnitsAndOwnerAndManager_enum /*implements DataEnum<Proper
         this.manager_d = manager_d;
         this.managerStartDate = managerStartDate;
         this.managerEndDate = managerEndDate;
+    }
+
+    @Override
+    public PropertyAndUnitsAndOwnerAndManagerBuilder toFixtureScript() {
+        final Property_enum property_d = getProperty_d();
+
+        return new PropertyAndUnitsAndOwnerAndManagerBuilder()
+                .setReference(getRef())
+
+                .setName(property_d.getName())
+                .setCity(property_d.getCity())
+                .setPrereq((f,ex) -> f.setCountry(f.objectFor(property_d.getCountry_d(), ex)))
+                .setPropertyType(property_d.getPropertyType())
+                .setOpeningDate(property_d.getOpeningDate())
+                .setAcquireDate(property_d.getAcquireDate())
+                .setLocationStr(property_d.getLocationStr())
+
+                .setNumberOfUnits(getNumberOfUnits())
+
+                .setPrereq((f,ex) -> f.setOwner(f.objectFor(getOwner_d(), ex)))
+                .setOwnerStartDate(getOwnerStartDate())
+                .setOwnerEndDate(getOwnerEndDate())
+
+                .setPrereq((f,ex) -> f.setManager(f.objectFor(getManager_d(), ex)))
+                .setManagerStartDate(getManagerStartDate())
+                .setManagerEndDate(getManagerEndDate());
+
+    }
+
+    @Override
+    public Property findUsing(final ServiceRegistry2 serviceRegistry) {
+        return serviceRegistry.lookupService(PropertyRepository.class).findPropertyByReference(getRef());
     }
 }

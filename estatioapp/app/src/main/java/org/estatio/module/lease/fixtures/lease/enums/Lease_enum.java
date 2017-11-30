@@ -8,7 +8,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.asset.fixtures.property.enums.Property_enum;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
@@ -31,7 +31,7 @@ import static org.incode.module.base.integtests.VT.ld;
 public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<Lease, LeaseBuilder> {
 
     KalPoison001Nl  (
-            "KAL-POISON-001", "Poison Amsterdam", Property_enum.KalNl, "001",
+            "KAL-POISON-001", "Poison Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.KalNl, "001",
             OrganisationAndComms_enum.AcmeNl, OrganisationAndComms_enum.PoisonNl,
             ld(2011, 1, 1), ld(2020, 12, 31),
             OccupancyCreationPolicy.CREATE,
@@ -40,7 +40,7 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     OxfMediaX002Gb  (
-            "OXF-MEDIAX-002", "Mediax Lease", Property_enum.OxfGb, "002",
+            "OXF-MEDIAX-002", "Mediax Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb, "002",
             OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.MediaXGb,
             ld(2008, 1, 1), ld(2017, 12, 31),
             OccupancyCreationPolicy.CREATE,
@@ -49,7 +49,7 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.CREATE
     ),
     OxfMiracl005Gb  (
-            "OXF-MIRACL-005", "Miracle lease", Property_enum.OxfGb, "005",
+            "OXF-MIRACL-005", "Miracle lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb, "005",
             OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.MiracleGb,
             ld(2013, 11, 7), ld(2023, 11, 6),
             OccupancyCreationPolicy.CREATE,
@@ -58,7 +58,7 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     OxfPoison003Gb  (
-            "OXF-POISON-003", "Poison Lease", Property_enum.OxfGb, "003",
+            "OXF-POISON-003", "Poison Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb, "003",
             OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.PoisonGb,
             ld(2011, 1, 1), ld(2020, 12, 31),
             OccupancyCreationPolicy.CREATE,
@@ -67,7 +67,7 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     OxfPret004Gb    (
-            "OXF-PRET-004", "Pret-a-Partir lease", Property_enum.OxfGb, "004",
+            "OXF-PRET-004", "Pret-a-Partir lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb, "004",
             OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.PretGb,
             ld(2011, 7, 1), ld(2014, 6, 30),
             OccupancyCreationPolicy.DONT_CREATE,
@@ -77,7 +77,7 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     OxfTopModel001Gb(
-            "OXF-TOPMODEL-001", "Topmodel Lease", Property_enum.OxfGb, "001",
+            "OXF-TOPMODEL-001", "Topmodel Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb, "001",
             OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.TopModelGb,
             ld(2010, 7, 15), ld(2022, 7, 14),
             OccupancyCreationPolicy.CREATE,
@@ -89,7 +89,7 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
 
     private final String ref;
     private final String name;
-    private final Property_enum property_d;
+    private final PropertyAndUnitsAndOwnerAndManager_enum propertyAndUnits_d;
     private final String unitReferenceSuffix;
     private final OrganisationAndComms_enum landlord_d;
     private final OrganisationAndComms_enum tenant_d;
@@ -110,7 +110,7 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
     private final AddressesCreationPolicy addressesCreationPolicy;
 
     public String getUnitReference() {
-        return property_d.unitRef(unitReferenceSuffix);
+        return propertyAndUnits_d.getProperty_d().unitRef(unitReferenceSuffix);
     }
 
     @Override
@@ -125,7 +125,7 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
                 .setReference(ref)
                 .setName(name)
                 .setPrereq((f, ec) -> {
-                    final Property property = f.objectFor(property_d, ec);
+                    final Property property = f.objectFor(propertyAndUnits_d, ec);
                     f.setUnit(property.findUnitByReference(getUnitReference()));
                 })
                 .setPrereq((f,ec) -> f.setLandlord(f.objectFor(landlord_d, ec)))

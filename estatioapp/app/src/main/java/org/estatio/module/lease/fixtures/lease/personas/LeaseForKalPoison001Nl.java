@@ -18,8 +18,6 @@
  */
 package org.estatio.module.lease.fixtures.lease.personas;
 
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
@@ -33,10 +31,10 @@ public class LeaseForKalPoison001Nl extends LeaseAbstract {
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, data.getLandlord_d().toFixtureScript());
-        executionContext.executeChild(this, data.getTenant_d().toFixtureScript());
-        executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForKalNl());
+//        executionContext.executeChild(this, data.getLandlord_d().toFixtureScript());
+//        executionContext.executeChild(this, data.getTenant_d().toFixtureScript());
+//        executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
+//        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForKalNl());
 
         // exec
         final Lease lease = data.toFixtureScript().build(this, executionContext).getObject();
