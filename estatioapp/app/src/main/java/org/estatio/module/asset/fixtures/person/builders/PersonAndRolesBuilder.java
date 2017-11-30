@@ -26,9 +26,7 @@ import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 
-import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
-import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
@@ -96,14 +94,8 @@ public final class PersonAndRolesBuilder extends BuilderScriptAbstract<Person, P
         return this;
     }
 
-    @Getter
+    @Getter @Setter
     private List<PersonFixedAssetRolesBuilder.FixedAssetRoleSpec> fixedAssetRoleSpecs = Lists.newArrayList();
-    public PersonAndRolesBuilder addFixedAssetRole(
-            final FixedAssetRoleTypeEnum fixedAssetRoleType,
-            final Property property) {
-        fixedAssetRoleSpecs.add(new PersonFixedAssetRolesBuilder.FixedAssetRoleSpec(fixedAssetRoleType, property));
-        return this;
-    }
 
     @Getter
     private Person object;
@@ -168,7 +160,7 @@ public final class PersonAndRolesBuilder extends BuilderScriptAbstract<Person, P
 
         fixedAssetRoles = new PersonFixedAssetRolesBuilder()
                 .setPerson(object)
-                .addFixedAssetRoles(fixedAssetRoleSpecs)
+                .setFixedAssetRoleSpecs(fixedAssetRoleSpecs)
                 .build(this, executionContext)
                 .getObject();
     }

@@ -20,13 +20,9 @@ package org.estatio.module.lease.fixtures.lease.personas2;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
-import org.estatio.module.country.fixtures.enums.Country_enum;
-import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.LeaseAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
-
-import static org.incode.module.base.integtests.VT.ld;
 
 public class LeasesForBudNl extends LeaseAbstract {
 
@@ -139,18 +135,18 @@ public class LeasesForBudNl extends LeaseAbstract {
 //                manager,
 //                executionContext);
 
-        createOccupancyWithEndDate(
-                REF4,
-                UNIT_REF7,
-                "Dago Bank",
-                BrandCoverage.INTERNATIONAL,
-                Country_enum.NLD.getRef3(),
-                "BANK",
-                "LOANS",
-                ld(2011, 1, 1),
-                ld(2015, 6, 30),
-                executionContext
-                );
+//        createOccupancyWithEndDate(
+//                REF4,
+//                UNIT_REF7,
+//                "Dago Bank",
+//                BrandCoverage.INTERNATIONAL,
+//                Country_enum.NLD.getRef3(),
+//                "BANK",
+//                "LOANS",
+//                ld(2011, 1, 1),
+//                ld(2015, 6, 30),
+//                executionContext
+//                );
 
 //        createLease(
 //                REF4A,

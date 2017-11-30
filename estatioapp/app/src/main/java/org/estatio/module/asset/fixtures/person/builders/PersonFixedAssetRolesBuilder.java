@@ -52,27 +52,13 @@ public final class PersonFixedAssetRolesBuilder
     private Person person;
 
     @Data
-    static class FixedAssetRoleSpec {
+    public static class FixedAssetRoleSpec {
         final FixedAssetRoleTypeEnum roleType;
         final Property property;
     }
 
+    @Getter @Setter
     private List<FixedAssetRoleSpec> fixedAssetRoleSpecs = Lists.newArrayList();
-
-    public PersonFixedAssetRolesBuilder addFixedAssetRole(
-            final FixedAssetRoleTypeEnum fixedAssetRoleType,
-            final Property property) {
-        fixedAssetRoleSpecs.add(new FixedAssetRoleSpec(fixedAssetRoleType, property));
-        return this;
-    }
-
-    public PersonFixedAssetRolesBuilder addFixedAssetRoles(
-            final List<FixedAssetRoleSpec> fixedAssetRoleTypes) {
-        for (FixedAssetRoleSpec fixedAssetRoleType : fixedAssetRoleTypes) {
-            addFixedAssetRole(fixedAssetRoleType.roleType, fixedAssetRoleType.property);
-        }
-        return this;
-    }
 
     @Getter
     private List<FixedAssetRole> object = Lists.newArrayList();

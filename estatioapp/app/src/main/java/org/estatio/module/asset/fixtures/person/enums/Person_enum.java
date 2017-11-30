@@ -1,11 +1,15 @@
 package org.estatio.module.asset.fixtures.person.enums;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.EnumWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
+import org.estatio.module.asset.fixtures.person.builders.PersonFixedAssetRolesBuilder;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.party.dom.Party;
@@ -217,14 +221,13 @@ public enum Person_enum
                 .setAtPath(getApplicationTenancy_d().getPath())
                 .setRelationshipType(getPartyRelationshipType())
                 .setPrereq((f,ec) -> f.setFromParty(f.objectFor(getPartyFrom_d(), ec)))
-                .setPrereq((f,ec) -> {
-                    for (final FixedAssetRoleSpec roleSpec : Person_enum.this.getFixedAssetRoles()) {
-                        f.addFixedAssetRole(
-                                roleSpec.getFixedAssetRole(),
-                                f.objectFor(roleSpec.getProperty_d(), ec)
-                        );
-                    }
-                })
+                .setPrereq((f,ec) -> f.setFixedAssetRoleSpecs(
+                            Arrays.stream(Person_enum.this.getFixedAssetRoles())
+                                .map(x -> new PersonFixedAssetRolesBuilder.FixedAssetRoleSpec(
+                                                x.fixedAssetRole,
+                                                f.objectFor(x.getProperty_d(), ec))
+                                        )
+                                .collect(Collectors.toList())))
                 ;
 
         for (final IPartyRoleType partyRoleType : getPartyRoleTypes()) {

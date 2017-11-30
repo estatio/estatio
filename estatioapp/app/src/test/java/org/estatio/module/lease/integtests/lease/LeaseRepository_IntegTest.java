@@ -244,7 +244,7 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         @Test
         public void whenValidProperty() {
             // given
-            final Brand brand = brandRepository.findByName(Lease_enum.OxfTopModel001Gb.getBrand());
+            final Brand brand = brandRepository.findByName(Lease_enum.OxfTopModel001Gb.getOccupancySpecs()[0].getBrand());
             final List<Lease> matchingLeases = leaseRepository.findByBrand(brand, false);
             assertThat(matchingLeases.size()).isEqualTo(1);
 

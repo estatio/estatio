@@ -46,6 +46,7 @@ import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannelTypeRep
 import org.estatio.module.agreement.dom.commchantype.IAgreementRoleCommunicationChannelType;
 import org.estatio.module.agreement.dom.role.AgreementRoleType;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.lease.dom.AgreementRoleCommunicationChannelTypeEnum;
@@ -61,6 +62,8 @@ import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -79,7 +82,7 @@ public final class LeaseBuilder
     @Getter @Setter
     String name;
     @Getter @Setter
-    Unit unit;
+    Property property;
 
     @Getter @Setter
     Party landlord;
@@ -89,25 +92,23 @@ public final class LeaseBuilder
     LocalDate startDate;
     @Getter @Setter
     LocalDate endDate;
-    @Getter @Setter
-    LocalDate occupancyEndDate;
 
+    @AllArgsConstructor
+    @Data
+    public static class OccupancySpec {
+        @Getter @Setter
+        Unit unit;
+        String brand;
+        BrandCoverage brandCoverage;
+        Country countryOfOrigin;
+        String sector;
+        String activity;
+        LocalDate startDate;
+        LocalDate endDate;
+    }
     @Getter @Setter
-    OccupancyCreationPolicy occupancyCreationPolicy;
+    List<OccupancySpec> occupancySpecs = Lists.newArrayList();
 
-    @Getter @Setter
-    String brand;
-    @Getter @Setter
-    BrandCoverage brandCoverage;
-    @Getter @Setter
-    Country countryOfOrigin;
-    @Getter @Setter
-    String sector;
-    @Getter @Setter
-    String activity;
-
-    @Getter @Setter
-    ManagerRoleCreationPolicy managerRoleCreationPolicy;
     @Getter @Setter
     Party manager;
 
@@ -116,14 +117,6 @@ public final class LeaseBuilder
     @Getter @Setter
     AddressesCreationPolicy addressesCreationPolicy;
 
-    public enum ManagerRoleCreationPolicy {
-        CREATE,
-        DONT_CREATE
-    }
-    public enum OccupancyCreationPolicy {
-        CREATE,
-        DONT_CREATE
-    }
     public enum InvoiceAddressCreationPolicy {
         CREATE,
         DONT_CREATE
@@ -139,16 +132,14 @@ public final class LeaseBuilder
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
-        checkParam("unit", executionContext, Unit.class);
         checkParam("reference", executionContext, String.class);
         checkParam("name", executionContext, String.class);
+        checkParam("property", executionContext, Unit.class);
         checkParam("landlord", executionContext, Party.class);
         checkParam("tenant", executionContext, Party.class);
         checkParam("startDate", executionContext, LocalDate.class);
         checkParam("endDate", executionContext, LocalDate.class);
 
-        defaultParam("managerRoleCreationPolicy", executionContext, ManagerRoleCreationPolicy.CREATE);
-        defaultParam("occupancyCreationPolicy", executionContext, OccupancyCreationPolicy.CREATE);
         defaultParam("invoiceAddressCreationPolicy", executionContext, InvoiceAddressCreationPolicy.DONT_CREATE);
         defaultParam("addressesCreationPolicy", executionContext, AddressesCreationPolicy.DONT_CREATE);
 
@@ -159,7 +150,7 @@ public final class LeaseBuilder
         final LeaseType leaseType = leaseTypeRepository.findOrCreate("STD", "Standard", atPath);
 
         Lease lease = leaseRepository.newLease(
-                unit.getApplicationTenancy(), reference,
+                property.getApplicationTenancy(), reference,
                 name,
                 leaseType,
                 startDate,
@@ -170,26 +161,19 @@ public final class LeaseBuilder
         );
         executionContext.addResult(this, lease.getReference(), lease);
 
-        if (managerRoleCreationPolicy == ManagerRoleCreationPolicy.CREATE) {
-
-            checkParam("manager", executionContext, Party.class);
-
+        if (manager != null) {
             final AgreementRole role = lease.createRole(agreementRoleTypeRepository.find(
                     LeaseAgreementRoleTypeEnum.MANAGER), manager, null, null);
             executionContext.addResult(this, role);
         }
-        if (occupancyCreationPolicy == OccupancyCreationPolicy.CREATE) {
-
-            checkParam("brand", executionContext, String.class);
-            checkParam("sector", executionContext, String.class);
-            checkParam("activity", executionContext, String.class);
-
-            Occupancy occupancy = occupancyRepository.newOccupancy(lease, unit, startDate);
-            occupancy.setEndDate(occupancyEndDate);
-            occupancy.setBrandName(brand, brandCoverage, countryOfOrigin);
-            occupancy.setSectorName(sector);
-            occupancy.setActivityName(activity);
+        for (final OccupancySpec spec : occupancySpecs) {
+            Occupancy occupancy = occupancyRepository.newOccupancy(lease, spec.unit, spec.startDate);
+            occupancy.setEndDate(spec.endDate);
+            occupancy.setBrandName(spec.brand, spec.brandCoverage, spec.countryOfOrigin);
+            occupancy.setSectorName(spec.sector);
+            occupancy.setActivityName(spec.activity);
             executionContext.addResult(this, occupancy);
+
         }
 
         if(invoiceAddressCreationPolicy == InvoiceAddressCreationPolicy.CREATE) {
@@ -243,11 +227,6 @@ public final class LeaseBuilder
         }
     }
 
-
-    private void addAddresses(final Lease lease) {
-        createAddress(lease, AgreementRoleCommunicationChannelTypeEnum.ADMINISTRATION_ADDRESS);
-        createAddress(lease, AgreementRoleCommunicationChannelTypeEnum.INVOICE_ADDRESS);
-    }
 
     private void createAddress(Lease lease, IAgreementRoleCommunicationChannelType addressType) {
         final AgreementRoleType agreementRoleType =

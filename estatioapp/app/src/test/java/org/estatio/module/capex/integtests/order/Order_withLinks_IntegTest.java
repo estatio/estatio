@@ -33,6 +33,7 @@ import org.estatio.module.capex.fixtures.IncomingInvoiceFixture;
 import org.estatio.module.capex.fixtures.OrderFixture;
 import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
+import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;
@@ -52,6 +53,7 @@ public class Order_withLinks_IntegTest extends CapexModuleIntegTestAbstract {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
+                executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
                 executionContext.executeChild(this, new IncomingChargeFixture());
                 executionContext.executeChild(this, orderFixture);
                 executionContext.executeChild(this, Budget_enum.OxfBudget2015.toFixtureScript());

@@ -136,7 +136,7 @@ public class OccupancyRepository_IntegTest extends LeaseModuleIntegTestAbstract 
 
         @Test
         public void happyCase() throws Exception {
-            Brand brand = brandRepository.findByName(Lease_enum.OxfTopModel001Gb.getBrand());
+            Brand brand = brandRepository.findByName(Lease_enum.OxfTopModel001Gb.getOccupancySpecs()[0].getBrand());
             assertNotNull(brand);
 
             assertThat(occupancyRepository.findByBrand(brand, false).size(), is(1));
@@ -177,8 +177,8 @@ public class OccupancyRepository_IntegTest extends LeaseModuleIntegTestAbstract 
 
         @Before
         public void setUp() throws Exception {
-            oldBrand = brandRepository.findByName(Lease_enum.OxfTopModel001Gb.getBrand());
-            newBrand = brandRepository.findByName(Lease_enum.OxfMediaX002Gb.getBrand());
+            oldBrand = brandRepository.findByName(Lease_enum.OxfTopModel001Gb.getOccupancySpecs()[0].getBrand());
+            newBrand = brandRepository.findByName(Lease_enum.OxfMediaX002Gb.getOccupancySpecs()[0].getBrand());
         }
 
         @Test
