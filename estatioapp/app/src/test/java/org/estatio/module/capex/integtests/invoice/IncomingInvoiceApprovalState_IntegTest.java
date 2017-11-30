@@ -51,7 +51,7 @@ import org.estatio.module.party.dom.role.PartyRole;
 import org.estatio.module.party.dom.role.PartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState.NOT_VERIFIED;
@@ -91,8 +91,8 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
     public void setUp() {
         propertyForOxf = Property_enum.OxfGb.findUsing(serviceRegistry);
 
-        buyer = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
-        seller = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+        buyer = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
+        seller = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
 
         greatBritain = countryRepository.findCountry(Country_enum.GBR.getRef3());
         charge_for_works = chargeRepository.findByReference("WORKS");

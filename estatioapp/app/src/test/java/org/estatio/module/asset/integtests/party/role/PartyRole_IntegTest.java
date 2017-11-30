@@ -34,7 +34,7 @@ import org.estatio.module.party.dom.role.PartyRoleRepository;
 import org.estatio.module.party.dom.role.PartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -59,7 +59,7 @@ public class PartyRole_IntegTest extends AssetModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, Organisation_enum.AcmeNl.toFixtureScript());
+                    executionContext.executeChild(this, OrganisationAndComms_enum.AcmeNl.toFixtureScript());
                 }
             });
         }
@@ -68,7 +68,7 @@ public class PartyRole_IntegTest extends AssetModuleIntegTestAbstract {
         public void add_role() {
             // Given
             PartyRoleType partyRoleType = partyRoleTypeRepository.findOrCreate(PartyRoleTypeEnum.TREASURER);
-            Party party = Organisation_enum.AcmeNl.findUsing(serviceRegistry);
+            Party party = OrganisationAndComms_enum.AcmeNl.findUsing(serviceRegistry);
             int roleChoices = party.choices0AddRole().size();
 
             // When

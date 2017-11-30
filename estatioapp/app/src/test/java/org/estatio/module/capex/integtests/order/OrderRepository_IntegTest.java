@@ -19,7 +19,7 @@ import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,7 +34,7 @@ public class OrderRepository_IntegTest extends CapexModuleIntegTestAbstract {
             protected void execute(final ExecutionContext executionContext) {
 
                 executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
-                executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
+                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toFixtureScript());
             }
         });
     }
@@ -48,7 +48,7 @@ public class OrderRepository_IntegTest extends CapexModuleIntegTestAbstract {
             LocalDate orderDate = new LocalDate(2017, 1, 1);
 
 
-            Party seller = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+            Party seller = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
             Order orderMade1 = orderRepository.create(property,"123", sellerOrderReference, orderDate.plusDays(4),orderDate, seller, null, "/GBR", null);
             Order orderMade2 = orderRepository.create(property,"456", sellerOrderReference, orderDate.plusDays(5),orderDate.plusDays(1), seller, null, "/GBR", null);

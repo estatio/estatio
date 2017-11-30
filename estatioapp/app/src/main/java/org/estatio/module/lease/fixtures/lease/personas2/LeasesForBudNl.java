@@ -26,7 +26,7 @@ import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.LeaseAbstract;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.incode.module.base.integtests.VT.ld;
 
@@ -48,14 +48,14 @@ public class LeasesForBudNl extends LeaseAbstract {
     public static final String UNIT_REF6 = Property_enum.BudNl.unitRef("006");
     public static final String UNIT_REF7 = Property_enum.BudNl.unitRef("007");
 
-    public static final String PARTY_REF_TENANT1 = Organisation_enum.PoisonNl.getRef();
-    public static final String PARTY_REF_TENANT2 = Organisation_enum.MiracleNl.getRef();
-    public static final String PARTY_REF_TENANT3 = Organisation_enum.HelloWorldNl.getRef();
-    public static final String PARTY_REF_TENANT4 = Organisation_enum.DagoBankNl.getRef();
-    public static final String PARTY_REF_TENANT4A = Organisation_enum.NlBankNl.getRef();
-    public static final String PARTY_REF_TENANT5 = Organisation_enum.HyperNl.getRef();
+    public static final String PARTY_REF_TENANT1 = OrganisationAndComms_enum.PoisonNl.getRef();
+    public static final String PARTY_REF_TENANT2 = OrganisationAndComms_enum.MiracleNl.getRef();
+    public static final String PARTY_REF_TENANT3 = OrganisationAndComms_enum.HelloWorldNl.getRef();
+    public static final String PARTY_REF_TENANT4 = OrganisationAndComms_enum.DagoBankNl.getRef();
+    public static final String PARTY_REF_TENANT4A = OrganisationAndComms_enum.NlBankNl.getRef();
+    public static final String PARTY_REF_TENANT5 = OrganisationAndComms_enum.HyperNl.getRef();
 
-    public static final String PARTY_REF_LANDLORD = Organisation_enum.AcmeNl.getRef();
+    public static final String PARTY_REF_LANDLORD = OrganisationAndComms_enum.AcmeNl.getRef();
     public static final String PARTY_REF_MANAGER = Person_enum.JohnDoeNl.getRef();
 
     public static final String BRAND1 = "Poison";
@@ -73,13 +73,13 @@ public class LeasesForBudNl extends LeaseAbstract {
 
         // prereqs
         executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
-        executionContext.executeChild(this, Organisation_enum.AcmeNl.toFixtureScript());
-        executionContext.executeChild(this, Organisation_enum.PoisonNl.toFixtureScript());
-        executionContext.executeChild(this, Organisation_enum.MiracleNl.toFixtureScript());
-        executionContext.executeChild(this, Organisation_enum.HelloWorldNl.toFixtureScript());
-        executionContext.executeChild(this, Organisation_enum.DagoBankNl.toFixtureScript());
-        executionContext.executeChild(this, Organisation_enum.NlBankNl.toFixtureScript());
-        executionContext.executeChild(this, Organisation_enum.HyperNl.toFixtureScript());
+        executionContext.executeChild(this, OrganisationAndComms_enum.AcmeNl.toFixtureScript());
+        executionContext.executeChild(this, OrganisationAndComms_enum.PoisonNl.toFixtureScript());
+        executionContext.executeChild(this, OrganisationAndComms_enum.MiracleNl.toFixtureScript());
+        executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldNl.toFixtureScript());
+        executionContext.executeChild(this, OrganisationAndComms_enum.DagoBankNl.toFixtureScript());
+        executionContext.executeChild(this, OrganisationAndComms_enum.NlBankNl.toFixtureScript());
+        executionContext.executeChild(this, OrganisationAndComms_enum.HyperNl.toFixtureScript());
         executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForBudNl());
 
         // exec

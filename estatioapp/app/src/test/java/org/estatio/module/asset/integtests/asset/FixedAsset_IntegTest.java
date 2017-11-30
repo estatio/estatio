@@ -20,7 +20,7 @@ import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOw
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.incode.module.base.integtests.VT.ld;
@@ -54,7 +54,7 @@ public class FixedAsset_IntegTest extends AssetModuleIntegTestAbstract {
 
     @Before
     public void setUp() {
-        party = Organisation_enum.AcmeNl.findUsing(serviceRegistry);
+        party = OrganisationAndComms_enum.AcmeNl.findUsing(serviceRegistry);
         property = Property_enum.KalNl.findUsing(serviceRegistry);
 
         List<FixedAssetRole> allFixedAssetRoles = fixedAssetRoles.findAllForProperty(property);

@@ -31,7 +31,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 import org.estatio.module.party.integtests.PartyModuleIntegTestAbstract;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -51,10 +51,10 @@ public class CommunicationChannelContributions_IntegTest extends PartyModuleInte
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, Organisation_enum.HelloWorldGb.toFixtureScript());
+                executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.toFixtureScript());
             }
         });
-        party = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
+        party = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
     }
 
     @Ignore // TODO: reinstate

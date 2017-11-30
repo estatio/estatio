@@ -73,7 +73,7 @@ import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
@@ -528,8 +528,8 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         @Before
         public void setUp() throws Exception {
             applicationTenancy = applicationTenancyRepository.findByPath(ApplicationTenancy_enum.Gb.getPath());
-            seller = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
-            buyer = Organisation_enum.PoisonGb.findUsing(serviceRegistry);
+            seller = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
+            buyer = OrganisationAndComms_enum.PoisonGb.findUsing(serviceRegistry);
             lease = leaseRepository.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
             invoiceStartDate = InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.startDateFor(lease);
         }

@@ -41,7 +41,7 @@ import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 public class BankMandateRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
@@ -81,7 +81,7 @@ public class BankMandateRepository_IntegTest extends LeaseModuleIntegTestAbstrac
         public void happy_case() throws Exception {
 
             // Given
-            Party owner = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+            Party owner = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
             BankAccount bankAccount = BankAccount_enum.TopModelGb.findUsing(serviceRegistry);
 
             final String reference = "REF";

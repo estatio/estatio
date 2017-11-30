@@ -36,7 +36,7 @@ import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOw
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -83,7 +83,7 @@ public class FixedAssetRoleRepository_IntegTest extends AssetModuleIntegTestAbst
         public void withExistingPropertyPartyAndRoleType() throws Exception {
 
             // given
-            Party party = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
+            Party party = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
             Property property = propertyRepository.findPropertyByReference("OXF");
             // TODO: get right dates (although the date params are not actually
             // used in the query..)

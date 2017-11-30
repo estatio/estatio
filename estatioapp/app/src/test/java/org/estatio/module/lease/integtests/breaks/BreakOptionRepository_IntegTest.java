@@ -43,7 +43,7 @@ import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.breaks.BreakType;
 import org.estatio.module.lease.dom.breaks.RollingBreakOption;
-import org.estatio.module.lease.fixtures.LeaseBuilder;
+import org.estatio.module.lease.fixtures.lease.builders.LeaseBuilderLEGACY;
 import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfTopModel001;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
@@ -86,7 +86,7 @@ public class BreakOptionRepository_IntegTest extends LeaseModuleIntegTestAbstrac
 
     public static class NewBreakOption extends BreakOption_IntegTest {
 
-        LeaseBuilder fs;
+        LeaseBuilderLEGACY fs;
         @Inject
         EventRepository eventRepository;
         @Inject
@@ -99,7 +99,7 @@ public class BreakOptionRepository_IntegTest extends LeaseModuleIntegTestAbstrac
 
             setFixtureClockDate(2014, 7, 1);
 
-            fs = new LeaseBuilder() {{
+            fs = new LeaseBuilderLEGACY() {{
                 setStartDate(VT.ld(2014, 4, 1));
                 setDuration("P10y");
             }};

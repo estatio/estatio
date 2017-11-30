@@ -20,69 +20,39 @@ package org.estatio.module.lease.fixtures.lease.personas;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
-import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnSmithGb;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
-import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.LeaseAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
-
-import static org.incode.module.base.integtests.VT.ld;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 public class LeaseForOxfPoison003Gb extends LeaseAbstract {
 
     public static final Lease_enum data = Lease_enum.OxfPoison003Gb;
+    public static final Property_enum property_d = Property_enum.OxfGb;
+    public static final OrganisationAndComms_enum tenant_d = OrganisationAndComms_enum.PoisonGb;
 
     public static final String REF = data.getRef();
 
-    public static final String UNIT_REFERENCE = Property_enum.OxfGb.unitRef("003");
-    public static final String PARTY_REF_LANDLORD = Organisation_enum.HelloWorldGb.getRef();
-
-    public static final String BRAND = "Poison";
-    public static final BrandCoverage BRAND_COVERAGE = BrandCoverage.INTERNATIONAL;
-    public static final String COUNTRY_OF_ORIGIN_REF = Country_enum.NLD.getRef3();
-
-    public static final String PARTY_REF_TENANT = Organisation_enum.PoisonGb.getRef();
-    public static final String PARTY_REF_MANAGER = Person_enum.JohnSmithGb.getRef();
+    public static final String PARTY_REF_TENANT = tenant_d.getRef();
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, Organisation_enum.HelloWorldGb.toFixtureScript());
-        executionContext.executeChild(this, Organisation_enum.PoisonGb.toFixtureScript());
+        executionContext.executeChild(this, data.getLandlord_d().toFixtureScript());
+        executionContext.executeChild(this, data.getTenant_d().toFixtureScript());
         executionContext.executeChild(this, new PersonAndRolesForJohnSmithGb());
         executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
 
         // exec
-        final Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);
-        final Lease lease = createLease(
-                REF,
-                "Poison Lease",
-                UNIT_REFERENCE,
-                BRAND,
-                BRAND_COVERAGE,
-                COUNTRY_OF_ORIGIN_REF,
-                "HEALT&BEAUTY",
-                "PERFUMERIE",
-                PARTY_REF_LANDLORD,
-                PARTY_REF_TENANT,
-                ld(2011, 1, 1),
-                ld(2020, 12, 31),
-                true,
-                true,
-                manager,
-                executionContext);
+        final Lease lease = data.toFixtureScript().build(this, executionContext).getObject();
 
-        final String partyRefTenant = PARTY_REF_TENANT;
-        final CommunicationChannelType channelType = CommunicationChannelType.EMAIL_ADDRESS;
-
-        addInvoiceAddressForTenant(lease, partyRefTenant, channelType);
+        addInvoiceAddressForTenant(lease,
+                tenant_d.getRef(),
+                CommunicationChannelType.EMAIL_ADDRESS);
     }
 
 }

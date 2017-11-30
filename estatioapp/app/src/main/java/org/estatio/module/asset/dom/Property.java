@@ -203,6 +203,11 @@ public class Property
     @Getter @Setter
     private SortedSet<Unit> units = new TreeSet<>();
 
+    @Programmatic
+    public Unit findUnitByReference(final String unitReference) {
+        return unitRepository.findUnitByReference(unitReference);
+    }
+
     // //////////////////////////////////////
 
     @Column(allowsNull = "true")
@@ -286,6 +291,7 @@ public class Property
 
     @Inject
     FixedAssetOwnershipRepository fixedAssetOwnershipRepository;
+
 
     // //////////////////////////////////////
 

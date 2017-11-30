@@ -19,7 +19,7 @@
 package org.estatio.module.lease.fixtures.bankaccount.personas;
 
 import org.estatio.module.financial.fixtures.FinancialAccountTransactionAbstract;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.incode.module.base.integtests.VT.bd;
 import static org.incode.module.base.integtests.VT.ld;
@@ -38,8 +38,8 @@ public class FinancialAccountTransactionForTopModel extends FinancialAccountTran
     protected void execute(ExecutionContext ec) {
 
         createFinancialAccountTransaction(
-                Organisation_enum.TopModelGb.getRef(), ld(2014, 7, 1), bd(1000), ec);
+                OrganisationAndComms_enum.TopModelGb.getRef(), ld(2014, 7, 1), bd(1000), ec);
         createFinancialAccountTransaction(
-                Organisation_enum.TopModelGb.getRef(), ld(2014, 7, 2), bd(2000), ec);
+                OrganisationAndComms_enum.TopModelGb.getRef(), ld(2014, 7, 2), bd(2000), ec);
     }
 }

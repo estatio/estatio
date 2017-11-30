@@ -50,7 +50,7 @@ import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.PersonRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -133,7 +133,7 @@ public class AgreementRoleRepository_IntegTest extends LeaseModuleIntegTestAbstr
         public void setUp() throws Exception {
             artTenant = agreementRoleTypeRepository.findByTitle(LeaseAgreementRoleTypeEnum.TENANT.getTitle());
             leaseOxfTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            partyTopModel = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+            partyTopModel = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
         }
 
         @Test

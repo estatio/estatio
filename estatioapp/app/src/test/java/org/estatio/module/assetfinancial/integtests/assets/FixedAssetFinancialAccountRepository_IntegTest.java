@@ -46,9 +46,10 @@ import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
+import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -150,7 +151,9 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
         @Before
         public void setUp() throws Exception {
             oldBankAccount = bankAccountRepository.findBankAccountByReference(owner, BankAccountFaFa_enum.Oxford.getBankAccount_d().getIban());
-            newBankAccount = bankAccountRepository.newBankAccount(Organisation_enum.HelloWorldGb.findUsing(serviceRegistry), "NEWBANKACCOUNT", null);
+            final Organisation organisation = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
+            newBankAccount = bankAccountRepository.newBankAccount(
+                    organisation, "NEWBANKACCOUNT", null);
         }
 
         @Test

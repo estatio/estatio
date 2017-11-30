@@ -126,8 +126,10 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new DocFragmentDemoFixture());
         executionContext.executeChild(this, new DocFragmentSeedFixture());
         executionContext.executeChild(this, Person_enum.LinusTorvaldsNl.toFixtureScript());
+
         executionContext.executeChild(this, BankAccount_enum.AcmeNl.toFixtureScript());
         executionContext.executeChild(this, BankAccountFaFa_enum.AcmeNl.toFixtureScript());
+
         executionContext.executeChild(this, BankAccount_enum.HelloWorldNl.toFixtureScript());
         executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldNl.toFixtureScript());
         executionContext.executeChild(this, BankAccount_enum.HelloWorldGb.toFixtureScript());

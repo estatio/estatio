@@ -18,63 +18,37 @@
  */
 package org.estatio.module.lease.fixtures.lease.personas;
 
-import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnSmithGb;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
-import org.estatio.module.country.fixtures.enums.Country_enum;
-import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.LeaseAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
-
-import static org.incode.module.base.integtests.VT.ld;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 public class LeaseForOxfMiracl005Gb extends LeaseAbstract {
 
     public static final Lease_enum data = Lease_enum.OxfMiracl005Gb;
+    public static final Property_enum property_d = Property_enum.OxfGb;
+    public static final OrganisationAndComms_enum tenant_d = OrganisationAndComms_enum.MiracleGb;
 
     public static final String REF = data.getRef();
 
-    public static final String UNIT_REF = Property_enum.OxfGb.unitRef("005");
-    public static final String PARTY_REF_LANDLORD = Organisation_enum.HelloWorldGb.getRef();
-    public static final String PARTY_REF_TENANT = Organisation_enum.MiracleGb.getRef();
+    public static final String PARTY_REF_TENANT = tenant_d.getRef();
 
-    public static final String BRAND = "Miracle";
-    public static final BrandCoverage BRAND_COVERAGE = BrandCoverage.NATIONAL;
-    public static final String COUNTRY_OF_ORIGIN_REF = Country_enum.GBR.getRef3();
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, Organisation_enum.HelloWorldGb.toFixtureScript());
-        executionContext.executeChild(this, Organisation_enum.MiracleGb.toFixtureScript());
+        executionContext.executeChild(this, data.getLandlord_d().toFixtureScript());
+        executionContext.executeChild(this, data.getTenant_d().toFixtureScript());
         executionContext.executeChild(this, new PersonAndRolesForJohnSmithGb());
         executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
 
         // exec
 
-        Party manager = partyRepository.findPartyByReference(Person_enum.JohnSmithGb.getRef());
+        data.toFixtureScript().build(this, executionContext);
 
-        createLease(
-                REF,
-                "Miracle lease",
-                UNIT_REF,
-                BRAND,
-                BRAND_COVERAGE,
-                COUNTRY_OF_ORIGIN_REF,
-                "FASHION",
-                "ALL",
-                PARTY_REF_LANDLORD,
-                PARTY_REF_TENANT,
-                ld(2013, 11, 7),
-                ld(2023, 11, 6),
-                false,
-                true,
-                manager,
-                executionContext);
     }
 
 }

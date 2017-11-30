@@ -75,7 +75,7 @@ import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas.LeaseI
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -167,7 +167,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
             // given
             final String newReference = "OXF-MEDIA-001";
             final Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            final Party newParty = Organisation_enum.MediaXGb.findUsing(serviceRegistry);
+            final Party newParty = OrganisationAndComms_enum.MediaXGb.findUsing(serviceRegistry);
             final LocalDate newStartDate = VT.ld(2014, 1, 1);
 
             // when

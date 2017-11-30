@@ -38,7 +38,7 @@ import static org.estatio.module.base.fixtures.security.apptenancy.enums.Applica
 
 @Getter
 @Accessors(chain = true)
-public enum Organisation_enum
+public enum OrganisationAndComms_enum
         implements EnumWithBuilderScript<Organisation, OrganisationAndCommsBuilder>, EnumWithFinder<Organisation> {
 
     AcmeNl          ("ACME_NL", "ACME Properties International", Nl,
@@ -107,14 +107,14 @@ public enum Organisation_enum
     private final ApplicationTenancy_enum applicationTenancy;
     private final OrganisationComms_enum[] comms;
 
-    Organisation_enum(
+    OrganisationAndComms_enum(
             final String ref,
             final String name,
             final ApplicationTenancy_enum applicationTenancy) {
         this(ref, name, applicationTenancy, new OrganisationComms_enum[0]);
     }
 
-    Organisation_enum(
+    OrganisationAndComms_enum(
             final String ref,
             final String name,
             final ApplicationTenancy_enum applicationTenancy,

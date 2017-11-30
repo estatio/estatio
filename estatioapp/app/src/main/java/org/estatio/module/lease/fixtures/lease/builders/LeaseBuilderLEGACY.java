@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.lease.fixtures;
+package org.estatio.module.lease.fixtures.lease.builders;
 
 import javax.inject.Inject;
 
@@ -43,13 +43,14 @@ import org.estatio.module.lease.dom.LeaseType;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
+import org.estatio.module.lease.fixtures.LeaseTypeForItalyRefData;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 
 import lombok.Getter;
 import lombok.Setter;
 
-public class LeaseBuilder extends FixtureScript {
+public class LeaseBuilderLEGACY extends FixtureScript {
 
     @Getter @Setter
     private String reference;

@@ -47,7 +47,7 @@ import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -75,7 +75,7 @@ public class FinancialAccount_IntegTest extends AssetFinancialModuleIntegTestAbs
 
         @Before
         public void setUp() throws Exception {
-            party = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
+            party = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
         }
 
         // this test really just makes an assertion about the fixture.
@@ -123,11 +123,11 @@ public class FinancialAccount_IntegTest extends AssetFinancialModuleIntegTestAbs
 
             runFixtureScript(
                     BankAccountFaFa_enum.HelloWorldNl.toFixtureScript(),
-                    Organisation_enum.HelloWorldNl.toFixtureScript()
+                    OrganisationAndComms_enum.HelloWorldNl.toFixtureScript()
             );
 
             bankAccount = BankAccountFaFa_enum.HelloWorldNl.getBankAccount_d().findUsing(serviceRegistry);
-            owner = Organisation_enum.HelloWorldNl.findUsing(serviceRegistry);
+            owner = OrganisationAndComms_enum.HelloWorldNl.findUsing(serviceRegistry);
         }
 
         @Rule

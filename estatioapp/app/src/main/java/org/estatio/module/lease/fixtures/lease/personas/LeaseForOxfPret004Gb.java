@@ -18,68 +18,37 @@
  */
 package org.estatio.module.lease.fixtures.lease.personas;
 
-import javax.inject.Inject;
-
-import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForGinoVannelliGb;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
-import org.estatio.module.country.fixtures.enums.Country_enum;
-import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.LeaseAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
-
-import static org.incode.module.base.integtests.VT.ld;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 public class LeaseForOxfPret004Gb extends LeaseAbstract {
 
     public static final Lease_enum data = Lease_enum.OxfPret004Gb;
+    public static final Property_enum property_d = Property_enum.OxfGb;
+    public static final OrganisationAndComms_enum tenant_d = OrganisationAndComms_enum.PretGb;
 
     public static final String REF = data.getRef();
 
-    public static final String LEASE_REFERENCE = REF;
-    public static final String UNIT_REFERENCE = Property_enum.OxfGb.unitRef("004");
-    public static final String PARTY_REF_LANDLORD = Organisation_enum.HelloWorldGb.getRef();
-    public static final String PARTY_REF_TENANT = Organisation_enum.PretGb.getRef();
+    public static final String PARTY_REF_TENANT = tenant_d.getRef();
 
-    public static final String BRAND = "Pret-a-Partir";
-    public static final BrandCoverage BRAND_COVERAGE = BrandCoverage.REGIONAL;
-    public static final String COUNTRY_OF_ORIGIN_REF = Country_enum.FRA.getRef3();
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, Organisation_enum.PretGb.toFixtureScript());
-        executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
+        executionContext.executeChild(this, data.getLandlord_d().toFixtureScript());
+        executionContext.executeChild(this, data.getTenant_d().toFixtureScript());
         executionContext.executeChild(this, new PersonAndRolesForGinoVannelliGb());
         executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
 
         // exec
-        Party manager = partyRepository.findPartyByReference(Person_enum.GinoVannelliGb.getRef());
-        createLease(
-                LEASE_REFERENCE,
-                "Pret-a-Partir lease",
-                UNIT_REFERENCE,
-                BRAND,
-                BRAND_COVERAGE,
-                COUNTRY_OF_ORIGIN_REF,
-                "FASHION",
-                "ALL",
-                PARTY_REF_LANDLORD,
-                PARTY_REF_TENANT,
-                ld(2011, 7, 1),
-                ld(2014, 6, 30),
-                false,
-                false,
-                manager,
-                executionContext);
+        data.toFixtureScript().build(this, executionContext);
+
     }
 
-    @Inject
-    PartyRepository partyRepository;
 
 }

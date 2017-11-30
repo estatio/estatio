@@ -53,7 +53,7 @@ import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState.AWAITING_PROOF;
@@ -122,12 +122,12 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
                 @Override
                 protected void execute(final FixtureScript.ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
+                    executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toFixtureScript());
                 }
             });
 
             // given
-            seller = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+            seller = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
         }
 
         @Test
@@ -189,7 +189,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
             });
 
             // given
-            seller = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+            seller = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
             bankAccount = bankAccountRepository.findBankAccountByReference(seller,
                     BankAccount_enum.TopModelGb.getIban());
             // bank accounts now need BICs so can verify

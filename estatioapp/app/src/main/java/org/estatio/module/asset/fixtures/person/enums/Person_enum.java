@@ -15,7 +15,7 @@ import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import lombok.Data;
 import lombok.Getter;
@@ -28,10 +28,10 @@ import static org.estatio.module.base.fixtures.security.apptenancy.enums.Applica
 import static org.estatio.module.party.dom.PersonGenderType.FEMALE;
 import static org.estatio.module.party.dom.PersonGenderType.MALE;
 import static org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum.CONTACT;
-import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.PastaPapaItNl;
-import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.PerdantFr;
-import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.TopModelGb;
-import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.YoukeaSe;
+import static org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum.PastaPapaItNl;
+import static org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum.PerdantFr;
+import static org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum.TopModelGb;
+import static org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum.YoukeaSe;
 
 @Getter
 @Accessors(chain = true)
@@ -163,7 +163,7 @@ public enum Person_enum
     private final ApplicationTenancy_enum applicationTenancy_d;
 
     private final PartyRelationshipTypeEnum partyRelationshipType;
-    private final Organisation_enum partyFrom_d;
+    private final OrganisationAndComms_enum partyFrom_d;
 
     private final IPartyRoleType[] partyRoleTypes;
     private final FixedAssetRoleSpec[] fixedAssetRoles;
@@ -177,7 +177,7 @@ public enum Person_enum
             final PersonGenderType personGenderType,
             final ApplicationTenancy_enum applicationTenancy_d,
             final PartyRelationshipTypeEnum partyRelationshipType,
-            final Organisation_enum partyFrom_d,
+            final OrganisationAndComms_enum partyFrom_d,
             final IPartyRoleType[] partyRoleTypes,
             final FixedAssetRoleSpec[] fixedAssetRoles) {
         this.ref = ref;
