@@ -69,8 +69,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-se_enum;
-
 public class InvoiceCalculationService_normalRun_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Inject
