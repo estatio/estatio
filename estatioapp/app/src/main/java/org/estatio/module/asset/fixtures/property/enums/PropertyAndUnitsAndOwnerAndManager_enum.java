@@ -2,8 +2,8 @@ package org.estatio.module.asset.fixtures.property.enums;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
-import org.apache.isis.applib.fixturescripts.EnumWithFinder;
+import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.asset.dom.Property;
@@ -19,8 +19,9 @@ import static org.incode.module.base.integtests.VT.ld;
 //@AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum PropertyAndUnitsAndOwnerAndManager_enum implements EnumWithBuilderScript<Property, PropertyAndUnitsAndOwnerAndManagerBuilder>,
-        EnumWithFinder<Property> {
+public enum PropertyAndUnitsAndOwnerAndManager_enum implements
+        PersonaWithBuilderScript<Property, PropertyAndUnitsAndOwnerAndManagerBuilder>,
+        PersonaWithFinder<Property> {
 
     BudNl   (Property_enum.BudNl,
             7,
@@ -103,7 +104,7 @@ public enum PropertyAndUnitsAndOwnerAndManager_enum implements EnumWithBuilderSc
     }
 
     @Override
-    public PropertyAndUnitsAndOwnerAndManagerBuilder toFixtureScript() {
+    public PropertyAndUnitsAndOwnerAndManagerBuilder toBuilderScript() {
         final Property_enum property_d = getProperty_d();
 
         return new PropertyAndUnitsAndOwnerAndManagerBuilder()

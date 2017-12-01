@@ -38,7 +38,7 @@ public class LeaseItemAndLeaseTermForRentOf2ForOxfMiracl005Gb extends LeaseItemA
     private void createLeaseTermsForOxfMiracl005(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.toFixtureScript());
+        executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.toBuilderScript());
 
         // exec
 

@@ -159,10 +159,10 @@ public class Invoice_IntegTest extends LeaseModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, Person_enum.LinusTorvaldsNl.toFixtureScript());
+                    executionContext.executeChild(this, Person_enum.LinusTorvaldsNl.toBuilderScript());
 
-                    executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toFixtureScript());
-                    executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.KalNl.toFixtureScript());
+                    executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
+                    executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.KalNl.toBuilderScript());
 
                     executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
 
@@ -172,7 +172,7 @@ public class Invoice_IntegTest extends LeaseModuleIntegTestAbstract {
                     executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
                     executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
 
-                    executionContext.executeChild(this, Lease_enum.OxfPret004Gb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfPret004Gb.toBuilderScript());
 
                     executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentOf2ForOxfMiracl005Gb());
                     executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeOf2ForOxfMiracl005Gb());

@@ -40,13 +40,13 @@ public class BudgetOverridesForBud extends BudgetOverrideAbstact {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChildT(this, Lease_enum.BudPoison001Nl.toFixtureScript());
-        executionContext.executeChildT(this, Lease_enum.BudMiracle002Nl.toFixtureScript());
-        executionContext.executeChildT(this, Lease_enum.BudHello003Nl.toFixtureScript());
-        executionContext.executeChildT(this, Lease_enum.BudDago004Nl.toFixtureScript());
-        executionContext.executeChildT(this, Lease_enum.BudNlBank004Nl.toFixtureScript());
-        executionContext.executeChildT(this, Lease_enum.BudHyper005Nl.toFixtureScript());
-        executionContext.executeChildT(this, Lease_enum.BudHello006Nl.toFixtureScript());
+        executionContext.executeChildT(this, Lease_enum.BudPoison001Nl.toBuilderScript());
+        executionContext.executeChildT(this, Lease_enum.BudMiracle002Nl.toBuilderScript());
+        executionContext.executeChildT(this, Lease_enum.BudHello003Nl.toBuilderScript());
+        executionContext.executeChildT(this, Lease_enum.BudDago004Nl.toBuilderScript());
+        executionContext.executeChildT(this, Lease_enum.BudNlBank004Nl.toBuilderScript());
+        executionContext.executeChildT(this, Lease_enum.BudHyper005Nl.toBuilderScript());
+        executionContext.executeChildT(this, Lease_enum.BudHello006Nl.toBuilderScript());
 
         // exec
         Lease leaseForPoison = Lease_enum.BudPoison001Nl.findUsing(serviceRegistry);

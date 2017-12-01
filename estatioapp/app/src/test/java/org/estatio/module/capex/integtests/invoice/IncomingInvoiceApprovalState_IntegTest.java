@@ -78,8 +78,8 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
                 executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
                 executionContext.executeChild(this, new IncomingChargeFixture());
                 executionContext.executeChild(this, new IncomingInvoiceFixture());
-                executionContext.executeChild(this, BankAccount_enum.TopModelGb.toFixtureScript());
-                executionContext.executeChild(this, Person_enum.EmmaTreasurerGb.toFixtureScript());
+                executionContext.executeChild(this, BankAccount_enum.TopModelGb.toBuilderScript());
+                executionContext.executeChild(this, Person_enum.EmmaTreasurerGb.toBuilderScript());
             }
         });
 

@@ -58,8 +58,8 @@ public class GuaranteeRepository_IntegTest extends GuaranteeModuleIntegTestAbstr
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new GuaranteeForOxfTopModel001Gb());
-                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
-                executionContext.executeChild(this, BankAccount_enum.TopModelGb.toFixtureScript());
+                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
+                executionContext.executeChild(this, BankAccount_enum.TopModelGb.toBuilderScript());
             }
         });
 

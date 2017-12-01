@@ -44,7 +44,7 @@ public class CommunicationChannelRepository_IntegTest extends PartyModuleIntegTe
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toFixtureScript());
+                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
             }
         });
     }

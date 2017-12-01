@@ -31,11 +31,11 @@ public class IncomingDocumentRepository_IntegTest extends CapexModuleIntegTestAb
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toFixtureScript());
-                executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.toFixtureScript());
-                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toFixtureScript());
-                executionContext.executeChild(this, BankAccount_enum.HelloWorldNl.toFixtureScript());
-                executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldNl.toFixtureScript());
+                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
+                executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.toBuilderScript());
+                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
+                executionContext.executeChild(this, BankAccount_enum.HelloWorldNl.toBuilderScript());
+                executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldNl.toBuilderScript());
 
                 executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
 

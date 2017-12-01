@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
-import org.apache.isis.applib.fixturescripts.EnumWithFinder;
+import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.asset.dom.Property;
@@ -34,7 +34,7 @@ import static org.incode.module.base.integtests.VT.ld;
 @AllArgsConstructor()
 @Getter
 @Accessors(chain = true)
-public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<Lease, LeaseBuilder> {
+public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderScript<Lease, LeaseBuilder> {
 
     KalPoison001Nl  (
             "KAL-POISON-001", "Poison Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.KalNl,
@@ -209,7 +209,7 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
     }
 
     @Override
-    public LeaseBuilder toFixtureScript() {
+    public LeaseBuilder toBuilderScript() {
         return new LeaseBuilder()
                 .setPrereq((f,ec) -> f.setProperty(f.objectFor(propertyAndUnits_d.getProperty_d(), ec)))
                 .setReference(ref)

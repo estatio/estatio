@@ -40,7 +40,7 @@ public class Person_IntegTest extends AssetModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, Person_enum.JohnDoeNl.toFixtureScript());
+                    executionContext.executeChild(this, Person_enum.JohnDoeNl.toBuilderScript());
                 }
             });
         }

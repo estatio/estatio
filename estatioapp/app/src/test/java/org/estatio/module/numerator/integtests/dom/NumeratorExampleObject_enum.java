@@ -5,8 +5,8 @@ import javax.inject.Inject;
 import com.google.common.base.Objects;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
-import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
-import org.apache.isis.applib.fixturescripts.EnumWithFinder;
+import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
@@ -21,8 +21,8 @@ import lombok.experimental.Accessors;
 @Getter
 @Accessors(chain = true)
 public enum NumeratorExampleObject_enum
-        implements EnumWithBuilderScript<NumeratorExampleObject, NumeratorExampleObject_enum.Builder>,
-        EnumWithFinder<NumeratorExampleObject> {
+        implements PersonaWithBuilderScript<NumeratorExampleObject, NumeratorExampleObject_enum.Builder>,
+        PersonaWithFinder<NumeratorExampleObject> {
 
     Kal("Kal"),
     Oxf("Oxf");
@@ -31,7 +31,7 @@ public enum NumeratorExampleObject_enum
 
 
     @Override
-    public Builder toFixtureScript() {
+    public Builder toBuilderScript() {
         return new Builder().setName(name);
     }
 

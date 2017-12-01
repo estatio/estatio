@@ -61,9 +61,9 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toFixtureScript());
-                executionContext.executeChild(this, BankAccount_enum.Oxford.toFixtureScript());
-                executionContext.executeChild(this, BankAccountFaFa_enum.Oxford.toFixtureScript());
+                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
+                executionContext.executeChild(this, BankAccount_enum.Oxford.toBuilderScript());
+                executionContext.executeChild(this, BankAccountFaFa_enum.Oxford.toBuilderScript());
             }
         });
         owner = PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.getOwner_d().findUsing(serviceRegistry);

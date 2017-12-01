@@ -57,8 +57,8 @@ public class Property_IntegTest extends LeaseModuleIntegTestAbstract {
             @Override
             protected void execute(ExecutionContext executionContext) {
 
-                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toFixtureScript());
-                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
+                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
+                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
             }
         });
     }

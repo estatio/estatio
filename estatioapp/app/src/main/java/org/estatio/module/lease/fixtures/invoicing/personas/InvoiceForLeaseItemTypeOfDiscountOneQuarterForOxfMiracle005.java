@@ -69,7 +69,7 @@ public class InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005 extends
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.toFixtureScript());
+        executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.toBuilderScript());
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb());
 
         // exec

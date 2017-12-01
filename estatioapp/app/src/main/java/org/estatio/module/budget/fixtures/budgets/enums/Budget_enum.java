@@ -21,8 +21,8 @@ import java.math.BigDecimal;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
-import org.apache.isis.applib.fixturescripts.EnumWithFinder;
+import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.asset.dom.Property;
@@ -41,7 +41,7 @@ import static org.incode.module.base.integtests.VT.ld;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum Budget_enum implements EnumWithBuilderScript<Budget, BudgetBuilder>, EnumWithFinder<Budget> {
+public enum Budget_enum implements PersonaWithBuilderScript<Budget, BudgetBuilder>, PersonaWithFinder<Budget> {
 
     OxfBudget2015(
             PropertyAndUnitsAndOwnerAndManager_enum.OxfGb, ld(2015, 1, 1),
@@ -63,7 +63,7 @@ public enum Budget_enum implements EnumWithBuilderScript<Budget, BudgetBuilder>,
     private final BigDecimal value2;
 
     @Override
-    public BudgetBuilder toFixtureScript() {
+    public BudgetBuilder toBuilderScript() {
         return new BudgetBuilder()
                 .setPrereq((f,ec) -> f.setProperty(f.objectFor(property_d, ec)))
                 .setStartDate(startDate)

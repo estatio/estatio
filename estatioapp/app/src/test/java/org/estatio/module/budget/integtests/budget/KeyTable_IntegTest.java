@@ -65,8 +65,8 @@ public class KeyTable_IntegTest extends BudgetModuleIntegTestAbstract {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, Budget_enum.OxfBudget2015.toFixtureScript());
-                executionContext.executeChild(this, Budget_enum.OxfBudget2016.toFixtureScript());
+                executionContext.executeChild(this, Budget_enum.OxfBudget2015.toBuilderScript());
+                executionContext.executeChild(this, Budget_enum.OxfBudget2016.toBuilderScript());
 
 
             }

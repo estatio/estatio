@@ -58,7 +58,7 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
 
                 executionContext.executeChild(this, new IncomingChargeFixture());
                 executionContext.executeChild(this, orderFixture);
-                executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.toFixtureScript());
+                executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.toBuilderScript());
             }
         });
         order = orderFixture.getOrder();

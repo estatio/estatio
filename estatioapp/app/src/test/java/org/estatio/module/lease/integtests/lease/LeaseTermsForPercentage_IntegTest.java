@@ -70,7 +70,7 @@ public class LeaseTermsForPercentage_IntegTest extends LeaseModuleIntegTestAbstr
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
 
                     executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForOxfTopModel001Gb());
                     executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001Gb());
@@ -128,7 +128,7 @@ public class LeaseTermsForPercentage_IntegTest extends LeaseModuleIntegTestAbstr
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
 
                     executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForOxfTopModel001Gb());
                     executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001Gb());

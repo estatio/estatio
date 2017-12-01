@@ -50,8 +50,8 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, Person_enum.JohnDoeNl.toFixtureScript());
-                    executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldNl.toFixtureScript());
+                    executionContext.executeChild(this, Person_enum.JohnDoeNl.toBuilderScript());
+                    executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldNl.toBuilderScript());
                 }
             });
         }
@@ -89,7 +89,7 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldNl.toFixtureScript());
+                    executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldNl.toBuilderScript());
                 }
             });
         }
@@ -118,7 +118,7 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldNl.toFixtureScript());
+                    executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldNl.toBuilderScript());
                 }
             });
         }
@@ -147,9 +147,9 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, Person_enum.JohnDoeNl.toFixtureScript());
-                    executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldNl.toFixtureScript());
-                    executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toFixtureScript());
+                    executionContext.executeChild(this, Person_enum.JohnDoeNl.toBuilderScript());
+                    executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldNl.toBuilderScript());
+                    executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
                 }
             });
         }
@@ -175,7 +175,7 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldNl.toFixtureScript());
+                    executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldNl.toBuilderScript());
                 }
             });
         }

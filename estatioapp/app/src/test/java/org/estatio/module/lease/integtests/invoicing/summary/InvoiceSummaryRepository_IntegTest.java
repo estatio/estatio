@@ -83,7 +83,7 @@ public class InvoiceSummaryRepository_IntegTest extends LeaseModuleIntegTestAbst
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toBuilderScript());
                 }
             });
         }

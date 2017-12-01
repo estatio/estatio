@@ -50,7 +50,7 @@ public class AgreementRoleTypeRepository_IntegTest extends LeaseModuleIntegTestA
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
+                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
             }
         });
     }

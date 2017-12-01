@@ -32,7 +32,7 @@ public class LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002Gb extends Lease
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.toFixtureScript());
+        executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.toBuilderScript());
 
         // exec
         String leaseReference = LEASE_REF;

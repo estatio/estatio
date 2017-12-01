@@ -56,11 +56,11 @@ public class Order_withLinks_IntegTest extends CapexModuleIntegTestAbstract {
                 executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
                 executionContext.executeChild(this, new IncomingChargeFixture());
                 executionContext.executeChild(this, orderFixture);
-                executionContext.executeChild(this, Budget_enum.OxfBudget2015.toFixtureScript());
-                executionContext.executeChild(this, Budget_enum.OxfBudget2016.toFixtureScript());
+                executionContext.executeChild(this, Budget_enum.OxfBudget2015.toBuilderScript());
+                executionContext.executeChild(this, Budget_enum.OxfBudget2016.toBuilderScript());
 
                 executionContext.executeChild(this, new IncomingInvoiceFixture());
-                executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.toFixtureScript());
+                executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.toBuilderScript());
             }
         });
         order = orderFixture.getOrder();

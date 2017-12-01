@@ -56,9 +56,9 @@ public class PartyRelationshipRepository_IntegTest extends AssetModuleIntegTestA
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toFixtureScript());
-                executionContext.executeChild(this, Person_enum.GinoVannelliGb.toFixtureScript());
-                executionContext.executeChild(this, Person_enum.LinusTorvaldsNl.toFixtureScript());
+                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
+                executionContext.executeChild(this, Person_enum.GinoVannelliGb.toBuilderScript());
+                executionContext.executeChild(this, Person_enum.LinusTorvaldsNl.toBuilderScript());
             }
         });
     }

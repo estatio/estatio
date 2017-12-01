@@ -2,8 +2,8 @@ package org.estatio.module.asset.fixtures.property.enums;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
-import org.apache.isis.applib.fixturescripts.EnumWithFinder;
+import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.asset.dom.Property;
@@ -26,7 +26,7 @@ import static org.incode.module.base.integtests.VT.ld;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum Property_enum implements EnumWithFinder<Property>, EnumWithBuilderScript<Property, PropertyBuilder> {
+public enum Property_enum implements PersonaWithFinder<Property>, PersonaWithBuilderScript<Property, PropertyBuilder> {
 
     BudNl   ("BUD", "BudgetToren", "Amsterdam", NLD, SHOPPING_CENTER,
             ld(2003, 12, 1), ld(2003, 12, 1), "52.37597;4.90814"),
@@ -63,7 +63,7 @@ public enum Property_enum implements EnumWithFinder<Property>, EnumWithBuilderSc
     }
 
     @Override
-    public PropertyBuilder toFixtureScript() {
+    public PropertyBuilder toBuilderScript() {
         return new PropertyBuilder()
                 .setReference(ref)
                 .setName(name)

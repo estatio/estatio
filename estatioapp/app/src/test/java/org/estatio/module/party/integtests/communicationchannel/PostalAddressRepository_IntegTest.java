@@ -48,7 +48,7 @@ public class PostalAddressRepository_IntegTest extends PartyModuleIntegTestAbstr
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toFixtureScript());
+                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
             }
         });
     }

@@ -152,7 +152,7 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
                     executionContext.executeChild(this, new PartitioningAndItemsForOxfBudget2015());
                     executionContext.executeChild(this, new PartitioningAndItemsForBudBudget2015());
                     executionContext.executeChild(this, new LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb());
-                    executionContext.executeChild(this, Budget_enum.OxfBudget2016.toFixtureScript());
+                    executionContext.executeChild(this, Budget_enum.OxfBudget2016.toBuilderScript());
                 }
             });
 

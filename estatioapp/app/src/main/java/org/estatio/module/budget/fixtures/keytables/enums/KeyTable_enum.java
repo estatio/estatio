@@ -19,8 +19,8 @@ package org.estatio.module.budget.fixtures.keytables.enums;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
-import org.apache.isis.applib.fixturescripts.EnumWithFinder;
+import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.budget.dom.budget.Budget;
@@ -38,7 +38,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum KeyTable_enum implements EnumWithBuilderScript<KeyTable, KeyTableBuilder>, EnumWithFinder<KeyTable> {
+public enum KeyTable_enum implements PersonaWithBuilderScript<KeyTable, KeyTableBuilder>, PersonaWithFinder<KeyTable> {
 
     Oxf2015Area(
             Budget_enum.OxfBudget2015, "Service Charges By Area year 2015",
@@ -58,7 +58,7 @@ public enum KeyTable_enum implements EnumWithBuilderScript<KeyTable, KeyTableBui
         return budget_d.getStartDate();
     }
 
-    @Override public KeyTableBuilder toFixtureScript() {
+    @Override public KeyTableBuilder toBuilderScript() {
         return new KeyTableBuilder()
                 .setPrereq((f,ec) -> f.setBudget(f.objectFor(budget_d, ec)))
                 .setName(name)

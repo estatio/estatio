@@ -59,12 +59,12 @@ public class Party_IntegTest extends AssetModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     // linked together:
-                    executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toFixtureScript());
-                    executionContext.executeChild(this, Person_enum.GinoVannelliGb.toFixtureScript());
+                    executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
+                    executionContext.executeChild(this, Person_enum.GinoVannelliGb.toBuilderScript());
                     // only relationship
-                    executionContext.executeChild(this, Person_enum.JohnDoeNl.toFixtureScript());
+                    executionContext.executeChild(this, Person_enum.JohnDoeNl.toBuilderScript());
                     // only comm channels
-                    executionContext.executeChild(this, OrganisationAndComms_enum.AcmeNl.toFixtureScript());
+                    executionContext.executeChild(this, OrganisationAndComms_enum.AcmeNl.toBuilderScript());
                 }
             });
         }

@@ -106,7 +106,7 @@ public class BreakOption_IntegTest extends LeaseModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
                 }
             });
 
@@ -147,14 +147,7 @@ public class BreakOption_IntegTest extends LeaseModuleIntegTestAbstract {
 
         @Before
         public void setup() {
-            runFixtureScript(new FixtureScript() {
-                @Override
-                protected void execute(final ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-                }
-            });
-
-            lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            lease = runBuilderScript(Lease_enum.OxfTopModel001Gb.toBuilderScript());
         }
 
         @Test

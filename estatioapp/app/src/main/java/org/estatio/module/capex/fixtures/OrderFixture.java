@@ -49,7 +49,7 @@ public class OrderFixture extends FixtureScript {
         // prereqs
         executionContext.executeChild(this, new ProjectForOxf());
         executionContext.executeChild(this, new IncomingPdfForFakeOrder2().setRunAs("estatio-user-gb"));
-        executionContext.executeChild(this, Person_enum.DylanOfficeAdministratorGb.toFixtureScript());
+        executionContext.executeChild(this, Person_enum.DylanOfficeAdministratorGb.toBuilderScript());
 
         // given a document has been scanned and uploaded
         Document fakeOrder2Doc = incomingDocumentRepository.matchAllIncomingDocumentsByName(IncomingPdfForFakeOrder2.resourceName).get(0);

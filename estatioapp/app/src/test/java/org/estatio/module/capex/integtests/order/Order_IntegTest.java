@@ -47,7 +47,7 @@ public class Order_IntegTest extends CapexModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toFixtureScript());
+                    executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
                     executionContext.executeChild(this, new IncomingChargeFixture());
                     executionContext.executeChild(this, new OrderInvoiceFixture());
                 }

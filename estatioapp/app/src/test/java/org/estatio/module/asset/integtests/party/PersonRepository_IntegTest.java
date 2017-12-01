@@ -52,17 +52,17 @@ public class PersonRepository_IntegTest extends AssetModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, Person_enum.DylanOfficeAdministratorGb.toFixtureScript()); // gb mailroom
-                    executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.toFixtureScript());  // gb property mgr for OXF
-                    executionContext.executeChild(this, Person_enum.FaithConwayGb.toFixtureScript());  // gb country administrator
-                    executionContext.executeChild(this, Person_enum.OscarCountryDirectorGb.toFixtureScript());  // gb country director
-                    executionContext.executeChild(this, Person_enum.EmmaTreasurerGb.toFixtureScript());   // gb treasurer
-                    executionContext.executeChild(this, Person_enum.ThibaultOfficerAdministratorFr.toFixtureScript());  // fr mailroom
-                    executionContext.executeChild(this, Person_enum.FifineLacroixFr.toFixtureScript());  // fr property mgr for VIV and MNS
-                    executionContext.executeChild(this, Person_enum.OlivePropertyManagerFr.toFixtureScript());  // fr property mgr for MAC
-                    executionContext.executeChild(this, Person_enum.RosaireEvrardFr.toFixtureScript());  // fr country administrator
-                    executionContext.executeChild(this, Person_enum.GabrielHerveFr.toFixtureScript());  // fr country director
-                    executionContext.executeChild(this, Person_enum.BrunoTreasurerFr.toFixtureScript()); // fr treasurer
+                    executionContext.executeChild(this, Person_enum.DylanOfficeAdministratorGb.toBuilderScript()); // gb mailroom
+                    executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.toBuilderScript());  // gb property mgr for OXF
+                    executionContext.executeChild(this, Person_enum.FaithConwayGb.toBuilderScript());  // gb country administrator
+                    executionContext.executeChild(this, Person_enum.OscarCountryDirectorGb.toBuilderScript());  // gb country director
+                    executionContext.executeChild(this, Person_enum.EmmaTreasurerGb.toBuilderScript());   // gb treasurer
+                    executionContext.executeChild(this, Person_enum.ThibaultOfficerAdministratorFr.toBuilderScript());  // fr mailroom
+                    executionContext.executeChild(this, Person_enum.FifineLacroixFr.toBuilderScript());  // fr property mgr for VIV and MNS
+                    executionContext.executeChild(this, Person_enum.OlivePropertyManagerFr.toBuilderScript());  // fr property mgr for MAC
+                    executionContext.executeChild(this, Person_enum.RosaireEvrardFr.toBuilderScript());  // fr country administrator
+                    executionContext.executeChild(this, Person_enum.GabrielHerveFr.toBuilderScript());  // fr country director
+                    executionContext.executeChild(this, Person_enum.BrunoTreasurerFr.toBuilderScript()); // fr treasurer
                 }
             });
         }

@@ -53,7 +53,7 @@ public class BankMandateRepository_IntegTest extends LeaseModuleIntegTestAbstrac
                 protected void execute(ExecutionContext executionContext) {
 
                     executionContext.executeChild(this, new BankAccountAndMandateForTopModelGb());
-                    executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toBuilderScript());
                     executionContext.executeChild(this, new BankAccountAndMandateForPoisonNl());
                 }
             });

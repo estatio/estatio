@@ -18,8 +18,8 @@
  */
 package org.estatio.module.party.fixtures.organisation.enums;
 
-import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
-import org.apache.isis.applib.fixturescripts.EnumWithFinder;
+import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
@@ -39,7 +39,8 @@ import static org.estatio.module.base.fixtures.security.apptenancy.enums.Applica
 @Getter
 @Accessors(chain = true)
 public enum OrganisationAndComms_enum
-        implements EnumWithBuilderScript<Organisation, OrganisationAndCommsBuilder>, EnumWithFinder<Organisation> {
+        implements PersonaWithBuilderScript<Organisation, OrganisationAndCommsBuilder>,
+        PersonaWithFinder<Organisation> {
 
     AcmeNl          ("ACME_NL", "ACME Properties International", Nl,
             new OrganisationComms_enum[] { OrganisationComms_enum.AcmeNl }),
@@ -126,7 +127,7 @@ public enum OrganisationAndComms_enum
     }
 
     @Override
-    public OrganisationAndCommsBuilder toFixtureScript() {
+    public OrganisationAndCommsBuilder toBuilderScript() {
         return new OrganisationAndCommsBuilder()
                 .setAtPath(getApplicationTenancy().getPath())
                 .setPartyName(getName())

@@ -32,8 +32,8 @@ public class OrderItemRepository_IntegTest extends CapexModuleIntegTestAbstract 
             @Override
             protected void execute(final ExecutionContext ec) {
                 ec.executeChild(this, new IncomingChargeFixture());
-                ec.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toFixtureScript());
-                ec.executeChild(this, OrganisationAndComms_enum.YoukeaSe.toFixtureScript());
+                ec.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
+                ec.executeChild(this, OrganisationAndComms_enum.YoukeaSe.toBuilderScript());
                 ec.executeChild(this, new OrderInvoiceFixture());
             }
         });

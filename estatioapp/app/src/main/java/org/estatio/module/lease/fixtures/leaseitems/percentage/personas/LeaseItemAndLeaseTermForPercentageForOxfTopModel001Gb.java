@@ -38,7 +38,7 @@ public class LeaseItemAndLeaseTermForPercentageForOxfTopModel001Gb extends Lease
     private void createLeaseTermsForOxfTopModel001(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
+        executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
 
         // exec
         final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);

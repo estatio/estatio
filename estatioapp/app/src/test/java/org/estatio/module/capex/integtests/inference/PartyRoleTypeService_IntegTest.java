@@ -45,10 +45,10 @@ public class PartyRoleTypeService_IntegTest extends CapexModuleIntegTestAbstract
             @Override
             protected void execute(final ExecutionContext executionContext) {
 
-                executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.toFixtureScript());
-                executionContext.executeChild(this, Person_enum.DylanOfficeAdministratorGb.toFixtureScript());
-                executionContext.executeChild(this, Person_enum.EmmaTreasurerGb.toFixtureScript());
-                executionContext.executeChild(this, Person_enum.FloellaAssetManagerGb.toFixtureScript());
+                executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.toBuilderScript());
+                executionContext.executeChild(this, Person_enum.DylanOfficeAdministratorGb.toBuilderScript());
+                executionContext.executeChild(this, Person_enum.EmmaTreasurerGb.toBuilderScript());
+                executionContext.executeChild(this, Person_enum.FloellaAssetManagerGb.toBuilderScript());
 
             }
         });

@@ -52,8 +52,8 @@ public class PropertyRepository_IntegTest extends AssetModuleIntegTestAbstract {
             @Override
             protected void execute(final ExecutionContext executionContext) {
 
-                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toFixtureScript());
-                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.KalNl.toFixtureScript());
+                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
+                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.KalNl.toBuilderScript());
             }
         });
     }

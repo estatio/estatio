@@ -18,8 +18,8 @@
  */
 package org.estatio.module.charge.fixtures.charges.enums;
 
-import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
-import org.apache.isis.applib.fixturescripts.EnumWithFinder;
+import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
@@ -37,7 +37,7 @@ import lombok.experimental.Accessors;
 
 @Getter
 @Accessors(chain = true)
-public enum Charge_enum implements EnumWithBuilderScript<Charge, ChargeBuilder>, EnumWithFinder<Charge> {
+public enum Charge_enum implements PersonaWithBuilderScript<Charge, ChargeBuilder>, PersonaWithFinder<Charge> {
 
     ItRent ( Country_enum.ITA, ChargeNoCountry_enum.Rent, Tax_enum.IT_VATSTD),
     ItServiceCharge ( Country_enum.ITA, ChargeNoCountry_enum.ServiceCharge, Tax_enum.IT_VATSTD),
@@ -158,7 +158,7 @@ public enum Charge_enum implements EnumWithBuilderScript<Charge, ChargeBuilder>,
     }
 
 
-    public ChargeBuilder toFixtureScript() {
+    public ChargeBuilder toBuilderScript() {
         return new ChargeBuilder()
                 .setRef(Charge_enum.this.getRef())
                 .setName(Charge_enum.this.getName())
@@ -174,7 +174,7 @@ public enum Charge_enum implements EnumWithBuilderScript<Charge, ChargeBuilder>,
         @Override
         protected void execute(final ExecutionContext executionContext) {
             for (Charge_enum datum : values()) {
-                final ChargeBuilder chargeBuilder = datum.toFixtureScript();
+                final ChargeBuilder chargeBuilder = datum.toBuilderScript();
                 final Charge charge = executionContext.executeChildT(this, chargeBuilder).getObject();
                 executionContext.addResult(this, charge.getReference(), charge);
             }

@@ -51,7 +51,7 @@ public class CommunicationChannelContributions_IntegTest extends PartyModuleInte
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.toFixtureScript());
+                executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.toBuilderScript());
             }
         });
         party = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);

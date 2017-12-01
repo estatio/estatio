@@ -24,7 +24,7 @@ public class FinancialAccountRepository_create_IntegTest extends FinancialModule
     @Before
     public void setUp() throws Exception {
         runFixtureScript(
-                OrganisationAndComms_enum.HelloWorldGb.toFixtureScript()
+                OrganisationAndComms_enum.HelloWorldGb.toBuilderScript()
         );
         this.party = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
     }

@@ -37,7 +37,7 @@ public class LeaseItemAndLeaseTermForDepositForOxfMiracl005Gb extends LeaseItemA
     private void createLeaseTermsForOxfMiracl005Gb(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.toFixtureScript());
+        executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.toBuilderScript());
 
         // exec
         final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);

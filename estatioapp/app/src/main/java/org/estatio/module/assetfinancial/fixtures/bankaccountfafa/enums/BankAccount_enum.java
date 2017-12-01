@@ -18,8 +18,8 @@
  */
 package org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums;
 
-import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
-import org.apache.isis.applib.fixturescripts.EnumWithFinder;
+import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.financial.dom.BankAccount;
@@ -36,7 +36,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Accessors(chain = true)
 public enum BankAccount_enum
-        implements EnumWithBuilderScript<BankAccount, BankAccountBuilder>, EnumWithFinder<BankAccount> {
+        implements PersonaWithBuilderScript<BankAccount, BankAccountBuilder>, PersonaWithFinder<BankAccount> {
 
     AcmeNl          (OrganisationAndComms_enum.AcmeNl,       "NL31ABNA0580744433"),
     HelloWorldGb    (OrganisationAndComms_enum.HelloWorldGb, "GB31ABNA0580744434"),
@@ -57,7 +57,7 @@ public enum BankAccount_enum
 
 
     @Override
-    public BankAccountBuilder toFixtureScript() {
+    public BankAccountBuilder toBuilderScript() {
         return new BankAccountBuilder()
                 .setIban(iban)
                 .setPrereq((f,ec) -> f.setParty(f.objectFor(organisation_d, ec)));

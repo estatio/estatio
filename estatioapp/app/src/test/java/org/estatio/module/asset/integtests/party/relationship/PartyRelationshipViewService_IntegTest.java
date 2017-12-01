@@ -45,8 +45,8 @@ public class PartyRelationshipViewService_IntegTest extends AssetModuleIntegTest
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toFixtureScript());
-                executionContext.executeChild(this, Person_enum.GinoVannelliGb.toFixtureScript());
+                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
+                executionContext.executeChild(this, Person_enum.GinoVannelliGb.toBuilderScript());
             }
         });
         org = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);

@@ -20,8 +20,9 @@ package org.estatio.module.index.fixtures.enums;
 
 import java.util.Arrays;
 
-import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
-import org.apache.isis.applib.fixturescripts.EnumWithFinder;
+import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
@@ -36,7 +37,7 @@ import static org.estatio.module.index.fixtures.builders.IndexBuilder.*;
 //@AllArgsConstructor()
 @Getter
 @Accessors(chain = true)
-public enum Index_enum implements EnumWithBuilderScript<Index, IndexBuilder>, EnumWithFinder<Index> {
+public enum Index_enum implements PersonaWithBuilderScript<Index, IndexBuilder>, PersonaWithFinder<Index> {
 
     // Source http://www.istat.it/it/archivio/30440
     IStatFoi(ApplicationTenancy_enum.It, "ISTAT-FOI", "ISTAT FOI",
@@ -94,13 +95,12 @@ public enum Index_enum implements EnumWithBuilderScript<Index, IndexBuilder>, En
 
 
     @Override
-    public IndexBuilder toFixtureScript() {
+    public IndexBuilder toBuilderScript() {
         return new IndexBuilder()
                 .setReference(reference)
                 .setName(name)
                 .setPrereq((f,ec) -> f.setApplicationTenancy(f.objectFor(applicationTenancy_d, ec)))
                 .setBases(Arrays.asList(bases));
-
     }
 
     @Override
@@ -109,4 +109,13 @@ public enum Index_enum implements EnumWithBuilderScript<Index, IndexBuilder>, En
         return indexRepository.findByReference(reference);
     }
 
+    public static class PersistAll extends FixtureScript {
+
+        @Override
+        protected void execute(final ExecutionContext executionContext) {
+            for (Index_enum datum : Index_enum.values()) {
+                datum.toBuilderScript().build(this, executionContext);
+            }
+        }
+    }
 }

@@ -40,8 +40,8 @@ public class PartitioningAndItemsForOxfBudget2015 extends PartitioningAndItemsAb
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, keyTable1_d.toFixtureScript());
-        executionContext.executeChild(this, keyTable2_d.toFixtureScript());
+        executionContext.executeChild(this, keyTable1_d.toBuilderScript());
+        executionContext.executeChild(this, keyTable2_d.toBuilderScript());
 
         // all this stuff set up by prereqs
         Budget budget = budget_d.findUsing(serviceRegistry);

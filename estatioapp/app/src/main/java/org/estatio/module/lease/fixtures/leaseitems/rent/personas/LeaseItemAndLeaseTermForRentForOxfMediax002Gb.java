@@ -38,7 +38,7 @@ public class LeaseItemAndLeaseTermForRentForOxfMediax002Gb extends LeaseItemAndT
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.toFixtureScript());
+        executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.toBuilderScript());
 
         // exec
         final Lease lease = Lease_enum.OxfMediaX002Gb.findUsing(serviceRegistry);

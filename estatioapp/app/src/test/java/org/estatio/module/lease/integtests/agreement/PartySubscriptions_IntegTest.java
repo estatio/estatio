@@ -83,7 +83,7 @@ public class PartySubscriptions_IntegTest extends LeaseModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
                 }
             });
 

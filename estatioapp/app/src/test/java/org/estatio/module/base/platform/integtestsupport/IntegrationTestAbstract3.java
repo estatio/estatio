@@ -49,6 +49,7 @@ import org.apache.isis.applib.NonRecoverableException;
 import org.apache.isis.applib.RecoverableException;
 import org.apache.isis.applib.clock.Clock;
 import org.apache.isis.applib.fixtures.FixtureClock;
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.apache.isis.applib.services.clock.ClockService;
@@ -411,6 +412,18 @@ public abstract class IntegrationTestAbstract3 {
         }
 
         transactionService.nextTransaction();
+    }
+
+
+    protected <T,F extends BuilderScriptAbstract<T,F>> T runBuilderScript(final F fixture) {
+
+        serviceRegistry.injectServicesInto(fixture);
+        fixture.run(null);
+
+        final T object = fixture.getObject();
+        transactionService.nextTransaction();
+
+        return object;
     }
 
 

@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
-import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScriptWithExecutionStrategy;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
@@ -13,7 +13,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import lombok.Getter;
 
-public class DataEnumPersist<E extends EnumWithBuilderScript<T,F>, T, F extends BuilderScriptAbstract<T,F>>
+public class DataEnumPersist<E extends PersonaWithBuilderScript<T,F>, T, F extends BuilderScriptAbstract<T,F>>
         extends FixtureScript
         implements FixtureScriptWithExecutionStrategy {
 
@@ -54,7 +54,7 @@ public class DataEnumPersist<E extends EnumWithBuilderScript<T,F>, T, F extends 
         }
 
         for (int i = 0; i < number; i++) {
-            final F enumFixture = enumConstants[i].toFixtureScript();
+            final F enumFixture = enumConstants[i].toBuilderScript();
             final T domainObject = ec.executeChildT(this, enumFixture).getObject();
             ec.addResult(this, domainObject);
             objects.add(domainObject);

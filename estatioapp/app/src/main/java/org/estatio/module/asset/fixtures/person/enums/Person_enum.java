@@ -3,8 +3,8 @@ package org.estatio.module.asset.fixtures.person.enums;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
-import org.apache.isis.applib.fixturescripts.EnumWithFinder;
+import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
@@ -40,7 +40,7 @@ import static org.estatio.module.party.fixtures.organisation.enums.OrganisationA
 @Getter
 @Accessors(chain = true)
 public enum Person_enum
-        implements EnumWithBuilderScript<Person, PersonAndRolesBuilder>, EnumWithFinder<Person> {
+        implements PersonaWithBuilderScript<Person, PersonAndRolesBuilder>, PersonaWithFinder<Person> {
 
     AgnethaFaltskogSe("AFALTSKOG", "Agnetha", "Faltskog", "A", false, FEMALE, Se,
             CONTACT, YoukeaSe,
@@ -209,7 +209,7 @@ public enum Person_enum
 
 
     @Override
-    public PersonAndRolesBuilder toFixtureScript() {
+    public PersonAndRolesBuilder toBuilderScript() {
 
         final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder()
                 .setReference(getRef())

@@ -18,8 +18,8 @@
  */
 package org.estatio.module.currency.fixtures.enums;
 
-import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
-import org.apache.isis.applib.fixturescripts.EnumWithFinder;
+import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
@@ -34,7 +34,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor()
 @Getter
 @Accessors(chain = true)
-public enum Currency_enum implements EnumWithBuilderScript<Currency,CurrencyBuilder>, EnumWithFinder<Currency> {
+public enum Currency_enum implements PersonaWithBuilderScript<Currency,CurrencyBuilder>, PersonaWithFinder<Currency> {
 
     EUR("EUR","Euro"),
     SEK("SEK", "Swedish krona"),
@@ -45,7 +45,7 @@ public enum Currency_enum implements EnumWithBuilderScript<Currency,CurrencyBuil
     private final String name;
 
     @Override
-    public CurrencyBuilder toFixtureScript() {
+    public CurrencyBuilder toBuilderScript() {
         return new CurrencyBuilder()
                         .setReference(reference)
                 .setName(name);
@@ -62,7 +62,7 @@ public enum Currency_enum implements EnumWithBuilderScript<Currency,CurrencyBuil
         @Override
         protected void execute(ExecutionContext executionContext) {
             for (final Currency_enum datum : values()) {
-                executionContext.executeChildT(this, datum.toFixtureScript());
+                executionContext.executeChildT(this, datum.toBuilderScript());
             }
         }
 

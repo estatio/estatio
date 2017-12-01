@@ -271,7 +271,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.toBuilderScript());
                 }
             });
         }
@@ -481,7 +481,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                 protected void execute(ExecutionContext executionContext) {
 
 
-                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
                 }
             });
         }
@@ -518,7 +518,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                 protected void execute(ExecutionContext executionContext) {
 
 
-                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
                 }
             });
         }
@@ -558,7 +558,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
                 }
             });
             leaseTopModel1 = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
@@ -626,7 +626,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
                 }
             });
             leaseTopModel1 = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
@@ -667,7 +667,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.toBuilderScript());
                 }
             });
         }

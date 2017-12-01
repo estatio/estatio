@@ -50,12 +50,12 @@ public class AgreementRepository_IntegTest extends LeaseModuleIntegTestAbstract 
             protected void execute(ExecutionContext executionContext) {
 
                 // 5 oxford leases, 1 kal
-                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toFixtureScript());
-                executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.toFixtureScript());
-                executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.toFixtureScript());
-                executionContext.executeChild(this, Lease_enum.OxfPret004Gb.toFixtureScript());
-                executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.toFixtureScript());
-                executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toFixtureScript());
+                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
+                executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.toBuilderScript());
+                executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.toBuilderScript());
+                executionContext.executeChild(this, Lease_enum.OxfPret004Gb.toBuilderScript());
+                executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.toBuilderScript());
+                executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toBuilderScript());
             }
         });
 

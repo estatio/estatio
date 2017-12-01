@@ -61,7 +61,7 @@ public class OrderInvoiceImport_IntegTest extends CapexModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final FixtureScript.ExecutionContext executionContext) {
-                    executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toFixtureScript());
+                    executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
                 }
             });
 
