@@ -39,8 +39,8 @@ import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValueRepos
 import org.estatio.module.budgetassignment.dom.service.BudgetAssignmentService;
 import org.estatio.module.budgetassignment.dom.service.CalculationResultViewModel;
 import org.estatio.module.budgetassignment.dom.service.DetailedCalculationResultViewmodel;
-import org.estatio.module.budgetassignment.fixtures.overrides.enums.BudgetOverrideForFlatRate_enum;
-import org.estatio.module.budgetassignment.fixtures.overrides.enums.BudgetOverrideForMax_enum;
+import org.estatio.module.budgetassignment.fixtures.override.enums.BudgetOverrideForFlatRate_enum;
+import org.estatio.module.budgetassignment.fixtures.override.enums.BudgetOverrideForMax_enum;
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;

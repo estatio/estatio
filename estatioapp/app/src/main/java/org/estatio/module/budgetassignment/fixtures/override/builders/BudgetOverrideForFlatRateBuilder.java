@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package org.estatio.module.budgetassignment.fixtures.overrides.builders;
+package org.estatio.module.budgetassignment.fixtures.override.builders;
 
 import java.math.BigDecimal;
 
@@ -26,7 +26,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
-import org.estatio.module.budgetassignment.dom.override.BudgetOverrideForMax;
+import org.estatio.module.budgetassignment.dom.override.BudgetOverrideForFlatRate;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideRepository;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideType;
 import org.estatio.module.charge.dom.Charge;
@@ -41,7 +41,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(of={"lease", "invoiceCharge"}, callSuper = false)
 @ToString(of={"lease", "invoiceCharge"})
 @Accessors(chain = true)
-public class BudgetOverrideForMaxBuilder extends BuilderScriptAbstract<BudgetOverrideForMax, BudgetOverrideForMaxBuilder> {
+public class BudgetOverrideForFlatRateBuilder extends BuilderScriptAbstract<BudgetOverrideForFlatRate, BudgetOverrideForFlatRateBuilder> {
 
 
     @Getter @Setter
@@ -50,7 +50,9 @@ public class BudgetOverrideForMaxBuilder extends BuilderScriptAbstract<BudgetOve
     Charge invoiceCharge;
 
     @Getter @Setter
-    BigDecimal maxValue;
+    BigDecimal valuePerM2;
+    @Getter @Setter
+    BigDecimal weightedArea;
 
     @Getter @Setter
     LocalDate startDate;
@@ -65,21 +67,23 @@ public class BudgetOverrideForMaxBuilder extends BuilderScriptAbstract<BudgetOve
     String reason;
 
     @Getter
-    BudgetOverrideForMax object;
+    BudgetOverrideForFlatRate object;
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
         checkParam("lease", executionContext, Lease.class);
         checkParam("invoiceCharge", executionContext, Charge.class);
-        checkParam("maxValue", executionContext, BigDecimal.class);
+        checkParam("valuePerM2", executionContext, BigDecimal.class);
+        checkParam("weightedArea", executionContext, BigDecimal.class);
 
         defaultParam("budgetCalculationType", executionContext, BudgetCalculationType.BUDGETED);
-        defaultParam("reason", executionContext, BudgetOverrideType.CEILING.reason);
+        defaultParam("reason", executionContext, BudgetOverrideType.FLATRATE.reason);
 
-        BudgetOverrideForMax budgetOverride = budgetOverrideRepository
-                .newBudgetOverrideForMax(
-                        maxValue,
+        BudgetOverrideForFlatRate budgetOverride = budgetOverrideRepository
+                .newBudgetOverrideForFlatRate(
+                        valuePerM2,
+                        weightedArea,
                         lease,
                         startDate,
                         endDate,
@@ -87,6 +91,7 @@ public class BudgetOverrideForMaxBuilder extends BuilderScriptAbstract<BudgetOve
                         incomingCharge,
                         budgetCalculationType,
                         reason);
+
         executionContext.addResult(this, budgetOverride);
 
         object = budgetOverride;

@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package org.estatio.module.budgetassignment.fixtures.overrides.builders;
+package org.estatio.module.budgetassignment.fixtures.override.builders;
 
 import java.math.BigDecimal;
 

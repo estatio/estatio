@@ -15,15 +15,15 @@
  * under the License.
  */
 
-package org.estatio.module.budgetassignment.fixtures.overrides.enums;
+package org.estatio.module.budgetassignment.fixtures.override.enums;
 
 import java.math.BigDecimal;
 
 import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
-import org.estatio.module.budgetassignment.dom.override.BudgetOverrideForMax;
-import org.estatio.module.budgetassignment.fixtures.overrides.builders.BudgetOverrideForMaxBuilder;
+import org.estatio.module.budgetassignment.dom.override.BudgetOverrideForFlatRate;
+import org.estatio.module.budgetassignment.fixtures.override.builders.BudgetOverrideForFlatRateBuilder;
 import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 
@@ -31,36 +31,39 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import static org.estatio.module.budget.fixtures.budgets.enums.Budget_enum.BudBudget2015;
-import static org.estatio.module.charge.fixtures.charges.enums.Charge_enum.NlIncomingCharge1;
 import static org.estatio.module.charge.fixtures.charges.enums.Charge_enum.NlServiceCharge;
-import static org.estatio.module.lease.fixtures.lease.enums.Lease_enum.BudPoison001Nl;
+import static org.estatio.module.lease.fixtures.lease.enums.Lease_enum.BudMiracle002Nl;
 import static org.incode.module.base.integtests.VT.bd;
+
 
 @AllArgsConstructor()
 @Getter
 @Accessors(chain = true)
-public enum BudgetOverrideForMax_enum implements PersonaWithBuilderScript<BudgetOverrideForMax,BudgetOverrideForMaxBuilder> {
+public enum BudgetOverrideForFlatRate_enum implements PersonaWithBuilderScript<BudgetOverrideForFlatRate,BudgetOverrideForFlatRateBuilder> {
 
-    BudPoison001Nl_2015(
-            BudPoison001Nl, BudBudget2015, NlServiceCharge, bd("350.00"), NlIncomingCharge1
+    BudMiracle002Nl_2015(
+            BudMiracle002Nl, BudBudget2015, NlServiceCharge, bd("12.5"), bd("90"), null
     );
 
     private final Lease_enum lease_d;
     private final Budget_enum budget_d;
     private final Charge_enum invoiceCharge_d;
 
-    private final BigDecimal maxValue;
+    private final BigDecimal valuePerM2;
+    private final BigDecimal weightedArea;
 
     private final Charge_enum incomingCharge_d;
 
     @Override
-    public BudgetOverrideForMaxBuilder toBuilderScript() {
-        return new BudgetOverrideForMaxBuilder()
+    public BudgetOverrideForFlatRateBuilder toBuilderScript() {
+        return new BudgetOverrideForFlatRateBuilder()
                 .setPrereq((f,ec) -> f.setLease(f.objectFor(lease_d, ec)))
                 .setPrereq((f,ec) -> f.setStartDate(f.objectFor(budget_d, ec).getStartDate()))
                 .setPrereq((f,ec) -> f.setInvoiceCharge(f.objectFor(invoiceCharge_d, ec)))
                 .setPrereq((f,ec) -> f.setIncomingCharge(f.objectFor(incomingCharge_d, ec)))
-                .setMaxValue(maxValue)
+                .setValuePerM2(valuePerM2)
+                .setWeightedArea(weightedArea)
                 ;
     }
+
 }
