@@ -22,7 +22,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.breaks.BreakExerciseType;
 import org.estatio.module.lease.dom.breaks.BreakType;
 import org.estatio.module.lease.fixtures.LeaseBreakOptionsAbstract;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.entryfee.personas.LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001Gb;
@@ -36,7 +36,7 @@ import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas.LeaseI
 
 public class LeaseBreakOptionsForOxfTopModel001 extends LeaseBreakOptionsAbstract {
 
-    public static final String LEASE_REF = LeaseForOxfTopModel001Gb.REF;
+    public static final String LEASE_REF = Lease_enum.OxfTopModel001Gb.getRef();
 
     @Override
     protected void execute(ExecutionContext executionContext) {

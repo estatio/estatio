@@ -1,11 +1,15 @@
 package org.estatio.module.asset.fixtures.person.enums;
 
-import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
-import org.apache.isis.applib.fixturescripts.EnumWithFinder;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
+import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
+import org.estatio.module.asset.fixtures.person.builders.PersonFixedAssetRolesBuilder;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.party.dom.Party;
@@ -15,7 +19,7 @@ import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import lombok.Data;
 import lombok.Getter;
@@ -28,15 +32,15 @@ import static org.estatio.module.base.fixtures.security.apptenancy.enums.Applica
 import static org.estatio.module.party.dom.PersonGenderType.FEMALE;
 import static org.estatio.module.party.dom.PersonGenderType.MALE;
 import static org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum.CONTACT;
-import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.PastaPapaItNl;
-import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.PerdantFr;
-import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.TopModelGb;
-import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.YoukeaSe;
+import static org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum.PastaPapaItNl;
+import static org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum.PerdantFr;
+import static org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum.TopModelGb;
+import static org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum.YoukeaSe;
 
 @Getter
 @Accessors(chain = true)
 public enum Person_enum
-        implements EnumWithBuilderScript<Person, PersonAndRolesBuilder>, EnumWithFinder<Person> {
+        implements PersonaWithBuilderScript<Person, PersonAndRolesBuilder>, PersonaWithFinder<Person> {
 
     AgnethaFaltskogSe("AFALTSKOG", "Agnetha", "Faltskog", "A", false, FEMALE, Se,
             CONTACT, YoukeaSe,
@@ -163,7 +167,7 @@ public enum Person_enum
     private final ApplicationTenancy_enum applicationTenancy_d;
 
     private final PartyRelationshipTypeEnum partyRelationshipType;
-    private final Organisation_enum partyFrom_d;
+    private final OrganisationAndComms_enum partyFrom_d;
 
     private final IPartyRoleType[] partyRoleTypes;
     private final FixedAssetRoleSpec[] fixedAssetRoles;
@@ -177,7 +181,7 @@ public enum Person_enum
             final PersonGenderType personGenderType,
             final ApplicationTenancy_enum applicationTenancy_d,
             final PartyRelationshipTypeEnum partyRelationshipType,
-            final Organisation_enum partyFrom_d,
+            final OrganisationAndComms_enum partyFrom_d,
             final IPartyRoleType[] partyRoleTypes,
             final FixedAssetRoleSpec[] fixedAssetRoles) {
         this.ref = ref;
@@ -205,7 +209,7 @@ public enum Person_enum
 
 
     @Override
-    public PersonAndRolesBuilder toFixtureScript() {
+    public PersonAndRolesBuilder toBuilderScript() {
 
         final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder()
                 .setReference(getRef())
@@ -217,14 +221,13 @@ public enum Person_enum
                 .setAtPath(getApplicationTenancy_d().getPath())
                 .setRelationshipType(getPartyRelationshipType())
                 .setPrereq((f,ec) -> f.setFromParty(f.objectFor(getPartyFrom_d(), ec)))
-                .setPrereq((f,ec) -> {
-                    for (final FixedAssetRoleSpec roleSpec : Person_enum.this.getFixedAssetRoles()) {
-                        f.addFixedAssetRole(
-                                roleSpec.getFixedAssetRole(),
-                                f.objectFor(roleSpec.getProperty_d(), ec)
-                        );
-                    }
-                })
+                .setPrereq((f,ec) -> f.setFixedAssetRoleSpecs(
+                            Arrays.stream(Person_enum.this.getFixedAssetRoles())
+                                .map(x -> new PersonFixedAssetRolesBuilder.FixedAssetRoleSpec(
+                                                x.fixedAssetRole,
+                                                f.objectFor(x.getProperty_d(), ec))
+                                        )
+                                .collect(Collectors.toList())))
                 ;
 
         for (final IPartyRoleType partyRoleType : getPartyRoleTypes()) {

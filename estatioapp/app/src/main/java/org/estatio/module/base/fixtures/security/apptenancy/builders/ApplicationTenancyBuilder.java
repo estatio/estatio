@@ -10,9 +10,11 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"path"}, callSuper = false)
+@ToString(of={"path"})
 @Accessors(chain = true)
 public final class ApplicationTenancyBuilder
         extends BuilderScriptAbstract<ApplicationTenancy, ApplicationTenancyBuilder> {

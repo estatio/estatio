@@ -15,9 +15,11 @@ import org.estatio.module.numerator.dom.NumeratorRepository;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"name", "format", "country"}, callSuper = false)
+@ToString(of={"name", "format", "country"})
 @Accessors(chain = true)
 public final class NumeratorForOrganisationBuilder
         extends BuilderScriptAbstract<Numerator, NumeratorForOrganisationBuilder> {

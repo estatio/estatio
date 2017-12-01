@@ -30,9 +30,11 @@ import org.estatio.module.party.dom.Party;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"party", "iban", "property"}, callSuper = false)
+@ToString(of={"party", "iban", "property"})
 @Accessors(chain = true)
 public final class BankAccountAndFaFaBuilder extends BuilderScriptAbstract<BankAccount, BankAccountAndFaFaBuilder>
 {

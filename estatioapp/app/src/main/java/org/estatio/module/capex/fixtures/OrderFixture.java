@@ -18,7 +18,6 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForDylanOfficeAdministratorGb;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.capex.app.order.IncomingDocAsOrderViewModel;
 import org.estatio.module.capex.app.order.Order_switchView;
@@ -35,7 +34,7 @@ import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;
 import org.estatio.module.tax.fixtures.data.Tax_enum;
@@ -50,7 +49,7 @@ public class OrderFixture extends FixtureScript {
         // prereqs
         executionContext.executeChild(this, new ProjectForOxf());
         executionContext.executeChild(this, new IncomingPdfForFakeOrder2().setRunAs("estatio-user-gb"));
-        executionContext.executeChild(this, new PersonAndRolesForDylanOfficeAdministratorGb());
+        executionContext.executeChild(this, Person_enum.DylanOfficeAdministratorGb.toBuilderScript());
 
         // given a document has been scanned and uploaded
         Document fakeOrder2Doc = incomingDocumentRepository.matchAllIncomingDocumentsByName(IncomingPdfForFakeOrder2.resourceName).get(0);
@@ -69,9 +68,9 @@ public class OrderFixture extends FixtureScript {
             final Project projectForOxf = projectRepository.findByReference("OXF-02");
             final Tax taxForGbr = taxRepository.findByReference(Tax_enum.GB_VATSTD.getReference());
 
-            final Party orgTopModelGb = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+            final Party orgTopModelGb = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
             final Party orgHelloWorldGb = partyRepository.findPartyByReference(
-                    Organisation_enum.HelloWorldGb.getRef());
+                    OrganisationAndComms_enum.HelloWorldGb.getRef());
             final Charge chargeWorks = chargeRepository.findByReference("WORKS");
 
             Order fakeOrder = orderRepository.findOrderByDocumentName("fakeOrder2.pdf").get(0);

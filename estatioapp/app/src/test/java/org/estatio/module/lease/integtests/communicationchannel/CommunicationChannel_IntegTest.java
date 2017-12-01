@@ -33,11 +33,11 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -50,7 +50,7 @@ public class CommunicationChannel_IntegTest extends LeaseModuleIntegTestAbstract
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
                 }
             });
         }
@@ -69,7 +69,7 @@ public class CommunicationChannel_IntegTest extends LeaseModuleIntegTestAbstract
 
         @Before
         public void setUp() throws Exception {
-            party = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+            party = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
             final SortedSet<CommunicationChannel> postalAddresses = communicationChannelRepository.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS);
             Assert.assertThat(postalAddresses.size(), is(2));
             communicationChannel = postalAddresses.first();

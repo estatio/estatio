@@ -22,14 +22,14 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.breaks.BreakExerciseType;
 import org.estatio.module.lease.dom.breaks.BreakType;
 import org.estatio.module.lease.fixtures.LeaseBreakOptionsAbstract;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMediaX002Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.rent.personas.LeaseItemAndLeaseTermForRentForOxfMediax002Gb;
 import org.estatio.module.lease.fixtures.leaseitems.servicecharge.personas.LeaseItemAndLeaseTermForServiceChargeForOxfMediax002Gb;
 import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas.LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002Gb;
 
 public class LeaseBreakOptionsForOxfMediax002Gb extends LeaseBreakOptionsAbstract {
 
-    public static final String LEASE_REF = LeaseForOxfMediaX002Gb.REF;
+    public static final String LEASE_REF = Lease_enum.OxfMediaX002Gb.getRef();
 
     @Override
     protected void execute(ExecutionContext executionContext) {

@@ -48,12 +48,12 @@ import org.estatio.module.capex.integtests.document.IncomingDocumentPresentation
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState.AWAITING_PROOF;
@@ -122,12 +122,12 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
                 @Override
                 protected void execute(final FixtureScript.ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
+                    executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
                 }
             });
 
             // given
-            seller = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+            seller = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
         }
 
         @Test
@@ -183,13 +183,13 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
                 protected void execute(final FixtureScript.ExecutionContext executionContext) {
 
                     executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-                    executionContext.executeChild(this, BankAccount_enum.TopModelGb.toFixtureScript());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
+                    executionContext.executeChild(this, BankAccount_enum.TopModelGb.toBuilderScript());
                 }
             });
 
             // given
-            seller = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+            seller = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
             bankAccount = bankAccountRepository.findBankAccountByReference(seller,
                     BankAccount_enum.TopModelGb.getIban());
             // bank accounts now need BICs so can verify

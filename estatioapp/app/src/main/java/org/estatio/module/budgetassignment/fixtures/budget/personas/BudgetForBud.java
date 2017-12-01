@@ -26,27 +26,36 @@ import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
-import org.estatio.module.budget.fixtures.budgets.BudgetAbstract;
+import org.estatio.module.budgetassignment.fixtures.budget.BudgetAbstract;
 import org.estatio.module.budgetassignment.fixtures.overrides.personas.BudgetOverridesForBud;
-import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
-import org.estatio.module.lease.fixtures.lease.personas2.LeasesForBudNl;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+
+import static org.incode.module.base.integtests.VT.bd;
 
 public class BudgetForBud extends BudgetAbstract {
 
-    public static final LocalDate BUDGET_2015_START_DATE = new LocalDate(2015, 01, 01);
+    public static final LocalDate BUDGET_2015_START_DATE = new LocalDate(2015, 1, 1);
     public static final LocalDate BUDGET_2015_END_DATE = BUDGET_2015_START_DATE.plusYears(1).minusDays(1);
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new LeasesForBudNl());
+        executionContext.executeChildT(this, Lease_enum.BudPoison001Nl.toBuilderScript());
+        executionContext.executeChildT(this, Lease_enum.BudMiracle002Nl.toBuilderScript());
+        executionContext.executeChildT(this, Lease_enum.BudHello003Nl.toBuilderScript());
+        executionContext.executeChildT(this, Lease_enum.BudDago004Nl.toBuilderScript());
+        executionContext.executeChildT(this, Lease_enum.BudNlBank004Nl.toBuilderScript());
+        executionContext.executeChildT(this, Lease_enum.BudHyper005Nl.toBuilderScript());
+        executionContext.executeChildT(this, Lease_enum.BudHello006Nl.toBuilderScript());
+
         executionContext.executeChild(this, new BudgetOverridesForBud());
 
         // exec
         Property property = Property_enum.BudNl.findUsing(serviceRegistry);
 
-        createBudget(executionContext, property, BigDecimal.valueOf(10000.00), BigDecimal.valueOf(20000.00), BigDecimal.valueOf(30000.00), BUDGET_2015_START_DATE);
+        createBudget(executionContext, property, bd(10000.00), bd(20000.00), bd(30000.00), BUDGET_2015_START_DATE);
     }
 
     private void createBudget(final ExecutionContext executionContext, final Property property, final BigDecimal value1, final BigDecimal value2, final BigDecimal value3, final LocalDate budgetStartDate) {
@@ -56,9 +65,9 @@ public class BudgetForBud extends BudgetAbstract {
                 budgetStartDate.plusYears(1).minusDays(1),
                 executionContext);
 
-        BudgetItem item1 = createBudgetItem(newBudget,chargeRepository.findByReference(ChargeRefData.NL_INCOMING_CHARGE_1));
-        BudgetItem item2 = createBudgetItem(newBudget,chargeRepository.findByReference(ChargeRefData.NL_INCOMING_CHARGE_2));
-        BudgetItem item3 = createBudgetItem(newBudget,chargeRepository.findByReference(ChargeRefData.NL_INCOMING_CHARGE_3));
+        BudgetItem item1 = createBudgetItem(newBudget, Charge_enum.NlIncomingCharge1.findUsing(serviceRegistry));
+        BudgetItem item2 = createBudgetItem(newBudget, Charge_enum.NlIncomingCharge2.findUsing(serviceRegistry));
+        BudgetItem item3 = createBudgetItem(newBudget, Charge_enum.NlIncomingCharge3.findUsing(serviceRegistry));
 
         createBudgetItemValue(item1, value1, budgetStartDate, BudgetCalculationType.BUDGETED);
         createBudgetItemValue(item2, value2, budgetStartDate, BudgetCalculationType.BUDGETED);

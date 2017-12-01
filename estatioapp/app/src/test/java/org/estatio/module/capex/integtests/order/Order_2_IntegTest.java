@@ -19,7 +19,6 @@ import org.apache.isis.applib.services.wrapper.HiddenException;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJonathanPropertyManagerGb;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
@@ -59,7 +58,7 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
 
                 executionContext.executeChild(this, new IncomingChargeFixture());
                 executionContext.executeChild(this, orderFixture);
-                executionContext.executeChild(this, new PersonAndRolesForJonathanPropertyManagerGb());
+                executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.toBuilderScript());
             }
         });
         order = orderFixture.getOrder();

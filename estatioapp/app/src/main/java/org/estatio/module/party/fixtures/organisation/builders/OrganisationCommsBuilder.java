@@ -37,9 +37,11 @@ import org.estatio.module.party.dom.Organisation;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"organisation", "address1", "phone", "emailAddress", "fax"}, callSuper = false)
+@ToString(of={"organisation", "address1", "phone", "emailAddress", "fax"})
 @Accessors(chain = true)
 public final class OrganisationCommsBuilder
         extends BuilderScriptAbstract<Organisation, OrganisationCommsBuilder> {

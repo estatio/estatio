@@ -24,7 +24,7 @@ import org.junit.Test;
 
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.dom.CurrencyRepository;
-import org.estatio.module.currency.fixtures.CurrenciesRefData;
+import org.estatio.module.currency.fixtures.enums.Currency_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,7 +34,7 @@ public class CurrencyRepository_IntegTest extends CurrencyModuleIntegTestAbstrac
 
         @Test
         public void happyCase() throws Exception {
-            Currency euro = currencyRepository.findCurrency(CurrenciesRefData.EUR);
+            Currency euro = currencyRepository.findCurrency(Currency_enum.EUR.getReference());
             assertThat(euro.getName()).isEqualTo("Euro");
         }
     }
@@ -44,10 +44,10 @@ public class CurrencyRepository_IntegTest extends CurrencyModuleIntegTestAbstrac
         @Test
         public void findCurrency() throws Exception {
             // when
-            final Currency currency = currencyRepository.findOrCreateCurrency(CurrenciesRefData.EUR, "Euro");
+            final Currency currency = currencyRepository.findOrCreateCurrency(Currency_enum.EUR.getReference(), Currency_enum.EUR.getName());
 
             // then
-            assertThat(currency.getReference()).isEqualTo(CurrenciesRefData.EUR);
+            assertThat(currency.getReference()).isEqualTo(Currency_enum.EUR.getReference());
             assertThat(currency.getName()).isEqualTo("Euro");
         }
 

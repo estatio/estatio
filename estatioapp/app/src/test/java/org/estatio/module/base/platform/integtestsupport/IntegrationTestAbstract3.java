@@ -50,7 +50,6 @@ import org.apache.isis.applib.RecoverableException;
 import org.apache.isis.applib.clock.Clock;
 import org.apache.isis.applib.fixtures.FixtureClock;
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
-import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.apache.isis.applib.services.clock.ClockService;
@@ -69,8 +68,6 @@ import org.apache.isis.core.runtime.system.session.IsisSessionFactory;
 import org.apache.isis.objectstore.jdo.datanucleus.IsisConfigurationForJdoIntegTests;
 
 import org.isisaddons.module.base.platform.applib.Module;
-import org.isisaddons.module.fakedata.FakeDataModule;
-import org.isisaddons.module.fakedata.dom.FakeDataService;
 
 import org.estatio.module.base.platform.applib.TickingFixtureClock;
 
@@ -122,7 +119,7 @@ public abstract class IntegrationTestAbstract3 {
 
         if(!Strings.isNullOrEmpty(moduleFqcn)) {
             this.module = InstanceUtil.createInstance(moduleFqcn, Module.class);
-            this.additionalModuleClasses = new Class<?>[] { FakeDataModule.class };
+            this.additionalModuleClasses = new Class<?>[] { };
         } else {
             this.module = module;
             this.additionalModuleClasses = additionalModuleClasses;
@@ -418,6 +415,18 @@ public abstract class IntegrationTestAbstract3 {
     }
 
 
+    protected <T,F extends BuilderScriptAbstract<T,F>> T runBuilderScript(final F fixture) {
+
+        serviceRegistry.injectServicesInto(fixture);
+        fixture.run(null);
+
+        final T object = fixture.getObject();
+        transactionService.nextTransaction();
+
+        return object;
+    }
+
+
     private static Class[] asClasses(final List<Module> dependencies) {
         final List<? extends Class<? extends Module>> dependenciesAsClasses =
                 dependencies.stream().map(Module::getClass)
@@ -481,15 +490,13 @@ public abstract class IntegrationTestAbstract3 {
     }
 
     @Inject
-    protected FakeDataService fakeDataService;
-    @Inject
     protected FixtureScripts fixtureScripts;
     @Inject
     protected FactoryService factoryService;
     @Inject
     protected ServiceRegistry2 serviceRegistry;
     @Inject
-    RepositoryService repositoryService;
+    protected RepositoryService repositoryService;
     @Inject
     protected UserService userService;
     @Inject

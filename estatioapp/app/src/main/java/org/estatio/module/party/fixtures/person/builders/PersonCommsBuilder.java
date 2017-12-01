@@ -30,9 +30,11 @@ import org.estatio.module.party.dom.Person;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"person"}, callSuper = false)
+@ToString(of={"person"})
 @Accessors(chain = true)
 public final class PersonCommsBuilder
         extends BuilderScriptAbstract<Person, PersonCommsBuilder> {

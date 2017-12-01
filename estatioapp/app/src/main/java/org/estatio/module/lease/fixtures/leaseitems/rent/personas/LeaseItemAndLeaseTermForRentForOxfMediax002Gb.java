@@ -19,29 +19,29 @@
 package org.estatio.module.lease.fixtures.leaseitems.rent.personas;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.index.fixtures.IndexRefData;
+import org.estatio.module.index.fixtures.enums.Index_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMediaX002Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 
 import static org.incode.module.base.integtests.VT.bd;
 import static org.incode.module.base.integtests.VT.ld;
 
 public class LeaseItemAndLeaseTermForRentForOxfMediax002Gb extends LeaseItemAndTermsAbstract {
 
-    public static final String LEASE_REF = LeaseForOxfMediaX002Gb.REF;
+    public static final String LEASE_REF = Lease_enum.OxfMediaX002Gb.getRef();
     public static final String AT_PATH = ApplicationTenancy_enum.GbOxfDefault.getPath();
 
-    public static final String INDEX_REF_IT = IndexRefData.IT_REF;
+    public static final String INDEX_REF_IT = Index_enum.IStatFoi.getReference();
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new LeaseForOxfMediaX002Gb());
+        executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.toBuilderScript());
 
         // exec
-        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
+        final Lease lease = Lease_enum.OxfMediaX002Gb.findUsing(serviceRegistry);
 
         createLeaseTermForIndexableRent(
                 LEASE_REF,

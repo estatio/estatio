@@ -44,7 +44,7 @@ import org.estatio.module.guarantee.fixtures.personas.GuaranteeForOxfTopModel001
 import org.estatio.module.guarantee.integtests.GuaranteeModuleIntegTestAbstract;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 
@@ -58,8 +58,8 @@ public class GuaranteeRepository_IntegTest extends GuaranteeModuleIntegTestAbstr
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new GuaranteeForOxfTopModel001Gb());
-                executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-                executionContext.executeChild(this, BankAccount_enum.TopModelGb.toFixtureScript());
+                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
+                executionContext.executeChild(this, BankAccount_enum.TopModelGb.toBuilderScript());
             }
         });
 
@@ -96,7 +96,7 @@ public class GuaranteeRepository_IntegTest extends GuaranteeModuleIntegTestAbstr
 
         @Before
         public void setup() {
-            lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
 
             assertThat(lease.getPrimaryParty()).isNotNull();
             assertThat(lease.getSecondaryParty()).isNotNull();
@@ -203,7 +203,7 @@ public class GuaranteeRepository_IntegTest extends GuaranteeModuleIntegTestAbstr
         public void findGuarantees() throws Exception {
 
             // when
-            List<Guarantee> results = guaranteeRepository.findGuarantees(LeaseForOxfTopModel001Gb.REF + "*");
+            List<Guarantee> results = guaranteeRepository.findGuarantees(Lease_enum.OxfTopModel001Gb.getRef() + "*");
 
             // then
             assertThat(results.size()).isEqualTo(1);
@@ -213,7 +213,7 @@ public class GuaranteeRepository_IntegTest extends GuaranteeModuleIntegTestAbstr
         public void findGuaranteesByCommentAsWell() throws Exception {
 
             // given
-            Guarantee guarantee = guaranteeRepository.findGuarantees(LeaseForOxfTopModel001Gb.REF + "*").get(0);
+            Guarantee guarantee = guaranteeRepository.findGuarantees(Lease_enum.OxfTopModel001Gb.getRef() + "*").get(0);
 
             // when
             guarantee.setComments("My special comment");
@@ -228,10 +228,10 @@ public class GuaranteeRepository_IntegTest extends GuaranteeModuleIntegTestAbstr
         @Test
         public void findByReference() throws Exception {
             // when
-            Guarantee guarantee = guaranteeRepository.findByReference(LeaseForOxfTopModel001Gb.REF + "-D");
+            Guarantee guarantee = guaranteeRepository.findByReference(Lease_enum.OxfTopModel001Gb.getRef() + "-D");
 
             // then
-            assertThat(guarantee.getReference()).isEqualTo(LeaseForOxfTopModel001Gb.REF + "-D");
+            assertThat(guarantee.getReference()).isEqualTo(Lease_enum.OxfTopModel001Gb.getRef() + "-D");
         }
     }
 
@@ -240,7 +240,7 @@ public class GuaranteeRepository_IntegTest extends GuaranteeModuleIntegTestAbstr
         @Test
         public void guarantees() throws Exception {
             // given
-            Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
 
             // when
             List<Guarantee> results = leaseNewGuaranteeContribution.guarantees(lease);
@@ -255,7 +255,7 @@ public class GuaranteeRepository_IntegTest extends GuaranteeModuleIntegTestAbstr
         @Test
         public void findByLease() throws Exception {
             // given
-            Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
 
             // when
             List<Guarantee> results = guaranteeRepository.findByLease(lease);
@@ -271,14 +271,15 @@ public class GuaranteeRepository_IntegTest extends GuaranteeModuleIntegTestAbstr
 
         public void happy_case() throws Exception {
             // given
-            Party owner = partyRepository.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
-            FinancialAccount account = financialAccountRepository.findByOwnerAndReference(owner, LeaseForOxfTopModel001Gb.REF + "-D");
+            Party owner = Lease_enum.OxfTopModel001Gb.getTenant_d().findUsing(serviceRegistry);
+            FinancialAccount account = financialAccountRepository.findByOwnerAndReference(owner, Lease_enum.OxfTopModel001Gb.getRef()
+                    + "-D");
 
             // when
             Guarantee guarantee = guaranteeRepository.findbyFinancialAccount(account);
 
             // then
-            assertThat(guarantee.getReference()).isEqualTo(LeaseForOxfTopModel001Gb.REF + "-D");
+            assertThat(guarantee.getReference()).isEqualTo(Lease_enum.OxfTopModel001Gb.getRef() + "-D");
         }
     }
 }

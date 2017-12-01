@@ -28,13 +28,12 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForGinoVannelliGb;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.relationship.PartyRelationshipView;
 import org.estatio.module.party.dom.relationship.Party_PartyRelationshipContributions;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -46,11 +45,11 @@ public class PartyRelationshipViewService_IntegTest extends AssetModuleIntegTest
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
-                executionContext.executeChild(this, new PersonAndRolesForGinoVannelliGb());
+                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
+                executionContext.executeChild(this, Person_enum.GinoVannelliGb.toBuilderScript());
             }
         });
-        org = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+        org = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
         person = partyRepository.findPartyByReference(Person_enum.GinoVannelliGb.getRef());
     }
 

@@ -19,20 +19,18 @@
 package org.estatio.module.lease.fixtures.leaseitems.rent.personas;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.index.fixtures.IndexRefData;
+import org.estatio.module.index.fixtures.enums.Index_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 
 import static org.incode.module.base.integtests.VT.bd;
 import static org.incode.module.base.integtests.VT.ld;
 
 public class LeaseItemAndLeaseTermForRentForOxfTopModel001Gb extends LeaseItemAndTermsAbstract {
 
-    public static final String LEASE_REF = LeaseForOxfTopModel001Gb.REF;
+    public static final String LEASE_REF = Lease_enum.OxfTopModel001Gb.getRef();
     public static final String AT_PATH = ApplicationTenancy_enum.GbOxfDefault.getPath();
-
-    public static final String INDEX_REF_IT = IndexRefData.IT_REF;
 
     @Override
     protected void execute(final ExecutionContext fixtureResults) {
@@ -42,17 +40,17 @@ public class LeaseItemAndLeaseTermForRentForOxfTopModel001Gb extends LeaseItemAn
     private void createLeaseTermsForOxfTopModel001(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+        executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
 
         // exec
-        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
+        final Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
         createLeaseTermForIndexableRent(
                 LEASE_REF,
                 AT_PATH,
                 lease.getStartDate(), null,
                 bd(20000),
                 ld(2010, 7, 1), ld(2011, 1, 1), ld(2011, 4, 1),
-                INDEX_REF_IT,
+                Index_enum.IStatFoi.getReference(),
                 executionContext);
     }
 }

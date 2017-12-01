@@ -53,9 +53,7 @@ import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTerm;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMediaX002Gb;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPoison003Gb;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.entryfee.personas.LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001Gb;
@@ -75,7 +73,7 @@ import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas.LeaseI
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -120,7 +118,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
         @Test
         public void happy_case() throws Exception {
             //Given
-            Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
             assertThat(lease.getOccupancies().size()).isGreaterThan(0);
 
             //When
@@ -132,7 +130,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                     });
 
             //Then
-            assertThat(leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF)).isNull();
+            assertThat(Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry)).isNull();
         }
 
         @Inject
@@ -166,8 +164,8 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
         public void happyCase() throws Exception {
             // given
             final String newReference = "OXF-MEDIA-001";
-            final Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            final Party newParty = Organisation_enum.MediaXGb.findUsing(serviceRegistry);
+            final Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+            final Party newParty = OrganisationAndComms_enum.MediaXGb.findUsing(serviceRegistry);
             final LocalDate newStartDate = VT.ld(2014, 1, 1);
 
             // when
@@ -220,7 +218,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
         public void whenExists() throws Exception {
 
             // given
-            Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
             assertThat(lease.getItems().size()).isEqualTo(10);
 
             // when
@@ -260,7 +258,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
 
         @Test
         public void whenNonEmpty() throws Exception {
-            Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
             assertThat(lease.getItems().size()).isEqualTo(10);
         }
     }
@@ -273,7 +271,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.toBuilderScript());
                 }
             });
         }
@@ -282,7 +280,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
 
         @Before
         public void setup() {
-            leasePoison = leaseRepository.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
+            leasePoison = Lease_enum.OxfPoison003Gb.findUsing(serviceRegistry);
         }
 
 
@@ -356,7 +354,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
 
         @Before
         public void setUp() throws Exception {
-            leaseTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
 
             leaseTopModelRentItem = leaseTopModel.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));
             assertThat(leaseTopModelRentItem).isNotNull();
@@ -412,7 +410,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
             // TODO: what is the variation being tested here ?
 
             // given
-            Lease leaseMediax = leaseRepository.findLeaseByReference(LeaseForOxfMediaX002Gb.REF);
+            Lease leaseMediax = Lease_enum.OxfMediaX002Gb.findUsing(serviceRegistry);
 
             LeaseItem leaseMediaXServiceChargeItem = leaseMediax.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2008, 1, 1), VT.bi(1));
             LeaseTerm leaseMediaXServiceChargeTerm = leaseMediaXServiceChargeItem.findTerm(VT.ld(2008, 1, 1));
@@ -483,7 +481,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                 protected void execute(ExecutionContext executionContext) {
 
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
                 }
             });
         }
@@ -495,7 +493,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
 
         @Before
         public void setup() {
-            leaseTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
         }
 
         @Test
@@ -520,7 +518,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                 protected void execute(ExecutionContext executionContext) {
 
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
                 }
             });
         }
@@ -532,7 +530,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
 
         @Before
         public void setup() {
-            leaseTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
         }
 
         @Test
@@ -560,10 +558,10 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
                 }
             });
-            leaseTopModel1 = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            leaseTopModel1 = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
             leaseTopModel2a = leaseTopModel1.renew("OXF-TOPMODEL-002A", "Lease2", ld(2022, 7, 15), ld(2032, 7, 14));
             leaseTopModel3 = leaseTopModel2a.renew("OXF-TOPMODEL-003", "lease3", ld(2032,7,15), ld(2042,7,14));
             leaseTopModel2b = leaseRepository.newLease(
@@ -628,10 +626,10 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
                 }
             });
-            leaseTopModel1 = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            leaseTopModel1 = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
             leaseTopModel2 = leaseTopModel1.renew("OXF-TOPMODEL-002", "Lease2", ld(2022, 7, 15), ld(2032, 7, 14));
             // work-a-round: make an extra one in order to get leaseTopModel2.getPrevious() set
             leaseTopModel3 = leaseTopModel2.renew("OXF-TOPMODEL-003", "lease3", ld(2032,7,15), ld(2042,7,14));
@@ -669,14 +667,14 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.toBuilderScript());
                 }
             });
         }
         
         @Test
         public void xxx() throws Exception {
-            Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
+            Lease lease = Lease_enum.OxfPoison003Gb.findUsing(serviceRegistry);
 
             assertThat(lease.getOccupancies().size()).isEqualTo(1);
             assertThat(lease.primaryOccupancy().get()).isEqualTo(lease.getOccupancies().first());

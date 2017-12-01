@@ -36,12 +36,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /**
  * A superset of {@link PersonPartyRolesBuilder}, adding a {@link FixedAssetRole} and a corresponding {@link PartyRole}.
  */
 @EqualsAndHashCode(of={"person", "fixedAssetRoleSpecs"}, callSuper = false)
+@ToString(of={"person", "fixedAssetRoleSpecs"})
 @Accessors(chain = true)
 public final class PersonFixedAssetRolesBuilder
         extends BuilderScriptAbstract<List<FixedAssetRole>, PersonFixedAssetRolesBuilder> {
@@ -50,27 +52,13 @@ public final class PersonFixedAssetRolesBuilder
     private Person person;
 
     @Data
-    static class FixedAssetRoleSpec {
+    public static class FixedAssetRoleSpec {
         final FixedAssetRoleTypeEnum roleType;
         final Property property;
     }
 
+    @Getter @Setter
     private List<FixedAssetRoleSpec> fixedAssetRoleSpecs = Lists.newArrayList();
-
-    public PersonFixedAssetRolesBuilder addFixedAssetRole(
-            final FixedAssetRoleTypeEnum fixedAssetRoleType,
-            final Property property) {
-        fixedAssetRoleSpecs.add(new FixedAssetRoleSpec(fixedAssetRoleType, property));
-        return this;
-    }
-
-    public PersonFixedAssetRolesBuilder addFixedAssetRoles(
-            final List<FixedAssetRoleSpec> fixedAssetRoleTypes) {
-        for (FixedAssetRoleSpec fixedAssetRoleType : fixedAssetRoleTypes) {
-            addFixedAssetRole(fixedAssetRoleType.roleType, fixedAssetRoleType.property);
-        }
-        return this;
-    }
 
     @Getter
     private List<FixedAssetRole> object = Lists.newArrayList();

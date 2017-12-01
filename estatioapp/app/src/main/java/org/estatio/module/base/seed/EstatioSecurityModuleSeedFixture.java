@@ -21,18 +21,7 @@ import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 import org.isisaddons.module.security.seed.SeedUsersAndRolesFixtureScript;
 import org.isisaddons.module.togglz.glue.seed.TogglzModuleAdminRole;
 
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForFr;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForFrOther;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGbOther;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGlobal;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGlobalOnly;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForIt;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForItOther;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNl;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNlOther;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForSe;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForSeOther;
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.base.fixtures.security.perms.personas.EstatioRolesAndPermissions;
 import org.estatio.module.base.fixtures.security.userrole.personas.EstatioAdmin_Has_EstatioAdminRole;
 import org.estatio.module.base.fixtures.security.userrole.personas.EstatioAdmin_Has_EstatioSuperuserRole;
@@ -60,18 +49,18 @@ public class EstatioSecurityModuleSeedFixture extends DiscoverableFixtureScript 
         executionContext.executeChild(this, new SeedUsersAndRolesFixtureScript());
 
         // estatio app tenancy, users, roles etc
-        executionContext.executeChild(this, new ApplicationTenancyForGlobal());
-        executionContext.executeChild(this, new ApplicationTenancyForGlobalOnly());
-        executionContext.executeChild(this, new ApplicationTenancyForFr());
-        executionContext.executeChild(this, new ApplicationTenancyForFrOther());
-        executionContext.executeChild(this, new ApplicationTenancyForIt());
-        executionContext.executeChild(this, new ApplicationTenancyForItOther());
-        executionContext.executeChild(this, new ApplicationTenancyForNl());
-        executionContext.executeChild(this, new ApplicationTenancyForNlOther());
-        executionContext.executeChild(this, new ApplicationTenancyForSe());
-        executionContext.executeChild(this, new ApplicationTenancyForSeOther());
-        executionContext.executeChild(this, new ApplicationTenancyForGb());
-        executionContext.executeChild(this, new ApplicationTenancyForGbOther());
+        executionContext.executeChild(this, ApplicationTenancy_enum.Global.toBuilderScript());
+        executionContext.executeChild(this, ApplicationTenancy_enum.GlobalOnly.toBuilderScript());
+        executionContext.executeChild(this, ApplicationTenancy_enum.Fr.toBuilderScript());
+        executionContext.executeChild(this, ApplicationTenancy_enum.FrOther.toBuilderScript());
+        executionContext.executeChild(this, ApplicationTenancy_enum.It.toBuilderScript());
+        executionContext.executeChild(this, ApplicationTenancy_enum.ItOther.toBuilderScript());
+        executionContext.executeChild(this, ApplicationTenancy_enum.Nl.toBuilderScript());
+        executionContext.executeChild(this, ApplicationTenancy_enum.NlOther.toBuilderScript());
+        executionContext.executeChild(this, ApplicationTenancy_enum.Se.toBuilderScript());
+        executionContext.executeChild(this, ApplicationTenancy_enum.SeOther.toBuilderScript());
+        executionContext.executeChild(this, ApplicationTenancy_enum.Gb.toBuilderScript());
+        executionContext.executeChild(this, ApplicationTenancy_enum.GbOther.toBuilderScript());
 
         // perms (role/features)
         executionContext.executeChild(this, new EstatioRolesAndPermissions());

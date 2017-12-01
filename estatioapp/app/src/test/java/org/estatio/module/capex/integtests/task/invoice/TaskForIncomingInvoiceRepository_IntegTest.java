@@ -32,8 +32,8 @@ import org.apache.isis.applib.util.Enums;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
@@ -47,7 +47,7 @@ import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -62,7 +62,7 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends CapexModuleInteg
                 @Override
                 protected void execute(final ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
+                    executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
                 }
             });
 
@@ -88,8 +88,8 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends CapexModuleInteg
         @Test
         public void happy_case() throws Exception {
 
-            final Party buyer = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
-            final Party seller = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+            final Party buyer = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
+            final Party seller = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
             final Property property = propertyRepository.findPropertyByReference(
                     Property_enum.OxfGb.getRef());
 

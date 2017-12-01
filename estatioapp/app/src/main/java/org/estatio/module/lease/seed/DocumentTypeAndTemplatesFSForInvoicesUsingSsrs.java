@@ -43,8 +43,6 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGlobal;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForIt;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;
@@ -88,8 +86,8 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         final LocalDate templateDate = getTemplateDateElseNow();
 
         // prereqs
-        executionContext.executeChild(this, new ApplicationTenancyForGlobal());
-        executionContext.executeChild(this, new ApplicationTenancyForIt());
+        executionContext.executeChild(this, ApplicationTenancy_enum.Global.toBuilderScript());
+        executionContext.executeChild(this, ApplicationTenancy_enum.It.toBuilderScript());
         executionContext.executeChild(this, new RenderingStrategies());
 
         upsertTemplatesForInvoice(templateDate, executionContext);

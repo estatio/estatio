@@ -37,11 +37,11 @@ import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 public class BankMandateRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
@@ -50,12 +50,12 @@ public class BankMandateRepository_IntegTest extends LeaseModuleIntegTestAbstrac
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-                executionContext.executeChild(this, BankAccount_enum.TopModelGb.toFixtureScript());
+                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
+                executionContext.executeChild(this, BankAccount_enum.TopModelGb.toBuilderScript());
             }
         });
 
-        lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
     }
 
     @Inject
@@ -81,7 +81,7 @@ public class BankMandateRepository_IntegTest extends LeaseModuleIntegTestAbstrac
         public void happy_case() throws Exception {
 
             // Given
-            Party owner = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+            Party owner = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
             BankAccount bankAccount = BankAccount_enum.TopModelGb.findUsing(serviceRegistry);
 
             final String reference = "REF";

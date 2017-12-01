@@ -30,6 +30,7 @@ import org.isisaddons.module.base.platform.applib.Module;
 import org.isisaddons.module.base.platform.applib.ModuleAbstract;
 import org.isisaddons.module.command.IncodeSpiCommandModule;
 import org.isisaddons.module.excel.IncodeLibExcelModule;
+import org.isisaddons.module.fakedata.IncodeLibFakeDataModule;
 import org.isisaddons.module.freemarker.IncodeLibFreeMarkerModule;
 import org.isisaddons.module.pdfbox.IncodeLibPdfBoxModule;
 import org.isisaddons.module.poly.IncodeLibPolyModule;
@@ -73,6 +74,7 @@ public final class EstatioBaseModule extends ModuleAbstract {
                 new IncodeLibPolyModule(),
                 new IncodeLibServletApiModule(),
                 new IncodeLibStringInterpolatorModule(),
+                new IncodeLibFakeDataModule(),
                 new IncodeLibFreeMarkerModule(),
                 new IncodeLibXDocReportModule(),
 

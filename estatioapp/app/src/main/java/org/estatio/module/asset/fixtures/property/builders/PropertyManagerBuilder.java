@@ -30,9 +30,11 @@ import org.estatio.module.party.dom.Party;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"property", "manager"}, callSuper = false)
+@ToString(of={"property", "manager"})
 @Accessors(chain = true)
 public final class PropertyManagerBuilder
         extends BuilderScriptAbstract<FixedAssetRole, PropertyManagerBuilder> {

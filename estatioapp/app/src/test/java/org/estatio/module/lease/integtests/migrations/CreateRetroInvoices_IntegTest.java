@@ -46,7 +46,7 @@ import org.estatio.module.lease.dom.invoicing.InvoiceCalculationSelection;
 import org.estatio.module.lease.dom.invoicing.InvoiceCalculationService;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.entryfee.personas.LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001Gb;
@@ -124,7 +124,7 @@ public class CreateRetroInvoices_IntegTest extends LeaseModuleIntegTestAbstract 
             }
         };
 
-        lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
     }
 
     public static class FindDueDatesForLease extends CreateRetroInvoices_IntegTest {

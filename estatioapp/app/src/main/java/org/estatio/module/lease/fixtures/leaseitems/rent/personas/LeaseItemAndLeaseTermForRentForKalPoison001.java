@@ -19,15 +19,14 @@
 package org.estatio.module.lease.fixtures.leaseitems.rent.personas;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
-import org.estatio.module.index.fixtures.IndexRefData;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
+import org.estatio.module.index.fixtures.enums.Index_enum;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForKalPoison001Nl;
 
 import static org.incode.module.base.integtests.VT.bd;
 
@@ -36,14 +35,11 @@ public class LeaseItemAndLeaseTermForRentForKalPoison001 extends LeaseItemAndTer
     public static final String LEASE_REF = Lease_enum.KalPoison001Nl.getRef();
     public static final String AT_PATH = ApplicationTenancy_enum.NlKalDefault.getPath();
 
-    public static final String INDEX_REF_IT = IndexRefData.IT_REF;
-    public static final String CHARGE_REF_IT = ChargeRefData.IT_RENT;
-
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new LeaseForKalPoison001Nl());
+        executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toBuilderScript());
 
         // exec
 
@@ -51,7 +47,7 @@ public class LeaseItemAndLeaseTermForRentForKalPoison001 extends LeaseItemAndTer
 
         final String leaseRef = LEASE_REF;
         final String leaseItemAtPath = AT_PATH;
-        final String chargeRef = CHARGE_REF_IT;
+        final String chargeRef = Charge_enum.ItRent.getRef();
         final LeaseItem leaseItem = findOrCreateLeaseItem(
                 leaseRef,
                 leaseItemAtPath,
@@ -66,7 +62,7 @@ public class LeaseItemAndLeaseTermForRentForKalPoison001 extends LeaseItemAndTer
                 lease.getStartDate(),
                 null,
                 bd(150000), null, null, null,
-                INDEX_REF_IT,
+                Index_enum.IStatFoi.getReference(),
                 executionContext);
     }
 

@@ -19,11 +19,10 @@
 package org.estatio.module.lease.fixtures.leaseitems.indexsvcchg.personas;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.index.fixtures.IndexRefData;
+import org.estatio.module.index.fixtures.enums.Index_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMiracl005Gb;
 
 import static org.incode.module.base.integtests.VT.bd;
 import static org.incode.module.base.integtests.VT.ld;
@@ -32,7 +31,6 @@ public class LeaseItemAndLeaseTermForIndexableServiceChargeForOxfMiracl005Gb ext
 
     public static final String LEASE_REF = Lease_enum.OxfMiracl005Gb.getRef();
     public static final String AT_PATH = ApplicationTenancy_enum.GbOxfDefault.getPath();
-    public static final String INDEX_REF = IndexRefData.IT_REF;
 
     @Override
     protected void execute(final ExecutionContext fixtureResults) {
@@ -42,7 +40,7 @@ public class LeaseItemAndLeaseTermForIndexableServiceChargeForOxfMiracl005Gb ext
     private void createLeaseTermsForOxfMiracl005(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new LeaseForOxfMiracl005Gb());
+        executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.toBuilderScript());
 
         // exec
 
@@ -52,7 +50,7 @@ public class LeaseItemAndLeaseTermForIndexableServiceChargeForOxfMiracl005Gb ext
                 AT_PATH, lease.getStartDate(), null,
                 bd(6000),
                 ld(2010, 7, 1), ld(2011, 1, 1), ld(2011, 4, 1),
-                INDEX_REF,
+                Index_enum.IStatFoi.getReference(),
                 executionContext);
     }
 }

@@ -15,12 +15,12 @@ import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.incode.module.base.integtests.VT.ld;
@@ -47,14 +47,14 @@ public class FixedAsset_IntegTest extends AssetModuleIntegTestAbstract {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForKalNl());
+                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.KalNl.toBuilderScript());
             }
         });
     }
 
     @Before
     public void setUp() {
-        party = Organisation_enum.AcmeNl.findUsing(serviceRegistry);
+        party = OrganisationAndComms_enum.AcmeNl.findUsing(serviceRegistry);
         property = Property_enum.KalNl.findUsing(serviceRegistry);
 
         List<FixedAssetRole> allFixedAssetRoles = fixedAssetRoles.findAllForProperty(property);

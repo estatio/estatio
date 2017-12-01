@@ -29,10 +29,6 @@ import org.apache.isis.applib.services.sudo.SudoService;
 
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForDylanOfficeAdministratorGb;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForEmmaTreasurerGb;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForFloellaAssetManagerGb;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJonathanPropertyManagerGb;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.role.PartyRoleTypeService;
@@ -49,10 +45,10 @@ public class PartyRoleTypeService_IntegTest extends CapexModuleIntegTestAbstract
             @Override
             protected void execute(final ExecutionContext executionContext) {
 
-                executionContext.executeChild(this, new PersonAndRolesForJonathanPropertyManagerGb());
-                executionContext.executeChild(this, new PersonAndRolesForDylanOfficeAdministratorGb());
-                executionContext.executeChild(this, new PersonAndRolesForEmmaTreasurerGb());
-                executionContext.executeChild(this, new PersonAndRolesForFloellaAssetManagerGb());
+                executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.toBuilderScript());
+                executionContext.executeChild(this, Person_enum.DylanOfficeAdministratorGb.toBuilderScript());
+                executionContext.executeChild(this, Person_enum.EmmaTreasurerGb.toBuilderScript());
+                executionContext.executeChild(this, Person_enum.FloellaAssetManagerGb.toBuilderScript());
 
             }
         });

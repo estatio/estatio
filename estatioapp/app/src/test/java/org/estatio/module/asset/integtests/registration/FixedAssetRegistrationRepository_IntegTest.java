@@ -33,8 +33,8 @@ import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.FixedAssetRepository;
 import org.estatio.module.asset.dom.registration.FixedAssetRegistration;
 import org.estatio.module.asset.dom.registration.FixedAssetRegistrationRepository;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -48,7 +48,7 @@ public class FixedAssetRegistrationRepository_IntegTest extends AssetModuleInteg
             @Override
             protected void execute(ExecutionContext executionContext) {
 
-                executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
+                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
             }
         });
     }

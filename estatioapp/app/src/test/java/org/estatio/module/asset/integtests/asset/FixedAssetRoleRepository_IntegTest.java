@@ -32,11 +32,11 @@ import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -47,7 +47,7 @@ public class FixedAssetRoleRepository_IntegTest extends AssetModuleIntegTestAbst
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
+                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
             }
         });
     }
@@ -83,7 +83,7 @@ public class FixedAssetRoleRepository_IntegTest extends AssetModuleIntegTestAbst
         public void withExistingPropertyPartyAndRoleType() throws Exception {
 
             // given
-            Party party = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
+            Party party = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
             Property property = propertyRepository.findPropertyByReference("OXF");
             // TODO: get right dates (although the date params are not actually
             // used in the query..)

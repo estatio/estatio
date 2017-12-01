@@ -26,30 +26,13 @@ import org.isisaddons.module.security.dom.user.AccountType;
 import org.isisaddons.module.security.seed.scripts.AbstractUserAndRolesFixtureScript;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForBrunoTreasurerFr;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForDylanOfficeAdministratorGb;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForEmmaTreasurerGb;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForFaithConwayGb;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForFifineLacroixFr;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForGabrielHerveFr;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForGinoVannelliGb;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJonathanPropertyManagerGb;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForOlivePropertyManagerFr;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForOscarCountryDirectorGb;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForRosaireEvrardFr;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForThibaultOfficerAdministratorFr;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForCARTEST;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForGraIt;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForHanSe;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForMacFr;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForMnsFr;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForVivFr;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.base.platform.applib.TickingFixtureClock;
-import org.estatio.module.budget.fixtures.budgets.personas.BudgetsForOxf;
-import org.estatio.module.budget.fixtures.keytables.personas.KeyTablesForOxf;
-import org.estatio.module.budget.fixtures.partitioning.personas.PartitioningAndItemsForOxf;
+import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
+import org.estatio.module.budget.fixtures.keytables.enums.KeyTable_enum;
+import org.estatio.module.budget.fixtures.partitioning.personas.PartitioningAndItemsForOxfBudget2015;
 import org.estatio.module.capex.fixtures.IncomingInvoiceFixture;
 import org.estatio.module.capex.fixtures.OrderFixture;
 import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
@@ -72,11 +55,7 @@ import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptions
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForKalPoison001Nl;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMediaX002Gb;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMiracl005Gb;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPret004Gb;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfMiracl005Gb;
 import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;
 import org.estatio.module.lease.fixtures.leaseitems.percentage.personas.LeaseItemAndLeaseTermForPercentageForOxfMiracl005Gb;
@@ -125,23 +104,25 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
         executionContext.executeChild(this, new DocFragmentDemoFixture());
         executionContext.executeChild(this, new DocFragmentSeedFixture());
-        executionContext.executeChild(this, Person_enum.LinusTorvaldsNl.toFixtureScript());
-        executionContext.executeChild(this, BankAccount_enum.AcmeNl.toFixtureScript());
-        executionContext.executeChild(this, BankAccountFaFa_enum.AcmeNl.toFixtureScript());
-        executionContext.executeChild(this, BankAccount_enum.HelloWorldNl.toFixtureScript());
-        executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldNl.toFixtureScript());
-        executionContext.executeChild(this, BankAccount_enum.HelloWorldGb.toFixtureScript());
-        executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldGb.toFixtureScript());
-        executionContext.executeChild(this, BankAccount_enum.TopModelGb.toFixtureScript());
+        executionContext.executeChild(this, Person_enum.LinusTorvaldsNl.toBuilderScript());
+
+        executionContext.executeChild(this, BankAccount_enum.AcmeNl.toBuilderScript());
+        executionContext.executeChild(this, BankAccountFaFa_enum.AcmeNl.toBuilderScript());
+
+        executionContext.executeChild(this, BankAccount_enum.HelloWorldNl.toBuilderScript());
+        executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldNl.toBuilderScript());
+        executionContext.executeChild(this, BankAccount_enum.HelloWorldGb.toBuilderScript());
+        executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldGb.toBuilderScript());
+        executionContext.executeChild(this, BankAccount_enum.TopModelGb.toBuilderScript());
         executionContext.executeChild(this, new BankAccountAndMandateForTopModelGb());
         executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
-        executionContext.executeChild(this, new LeaseForOxfMediaX002Gb());
-        executionContext.executeChild(this, BankAccount_enum.MediaXGb.toFixtureScript());
+        executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.toBuilderScript());
+        executionContext.executeChild(this, BankAccount_enum.MediaXGb.toBuilderScript());
         executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002Gb());
-        executionContext.executeChild(this, new LeaseForOxfPret004Gb());
-        executionContext.executeChild(this, BankAccount_enum.PretGb.toFixtureScript());
-        executionContext.executeChild(this, new LeaseForOxfMiracl005Gb());
-        executionContext.executeChild(this, BankAccount_enum.MiracleGb.toFixtureScript());
+        executionContext.executeChild(this, Lease_enum.OxfPret004Gb.toBuilderScript());
+        executionContext.executeChild(this, BankAccount_enum.PretGb.toBuilderScript());
+        executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.toBuilderScript());
+        executionContext.executeChild(this, BankAccount_enum.MiracleGb.toBuilderScript());
 
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentOf2ForOxfMiracl005Gb());
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeOf2ForOxfMiracl005Gb());
@@ -150,7 +131,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForPercentageForOxfMiracl005Gb());
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForDepositForOxfMiracl005Gb());
 
-        executionContext.executeChild(this, new LeaseForKalPoison001Nl());
+        executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toBuilderScript());
         executionContext.executeChild(this, new BankAccountAndMandateForPoisonNl());
         executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003Gb());
         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
@@ -158,37 +139,39 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005());
         executionContext.executeChild(this, new GuaranteeForOxfTopModel001Gb());
-        executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-        executionContext.executeChild(this, BankAccount_enum.TopModelGb.toFixtureScript());
-        executionContext.executeChild(this, new PersonAndRolesForGinoVannelliGb());
+        executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
+        executionContext.executeChild(this, BankAccount_enum.TopModelGb.toBuilderScript());
+        executionContext.executeChild(this, Person_enum.GinoVannelliGb.toBuilderScript());
 
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForGraIt());
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForVivFr());
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForHanSe());
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForMnsFr());
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForMacFr());
+        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.GraIt.toBuilderScript());
+        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.VivFr.toBuilderScript());
+        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.HanSe.toBuilderScript());
+        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.MnsFr.toBuilderScript());
+        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.MacFr.toBuilderScript());
 
-        executionContext.executeChild(this, new PersonAndRolesForDylanOfficeAdministratorGb()); // gb mailroom
-        executionContext.executeChild(this, new PersonAndRolesForJonathanPropertyManagerGb());  // gb property mgr for OXF
-        executionContext.executeChild(this, new PersonAndRolesForFaithConwayGb());  // gb country administrator
-        executionContext.executeChild(this, new PersonAndRolesForOscarCountryDirectorGb());  // gb country director
-        executionContext.executeChild(this, new PersonAndRolesForEmmaTreasurerGb());   // gb treasurer
-
-        executionContext.executeChild(this, new PersonAndRolesForThibaultOfficerAdministratorFr());  // fr mailroom
-        executionContext.executeChild(this, new PersonAndRolesForFifineLacroixFr());  // fr property mgr for VIV and MNS
-        executionContext.executeChild(this, new PersonAndRolesForOlivePropertyManagerFr());  // fr property mgr for MAC
-        executionContext.executeChild(this, new PersonAndRolesForRosaireEvrardFr());  // fr country administrator
-        executionContext.executeChild(this, new PersonAndRolesForGabrielHerveFr());  // fr country director
-        executionContext.executeChild(this, new PersonAndRolesForBrunoTreasurerFr()); // fr treasurer
+        executionContext.executeChild(this, Person_enum.DylanOfficeAdministratorGb.toBuilderScript()); // gb mailroom
+        executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.toBuilderScript());  // gb property mgr for OXF
+        executionContext.executeChild(this, Person_enum.FaithConwayGb.toBuilderScript());  // gb country administrator
+        executionContext.executeChild(this, Person_enum.OscarCountryDirectorGb.toBuilderScript());  // gb country director
+        executionContext.executeChild(this, Person_enum.EmmaTreasurerGb.toBuilderScript());   // gb treasurer
+        executionContext.executeChild(this, Person_enum.ThibaultOfficerAdministratorFr.toBuilderScript());  // fr mailroom
+        executionContext.executeChild(this, Person_enum.FifineLacroixFr.toBuilderScript());  // fr property mgr for VIV and MNS
+        executionContext.executeChild(this, Person_enum.OlivePropertyManagerFr.toBuilderScript());  // fr property mgr for MAC
+        executionContext.executeChild(this, Person_enum.RosaireEvrardFr.toBuilderScript());  // fr country administrator
+        executionContext.executeChild(this, Person_enum.GabrielHerveFr.toBuilderScript());  // fr country director
+        executionContext.executeChild(this, Person_enum.BrunoTreasurerFr.toBuilderScript()); // fr treasurer
 
         executionContext.executeChild(this, new ProjectsForKal());
         executionContext.executeChild(this, new ProjectForGra());
 
-        executionContext.executeChild(this, new BudgetsForOxf());
-        executionContext.executeChild(this, new KeyTablesForOxf());
-        executionContext.executeChild(this, new PartitioningAndItemsForOxf());
+        executionContext.executeChild(this, Budget_enum.OxfBudget2015.toBuilderScript());
+        executionContext.executeChild(this, Budget_enum.OxfBudget2016.toBuilderScript());
+        executionContext.executeChild(this, KeyTable_enum.Oxf2015Area.toBuilderScript());
+        executionContext.executeChild(this, KeyTable_enum.Oxf2015Count.toBuilderScript());
 
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForCARTEST());
+        executionContext.executeChild(this, new PartitioningAndItemsForOxfBudget2015());
+
+        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.CARTEST.toBuilderScript());
         executionContext.executeChild(this, new NumeratorForOrganisationFra());
 
         executionContext.executeChild(this, new CreateInvoiceNumerators());

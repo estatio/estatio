@@ -15,7 +15,6 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForDylanOfficeAdministratorGb;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.capex.app.DocumentMenu;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
@@ -34,7 +33,7 @@ import org.estatio.module.capex.fixtures.project.personas.ProjectForOxf;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;
 import org.estatio.module.tax.fixtures.data.Tax_enum;
@@ -48,7 +47,7 @@ public class IncomingInvoiceFixture extends FixtureScript {
         executionContext.executeChild(this, new ProjectForOxf());
         executionContext.executeChild(this, new OrderFixture());
         executionContext.executeChild(this, new IncomingPdfForFakeInvoice2().setRunAs("estatio-user-gb"));
-        executionContext.executeChild(this, new PersonAndRolesForDylanOfficeAdministratorGb());
+        executionContext.executeChild(this, Person_enum.DylanOfficeAdministratorGb.toBuilderScript());
 
         Document fakeInvoice2Doc = incomingDocumentRepository.matchAllIncomingDocumentsByName(
                 IncomingPdfForFakeInvoice2.resourceName).get(0);
@@ -63,8 +62,8 @@ public class IncomingInvoiceFixture extends FixtureScript {
 
         IncomingInvoice fakeInvoice = incomingInvoiceRepository.findIncomingInvoiceByDocumentName("fakeInvoice2.pdf").get(0);
         fakeInvoice.setDateReceived(new LocalDate(2014,5,15));
-        fakeInvoice.setSeller(Organisation_enum.TopModelGb.findUsing(serviceRegistry));
-        fakeInvoice.setBuyer(Organisation_enum.HelloWorldGb.findUsing(serviceRegistry));
+        fakeInvoice.setSeller(OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry));
+        fakeInvoice.setBuyer(OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry));
         fakeInvoice.setType(IncomingInvoiceType.CAPEX);
         fakeInvoice.setDueDate(new LocalDate(2014,6,15));
         fakeInvoice.setInvoiceNumber("65432");

@@ -35,7 +35,7 @@ import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.lease.dom.LeaseTermForPercentage;
 import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.entryfee.personas.LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001Gb;
@@ -47,6 +47,8 @@ import org.estatio.module.lease.fixtures.leaseitems.svcchgbudgeted.personas.Leas
 import org.estatio.module.lease.fixtures.leaseitems.tax.personas.LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas.LeaseItemAndLeaseTermForTurnoverRentForOxfTopModel001Gb;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
+
+import static org.incode.module.base.integtests.VT.ld;
 
 public class LeaseTermsForPercentage_IntegTest extends LeaseModuleIntegTestAbstract {
 
@@ -68,7 +70,7 @@ public class LeaseTermsForPercentage_IntegTest extends LeaseModuleIntegTestAbstr
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
 
                     executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForOxfTopModel001Gb());
                     executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001Gb());
@@ -88,15 +90,15 @@ public class LeaseTermsForPercentage_IntegTest extends LeaseModuleIntegTestAbstr
         @Test
         public void test() throws Exception {
             // given
-            topmodelLease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            topmodelLease.verifyUntil(new LocalDate(2012, 1, 1));
+            topmodelLease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+            topmodelLease.verifyUntil(ld(2012, 1, 1));
 
             indexTerm1 = (LeaseTermForIndexable) topmodelLease.findFirstItemOfType(LeaseItemType.RENT).getTerms().first();
             indexTerm2 = (LeaseTermForIndexable) indexTerm1.getNext();
 
             torTerm = (LeaseTermForTurnoverRent) topmodelLease.findFirstItemOfType(LeaseItemType.TURNOVER_RENT).getTerms().first();
             torTerm.setAuditedTurnover(BigDecimal.valueOf(1111111.00));
-            topmodelLease.verifyUntil(new LocalDate(2012, 1, 1));
+            topmodelLease.verifyUntil(ld(2012, 1, 1));
 
             // when
             Assertions.assertThat(indexTerm1.valueForDate(new LocalDate(2011, 7, 14))).isEqualTo(new BigDecimal("20200.00"));
@@ -126,7 +128,7 @@ public class LeaseTermsForPercentage_IntegTest extends LeaseModuleIntegTestAbstr
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
 
                     executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForOxfTopModel001Gb());
                     executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001Gb());
@@ -146,7 +148,7 @@ public class LeaseTermsForPercentage_IntegTest extends LeaseModuleIntegTestAbstr
         @Test
         public void test() throws Exception {
             // given
-            topmodelLease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            topmodelLease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
             topmodelLease.verifyUntil(new LocalDate(2016, 1, 1));
 
             indexTermLast = (LeaseTermForIndexable) topmodelLease.findFirstItemOfType(LeaseItemType.RENT).getTerms().last();

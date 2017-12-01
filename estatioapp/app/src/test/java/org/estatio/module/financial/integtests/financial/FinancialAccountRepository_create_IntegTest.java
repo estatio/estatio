@@ -7,12 +7,14 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.isisaddons.module.fakedata.dom.FakeDataService;
+
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccountType;
 import org.estatio.module.financial.integtests.FinancialModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,9 +24,9 @@ public class FinancialAccountRepository_create_IntegTest extends FinancialModule
     @Before
     public void setUp() throws Exception {
         runFixtureScript(
-                Organisation_enum.HelloWorldGb.toFixtureScript()
+                OrganisationAndComms_enum.HelloWorldGb.toBuilderScript()
         );
-        this.party = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
+        this.party = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
     }
 
     private Party party;
@@ -62,5 +64,8 @@ public class FinancialAccountRepository_create_IntegTest extends FinancialModule
         }
 
     }
+
+    @Inject
+    FakeDataService fakeDataService;
 
 }

@@ -24,7 +24,7 @@ import org.junit.Test;
 
 import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexRepository;
-import org.estatio.module.index.fixtures.IndexRefData;
+import org.estatio.module.index.fixtures.enums.Index_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -38,8 +38,9 @@ public class IndexRepository_IntegTest extends IndexModuleIntegTestAbstract {
 
         @Test
         public void whenExists() throws Exception {
-            final Index index = indexRepository.findByReference(IndexRefData.IT_REF);
-            assertThat(index.getReference(), is(IndexRefData.IT_REF));
+            final Index_enum index_d = Index_enum.IStatFoi;
+            final Index index = indexRepository.findByReference(index_d.getReference());
+            assertThat(index.getReference(), is(index_d.getReference()));
         }
 
     }

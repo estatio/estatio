@@ -36,7 +36,7 @@ import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndMand
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -64,7 +64,7 @@ public class FinancialAccountRepository_IntegTest extends LeaseModuleIntegTestAb
 
     @Before
     public void setup() throws Exception {
-        party = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+        party = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
     }
 
     public static class FindAccountByReference extends FinancialAccountRepository_IntegTest {

@@ -40,7 +40,8 @@ import org.estatio.module.charge.dom.ChargeRepository;
 
 public abstract class PartitioningAndItemsAbstract extends FixtureScript {
 
-    protected Partitioning createPartitioning(final Budget budget, final ExecutionContext executionContext){
+    protected Partitioning createPartitioning(
+            final Budget budget, final ExecutionContext executionContext){
         Partitioning partitioning = partitioningRepository.newPartitioning(budget, budget.getStartDate(), budget.getEndDate(), BudgetCalculationType.BUDGETED);
         return executionContext.addResult(this, partitioning);
     }

@@ -28,7 +28,7 @@ import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexBase;
 import org.estatio.module.index.dom.IndexBaseRepository;
 import org.estatio.module.index.dom.IndexRepository;
-import org.estatio.module.index.fixtures.IndexRefData;
+import org.estatio.module.index.fixtures.enums.Index_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -45,7 +45,7 @@ public class IndexBaseRepository_IntegTest extends IndexModuleIntegTestAbstract 
         @Test
         public void happyCase() throws Exception {
             // given
-            Index index = indexRepository.findByReference(IndexRefData.IT_REF);
+            Index index = Index_enum.IStatFoi.findUsing(serviceRegistry);
             // when
             final IndexBase indexBase = indexBaseRepository.findByIndexAndActiveOnDate(index, VT.ld(2013, 1, 1));
             // then

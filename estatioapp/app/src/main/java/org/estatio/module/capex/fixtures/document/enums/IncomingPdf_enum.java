@@ -1,6 +1,6 @@
 package org.estatio.module.capex.fixtures.document.enums;
 
-import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum IncomingPdf_enum implements EnumWithBuilderScript<Document, IncomingPdfBuilder> {
+public enum IncomingPdf_enum implements PersonaWithBuilderScript<Document, IncomingPdfBuilder> {
 
     FakeInvoice1(IncomingPdf_enum.class, "fakeInvoice1.pdf"),
     FakeInvoice2(IncomingPdf_enum.class, "fakeInvoice2.pdf"),
@@ -25,7 +25,7 @@ public enum IncomingPdf_enum implements EnumWithBuilderScript<Document, Incoming
     private final String resourceName;
 
     @Override
-    public IncomingPdfBuilder toFixtureScript() {
+    public IncomingPdfBuilder toBuilderScript() {
         return new IncomingPdfBuilder()
                 .setContextClass(contextClass)
                 .setResourceName(resourceName);

@@ -21,11 +21,12 @@ package org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas;
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 
 public class LeaseItemAndLeaseTermForTurnoverRentForOxfPoison003Gb extends LeaseItemAndTermsAbstract {
 
-    public static final String LEASE_REF = LeaseForOxfPoison003Gb.REF;
+    public static final String LEASE_REF = Lease_enum.OxfPoison003Gb.getRef();
+
     public static final String AT_PATH = ApplicationTenancy_enum.GbOxfDefault.getPath();
 
     @Override
@@ -36,7 +37,7 @@ public class LeaseItemAndLeaseTermForTurnoverRentForOxfPoison003Gb extends Lease
     private void createLeaseTermsForOxfPoison003(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
+        executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.toBuilderScript());
 
         // exec
         final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);

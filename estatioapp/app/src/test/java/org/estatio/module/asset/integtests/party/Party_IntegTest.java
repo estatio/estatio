@@ -31,14 +31,12 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.sudo.SudoService;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForGinoVannelliGb;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.junit.Assert.assertNull;
 
@@ -61,12 +59,12 @@ public class Party_IntegTest extends AssetModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     // linked together:
-                    executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
-                    executionContext.executeChild(this, new PersonAndRolesForGinoVannelliGb());
+                    executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
+                    executionContext.executeChild(this, Person_enum.GinoVannelliGb.toBuilderScript());
                     // only relationship
-                    executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
+                    executionContext.executeChild(this, Person_enum.JohnDoeNl.toBuilderScript());
                     // only comm channels
-                    executionContext.executeChild(this, Organisation_enum.AcmeNl.toFixtureScript());
+                    executionContext.executeChild(this, OrganisationAndComms_enum.AcmeNl.toBuilderScript());
                 }
             });
         }

@@ -33,7 +33,7 @@ import org.estatio.module.guarantee.integtests.GuaranteeModuleIntegTestAbstract;
 import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 
 public class Guarantee_TODO_IntegTest extends GuaranteeModuleIntegTestAbstract {
 
@@ -51,8 +51,8 @@ public class Guarantee_TODO_IntegTest extends GuaranteeModuleIntegTestAbstract {
                 }
             }.withTracing());
 
-            lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            guarantee = guaranteeRepository.findByReference(LeaseForOxfTopModel001Gb.REF + "-D");
+            lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+            guarantee = guaranteeRepository.findByReference(Lease_enum.OxfTopModel001Gb.getRef() + "-D");
         }
 
         @Test

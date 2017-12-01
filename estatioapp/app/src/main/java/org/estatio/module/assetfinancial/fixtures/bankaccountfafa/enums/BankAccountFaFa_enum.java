@@ -18,7 +18,7 @@
  */
 package org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums;
 
-import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
@@ -31,7 +31,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Accessors(chain = true)
 public enum BankAccountFaFa_enum
-        implements EnumWithBuilderScript<FixedAssetFinancialAccount, BankAccountFaFaBuilder> {
+        implements PersonaWithBuilderScript<FixedAssetFinancialAccount, BankAccountFaFaBuilder> {
 
     AcmeNl          (BankAccount_enum.AcmeNl, Property_enum.KalNl),
     HelloWorldGb    (BankAccount_enum.HelloWorldGb, Property_enum.OxfGb),
@@ -53,7 +53,7 @@ public enum BankAccountFaFa_enum
     }
 
     @Override
-    public BankAccountFaFaBuilder toFixtureScript() {
+    public BankAccountFaFaBuilder toBuilderScript() {
         return new BankAccountFaFaBuilder()
                 .setPrereq((f,ec) -> f.setBankAccount(f.objectFor(bankAccount_d, ec)))
                 .setPrereq((f,ec) -> f.setProperty(f.objectFor(property_d, ec)));

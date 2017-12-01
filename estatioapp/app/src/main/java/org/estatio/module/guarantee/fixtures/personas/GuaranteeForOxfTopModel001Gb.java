@@ -27,24 +27,24 @@ import org.estatio.module.guarantee.dom.GuaranteeType;
 import org.estatio.module.guarantee.fixtures.GuaranteeAbstract;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.incode.module.base.integtests.VT.bd;
 import static org.incode.module.base.integtests.VT.ld;
 
 public class GuaranteeForOxfTopModel001Gb extends GuaranteeAbstract {
 
-    public static final String LEASE_REFERENCE = LeaseForOxfTopModel001Gb.REF;
+    public static final String LEASE_REFERENCE = Lease_enum.OxfTopModel001Gb.getRef();
     public static final String REFERENCE = LEASE_REFERENCE + "-D";
-    public static final String PARTY_REF_BANK = Organisation_enum.DagoBankGb.getRef();
+    public static final String PARTY_REF_BANK = OrganisationAndComms_enum.DagoBankGb.getRef();
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
-        executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-        executionContext.executeChild(this, Organisation_enum.DagoBankGb.toFixtureScript());
+        executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
+        executionContext.executeChild(this, OrganisationAndComms_enum.DagoBankGb.toBuilderScript());
 
         createGuaranteeForOxfTopModel001(executionContext);
     }

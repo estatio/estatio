@@ -44,13 +44,13 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseAgreementTypeEnum;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.PersonRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -92,16 +92,17 @@ public class AgreementRoleRepository_IntegTest extends LeaseModuleIntegTestAbstr
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
             }
         });
     }
 
     @Before
     public void setUp() throws Exception {
-        party = partyRepository.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
+        party = Lease_enum.OxfTopModel001Gb.getTenant_d().findUsing(serviceRegistry);
         agreementType = agreementTypeRepository.find(LeaseAgreementTypeEnum.LEASE.getTitle());
-        agreement = agreementRepository.findAgreementByTypeAndReference(agreementType, LeaseForOxfTopModel001Gb.REF);
+        agreement = agreementRepository.findAgreementByTypeAndReference(agreementType,
+                Lease_enum.OxfTopModel001Gb.getRef());
         agreementRoleType = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, LeaseAgreementRoleTypeEnum.TENANT.getTitle());
 
     }
@@ -117,7 +118,7 @@ public class AgreementRoleRepository_IntegTest extends LeaseModuleIntegTestAbstr
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
                 }
             });
         }
@@ -132,8 +133,8 @@ public class AgreementRoleRepository_IntegTest extends LeaseModuleIntegTestAbstr
         @Before
         public void setUp() throws Exception {
             artTenant = agreementRoleTypeRepository.findByTitle(LeaseAgreementRoleTypeEnum.TENANT.getTitle());
-            leaseOxfTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            partyTopModel = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+            leaseOxfTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+            partyTopModel = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
         }
 
         @Test

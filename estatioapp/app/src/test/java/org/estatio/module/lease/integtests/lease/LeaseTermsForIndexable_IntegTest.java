@@ -32,7 +32,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexRepository;
-import org.estatio.module.index.fixtures.IndexRefData;
+import org.estatio.module.index.fixtures.enums.Index_enum;
 import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.lease.dom.LeaseTermForIndexableRepository;
 import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb;
@@ -90,7 +90,7 @@ public class LeaseTermsForIndexable_IntegTest extends LeaseModuleIntegTestAbstra
 
         @Before
         public void setUp() throws Exception {
-            index = indexes.findByReference(IndexRefData.IT_REF);
+            index = Index_enum.IStatFoi.findUsing(serviceRegistry);
         }
 
         @Test

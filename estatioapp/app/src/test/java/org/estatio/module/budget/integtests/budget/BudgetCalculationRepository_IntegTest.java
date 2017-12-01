@@ -22,8 +22,8 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
-import org.estatio.module.budget.fixtures.budgets.personas.BudgetsForOxf;
-import org.estatio.module.budget.fixtures.partitioning.personas.PartitioningAndItemsForOxf;
+import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
+import org.estatio.module.budget.fixtures.partitioning.personas.PartitioningAndItemsForOxfBudget2015;
 import org.estatio.module.budget.integtests.BudgetModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,7 +50,7 @@ public class BudgetCalculationRepository_IntegTest extends BudgetModuleIntegTest
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new PartitioningAndItemsForOxf());
+                executionContext.executeChild(this, new PartitioningAndItemsForOxfBudget2015());
             }
         });
     }
@@ -81,7 +81,8 @@ public class BudgetCalculationRepository_IntegTest extends BudgetModuleIntegTest
 
             // given
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
-            Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
+            Budget budget = budgetRepository.findByPropertyAndStartDate(property,
+                    Budget_enum.OxfBudget2015.getStartDate());
             PartitionItem partitionItem = budget.getItems().first().getPartitionItems().get(0);
             budgetCalculationService.calculatePersistedCalculations(budget);
 
@@ -102,7 +103,8 @@ public class BudgetCalculationRepository_IntegTest extends BudgetModuleIntegTest
 
             // given
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
-            Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
+            Budget budget = budgetRepository.findByPropertyAndStartDate(property,
+                    Budget_enum.OxfBudget2015.getStartDate());
             PartitionItem partitionItem = budget.getItems().first().getPartitionItems().get(0);
             budgetCalculationService.calculatePersistedCalculations(budget);
 

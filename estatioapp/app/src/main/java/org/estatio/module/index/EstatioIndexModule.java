@@ -35,7 +35,7 @@ import org.estatio.module.base.EstatioBaseModule;
 import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexBase;
 import org.estatio.module.index.dom.IndexValue;
-import org.estatio.module.index.fixtures.IndexRefData;
+import org.estatio.module.index.fixtures.enums.Index_enum;
 
 @XmlRootElement(name = "module")
 public final class EstatioIndexModule extends ModuleAbstract {
@@ -58,7 +58,7 @@ public final class EstatioIndexModule extends ModuleAbstract {
         return new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new IndexRefData());
+                executionContext.executeChild(this, new Index_enum.PersistAll());
             }
         };
     }

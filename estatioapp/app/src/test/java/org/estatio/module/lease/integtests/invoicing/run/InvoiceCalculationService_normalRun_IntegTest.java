@@ -33,9 +33,8 @@ import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.integtests.VT;
 
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForLinusTorvaldsNl;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.lease.app.InvoiceServiceMenu;
@@ -55,7 +54,7 @@ import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfMediax002Gb;
 import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfTopModel001;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPret004Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfMiracl005Gb;
 import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;
 import org.estatio.module.lease.fixtures.leaseitems.percentage.personas.LeaseItemAndLeaseTermForPercentageForOxfMiracl005Gb;
@@ -100,14 +99,14 @@ public class InvoiceCalculationService_normalRun_IntegTest extends LeaseModuleIn
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new PersonAndRolesForLinusTorvaldsNl());
-                executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
-                executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForKalNl());
+                executionContext.executeChild(this, Person_enum.LinusTorvaldsNl.toBuilderScript());
+                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
+                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.KalNl.toBuilderScript());
                 executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
                 executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002Gb());
                 executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003Gb());
                 executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
-                executionContext.executeChild(this, new LeaseForOxfPret004Gb());
+                executionContext.executeChild(this, Lease_enum.OxfPret004Gb.toBuilderScript());
 
                 executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentOf2ForOxfMiracl005Gb());
                 executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeOf2ForOxfMiracl005Gb());

@@ -40,7 +40,7 @@ import org.incode.module.country.dom.impl.CountryRepository;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 import org.estatio.module.party.integtests.PartyModuleIntegTestAbstract;
 
 public class CommunicationChannelOwnerLinkRepository_IntegTest extends PartyModuleIntegTestAbstract {
@@ -49,7 +49,7 @@ public class CommunicationChannelOwnerLinkRepository_IntegTest extends PartyModu
     public void setupData() throws Exception {
         runFixtureScript(new FixtureScript() {
             @Override protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
+                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
             }
         });
     }
@@ -59,7 +59,7 @@ public class CommunicationChannelOwnerLinkRepository_IntegTest extends PartyModu
         @Test
         public void happyCase() throws Exception {
             // given
-            final Party party = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+            final Party party = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
             final Country country = Country_enum.GBR.findUsing(serviceRegistry);
             final PostalAddress postalAddress = postalAddressRepository.findByAddress(party, "1 Circle Square", "W2AXXX", "London", country);
 
@@ -76,7 +76,7 @@ public class CommunicationChannelOwnerLinkRepository_IntegTest extends PartyModu
         @Test
         public void happyCase() throws Exception {
             // given
-            final Party party = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+            final Party party = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
 
             // when
             final List<CommunicationChannelOwnerLink> communicationChannelOwnerLinks = communicationChannelOwnerLinkRepository.findByOwner(party);
@@ -92,7 +92,7 @@ public class CommunicationChannelOwnerLinkRepository_IntegTest extends PartyModu
         @Test
         public void happyCase() throws Exception {
             // given
-            final Party party = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+            final Party party = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
 
             // when
             final List<CommunicationChannelOwnerLink> communicationChannelOwnerLinks = communicationChannelOwnerLinkRepository.findByOwnerAndCommunicationChannelType(party, CommunicationChannelType.PHONE_NUMBER);

@@ -21,7 +21,7 @@ package org.estatio.module.lease.fixtures.bankaccount.personas;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.bankmandate.dom.Scheme;
 import org.estatio.module.bankmandate.dom.SequenceType;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForKalPoison001Nl;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 
 public class BankAccountAndMandateForPoisonNl extends BankAccountAndMandateAbstract {
 
@@ -42,11 +42,11 @@ public class BankAccountAndMandateForPoisonNl extends BankAccountAndMandateAbstr
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new LeaseForKalPoison001Nl());
-        executionContext.executeChild(this, BankAccount_enum.PoisonNl.toFixtureScript());
+        executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toBuilderScript());
+        executionContext.executeChild(this, BankAccount_enum.PoisonNl.toBuilderScript());
 
         // exec
-        createBankMandate(LeaseForKalPoison001Nl.PARTY_REF_TENANT, BANK_ACCOUNT_REF, SEQUENCE, SEQUENCE_TYPE, SCHEME, executionContext);
+        createBankMandate(Lease_enum.KalPoison001Nl.getTenant_d().getRef(), BANK_ACCOUNT_REF, SEQUENCE, SEQUENCE_TYPE, SCHEME, executionContext);
     }
 
 }

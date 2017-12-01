@@ -22,7 +22,7 @@ public class IncomingPdfForFakeOrder2 extends FixtureScript {
     protected void execute(final FixtureScript.ExecutionContext executionContext) {
 
         executionContext.setParameter("runAs", runAs);
-        executionContext.executeChild(this, data.toFixtureScript());
+        executionContext.executeChild(this, data.toBuilderScript());
 
     }
 

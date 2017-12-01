@@ -25,7 +25,7 @@ import org.apache.isis.core.commons.ensure.Ensure;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.currency.fixtures.CurrenciesRefData;
+import org.estatio.module.currency.fixtures.enums.Currency_enum;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItemType;
@@ -35,15 +35,15 @@ import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.rent.personas.LeaseItemAndLeaseTermForRentOf2ForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.leaseitems.servicecharge.personas.LeaseItemAndLeaseTermForServiceChargeForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas.LeaseItemAndLeaseTermForTurnoverRentForOxfPoison003Gb;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.incode.module.base.integtests.VT.ldix;
 
 public class InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003 extends InvoiceAbstract {
 
-    private static final Organisation_enum seller_d = Organisation_enum.HelloWorldGb;
-    private static final Organisation_enum buyer_d = Organisation_enum.PoisonGb;
+    private static final OrganisationAndComms_enum seller_d = OrganisationAndComms_enum.HelloWorldGb;
+    private static final OrganisationAndComms_enum buyer_d = OrganisationAndComms_enum.PoisonGb;
     private static final Lease_enum lease_d = Lease_enum.OxfPoison003Gb;
     private static final ApplicationTenancy_enum applicationTenancy_d = ApplicationTenancy_enum.GbOxf;
 
@@ -70,7 +70,7 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003 extends Invo
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, Organisation_enum.HelloWorldNl.toFixtureScript());
+        executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldNl.toBuilderScript());
 
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentOf2ForOxfPoison003Gb());
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfPoison003Gb());
@@ -87,7 +87,7 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003 extends Invo
                 applicationTenancy,
                 lease, PARTY_REF_SELLER,
                 PARTY_REF_BUYER, PaymentMethod.DIRECT_DEBIT,
-                CurrenciesRefData.EUR,
+                Currency_enum.EUR.getReference(),
                 startDate, executionContext);
 
         createInvoiceItemsForTermsOfFirstLeaseItemOfType(

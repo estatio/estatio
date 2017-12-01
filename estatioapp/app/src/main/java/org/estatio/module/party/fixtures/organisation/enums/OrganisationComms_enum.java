@@ -31,17 +31,17 @@ import static org.estatio.module.country.fixtures.enums.Country_enum.NLD;
 @Accessors(chain = true)
 public enum OrganisationComms_enum {
 
-    AcmeNl(Organisation_enum.AcmeNl,
+    AcmeNl(OrganisationAndComms_enum.AcmeNl,
             "Herengracht 100", null, "1010 AA", "Amsterdam", null, NLD, true,
             "+31202211333",
             "+312022211399",
             "info@acme.example.com"),
-    DagoBankGb(Organisation_enum.DagoBankGb,
+    DagoBankGb(OrganisationAndComms_enum.DagoBankGb,
             null, null, null, null, null, null, true,
             null,
             null,
             "london.office@dagobank.example.com"),
-    DagoBankNl(Organisation_enum.DagoBankNl,
+    DagoBankNl(OrganisationAndComms_enum.DagoBankNl,
             "Herengracht 333", null, "1016 BA", "Amsterdam", null, NLD, true,
             "+31202211333",
             "+312022211399",
@@ -53,12 +53,12 @@ public enum OrganisationComms_enum {
             null,
             null),
 */
-    HelloWorldGb(Organisation_enum.HelloWorldGb,
+    HelloWorldGb(OrganisationAndComms_enum.HelloWorldGb,
             "5 Covent Garden", null, "W1A1AA", "London", null, GBR, true,
             "+44202211333",
             "+442022211399",
             "info@hello.example.com"),
-    HelloWorldGb_2(Organisation_enum.HelloWorldGb,
+    HelloWorldGb_2(OrganisationAndComms_enum.HelloWorldGb,
             "1 Circle Square", null, "W2AXXX", "London", null, GBR, true,
             null,
             null,
@@ -80,17 +80,17 @@ public enum OrganisationComms_enum {
             null,
             null),
 */
-    HyperNl(Organisation_enum.HyperNl,
+    HyperNl(OrganisationAndComms_enum.HyperNl,
             "Javaplein", null, "1016 BA", "Amsterdam", null, NLD, true,
             "+31202211333",
             "+312022211399",
             null),
-    MediaXGb(Organisation_enum.MediaXGb,
+    MediaXGb(OrganisationAndComms_enum.MediaXGb,
             "85 High St", null, "EN11 8TL", "Hoddesdon", null, GBR, true,
             "+442079897676",
             "+442079897677",
             "info@mediax.example.com"),
-    MediaXNl(Organisation_enum.MediaXNl,
+    MediaXNl(OrganisationAndComms_enum.MediaXNl,
             "Herengracht 100", null, "1010 AA", "Amsterdam", null, GBR, true,
             "+31202211333",
             "+312022211399",
@@ -107,7 +107,7 @@ public enum OrganisationComms_enum {
             null,
             null),
 */
-    NlBankNl(Organisation_enum.NlBankNl,
+    NlBankNl(OrganisationAndComms_enum.NlBankNl,
             "Single 2222", null, "1016 BA", "Amsterdam", null, NLD, true,
             "+31202211333",
             "+312022211399",
@@ -124,12 +124,12 @@ public enum OrganisationComms_enum {
             null,
             null),
 */
-    PoisonGb(Organisation_enum.PoisonGb,
+    PoisonGb(OrganisationAndComms_enum.PoisonGb,
             "46 Brewster Street", null, "W2D1PQ", "London", null, GBR, true,
             "+44202218888",
             "+44202218899",
             "info@poison-perfumeries.com"),
-    PoisonNl(Organisation_enum.PoisonNl,
+    PoisonNl(OrganisationAndComms_enum.PoisonNl,
             "Herengracht 100", null, "1010 AA", "Amsterdam", null, GBR, true,
             "+31202211333",
             "+312022211399",
@@ -141,12 +141,12 @@ public enum OrganisationComms_enum {
             null,
             null),
 */
-    TopModelGb(Organisation_enum.TopModelGb,
+    TopModelGb(OrganisationAndComms_enum.TopModelGb,
             "2 Top Road", null, "W2AXXX", "London", null, GBR, true,
             "+31202211333",
             "+312022211399",
             "info@topmodel.example.com"),
-    TopModelGb_2(Organisation_enum.TopModelGb,
+    TopModelGb_2(OrganisationAndComms_enum.TopModelGb,
             "1 Circle Square", null, "W2AXXX", "London", null, GBR, true,
             null,
             null,
@@ -160,7 +160,7 @@ public enum OrganisationComms_enum {
 */
     ;
 
-    private final Organisation_enum organisation;
+    private final OrganisationAndComms_enum organisation;
     private final String address1;
     private final String address2;
     private final String postalCode;

@@ -11,14 +11,14 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.fixtures.document.IncomingPdfFixture;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,11 +31,11 @@ public class IncomingDocumentRepository_IntegTest extends CapexModuleIntegTestAb
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
-                executionContext.executeChild(this, Organisation_enum.HelloWorldGb.toFixtureScript());
-                executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
-                executionContext.executeChild(this, BankAccount_enum.HelloWorldNl.toFixtureScript());
-                executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldNl.toFixtureScript());
+                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
+                executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.toBuilderScript());
+                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
+                executionContext.executeChild(this, BankAccount_enum.HelloWorldNl.toBuilderScript());
+                executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldNl.toBuilderScript());
 
                 executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
 

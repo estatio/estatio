@@ -30,9 +30,11 @@ import org.estatio.module.party.fixtures.organisation.enums.OrganisationComms_en
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"partyReference", "comms"}, callSuper = false)
+@ToString(of={"partyReference", "comms"})
 @Accessors(chain = true)
 public final class OrganisationAndCommsBuilder
         extends BuilderScriptAbstract<Organisation, OrganisationAndCommsBuilder> {

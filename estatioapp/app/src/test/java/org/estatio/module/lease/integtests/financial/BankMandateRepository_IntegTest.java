@@ -35,7 +35,7 @@ import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndMandateForPoisonNl;
 import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndMandateForTopModelGb;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForKalPoison001Nl;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.PartyRepository;
 
@@ -53,7 +53,7 @@ public class BankMandateRepository_IntegTest extends LeaseModuleIntegTestAbstrac
                 protected void execute(ExecutionContext executionContext) {
 
                     executionContext.executeChild(this, new BankAccountAndMandateForTopModelGb());
-                    executionContext.executeChild(this, new LeaseForKalPoison001Nl());
+                    executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toBuilderScript());
                     executionContext.executeChild(this, new BankAccountAndMandateForPoisonNl());
                 }
             });

@@ -30,9 +30,11 @@ import org.estatio.module.financial.dom.BankAccount;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"bankAccount", "property"}, callSuper = false)
+@ToString(of={"bankAccount", "property"})
 @Accessors(chain = true)
 public final class BankAccountFaFaBuilder
         extends BuilderScriptAbstract<FixedAssetFinancialAccount, BankAccountFaFaBuilder> {

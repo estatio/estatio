@@ -1,7 +1,7 @@
 package org.estatio.module.base.fixtures.security.apptenancy.enums;
 
-import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
-import org.apache.isis.applib.fixturescripts.EnumWithFinder;
+import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.isisaddons.module.base.platform.fixturesupport.DataEnumPersist;
@@ -18,8 +18,8 @@ import lombok.experimental.Accessors;
 @Getter
 @Accessors(chain = true)
 public enum ApplicationTenancy_enum
-        implements EnumWithFinder<ApplicationTenancy>,
-        EnumWithBuilderScript<ApplicationTenancy, ApplicationTenancyBuilder> {
+        implements PersonaWithFinder<ApplicationTenancy>,
+        PersonaWithBuilderScript<ApplicationTenancy, ApplicationTenancyBuilder> {
 
     Global      ("/",           "Global"),
     GlobalOnly  ("/_",          "Global only"),
@@ -75,7 +75,7 @@ public enum ApplicationTenancy_enum
     }
 
     @Override
-    public ApplicationTenancyBuilder toFixtureScript() {
+    public ApplicationTenancyBuilder toBuilderScript() {
         return new ApplicationTenancyBuilder()
                 .setName(name)
                 .setPath(path)

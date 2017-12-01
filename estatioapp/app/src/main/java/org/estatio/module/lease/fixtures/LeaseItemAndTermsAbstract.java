@@ -33,6 +33,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.estatio.module.base.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.index.dom.IndexRepository;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
@@ -54,7 +55,6 @@ import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
 import org.estatio.module.lease.dom.LeaseTermFrequency;
 import org.estatio.module.lease.dom.LeaseTermRepository;
 import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
-import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
 
 public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
 
@@ -111,7 +111,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
         return findOrCreateLeaseItem(
                 leaseRef,
                 leaseItemAtPath,
-                ChargeRefData.IT_RENT,
+                Charge_enum.ItRent.getRef(),
                 LeaseItemType.RENT,
                 InvoicingFrequency.QUARTERLY_IN_ADVANCE,
                 executionContext);
@@ -144,8 +144,8 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
                 nextIndexStartDate, 
                 effectiveDate, 
                 indexReference, 
-                LeaseItemType.RENT, 
-                ChargeRefData.IT_RENT,
+                LeaseItemType.RENT,
+                Charge_enum.ItRent.getRef(),
                 executionContext);
     }
 
@@ -159,7 +159,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
 
         final LeaseItem leaseItem = findOrCreateLeaseItem(
                 leaseRef, leaseItemAtPath,
-                ChargeRefData.IT_PERCENTAGE,
+                Charge_enum.ItPercentage.getRef(),
                 LeaseItemType.RENTAL_FEE,
                 InvoicingFrequency.YEARLY_IN_ARREARS,
                 executionContext);
@@ -184,7 +184,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
 
         final LeaseItem leaseItem = findOrCreateLeaseItem(
                 leaseRef, leaseItemAtPath,
-                ChargeRefData.IT_DEPOSIT,
+                Charge_enum.ItDeposit.getRef(),
                 LeaseItemType.DEPOSIT,
                 InvoicingFrequency.QUARTERLY_IN_ADVANCE,
                 executionContext);
@@ -225,8 +225,8 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
                 nextIndexStartDate, 
                 effectiveDate, 
                 indexReference, 
-                LeaseItemType.SERVICE_CHARGE_INDEXABLE, 
-                ChargeRefData.IT_SERVICE_CHARGE_INDEXABLE,
+                LeaseItemType.SERVICE_CHARGE_INDEXABLE,
+                Charge_enum.ItServiceChargeIndexable.getRef(),
                 executionContext);
     }
 
@@ -277,7 +277,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
         final LeaseItem leaseItemServiceCharge = findOrCreateLeaseItem(
                 leaseRef,
                 leaseItemAtPath,
-                ChargeRefData.GB_SERVICE_CHARGE,
+                Charge_enum.GbServiceCharge.getRef(),
                 LeaseItemType.SERVICE_CHARGE,
                 InvoicingFrequency.QUARTERLY_IN_ADVANCE,
                 executionContext,
@@ -301,7 +301,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
 
         final LeaseItem leaseItem = findOrCreateLeaseItem(
                 leaseRef, leaseItemAtPath,
-                ChargeRefData.GB_MARKETING,
+                Charge_enum.GbMarketing.getRef(),
                 LeaseItemType.MARKETING,
                 InvoicingFrequency.QUARTERLY_IN_ADVANCE,
                 executionContext,
@@ -323,7 +323,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
 
         final LeaseItem leaseItemServiceChargeBudgeted = findOrCreateLeaseItem(
                 leaseRef, leaseItemAtPath,
-                ChargeRefData.GB_SERVICE_CHARGE,
+                Charge_enum.GbServiceCharge.getRef(),
                 LeaseItemType.SERVICE_CHARGE_BUDGETED,
                 InvoicingFrequency.QUARTERLY_IN_ADVANCE,
                 executionContext);
@@ -348,7 +348,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
         final LeaseItem leaseItem = findOrCreateLeaseItem(
                 leaseRef,
                 leaseItemAtPath,
-                ChargeRefData.IT_TURNOVER_RENT,
+                Charge_enum.ItTurnoverRent.getRef(),
                 LeaseItemType.TURNOVER_RENT,
                 InvoicingFrequency.YEARLY_IN_ARREARS,
                 executionContext);
@@ -377,7 +377,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
 
         final LeaseItem leaseItem = findOrCreateLeaseItem(
                 leaseRef, leaseItemAtPath,
-                ChargeRefData.IT_DISCOUNT,
+                Charge_enum.ItDiscount.getRef(),
                 LeaseItemType.RENT_DISCOUNT_FIXED, InvoicingFrequency.FIXED_IN_ADVANCE,
                 executionContext);
 
@@ -400,7 +400,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
 
         final LeaseItem leaseItem = findOrCreateLeaseItem(
                 leaseRef, leaseItemAtPath,
-                ChargeRefData.IT_ENTRY_FEE,
+                Charge_enum.ItEntryFee.getRef(),
                 LeaseItemType.ENTRY_FEE,
                 InvoicingFrequency.FIXED_IN_ADVANCE,
                 executionContext);
@@ -430,7 +430,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
 
         final LeaseItem leaseItem = findOrCreateLeaseItem(
                 leaseRef, leaseItemAtPath,
-                ChargeRefData.IT_TAX,
+                Charge_enum.ItTax.getRef(),
                 LeaseItemType.TAX,
                 InvoicingFrequency.FIXED_IN_ADVANCE,
                 executionContext);

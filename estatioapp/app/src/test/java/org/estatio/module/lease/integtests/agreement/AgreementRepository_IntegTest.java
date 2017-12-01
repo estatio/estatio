@@ -34,12 +34,7 @@ import org.estatio.module.agreement.dom.type.AgreementType;
 import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForKalPoison001Nl;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMediaX002Gb;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMiracl005Gb;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPoison003Gb;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPret004Gb;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -55,16 +50,16 @@ public class AgreementRepository_IntegTest extends LeaseModuleIntegTestAbstract 
             protected void execute(ExecutionContext executionContext) {
 
                 // 5 oxford leases, 1 kal
-                executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-                executionContext.executeChild(this, new LeaseForOxfMediaX002Gb());
-                executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
-                executionContext.executeChild(this, new LeaseForOxfPret004Gb());
-                executionContext.executeChild(this, new LeaseForOxfMiracl005Gb());
-                executionContext.executeChild(this, new LeaseForKalPoison001Nl());
+                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
+                executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.toBuilderScript());
+                executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.toBuilderScript());
+                executionContext.executeChild(this, Lease_enum.OxfPret004Gb.toBuilderScript());
+                executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.toBuilderScript());
+                executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toBuilderScript());
             }
         });
 
-        lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
     }
 
     @Inject

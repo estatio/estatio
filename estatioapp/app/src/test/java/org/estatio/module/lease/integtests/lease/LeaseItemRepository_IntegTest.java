@@ -32,7 +32,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
@@ -41,8 +41,7 @@ import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemRepository;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPoison003Gb;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.entryfee.personas.LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001Gb;
@@ -76,7 +75,7 @@ public class LeaseItemRepository_IntegTest extends LeaseModuleIntegTestAbstract 
                 executionContext.executeChild(this, new LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb());
                 executionContext.executeChild(this, new LeaseItemAndLeaseTermForMarketingForOxfTopModel001Gb());
 
-                executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
+                executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.toBuilderScript());
             }
         });
     }
@@ -93,7 +92,7 @@ public class LeaseItemRepository_IntegTest extends LeaseModuleIntegTestAbstract 
 
     @Before
     public void setUp() throws Exception {
-        lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
     }
 
     public static class FindLeaseItem extends LeaseItemRepository_IntegTest {
@@ -128,8 +127,8 @@ public class LeaseItemRepository_IntegTest extends LeaseModuleIntegTestAbstract 
         @Test
         public void happy_case() throws Exception {
             //given
-            Charge charge = chargeRepository.findByReference(ChargeRefData.GB_RENT);
-            Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            Charge charge = Charge_enum.GbRent.findUsing(serviceRegistry);
+            Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
             final LeaseItemType leaseItemType = LeaseItemType.RENT;
             final LeaseAgreementRoleTypeEnum agreementRoleType = LeaseAgreementRoleTypeEnum.TENANTS_ASSOCIATION;
             final InvoicingFrequency invoicingFrequency = InvoicingFrequency.QUARTERLY_IN_ADVANCE;

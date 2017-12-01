@@ -13,8 +13,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;
@@ -29,7 +29,7 @@ import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;
 
@@ -44,9 +44,9 @@ public class IncomingInvoiceItemRepository_IntegTest extends CapexModuleIntegTes
             protected void execute(final ExecutionContext executionContext) {
 
                 executionContext.executeChild(this, new IncomingChargeFixture());
-                executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
-                executionContext.executeChild(this, Organisation_enum.HelloWorldGb.toFixtureScript());
-                executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
+                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
+                executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.toBuilderScript());
+                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
             }
         });
     }
@@ -99,8 +99,8 @@ public class IncomingInvoiceItemRepository_IntegTest extends CapexModuleIntegTes
     }
 
     private IncomingInvoice createIncomingInvoiceAndTwoItemsWithSameCharge(){
-        seller = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
-        buyer = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
+        seller = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
+        buyer = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
         property = propertyRepository.findPropertyByReference(Property_enum.OxfGb.getRef());
         invoiceNumber = "123";
         invoiceDate = new LocalDate(2017,1,1);

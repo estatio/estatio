@@ -37,7 +37,7 @@ import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.breaks.BreakType;
 import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfTopModel001;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -106,11 +106,11 @@ public class BreakOption_IntegTest extends LeaseModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
                 }
             });
 
-            lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
 
 
         }
@@ -147,14 +147,7 @@ public class BreakOption_IntegTest extends LeaseModuleIntegTestAbstract {
 
         @Before
         public void setup() {
-            runFixtureScript(new FixtureScript() {
-                @Override
-                protected void execute(final ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-                }
-            });
-
-            lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            lease = runBuilderScript(Lease_enum.OxfTopModel001Gb.toBuilderScript());
         }
 
         @Test
@@ -195,7 +188,7 @@ public class BreakOption_IntegTest extends LeaseModuleIntegTestAbstract {
                 }
             });
 
-            lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
 
             assertThat(breakOptionRepository.allBreakOptions().size(), is(2));
             assertThat(breakOptionRepository.findByLease(lease).size(), is(2));

@@ -36,7 +36,7 @@ import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.communications.dom.impl.commchannel.EmailAddressRepository;
 
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 import org.estatio.module.party.integtests.PartyModuleIntegTestAbstract;
 
 import static org.hamcrest.Matchers.is;
@@ -48,7 +48,7 @@ public class EmailAddressRepository_IntegTest extends PartyModuleIntegTestAbstra
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
+                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
             }
         });
     }
@@ -65,7 +65,7 @@ public class EmailAddressRepository_IntegTest extends PartyModuleIntegTestAbstra
 
     @Before
     public void setUp() throws Exception {
-        party = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+        party = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
         SortedSet<CommunicationChannel> results = communicationChannelRepository.findByOwner(party);
         Iterator<CommunicationChannel> it = results.iterator();
         while (it.hasNext()) {

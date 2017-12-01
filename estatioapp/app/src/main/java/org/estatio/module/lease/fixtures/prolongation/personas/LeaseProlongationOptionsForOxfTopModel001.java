@@ -25,7 +25,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.breaks.prolongation.ProlongationOptionRepository;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.entryfee.personas.LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001Gb;
@@ -39,7 +39,7 @@ import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas.LeaseI
 
 public class LeaseProlongationOptionsForOxfTopModel001 extends FixtureScript {
 
-    public static final String LEASE_REF = LeaseForOxfTopModel001Gb.REF;
+    public static final String LEASE_REF = Lease_enum.OxfTopModel001Gb.getRef();
 
     @Override
     protected void execute(ExecutionContext executionContext) {

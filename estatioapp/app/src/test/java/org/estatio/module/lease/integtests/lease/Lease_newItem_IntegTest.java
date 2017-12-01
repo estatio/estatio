@@ -34,7 +34,7 @@ import org.incode.module.base.integtests.VT;
 
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
@@ -42,7 +42,7 @@ import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.entryfee.personas.LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001Gb;
@@ -84,7 +84,7 @@ public class Lease_newItem_IntegTest extends LeaseModuleIntegTestAbstract {
                 executionContext.executeChild(this, new LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb());
                 executionContext.executeChild(this, new LeaseItemAndLeaseTermForMarketingForOxfTopModel001Gb());
 
-                executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
+                executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.toBuilderScript());
             }
         });
     }
@@ -95,14 +95,14 @@ public class Lease_newItem_IntegTest extends LeaseModuleIntegTestAbstract {
 
         @Before
         public void setup() {
-            leasePoison = leaseRepository.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
+            leasePoison = Lease_enum.OxfPoison003Gb.findUsing(serviceRegistry);
         }
 
         @Test
         public void happyCase() throws Exception {
 
             // given
-            final Charge charge = chargeRepository.findByReference(ChargeRefData.GB_DISCOUNT);
+            final Charge charge = Charge_enum.GbDiscount.findUsing(serviceRegistry);
             final ApplicationTenancy leaseAppTenancy = leasePoison.getApplicationTenancy();
             final ApplicationTenancy firstChildAppTenancy = leaseAppTenancy.getChildren().first();
 
@@ -129,7 +129,7 @@ public class Lease_newItem_IntegTest extends LeaseModuleIntegTestAbstract {
         public void invalidCharge() throws Exception {
 
             // given
-            final Charge charge = chargeRepository.findByReference(ChargeRefData.IT_DISCOUNT);
+            final Charge charge = Charge_enum.ItDiscount.findUsing(serviceRegistry);
 
             // then
             expectedExceptions.expect(InvalidException.class);

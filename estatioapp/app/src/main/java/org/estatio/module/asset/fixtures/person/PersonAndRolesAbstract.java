@@ -38,7 +38,7 @@ public abstract class PersonAndRolesAbstract extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        executionContext.executeChild(this, data.toFixtureScript());
+        executionContext.executeChild(this, data.toBuilderScript());
     }
 
 

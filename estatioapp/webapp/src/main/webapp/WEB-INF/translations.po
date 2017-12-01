@@ -259,7 +259,7 @@ msgstr ""
 
 
 #: org.isisaddons.module.security.app.feature.ApplicationFeatureViewModels#allCollections()
-msgid "All Collections"
+msgid "All Chars"
 msgstr ""
 
 

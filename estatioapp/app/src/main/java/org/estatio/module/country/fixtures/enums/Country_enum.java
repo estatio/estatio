@@ -1,9 +1,9 @@
 package org.estatio.module.country.fixtures.enums;
 
-import org.apache.isis.applib.fixturescripts.EnumWithFinder;
+import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
@@ -18,7 +18,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum Country_enum implements EnumWithBuilderScript<Country, CountryBuilder>, EnumWithFinder<Country> {
+public enum Country_enum implements PersonaWithBuilderScript<Country, CountryBuilder>, PersonaWithFinder<Country> {
 
     GBR("GBR", "GB", "United Kingdom",  ApplicationTenancy_enum.Gb),
     NLD("NLD", "NL", "The Netherlands", ApplicationTenancy_enum.Nl),
@@ -43,7 +43,7 @@ public enum Country_enum implements EnumWithBuilderScript<Country, CountryBuilde
     }
 
     @Override
-    public CountryBuilder toFixtureScript() {
+    public CountryBuilder toBuilderScript() {
         return new CountryBuilder()
                     .setRef3(ref3)
                     .setRef2(ref2)

@@ -33,7 +33,7 @@ import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.base.EstatioBaseModule;
 import org.estatio.module.currency.dom.Currency;
-import org.estatio.module.currency.fixtures.CurrenciesRefData;
+import org.estatio.module.currency.fixtures.enums.Currency_enum;
 
 @XmlRootElement(name = "module")
 public final class EstatioCurrencyModule extends ModuleAbstract {
@@ -53,7 +53,7 @@ public final class EstatioCurrencyModule extends ModuleAbstract {
         }
         // else
         refData.set(true);
-        return new CurrenciesRefData();
+        return new Currency_enum.PersistAll();
     }
 
     @Override

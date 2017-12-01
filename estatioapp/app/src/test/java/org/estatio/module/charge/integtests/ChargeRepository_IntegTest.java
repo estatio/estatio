@@ -19,6 +19,7 @@
 package org.estatio.module.charge.integtests;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -31,7 +32,7 @@ import org.junit.Test;
 
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 
 public class ChargeRepository_IntegTest extends ChargeModuleIntegTestAbstract {
@@ -44,9 +45,9 @@ public class ChargeRepository_IntegTest extends ChargeModuleIntegTestAbstract {
         @Test
         public void whenExists() throws Exception {
             // when
-            final Charge charge = chargeRepository.findByReference(ChargeRefData.IT_RENT);
+            final Charge charge = Charge_enum.ItRent.findUsing(serviceRegistry);
             // then
-            Assert.assertEquals(charge.getReference(), ChargeRefData.IT_RENT);
+            Assert.assertEquals(charge.getReference(), Charge_enum.ItRent.getRef());
         }
     }
 
@@ -62,20 +63,23 @@ public class ChargeRepository_IntegTest extends ChargeModuleIntegTestAbstract {
         public void setUp() throws Exception {
 
             gbCharges = Lists.newArrayList(
-                    chargeRepository.findByReference(ChargeRefData.GB_DISCOUNT),
-                    chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE),
-                    chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE2),
-                    chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1),
-                    chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_2),
-                    chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_3),
-                    chargeRepository.findByReference(ChargeRefData.GB_RENT),
-                    chargeRepository.findByReference(ChargeRefData.GB_ENTRY_FEE),
-                    chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE_INDEXABLE),
-                    chargeRepository.findByReference(ChargeRefData.GB_TAX),
-                    chargeRepository.findByReference(ChargeRefData.GB_TURNOVER_RENT),
-                    chargeRepository.findByReference(ChargeRefData.GB_PERCENTAGE),
-                    chargeRepository.findByReference(ChargeRefData.GB_DEPOSIT),
-                    chargeRepository.findByReference(ChargeRefData.GB_MARKETING));
+                    Charge_enum.GbDiscount,
+                    Charge_enum.GbServiceCharge,
+                    Charge_enum.GbServiceCharge2,
+                    Charge_enum.GbIncomingCharge1,
+                    Charge_enum.GbIncomingCharge2,
+                    Charge_enum.GbIncomingCharge3,
+                    Charge_enum.GbRent,
+                    Charge_enum.GbEntryFee,
+                    Charge_enum.GbServiceChargeIndexable,
+                    Charge_enum.GbTax,
+                    Charge_enum.GbTurnoverRent,
+                    Charge_enum.GbPercentage,
+                    Charge_enum.GbDeposit,
+                    Charge_enum.GbMarketing)
+                    .stream()
+                    .map(x -> x.findUsing(serviceRegistry))
+                    .collect(Collectors.toList());
 
         }
 
