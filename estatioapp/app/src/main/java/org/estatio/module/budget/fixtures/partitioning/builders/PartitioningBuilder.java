@@ -46,8 +46,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"property", "owner"}, callSuper = false)
-@ToString(of={"property", "owner"})
+@EqualsAndHashCode(of={"budget", "startDate", "endDate"}, callSuper = false)
+@ToString(of={"budget", "startDate", "endDate"})
 @Accessors(chain = true)
 public class PartitioningBuilder extends BuilderScriptAbstract<Partitioning,PartitioningBuilder> {
 
