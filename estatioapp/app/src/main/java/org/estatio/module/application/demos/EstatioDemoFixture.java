@@ -38,8 +38,7 @@ import org.estatio.module.capex.fixtures.OrderFixture;
 import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
 import org.estatio.module.capex.fixtures.document.IncomingPdfFixture;
 import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
-import org.estatio.module.capex.fixtures.project.personas.ProjectForGra;
-import org.estatio.module.capex.fixtures.project.personas.ProjectsForKal;
+import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.EstatioChargeModule;
 import org.estatio.module.country.IncodeDomCountryModule;
@@ -161,8 +160,9 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, Person_enum.GabrielHerveFr.toBuilderScript());  // fr country director
         executionContext.executeChild(this, Person_enum.BrunoTreasurerFr.toBuilderScript()); // fr treasurer
 
-        executionContext.executeChild(this, new ProjectsForKal());
-        executionContext.executeChild(this, new ProjectForGra());
+        executionContext.executeChild(this, Project_enum.KalProject1.toBuilderScript());
+        executionContext.executeChild(this, Project_enum.KalProject2.toBuilderScript());
+        executionContext.executeChild(this, Project_enum.GraProject.toBuilderScript());
 
         executionContext.executeChild(this, Budget_enum.OxfBudget2015.toBuilderScript());
         executionContext.executeChild(this, Budget_enum.OxfBudget2016.toBuilderScript());

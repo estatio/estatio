@@ -20,9 +20,13 @@ package org.estatio.module.capex.fixtures.project.enums;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.capex.fixtures.project.ProjectBuilder;
 
 import lombok.AllArgsConstructor;
@@ -35,7 +39,7 @@ import static org.incode.module.base.integtests.VT.ld;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum Project_enum {
+public enum Project_enum implements PersonaWithBuilderScript<Project, ProjectBuilder>, PersonaWithFinder<Project> {
 
     OxfProject  ("OXF-02", "New extension", ld(2016, 1, 1), ld(2019, 7, 1), Gb),
     GraProject  ("PR3", "Place commercial signs", ld(1999, 1, 1), ld(1999, 7, 1), Nl),
@@ -49,15 +53,21 @@ public enum Project_enum {
     private final LocalDate endDate;
     private final ApplicationTenancy_enum applicationTenancy;
 
-    public <T extends FixtureScript> FixtureScript toFixtureScript() {
-        final ProjectBuilder projectBuilder = new ProjectBuilder();
-        return projectBuilder.setReference(ref)
+
+    @Override
+    public ProjectBuilder toBuilderScript() {
+        return new ProjectBuilder().setReference(ref)
                 .setName(name)
                 .setStartDate(startDate)
                 .setEndDate(endDate)
                 .setEstimatedCost(null)
                 .setAtPath(applicationTenancy.getPath())
                 .setParent(null);
+    }
 
+    @Override
+    public Project findUsing(final ServiceRegistry2 serviceRegistry) {
+        final ProjectRepository projectRepository = serviceRegistry.lookupService(ProjectRepository.class);
+        return projectRepository.findByReference(ref);
     }
 }
