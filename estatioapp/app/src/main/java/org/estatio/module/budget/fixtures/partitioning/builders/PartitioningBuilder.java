@@ -66,9 +66,9 @@ public class PartitioningBuilder extends BuilderScriptAbstract<Partitioning,Part
     @AllArgsConstructor
     @Data
     public static class ItemSpec {
-        private final Charge charge;
-        private final KeyTable keyTable;
         private final Charge itemCharge;
+        private final KeyTable keyTable;
+        private final Charge charge;
         private final BigDecimal percentage;
     }
 

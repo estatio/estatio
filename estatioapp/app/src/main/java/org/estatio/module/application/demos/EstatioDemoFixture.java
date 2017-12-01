@@ -169,7 +169,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, KeyTable_enum.Oxf2015Area.toBuilderScript());
         executionContext.executeChild(this, KeyTable_enum.Oxf2015Count.toBuilderScript());
 
-        executionContext.executeChild(this, Partitioning_enum.OxfBudget2015.toBuilderScript());
+        executionContext.executeChild(this, Partitioning_enum.OxfPartitioning2015.toBuilderScript());
 
         executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.CARTEST.toBuilderScript());
         executionContext.executeChild(this, new NumeratorForOrganisationFra());

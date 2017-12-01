@@ -38,6 +38,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import static org.estatio.module.budget.fixtures.budgets.enums.Budget_enum.BudBudget2015;
+import static org.estatio.module.budget.fixtures.budgets.enums.Budget_enum.OxfBudget2015;
+import static org.estatio.module.budget.fixtures.keytables.enums.KeyTable_enum.*;
+import static org.estatio.module.charge.fixtures.charges.enums.Charge_enum.*;
 import static org.incode.module.base.integtests.VT.bd;
 
 //@AllArgsConstructor
@@ -47,13 +51,22 @@ public enum Partitioning_enum
         implements PersonaWithBuilderScript<Partitioning, PartitioningBuilder>,
         PersonaWithFinder<Partitioning> {
 
-    OxfBudget2015(
-            Budget_enum.OxfBudget2015, BudgetCalculationType.BUDGETED,
+    OxfPartitioning2015(
+            OxfBudget2015, BudgetCalculationType.BUDGETED,
             new ItemSpec[]{
-                new ItemSpec(Charge_enum.GbServiceCharge, KeyTable_enum.Oxf2015Area, Budget_enum.OxfBudget2015.getItemSpecs()[0].getCharge_d(), bd(100)),
-                new ItemSpec(Charge_enum.GbServiceCharge, KeyTable_enum.Oxf2015Area, Budget_enum.OxfBudget2015.getItemSpecs()[1].getCharge_d(), bd(80)),
-                new ItemSpec(Charge_enum.GbServiceCharge, KeyTable_enum.Oxf2015Count, Budget_enum.OxfBudget2015.getItemSpecs()[1].getCharge_d(), bd(20)),
-            })
+                new ItemSpec(OxfBudget2015, GbServiceCharge, Oxf2015Area, 0, bd(100)),
+                new ItemSpec(OxfBudget2015, GbServiceCharge, Oxf2015Area, 1, bd(80)),
+                new ItemSpec(OxfBudget2015, GbServiceCharge, Oxf2015Count, 1, bd(20)),
+            }),
+    BudPartitioning2015(
+            BudBudget2015, BudgetCalculationType.BUDGETED,
+            new ItemSpec[]{
+                new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Area, 0, bd(100)),
+                new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Area, 1, bd(80)),
+                new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Count, 1, bd(20)),
+                new ItemSpec(BudBudget2015, NlServiceCharge2, Bud2015Area, 2, bd(90)),
+                new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Count, 2, bd(10)),
+            }),
     ;
 
     private final Budget_enum budget_d;
@@ -63,10 +76,15 @@ public enum Partitioning_enum
     @AllArgsConstructor
     @Data
     public static class ItemSpec {
+        private final Budget_enum budget_d;
         private final Charge_enum charge_d;
         private final KeyTable_enum keyTable_d;
-        private final Charge_enum itemCharge_d;
+        private final int itemIndex;
         private final BigDecimal percentage;
+
+        public Charge_enum getItemCharge_d() {
+            return budget_d.getItemSpecs()[itemIndex].getCharge_d();
+        }
     }
 
     Partitioning_enum(
@@ -95,9 +113,8 @@ public enum Partitioning_enum
                 .setPrereq((f,ec) -> f.setItemSpec(
                         Arrays.stream(itemSpecs).map(x ->
                                 new PartitioningBuilder.ItemSpec(
+                                        f.objectFor(x.getItemCharge_d(), ec), f.objectFor(x.keyTable_d, ec),
                                         f.objectFor(x.charge_d, ec),
-                                        f.objectFor(x.keyTable_d, ec),
-                                        f.objectFor(x.itemCharge_d, ec),
                                         x.percentage)
                         ).collect(Collectors.toList())
                 ));
