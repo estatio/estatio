@@ -72,6 +72,7 @@ public class BudgetOverrideForFixedBuilder extends BuilderScriptAbstract<BudgetO
         checkParam("invoiceCharge", executionContext, Charge.class);
         checkParam("fixedValue", executionContext, BigDecimal.class);
 
+        defaultParam("budgetCalculationType", executionContext, BudgetCalculationType.BUDGETED);
         defaultParam("reason", executionContext, "agreed on fixed amount");
 
         BudgetOverrideForFixed budgetOverride = budgetOverrideRepository

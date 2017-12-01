@@ -74,6 +74,7 @@ public class BudgetOverrideForMaxBuilder extends BuilderScriptAbstract<BudgetOve
         checkParam("invoiceCharge", executionContext, Charge.class);
         checkParam("maxValue", executionContext, BigDecimal.class);
 
+        defaultParam("budgetCalculationType", executionContext, BudgetCalculationType.BUDGETED);
         defaultParam("reason", executionContext, BudgetOverrideType.CEILING.reason);
 
         BudgetOverrideForMax budgetOverride = budgetOverrideRepository

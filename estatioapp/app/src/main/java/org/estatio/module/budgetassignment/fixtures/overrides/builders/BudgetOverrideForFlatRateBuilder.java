@@ -79,6 +79,7 @@ public class BudgetOverrideForFlatRateBuilder extends BuilderScriptAbstract<Budg
         checkParam("valuePerM2", executionContext, BigDecimal.class);
         checkParam("weightedArea", executionContext, BigDecimal.class);
 
+        defaultParam("budgetCalculationType", executionContext, BudgetCalculationType.BUDGETED);
         defaultParam("reason", executionContext, BudgetOverrideType.FLATRATE.reason);
 
         BudgetOverrideForFlatRate budgetOverride = budgetOverrideRepository
