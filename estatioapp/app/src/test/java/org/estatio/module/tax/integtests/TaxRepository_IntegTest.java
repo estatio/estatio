@@ -25,6 +25,7 @@ import javax.inject.Inject;
 
 import org.junit.Test;
 
+import org.isisaddons.module.fakedata.dom.FakeDataService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.tax.dom.Tax;
@@ -86,6 +87,8 @@ public class TaxRepository_IntegTest extends TaxModuleIntegTestAbstract {
         }
     }
 
+    @Inject
+    FakeDataService fakeDataService;
 
 
 }

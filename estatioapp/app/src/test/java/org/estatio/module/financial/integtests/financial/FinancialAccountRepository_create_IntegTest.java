@@ -7,6 +7,8 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.isisaddons.module.fakedata.dom.FakeDataService;
+
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccountType;
@@ -62,5 +64,8 @@ public class FinancialAccountRepository_create_IntegTest extends FinancialModule
         }
 
     }
+
+    @Inject
+    FakeDataService fakeDataService;
 
 }

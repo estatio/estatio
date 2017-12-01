@@ -29,6 +29,8 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.clock.ClockService;
 
+import org.isisaddons.module.fakedata.dom.FakeDataService;
+
 import org.incode.module.base.integtests.VT;
 
 import org.estatio.module.agreement.dom.AgreementRoleRepository;
@@ -356,5 +358,8 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         }
 
     }
+
+    @Inject
+    FakeDataService fakeDataService;
 
 }

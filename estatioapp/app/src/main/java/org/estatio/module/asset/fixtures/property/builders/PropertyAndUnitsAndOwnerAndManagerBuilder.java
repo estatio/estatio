@@ -29,22 +29,16 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+import org.isisaddons.module.fakedata.dom.FakeDataService;
 
 import org.incode.module.country.dom.impl.Country;
-import org.incode.module.country.dom.impl.CountryRepository;
-import org.incode.module.country.dom.impl.StateRepository;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.PropertyType;
 import org.estatio.module.asset.dom.Unit;
-import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.asset.dom.UnitType;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
-import org.estatio.module.base.platform.fake.EstatioFakeDataService;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -111,7 +105,7 @@ public final class PropertyAndUnitsAndOwnerAndManagerBuilder
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
-        defaultParam("numberOfUnits", executionContext, fakeDataService.values().anInt(10,20));
+        defaultParam("numberOfUnits", executionContext, fakeDataService.ints().between(10,20));
 
         final Property property = new PropertyBuilder()
                 .setReference(reference)
@@ -166,28 +160,9 @@ public final class PropertyAndUnitsAndOwnerAndManagerBuilder
         return String.format("%1$s-%2$03d", propertyReference, unitNum);
     }
 
-    // //////////////////////////////////////
 
     @Inject
-    protected StateRepository stateRepository;
-
-    @Inject
-    protected CountryRepository countryRepository;
-
-    @Inject
-    protected PropertyRepository propertyRepository;
-
-    @Inject
-    protected UnitRepository unitRepository;
-
-    @Inject
-    protected PartyRepository partyRepository;
-
-    @Inject
-    protected ApplicationTenancyRepository applicationTenancyRepository;
-
-    @Inject
-    EstatioFakeDataService fakeDataService;
+    FakeDataService fakeDataService;
 
 
 }

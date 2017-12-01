@@ -24,6 +24,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.isisaddons.module.fakedata.dom.FakeDataService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -135,15 +136,15 @@ public class LeaseBuilderLEGACY extends FixtureScript {
 
         executionContext.executeChild(this, new LeaseTypeForItalyRefData());
 
-        defaultParam("reference", executionContext, fakeDataService.lorem().fixedString(3));
+        defaultParam("reference", executionContext, fakeDataService.strings().fixed(3));
         defaultParam("name", executionContext, fakeDataService.name().lastName() + " Mall");
-        defaultParam("leaseType", executionContext, fakeDataService.collections().aBounded(LeaseType.class));
+        defaultParam("leaseType", executionContext, fakeDataService.collections().anyBounded(LeaseType.class));
         defaultParam("atPath", executionContext, ApplicationTenancy_enum.Gb.getPath());
 
-        defaultParam("startDate", executionContext, fakeDataService
-                .dates().before(fakeDataService.periods().daysUpTo(2 * 365)));
+        defaultParam("startDate", executionContext, fakeDataService2
+                .dates().before(fakeDataService2.periods().daysUpTo(2 * 365)));
         if (getDuration() == null && getEndDate() == null) {
-            defaultParam("endDate", executionContext, getStartDate().plus(fakeDataService.periods().years(10, 20)));
+            defaultParam("endDate", executionContext, getStartDate().plus(fakeDataService2.periods().years(10, 20)));
         }
         final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(getAtPath());
 
@@ -153,28 +154,30 @@ public class LeaseBuilderLEGACY extends FixtureScript {
     // //////////////////////////////////////
 
     @Inject
-    protected UnitRepository unitRepository;
+    UnitRepository unitRepository;
 
     @Inject
-    protected LeaseRepository leaseRepository;
+    LeaseRepository leaseRepository;
 
     @Inject
-    protected OccupancyRepository occupancyRepository;
+    OccupancyRepository occupancyRepository;
 
     @Inject
-    protected PartyRepository partyRepository;
+    PartyRepository partyRepository;
 
     @Inject
-    protected AgreementRoleTypeRepository agreementRoleTypeRepository;
+    AgreementRoleTypeRepository agreementRoleTypeRepository;
 
     @Inject
-    protected ApplicationTenancies applicationTenancies;
+    ApplicationTenancies applicationTenancies;
 
     @Inject
     CountryRepository countryRepository;
 
     @Inject
-    EstatioFakeDataService fakeDataService;
+    FakeDataService fakeDataService;
+    @Inject
+    EstatioFakeDataService fakeDataService2;
 
 
 }

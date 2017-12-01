@@ -31,9 +31,10 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.clock.ClockService;
 
+import org.isisaddons.module.fakedata.dom.FakeDataService;
+
 import org.incode.module.base.integtests.VT;
 
-import org.estatio.module.base.platform.fake.EstatioFakeDataService;
 import org.estatio.module.event.dom.Event;
 import org.estatio.module.event.dom.EventRepository;
 import org.estatio.module.lease.dom.Lease;
@@ -92,7 +93,7 @@ public class BreakOptionRepository_IntegTest extends LeaseModuleIntegTestAbstrac
         @Inject
         ClockService clockService;
         @Inject
-        EstatioFakeDataService fakeDataService;
+        FakeDataService fakeDataService;
 
         @Before
         public void setup() {
@@ -125,7 +126,7 @@ public class BreakOptionRepository_IntegTest extends LeaseModuleIntegTestAbstrac
             final LocalDate breakDate = currentDate.plusMonths(4);
             final String notificationPeriodStr = "3m";
             final BreakType breakType = BreakType.ROLLING;
-            final BreakExerciseType breakExerciseType = fakeDataService.collections().anEnum(BreakExerciseType.class);
+            final BreakExerciseType breakExerciseType = fakeDataService.enums().anyOf(BreakExerciseType.class);
             final String description = fakeDataService.lorem().sentence();
 
             breakOptionRepository.newBreakOption(lease, breakDate, notificationPeriodStr, breakType, breakExerciseType, description);

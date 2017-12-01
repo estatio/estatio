@@ -24,6 +24,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
+import org.isisaddons.module.fakedata.dom.FakeDataService;
 import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 
 import org.incode.module.country.dom.impl.Country;
@@ -75,12 +76,12 @@ public final class PropertyBuilder
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
-        defaultParam("reference", executionContext, fakeDataService.values().code(3).toUpperCase());
+        defaultParam("reference", executionContext, fakeDataService2.strings().fixedUpper(3).toUpperCase());
         defaultParam("name", executionContext, fakeDataService.name().lastName() + " Mall");
-        defaultParam("propertyType", executionContext, fakeDataService.collections().anEnum(PropertyType.class));
-        defaultParam("city", executionContext, fakeDataService.address().cityPrefix() + " " + fakeDataService.name().lastName() + fakeDataService.address().citySuffix());
-        defaultParam("country", executionContext, fakeDataService.collections().aBounded(Country.class));
-        defaultParam("acquireDate", executionContext, fakeDataService.dates().before(fakeDataService.periods().days(100, 200)));
+        defaultParam("propertyType", executionContext, fakeDataService.collections().anyOf(PropertyType.class));
+        defaultParam("city", executionContext, fakeDataService.addresses().cityPrefix() + " " + fakeDataService.name().lastName() + fakeDataService.addresses().citySuffix());
+        defaultParam("country", executionContext, fakeDataService.collections().anyBounded(Country.class));
+        defaultParam("acquireDate", executionContext, fakeDataService2.dates().before(fakeDataService2.periods().days(100, 200)));
 
         this.object = propertyRepository
                 .newProperty(getReference(), getName(), getPropertyType(), getCity(), getCountry(), getAcquireDate());
@@ -94,6 +95,8 @@ public final class PropertyBuilder
     PropertyRepository propertyRepository;
 
     @Inject
-    EstatioFakeDataService fakeDataService;
+    FakeDataService fakeDataService;
+    @Inject
+    EstatioFakeDataService fakeDataService2;
 
 }

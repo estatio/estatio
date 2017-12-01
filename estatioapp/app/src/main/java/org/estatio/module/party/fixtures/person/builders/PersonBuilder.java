@@ -22,10 +22,11 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
+import org.isisaddons.module.fakedata.dom.FakeDataService;
+
 import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.base.platform.fake.EstatioFakeDataService;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.party.dom.PersonRepository;
@@ -67,10 +68,10 @@ public final class PersonBuilder
     protected void execute(ExecutionContext executionContext) {
 
         defaultParam("atPath", executionContext, ApplicationTenancy_enum.Global.getPath());
-        defaultParam("reference", executionContext, fakeDataService.lorem().fixedString(6));
+        defaultParam("reference", executionContext, fakeDataService.strings().fixed(6));
         defaultParam("firstName", executionContext, fakeDataService.name().firstName());
         defaultParam("lastName", executionContext, fakeDataService.name().fullName());
-        defaultParam("personGenderType", executionContext, fakeDataService.collections().anEnum(PersonGenderType.class));
+        defaultParam("personGenderType", executionContext, fakeDataService.collections().anyOf(PersonGenderType.class));
         defaultParam("initials", executionContext, firstName.substring(0,1));
 
         object = personRepository.newPerson(getReference(), getInitials(), getFirstName(), getLastName(),
@@ -80,7 +81,7 @@ public final class PersonBuilder
     }
 
     @Inject
-    EstatioFakeDataService fakeDataService;
+    FakeDataService fakeDataService;
 
     @Inject
     protected CountryRepository countryRepository;

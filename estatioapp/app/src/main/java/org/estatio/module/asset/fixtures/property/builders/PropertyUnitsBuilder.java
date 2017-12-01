@@ -27,10 +27,11 @@ import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
+import org.isisaddons.module.fakedata.dom.FakeDataService;
+
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitType;
-import org.estatio.module.base.platform.fake.EstatioFakeDataService;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -58,12 +59,12 @@ public final class PropertyUnitsBuilder
 
         checkParam("property", executionContext, Property.class);
 
-        defaultParam("numberOfUnits", executionContext, fakeDataService.values().anInt(10,20));
+        defaultParam("numberOfUnits", executionContext, fakeDataService.ints().between(10,20));
 
         for (int i = 0; i < getNumberOfUnits(); i++) {
             final int unitNum = i + 1;
             final String unitRef = buildUnitReference(property.getReference(), unitNum);
-            final UnitType unitType = fakeDataService.collections().anEnum(UnitType.class);
+            final UnitType unitType = fakeDataService.enums().anyOf(UnitType.class);
             final String unitName = fakeDataService.name().firstName();
             final Unit unit = wrap(property).newUnit(unitRef, unitName, unitType);
 
@@ -79,7 +80,7 @@ public final class PropertyUnitsBuilder
     }
 
     @Inject
-    EstatioFakeDataService fakeDataService;
+    FakeDataService fakeDataService;
 
 
 }
