@@ -71,7 +71,7 @@ public final class PersonBuilder
         defaultParam("reference", executionContext, fakeDataService.strings().fixed(6));
         defaultParam("firstName", executionContext, fakeDataService.name().firstName());
         defaultParam("lastName", executionContext, fakeDataService.name().fullName());
-        defaultParam("personGenderType", executionContext, fakeDataService.collections().anyOf(PersonGenderType.class));
+        defaultParam("personGenderType", executionContext, fakeDataService.enums().anyOf(PersonGenderType.class));
         defaultParam("initials", executionContext, firstName.substring(0,1));
 
         object = personRepository.newPerson(getReference(), getInitials(), getFirstName(), getLastName(),
