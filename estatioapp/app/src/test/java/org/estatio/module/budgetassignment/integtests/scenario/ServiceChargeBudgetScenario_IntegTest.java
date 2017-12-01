@@ -39,7 +39,7 @@ import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValueRepos
 import org.estatio.module.budgetassignment.dom.service.BudgetAssignmentService;
 import org.estatio.module.budgetassignment.dom.service.CalculationResultViewModel;
 import org.estatio.module.budgetassignment.dom.service.DetailedCalculationResultViewmodel;
-import org.estatio.module.budgetassignment.fixtures.budget.personas.BudgetForBud;
+import org.estatio.module.budget.fixtures.budgets.personas.BudgetForBud;
 import org.estatio.module.budgetassignment.fixtures.overrides.personas.BudgetOverridesForBud;
 import org.estatio.module.budgetassignment.fixtures.partitioning.personas.PartitioningAndItemsForBudBudget2015;
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;

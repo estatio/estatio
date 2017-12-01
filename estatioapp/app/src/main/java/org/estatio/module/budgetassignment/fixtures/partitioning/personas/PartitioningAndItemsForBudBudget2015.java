@@ -28,8 +28,8 @@ import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.partioning.Partitioning;
 import org.estatio.module.budget.fixtures.partitioning.PartitioningAndItemsAbstract;
-import org.estatio.module.budgetassignment.fixtures.budget.personas.BudgetForBud;
-import org.estatio.module.budgetassignment.fixtures.keytables.personas.KeyTablesForBud;
+import org.estatio.module.budget.fixtures.budgets.personas.BudgetForBud;
+import org.estatio.module.budget.fixtures.keytables.personas.KeyTablesForBud;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 

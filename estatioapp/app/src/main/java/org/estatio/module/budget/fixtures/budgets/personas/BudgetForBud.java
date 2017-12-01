@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package org.estatio.module.budgetassignment.fixtures.budget.personas;
+package org.estatio.module.budget.fixtures.budgets.personas;
 
 import java.math.BigDecimal;
 
@@ -26,7 +26,7 @@ import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
-import org.estatio.module.budgetassignment.fixtures.budget.BudgetAbstract;
+import org.estatio.module.budget.fixtures.budgets.BudgetAbstract;
 import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 

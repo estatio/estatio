@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package org.estatio.module.budgetassignment.fixtures.budget;
+package org.estatio.module.budget.fixtures.budgets;
 
 import java.math.BigDecimal;
 
@@ -34,7 +34,6 @@ import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemRepository;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemValue;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemValueRepository;
-import org.estatio.module.budget.dom.partioning.PartitioningRepository;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 
@@ -80,7 +79,5 @@ public abstract class BudgetAbstract extends FixtureScript {
     @Inject
     protected BudgetItemValueRepository budgetItemValueRepository;
 
-    @Inject
-    protected PartitioningRepository partitioningRepository;
 
 }
