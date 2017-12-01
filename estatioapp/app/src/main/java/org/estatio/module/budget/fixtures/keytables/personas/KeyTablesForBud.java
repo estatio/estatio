@@ -17,37 +17,35 @@
 
 package org.estatio.module.budget.fixtures.keytables.personas;
 
-import org.joda.time.LocalDate;
-
-import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.budget.dom.budget.Budget;
-import org.estatio.module.budget.dom.keytable.FoundationValueType;
-import org.estatio.module.budget.dom.keytable.KeyValueMethod;
 import org.estatio.module.budget.fixtures.keytables.KeyTableAbstract;
-import org.estatio.module.budget.fixtures.budgets.personas.BudgetForBud;
+import org.estatio.module.budget.fixtures.keytables.enums.KeyTable_enum;
 
 public class KeyTablesForBud extends KeyTableAbstract {
 
-    public static final String NAME_BY_AREA = "table1";
-    public static final String NAME_BY_COUNT = "table2";
-    public static final FoundationValueType BUDGET_FOUNDATION_VALUE_TYPE = FoundationValueType.AREA;
-    public static final FoundationValueType BUDGET_FOUNDATION_VALUE_TYPE2 = FoundationValueType.COUNT;
-    public static final KeyValueMethod BUDGET_KEY_VALUE_METHOD = KeyValueMethod.PROMILLE;
-    public static final LocalDate START_DATE = new LocalDate(2015, 1, 1);
-    public static final int NUMBER_OF_DIGITS = 6;
+//    public static final String NAME_BY_AREA = KeyTable_enum.Bud2015Area.getName();
+//    public static final String NAME_BY_COUNT = KeyTable_enum.Bud2015Count.getName();
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        // prereqs
-        executionContext.executeChild(this, new BudgetForBud());
+        executionContext.executeChildT(this, KeyTable_enum.Bud2015Area.toBuilderScript());
+        executionContext.executeChildT(this, KeyTable_enum.Bud2015Count.toBuilderScript());
 
-        // exec
-        Property property = Property_enum.BudNl.findUsing(serviceRegistry);
-        Budget budget = budgetRepository.findByPropertyAndStartDate(property, START_DATE);
-
-        createKeyTable(budget, NAME_BY_AREA, BUDGET_FOUNDATION_VALUE_TYPE, BUDGET_KEY_VALUE_METHOD, NUMBER_OF_DIGITS, executionContext);
-        createKeyTable(budget, NAME_BY_COUNT, BUDGET_FOUNDATION_VALUE_TYPE2, BUDGET_KEY_VALUE_METHOD, NUMBER_OF_DIGITS, executionContext);
+//        // prereqs
+//        Budget budget = Budget_enum.BudBudget2015.toBuilderScript().build(this, executionContext).getObject();
+//
+//        // exec
+//        createKeyTable(
+//                budget,
+//                NAME_BY_AREA,
+//                FoundationValueType.AREA,
+//                KeyValueMethod.PROMILLE, 6,
+//                executionContext);
+//        createKeyTable(
+//                budget,
+//                NAME_BY_COUNT,
+//                FoundationValueType.COUNT,
+//                KeyValueMethod.PROMILLE, 6,
+//                executionContext);
     }
 }

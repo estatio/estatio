@@ -19,15 +19,12 @@ package org.estatio.module.budgetassignment.fixtures.partitioning.personas;
 
 import java.math.BigDecimal;
 
-import org.joda.time.LocalDate;
-
-import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.partioning.Partitioning;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
+import org.estatio.module.budget.fixtures.keytables.enums.KeyTable_enum;
 import org.estatio.module.budget.fixtures.partitioning.PartitioningAndItemsAbstract;
 import org.estatio.module.budget.fixtures.keytables.personas.KeyTablesForBud;
 import org.estatio.module.charge.dom.Charge;
@@ -53,8 +50,8 @@ public class PartitioningAndItemsForBudBudget2015 extends PartitioningAndItemsAb
         BudgetItem budgetItem3 = budgetItemRepository.findByBudgetAndCharge(budget, incomingCharge3);
         Charge invoiceCharge1 = Charge_enum.NlServiceCharge.findUsing(serviceRegistry);
         Charge invoiceCharge2 = Charge_enum.NlServiceCharge2.findUsing(serviceRegistry);
-        KeyTable keyTable1 = keyTableRepository.findByBudgetAndName(budget, KeyTablesForBud.NAME_BY_AREA);
-        KeyTable keyTable2 = keyTableRepository.findByBudgetAndName(budget, KeyTablesForBud.NAME_BY_COUNT);
+        KeyTable keyTable1 = keyTableRepository.findByBudgetAndName(budget, KeyTable_enum.Bud2015Area.getName());
+        KeyTable keyTable2 = keyTableRepository.findByBudgetAndName(budget, KeyTable_enum.Bud2015Count.getName());
 
         Partitioning partitioning = createPartitioning(budget, executionContext);
 
