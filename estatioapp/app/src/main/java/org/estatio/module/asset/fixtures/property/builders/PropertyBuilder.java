@@ -78,7 +78,7 @@ public final class PropertyBuilder
 
         defaultParam("reference", executionContext, fakeDataService2.strings().fixedUpper(3).toUpperCase());
         defaultParam("name", executionContext, fakeDataService.name().lastName() + " Mall");
-        defaultParam("propertyType", executionContext, fakeDataService.collections().anyOf(PropertyType.class));
+        defaultParam("propertyType", executionContext, fakeDataService.enums().anyOf(PropertyType.class));
         defaultParam("city", executionContext, fakeDataService.addresses().cityPrefix() + " " + fakeDataService.name().lastName() + fakeDataService.addresses().citySuffix());
         defaultParam("country", executionContext, fakeDataService.collections().anyBounded(Country.class));
         defaultParam("acquireDate", executionContext, fakeDataService2.dates().before(fakeDataService2.periods().days(100, 200)));
