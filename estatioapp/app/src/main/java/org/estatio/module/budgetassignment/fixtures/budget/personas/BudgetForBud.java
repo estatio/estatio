@@ -27,7 +27,6 @@ import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budgetassignment.fixtures.budget.BudgetAbstract;
-import org.estatio.module.budgetassignment.fixtures.overrides.personas.BudgetOverridesForBud;
 import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 
@@ -49,8 +48,6 @@ public class BudgetForBud extends BudgetAbstract {
         executionContext.executeChildT(this, Lease_enum.BudNlBank004Nl.toBuilderScript());
         executionContext.executeChildT(this, Lease_enum.BudHyper005Nl.toBuilderScript());
         executionContext.executeChildT(this, Lease_enum.BudHello006Nl.toBuilderScript());
-
-        executionContext.executeChild(this, new BudgetOverridesForBud());
 
         // exec
         Property property = Property_enum.BudNl.findUsing(serviceRegistry);

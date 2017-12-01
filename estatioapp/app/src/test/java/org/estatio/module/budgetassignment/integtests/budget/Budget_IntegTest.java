@@ -24,6 +24,7 @@ import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
 import org.estatio.module.budgetassignment.fixtures.budget.personas.BudgetForBud;
+import org.estatio.module.budgetassignment.fixtures.overrides.personas.BudgetOverridesForBud;
 import org.estatio.module.budgetassignment.fixtures.partitioning.personas.PartitioningAndItemsForBudBudget2015;
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
 import org.estatio.module.lease.fixtures.leaseitems.svcchgbudgeted.personas.LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb;
@@ -44,6 +45,7 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
                 protected void execute(final ExecutionContext executionContext) {
                     executionContext.executeChild(this, Partitioning_enum.OxfBudget2015.toBuilderScript());
                     executionContext.executeChild(this, new PartitioningAndItemsForBudBudget2015());
+                    executionContext.executeChild(this, new BudgetOverridesForBud());
                     executionContext.executeChild(this, new LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb());
                 }
             });
@@ -123,6 +125,7 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
                 protected void execute(final ExecutionContext executionContext) {
                     executionContext.executeChild(this, Partitioning_enum.OxfBudget2015.toBuilderScript());
                     executionContext.executeChild(this, new PartitioningAndItemsForBudBudget2015());
+                    executionContext.executeChild(this, new BudgetOverridesForBud());
                     executionContext.executeChild(this, new LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb());
                 }
             });
@@ -151,6 +154,7 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
                 protected void execute(final ExecutionContext executionContext) {
                     executionContext.executeChild(this, Partitioning_enum.OxfBudget2015.toBuilderScript());
                     executionContext.executeChild(this, new PartitioningAndItemsForBudBudget2015());
+                    executionContext.executeChild(this, new BudgetOverridesForBud());
                     executionContext.executeChild(this, new LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb());
                     executionContext.executeChild(this, Budget_enum.OxfBudget2016.toBuilderScript());
                 }
