@@ -98,6 +98,7 @@ public enum Index_enum implements EnumWithBuilderScript<Index, IndexBuilder>, En
         return new IndexBuilder()
                 .setReference(reference)
                 .setName(name)
+                .setPrereq((f,ec) -> f.setApplicationTenancy(f.objectFor(applicationTenancy_d, ec)))
                 .setBases(Arrays.asList(bases));
 
     }
