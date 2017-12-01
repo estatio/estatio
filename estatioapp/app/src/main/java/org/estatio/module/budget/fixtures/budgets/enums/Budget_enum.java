@@ -60,6 +60,14 @@ public enum Budget_enum implements PersonaWithBuilderScript<Budget, BudgetBuilde
                     new ItemSpec(Charge_enum.GbIncomingCharge1, bd("30500.99")),
                     new ItemSpec(Charge_enum.GbIncomingCharge2, bd("40600.01"))
             }
+    ),
+    BudBudget2015(
+            PropertyAndUnitsAndOwnerAndManager_enum.BudNl, ld(2015, 1, 1),
+            new ItemSpec[]{
+                    new ItemSpec(Charge_enum.NlIncomingCharge1, bd(10000.00)),
+                    new ItemSpec(Charge_enum.NlIncomingCharge2, bd(20000.00)),
+                    new ItemSpec(Charge_enum.NlIncomingCharge3, bd(30000.00))
+            }
     )
     ;
 
