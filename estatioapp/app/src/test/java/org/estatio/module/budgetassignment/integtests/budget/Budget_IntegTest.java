@@ -22,7 +22,7 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
-import org.estatio.module.budget.fixtures.partitioning.personas.PartitioningAndItemsForOxfBudget2015;
+import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
 import org.estatio.module.budgetassignment.fixtures.budget.personas.BudgetForBud;
 import org.estatio.module.budgetassignment.fixtures.partitioning.personas.PartitioningAndItemsForBudBudget2015;
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
@@ -42,7 +42,7 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new PartitioningAndItemsForOxfBudget2015());
+                    executionContext.executeChild(this, Partitioning_enum.OxfBudget2015.toBuilderScript());
                     executionContext.executeChild(this, new PartitioningAndItemsForBudBudget2015());
                     executionContext.executeChild(this, new LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb());
                 }
@@ -121,7 +121,7 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new PartitioningAndItemsForOxfBudget2015());
+                    executionContext.executeChild(this, Partitioning_enum.OxfBudget2015.toBuilderScript());
                     executionContext.executeChild(this, new PartitioningAndItemsForBudBudget2015());
                     executionContext.executeChild(this, new LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb());
                 }
@@ -149,7 +149,7 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new PartitioningAndItemsForOxfBudget2015());
+                    executionContext.executeChild(this, Partitioning_enum.OxfBudget2015.toBuilderScript());
                     executionContext.executeChild(this, new PartitioningAndItemsForBudBudget2015());
                     executionContext.executeChild(this, new LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb());
                     executionContext.executeChild(this, Budget_enum.OxfBudget2016.toBuilderScript());
