@@ -23,6 +23,7 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetcalculation.Status;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
+import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLink;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLinkRepository;
@@ -39,7 +40,6 @@ import org.estatio.module.budgetassignment.dom.service.BudgetAssignmentService;
 import org.estatio.module.budgetassignment.dom.service.CalculationResultViewModel;
 import org.estatio.module.budgetassignment.dom.service.DetailedCalculationResultViewmodel;
 import org.estatio.module.budgetassignment.fixtures.overrides.personas.BudgetOverridesForBud;
-import org.estatio.module.budget.fixtures.partitioning.personas.PartitioningAndItemsForBudBudget2015;
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
@@ -104,7 +104,7 @@ ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModuleIntegTestAbs
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new PartitioningAndItemsForBudBudget2015());
+                executionContext.executeChild(this, Partitioning_enum.BudPartitioning2015.toBuilderScript());
                 executionContext.executeChild(this, new BudgetOverridesForBud());
             }
         });
