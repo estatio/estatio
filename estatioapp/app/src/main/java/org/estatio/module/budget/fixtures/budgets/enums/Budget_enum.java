@@ -18,6 +18,8 @@
 package org.estatio.module.budget.fixtures.budgets.enums;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import org.joda.time.LocalDate;
 
@@ -30,9 +32,11 @@ import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwner
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.fixtures.budgets.builders.BudgetBuilder;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import static org.incode.module.base.integtests.VT.bd;
@@ -45,32 +49,44 @@ public enum Budget_enum implements PersonaWithBuilderScript<Budget, BudgetBuilde
 
     OxfBudget2015(
             PropertyAndUnitsAndOwnerAndManager_enum.OxfGb, ld(2015, 1, 1),
-            Charge_enum.GbIncomingCharge1, bd("30000.55"),
-            Charge_enum.GbIncomingCharge2, bd("40000.35")
+            new ItemSpec[]{
+                new ItemSpec(Charge_enum.GbIncomingCharge1, bd("30000.55")),
+                new ItemSpec(Charge_enum.GbIncomingCharge2, bd("40000.35"))
+            }
     ),
     OxfBudget2016(
             PropertyAndUnitsAndOwnerAndManager_enum.OxfGb, ld(2016, 1, 1),
-            Charge_enum.GbIncomingCharge1, bd("30500.99"),
-            Charge_enum.GbIncomingCharge2, bd("40600.01")
-    ),
+            new ItemSpec[]{
+                    new ItemSpec(Charge_enum.GbIncomingCharge1, bd("30500.99")),
+                    new ItemSpec(Charge_enum.GbIncomingCharge2, bd("40600.01"))
+            }
+    )
     ;
 
     private final PropertyAndUnitsAndOwnerAndManager_enum property_d;
     private final LocalDate startDate;
-    private final Charge_enum charge1_d;
-    private final BigDecimal value1;
-    private final Charge_enum charge2_d;
-    private final BigDecimal value2;
+    private final ItemSpec[] itemSpecs;
+
+    @AllArgsConstructor
+    @Data
+    public static class ItemSpec {
+        private final Charge_enum charge_d;
+        private final BigDecimal value;
+    }
 
     @Override
     public BudgetBuilder toBuilderScript() {
         return new BudgetBuilder()
                 .setPrereq((f,ec) -> f.setProperty(f.objectFor(property_d, ec)))
                 .setStartDate(startDate)
-                .setPrereq((f,ec) -> f.setCharge1(f.objectFor(charge1_d, ec)))
-                .setValue1(value1)
-                .setPrereq((f,ec) -> f.setCharge2(f.objectFor(charge2_d, ec)))
-                .setValue2(value2)
+                .setPrereq((f,ec) -> f.setItemSpecs(
+                        Arrays.stream(itemSpecs)
+                                .map(x -> {
+                                    final Charge charge = f.objectFor(x.charge_d, ec);
+                                    return new BudgetBuilder.ItemSpec(charge, x.value);
+                                })
+                                .collect(Collectors.toList())
+                ))
                 ;
     }
 

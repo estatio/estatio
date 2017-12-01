@@ -50,9 +50,9 @@ public enum Partitioning_enum
     OxfBudget2015(
             Budget_enum.OxfBudget2015, BudgetCalculationType.BUDGETED,
             new ItemSpec[]{
-                new ItemSpec(Charge_enum.GbServiceCharge, KeyTable_enum.Oxf2015Area, Budget_enum.OxfBudget2015.getCharge1_d(), bd(100)),
-                new ItemSpec(Charge_enum.GbServiceCharge, KeyTable_enum.Oxf2015Area, Budget_enum.OxfBudget2015.getCharge2_d(), bd(80)),
-                new ItemSpec(Charge_enum.GbServiceCharge, KeyTable_enum.Oxf2015Count, Budget_enum.OxfBudget2015.getCharge2_d(), bd(20)),
+                new ItemSpec(Charge_enum.GbServiceCharge, KeyTable_enum.Oxf2015Area, Budget_enum.OxfBudget2015.getItemSpecs()[0].getCharge_d(), bd(100)),
+                new ItemSpec(Charge_enum.GbServiceCharge, KeyTable_enum.Oxf2015Area, Budget_enum.OxfBudget2015.getItemSpecs()[1].getCharge_d(), bd(80)),
+                new ItemSpec(Charge_enum.GbServiceCharge, KeyTable_enum.Oxf2015Count, Budget_enum.OxfBudget2015.getItemSpecs()[1].getCharge_d(), bd(20)),
             })
     ;
 
