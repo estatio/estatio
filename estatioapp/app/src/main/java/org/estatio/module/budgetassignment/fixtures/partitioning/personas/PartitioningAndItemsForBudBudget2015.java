@@ -27,8 +27,8 @@ import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.partioning.Partitioning;
+import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.partitioning.PartitioningAndItemsAbstract;
-import org.estatio.module.budget.fixtures.budgets.personas.BudgetForBud;
 import org.estatio.module.budget.fixtures.keytables.personas.KeyTablesForBud;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
@@ -43,9 +43,8 @@ public class PartitioningAndItemsForBudBudget2015 extends PartitioningAndItemsAb
 
 
         // exec
-        Property property = Property_enum.BudNl.findUsing(serviceRegistry);
-        LocalDate startDate = BudgetForBud.BUDGET_2015_START_DATE;
-        Budget budget = budgetRepository.findByPropertyAndStartDate(property, startDate);
+        Budget budget = Budget_enum.BudBudget2015.findUsing(serviceRegistry);
+
         Charge incomingCharge1 = Charge_enum.NlIncomingCharge1.findUsing(serviceRegistry);
         Charge incomingCharge2 = Charge_enum.NlIncomingCharge2.findUsing(serviceRegistry);
         Charge incomingCharge3 = Charge_enum.NlIncomingCharge3.findUsing(serviceRegistry);

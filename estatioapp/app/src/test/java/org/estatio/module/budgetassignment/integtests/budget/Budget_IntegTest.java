@@ -23,7 +23,6 @@ import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
-import org.estatio.module.budget.fixtures.budgets.personas.BudgetForBud;
 import org.estatio.module.budgetassignment.fixtures.overrides.personas.BudgetOverridesForBud;
 import org.estatio.module.budgetassignment.fixtures.partitioning.personas.PartitioningAndItemsForBudBudget2015;
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
@@ -52,26 +51,19 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
         }
 
 
-        Property propertyBud;
-        List<Budget> budgetsForBud;
-        Budget budget2015;
-        Budget budget2016;
-
-        @Before
-        public void setUp() throws Exception {
-            propertyBud = Property_enum.BudNl.findUsing(serviceRegistry);
-            budgetsForBud = budgetRepository.findByProperty(propertyBud);
-            budget2015 = budgetRepository.findByPropertyAndStartDate(propertyBud, BudgetForBud.BUDGET_2015_START_DATE);
-        }
 
         @Test
         public void nextBudgetTest() throws Exception {
 
             // given
+            Budget budget2015 = Budget_enum.BudBudget2015.findUsing(serviceRegistry);
+
+            Property propertyBud = Property_enum.BudNl.findUsing(serviceRegistry);
+            List<Budget> budgetsForBud = budgetRepository.findByProperty(budget2015.getProperty());
             assertThat(budgetsForBud.size()).isEqualTo(1);
 
             // when
-            budget2016 = wrap(budget2015).createNextBudget();
+            Budget budget2016 = wrap(budget2015).createNextBudget();
 
             // then
             assertThat(budgetRepository.findByProperty(propertyBud).size()).isEqualTo(2);

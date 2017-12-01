@@ -17,17 +17,12 @@
 
 package org.estatio.module.budget.fixtures.budgets.personas;
 
-import org.joda.time.LocalDate;
-
 import org.estatio.module.budget.fixtures.budgets.BudgetAbstract;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 
 public class BudgetForBud extends BudgetAbstract {
 
     public static final Budget_enum data = Budget_enum.BudBudget2015;
-
-    public static final LocalDate BUDGET_2015_START_DATE = Budget_enum.BudBudget2015.getStartDate();
-    public static final LocalDate BUDGET_2015_END_DATE =  Budget_enum.BudBudget2015.getStartDate().plusYears(1).minusDays(1);
 
     @Override
     protected void execute(ExecutionContext executionContext) {

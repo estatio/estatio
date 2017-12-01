@@ -75,6 +75,10 @@ public enum Budget_enum implements PersonaWithBuilderScript<Budget, BudgetBuilde
     private final LocalDate startDate;
     private final ItemSpec[] itemSpecs;
 
+    public LocalDate getEndDate() {
+        return getStartDate().plusYears(1).minusDays(1);
+    }
+
     @AllArgsConstructor
     @Data
     public static class ItemSpec {
