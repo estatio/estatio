@@ -31,7 +31,7 @@ import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexRepository;
 import org.estatio.module.index.dom.IndexValue;
 import org.estatio.module.index.dom.IndexValueRepository;
-import org.estatio.module.index.fixtures.IndexRefData;
+import org.estatio.module.index.fixtures.enums.Index_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -48,7 +48,7 @@ public class IndexValueRepository_IntegTest extends IndexModuleIntegTestAbstract
         @Test
         public void happyCase() throws Exception {
             // given
-            Index index = indexRepository.findByReference(IndexRefData.IT_REF);
+            Index index = Index_enum.IStatFoi.findUsing(serviceRegistry);
             // when, then
             assertThat(indexValueRepository.findByIndexAndStartDate(index, VT.ld(2013, 1, 1)).getValue(), is(VT.bd("106.7000")));
             assertThat(indexValueRepository.findByIndexAndStartDate(index, VT.ld(2013, 10, 1)).getValue(), is(VT.bd("107.1000")));
@@ -63,7 +63,7 @@ public class IndexValueRepository_IntegTest extends IndexModuleIntegTestAbstract
 
             // given
             final List<IndexValue> all = indexValueRepository.all();
-            Index index = indexRepository.findByReference(IndexRefData.IT_REF);
+            Index index = Index_enum.IStatFoi.findUsing(serviceRegistry);
             final List<IndexValue> indexReverseSortedValues =
                     all.stream()
                         .filter(value -> value.getIndexBase().getIndex() == index)

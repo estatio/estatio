@@ -19,7 +19,7 @@
 package org.estatio.module.lease.fixtures.leaseitems.rent.personas;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.index.fixtures.IndexRefData;
+import org.estatio.module.index.fixtures.enums.Index_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
@@ -29,10 +29,6 @@ import static org.incode.module.base.integtests.VT.ld;
 
 public class LeaseItemAndLeaseTermForRentOf2ForOxfMiracl005Gb extends LeaseItemAndTermsAbstract {
 
-    public static final String LEASE_REF = Lease_enum.OxfMiracl005Gb.getRef();
-    public static final String AT_PATH = ApplicationTenancy_enum.GbOxfDefault.getPath();
-    
-    public static final String INDEX_REF_IT = IndexRefData.IT_REF;
 
     @Override
     protected void execute(final ExecutionContext fixtureResults) {
@@ -46,23 +42,24 @@ public class LeaseItemAndLeaseTermForRentOf2ForOxfMiracl005Gb extends LeaseItemA
 
         // exec
 
-        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
+        final Lease lease = Lease_enum.OxfMiracl005Gb.findUsing(serviceRegistry);
 
         createLeaseTermForIndexableRent(
-                LEASE_REF,
-                AT_PATH,
+                Lease_enum.OxfMiracl005Gb.getRef(),
+                ApplicationTenancy_enum.GbOxfDefault.getPath(),
                 lease.getStartDate(), null,
                 bd(150000),
                 null, null, null,
-                INDEX_REF_IT,
+                Index_enum.IStatFoi.getReference(),
                 executionContext);
 
         createLeaseTermForIndexableRent(
-                LEASE_REF,
-                AT_PATH, ld(2015, 1, 1), null,
+                Lease_enum.OxfMiracl005Gb.getRef(),
+                ApplicationTenancy_enum.GbOxfDefault.getPath(),
+                ld(2015, 1, 1), null,
                 null,
                 ld(2013, 11, 1), ld(2014, 12, 1), null,
-                INDEX_REF_IT,
+                Index_enum.IStatFoi.getReference(),
                 executionContext);
 
     }
