@@ -32,7 +32,7 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 import static org.estatio.module.budget.fixtures.budgets.enums.Budget_enum.BudBudget2015;
 import static org.estatio.module.charge.fixtures.charges.enums.Charge_enum.NlServiceCharge;
-import static org.estatio.module.lease.fixtures.lease.enums.Lease_enum.BudPoison001Nl;
+import static org.estatio.module.lease.fixtures.lease.enums.Lease_enum.BudMiracle002Nl;
 import static org.incode.module.base.integtests.VT.bd;
 
 
@@ -42,7 +42,7 @@ import static org.incode.module.base.integtests.VT.bd;
 public enum BudgetOverrideForFlatRate_enum implements PersonaWithBuilderScript<BudgetOverrideForFlatRate,BudgetOverrideForFlatRateBuilder> {
 
     BudMiracle002Nl_2015(
-                BudPoison001Nl, BudBudget2015, NlServiceCharge, bd("12.5"), bd("90"), null
+            BudMiracle002Nl, BudBudget2015, NlServiceCharge, bd("12.5"), bd("90"), null
     );
 
     private final Lease_enum lease_d;

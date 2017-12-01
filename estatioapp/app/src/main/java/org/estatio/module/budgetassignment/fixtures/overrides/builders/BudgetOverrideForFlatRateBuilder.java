@@ -55,8 +55,6 @@ public class BudgetOverrideForFlatRateBuilder extends BuilderScriptAbstract<Budg
     BigDecimal weightedArea;
 
     @Getter @Setter
-    BigDecimal area;
-    @Getter @Setter
     LocalDate startDate;
     @Getter @Setter
     LocalDate endDate;
@@ -85,7 +83,7 @@ public class BudgetOverrideForFlatRateBuilder extends BuilderScriptAbstract<Budg
         BudgetOverrideForFlatRate budgetOverride = budgetOverrideRepository
                 .newBudgetOverrideForFlatRate(
                         valuePerM2,
-                        area,
+                        weightedArea,
                         lease,
                         startDate,
                         endDate,

@@ -39,7 +39,8 @@ import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValueRepos
 import org.estatio.module.budgetassignment.dom.service.BudgetAssignmentService;
 import org.estatio.module.budgetassignment.dom.service.CalculationResultViewModel;
 import org.estatio.module.budgetassignment.dom.service.DetailedCalculationResultViewmodel;
-import org.estatio.module.budgetassignment.fixtures.overrides.personas.BudgetOverridesForBud;
+import org.estatio.module.budgetassignment.fixtures.overrides.enums.BudgetOverrideForFlatRate_enum;
+import org.estatio.module.budgetassignment.fixtures.overrides.enums.BudgetOverrideForMax_enum;
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
@@ -56,9 +57,7 @@ import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class
-
-ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
+public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
 
     @Inject
     PropertyRepository propertyRepository;
@@ -105,8 +104,17 @@ ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModuleIntegTestAbs
             @Override
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, Partitioning_enum.BudPartitioning2015.toBuilderScript());
-                executionContext.executeChild(this, new BudgetOverridesForBud());
-            }
+
+                executionContext.executeChildT(this, Lease_enum.BudPoison001Nl.toBuilderScript());
+                executionContext.executeChildT(this, Lease_enum.BudMiracle002Nl.toBuilderScript());
+                executionContext.executeChildT(this, Lease_enum.BudHello003Nl.toBuilderScript());
+                executionContext.executeChildT(this, Lease_enum.BudDago004Nl.toBuilderScript());
+                executionContext.executeChildT(this, Lease_enum.BudNlBank004Nl.toBuilderScript());
+                executionContext.executeChildT(this, Lease_enum.BudHyper005Nl.toBuilderScript());
+                executionContext.executeChildT(this, Lease_enum.BudHello006Nl.toBuilderScript());
+                executionContext.executeChildT(this, BudgetOverrideForFlatRate_enum.BudMiracle002Nl_2015.toBuilderScript());
+                executionContext.executeChildT(this, BudgetOverrideForMax_enum.BudPoison001Nl_2015.toBuilderScript());
+          }
         });
     }
 

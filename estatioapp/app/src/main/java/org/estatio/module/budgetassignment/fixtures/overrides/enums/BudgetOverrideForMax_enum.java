@@ -42,7 +42,7 @@ import static org.incode.module.base.integtests.VT.bd;
 public enum BudgetOverrideForMax_enum implements PersonaWithBuilderScript<BudgetOverrideForMax,BudgetOverrideForMaxBuilder> {
 
     BudPoison001Nl_2015(
-                BudPoison001Nl, BudBudget2015, NlServiceCharge, bd("350.00"), NlIncomingCharge1
+            BudPoison001Nl, BudBudget2015, NlServiceCharge, bd("350.00"), NlIncomingCharge1
     );
 
     private final Lease_enum lease_d;

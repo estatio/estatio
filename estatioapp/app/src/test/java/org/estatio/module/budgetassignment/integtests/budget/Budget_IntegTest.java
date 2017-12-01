@@ -23,8 +23,10 @@ import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
-import org.estatio.module.budgetassignment.fixtures.overrides.personas.BudgetOverridesForBud;
+import org.estatio.module.budgetassignment.fixtures.overrides.enums.BudgetOverrideForFlatRate_enum;
+import org.estatio.module.budgetassignment.fixtures.overrides.enums.BudgetOverrideForMax_enum;
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.svcchgbudgeted.personas.LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,7 +45,17 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
                 protected void execute(final ExecutionContext executionContext) {
                     executionContext.executeChild(this, Partitioning_enum.OxfPartitioning2015.toBuilderScript());
                     executionContext.executeChild(this, Partitioning_enum.BudPartitioning2015.toBuilderScript());
-                    executionContext.executeChild(this, new BudgetOverridesForBud());
+
+                    executionContext.executeChildT(this, Lease_enum.BudPoison001Nl.toBuilderScript());
+                    executionContext.executeChildT(this, Lease_enum.BudMiracle002Nl.toBuilderScript());
+                    executionContext.executeChildT(this, Lease_enum.BudHello003Nl.toBuilderScript());
+                    executionContext.executeChildT(this, Lease_enum.BudDago004Nl.toBuilderScript());
+                    executionContext.executeChildT(this, Lease_enum.BudNlBank004Nl.toBuilderScript());
+                    executionContext.executeChildT(this, Lease_enum.BudHyper005Nl.toBuilderScript());
+                    executionContext.executeChildT(this, Lease_enum.BudHello006Nl.toBuilderScript());
+                    executionContext.executeChildT(this, BudgetOverrideForFlatRate_enum.BudMiracle002Nl_2015.toBuilderScript());
+                    executionContext.executeChildT(this, BudgetOverrideForMax_enum.BudPoison001Nl_2015.toBuilderScript());
+
                     executionContext.executeChild(this, new LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb());
                 }
             });
@@ -116,7 +128,17 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
                 protected void execute(final ExecutionContext executionContext) {
                     executionContext.executeChild(this, Partitioning_enum.OxfPartitioning2015.toBuilderScript());
                     executionContext.executeChild(this, Partitioning_enum.BudPartitioning2015.toBuilderScript());
-                    executionContext.executeChild(this, new BudgetOverridesForBud());
+
+                    executionContext.executeChildT(this, Lease_enum.BudPoison001Nl.toBuilderScript());
+                    executionContext.executeChildT(this, Lease_enum.BudMiracle002Nl.toBuilderScript());
+                    executionContext.executeChildT(this, Lease_enum.BudHello003Nl.toBuilderScript());
+                    executionContext.executeChildT(this, Lease_enum.BudDago004Nl.toBuilderScript());
+                    executionContext.executeChildT(this, Lease_enum.BudNlBank004Nl.toBuilderScript());
+                    executionContext.executeChildT(this, Lease_enum.BudHyper005Nl.toBuilderScript());
+                    executionContext.executeChildT(this, Lease_enum.BudHello006Nl.toBuilderScript());
+                    executionContext.executeChildT(this, BudgetOverrideForFlatRate_enum.BudMiracle002Nl_2015.toBuilderScript());
+                    executionContext.executeChildT(this, BudgetOverrideForMax_enum.BudPoison001Nl_2015.toBuilderScript());
+
                     executionContext.executeChild(this, new LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb());
                 }
             });
@@ -143,7 +165,17 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
                 protected void execute(final ExecutionContext executionContext) {
                     executionContext.executeChild(this, Partitioning_enum.OxfPartitioning2015.toBuilderScript());
                     executionContext.executeChild(this, Partitioning_enum.BudPartitioning2015.toBuilderScript());
-                    executionContext.executeChild(this, new BudgetOverridesForBud());
+
+                    executionContext.executeChildT(this, Lease_enum.BudPoison001Nl.toBuilderScript());
+                    executionContext.executeChildT(this, Lease_enum.BudMiracle002Nl.toBuilderScript());
+                    executionContext.executeChildT(this, Lease_enum.BudHello003Nl.toBuilderScript());
+                    executionContext.executeChildT(this, Lease_enum.BudDago004Nl.toBuilderScript());
+                    executionContext.executeChildT(this, Lease_enum.BudNlBank004Nl.toBuilderScript());
+                    executionContext.executeChildT(this, Lease_enum.BudHyper005Nl.toBuilderScript());
+                    executionContext.executeChildT(this, Lease_enum.BudHello006Nl.toBuilderScript());
+                    executionContext.executeChildT(this, BudgetOverrideForFlatRate_enum.BudMiracle002Nl_2015.toBuilderScript());
+                    executionContext.executeChildT(this, BudgetOverrideForMax_enum.BudPoison001Nl_2015.toBuilderScript());
+
                     executionContext.executeChild(this, new LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb());
                     executionContext.executeChild(this, Budget_enum.OxfBudget2016.toBuilderScript());
                 }
