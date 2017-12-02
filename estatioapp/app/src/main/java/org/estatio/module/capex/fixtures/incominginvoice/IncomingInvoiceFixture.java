@@ -1,4 +1,4 @@
-package org.estatio.module.capex.fixtures;
+package org.estatio.module.capex.fixtures.incominginvoice;
 
 import java.math.BigDecimal;
 
@@ -28,8 +28,9 @@ import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.dom.orderinvoice.IncomingInvoiceItem_createOrderItemLink;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
-import org.estatio.module.capex.fixtures.document.personas.IncomingPdfForFakeInvoice2;
-import org.estatio.module.capex.fixtures.project.personas.ProjectForOxf;
+import org.estatio.module.capex.fixtures.document.enums.IncomingPdf_enum;
+import org.estatio.module.capex.fixtures.order.OrderFixture;
+import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.PartyRepository;
@@ -44,21 +45,21 @@ public class IncomingInvoiceFixture extends FixtureScript {
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new ProjectForOxf());
+        executionContext.executeChild(this, Project_enum.OxfProject.builder());
         executionContext.executeChild(this, new OrderFixture());
-        executionContext.executeChild(this, new IncomingPdfForFakeInvoice2().setRunAs("estatio-user-gb"));
-        executionContext.executeChild(this, Person_enum.DylanOfficeAdministratorGb.toBuilderScript());
+        executionContext.executeChild(this, IncomingPdf_enum.FakeInvoice2.builder().setRunAs("estatio-user-gb"));
+        executionContext.executeChild(this, Person_enum.DylanOfficeAdministratorGb.builder());
 
         Document fakeInvoice2Doc = incomingDocumentRepository.matchAllIncomingDocumentsByName(
-                IncomingPdfForFakeInvoice2.resourceName).get(0);
+                IncomingPdf_enum.FakeInvoice2.getResourceName()).get(0);
         fakeInvoice2Doc.setCreatedAt(new DateTime(2014,5,22,11,10));
         fakeInvoice2Doc.setAtPath("/GBR");
         Property propertyForOxf = Property_enum.OxfGb.findUsing(serviceRegistry);
         sudoService.sudo(Person_enum.DylanOfficeAdministratorGb.getSecurityUserName(), (Runnable) () ->
         wrap(mixin(Document_categoriseAsPropertyInvoice.class,fakeInvoice2Doc)).act(propertyForOxf, ""));
 
-        Project projectForOxf = projectRepository.findByReference("OXF-02");
-        Tax taxForGbr = taxRepository.findByReference(Tax_enum.GB_VATSTD.getReference());
+        Project projectForOxf = Project_enum.OxfProject.findUsing(serviceRegistry);
+        Tax taxForGbr = Tax_enum.GB_VATSTD.findUsing(serviceRegistry);
 
         IncomingInvoice fakeInvoice = incomingInvoiceRepository.findIncomingInvoiceByDocumentName("fakeInvoice2.pdf").get(0);
         fakeInvoice.setDateReceived(new LocalDate(2014,5,15));

@@ -75,7 +75,7 @@ public class LeaseItemRepository_IntegTest extends LeaseModuleIntegTestAbstract 
                 executionContext.executeChild(this, new LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb());
                 executionContext.executeChild(this, new LeaseItemAndLeaseTermForMarketingForOxfTopModel001Gb());
 
-                executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.toBuilderScript());
+                executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.builder());
             }
         });
     }

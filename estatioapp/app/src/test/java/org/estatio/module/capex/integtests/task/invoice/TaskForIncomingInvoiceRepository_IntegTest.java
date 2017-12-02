@@ -62,7 +62,7 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends CapexModuleInteg
                 @Override
                 protected void execute(final ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
+                    executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.builder());
                 }
             });
 

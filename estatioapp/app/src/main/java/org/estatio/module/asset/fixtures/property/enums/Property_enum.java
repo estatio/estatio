@@ -63,7 +63,7 @@ public enum Property_enum implements PersonaWithFinder<Property>, PersonaWithBui
     }
 
     @Override
-    public PropertyBuilder toBuilderScript() {
+    public PropertyBuilder builder() {
         return new PropertyBuilder()
                 .setReference(ref)
                 .setName(name)

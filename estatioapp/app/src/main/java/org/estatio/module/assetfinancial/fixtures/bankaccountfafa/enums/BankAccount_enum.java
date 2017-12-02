@@ -57,7 +57,7 @@ public enum BankAccount_enum
 
 
     @Override
-    public BankAccountBuilder toBuilderScript() {
+    public BankAccountBuilder builder() {
         return new BankAccountBuilder()
                 .setIban(iban)
                 .setPrereq((f,ec) -> f.setParty(f.objectFor(organisation_d, ec)));

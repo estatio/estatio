@@ -86,8 +86,8 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         final LocalDate templateDate = getTemplateDateElseNow();
 
         // prereqs
-        executionContext.executeChild(this, ApplicationTenancy_enum.Global.toBuilderScript());
-        executionContext.executeChild(this, ApplicationTenancy_enum.It.toBuilderScript());
+        executionContext.executeChild(this, ApplicationTenancy_enum.Global.builder());
+        executionContext.executeChild(this, ApplicationTenancy_enum.It.builder());
         executionContext.executeChild(this, new RenderingStrategies());
 
         upsertTemplatesForInvoice(templateDate, executionContext);

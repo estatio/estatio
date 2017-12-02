@@ -19,8 +19,7 @@ public class IncomingPdfForFakeInvoice1 extends FixtureScript {
     @Override
     protected void execute(final FixtureScript.ExecutionContext executionContext) {
 
-        executionContext.setParameter("runAs", runAs);
-        executionContext.executeChild(this, data.toBuilderScript());
+        executionContext.executeChild(this, data.builder().setRunAs(runAs));
 
     }
 

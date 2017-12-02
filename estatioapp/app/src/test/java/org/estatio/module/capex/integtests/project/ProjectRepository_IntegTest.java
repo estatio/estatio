@@ -44,9 +44,9 @@ public class ProjectRepository_IntegTest extends CapexModuleIntegTestAbstract {
             @Override
             protected void execute(ExecutionContext executionContext) {
 
-                executionContext.executeChild(this, Project_enum.KalProject1.toBuilderScript());
-                executionContext.executeChild(this, Project_enum.KalProject2.toBuilderScript());
-                executionContext.executeChild(this, Project_enum.GraProject.toBuilderScript());
+                executionContext.executeChild(this, Project_enum.KalProject1.builder());
+                executionContext.executeChild(this, Project_enum.KalProject2.builder());
+                executionContext.executeChild(this, Project_enum.GraProject.builder());
 
             }
         });

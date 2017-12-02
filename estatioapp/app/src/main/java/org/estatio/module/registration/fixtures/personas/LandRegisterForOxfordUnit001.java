@@ -37,7 +37,7 @@ public class LandRegisterForOxfordUnit001 extends FixtureScript {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
+        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.builder());
 
         Unit unit = Property_enum.OxfGb.findUsing(serviceRegistry).getUnits().first();
 

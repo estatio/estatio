@@ -1,4 +1,4 @@
-package org.estatio.module.capex.fixtures.charge;
+package org.estatio.module.charge.fixtures.incoming.builders;
 
 import java.util.List;
 

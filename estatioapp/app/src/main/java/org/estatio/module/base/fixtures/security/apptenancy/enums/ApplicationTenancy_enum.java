@@ -75,7 +75,7 @@ public enum ApplicationTenancy_enum
     }
 
     @Override
-    public ApplicationTenancyBuilder toBuilderScript() {
+    public ApplicationTenancyBuilder builder() {
         return new ApplicationTenancyBuilder()
                 .setName(name)
                 .setPath(path)

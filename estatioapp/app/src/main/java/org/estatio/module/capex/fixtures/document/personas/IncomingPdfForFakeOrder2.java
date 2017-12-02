@@ -16,13 +16,13 @@ public class IncomingPdfForFakeOrder2 extends FixtureScript {
     @Getter @Setter
     private String runAs;
 
-    public static String resourceName = data.getResourceName();
+    public static String resourceName = IncomingPdf_enum.FakeOrder2.getResourceName();
 
     @Override
     protected void execute(final FixtureScript.ExecutionContext executionContext) {
 
         executionContext.setParameter("runAs", runAs);
-        executionContext.executeChild(this, data.toBuilderScript());
+        executionContext.executeChild(this, IncomingPdf_enum.FakeOrder2.builder().setRunAs(runAs));
 
     }
 

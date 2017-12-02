@@ -43,8 +43,8 @@ public class GuaranteeForOxfTopModel001Gb extends GuaranteeAbstract {
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
-        executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
-        executionContext.executeChild(this, OrganisationAndComms_enum.DagoBankGb.toBuilderScript());
+        executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
+        executionContext.executeChild(this, OrganisationAndComms_enum.DagoBankGb.builder());
 
         createGuaranteeForOxfTopModel001(executionContext);
     }

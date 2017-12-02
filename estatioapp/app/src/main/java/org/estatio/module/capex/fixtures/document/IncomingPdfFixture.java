@@ -2,8 +2,7 @@ package org.estatio.module.capex.fixtures.document;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.capex.fixtures.document.personas.IncomingPdfForFakeInvoice1;
-import org.estatio.module.capex.fixtures.document.personas.IncomingPdfForFakeOrder1;
+import org.estatio.module.capex.fixtures.document.enums.IncomingPdf_enum;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,8 +17,8 @@ public class IncomingPdfFixture extends FixtureScript {
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
-        executionContext.executeChild(this, new IncomingPdfForFakeOrder1());
-        executionContext.executeChild(this, new IncomingPdfForFakeInvoice1());
+        executionContext.executeChild(this, IncomingPdf_enum.FakeOrder1.builder().setRunAs(runAs));
+        executionContext.executeChild(this, IncomingPdf_enum.FakeInvoice1.builder().setRunAs(runAs));
 
     }
 

@@ -86,7 +86,7 @@ public enum Index_enum implements PersonaWithBuilderScript<Index, IndexBuilder>,
 
 
     @Override
-    public IndexBuilder toBuilderScript() {
+    public IndexBuilder builder() {
         return new IndexBuilder()
                 .setReference(reference)
                 .setName(name)
@@ -105,7 +105,7 @@ public enum Index_enum implements PersonaWithBuilderScript<Index, IndexBuilder>,
         @Override
         protected void execute(final ExecutionContext executionContext) {
             for (Index_enum datum : Index_enum.values()) {
-                datum.toBuilderScript().build(this, executionContext);
+                datum.builder().build(this, executionContext);
             }
         }
     }

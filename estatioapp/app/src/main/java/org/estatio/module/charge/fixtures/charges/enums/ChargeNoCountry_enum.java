@@ -63,6 +63,8 @@ public enum ChargeNoCountry_enum {
             "Tax", "_TAX", Applicability.IN_AND_OUT),
     Marketing (ChargeGroup_enum.Marketing,
             "Marketing", "_MARKETING", Applicability.IN_AND_OUT),
+    Works (null,
+            "Works", null, null),
     ;
 
     private final ChargeGroup_enum chargeGroup;

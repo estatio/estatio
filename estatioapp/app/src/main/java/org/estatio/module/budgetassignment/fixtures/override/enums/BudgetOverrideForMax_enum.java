@@ -54,7 +54,7 @@ public enum BudgetOverrideForMax_enum implements PersonaWithBuilderScript<Budget
     private final Charge_enum incomingCharge_d;
 
     @Override
-    public BudgetOverrideForMaxBuilder toBuilderScript() {
+    public BudgetOverrideForMaxBuilder builder() {
         return new BudgetOverrideForMaxBuilder()
                 .setPrereq((f,ec) -> f.setLease(f.objectFor(lease_d, ec)))
                 .setPrereq((f,ec) -> f.setStartDate(f.objectFor(budget_d, ec).getStartDate()))

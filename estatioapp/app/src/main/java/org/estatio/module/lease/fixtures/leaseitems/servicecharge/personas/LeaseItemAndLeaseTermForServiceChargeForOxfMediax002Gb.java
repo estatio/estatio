@@ -35,7 +35,7 @@ public class LeaseItemAndLeaseTermForServiceChargeForOxfMediax002Gb extends Leas
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.toBuilderScript());
+        executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.builder());
 
         // exec
         final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);

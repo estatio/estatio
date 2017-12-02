@@ -31,7 +31,7 @@ public enum NumeratorExampleObject_enum
 
 
     @Override
-    public Builder toBuilderScript() {
+    public Builder builder() {
         return new Builder().setName(name);
     }
 

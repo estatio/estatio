@@ -167,8 +167,8 @@ public class OccupancyRepository_IntegTest extends LeaseModuleIntegTestAbstract 
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
-                    executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.toBuilderScript());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
+                    executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.builder());
                 }
             });
         }
@@ -232,7 +232,7 @@ public class OccupancyRepository_IntegTest extends LeaseModuleIntegTestAbstract 
                 protected void execute(ExecutionContext executionContext) {
 
 
-                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
                 }
             });
         }
@@ -270,7 +270,7 @@ public class OccupancyRepository_IntegTest extends LeaseModuleIntegTestAbstract 
                 protected void execute(ExecutionContext executionContext) {
 
 
-                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
                 }
             });
         }

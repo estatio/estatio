@@ -14,7 +14,7 @@ import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwner
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
-import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargeFixture;
 import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
@@ -32,8 +32,8 @@ public class OrderItemRepository_IntegTest extends CapexModuleIntegTestAbstract 
             @Override
             protected void execute(final ExecutionContext ec) {
                 ec.executeChild(this, new IncomingChargeFixture());
-                ec.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
-                ec.executeChild(this, OrganisationAndComms_enum.YoukeaSe.toBuilderScript());
+                ec.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.builder());
+                ec.executeChild(this, OrganisationAndComms_enum.YoukeaSe.builder());
                 ec.executeChild(this, new OrderInvoiceFixture());
             }
         });

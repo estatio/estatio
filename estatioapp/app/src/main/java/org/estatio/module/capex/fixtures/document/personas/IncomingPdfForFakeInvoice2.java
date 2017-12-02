@@ -11,18 +11,15 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class IncomingPdfForFakeInvoice2 extends FixtureScript {
 
-    public final static IncomingPdf_enum data = IncomingPdf_enum.FakeInvoice2;
-
     @Getter @Setter
     private String runAs;
 
-    public static String resourceName = data.getResourceName();
+    public static String resourceName = IncomingPdf_enum.FakeInvoice2.getResourceName();
 
     @Override
     protected void execute(final FixtureScript.ExecutionContext executionContext) {
 
-        executionContext.setParameter("runAs", runAs);
-        executionContext.executeChild(this, data.toBuilderScript());
+        executionContext.executeChild(this, IncomingPdf_enum.FakeInvoice2.builder().setRunAs(runAs));
 
     }
 

@@ -79,7 +79,7 @@ public class LeaseItem_IntegTest extends LeaseModuleIntegTestAbstract {
             @Override
             protected void execute(ExecutionContext executionContext) {
 
-                executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toBuilderScript());
+                executionContext.executeChild(this, Lease_enum.KalPoison001Nl.builder());
                 executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
                 executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
 

@@ -42,8 +42,8 @@ public class BankAccountAndMandateForPoisonNl extends BankAccountAndMandateAbstr
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toBuilderScript());
-        executionContext.executeChild(this, BankAccount_enum.PoisonNl.toBuilderScript());
+        executionContext.executeChild(this, Lease_enum.KalPoison001Nl.builder());
+        executionContext.executeChild(this, BankAccount_enum.PoisonNl.builder());
 
         // exec
         createBankMandate(Lease_enum.KalPoison001Nl.getTenant_d().getRef(), BANK_ACCOUNT_REF, SEQUENCE, SEQUENCE_TYPE, SCHEME, executionContext);

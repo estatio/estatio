@@ -87,7 +87,7 @@ public enum Budget_enum implements PersonaWithBuilderScript<Budget, BudgetBuilde
     }
 
     @Override
-    public BudgetBuilder toBuilderScript() {
+    public BudgetBuilder builder() {
         return new BudgetBuilder()
                 .setPrereq((f,ec) -> f.setProperty(f.objectFor(property_d, ec)))
                 .setStartDate(startDate)

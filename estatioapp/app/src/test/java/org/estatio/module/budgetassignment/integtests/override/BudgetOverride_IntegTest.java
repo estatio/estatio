@@ -43,7 +43,7 @@ public class BudgetOverride_IntegTest extends BudgetAssignmentModuleIntegTestAbs
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
+                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
             }
         });
     }

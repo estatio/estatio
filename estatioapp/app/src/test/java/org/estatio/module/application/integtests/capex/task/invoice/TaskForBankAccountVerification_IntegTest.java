@@ -122,7 +122,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
                 @Override
                 protected void execute(final FixtureScript.ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
+                    executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.builder());
                 }
             });
 
@@ -183,8 +183,8 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
                 protected void execute(final FixtureScript.ExecutionContext executionContext) {
 
                     executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
-                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
-                    executionContext.executeChild(this, BankAccount_enum.TopModelGb.toBuilderScript());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
+                    executionContext.executeChild(this, BankAccount_enum.TopModelGb.builder());
                 }
             });
 

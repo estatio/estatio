@@ -54,7 +54,7 @@ public class DataEnumPersist<E extends PersonaWithBuilderScript<T,F>, T, F exten
         }
 
         for (int i = 0; i < number; i++) {
-            final F enumFixture = enumConstants[i].toBuilderScript();
+            final F enumFixture = enumConstants[i].builder();
             final T domainObject = ec.executeChildT(this, enumFixture).getObject();
             ec.addResult(this, domainObject);
             objects.add(domainObject);

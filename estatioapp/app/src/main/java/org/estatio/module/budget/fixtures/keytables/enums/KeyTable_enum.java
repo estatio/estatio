@@ -65,7 +65,7 @@ public enum KeyTable_enum implements PersonaWithBuilderScript<KeyTable, KeyTable
     }
 
     @Override
-    public KeyTableBuilder toBuilderScript() {
+    public KeyTableBuilder builder() {
         return new KeyTableBuilder()
                 .setPrereq((f,ec) -> f.setBudget(f.objectFor(budget_d, ec)))
                 .setName(name)

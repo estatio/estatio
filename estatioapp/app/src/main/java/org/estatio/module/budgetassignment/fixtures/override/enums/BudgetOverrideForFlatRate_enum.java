@@ -55,7 +55,7 @@ public enum BudgetOverrideForFlatRate_enum implements PersonaWithBuilderScript<B
     private final Charge_enum incomingCharge_d;
 
     @Override
-    public BudgetOverrideForFlatRateBuilder toBuilderScript() {
+    public BudgetOverrideForFlatRateBuilder builder() {
         return new BudgetOverrideForFlatRateBuilder()
                 .setPrereq((f,ec) -> f.setLease(f.objectFor(lease_d, ec)))
                 .setPrereq((f,ec) -> f.setStartDate(f.objectFor(budget_d, ec).getStartDate()))

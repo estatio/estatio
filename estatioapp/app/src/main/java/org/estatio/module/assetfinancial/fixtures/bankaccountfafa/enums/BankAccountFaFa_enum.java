@@ -53,7 +53,7 @@ public enum BankAccountFaFa_enum
     }
 
     @Override
-    public BankAccountFaFaBuilder toBuilderScript() {
+    public BankAccountFaFaBuilder builder() {
         return new BankAccountFaFaBuilder()
                 .setPrereq((f,ec) -> f.setBankAccount(f.objectFor(bankAccount_d, ec)))
                 .setPrereq((f,ec) -> f.setProperty(f.objectFor(property_d, ec)));

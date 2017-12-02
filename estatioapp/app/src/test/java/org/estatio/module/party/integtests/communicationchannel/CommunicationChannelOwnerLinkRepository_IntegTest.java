@@ -49,7 +49,7 @@ public class CommunicationChannelOwnerLinkRepository_IntegTest extends PartyModu
     public void setupData() throws Exception {
         runFixtureScript(new FixtureScript() {
             @Override protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
+                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.builder());
             }
         });
     }

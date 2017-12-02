@@ -21,7 +21,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
-import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargeFixture;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
@@ -44,9 +44,9 @@ public class IncomingInvoiceItemRepository_IntegTest extends CapexModuleIntegTes
             protected void execute(final ExecutionContext executionContext) {
 
                 executionContext.executeChild(this, new IncomingChargeFixture());
-                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
-                executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.toBuilderScript());
-                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
+                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.builder());
+                executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.builder());
+                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.builder());
             }
         });
     }

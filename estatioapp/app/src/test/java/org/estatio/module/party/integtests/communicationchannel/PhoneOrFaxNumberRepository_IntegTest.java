@@ -48,7 +48,7 @@ public class PhoneOrFaxNumberRepository_IntegTest extends PartyModuleIntegTestAb
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
+                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.builder());
             }
         });
     }

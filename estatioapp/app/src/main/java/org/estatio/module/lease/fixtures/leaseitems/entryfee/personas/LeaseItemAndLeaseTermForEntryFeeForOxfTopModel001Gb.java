@@ -38,7 +38,7 @@ public class LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001Gb extends LeaseIt
     private void createLeaseTermsForOxfTopModel001(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
+        executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
 
         // exec
         final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);

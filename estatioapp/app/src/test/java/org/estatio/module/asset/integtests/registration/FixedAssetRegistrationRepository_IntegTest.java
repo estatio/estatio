@@ -48,7 +48,7 @@ public class FixedAssetRegistrationRepository_IntegTest extends AssetModuleInteg
             @Override
             protected void execute(ExecutionContext executionContext) {
 
-                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
+                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.builder());
             }
         });
     }

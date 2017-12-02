@@ -209,7 +209,7 @@ public enum Person_enum
 
 
     @Override
-    public PersonAndRolesBuilder toBuilderScript() {
+    public PersonAndRolesBuilder builder() {
 
         final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder()
                 .setReference(getRef())

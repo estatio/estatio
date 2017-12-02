@@ -60,7 +60,7 @@ public enum ChargeGroup_enum implements PersonaWithBuilderScript<ChargeGroup, Ch
         return repository.findChargeGroup(ref);
     }
 
-    public ChargeGroupBuilder toBuilderScript() {
+    public ChargeGroupBuilder builder() {
         return new ChargeGroupBuilder()
                         .setRef(ref)
                         .setDescription(description);
@@ -71,7 +71,7 @@ public enum ChargeGroup_enum implements PersonaWithBuilderScript<ChargeGroup, Ch
         @Override
         protected void execute(final ExecutionContext executionContext) {
             for (final ChargeGroup_enum datum : values()) {
-                executionContext.executeChild(this, datum.toBuilderScript());
+                executionContext.executeChild(this, datum.builder());
             }
         }
     }

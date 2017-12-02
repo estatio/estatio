@@ -39,7 +39,7 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
 
     @Before
     public void setupData() {
-        runFixtureScript(Partitioning_enum.OxfPartitioning2015.toBuilderScript());
+        runFixtureScript(Partitioning_enum.OxfPartitioning2015.builder());
     }
 
     public static class validateNewPartitionItem extends PartitionItemRepository_IntegTest {

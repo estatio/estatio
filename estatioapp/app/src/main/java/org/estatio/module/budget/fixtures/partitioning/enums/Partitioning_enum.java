@@ -103,7 +103,7 @@ public enum Partitioning_enum
     }
 
     @Override
-    public PartitioningBuilder toBuilderScript() {
+    public PartitioningBuilder builder() {
         return new PartitioningBuilder()
                 .setPrereq((f, ec) -> {
                     final Budget budget = f.objectFor(budget_d, ec);

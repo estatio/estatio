@@ -41,11 +41,11 @@ public class IncomingInvoiceRepository_IntegTest extends CapexModuleIntegTestAbs
             @Override
             protected void execute(final ExecutionContext executionContext) {
 
-                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
-                executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.toBuilderScript());
-                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
-                executionContext.executeChild(this, BankAccount_enum.HelloWorldNl.toBuilderScript());
-                executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldNl.toBuilderScript());
+                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.builder());
+                executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.builder());
+                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.builder());
+                executionContext.executeChild(this, BankAccount_enum.HelloWorldNl.builder());
+                executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldNl.builder());
             }
         });
     }

@@ -33,9 +33,9 @@ import org.estatio.module.base.platform.applib.TickingFixtureClock;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.keytables.enums.KeyTable_enum;
 import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
-import org.estatio.module.capex.fixtures.IncomingInvoiceFixture;
-import org.estatio.module.capex.fixtures.OrderFixture;
-import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
+import org.estatio.module.capex.fixtures.incominginvoice.IncomingInvoiceFixture;
+import org.estatio.module.capex.fixtures.order.OrderFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargeFixture;
 import org.estatio.module.capex.fixtures.document.IncomingPdfFixture;
 import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
@@ -103,25 +103,25 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
         executionContext.executeChild(this, new DocFragmentDemoFixture());
         executionContext.executeChild(this, new DocFragmentSeedFixture());
-        executionContext.executeChild(this, Person_enum.LinusTorvaldsNl.toBuilderScript());
+        executionContext.executeChild(this, Person_enum.LinusTorvaldsNl.builder());
 
-        executionContext.executeChild(this, BankAccount_enum.AcmeNl.toBuilderScript());
-        executionContext.executeChild(this, BankAccountFaFa_enum.AcmeNl.toBuilderScript());
+        executionContext.executeChild(this, BankAccount_enum.AcmeNl.builder());
+        executionContext.executeChild(this, BankAccountFaFa_enum.AcmeNl.builder());
 
-        executionContext.executeChild(this, BankAccount_enum.HelloWorldNl.toBuilderScript());
-        executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldNl.toBuilderScript());
-        executionContext.executeChild(this, BankAccount_enum.HelloWorldGb.toBuilderScript());
-        executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldGb.toBuilderScript());
-        executionContext.executeChild(this, BankAccount_enum.TopModelGb.toBuilderScript());
+        executionContext.executeChild(this, BankAccount_enum.HelloWorldNl.builder());
+        executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldNl.builder());
+        executionContext.executeChild(this, BankAccount_enum.HelloWorldGb.builder());
+        executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldGb.builder());
+        executionContext.executeChild(this, BankAccount_enum.TopModelGb.builder());
         executionContext.executeChild(this, new BankAccountAndMandateForTopModelGb());
         executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
-        executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.toBuilderScript());
-        executionContext.executeChild(this, BankAccount_enum.MediaXGb.toBuilderScript());
+        executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.builder());
+        executionContext.executeChild(this, BankAccount_enum.MediaXGb.builder());
         executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002Gb());
-        executionContext.executeChild(this, Lease_enum.OxfPret004Gb.toBuilderScript());
-        executionContext.executeChild(this, BankAccount_enum.PretGb.toBuilderScript());
-        executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.toBuilderScript());
-        executionContext.executeChild(this, BankAccount_enum.MiracleGb.toBuilderScript());
+        executionContext.executeChild(this, Lease_enum.OxfPret004Gb.builder());
+        executionContext.executeChild(this, BankAccount_enum.PretGb.builder());
+        executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.builder());
+        executionContext.executeChild(this, BankAccount_enum.MiracleGb.builder());
 
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentOf2ForOxfMiracl005Gb());
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeOf2ForOxfMiracl005Gb());
@@ -130,7 +130,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForPercentageForOxfMiracl005Gb());
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForDepositForOxfMiracl005Gb());
 
-        executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toBuilderScript());
+        executionContext.executeChild(this, Lease_enum.KalPoison001Nl.builder());
         executionContext.executeChild(this, new BankAccountAndMandateForPoisonNl());
         executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003Gb());
         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
@@ -138,40 +138,40 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005());
         executionContext.executeChild(this, new GuaranteeForOxfTopModel001Gb());
-        executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
-        executionContext.executeChild(this, BankAccount_enum.TopModelGb.toBuilderScript());
-        executionContext.executeChild(this, Person_enum.GinoVannelliGb.toBuilderScript());
+        executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
+        executionContext.executeChild(this, BankAccount_enum.TopModelGb.builder());
+        executionContext.executeChild(this, Person_enum.GinoVannelliGb.builder());
 
-        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.GraIt.toBuilderScript());
-        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.VivFr.toBuilderScript());
-        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.HanSe.toBuilderScript());
-        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.MnsFr.toBuilderScript());
-        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.MacFr.toBuilderScript());
+        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.GraIt.builder());
+        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.VivFr.builder());
+        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.HanSe.builder());
+        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.MnsFr.builder());
+        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.MacFr.builder());
 
-        executionContext.executeChild(this, Person_enum.DylanOfficeAdministratorGb.toBuilderScript()); // gb mailroom
-        executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.toBuilderScript());  // gb property mgr for OXF
-        executionContext.executeChild(this, Person_enum.FaithConwayGb.toBuilderScript());  // gb country administrator
-        executionContext.executeChild(this, Person_enum.OscarCountryDirectorGb.toBuilderScript());  // gb country director
-        executionContext.executeChild(this, Person_enum.EmmaTreasurerGb.toBuilderScript());   // gb treasurer
-        executionContext.executeChild(this, Person_enum.ThibaultOfficerAdministratorFr.toBuilderScript());  // fr mailroom
-        executionContext.executeChild(this, Person_enum.FifineLacroixFr.toBuilderScript());  // fr property mgr for VIV and MNS
-        executionContext.executeChild(this, Person_enum.OlivePropertyManagerFr.toBuilderScript());  // fr property mgr for MAC
-        executionContext.executeChild(this, Person_enum.RosaireEvrardFr.toBuilderScript());  // fr country administrator
-        executionContext.executeChild(this, Person_enum.GabrielHerveFr.toBuilderScript());  // fr country director
-        executionContext.executeChild(this, Person_enum.BrunoTreasurerFr.toBuilderScript()); // fr treasurer
+        executionContext.executeChild(this, Person_enum.DylanOfficeAdministratorGb.builder()); // gb mailroom
+        executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.builder());  // gb property mgr for OXF
+        executionContext.executeChild(this, Person_enum.FaithConwayGb.builder());  // gb country administrator
+        executionContext.executeChild(this, Person_enum.OscarCountryDirectorGb.builder());  // gb country director
+        executionContext.executeChild(this, Person_enum.EmmaTreasurerGb.builder());   // gb treasurer
+        executionContext.executeChild(this, Person_enum.ThibaultOfficerAdministratorFr.builder());  // fr mailroom
+        executionContext.executeChild(this, Person_enum.FifineLacroixFr.builder());  // fr property mgr for VIV and MNS
+        executionContext.executeChild(this, Person_enum.OlivePropertyManagerFr.builder());  // fr property mgr for MAC
+        executionContext.executeChild(this, Person_enum.RosaireEvrardFr.builder());  // fr country administrator
+        executionContext.executeChild(this, Person_enum.GabrielHerveFr.builder());  // fr country director
+        executionContext.executeChild(this, Person_enum.BrunoTreasurerFr.builder()); // fr treasurer
 
-        executionContext.executeChild(this, Project_enum.KalProject1.toBuilderScript());
-        executionContext.executeChild(this, Project_enum.KalProject2.toBuilderScript());
-        executionContext.executeChild(this, Project_enum.GraProject.toBuilderScript());
+        executionContext.executeChild(this, Project_enum.KalProject1.builder());
+        executionContext.executeChild(this, Project_enum.KalProject2.builder());
+        executionContext.executeChild(this, Project_enum.GraProject.builder());
 
-        executionContext.executeChild(this, Budget_enum.OxfBudget2015.toBuilderScript());
-        executionContext.executeChild(this, Budget_enum.OxfBudget2016.toBuilderScript());
-        executionContext.executeChild(this, KeyTable_enum.Oxf2015Area.toBuilderScript());
-        executionContext.executeChild(this, KeyTable_enum.Oxf2015Count.toBuilderScript());
+        executionContext.executeChild(this, Budget_enum.OxfBudget2015.builder());
+        executionContext.executeChild(this, Budget_enum.OxfBudget2016.builder());
+        executionContext.executeChild(this, KeyTable_enum.Oxf2015Area.builder());
+        executionContext.executeChild(this, KeyTable_enum.Oxf2015Count.builder());
 
-        executionContext.executeChild(this, Partitioning_enum.OxfPartitioning2015.toBuilderScript());
+        executionContext.executeChild(this, Partitioning_enum.OxfPartitioning2015.builder());
 
-        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.CARTEST.toBuilderScript());
+        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.CARTEST.builder());
         executionContext.executeChild(this, new NumeratorForOrganisationFra());
 
         executionContext.executeChild(this, new CreateInvoiceNumerators());

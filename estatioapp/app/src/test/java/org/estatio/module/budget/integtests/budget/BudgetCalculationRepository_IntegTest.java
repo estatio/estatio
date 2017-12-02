@@ -45,7 +45,7 @@ public class BudgetCalculationRepository_IntegTest extends BudgetModuleIntegTest
 
     @Before
     public void setupData() {
-        runFixtureScript(Partitioning_enum.OxfPartitioning2015.toBuilderScript());
+        runFixtureScript(Partitioning_enum.OxfPartitioning2015.builder());
     }
 
     public static class FindUnique extends BudgetCalculationRepository_IntegTest {

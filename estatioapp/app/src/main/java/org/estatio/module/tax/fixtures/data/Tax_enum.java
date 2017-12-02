@@ -53,7 +53,7 @@ public enum Tax_enum implements PersonaWithBuilderScript<Tax, TaxBuilder>, Perso
 
 
     @Override
-    public TaxBuilder toBuilderScript() {
+    public TaxBuilder builder() {
 
         return new TaxBuilder()
                 .setPrereq((f,ec) -> f.setCountry(f.objectFor(country_d, ec)))
