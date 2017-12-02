@@ -39,7 +39,7 @@ public class LeaseItemAndLeaseTermForPercentageForOxfMiracl005Gb extends LeaseIt
     private void createLeaseTermsForOxfMiracl005(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.toBuilderScript());
+        executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.builder());
 
         // exec
         final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);

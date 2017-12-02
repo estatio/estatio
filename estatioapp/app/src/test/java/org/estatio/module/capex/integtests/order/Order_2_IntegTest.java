@@ -29,14 +29,15 @@ import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.order.approval.triggers.Order_amend;
 import org.estatio.module.capex.dom.order.approval.triggers.Order_completeWithApproval;
 import org.estatio.module.capex.dom.order.approval.triggers.Order_discard;
-import org.estatio.module.capex.fixtures.OrderFixture;
-import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
+import org.estatio.module.capex.fixtures.order.OrderFixture;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargeFixture;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.incode.module.base.integtests.VT.ld;
 import static org.junit.Assert.assertNotNull;
 
 public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
@@ -53,12 +54,12 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
             protected void execute(final FixtureScript.ExecutionContext executionContext) {
 
                 // taken from the DocumentTypesAndTemplatesSeedService (not run in integ tests by default)
-                final LocalDate templateDate = new LocalDate(2012,1,1);
+                final LocalDate templateDate = ld(2012,1,1);
                 executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture(templateDate));
 
                 executionContext.executeChild(this, new IncomingChargeFixture());
                 executionContext.executeChild(this, orderFixture);
-                executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.toBuilderScript());
+                executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.builder());
             }
         });
         order = orderFixture.getOrder();
@@ -191,5 +192,6 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
 
     @Inject
     IncomingDocumentRepository incomingDocumentRepository;
+
 
 }

@@ -15,7 +15,7 @@ import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwner
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
-import org.estatio.module.capex.fixtures.document.IncomingPdfFixture;
+import org.estatio.module.capex.fixtures.document.enums.IncomingPdf_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
@@ -31,15 +31,16 @@ public class IncomingDocumentRepository_IntegTest extends CapexModuleIntegTestAb
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
-                executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.toBuilderScript());
-                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
-                executionContext.executeChild(this, BankAccount_enum.HelloWorldNl.toBuilderScript());
-                executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldNl.toBuilderScript());
+                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.builder());
+                executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.builder());
+                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.builder());
+                executionContext.executeChild(this, BankAccount_enum.HelloWorldNl.builder());
+                executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldNl.builder());
 
                 executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
 
-                executionContext.executeChild(this, new IncomingPdfFixture());
+                executionContext.executeChild(this, IncomingPdf_enum.FakeOrder1.builder());
+                executionContext.executeChild(this, IncomingPdf_enum.FakeInvoice1.builder());
             }
         });
     }

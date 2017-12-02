@@ -59,7 +59,7 @@ public class PartyRole_IntegTest extends AssetModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, OrganisationAndComms_enum.AcmeNl.toBuilderScript());
+                    executionContext.executeChild(this, OrganisationAndComms_enum.AcmeNl.builder());
                 }
             });
         }

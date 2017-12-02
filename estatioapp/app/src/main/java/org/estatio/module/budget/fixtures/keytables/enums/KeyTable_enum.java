@@ -45,8 +45,14 @@ public enum KeyTable_enum implements PersonaWithBuilderScript<KeyTable, KeyTable
             FoundationValueType.AREA, KeyValueMethod.PROMILLE, 3),
     Oxf2015Count(
             Budget_enum.OxfBudget2015, "Service Charges By Count year 2015",
-            FoundationValueType.COUNT, KeyValueMethod.PROMILLE, 3)
-    ,;
+            FoundationValueType.COUNT, KeyValueMethod.PROMILLE, 3),
+    Bud2015Area(
+            Budget_enum.BudBudget2015, "table1",
+            FoundationValueType.AREA, KeyValueMethod.PROMILLE, 6),
+    Bud2015Count(
+            Budget_enum.BudBudget2015, "table2",
+            FoundationValueType.COUNT, KeyValueMethod.PROMILLE, 6),
+    ;
 
     private final Budget_enum budget_d;
     private final String name;
@@ -58,7 +64,8 @@ public enum KeyTable_enum implements PersonaWithBuilderScript<KeyTable, KeyTable
         return budget_d.getStartDate();
     }
 
-    @Override public KeyTableBuilder toBuilderScript() {
+    @Override
+    public KeyTableBuilder builder() {
         return new KeyTableBuilder()
                 .setPrereq((f,ec) -> f.setBudget(f.objectFor(budget_d, ec)))
                 .setName(name)

@@ -53,7 +53,7 @@ public class Agreement_IntegTest extends LeaseModuleIntegTestAbstract {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, Lease_enum.KalPoison001Nl.toBuilderScript());
+                executionContext.executeChild(this, Lease_enum.KalPoison001Nl.builder());
             }
         });
     }

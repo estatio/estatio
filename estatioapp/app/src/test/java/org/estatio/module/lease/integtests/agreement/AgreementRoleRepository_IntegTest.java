@@ -92,7 +92,7 @@ public class AgreementRoleRepository_IntegTest extends LeaseModuleIntegTestAbstr
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
+                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
             }
         });
     }
@@ -118,7 +118,7 @@ public class AgreementRoleRepository_IntegTest extends LeaseModuleIntegTestAbstr
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
                 }
             });
         }

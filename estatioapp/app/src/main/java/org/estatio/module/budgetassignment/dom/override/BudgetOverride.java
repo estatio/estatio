@@ -151,7 +151,7 @@ public abstract class BudgetOverride extends UdoDomainObject2<BudgetOverride> {
             } else {
                 switch (getType()) {
                 case BUDGETED:
-                    resultBudgeted = valueFor(startDate, BudgetCalculationType.BUDGETED);
+                        resultBudgeted = valueFor(startDate, BudgetCalculationType.BUDGETED);
                     if (resultBudgeted!=null) {
                         results.add(resultBudgeted);
                     }

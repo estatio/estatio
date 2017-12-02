@@ -47,8 +47,8 @@ public class KeyItemRepository_IntegTest extends BudgetModuleIntegTestAbstract {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, Budget_enum.OxfBudget2015.toBuilderScript());
-                executionContext.executeChild(this, Budget_enum.OxfBudget2016.toBuilderScript());
+                executionContext.executeChild(this, Budget_enum.OxfBudget2015.builder());
+                executionContext.executeChild(this, Budget_enum.OxfBudget2016.builder());
 
             }
         });

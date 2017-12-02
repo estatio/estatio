@@ -16,19 +16,27 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.capex.fixtures.project;
+package org.estatio.module.capex.fixtures.project.builders;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.inject.Inject;
+
+import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.tax.dom.Tax;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -54,9 +62,23 @@ public final class ProjectBuilder extends BuilderScriptAbstract<Project, Project
     private String atPath;
     @Getter @Setter
     private Project parent;
+    @Getter @Setter
+    private List<ItemSpec> itemSpecs = Lists.newArrayList();
 
     @Getter
     private Project object;
+
+    @AllArgsConstructor
+    @Data
+    public static class ItemSpec {
+        private final Charge charge;
+        private final String description;
+        private final BigDecimal budgetedAmount;
+        private final LocalDate startDate;
+        private final LocalDate endDate;
+        private final Property property;
+        private final Tax tax;
+    }
 
     @Override
     protected void execute(final ExecutionContext ec) {
@@ -64,8 +86,14 @@ public final class ProjectBuilder extends BuilderScriptAbstract<Project, Project
         checkParam("reference", ec, String.class);
         checkParam("name", ec, String.class);
 
-        object = projectRepository.create(reference, name, startDate, endDate, atPath, parent);
-        ec.addResult(this, reference, object);
+        final Project project = projectRepository.create(reference, name, startDate, endDate, atPath, parent);
+        ec.addResult(this, reference, project);
+
+        for (ItemSpec i : itemSpecs) {
+            project.addItem(i.charge, i.description, i.budgetedAmount, i.startDate, i.endDate, i.property, i.tax );
+        }
+
+        object = project;
     }
 
 

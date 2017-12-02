@@ -60,8 +60,8 @@ public class FinancialAccount_IntegTest extends AssetFinancialModuleIntegTestAbs
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, BankAccount_enum.HelloWorldGb.toBuilderScript());
-                    executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldGb.toBuilderScript());
+                    executionContext.executeChild(this, BankAccount_enum.HelloWorldGb.builder());
+                    executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldGb.builder());
                 }
             });
         }
@@ -122,8 +122,8 @@ public class FinancialAccount_IntegTest extends AssetFinancialModuleIntegTestAbs
         public void setUp() throws Exception {
 
             runFixtureScript(
-                    BankAccountFaFa_enum.HelloWorldNl.toBuilderScript(),
-                    OrganisationAndComms_enum.HelloWorldNl.toBuilderScript()
+                    BankAccountFaFa_enum.HelloWorldNl.builder(),
+                    OrganisationAndComms_enum.HelloWorldNl.builder()
             );
 
             bankAccount = BankAccountFaFa_enum.HelloWorldNl.getBankAccount_d().findUsing(serviceRegistry);

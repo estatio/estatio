@@ -127,7 +127,7 @@ public enum OrganisationAndComms_enum
     }
 
     @Override
-    public OrganisationAndCommsBuilder toBuilderScript() {
+    public OrganisationAndCommsBuilder builder() {
         return new OrganisationAndCommsBuilder()
                 .setAtPath(getApplicationTenancy().getPath())
                 .setPartyName(getName())

@@ -209,7 +209,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     }
 
     @Override
-    public LeaseBuilder toBuilderScript() {
+    public LeaseBuilder builder() {
         return new LeaseBuilder()
                 .setPrereq((f,ec) -> f.setProperty(f.objectFor(propertyAndUnits_d.getProperty_d(), ec)))
                 .setReference(ref)

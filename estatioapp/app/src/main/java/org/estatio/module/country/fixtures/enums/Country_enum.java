@@ -43,7 +43,7 @@ public enum Country_enum implements PersonaWithBuilderScript<Country, CountryBui
     }
 
     @Override
-    public CountryBuilder toBuilderScript() {
+    public CountryBuilder builder() {
         return new CountryBuilder()
                     .setRef3(ref3)
                     .setRef2(ref2)

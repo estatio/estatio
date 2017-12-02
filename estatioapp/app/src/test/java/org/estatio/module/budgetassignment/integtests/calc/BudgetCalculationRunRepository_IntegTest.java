@@ -49,10 +49,10 @@ public class BudgetCalculationRunRepository_IntegTest extends BudgetAssignmentMo
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, Budget_enum.OxfBudget2015.toBuilderScript());
-                executionContext.executeChild(this, Budget_enum.OxfBudget2016.toBuilderScript());
+                executionContext.executeChild(this, Budget_enum.OxfBudget2015.builder());
+                executionContext.executeChild(this, Budget_enum.OxfBudget2016.builder());
 
-                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
+                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
             }
         });
         propertyOxf = Property_enum.OxfGb.findUsing(serviceRegistry);

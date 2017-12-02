@@ -18,8 +18,11 @@
 package org.estatio.module.budget.fixtures.budgets.builders;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.inject.Inject;
+
+import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
 
@@ -30,6 +33,8 @@ import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.charge.dom.Charge;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,14 +51,16 @@ public class BudgetBuilder extends BuilderScriptAbstract<Budget, BudgetBuilder> 
     Property property;
     @Getter @Setter
     LocalDate startDate;
+
     @Getter @Setter
-    Charge charge1;
-    @Getter @Setter
-    BigDecimal value1;
-    @Getter @Setter
-    Charge charge2;
-    @Getter @Setter
-    BigDecimal value2;
+    List<ItemSpec> itemSpecs = Lists.newArrayList();
+
+    @AllArgsConstructor
+    @Data
+    public static class ItemSpec {
+        private final Charge charge;
+        private final BigDecimal value;
+    }
 
     @Getter
     Budget object;
@@ -63,14 +70,11 @@ public class BudgetBuilder extends BuilderScriptAbstract<Budget, BudgetBuilder> 
 
         checkParam("property", executionContext, Property.class);
         checkParam("startDate", executionContext, LocalDate.class);
-        checkParam("charge1", executionContext, Charge.class);
-        checkParam("value1", executionContext, BigDecimal.class);
-        checkParam("charge2", executionContext, Charge.class);
-        checkParam("value2", executionContext, BigDecimal.class);
 
         Budget budget = budgetRepository.newBudget(property, startDate, startDate.plusYears(1).minusDays(1));
-        budget.newBudgetItem(value1, charge1);
-        budget.newBudgetItem(value2, charge2);
+        for (ItemSpec itemSpec : itemSpecs) {
+            budget.newBudgetItem(itemSpec.value, itemSpec.charge);
+        }
 
         executionContext.addResult(this, startDate.toString("yyyy-MM-dd"), budget);
 

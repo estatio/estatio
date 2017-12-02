@@ -21,8 +21,8 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_complete;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_discard;
-import org.estatio.module.capex.fixtures.IncomingInvoiceFixture;
-import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
+import org.estatio.module.capex.fixtures.incominginvoice.IncomingInvoiceFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargeFixture;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.dom.Charge;
@@ -58,7 +58,7 @@ public class IncomingInvoice_IntegTest extends CapexModuleIntegTestAbstract {
                 executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
                 executionContext.executeChild(this, new IncomingChargeFixture());
                 executionContext.executeChild(this, new IncomingInvoiceFixture());
-                executionContext.executeChild(this, BankAccount_enum.TopModelGb.toBuilderScript());
+                executionContext.executeChild(this, BankAccount_enum.TopModelGb.builder());
             }
         });
     }

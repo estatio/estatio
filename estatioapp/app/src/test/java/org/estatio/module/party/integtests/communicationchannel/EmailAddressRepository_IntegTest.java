@@ -48,7 +48,7 @@ public class EmailAddressRepository_IntegTest extends PartyModuleIntegTestAbstra
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
+                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.builder());
             }
         });
     }

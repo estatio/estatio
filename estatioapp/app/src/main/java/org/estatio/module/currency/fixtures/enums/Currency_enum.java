@@ -45,7 +45,7 @@ public enum Currency_enum implements PersonaWithBuilderScript<Currency,CurrencyB
     private final String name;
 
     @Override
-    public CurrencyBuilder toBuilderScript() {
+    public CurrencyBuilder builder() {
         return new CurrencyBuilder()
                         .setReference(reference)
                 .setName(name);
@@ -62,7 +62,7 @@ public enum Currency_enum implements PersonaWithBuilderScript<Currency,CurrencyB
         @Override
         protected void execute(ExecutionContext executionContext) {
             for (final Currency_enum datum : values()) {
-                executionContext.executeChildT(this, datum.toBuilderScript());
+                executionContext.executeChildT(this, datum.builder());
             }
         }
 

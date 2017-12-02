@@ -47,7 +47,7 @@ public class Occupancy_IntegTest extends LeaseModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.toBuilderScript());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
                 }
             });
         }

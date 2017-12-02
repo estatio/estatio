@@ -44,7 +44,7 @@ import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectItem;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.capex.dom.task.TaskRepository;
-import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargeFixture;
 import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 
@@ -61,7 +61,7 @@ public class OrderInvoiceImport_IntegTest extends CapexModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final FixtureScript.ExecutionContext executionContext) {
-                    executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
+                    executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.builder());
                 }
             });
 

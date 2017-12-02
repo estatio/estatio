@@ -104,7 +104,7 @@ public enum PropertyAndUnitsAndOwnerAndManager_enum implements
     }
 
     @Override
-    public PropertyAndUnitsAndOwnerAndManagerBuilder toBuilderScript() {
+    public PropertyAndUnitsAndOwnerAndManagerBuilder builder() {
         final Property_enum property_d = getProperty_d();
 
         return new PropertyAndUnitsAndOwnerAndManagerBuilder()

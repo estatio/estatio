@@ -70,7 +70,7 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003 extends Invo
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldNl.toBuilderScript());
+        executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldNl.builder());
 
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentOf2ForOxfPoison003Gb());
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfPoison003Gb());

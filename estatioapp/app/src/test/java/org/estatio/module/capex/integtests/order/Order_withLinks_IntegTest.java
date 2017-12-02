@@ -29,9 +29,9 @@ import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.order.approval.triggers.Order_discard;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.project.ProjectRepository;
-import org.estatio.module.capex.fixtures.IncomingInvoiceFixture;
-import org.estatio.module.capex.fixtures.OrderFixture;
-import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
+import org.estatio.module.capex.fixtures.incominginvoice.IncomingInvoiceFixture;
+import org.estatio.module.capex.fixtures.order.OrderFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargeFixture;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.dom.ChargeRepository;
@@ -56,11 +56,11 @@ public class Order_withLinks_IntegTest extends CapexModuleIntegTestAbstract {
                 executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
                 executionContext.executeChild(this, new IncomingChargeFixture());
                 executionContext.executeChild(this, orderFixture);
-                executionContext.executeChild(this, Budget_enum.OxfBudget2015.toBuilderScript());
-                executionContext.executeChild(this, Budget_enum.OxfBudget2016.toBuilderScript());
+                executionContext.executeChild(this, Budget_enum.OxfBudget2015.builder());
+                executionContext.executeChild(this, Budget_enum.OxfBudget2016.builder());
 
                 executionContext.executeChild(this, new IncomingInvoiceFixture());
-                executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.toBuilderScript());
+                executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.builder());
             }
         });
         order = orderFixture.getOrder();

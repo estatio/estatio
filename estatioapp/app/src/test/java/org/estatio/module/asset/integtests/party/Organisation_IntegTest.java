@@ -78,7 +78,7 @@ public class Organisation_IntegTest extends AssetModuleIntegTestAbstract {
         public void setupData() {
             runFixtureScript(new FixtureScript() {
                 @Override protected void execute(final ExecutionContext executionContext) {
-                    executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
+                    executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.builder());
                 }
             });
 

@@ -69,7 +69,7 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001 extends Invo
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, seller_d.toBuilderScript());
+        executionContext.executeChild(this, seller_d.builder());
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
 
         // exec

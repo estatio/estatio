@@ -70,8 +70,8 @@ public class IndexBuilder extends BuilderScriptAbstract<Index, IndexBuilder> {
     public static class Value {
         final int year;
         final double[] values;
-        final double averageUNUSED;
     }
+
     @Getter
     private Index object;
 

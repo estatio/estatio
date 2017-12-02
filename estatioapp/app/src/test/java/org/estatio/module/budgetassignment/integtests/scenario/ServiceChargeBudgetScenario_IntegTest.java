@@ -13,9 +13,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
@@ -24,6 +22,8 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetcalculation.Status;
 import org.estatio.module.budget.dom.keytable.KeyTable;
+import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
+import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLink;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLinkRepository;
@@ -39,8 +39,8 @@ import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValueRepos
 import org.estatio.module.budgetassignment.dom.service.BudgetAssignmentService;
 import org.estatio.module.budgetassignment.dom.service.CalculationResultViewModel;
 import org.estatio.module.budgetassignment.dom.service.DetailedCalculationResultViewmodel;
-import org.estatio.module.budgetassignment.fixtures.budget.personas.BudgetForBud;
-import org.estatio.module.budgetassignment.fixtures.partitioning.personas.PartitioningAndItemsForBudBudget2015;
+import org.estatio.module.budgetassignment.fixtures.override.enums.BudgetOverrideForFlatRate_enum;
+import org.estatio.module.budgetassignment.fixtures.override.enums.BudgetOverrideForMax_enum;
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
@@ -57,9 +57,7 @@ import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class
-
-ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
+public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
 
     @Inject
     PropertyRepository propertyRepository;
@@ -105,15 +103,24 @@ ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModuleIntegTestAbs
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new PartitioningAndItemsForBudBudget2015());
-            }
+                executionContext.executeChild(this, Partitioning_enum.BudPartitioning2015.builder());
+
+                executionContext.executeChildT(this, Lease_enum.BudPoison001Nl.builder());
+                executionContext.executeChildT(this, Lease_enum.BudMiracle002Nl.builder());
+                executionContext.executeChildT(this, Lease_enum.BudHello003Nl.builder());
+                executionContext.executeChildT(this, Lease_enum.BudDago004Nl.builder());
+                executionContext.executeChildT(this, Lease_enum.BudNlBank004Nl.builder());
+                executionContext.executeChildT(this, Lease_enum.BudHyper005Nl.builder());
+                executionContext.executeChildT(this, Lease_enum.BudHello006Nl.builder());
+                executionContext.executeChildT(this, BudgetOverrideForFlatRate_enum.BudMiracle002Nl_2015.builder());
+                executionContext.executeChildT(this, BudgetOverrideForMax_enum.BudPoison001Nl_2015.builder());
+          }
         });
     }
 
 
     public static class Calculate extends ServiceChargeBudgetScenario_IntegTest {
 
-        Property property;
         Budget budget;
         List<BudgetCalculation> calculations;
         List<BudgetCalculationRun> calculationRuns;
@@ -134,8 +141,8 @@ ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModuleIntegTestAbs
         @Before
         public void setup() {
             // given
-            property = Property_enum.BudNl.findUsing(serviceRegistry);
-            budget = budgetRepository.findByPropertyAndStartDate(property, BudgetForBud.BUDGET_2015_START_DATE);
+            budget = Budget_enum.BudBudget2015.findUsing(serviceRegistry);
+
             //**IMPORTANT!** truncate keytable
             KeyTable key2 = budget.getKeyTables().last();
             key2.getItems().last().deleteBudgetKeyItem();
@@ -354,12 +361,12 @@ ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModuleIntegTestAbs
             validateLeaseItemsAndTerms(
                     leasePoison,
                     Arrays.asList(BVAL_POISON_1, U1_BVAL_2.setScale(2, BigDecimal.ROUND_HALF_UP)),
-                    BudgetForBud.BUDGET_2015_START_DATE
+                    Budget_enum.BudBudget2015.getStartDate()
             );
             validateLeaseItemsAndTerms(
                     leaseMiracle,
                     Arrays.asList(BVAL_MIRACLE_1, U2_BVAL_2.setScale(2, BigDecimal.ROUND_HALF_UP)),
-                    BudgetForBud.BUDGET_2015_START_DATE
+                    Budget_enum.BudBudget2015.getStartDate()
             );
             validateLeaseItemsAndTerms(
                     leaseHello3,
@@ -369,7 +376,7 @@ ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModuleIntegTestAbs
             validateLeaseItemsAndTerms(
                     leaseDago,
                     Arrays.asList(U4_BVAL_1.add(U7_BVAL_1).setScale(2, BigDecimal.ROUND_HALF_UP), U4_BVAL_2.add(U7_BVAL_2).setScale(2, BigDecimal.ROUND_HALF_UP)),
-                    BudgetForBud.BUDGET_2015_START_DATE
+                    Budget_enum.BudBudget2015.getStartDate()
             );
             validateLeaseItemsAndTerms(
                     leaseNlBank,
@@ -402,7 +409,7 @@ ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModuleIntegTestAbs
             assertThat(term1.getBudgetedValue()).isEqualTo(values.get(0));
             assertThat(term1.getAuditedValue()).isNull();
             assertThat(term1.getStartDate()).isEqualTo(startDate);
-            assertThat(term1.getEndDate()).isEqualTo(BudgetForBud.BUDGET_2015_END_DATE);
+            assertThat(term1.getEndDate()).isEqualTo(Budget_enum.BudBudget2015.getEndDate());
 
             assertThat(lease.getItems().last().getCharge()).isEqualTo(invoiceCharge2);
             assertThat(lease.getItems().last().getStartDate()).isEqualTo(startDate);
@@ -416,7 +423,7 @@ ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModuleIntegTestAbs
             assertThat(term2.getBudgetedValue()).isEqualTo(values.get(1));
             assertThat(term2.getAuditedValue()).isNull();
             assertThat(term2.getStartDate()).isEqualTo(startDate);
-            assertThat(term2.getEndDate()).isEqualTo(BudgetForBud.BUDGET_2015_END_DATE);
+            assertThat(term2.getEndDate()).isEqualTo(Budget_enum.BudBudget2015.getEndDate());
 
         }
 

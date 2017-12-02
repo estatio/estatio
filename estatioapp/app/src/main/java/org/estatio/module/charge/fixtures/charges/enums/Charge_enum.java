@@ -112,9 +112,7 @@ public enum Charge_enum implements PersonaWithBuilderScript<Charge, ChargeBuilde
     GbEntryFee ( Country_enum.GBR, ChargeNoCountry_enum.EntryFee, Tax_enum.GB_VATSTD),
     GbTax ( Country_enum.GBR, ChargeNoCountry_enum.Tax, Tax_enum.GB_VATSTD),
     GbServiceChargeIndexable( Country_enum.GBR, ChargeNoCountry_enum.ServiceChargeIndexable, Tax_enum.GB_VATSTD),
-    GbMarketing ( Country_enum.GBR, ChargeNoCountry_enum.Marketing, Tax_enum.GB_VATSTD),
-
-    ;
+    GbMarketing ( Country_enum.GBR, ChargeNoCountry_enum.Marketing, Tax_enum.GB_VATSTD);
 
     private final Country_enum country_d;
     private final ApplicationTenancy_enum applicationTenancy_d;
@@ -158,7 +156,7 @@ public enum Charge_enum implements PersonaWithBuilderScript<Charge, ChargeBuilde
     }
 
 
-    public ChargeBuilder toBuilderScript() {
+    public ChargeBuilder builder() {
         return new ChargeBuilder()
                 .setRef(Charge_enum.this.getRef())
                 .setName(Charge_enum.this.getName())
@@ -174,7 +172,7 @@ public enum Charge_enum implements PersonaWithBuilderScript<Charge, ChargeBuilde
         @Override
         protected void execute(final ExecutionContext executionContext) {
             for (Charge_enum datum : values()) {
-                final ChargeBuilder chargeBuilder = datum.toBuilderScript();
+                final ChargeBuilder chargeBuilder = datum.builder();
                 final Charge charge = executionContext.executeChildT(this, chargeBuilder).getObject();
                 executionContext.addResult(this, charge.getReference(), charge);
             }

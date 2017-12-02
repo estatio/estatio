@@ -1,4 +1,4 @@
-package org.estatio.module.capex.fixtures;
+package org.estatio.module.capex.fixtures.order;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.asset.fixtures.property.enums.Property_enum;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.capex.app.order.IncomingDocAsOrderViewModel;
 import org.estatio.module.capex.app.order.Order_switchView;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
@@ -28,12 +28,14 @@ import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
-import org.estatio.module.capex.fixtures.document.personas.IncomingPdfForFakeOrder2;
-import org.estatio.module.capex.fixtures.project.personas.ProjectForOxf;
+import org.estatio.module.capex.fixtures.document.enums.IncomingPdf_enum;
+import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
+import org.estatio.module.charge.fixtures.incoming.enums.IncomingCharge_enum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;
@@ -44,34 +46,32 @@ import lombok.Getter;
 public class OrderFixture extends FixtureScript {
 
     @Override
-    protected void execute(final ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext ec) {
 
         // prereqs
-        executionContext.executeChild(this, new ProjectForOxf());
-        executionContext.executeChild(this, new IncomingPdfForFakeOrder2().setRunAs("estatio-user-gb"));
-        executionContext.executeChild(this, Person_enum.DylanOfficeAdministratorGb.toBuilderScript());
+        final Tax taxForGbr = Tax_enum.GB_VATSTD.builder().build(this, ec).getObject();
+        final Party orgTopModelGb = OrganisationAndComms_enum.TopModelGb.builder().build(this, ec).getObject();
+        final Party orgHelloWorldGb = OrganisationAndComms_enum.HelloWorldGb.builder().build(this, ec).getObject();
+        final Project projectForOxf = Project_enum.OxfProject.builder().build(this, ec).getObject();
+        final Property propertyForOxf = PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.builder().build(this, ec).getObject();
+        final Person dylanPerson = Person_enum.DylanOfficeAdministratorGb.builder().build(this, ec).getObject();
+        final Charge chargeWorks = IncomingCharge_enum.FrWorks.findUsing(serviceRegistry);
+
 
         // given a document has been scanned and uploaded
-        Document fakeOrder2Doc = incomingDocumentRepository.matchAllIncomingDocumentsByName(IncomingPdfForFakeOrder2.resourceName).get(0);
+        final Document fakeOrder2Doc =
+                IncomingPdf_enum.FakeOrder2.builder().setRunAs("estatio-user-gb").build(this, ec).getObject();
         fakeOrder2Doc.setCreatedAt(new DateTime(2014,3,5,10,0));
         fakeOrder2Doc.setAtPath("/GBR");
 
         // given we categorise for a property
-        final Property propertyForOxf = Property_enum.OxfGb.findUsing(serviceRegistry);
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(Person_enum.DylanOfficeAdministratorGb.getSecurityUserName(), () -> {
+        sudoService.sudo(dylanPerson.getUsername(), () -> {
 
             wrap(mixin(Document_categoriseAsOrder.class,fakeOrder2Doc)).act(propertyForOxf, "");
 
             // given most/all of the info has been completed  (not using our view model here).
-            final Project projectForOxf = projectRepository.findByReference("OXF-02");
-            final Tax taxForGbr = taxRepository.findByReference(Tax_enum.GB_VATSTD.getReference());
-
-            final Party orgTopModelGb = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
-            final Party orgHelloWorldGb = partyRepository.findPartyByReference(
-                    OrganisationAndComms_enum.HelloWorldGb.getRef());
-            final Charge chargeWorks = chargeRepository.findByReference("WORKS");
 
             Order fakeOrder = orderRepository.findOrderByDocumentName("fakeOrder2.pdf").get(0);
 

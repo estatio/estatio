@@ -44,7 +44,7 @@ public abstract class PropertyAndUnitsAndOwnerAndManagerAbstract extends Fixture
     @Override
     protected void execute(final ExecutionContext ec) {
 
-        data.toBuilderScript().build(this, ec);
+        data.builder().build(this, ec);
 
 //        property = new PropertyAndUnitsAndOwnerAndManagerBuilder()
 //                .setReference(data.getRef())

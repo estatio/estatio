@@ -40,7 +40,7 @@ public class LeaseItemAndLeaseTermForServiceChargeForOxfPoison003Gb extends Leas
     private void createLeaseTermsForOxfPoison003(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.toBuilderScript());
+        executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.builder());
 
         // exec
         final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);

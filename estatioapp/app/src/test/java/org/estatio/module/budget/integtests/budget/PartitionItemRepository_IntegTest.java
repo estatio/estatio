@@ -8,10 +8,7 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
@@ -22,10 +19,9 @@ import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
 import org.estatio.module.budget.dom.partioning.Partitioning;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
-import org.estatio.module.budget.fixtures.partitioning.personas.PartitioningAndItemsForOxfBudget2015;
+import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
 import org.estatio.module.budget.integtests.BudgetModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
-import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,22 +35,11 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
     BudgetRepository budgetRepository;
 
     @Inject
-    PropertyRepository propertyRepository;
-
-    @Inject
     KeyTableRepository keytablesRepository;
-
-    @Inject
-    ChargeRepository chargeRepository;
 
     @Before
     public void setupData() {
-        runFixtureScript(new FixtureScript() {
-            @Override
-            protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new PartitioningAndItemsForOxfBudget2015());
-            }
-        });
+        runFixtureScript(Partitioning_enum.OxfPartitioning2015.builder());
     }
 
     public static class validateNewPartitionItem extends PartitionItemRepository_IntegTest {

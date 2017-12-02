@@ -33,8 +33,8 @@ public class OrderRepository_IntegTest extends CapexModuleIntegTestAbstract {
             @Override
             protected void execute(final ExecutionContext executionContext) {
 
-                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toBuilderScript());
-                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toBuilderScript());
+                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.builder());
+                executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.builder());
             }
         });
     }
