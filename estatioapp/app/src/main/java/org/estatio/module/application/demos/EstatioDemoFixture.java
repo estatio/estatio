@@ -33,14 +33,14 @@ import org.estatio.module.base.platform.applib.TickingFixtureClock;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.keytables.enums.KeyTable_enum;
 import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
+import org.estatio.module.capex.fixtures.document.enums.IncomingPdf_enum;
 import org.estatio.module.capex.fixtures.incominginvoice.IncomingInvoiceFixture;
 import org.estatio.module.capex.fixtures.order.OrderFixture;
-import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargeFixture;
-import org.estatio.module.capex.fixtures.document.IncomingPdfFixture;
 import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.EstatioChargeModule;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargeFixture;
 import org.estatio.module.country.IncodeDomCountryModule;
 import org.estatio.module.currency.EstatioCurrencyModule;
 import org.estatio.module.guarantee.fixtures.personas.GuaranteeForOxfTopModel001Gb;
@@ -181,7 +181,9 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
         executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
         executionContext.executeChild(this, new DocumentTypesAndTemplatesForLeaseFixture());
-        executionContext.executeChild(this, new IncomingPdfFixture().setRunAs("estatio-user-fr"));
+        executionContext.executeChild(this, IncomingPdf_enum.FakeOrder1.builder().setRunAs("estatio-user-fr"));
+        executionContext.executeChild(this, IncomingPdf_enum.FakeInvoice1.builder().setRunAs("estatio-user-fr"));
+
 
         executionContext.executeChild(this, new OrderFixture());
 
