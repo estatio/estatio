@@ -69,8 +69,6 @@ public class OrganisationMenuTest {
         public void when_using_numerator_for_reference_and_no_numerator_found() throws Exception {
 
             // given
-            boolean useNumeratorForReference = true;
-
             context.checking(new Expectations() {{
                 allowing(mockNumeratorRepository).findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy);
                 will(returnValue(null));
@@ -79,10 +77,14 @@ public class OrganisationMenuTest {
             }});
 
             // when
-            String reason = organisationMenu.validateNewOrganisation(name, country, Collections.emptyList());
-
+            String reason = organisationMenu.validateNewOrganisation(null, name, country, Collections.emptyList());
             // then
             assertThat(reason).isEqualTo("No numerator found");
+
+            // and when
+            reason = organisationMenu.validateNewOrganisation(reference, name, country, Collections.emptyList());
+            // then
+            assertThat(reason).isNull();
         }
 
         @Test
@@ -99,10 +101,14 @@ public class OrganisationMenuTest {
             }});
 
             // when
-            String reason = organisationMenu.validateNewOrganisation(name, country, Collections.emptyList());
-
+            String reason = organisationMenu.validateNewOrganisation(null, name, country, Collections.emptyList());
             // then
             assertThat(reason).isNull();
+
+            // and when
+            reason = organisationMenu.validateNewOrganisation(reference, name, country, Collections.emptyList());
+            // then
+            assertThat(reason).isEqualTo("Reference must be left empty because a numerator is being used");
         }
 
     }
