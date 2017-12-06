@@ -32,6 +32,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.index.fixtures.enums.Index_enum;
 import org.estatio.module.invoice.dom.InvoiceRunType;
@@ -78,6 +79,8 @@ public class LeaseTermsForDeposit_IntegTest2 extends LeaseModuleIntegTestAbstrac
         });
     }
 
+    Charge chargeForRent;
+    Charge chargeForDeposit;
     Lease poisonLease010Advance;
     Lease poisonLease011Arrears;
     LeaseItem rentItem010;
@@ -109,6 +112,8 @@ public class LeaseTermsForDeposit_IntegTest2 extends LeaseModuleIntegTestAbstrac
         Property oxford = Property_enum.OxfGb.findUsing(serviceRegistry);
         final LocalDate dateOfInvoiceRun = new LocalDate(2011, 12, 1);
         setFixtureClockDate(dateOfInvoiceRun);
+        chargeForRent = Charge_enum.GbRent.findUsing(serviceRegistry);
+        chargeForDeposit = Charge_enum.GbDeposit.findUsing(serviceRegistry);
 
         poisonLease010Advance = Lease_enum.OxfPoison010ADVANCEGb.findUsing(serviceRegistry);
         rentItem010 = setUpRentItem(poisonLease010Advance, effectiveIndexationDateFor010Rent.minusYears(1));
@@ -139,16 +144,16 @@ public class LeaseTermsForDeposit_IntegTest2 extends LeaseModuleIntegTestAbstrac
         InvoiceForLease invoiceFor010Advance = invoiceForLeaseRepository.findByLease(poisonLease010Advance).get(0);
         assertThat(invoiceFor010Advance).isNotNull();
         assertThat(invoiceFor010Advance.getItems().size()).isEqualTo(2);
-        InvoiceItemForLease rentItem010 = (InvoiceItemForLease) invoiceFor010Advance.getItems().stream().filter(x->x.getCharge().equals(Charge_enum.GbRent.findUsing(serviceRegistry))).collect(Collectors.toList()).get(0);
-        InvoiceItemForLease depositItem010Advance = (InvoiceItemForLease) invoiceFor010Advance.getItems().stream().filter(x->x.getCharge().equals(Charge_enum.GbDeposit.findUsing(serviceRegistry))).collect(Collectors.toList()).get(0);
+        InvoiceItemForLease rentItem010 = (InvoiceItemForLease) invoiceFor010Advance.getItems().stream().filter(x->x.getCharge().equals(chargeForRent)).collect(Collectors.toList()).get(0);
+        InvoiceItemForLease depositItem010Advance = (InvoiceItemForLease) invoiceFor010Advance.getItems().stream().filter(x->x.getCharge().equals(chargeForDeposit)).collect(Collectors.toList()).get(0);
         assertThat(rentItem010.getNetAmount()).isEqualTo(quarterlyRentAfterIndexation);
         assertThat(depositItem010Advance.getNetAmount()).isEqualTo(depositValueAfterIndexation);
 
         InvoiceForLease invoiceFor011Arrears = invoiceForLeaseRepository.findByLease(poisonLease011Arrears).get(0);
         assertThat(invoiceFor011Arrears).isNotNull();
         assertThat(invoiceFor011Arrears.getItems().size()).isEqualTo(2);
-        InvoiceItemForLease rentItem011 = (InvoiceItemForLease) invoiceFor011Arrears.getItems().stream().filter(x->x.getCharge().equals(Charge_enum.GbRent.findUsing(serviceRegistry))).collect(Collectors.toList()).get(0);
-        InvoiceItemForLease depositItem011Arrears = (InvoiceItemForLease) invoiceFor011Arrears.getItems().stream().filter(x->x.getCharge().equals(Charge_enum.GbDeposit.findUsing(serviceRegistry))).collect(Collectors.toList()).get(0);
+        InvoiceItemForLease rentItem011 = (InvoiceItemForLease) invoiceFor011Arrears.getItems().stream().filter(x->x.getCharge().equals(chargeForRent)).collect(Collectors.toList()).get(0);
+        InvoiceItemForLease depositItem011Arrears = (InvoiceItemForLease) invoiceFor011Arrears.getItems().stream().filter(x->x.getCharge().equals(chargeForDeposit)).collect(Collectors.toList()).get(0);
         assertThat(rentItem011.getNetAmount()).isEqualTo(quarterlyRentAfterIndexation);
         assertThat(depositItem011Arrears.getNetAmount()).isEqualTo(depositValueBeforeIndexation); // The user expects that the indexation on 1-1-2012 - which is outside the quarter being invoiced in arrears - is NOT taken into account
 
@@ -159,7 +164,7 @@ public class LeaseTermsForDeposit_IntegTest2 extends LeaseModuleIntegTestAbstrac
         LeaseItem leaseItem = wrap(lease).newItem(
                 LeaseItemType.RENT,
                 LeaseAgreementRoleTypeEnum.LANDLORD,
-                Charge_enum.GbRent.findUsing(serviceRegistry),
+                chargeForRent,
                 InvoicingFrequency.QUARTERLY_IN_ADVANCE,
                 PaymentMethod.DIRECT_DEBIT,
                 effectiveIndexationDate);
@@ -182,7 +187,7 @@ public class LeaseTermsForDeposit_IntegTest2 extends LeaseModuleIntegTestAbstrac
         LeaseItem depositItem = wrap(lease).newItem(
                 LeaseItemType.DEPOSIT,
                 LeaseAgreementRoleTypeEnum.LANDLORD,
-                Charge_enum.GbDeposit.findUsing(serviceRegistry),
+                chargeForDeposit,
                 invoicingFrequency,
                 PaymentMethod.DIRECT_DEBIT,
                 startDateForItems);
