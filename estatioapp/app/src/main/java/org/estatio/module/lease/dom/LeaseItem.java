@@ -42,6 +42,7 @@ import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -71,8 +72,8 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.base.dom.with.WithSequence;
 
-import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.agreement.dom.role.IAgreementRoleType;
+import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPropertyLocal;
@@ -599,6 +600,7 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
+
     @Persistent(mappedBy = "leaseItem")
     @CollectionLayout(render = RenderType.EAGERLY, paged = PAGE_SIZE)
     @Getter @Setter
@@ -711,7 +713,7 @@ public class LeaseItem
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public LeaseItem verifyUntil(final LocalDate date) {
-        for(LeaseTerm term : getTerms().stream().filter(t->t.getPrevious()==null).collect(Collectors.toList())) {
+        for(LeaseTerm term : Lists.newArrayList(getTerms()).stream().filter(t->t.getPrevious()==null).collect(Collectors.toList())) {
             // only verify the first terms of a chain or the standalones:
             term.verifyUntil(date);
         }
