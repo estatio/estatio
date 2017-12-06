@@ -76,6 +76,26 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             Person_enum.JohnSmithGb,
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
+    OxfPoison010ADVANCEGb  (
+            "OXF-POISON-010", "Poison Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.PoisonGb,
+            ld(2011, 1, 1), ld(2020, 12, 31),
+            new OccupancySpec[] {
+        new OccupancySpec("010", "Poison", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), null)
+    },
+    Person_enum.JohnSmithGb,
+    InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE
+    ),
+    OxfPoison011ARREARSGb  (
+            "OXF-POISON-011", "Poison Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.PoisonGb,
+            ld(2011, 1, 1), ld(2020, 12, 31),
+            new OccupancySpec[] {
+                    new OccupancySpec("011", "Poison", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), null)
+            },
+            Person_enum.JohnSmithGb,
+            InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE
+    ),
     OxfPret004Gb    (
             "OXF-PRET-004", "Pret-a-Partir lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
             OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.PretGb,
