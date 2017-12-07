@@ -29,7 +29,7 @@ import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
-import org.estatio.module.base.platform.applib.TickingFixtureClock;
+import org.apache.isis.applib.clock.TickingFixtureClock;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.keytables.enums.KeyTable_enum;
 import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;

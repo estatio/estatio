@@ -25,8 +25,8 @@ import org.isisaddons.module.security.SecurityModule;
 import org.incode.module.country.dom.CountryModule;
 
 import org.estatio.module.base.EstatioBaseModule;
-import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
-import org.estatio.module.base.platform.integtestsupport.LogConfig;
+import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
+import org.apache.isis.core.integtestsupport.logging.LogConfig;
 
 public abstract class BaseModuleIntegTestAbstract
         extends IntegrationTestAbstract3 {

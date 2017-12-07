@@ -27,7 +27,7 @@ import com.google.common.collect.Sets;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.audit.dom.AuditEntry;
-import org.isisaddons.module.base.platform.applib.ModuleAbstract;
+import org.apache.isis.applib.ModuleAbstract;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 

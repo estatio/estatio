@@ -29,8 +29,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.asset.EstatioAssetModule;
-import org.isisaddons.module.base.platform.applib.Module;
-import org.isisaddons.module.base.platform.applib.ModuleAbstract;
+import org.apache.isis.applib.Module;
+import org.apache.isis.applib.ModuleAbstract;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;

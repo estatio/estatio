@@ -43,6 +43,7 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
+import org.estatio.module.base.platform.integtestsupport.RunBackgroundCommandsService;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceStatus;
@@ -257,4 +258,8 @@ public class InvoiceSummaryforPropertyDueDateStatus_invoiceDocs_IntegTest extend
     PaperclipRepository paperclipRepository;
     @Inject
     DocumentTypeRepository documentTypeRepository;
+
+    @Inject
+    protected RunBackgroundCommandsService runBackgroundCommandsService;
+
 }

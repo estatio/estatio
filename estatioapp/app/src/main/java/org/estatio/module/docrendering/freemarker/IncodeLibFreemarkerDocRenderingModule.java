@@ -24,8 +24,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.collect.Sets;
 
-import org.isisaddons.module.base.platform.applib.Module;
-import org.isisaddons.module.base.platform.applib.ModuleAbstract;
+import org.apache.isis.applib.Module;
+import org.apache.isis.applib.ModuleAbstract;
 import org.isisaddons.module.freemarker.IncodeLibFreeMarkerModule;
 
 import org.incode.module.docrendering.freemarker.dom.FreemarkerDocRenderingModule;

@@ -20,8 +20,8 @@ package org.estatio.module.currency.integtests;
 
 import org.slf4j.event.Level;
 
-import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
-import org.estatio.module.base.platform.integtestsupport.LogConfig;
+import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
+import org.apache.isis.core.integtestsupport.logging.LogConfig;
 import org.estatio.module.currency.EstatioCurrencyModule;
 
 public abstract class CurrencyModuleIntegTestAbstract
