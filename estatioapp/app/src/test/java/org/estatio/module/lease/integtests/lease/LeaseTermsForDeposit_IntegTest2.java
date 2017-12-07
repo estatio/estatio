@@ -109,9 +109,6 @@ public class LeaseTermsForDeposit_IntegTest2 extends LeaseModuleIntegTestAbstrac
     public void in_arrears_and_in_advance_in_one_invoicerun_works() {
 
         // given
-        Property oxford = Property_enum.OxfGb.findUsing(serviceRegistry);
-        final LocalDate dateOfInvoiceRun = new LocalDate(2011, 12, 1);
-        setFixtureClockDate(dateOfInvoiceRun);
         chargeForRent = Charge_enum.GbRent.findUsing(serviceRegistry);
         chargeForDeposit = Charge_enum.GbDeposit.findUsing(serviceRegistry);
 
@@ -129,7 +126,13 @@ public class LeaseTermsForDeposit_IntegTest2 extends LeaseModuleIntegTestAbstrac
         LocalDate nextDueDate = new LocalDate(2012,1,2);
 
         // TODO: This should not be needed and is not needed when executing a calculate using the UI see: EST-1750
-        manualVerification(nextDueDate);
+        // manualVerification(nextDueDate);
+
+        sessionManagementService.nextSession();
+
+        Property oxford = Property_enum.OxfGb.findUsing(serviceRegistry);
+        final LocalDate dateOfInvoiceRun = new LocalDate(2011, 12, 1);
+        setFixtureClockDate(dateOfInvoiceRun);
 
         mixin(Property_calculateInvoices.class, oxford).exec(
                 InvoiceRunType.NORMAL_RUN,
@@ -138,7 +141,21 @@ public class LeaseTermsForDeposit_IntegTest2 extends LeaseModuleIntegTestAbstrac
                 startDueDate,
                 nextDueDate
         );
-        transactionService.nextTransaction();
+
+        sessionManagementService.nextSession();
+
+        chargeForRent = Charge_enum.GbRent.findUsing(serviceRegistry);
+        chargeForDeposit = Charge_enum.GbDeposit.findUsing(serviceRegistry);
+        poisonLease010Advance = Lease_enum.OxfPoison010ADVANCEGb.findUsing(serviceRegistry);
+        rentItem010 = poisonLease010Advance.findFirstItemOfType(LeaseItemType.RENT);
+        depositItem010InAdvance = poisonLease010Advance.findFirstItemOfType(LeaseItemType.DEPOSIT);
+
+        poisonLease011Arrears = Lease_enum.OxfPoison011ARREARSGb.findUsing(serviceRegistry);
+        rentItem011 = poisonLease011Arrears.findFirstItemOfType(LeaseItemType.RENT);
+        depositItem011InArrears= poisonLease011Arrears.findFirstItemOfType(LeaseItemType.DEPOSIT);
+
+
+        assertThat(rentItem010.getTerms().size()).isEqualTo(2);
 
         // then
         InvoiceForLease invoiceFor010Advance = invoiceForLeaseRepository.findByLease(poisonLease010Advance).get(0);

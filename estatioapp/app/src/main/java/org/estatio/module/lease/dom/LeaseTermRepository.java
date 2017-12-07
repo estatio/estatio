@@ -40,9 +40,9 @@ import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.base.dom.EstatioRole;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(
         repositoryFor = LeaseTerm.class,
@@ -92,6 +92,7 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
         // too.
         persistIfNotAlready(leaseTerm);
         getContainer().flush();
+//        getIsisJdoSupport().getJdoPersistenceManager().flush();
         getIsisJdoSupport().refresh(leaseItem);
         return leaseTerm;
     }
