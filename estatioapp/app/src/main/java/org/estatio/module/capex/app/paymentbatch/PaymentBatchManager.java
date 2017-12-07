@@ -2,6 +2,7 @@ package org.estatio.module.capex.app.paymentbatch;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +14,7 @@ import javax.inject.Inject;
 import com.google.common.collect.Lists;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.CommandReification;
@@ -30,11 +32,12 @@ import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
+import org.isisaddons.module.excel.dom.ExcelService;
+
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
-import org.estatio.module.financial.dom.BankAccount;
-import org.estatio.module.financial.dom.BankAccountRepository;
+import org.estatio.module.capex.app.paymentline.PaymentLineForExcelExportV1;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
@@ -44,6 +47,8 @@ import org.estatio.module.capex.dom.payment.PaymentBatchRepository;
 import org.estatio.module.capex.dom.payment.PaymentLine;
 import org.estatio.module.capex.dom.payment.approval.triggers.PaymentBatch_complete;
 import org.estatio.module.capex.dom.util.InvoicePageRange;
+import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
@@ -604,6 +609,48 @@ public class PaymentBatchManager {
     }
 
 
+    @Action(
+            semantics = SemanticsOf.SAFE,
+            command = CommandReification.DISABLED,
+            publishing = Publishing.DISABLED
+    )
+    public Blob downloadExcelExportForNewBatches(
+            @Nullable final String documentName) {
+        List<PaymentLineForExcelExportV1> lineVms = new ArrayList<>();
+        for (PaymentBatch batch : getNewBatches()){
+            lineVms.addAll(batch.paymentLinesForExcelExport());
+        }
+        String name = documentName!=null ? documentName.concat(".xlsx") : "export.xlsx";
+        return excelService.toExcel(lineVms, PaymentLineForExcelExportV1.class, "export", name);
+    }
+
+    @Action(
+            semantics = SemanticsOf.SAFE,
+            command = CommandReification.DISABLED,
+            publishing = Publishing.DISABLED
+    )
+    public Blob downloadExcelExportForCompletedBatches(
+            @Nullable final String documentName,
+            final LocalDate startExecutionDate,
+            final LocalDate endExecutionDate
+    ) {
+        List<PaymentLineForExcelExportV1> lineVms = new ArrayList<>();
+        List<PaymentBatch> batchesToExport = getCompletedBatches()
+                .stream()
+                .filter(
+                        x->
+                                x.getRequestedExecutionDate().toLocalDate().isAfter(startExecutionDate.minusDays(1))
+                        &&
+                                x.getRequestedExecutionDate().toLocalDate().isBefore(endExecutionDate.plusDays(1))
+                )
+                .collect(Collectors.toList());
+        for (PaymentBatch batch : batchesToExport){
+            lineVms.addAll(batch.paymentLinesForExcelExport());
+        }
+        String name = documentName!=null ? documentName.concat(".xlsx") : "export.xlsx";
+        return excelService.toExcel(lineVms, PaymentLineForExcelExportV1.class, "export", name);
+    }
+
 
 
 
@@ -659,5 +706,10 @@ public class PaymentBatchManager {
     @Inject
     @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
     ServiceRegistry2 serviceRegistry2;
+
+    @Inject
+    @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
+    ExcelService excelService;
+
 
 }

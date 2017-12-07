@@ -26,6 +26,7 @@
             <bs3:row>
                 <bs3:col span="12">
                     <cpt:collection id="newBatches" defaultView="table" paged="15">
+                        <cpt:action id="downloadExcelExportForNewBatches"/>
                         <cpt:action id="reset" cssClassFa="mail-reply" cssClass="btn-warning"/>
                     </cpt:collection>
                 </bs3:col>
@@ -78,6 +79,7 @@
                     <cpt:collection id="completedBatches" defaultView="table" paged="15">
                         <cpt:action id="downloadPaymentFile"/>
                         <cpt:action id="downloadReviewPdf"/>
+                        <cpt:action id="downloadExcelExportForCompletedBatches"/>
                     </cpt:collection>
                 </bs3:col>
             </bs3:row>

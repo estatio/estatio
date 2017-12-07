@@ -68,12 +68,14 @@ import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
+import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
 import org.incode.module.communications.dom.mixins.DocumentConstants;
 
+import org.estatio.module.capex.app.paymentline.PaymentLineForExcelExportV1;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.financial.dom.BankAccount;
@@ -574,6 +576,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
     }
 
+
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed= Contributed.AS_ACTION)
     public Blob downloadReviewPdf(
@@ -710,6 +713,31 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
             return "No payment lines";
         }
         return null;
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed= Contributed.AS_ACTION)
+    public Blob downloadExcelExport(){
+        return excelService.toExcel(paymentLinesForExcelExport(), PaymentLineForExcelExportV1.class, "export", title().concat("-export.xlsx"));
+    }
+
+    @Programmatic public List<PaymentLineForExcelExportV1> paymentLinesForExcelExport(){
+        List<PaymentLineForExcelExportV1> lineVms = new ArrayList<>();
+        for (PaymentLine line : getLines()) {
+            lineVms.add(new PaymentLineForExcelExportV1(
+                    line.getInvoice().getInvoiceDate(),
+                    getRequestedExecutionDate() != null ? this.getRequestedExecutionDate().toLocalDate() : null,
+                    line.getInvoice().getSeller().getName(),
+                    line.getInvoice().getSeller().getReference(),
+                    line.getInvoice().getProperty() != null ? line.getInvoice().getProperty().getReference() : null,
+                    line.getInvoice().getInvoiceNumber(),
+                    line.getInvoice().getId(),
+                    line.getInvoice().getNetAmount().negate(),
+                    line.getInvoice().getVatAmount().negate(),
+                    line.getInvoice().getGrossAmount().negate()
+            ));
+        }
+        return lineVms;
     }
 
     @Inject
@@ -873,6 +901,9 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
     @Inject
     PaymentBatchApprovalStateTransition.Repository approvalStateTransitionRepository;
+
+    @Inject
+    ExcelService excelService;
 
 
 
