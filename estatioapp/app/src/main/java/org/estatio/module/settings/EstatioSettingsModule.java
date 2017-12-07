@@ -29,8 +29,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.base.EstatioBaseModule;
-import org.isisaddons.module.base.platform.applib.Module;
-import org.isisaddons.module.base.platform.applib.ModuleAbstract;
+import org.apache.isis.applib.Module;
+import org.apache.isis.applib.ModuleAbstract;
 
 @XmlRootElement(name = "module")
 public final class EstatioSettingsModule extends ModuleAbstract {

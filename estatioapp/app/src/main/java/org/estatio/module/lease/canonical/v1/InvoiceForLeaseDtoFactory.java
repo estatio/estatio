@@ -14,7 +14,7 @@ import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.module.bankmandate.dom.BankMandate;
 import org.estatio.module.base.platform.applib.DtoFactoryAbstract;
-import org.estatio.module.base.platform.applib.DtoMappingHelper;
+import org.apache.isis.applib.services.dto.DtoMappingHelper;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;

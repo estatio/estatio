@@ -20,8 +20,8 @@ package org.estatio.module.budget.integtests;
 
 import org.slf4j.event.Level;
 
-import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
-import org.estatio.module.base.platform.integtestsupport.LogConfig;
+import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
+import org.apache.isis.core.integtestsupport.logging.LogConfig;
 import org.estatio.module.budget.EstatioBudgetModule;
 
 public abstract class BudgetModuleIntegTestAbstract extends IntegrationTestAbstract3 {

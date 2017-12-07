@@ -28,7 +28,7 @@ import org.isisaddons.wicket.gmap3.cpt.applib.Gmap3ApplibModule;
 import org.isisaddons.wicket.gmap3.cpt.service.Gmap3ServiceModule;
 import org.isisaddons.wicket.gmap3.cpt.ui.Gmap3UiModule;
 
-import org.isisaddons.module.base.platform.applib.ModuleAbstract;
+import org.apache.isis.applib.ModuleAbstract;
 
 /**
  * This is a "proxy" for the corresponding module defined in the Incode Platform.

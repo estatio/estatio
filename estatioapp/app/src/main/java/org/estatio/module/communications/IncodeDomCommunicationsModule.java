@@ -26,8 +26,8 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.isisaddons.module.base.platform.applib.Module;
-import org.isisaddons.module.base.platform.applib.ModuleAbstract;
+import org.apache.isis.applib.Module;
+import org.apache.isis.applib.ModuleAbstract;
 
 import org.incode.module.communications.dom.CommunicationsModule;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;

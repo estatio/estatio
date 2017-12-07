@@ -27,9 +27,9 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.isisaddons.module.base.platform.applib.Module;
-import org.isisaddons.module.base.platform.applib.ModuleAbstract;
-import org.isisaddons.module.base.platform.fixturesupport.TeardownFixtureAbstract2;
+import org.apache.isis.applib.Module;
+import org.apache.isis.applib.ModuleAbstract;
+import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
 
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
 import org.estatio.module.classification.IncodeDomClassificationModule;

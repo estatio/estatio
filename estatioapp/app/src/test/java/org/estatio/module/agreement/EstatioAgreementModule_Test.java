@@ -6,7 +6,7 @@ import com.google.common.collect.Sets;
 
 import org.junit.Test;
 
-import org.isisaddons.module.base.platform.applib.Module;
+import org.apache.isis.applib.Module;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -20,10 +20,11 @@ package org.estatio.module.lease.integtests;
 
 import org.slf4j.event.Level;
 
+import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
+import org.apache.isis.core.integtestsupport.logging.LogConfig;
+
 import org.isisaddons.module.fakedata.FakeDataModule;
 
-import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
-import org.estatio.module.base.platform.integtestsupport.LogConfig;
 import org.estatio.module.lease.EstatioLeaseModule;
 import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
 

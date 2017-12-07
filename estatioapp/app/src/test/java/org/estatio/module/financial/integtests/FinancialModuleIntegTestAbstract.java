@@ -22,8 +22,8 @@ import org.slf4j.event.Level;
 
 import org.isisaddons.module.fakedata.FakeDataModule;
 
-import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
-import org.estatio.module.base.platform.integtestsupport.LogConfig;
+import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
+import org.apache.isis.core.integtestsupport.logging.LogConfig;
 import org.estatio.module.financial.EstatioFinancialModule;
 
 public abstract class FinancialModuleIntegTestAbstract extends IntegrationTestAbstract3 {

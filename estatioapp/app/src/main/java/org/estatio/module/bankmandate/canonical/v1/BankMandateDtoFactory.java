@@ -7,7 +7,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.module.base.platform.applib.DtoFactoryAbstract;
-import org.estatio.module.base.platform.applib.DtoMappingHelper;
+import org.apache.isis.applib.services.dto.DtoMappingHelper;
 import org.estatio.canonical.bankmandate.v1.BankMandateDto;
 import org.estatio.canonical.bankmandate.v1.Status;
 import org.estatio.module.bankmandate.dom.BankMandate;

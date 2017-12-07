@@ -4,7 +4,7 @@ import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.isisaddons.module.base.platform.fixturesupport.DataEnumPersist;
+import org.apache.isis.applib.fixturescripts.setup.PersonaEnumPersistAll;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
@@ -82,9 +82,9 @@ public enum ApplicationTenancy_enum
                 .setPathOfParent(getPathOfParent());
     }
 
-    public static class PersistScript
-            extends DataEnumPersist<ApplicationTenancy_enum, ApplicationTenancy, ApplicationTenancyBuilder> {
-        public PersistScript() {
+    public static class PersistAll
+            extends PersonaEnumPersistAll<ApplicationTenancy_enum, ApplicationTenancy, ApplicationTenancyBuilder> {
+        public PersistAll() {
             super(ApplicationTenancy_enum.class);
         }
     }
