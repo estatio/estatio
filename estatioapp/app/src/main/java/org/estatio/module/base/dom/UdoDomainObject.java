@@ -36,7 +36,7 @@ import org.incode.module.base.dom.with.WithReferenceGetter;
 import org.incode.module.base.dom.with.WithTitleGetter;
 
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancy;
-import org.estatio.module.base.platform.applib.ObjectContracts2;
+import org.apache.isis.applib.util.ObjectContracts2;
 
 /**
  * A domain object that is mutable and can be changed by multiple users over time,

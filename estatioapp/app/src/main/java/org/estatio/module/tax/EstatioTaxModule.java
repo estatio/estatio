@@ -26,9 +26,9 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.isisaddons.module.base.platform.applib.Module;
-import org.isisaddons.module.base.platform.applib.ModuleAbstract;
-import org.isisaddons.module.base.platform.fixturesupport.DataEnumPersist;
+import org.apache.isis.applib.Module;
+import org.apache.isis.applib.ModuleAbstract;
+import org.apache.isis.applib.fixturescripts.setup.PersonaEnumPersistAll;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
@@ -56,7 +56,7 @@ public final class EstatioTaxModule extends ModuleAbstract {
         }
         // else
         refData.set(true);
-        return new DataEnumPersist<Tax_enum, Tax, TaxBuilder>(Tax_enum.class) {};
+        return new PersonaEnumPersistAll<Tax_enum, Tax, TaxBuilder>(Tax_enum.class) {};
     }
 
     @Override

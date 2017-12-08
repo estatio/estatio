@@ -21,8 +21,8 @@ package org.estatio.module.bankmandate.integtests;
 import org.slf4j.event.Level;
 
 import org.estatio.module.bankmandate.EstatioBankMandateModule;
-import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
-import org.estatio.module.base.platform.integtestsupport.LogConfig;
+import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
+import org.apache.isis.core.integtestsupport.logging.LogConfig;
 
 public abstract class BankMandateModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 

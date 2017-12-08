@@ -21,8 +21,8 @@ package org.estatio.module.asset.integtests;
 import org.slf4j.event.Level;
 
 import org.estatio.module.asset.EstatioAssetModule;
-import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
-import org.estatio.module.base.platform.integtestsupport.LogConfig;
+import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
+import org.apache.isis.core.integtestsupport.logging.LogConfig;
 
 public abstract class AssetModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 

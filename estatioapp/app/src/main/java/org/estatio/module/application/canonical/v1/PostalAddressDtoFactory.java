@@ -11,7 +11,7 @@ import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.State;
 
-import org.estatio.module.base.platform.applib.DtoMappingHelper;
+import org.apache.isis.applib.services.dto.DtoMappingHelper;
 import org.estatio.canonical.communicationchannel.v1.PostalAddressDto;
 
 @DomainService(

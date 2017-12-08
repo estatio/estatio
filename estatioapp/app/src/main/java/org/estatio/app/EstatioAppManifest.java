@@ -2,7 +2,7 @@ package org.estatio.app;
 
 import org.apache.isis.applib.AppManifestAbstract;
 
-import org.isisaddons.module.base.platform.applib.Module;
+import org.apache.isis.applib.Module;
 
 import org.estatio.module.application.EstatioApplicationModule;
 
