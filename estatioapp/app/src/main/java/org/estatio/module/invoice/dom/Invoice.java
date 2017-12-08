@@ -69,14 +69,15 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.types.AtPathType;
 
+import org.estatio.module.bankmandate.dom.BankMandate;
+import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPathPersisted;
-import org.estatio.module.bankmandate.dom.BankMandate;
 import org.estatio.module.base.platform.docfragment.FragmentRenderService;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.base.dom.EstatioRole;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -434,6 +435,16 @@ public abstract class Invoice<T extends Invoice<T>>
     @javax.jdo.annotations.Column(allowsNull = "true", name = "paidByBankMandateId")
     @Getter @Setter
     private BankMandate paidBy;
+
+    @Programmatic
+    public InvoiceItem findFirstItemWithCharge(final Charge charge) {
+        for (InvoiceItem item : getItems()) {
+            if (item.getCharge().equals(charge)) {
+                return item;
+            }
+        }
+        return null;
+    }
 
     /**
      * TODO: inline this mixin
