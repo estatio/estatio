@@ -31,7 +31,6 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.clock.ClockService;
 
-import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceItem;
@@ -53,18 +52,8 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb;
-import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb;
-import org.estatio.module.lease.fixtures.leaseitems.entryfee.personas.LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001Gb;
-import org.estatio.module.lease.fixtures.leaseitems.marketing.personas.LeaseItemAndLeaseTermForMarketingForOxfTopModel001Gb;
-import org.estatio.module.lease.fixtures.leaseitems.percentage.personas.LeaseItemAndLeaseTermForPercentageForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.rent.personas.LeaseItemAndLeaseTermForRentForOxfMediax002Gb;
 import org.estatio.module.lease.fixtures.leaseitems.rent.personas.LeaseItemAndLeaseTermForRentForOxfTopModel001Gb;
-import org.estatio.module.lease.fixtures.leaseitems.servicecharge.personas.LeaseItemAndLeaseTermForServiceChargeForOxfMediax002Gb;
-import org.estatio.module.lease.fixtures.leaseitems.servicecharge.personas.LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001Gb;
-import org.estatio.module.lease.fixtures.leaseitems.svcchgbudgeted.personas.LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb;
-import org.estatio.module.lease.fixtures.leaseitems.tax.personas.LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb;
-import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas.LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002Gb;
-import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas.LeaseItemAndLeaseTermForTurnoverRentForOxfTopModel001Gb;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -79,11 +68,9 @@ public class LeaseTermsForDeposit_IntegTest extends LeaseModuleIntegTestAbstract
     InvoiceServiceMenu invoiceService;
 
     @Inject
-    ChargeRepository chargeRepository;
-
-    @Inject
     InvoiceForLeaseRepository invoiceForLeaseRepository;
 
+    //EST-1741: behaviour of deposits is covered now also by org.estatio.module.lease.integtests.invoicing.run.InvoiceCalculationForDeposit_IntegTest
     public static class LeaseTermForDepositForOxfScenario extends LeaseTermsForDeposit_IntegTest {
 
         LeaseTermForDeposit depositTerm;
@@ -98,17 +85,8 @@ public class LeaseTermsForDeposit_IntegTest extends LeaseModuleIntegTestAbstract
                 protected void execute(ExecutionContext executionContext) {
 
                     executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
-
                     executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForOxfTopModel001Gb());
-                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001Gb());
-                    executionContext.executeChild(this, new LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb());
-                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForTurnoverRentForOxfTopModel001Gb());
-                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForPercentageForOxfTopModel001Gb());
-                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb());
-                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001Gb());
-                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb());
                     executionContext.executeChild(this, new LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb());
-                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForMarketingForOxfTopModel001Gb());
 
                 }
             });
@@ -192,10 +170,7 @@ public class LeaseTermsForDeposit_IntegTest extends LeaseModuleIntegTestAbstract
                 protected void execute(ExecutionContext executionContext) {
 
                     executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.builder());
-
                     executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForOxfMediax002Gb());
-                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfMediax002Gb());
-                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002Gb());
                 }
             });
 
@@ -252,7 +227,8 @@ public class LeaseTermsForDeposit_IntegTest extends LeaseModuleIntegTestAbstract
 
             InvoiceItemForLease invoiceItemInArrears = (InvoiceItemForLease) invoice.getItems().last();
             assertThat(invoiceItemInArrears.getSource()).isEqualTo(termInArrears);
-            assertThat(invoiceItemInArrears.getNetAmount()).isEqualTo(new BigDecimal("10508.16")); //TODO: is this the expected value (taken from rent on 1-1-2011)? Or is should the expected value be taken from rent on 31-12-2010 instead (10281.95)?
+//            assertThat(invoiceItemInArrears.getNetAmount()).isEqualTo(new BigDecimal("10508.16")); //DONE: is this the expected value (taken from rent on 1-1-2011)? Or is should the expected value be taken from rent on 31-12-2010 instead (10281.95)?
+            assertThat(invoiceItemInArrears.getNetAmount()).isEqualTo(new BigDecimal("10281.95")); // EST-1741: the behaviour is changed
 
             InvoiceItemForLease invoiceItemInAdvance = (InvoiceItemForLease) invoice.getItems().first();
             assertThat(invoiceItemInAdvance.getSource()).isEqualTo(termInAdvance);

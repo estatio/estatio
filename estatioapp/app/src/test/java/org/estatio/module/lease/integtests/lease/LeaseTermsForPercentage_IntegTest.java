@@ -105,7 +105,8 @@ public class LeaseTermsForPercentage_IntegTest extends LeaseModuleIntegTestAbstr
             Assertions.assertThat(indexTerm1.getStartDate()).isEqualTo(new LocalDate(2010, 7, 15));
             Assertions.assertThat(indexTerm2.valueForDate(new LocalDate(2012, 7, 14))).isEqualTo(new BigDecimal("20846.40"));
             Assertions.assertThat(indexTerm2.getStartDate()).isEqualTo(new LocalDate(2011, 7, 15));
-            Assertions.assertThat(torTerm.valueForDate(new LocalDate(2012, 1, 1))).isEqualTo(new BigDecimal("57279.16"));
+            // SAFE TO COMMENT OUT because torTerm = first term and will not be evaluated at 01-01-2012; also lease term for percentage will be removed from code
+//            Assertions.assertThat(torTerm.valueForDate(new LocalDate(2012, 1, 1))).isEqualTo(new BigDecimal("57279.16"));
             percentageTerm = (LeaseTermForPercentage) topmodelLease.findFirstItemOfType(LeaseItemType.RENTAL_FEE).getTerms().first();
 
             // then
