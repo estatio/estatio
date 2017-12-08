@@ -27,7 +27,7 @@ import org.estatio.module.budgetassignment.fixtures.override.enums.BudgetOverrid
 import org.estatio.module.budgetassignment.fixtures.override.enums.BudgetOverrideForMax_enum;
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.leaseitems.svcchgbudgeted.enums.LeaseItemForServiceChargeBudgeted_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceChargeBudgeted_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

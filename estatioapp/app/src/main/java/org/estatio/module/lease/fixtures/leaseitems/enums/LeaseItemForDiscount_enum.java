@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.lease.fixtures.leaseitems.discount.enums;
+package org.estatio.module.lease.fixtures.leaseitems.enums;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -36,7 +36,6 @@ import org.estatio.module.lease.dom.LeaseTermFrequency;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.builders.LeaseItemForDiscountBuilder;
 import org.estatio.module.lease.fixtures.leaseitems.builders.LeaseTermForFixedBuilder;
-import org.estatio.module.lease.fixtures.leaseitems.rent.enums.LeaseItemForRent_enum;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

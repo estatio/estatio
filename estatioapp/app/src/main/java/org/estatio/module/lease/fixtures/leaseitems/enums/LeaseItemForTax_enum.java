@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.lease.fixtures.leaseitems.entryfee.enums;
+package org.estatio.module.lease.fixtures.leaseitems.enums;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -34,9 +34,9 @@ import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemRepository;
 import org.estatio.module.lease.dom.LeaseTermFrequency;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.leaseitems.builders.LeaseItemForEntryFeeBuilder;
-import org.estatio.module.lease.fixtures.leaseitems.builders.LeaseTermForFixedBuilder;
-import org.estatio.module.lease.fixtures.leaseitems.rent.enums.LeaseItemForRent_enum;
+import org.estatio.module.lease.fixtures.leaseitems.builders.LeaseItemForTaxBuilder;
+import org.estatio.module.lease.fixtures.leaseitems.builders.LeaseTermForTaxBuilder;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,17 +48,18 @@ import static org.incode.module.base.integtests.VT.bi;
 @AllArgsConstructor()
 @Getter
 @Accessors(chain = true)
-public enum LeaseItemForEntryFee_enum implements PersonaWithFinder<LeaseItem>, PersonaWithBuilderScript<LeaseItem, LeaseItemForEntryFeeBuilder> {
+public enum LeaseItemForTax_enum implements PersonaWithFinder<LeaseItem>, PersonaWithBuilderScript<LeaseItem, LeaseItemForTaxBuilder> {
 
     OxfTopModel001Gb(Lease_enum.OxfTopModel001Gb, bi(1), LeaseItemForRent_enum.OxfTopModel001Gb,
         new TermSpec[]{
-            new TermSpec(Lease_enum.OxfTopModel001Gb.getStartDate(), null, null, bd(5000))
-        })
+            new TermSpec(Lease_enum.OxfTopModel001Gb.getStartDate(), null, null, bd(1), bd(50), true)
+        }),
     ;
 
     private final Lease_enum lease_d;
     private final BigInteger sequence;
-    private final LeaseItemForRent_enum rentItem_d;
+    private final LeaseItemForRent_enum sourceItem_d;
+
     private final TermSpec[] termSpecs;
 
     @AllArgsConstructor
@@ -67,20 +68,23 @@ public enum LeaseItemForEntryFee_enum implements PersonaWithFinder<LeaseItem>, P
         LocalDate startDate;
         LocalDate endDate;
         LeaseTermFrequency leaseTermFrequency;
-        BigDecimal value;
+        BigDecimal taxPercentage;
+        BigDecimal recoverablePercentage;
+        Boolean taxable;
     }
 
     @Override
-    public LeaseItemForEntryFeeBuilder builder() {
-        return new LeaseItemForEntryFeeBuilder()
+    public LeaseItemForTaxBuilder builder() {
+        return new LeaseItemForTaxBuilder()
                 .setPrereq((f,ec) -> f.setLease(f.objectFor(lease_d, ec)))
                 .setSequence(sequence)
+                .setPrereq((f,ec) -> f.setSourceItem(f.objectFor(sourceItem_d, ec)))
                 .setPrereq((f,ec) -> f.setTermSpecs(
                         Arrays.stream(termSpecs)
-                                .map(x -> new LeaseTermForFixedBuilder.TermSpec(
-                                        x.startDate, x.endDate, x.leaseTermFrequency, x.value))
-                                .collect(Collectors.toList())
-                        ))
+                                .map(x -> new LeaseTermForTaxBuilder.TermSpec(
+                                        x.startDate, x.endDate, x.leaseTermFrequency,
+                                        x.taxPercentage, x.recoverablePercentage, x.taxable))
+                                .collect(Collectors.toList())))
                 ;
     }
 
@@ -90,6 +94,6 @@ public enum LeaseItemForEntryFee_enum implements PersonaWithFinder<LeaseItem>, P
         final LocalDate startDate = lease.getStartDate();
         final LeaseItemRepository leaseItemRepository = serviceRegistry.lookupService(LeaseItemRepository.class);
         return leaseItemRepository.findLeaseItem(
-                lease, LeaseItemForEntryFeeBuilder.LEASE_ITEM_TYPE, startDate, sequence);
+                lease, LeaseItemForTaxBuilder.LEASE_ITEM_TYPE, startDate, sequence);
     }
 }

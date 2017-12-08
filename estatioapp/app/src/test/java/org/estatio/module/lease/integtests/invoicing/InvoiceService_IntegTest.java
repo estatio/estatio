@@ -59,12 +59,12 @@ import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptions
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.leaseitems.deposits.enums.LeaseItemForDeposit_enum;
-import org.estatio.module.lease.fixtures.leaseitems.discount.enums.LeaseItemForDiscount_enum;
-import org.estatio.module.lease.fixtures.leaseitems.percentage.enums.LeaseItemForPercentage_enum;
-import org.estatio.module.lease.fixtures.leaseitems.rent.enums.LeaseItemForRent_enum;
-import org.estatio.module.lease.fixtures.leaseitems.servicecharge.enums.LeaseItemForServiceCharge_enum;
-import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.enums.LeaseItemForTurnoverRent_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForPercentage_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.lease.migrations.CreateInvoiceNumerators;
 
