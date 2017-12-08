@@ -35,9 +35,9 @@ public class LeaseBreakOptionsForOxfMediax002Gb extends LeaseBreakOptionsAbstrac
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForOxfMediax002Gb());
-        executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfMediax002Gb());
-        executionContext.executeChild(this, new LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002Gb());
+        executionContext.executeChild(this, LeaseItemForRent_enum.OxfMediaX002Gb.builder());
+        executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfMediaX002Gb.builder());
+        executionContext.executeChild(this, LeaseItemForTurnoverRent_enum.OxfMediaX002Gb.builder());
 
         // exec
         final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);

@@ -140,7 +140,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
 
                         executionContext.executeChild(this, Organisation_enum.PoisonNl.toFixtureScript());
                         executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003Gb());
-                        executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
+                        executionContext.executeChild(this, LeaseItemForRent_enum.KalPoison001Nl.builder());
                         executionContext.executeChild(this, new BankAccountAndMandateForPoisonNl());
                         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
                         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());

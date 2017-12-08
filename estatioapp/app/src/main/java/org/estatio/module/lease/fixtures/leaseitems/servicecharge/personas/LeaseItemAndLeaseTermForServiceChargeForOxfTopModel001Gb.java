@@ -18,7 +18,6 @@
  */
 package org.estatio.module.lease.fixtures.leaseitems.servicecharge.personas;
 
-import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.servicecharge.enums.LeaseItemForServiceCharge_enum;
@@ -26,15 +25,15 @@ import org.estatio.module.lease.fixtures.leaseitems.servicecharge.enums.LeaseIte
 public class LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001Gb extends LeaseItemAndTermsAbstract {
 
     @Override
-    protected void execute(final ExecutionContext fixtureResults) {
+    protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        fixtureResults.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
+        executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
 
         // exec
 
-        fixtureResults.executeChild(this, LeaseItemForServiceCharge_enum.OxfTopModel001Gb.builder());
-        fixtureResults.executeChild(this, LeaseItemForServiceCharge_enum.OxfTopModel001Gb_TA.builder());
+        executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfTopModel001Gb.builder());
+        executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfTopModel001Gb_TA.builder());
 
     }
 

@@ -70,7 +70,7 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001 extends Invo
 
         // prereqs
         executionContext.executeChild(this, seller_d.builder());
-        executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
+        executionContext.executeChild(this, LeaseItemForRent_enum.KalPoison001Nl.builder());
 
         // exec
         final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(AT_PATH);

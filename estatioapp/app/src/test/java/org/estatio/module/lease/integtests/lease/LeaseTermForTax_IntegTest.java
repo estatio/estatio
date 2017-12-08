@@ -63,8 +63,8 @@ public class LeaseTermForTax_IntegTest extends LeaseModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForOxfTopModel001Gb());
-                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb());
+                    executionContext.executeChild(this, LeaseItemForRent_enum.OxfTopModel001Gb.builder());
+                    executionContext.executeChild(this, LeaseItemForTax_enum.OxfTopModel001Gb.builder());
                 }
             });
         }
