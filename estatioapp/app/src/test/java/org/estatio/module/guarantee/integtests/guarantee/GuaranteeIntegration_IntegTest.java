@@ -27,7 +27,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.sudo.SudoService;
 import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.applib.services.wrapper.DisabledException;
@@ -84,12 +83,7 @@ public class GuaranteeIntegration_IntegTest extends GuaranteeModuleIntegTestAbst
 
     @Before
     public void setupData() {
-        runFixtureScript(new FixtureScript() {
-            @Override
-            protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new GuaranteeForOxfTopModel001Gb());
-            }
-        }.withTracing());
+        runFixtureScript(new GuaranteeForOxfTopModel001Gb());
 
     }
 

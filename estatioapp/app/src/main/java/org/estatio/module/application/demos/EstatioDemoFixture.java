@@ -20,6 +20,7 @@ package org.estatio.module.application.demos;
 
 import com.google.common.collect.Lists;
 
+import org.apache.isis.applib.clock.TickingFixtureClock;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.isisaddons.module.security.dom.user.AccountType;
@@ -29,7 +30,6 @@ import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
-import org.apache.isis.applib.clock.TickingFixtureClock;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.keytables.enums.KeyTable_enum;
 import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
@@ -55,13 +55,12 @@ import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemT
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfMiracl005Gb;
-import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;
-import org.estatio.module.lease.fixtures.leaseitems.percentage.personas.LeaseItemAndLeaseTermForPercentageForOxfMiracl005Gb;
-import org.estatio.module.lease.fixtures.leaseitems.rent.personas.LeaseItemAndLeaseTermForRentForKalPoison001;
-import org.estatio.module.lease.fixtures.leaseitems.rent.personas.LeaseItemAndLeaseTermForRentOf2ForOxfMiracl005Gb;
-import org.estatio.module.lease.fixtures.leaseitems.servicecharge.personas.LeaseItemAndLeaseTermForServiceChargeOf2ForOxfMiracl005Gb;
-import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas.LeaseItemAndLeaseTermForTurnoverRentForOxfMiracl005Gb;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForPercentage_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
 import org.estatio.module.lease.migrations.CreateInvoiceNumerators;
 import org.estatio.module.lease.seed.DocFragmentSeedFixture;
 import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
@@ -86,7 +85,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         doExecute(executionContext);
     }
 
-    private void doExecute(final ExecutionContext executionContext) {
+    private void doExecute(final ExecutionContext ec) {
 
         final AbstractUserAndRolesFixtureScript initialisationUser =
                 new AbstractUserAndRolesFixtureScript(
@@ -94,100 +93,115 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                         Global.getPath(), AccountType.LOCAL,
                         Lists.newArrayList("estatio-admin")) {
                 };
-        executionContext.executeChild(this, "'initialisation' user", initialisationUser);
-        executionContext.executeChild(this, "countries", new IncodeDomCountryModule().getRefDataSetupFixture());
-        executionContext.executeChild(this, "currencies", new EstatioCurrencyModule().getRefDataSetupFixture());
-        executionContext.executeChild(this, "taxes", new EstatioTaxModule().getRefDataSetupFixture());
-        executionContext.executeChild(this, "incomingCharges", new EstatioChargeModule().getRefDataSetupFixture());
-        executionContext.executeChild(this, "indices", new EstatioIndexModule().getRefDataSetupFixture());
+        ec.executeChild(this, "'initialisation' user", initialisationUser);
+        ec.executeChild(this, "countries", new IncodeDomCountryModule().getRefDataSetupFixture());
+        ec.executeChild(this, "currencies", new EstatioCurrencyModule().getRefDataSetupFixture());
+        ec.executeChild(this, "taxes", new EstatioTaxModule().getRefDataSetupFixture());
+        ec.executeChild(this, "incomingCharges", new EstatioChargeModule().getRefDataSetupFixture());
+        ec.executeChild(this, "indices", new EstatioIndexModule().getRefDataSetupFixture());
 
-        executionContext.executeChild(this, new DocFragmentDemoFixture());
-        executionContext.executeChild(this, new DocFragmentSeedFixture());
-        executionContext.executeChild(this, Person_enum.LinusTorvaldsNl.builder());
+        ec.executeChildren(this, new DocFragmentDemoFixture(), new DocFragmentSeedFixture());
 
-        executionContext.executeChild(this, BankAccount_enum.AcmeNl.builder());
-        executionContext.executeChild(this, BankAccountFaFa_enum.AcmeNl.builder());
+        ec.executeChildren(this,
+                Person_enum.LinusTorvaldsNl,
+                Person_enum.GinoVannelliGb, Person_enum.DylanOfficeAdministratorGb,
+                Person_enum.JonathanPropertyManagerGb,
+                Person_enum.FaithConwayGb,
+                Person_enum.OscarCountryDirectorGb,
+                Person_enum.EmmaTreasurerGb,
+                Person_enum.ThibaultOfficerAdministratorFr,
+                Person_enum.FifineLacroixFr,
+                Person_enum.OlivePropertyManagerFr,
+                Person_enum.RosaireEvrardFr,
+                Person_enum.GabrielHerveFr,
+                Person_enum.BrunoTreasurerFr);
 
-        executionContext.executeChild(this, BankAccount_enum.HelloWorldNl.builder());
-        executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldNl.builder());
-        executionContext.executeChild(this, BankAccount_enum.HelloWorldGb.builder());
-        executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldGb.builder());
-        executionContext.executeChild(this, BankAccount_enum.TopModelGb.builder());
-        executionContext.executeChild(this, new BankAccountAndMandateForTopModelGb());
-        executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
-        executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.builder());
-        executionContext.executeChild(this, BankAccount_enum.MediaXGb.builder());
-        executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002Gb());
-        executionContext.executeChild(this, Lease_enum.OxfPret004Gb.builder());
-        executionContext.executeChild(this, BankAccount_enum.PretGb.builder());
-        executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.builder());
-        executionContext.executeChild(this, BankAccount_enum.MiracleGb.builder());
+        ec.executeChildren(this,
+                PropertyAndUnitsAndOwnerAndManager_enum.GraIt,
+                PropertyAndUnitsAndOwnerAndManager_enum.VivFr,
+                PropertyAndUnitsAndOwnerAndManager_enum.HanSe,
+                PropertyAndUnitsAndOwnerAndManager_enum.MnsFr,
+                PropertyAndUnitsAndOwnerAndManager_enum.MacFr,
+                PropertyAndUnitsAndOwnerAndManager_enum.CARTEST);
 
-        executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentOf2ForOxfMiracl005Gb());
-        executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeOf2ForOxfMiracl005Gb());
-        executionContext.executeChild(this, new LeaseItemAndLeaseTermForTurnoverRentForOxfMiracl005Gb());
-        executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb());
-        executionContext.executeChild(this, new LeaseItemAndLeaseTermForPercentageForOxfMiracl005Gb());
-        executionContext.executeChild(this, new LeaseItemAndLeaseTermForDepositForOxfMiracl005Gb());
+        ec.executeChild(this, new NumeratorForOrganisationFra());
 
-        executionContext.executeChild(this, Lease_enum.KalPoison001Nl.builder());
-        executionContext.executeChild(this, new BankAccountAndMandateForPoisonNl());
-        executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003Gb());
-        executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
-        executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
-        executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
-        executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005());
-        executionContext.executeChild(this, new GuaranteeForOxfTopModel001Gb());
-        executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
-        executionContext.executeChild(this, BankAccount_enum.TopModelGb.builder());
-        executionContext.executeChild(this, Person_enum.GinoVannelliGb.builder());
+        ec.executeChildren(this,
+                BankAccount_enum.AcmeNl,
+                BankAccount_enum.HelloWorldGb,
+                BankAccount_enum.TopModelGb,
+                BankAccount_enum.MediaXGb,
+                BankAccount_enum.PretGb,
+                BankAccount_enum.MiracleGb,
+                BankAccount_enum.HelloWorldNl,
+                BankAccountFaFa_enum.AcmeNl);
 
-        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.GraIt.builder());
-        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.VivFr.builder());
-        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.HanSe.builder());
-        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.MnsFr.builder());
-        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.MacFr.builder());
+        ec.executeChildren(this,
+                BankAccountFaFa_enum.HelloWorldNl,
+                BankAccountFaFa_enum.HelloWorldGb
+        );
 
-        executionContext.executeChild(this, Person_enum.DylanOfficeAdministratorGb.builder()); // gb mailroom
-        executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.builder());  // gb property mgr for OXF
-        executionContext.executeChild(this, Person_enum.FaithConwayGb.builder());  // gb country administrator
-        executionContext.executeChild(this, Person_enum.OscarCountryDirectorGb.builder());  // gb country director
-        executionContext.executeChild(this, Person_enum.EmmaTreasurerGb.builder());   // gb treasurer
-        executionContext.executeChild(this, Person_enum.ThibaultOfficerAdministratorFr.builder());  // fr mailroom
-        executionContext.executeChild(this, Person_enum.FifineLacroixFr.builder());  // fr property mgr for VIV and MNS
-        executionContext.executeChild(this, Person_enum.OlivePropertyManagerFr.builder());  // fr property mgr for MAC
-        executionContext.executeChild(this, Person_enum.RosaireEvrardFr.builder());  // fr country administrator
-        executionContext.executeChild(this, Person_enum.GabrielHerveFr.builder());  // fr country director
-        executionContext.executeChild(this, Person_enum.BrunoTreasurerFr.builder()); // fr treasurer
+        ec.executeChildren(this,
+                new BankAccountAndMandateForTopModelGb(),
+                new BankAccountAndMandateForPoisonNl());
 
-        executionContext.executeChild(this, Project_enum.KalProject1.builder());
-        executionContext.executeChild(this, Project_enum.KalProject2.builder());
-        executionContext.executeChild(this, Project_enum.GraProject.builder());
+        ec.executeChild(this, new GuaranteeForOxfTopModel001Gb());
 
-        executionContext.executeChild(this, Budget_enum.OxfBudget2015.builder());
-        executionContext.executeChild(this, Budget_enum.OxfBudget2016.builder());
-        executionContext.executeChild(this, KeyTable_enum.Oxf2015Area.builder());
-        executionContext.executeChild(this, KeyTable_enum.Oxf2015Count.builder());
+        ec.executeChildren(this,
+                Lease_enum.OxfMediaX002Gb,
+                Lease_enum.OxfPret004Gb, Lease_enum.OxfMiracl005Gb,
+                Lease_enum.KalPoison001Nl,
+                Lease_enum.OxfTopModel001Gb);
 
-        executionContext.executeChild(this, Partitioning_enum.OxfPartitioning2015.builder());
+        ec.executeChildren(this,
+                new LeaseBreakOptionsForOxfTopModel001(),
+                new LeaseBreakOptionsForOxfPoison003Gb(),
+                new LeaseBreakOptionsForOxfMediax002Gb());
 
-        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.CARTEST.builder());
-        executionContext.executeChild(this, new NumeratorForOrganisationFra());
+        ec.executeChildren(this,
+                LeaseItemForRent_enum.OxfMiracl005Gb,
+                LeaseItemForServiceCharge_enum.OxfMiracl005Gb,
+                LeaseItemForTurnoverRent_enum.OxfMiracl005Gb,
+                LeaseItemForDiscount_enum.OxfMiracle005bGb,
+                LeaseItemForPercentage_enum.OxfMiracl005Gb,
+                LeaseItemForDeposit_enum.OxfMiracle005bGb,
+                LeaseItemForRent_enum.KalPoison001Nl);
 
-        executionContext.executeChild(this, new CreateInvoiceNumerators());
+        ec.executeChildren(this,
+                new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(),
+                new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(),
+                new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005());
 
-        executionContext.executeChild(this, new IncomingChargeFixture());
-        executionContext.executeChild(this, new OrderInvoiceFixture());
+        ec.executeChildren(this,
+                Project_enum.KalProject1,
+                Project_enum.KalProject2,
+                Project_enum.GraProject);
 
-        executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
-        executionContext.executeChild(this, new DocumentTypesAndTemplatesForLeaseFixture());
-        executionContext.executeChild(this, IncomingPdf_enum.FakeOrder1.builder().setRunAs("estatio-user-fr"));
-        executionContext.executeChild(this, IncomingPdf_enum.FakeInvoice1.builder().setRunAs("estatio-user-fr"));
+        ec.executeChildren(this,
+                Budget_enum.OxfBudget2015,
+                Budget_enum.OxfBudget2016);
 
+        ec.executeChildren(this,
+                KeyTable_enum.Oxf2015Area,
+                KeyTable_enum.Oxf2015Count);
 
-        executionContext.executeChild(this, new OrderFixture());
+        ec.executeChild(this, Partitioning_enum.OxfPartitioning2015.builder());
 
-        executionContext.executeChild(this, new IncomingInvoiceFixture());
+        ec.executeChild(this, new CreateInvoiceNumerators());
+
+        ec.executeChild(this, new IncomingChargeFixture());
+        ec.executeChild(this, new OrderInvoiceFixture());
+
+        ec.executeChildren(this,
+                new DocumentTypesAndTemplatesForCapexFixture(),
+                new DocumentTypesAndTemplatesForLeaseFixture());
+
+        ec.executeChildren(this,
+                IncomingPdf_enum.FakeOrder1.builder().setRunAs("estatio-user-fr"),
+                IncomingPdf_enum.FakeInvoice1.builder().setRunAs("estatio-user-fr"));
+
+        ec.executeChild(this, new OrderFixture());
+        ec.executeChild(this, new IncomingInvoiceFixture());
 
     }
 
