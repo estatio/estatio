@@ -22,6 +22,7 @@ import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTen
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.lease.fixtures.leaseitems.svcchgbudgeted.enums.LeaseItemForServiceChargeBudgeted_enum;
 
 public class LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb extends LeaseItemAndTermsAbstract {
 
@@ -39,11 +40,18 @@ public class LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb extends LeaseI
         executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
 
         // exec
-        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
 
-        createLeaseItemForServiceChargeBudgeted(
-                LEASE_REF,
-                AT_PATH,
-                executionContext);
+        if(System.getProperty("lease-item-legacy") == null) {
+            executionContext.executeChild(this, LeaseItemForServiceChargeBudgeted_enum.OxfTopModel001Gb.builder());
+        } else {
+            final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
+
+            createLeaseItemForServiceChargeBudgeted(
+                    LEASE_REF,
+                    AT_PATH,
+                    executionContext);
+        }
+
+
     }
 }

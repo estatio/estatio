@@ -24,8 +24,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.module.guarantee.dom.Guarantee;
 import org.estatio.module.guarantee.dom.GuaranteeRepository;
 import org.estatio.module.guarantee.fixtures.personas.GuaranteeForOxfTopModel001Gb;
@@ -44,12 +42,7 @@ public class Guarantee_TODO_IntegTest extends GuaranteeModuleIntegTestAbstract {
 
         @Before
         public void setupData() {
-            runFixtureScript(new FixtureScript() {
-                @Override
-                protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new GuaranteeForOxfTopModel001Gb());
-                }
-            }.withTracing());
+            runFixtureScript(new GuaranteeForOxfTopModel001Gb());
 
             lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
             guarantee = guaranteeRepository.findByReference(Lease_enum.OxfTopModel001Gb.getRef() + "-D");

@@ -23,6 +23,7 @@ import org.estatio.module.lease.dom.Fraction;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.lease.fixtures.leaseitems.deposits.enums.LeaseItemForDeposit_enum;
 
 public class LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb extends LeaseItemAndTermsAbstract {
 
@@ -40,13 +41,20 @@ public class LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb extends LeaseIte
         executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
 
         // exec
-        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
 
-        createLeaseTermForDeposit(
-                LEASE_REF,
-                AT_PATH,
-                lease.getStartDate(), null,
-                Fraction.M6,
-                executionContext);
+        if(System.getProperty("lease-item-legacy") == null) {
+            executionContext.executeChild(this, LeaseItemForDeposit_enum.OxfTopModel001Gb.builder());
+        } else {
+            final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
+
+            createLeaseTermForDeposit(
+                    LEASE_REF,
+                    AT_PATH,
+                    lease.getStartDate(), null,
+                    Fraction.M6,
+                    executionContext);
+        }
+
+
     }
 }

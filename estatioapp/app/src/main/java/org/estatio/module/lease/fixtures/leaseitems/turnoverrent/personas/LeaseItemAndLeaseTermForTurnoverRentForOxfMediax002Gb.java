@@ -22,6 +22,7 @@ import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTen
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.enums.LeaseItemForTurnoverRent_enum;
 
 public class LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002Gb extends LeaseItemAndTermsAbstract {
 
@@ -35,6 +36,10 @@ public class LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002Gb extends Lease
         executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.builder());
 
         // exec
+
+        if(System.getProperty("lease-item-legacy") == null) {
+            executionContext.executeChild(this, LeaseItemForTurnoverRent_enum.OxfMediaX002Gb.builder());
+        } else {
         String leaseReference = LEASE_REF;
         Lease lease = leaseRepository.findLeaseByReference(leaseReference);
 
@@ -44,6 +49,9 @@ public class LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002Gb extends Lease
                 lease.getStartDate(), null,
                 "7",
                 executionContext);
+        }
+
+
     }
 
 }

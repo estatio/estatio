@@ -22,6 +22,7 @@ import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTen
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.lease.fixtures.leaseitems.tax.enums.LeaseItemForTax_enum;
 
 import static org.incode.module.base.integtests.VT.bd;
 
@@ -41,6 +42,10 @@ public class LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb extends LeaseItemAnd
         executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
 
         // exec
+
+        if(System.getProperty("lease-item-legacy") == null) {
+            executionContext.executeChild(this, LeaseItemForTax_enum.OxfTopModel001Gb.builder());
+        } else {
         final Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
         createLeaseTermForTax(
                 LEASE_REF,
@@ -48,5 +53,7 @@ public class LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb extends LeaseItemAnd
                 bd(1),
                 bd(50), true,
                 executionContext);
+        }
+
     }
 }

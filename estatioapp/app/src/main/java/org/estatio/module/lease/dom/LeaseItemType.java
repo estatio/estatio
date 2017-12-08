@@ -71,6 +71,10 @@ public enum LeaseItemType implements PowerType<LeaseTerm> {
         return StringUtils.enumTitle(this.name());
     }
 
+    public boolean isCreate(Class<?> cls) {
+        return cls.isAssignableFrom(this.cls);
+    }
+
     // //////////////////////////////////////
 
     public LeaseTerm create(final FactoryService factoryService) {

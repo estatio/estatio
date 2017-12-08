@@ -27,6 +27,7 @@ import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.lease.fixtures.leaseitems.rent.enums.LeaseItemForRent_enum;
 
 import static org.incode.module.base.integtests.VT.bd;
 
@@ -43,27 +44,33 @@ public class LeaseItemAndLeaseTermForRentForKalPoison001 extends LeaseItemAndTer
 
         // exec
 
-        Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
+        if(System.getProperty("lease-item-legacy") == null) {
+            executionContext.executeChild(this, LeaseItemForRent_enum.KalPoison001Nl.builder());
+        } else {
+            Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
 
-        final String leaseRef = LEASE_REF;
-        final String leaseItemAtPath = AT_PATH;
-        final String chargeRef = Charge_enum.ItRent.getRef();
-        final LeaseItem leaseItem = findOrCreateLeaseItem(
-                leaseRef,
-                leaseItemAtPath,
-                chargeRef,
-                LeaseItemType.RENT,
-                InvoicingFrequency.QUARTERLY_IN_ADVANCE,
-                executionContext);
+            final String leaseRef = LEASE_REF;
+            final String leaseItemAtPath = AT_PATH;
+            final String chargeRef = Charge_enum.ItRent.getRef();
+            final LeaseItem leaseItem = findOrCreateLeaseItem(
+                    leaseRef,
+                    leaseItemAtPath,
+                    chargeRef,
+                    LeaseItemType.RENT,
+                    InvoicingFrequency.QUARTERLY_IN_ADVANCE,
+                    executionContext);
 
-        createLeaseTermForIndexableRent(
-                leaseRef,
-                leaseItemAtPath,
-                lease.getStartDate(),
-                null,
-                bd(150000), null, null, null,
-                Index_enum.IStatFoi.getReference(),
-                executionContext);
+            createLeaseTermForIndexableRent(
+                    leaseRef,
+                    leaseItemAtPath,
+                    lease.getStartDate(),
+                    null,
+                    bd(150000), null, null, null,
+                    Index_enum.IStatFoi.getReference(),
+                    executionContext);
+        }
+
+
     }
 
 }

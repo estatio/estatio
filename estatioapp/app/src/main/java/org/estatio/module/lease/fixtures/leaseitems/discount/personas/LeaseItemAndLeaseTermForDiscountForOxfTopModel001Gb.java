@@ -19,11 +19,9 @@
 package org.estatio.module.lease.fixtures.leaseitems.discount.personas;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-
-import static org.incode.module.base.integtests.VT.bd;
+import org.estatio.module.lease.fixtures.leaseitems.discount.enums.LeaseItemForDiscount_enum;
 
 public class LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb extends LeaseItemAndTermsAbstract {
 
@@ -42,12 +40,18 @@ public class LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb extends LeaseIt
 
         // exec
 
-        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
-        createLeaseTermForDiscount(
-                LEASE_REF,
-                AT_PATH,
-                lease.getStartDate(), lease.getStartDate().plusYears(5),
-                bd(-2000),
-                executionContext);
+        if(System.getProperty("lease-item-legacy") == null) {
+        } else {
+        }
+
+        executionContext.executeChild(this, LeaseItemForDiscount_enum.OxfTopModel001Gb.builder());
+
+//        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
+//        createLeaseTermForDiscount(
+//                LEASE_REF,
+//                AT_PATH,
+//                lease.getStartDate(), lease.getStartDate().plusYears(5),
+//                bd(-2000),
+//                executionContext);
     }
 }

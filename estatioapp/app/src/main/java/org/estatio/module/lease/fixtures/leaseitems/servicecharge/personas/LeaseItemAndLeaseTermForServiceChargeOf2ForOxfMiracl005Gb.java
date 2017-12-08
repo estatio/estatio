@@ -23,6 +23,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.lease.fixtures.leaseitems.servicecharge.enums.LeaseItemForServiceCharge_enum;
 
 import static org.incode.module.base.integtests.VT.bd;
 import static org.incode.module.base.integtests.VT.ld;
@@ -43,20 +44,27 @@ public class LeaseItemAndLeaseTermForServiceChargeOf2ForOxfMiracl005Gb extends L
         executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.builder());
 
         // exec
-        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
 
-        createLeaseTermForServiceCharge(
-                LEASE_REF,
-                AT_PATH, lease.getStartDate(), null,
-                bd(12400),
-                executionContext,
-                LeaseAgreementRoleTypeEnum.LANDLORD);
-        createLeaseTermForServiceCharge(
-                LEASE_REF,
-                AT_PATH, ld(2014, 1, 1), null,
-                bd(13000),
-                executionContext,
-                LeaseAgreementRoleTypeEnum.LANDLORD);
+        if(System.getProperty("lease-item-legacy") == null) {
+            executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfMiracl005Gb.builder());
+        } else {
+            final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
+
+            createLeaseTermForServiceCharge(
+                    LEASE_REF,
+                    AT_PATH, lease.getStartDate(), null,
+                    bd(12400),
+                    executionContext,
+                    LeaseAgreementRoleTypeEnum.LANDLORD);
+            createLeaseTermForServiceCharge(
+                    LEASE_REF,
+                    AT_PATH, ld(2014, 1, 1), null,
+                    bd(13000),
+                    executionContext,
+                    LeaseAgreementRoleTypeEnum.LANDLORD);
+        }
+
+
 
     }
 

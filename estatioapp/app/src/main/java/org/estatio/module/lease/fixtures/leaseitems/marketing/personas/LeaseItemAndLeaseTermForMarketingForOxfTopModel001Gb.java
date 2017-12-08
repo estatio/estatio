@@ -23,6 +23,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.lease.fixtures.leaseitems.marketing.enums.LeaseItemForMarketing_enum;
 
 import static org.incode.module.base.integtests.VT.bd;
 
@@ -42,14 +43,21 @@ public class LeaseItemAndLeaseTermForMarketingForOxfTopModel001Gb extends LeaseI
         executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
 
         // exec
-        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
 
-        createLeaseTermForMarketing(
-                LEASE_REF,
-                AT_PATH,
-                LeaseAgreementRoleTypeEnum.TENANTS_ASSOCIATION, lease.getStartDate(), null,
-                bd(6000),
-                executionContext
-        );
+        if(System.getProperty("lease-item-legacy") == null) {
+            executionContext.executeChild(this, LeaseItemForMarketing_enum.OxfTopModel001Gb.builder());
+        } else {
+            final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
+
+            createLeaseTermForMarketing(
+                    LEASE_REF,
+                    AT_PATH,
+                    LeaseAgreementRoleTypeEnum.TENANTS_ASSOCIATION, lease.getStartDate(), null,
+                    bd(6000),
+                    executionContext
+            );
+        }
+
+
     }
 }

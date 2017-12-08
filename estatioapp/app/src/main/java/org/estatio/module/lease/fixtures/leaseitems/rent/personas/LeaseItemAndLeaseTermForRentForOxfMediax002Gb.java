@@ -23,6 +23,7 @@ import org.estatio.module.index.fixtures.enums.Index_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.lease.fixtures.leaseitems.rent.enums.LeaseItemForRent_enum;
 
 import static org.incode.module.base.integtests.VT.bd;
 import static org.incode.module.base.integtests.VT.ld;
@@ -41,6 +42,11 @@ public class LeaseItemAndLeaseTermForRentForOxfMediax002Gb extends LeaseItemAndT
         executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.builder());
 
         // exec
+
+        if(System.getProperty("lease-item-legacy") == null) {
+            executionContext.executeChild(this, LeaseItemForRent_enum.OxfMediaX002Gb.builder());
+        } else {
+
         final Lease lease = Lease_enum.OxfMediaX002Gb.findUsing(serviceRegistry);
 
         createLeaseTermForIndexableRent(
@@ -51,6 +57,8 @@ public class LeaseItemAndLeaseTermForRentForOxfMediax002Gb extends LeaseItemAndT
                 ld(2008, 1, 1), ld(2009, 1, 1), ld(2009, 4, 1),
                 INDEX_REF_IT,
                 executionContext);
+        }
+
     }
 
 }

@@ -151,7 +151,8 @@ public class CreateRetroInvoices_IntegTest extends LeaseModuleIntegTestAbstract 
             createRetroInvoices.createLease(lease, VT.ld(2012, 1, 1), VT.ld(2014, 1, 1), FixtureScript.ExecutionContext.NOOP);
 
             // then
-            assertThat(invoiceForLeaseRepository.findByLease(lease).size(), is(10));
+            final List<InvoiceForLease> invoicesAfterCreate = invoiceForLeaseRepository.findByLease(lease);
+            assertThat(invoicesAfterCreate.size(), is(10));
 
             // and given
             lease.terminate(VT.ld(2013, 10, 1));
@@ -160,9 +161,9 @@ public class CreateRetroInvoices_IntegTest extends LeaseModuleIntegTestAbstract 
             invoiceService.calculateLegacy(lease, InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.ALL_RENT_AND_SERVICE_CHARGE, VT.ld(2014, 2, 1), VT.ld(2012, 1, 1), VT.ld(2014, 1, 1));
 
             // then
-            List<InvoiceForLease> invoicesList = invoiceForLeaseRepository.findByLease(lease);
-            assertThat(invoicesList.size(), is(11));
-            Invoice invoice = invoicesList.get(10);
+            List<InvoiceForLease> invoicessAfterCreateLegacy = invoiceForLeaseRepository.findByLease(lease);
+            assertThat(invoicessAfterCreateLegacy.size(), is(11));
+            Invoice invoice = invoicessAfterCreateLegacy.get(10);
             assertThat(invoice.getDueDate(), is(VT.ld(2014, 2, 1)));
             assertThat(invoice.getTotalGrossAmount(), is(VT.bd("-8170.01")));
 

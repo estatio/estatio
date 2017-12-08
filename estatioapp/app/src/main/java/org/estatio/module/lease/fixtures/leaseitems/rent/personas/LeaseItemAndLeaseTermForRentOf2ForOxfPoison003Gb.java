@@ -23,6 +23,7 @@ import org.estatio.module.index.fixtures.enums.Index_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.lease.fixtures.leaseitems.rent.enums.LeaseItemForRent_enum;
 
 import static org.incode.module.base.integtests.VT.bd;
 import static org.incode.module.base.integtests.VT.ld;
@@ -40,25 +41,32 @@ public class LeaseItemAndLeaseTermForRentOf2ForOxfPoison003Gb extends LeaseItemA
         executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.builder());
 
         // exec
-        final Lease lease = Lease_enum.OxfPoison003Gb.findUsing(serviceRegistry);
 
-        createLeaseTermForIndexableRent(
-                Lease_enum.OxfPoison003Gb.getRef(),
-                ApplicationTenancy_enum.GbOxfDefault.getPath(),
-                lease.getStartDate(), null,
-                bd(87300),
-                null, null, null,
-                Index_enum.IStatFoi.getReference(),
-                executionContext);
+        if(System.getProperty("lease-item-legacy") == null) {
+            executionContext.executeChild(this, LeaseItemForRent_enum.OxfPoison003Gb.builder());
+        } else {
+            final Lease lease = Lease_enum.OxfPoison003Gb.findUsing(serviceRegistry);
 
-        createLeaseTermForIndexableRent(
-                Lease_enum.OxfPoison003Gb.getRef(),
-                ApplicationTenancy_enum.GbOxfDefault.getPath(),
-                lease.getStartDate().plusYears(1), null,
-                bd(87300),
-                ld(2011, 1, 1), ld(2012, 1, 1), ld(2012, 4, 1),
-                Index_enum.IStatFoi.getReference(),
-                executionContext);
+            createLeaseTermForIndexableRent(
+                    Lease_enum.OxfPoison003Gb.getRef(),
+                    ApplicationTenancy_enum.GbOxfDefault.getPath(),
+                    lease.getStartDate(), null,
+                    bd(87300),
+                    null, null, null,
+                    Index_enum.IStatFoi.getReference(),
+                    executionContext);
+
+            createLeaseTermForIndexableRent(
+                    Lease_enum.OxfPoison003Gb.getRef(),
+                    ApplicationTenancy_enum.GbOxfDefault.getPath(),
+                    lease.getStartDate().plusYears(1), null,
+                    bd(87300),
+                    ld(2011, 1, 1), ld(2012, 1, 1), ld(2012, 4, 1),
+                    Index_enum.IStatFoi.getReference(),
+                    executionContext);
+        }
+
+
     }
 
 }

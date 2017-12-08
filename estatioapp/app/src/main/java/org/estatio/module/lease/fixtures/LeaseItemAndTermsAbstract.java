@@ -58,6 +58,7 @@ import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
 
 public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
 
+    // see LeaseItemBuilder
     protected LeaseItem findOrCreateLeaseItem(
             final String leaseRef,
             final String leaseItemAtPath,
@@ -75,6 +76,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
                 LeaseAgreementRoleTypeEnum.LANDLORD);
     }
 
+    // see LeaseItemBuilder
     protected LeaseItem findOrCreateLeaseItem(
             final String leaseRef,
             final String leaseItemAtPath,
@@ -107,6 +109,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
         return li;
     }
 
+    // see LeaseItemForRentBuilder
     private LeaseItem findOrCreateRentItem(final String leaseRef, final String leaseItemAtPath, final ExecutionContext executionContext){
         return findOrCreateLeaseItem(
                 leaseRef,
@@ -123,6 +126,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
 
     // //////////////////////////////////////
 
+    // LeaseTermForIndexableBuilder
     protected LeaseTerm createLeaseTermForIndexableRent(
             final String leaseRef,
             final String leaseItemAtPath,
@@ -149,6 +153,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
                 executionContext);
     }
 
+    // as per LeaseTermForPercentageBuilder
     protected LeaseTerm createLeaseTermForPercentage(
             final String leaseRef,
             final String leaseItemAtPath,
@@ -157,12 +162,15 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
             final BigDecimal percentage,
             final ExecutionContext executionContext) {
 
+        // as per LeaseItemForPercentageBuilder
         final LeaseItem leaseItem = findOrCreateLeaseItem(
                 leaseRef, leaseItemAtPath,
                 Charge_enum.ItPercentage.getRef(),
                 LeaseItemType.RENTAL_FEE,
                 InvoicingFrequency.YEARLY_IN_ARREARS,
                 executionContext);
+
+
         final LeaseTermForPercentage leaseTerm = (LeaseTermForPercentage) leaseItem.newTerm(startDate, endDate);
 
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
@@ -171,6 +179,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
         return executionContext.addResult(this, leaseTerm);
     }
 
+    // LeaseItemForDepositBuilder
     protected LeaseTerm createLeaseTermForDeposit(
             final String leaseRef,
             final String leaseItemAtPath,
@@ -204,6 +213,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
     }
 
 
+    // as per LeaseTermForIndexableBuilder
     protected LeaseTerm createLeaseTermForIndexableServiceCharge(
             final String leaseRef,
             final String leaseItemAtPath,
@@ -230,6 +240,8 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
                 executionContext);
     }
 
+
+    // as per LeaseTermForIndexableBuilder
     private LeaseTerm createLeaseTermForIndexable(
             final String leaseRef,
             final String leaseItemAtPath,
@@ -240,14 +252,14 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
             final LocalDate nextIndexStartDate,
             final LocalDate effectiveDate,
             final String indexReference,
-            final LeaseItemType rent,
+            final LeaseItemType leaseItemType,
             final String chargeReference,
             final ExecutionContext executionContext) {
 
         final LeaseItem leaseItem = findOrCreateLeaseItem(
                 leaseRef, leaseItemAtPath,
                 chargeReference,
-                rent, 
+                leaseItemType,
                 InvoicingFrequency.QUARTERLY_IN_ADVANCE,
                 executionContext);
 
@@ -262,9 +274,9 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
 
         return executionContext.addResult(this, leaseTerm);
     }
-
     // //////////////////////////////////////
 
+    // LeaseTermForServiceChargeBuilder
     protected LeaseTerm createLeaseTermForServiceCharge(
             final String leaseRef,
             final String leaseItemAtPath,
@@ -367,6 +379,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
 
     // //////////////////////////////////////
 
+    // LeaseItemForDiscountBuilder
     protected LeaseTerm createLeaseTermForDiscount(
             final String leaseRef,
             final String leaseItemAtPath,
@@ -381,6 +394,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
                 LeaseItemType.RENT_DISCOUNT_FIXED, InvoicingFrequency.FIXED_IN_ADVANCE,
                 executionContext);
 
+        // LeaseTermForFixedBuilder
         final LeaseTermForFixed leaseTerm = (LeaseTermForFixed) leaseItem.newTerm(startDate, endDate);
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
         leaseTerm.setValue(value);

@@ -22,6 +22,7 @@ import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTen
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.lease.fixtures.leaseitems.discount.enums.LeaseItemForDiscount_enum;
 
 import static org.incode.module.base.integtests.VT.bd;
 
@@ -42,13 +43,19 @@ public class LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb extends LeaseItem
 
         // exec
 
-        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
-        createLeaseTermForDiscount(
-                LEASE_REF,
-                AT_PATH,
-                lease.getStartDate(), lease.getStartDate().plusYears(1),
-                bd(-20000),
-                executionContext);
+        if(System.getProperty("lease-item-legacy") == null) {
+            executionContext.executeChild(this, LeaseItemForDiscount_enum.OxfMiracle005bGb.builder());
+        } else {
+            final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
+            createLeaseTermForDiscount(
+                    LEASE_REF,
+                    AT_PATH,
+                    lease.getStartDate(), lease.getStartDate().plusYears(1),
+                    bd(-20000),
+                    executionContext);
+        }
+
+
     }
 
 }

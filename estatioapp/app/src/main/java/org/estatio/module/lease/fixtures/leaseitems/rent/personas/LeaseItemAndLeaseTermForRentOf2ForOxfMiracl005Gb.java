@@ -23,6 +23,7 @@ import org.estatio.module.index.fixtures.enums.Index_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.lease.fixtures.leaseitems.rent.enums.LeaseItemForRent_enum;
 
 import static org.incode.module.base.integtests.VT.bd;
 import static org.incode.module.base.integtests.VT.ld;
@@ -42,25 +43,32 @@ public class LeaseItemAndLeaseTermForRentOf2ForOxfMiracl005Gb extends LeaseItemA
 
         // exec
 
-        final Lease lease = Lease_enum.OxfMiracl005Gb.findUsing(serviceRegistry);
+        if(System.getProperty("lease-item-legacy") == null) {
+            executionContext.executeChild(this, LeaseItemForRent_enum.OxfMiracl005Gb.builder());
+        } else {
+            final Lease lease = Lease_enum.OxfMiracl005Gb.findUsing(serviceRegistry);
 
-        createLeaseTermForIndexableRent(
-                Lease_enum.OxfMiracl005Gb.getRef(),
-                ApplicationTenancy_enum.GbOxfDefault.getPath(),
-                lease.getStartDate(), null,
-                bd(150000),
-                null, null, null,
-                Index_enum.IStatFoi.getReference(),
-                executionContext);
+            createLeaseTermForIndexableRent(
+                    Lease_enum.OxfMiracl005Gb.getRef(),
+                    ApplicationTenancy_enum.GbOxfDefault.getPath(),
+                    lease.getStartDate(), null,
+                    bd(150000),
+                    null, null, null,
+                    Index_enum.IStatFoi.getReference(),
+                    executionContext);
 
-        createLeaseTermForIndexableRent(
-                Lease_enum.OxfMiracl005Gb.getRef(),
-                ApplicationTenancy_enum.GbOxfDefault.getPath(),
-                ld(2015, 1, 1), null,
-                null,
-                ld(2013, 11, 1), ld(2014, 12, 1), null,
-                Index_enum.IStatFoi.getReference(),
-                executionContext);
+            createLeaseTermForIndexableRent(
+                    Lease_enum.OxfMiracl005Gb.getRef(),
+                    ApplicationTenancy_enum.GbOxfDefault.getPath(),
+                    ld(2015, 1, 1), null,
+                    null,
+                    ld(2013, 11, 1), ld(2014, 12, 1), null,
+                    Index_enum.IStatFoi.getReference(),
+                    executionContext);
+        }
+
+
+
 
     }
 

@@ -24,6 +24,7 @@ import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTen
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.lease.fixtures.leaseitems.percentage.enums.LeaseItemForPercentage_enum;
 
 public class LeaseItemAndLeaseTermForPercentageForOxfTopModel001Gb extends LeaseItemAndTermsAbstract {
 
@@ -41,13 +42,20 @@ public class LeaseItemAndLeaseTermForPercentageForOxfTopModel001Gb extends Lease
         executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
 
         // exec
-        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
 
-        createLeaseTermForPercentage(
-                LEASE_REF,
-                AT_PATH,
-                lease.getStartDate().withDayOfYear(1).plusYears(1), null,
-                BigDecimal.valueOf(1.50),
-                executionContext);
+        if(System.getProperty("lease-item-legacy") == null) {
+            executionContext.executeChild(this, LeaseItemForPercentage_enum.OxfTopModel001Gb.builder());
+        } else {
+            final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
+
+            createLeaseTermForPercentage(
+                    LEASE_REF,
+                    AT_PATH,
+                    lease.getStartDate().withDayOfYear(1).plusYears(1), null,
+                    BigDecimal.valueOf(1.50),
+                    executionContext);
+        }
+
+
     }
 }

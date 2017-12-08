@@ -23,6 +23,7 @@ import org.estatio.module.index.fixtures.enums.Index_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.lease.fixtures.leaseitems.indexsvcchg.enums.LeaseItemForIndexableServiceCharge_enum;
 
 import static org.incode.module.base.integtests.VT.bd;
 import static org.incode.module.base.integtests.VT.ld;
@@ -44,13 +45,19 @@ public class LeaseItemAndLeaseTermForIndexableServiceChargeForOxfMiracl005Gb ext
 
         // exec
 
-        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
-        createLeaseTermForIndexableServiceCharge(
-                LEASE_REF,
-                AT_PATH, lease.getStartDate(), null,
-                bd(6000),
-                ld(2010, 7, 1), ld(2011, 1, 1), ld(2011, 4, 1),
-                Index_enum.IStatFoi.getReference(),
-                executionContext);
+        if(System.getProperty("lease-item-legacy") == null) {
+            executionContext.executeChild(this, LeaseItemForIndexableServiceCharge_enum.OxfMiracl005Gb.builder());
+        } else {
+            final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
+            createLeaseTermForIndexableServiceCharge(
+                    LEASE_REF,
+                    AT_PATH, lease.getStartDate(), null,
+                    bd(6000),
+                    ld(2010, 7, 1), ld(2011, 1, 1), ld(2011, 4, 1),
+                    Index_enum.IStatFoi.getReference(),
+                    executionContext);
+        }
+
+
     }
 }
