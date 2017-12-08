@@ -19,19 +19,11 @@
 package org.estatio.module.lease.fixtures.leaseitems.rent.personas;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.index.fixtures.enums.Index_enum;
-import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.rent.enums.LeaseItemForRent_enum;
 
-import static org.incode.module.base.integtests.VT.bd;
-import static org.incode.module.base.integtests.VT.ld;
-
 public class LeaseItemAndLeaseTermForRentForOxfTopModel001Gb extends LeaseItemAndTermsAbstract {
-
-    public static final String LEASE_REF = Lease_enum.OxfTopModel001Gb.getRef();
-    public static final String AT_PATH = ApplicationTenancy_enum.GbOxfDefault.getPath();
 
     @Override
     protected void execute(final ExecutionContext fixtureResults) {
@@ -44,20 +36,7 @@ public class LeaseItemAndLeaseTermForRentForOxfTopModel001Gb extends LeaseItemAn
         executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
 
         // exec
-
-        if(System.getProperty("lease-item-legacy") == null) {
-            executionContext.executeChild(this, LeaseItemForRent_enum.OxfTopModel001Gb.builder());
-        } else {
-            final Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
-            createLeaseTermForIndexableRent(
-                    LEASE_REF,
-                    AT_PATH,
-                    lease.getStartDate(), null,
-                    bd(20000),
-                    ld(2010, 7, 1), ld(2011, 1, 1), ld(2011, 4, 1),
-                    Index_enum.IStatFoi.getReference(),
-                    executionContext);
-        }
+        executionContext.executeChild(this, LeaseItemForRent_enum.OxfTopModel001Gb.builder());
 
 
     }

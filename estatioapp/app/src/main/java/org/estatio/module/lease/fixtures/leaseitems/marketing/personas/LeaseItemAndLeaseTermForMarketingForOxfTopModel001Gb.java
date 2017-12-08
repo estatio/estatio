@@ -18,46 +18,22 @@
  */
 package org.estatio.module.lease.fixtures.leaseitems.marketing.personas;
 
-import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.marketing.enums.LeaseItemForMarketing_enum;
 
-import static org.incode.module.base.integtests.VT.bd;
-
 public class LeaseItemAndLeaseTermForMarketingForOxfTopModel001Gb extends LeaseItemAndTermsAbstract {
-
-    public static final String LEASE_REF = Lease_enum.OxfTopModel001Gb.getRef();
-    public static final String AT_PATH = ApplicationTenancy_enum.GbOxfDefault.getPath();
 
     @Override
     protected void execute(final ExecutionContext fixtureResults) {
-        createLeaseTermsForOxfTopModel001(fixtureResults);
-    }
-
-    private void createLeaseTermsForOxfTopModel001(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
+        fixtureResults.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
 
         // exec
 
-        if(System.getProperty("lease-item-legacy") == null) {
-            executionContext.executeChild(this, LeaseItemForMarketing_enum.OxfTopModel001Gb.builder());
-        } else {
-            final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
-
-            createLeaseTermForMarketing(
-                    LEASE_REF,
-                    AT_PATH,
-                    LeaseAgreementRoleTypeEnum.TENANTS_ASSOCIATION, lease.getStartDate(), null,
-                    bd(6000),
-                    executionContext
-            );
-        }
-
+        fixtureResults.executeChild(this, LeaseItemForMarketing_enum.OxfTopModel001Gb.builder());
 
     }
+
 }

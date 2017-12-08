@@ -19,15 +19,11 @@
 package org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.enums.LeaseItemForTurnoverRent_enum;
 
 public class LeaseItemAndLeaseTermForTurnoverRentForOxfMiracl005Gb extends LeaseItemAndTermsAbstract {
-
-    public static final String LEASE_REF = Lease_enum.OxfMiracl005Gb.getRef();
-    public static final String AT_PATH = ApplicationTenancy_enum.GbOxfDefault.getPath();
 
     @Override
     protected void execute(final ExecutionContext fixtureResults) {
@@ -40,18 +36,7 @@ public class LeaseItemAndLeaseTermForTurnoverRentForOxfMiracl005Gb extends Lease
         executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.builder());
 
         // exec
-
-        if(System.getProperty("lease-item-legacy") == null) {
-            executionContext.executeChild(this, LeaseItemForTurnoverRent_enum.OxfMiracl005Gb.builder());
-        } else {
-        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
-
-        createLeaseTermForTurnoverRent(
-                LEASE_REF,
-                AT_PATH,
-                lease.getStartDate(), null, "7",
-                executionContext);
-        }
+        executionContext.executeChild(this, LeaseItemForTurnoverRent_enum.OxfMiracl005Gb.builder());
     }
 
 }

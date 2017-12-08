@@ -26,9 +26,6 @@ import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.enums.LeaseItem
 
 public class LeaseItemAndLeaseTermForTurnoverRentForOxfTopModel001Gb extends LeaseItemAndTermsAbstract {
 
-    public static final String LEASE_REF = Lease_enum.OxfTopModel001Gb.getRef();
-    public static final String AT_PATH = ApplicationTenancy_enum.GbOxfDefault.getPath();
-
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
@@ -36,21 +33,7 @@ public class LeaseItemAndLeaseTermForTurnoverRentForOxfTopModel001Gb extends Lea
         executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
 
         // exec
-
-        if(System.getProperty("lease-item-legacy") == null) {
         executionContext.executeChild(this, LeaseItemForTurnoverRent_enum.OxfTopModel001Gb.builder());
-        } else {
-
-            final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
-
-            createLeaseTermForTurnoverRent(
-                    LEASE_REF,
-                    AT_PATH,
-                    lease.getStartDate().withDayOfYear(1).plusYears(1), null,
-                    "7",
-                    executionContext);
-        }
-
 
     }
 

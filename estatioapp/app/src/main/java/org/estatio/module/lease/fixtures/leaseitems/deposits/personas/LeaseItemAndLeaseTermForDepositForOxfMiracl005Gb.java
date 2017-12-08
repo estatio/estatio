@@ -18,43 +18,21 @@
  */
 package org.estatio.module.lease.fixtures.leaseitems.deposits.personas;
 
-import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.lease.dom.Fraction;
-import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.deposits.enums.LeaseItemForDeposit_enum;
 
 public class LeaseItemAndLeaseTermForDepositForOxfMiracl005Gb extends LeaseItemAndTermsAbstract {
 
-    public static final String LEASE_REF = Lease_enum.OxfMiracl005Gb.getRef();
-    public static final String AT_PATH = ApplicationTenancy_enum.GbOxfDefault.getPath();
-
     @Override
     protected void execute(final ExecutionContext fixtureResults) {
-        createLeaseTermsForOxfMiracl005Gb(fixtureResults);
-    }
-
-    private void createLeaseTermsForOxfMiracl005Gb(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.builder());
-
+        fixtureResults.executeChild(this, Lease_enum.OxfMiracl005Gb.builder());
 
         // exec
-        if(System.getProperty("lease-item-legacy") == null) {
-            executionContext.executeChild(this, LeaseItemForDeposit_enum.OxfMiracle005bGb.builder());
-        } else {
-
-            final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
-
-            createLeaseTermForDeposit(
-                    LEASE_REF,
-                    AT_PATH,
-                    lease.getStartDate(), null,
-                    Fraction.M6,
-                    executionContext);
-        }
+        fixtureResults.executeChild(this, LeaseItemForDeposit_enum.OxfMiracle005bGb.builder());
 
     }
+
 }

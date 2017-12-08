@@ -19,15 +19,11 @@
 package org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.enums.LeaseItemForTurnoverRent_enum;
 
 public class LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002Gb extends LeaseItemAndTermsAbstract {
-
-    public static final String LEASE_REF = Lease_enum.OxfMediaX002Gb.getRef();
-    public static final String AT_PATH = ApplicationTenancy_enum.GbOxfDefault.getPath();
 
     @Override
     protected void execute(ExecutionContext executionContext) {
@@ -37,19 +33,7 @@ public class LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002Gb extends Lease
 
         // exec
 
-        if(System.getProperty("lease-item-legacy") == null) {
             executionContext.executeChild(this, LeaseItemForTurnoverRent_enum.OxfMediaX002Gb.builder());
-        } else {
-        String leaseReference = LEASE_REF;
-        Lease lease = leaseRepository.findLeaseByReference(leaseReference);
-
-        createLeaseTermForTurnoverRent(
-                leaseReference,
-                AT_PATH,
-                lease.getStartDate(), null,
-                "7",
-                executionContext);
-        }
 
 
     }

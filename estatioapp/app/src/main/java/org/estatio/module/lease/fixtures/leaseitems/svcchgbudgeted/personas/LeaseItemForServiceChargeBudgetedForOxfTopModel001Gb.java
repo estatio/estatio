@@ -18,40 +18,21 @@
  */
 package org.estatio.module.lease.fixtures.leaseitems.svcchgbudgeted.personas;
 
-import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.svcchgbudgeted.enums.LeaseItemForServiceChargeBudgeted_enum;
 
 public class LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb extends LeaseItemAndTermsAbstract {
 
-    public static final String LEASE_REF = Lease_enum.OxfTopModel001Gb.getRef();
-    public static final String AT_PATH = ApplicationTenancy_enum.GbOxfDefault.getPath();
-
     @Override
     protected void execute(final ExecutionContext fixtureResults) {
-        createLeaseTermsForOxfTopModel001(fixtureResults);
-    }
-
-    private void createLeaseTermsForOxfTopModel001(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
+        fixtureResults.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
 
         // exec
-
-        if(System.getProperty("lease-item-legacy") == null) {
-            executionContext.executeChild(this, LeaseItemForServiceChargeBudgeted_enum.OxfTopModel001Gb.builder());
-        } else {
-            final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
-
-            createLeaseItemForServiceChargeBudgeted(
-                    LEASE_REF,
-                    AT_PATH,
-                    executionContext);
-        }
-
+        fixtureResults.executeChild(this, LeaseItemForServiceChargeBudgeted_enum.OxfTopModel001Gb.builder());
 
     }
+
 }
