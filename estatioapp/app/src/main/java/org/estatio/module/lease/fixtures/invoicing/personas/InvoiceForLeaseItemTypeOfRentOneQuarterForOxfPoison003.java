@@ -32,9 +32,9 @@ import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.fixtures.invoice.InvoiceAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.leaseitems.rent.personas.LeaseItemAndLeaseTermForRentOf2ForOxfPoison003Gb;
-import org.estatio.module.lease.fixtures.leaseitems.servicecharge.personas.LeaseItemAndLeaseTermForServiceChargeForOxfPoison003Gb;
-import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas.LeaseItemAndLeaseTermForTurnoverRentForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.leaseitems.rent.enums.LeaseItemForRent_enum;
+import org.estatio.module.lease.fixtures.leaseitems.servicecharge.enums.LeaseItemForServiceCharge_enum;
+import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.enums.LeaseItemForTurnoverRent_enum;
 import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.hamcrest.CoreMatchers.is;

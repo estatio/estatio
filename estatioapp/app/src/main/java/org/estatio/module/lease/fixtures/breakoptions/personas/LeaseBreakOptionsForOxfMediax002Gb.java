@@ -23,9 +23,9 @@ import org.estatio.module.lease.dom.breaks.BreakExerciseType;
 import org.estatio.module.lease.dom.breaks.BreakType;
 import org.estatio.module.lease.fixtures.LeaseBreakOptionsAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.leaseitems.rent.personas.LeaseItemAndLeaseTermForRentForOxfMediax002Gb;
-import org.estatio.module.lease.fixtures.leaseitems.servicecharge.personas.LeaseItemAndLeaseTermForServiceChargeForOxfMediax002Gb;
-import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas.LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002Gb;
+import org.estatio.module.lease.fixtures.leaseitems.rent.enums.LeaseItemForRent_enum;
+import org.estatio.module.lease.fixtures.leaseitems.servicecharge.enums.LeaseItemForServiceCharge_enum;
+import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.enums.LeaseItemForTurnoverRent_enum;
 
 public class LeaseBreakOptionsForOxfMediax002Gb extends LeaseBreakOptionsAbstract {
 

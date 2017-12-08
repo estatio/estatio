@@ -36,8 +36,8 @@ import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTermForTax;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.leaseitems.rent.personas.LeaseItemAndLeaseTermForRentForOxfTopModel001Gb;
-import org.estatio.module.lease.fixtures.leaseitems.tax.personas.LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.leaseitems.rent.enums.LeaseItemForRent_enum;
+import org.estatio.module.lease.fixtures.leaseitems.tax.enums.LeaseItemForTax_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.hamcrest.CoreMatchers.is;
