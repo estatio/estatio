@@ -20,6 +20,7 @@ package org.estatio.module.lease.dom.breaks.prolongation;
 
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.InheritanceStrategy;
 
@@ -27,9 +28,14 @@ import com.google.common.collect.Sets;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.incode.module.base.dom.utils.JodaPeriodUtils;
+
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.breaks.BreakOption;
 
 import lombok.Getter;
@@ -86,5 +92,14 @@ public class ProlongationOption
         createEvent(getBreakDate(), this, CALENDAR_NAME_PROLONGATION);
         createEvent(getExerciseDate(), this, CALENDAR_NAME_PROLONGATION_EXERCISE);
     }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public Lease prolong(){
+        getLease().setEndDate(getBreakDate().plus(JodaPeriodUtils.asPeriod(getProlongationPeriod())));
+        return prolongationOptionRepository.newProlongationOption(getLease(), getProlongationPeriod(), getNotificationPeriod(), getDescription());
+    }
+
+    @Inject
+    ProlongationOptionRepository prolongationOptionRepository;
 
 }

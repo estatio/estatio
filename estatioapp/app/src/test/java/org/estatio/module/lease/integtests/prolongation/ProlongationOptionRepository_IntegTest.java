@@ -127,4 +127,41 @@ public class ProlongationOptionRepository_IntegTest extends LeaseModuleIntegTest
 
     }
 
+    public static class Prolong extends ProlongationOptionRepository_IntegTest {
+
+        @Before
+        public void setupData() {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new LeaseProlongationOptionsForOxfTopModel001());
+                }
+            });
+        }
+
+        @Test
+        public void prolong_works() throws Exception {
+            // given
+            Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+            LocalDate leaseEndDate = lease.getEndDate();
+            assertThat(leaseEndDate).isEqualTo(new LocalDate(2022, 7,14));
+
+            ProlongationOption option1 = prolongationOptionRepository.findByLease(lease).get(0);
+
+            // when
+            wrap(option1).prolong();
+
+            // then
+            assertThat(lease.getEndDate()).isEqualTo(new LocalDate(2027, 7, 14));
+            ProlongationOption option2 = prolongationOptionRepository.findByLease(lease).get(1);
+            assertThat(option2.getProlongationPeriod()).isEqualTo(option1.getProlongationPeriod());
+            assertThat(option2.getNotificationPeriod()).isEqualTo(option1.getNotificationPeriod());
+            assertThat(option2.getDescription()).isEqualTo(option1.getDescription());
+            assertThat(option2.getCalendarEvents().size()).isEqualTo(2);
+
+        }
+
+
+    }
+
 }
