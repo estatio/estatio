@@ -20,6 +20,7 @@
 package org.estatio.module.lease.dom;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -130,6 +131,14 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
         return allMatches("matchByReferenceOrName", "referenceOrName", pattern, "includeTerminated", includeTerminated, "date", clockService.now());
     }
 
+    public List<Lease> matchByTenantName(final String tenantName, final Property property) {
+        String pattern = StringUtils.wildcardToCaseInsensitiveRegex(tenantName);
+        return allMatches("findByProperty", "property", property)
+                .stream()
+                .filter(x->x.getSecondaryParty().getName().matches(pattern))
+                .collect(Collectors.toList());
+    }
+
     public List<Lease> findByAssetAndActiveOnDate(
             final FixedAsset fixedAsset,
             final LocalDate activeOnDate) {
@@ -188,5 +197,6 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
 
     @Inject
     AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
+
 
 }

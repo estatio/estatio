@@ -207,8 +207,17 @@ public class LeaseMenu {
         return leaseRepository.findByBrand(brand, includeTerminated);
     }
 
+    @ActionLayout(contributed = Contributed.AS_NEITHER)
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "5")
+    public List<Lease> findLeasesByTenantName(
+            final String tenantName,
+            final Property property) {
+        return leaseRepository.matchByTenantName(tenantName, property);
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @MemberOrder(sequence = "6")
     public List<Lease> findLeasesActiveOnDate(
             final FixedAsset fixedAsset,
             final LocalDate activeOnDate) {

@@ -262,6 +262,47 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         }
     }
 
+    public static class MatchByTenantName extends LeaseRepository_IntegTest {
+
+        @Before
+        public void setupData() {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+
+
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
+                    executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.builder());
+                    executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.builder());
+                    executionContext.executeChild(this, Lease_enum.KalPoison001Nl.builder());
+                    executionContext.executeChild(this, Lease_enum.OxfPret004Gb.builder());
+                    executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.builder());
+                }
+            });
+        }
+
+        @Test
+        public void match_by_tenant_name_works(){
+
+            // given
+            Property oxf = Property_enum.OxfGb.findUsing(serviceRegistry);
+
+            // when
+            final List<Lease> result = leaseRepository.matchByTenantName("*oison*", oxf);
+
+            // then
+            assertThat(result.size()).isEqualTo(1);
+            assertThat(result.get(0)).isEqualTo(Lease_enum.OxfPoison003Gb.findUsing(serviceRegistry));
+
+            // and when
+            final List<Lease> results = leaseRepository.matchByTenantName("m*", oxf);
+            // then
+            assertThat(results.size()).isEqualTo(2);
+            
+        }
+
+    }
+
     public static class FindLeasesActiveOnDate extends LeaseRepository_IntegTest {
 
         @Before
