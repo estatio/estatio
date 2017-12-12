@@ -250,8 +250,19 @@ public class IncomingInvoiceItem_Test {
 
             // and given
             validator = new IncomingInvoiceItem.Validator();
+            // when
+            item.setStartDate(new LocalDate(2017,1,1));
+            item.setEndDate(new LocalDate(2017,12,31));
+            result = validator.validateForIncomingInvoiceType(item).getResult();
+            // then
+            assertThat(result).isEqualTo("project (capex), removal of budget item (only applicable for service charges), financial period (capex) required");
+
+            // and given
+            validator = new IncomingInvoiceItem.Validator();
             // when all conditions satisfied
             item.setProject(new Project());
+            item.setStartDate(new LocalDate(2017,7,1));
+            item.setEndDate(new LocalDate(2018,6,30));
             result = validator.validateForIncomingInvoiceType(item).getResult();
             // then
             assertThat(result).isEqualTo("removal of budget item (only applicable for service charges) required");
