@@ -537,7 +537,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
 
             //then
             expectedException.expect(DisabledException.class);
-            expectedException.expectMessage("You need administrator rights to change the dates");
+            expectedException.expectMessage("You need super user rights to change the dates");
 
             // when
             wrap(leaseTopModel).changeDates(null, null);

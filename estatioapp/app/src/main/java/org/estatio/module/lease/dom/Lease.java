@@ -401,7 +401,7 @@ public class Lease
 
     @Override
     public String disableChangeDates() {
-        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser()) ? "You need administrator rights to change the dates" : null;
+        return !EstatioRole.SUPERUSER.isApplicableFor(getUser()) ? "You need super user rights to change the dates" : null;
     }
 
     @Programmatic
