@@ -281,6 +281,7 @@ public abstract class BreakOption
     ){
         final Period p = JodaPeriodUtils.asPeriod(notificationPeriod);
         setExerciseDate(getBreakDate().minus(p));
+        setNotificationPeriod(notificationPeriod);
 
         // re-create events
         removeExistingEvents();

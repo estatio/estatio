@@ -11,8 +11,8 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 public class PeriodUtil {
 
-    private static Pattern financialYearPattern = Pattern.compile("^F\\d{4}.*");
-    private static Pattern yearPattern = Pattern.compile("^\\d{4}.*");
+    public static Pattern financialYearPattern = Pattern.compile("^F\\d{4}.*");
+    public static Pattern yearPattern = Pattern.compile("^\\d{4}.*");
 
     @Nullable
     public static LocalDateInterval yearFromPeriod(final String period){

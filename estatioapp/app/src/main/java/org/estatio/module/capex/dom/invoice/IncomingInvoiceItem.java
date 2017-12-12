@@ -843,6 +843,10 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
                     if (incomingInvoiceItem.getBudgetItem()!=null){
                         setResult(result==null ? message : result.concat(", ").concat(message));
                     }
+                    message = "financial period (capex)";
+                    if (incomingInvoiceItem.getPeriod()!=null && !PeriodUtil.financialYearPattern.matcher(incomingInvoiceItem.getPeriod()).matches()){
+                        setResult(result==null ? message : result.concat(", ").concat(message));
+                    }
                 break;
 
                 case SERVICE_CHARGES:

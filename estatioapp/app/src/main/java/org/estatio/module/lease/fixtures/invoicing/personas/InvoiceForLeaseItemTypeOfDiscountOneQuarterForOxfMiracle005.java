@@ -32,7 +32,7 @@ import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.fixtures.invoice.InvoiceAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
 import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -70,7 +70,7 @@ public class InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005 extends
 
         // prereqs
         executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.builder());
-        executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb());
+        executionContext.executeChild(this, LeaseItemForDiscount_enum.OxfMiracle005bGb.builder());
 
         // exec
         final ApplicationTenancy applicationTenancy = applicationTenancy_d.findUsing(serviceRegistry);

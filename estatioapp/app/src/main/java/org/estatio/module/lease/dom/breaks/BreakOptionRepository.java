@@ -35,7 +35,6 @@ import org.incode.module.base.dom.utils.JodaPeriodUtils;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.lease.dom.breaks.prolongation.ProlongationOption;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = BreakOption.class)
 public class BreakOptionRepository extends UdoDomainRepositoryAndFactory<BreakOption> {
@@ -72,25 +71,6 @@ public class BreakOptionRepository extends UdoDomainRepositoryAndFactory<BreakOp
                         BreakOption.Predicates.whetherTypeAndBreakDate(breakType, breakDate));
         return duplicates.iterator().hasNext() ?
                 "This lease already has a " + breakType + " break option for this date" : null;
-    }
-
-    @Programmatic
-    public Lease newProlongationOption(
-            final Lease lease,
-            final String prolongationPeriod,
-            final String notificationPeriod,
-            final @Parameter(optionality = Optionality.OPTIONAL) String description
-    ) {
-        final ProlongationOption prolongationOption = newTransientInstance(ProlongationOption.class);
-        prolongationOption.setType(BreakType.PROLONGATION);
-        prolongationOption.setLease(lease);
-        prolongationOption.setExerciseType(BreakExerciseType.TENANT);
-        prolongationOption.setBreakDate(lease.getEndDate());
-        prolongationOption.setNotificationPeriod(notificationPeriod);
-        prolongationOption.setExerciseDate(lease.getEndDate().minus(JodaPeriodUtils.asPeriod(notificationPeriod)));
-        prolongationOption.setDescription(description);
-        persist(prolongationOption);
-        return lease;
     }
 
     @Programmatic

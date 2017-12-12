@@ -170,6 +170,7 @@ public class BreakOption_IntegTest extends LeaseModuleIntegTestAbstract {
 
             // then
             assertThat(breakOption.getExerciseDate(), is(breakDate.minusMonths(6)));
+            assertThat(breakOption.getNotificationPeriod(), is("6m"));
         }
 
     }

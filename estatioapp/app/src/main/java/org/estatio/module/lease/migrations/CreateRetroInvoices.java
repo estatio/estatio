@@ -19,6 +19,7 @@
 package org.estatio.module.lease.migrations;
 
 import java.util.List;
+import java.util.SortedSet;
 
 import javax.inject.Inject;
 
@@ -126,7 +127,8 @@ public class CreateRetroInvoices extends DiscoverableFixtureScript {
             final LocalDate startDueDate,
             final LocalDate nextDueDate,
             final ExecutionContext fixtureResults) {
-        for (LocalDate dueDate : lease.dueDatesInRange(startDueDate, nextDueDate)) {
+        final SortedSet<LocalDate> dueDates = lease.dueDatesInRange(startDueDate, nextDueDate);
+        for (LocalDate dueDate : dueDates) {
             InvoiceCalculationParameters parameters =
                     InvoiceCalculationParameters.builder()
                             .lease(lease)

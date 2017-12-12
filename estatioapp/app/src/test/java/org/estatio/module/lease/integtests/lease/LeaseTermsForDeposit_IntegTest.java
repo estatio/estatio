@@ -51,9 +51,8 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb;
-import org.estatio.module.lease.fixtures.leaseitems.rent.personas.LeaseItemAndLeaseTermForRentForOxfMediax002Gb;
-import org.estatio.module.lease.fixtures.leaseitems.rent.personas.LeaseItemAndLeaseTermForRentForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -85,8 +84,8 @@ public class LeaseTermsForDeposit_IntegTest extends LeaseModuleIntegTestAbstract
                 protected void execute(ExecutionContext executionContext) {
 
                     executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
-                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForOxfTopModel001Gb());
-                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb());
+                    executionContext.executeChild(this, LeaseItemForRent_enum.OxfTopModel001Gb.builder());
+                    executionContext.executeChild(this, LeaseItemForDeposit_enum.OxfTopModel001Gb.builder());
 
                 }
             });
@@ -170,7 +169,7 @@ public class LeaseTermsForDeposit_IntegTest extends LeaseModuleIntegTestAbstract
                 protected void execute(ExecutionContext executionContext) {
 
                     executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.builder());
-                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForOxfMediax002Gb());
+                    executionContext.executeChild(this, LeaseItemForRent_enum.OxfMediaX002Gb.builder());
                 }
             });
 

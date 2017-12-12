@@ -128,27 +128,15 @@ public class PaymentBatchManager {
     }
 
 
-
-    public static enum Selection {
-        ALL_POSSIBLE,
-        HAND_PICK
-    }
-
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
             command = CommandReification.DISABLED,
             publishing = Publishing.DISABLED
     )
     public PaymentBatchManager autoCreateBatches(
-            final Selection selection,
             @Nullable final List<IncomingInvoice> payableInvoices) {
 
-        final List<IncomingInvoice> invoicesToPay =
-                selection == Selection.ALL_POSSIBLE
-                        ? getPayableInvoicesNotInAnyBatchWithBankAccountAndBic()
-                        : payableInvoices; // ie, HAND_PICK (as provided as parameter)
-
-        for (final IncomingInvoice payableInvoice : invoicesToPay) {
+        for (final IncomingInvoice payableInvoice : payableInvoices) {
             final BankAccount uniqueBankAccountIfAny = uniqueDebtorAccountToPay(payableInvoice);
             if (uniqueBankAccountIfAny != null && uniqueBankAccountIfAny.getBic() != null) {
                 // should be true, because those that don't pass this are filtered out in choicesXxx anyway.
@@ -194,11 +182,12 @@ public class PaymentBatchManager {
         }
     }
 
-    public Selection default0AutoCreateBatches() {
-        return Selection.ALL_POSSIBLE;
+
+    public List<IncomingInvoice> default0AutoCreateBatches() {
+        return getPayableInvoicesNotInAnyBatchWithBankAccountAndBic();
     }
 
-    public List<IncomingInvoice> choices1AutoCreateBatches(final Selection selection) {
+    public List<IncomingInvoice> choices0AutoCreateBatches() {
         List<IncomingInvoice> choices = Lists.newArrayList();
 
         final List<IncomingInvoice> invoices = getPayableInvoicesNotInAnyBatchWithBankAccountAndBic();
@@ -210,18 +199,6 @@ public class PaymentBatchManager {
         }
 
         return choices;
-    }
-
-    public String validateAutoCreateBatches(
-            final Selection selection,
-            final List<IncomingInvoice> payableInvoices) {
-        if (selection == Selection.HAND_PICK && payableInvoices.isEmpty()) {
-            return "Select one or more invoices";
-        }
-        if (selection == Selection.ALL_POSSIBLE && !payableInvoices.isEmpty()) {
-            return "No need to select any invoices, all (possible) will be added";
-        }
-        return null;
     }
 
     private List<IncomingInvoice> getPayableInvoicesNotInAnyBatchWithBankAccountAndBic() {
@@ -615,13 +592,22 @@ public class PaymentBatchManager {
             publishing = Publishing.DISABLED
     )
     public Blob downloadExcelExportForNewBatches(
-            @Nullable final String documentName) {
+            @Nullable final String documentName,
+            @Nullable final List<PaymentBatch> newPaymentBatches) {
         List<PaymentLineForExcelExportV1> lineVms = new ArrayList<>();
-        for (PaymentBatch batch : getNewBatches()){
+        for (PaymentBatch batch : newPaymentBatches){
             lineVms.addAll(batch.paymentLinesForExcelExport());
         }
         String name = documentName!=null ? documentName.concat(".xlsx") : "export.xlsx";
         return excelService.toExcel(lineVms, PaymentLineForExcelExportV1.class, "export", name);
+    }
+
+    public List<PaymentBatch> default1DownloadExcelExportForNewBatches(){
+        return getNewBatches();
+    }
+
+    public List<PaymentBatch> choices1DownloadExcelExportForNewBatches(){
+        return getNewBatches();
     }
 
     @Action(

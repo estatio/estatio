@@ -30,8 +30,11 @@ public class Lease_newProlongationOption {
         return lease;
     }
 
-    public String disable$$(){
-        return prolongationOptionRepository.findByLease(lease) == null ? null : "A prolongation already exists";
+    public String validate$$(
+            final String prolongationPeriod,
+            final String notificationPeriod,
+            final String description){
+        return prolongationOptionRepository.validateNewProlongation(lease, prolongationPeriod, notificationPeriod, description);
     }
 
     @Inject
