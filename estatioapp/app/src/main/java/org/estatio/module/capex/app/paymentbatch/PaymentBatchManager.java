@@ -615,13 +615,22 @@ public class PaymentBatchManager {
             publishing = Publishing.DISABLED
     )
     public Blob downloadExcelExportForNewBatches(
-            @Nullable final String documentName) {
+            @Nullable final String documentName,
+            @Nullable final List<PaymentBatch> newPaymentBatches) {
         List<PaymentLineForExcelExportV1> lineVms = new ArrayList<>();
-        for (PaymentBatch batch : getNewBatches()){
+        for (PaymentBatch batch : newPaymentBatches){
             lineVms.addAll(batch.paymentLinesForExcelExport());
         }
         String name = documentName!=null ? documentName.concat(".xlsx") : "export.xlsx";
         return excelService.toExcel(lineVms, PaymentLineForExcelExportV1.class, "export", name);
+    }
+
+    public List<PaymentBatch> default1DownloadExcelExportForNewBatches(){
+        return getNewBatches();
+    }
+
+    public List<PaymentBatch> choices1DownloadExcelExportForNewBatches(){
+        return getNewBatches();
     }
 
     @Action(
