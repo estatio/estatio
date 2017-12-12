@@ -725,6 +725,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         List<PaymentLineForExcelExportV1> lineVms = new ArrayList<>();
         for (PaymentLine line : getLines()) {
             lineVms.add(new PaymentLineForExcelExportV1(
+                    getDebtorBankAccount().getIban(),
                     line.getInvoice().getInvoiceDate(),
                     getRequestedExecutionDate() != null ? this.getRequestedExecutionDate().toLocalDate() : null,
                     line.getInvoice().getSeller().getName(),
