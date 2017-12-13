@@ -18,17 +18,10 @@
  */
 package org.estatio.module.lease.fixtures.bankaccount.personas;
 
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
-import org.estatio.module.bankmandate.dom.Scheme;
-import org.estatio.module.bankmandate.dom.SequenceType;
-import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.lease.fixtures.bankaccount.enums.BankMandate_enum;
 
 public class BankAccountAndMandateForPoisonNl extends BankAccountAndMandateAbstract {
 
-    public static final String BANK_ACCOUNT_REF = BankAccount_enum.PoisonNl.getIban();
-    public static final int SEQUENCE = 2;
-    public static final SequenceType SEQUENCE_TYPE = SequenceType.FIRST;
-    public static final Scheme SCHEME = Scheme.CORE;
 
     public BankAccountAndMandateForPoisonNl() {
         this(null, null);
@@ -39,14 +32,16 @@ public class BankAccountAndMandateForPoisonNl extends BankAccountAndMandateAbstr
     }
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void execute(ExecutionContext ec) {
 
-        // prereqs
-        executionContext.executeChild(this, Lease_enum.KalPoison001Nl.builder());
-        executionContext.executeChild(this, BankAccount_enum.PoisonNl.builder());
+        ec.executeChild(this, BankMandate_enum.KalPoison001Nl_2.builder());
 
-        // exec
-        createBankMandate(Lease_enum.KalPoison001Nl.getTenant_d().getRef(), BANK_ACCOUNT_REF, SEQUENCE, SEQUENCE_TYPE, SCHEME, executionContext);
+//        // prereqs
+//        ec.executeChild(this, Lease_enum.KalPoison001Nl.builder());
+//        ec.executeChild(this, BankAccount_enum.PoisonNl.builder());
+//
+//        // exec
+//        createBankMandate(Lease_enum.KalPoison001Nl.getTenant_d().getRef(), BANK_ACCOUNT_REF, SEQUENCE, SEQUENCE_TYPE, SCHEME, ec);
     }
 
 }

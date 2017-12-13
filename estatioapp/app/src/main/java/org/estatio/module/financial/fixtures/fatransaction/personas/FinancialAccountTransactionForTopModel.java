@@ -16,9 +16,8 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.lease.fixtures.bankaccount.personas;
+package org.estatio.module.financial.fixtures.fatransaction.personas;
 
-import org.estatio.module.financial.fixtures.FinancialAccountTransactionAbstract;
 import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.incode.module.base.integtests.VT.bd;

@@ -18,30 +18,7 @@
  */
 package org.estatio.module.lease.fixtures.bankaccount.personas;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
-import org.estatio.module.agreement.dom.AgreementRole;
-import org.estatio.module.agreement.dom.AgreementRoleRepository;
-import org.estatio.module.agreement.dom.role.AgreementRoleType;
-import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
-import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
-import org.estatio.module.bankmandate.dom.BankMandate;
-import org.estatio.module.bankmandate.dom.BankMandateRepository;
-import org.estatio.module.bankmandate.dom.Scheme;
-import org.estatio.module.bankmandate.dom.SequenceType;
-import org.estatio.module.financial.dom.FinancialAccountRepository;
-import org.estatio.module.financial.dom.BankAccount;
-import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
-import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
-
-import static org.incode.module.base.integtests.VT.ld;
 
 public abstract class BankAccountAndMandateAbstract extends FixtureScript {
 
@@ -49,50 +26,50 @@ public abstract class BankAccountAndMandateAbstract extends FixtureScript {
         super(friendlyName, localName);
     }
 
-    protected void createBankMandate(String ownerRef, String bankAccountRef, Integer sequence, SequenceType sequenceType, Scheme scheme, ExecutionContext executionContext) {
-        final Party owner = partyRepository.findPartyByReference(ownerRef);
-        final BankAccount bankAccount = (BankAccount) financialAccountRepository.findByOwnerAndReference(owner, bankAccountRef);
-        final AgreementRoleType agreementRoleType = agreementRoleTypeRepository.findByTitle(
-                LeaseAgreementRoleTypeEnum.TENANT.getTitle());
-        final String partyRef = owner.getReference();
-        final List<AgreementRole> roles = agreementRoles.findByPartyAndTypeAndContainsDate(owner, agreementRoleType, ld(2013, 10, 1));
-        final Lease lease = (Lease) roles.get(0).getAgreement();
-
-        final BankMandate bankMandate = bankMandateRepository.newBankMandate(
-                partyRef + sequence.toString(),
-                partyRef,
-                lease.getStartDate(),
-                lease.getEndDate(),
-                lease.getSecondaryParty(),
-                lease.getPrimaryParty(),
-                bankAccount,
-                sequenceType,
-                scheme,
-                lease.getStartDate());
-        executionContext.addResult(this, bankMandate.getReference(), bankMandate);
-    }
-
-    // //////////////////////////////////////
-
-    @Inject
-    FinancialAccountRepository financialAccountRepository;
-
-    @Inject
-    private PartyRepository partyRepository;
-
-    @Inject
-    private BankMandateRepository bankMandateRepository;
-
-    @Inject
-    private AgreementRoleRepository agreementRoles;
-
-    @Inject
-    private AgreementRoleTypeRepository agreementRoleTypeRepository;
-
-    @Inject
-    private PropertyRepository propertyRepository;
-
-    @Inject
-    private FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
+//    protected void createBankMandate(String ownerRef, String bankAccountRef, Integer sequence, SequenceType sequenceType, Scheme scheme, ExecutionContext executionContext) {
+//        final Party owner = partyRepository.findPartyByReference(ownerRef);
+//        final BankAccount bankAccount = (BankAccount) financialAccountRepository.findByOwnerAndReference(owner, bankAccountRef);
+//        final AgreementRoleType agreementRoleType = agreementRoleTypeRepository.findByTitle(
+//                LeaseAgreementRoleTypeEnum.TENANT.getTitle());
+//        final String partyRef = owner.getReference();
+//        final List<AgreementRole> roles = agreementRoles.findByPartyAndTypeAndContainsDate(owner, agreementRoleType, ld(2013, 10, 1));
+//        final Lease lease = (Lease) roles.get(0).getAgreement();
+//
+//        final BankMandate bankMandate = bankMandateRepository.newBankMandate(
+//                partyRef + sequence.toString(),
+//                partyRef,
+//                lease.getStartDate(),
+//                lease.getEndDate(),
+//                lease.getSecondaryParty(),
+//                lease.getPrimaryParty(),
+//                bankAccount,
+//                sequenceType,
+//                scheme,
+//                lease.getStartDate());
+//        executionContext.addResult(this, bankMandate.getReference(), bankMandate);
+//    }
+//
+//    // //////////////////////////////////////
+//
+//    @Inject
+//    FinancialAccountRepository financialAccountRepository;
+//
+//    @Inject
+//    private PartyRepository partyRepository;
+//
+//    @Inject
+//    private BankMandateRepository bankMandateRepository;
+//
+//    @Inject
+//    private AgreementRoleRepository agreementRoles;
+//
+//    @Inject
+//    private AgreementRoleTypeRepository agreementRoleTypeRepository;
+//
+//    @Inject
+//    private PropertyRepository propertyRepository;
+//
+//    @Inject
+//    private FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
 
 }

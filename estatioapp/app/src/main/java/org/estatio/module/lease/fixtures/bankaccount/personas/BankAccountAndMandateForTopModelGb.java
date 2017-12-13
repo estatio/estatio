@@ -18,17 +18,13 @@
  */
 package org.estatio.module.lease.fixtures.bankaccount.personas;
 
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
-import org.estatio.module.bankmandate.dom.Scheme;
-import org.estatio.module.bankmandate.dom.SequenceType;
-import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.lease.fixtures.bankaccount.enums.BankMandate_enum;
 
 public class BankAccountAndMandateForTopModelGb extends BankAccountAndMandateAbstract {
 
-    public static final String REF = BankAccount_enum.TopModelGb.getIban();
-    public static final int SEQUENCE = 1;
-    public static final SequenceType SEQUENCE_TYPE = SequenceType.FIRST;
-    public static final Scheme SCHEME = Scheme.CORE;
+//    public static final int SEQUENCE = 1;
+//    public static final SequenceType SEQUENCE_TYPE = SequenceType.FIRST;
+//    public static final Scheme SCHEME = Scheme.CORE;
 
     public BankAccountAndMandateForTopModelGb() {
         this(null, null);
@@ -39,17 +35,19 @@ public class BankAccountAndMandateForTopModelGb extends BankAccountAndMandateAbs
     }
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void execute(ExecutionContext ec) {
 
-        // prereqs
-        executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
-        executionContext.executeChild(this, BankAccount_enum.TopModelGb.builder());
+        ec.executeChild(this, BankMandate_enum.OxfTopModel001Gb_1.builder());
 
-        // exec
-        createBankMandate(
-                Lease_enum.OxfTopModel001Gb.getTenant_d().getRef(),
-                REF, SEQUENCE, SEQUENCE_TYPE, SCHEME,
-                executionContext);
+//        // prereqs
+//        ec.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
+//        ec.executeChild(this, BankAccount_enum.TopModelGb.builder());
+//
+//        // exec
+//        createBankMandate(
+//                Lease_enum.OxfTopModel001Gb.getTenant_d().getRef(),
+//                REF, SEQUENCE, SEQUENCE_TYPE, SCHEME,
+//                ec);
     }
 
 }

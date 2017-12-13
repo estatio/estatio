@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
@@ -73,7 +74,7 @@ public class FinancialAccountRepository_IntegTest extends LeaseModuleIntegTestAb
         public void forAccount() {
             // when
             FinancialAccount account = financialAccountRepository
-                    .findByOwnerAndReference(party, BankAccountAndMandateForTopModelGb.REF);
+                    .findByOwnerAndReference(party, BankAccount_enum.TopModelGb.getIban());
 
             // then
             assertThat(account, is(notNullValue()));
@@ -92,7 +93,7 @@ public class FinancialAccountRepository_IntegTest extends LeaseModuleIntegTestAb
             assertThat(accounts.size(), is(1));
 
             // then
-            assertThat(accounts.get(0).getReference(), is(BankAccountAndMandateForTopModelGb.REF));
+            assertThat(accounts.get(0).getReference(), is(BankAccount_enum.TopModelGb.getIban()));
 
         }
     }
@@ -107,7 +108,7 @@ public class FinancialAccountRepository_IntegTest extends LeaseModuleIntegTestAb
             assertThat(accounts.size(), is(1));
 
             // then
-            assertThat(accounts.get(0).getReference(), is(BankAccountAndMandateForTopModelGb.REF));
+            assertThat(accounts.get(0).getReference(), is(BankAccount_enum.TopModelGb.getIban()));
         }
     }
 

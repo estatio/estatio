@@ -34,7 +34,7 @@ import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccountTransaction;
 import org.estatio.module.financial.dom.FinancialAccountTransactionRepository;
 import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndMandateForTopModelGb;
-import org.estatio.module.lease.fixtures.bankaccount.personas.FinancialAccountTransactionForTopModel;
+import org.estatio.module.financial.fixtures.fatransaction.personas.FinancialAccountTransactionForTopModel;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
