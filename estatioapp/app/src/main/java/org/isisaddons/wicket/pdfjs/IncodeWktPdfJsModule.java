@@ -35,7 +35,7 @@ import org.apache.isis.applib.ModuleAbstract;
 public final class IncodeWktPdfJsModule extends ModuleAbstract {
 
     @Override
-    public Set<Class<?>> getDependenciesAsClass() {
+    public Set<Class<?>> getAdditionalModules() {
         return Sets.newHashSet(
                 PdfjsCptModule.class
             );

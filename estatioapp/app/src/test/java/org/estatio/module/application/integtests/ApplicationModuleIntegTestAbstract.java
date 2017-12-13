@@ -20,9 +20,10 @@ package org.estatio.module.application.integtests;
 
 import org.slf4j.event.Level;
 
-import org.estatio.module.application.EstatioApplicationModule;
 import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
-import org.apache.isis.core.integtestsupport.logging.LogConfig;
+import org.apache.isis.core.runtime.headless.logging.LogConfig;
+
+import org.estatio.module.application.EstatioApplicationModule;
 
 public abstract class ApplicationModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 

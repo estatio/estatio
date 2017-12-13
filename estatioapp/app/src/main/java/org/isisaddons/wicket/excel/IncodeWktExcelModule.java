@@ -35,7 +35,7 @@ import org.apache.isis.applib.ModuleAbstract;
 public final class IncodeWktExcelModule extends ModuleAbstract {
 
     @Override
-    public Set<Class<?>> getDependenciesAsClass() {
+    public Set<Class<?>> getAdditionalModules() {
         return Sets.newHashSet(ExcelUiModule.class);
     }
 

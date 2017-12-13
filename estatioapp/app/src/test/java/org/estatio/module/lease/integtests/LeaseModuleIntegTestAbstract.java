@@ -21,9 +21,7 @@ package org.estatio.module.lease.integtests;
 import org.slf4j.event.Level;
 
 import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
-import org.apache.isis.core.integtestsupport.logging.LogConfig;
-
-import org.isisaddons.module.fakedata.FakeDataModule;
+import org.apache.isis.core.runtime.headless.logging.LogConfig;
 
 import org.estatio.module.lease.EstatioLeaseModule;
 import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
@@ -32,8 +30,8 @@ public abstract class LeaseModuleIntegTestAbstract extends IntegrationTestAbstra
 
     public LeaseModuleIntegTestAbstract() {
         super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
-                new EstatioLeaseModule(),
-                FakeDataModule.class);
+                new EstatioLeaseModule()
+        );
     }
 
     @Override

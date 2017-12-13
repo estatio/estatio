@@ -34,7 +34,7 @@ public final class IncodeLibFakeDataModule extends ModuleAbstract {
 
 
     @Override
-    public Set<Class<?>> getDependenciesAsClass() {
+    public Set<Class<?>> getAdditionalModules() {
         return Sets.newHashSet(FakeDataModule.class);
     }
 

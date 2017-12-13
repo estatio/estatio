@@ -57,7 +57,7 @@ public final class IncodeDomCommunicationsModule extends ModuleAbstract {
 
 
     @Override
-    public Set<Class<?>> getDependenciesAsClass() {
+    public Set<Class<?>> getAdditionalModules() {
         return Sets.newHashSet(CommunicationsModule.class);
     }
 

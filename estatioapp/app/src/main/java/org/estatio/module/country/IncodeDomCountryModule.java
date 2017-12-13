@@ -51,7 +51,7 @@ public final class IncodeDomCountryModule extends ModuleAbstract {
     }
 
     @Override
-    public Set<Class<?>> getDependenciesAsClass() {
+    public Set<Class<?>> getAdditionalModules() {
         return Sets.newHashSet(CountryModule.class);
     }
 

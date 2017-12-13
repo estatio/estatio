@@ -24,10 +24,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.collect.Sets;
 
+import org.apache.isis.applib.ModuleAbstract;
+
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.FullCalendar2ApplibModule;
 import org.isisaddons.wicket.fullcalendar2.cpt.ui.FullCalendar2UiModule;
-
-import org.apache.isis.applib.ModuleAbstract;
 
 /**
  * This is a "proxy" for the corresponding module defined in the Incode Platform.
@@ -36,7 +36,7 @@ import org.apache.isis.applib.ModuleAbstract;
 public final class IncodeWktFullCalendar2Module extends ModuleAbstract {
 
     @Override
-    public Set<Class<?>> getDependenciesAsClass() {
+    public Set<Class<?>> getAdditionalModules() {
         return Sets.newHashSet(
                 FullCalendar2ApplibModule.class,
                 FullCalendar2UiModule.class

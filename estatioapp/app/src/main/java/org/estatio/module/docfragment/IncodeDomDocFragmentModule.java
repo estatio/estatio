@@ -36,7 +36,7 @@ import org.incode.module.docfragment.dom.DocFragmentModuleDomModule;
 public final class IncodeDomDocFragmentModule extends ModuleAbstract {
 
     @Override
-    public Set<Class<?>> getDependenciesAsClass() {
+    public Set<Class<?>> getAdditionalModules() {
         return Sets.newHashSet(DocFragmentModuleDomModule.class);
     }
 

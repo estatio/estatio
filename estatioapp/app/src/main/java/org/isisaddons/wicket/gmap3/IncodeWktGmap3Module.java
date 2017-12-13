@@ -37,7 +37,7 @@ import org.apache.isis.applib.ModuleAbstract;
 public final class IncodeWktGmap3Module extends ModuleAbstract {
 
     @Override
-    public Set<Class<?>> getDependenciesAsClass() {
+    public Set<Class<?>> getAdditionalModules() {
         return Sets.newHashSet(
                 Gmap3ApplibModule.class,
                 Gmap3UiModule.class,

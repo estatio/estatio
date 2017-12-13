@@ -36,7 +36,7 @@ import org.incode.module.classification.dom.ClassificationModule;
 public final class IncodeDomClassificationModule extends ModuleAbstract {
 
     @Override
-    public Set<Class<?>> getDependenciesAsClass() {
+    public Set<Class<?>> getAdditionalModules() {
         return Sets.newHashSet(ClassificationModule.class);
     }
 

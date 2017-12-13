@@ -33,6 +33,7 @@ import org.apache.isis.applib.fixturescripts.setup.PersonaEnumPersistAll;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.base.EstatioBaseModule;
+import org.estatio.module.country.IncodeDomCountryModule;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRate;
 import org.estatio.module.tax.fixtures.builders.TaxBuilder;
@@ -45,7 +46,7 @@ public final class EstatioTaxModule extends ModuleAbstract {
 
     @Override
     public Set<Module> getDependencies() {
-        return Sets.newHashSet(new EstatioBaseModule());
+        return Sets.newHashSet(new EstatioBaseModule(), new IncodeDomCountryModule());
     }
 
     private static final ThreadLocal<Boolean> refData = ThreadLocal.withInitial(() -> false);

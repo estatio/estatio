@@ -38,7 +38,7 @@ import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 public final class IncodeSpiSessionLoggerModule extends ModuleAbstract {
 
     @Override
-    public Set<Class<?>> getDependenciesAsClass() {
+    public Set<Class<?>> getAdditionalModules() {
         return Sets.newHashSet(SessionLoggerModule.class);
     }
 
