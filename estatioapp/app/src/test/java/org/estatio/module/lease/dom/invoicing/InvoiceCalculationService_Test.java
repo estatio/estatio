@@ -450,7 +450,7 @@ public class InvoiceCalculationService_Test {
             LeaseItem item = new LeaseItem(lease, invoicingFrequency);
             LeaseTerm term = new LeaseTermForTesting(item, LocalDateInterval.parseString(termInterval), new BigDecimal(termValue));
 
-            final List<InvoiceCalculationService.CalculationResult> calculationResults = ic.calculateDateRange(term, LocalDateInterval.parseString(caluculationInterval), new LocalDate(dueDate));
+            final List<InvoiceCalculationService.CalculationResult> calculationResults = ic.calculateDateRange(term, LocalDateInterval.parseString(caluculationInterval));
 
             compareResults(calculationResults, results);
         }

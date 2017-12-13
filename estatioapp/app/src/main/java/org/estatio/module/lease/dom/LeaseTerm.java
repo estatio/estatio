@@ -562,8 +562,8 @@ public abstract class LeaseTerm
     @Action(restrictTo = RestrictTo.PROTOTYPING)
     public String showCalculationResults() {
         return StringUtils.join(calculationResults(
-                getEffectiveInterval(),
-                getStartDate().plusYears(2)),
+                getEffectiveInterval()
+                ),
                 "\t");
     }
 
@@ -571,10 +571,9 @@ public abstract class LeaseTerm
 
     @Programmatic
     public List<CalculationResult> calculationResults(
-            final LocalDateInterval interval,
-            final LocalDate dueDate
+            final LocalDateInterval interval
     ) {
-        return invoiceCalculationService.calculateDateRange(this, interval, dueDate);
+        return invoiceCalculationService.calculateDateRange(this, interval);
     }
 
     // //////////////////////////////////////

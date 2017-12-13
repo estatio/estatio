@@ -748,7 +748,7 @@ public class LeaseItem
             ) {
         List<CalculationResult> results = new ArrayList<>();
         for (LeaseTerm term : getTerms()) {
-            results.addAll(term.calculationResults(interval, dueDate));
+            results.addAll(term.calculationResults(interval));
         }
         return results;
     }
