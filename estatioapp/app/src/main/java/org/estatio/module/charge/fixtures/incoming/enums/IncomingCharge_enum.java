@@ -62,5 +62,4 @@ public enum IncomingCharge_enum implements PersonaWithFinder<Charge> {
         return repository.findByReference(reference);
     }
 
-
 }

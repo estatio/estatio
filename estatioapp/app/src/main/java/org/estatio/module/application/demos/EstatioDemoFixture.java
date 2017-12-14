@@ -36,7 +36,7 @@ import org.estatio.module.budget.fixtures.keytables.enums.KeyTable_enum;
 import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
 import org.estatio.module.capex.fixtures.document.enums.IncomingPdf_enum;
 import org.estatio.module.capex.fixtures.incominginvoice.IncomingInvoiceFixture;
-import org.estatio.module.capex.fixtures.order.OrderFixture;
+import org.estatio.module.capex.fixtures.order.enums.Order_enum;
 import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceImportForDemoXlsxFixture;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
@@ -227,7 +227,9 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 IncomingPdf_enum.FakeOrder1.builder().setRunAs("estatio-user-fr"),
                 IncomingPdf_enum.FakeInvoice1.builder().setRunAs("estatio-user-fr"));
 
-        ec.executeChild(this, new OrderFixture());
+        ec.executeChildren(this,
+                Order_enum.fakeOrder2Pdf);
+
         ec.executeChild(this, new IncomingInvoiceFixture());
 
     }
