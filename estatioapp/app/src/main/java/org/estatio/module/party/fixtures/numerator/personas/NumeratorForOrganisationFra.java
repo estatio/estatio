@@ -18,27 +18,23 @@
  */
 package org.estatio.module.party.fixtures.numerator.personas;
 
-import javax.inject.Inject;
-
-import org.incode.module.country.dom.impl.CountryRepository;
-
-import org.estatio.module.country.fixtures.enums.Country_enum;
-import org.estatio.module.party.dom.PartyConstants;
+import org.estatio.module.party.fixtures.numerator.enums.NumeratorForOrganisation_enum;
 
 public class NumeratorForOrganisationFra extends NumeratorForOrganisationAbstract {
 
-    public static final String REF = "ACME_NL";
-
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createNumeratorForOrganisation(
-                PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME,
-                "FRCL%04d",
-                countryRepository.findCountry(Country_enum.FRA.getRef3()),
-                executionContext);
+
+        executionContext.executeChildren(this, NumeratorForOrganisation_enum.Fra);
+
+//        createNumeratorForOrganisation(
+//                PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME,
+//                "FRCL%04d",
+//                countryRepository.findCountry(Country_enum.FRA.getRef3()),
+//                executionContext);
     }
 
-    @Inject
-    CountryRepository countryRepository;
+//    @Inject
+//    CountryRepository countryRepository;
 
 }
