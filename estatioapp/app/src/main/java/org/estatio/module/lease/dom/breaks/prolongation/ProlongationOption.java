@@ -96,7 +96,8 @@ public class ProlongationOption
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Lease prolong(){
         getLease().setEndDate(getBreakDate().plus(JodaPeriodUtils.asPeriod(getProlongationPeriod())));
-        return prolongationOptionRepository.newProlongationOption(getLease(), getProlongationPeriod(), getNotificationPeriod(), getDescription());
+        prolongationOptionRepository.newProlongationOption(getLease(), getProlongationPeriod(), getNotificationPeriod(), getDescription());
+        return getLease();
     }
 
     @Inject
