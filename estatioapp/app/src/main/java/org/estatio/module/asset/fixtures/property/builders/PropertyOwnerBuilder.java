@@ -18,13 +18,20 @@
  */
 package org.estatio.module.asset.fixtures.property.builders;
 
+import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.lease.dom.EstatioApplicationTenancyRepositoryForLease;
+import org.estatio.module.lease.dom.invoicing.NumeratorForCollectionRepository;
+import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.party.dom.Party;
 
 import lombok.EqualsAndHashCode;
@@ -32,6 +39,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import static org.incode.module.base.integtests.VT.bi;
 
 @EqualsAndHashCode(of={"property", "owner"}, callSuper = false)
 @ToString(of={"property", "owner"})
@@ -54,13 +62,43 @@ public final class PropertyOwnerBuilder
     @Getter
     private FixedAssetRole object;
 
+    @Getter
+    private Numerator numerator;
+
     @Override
-    protected void execute(final ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext ec) {
 
-        checkParam("property", executionContext, Property.class);
-        checkParam("owner", executionContext, Party.class);
+        checkParam("property", ec, Property.class);
+        checkParam("owner", ec, Party.class);
 
-        //wrap(property).newRole(FixedAssetRoleTypeEnum.ASSET_MANAGER, manager, startDate, endDate);
-        object = property.addRoleIfDoesNotExist(owner, FixedAssetRoleTypeEnum.PROPERTY_OWNER, startDate, endDate);
+        final FixedAssetRole fixedAssetRole = property
+                .addRoleIfDoesNotExist(owner, FixedAssetRoleTypeEnum.PROPERTY_OWNER, startDate, endDate);
+
+        ec.addResult(this, fixedAssetRole);
+
+        this.object = fixedAssetRole;
+
+
+        ApplicationTenancy applicationTenancy =
+                estatioApplicationTenancyRepository.findOrCreateTenancyFor(
+                        property, owner);
+        this.numerator =
+                estatioNumeratorRepository.createInvoiceNumberNumerator(
+                        property,
+                        numeratorReferenceFor(property),
+                        bi(0),
+                        applicationTenancy);
+
+        ec.addResult(this, property.getReference(), numerator);
     }
+
+    public static String numeratorReferenceFor(final Property property) {
+        return property.getReference().concat("-%04d");
+    }
+
+    @Inject
+    NumeratorForCollectionRepository estatioNumeratorRepository;
+
+    @Inject
+    EstatioApplicationTenancyRepositoryForLease estatioApplicationTenancyRepository;
 }

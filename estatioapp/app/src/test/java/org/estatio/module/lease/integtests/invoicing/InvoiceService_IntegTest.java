@@ -63,7 +63,6 @@ import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
-import org.estatio.module.lease.migrations.CreateInvoiceNumerators;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -141,8 +140,6 @@ public class InvoiceService_IntegTest extends LeaseModuleIntegTestAbstract {
                             LeaseItemForDiscount_enum.OxfMiracle005bGb,
                             LeaseItemForPercentage_enum.OxfMiracl005Gb,
                             LeaseItemForDeposit_enum.OxfMiracle005bGb);
-
-                    ec.executeChild(this, new CreateInvoiceNumerators());
                 }
             });
 

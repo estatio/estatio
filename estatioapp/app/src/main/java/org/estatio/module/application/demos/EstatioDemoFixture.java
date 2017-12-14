@@ -37,11 +37,11 @@ import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
 import org.estatio.module.capex.fixtures.document.enums.IncomingPdf_enum;
 import org.estatio.module.capex.fixtures.incominginvoice.IncomingInvoiceFixture;
 import org.estatio.module.capex.fixtures.order.OrderFixture;
-import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
+import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceImportForDemoXlsxFixture;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.EstatioChargeModule;
-import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargeFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
 import org.estatio.module.country.IncodeDomCountryModule;
 import org.estatio.module.currency.EstatioCurrencyModule;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
@@ -58,7 +58,6 @@ import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForPercentage
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
-import org.estatio.module.lease.migrations.CreateInvoiceNumerators;
 import org.estatio.module.lease.seed.DocFragment_enum;
 import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
 import org.estatio.module.party.fixtures.numerator.enums.NumeratorForOrganisation_enum;
@@ -216,12 +215,9 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 Partitioning_enum.OxfPartitioning2015);
 
         ec.executeChild(this,
-                new CreateInvoiceNumerators());
-
+                new CapexChargeHierarchyXlsxFixture());
         ec.executeChild(this,
-                new IncomingChargeFixture());
-        ec.executeChild(this,
-                new OrderInvoiceFixture());
+                new OrderInvoiceImportForDemoXlsxFixture());
 
         ec.executeChildren(this,
                 new DocumentTypesAndTemplatesForCapexFixture(),

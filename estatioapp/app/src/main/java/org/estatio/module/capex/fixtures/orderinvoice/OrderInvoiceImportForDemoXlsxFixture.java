@@ -14,7 +14,7 @@ import org.isisaddons.module.excel.dom.util.Mode;
 import org.estatio.module.capex.imports.OrderInvoiceImportHandler;
 import org.estatio.module.capex.imports.OrderInvoiceLine;
 
-public class OrderInvoiceFixture extends ExcelFixture2 {
+public class OrderInvoiceImportForDemoXlsxFixture extends ExcelFixture2 {
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
