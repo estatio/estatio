@@ -151,7 +151,7 @@ public enum InvoiceForLease_enum implements PersonaWithFinder<InvoiceForLease>, 
         final int durationInMonths;
     }
 
-    LocalDate getDueDate() {
+    public LocalDate getDueDate() {
         Ensure.ensureThatArg(lease_d.getRef(), is(lease_d.getRef()));
         return lease_d.getStartDate().plusYears(1);
     }

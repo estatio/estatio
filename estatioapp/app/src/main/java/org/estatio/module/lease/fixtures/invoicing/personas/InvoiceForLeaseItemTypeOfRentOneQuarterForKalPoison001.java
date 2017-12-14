@@ -18,37 +18,21 @@
  */
 package org.estatio.module.lease.fixtures.invoicing.personas;
 
-import org.joda.time.LocalDate;
-
-import org.apache.isis.core.commons.ensure.Ensure;
-
-import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.invoice.InvoiceAbstract;
 import org.estatio.module.lease.fixtures.invoice.enums.InvoiceForLease_enum;
-import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
-
-import static org.hamcrest.CoreMatchers.is;
 
 public class InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001 extends InvoiceAbstract {
 
-    private static final OrganisationAndComms_enum seller_d = OrganisationAndComms_enum.AcmeNl;
-    private static final OrganisationAndComms_enum buyer_d = OrganisationAndComms_enum.PoisonNl;
-    private static final Lease_enum lease_d = Lease_enum.KalPoison001Nl;
-    private static final ApplicationTenancy_enum applicationTenancy_d = ApplicationTenancy_enum.NlKal;
+//    private static final OrganisationAndComms_enum seller_d = OrganisationAndComms_enum.AcmeNl;
+//    private static final OrganisationAndComms_enum buyer_d = OrganisationAndComms_enum.PoisonNl;
+//    private static final Lease_enum lease_d = Lease_enum.KalPoison001Nl;
+//    private static final ApplicationTenancy_enum applicationTenancy_d = ApplicationTenancy_enum.NlKal;
 
-    public static final String PARTY_REF_SELLER = seller_d.getRef();
-    public static final String PARTY_REF_BUYER = buyer_d.getRef();
-    public static final String LEASE_REF = lease_d.getRef();
+//    public static final String PARTY_REF_SELLER = InvoiceForLease_enum.KalPoison001Nl.getSeller_d().getRef();
+//    public static final String PARTY_REF_BUYER = InvoiceForLease_enum.KalPoison001Nl.getBuyer_d().getRef();
+//    public static final String LEASE_REF = InvoiceForLease_enum.KalPoison001Nl.getLease_d().getRef();
 
-    public static final String AT_PATH = applicationTenancy_d.getPath();
-
-    // simply within the lease's start/end date
-    public static LocalDate startDateFor(Lease lease) {
-        Ensure.ensureThatArg(lease.getReference(), is(LEASE_REF));
-        return lease.getStartDate().plusYears(1);
-    }
+    //public static final String AT_PATH = applicationTenancy_d.getPath();
 
     public InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001() {
         this(null, null);

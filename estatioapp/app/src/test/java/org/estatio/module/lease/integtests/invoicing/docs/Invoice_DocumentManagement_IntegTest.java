@@ -87,7 +87,7 @@ import org.estatio.module.lease.dom.invoicing.summary.comms.DocAndCommForPrelimL
 import org.estatio.module.lease.dom.invoicing.summary.comms.DocAndCommForPrelimLetter_documentState;
 import org.estatio.module.lease.dom.invoicing.summary.comms.Invoice_ForLease_preliminaryLetters;
 import org.estatio.module.lease.dom.invoicing.summary.comms.Invoice_invoiceDocs;
-import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
+import org.estatio.module.lease.fixtures.invoice.enums.InvoiceForLease_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
 import org.estatio.module.party.dom.Party;
@@ -104,7 +104,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new DocumentTypesAndTemplatesForLeaseFixture());
 
-                executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
+                executionContext.executeChildren(this, InvoiceForLease_enum.OxfPoison003Gb);
 
             }
         });
@@ -829,14 +829,10 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
         // clears out queryResultsCache
         transactionService.nextTransaction();
 
-        final Party seller = partyRepository
-                .findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.PARTY_REF_SELLER);
-        final Party buyer = partyRepository
-                .findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.PARTY_REF_BUYER);
-        final Lease lease = leaseRepository
-                .findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE_REF);
-        final LocalDate invoiceStartDate = InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003
-                .startDateFor(lease);
+        final Party seller = InvoiceForLease_enum.OxfPoison003Gb.getSeller_d().findUsing(serviceRegistry);
+        final Party buyer = InvoiceForLease_enum.OxfPoison003Gb.getBuyer_d().findUsing(serviceRegistry);
+        final Lease lease = InvoiceForLease_enum.OxfPoison003Gb.getLease_d().findUsing(serviceRegistry);
+        final LocalDate invoiceStartDate = InvoiceForLease_enum.OxfPoison003Gb.getLease_d().getStartDate().plusYears(1);
 
         List<InvoiceForLease> matchingInvoices = findMatchingInvoices(seller, buyer, lease, invoiceStartDate, invoiceStatus);
         assertThat(matchingInvoices.size()).isLessThanOrEqualTo(1);
