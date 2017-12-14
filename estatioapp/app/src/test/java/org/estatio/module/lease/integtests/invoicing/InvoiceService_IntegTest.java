@@ -54,8 +54,7 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.module.lease.fixtures.breakoptions.enums.BreakOption_enum;
-import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
-import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
+import org.estatio.module.lease.fixtures.invoice.enums.InvoiceForLease_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
@@ -129,8 +128,9 @@ public class InvoiceService_IntegTest extends LeaseModuleIntegTestAbstract {
                             BreakOption_enum.OxfTopModel001Gb_FIXED,
                             BreakOption_enum.OxfTopModel001Gb_ROLLING);
 
-                    ec.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
-                    ec.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
+                    ec.executeChildren(this,
+                            InvoiceForLease_enum.OxfPoison003Gb,
+                            InvoiceForLease_enum.KalPoison001Nl);
 
                     ec.executeChildren(this,
                             Lease_enum.OxfPret004Gb,

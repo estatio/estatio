@@ -49,7 +49,7 @@ import org.estatio.module.lease.dom.LeaseTermStatus;
 import org.estatio.module.lease.dom.LeaseTermValueType;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLeaseRepository;
-import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
+import org.estatio.module.lease.fixtures.invoice.enums.InvoiceForLease_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
@@ -57,8 +57,8 @@ import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForEntryFee_e
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForMarketing_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForPercentage_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceChargeBudgeted_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTax_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
@@ -112,10 +112,12 @@ public class LeaseTerm_IntegTest extends LeaseModuleIntegTestAbstract {
             public void setupData() {
                 runFixtureScript(new FixtureScript() {
                     @Override
-                    protected void execute(ExecutionContext executionContext) {
+                    protected void execute(ExecutionContext ec) {
 
-                        executionContext.executeChild(this, LeaseItemForDiscount_enum.OxfMiracle005bGb.builder());
-                        executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
+                        ec.executeChildren(this,
+                                LeaseItemForDiscount_enum.OxfMiracle005bGb,
+                                InvoiceForLease_enum.OxfPoison003Gb);
+
                     }
                 });
             }
@@ -165,7 +167,7 @@ public class LeaseTerm_IntegTest extends LeaseModuleIntegTestAbstract {
                 //
                 //            @Override
                 //            public void run() {
-                //                runFixtureScript(new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005());
+                //                runFixtureScript(new InvoiceForLease_enum.OxfMiracle005Gb.builder());
                 //            }
                 //        }
                 //        );

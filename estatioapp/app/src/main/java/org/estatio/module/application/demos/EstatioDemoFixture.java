@@ -48,9 +48,7 @@ import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
 import org.estatio.module.lease.fixtures.bankaccount.enums.BankMandate_enum;
 import org.estatio.module.lease.fixtures.breakoptions.enums.BreakOption_enum;
-import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005;
-import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
-import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
+import org.estatio.module.lease.fixtures.invoice.enums.InvoiceForLease_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
@@ -168,9 +166,9 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 LeaseItemForRent_enum.KalPoison001Nl);
 
         ec.executeChildren(this,
-                new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(),
-                new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(),
-                new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005());
+                InvoiceForLease_enum.OxfPoison003Gb,
+                InvoiceForLease_enum.KalPoison001Nl,
+                InvoiceForLease_enum.OxfMiracl005Gb);
 
         ec.executeChildren(this,
                 Project_enum.KalProject1,

@@ -53,8 +53,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
-import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
-import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
+import org.estatio.module.lease.fixtures.invoice.enums.InvoiceForLease_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
@@ -109,8 +108,8 @@ public class CommunicationChannelSubscriptions_IntegTest extends LeaseModuleInte
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
-                    executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
+                    executionContext.executeChild(this, InvoiceForLease_enum.OxfPoison003Gb.builder());
+                    executionContext.executeChild(this, InvoiceForLease_enum.KalPoison001Nl.builder());
                 }
             });
         }
@@ -130,9 +129,9 @@ public class CommunicationChannelSubscriptions_IntegTest extends LeaseModuleInte
         @Before
         public void setUp() throws Exception {
             applicationTenancy = applicationTenancyRepository.findByPath(ApplicationTenancy_enum.Nl.getPath());
-            seller = partyRepository.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.PARTY_REF_SELLER);
-            buyer = partyRepository.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.PARTY_REF_BUYER);
-            lease = leaseRepository.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.LEASE_REF);
+            seller = InvoiceForLease_enum.KalPoison001Nl.getSeller_d().findUsing(serviceRegistry);
+            buyer = InvoiceForLease_enum.KalPoison001Nl.getBuyer_d().findUsing(serviceRegistry);
+            lease = InvoiceForLease_enum.KalPoison001Nl.getLease_d().findUsing(serviceRegistry);
 
             propertyKal = Property_enum.KalNl.findUsing(serviceRegistry);
 
@@ -143,7 +142,7 @@ public class CommunicationChannelSubscriptions_IntegTest extends LeaseModuleInte
                     PaymentMethod.DIRECT_DEBIT,
                     lease,
                     InvoiceStatus.NEW,
-                    InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.startDateFor(lease),
+                    InvoiceForLease_enum.KalPoison001Nl.getDueDate(),
                     null);
             invoice.setRunId(runId);
             Assert.assertNotNull(invoice);
@@ -251,8 +250,9 @@ public class CommunicationChannelSubscriptions_IntegTest extends LeaseModuleInte
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
-                    executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
+                    executionContext.executeChildren(this,
+                            InvoiceForLease_enum.OxfPoison003Gb,
+                            InvoiceForLease_enum.KalPoison001Nl);
                 }
             });
         }
@@ -262,10 +262,10 @@ public class CommunicationChannelSubscriptions_IntegTest extends LeaseModuleInte
         @Before
         public void setUp() throws Exception {
             final ApplicationTenancy applicationTenancy = applicationTenancyRepository.findByPath(ApplicationTenancy_enum.Gb.getPath());
-            final Party seller = partyRepository.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.PARTY_REF_SELLER);
-            final Party buyer = partyRepository.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.PARTY_REF_BUYER);
-            final Lease lease = leaseRepository.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE_REF);
-            final LocalDate startDate = InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.startDateFor(lease);
+            final Party seller = InvoiceForLease_enum.OxfPoison003Gb.getSeller_d().findUsing(serviceRegistry);
+            final Party buyer = InvoiceForLease_enum.OxfPoison003Gb.getBuyer_d().findUsing(serviceRegistry);
+            final Lease lease = InvoiceForLease_enum.OxfPoison003Gb.getLease_d().findUsing(serviceRegistry);
+            final LocalDate startDate = InvoiceForLease_enum.OxfPoison003Gb.getLease_d().getStartDate().plusYears(1);
 
             InvoiceForLease invoiceForLease = invoiceForLeaseRepository.findOrCreateMatchingInvoice(
                     applicationTenancy,
@@ -314,7 +314,7 @@ public class CommunicationChannelSubscriptions_IntegTest extends LeaseModuleInte
             seller = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
             buyer = OrganisationAndComms_enum.PoisonGb.findUsing(serviceRegistry);
             lease = Lease_enum.OxfPoison003Gb.findUsing(serviceRegistry);
-            invoiceStartDate = InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.startDateFor(lease);
+            invoiceStartDate = InvoiceForLease_enum.OxfPoison003Gb.getLease_d().getStartDate().plusYears(1);
         }
 
         @Test
