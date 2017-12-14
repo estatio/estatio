@@ -25,10 +25,11 @@ import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.fixtures.builders.BankAccountFaFaBuilder;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
-//@AllArgsConstructor
+@AllArgsConstructor
 @Getter
 @Accessors(chain = true)
 public enum BankAccountFaFa_enum
@@ -38,20 +39,12 @@ public enum BankAccountFaFa_enum
     HelloWorldGb    (BankAccount_enum.HelloWorldGb, Property_enum.OxfGb),
     HelloWorldNl    (BankAccount_enum.HelloWorldNl, Property_enum.KalNl),
 
-    // nb: this is misnamed, is actually second bank account for HelloWorldGb party
+    // nb: this referenced bank account is misnamed, is actually second bank account for HelloWorldGb party
     Oxford          (BankAccount_enum.Oxford, Property_enum.OxfGb),
-
     ;
 
     private final BankAccount_enum bankAccount_d;
     private final Property_enum property_d;
-
-    BankAccountFaFa_enum(
-            final BankAccount_enum bankAccount_d,
-            final Property_enum property_d) {
-        this.bankAccount_d = bankAccount_d;
-        this.property_d = property_d;
-    }
 
     @Override
     public BankAccountFaFaBuilder builder() {
