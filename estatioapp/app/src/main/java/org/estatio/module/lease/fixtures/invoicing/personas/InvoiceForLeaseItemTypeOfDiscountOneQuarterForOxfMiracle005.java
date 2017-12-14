@@ -22,21 +22,15 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.core.commons.ensure.Ensure;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.currency.fixtures.enums.Currency_enum;
-import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.lease.dom.LeaseItemType;
-import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.fixtures.invoice.InvoiceAbstract;
+import org.estatio.module.lease.fixtures.invoice.enums.InvoiceForLease_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
 import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.incode.module.base.integtests.VT.ldix;
 
 public class InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005 extends InvoiceAbstract {
 
@@ -66,31 +60,34 @@ public class InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005 extends
     }
 
     @Override
-    protected void execute(final ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext ec) {
 
-        // prereqs
-        executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.builder());
-        executionContext.executeChild(this, LeaseItemForDiscount_enum.OxfMiracle005bGb.builder());
+//        // prereqs
+        ec.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.builder());
+        ec.executeChild(this, LeaseItemForDiscount_enum.OxfMiracle005bGb.builder());
 
-        // exec
-        final ApplicationTenancy applicationTenancy = applicationTenancy_d.findUsing(serviceRegistry);
-        final Lease lease = lease_d.findUsing(serviceRegistry);
-        final LocalDate invoiceStartDate = startDateFor(lease);
+        ec.executeChildren(this, InvoiceForLease_enum.OxfMiracl005Gb);
 
-        final InvoiceForLease invoice = createInvoiceAndNumerator(
-                applicationTenancy,
-                lease,
-                PARTY_REF_SELLER,
-                PARTY_REF_BUYER,
-                PaymentMethod.DIRECT_DEBIT,
-                Currency_enum.EUR.getReference(),
-                invoiceStartDate,
-                executionContext);
-
-        createInvoiceItemsForTermsOfFirstLeaseItemOfType(
-                invoice, LeaseItemType.RENT_DISCOUNT_FIXED,
-                invoiceStartDate, ldix(invoiceStartDate, invoiceStartDate.plusMonths(3)),
-                executionContext);
+//
+//        // exec
+//        final ApplicationTenancy applicationTenancy = applicationTenancy_d.findUsing(serviceRegistry);
+//        final Lease lease = lease_d.findUsing(serviceRegistry);
+//        final LocalDate invoiceStartDate = startDateFor(lease);
+//
+//        final InvoiceForLease invoice = createInvoiceAndNumerator(
+//                applicationTenancy,
+//                lease,
+//                PARTY_REF_SELLER,
+//                PARTY_REF_BUYER,
+//                PaymentMethod.DIRECT_DEBIT,
+//                Currency_enum.EUR.getReference(),
+//                invoiceStartDate,
+//                ec);
+//
+//        createInvoiceItemsForTermsOfFirstLeaseItemOfType(
+//                invoice, LeaseItemType.RENT_DISCOUNT_FIXED,
+//                invoiceStartDate, ldix(invoiceStartDate, invoiceStartDate.plusMonths(3)),
+//                ec);
 
     }
 }

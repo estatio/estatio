@@ -22,21 +22,15 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.core.commons.ensure.Ensure;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.currency.fixtures.enums.Currency_enum;
-import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.lease.dom.LeaseItemType;
-import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.fixtures.invoice.InvoiceAbstract;
+import org.estatio.module.lease.fixtures.invoice.enums.InvoiceForLease_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.incode.module.base.integtests.VT.ldix;
 
 public class InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001 extends InvoiceAbstract {
 
@@ -66,30 +60,33 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001 extends Invo
     }
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void execute(ExecutionContext ec) {
 
-        // prereqs
-        executionContext.executeChild(this, seller_d.builder());
-        executionContext.executeChild(this, LeaseItemForRent_enum.KalPoison001Nl.builder());
+//        // prereqs
+        ec.executeChild(this, seller_d.builder());
+        ec.executeChild(this, LeaseItemForRent_enum.KalPoison001Nl.builder());
 
-        // exec
-        final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(AT_PATH);
-        final Lease lease = lease_d.findUsing(serviceRegistry);
+        ec.executeChildren(this, InvoiceForLease_enum.KalPoison001Nl);
 
-        // simply within the lease's start/end date
-        final LocalDate startDate = startDateFor(lease);
-
-        final InvoiceForLease invoice = createInvoiceAndNumerator(
-                applicationTenancy,
-                lease, PARTY_REF_SELLER,
-                PARTY_REF_BUYER, PaymentMethod.DIRECT_DEBIT,
-                Currency_enum.EUR.getReference(),
-                startDate, executionContext);
-
-        createInvoiceItemsForTermsOfFirstLeaseItemOfType(
-                invoice, LeaseItemType.RENT,
-                startDate, ldix(startDate, startDate.plusMonths(3)),
-                executionContext);
+//
+//        // exec
+//        final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(AT_PATH);
+//        final Lease lease = lease_d.findUsing(serviceRegistry);
+//
+//        // simply within the lease's start/end date
+//        final LocalDate startDate = startDateFor(lease);
+//
+//        final InvoiceForLease invoice = createInvoiceAndNumerator(
+//                applicationTenancy,
+//                lease, PARTY_REF_SELLER,
+//                PARTY_REF_BUYER, PaymentMethod.DIRECT_DEBIT,
+//                Currency_enum.EUR.getReference(),
+//                startDate, ec);
+//
+//        createInvoiceItemsForTermsOfFirstLeaseItemOfType(
+//                invoice, LeaseItemType.RENT,
+//                startDate, ldix(startDate, startDate.plusMonths(3)),
+//                ec);
     }
 
 }
