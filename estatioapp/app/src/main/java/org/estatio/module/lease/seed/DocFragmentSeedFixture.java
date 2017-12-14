@@ -16,24 +16,29 @@
  */
 package org.estatio.module.lease.seed;
 
-import javax.inject.Inject;
-
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
-import org.incode.module.docfragment.dom.impl.DocFragmentRepository;
 
 public class DocFragmentSeedFixture extends DiscoverableFixtureScript {
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void execute(ExecutionContext ec) {
 
-        final DocFragmentData[] data = DocFragmentData.values();
-        for (DocFragmentData value : data) {
-            executionContext.executeChild(this, value.script());
-        }
+        ec.executeChildren(this,
+                            DocFragmentData.InvoiceDescriptionFra,
+                            DocFragmentData.InvoiceDescriptionIta,
+                            DocFragmentData.InvoiceItemDescriptionFra,
+                            DocFragmentData.InvoiceItemDescriptionIta,
+                            DocFragmentData.InvoicePreliminaryLetterDescriptionFra,
+                            DocFragmentData.InvoicePreliminaryLetterDescriptionIta
+                );
+//        final DocFragmentData[] data = DocFragmentData.values();
+//        for (DocFragmentData value : data) {
+//            executionContext.executeChild(this, value.script());
+//        }
 
     }
 
-    @Inject
-    DocFragmentRepository docFragmentRepository;
+//    @Inject
+//    DocFragmentRepository docFragmentRepository;
 }

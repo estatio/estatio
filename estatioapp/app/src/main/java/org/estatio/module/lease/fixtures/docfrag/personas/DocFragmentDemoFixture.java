@@ -18,16 +18,16 @@ package org.estatio.module.lease.fixtures.docfrag.personas;
 
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
-import org.estatio.module.lease.fixtures.docfrag.enums.DocFragment_enum;
+import org.estatio.module.lease.fixtures.docfrag.enums.DocFragment_demo_enum;
 
 public class DocFragmentDemoFixture extends DiscoverableFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        executionContext.executeChildren(this, DocFragment_enum.class);
-//        final DocFragment_enum[] data = DocFragment_enum.values();
-//        for (DocFragment_enum value : data) {
+        executionContext.executeChildren(this, DocFragment_demo_enum.class);
+//        final DocFragment_demo_enum[] data = DocFragment_demo_enum.values();
+//        for (DocFragment_demo_enum value : data) {
 //            executionContext.executeChild(this, value.script());
 //        }
     }

@@ -45,9 +45,9 @@ import org.estatio.module.currency.EstatioCurrencyModule;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.guarantee.fixtures.personas.GuaranteeForOxfTopModel001Gb;
 import org.estatio.module.index.EstatioIndexModule;
-import org.estatio.module.lease.fixtures.docfrag.personas.DocFragmentDemoFixture;
 import org.estatio.module.lease.fixtures.bankaccount.enums.BankMandate_enum;
 import org.estatio.module.lease.fixtures.breakoptions.enums.BreakOption_enum;
+import org.estatio.module.lease.fixtures.docfrag.enums.DocFragment_demo_enum;
 import org.estatio.module.lease.fixtures.invoice.enums.InvoiceForLease_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_enum;
@@ -57,7 +57,7 @@ import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
 import org.estatio.module.lease.migrations.CreateInvoiceNumerators;
-import org.estatio.module.lease.seed.DocFragmentSeedFixture;
+import org.estatio.module.lease.seed.DocFragmentData;
 import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
 import org.estatio.module.party.fixtures.numerator.enums.NumeratorForOrganisation_enum;
 import org.estatio.module.tax.EstatioTaxModule;
@@ -95,7 +95,28 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         ec.executeChild(this, "incomingCharges", new EstatioChargeModule().getRefDataSetupFixture());
         ec.executeChild(this, "indices", new EstatioIndexModule().getRefDataSetupFixture());
 
-        ec.executeChildren(this, new DocFragmentDemoFixture(), new DocFragmentSeedFixture());
+        ec.executeChildren(this,
+                // demo
+                DocFragment_demo_enum.InvoicePreliminaryLetterDescription_DemoGbr,
+                DocFragment_demo_enum.InvoicePreliminaryLetterDescription_DemoNld,
+                DocFragment_demo_enum.InvoiceDescription_DemoGbr,
+                DocFragment_demo_enum.InvoiceDescription_DemoNld,
+                DocFragment_demo_enum.InvoiceItemDescription_DemoGbr,
+                DocFragment_demo_enum.InvoiceItemDescription_DemoNld
+        );
+
+        ec.executeChildren(this,
+                DocFragmentData.InvoiceDescriptionFra,
+                DocFragmentData.InvoiceDescriptionIta,
+                DocFragmentData.InvoiceItemDescriptionFra,
+                DocFragmentData.InvoiceItemDescriptionIta,
+                DocFragmentData.InvoicePreliminaryLetterDescriptionFra,
+                DocFragmentData.InvoicePreliminaryLetterDescriptionIta
+        );
+
+//        ec.executeChildren(this,
+//                // new DocFragmentDemoFixture(),
+//                // new DocFragmentSeedFixture());
 
         ec.executeChildren(this,
                 Person_enum.LinusTorvaldsNl,

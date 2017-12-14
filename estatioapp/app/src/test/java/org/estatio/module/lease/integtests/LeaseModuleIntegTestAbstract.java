@@ -20,11 +20,12 @@ package org.estatio.module.lease.integtests;
 
 import org.slf4j.event.Level;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
 import org.apache.isis.core.runtime.headless.logging.LogConfig;
 
 import org.estatio.module.lease.EstatioLeaseModule;
-import org.estatio.module.lease.fixtures.docfrag.personas.DocFragmentDemoFixture;
+import org.estatio.module.lease.fixtures.docfrag.enums.DocFragment_demo_enum;
 
 public abstract class LeaseModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
@@ -37,6 +38,21 @@ public abstract class LeaseModuleIntegTestAbstract extends IntegrationTestAbstra
     @Override
     public void bootstrapAndSetupIfRequired() {
         super.bootstrapAndSetupIfRequired();
-        runFixtureScript(new DocFragmentDemoFixture());
+
+        // TODO: push down to subclasses that need this... at the moment this fixture is hidden away and not obvious
+        runFixtureScript(new FixtureScript() {
+            @Override
+            protected void execute(final ExecutionContext ec) {
+                ec.executeChildren(this,
+                        // demo
+                        DocFragment_demo_enum.InvoicePreliminaryLetterDescription_DemoGbr,
+                        DocFragment_demo_enum.InvoicePreliminaryLetterDescription_DemoNld,
+                        DocFragment_demo_enum.InvoiceDescription_DemoGbr,
+                        DocFragment_demo_enum.InvoiceDescription_DemoNld,
+                        DocFragment_demo_enum.InvoiceItemDescription_DemoGbr,
+                        DocFragment_demo_enum.InvoiceItemDescription_DemoNld
+                );
+            }
+        });
     }
 }

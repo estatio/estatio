@@ -19,112 +19,60 @@ package org.estatio.module.lease.seed;
 import java.io.IOException;
 import java.util.Objects;
 
-import javax.inject.Inject;
-
 import com.google.common.io.Resources;
 
 import org.apache.commons.io.Charsets;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.incode.module.docfragment.dom.impl.DocFragment;
 import org.incode.module.docfragment.dom.impl.DocFragmentRepository;
 
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.estatio.module.lease.fixtures.docfrag.builders.DocFragmentBuilder;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 
 @AllArgsConstructor
-public enum DocFragmentData {
+@Getter
+@Accessors(chain = true)
+public enum DocFragmentData
+        implements PersonaWithBuilderScript<DocFragment, DocFragmentBuilder>, PersonaWithFinder<DocFragment> {
 
     InvoicePreliminaryLetterDescriptionIta(
-            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "preliminaryLetterDescription", "/ITA",
-            "Invoice_preliminaryLetterDescription_ITA.docFragment.ftl") {
-        public FixtureScript script() {
-            // subclasses are necessary because
-            // FixtureScriptsSpecificationProvider's MultipleExecutionPolicy set to ONCE_PER_CLASS
-            return new DocFragmentScript() {};
-        }
-    },
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "preliminaryLetterDescription", ApplicationTenancy_enum.It,
+            "Invoice_preliminaryLetterDescription_ITA.docFragment.ftl"),
     InvoiceDescriptionIta(
-            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "description", "/ITA",
-            "Invoice_description_ITA.docFragment.ftl") {
-        public FixtureScript script() {
-            // subclasses are necessary because
-            // FixtureScriptsSpecificationProvider's MultipleExecutionPolicy set to ONCE_PER_CLASS
-            return new DocFragmentScript() {};
-        }
-    },
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "description", ApplicationTenancy_enum.It,
+            "Invoice_description_ITA.docFragment.ftl"),
     InvoiceItemDescriptionIta(
-            "org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM", "description", "/ITA",
-            "InvoiceItem_description_ITA.docFragment.ftl") {
-        public FixtureScript script() {
-            // subclasses are necessary because
-            // FixtureScriptsSpecificationProvider's MultipleExecutionPolicy set to ONCE_PER_CLASS
-            return new DocFragmentScript() {};
-        }
-    },
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM", "description", ApplicationTenancy_enum.It,
+            "InvoiceItem_description_ITA.docFragment.ftl"),
 
     InvoicePreliminaryLetterDescriptionFra(
-            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "preliminaryLetterDescription", "/FRA",
-            "Invoice_preliminaryLetterDescription_FRA.docFragment.ftl") {
-        public FixtureScript script() {
-            // subclasses are necessary because
-            // FixtureScriptsSpecificationProvider's MultipleExecutionPolicy set to ONCE_PER_CLASS
-            return new DocFragmentScript() {};
-        }
-    },
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "preliminaryLetterDescription", ApplicationTenancy_enum.Fr,
+            "Invoice_preliminaryLetterDescription_FRA.docFragment.ftl"),
     InvoiceDescriptionFra(
-            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "description", "/FRA",
-            "Invoice_description_FRA.docFragment.ftl") {
-        public FixtureScript script() {
-            // subclasses are necessary because
-            // FixtureScriptsSpecificationProvider's MultipleExecutionPolicy set to ONCE_PER_CLASS
-            return new DocFragmentScript() {};
-        }
-    },
-
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "description", ApplicationTenancy_enum.Fr,
+            "Invoice_description_FRA.docFragment.ftl") ,
     InvoiceItemDescriptionFra(
-            "org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM", "description", "/FRA",
-            "InvoiceItem_description_FRA.docFragment.ftl") {
-        public FixtureScript script() {
-            return new DocFragmentScript() {};
-        }
-    },
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM", "description", ApplicationTenancy_enum.Fr,
+            "InvoiceItem_description_FRA.docFragment.ftl") ,
 
     ;
 
-    @Getter
     private final String objectType;
-    @Getter
     private final String name;
-    @Getter
-    private final String atPath;
+    private final ApplicationTenancy_enum applicationTenancy_d;
     private final String templateResourceName;
 
-    public String getTemplateText() {
+    String getTemplateText() {
         return read(templateResourceName);
     }
-
-    class DocFragmentScript extends FixtureScript {
-        @Override
-        public void execute(final ExecutionContext executionContext) {
-
-            final DocFragment docFrag = docFragmentRepository
-                    .findByObjectTypeAndNameAndApplicableToAtPath(objectType, name, atPath);
-
-            final String templateText = getTemplateText();
-            if(docFrag != null && Objects.equals(docFrag.getAtPath(), atPath)) {
-                docFrag.setTemplateText(templateText);
-            } else {
-                docFragmentRepository.create(objectType, name, atPath, templateText);
-            }
-        }
-
-        @Inject
-        DocFragmentRepository docFragmentRepository;
-    }
-
-    public abstract FixtureScript script();
 
     public static String read(final String resourceName) {
         try {
@@ -133,5 +81,23 @@ public enum DocFragmentData {
             throw new RuntimeException(e);
         }
     }
+
+
+    @Override public DocFragment findUsing(final ServiceRegistry2 serviceRegistry) {
+        final DocFragmentRepository repo = serviceRegistry.lookupService(DocFragmentRepository.class);
+        final DocFragment docFrag = repo.findByObjectTypeAndNameAndApplicableToAtPath(objectType, name, applicationTenancy_d.getPath());
+        return docFrag != null && Objects.equals(docFrag.getAtPath(), applicationTenancy_d.getPath())
+                ? docFrag
+                : null;
+    }
+    @Override
+    public DocFragmentBuilder builder() {
+        return new DocFragmentBuilder()
+                .setName(name)
+                .setObjectType(objectType)
+                .setAtPath(applicationTenancy_d.getPath())
+                .setTemplateText(getTemplateText());
+    }
+
 
 }

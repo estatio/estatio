@@ -23,7 +23,6 @@ import com.google.common.io.Resources;
 
 import org.apache.commons.io.Charsets;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
@@ -42,7 +41,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum DocFragment_enum
+public enum DocFragment_demo_enum
         implements PersonaWithBuilderScript<DocFragment, DocFragmentBuilder>, PersonaWithFinder<DocFragment> {
 
     //
@@ -51,38 +50,26 @@ public enum DocFragment_enum
     InvoicePreliminaryLetterDescription_DemoGbr(
             "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "preliminaryLetterDescription",
             ApplicationTenancy_enum.Gb,
-            "Invoice_preliminaryLetterDescription_ITA.docFragment.ftl") {
-    },
+            "Invoice_preliminaryLetterDescription_ITA.docFragment.ftl"),
     InvoiceDescription_DemoGbr(
             "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "description", ApplicationTenancy_enum.Gb,
-            "Invoice_description_ITA.docFragment.ftl") {
-    },
+            "Invoice_description_ITA.docFragment.ftl"),
     InvoiceItemDescription_DemoGbr(
             "org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM", "description", ApplicationTenancy_enum.Gb,
-            "InvoiceItem_description_ITA.docFragment.ftl") {
-    },
+            "InvoiceItem_description_ITA.docFragment.ftl"),
 
     //
     // using ITA's fragments for now
     //
     InvoicePreliminaryLetterDescription_DemoNld(
             "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "preliminaryLetterDescription", ApplicationTenancy_enum.Nl,
-            "Invoice_preliminaryLetterDescription_ITA.docFragment.ftl") {
-        public FixtureScript script() {
-            return new DocFragmentBuilder() {};
-        }
-    },
+            "Invoice_preliminaryLetterDescription_ITA.docFragment.ftl"),
     InvoiceDescription_DemoNld(
             "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "description", ApplicationTenancy_enum.Nl,
-            "Invoice_description_ITA.docFragment.ftl") {
-        public FixtureScript script() {
-            return new DocFragmentBuilder() {};
-        }
-    },
+            "Invoice_description_ITA.docFragment.ftl"),
     InvoiceItemDescription_DemoNld(
             "org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM", "description", ApplicationTenancy_enum.Nl,
-            "InvoiceItem_description_ITA.docFragment.ftl") {
-    },
+            "InvoiceItem_description_ITA.docFragment.ftl"),
     ;
 
     private final String objectType;
