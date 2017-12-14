@@ -37,7 +37,6 @@ import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceAttribute;
 import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.invoice.dom.paperclips.PaperclipForInvoice;
-import org.estatio.module.lease.EstatioLeaseModule;
 
 @XmlRootElement(name = "module")
 public class EstatioCapexModule extends ModuleAbstract {
@@ -47,7 +46,6 @@ public class EstatioCapexModule extends ModuleAbstract {
     @Override
     public Set<Module> getDependencies(){
         return Sets.newHashSet(
-                new EstatioLeaseModule(), // TODO: REMOVE THIS DEPENDENCY !!!
                 new EstatioInvoiceModule(),
                 new EstatioAssetFinancialModule(),
                 new EstatioBudgetModule(),
