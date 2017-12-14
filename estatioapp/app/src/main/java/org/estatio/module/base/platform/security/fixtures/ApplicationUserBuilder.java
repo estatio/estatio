@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.party.fixtures.person.builders;
+package org.estatio.module.base.platform.security.fixtures;
 
 import javax.inject.Inject;
 
