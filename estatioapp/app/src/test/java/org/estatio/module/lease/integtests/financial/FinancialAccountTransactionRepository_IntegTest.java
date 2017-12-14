@@ -18,18 +18,15 @@
  */
 package org.estatio.module.lease.integtests.financial;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccountTransaction;
@@ -37,10 +34,11 @@ import org.estatio.module.financial.dom.FinancialAccountTransactionRepository;
 import org.estatio.module.financial.fixtures.fatransaction.enums.FinancialAccountTransaction_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.incode.module.base.integtests.VT.bd;
+import static org.incode.module.base.integtests.VT.ld;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
@@ -52,9 +50,8 @@ public class FinancialAccountTransactionRepository_IntegTest extends LeaseModule
             @Override
             protected void execute(ExecutionContext ec) {
                 ec.executeChildren(this,
-                        BankAccount_enum.TopModelGb,
-                        FinancialAccountTransaction_enum.TopModelGb_0_xactn1,
-                        FinancialAccountTransaction_enum.TopModelGb_0_xactn2);
+                        FinancialAccountTransaction_enum.TopModelGb_xactn1,
+                        FinancialAccountTransaction_enum.TopModelGb_xactn2);
             }
         });
     }
@@ -65,15 +62,12 @@ public class FinancialAccountTransactionRepository_IntegTest extends LeaseModule
     @Inject
     FinancialAccountTransactionRepository financialAccountTransactionRepository;
 
-    @Inject
-    PartyRepository partyRepository;
-
     Party party;
 
     FinancialAccount financialAccount;
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         party = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
         List<FinancialAccount> accounts = financialAccountRepository.findAccountsByOwner(party);
         assertThat(accounts.size(), is(1));
@@ -83,29 +77,29 @@ public class FinancialAccountTransactionRepository_IntegTest extends LeaseModule
     public static class FindTransaction extends FinancialAccountTransactionRepository_IntegTest {
 
         @Test
-        public void findTransaction() throws Exception {
+        public void findTransaction() {
             // when
             FinancialAccountTransaction financialAccountTransaction = financialAccountTransactionRepository.findTransaction(
                     financialAccount,
-                    new LocalDate(2014, 7, 1));
+                    ld(2014, 7, 1));
 
             // then
             assertNotNull(financialAccountTransaction);
-            assertThat(financialAccountTransaction.getAmount(), is(new BigDecimal(1000).setScale(2, 0)));
+            assertThat(financialAccountTransaction.getAmount(), is(bd(1000).setScale(2,0)));
         }
     }
 
     public static class Transactions extends FinancialAccountTransactionRepository_IntegTest {
 
         @Test
-        public void transactions() throws Exception {
+        public void transactions() {
             // when
             List<FinancialAccountTransaction> transactions = financialAccountTransactionRepository.transactions(financialAccount);
 
             // then
             assertThat(transactions.size(), is(2));
-            assertThat(transactions.get(0).getAmount(), is(new BigDecimal(1000).setScale(2, 0)));
-            assertThat(transactions.get(1).getAmount(), is(new BigDecimal(2000).setScale(2, 0)));
+            assertThat(transactions.get(0).getAmount(), is(bd(1000).setScale(2,0)));
+            assertThat(transactions.get(1).getAmount(), is(bd(2000).setScale(2,0)));
         }
     }
 

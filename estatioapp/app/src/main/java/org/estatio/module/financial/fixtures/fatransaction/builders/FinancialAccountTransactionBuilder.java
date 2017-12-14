@@ -30,7 +30,6 @@ import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccountTransaction;
 import org.estatio.module.financial.dom.FinancialAccountTransactionRepository;
-import org.estatio.module.party.dom.Party;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -42,19 +41,16 @@ import lombok.experimental.Accessors;
 public class BankMandateBuilder extends BuilderScriptAbstract<BankMandate, BankMandateBuilder> {
 
  */
-@EqualsAndHashCode(of={"party", "accountIndex", "date"}, callSuper = false)
-@ToString(of={"party", "accountIndex", "date"})
+@EqualsAndHashCode(of={"financialAccount", "date"}, callSuper = false)
+@ToString(of={"financialAccount", "date"})
 @Accessors(chain = true)
 public class FinancialAccountTransactionBuilder extends BuilderScriptAbstract<FinancialAccountTransaction, FinancialAccountTransactionBuilder> {
 
     @Getter @Setter
-    Party party;
+    FinancialAccount financialAccount;
 
     @Getter @Setter
     LocalDate date;
-
-    @Getter @Setter
-    int accountIndex;
 
     @Getter @Setter
     BigDecimal amount;
@@ -68,13 +64,10 @@ public class FinancialAccountTransactionBuilder extends BuilderScriptAbstract<Fi
     @Override
     protected void execute(final ExecutionContext ec) {
 
-        checkParam("party", ec, Party.class);
-        defaultParam("accountIndex", ec, 0);
+        defaultParam("financialAccount", ec, 0);
         checkParam("date", ec, LocalDate.class);
         checkParam("amount", ec, BigDecimal.class);
         defaultParam("description", ec, "Fixture transaction");
-
-        FinancialAccount financialAccount = financialAccountRepository.findAccountsByOwner(party).get(accountIndex);
 
         FinancialAccountTransaction financialAccountTransaction = financialAccountTransactionRepository.newTransaction(
                 financialAccount,
