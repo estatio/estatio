@@ -40,7 +40,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum DocFragmentData
+public enum DocFragment_enum
         implements PersonaWithBuilderScript<DocFragment, DocFragmentBuilder>, PersonaWithFinder<DocFragment> {
 
     InvoicePreliminaryLetterDescriptionIta(
@@ -76,7 +76,7 @@ public enum DocFragmentData
 
     public static String read(final String resourceName) {
         try {
-            return Resources.toString(Resources.getResource(DocFragmentData.class, resourceName), Charsets.UTF_8);
+            return Resources.toString(Resources.getResource(DocFragment_enum.class, resourceName), Charsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

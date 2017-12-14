@@ -18,6 +18,8 @@
  */
 package org.estatio.module.application.demos;
 
+import java.util.Arrays;
+
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.clock.TickingFixtureClock;
@@ -57,7 +59,7 @@ import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
 import org.estatio.module.lease.migrations.CreateInvoiceNumerators;
-import org.estatio.module.lease.seed.DocFragmentData;
+import org.estatio.module.lease.seed.DocFragment_enum;
 import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
 import org.estatio.module.party.fixtures.numerator.enums.NumeratorForOrganisation_enum;
 import org.estatio.module.tax.EstatioTaxModule;
@@ -82,21 +84,29 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
     private void doExecute(final ExecutionContext ec) {
 
-        final AbstractUserAndRolesFixtureScript initialisationUser =
-                new AbstractUserAndRolesFixtureScript(
-                        "initialisation", "pass", null,
-                        Global.getPath(), AccountType.LOCAL,
-                        Lists.newArrayList("estatio-admin")) {
-                };
-        ec.executeChild(this, "'initialisation' user", initialisationUser);
-        ec.executeChild(this, "countries", new IncodeDomCountryModule().getRefDataSetupFixture());
-        ec.executeChild(this, "currencies", new EstatioCurrencyModule().getRefDataSetupFixture());
-        ec.executeChild(this, "taxes", new EstatioTaxModule().getRefDataSetupFixture());
-        ec.executeChild(this, "incomingCharges", new EstatioChargeModule().getRefDataSetupFixture());
-        ec.executeChild(this, "indices", new EstatioIndexModule().getRefDataSetupFixture());
+        ec.executeChild(this, new AbstractUserAndRolesFixtureScript(
+                "initialisation", "pass",
+                null, // email address
+                Global.getPath(), AccountType.LOCAL,
+                Lists.newArrayList("estatio-admin")) {
+        });
+
+        Arrays.asList(
+                new IncodeDomCountryModule(),
+                new EstatioCurrencyModule(),
+                new EstatioTaxModule(),
+                new EstatioChargeModule(),
+                new EstatioIndexModule()
+        ).forEach(
+                module -> ec.executeChild(this, module.getRefDataSetupFixture())
+        );
+//        ec.executeChild(this, new IncodeDomCountryModule().getRefDataSetupFixture());
+//        ec.executeChild(this, new EstatioCurrencyModule().getRefDataSetupFixture());
+//        ec.executeChild(this, new EstatioTaxModule().getRefDataSetupFixture());
+//        ec.executeChild(this, new EstatioChargeModule().getRefDataSetupFixture());
+//        ec.executeChild(this, new EstatioIndexModule().getRefDataSetupFixture());
 
         ec.executeChildren(this,
-                // demo
                 DocFragment_demo_enum.InvoicePreliminaryLetterDescription_DemoGbr,
                 DocFragment_demo_enum.InvoicePreliminaryLetterDescription_DemoNld,
                 DocFragment_demo_enum.InvoiceDescription_DemoGbr,
@@ -106,17 +116,13 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         );
 
         ec.executeChildren(this,
-                DocFragmentData.InvoiceDescriptionFra,
-                DocFragmentData.InvoiceDescriptionIta,
-                DocFragmentData.InvoiceItemDescriptionFra,
-                DocFragmentData.InvoiceItemDescriptionIta,
-                DocFragmentData.InvoicePreliminaryLetterDescriptionFra,
-                DocFragmentData.InvoicePreliminaryLetterDescriptionIta
+                DocFragment_enum.InvoiceDescriptionFra,
+                DocFragment_enum.InvoiceDescriptionIta,
+                DocFragment_enum.InvoiceItemDescriptionFra,
+                DocFragment_enum.InvoiceItemDescriptionIta,
+                DocFragment_enum.InvoicePreliminaryLetterDescriptionFra,
+                DocFragment_enum.InvoicePreliminaryLetterDescriptionIta
         );
-
-//        ec.executeChildren(this,
-//                // new DocFragmentDemoFixture(),
-//                // new DocFragmentSeedFixture());
 
         ec.executeChildren(this,
                 Person_enum.LinusTorvaldsNl,
@@ -140,7 +146,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 PropertyAndUnitsAndOwnerAndManager_enum.MacFr,
                 PropertyAndUnitsAndOwnerAndManager_enum.CARTEST);
 
-        ec.executeChildren(this, NumeratorForOrganisation_enum.Fra);
+        ec.executeChildren(this,
+                NumeratorForOrganisation_enum.Fra);
 
         ec.executeChildren(this,
                 BankAccount_enum.AcmeNl,
@@ -154,8 +161,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
         ec.executeChildren(this,
                 BankAccountFaFa_enum.HelloWorldNl,
-                BankAccountFaFa_enum.HelloWorldGb
-        );
+                BankAccountFaFa_enum.HelloWorldGb);
 
         ec.executeChildren(this,
                 BankMandate_enum.OxfTopModel001Gb_1,
@@ -165,7 +171,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
         ec.executeChildren(this,
                 Lease_enum.OxfMediaX002Gb,
-                Lease_enum.OxfPret004Gb, Lease_enum.OxfMiracl005Gb,
+                Lease_enum.OxfPret004Gb,
+                Lease_enum.OxfMiracl005Gb,
                 Lease_enum.KalPoison001Nl,
                 Lease_enum.OxfTopModel001Gb);
 
@@ -204,12 +211,16 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 KeyTable_enum.Oxf2015Area,
                 KeyTable_enum.Oxf2015Count);
 
-        ec.executeChild(this, Partitioning_enum.OxfPartitioning2015.builder());
+        ec.executeChild(this,
+                Partitioning_enum.OxfPartitioning2015.builder());
 
-        ec.executeChild(this, new CreateInvoiceNumerators());
+        ec.executeChild(this,
+                new CreateInvoiceNumerators());
 
-        ec.executeChild(this, new IncomingChargeFixture());
-        ec.executeChild(this, new OrderInvoiceFixture());
+        ec.executeChild(this,
+                new IncomingChargeFixture());
+        ec.executeChild(this,
+                new OrderInvoiceFixture());
 
         ec.executeChildren(this,
                 new DocumentTypesAndTemplatesForCapexFixture(),

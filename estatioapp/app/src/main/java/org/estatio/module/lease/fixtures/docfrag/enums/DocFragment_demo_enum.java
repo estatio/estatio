@@ -32,7 +32,7 @@ import org.incode.module.docfragment.dom.impl.DocFragmentRepository;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.lease.fixtures.docfrag.builders.DocFragmentBuilder;
-import org.estatio.module.lease.seed.DocFragmentData;
+import org.estatio.module.lease.seed.DocFragment_enum;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -83,7 +83,7 @@ public enum DocFragment_demo_enum
 
     public static String read(final String resourceName) {
         try {
-            return Resources.toString(Resources.getResource(DocFragmentData.class, resourceName), Charsets.UTF_8);
+            return Resources.toString(Resources.getResource(DocFragment_enum.class, resourceName), Charsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

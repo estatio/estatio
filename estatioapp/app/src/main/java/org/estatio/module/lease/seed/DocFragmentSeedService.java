@@ -38,10 +38,16 @@ public class DocFragmentSeedService {
             return;
         }
 
-        //fixtureScripts.runFixtureScript(new DocFragmentSeedFixture(), null);
         fixtureScripts.runFixtureScript(new FixtureScript() {
-            @Override protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChildren(this, DocFragmentData.class);
+            @Override protected void execute(final ExecutionContext ec) {
+                ec.executeChildren(this,
+                                DocFragment_enum.InvoiceDescriptionFra,
+                                DocFragment_enum.InvoiceDescriptionIta,
+                                DocFragment_enum.InvoiceItemDescriptionFra,
+                                DocFragment_enum.InvoiceItemDescriptionIta,
+                                DocFragment_enum.InvoicePreliminaryLetterDescriptionFra,
+                                DocFragment_enum.InvoicePreliminaryLetterDescriptionIta
+                );
             }
         });
     }
