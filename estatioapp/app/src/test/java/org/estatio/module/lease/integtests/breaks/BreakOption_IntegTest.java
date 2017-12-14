@@ -36,7 +36,7 @@ import org.estatio.module.lease.dom.breaks.BreakExerciseType;
 import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.breaks.BreakType;
-import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfTopModel001;
+import org.estatio.module.lease.fixtures.breakoptions.enums.BreakOption_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
@@ -66,12 +66,15 @@ public class BreakOption_IntegTest extends LeaseModuleIntegTestAbstract {
         public void setupData() {
             runFixtureScript(new FixtureScript() {
                 @Override
-                protected void execute(final ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
+                protected void execute(final ExecutionContext ec) {
+                    ec.executeChildren(this,
+                            BreakOption_enum.OxfTopModel001Gb_FIXED,
+                            BreakOption_enum.OxfTopModel001Gb_ROLLING);
+
                 }
             });
 
-            lease = leaseRepository.findLeaseByReference(LeaseBreakOptionsForOxfTopModel001.LEASE_REF);
+            lease = BreakOption_enum.OxfTopModel001Gb_FIXED.getLease_d().findUsing(serviceRegistry);
 
             final List<BreakOption> breakOptions = breakOptionRepository.allBreakOptions();
             assertThat(breakOptions.size(), is(2));
@@ -184,8 +187,10 @@ public class BreakOption_IntegTest extends LeaseModuleIntegTestAbstract {
         public void setup() {
             runFixtureScript(new FixtureScript() {
                 @Override
-                protected void execute(final ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
+                protected void execute(final ExecutionContext ec) {
+                    ec.executeChildren(this,
+                            BreakOption_enum.OxfTopModel001Gb_FIXED,
+                            BreakOption_enum.OxfTopModel001Gb_ROLLING);
                 }
             });
 

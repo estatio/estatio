@@ -53,9 +53,7 @@ import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
-import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfMediax002Gb;
-import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfPoison003Gb;
-import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfTopModel001;
+import org.estatio.module.lease.fixtures.breakoptions.enums.BreakOption_enum;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
@@ -155,28 +153,34 @@ public class Invoice_IntegTest extends LeaseModuleIntegTestAbstract {
         public void setupData() {
             runFixtureScript(new FixtureScript() {
                 @Override
-                protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, Person_enum.LinusTorvaldsNl.builder());
+                protected void execute(ExecutionContext ec) {
 
-                    executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.builder());
-                    executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.KalNl.builder());
+                    ec.executeChildren(this,
+                            Person_enum.LinusTorvaldsNl,
+                            PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+                            PropertyAndUnitsAndOwnerAndManager_enum.KalNl);
 
-                    executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
+                    ec.executeChildren(this,
+                            BreakOption_enum.OxfPoison003Gb_FIXED,
+                            BreakOption_enum.OxfPoison003Gb_ROLLING,
+                            BreakOption_enum.OxfPoison003Gb_FIXED,
+                            BreakOption_enum.OxfPoison003Gb_ROLLING,
+                            BreakOption_enum.OxfTopModel001Gb_FIXED,
+                            BreakOption_enum.OxfTopModel001Gb_ROLLING);
 
-                    executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002Gb());
+                    ec.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
+                    ec.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
 
-                    executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003Gb());
-                    executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
-                    executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
+                    ec.executeChildren(this,
+                            Lease_enum.OxfPret004Gb,
 
-                    executionContext.executeChild(this, Lease_enum.OxfPret004Gb.builder());
-
-                    executionContext.executeChild(this, LeaseItemForRent_enum.OxfMiracl005Gb.builder());
-                    executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfMiracl005Gb.builder());
-                    executionContext.executeChild(this, LeaseItemForTurnoverRent_enum.OxfMiracl005Gb.builder());
-                    executionContext.executeChild(this, LeaseItemForDiscount_enum.OxfMiracle005bGb.builder());
-                    executionContext.executeChild(this, LeaseItemForPercentage_enum.OxfMiracl005Gb.builder());
-                    executionContext.executeChild(this, LeaseItemForDeposit_enum.OxfMiracle005bGb.builder());
+                            LeaseItemForRent_enum.OxfMiracl005Gb,
+                            LeaseItemForServiceCharge_enum.OxfMiracl005Gb,
+                            LeaseItemForTurnoverRent_enum.OxfMiracl005Gb,
+                            LeaseItemForDiscount_enum.OxfMiracle005bGb,
+                            LeaseItemForPercentage_enum.OxfMiracl005Gb,
+                            LeaseItemForDeposit_enum.OxfMiracle005bGb
+                    );
 
                 }
             });

@@ -47,9 +47,7 @@ import org.estatio.module.guarantee.fixtures.personas.GuaranteeForOxfTopModel001
 import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
 import org.estatio.module.lease.fixtures.bankaccount.enums.BankMandate_enum;
-import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfMediax002Gb;
-import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfPoison003Gb;
-import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfTopModel001;
+import org.estatio.module.lease.fixtures.breakoptions.enums.BreakOption_enum;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
@@ -153,9 +151,12 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 Lease_enum.OxfTopModel001Gb);
 
         ec.executeChildren(this,
-                new LeaseBreakOptionsForOxfTopModel001(),
-                new LeaseBreakOptionsForOxfPoison003Gb(),
-                new LeaseBreakOptionsForOxfMediax002Gb());
+                BreakOption_enum.OxfPoison003Gb_FIXED,
+                BreakOption_enum.OxfPoison003Gb_ROLLING,
+                BreakOption_enum.OxfPoison003Gb_FIXED,
+                BreakOption_enum.OxfPoison003Gb_ROLLING,
+                BreakOption_enum.OxfTopModel001Gb_FIXED,
+                BreakOption_enum.OxfTopModel001Gb_ROLLING);
 
         ec.executeChildren(this,
                 LeaseItemForRent_enum.OxfMiracl005Gb,
