@@ -6,7 +6,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
+import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.financial.dom.FinancialAccountTransaction;
 import org.estatio.module.financial.fixtures.fatransaction.builders.FinancialAccountTransactionBuilder;
 

@@ -1,4 +1,4 @@
-package org.estatio.module.capex.imports;
+package org.estatio.module.charge.fixtures.incoming.builders;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
