@@ -27,7 +27,6 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.invoice.InvoiceAbstract;
 import org.estatio.module.lease.fixtures.invoice.enums.InvoiceForLease_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -63,8 +62,8 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001 extends Invo
     protected void execute(ExecutionContext ec) {
 
 //        // prereqs
-        ec.executeChild(this, seller_d.builder());
-        ec.executeChild(this, LeaseItemForRent_enum.KalPoison001Nl.builder());
+//        ec.executeChild(this, seller_d.builder());
+//        ec.executeChild(this, LeaseItemForRent_enum.KalPoison001Nl.builder());
 
         ec.executeChildren(this, InvoiceForLease_enum.KalPoison001Nl);
 

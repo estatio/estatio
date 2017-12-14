@@ -27,9 +27,6 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.invoice.InvoiceAbstract;
 import org.estatio.module.lease.fixtures.invoice.enums.InvoiceForLease_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
 import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -64,11 +61,11 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003 extends Invo
     protected void execute(final ExecutionContext ec) {
 
         // prereqs
-        ec.executeChild(this, OrganisationAndComms_enum.HelloWorldNl.builder());
-
-        ec.executeChild(this, LeaseItemForRent_enum.OxfPoison003Gb.builder());
-        ec.executeChild(this, LeaseItemForServiceCharge_enum.OxfPoison003Gb.builder());
-        ec.executeChild(this, LeaseItemForTurnoverRent_enum.OxfPoison003Gb.builder());
+//        ec.executeChild(this, OrganisationAndComms_enum.HelloWorldNl.builder());
+//
+//        ec.executeChild(this, LeaseItemForRent_enum.OxfPoison003Gb.builder());
+//        ec.executeChild(this, LeaseItemForServiceCharge_enum.OxfPoison003Gb.builder());
+//        ec.executeChild(this, LeaseItemForTurnoverRent_enum.OxfPoison003Gb.builder());
 
         ec.executeChildren(this, InvoiceForLease_enum.OxfPoison003Gb);
 

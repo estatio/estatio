@@ -22,6 +22,10 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.fixtures.invoice.builders.InvoiceForLeaseBuilder;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
 import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import lombok.AllArgsConstructor;
@@ -97,6 +101,10 @@ public enum InvoiceForLease_enum implements PersonaWithFinder<InvoiceForLease>, 
             PaymentMethod.DIRECT_DEBIT, Currency_enum.EUR,
             new ItemsSpec[] {
                 new ItemsSpec(LeaseItemType.RENT_DISCOUNT_FIXED, 3)
+            },
+            new PersonaWithBuilderScript[] {
+                    //OrganisationAndComms_enum.HelloWorldGb,
+                    LeaseItemForDiscount_enum.OxfMiracle005bGb
             }
     ),
     KalPoison001Nl(
@@ -105,6 +113,9 @@ public enum InvoiceForLease_enum implements PersonaWithFinder<InvoiceForLease>, 
             PaymentMethod.DIRECT_DEBIT, Currency_enum.EUR,
             new ItemsSpec[] {
                 new ItemsSpec(LeaseItemType.RENT, 3)
+            },
+            new PersonaWithBuilderScript[] {
+                    LeaseItemForRent_enum.KalPoison001Nl
             }
     ),
     OxfPoison003Gb(
@@ -113,6 +124,12 @@ public enum InvoiceForLease_enum implements PersonaWithFinder<InvoiceForLease>, 
             PaymentMethod.DIRECT_DEBIT, Currency_enum.EUR,
             new ItemsSpec[] {
                 new ItemsSpec(LeaseItemType.RENT, 3)
+            },
+            new PersonaWithBuilderScript[] {
+                    // OrganisationAndComms_enum.HelloWorldNl
+                    LeaseItemForRent_enum.OxfPoison003Gb,
+                    LeaseItemForServiceCharge_enum.OxfPoison003Gb,
+                    LeaseItemForTurnoverRent_enum.OxfPoison003Gb
             }
     ),
     ;
@@ -125,6 +142,7 @@ public enum InvoiceForLease_enum implements PersonaWithFinder<InvoiceForLease>, 
     private final Currency_enum currency_d;
 
     private final ItemsSpec[] itemsSpecs;
+    private final PersonaWithBuilderScript<?,?>[] prereqs;
 
     @AllArgsConstructor
     @Data
@@ -157,6 +175,12 @@ public enum InvoiceForLease_enum implements PersonaWithFinder<InvoiceForLease>, 
     @Override
     public InvoiceForLeaseBuilder builder() {
         return new InvoiceForLeaseBuilder()
+                .setPrereq((f,ec) -> {
+                    // simply make sure these objects exist
+                    for (PersonaWithBuilderScript<?, ?> prereq : prereqs) {
+                        f.objectFor(prereq, ec);
+                    }
+                })
                 .setPrereq((f,ec) -> f.setApplicationTenancy(f.objectFor(applicationTenancy_d, ec)))
                 .setPrereq((f,ec) -> f.setLease(f.objectFor(lease_d, ec)))
                 .setPrereq((f,ec) -> f.setSeller(f.objectFor(seller_d, ec)))

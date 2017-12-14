@@ -27,7 +27,6 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.invoice.InvoiceAbstract;
 import org.estatio.module.lease.fixtures.invoice.enums.InvoiceForLease_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
 import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -63,8 +62,8 @@ public class InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005 extends
     protected void execute(final ExecutionContext ec) {
 
 //        // prereqs
-        ec.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.builder());
-        ec.executeChild(this, LeaseItemForDiscount_enum.OxfMiracle005bGb.builder());
+//        ec.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.builder());
+//        ec.executeChild(this, LeaseItemForDiscount_enum.OxfMiracle005bGb.builder());
 
         ec.executeChildren(this, InvoiceForLease_enum.OxfMiracl005Gb);
 
