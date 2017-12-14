@@ -16,15 +16,18 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.asset.fixtures.property.builders;
+package org.estatio.module.lease.fixtures.numerators.builders;
 
-import org.joda.time.LocalDate;
+import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.dom.role.FixedAssetRole;
-import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.lease.dom.EstatioApplicationTenancyRepositoryForLease;
+import org.estatio.module.lease.dom.invoicing.NumeratorForCollectionRepository;
+import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.party.dom.Party;
 
 import lombok.EqualsAndHashCode;
@@ -32,12 +35,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import static org.incode.module.base.integtests.VT.bi;
 
-@EqualsAndHashCode(of={"property", "owner"}, callSuper = false)
-@ToString(of={"property", "owner"})
+@EqualsAndHashCode(of={"property"}, callSuper = false)
+@ToString(of={"property"})
 @Accessors(chain = true)
-public final class PropertyOwnerBuilder
-        extends BuilderScriptAbstract<FixedAssetRole, PropertyOwnerBuilder> {
+public final class PropertyOwnerNumeratorBuilder
+        extends BuilderScriptAbstract<Numerator, PropertyOwnerNumeratorBuilder> {
 
     @Getter @Setter
     private Property property;
@@ -45,14 +49,8 @@ public final class PropertyOwnerBuilder
     @Getter @Setter
     private Party owner;
 
-    @Getter @Setter
-    private LocalDate startDate;
-
-    @Getter @Setter
-    private LocalDate endDate;
-
     @Getter
-    private FixedAssetRole object;
+    private Numerator object;
 
     @Override
     protected void execute(final ExecutionContext ec) {
@@ -60,15 +58,26 @@ public final class PropertyOwnerBuilder
         checkParam("property", ec, Property.class);
         checkParam("owner", ec, Party.class);
 
-        final FixedAssetRole fixedAssetRole = property
-                .addRoleIfDoesNotExist(owner, FixedAssetRoleTypeEnum.PROPERTY_OWNER, startDate, endDate);
+        ApplicationTenancy applicationTenancy =
+                estatioApplicationTenancyRepository.findOrCreateTenancyFor(
+                        property, owner);
+        this.object =
+                estatioNumeratorRepository.createInvoiceNumberNumerator(
+                        property,
+                        numeratorReferenceFor(property),
+                        bi(0),
+                        applicationTenancy);
 
-        ec.addResult(this, fixedAssetRole);
-
-        this.object = fixedAssetRole;
+        ec.addResult(this, property.getReference(), object);
     }
 
     public static String numeratorReferenceFor(final Property property) {
         return property.getReference().concat("-%04d");
     }
+
+    @Inject
+    NumeratorForCollectionRepository estatioNumeratorRepository;
+
+    @Inject
+    EstatioApplicationTenancyRepositoryForLease estatioApplicationTenancyRepository;
 }

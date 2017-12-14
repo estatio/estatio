@@ -17,6 +17,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.lease.builders.LeaseBuilder;
+import org.estatio.module.lease.fixtures.numerators.enums.PropertyOwnerNumerator_enum;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
 
@@ -212,7 +213,14 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     @Override
     public LeaseBuilder builder() {
         return new LeaseBuilder()
-                .setPrereq((f,ec) -> f.setProperty(f.objectFor(propertyAndUnits_d.getProperty_d(), ec)))
+                .setPrereq((f,ec) -> {
+                    // ensure corresponding numerator exists
+                    Arrays.stream(PropertyOwnerNumerator_enum.values())
+                            .filter(x -> x.getPropertyAndUnitsAndOwnerAndManager_d().getProperty_d() == propertyAndUnits_d.getProperty_d())
+                            .forEach(x -> f.objectFor(x, ec));
+
+                    f.setProperty(f.objectFor(propertyAndUnits_d.getProperty_d(), ec));
+                })
                 .setReference(ref)
                 .setName(name)
                 .setPrereq((f,ec) -> f.setLandlord(f.objectFor(landlord_d, ec)))
