@@ -140,8 +140,6 @@ public class InvoiceService_IntegTest extends LeaseModuleIntegTestAbstract {
                             LeaseItemForDiscount_enum.OxfMiracle005bGb,
                             LeaseItemForPercentage_enum.OxfMiracl005Gb,
                             LeaseItemForDeposit_enum.OxfMiracle005bGb);
-
-                    // ec.executeChild(this, new CreateInvoiceNumerators());
                 }
             });
 

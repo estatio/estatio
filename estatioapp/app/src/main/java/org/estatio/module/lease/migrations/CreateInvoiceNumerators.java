@@ -30,6 +30,7 @@ import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.fixtures.property.builders.PropertyOwnerBuilder;
 import org.estatio.module.lease.dom.EstatioApplicationTenancyRepositoryForLease;
 import org.estatio.module.lease.dom.invoicing.NumeratorForCollectionRepository;
 import org.estatio.module.numerator.dom.Numerator;
@@ -54,7 +55,7 @@ public class CreateInvoiceNumerators extends DiscoverableFixtureScript {
                     final Numerator numerator =
                             estatioNumeratorRepository.createInvoiceNumberNumerator(
                                     property,
-                                    property.getReference().concat("-%04d"),
+                                    PropertyOwnerBuilder.numeratorReferenceFor(property),
                                     bi(0),
                                     applicationTenancy);
 

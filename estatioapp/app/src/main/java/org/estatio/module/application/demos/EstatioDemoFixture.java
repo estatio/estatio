@@ -214,9 +214,6 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         ec.executeChildren(this,
                 Partitioning_enum.OxfPartitioning2015);
 
-//        ec.executeChild(this,
-//                new CreateInvoiceNumerators());
-
         ec.executeChild(this,
                 new IncomingChargeFixture());
         ec.executeChild(this,

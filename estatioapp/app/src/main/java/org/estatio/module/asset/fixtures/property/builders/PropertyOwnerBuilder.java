@@ -62,13 +62,15 @@ public final class PropertyOwnerBuilder
     @Getter
     private FixedAssetRole object;
 
+    @Getter
+    private Numerator numerator;
+
     @Override
     protected void execute(final ExecutionContext ec) {
 
         checkParam("property", ec, Property.class);
         checkParam("owner", ec, Party.class);
 
-        //wrap(property).newRole(FixedAssetRoleTypeEnum.ASSET_MANAGER, manager, startDate, endDate);
         final FixedAssetRole fixedAssetRole = property
                 .addRoleIfDoesNotExist(owner, FixedAssetRoleTypeEnum.PROPERTY_OWNER, startDate, endDate);
 
@@ -76,17 +78,22 @@ public final class PropertyOwnerBuilder
 
         this.object = fixedAssetRole;
 
+
         ApplicationTenancy applicationTenancy =
                 estatioApplicationTenancyRepository.findOrCreateTenancyFor(
                         property, owner);
-        final Numerator numerator =
+        this.numerator =
                 estatioNumeratorRepository.createInvoiceNumberNumerator(
                         property,
-                        property.getReference().concat("-%04d"),
+                        numeratorReferenceFor(property),
                         bi(0),
                         applicationTenancy);
 
         ec.addResult(this, property.getReference(), numerator);
+    }
+
+    public static String numeratorReferenceFor(final Property property) {
+        return property.getReference().concat("-%04d");
     }
 
     @Inject
