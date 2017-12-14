@@ -36,7 +36,6 @@ import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.BrandRepository;
-import org.estatio.module.lease.fixtures.BrandsFixture;
 import org.estatio.module.lease.fixtures.brands.enums.Brand_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
@@ -52,15 +51,16 @@ public class BrandRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Inject
     ApplicationTenancyRepository applicationTenancyRepository;
-    @Inject
-    CountryRepository countryRepository;
 
     @Before
     public void setupData() {
         runFixtureScript(new FixtureScript() {
             @Override
-            protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new BrandsFixture());
+            protected void execute(ExecutionContext ec) {
+                ec.executeChildren(this,
+                        Brand_enum.Yu_s_Noodle_Joint,
+                        Brand_enum.Yu_s_Cleaning_Services,
+                        Brand_enum.Happy_ValLey);
             }
         });
 
