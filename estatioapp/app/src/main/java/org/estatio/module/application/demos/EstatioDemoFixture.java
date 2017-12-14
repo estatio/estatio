@@ -45,7 +45,7 @@ import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargeFixtur
 import org.estatio.module.country.IncodeDomCountryModule;
 import org.estatio.module.currency.EstatioCurrencyModule;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
-import org.estatio.module.guarantee.fixtures.personas.GuaranteeForOxfTopModel001Gb;
+import org.estatio.module.guarantee.fixtures.enums.Guarantee_enum;
 import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.lease.fixtures.bankaccount.enums.BankMandate_enum;
 import org.estatio.module.lease.fixtures.breakoptions.enums.BreakOption_enum;
@@ -167,7 +167,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 BankMandate_enum.OxfTopModel001Gb_1,
                 BankMandate_enum.KalPoison001Nl_2);
 
-        ec.executeChild(this, new GuaranteeForOxfTopModel001Gb());
+        ec.executeChildren(this,
+                Guarantee_enum.OxfTopModel001Gb);
 
         ec.executeChildren(this,
                 Lease_enum.OxfMediaX002Gb,
@@ -211,8 +212,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 KeyTable_enum.Oxf2015Area,
                 KeyTable_enum.Oxf2015Count);
 
-        ec.executeChild(this,
-                Partitioning_enum.OxfPartitioning2015.builder());
+        ec.executeChildren(this,
+                Partitioning_enum.OxfPartitioning2015);
 
         ec.executeChild(this,
                 new CreateInvoiceNumerators());

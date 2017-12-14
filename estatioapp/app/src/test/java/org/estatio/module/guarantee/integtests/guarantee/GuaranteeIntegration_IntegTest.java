@@ -32,22 +32,21 @@ import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.applib.services.wrapper.DisabledException;
 import org.apache.isis.applib.services.xactn.TransactionService;
 
-import org.incode.module.base.integtests.VT;
-
 import org.estatio.module.agreement.dom.AgreementRoleRepository;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.guarantee.dom.Guarantee;
 import org.estatio.module.guarantee.dom.GuaranteeRepository;
 import org.estatio.module.guarantee.dom.GuaranteeType;
-import org.estatio.module.guarantee.fixtures.personas.GuaranteeForOxfTopModel001Gb;
+import org.estatio.module.guarantee.fixtures.enums.Guarantee_enum;
 import org.estatio.module.guarantee.integtests.GuaranteeModuleIntegTestAbstract;
 import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.party.dom.Party;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.incode.module.base.integtests.VT.bd;
+import static org.incode.module.base.integtests.VT.ld;
 
 public class GuaranteeIntegration_IntegTest extends GuaranteeModuleIntegTestAbstract {
 
@@ -83,17 +82,18 @@ public class GuaranteeIntegration_IntegTest extends GuaranteeModuleIntegTestAbst
 
     @Before
     public void setupData() {
-        runFixtureScript(new GuaranteeForOxfTopModel001Gb());
+        runFixtureScript(Guarantee_enum.OxfTopModel001Gb.builder());
 
     }
 
     @Before
     public void setUp() {
-        lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
-        guaranteeWithFinancialAccount = guaranteeRepository.findByReference(Lease_enum.OxfTopModel001Gb.getRef() + "-D");
+        guaranteeWithFinancialAccount = Guarantee_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+        lease = Guarantee_enum.OxfTopModel001Gb.getLease_d().findUsing(serviceRegistry);
+
         GuaranteeType guaranteeType = GuaranteeType.UNKNOWN;
         guaranteeWithoutFinancialAccount = guaranteeRepository.newGuarantee(
-                lease, guaranteeType.name(), guaranteeType.name(), guaranteeType, VT.ld(2012,1,1), null, "", VT.bd(1000), null);
+                lease, guaranteeType.name(), guaranteeType.name(), guaranteeType, ld(2012,1,1), null, "", bd(1000), null);
         transactionService.flushTransaction();
     }
 
@@ -102,7 +102,7 @@ public class GuaranteeIntegration_IntegTest extends GuaranteeModuleIntegTestAbst
         @Test
         public void happy_case() throws Exception {
             //Given
-            final Guarantee guarantee = guaranteeRepository.findByReference(GuaranteeForOxfTopModel001Gb.REFERENCE);
+            final Guarantee guarantee = Guarantee_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
             assertThat(guarantee.getRoles()).isNotNull();
             final Party primaryParty = guarantee.getPrimaryParty();
             final int size = agreementRoleRepository.findByParty(primaryParty).size();
@@ -113,7 +113,7 @@ public class GuaranteeIntegration_IntegTest extends GuaranteeModuleIntegTestAbst
                     () -> wrap(guarantee).remove("Some reason"));
 
             //Then
-            assertThat(guaranteeRepository.findByReference(GuaranteeForOxfTopModel001Gb.REFERENCE)).isNull();
+            assertThat(Guarantee_enum.OxfTopModel001Gb.findUsing(serviceRegistry)).isNull();
 
             //TODO: The agreement roles are implicitly removed, scary....
             assertThat(agreementRoleRepository.findByParty(primaryParty).size()).isEqualTo(size-1);
