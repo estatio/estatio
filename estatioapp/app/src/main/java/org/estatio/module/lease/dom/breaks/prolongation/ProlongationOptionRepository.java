@@ -43,7 +43,7 @@ public class ProlongationOptionRepository extends UdoDomainRepositoryAndFactory<
     }
 
     @Programmatic
-    public Lease newProlongationOption(
+    public ProlongationOption newProlongationOption(
             final Lease lease,
             final String prolongationPeriod,
             final String notificationPeriod,
@@ -65,7 +65,7 @@ public class ProlongationOptionRepository extends UdoDomainRepositoryAndFactory<
         prolongationOption.setDescription(description);
         persist(prolongationOption);
 
-        return lease;
+        return prolongationOption;
     }
 
     @Programmatic

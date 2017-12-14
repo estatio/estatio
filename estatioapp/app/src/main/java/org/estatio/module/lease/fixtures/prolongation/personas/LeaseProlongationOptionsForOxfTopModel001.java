@@ -18,56 +18,43 @@
  */
 package org.estatio.module.lease.fixtures.prolongation.personas;
 
-import javax.inject.Inject;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.dom.breaks.prolongation.ProlongationOptionRepository;
-import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForEntryFee_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForMarketing_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForPercentage_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceChargeBudgeted_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTax_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
+import org.estatio.module.lease.fixtures.prolongation.enums.ProlongationOption_enum;
 
 public class LeaseProlongationOptionsForOxfTopModel001 extends FixtureScript {
 
-    public static final String LEASE_REF = Lease_enum.OxfTopModel001Gb.getRef();
+//    public static final String LEASE_REF = Lease_enum.OxfTopModel001Gb.getRef();
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, LeaseItemForRent_enum.OxfTopModel001Gb.builder());
-        executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfTopModel001Gb.builder());
-        executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfTopModel001Gb_TA.builder());
-        executionContext.executeChild(this, LeaseItemForServiceChargeBudgeted_enum.OxfTopModel001Gb.builder());
-        executionContext.executeChild(this, LeaseItemForTurnoverRent_enum.OxfTopModel001Gb.builder());
-        executionContext.executeChild(this, LeaseItemForPercentage_enum.OxfTopModel001Gb.builder());
-        executionContext.executeChild(this, LeaseItemForDiscount_enum.OxfTopModel001Gb.builder());
-        executionContext.executeChild(this, LeaseItemForEntryFee_enum.OxfTopModel001Gb.builder());
-        executionContext.executeChild(this, LeaseItemForTax_enum.OxfTopModel001Gb.builder());
-        executionContext.executeChild(this, LeaseItemForDeposit_enum.OxfTopModel001Gb.builder());
-        executionContext.executeChild(this, LeaseItemForMarketing_enum.OxfTopModel001Gb.builder());
+//        executionContext.executeChild(this, LeaseItemForRent_enum.OxfTopModel001Gb.builder());
+//        executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfTopModel001Gb.builder());
+//        executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfTopModel001Gb_TA.builder());
+//        executionContext.executeChild(this, LeaseItemForServiceChargeBudgeted_enum.OxfTopModel001Gb.builder());
+//        executionContext.executeChild(this, LeaseItemForTurnoverRent_enum.OxfTopModel001Gb.builder());
+//        executionContext.executeChild(this, LeaseItemForPercentage_enum.OxfTopModel001Gb.builder());
+//        executionContext.executeChild(this, LeaseItemForDiscount_enum.OxfTopModel001Gb.builder());
+//        executionContext.executeChild(this, LeaseItemForEntryFee_enum.OxfTopModel001Gb.builder());
+//        executionContext.executeChild(this, LeaseItemForTax_enum.OxfTopModel001Gb.builder());
+//        executionContext.executeChild(this, LeaseItemForDeposit_enum.OxfTopModel001Gb.builder());
+//        executionContext.executeChild(this, LeaseItemForMarketing_enum.OxfTopModel001Gb.builder());
 
 
         // exec
-        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
+        executionContext.executeChildren(this, ProlongationOption_enum.OxfTopModel001);
 
-        prolongationOptionRepository.newProlongationOption(lease, "5y", "6m", "Some description");
+//        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
+//
+//        prolongationOptionRepository.newProlongationOption(lease, "5y", "6m", "Some description");
     }
 
-    @Inject
-    protected LeaseRepository leaseRepository;
-
-    @Inject
-    protected ProlongationOptionRepository prolongationOptionRepository;
-
+//    @Inject
+//    protected LeaseRepository leaseRepository;
+//
+//    @Inject
+//    protected ProlongationOptionRepository prolongationOptionRepository;
+//
 }
