@@ -24,7 +24,7 @@ import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
 import org.apache.isis.core.runtime.headless.logging.LogConfig;
 
 import org.estatio.module.lease.EstatioLeaseModule;
-import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
+import org.estatio.module.lease.fixtures.docfrag.personas.DocFragmentDemoFixture;
 
 public abstract class LeaseModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 

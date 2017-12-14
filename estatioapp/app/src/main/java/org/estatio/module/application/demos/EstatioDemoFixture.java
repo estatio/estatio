@@ -45,7 +45,7 @@ import org.estatio.module.currency.EstatioCurrencyModule;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.guarantee.fixtures.personas.GuaranteeForOxfTopModel001Gb;
 import org.estatio.module.index.EstatioIndexModule;
-import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
+import org.estatio.module.lease.fixtures.docfrag.personas.DocFragmentDemoFixture;
 import org.estatio.module.lease.fixtures.bankaccount.enums.BankMandate_enum;
 import org.estatio.module.lease.fixtures.breakoptions.enums.BreakOption_enum;
 import org.estatio.module.lease.fixtures.invoice.enums.InvoiceForLease_enum;

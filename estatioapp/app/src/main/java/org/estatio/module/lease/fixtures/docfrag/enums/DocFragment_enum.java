@@ -14,113 +14,85 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.lease.fixtures;
+package org.estatio.module.lease.fixtures.docfrag.enums;
 
 import java.io.IOException;
 import java.util.Objects;
-
-import javax.inject.Inject;
 
 import com.google.common.io.Resources;
 
 import org.apache.commons.io.Charsets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.incode.module.docfragment.dom.impl.DocFragment;
 import org.incode.module.docfragment.dom.impl.DocFragmentRepository;
 
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.estatio.module.lease.fixtures.docfrag.builders.DocFragmentBuilder;
 import org.estatio.module.lease.seed.DocFragmentData;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 
 @AllArgsConstructor
-public enum DocFragmentDemoData {
+@Getter
+@Accessors(chain = true)
+public enum DocFragment_enum
+        implements PersonaWithBuilderScript<DocFragment, DocFragmentBuilder>, PersonaWithFinder<DocFragment> {
 
     //
     // using ITA's fragments for now
     //
     InvoicePreliminaryLetterDescription_DemoGbr(
-            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "preliminaryLetterDescription", "/GBR",
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "preliminaryLetterDescription",
+            ApplicationTenancy_enum.Gb,
             "Invoice_preliminaryLetterDescription_ITA.docFragment.ftl") {
-        public FixtureScript script() {
-            // subclasses are necessary because
-            // FixtureScriptsSpecificationProvider's MultipleExecutionPolicy set to ONCE_PER_CLASS
-            return new DocFragmentScript() {};
-        }
     },
     InvoiceDescription_DemoGbr(
-            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "description", "/GBR",
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "description", ApplicationTenancy_enum.Gb,
             "Invoice_description_ITA.docFragment.ftl") {
-        public FixtureScript script() {
-            return new DocFragmentScript() {};
-        }
     },
     InvoiceItemDescription_DemoGbr(
-            "org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM", "description", "/GBR",
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM", "description", ApplicationTenancy_enum.Gb,
             "InvoiceItem_description_ITA.docFragment.ftl") {
-        public FixtureScript script() {
-            return new DocFragmentScript() {};
-        }
     },
 
     //
     // using ITA's fragments for now
     //
     InvoicePreliminaryLetterDescription_DemoNld(
-            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "preliminaryLetterDescription", "/NLD",
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "preliminaryLetterDescription", ApplicationTenancy_enum.Nl,
             "Invoice_preliminaryLetterDescription_ITA.docFragment.ftl") {
         public FixtureScript script() {
-            return new DocFragmentScript() {};
+            return new DocFragmentBuilder() {};
         }
     },
     InvoiceDescription_DemoNld(
-            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "description", "/NLD",
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "description", ApplicationTenancy_enum.Nl,
             "Invoice_description_ITA.docFragment.ftl") {
         public FixtureScript script() {
-            return new DocFragmentScript() {};
+            return new DocFragmentBuilder() {};
         }
     },
     InvoiceItemDescription_DemoNld(
-            "org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM", "description", "/NLD",
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM", "description", ApplicationTenancy_enum.Nl,
             "InvoiceItem_description_ITA.docFragment.ftl") {
-        public FixtureScript script() {
-            return new DocFragmentScript() {};
-        }
     },
     ;
 
-    @Getter
     private final String objectType;
-    @Getter
     private final String name;
-    @Getter
-    private final String atPath;
+    private final ApplicationTenancy_enum applicationTenancy_d;
     private final String templateResourceName;
 
-    public String getTemplateText() {
+    String getTemplateText() {
         return read(templateResourceName);
     }
-
-    class DocFragmentScript extends FixtureScript {
-        @Override
-        public void execute(final ExecutionContext executionContext) {
-
-            final DocFragment docFrag = docFragmentRepository
-                    .findByObjectTypeAndNameAndApplicableToAtPath(objectType, name, atPath);
-            if(docFrag != null && Objects.equals(docFrag.getAtPath(), atPath)) {
-                return;
-            }
-
-            docFragmentRepository.create(objectType, name, atPath, getTemplateText());
-        }
-
-        @Inject
-        DocFragmentRepository docFragmentRepository;
-    }
-
-    public abstract FixtureScript script();
 
     public static String read(final String resourceName) {
         try {
@@ -129,5 +101,23 @@ public enum DocFragmentDemoData {
             throw new RuntimeException(e);
         }
     }
+
+
+    @Override public DocFragment findUsing(final ServiceRegistry2 serviceRegistry) {
+        final DocFragmentRepository repo = serviceRegistry.lookupService(DocFragmentRepository.class);
+        final DocFragment docFrag = repo.findByObjectTypeAndNameAndApplicableToAtPath(objectType, name, applicationTenancy_d.getPath());
+        return docFrag != null && Objects.equals(docFrag.getAtPath(), applicationTenancy_d.getPath())
+                ? docFrag
+                : null;
+    }
+    @Override
+    public DocFragmentBuilder builder() {
+        return new DocFragmentBuilder()
+                .setName(name)
+                .setObjectType(objectType)
+                .setAtPath(applicationTenancy_d.getPath())
+                .setTemplateText(getTemplateText());
+    }
+
 
 }
