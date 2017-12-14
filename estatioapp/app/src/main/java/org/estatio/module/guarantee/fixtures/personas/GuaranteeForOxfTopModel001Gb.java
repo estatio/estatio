@@ -25,11 +25,11 @@ import org.estatio.module.guarantee.dom.Guarantee;
 import org.estatio.module.guarantee.dom.GuaranteeAgreementRoleTypeEnum;
 import org.estatio.module.guarantee.dom.GuaranteeType;
 import org.estatio.module.guarantee.fixtures.GuaranteeAbstract;
+import org.estatio.module.guarantee.fixtures.enums.Guarantee_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.incode.module.base.integtests.VT.bd;
@@ -37,17 +37,20 @@ import static org.incode.module.base.integtests.VT.ld;
 
 public class GuaranteeForOxfTopModel001Gb extends GuaranteeAbstract {
 
-    public static final String LEASE_REFERENCE = Lease_enum.OxfTopModel001Gb.getRef();
-    public static final String REFERENCE = LEASE_REFERENCE + "-D";
-    public static final String PARTY_REF_BANK = Organisation_enum.DagoBankGb.getRef();
+    private static final String LEASE_REFERENCE = Lease_enum.OxfTopModel001Gb.getRef();
+    public static final String REFERENCE = Guarantee_enum.OxfTopModel001Gb.getReference();
+    //  LEASE_REFERENCE + "-D";
+    private static final String PARTY_REF_BANK = Organisation_enum.DagoBankGb.getRef();
 
     @Override
-    protected void execute(final ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext ec) {
 
-        executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
-        executionContext.executeChild(this, OrganisationAndComms_enum.DagoBankGb.builder());
+        ec.executeChildren(this, Guarantee_enum.OxfTopModel001Gb);
 
-        createGuaranteeForOxfTopModel001(executionContext);
+//        ec.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
+//        ec.executeChild(this, OrganisationAndComms_enum.DagoBankGb.builder());
+//
+//        createGuaranteeForOxfTopModel001(ec);
     }
 
     private void createGuaranteeForOxfTopModel001(final ExecutionContext executionContext) {
