@@ -14,7 +14,7 @@ import org.incode.module.country.dom.impl.CountryRepository;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
+import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;

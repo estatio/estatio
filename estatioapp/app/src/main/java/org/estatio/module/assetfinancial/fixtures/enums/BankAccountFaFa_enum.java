@@ -16,13 +16,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums;
+package org.estatio.module.assetfinancial.fixtures.enums;
 
 import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
-import org.estatio.module.assetfinancial.fixtures.fafa.builders.BankAccountFaFaBuilder;
+import org.estatio.module.assetfinancial.fixtures.builders.BankAccountFaFaBuilder;
+import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 
 import lombok.Getter;
 import lombok.experimental.Accessors;

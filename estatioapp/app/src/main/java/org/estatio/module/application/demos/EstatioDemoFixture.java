@@ -28,8 +28,7 @@ import org.isisaddons.module.security.seed.scripts.AbstractUserAndRolesFixtureSc
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
+import org.estatio.module.assetfinancial.fixtures.enums.BankAccountFaFa_enum;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.keytables.enums.KeyTable_enum;
 import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
@@ -43,13 +42,12 @@ import org.estatio.module.charge.EstatioChargeModule;
 import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargeFixture;
 import org.estatio.module.country.IncodeDomCountryModule;
 import org.estatio.module.currency.EstatioCurrencyModule;
+import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.guarantee.fixtures.personas.GuaranteeForOxfTopModel001Gb;
 import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
 import org.estatio.module.lease.fixtures.bankaccount.enums.BankMandate_enum;
-import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfMediax002Gb;
-import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfPoison003Gb;
-import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfTopModel001;
+import org.estatio.module.lease.fixtures.breakoptions.enums.BreakOption_enum;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
@@ -63,7 +61,7 @@ import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRe
 import org.estatio.module.lease.migrations.CreateInvoiceNumerators;
 import org.estatio.module.lease.seed.DocFragmentSeedFixture;
 import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
-import org.estatio.module.party.fixtures.numerator.personas.NumeratorForOrganisationFra;
+import org.estatio.module.party.fixtures.numerator.enums.NumeratorForOrganisation_enum;
 import org.estatio.module.tax.EstatioTaxModule;
 
 import static org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum.Global;
@@ -123,7 +121,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 PropertyAndUnitsAndOwnerAndManager_enum.MacFr,
                 PropertyAndUnitsAndOwnerAndManager_enum.CARTEST);
 
-        ec.executeChild(this, new NumeratorForOrganisationFra());
+        ec.executeChildren(this, NumeratorForOrganisation_enum.Fra);
 
         ec.executeChildren(this,
                 BankAccount_enum.AcmeNl,
@@ -153,9 +151,12 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 Lease_enum.OxfTopModel001Gb);
 
         ec.executeChildren(this,
-                new LeaseBreakOptionsForOxfTopModel001(),
-                new LeaseBreakOptionsForOxfPoison003Gb(),
-                new LeaseBreakOptionsForOxfMediax002Gb());
+                BreakOption_enum.OxfPoison003Gb_FIXED,
+                BreakOption_enum.OxfPoison003Gb_ROLLING,
+                BreakOption_enum.OxfPoison003Gb_FIXED,
+                BreakOption_enum.OxfPoison003Gb_ROLLING,
+                BreakOption_enum.OxfTopModel001Gb_FIXED,
+                BreakOption_enum.OxfTopModel001Gb_ROLLING);
 
         ec.executeChildren(this,
                 LeaseItemForRent_enum.OxfMiracl005Gb,

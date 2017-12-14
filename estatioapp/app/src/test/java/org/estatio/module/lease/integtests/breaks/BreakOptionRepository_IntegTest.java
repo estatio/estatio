@@ -44,7 +44,7 @@ import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.breaks.BreakType;
 import org.estatio.module.lease.dom.breaks.RollingBreakOption;
-import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfTopModel001;
+import org.estatio.module.lease.fixtures.breakoptions.enums.BreakOption_enum;
 import org.estatio.module.lease.fixtures.lease.builders.LeaseBuilderLEGACY;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
@@ -66,8 +66,10 @@ public class BreakOptionRepository_IntegTest extends LeaseModuleIntegTestAbstrac
         public void setupData() {
             runFixtureScript(new FixtureScript() {
                 @Override
-                protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
+                protected void execute(ExecutionContext ec) {
+                    ec.executeChildren(this,
+                            BreakOption_enum.OxfTopModel001Gb_FIXED,
+                            BreakOption_enum.OxfTopModel001Gb_ROLLING);
                 }
             });
         }

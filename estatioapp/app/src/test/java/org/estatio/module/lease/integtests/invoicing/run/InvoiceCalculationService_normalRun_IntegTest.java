@@ -51,15 +51,17 @@ import org.estatio.module.lease.dom.invoicing.InvoiceCalculationService;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
-import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfMediax002Gb;
-import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfPoison003Gb;
-import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfTopModel001;
+import org.estatio.module.lease.fixtures.breakoptions.enums.BreakOption_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForEntryFee_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForMarketing_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForPercentage_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceChargeBudgeted_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTax_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
@@ -98,22 +100,48 @@ public class InvoiceCalculationService_normalRun_IntegTest extends LeaseModuleIn
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext ec) {
-                ec.executeChild(this, Person_enum.LinusTorvaldsNl.builder());
-                ec.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.builder());
-                ec.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.KalNl.builder());
-                ec.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
-                ec.executeChild(this, new LeaseBreakOptionsForOxfMediax002Gb());
-                ec.executeChild(this, new LeaseBreakOptionsForOxfPoison003Gb());
-                ec.executeChild(this, LeaseItemForRent_enum.KalPoison001Nl.builder());
-                ec.executeChild(this, Lease_enum.OxfPret004Gb.builder());
 
-                ec.executeChild(this, LeaseItemForRent_enum.OxfMiracl005Gb.builder());
-                ec.executeChild(this, LeaseItemForServiceCharge_enum.OxfMiracl005Gb.builder());
-                ec.executeChild(this, LeaseItemForTurnoverRent_enum.OxfMiracl005Gb.builder());
-                ec.executeChild(this, LeaseItemForDiscount_enum.OxfMiracle005bGb.builder());
-                ec.executeChild(this, LeaseItemForPercentage_enum.OxfMiracl005Gb.builder());
-                ec.executeChild(this, LeaseItemForDeposit_enum.OxfMiracle005bGb.builder());
+                ec.executeChildren(this,
+                        Person_enum.LinusTorvaldsNl,
+                        PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+                        PropertyAndUnitsAndOwnerAndManager_enum.KalNl,
 
+                        LeaseItemForRent_enum.OxfMediaX002Gb,
+                        LeaseItemForServiceCharge_enum.OxfMediaX002Gb,
+                        LeaseItemForTurnoverRent_enum.OxfMediaX002Gb,
+
+                        LeaseItemForRent_enum.OxfPoison003Gb,
+                        LeaseItemForServiceCharge_enum.OxfPoison003Gb,
+                        LeaseItemForTurnoverRent_enum.OxfPoison003Gb,
+
+                        LeaseItemForRent_enum.OxfTopModel001Gb,
+                        LeaseItemForServiceCharge_enum.OxfTopModel001Gb,
+                        LeaseItemForServiceCharge_enum.OxfTopModel001Gb_TA,
+                        LeaseItemForServiceChargeBudgeted_enum.OxfTopModel001Gb,
+                        LeaseItemForTurnoverRent_enum.OxfTopModel001Gb,
+                        LeaseItemForPercentage_enum.OxfTopModel001Gb,
+                        LeaseItemForDiscount_enum.OxfTopModel001Gb,
+                        LeaseItemForEntryFee_enum.OxfTopModel001Gb,
+                        LeaseItemForTax_enum.OxfTopModel001Gb,
+                        LeaseItemForDeposit_enum.OxfTopModel001Gb,
+                        LeaseItemForMarketing_enum.OxfTopModel001Gb,
+
+                        BreakOption_enum.OxfPoison003Gb_FIXED,
+                        BreakOption_enum.OxfPoison003Gb_ROLLING,
+                        BreakOption_enum.OxfPoison003Gb_FIXED,
+                        BreakOption_enum.OxfPoison003Gb_ROLLING,
+                        BreakOption_enum.OxfTopModel001Gb_FIXED,
+                        BreakOption_enum.OxfTopModel001Gb_ROLLING,
+
+                        LeaseItemForRent_enum.KalPoison001Nl,
+
+                        Lease_enum.OxfPret004Gb,
+                        LeaseItemForRent_enum.OxfMiracl005Gb,
+                        LeaseItemForServiceCharge_enum.OxfMiracl005Gb,
+                        LeaseItemForTurnoverRent_enum.OxfMiracl005Gb,
+                        LeaseItemForDiscount_enum.OxfMiracle005bGb,
+                        LeaseItemForPercentage_enum.OxfMiracl005Gb,
+                        LeaseItemForDeposit_enum.OxfMiracle005bGb);
             }
         });
 

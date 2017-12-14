@@ -34,7 +34,7 @@ import org.estatio.module.party.dom.relationship.PartyRelationship;
 import org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRole;
-import org.estatio.module.party.fixtures.person.builders.ApplicationUserBuilder;
+import org.estatio.module.base.platform.security.fixtures.ApplicationUserBuilder;
 import org.estatio.module.party.fixtures.person.builders.PersonBuilder;
 import org.estatio.module.party.fixtures.person.builders.PersonCommsBuilder;
 import org.estatio.module.party.fixtures.person.builders.PersonPartyRolesBuilder;

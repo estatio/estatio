@@ -12,8 +12,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
+import org.estatio.module.assetfinancial.fixtures.enums.BankAccountFaFa_enum;
+import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.fixtures.document.enums.IncomingPdf_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;

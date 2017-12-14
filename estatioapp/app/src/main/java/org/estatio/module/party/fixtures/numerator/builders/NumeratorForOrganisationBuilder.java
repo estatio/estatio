@@ -11,6 +11,7 @@ import org.incode.module.country.dom.impl.Country;
 import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
+import org.estatio.module.party.dom.PartyConstants;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,20 +19,20 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"name", "format", "country"}, callSuper = false)
-@ToString(of={"name", "format", "country"})
+@EqualsAndHashCode(of={"country"}, callSuper = false)
+@ToString(of={"country"})
 @Accessors(chain = true)
 public final class NumeratorForOrganisationBuilder
         extends BuilderScriptAbstract<Numerator, NumeratorForOrganisationBuilder> {
 
     @Getter @Setter
-    String name;
+    Country country;
 
     @Getter @Setter
     String format;
 
     @Getter @Setter
-    Country country;
+    String name;
 
     @Getter
     Numerator object;
@@ -39,9 +40,10 @@ public final class NumeratorForOrganisationBuilder
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        checkParam("name", executionContext, String.class);
-        checkParam("format", executionContext, String.class);
         checkParam("country", executionContext, Country.class);
+        checkParam("format", executionContext, String.class);
+
+        defaultParam("name", executionContext, PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME);
 
         Numerator numerator = numeratorRepository
                 .createGlobalNumerator(name, format, BigInteger.ZERO,  estatioApplicationTenancyRepository.findOrCreateTenancyFor(country));
