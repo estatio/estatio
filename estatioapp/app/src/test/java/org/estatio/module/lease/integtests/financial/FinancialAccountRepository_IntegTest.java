@@ -33,7 +33,7 @@ import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccountType;
-import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndMandateForTopModelGb;
+import org.estatio.module.lease.fixtures.bankaccount.enums.BankMandate_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -50,7 +50,7 @@ public class FinancialAccountRepository_IntegTest extends LeaseModuleIntegTestAb
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new BankAccountAndMandateForTopModelGb());
+                executionContext.executeChildren(this, BankMandate_enum.OxfTopModel001Gb_1);
             }
         });
     }

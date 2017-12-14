@@ -46,8 +46,7 @@ import org.estatio.module.currency.EstatioCurrencyModule;
 import org.estatio.module.guarantee.fixtures.personas.GuaranteeForOxfTopModel001Gb;
 import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
-import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndMandateForPoisonNl;
-import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndMandateForTopModelGb;
+import org.estatio.module.lease.fixtures.bankaccount.enums.BankMandate_enum;
 import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfMediax002Gb;
 import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfTopModel001;
@@ -142,8 +141,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         );
 
         ec.executeChildren(this,
-                new BankAccountAndMandateForTopModelGb(),
-                new BankAccountAndMandateForPoisonNl());
+                BankMandate_enum.OxfTopModel001Gb_1,
+                BankMandate_enum.KalPoison001Nl_2);
 
         ec.executeChild(this, new GuaranteeForOxfTopModel001Gb());
 

@@ -24,6 +24,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
+import org.estatio.module.agreement.dom.Agreement;
 import org.estatio.module.agreement.dom.AgreementRole;
 import org.estatio.module.agreement.dom.AgreementRoleRepository;
 import org.estatio.module.agreement.dom.role.AgreementRoleType;
@@ -33,7 +34,6 @@ import org.estatio.module.bankmandate.dom.BankMandateRepository;
 import org.estatio.module.bankmandate.dom.Scheme;
 import org.estatio.module.bankmandate.dom.SequenceType;
 import org.estatio.module.financial.dom.BankAccount;
-import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.party.dom.Party;
 
@@ -43,14 +43,13 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"bankAcount", "sequence"}, callSuper = false)
-@ToString(of={"bankAcount", "sequence"})
+@EqualsAndHashCode(of={"agreement","bankAccount", "sequence"}, callSuper = false)
+@ToString(of={"agreement", "bankAccount", "sequence"})
 @Accessors(chain = true)
 public class BankMandateBuilder extends BuilderScriptAbstract<BankMandate, BankMandateBuilder> {
 
-
     @Getter @Setter
-    Lease lease;
+    Agreement agreement;
     @Getter @Setter
     BankAccount bankAccount;
     @Getter @Setter
@@ -69,7 +68,7 @@ public class BankMandateBuilder extends BuilderScriptAbstract<BankMandate, BankM
     @Override
     protected void execute(final ExecutionContext ec) {
 
-        checkParam("lease", ec, Lease.class);
+        checkParam("agreement", ec, Agreement.class);
         checkParam("bankAccount", ec, BankAccount.class);
         checkParam("sequence", ec, Integer.class);
 
@@ -82,21 +81,23 @@ public class BankMandateBuilder extends BuilderScriptAbstract<BankMandate, BankM
         final AgreementRoleType agreementRoleType =
                 agreementRoleTypeRepository.findByTitle(LeaseAgreementRoleTypeEnum.TENANT.getTitle());
         final AgreementRole role =
-            agreementRoleRepository.findByAgreementAndTypeAndContainsDate(lease, agreementRoleType, leaseDate);
+            agreementRoleRepository.findByAgreementAndTypeAndContainsDate(agreement, agreementRoleType, leaseDate);
         final Party owner = role.getParty();
 
         final BankMandate bankMandate = bankMandateRepository.newBankMandate(
                 referenceFrom(owner, sequence),
                 owner.getReference(),
-                lease.getStartDate(),
-                lease.getEndDate(),
-                lease.getSecondaryParty(),
-                lease.getPrimaryParty(),
+                agreement.getStartDate(),
+                agreement.getEndDate(),
+                agreement.getSecondaryParty(),
+                agreement.getPrimaryParty(),
                 bankAccount,
                 sequenceType,
                 scheme,
-                lease.getStartDate());
+                agreement.getStartDate());
         ec.addResult(this, bankMandate.getReference(), bankMandate);
+
+        object = bankMandate;
     }
 
     public static String referenceFrom(final Party owner, final Integer sequence) {

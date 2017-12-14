@@ -29,12 +29,12 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccountTransaction;
 import org.estatio.module.financial.dom.FinancialAccountTransactionRepository;
-import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndMandateForTopModelGb;
-import org.estatio.module.financial.fixtures.fatransaction.personas.FinancialAccountTransactionForTopModel;
+import org.estatio.module.financial.fixtures.fatransaction.enums.FinancialAccountTransaction_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -50,9 +50,11 @@ public class FinancialAccountTransactionRepository_IntegTest extends LeaseModule
     public void setupData() {
         runFixtureScript(new FixtureScript() {
             @Override
-            protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new BankAccountAndMandateForTopModelGb());
-                executionContext.executeChild(this, new FinancialAccountTransactionForTopModel());
+            protected void execute(ExecutionContext ec) {
+                ec.executeChildren(this,
+                        BankAccount_enum.TopModelGb,
+                        FinancialAccountTransaction_enum.TopModelGb_0_xactn1,
+                        FinancialAccountTransaction_enum.TopModelGb_0_xactn2);
             }
         });
     }

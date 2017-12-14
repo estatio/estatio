@@ -48,7 +48,7 @@ public enum BankMandate_enum implements PersonaWithFinder<BankMandate>, PersonaW
     @Override
     public BankMandateBuilder builder() {
         return new BankMandateBuilder()
-                .setPrereq((f,ec) -> f.setLease(f.objectFor(lease_d, ec)))
+                .setPrereq((f,ec) -> f.setAgreement(f.objectFor(lease_d, ec)))
                 .setPrereq((f,ec) -> f.setBankAccount(f.objectFor(bankAccount_d, ec)))
                 .setLeaseDate(ld(2013, 10, 1))
                 .setScheme(scheme)
