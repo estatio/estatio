@@ -22,6 +22,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 
 /**
@@ -37,7 +38,18 @@ public class DocFragmentSeedService {
             return;
         }
 
-        fixtureScripts.runFixtureScript(new DocFragmentSeedFixture(), null);
+        fixtureScripts.runFixtureScript(new FixtureScript() {
+            @Override protected void execute(final ExecutionContext ec) {
+                ec.executeChildren(this,
+                                DocFragment_enum.InvoiceDescriptionFra,
+                                DocFragment_enum.InvoiceDescriptionIta,
+                                DocFragment_enum.InvoiceItemDescriptionFra,
+                                DocFragment_enum.InvoiceItemDescriptionIta,
+                                DocFragment_enum.InvoicePreliminaryLetterDescriptionFra,
+                                DocFragment_enum.InvoicePreliminaryLetterDescriptionIta
+                );
+            }
+        });
     }
 
     @Inject
