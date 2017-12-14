@@ -13,7 +13,7 @@ import org.isisaddons.module.excel.dom.util.Mode;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 
-public class IncomingChargeFixture extends ExcelFixture2 {
+public class CapexChargeHierarchyXlsxFixture extends ExcelFixture2 {
 
     @Inject
     ChargeRepository chargeRepository;

@@ -32,7 +32,7 @@ import org.estatio.module.capex.dom.order.approval.triggers.Order_discard;
 import org.estatio.module.capex.fixtures.order.OrderFixture;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
-import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargeFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 
@@ -57,7 +57,7 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
                 final LocalDate templateDate = ld(2012,1,1);
                 executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture(templateDate));
 
-                executionContext.executeChild(this, new IncomingChargeFixture());
+                executionContext.executeChild(this, new CapexChargeHierarchyXlsxFixture());
                 executionContext.executeChild(this, orderFixture);
                 executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.builder());
             }

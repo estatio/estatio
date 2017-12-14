@@ -14,9 +14,9 @@ import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwner
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
-import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
+import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceImportForDemoXlsxFixture;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
-import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargeFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
@@ -31,10 +31,10 @@ public class OrderItemRepository_IntegTest extends CapexModuleIntegTestAbstract 
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext ec) {
-                ec.executeChild(this, new IncomingChargeFixture());
+                ec.executeChild(this, new CapexChargeHierarchyXlsxFixture());
                 ec.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.builder());
                 ec.executeChild(this, Organisation_enum.YoukeaSe.builder());
-                ec.executeChild(this, new OrderInvoiceFixture());
+                ec.executeChild(this, new OrderInvoiceImportForDemoXlsxFixture());
             }
         });
     }
