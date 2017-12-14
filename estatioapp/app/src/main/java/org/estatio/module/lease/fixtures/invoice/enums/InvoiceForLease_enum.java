@@ -40,61 +40,6 @@ import static org.incode.module.base.integtests.VT.ldix;
 @Accessors(chain = true)
 public enum InvoiceForLease_enum implements PersonaWithFinder<InvoiceForLease>, PersonaWithBuilderScript<InvoiceForLease, InvoiceForLeaseBuilder> {
 
-    /*
-    private static final OrganisationAndComms_enum seller_d = OrganisationAndComms_enum.HelloWorldGb;
-    private static final OrganisationAndComms_enum buyer_d = OrganisationAndComms_enum.PoisonGb;
-    private static final Lease_enum lease_d = Lease_enum.OxfPoison003Gb;
-    private static final ApplicationTenancy_enum applicationTenancy_d = ApplicationTenancy_enum.GbOxf;
-
-    public static final String PARTY_REF_SELLER = seller_d.getRef();
-    public static final String PARTY_REF_BUYER = buyer_d.getRef();
-    public static final String LEASE_REF = lease_d.getRef();
-    public static final String AT_PATH = applicationTenancy_d.getPath();
-
-    // simply within the lease's start/end date
-    public static LocalDate startDateFor(final Lease lease) {
-        Ensure.ensureThatArg(lease.getReference(), is(lease_d.getRef()));
-        return lease.getStartDate().plusYears(1);
-    }
-
-    public InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003() {
-        this(null, null);
-    }
-
-    public InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(final String friendlyName, final String localName) {
-        super(friendlyName, localName);
-    }
-
-    @Override
-    protected void execute(final ExecutionContext executionContext) {
-
-        // prereqs
-        executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldNl.builder());
-
-        executionContext.executeChild(this, LeaseItemForRent_enum.OxfPoison003Gb.builder());
-        executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfPoison003Gb.builder());
-        executionContext.executeChild(this, LeaseItemForTurnoverRent_enum.OxfPoison003Gb.builder());
-
-        // exec
-
-        final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(AT_PATH);
-        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
-
-        final LocalDate startDate = startDateFor(lease);
-
-        final InvoiceForLease invoice = createInvoiceAndNumerator(
-                applicationTenancy,
-                lease, PARTY_REF_SELLER,
-                PARTY_REF_BUYER, PaymentMethod.DIRECT_DEBIT,
-                Currency_enum.EUR.getReference(),
-                startDate, executionContext);
-
-        createInvoiceItemsForTermsOfFirstLeaseItemOfType(
-                invoice, LeaseItemType.RENT,
-                startDate, ldix(startDate, startDate.plusMonths(3)),
-                executionContext);
-    }
-     */
     OxfMiracl005Gb(
             ApplicationTenancy_enum.GbOxf, Lease_enum.OxfMiracl005Gb,
             OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.MiracleGb,
@@ -102,8 +47,8 @@ public enum InvoiceForLease_enum implements PersonaWithFinder<InvoiceForLease>, 
             new ItemsSpec[] {
                 new ItemsSpec(LeaseItemType.RENT_DISCOUNT_FIXED, 3)
             },
+            // prereqs
             new PersonaWithBuilderScript[] {
-                    //OrganisationAndComms_enum.HelloWorldGb,
                     LeaseItemForDiscount_enum.OxfMiracle005bGb
             }
     ),
@@ -114,6 +59,7 @@ public enum InvoiceForLease_enum implements PersonaWithFinder<InvoiceForLease>, 
             new ItemsSpec[] {
                 new ItemsSpec(LeaseItemType.RENT, 3)
             },
+            // prereqs
             new PersonaWithBuilderScript[] {
                     LeaseItemForRent_enum.KalPoison001Nl
             }
@@ -125,8 +71,8 @@ public enum InvoiceForLease_enum implements PersonaWithFinder<InvoiceForLease>, 
             new ItemsSpec[] {
                 new ItemsSpec(LeaseItemType.RENT, 3)
             },
+            // prereqs
             new PersonaWithBuilderScript[] {
-                    // OrganisationAndComms_enum.HelloWorldNl
                     LeaseItemForRent_enum.OxfPoison003Gb,
                     LeaseItemForServiceCharge_enum.OxfPoison003Gb,
                     LeaseItemForTurnoverRent_enum.OxfPoison003Gb

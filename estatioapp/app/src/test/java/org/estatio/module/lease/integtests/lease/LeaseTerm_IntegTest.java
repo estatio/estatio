@@ -167,7 +167,7 @@ public class LeaseTerm_IntegTest extends LeaseModuleIntegTestAbstract {
                 //
                 //            @Override
                 //            public void run() {
-                //                runFixtureScript(new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005());
+                //                runFixtureScript(new InvoiceForLease_enum.OxfMiracle005Gb.builder());
                 //            }
                 //        }
                 //        );
