@@ -28,11 +28,12 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccountType;
-import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndMandateForTopModelGb;
+import org.estatio.module.lease.fixtures.bankaccount.enums.BankMandate_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -49,7 +50,7 @@ public class FinancialAccountRepository_IntegTest extends LeaseModuleIntegTestAb
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new BankAccountAndMandateForTopModelGb());
+                executionContext.executeChildren(this, BankMandate_enum.OxfTopModel001Gb_1);
             }
         });
     }
@@ -73,7 +74,7 @@ public class FinancialAccountRepository_IntegTest extends LeaseModuleIntegTestAb
         public void forAccount() {
             // when
             FinancialAccount account = financialAccountRepository
-                    .findByOwnerAndReference(party, BankAccountAndMandateForTopModelGb.REF);
+                    .findByOwnerAndReference(party, BankAccount_enum.TopModelGb.getIban());
 
             // then
             assertThat(account, is(notNullValue()));
@@ -92,7 +93,7 @@ public class FinancialAccountRepository_IntegTest extends LeaseModuleIntegTestAb
             assertThat(accounts.size(), is(1));
 
             // then
-            assertThat(accounts.get(0).getReference(), is(BankAccountAndMandateForTopModelGb.REF));
+            assertThat(accounts.get(0).getReference(), is(BankAccount_enum.TopModelGb.getIban()));
 
         }
     }
@@ -107,7 +108,7 @@ public class FinancialAccountRepository_IntegTest extends LeaseModuleIntegTestAb
             assertThat(accounts.size(), is(1));
 
             // then
-            assertThat(accounts.get(0).getReference(), is(BankAccountAndMandateForTopModelGb.REF));
+            assertThat(accounts.get(0).getReference(), is(BankAccount_enum.TopModelGb.getIban()));
         }
     }
 
