@@ -60,7 +60,6 @@ import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -249,9 +248,6 @@ public final class LeaseBuilder
 
     @Inject
     OccupancyRepository occupancyRepository;
-
-    @Inject
-    PartyRepository partyRepository;
 
     @Inject
     AgreementRoleTypeRepository agreementRoleTypeRepository;

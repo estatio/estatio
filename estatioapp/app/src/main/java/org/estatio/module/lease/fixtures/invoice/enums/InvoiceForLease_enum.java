@@ -26,7 +26,7 @@ import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_e
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
-import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -42,7 +42,7 @@ public enum InvoiceForLease_enum implements PersonaWithFinder<InvoiceForLease>, 
 
     OxfMiracl005Gb(
             ApplicationTenancy_enum.GbOxf, Lease_enum.OxfMiracl005Gb,
-            OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.MiracleGb,
+            Organisation_enum.HelloWorldGb, Organisation_enum.MiracleGb,
             PaymentMethod.DIRECT_DEBIT, Currency_enum.EUR,
             new ItemsSpec[] {
                 new ItemsSpec(LeaseItemType.RENT_DISCOUNT_FIXED, 3)
@@ -54,7 +54,7 @@ public enum InvoiceForLease_enum implements PersonaWithFinder<InvoiceForLease>, 
     ),
     KalPoison001Nl(
             ApplicationTenancy_enum.NlKal, Lease_enum.KalPoison001Nl,
-            OrganisationAndComms_enum.AcmeNl, OrganisationAndComms_enum.PoisonNl,
+            Organisation_enum.AcmeNl, Organisation_enum.PoisonNl,
             PaymentMethod.DIRECT_DEBIT, Currency_enum.EUR,
             new ItemsSpec[] {
                 new ItemsSpec(LeaseItemType.RENT, 3)
@@ -66,7 +66,7 @@ public enum InvoiceForLease_enum implements PersonaWithFinder<InvoiceForLease>, 
     ),
     OxfPoison003Gb(
             ApplicationTenancy_enum.GbOxf, Lease_enum.OxfPoison003Gb,
-            OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.PoisonGb,
+            Organisation_enum.HelloWorldGb, Organisation_enum.PoisonGb,
             PaymentMethod.DIRECT_DEBIT, Currency_enum.EUR,
             new ItemsSpec[] {
                 new ItemsSpec(LeaseItemType.RENT, 3)
@@ -82,8 +82,8 @@ public enum InvoiceForLease_enum implements PersonaWithFinder<InvoiceForLease>, 
 
     private final ApplicationTenancy_enum applicationTenancy_d;
     private final Lease_enum lease_d;
-    private final OrganisationAndComms_enum seller_d;
-    private final OrganisationAndComms_enum buyer_d;
+    private final Organisation_enum seller_d;
+    private final Organisation_enum buyer_d;
     private final PaymentMethod paymentMethod;
     private final Currency_enum currency_d;
 

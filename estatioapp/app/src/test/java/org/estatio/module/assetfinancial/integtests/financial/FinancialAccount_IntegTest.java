@@ -39,15 +39,16 @@ import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.module.assetfinancial.fixtures.enums.BankAccountFaFa_enum;
-import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.assetfinancial.integtests.AssetFinancialModuleIntegTestAbstract;
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
+import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
+import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -123,11 +124,11 @@ public class FinancialAccount_IntegTest extends AssetFinancialModuleIntegTestAbs
 
             runFixtureScript(
                     BankAccountFaFa_enum.HelloWorldNl.builder(),
-                    OrganisationAndComms_enum.HelloWorldNl.builder()
+                    Organisation_enum.HelloWorldNl.builder()
             );
 
             bankAccount = BankAccountFaFa_enum.HelloWorldNl.getBankAccount_d().findUsing(serviceRegistry);
-            owner = OrganisationAndComms_enum.HelloWorldNl.findUsing(serviceRegistry);
+            owner = Organisation_enum.HelloWorldNl.findUsing(serviceRegistry);
         }
 
         @Rule

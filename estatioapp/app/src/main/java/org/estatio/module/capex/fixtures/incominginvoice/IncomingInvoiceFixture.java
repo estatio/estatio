@@ -33,7 +33,7 @@ import org.estatio.module.charge.fixtures.incoming.enums.IncomingCharge_enum;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Person;
-import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
+import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.fixtures.data.Tax_enum;
 

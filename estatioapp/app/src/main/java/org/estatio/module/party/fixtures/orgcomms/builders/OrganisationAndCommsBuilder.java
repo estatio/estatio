@@ -16,7 +16,11 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.party.fixtures.organisation.builders;
+package org.estatio.module.party.fixtures.orgcomms.builders;
+
+import java.util.List;
+
+import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
@@ -24,9 +28,11 @@ import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.communications.dom.impl.commchannel.PhoneOrFaxNumber;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 
+import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.party.dom.Organisation;
-import org.estatio.module.party.fixtures.organisation.enums.OrganisationComms_enum;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,19 +46,10 @@ public final class OrganisationAndCommsBuilder
         extends BuilderScriptAbstract<Organisation, OrganisationAndCommsBuilder> {
 
     @Getter @Setter
-    private String atPath;
+    private Organisation organisation;
 
     @Getter @Setter
-    private String partyReference;
-
-    @Getter @Setter
-    private String partyName;
-
-    @Getter @Setter
-    private Boolean useNumeratorForReference;
-
-    @Getter @Setter
-    private OrganisationComms_enum[] comms;
+    private List<CommsSpec> comms = Lists.newArrayList();
 
     @Getter
     private Organisation object;
@@ -72,19 +69,12 @@ public final class OrganisationAndCommsBuilder
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        final OrganisationBuilder organisationBuilder = new OrganisationBuilder();
-        this.object = organisationBuilder
-                .setAtPath(atPath)
-                .setName(partyName)
-                .setReference(partyReference)
-                .setUseNumeratorForReference(useNumeratorForReference)
-                .build(this, executionContext)
-                .getObject();
+        this.object = organisation;
 
-        for (final OrganisationComms_enum comms : this.comms) {
+        for (final OrganisationAndCommsBuilder.CommsSpec comms : this.comms) {
             final OrganisationCommsBuilder organisationCommsBuilder = new OrganisationCommsBuilder();
             organisationCommsBuilder
-                    .setOrganisation(object)
+                    .setOrganisation(this.object)
                     .setAddress1(comms.getAddress1())
                     .setAddress2(comms.getAddress2())
                     .setCity(comms.getCity())
@@ -110,5 +100,21 @@ public final class OrganisationAndCommsBuilder
                 this.faxObj = organisationCommsBuilder.getFaxObj();
             }
         }
+    }
+
+    @AllArgsConstructor
+    @Data
+    public static class CommsSpec {
+        private final String address1;
+        private final String address2;
+        private final String postalCode;
+        private final String city;
+        private final String stateReference;
+        private final Country_enum country;
+        private final Boolean legalAddress;
+
+        private final String phone;
+        private final String fax;
+        private final String emailAddress;
     }
 }

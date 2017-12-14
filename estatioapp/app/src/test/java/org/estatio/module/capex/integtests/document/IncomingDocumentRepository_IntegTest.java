@@ -18,7 +18,7 @@ import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.fixtures.document.enums.IncomingPdf_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
-import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
+import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

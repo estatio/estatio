@@ -32,7 +32,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
+import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
 import org.estatio.module.party.integtests.PartyModuleIntegTestAbstract;
 
 import static org.hamcrest.CoreMatchers.is;

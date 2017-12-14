@@ -44,7 +44,7 @@ import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.party.dom.relationship.PartyRelationship;
 import org.estatio.module.party.dom.relationship.PartyRelationshipRepository;
 import org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum;
-import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
+import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

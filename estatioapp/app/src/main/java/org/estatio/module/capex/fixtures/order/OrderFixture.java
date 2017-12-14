@@ -36,7 +36,7 @@ import org.estatio.module.charge.fixtures.incoming.enums.IncomingCharge_enum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
-import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
+import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;
 import org.estatio.module.tax.fixtures.data.Tax_enum;

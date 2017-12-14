@@ -43,14 +43,13 @@ import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseAgreementTypeEnum;
-import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.PersonRepository;
-import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -124,17 +123,13 @@ public class AgreementRoleRepository_IntegTest extends LeaseModuleIntegTestAbstr
         }
 
         @Inject
-        private LeaseRepository leaseRepository;
-        @Inject
-        private PartyRepository partyRepository;
-        @Inject
-        private ClockService clockService;
+        ClockService clockService;
 
         @Before
         public void setUp() throws Exception {
             artTenant = agreementRoleTypeRepository.findByTitle(LeaseAgreementRoleTypeEnum.TENANT.getTitle());
             leaseOxfTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
-            partyTopModel = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
+            partyTopModel = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
         }
 
         @Test

@@ -10,7 +10,7 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.builders.PropertyAndUnitsAndOwnerAndManagerBuilder;
-import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -25,48 +25,48 @@ public enum PropertyAndUnitsAndOwnerAndManager_enum implements
 
     BudNl   (Property_enum.BudNl,
             7,
-            OrganisationAndComms_enum.AcmeNl, ld(1999, 1, 1), ld(2000, 1, 1),
+            Organisation_enum.AcmeNl, ld(1999, 1, 1), ld(2000, 1, 1),
             Person_enum.JohnDoeNl, null, null
     ) {
     },
     CARTEST (Property_enum.CARTEST,
             0,
-            OrganisationAndComms_enum.HelloWorldIt, ld(1999, 1, 1), ld(2000, 1, 1),
+            Organisation_enum.HelloWorldIt, ld(1999, 1, 1), ld(2000, 1, 1),
             Person_enum.LucianoPavarottiIt, null, null
     ),
     GraIt   (Property_enum.GraIt,
             55,
-            OrganisationAndComms_enum.HelloWorldIt, ld(1999, 1, 1), ld(2000, 1, 1),
+            Organisation_enum.HelloWorldIt, ld(1999, 1, 1), ld(2000, 1, 1),
             Person_enum.LucianoPavarottiIt, null, null
     ),
     HanSe   (Property_enum.HanSe,
             5,
-            OrganisationAndComms_enum.HelloWorldSe, ld(1999, 1, 1), ld(2000, 1, 1),
+            Organisation_enum.HelloWorldSe, ld(1999, 1, 1), ld(2000, 1, 1),
             Person_enum.AgnethaFaltskogSe, null, null
     ),
     KalNl   (Property_enum.KalNl,
             40,
-            OrganisationAndComms_enum.AcmeNl, ld(1999, 1, 1), ld(2000, 1, 1),
+            Organisation_enum.AcmeNl, ld(1999, 1, 1), ld(2000, 1, 1),
             Person_enum.JohnDoeNl, null, null
     ),
     MacFr   (Property_enum.MacFr,
             5,
-            OrganisationAndComms_enum.HelloWorldFr, ld(1999, 1, 1), ld(2000, 1, 1),
+            Organisation_enum.HelloWorldFr, ld(1999, 1, 1), ld(2000, 1, 1),
             Person_enum.JeanneDarcFr, null, null
     ),
     MnsFr   (Property_enum.MnsFr,
             5,
-            OrganisationAndComms_enum.HelloWorldFr, ld(1999, 1, 1), ld(2000, 1, 1),
+            Organisation_enum.HelloWorldFr, ld(1999, 1, 1), ld(2000, 1, 1),
             Person_enum.FleuretteRenaudFr, null, null
     ),
     OxfGb   (Property_enum.OxfGb,
             25,
-            OrganisationAndComms_enum.HelloWorldGb, ld(1999, 1, 1), ld(2000, 1, 1),
+            Organisation_enum.HelloWorldGb, ld(1999, 1, 1), ld(2000, 1, 1),
             Person_enum.GinoVannelliGb, null, null
     ),
     VivFr   (Property_enum.VivFr,
             5,
-            OrganisationAndComms_enum.HelloWorldFr, ld(1999, 1, 1), ld(2000, 1, 1),
+            Organisation_enum.HelloWorldFr, ld(1999, 1, 1), ld(2000, 1, 1),
             Person_enum.JeanneDarcFr, null, null
     );
 
@@ -74,7 +74,7 @@ public enum PropertyAndUnitsAndOwnerAndManager_enum implements
     public String getRef() { return property_d.getRef(); }
 
     private final int numberOfUnits;
-    private final OrganisationAndComms_enum owner_d;
+    private final Organisation_enum owner_d;
     private final LocalDate ownerStartDate;
     private final LocalDate ownerEndDate;
     private final Person_enum manager_d;
@@ -84,7 +84,7 @@ public enum PropertyAndUnitsAndOwnerAndManager_enum implements
     PropertyAndUnitsAndOwnerAndManager_enum(
             final Property_enum property_d,
             final int numberOfUnits,
-            final OrganisationAndComms_enum owner_d,
+            final Organisation_enum owner_d,
             final LocalDate ownerStartDate,
             final LocalDate ownerEndDate,
             final Person_enum manager_d,
