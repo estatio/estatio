@@ -40,14 +40,25 @@ public class CreateInvoiceNumerators extends DiscoverableFixtureScript {
 
 
     @Override
-    protected void execute(ExecutionContext fixtureResults) {
-        final List<FixedAssetRoleTypeEnum> roleTypes = Arrays.asList(FixedAssetRoleTypeEnum.PROPERTY_OWNER, FixedAssetRoleTypeEnum.TENANTS_ASSOCIATION);
-        for (Property property : propertyRepository.allProperties()) {
-            for (FixedAssetRole fixedAssetRole : fixedAssetRoleRepository.findAllForProperty(property)){
+    protected void execute(ExecutionContext ec) {
+        final List<FixedAssetRoleTypeEnum> roleTypes = Arrays.asList(
+                FixedAssetRoleTypeEnum.PROPERTY_OWNER,
+                FixedAssetRoleTypeEnum.TENANTS_ASSOCIATION);
+
+        for (final Property property : propertyRepository.allProperties()) {
+            for (final FixedAssetRole fixedAssetRole : fixedAssetRoleRepository.findAllForProperty(property)){
                 if (roleTypes.contains(fixedAssetRole.getType())) {
-                    ApplicationTenancy applicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(property, fixedAssetRole.getParty());
-                    final Numerator numerator = estatioNumeratorRepository.createInvoiceNumberNumerator(property, property.getReference().concat("-%04d"), bi(0), applicationTenancy);
-                    fixtureResults.addResult(this, property.getReference(), numerator);
+                    ApplicationTenancy applicationTenancy =
+                            estatioApplicationTenancyRepository.findOrCreateTenancyFor(
+                                    property, fixedAssetRole.getParty());
+                    final Numerator numerator =
+                            estatioNumeratorRepository.createInvoiceNumberNumerator(
+                                    property,
+                                    property.getReference().concat("-%04d"),
+                                    bi(0),
+                                    applicationTenancy);
+
+                    ec.addResult(this, property.getReference(), numerator);
                 }
             }
         }

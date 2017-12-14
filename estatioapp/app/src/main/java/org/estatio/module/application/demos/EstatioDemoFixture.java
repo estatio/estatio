@@ -58,7 +58,6 @@ import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForPercentage
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
-import org.estatio.module.lease.migrations.CreateInvoiceNumerators;
 import org.estatio.module.lease.seed.DocFragment_enum;
 import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
 import org.estatio.module.party.fixtures.numerator.enums.NumeratorForOrganisation_enum;
@@ -215,8 +214,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         ec.executeChildren(this,
                 Partitioning_enum.OxfPartitioning2015);
 
-        ec.executeChild(this,
-                new CreateInvoiceNumerators());
+//        ec.executeChild(this,
+//                new CreateInvoiceNumerators());
 
         ec.executeChild(this,
                 new IncomingChargeFixture());
