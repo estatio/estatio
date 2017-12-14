@@ -18,21 +18,8 @@
  */
 package org.estatio.module.lease.fixtures.breakoptions.personas;
 
-import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.lease.dom.breaks.BreakExerciseType;
-import org.estatio.module.lease.dom.breaks.BreakType;
-import org.estatio.module.lease.fixtures.LeaseBreakOptionsAbstract;
+import org.estatio.module.lease.fixtures.breakoptions.enums.BreakOption_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForEntryFee_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForMarketing_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForPercentage_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceChargeBudgeted_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTax_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
 
 public class LeaseBreakOptionsForOxfTopModel001 extends LeaseBreakOptionsAbstract {
 
@@ -41,26 +28,28 @@ public class LeaseBreakOptionsForOxfTopModel001 extends LeaseBreakOptionsAbstrac
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        // prereqs
-        executionContext.executeChild(this, LeaseItemForRent_enum.OxfTopModel001Gb.builder());
-        executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfTopModel001Gb.builder());
-        executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfTopModel001Gb_TA.builder());
-        executionContext.executeChild(this, LeaseItemForServiceChargeBudgeted_enum.OxfTopModel001Gb.builder());
-        executionContext.executeChild(this, LeaseItemForTurnoverRent_enum.OxfTopModel001Gb.builder());
-        executionContext.executeChild(this, LeaseItemForPercentage_enum.OxfTopModel001Gb.builder());
-        executionContext.executeChild(this, LeaseItemForDiscount_enum.OxfTopModel001Gb.builder());
-        executionContext.executeChild(this, LeaseItemForEntryFee_enum.OxfTopModel001Gb.builder());
-        executionContext.executeChild(this, LeaseItemForTax_enum.OxfTopModel001Gb.builder());
-        executionContext.executeChild(this, LeaseItemForDeposit_enum.OxfTopModel001Gb.builder());
-        executionContext.executeChild(this, LeaseItemForMarketing_enum.OxfTopModel001Gb.builder());
+        executionContext.executeChildren(this, BreakOption_enum.OxfTopModel001Gb_FIXED, BreakOption_enum.OxfTopModel001Gb_ROLLING);
 
-
-        // exec
-        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
-        newBreakOptionPlusYears(
-                lease, 5, "6m", BreakType.FIXED, BreakExerciseType.MUTUAL, null, executionContext);
-        newBreakOptionAtEndDate(
-                lease, "6m", BreakType.ROLLING, BreakExerciseType.MUTUAL, null, executionContext);
+//        // prereqs
+//        executionContext.executeChild(this, LeaseItemForRent_enum.OxfTopModel001Gb.builder());
+//        executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfTopModel001Gb.builder());
+//        executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfTopModel001Gb_TA.builder());
+//        executionContext.executeChild(this, LeaseItemForServiceChargeBudgeted_enum.OxfTopModel001Gb.builder());
+//        executionContext.executeChild(this, LeaseItemForTurnoverRent_enum.OxfTopModel001Gb.builder());
+//        executionContext.executeChild(this, LeaseItemForPercentage_enum.OxfTopModel001Gb.builder());
+//        executionContext.executeChild(this, LeaseItemForDiscount_enum.OxfTopModel001Gb.builder());
+//        executionContext.executeChild(this, LeaseItemForEntryFee_enum.OxfTopModel001Gb.builder());
+//        executionContext.executeChild(this, LeaseItemForTax_enum.OxfTopModel001Gb.builder());
+//        executionContext.executeChild(this, LeaseItemForDeposit_enum.OxfTopModel001Gb.builder());
+//        executionContext.executeChild(this, LeaseItemForMarketing_enum.OxfTopModel001Gb.builder());
+//
+//
+//        // exec
+//        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
+//        newBreakOptionPlusYears(
+//                lease, 5, "6m", BreakType.FIXED, BreakExerciseType.MUTUAL, null, executionContext);
+//        newBreakOptionAtEndDate(
+//                lease, "6m", BreakType.ROLLING, BreakExerciseType.MUTUAL, null, executionContext);
     }
 
 }

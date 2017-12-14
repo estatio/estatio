@@ -18,14 +18,8 @@
  */
 package org.estatio.module.lease.fixtures.breakoptions.personas;
 
-import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.lease.dom.breaks.BreakExerciseType;
-import org.estatio.module.lease.dom.breaks.BreakType;
-import org.estatio.module.lease.fixtures.LeaseBreakOptionsAbstract;
+import org.estatio.module.lease.fixtures.breakoptions.enums.BreakOption_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
 
 public class LeaseBreakOptionsForOxfMediax002Gb extends LeaseBreakOptionsAbstract {
 
@@ -34,17 +28,18 @@ public class LeaseBreakOptionsForOxfMediax002Gb extends LeaseBreakOptionsAbstrac
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        // prereqs
-        executionContext.executeChild(this, LeaseItemForRent_enum.OxfMediaX002Gb.builder());
-        executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfMediaX002Gb.builder());
-        executionContext.executeChild(this, LeaseItemForTurnoverRent_enum.OxfMediaX002Gb.builder());
-
-        // exec
-        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
-        newBreakOptionPlusYears(
-                lease, 5, "6m", BreakType.FIXED, BreakExerciseType.MUTUAL, null, executionContext);
-        newBreakOptionAtEndDate(
-                lease, "6m", BreakType.ROLLING, BreakExerciseType.MUTUAL, null, executionContext);
+        executionContext.executeChildren(this, BreakOption_enum.OxfMediaX002Gb_FIXED, BreakOption_enum.OxfMediaX002Gb_ROLLING);
+//        // prereqs
+//        executionContext.executeChild(this, LeaseItemForRent_enum.OxfMediaX002Gb.builder());
+//        executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfMediaX002Gb.builder());
+//        executionContext.executeChild(this, LeaseItemForTurnoverRent_enum.OxfMediaX002Gb.builder());
+//
+//        // exec
+//        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
+//        newBreakOptionPlusYears(
+//                lease, 5, "6m", BreakType.FIXED, BreakExerciseType.MUTUAL, null, executionContext);
+//        newBreakOptionAtEndDate(
+//                lease, "6m", BreakType.ROLLING, BreakExerciseType.MUTUAL, null, executionContext);
     }
 
 }

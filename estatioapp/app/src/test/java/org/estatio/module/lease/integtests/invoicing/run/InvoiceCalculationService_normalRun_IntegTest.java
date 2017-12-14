@@ -57,9 +57,13 @@ import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptions
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForEntryFee_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForMarketing_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForPercentage_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceChargeBudgeted_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTax_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
@@ -101,6 +105,27 @@ public class InvoiceCalculationService_normalRun_IntegTest extends LeaseModuleIn
                 ec.executeChild(this, Person_enum.LinusTorvaldsNl.builder());
                 ec.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.builder());
                 ec.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.KalNl.builder());
+
+                ec.executeChild(this, LeaseItemForRent_enum.OxfMediaX002Gb.builder());
+                ec.executeChild(this, LeaseItemForServiceCharge_enum.OxfMediaX002Gb.builder());
+                ec.executeChild(this, LeaseItemForTurnoverRent_enum.OxfMediaX002Gb.builder());
+
+                ec.executeChild(this, LeaseItemForRent_enum.OxfPoison003Gb.builder());
+                ec.executeChild(this, LeaseItemForServiceCharge_enum.OxfPoison003Gb.builder());
+                ec.executeChild(this, LeaseItemForTurnoverRent_enum.OxfPoison003Gb.builder());
+
+                ec.executeChild(this, LeaseItemForRent_enum.OxfTopModel001Gb.builder());
+                ec.executeChild(this, LeaseItemForServiceCharge_enum.OxfTopModel001Gb.builder());
+                ec.executeChild(this, LeaseItemForServiceCharge_enum.OxfTopModel001Gb_TA.builder());
+                ec.executeChild(this, LeaseItemForServiceChargeBudgeted_enum.OxfTopModel001Gb.builder());
+                ec.executeChild(this, LeaseItemForTurnoverRent_enum.OxfTopModel001Gb.builder());
+                ec.executeChild(this, LeaseItemForPercentage_enum.OxfTopModel001Gb.builder());
+                ec.executeChild(this, LeaseItemForDiscount_enum.OxfTopModel001Gb.builder());
+                ec.executeChild(this, LeaseItemForEntryFee_enum.OxfTopModel001Gb.builder());
+                ec.executeChild(this, LeaseItemForTax_enum.OxfTopModel001Gb.builder());
+                ec.executeChild(this, LeaseItemForDeposit_enum.OxfTopModel001Gb.builder());
+                ec.executeChild(this, LeaseItemForMarketing_enum.OxfTopModel001Gb.builder());
+
                 ec.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
                 ec.executeChild(this, new LeaseBreakOptionsForOxfMediax002Gb());
                 ec.executeChild(this, new LeaseBreakOptionsForOxfPoison003Gb());

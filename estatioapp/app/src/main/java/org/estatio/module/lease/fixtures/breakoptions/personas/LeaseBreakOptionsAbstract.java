@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.lease.fixtures;
+package org.estatio.module.lease.fixtures.breakoptions.personas;
 
 import javax.inject.Inject;
 
@@ -35,18 +35,41 @@ public abstract class LeaseBreakOptionsAbstract extends FixtureScript {
     @Override
     protected abstract void execute(ExecutionContext executionContext);
 
-    protected Lease newBreakOptionPlusYears(Lease lease, int years, String notificationPeriodStr, BreakType breakType, BreakExerciseType exerciseType, String description, ExecutionContext executionContext) {
+    protected Lease newBreakOptionPlusYears(
+            Lease lease,
+            int years,
+            String notificationPeriodStr,
+            BreakType breakType,
+            BreakExerciseType exerciseType,
+            String description,
+            ExecutionContext executionContext) {
         final LocalDate breakDate = lease.getStartDate().plusYears(years);
-        return newBreakOption(lease, breakDate, notificationPeriodStr, exerciseType, breakType, description, executionContext);
+        return newBreakOption(lease, breakDate, notificationPeriodStr, exerciseType, breakType, description,
+                executionContext);
     }
 
-    protected Lease newBreakOptionAtEndDate(Lease lease, String notificationPeriodStr, BreakType breakType, BreakExerciseType breakExerciseType, String description, ExecutionContext executionContext) {
+    protected Lease newBreakOptionAtEndDate(
+            Lease lease,
+            String notificationPeriodStr,
+            BreakType breakType,
+            BreakExerciseType breakExerciseType,
+            String description,
+            ExecutionContext executionContext) {
         final LocalDate breakDate = lease.getInterval().endDateExcluding();
-        return newBreakOption(lease, breakDate, notificationPeriodStr, breakExerciseType, breakType, description, executionContext);
+        return newBreakOption(lease, breakDate, notificationPeriodStr, breakExerciseType, breakType, description,
+                executionContext);
     }
 
-    protected Lease newBreakOption(Lease lease, LocalDate breakDate, String notificationPeriodStr, BreakExerciseType exerciseType, BreakType breakType, String description, ExecutionContext executionContext) {
-        final Lease breakOption = breakOptionContributions.newBreakOption(lease, breakDate, notificationPeriodStr, breakType, exerciseType, description);
+    private Lease newBreakOption(
+            Lease lease,
+            LocalDate breakDate,
+            String notificationPeriodStr,
+            BreakExerciseType exerciseType,
+            BreakType breakType,
+            String description,
+            ExecutionContext executionContext) {
+        final Lease breakOption = breakOptionContributions
+                .newBreakOption(lease, breakDate, notificationPeriodStr, breakType, exerciseType, description);
         return executionContext.addResult(this, breakOption);
     }
 
