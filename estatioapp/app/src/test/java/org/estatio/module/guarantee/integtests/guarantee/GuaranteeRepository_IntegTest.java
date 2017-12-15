@@ -32,21 +32,19 @@ import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.incode.module.base.integtests.VT;
 
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccountType;
+import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.guarantee.contributions.LeaseGuaranteeService;
 import org.estatio.module.guarantee.dom.Guarantee;
 import org.estatio.module.guarantee.dom.GuaranteeRepository;
 import org.estatio.module.guarantee.dom.GuaranteeType;
-import org.estatio.module.guarantee.fixtures.personas.GuaranteeForOxfTopModel001Gb;
+import org.estatio.module.guarantee.fixtures.enums.Guarantee_enum;
 import org.estatio.module.guarantee.integtests.GuaranteeModuleIntegTestAbstract;
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -56,17 +54,16 @@ public class GuaranteeRepository_IntegTest extends GuaranteeModuleIntegTestAbstr
     public void setupData() {
         runFixtureScript(new FixtureScript() {
             @Override
-            protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new GuaranteeForOxfTopModel001Gb());
-                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
-                executionContext.executeChild(this, BankAccount_enum.TopModelGb.builder());
+            protected void execute(ExecutionContext ec) {
+                ec.executeChildren(this,
+                        Guarantee_enum.OxfTopModel001Gb,
+                        Lease_enum.OxfTopModel001Gb,
+                        BankAccount_enum.TopModelGb
+                );
             }
         });
 
     }
-
-    @Inject
-    LeaseRepository leaseRepository;
 
     @Inject
     GuaranteeRepository guaranteeRepository;
@@ -76,9 +73,6 @@ public class GuaranteeRepository_IntegTest extends GuaranteeModuleIntegTestAbstr
 
     @Inject
     FinancialAccountRepository financialAccountRepository;
-
-    @Inject
-    PartyRepository partyRepository;
 
     @Inject
     TransactionService transactionService;

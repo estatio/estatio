@@ -21,7 +21,7 @@ package org.estatio.module.link.integtests;
 import org.slf4j.event.Level;
 
 import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
-import org.apache.isis.core.integtestsupport.logging.LogConfig;
+import org.apache.isis.core.runtime.headless.logging.LogConfig;
 import org.estatio.module.link.EstatioLinkModule;
 
 /**

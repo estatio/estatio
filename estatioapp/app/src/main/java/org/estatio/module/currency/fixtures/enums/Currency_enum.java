@@ -45,16 +45,16 @@ public enum Currency_enum implements PersonaWithBuilderScript<Currency,CurrencyB
     private final String name;
 
     @Override
-    public CurrencyBuilder builder() {
-        return new CurrencyBuilder()
-                        .setReference(reference)
-                .setName(name);
-    }
-
-    @Override
     public Currency findUsing(final ServiceRegistry2 serviceRegistry) {
         final CurrencyRepository currencyRepository = serviceRegistry.lookupService(CurrencyRepository.class);
         return currencyRepository.findCurrency(reference);
+    }
+
+    @Override
+    public CurrencyBuilder builder() {
+        return new CurrencyBuilder()
+                .setReference(reference)
+                .setName(name);
     }
 
     public static class PersistAll extends FixtureScript {

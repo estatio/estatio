@@ -45,10 +45,10 @@ public class LeaseModuleSettingsSeedService extends UdoDomainService<LeaseModule
     @PostConstruct
     public void init(final Map<String,String> props) {
 
-        // unlike the other seed services, we really really need this (epoch date)
+        // unlike the other seed services, we really really do need this (epoch date)
         // TODO: however, what we ought to do is to refactor this stuff into a fixture script,
         // and then call that fixture script from EstatioBaseModule
-//        if(System.getProperty("isis.integTest") != null) {
+//        if(System.getProperty("isis.headless") != null) {
 //            return;
 //        }
 

@@ -48,7 +48,7 @@ public final class IncodeLibStringInterpolatorDocRenderingModule extends ModuleA
     }
 
     @Override
-    public Set<Class<?>> getDependenciesAsClass() {
+    public Set<Class<?>> getAdditionalModules() {
         return Sets.newHashSet(StringInterpolatorDocRenderingModule.class);
     }
 

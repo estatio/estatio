@@ -23,14 +23,14 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargeFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
 /**
- * Counterpart of {@link IncomingChargeFixture}, provides type-safe lookup of charges set up in the CapexChargeHierarchy.xlsx spreadsheet.
+ * Counterpart of {@link CapexChargeHierarchyXlsxFixture}, provides type-safe lookup of charges set up in the CapexChargeHierarchy.xlsx spreadsheet.
  */
 @AllArgsConstructor()
 @Getter
@@ -61,6 +61,5 @@ public enum IncomingCharge_enum implements PersonaWithFinder<Charge> {
                 serviceRegistry.lookupService(ChargeRepository.class);
         return repository.findByReference(reference);
     }
-
 
 }

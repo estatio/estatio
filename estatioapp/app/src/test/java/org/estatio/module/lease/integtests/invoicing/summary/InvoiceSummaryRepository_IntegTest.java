@@ -39,8 +39,7 @@ import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForInvoiceRu
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForInvoiceRunRepository;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatusRepository;
-import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
-import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
+import org.estatio.module.lease.fixtures.invoice.enums.InvoiceForLease_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
@@ -54,10 +53,11 @@ public class InvoiceSummaryRepository_IntegTest extends LeaseModuleIntegTestAbst
         public void setupData() {
             runFixtureScript(new FixtureScript() {
                 @Override
-                protected void execute(ExecutionContext executionContext) {
+                protected void execute(ExecutionContext ec) {
 
-                    executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
-                    executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
+                    ec.executeChildren(this,
+                            InvoiceForLease_enum.OxfPoison003Gb,
+                            InvoiceForLease_enum.KalPoison001Nl);
                 }
             });
         }

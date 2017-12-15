@@ -20,10 +20,9 @@ package org.estatio.module.tax.integtests;
 
 import org.slf4j.event.Level;
 
-import org.isisaddons.module.fakedata.FakeDataModule;
-
 import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
-import org.apache.isis.core.integtestsupport.logging.LogConfig;
+import org.apache.isis.core.runtime.headless.logging.LogConfig;
+
 import org.estatio.module.tax.EstatioTaxModule;
 
 public abstract class TaxModuleIntegTestAbstract
@@ -31,7 +30,7 @@ public abstract class TaxModuleIntegTestAbstract
 
     public TaxModuleIntegTestAbstract() {
         super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
-                new EstatioTaxModule(), FakeDataModule.class);
+                new EstatioTaxModule());
     }
 
 }

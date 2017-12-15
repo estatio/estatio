@@ -106,7 +106,7 @@ public class DocFragments_for_Invoicing_Test {
             @Before
             public void setUp() throws Exception {
                 super.setUp();
-                templateText = DocFragmentData.read("InvoiceItem_description_ITA.docFragment.ftl");
+                templateText = DocFragment_enum.read("InvoiceItem_description_ITA.docFragment.ftl");
             }
 
             @Ignore // in EST-1197
@@ -247,7 +247,7 @@ public class DocFragments_for_Invoicing_Test {
             @Before
             public void setUp() throws Exception {
                 super.setUp();
-                templateText = DocFragmentData.read("InvoiceItem_description_FRA.docFragment.ftl");
+                templateText = DocFragment_enum.read("InvoiceItem_description_FRA.docFragment.ftl");
             }
 
             @Ignore // EST-1151
@@ -404,7 +404,7 @@ public class DocFragments_for_Invoicing_Test {
             public void setUp() throws Exception {
                 super.setUp();
 
-                templateText = DocFragmentData.read("Invoice_description_ITA.docFragment.ftl");
+                templateText = DocFragment_enum.read("Invoice_description_ITA.docFragment.ftl");
             }
 
             @Test
@@ -736,7 +736,7 @@ public class DocFragments_for_Invoicing_Test {
             public void setUp() throws Exception {
                 super.setUp();
 
-                templateText = DocFragmentData.read("Invoice_preliminaryLetterDescription_ITA.docFragment.ftl");
+                templateText = DocFragment_enum.read("Invoice_preliminaryLetterDescription_ITA.docFragment.ftl");
             }
 
             @Test

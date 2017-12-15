@@ -20,21 +20,18 @@ package org.estatio.module.base.integtests;
 
 import org.slf4j.event.Level;
 
-import org.isisaddons.module.security.SecurityModule;
-
-import org.incode.module.country.dom.CountryModule;
+import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
+import org.apache.isis.core.runtime.headless.logging.LogConfig;
 
 import org.estatio.module.base.EstatioBaseModule;
-import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
-import org.apache.isis.core.integtestsupport.logging.LogConfig;
 
 public abstract class BaseModuleIntegTestAbstract
         extends IntegrationTestAbstract3 {
 
     public BaseModuleIntegTestAbstract() {
         super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
-                new EstatioBaseModule(),
-                SecurityModule.class, CountryModule.class);
+                new EstatioBaseModule()
+        );
     }
 
 }

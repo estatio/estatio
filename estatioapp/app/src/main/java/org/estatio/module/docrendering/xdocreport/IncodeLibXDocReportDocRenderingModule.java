@@ -48,7 +48,7 @@ public final class IncodeLibXDocReportDocRenderingModule extends ModuleAbstract 
     }
 
     @Override
-    public Set<Class<?>> getDependenciesAsClass() {
+    public Set<Class<?>> getAdditionalModules() {
         return Sets.newHashSet(XDocReportDocRenderingModule.class);
     }
 

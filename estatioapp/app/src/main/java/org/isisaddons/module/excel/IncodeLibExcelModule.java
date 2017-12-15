@@ -33,7 +33,7 @@ import org.apache.isis.applib.ModuleAbstract;
 public final class IncodeLibExcelModule extends ModuleAbstract {
 
     @Override
-    public Set<Class<?>> getDependenciesAsClass() {
+    public Set<Class<?>> getAdditionalModules() {
         return Sets.newHashSet(ExcelModule.class);
     }
 

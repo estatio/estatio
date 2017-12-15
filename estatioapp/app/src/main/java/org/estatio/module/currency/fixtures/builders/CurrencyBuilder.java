@@ -44,22 +44,17 @@ public class CurrencyBuilder extends BuilderScriptAbstract<Currency, CurrencyBui
     @Getter
     private Currency object;
 
-    public static final String EUR = "EUR";
-    public static final String SEK = "SEK";
-    public static final String GBP = "GBP";
-    public static final String USD = "USD";
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
-        createCurrency(EUR, "Euro", executionContext);
-        createCurrency(SEK, "Swedish krona", executionContext);
-        createCurrency(GBP, "Pound sterling", executionContext);
-        createCurrency(USD, "US dollar", executionContext);
-    }
+    protected void execute(ExecutionContext ec) {
 
-    private void createCurrency(String reference, String name, ExecutionContext executionContext) {
+        checkParam("reference", ec, String.class);
+        defaultParam("reference", ec, getName());
+
         final Currency currency = currencyRepository.findOrCreateCurrency(reference, name);
-        executionContext.addResult(this, currency.getReference(), currency);
+        ec.addResult(this, currency.getReference(), currency);
+
+        object = currency;
     }
 
     @Inject

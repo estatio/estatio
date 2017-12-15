@@ -46,7 +46,7 @@ public class RegistrationModuleSeedService {
     @PostConstruct
     public void init() {
 
-        if(System.getProperty("isis.integTest") != null) {
+        if(System.getProperty("isis.headless") != null) {
             return;
         }
 

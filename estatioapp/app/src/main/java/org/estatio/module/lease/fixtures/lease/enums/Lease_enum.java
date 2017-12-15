@@ -17,7 +17,9 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.lease.builders.LeaseBuilder;
-import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
+import org.estatio.module.lease.fixtures.numerators.enums.PropertyOwnerNumerator_enum;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,7 +40,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
 
     KalPoison001Nl  (
             "KAL-POISON-001", "Poison Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.KalNl,
-            OrganisationAndComms_enum.AcmeNl, OrganisationAndComms_enum.PoisonNl,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
             ld(2011, 1, 1), ld(2020, 12, 31),
             new OccupancySpec[] {
                 new OccupancySpec("001", "Poison", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), null)
@@ -48,7 +50,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     ),
     OxfMediaX002Gb  (
             "OXF-MEDIAX-002", "Mediax Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
-            OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.MediaXGb,
+            OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.MediaXGb,
             ld(2008, 1, 1), ld(2017, 12, 31),
             new OccupancySpec[] {
                 new OccupancySpec("002", "Mediax", NATIONAL, GBR, "ELECTRIC", "ELECTRIC", ld(2008, 1, 1), null)
@@ -58,7 +60,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     ),
     OxfMiracl005Gb  (
             "OXF-MIRACL-005", "Miracle lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
-            OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.MiracleGb,
+            OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.MiracleGb,
             ld(2013, 11, 7), ld(2023, 11, 6),
             new OccupancySpec[] {
                 new OccupancySpec("005", "Miracle", NATIONAL, GBR, "FASHION", "ALL", ld(2013, 11, 7), null)
@@ -68,7 +70,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     ),
     OxfPoison003Gb  (
             "OXF-POISON-003", "Poison Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
-            OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.PoisonGb,
+            OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.PoisonGb,
             ld(2011, 1, 1), ld(2020, 12, 31),
             new OccupancySpec[] {
                 new OccupancySpec("003", "Poison", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), null)
@@ -78,7 +80,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     ),
     OxfPoison010ADVANCEGb  (
             "OXF-POISON-010", "Poison Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
-            OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.PoisonGb,
+            OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.PoisonGb,
             ld(2011, 1, 1), ld(2020, 12, 31),
             new OccupancySpec[] {
         new OccupancySpec("010", "Poison", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), null)
@@ -88,7 +90,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     ),
     OxfPoison011ARREARSGb  (
             "OXF-POISON-011", "Poison Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
-            OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.PoisonGb,
+            OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.PoisonGb,
             ld(2011, 1, 1), ld(2020, 12, 31),
             new OccupancySpec[] {
                     new OccupancySpec("011", "Poison", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), null)
@@ -98,7 +100,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     ),
     OxfPret004Gb    (
             "OXF-PRET-004", "Pret-a-Partir lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
-            OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.PretGb,
+            OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.PretGb,
             ld(2011, 7, 1), ld(2014, 6, 30),
             new OccupancySpec[] {
                 // although these values were provided, adding an occupancy was disabled.  So equiv to passing in no info
@@ -109,7 +111,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     ),
     OxfTopModel001Gb(
             "OXF-TOPMODEL-001", "Topmodel Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
-            OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.TopModelGb,
+            OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.TopModelGb,
             ld(2010, 7, 15), ld(2022, 7, 14),
             new OccupancySpec[] {
                 new OccupancySpec("001", "Topmodel", NATIONAL, GBR, "FASHION", "WOMEN", ld(2010, 7, 15), null)
@@ -119,7 +121,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     ),
     BudPoison001Nl(
             "BUD-POISON-001", "Poison Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl,
-            OrganisationAndComms_enum.AcmeNl, OrganisationAndComms_enum.PoisonNl,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
             ld(2011, 1, 1), ld(2020, 12, 31),
             new OccupancySpec[] {
                 new OccupancySpec("001", "Poison", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), null)
@@ -129,7 +131,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     ),
     BudMiracle002Nl(
             "BUD-MIRACLE-002", "Miracle Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl,
-            OrganisationAndComms_enum.AcmeNl, OrganisationAndComms_enum.MiracleNl,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.MiracleNl,
             ld(2011, 1, 1), ld(2015, 6, 30),
             new OccupancySpec[] {
                 new OccupancySpec("002", "Miracle", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), ld(2015, 6, 30))
@@ -139,7 +141,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     ),
     BudHello003Nl(
             "BUD-HELLO-003", "Hello Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl,
-            OrganisationAndComms_enum.AcmeNl, OrganisationAndComms_enum.HelloWorldNl,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.HelloWorldNl,
             ld(2015, 4, 1), ld(2020, 12, 31),
             new OccupancySpec[] {
                 new OccupancySpec("003", "Hello", INTERNATIONAL, NLD, "IT", "TELECOM", ld(2015, 4, 1), null)
@@ -149,7 +151,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     ),
     BudDago004Nl(
             "BUD-DAGO-004", "Dago Bank Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl,
-            OrganisationAndComms_enum.AcmeNl, OrganisationAndComms_enum.DagoBankNl,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.DagoBankNl,
             ld(2011, 1, 1), ld(2015, 6, 30),
             new OccupancySpec[] {
                 new OccupancySpec("004", "Dago Bank", INTERNATIONAL, NLD, "BANK", "LOANS", ld(2011, 1, 1), ld(2015, 6, 30)),
@@ -160,7 +162,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     ),
     BudNlBank004Nl(
             "BUD-NLBANK-004", "NL Bank Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl,
-            OrganisationAndComms_enum.AcmeNl, OrganisationAndComms_enum.NlBankNl,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.NlBankNl,
             ld(2015, 10, 1), ld(2020, 6, 30),
             new OccupancySpec[] {
                 new OccupancySpec("004", "Nl Bank", INTERNATIONAL, NLD, "BANK", "LOANS", ld(2015, 10, 1), null)
@@ -170,7 +172,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     ),
     BudHyper005Nl(
             "BUD-HYPER-005", "Hypermarkt Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl,
-            OrganisationAndComms_enum.AcmeNl, OrganisationAndComms_enum.HyperNl,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.HyperNl,
             ld(2015, 4, 1), ld(2015, 6, 30),
             new OccupancySpec[] {
                 new OccupancySpec("005", "Nl Hypermarkt", INTERNATIONAL, NLD, "SUPERMARKET", "RETAIL", ld(2015, 4, 1), ld(2015, 6, 30))
@@ -180,7 +182,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     ),
     BudHello006Nl(
             "BUD-HELLO-006", "Hello Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl,
-            OrganisationAndComms_enum.AcmeNl, OrganisationAndComms_enum.DagoBankNl, // tenant looks wrong here...
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.DagoBankNl, // tenant looks wrong here...
             ld(2011, 1, 1), ld(2014, 12, 31),
             new OccupancySpec[] {
                 new OccupancySpec( "006", "Dago Bank", INTERNATIONAL, NLD, "BANK", "LOANS", ld(2011, 1, 1), ld(2014, 12, 31))
@@ -207,7 +209,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     private final String name;
     private final PropertyAndUnitsAndOwnerAndManager_enum propertyAndUnits_d;
     private final OrganisationAndComms_enum landlord_d;
-    private final OrganisationAndComms_enum tenant_d;
+    private final Organisation_enum tenant_d;
     private final LocalDate startDate;
     private final LocalDate endDate;
 
@@ -231,11 +233,25 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     @Override
     public LeaseBuilder builder() {
         return new LeaseBuilder()
-                .setPrereq((f,ec) -> f.setProperty(f.objectFor(propertyAndUnits_d.getProperty_d(), ec)))
+                .setPrereq((f,ec) -> {
+                    // ensure corresponding numerator exists
+                    Arrays.stream(PropertyOwnerNumerator_enum.values())
+                            .filter(x -> x.getPropertyAndUnitsAndOwnerAndManager_d().getProperty_d() == propertyAndUnits_d.getProperty_d())
+                            .forEach(x -> f.objectFor(x, ec));
+
+                    f.setProperty(f.objectFor(propertyAndUnits_d.getProperty_d(), ec));
+                })
                 .setReference(ref)
                 .setName(name)
                 .setPrereq((f,ec) -> f.setLandlord(f.objectFor(landlord_d, ec)))
-                .setPrereq((f,ec) -> f.setTenant(f.objectFor(tenant_d, ec)))
+                .setPrereq((f,ec) -> {
+                    // if there are corresponding comms, then also create
+                    Arrays.stream(OrganisationAndComms_enum.values())
+                            .filter(x -> x.getOrganisation_d() == tenant_d)
+                            .forEach(x -> f.objectFor(x, ec));
+
+                    f.setTenant(f.objectFor(tenant_d, ec));
+                })
                 .setStartDate(startDate)
                 .setEndDate(endDate)
                 .setPrereq((f, ec) -> {

@@ -45,7 +45,7 @@ public class ApplicationSettingsSeedService extends UdoDomainService<Application
     @PostConstruct
     public void init(final Map<String,String> props) {
         super.init(props);
-        if(System.getProperty("isis.integTest") != null) {
+        if(System.getProperty("isis.headless") != null) {
             return;
         }
 

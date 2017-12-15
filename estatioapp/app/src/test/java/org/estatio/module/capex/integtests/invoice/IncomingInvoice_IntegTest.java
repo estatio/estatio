@@ -14,7 +14,8 @@ import org.incode.module.country.dom.impl.CountryRepository;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
+import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
+import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
@@ -22,7 +23,6 @@ import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStat
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_complete;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_discard;
 import org.estatio.module.capex.fixtures.incominginvoice.IncomingInvoiceFixture;
-import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargeFixture;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.dom.Charge;
@@ -32,7 +32,7 @@ import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
+import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -56,7 +56,7 @@ public class IncomingInvoice_IntegTest extends CapexModuleIntegTestAbstract {
             @Override
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
-                executionContext.executeChild(this, new IncomingChargeFixture());
+                executionContext.executeChild(this, new CapexChargeHierarchyXlsxFixture());
                 executionContext.executeChild(this, new IncomingInvoiceFixture());
                 executionContext.executeChild(this, BankAccount_enum.TopModelGb.builder());
             }

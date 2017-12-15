@@ -27,14 +27,13 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
+import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.bankmandate.dom.BankMandate;
 import org.estatio.module.bankmandate.dom.BankMandateRepository;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
-import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndMandateForPoisonNl;
-import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndMandateForTopModelGb;
+import org.estatio.module.lease.fixtures.bankaccount.enums.BankMandate_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.PartyRepository;
@@ -52,9 +51,10 @@ public class BankMandateRepository_IntegTest extends LeaseModuleIntegTestAbstrac
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new BankAccountAndMandateForTopModelGb());
-                    executionContext.executeChild(this, Lease_enum.KalPoison001Nl.builder());
-                    executionContext.executeChild(this, new BankAccountAndMandateForPoisonNl());
+                    executionContext.executeChildren(this,
+                            BankMandate_enum.OxfTopModel001Gb_1,
+                            Lease_enum.KalPoison001Nl,
+                            BankMandate_enum.KalPoison001Nl_2);
                 }
             });
         }

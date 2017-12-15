@@ -29,10 +29,10 @@ import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.order.approval.triggers.Order_amend;
 import org.estatio.module.capex.dom.order.approval.triggers.Order_completeWithApproval;
 import org.estatio.module.capex.dom.order.approval.triggers.Order_discard;
-import org.estatio.module.capex.fixtures.order.OrderFixture;
+import org.estatio.module.capex.fixtures.order.enums.Order_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
-import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargeFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 
@@ -48,21 +48,23 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
     @Before
     public void setupData() {
 
-        final OrderFixture orderFixture = new OrderFixture();
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final FixtureScript.ExecutionContext executionContext) {
 
                 // taken from the DocumentTypesAndTemplatesSeedService (not run in integ tests by default)
                 final LocalDate templateDate = ld(2012,1,1);
-                executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture(templateDate));
 
-                executionContext.executeChild(this, new IncomingChargeFixture());
-                executionContext.executeChild(this, orderFixture);
-                executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.builder());
+                executionContext.executeChildren(this,
+                        new DocumentTypesAndTemplatesForCapexFixture(templateDate),
+                        new CapexChargeHierarchyXlsxFixture());
+
+                executionContext.executeChildren(this,
+                        Order_enum.fakeOrder2Pdf,
+                        Person_enum.JonathanPropertyManagerGb);
             }
         });
-        order = orderFixture.getOrder();
+        order = Order_enum.fakeOrder2Pdf.findUsing(serviceRegistry);
     }
 
     Order order;
@@ -76,8 +78,10 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
         List<Document> unclassifiedIncomingOrders = incomingDocumentRepository.findUnclassifiedIncomingOrders();
         assertThat(unclassifiedIncomingOrders.size()).isEqualTo(0);
 
-        Document fakeOrderDoc = incomingDocumentRepository.findAllIncomingDocumentsByName("fakeOrder2.pdf").get(0);
-        List<IncomingDocumentCategorisationStateTransition> transitions = mixin(Document_categorisationTransitions.class, fakeOrderDoc).coll();
+        final String documentName = Order_enum.fakeOrder2Pdf.getDocument_d().findUsing(serviceRegistry).getName();
+        Document document = incomingDocumentRepository.findAllIncomingDocumentsByName(documentName).get(0);
+        List<IncomingDocumentCategorisationStateTransition> transitions =
+                mixin(Document_categorisationTransitions.class, document).coll();
         assertThat(transitions.size()).isEqualTo(2);
     }
 

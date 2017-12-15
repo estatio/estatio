@@ -20,18 +20,17 @@ package org.estatio.module.event.integtests;
 
 import org.slf4j.event.Level;
 
-import org.isisaddons.module.fakedata.FakeDataModule;
-
 import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
-import org.apache.isis.core.integtestsupport.logging.LogConfig;
+import org.apache.isis.core.runtime.headless.logging.LogConfig;
+
 import org.estatio.module.event.EstatioEventModule;
 
 public abstract class EventModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
     public EventModuleIntegTestAbstract() {
         super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
-                new EstatioEventModule(),
-                FakeDataModule.class);
+                new EstatioEventModule()
+        );
     }
 
 }

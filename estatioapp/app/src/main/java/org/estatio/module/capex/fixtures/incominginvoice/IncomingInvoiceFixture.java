@@ -26,14 +26,14 @@ import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.dom.orderinvoice.IncomingInvoiceItem_createOrderItemLink;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.fixtures.document.enums.IncomingPdf_enum;
-import org.estatio.module.capex.fixtures.order.OrderFixture;
+import org.estatio.module.capex.fixtures.order.enums.Order_enum;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.fixtures.incoming.enums.IncomingCharge_enum;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Person;
-import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
+import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.fixtures.data.Tax_enum;
 
@@ -53,7 +53,7 @@ public class IncomingInvoiceFixture extends FixtureScript {
         final Organisation helloWorldGb = OrganisationAndComms_enum.HelloWorldGb.builder().build(this, ec).getObject();
         final Project projectForOxf = Project_enum.OxfProject.builder().build(this, ec).getObject();
 
-        ec.executeChild(this, new OrderFixture());
+        ec.executeChildren(this, Order_enum.fakeOrder2Pdf);
 
         Document fakeInvoice2Doc = IncomingPdf_enum.FakeInvoice2.builder()
                                                    .setRunAs("estatio-user-gb").build(this, ec).getObject();

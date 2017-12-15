@@ -30,11 +30,12 @@ import org.estatio.module.capex.dom.order.approval.triggers.Order_discard;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.capex.fixtures.incominginvoice.IncomingInvoiceFixture;
-import org.estatio.module.capex.fixtures.order.OrderFixture;
-import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargeFixture;
+import org.estatio.module.capex.fixtures.order.builders.OrderBuilder;
+import org.estatio.module.capex.fixtures.order.enums.Order_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.dom.ChargeRepository;
+import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;
 
@@ -49,12 +50,12 @@ public class Order_withLinks_IntegTest extends CapexModuleIntegTestAbstract {
     @Before
     public void setupData() {
 
-        final OrderFixture orderFixture = new OrderFixture();
+        final OrderBuilder orderFixture = Order_enum.fakeOrder2Pdf.builder();
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
-                executionContext.executeChild(this, new IncomingChargeFixture());
+                executionContext.executeChild(this, new CapexChargeHierarchyXlsxFixture());
                 executionContext.executeChild(this, orderFixture);
                 executionContext.executeChild(this, Budget_enum.OxfBudget2015.builder());
                 executionContext.executeChild(this, Budget_enum.OxfBudget2016.builder());
@@ -63,7 +64,7 @@ public class Order_withLinks_IntegTest extends CapexModuleIntegTestAbstract {
                 executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.builder());
             }
         });
-        order = orderFixture.getOrder();
+        order = orderFixture.getObject();
         orderItem = orderFixture.getFirstItem();
 
         // given

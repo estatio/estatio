@@ -55,12 +55,20 @@ public final class PropertyOwnerBuilder
     private FixedAssetRole object;
 
     @Override
-    protected void execute(final ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext ec) {
 
-        checkParam("property", executionContext, Property.class);
-        checkParam("owner", executionContext, Party.class);
+        checkParam("property", ec, Property.class);
+        checkParam("owner", ec, Party.class);
 
-        //wrap(property).newRole(FixedAssetRoleTypeEnum.ASSET_MANAGER, manager, startDate, endDate);
-        object = property.addRoleIfDoesNotExist(owner, FixedAssetRoleTypeEnum.PROPERTY_OWNER, startDate, endDate);
+        final FixedAssetRole fixedAssetRole = property
+                .addRoleIfDoesNotExist(owner, FixedAssetRoleTypeEnum.PROPERTY_OWNER, startDate, endDate);
+
+        ec.addResult(this, fixedAssetRole);
+
+        this.object = fixedAssetRole;
+    }
+
+    public static String numeratorReferenceFor(final Property property) {
+        return property.getReference().concat("-%04d");
     }
 }

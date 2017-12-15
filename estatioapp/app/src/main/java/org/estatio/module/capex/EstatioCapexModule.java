@@ -6,10 +6,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.collect.Sets;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.apache.isis.applib.Module;
 import org.apache.isis.applib.ModuleAbstract;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
 
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;

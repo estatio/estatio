@@ -20,18 +20,17 @@ package org.estatio.module.financial.integtests;
 
 import org.slf4j.event.Level;
 
-import org.isisaddons.module.fakedata.FakeDataModule;
-
 import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
-import org.apache.isis.core.integtestsupport.logging.LogConfig;
+import org.apache.isis.core.runtime.headless.logging.LogConfig;
+
 import org.estatio.module.financial.EstatioFinancialModule;
 
 public abstract class FinancialModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
     public FinancialModuleIntegTestAbstract() {
         super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
-                new EstatioFinancialModule(),
-                FakeDataModule.class);
+                new EstatioFinancialModule()
+        );
     }
 
 }

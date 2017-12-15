@@ -24,7 +24,6 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.module.lease.dom.Lease;
@@ -33,7 +32,7 @@ import org.estatio.module.lease.dom.breaks.prolongation.Lease_newProlongationOpt
 import org.estatio.module.lease.dom.breaks.prolongation.ProlongationOption;
 import org.estatio.module.lease.dom.breaks.prolongation.ProlongationOptionRepository;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.prolongation.personas.LeaseProlongationOptionsForOxfTopModel001;
+import org.estatio.module.lease.fixtures.prolongation.enums.ProlongationOption_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,18 +49,13 @@ public class ProlongationOptionRepository_IntegTest extends LeaseModuleIntegTest
 
         @Before
         public void setupData() {
-            runFixtureScript(new FixtureScript() {
-                @Override
-                protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new LeaseProlongationOptionsForOxfTopModel001());
-                }
-            });
+            runBuilderScript(ProlongationOption_enum.OxfTopModel001.builder());
         }
 
         @Test
         public void findByLease() throws Exception {
             // given
-            Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+            Lease lease = ProlongationOption_enum.OxfTopModel001.getLease_d().findUsing(serviceRegistry);
 
             // when
             final ProlongationOption option = prolongationOptionRepository.findByLease(lease).get(0);
@@ -77,12 +71,7 @@ public class ProlongationOptionRepository_IntegTest extends LeaseModuleIntegTest
 
         @Before
         public void setupData() {
-            runFixtureScript(new FixtureScript() {
-                @Override
-                protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new LeaseProlongationOptionsForOxfTopModel001());
-                }
-            });
+            runFixtureScript(ProlongationOption_enum.OxfTopModel001.builder());
         }
 
         @Test
@@ -131,18 +120,13 @@ public class ProlongationOptionRepository_IntegTest extends LeaseModuleIntegTest
 
         @Before
         public void setupData() {
-            runFixtureScript(new FixtureScript() {
-                @Override
-                protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new LeaseProlongationOptionsForOxfTopModel001());
-                }
-            });
+            runFixtureScript(ProlongationOption_enum.OxfTopModel001.builder());
         }
 
         @Test
         public void prolong_works() throws Exception {
             // given
-            Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+            Lease lease = ProlongationOption_enum.OxfTopModel001.getLease_d().findUsing(serviceRegistry);
             LocalDate leaseEndDate = lease.getEndDate();
             assertThat(leaseEndDate).isEqualTo(new LocalDate(2022, 7,14));
 

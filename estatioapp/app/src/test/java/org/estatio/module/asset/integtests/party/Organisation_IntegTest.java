@@ -45,8 +45,8 @@ import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationPreviousName;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.numerator.personas.NumeratorForOrganisationFra;
-import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
+import org.estatio.module.party.fixtures.numerator.enums.NumeratorForOrganisation_enum;
+import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -140,7 +140,7 @@ public class Organisation_IntegTest extends AssetModuleIntegTestAbstract {
         public void setupData() {
             runFixtureScript(new FixtureScript() {
                 @Override protected void execute(final ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new NumeratorForOrganisationFra());
+                    executionContext.executeChildren(this, NumeratorForOrganisation_enum.Fra);
                 }
             });
 

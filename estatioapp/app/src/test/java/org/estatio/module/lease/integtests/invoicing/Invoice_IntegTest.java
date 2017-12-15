@@ -53,11 +53,8 @@ import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
-import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfMediax002Gb;
-import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfPoison003Gb;
-import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfTopModel001;
-import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
-import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
+import org.estatio.module.lease.fixtures.breakoptions.enums.BreakOption_enum;
+import org.estatio.module.lease.fixtures.invoice.enums.InvoiceForLease_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
@@ -68,7 +65,7 @@ import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRe
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
+import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -155,28 +152,35 @@ public class Invoice_IntegTest extends LeaseModuleIntegTestAbstract {
         public void setupData() {
             runFixtureScript(new FixtureScript() {
                 @Override
-                protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, Person_enum.LinusTorvaldsNl.builder());
+                protected void execute(ExecutionContext ec) {
 
-                    executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.builder());
-                    executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.KalNl.builder());
+                    ec.executeChildren(this,
+                            Person_enum.LinusTorvaldsNl,
+                            PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+                            PropertyAndUnitsAndOwnerAndManager_enum.KalNl);
 
-                    executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
+                    ec.executeChildren(this,
+                            BreakOption_enum.OxfPoison003Gb_FIXED,
+                            BreakOption_enum.OxfPoison003Gb_ROLLING,
+                            BreakOption_enum.OxfPoison003Gb_FIXED,
+                            BreakOption_enum.OxfPoison003Gb_ROLLING,
+                            BreakOption_enum.OxfTopModel001Gb_FIXED,
+                            BreakOption_enum.OxfTopModel001Gb_ROLLING);
 
-                    executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002Gb());
+                    ec.executeChildren(this,
+                            InvoiceForLease_enum.OxfPoison003Gb,
+                            InvoiceForLease_enum.KalPoison001Nl);
 
-                    executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003Gb());
-                    executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
-                    executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
+                    ec.executeChildren(this,
+                            Lease_enum.OxfPret004Gb,
 
-                    executionContext.executeChild(this, Lease_enum.OxfPret004Gb.builder());
-
-                    executionContext.executeChild(this, LeaseItemForRent_enum.OxfMiracl005Gb.builder());
-                    executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfMiracl005Gb.builder());
-                    executionContext.executeChild(this, LeaseItemForTurnoverRent_enum.OxfMiracl005Gb.builder());
-                    executionContext.executeChild(this, LeaseItemForDiscount_enum.OxfMiracle005bGb.builder());
-                    executionContext.executeChild(this, LeaseItemForPercentage_enum.OxfMiracl005Gb.builder());
-                    executionContext.executeChild(this, LeaseItemForDeposit_enum.OxfMiracle005bGb.builder());
+                            LeaseItemForRent_enum.OxfMiracl005Gb,
+                            LeaseItemForServiceCharge_enum.OxfMiracl005Gb,
+                            LeaseItemForTurnoverRent_enum.OxfMiracl005Gb,
+                            LeaseItemForDiscount_enum.OxfMiracle005bGb,
+                            LeaseItemForPercentage_enum.OxfMiracl005Gb,
+                            LeaseItemForDeposit_enum.OxfMiracle005bGb
+                    );
 
                 }
             });
@@ -186,10 +190,10 @@ public class Invoice_IntegTest extends LeaseModuleIntegTestAbstract {
 
         @Before
         public void setUp() throws Exception {
-            seller = partyRepository.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.PARTY_REF_SELLER);
-            buyer = partyRepository.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.PARTY_REF_BUYER);
-            lease = leaseRepository.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE_REF);
-            invoiceStartDate = InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.startDateFor(lease);
+            seller = InvoiceForLease_enum.OxfPoison003Gb.getSeller_d().findUsing(serviceRegistry);
+            buyer = InvoiceForLease_enum.OxfPoison003Gb.getBuyer_d().findUsing(serviceRegistry);
+            lease = InvoiceForLease_enum.OxfPoison003Gb.getLease_d().findUsing(serviceRegistry);
+            invoiceStartDate = InvoiceForLease_enum.OxfPoison003Gb.getLease_d().getStartDate().plusYears(1);
         }
 
         @Test
