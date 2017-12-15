@@ -114,7 +114,7 @@ language governing permissions and limitations under the License.
         <incode-module-country.version>${incode-platform.version}</incode-module-country.version>
 
         <incode-module-docfragment.version>${incode-platform.version}</incode-module-docfragment.version>
-        <incode-module-document.version>${incode-platform.version}</incode-module-document.version>
+        <incode-module-document.version>1.15.1.2.20171215-1520</incode-module-document.version>
         <incode-module-docrendering-freemarker.version>${incode-platform.version}</incode-module-docrendering-freemarker.version>
         <incode-module-docrendering-stringinterpolator.version>${incode-platform.version}</incode-module-docrendering-stringinterpolator.version>
         <incode-module-docrendering-xdocreport.version>${incode-platform.version}</incode-module-docrendering-xdocreport.version>
