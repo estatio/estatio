@@ -23,8 +23,6 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
-import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccount_verificationState;
@@ -35,14 +33,16 @@ import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStat
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_complete;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
-import org.estatio.module.capex.fixtures.incominginvoice.IncomingInvoiceFixture;
+import org.estatio.module.capex.fixtures.incominginvoice.enums.IncomingInvoice_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
+import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
+import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
@@ -74,12 +74,13 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
 
         runFixtureScript(new FixtureScript() {
             @Override
-            protected void execute(final FixtureScript.ExecutionContext executionContext) {
-                executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
-                executionContext.executeChild(this, new CapexChargeHierarchyXlsxFixture());
-                executionContext.executeChild(this, new IncomingInvoiceFixture());
-                executionContext.executeChild(this, BankAccount_enum.TopModelGb.builder());
-                executionContext.executeChild(this, Person_enum.EmmaTreasurerGb.builder());
+            protected void execute(final FixtureScript.ExecutionContext ec) {
+                ec.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
+                ec.executeChild(this, new CapexChargeHierarchyXlsxFixture());
+                ec.executeChildren(this,
+                        IncomingInvoice_enum.fakeInvoice2Pdf,
+                        BankAccount_enum.TopModelGb,
+                        Person_enum.EmmaTreasurerGb);
             }
         });
 

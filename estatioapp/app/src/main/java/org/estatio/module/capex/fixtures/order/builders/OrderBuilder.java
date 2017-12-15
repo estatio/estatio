@@ -28,7 +28,7 @@ import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.tax.dom.Tax;
@@ -40,20 +40,20 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"person"}, callSuper = false)
-@ToString(of={"person"})
+@EqualsAndHashCode(of={"document", "seller", "buyer", "property", "entryDate"}, callSuper = false)
+@ToString(of={"document", "seller", "buyer", "property", "entryDate"})
 @Accessors(chain = true)
 public class OrderBuilder extends BuilderScriptAbstract<Order, OrderBuilder> {
 
     @Getter @Setter
-    Person officerAdministrator;
+    Person officeAdministrator;
     @Getter @Setter
     Document document;
 
     @Getter @Setter
-    Party seller;
+    Organisation seller;
     @Getter @Setter
-    Party buyer;
+    Organisation buyer;
     @Getter @Setter
     Project project;
     @Getter @Setter
@@ -63,33 +63,33 @@ public class OrderBuilder extends BuilderScriptAbstract<Order, OrderBuilder> {
     LocalDate entryDate;
 
     @Getter @Setter
-    Tax orderItemTax;
+    Tax itemTax;
 
     @Getter @Setter
-    String orderItem1Description;
+    String item1Description;
     @Getter @Setter
-    BigDecimal orderItem1NetAmount;
+    BigDecimal item1NetAmount;
     @Getter @Setter
-    BigDecimal orderItem1VatAmount;
+    BigDecimal item1VatAmount;
     @Getter @Setter
-    BigDecimal orderItem1GrossAmount;
+    BigDecimal item1GrossAmount;
     @Getter @Setter
-    Charge orderItem1Charge;
+    Charge item1Charge;
     @Getter @Setter
-    String orderItem1Period;
+    String item1Period;
 
     @Getter @Setter
-    String orderItem2Description;
+    String item2Description;
     @Getter @Setter
-    BigDecimal orderItem2NetAmount;
+    BigDecimal item2NetAmount;
     @Getter @Setter
-    BigDecimal orderItem2VatAmount;
+    BigDecimal item2VatAmount;
     @Getter @Setter
-    BigDecimal orderItem2GrossAmount;
+    BigDecimal item2GrossAmount;
     @Getter @Setter
-    Charge orderItem2Charge;
+    Charge item2Charge;
     @Getter @Setter
-    String orderItem2Period;
+    String item2Period;
 
     @Getter
     Order object;
@@ -101,77 +101,77 @@ public class OrderBuilder extends BuilderScriptAbstract<Order, OrderBuilder> {
     @Override
     protected void execute(final ExecutionContext ec) {
 
-        checkParam("officerAdministrator", ec, Person.class);
+        checkParam("officeAdministrator", ec, Person.class);
         checkParam("document", ec, Document.class);
 
-        checkParam("buyer", ec, Party.class);
-        checkParam("seller", ec, Party.class);
+        checkParam("buyer", ec, Organisation.class);
+        checkParam("seller", ec, Organisation.class);
         checkParam("property", ec, Property.class);
         checkParam("project", ec, Project.class);
 
         checkParam("entryDate", ec, LocalDate.class);
 
-        checkParam("orderItemTax", ec, Tax.class);
+        checkParam("itemTax", ec, Tax.class);
 
-        checkParam("orderItem1Description", ec, String.class);
-        checkParam("orderItem1NetAmount", ec, BigDecimal.class);
-        checkParam("orderItem1VatAmount", ec, BigDecimal.class);
-        checkParam("orderItem1GrossAmount", ec, BigDecimal.class);
-        checkParam("orderItem1Charge", ec, Charge.class);
-        checkParam("orderItem1Period", ec, String.class);
+        checkParam("item1Description", ec, String.class);
+        checkParam("item1NetAmount", ec, BigDecimal.class);
+        checkParam("item1VatAmount", ec, BigDecimal.class);
+        checkParam("item1GrossAmount", ec, BigDecimal.class);
+        checkParam("item1Charge", ec, Charge.class);
+        checkParam("item1Period", ec, String.class);
 
-        checkParam("orderItem2Description", ec, String.class);
-        checkParam("orderItem2NetAmount", ec, BigDecimal.class);
-        checkParam("orderItem2VatAmount", ec, BigDecimal.class);
-        checkParam("orderItem2GrossAmount", ec, BigDecimal.class);
-        checkParam("orderItem2Charge", ec, Charge.class);
-        checkParam("orderItem2Period", ec, String.class);
+        checkParam("item2Description", ec, String.class);
+        checkParam("item2NetAmount", ec, BigDecimal.class);
+        checkParam("item2VatAmount", ec, BigDecimal.class);
+        checkParam("item2GrossAmount", ec, BigDecimal.class);
+        checkParam("item2Charge", ec, Charge.class);
+        checkParam("item2Period", ec, String.class);
 
         // given we categorise for a property
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(officerAdministrator.getUsername(), () -> {
+        sudoService.sudo(officeAdministrator.getUsername(), () -> {
 
             final String comment = "";
             wrap(mixin(Document_categoriseAsOrder.class,document)).act(property, comment);
 
             // given most/all of the info has been completed  (not using our view model here).
             final String documentName = document.getName();
-            Order fakeOrder = orderRepository.findOrderByDocumentName(documentName).get(0);
+            Order order = orderRepository.findOrderByDocumentName(documentName).get(0);
 
             // only way to create a first order item "legally" is through the view model
-            final IncomingDocAsOrderViewModel viewModel = mixin(Order_switchView.class, fakeOrder).act();
+            final IncomingDocAsOrderViewModel viewModel = mixin(Order_switchView.class, order).act();
             final IncomingDocAsOrderViewModel.changeOrderDetails changeOrderDetails =
                     mixin(IncomingDocAsOrderViewModel.changeOrderDetails.class, viewModel);
             wrap(changeOrderDetails).act(changeOrderDetails.default0Act(), buyer, seller, changeOrderDetails.default3Act(), changeOrderDetails.default4Act());
 
-            wrap(viewModel).setTax(orderItemTax);
+            wrap(viewModel).setTax(itemTax);
             wrap(viewModel).setProperty(property);
             wrap(viewModel).setProject(project);
 
-            wrap(viewModel).editCharge(orderItem1Charge);
-            wrap(viewModel).setDescription(orderItem1Description);
-            wrap(viewModel).setNetAmount(orderItem1NetAmount);
-            wrap(viewModel).setVatAmount(orderItem1VatAmount);
-            wrap(viewModel).setGrossAmount(orderItem1GrossAmount);
-            wrap(viewModel).setPeriod(orderItem1Period);
+            wrap(viewModel).editCharge(item1Charge);
+            wrap(viewModel).setDescription(item1Description);
+            wrap(viewModel).setNetAmount(item1NetAmount);
+            wrap(viewModel).setVatAmount(item1VatAmount);
+            wrap(viewModel).setGrossAmount(item1GrossAmount);
+            wrap(viewModel).setPeriod(item1Period);
             wrap(viewModel).setBudgetItem(null);
 
             wrap(viewModel).save();
 
-            wrap(fakeOrder).changeDates(fakeOrder.default0ChangeDates(), entryDate);
+            wrap(order).changeDates(order.default0ChangeDates(), entryDate);
 
             // this does an upsert base on the charge, so we still end up with only one item
-            wrap(fakeOrder).addItem(orderItem1Charge, orderItem1Description, orderItem1NetAmount, orderItem1VatAmount, orderItem1GrossAmount, orderItemTax,
-                    orderItem2Period, // not a typo, but presumably the original fixture was wrong... guessing the upsert doesn't actually update this field
+            wrap(order).addItem(item1Charge, item1Description, item1NetAmount, item1VatAmount, item1GrossAmount, itemTax,
+                    item2Period, // not a typo, but presumably the original fixture was wrong... guessing the upsert doesn't actually update this field
                     property,
                     project,
                     null);
 
             // add a different charge; this creates a second item
-            wrap(fakeOrder).addItem(orderItem2Charge, orderItem2Description, orderItem2NetAmount, orderItem2VatAmount, orderItem2GrossAmount,
-                    orderItemTax, orderItem2Period, property, project, null);
+            wrap(order).addItem(item2Charge, item2Description, item2NetAmount, item2VatAmount, item2GrossAmount,
+                    itemTax, item2Period, property, project, null);
 
-            this.object = fakeOrder;
+            this.object = order;
         });
 
 

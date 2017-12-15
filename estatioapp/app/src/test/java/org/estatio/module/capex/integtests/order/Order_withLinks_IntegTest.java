@@ -29,7 +29,7 @@ import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.order.approval.triggers.Order_discard;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.project.ProjectRepository;
-import org.estatio.module.capex.fixtures.incominginvoice.IncomingInvoiceFixture;
+import org.estatio.module.capex.fixtures.incominginvoice.enums.IncomingInvoice_enum;
 import org.estatio.module.capex.fixtures.order.builders.OrderBuilder;
 import org.estatio.module.capex.fixtures.order.enums.Order_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
@@ -50,22 +50,21 @@ public class Order_withLinks_IntegTest extends CapexModuleIntegTestAbstract {
     @Before
     public void setupData() {
 
-        final OrderBuilder orderFixture = Order_enum.fakeOrder2Pdf.builder();
         runFixtureScript(new FixtureScript() {
             @Override
-            protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
-                executionContext.executeChild(this, new CapexChargeHierarchyXlsxFixture());
-                executionContext.executeChild(this, orderFixture);
-                executionContext.executeChild(this, Budget_enum.OxfBudget2015.builder());
-                executionContext.executeChild(this, Budget_enum.OxfBudget2016.builder());
-
-                executionContext.executeChild(this, new IncomingInvoiceFixture());
-                executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.builder());
+            protected void execute(final ExecutionContext ec) {
+                ec.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
+                ec.executeChild(this, new CapexChargeHierarchyXlsxFixture());
+                ec.executeChildren(this,
+                        Order_enum.fakeOrder2Pdf,
+                        Budget_enum.OxfBudget2015,
+                        Budget_enum.OxfBudget2016,
+                        IncomingInvoice_enum.fakeInvoice2Pdf,
+                        Person_enum.JonathanPropertyManagerGb);
             }
         });
-        order = orderFixture.getObject();
-        orderItem = orderFixture.getFirstItem();
+        order = Order_enum.fakeOrder2Pdf.findUsing(serviceRegistry);
+        orderItem = order.getItems().first();
 
         // given
         assertNotNull(order);

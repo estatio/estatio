@@ -18,10 +18,12 @@
  */
 package org.estatio.module.application.demos;
 
-import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import com.google.common.collect.Lists;
 
+import org.apache.isis.applib.ModuleAbstract;
 import org.apache.isis.applib.clock.TickingFixtureClock;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
@@ -35,7 +37,7 @@ import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.keytables.enums.KeyTable_enum;
 import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
 import org.estatio.module.capex.fixtures.document.enums.IncomingPdf_enum;
-import org.estatio.module.capex.fixtures.incominginvoice.IncomingInvoiceFixture;
+import org.estatio.module.capex.fixtures.incominginvoice.enums.IncomingInvoice_enum;
 import org.estatio.module.capex.fixtures.order.enums.Order_enum;
 import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceImportForDemoXlsxFixture;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
@@ -90,20 +92,16 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 Lists.newArrayList("estatio-admin")) {
         });
 
-        Arrays.asList(
+        Stream.of(
                 new IncodeDomCountryModule(),
                 new EstatioCurrencyModule(),
                 new EstatioTaxModule(),
                 new EstatioChargeModule(),
                 new EstatioIndexModule()
-        ).forEach(
-                module -> ec.executeChild(this, module.getRefDataSetupFixture())
-        );
-//        ec.executeChild(this, new IncodeDomCountryModule().getRefDataSetupFixture());
-//        ec.executeChild(this, new EstatioCurrencyModule().getRefDataSetupFixture());
-//        ec.executeChild(this, new EstatioTaxModule().getRefDataSetupFixture());
-//        ec.executeChild(this, new EstatioChargeModule().getRefDataSetupFixture());
-//        ec.executeChild(this, new EstatioIndexModule().getRefDataSetupFixture());
+        )
+                .map(ModuleAbstract::getRefDataSetupFixture)
+                .filter(Objects::nonNull)
+                .forEach(fixtureScript -> ec.executeChild(this, fixtureScript));
 
         ec.executeChildren(this,
                 DocFragment_demo_enum.InvoicePreliminaryLetterDescription_DemoGbr,
@@ -228,9 +226,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 IncomingPdf_enum.FakeInvoice1.builder().setRunAs("estatio-user-fr"));
 
         ec.executeChildren(this,
-                Order_enum.fakeOrder2Pdf);
-
-        ec.executeChild(this, new IncomingInvoiceFixture());
+                Order_enum.fakeOrder2Pdf,
+                IncomingInvoice_enum.fakeInvoice2Pdf);
 
     }
 
