@@ -94,6 +94,13 @@ public class AdministrationMenu extends UdoDomainService<AdministrationMenu> {
     }
 
 
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
+    @MemberOrder(sequence = "3.5")
+    public void raiseRuntimeException() {
+        throw new RuntimeException();
+    }
+
+
 
 
 
