@@ -185,116 +185,6 @@ language governing permissions and limitations under the License.
             </dependency>
 
 
-            <!-- inlined from incode-platform -->
-            <dependency>
-                <groupId>org.estatio.module.alias</groupId>
-                <artifactId>estatio-module-alias-dom</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.estatio.module.alias</groupId>
-                <artifactId>estatio-module-alias-dom</artifactId>
-                <version>${project.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.estatio.module.classification</groupId>
-                <artifactId>estatio-module-classification-dom</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.estatio.module.classification</groupId>
-                <artifactId>estatio-module-classification-dom</artifactId>
-                <version>${project.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.estatio.module.communications</groupId>
-                <artifactId>estatio-module-communications-dom</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.estatio.module.communications</groupId>
-                <artifactId>estatio-module-communications-dom</artifactId>
-                <version>${project.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.estatio.module.country</groupId>
-                <artifactId>estatio-module-country-dom</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.estatio.module.country</groupId>
-                <artifactId>estatio-module-country-dom</artifactId>
-                <version>${project.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.estatio.module.docfragment</groupId>
-                <artifactId>estatio-module-docfragment-dom</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.estatio.module.docfragment</groupId>
-                <artifactId>estatio-module-docfragment-dom</artifactId>
-                <version>${project.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.estatio.module.document</groupId>
-                <artifactId>estatio-module-document-dom</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.estatio.module.document</groupId>
-                <artifactId>estatio-module-document-dom</artifactId>
-                <version>${project.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.estatio.module.docrendering</groupId>
-                <artifactId>estatio-module-docrendering-freemarker-dom</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.estatio.module.docrendering</groupId>
-                <artifactId>estatio-module-docrendering-freemarker-dom</artifactId>
-                <version>${project.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.estatio.module.docrendering</groupId>
-                <artifactId>estatio-module-docrendering-stringinterpolator-dom</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.estatio.module.docrendering</groupId>
-                <artifactId>estatio-module-docrendering-stringinterpolator-dom</artifactId>
-                <version>${project.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.estatio.module.docrendering</groupId>
-                <artifactId>estatio-module-docrendering-xdocreport-dom</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.estatio.module.docrendering</groupId>
-                <artifactId>estatio-module-docrendering-xdocreport-dom</artifactId>
-                <version>${project.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
-            </dependency>
-
             <dependency>
                 <groupId>org.incode.estatio</groupId>
                 <artifactId>estatio-canonical</artifactId>
@@ -373,21 +263,6 @@ language governing permissions and limitations under the License.
     <modules>
         <module>iso20022</module>
         <module>estatioapp/app</module>
-        <module>estatioapp/dom/alias/impl</module>
-        <module>estatioapp/dom/alias/integtests</module>
-        <module>estatioapp/dom/classification/impl</module>
-        <module>estatioapp/dom/classification/integtests</module>
-        <module>estatioapp/dom/communications/impl</module>
-        <module>estatioapp/dom/communications/integtests</module>
-        <module>estatioapp/dom/country/impl</module>
-        <module>estatioapp/dom/country/integtests</module>
-        <module>estatioapp/dom/docfragment/impl</module>
-        <module>estatioapp/dom/docfragment/integtests</module>
-        <module>estatioapp/dom/document/impl</module>
-        <module>estatioapp/dom/document/integtests</module>
-        <module>estatioapp/lib/docrendering-freemarker/impl</module>
-        <module>estatioapp/lib/docrendering-stringinterpolator/impl</module>
-        <module>estatioapp/lib/docrendering-xdocreport/impl</module>
         <module>estatioapp/webapp</module>
     </modules>
 
@@ -412,53 +287,6 @@ language governing permissions and limitations under the License.
                 </repository>
             </repositories>
         </profile>
-        <profile>
-            <id>subdomains</id>
-            <activation>
-                <property>
-                    <name>subdomains</name>
-                </property>
-            </activation>
-            <modules>
-                <module>estatioapp/dom/alias/impl</module>
-                <module>estatioapp/dom/alias/integtests</module>
-                <module>estatioapp/dom/classification/impl</module>
-                <module>estatioapp/dom/classification/integtests</module>
-                <module>estatioapp/dom/communications/impl</module>
-                <module>estatioapp/dom/communications/integtests</module>
-                <module>estatioapp/dom/country/impl</module>
-                <module>estatioapp/dom/country/integtests</module>
-                <module>estatioapp/dom/docfragment/impl</module>
-                <module>estatioapp/dom/docfragment/integtests</module>
-                <module>estatioapp/dom/document/impl</module>
-                <module>estatioapp/dom/document/integtests</module>
-                <module>estatioapp/lib/docrendering-freemarker/impl</module>
-                <module>estatioapp/lib/docrendering-stringinterpolator/impl</module>
-                <module>estatioapp/lib/docrendering-xdocreport/impl</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>enhance</id>
-            <activation>
-                <property>
-                    <name>enhance</name>
-                </property>
-            </activation>
-            <modules>
-                <module>estatioapp/app</module>
-                <module>estatioapp/dom/alias/impl</module>
-                <module>estatioapp/dom/classification/impl</module>
-                <module>estatioapp/dom/classification/integtests</module>
-                <module>estatioapp/dom/communications/impl</module>
-                <module>estatioapp/dom/communications/integtests</module>
-                <module>estatioapp/dom/country/impl</module>
-                <module>estatioapp/dom/docfragment/impl</module>
-                <module>estatioapp/dom/docfragment/integtests</module>
-                <module>estatioapp/dom/document/impl</module>
-                <module>estatioapp/dom/document/integtests</module>
-            </modules>
-        </profile>
-
     </profiles>
 
 </project>

@@ -166,18 +166,6 @@ language governing permissions and limitations under the License.
             <type>test-jar</type>
         </dependency>
         <dependency>
-            <groupId>org.estatio.module.docrendering</groupId>
-            <artifactId>estatio-module-docrendering-stringinterpolator-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.estatio.module.docrendering</groupId>
-            <artifactId>estatio-module-docrendering-freemarker-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.estatio.module.docrendering</groupId>
-            <artifactId>estatio-module-docrendering-xdocreport-dom</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.isisaddons.module.excel</groupId>
             <artifactId>isis-module-excel-dom</artifactId>
         </dependency>
@@ -205,29 +193,10 @@ language governing permissions and limitations under the License.
             <groupId>org.isisaddons.module.stringinterpolator</groupId>
             <artifactId>isis-module-stringinterpolator-dom</artifactId>
         </dependency>
-
-        <!-- incode modules: generic subdomains -->
         <dependency>
-            <groupId>org.estatio.module.classification</groupId>
-            <artifactId>estatio-module-classification-dom</artifactId>
+            <groupId>org.isisaddons.module.freemarker</groupId>
+            <artifactId>isis-module-freemarker-dom</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.estatio.module.communications</groupId>
-            <artifactId>estatio-module-communications-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.estatio.module.country</groupId>
-            <artifactId>estatio-module-country-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.estatio.module.docfragment</groupId>
-            <artifactId>estatio-module-docfragment-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.estatio.module.document</groupId>
-            <artifactId>estatio-module-document-dom</artifactId>
-        </dependency>
-
 
         <!-- incode modules: metamodel -->
         <dependency>
@@ -403,15 +372,6 @@ language governing permissions and limitations under the License.
             <artifactId>danhaywood-java-assertjext</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.estatio.module.communications</groupId>
-            <artifactId>estatio-module-communications-dom</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-
-
 
     </dependencies>
 
