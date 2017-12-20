@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<orm xmlns="http://xmlns.jcp.org/xml/ns/jdo/orm"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/jdo/orm
+        http://xmlns.jcp.org/xml/ns/jdo/orm_3_0.xsd">
+
+    <package name="org.incode.module.document.dom.impl.docs">
+        <class name="DocumentAbstract"
+               schema="incodeDocuments">
+            <field name="blobBytes">
+                <column name="blob_bytes" jdbc-type="BLOB" sql-type="LONGVARBINARY" allows-null="true"/>
+            </field>
+        </class>
+    </package>
+
+</orm>
