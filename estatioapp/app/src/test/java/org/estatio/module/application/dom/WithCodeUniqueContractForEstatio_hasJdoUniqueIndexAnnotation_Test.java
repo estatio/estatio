@@ -25,7 +25,7 @@ public class WithCodeUniqueContractForEstatio_hasJdoUniqueIndexAnnotation_Test e
         WithFieldUniqueContractTestAllAbstract<WithCodeUnique> {
 
     public WithCodeUniqueContractForEstatio_hasJdoUniqueIndexAnnotation_Test() {
-        super(WithCodeUnique.class, "code", "org.estatio");
+        super("org.estatio", "code", WithCodeUnique.class);
     }
 
 }

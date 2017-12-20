@@ -34,9 +34,9 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.with.WithIntervalMutable;
+import org.incode.module.base.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.incode.module.unittestsupport.dom.bean.PojoTester;
-import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.lease.dom.Lease;

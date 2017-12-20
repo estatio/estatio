@@ -25,7 +25,7 @@ public class WithTitleUniqueContractForEstatio_hasJdoUniqueIndexAnnotation_Test 
         WithFieldUniqueContractTestAllAbstract<WithTitleUnique> {
 
     public WithTitleUniqueContractForEstatio_hasJdoUniqueIndexAnnotation_Test() {
-        super(WithTitleUnique.class, "title", "org.estatio");
+        super("org.estatio", "title", WithTitleUnique.class);
     }
 
 }

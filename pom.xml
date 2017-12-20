@@ -21,7 +21,7 @@ language governing permissions and limitations under the License.
     <parent>
         <groupId>org.incode</groupId>
         <artifactId>incode-parent</artifactId>
-        <version>1.15.1.1</version>
+        <version>1.15.1.2.20171215-1520</version>
     </parent>
 
     <groupId>org.estatio</groupId>
@@ -69,56 +69,15 @@ language governing permissions and limitations under the License.
         <isis.version>1.16.0-SNAPSHOT</isis.version>
         <isis.version>1.15.1.20171213-1405</isis.version>
         <isis.version>1.15.1.20171208-1726</isis.version>
-        <isis.version>1.15.1.20171207-1557</isis.version>
-        <isis.version>1.15.1.20171202-1701</isis.version>
         -->
 
-        <incode-platform.version>1.15.1.1</incode-platform.version>
+        <!-- NB: also update the parent of this pom -->
+        <incode-platform.version>1.15.1.2.20171215-1520</incode-platform.version>
 
         <!-- this is a temporary override, see ECP-431 to remove -->
         <mavenmixin-surefire.version>0.0.5</mavenmixin-surefire.version>
 
-        <isis-module-audit.version>${incode-platform.version}</isis-module-audit.version>
-        <isis-module-command.version>${incode-platform.version}</isis-module-command.version>
-        <isis-module-excel.version>${incode-platform.version}</isis-module-excel.version>
-        <isis-module-fakedata.version>${incode-platform.version}</isis-module-fakedata.version>
-        <isis-module-freemarker.version>${incode-platform.version}</isis-module-freemarker.version>
-        <isis-module-pdfbox.version>${incode-platform.version}</isis-module-pdfbox.version>
-        <isis-module-poly.version>${incode-platform.version}</isis-module-poly.version>
-        <isis-module-publishmq.version>${incode-platform.version}</isis-module-publishmq.version>
-        <isis-module-security.version>${incode-platform.version}</isis-module-security.version>
-        <isis-module-sessionlogger.version>${incode-platform.version}</isis-module-sessionlogger.version>
-        <isis-module-servletapi.version>${incode-platform.version}</isis-module-servletapi.version>
-        <isis-module-settings.version>${incode-platform.version}</isis-module-settings.version>
-        <isis-module-stringinterpolator.version>${incode-platform.version}</isis-module-stringinterpolator.version>
-        <isis-module-togglz.version>${incode-platform.version}</isis-module-togglz.version>
-        <isis-module-xdocreport.version>${incode-platform.version}</isis-module-xdocreport.version>
-
-
-        <isis-metamodel-paraname8.version>${incode-platform.version}</isis-metamodel-paraname8.version>
-
-        <isis-wicket-excel.version>${incode-platform.version}</isis-wicket-excel.version>
-        <isis-wicket-fullcalendar2.version>${incode-platform.version}</isis-wicket-fullcalendar2.version>
-        <isis-wicket-gmap3.version>${incode-platform.version}</isis-wicket-gmap3.version>
-        <isis-wicket-pdfjs.version>${incode-platform.version}</isis-wicket-pdfjs.version>
-
         <wicketstuff.version>7.9.0</wicketstuff.version>
-
-        <incode-module-base.version>${incode-platform.version}</incode-module-base.version>
-        <incode-module-classification.version>${incode-platform.version}</incode-module-classification.version>
-
-        <incode-module-communications.version>${incode-platform.version}</incode-module-communications.version>
-        <incode-module-country.version>${incode-platform.version}</incode-module-country.version>
-
-        <incode-module-docfragment.version>${incode-platform.version}</incode-module-docfragment.version>
-        <incode-module-document.version>1.15.1.2.20171215-1520</incode-module-document.version>
-        <incode-module-docrendering-freemarker.version>${incode-platform.version}</incode-module-docrendering-freemarker.version>
-        <incode-module-docrendering-stringinterpolator.version>${incode-platform.version}</incode-module-docrendering-stringinterpolator.version>
-        <incode-module-docrendering-xdocreport.version>${incode-platform.version}</incode-module-docrendering-xdocreport.version>
-
-        <incode-module-unittestsupport.version>${incode-platform.version}</incode-module-unittestsupport.version>
-        <incode-module-integtestsupport.version>${incode-platform.version}</incode-module-integtestsupport.version>
-        <incode-module-fixturesupport.version>${incode-platform.version}</incode-module-fixturesupport.version>
 
         <estatio-canonical.version>1.1.0</estatio-canonical.version>
 
@@ -159,91 +118,6 @@ language governing permissions and limitations under the License.
 
             <!-- modules -->
 
-            <dependency>
-                <groupId>org.isisaddons.module.command</groupId>
-                <artifactId>isis-module-command-dom</artifactId>
-                <version>${isis-module-command.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.isisaddons.module.excel</groupId>
-                <artifactId>isis-module-excel-dom</artifactId>
-                <version>${isis-module-excel.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.isisaddons.module.fakedata</groupId>
-                <artifactId>isis-module-fakedata-dom</artifactId>
-                <version>${isis-module-fakedata.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.isisaddons.module.settings</groupId>
-                <artifactId>isis-module-settings-dom</artifactId>
-                <version>${isis-module-settings.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.isisaddons.module.security</groupId>
-                <artifactId>isis-module-security-dom</artifactId>
-                <version>${isis-module-security.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.isisaddons.module.publishmq</groupId>
-                <artifactId>isis-module-publishmq-dom</artifactId>
-                <version>${isis-module-publishmq.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.isisaddons.module.audit</groupId>
-                <artifactId>isis-module-audit-dom</artifactId>
-                <version>${isis-module-audit.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.isisaddons.module.command</groupId>
-                <artifactId>isis-module-command-dom</artifactId>
-                <version>${isis-module-command.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.isisaddons.module.sessionlogger</groupId>
-                <artifactId>isis-module-sessionlogger-dom</artifactId>
-                <version>${isis-module-sessionlogger.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.isisaddons.module.servletapi</groupId>
-                <artifactId>isis-module-servletapi-dom</artifactId>
-                <version>${isis-module-servletapi.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.isisaddons.module.poly</groupId>
-                <artifactId>isis-module-poly-dom</artifactId>
-                <version>${isis-module-poly.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.isisaddons.module.pdfbox</groupId>
-                <artifactId>isis-module-pdfbox-dom</artifactId>
-                <version>${isis-module-pdfbox.version}</version>
-            </dependency>
-                <dependency>
-                    <groupId>org.isisaddons.module.freemarker</groupId>
-                    <artifactId>isis-module-freemarker-dom</artifactId>
-                    <version>${isis-module-freemarker.version}</version>
-                </dependency>
-
-
-            <dependency>
-                <groupId>org.isisaddons.metamodel.paraname8</groupId>
-                <artifactId>isis-metamodel-paraname8-dom</artifactId>
-                <version>${isis-metamodel-paraname8.version}</version>
-            </dependency>
-
-
-            <dependency>
-                <groupId>org.isisaddons.module.togglz</groupId>
-                <artifactId>isis-module-togglz-glue</artifactId>
-                <version>${isis-module-togglz.version}</version>
-            </dependency>
-
 
             <dependency>
                 <groupId>org.togglz</groupId>
@@ -257,161 +131,17 @@ language governing permissions and limitations under the License.
                 <scope>test</scope>
             </dependency>
 
-            <dependency>
-                <groupId>org.incode.module.classification</groupId>
-                <artifactId>incode-module-classification-dom</artifactId>
-                <version>${incode-module-classification.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.incode.module.communications</groupId>
-                <artifactId>incode-module-communications-dom</artifactId>
-                <version>${incode-module-communications.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.incode.module.communications</groupId>
-                <artifactId>incode-module-communications-dom</artifactId>
-                <version>${incode-module-communications.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.incode.module.country</groupId>
-                <artifactId>incode-module-country-dom</artifactId>
-                <version>${incode-module-country.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.incode.module.country</groupId>
-                <artifactId>incode-module-country-dom</artifactId>
-                <version>${incode-module-country.version}</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.incode.module.docfragment</groupId>
-                <artifactId>incode-module-docfragment-dom</artifactId>
-                <version>${incode-module-docfragment.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.incode.module.docfragment</groupId>
-                <artifactId>incode-module-docfragment-dom</artifactId>
-                <version>${incode-module-docfragment.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.incode.module.document</groupId>
-                <artifactId>incode-module-document-dom</artifactId>
-                <version>${incode-module-document.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.incode.module.document</groupId>
-                <artifactId>incode-module-document-dom</artifactId>
-                <version>${incode-module-document.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.incode.module.docrendering</groupId>
-                <artifactId>incode-module-docrendering-stringinterpolator-dom</artifactId>
-                <version>${incode-module-docrendering-stringinterpolator.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.incode.module.docrendering</groupId>
-                <artifactId>incode-module-docrendering-stringinterpolator-dom</artifactId>
-                <version>${incode-module-docrendering-stringinterpolator.version}</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.incode.module.docrendering</groupId>
-                <artifactId>incode-module-docrendering-freemarker-dom</artifactId>
-                <version>${incode-module-docrendering-freemarker.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.incode.module.docrendering</groupId>
-                <artifactId>incode-module-docrendering-freemarker-dom</artifactId>
-                <version>${incode-module-docrendering-freemarker.version}</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.incode.module.docrendering</groupId>
-                <artifactId>incode-module-docrendering-xdocreport-dom</artifactId>
-                <version>${incode-module-docrendering-xdocreport.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.incode.module.docrendering</groupId>
-                <artifactId>incode-module-docrendering-xdocreport-dom</artifactId>
-                <version>${incode-module-docrendering-xdocreport.version}</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.incode.module.base</groupId>
-                <artifactId>incode-module-base-dom</artifactId>
-                <version>${incode-module-base.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.incode.module.unittestsupport</groupId>
-                <artifactId>incode-module-unittestsupport-dom</artifactId>
-                <version>${incode-module-unittestsupport.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.incode.module.integtestsupport</groupId>
-                <artifactId>incode-module-integtestsupport-dom</artifactId>
-                <version>${incode-module-integtestsupport.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.incode.module.fixturesupport</groupId>
-                <artifactId>incode-module-fixturesupport-dom</artifactId>
-                <version>${incode-module-fixturesupport.version}</version>
-            </dependency>
-
-
-            <!-- required for the dataModel implementations used by docrendering-stringinterpolator -->
-            <dependency>
-                <groupId>org.isisaddons.module.stringinterpolator</groupId>
-                <artifactId>isis-module-stringinterpolator-dom</artifactId>
-                <version>${isis-module-stringinterpolator.version}</version>
-            </dependency>
-
-
-
-
             <!-- viewer extensions -->
-            <dependency>
-                <groupId>org.isisaddons.wicket.pdfjs</groupId>
-                <artifactId>isis-wicket-pdfjs-cpt</artifactId>
-                <version>${isis-wicket-pdfjs.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.isisaddons.wicket.gmap3</groupId>
                 <artifactId>isis-wicket-gmap3-cpt</artifactId>
-                <version>${isis-wicket-gmap3.version}</version>
+                <version>${incode-platform.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.wicketstuff</groupId>
                         <artifactId>wicketstuff-gmap3</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
-                <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
-                <version>${isis-wicket-fullcalendar2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.isisaddons.wicket.excel</groupId>
-                <artifactId>isis-wicket-excel-cpt</artifactId>
-                <version>${isis-wicket-excel.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wicketstuff</groupId>
@@ -813,5 +543,28 @@ language governing permissions and limitations under the License.
         <module>estatioapp/app</module>
         <module>estatioapp/webapp</module>
     </modules>
+
+    <profiles>
+        <profile>
+            <id>cloudbees-snapshots</id>
+            <activation>
+                <property>
+                    <name>!skip.cloudbees-snapshots</name>
+                </property>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>snapshots-repo</id>
+                    <url>http://repository-estatio.forge.cloudbees.com/snapshot/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
 
 </project>

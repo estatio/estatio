@@ -29,11 +29,11 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.gmap3.cpt.applib.Location;
-import org.isisaddons.wicket.gmap3.cpt.service.LocationLookupService;
 
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
+import org.estatio.module.asset.dom.location.LocationLookupService;
 import org.estatio.module.asset.dom.ownership.FixedAssetOwnership;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyForTesting;

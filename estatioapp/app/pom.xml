@@ -135,23 +135,6 @@ language governing permissions and limitations under the License.
         </isis.integTest.module>
     </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <!--
-            required for the AppManifest
-            (modules that have dependencies on other modules, eg docrendering-xdocreport
-            depending on xdocreport, do not advertise the services on which they depend).
-            -->
-            <dependency>
-                <groupId>org.isisaddons.module.xdocreport</groupId>
-                <artifactId>isis-module-xdocreport-dom</artifactId>
-                <version>${isis-module-xdocreport.version}</version>
-            </dependency>
-
-        </dependencies>
-    </dependencyManagement>
-
-
     <dependencies>
 
         <dependency>
@@ -177,6 +160,12 @@ language governing permissions and limitations under the License.
             <artifactId>incode-module-base-dom</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.incode.module.base</groupId>
+            <artifactId>incode-module-base-dom</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
+        <dependency>
             <groupId>org.incode.module.docrendering</groupId>
             <artifactId>incode-module-docrendering-stringinterpolator-dom</artifactId>
         </dependency>
@@ -191,7 +180,6 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.isisaddons.module.excel</groupId>
             <artifactId>isis-module-excel-dom</artifactId>
-            <version>${isis-module-excel.version}</version>
         </dependency>
         <dependency>
             <groupId>org.incode.module.fixturesupport</groupId>
