@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.ModuleAbstract;
-import org.apache.isis.applib.clock.TickingFixtureClock;
+import org.apache.isis.applib.fixtures.TickingFixtureClock;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.isisaddons.module.security.dom.user.AccountType;

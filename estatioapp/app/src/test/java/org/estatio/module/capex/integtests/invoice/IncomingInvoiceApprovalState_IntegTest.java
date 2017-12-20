@@ -83,8 +83,6 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
                         Person_enum.EmmaTreasurerGb);
             }
         });
-
-//        TickingFixtureClock.replaceExisting();
     }
 
     @Before
@@ -109,11 +107,6 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         assertState(bankAccount, NOT_VERIFIED);
 
     }
-
-//    @After
-//    public void tearDown() {
-//        TickingFixtureClock.reinstateExisting();
-//    }
 
     @Rule
     public TogglzRule togglzRule = TogglzRule.allDisabled(EstatioTogglzFeature.class);
