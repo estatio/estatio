@@ -1,15 +1,14 @@
-package org.estatio.module.country.fixtures.enums;
+package org.incode.module.country.fixtures.enums;
 
+import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
-
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
+import org.incode.module.country.fixtures.builders.CountryBuilder;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.country.fixtures.builders.CountryBuilder;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -29,7 +29,7 @@ import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.charge.fixtures.chargegroups.enums.ChargeGroup_enum;
 import org.estatio.module.charge.fixtures.charges.builders.ChargeBuilder;
-import org.estatio.module.country.fixtures.enums.Country_enum;
+import org.incode.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.tax.fixtures.data.Tax_enum;
 
 import lombok.Getter;
