@@ -36,7 +36,9 @@ public class DocumentCommunicationSupportForDocumentsAttachedToDemoInvoice imple
             return null;
         }
 
-        return documentTypeRepository.findByReference(DocumentType_and_DocumentTemplates_createSome.DOC_TYPE_REF_FREEMARKER_HTML);
+        final DocumentType documentType = documentTypeRepository
+                .findByReference(DocumentType_and_DocumentTemplates_createSome.DOC_TYPE_REF_FREEMARKER_HTML);
+        return documentType;
     }
 
 

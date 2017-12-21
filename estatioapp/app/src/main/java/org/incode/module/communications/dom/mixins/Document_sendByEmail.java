@@ -199,17 +199,18 @@ public class Document_sendByEmail {
     }
 
     private DocumentType determineEmailCoverNoteDocumentType() {
-        return queryResultsCache.execute(() -> {
-            if(documentCommunicationSupports != null) {
+        final DocumentType docType = queryResultsCache.execute(() -> {
+            if (documentCommunicationSupports != null) {
                 for (DocumentCommunicationSupport supportService : documentCommunicationSupports) {
                     final DocumentType documentType = supportService.emailCoverNoteDocumentTypeFor(document);
-                    if(documentType != null) {
+                    if (documentType != null) {
                         return documentType;
                     }
                 }
             }
             return null;
         }, Document_sendByEmail.class, "determineEmailCoverNoteDocumentType", document);
+        return docType;
     }
 
     private CommHeaderForEmail determineEmailHeader() {

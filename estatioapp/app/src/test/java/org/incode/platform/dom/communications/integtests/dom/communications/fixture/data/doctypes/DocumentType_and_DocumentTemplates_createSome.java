@@ -30,7 +30,7 @@ public class DocumentType_and_DocumentTemplates_createSome extends DocumentTempl
 
 
     // applicable to DemoInvoice.class
-    public static final String DOC_TYPE_REF_FREEMARKER_HTML = "FREEMARKER_HTML";
+    public static final String DOC_TYPE_REF_FREEMARKER_HTML = "FREEMARKER_HTML_COMMS";
 
     @Getter
     DocumentTemplate fmkTemplate;

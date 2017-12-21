@@ -7,13 +7,16 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.apache.isis.applib.services.xactn.TransactionService;
+
+import org.isisaddons.module.command.IncodeSpiCommandModule;
+import org.isisaddons.module.command.dom.BackgroundCommandServiceJdoRepository;
+import org.isisaddons.module.command.dom.CommandJdo;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerLinkRepository;
@@ -67,6 +70,7 @@ public class Smoke_IntegTest extends CommunicationsModuleIntegTestAbstract {
     public void can_send_email() throws Exception {
 
         // given
+        fixtureScripts.runFixtureScript(new IncodeSpiCommandModule().getTeardownFixtureWillDelete(), null);
         fixtureScripts.runFixtureScript(new DemoObjectWithNotes_and_DemoInvoice_and_docs_and_comms_create(), null);
         transactionService.nextTransaction();
 
@@ -114,6 +118,9 @@ public class Smoke_IntegTest extends CommunicationsModuleIntegTestAbstract {
 
         List<EmailMessage> emailMessages = fakeEmailService.listSentEmails();
         assertThat(emailMessages).isEmpty();
+
+        List<CommandJdo> commands = backgroundCommandRepository.findBackgroundCommandsNotYetStarted();
+        assertThat(commands.size()).isEqualTo(1);
 
         // when
         fakeScheduler.runBackgroundCommands(5000);
@@ -168,13 +175,11 @@ public class Smoke_IntegTest extends CommunicationsModuleIntegTestAbstract {
         assertThat(comm.getSubject()).isNotNull();
         assertThat(comm.getSentAt()).isNull();
 
-        // hmm, using Java8 equivalent yields no results.
-        // My guess is something to do with lazy loading, but I don't really understand why...
         final List<CommunicationChannel> correspondentChannels =
-                FluentIterable.from(comm.getCorrespondents())
-                        .transform(CommChannelRole::getChannel)
+                Lists.newArrayList(comm.getCorrespondents()).stream()
+                        .map(CommChannelRole::getChannel)
                         .filter(Objects::nonNull)
-                        .toList();
+                        .collect(Collectors.toList());
         assertThat(correspondentChannels).contains(maryPost);
 
         // when
@@ -191,5 +196,9 @@ public class Smoke_IntegTest extends CommunicationsModuleIntegTestAbstract {
 
     @Inject
     FakeEmailService fakeEmailService;
+
+    @Inject
+    BackgroundCommandServiceJdoRepository backgroundCommandRepository;
+
 }
 
