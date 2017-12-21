@@ -10,7 +10,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 
-import org.incode.module.document.dom.DocumentModule;
+import org.incode.module.document.DocumentModule;
 import org.incode.module.document.dom.services.ClassNameViewModel;
 import org.incode.module.document.dom.services.ClassService;
 import org.incode.module.document.dom.spi.RendererModelFactoryClassNameService;

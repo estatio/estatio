@@ -35,7 +35,7 @@ import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.spec.AbstractSpecification2;
 import org.apache.isis.applib.util.ObjectContracts;
 
-import org.incode.module.document.dom.DocumentModule;
+import org.incode.module.document.DocumentModule;
 import org.incode.module.document.dom.impl.docs.DocumentNature;
 import org.incode.module.document.dom.impl.docs.DocumentTemplateRepository;
 import org.incode.module.document.dom.impl.renderers.PreviewToUrl;

@@ -28,7 +28,7 @@ import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.util.ObjectContracts;
 import org.apache.isis.applib.util.TitleBuffer;
 
-import org.incode.module.alias.dom.AliasModule;
+import org.incode.module.alias.AliasModule;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -41,7 +41,7 @@ import org.apache.isis.applib.value.Clob;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.document.dom.DocumentModule;
+import org.incode.module.document.DocumentModule;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.docs.DocumentSort;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;

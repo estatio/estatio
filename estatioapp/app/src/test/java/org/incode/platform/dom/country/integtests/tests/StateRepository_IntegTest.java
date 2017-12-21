@@ -8,7 +8,7 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.incode.module.country.dom.CountryModule;
+import org.incode.module.country.CountryModule;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.dom.impl.State;

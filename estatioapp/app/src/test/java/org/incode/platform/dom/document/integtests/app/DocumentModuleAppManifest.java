@@ -8,10 +8,10 @@ import org.isisaddons.module.freemarker.dom.FreeMarkerModule;
 import org.isisaddons.module.stringinterpolator.StringInterpolatorModule;
 import org.isisaddons.module.xdocreport.dom.XDocReportModule;
 
-import org.incode.module.docrendering.freemarker.dom.FreemarkerDocRenderingModule;
-import org.incode.module.docrendering.stringinterpolator.dom.StringInterpolatorDocRenderingModule;
-import org.incode.module.docrendering.xdocreport.dom.XDocReportDocRenderingModule;
-import org.incode.module.document.dom.DocumentModule;
+import org.incode.module.docrendering.freemarker.FreemarkerDocRenderingModule;
+import org.incode.module.docrendering.stringinterpolator.StringInterpolatorDocRenderingModule;
+import org.incode.module.docrendering.xdocreport.XDocReportDocRenderingModule;
+import org.incode.module.document.DocumentModule;
 import org.incode.platform.dom.document.integtests.dom.document.DocumentModuleIntegrationSubmodule;
 
 /**

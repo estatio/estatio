@@ -57,7 +57,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.util.ObjectContracts;
 
-import org.incode.module.communications.dom.CommunicationsModule;
+import org.incode.module.communications.CommunicationsModule;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;

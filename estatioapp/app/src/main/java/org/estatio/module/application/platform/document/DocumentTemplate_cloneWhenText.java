@@ -38,7 +38,7 @@ import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.incode.module.document.dom.DocumentModule;
+import org.incode.module.document.DocumentModule;
 import org.incode.module.document.dom.impl.applicability.Applicability;
 import org.incode.module.document.dom.impl.docs.DocumentSort;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;

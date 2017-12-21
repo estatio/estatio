@@ -32,7 +32,7 @@ import org.apache.isis.applib.util.ObjectContracts;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
-import org.incode.module.document.dom.DocumentModule;
+import org.incode.module.document.DocumentModule;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.types.AtPathType;
 

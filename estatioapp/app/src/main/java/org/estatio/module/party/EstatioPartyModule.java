@@ -12,7 +12,7 @@ import org.apache.isis.applib.Module;
 import org.apache.isis.applib.ModuleAbstract;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.incode.module.communications.dom.CommunicationsModule;
+import org.incode.module.communications.CommunicationsModule;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.countryapptenancy.EstatioCountryAppTenancyModule;

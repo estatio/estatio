@@ -11,7 +11,7 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.incode.module.alias.dom.AliasModule;
+import org.incode.module.alias.AliasModule;
 
 public abstract class T_removeAlias<T> {
 

@@ -15,7 +15,7 @@ import org.apache.isis.applib.services.background.BackgroundService2;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
-import org.incode.module.document.dom.DocumentModule;
+import org.incode.module.document.DocumentModule;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;

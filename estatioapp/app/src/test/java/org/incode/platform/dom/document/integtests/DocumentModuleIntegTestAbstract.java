@@ -11,9 +11,9 @@ import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
 import org.isisaddons.module.command.CommandModule;
 import org.isisaddons.module.fakedata.FakeDataModule;
 
-import org.incode.module.docrendering.freemarker.dom.FreemarkerDocRenderingModule;
-import org.incode.module.docrendering.stringinterpolator.dom.StringInterpolatorDocRenderingModule;
-import org.incode.module.docrendering.xdocreport.dom.XDocReportDocRenderingModule;
+import org.incode.module.docrendering.freemarker.FreemarkerDocRenderingModule;
+import org.incode.module.docrendering.stringinterpolator.StringInterpolatorDocRenderingModule;
+import org.incode.module.docrendering.xdocreport.XDocReportDocRenderingModule;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.Document_delete;
 import org.incode.platform.dom.document.integtests.app.DocumentAppModule;

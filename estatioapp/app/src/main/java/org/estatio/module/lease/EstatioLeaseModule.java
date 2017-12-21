@@ -31,11 +31,11 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
 
 import org.incode.module.classification.dom.ClassificationModule;
-import org.incode.module.communications.dom.CommunicationsModule;
-import org.incode.module.docfragment.dom.DocFragmentModule;
-import org.incode.module.docrendering.freemarker.dom.FreemarkerDocRenderingModule;
-import org.incode.module.docrendering.stringinterpolator.dom.StringInterpolatorDocRenderingModule;
-import org.incode.module.docrendering.xdocreport.dom.XDocReportDocRenderingModule;
+import org.incode.module.communications.CommunicationsModule;
+import org.incode.module.docfragment.DocFragmentModule;
+import org.incode.module.docrendering.freemarker.FreemarkerDocRenderingModule;
+import org.incode.module.docrendering.stringinterpolator.StringInterpolatorDocRenderingModule;
+import org.incode.module.docrendering.xdocreport.XDocReportDocRenderingModule;
 
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
 import org.estatio.module.event.EstatioEventModule;

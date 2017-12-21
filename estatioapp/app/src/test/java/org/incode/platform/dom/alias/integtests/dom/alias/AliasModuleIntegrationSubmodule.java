@@ -11,7 +11,7 @@ import org.apache.isis.applib.ModuleAbstract;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
 
-import org.incode.module.alias.dom.AliasModule;
+import org.incode.module.alias.AliasModule;
 import org.incode.platform.dom.alias.integtests.demo.AliasModuleDemoDomSubmodule;
 import org.incode.platform.dom.alias.integtests.dom.alias.dom.AliasForDemoObject;
 

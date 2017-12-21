@@ -11,7 +11,7 @@ import org.apache.isis.applib.ModuleAbstract;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
 
-import org.incode.module.communications.dom.CommunicationsModule;
+import org.incode.module.communications.CommunicationsModule;
 import org.incode.platform.dom.communications.integtests.demo.CommunicationsModuleDemoDomSubmodule;
 import org.incode.platform.dom.communications.integtests.dom.communications.dom.commchannels.CommunicationChannelOwnerLinkForDemoObjectWithNotes;
 import org.incode.platform.dom.communications.integtests.dom.communications.dom.paperclips.PaperclipForDemoInvoice;

@@ -30,7 +30,7 @@ import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 import org.isisaddons.module.security.dom.user.AccountType;
 import org.isisaddons.module.security.seed.scripts.AbstractUserAndRolesFixtureScript;
 
-import org.incode.module.country.dom.CountryModule;
+import org.incode.module.country.CountryModule;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;

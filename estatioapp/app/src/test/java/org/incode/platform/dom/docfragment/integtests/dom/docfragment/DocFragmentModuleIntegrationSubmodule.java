@@ -9,7 +9,7 @@ import com.google.common.collect.Sets;
 import org.apache.isis.applib.Module;
 import org.apache.isis.applib.ModuleAbstract;
 
-import org.incode.module.docfragment.dom.DocFragmentModule;
+import org.incode.module.docfragment.DocFragmentModule;
 import org.incode.platform.dom.docfragment.integtests.demo.DocFragmentModuleDemoDomSubmodule;
 
 @XmlRootElement(name = "module")

@@ -29,7 +29,7 @@ import org.apache.isis.applib.ModuleAbstract;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.setup.PersonaEnumPersistAll;
 
-import org.incode.module.country.dom.CountryModule;
+import org.incode.module.country.CountryModule;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.base.EstatioBaseModule;

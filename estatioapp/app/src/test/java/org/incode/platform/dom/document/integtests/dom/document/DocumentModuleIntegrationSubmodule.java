@@ -11,7 +11,7 @@ import org.apache.isis.applib.ModuleAbstract;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
 
-import org.incode.module.document.dom.DocumentModule;
+import org.incode.module.document.DocumentModule;
 import org.incode.platform.dom.document.integtests.demo.DocumentModuleDemoDomSubmodule;
 import org.incode.platform.dom.document.integtests.dom.document.dom.paperclips.demowithurl.PaperclipForDemoObjectWithUrl;
 import org.incode.platform.dom.document.integtests.dom.document.dom.paperclips.other.PaperclipForOtherObject;

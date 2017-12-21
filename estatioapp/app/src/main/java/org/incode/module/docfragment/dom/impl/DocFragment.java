@@ -22,7 +22,7 @@ import org.apache.isis.applib.util.ObjectContracts;
 
 import org.isisaddons.module.freemarker.dom.service.FreeMarkerService;
 
-import org.incode.module.docfragment.dom.DocFragmentModule;
+import org.incode.module.docfragment.DocFragmentModule;
 import org.incode.module.docfragment.dom.types.AtPathType;
 import org.incode.module.docfragment.dom.types.DocFragmentNameType;
 import org.incode.module.docfragment.dom.types.ObjectTypeType;

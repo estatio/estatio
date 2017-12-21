@@ -27,7 +27,7 @@ import com.google.common.collect.Sets;
 import org.apache.isis.applib.Module;
 import org.apache.isis.applib.ModuleAbstract;
 
-import org.incode.module.country.dom.CountryModule;
+import org.incode.module.country.CountryModule;
 
 /**
  * Not to be confused with {@link CountryModule}.
