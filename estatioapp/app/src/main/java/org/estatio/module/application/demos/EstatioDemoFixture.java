@@ -56,9 +56,11 @@ import org.estatio.module.lease.fixtures.invoice.enums.InvoiceForLease_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForMarketing_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForPercentage_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTax_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
 import org.estatio.module.lease.seed.DocFragment_enum;
 import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
@@ -189,7 +191,15 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 LeaseItemForDiscount_enum.OxfMiracle005bGb,
                 LeaseItemForPercentage_enum.OxfMiracl005Gb,
                 LeaseItemForDeposit_enum.OxfMiracle005bGb,
-                LeaseItemForRent_enum.KalPoison001Nl);
+                LeaseItemForRent_enum.KalPoison001Nl,
+                LeaseItemForRent_enum.OxfTopModel001Gb,
+                LeaseItemForServiceCharge_enum.OxfTopModel001Gb,
+                LeaseItemForTurnoverRent_enum.OxfTopModel001Gb,
+                LeaseItemForPercentage_enum.OxfTopModel001Gb,
+                LeaseItemForDiscount_enum.OxfTopModel001Gb,
+                LeaseItemForDeposit_enum.OxfTopModel001Gb,
+                LeaseItemForTax_enum.OxfTopModel001Gb,
+                LeaseItemForMarketing_enum.OxfTopModel001Gb);
 
         ec.executeChildren(this,
                 InvoiceForLease_enum.OxfPoison003Gb,
