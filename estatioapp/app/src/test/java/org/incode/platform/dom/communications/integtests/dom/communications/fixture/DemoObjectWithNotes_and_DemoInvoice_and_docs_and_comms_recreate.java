@@ -6,8 +6,6 @@ public class DemoObjectWithNotes_and_DemoInvoice_and_docs_and_comms_recreate ext
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
-
-        executionContext.executeChild(this, new DemoObjectWithNotes_and_DemoInvoice_and_docs_and_comms_tearDown());
         executionContext.executeChild(this, new DemoObjectWithNotes_and_DemoInvoice_and_docs_and_comms_create());
     }
 

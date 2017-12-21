@@ -27,6 +27,8 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 import org.incode.module.docfragment.dom.api.DocFragmentService;
 import org.incode.module.docfragment.dom.types.AtPathType;
 
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancy;
+
 import freemarker.template.TemplateException;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,7 +36,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType=IdentityType.DATASTORE,
-        schema = "exampleDemo"
+        schema = "exampleDemoDocFragment"
 )
 @javax.jdo.annotations.DatastoreIdentity(strategy= IdGeneratorStrategy.IDENTITY, column ="id")
 @javax.jdo.annotations.Version(strategy= VersionStrategy.VERSION_NUMBER, column ="version")

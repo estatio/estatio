@@ -1,18 +1,17 @@
 package org.incode.module.country.fixture.teardown;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
+import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
 
-public class CountryModule_tearDown extends FixtureScript {
+import org.incode.module.country.dom.impl.Country;
+import org.incode.module.country.dom.impl.State;
+
+public class CountryModule_tearDown extends TeardownFixtureAbstract2 {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        isisJdoSupport.executeUpdate("delete from \"incodeCountry\".\"State\"");
-        isisJdoSupport.executeUpdate("delete from \"incodeCountry\".\"Country\"");
+        deleteFrom(State.class);
+        deleteFrom(Country.class);
     }
 
-
-    @javax.inject.Inject
-    private IsisJdoSupport isisJdoSupport;
 
 }

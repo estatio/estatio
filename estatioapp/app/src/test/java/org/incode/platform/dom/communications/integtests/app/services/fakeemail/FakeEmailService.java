@@ -23,7 +23,7 @@ import org.apache.isis.applib.services.email.EmailService;
 @DomainServiceLayout(
         named = "Fakes",
         menuBar = DomainServiceLayout.MenuBar.SECONDARY,
-        menuOrder = "100"
+        menuOrder = "98"
 )
 public class FakeEmailService implements EmailService {
 

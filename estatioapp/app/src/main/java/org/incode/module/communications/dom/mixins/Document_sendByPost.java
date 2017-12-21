@@ -97,13 +97,16 @@ public class Document_sendByPost {
 
     private CommHeaderForPost determinePostHeader() {
         return queryResultsCache.execute(() -> {
-            final CommHeaderForPost commHeaderForPost = new CommHeaderForPost();
+            final CommHeaderForPost header = new CommHeaderForPost();
             if(documentCommunicationSupports != null) {
                 for (DocumentCommunicationSupport commSupport : documentCommunicationSupports) {
-                    commSupport.inferPrintHeaderFor(document, commHeaderForPost);;
+                    commSupport.inferPrintHeaderFor(document, header);
                 }
             }
-            return commHeaderForPost;
+            if(header.getToChoices().isEmpty()) {
+                header.setDisabledReason("Could not find a communication channel to use");
+            }
+            return header;
         }, Document_sendByPost.class, "determinePrintHeader", document);
     }
 

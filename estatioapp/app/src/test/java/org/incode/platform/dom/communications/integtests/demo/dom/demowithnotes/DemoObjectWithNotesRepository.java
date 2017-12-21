@@ -20,7 +20,7 @@ public class DemoObjectWithNotesRepository {
 
     public List<DemoObjectWithNotes> findByName(final String name) {
         return repositoryService.allMatches(
-                new QueryDefault<DemoObjectWithNotes>(
+                new QueryDefault<>(
                         DemoObjectWithNotes.class,
                         "findByName",
                         "name", name));

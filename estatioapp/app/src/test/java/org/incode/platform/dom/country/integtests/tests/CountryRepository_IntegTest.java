@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.incode.module.country.dom.CountryModule;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.fixture.CountriesRefData;
@@ -22,6 +23,7 @@ public class CountryRepository_IntegTest extends CountryModuleIntegTestAbstract 
 
         @Before
         public void setupData() {
+            runFixtureScript(new CountryModule().getRefDataTeardown());
             runFixtureScript(new CountriesRefData());
         }
 
@@ -38,6 +40,7 @@ public class CountryRepository_IntegTest extends CountryModuleIntegTestAbstract 
 
         @Before
         public void setupData() {
+            runFixtureScript(new CountryModule().getRefDataTeardown());
             runFixtureScript(new CountriesRefData());
         }
 

@@ -12,7 +12,7 @@ import org.incode.module.docrendering.freemarker.dom.FreemarkerDocRenderingModul
 import org.incode.module.docrendering.stringinterpolator.dom.StringInterpolatorDocRenderingModule;
 import org.incode.module.docrendering.xdocreport.dom.XDocReportDocRenderingModule;
 import org.incode.module.document.dom.DocumentModule;
-import org.incode.platform.dom.document.integtests.dom.document.ExampleDomModuleDocumentModule;
+import org.incode.platform.dom.document.integtests.dom.document.DocumentModuleIntegrationSubmodule;
 
 /**
  * Bootstrap the application.
@@ -21,7 +21,7 @@ public class DocumentModuleAppManifest extends AppManifestAbstract {
 
     public static final Builder BUILDER = Builder.forModules(
             DocumentModule.class, // dom module
-            ExampleDomModuleDocumentModule.class,
+            DocumentModuleIntegrationSubmodule.class,
             DocumentAppModule.class,
 
             CommandModule.class,

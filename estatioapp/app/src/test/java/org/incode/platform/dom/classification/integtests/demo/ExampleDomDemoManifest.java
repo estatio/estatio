@@ -8,7 +8,7 @@ import org.apache.isis.applib.AppManifestAbstract;
 public class ExampleDomDemoManifest extends AppManifestAbstract {
 
     public static final Builder BUILDER = Builder.forModules(
-            ExampleDomDemoDomSubmodule.class
+            ClassificationModuleDemoDomSubmodule.class
     );
 
     public ExampleDomDemoManifest() {

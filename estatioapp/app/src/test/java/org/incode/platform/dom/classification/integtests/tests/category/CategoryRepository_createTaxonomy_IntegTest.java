@@ -15,8 +15,7 @@ import org.incode.module.classification.dom.impl.classification.ClassificationRe
 import org.incode.module.classification.dom.spi.ApplicationTenancyService;
 import org.incode.platform.dom.classification.integtests.ClassificationModuleIntegTestAbstract;
 import org.incode.platform.dom.classification.integtests.demo.dom.demowithatpath.DemoObjectWithAtPathMenu;
-import org.incode.platform.dom.classification.integtests.dom.classification.fixture.DemoObjectWithAtPath_and_OtherObjectWithAtPath_recreate3;
-import org.incode.platform.dom.classification.integtests.dom.classification.fixture.DemoObjectWithAtPath_and_OtherObjectWithAtPath_tearDown;
+import org.incode.platform.dom.classification.integtests.dom.classification.fixture.DemoObjectWithAtPath_and_OtherObjectWithAtPath_create3;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,8 +38,7 @@ public class CategoryRepository_createTaxonomy_IntegTest extends ClassificationM
 
     @Before
     public void setUpData() throws Exception {
-        fixtureScripts.runFixtureScript(new DemoObjectWithAtPath_and_OtherObjectWithAtPath_tearDown(), null);
-        fixtureScripts.runFixtureScript(new DemoObjectWithAtPath_and_OtherObjectWithAtPath_recreate3(), null);
+        fixtureScripts.runFixtureScript(new DemoObjectWithAtPath_and_OtherObjectWithAtPath_create3(), null);
     }
 
     @Test
@@ -60,6 +58,7 @@ public class CategoryRepository_createTaxonomy_IntegTest extends ClassificationM
         // given
         Taxonomy italianColours = (Taxonomy) categoryRepository.findByReference("ITACOL");
         assertThat(italianColours.getName()).isEqualTo("Italian Colours");
+        sessionManagementService.nextSession();
 
         // then
         expectedException.expect(JDODataStoreException.class);

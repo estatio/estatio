@@ -1,29 +1,29 @@
 package org.incode.platform.dom.classification.integtests.dom.classification.fixture;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
+import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
 
-public class ClassificationModule_tearDown extends FixtureScript {
+import org.incode.module.classification.dom.impl.applicability.Applicability;
+import org.incode.module.classification.dom.impl.category.Category;
+import org.incode.module.classification.dom.impl.classification.Classification;
+import org.incode.platform.dom.classification.integtests.dom.classification.dom.classification.demowithatpath.ClassificationForDemoObjectWithAtPath;
+import org.incode.platform.dom.classification.integtests.dom.classification.dom.classification.otherwithatpath.ClassificationForOtherObjectWithAtPath;
+
+public class ClassificationModule_tearDown extends TeardownFixtureAbstract2 {
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
         // classifications
-        isisJdoSupport.executeUpdate("delete from \"exampleDomClassification\".\"ClassificationForOtherObjectWithAtPath\"");
-
-        isisJdoSupport.executeUpdate("delete from \"exampleDomClassification\".\"ClassificationForDemoObjectWithAtPath\"");
+        deleteFrom(ClassificationForOtherObjectWithAtPath.class);
+        deleteFrom(ClassificationForDemoObjectWithAtPath.class);
 
 
         // classification refdata
-        isisJdoSupport.executeUpdate("delete from \"incodeClassification\".\"Classification\"");
-        isisJdoSupport.executeUpdate("delete from \"incodeClassification\".\"Applicability\"");
-        isisJdoSupport.executeUpdate("delete from \"incodeClassification\".\"Category\"");
-
+        deleteFrom(Classification.class);
+        deleteFrom(Applicability.class);
+        deleteFrom(Category.class);
 
     }
 
-
-    @javax.inject.Inject
-    IsisJdoSupport isisJdoSupport;
 
 }

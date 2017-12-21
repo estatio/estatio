@@ -1,23 +1,27 @@
 package org.incode.module.document.fixture.teardown;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
+import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
 
-public class DocumentModule_tearDown extends FixtureScript {
+import org.incode.module.document.dom.impl.applicability.Applicability;
+import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.DocumentAbstract;
+import org.incode.module.document.dom.impl.docs.DocumentTemplate;
+import org.incode.module.document.dom.impl.paperclips.Paperclip;
+import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
+import org.incode.module.document.dom.impl.types.DocumentType;
+
+public class DocumentModule_tearDown extends TeardownFixtureAbstract2 {
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
-        isisJdoSupport.executeUpdate("delete from \"incodeDocuments\".\"Paperclip\"");
-        isisJdoSupport.executeUpdate("delete from \"incodeDocuments\".\"Applicability\"");
-        isisJdoSupport.executeUpdate("delete from \"incodeDocuments\".\"Document\"");
-        isisJdoSupport.executeUpdate("delete from \"incodeDocuments\".\"DocumentTemplate\"");
-        isisJdoSupport.executeUpdate("delete from \"incodeDocuments\".\"DocumentAbstract\"");
-        isisJdoSupport.executeUpdate("delete from \"incodeDocuments\".\"DocumentType\"");
-        isisJdoSupport.executeUpdate("delete from \"incodeDocuments\".\"RenderingStrategy\"");
+        deleteFrom(Paperclip.class);
+        deleteFrom(Applicability.class);
+        deleteFrom(Document.class);
+        deleteFrom(DocumentTemplate.class);
+        deleteFrom(DocumentAbstract.class);
+        deleteFrom(DocumentType.class);
+        deleteFrom(RenderingStrategy.class);
     }
 
-
-    @javax.inject.Inject
-    private IsisJdoSupport isisJdoSupport;
 
 }

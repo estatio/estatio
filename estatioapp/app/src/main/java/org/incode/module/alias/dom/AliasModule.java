@@ -1,6 +1,25 @@
 package org.incode.module.alias.dom;
 
-public final class AliasModule {
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.isis.applib.ModuleAbstract;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
+
+import org.incode.module.alias.dom.impl.Alias;
+
+@XmlRootElement(name = "module")
+public class AliasModule extends ModuleAbstract {
+
+    @Override
+    public FixtureScript getTeardownFixture() {
+        return new TeardownFixtureAbstract2() {
+            @Override
+            protected void execute(final ExecutionContext executionContext) {
+                deleteFrom(Alias.class);
+            }
+        };
+    }
 
     //region > constants
 
@@ -15,10 +34,6 @@ public final class AliasModule {
         public static final int BOOKMARK = 2000;
     }
 
-    //endregion
-
-    //region > constructor
-    private AliasModule(){}
     //endregion
 
     //region > ui event classes

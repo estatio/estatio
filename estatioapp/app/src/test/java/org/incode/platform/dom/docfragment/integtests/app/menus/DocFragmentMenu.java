@@ -58,7 +58,7 @@ public class DocFragmentMenu {
         return docfragmentRepository.create(objectType, name, atPath, templateText);
     }
 
-    public List<String> choices0Create() {
+    public List<String> choices0CreateDocFragment() {
         final Collection<ObjectSpecification> objectSpecifications = specificationLookup.allSpecifications();
         return Lists.newArrayList(
                 FluentIterable.from(objectSpecifications)
@@ -67,7 +67,7 @@ public class DocFragmentMenu {
         );
     }
 
-    public List<String> choices2Create() {
+    public List<String> choices2CreateDocFragment() {
         return Lists.newArrayList("/", "/ITA", "/FRA");
     }
 

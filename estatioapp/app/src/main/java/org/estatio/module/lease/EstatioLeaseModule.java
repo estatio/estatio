@@ -25,19 +25,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.collect.Sets;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.apache.isis.applib.Module;
 import org.apache.isis.applib.ModuleAbstract;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
 
+import org.incode.module.classification.dom.ClassificationModule;
+import org.incode.module.communications.dom.CommunicationsModule;
+import org.incode.module.docfragment.dom.DocFragmentModule;
+import org.incode.module.docrendering.freemarker.dom.FreemarkerDocRenderingModule;
+import org.incode.module.docrendering.stringinterpolator.dom.StringInterpolatorDocRenderingModule;
+import org.incode.module.docrendering.xdocreport.dom.XDocReportDocRenderingModule;
+
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
-import org.estatio.module.classification.IncodeDomClassificationModule;
-import org.estatio.module.communications.IncodeDomCommunicationsModule;
-import org.estatio.module.docfragment.IncodeDomDocFragmentModule;
-import org.estatio.module.docrendering.freemarker.IncodeLibFreemarkerDocRenderingModule;
-import org.estatio.module.docrendering.stringinterpolator.IncodeLibStringInterpolatorDocRenderingModule;
-import org.estatio.module.docrendering.xdocreport.IncodeLibXDocReportDocRenderingModule;
 import org.estatio.module.event.EstatioEventModule;
 import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.invoice.EstatioInvoiceModule;
@@ -76,12 +76,12 @@ public final class EstatioLeaseModule extends ModuleAbstract {
                 new EstatioSettingsModule(),
 
                 // stuff from incode platform, but which we're going to inline back into Estatio
-                new IncodeDomCommunicationsModule(),
-                new IncodeLibFreemarkerDocRenderingModule(),
-                new IncodeLibStringInterpolatorDocRenderingModule(),
-                new IncodeLibXDocReportDocRenderingModule(),
-                new IncodeDomDocFragmentModule(),
-                new IncodeDomClassificationModule()
+                new CommunicationsModule(),
+                new FreemarkerDocRenderingModule(),
+                new StringInterpolatorDocRenderingModule(),
+                new XDocReportDocRenderingModule(),
+                new DocFragmentModule(),
+                new ClassificationModule()
 
                 );
     }

@@ -27,16 +27,16 @@ import com.google.common.collect.Sets;
 import org.apache.isis.applib.Module;
 import org.apache.isis.applib.ModuleAbstract;
 
-import org.estatio.module.country.IncodeDomCountryModule;
+import org.incode.module.country.dom.CountryModule;
 
 /**
- * Not to be confused with {@link IncodeDomCountryModule}.
+ * Not to be confused with {@link CountryModule}.
  */
 @XmlRootElement(name = "module")
 public final class EstatioCountryAppTenancyModule extends ModuleAbstract {
 
     @Override public Set<Module> getDependencies() {
-        return Sets.newHashSet(new IncodeDomCountryModule());
+        return Sets.newHashSet(new CountryModule());
     }
 
 

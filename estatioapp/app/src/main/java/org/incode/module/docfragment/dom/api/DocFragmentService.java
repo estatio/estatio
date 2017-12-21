@@ -1,8 +1,11 @@
 package org.incode.module.docfragment.dom.api;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.inject.Inject;
+
+import com.google.common.collect.FluentIterable;
 
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.annotation.DomainService;
@@ -44,8 +47,18 @@ public class DocFragmentService {
                 final String name)
             throws IOException, TemplateException, RenderException {
 
-        final String atPath = applicationTenancyService.atPathFor(domainObject);
+        final String atPath = atPathFor(domainObject);
         return render(domainObject, name, atPath);
+    }
+
+    public String atPathFor(final Object domainObject) {
+        for (ApplicationTenancyService applicationTenancyService : applicationTenancyServices) {
+            final String atPathFor = applicationTenancyService.atPathFor(domainObject);
+            if(atPathFor != null) {
+                return atPathFor;
+            }
+        }
+        return null;
     }
 
     /**
@@ -86,6 +99,6 @@ public class DocFragmentService {
     @Inject
     MetaModelService3 metaModelService3;
     @Inject
-    ApplicationTenancyService applicationTenancyService;
+    List<ApplicationTenancyService> applicationTenancyServices;
 
 }

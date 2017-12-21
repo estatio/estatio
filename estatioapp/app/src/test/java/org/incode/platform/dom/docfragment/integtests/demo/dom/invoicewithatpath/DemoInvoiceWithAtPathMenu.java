@@ -16,7 +16,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
  */
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
-        objectType = "exampleDemo.DemoInvoiceMenu"
+        objectType = "exampleDemoDocFragment.DemoInvoiceMenu"
 )
 @DomainServiceLayout(
         named = "Dummy",

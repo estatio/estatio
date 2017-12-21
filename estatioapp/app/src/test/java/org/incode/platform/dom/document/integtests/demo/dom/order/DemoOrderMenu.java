@@ -22,7 +22,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
         repositoryFor = DemoOrder.class,
-        objectType = "exampleDemo.OrderMenu"
+        objectType = "exampleDemoDocument.OrderMenu"
 )
 @DomainServiceLayout(
         named = "Dummy",

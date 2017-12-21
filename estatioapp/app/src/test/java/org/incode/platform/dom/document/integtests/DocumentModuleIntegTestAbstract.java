@@ -1,34 +1,51 @@
 package org.incode.platform.dom.document.integtests;
 
-import org.junit.BeforeClass;
+import java.util.Set;
 
-import org.apache.isis.core.integtestsupport.IntegrationTestAbstract2;
+import com.google.common.collect.Sets;
 
+import org.apache.isis.applib.Module;
+import org.apache.isis.applib.ModuleAbstract;
+import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
+
+import org.isisaddons.module.command.CommandModule;
 import org.isisaddons.module.fakedata.FakeDataModule;
 
+import org.incode.module.docrendering.freemarker.dom.FreemarkerDocRenderingModule;
+import org.incode.module.docrendering.stringinterpolator.dom.StringInterpolatorDocRenderingModule;
+import org.incode.module.docrendering.xdocreport.dom.XDocReportDocRenderingModule;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.Document_delete;
-import org.incode.platform.dom.document.integtests.app.DocumentModuleAppManifest;
-import org.incode.platform.dom.document.integtests.demo.ExampleDomDemoDomSubmodule;
+import org.incode.platform.dom.document.integtests.app.DocumentAppModule;
 import org.incode.platform.dom.document.integtests.demo.dom.demowithurl.DemoObjectWithUrl;
 import org.incode.platform.dom.document.integtests.demo.dom.other.OtherObject;
+import org.incode.platform.dom.document.integtests.dom.document.DocumentModuleIntegrationSubmodule;
 import org.incode.platform.dom.document.integtests.dom.document.dom.paperclips.demowithurl.PaperclipForDemoObjectWithUrl;
 import org.incode.platform.dom.document.integtests.dom.document.dom.paperclips.other.PaperclipForOtherObject;
 
-public abstract class DocumentModuleIntegTestAbstract extends IntegrationTestAbstract2 {
+public abstract class DocumentModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
-    @BeforeClass
-    public static void initClass() {
-        bootstrapUsing(
-                DocumentModuleAppManifest.BUILDER.
-                        withAdditionalModules(
-                                ExampleDomDemoDomSubmodule.class,
-                                DocumentModuleIntegTestAbstract.class,
-                                FakeDataModule.class
-                        )
-                        .build());
+    public static ModuleAbstract module() {
+        return new DocumentModuleIntegrationSubmodule() {
+                    @Override
+                    public Set<Module> getDependencies() {
+                        return Sets.newHashSet(
+                                new FreemarkerDocRenderingModule(),
+                                new StringInterpolatorDocRenderingModule(),
+                                new XDocReportDocRenderingModule()
+                        );
+                    }
+                }
+                .withAdditionalModules(
+                        DocumentAppModule.class,
+                        CommandModule.class,
+                        DocumentModuleIntegTestAbstract.class,
+                        FakeDataModule.class);
     }
 
+    protected DocumentModuleIntegTestAbstract() {
+        super(module());
+    }
 
     protected Document_delete _delete(final Document document) {
         return mixin(Document_delete.class, document);

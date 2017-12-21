@@ -22,7 +22,7 @@ import org.apache.isis.applib.util.ObjectContracts;
 
 import org.isisaddons.module.freemarker.dom.service.FreeMarkerService;
 
-import org.incode.module.docfragment.dom.DocFragmentModuleDomModule;
+import org.incode.module.docfragment.dom.DocFragmentModule;
 import org.incode.module.docfragment.dom.types.AtPathType;
 import org.incode.module.docfragment.dom.types.DocFragmentNameType;
 import org.incode.module.docfragment.dom.types.ObjectTypeType;
@@ -72,11 +72,11 @@ public class DocFragment implements Comparable<DocFragment> {
 
     //region > domain event classes
     public static abstract class PropertyDomainEvent<T>
-            extends DocFragmentModuleDomModule.PropertyDomainEvent<DocFragment, T> { }
+            extends DocFragmentModule.PropertyDomainEvent<DocFragment, T> { }
     public static abstract class CollectionDomainEvent<T>
-            extends DocFragmentModuleDomModule.CollectionDomainEvent<DocFragment, T> { }
+            extends DocFragmentModule.CollectionDomainEvent<DocFragment, T> { }
     public static abstract class ActionDomainEvent
-            extends DocFragmentModuleDomModule.ActionDomainEvent<DocFragment> { }
+            extends DocFragmentModule.ActionDomainEvent<DocFragment> { }
     //endregion
 
     //region > constructor

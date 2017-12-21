@@ -7,7 +7,7 @@ import org.apache.isis.applib.AppManifestAbstract;
  */
 public class ExampleDomModuleCommunicationsDomManifest extends AppManifestAbstract {
 
-    public static final Builder BUILDER = Builder.forModules(ExampleDomModuleCommunicationsModule.class);
+    public static final Builder BUILDER = Builder.forModules(CommunicationsModuleIntegrationSubmodule.class);
 
     public ExampleDomModuleCommunicationsDomManifest() {
         super(BUILDER);

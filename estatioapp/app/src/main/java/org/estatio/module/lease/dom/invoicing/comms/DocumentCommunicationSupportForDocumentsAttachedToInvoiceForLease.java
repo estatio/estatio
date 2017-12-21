@@ -88,9 +88,6 @@ public class DocumentCommunicationSupportForDocumentsAttachedToInvoiceForLease i
                 addTo(invoice, header, channelType);
             }
         }
-        if(header.getToChoices().isEmpty()) {
-            header.setDisabledReason("Could not find a communication channel to use");
-        }
     }
 
     private <T extends CommunicationChannel> void addTo(

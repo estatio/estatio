@@ -22,7 +22,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType=IdentityType.DATASTORE,
-        schema="exampleDemo"
+        schema="exampleDemoAlias"
 )
 @javax.jdo.annotations.DatastoreIdentity(strategy= IdGeneratorStrategy.IDENTITY, column = "id")
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column = "version")
@@ -30,7 +30,7 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByName", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.incode.domainapp.example.dom.demo.dom.demo.DemoObject "
+                        + "FROM org.incode.platform.dom.alias.integtests.demo.dom.demo.DemoObject "
                         + "WHERE name.indexOf(:name) >= 0 ")
 })
 

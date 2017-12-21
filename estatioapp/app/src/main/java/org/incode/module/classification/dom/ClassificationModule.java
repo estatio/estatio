@@ -1,11 +1,34 @@
 package org.incode.module.classification.dom;
 
-public final class ClassificationModule {
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.isis.applib.ModuleAbstract;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
+
+import org.incode.module.classification.dom.impl.applicability.Applicability;
+import org.incode.module.classification.dom.impl.category.Category;
+import org.incode.module.classification.dom.impl.classification.Classification;
+
+@XmlRootElement(name = "module")
+public class ClassificationModule extends ModuleAbstract {
+
+    @Override
+    public FixtureScript getTeardownFixture() {
+        return new TeardownFixtureAbstract2() {
+
+            @Override
+            protected void execute(final FixtureScript.ExecutionContext executionContext) {
+                deleteFrom(Classification.class);
+                deleteFrom(Applicability.class);
+                deleteFrom(Category.class);
+
+            }
+        };
+    }
 
     //region > constants
-
     public static class JdoColumnLength {
-
 
         private JdoColumnLength(){}
 
@@ -20,12 +43,6 @@ public final class ClassificationModule {
 
         public static final int BOOKMARK = 2000;
     }
-
-
-    //endregion
-
-    //region > constructor
-    private ClassificationModule(){}
     //endregion
 
     //region > ui event classes

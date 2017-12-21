@@ -15,7 +15,7 @@ import org.apache.isis.applib.services.xactn.TransactionService;
 import org.incode.platform.dom.docfragment.integtests.DocFragmentModuleIntegTestAbstract;
 import org.incode.platform.dom.docfragment.integtests.demo.dom.invoicewithatpath.DemoInvoiceWithAtPath;
 import org.incode.platform.dom.docfragment.integtests.demo.fixture.data.DemoInvoiceWithAtPathData;
-import org.incode.platform.dom.docfragment.integtests.dom.docfragment.fixture.DemoCustomer_and_DemoInvoiceWithAtPath_and_fragments_recreate;
+import org.incode.platform.dom.docfragment.integtests.dom.docfragment.fixture.DemoCustomer_and_DemoInvoiceWithAtPath_and_fragments_create;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -34,7 +34,7 @@ public class DocFragmentService_IntegTest extends DocFragmentModuleIntegTestAbst
     public void setUp() throws Exception {
 
         // given
-        fixtureScripts.runFixtureScript(new DemoCustomer_and_DemoInvoiceWithAtPath_and_fragments_recreate(), null);
+        fixtureScripts.runFixtureScript(new DemoCustomer_and_DemoInvoiceWithAtPath_and_fragments_create(), null);
         transactionService.nextTransaction();
 
         defaultLocale = Locale.getDefault();
@@ -45,7 +45,9 @@ public class DocFragmentService_IntegTest extends DocFragmentModuleIntegTestAbst
 
     @After
     public void tearDown() throws Exception {
-        Locale.setDefault(defaultLocale);
+        if(defaultLocale != null) {
+            Locale.setDefault(defaultLocale);
+        }
     }
 
 

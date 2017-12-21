@@ -25,6 +25,7 @@ import org.incode.platform.dom.alias.integtests.AliasModuleIntegTestAbstract;
 import org.incode.platform.dom.alias.integtests.demo.dom.demo.DemoObjectMenu;
 import org.incode.platform.dom.alias.integtests.dom.alias.fixture.DemoObject_withAliases_tearDown;
 
+import static org.apache.isis.core.integtestsupport.ThrowableMatchers.causedBy;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class T_addAlias_IntegTest extends AliasModuleIntegTestAbstract {
@@ -55,7 +56,7 @@ public class T_addAlias_IntegTest extends AliasModuleIntegTestAbstract {
         }
 
         @Test
-        public void can_add_alias() throws Exception {
+        public void can_add_alias() {
 
             // when
             final Collection<String> atPaths = applicationTenancyRepository.atPathsFor(aliased);
@@ -73,7 +74,7 @@ public class T_addAlias_IntegTest extends AliasModuleIntegTestAbstract {
         }
 
         @Test
-        public void can_add_to_same_ref_to_same_atPath_and_different_aliasTypes() throws Exception {
+        public void can_add_to_same_ref_to_same_atPath_and_different_aliasTypes() {
 
             // when
             final Collection<String> atPaths = applicationTenancyRepository.atPathsFor(aliased);
@@ -95,7 +96,7 @@ public class T_addAlias_IntegTest extends AliasModuleIntegTestAbstract {
         }
 
         @Test
-        public void can_add_to_same_ref_to_different_atPaths_and_same_aliasType() throws Exception {
+        public void can_add_to_same_ref_to_different_atPaths_and_same_aliasType() {
 
             // when
             final Collection<String> atPaths = applicationTenancyRepository.atPathsFor(aliased);
@@ -116,7 +117,7 @@ public class T_addAlias_IntegTest extends AliasModuleIntegTestAbstract {
         }
 
         @Test
-        public void cannot_add_to_same_ref_to_same_atPath_and_same_aliasType() throws Exception {
+        public void cannot_add_to_same_ref_to_same_atPath_and_same_aliasType() {
 
             expectedExceptions.expectCause(causedBy(SQLIntegrityConstraintViolationException.class));
 
@@ -139,7 +140,7 @@ public class T_addAlias_IntegTest extends AliasModuleIntegTestAbstract {
         }
 
         @Test
-        public void cannot_add_to_different_ref_to_same_atPath_and_same_aliasTypes() throws Exception {
+        public void cannot_add_to_different_ref_to_same_atPath_and_same_aliasTypes() {
 
             expectedExceptions.expectCause(causedBy(SQLIntegrityConstraintViolationException.class));
 
@@ -180,7 +181,7 @@ public class T_addAlias_IntegTest extends AliasModuleIntegTestAbstract {
         Subscriber subscriber;
 
         @Test
-        public void fires_event() throws Exception {
+        public void fires_event() {
 
             // given
             assertThat(wrap(mixinAliases(aliased)).$$()).isEmpty();

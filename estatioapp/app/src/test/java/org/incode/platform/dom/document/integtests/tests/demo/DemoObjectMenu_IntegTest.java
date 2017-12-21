@@ -12,7 +12,7 @@ import org.incode.platform.dom.document.integtests.DocumentModuleIntegTestAbstra
 import org.incode.platform.dom.document.integtests.demo.dom.demowithurl.DemoObjectWithUrl;
 import org.incode.platform.dom.document.integtests.demo.dom.demowithurl.DemoObjectWithUrlMenu;
 import org.incode.platform.dom.document.integtests.demo.fixture.setup.DemoObjectWithUrl_createUpTo5_fakeData;
-import org.incode.platform.dom.document.integtests.dom.document.fixture.DemoModule_and_DocTypesAndTemplates_tearDown;
+import org.incode.platform.dom.document.integtests.demo.fixture.teardown.sub.DemoObjectWithUrl_tearDown;
 import org.incode.platform.dom.document.integtests.dom.document.fixture.seed.DocumentTypeAndTemplatesApplicableForDemoObjectFixture;
 
 public class DemoObjectMenu_IntegTest extends DocumentModuleIntegTestAbstract {
@@ -24,8 +24,8 @@ public class DemoObjectMenu_IntegTest extends DocumentModuleIntegTestAbstract {
 
     @Before
     public void setUpData() throws Exception {
-        fixtureScripts.runFixtureScript(new DemoModule_and_DocTypesAndTemplates_tearDown(), null);
         fixtureScripts.runFixtureScript(new DocumentTypeAndTemplatesApplicableForDemoObjectFixture(), null);
+        fixtureScripts.runFixtureScript(new DemoObjectWithUrl_tearDown(), null);
         fixtureScripts.runFixtureScript(new DemoObjectWithUrl_createUpTo5_fakeData().setNumber(NUMBER), null);
     }
 

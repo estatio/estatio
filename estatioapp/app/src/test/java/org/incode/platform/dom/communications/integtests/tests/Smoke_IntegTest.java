@@ -3,10 +3,12 @@ package org.incode.platform.dom.communications.integtests.tests;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Lists;
 
 import org.junit.Test;
 
@@ -27,19 +29,20 @@ import org.incode.module.communications.dom.mixins.Document_sendByPost;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
-import org.incode.platform.dom.communications.integtests.CommunicationsIntegTestAbstract;
+import org.incode.platform.dom.communications.integtests.CommunicationsModuleIntegTestAbstract;
 import org.incode.platform.dom.communications.integtests.app.services.fakeemail.EmailMessage;
 import org.incode.platform.dom.communications.integtests.app.services.fakeemail.FakeEmailService;
 import org.incode.platform.dom.communications.integtests.demo.dom.demowithnotes.DemoObjectWithNotes;
 import org.incode.platform.dom.communications.integtests.demo.dom.demowithnotes.DemoObjectWithNotesMenu;
 import org.incode.platform.dom.communications.integtests.demo.dom.invoice.DemoInvoice;
 import org.incode.platform.dom.communications.integtests.demo.dom.invoice.DemoInvoiceRepository;
+import org.incode.platform.dom.communications.integtests.dom.communications.fixture.DemoObjectWithNotes_and_DemoInvoice_and_docs_and_comms_create;
 import org.incode.platform.dom.communications.integtests.dom.communications.fixture.DemoObjectWithNotes_and_DemoInvoice_and_docs_and_comms_recreate;
 import org.incode.platform.dom.communications.integtests.dom.communications.fixture.data.democust2.DemoObjectWithNote_and_DemoInvoice_create3;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
-public class Smoke_IntegTest extends CommunicationsIntegTestAbstract {
+public class Smoke_IntegTest extends CommunicationsModuleIntegTestAbstract {
 
     @Inject
     FixtureScripts fixtureScripts;
@@ -64,7 +67,7 @@ public class Smoke_IntegTest extends CommunicationsIntegTestAbstract {
     public void can_send_email() throws Exception {
 
         // given
-        fixtureScripts.runFixtureScript(new DemoObjectWithNotes_and_DemoInvoice_and_docs_and_comms_recreate(), null);
+        fixtureScripts.runFixtureScript(new DemoObjectWithNotes_and_DemoInvoice_and_docs_and_comms_create(), null);
         transactionService.nextTransaction();
 
         // and so given customer with an email
@@ -102,13 +105,11 @@ public class Smoke_IntegTest extends CommunicationsIntegTestAbstract {
         assertThat(comm.getSubject()).isNotNull();
         assertThat(comm.getSentAt()).isNull();
 
-        // hmm, using Java8 equivalent yields no results.
-        // My guess is something to do with lazy loading, but I don't really understand why...
         final List<CommunicationChannel> correspondentChannels =
-                FluentIterable.from(comm.getCorrespondents())
-                        .transform(CommChannelRole::getChannel)
+                Lists.newArrayList(comm.getCorrespondents()).stream()
+                        .map(CommChannelRole::getChannel)
                         .filter(Objects::nonNull)
-                        .toList();
+                        .collect(Collectors.toList());
         assertThat(correspondentChannels).contains(fredEmail);
 
         List<EmailMessage> emailMessages = fakeEmailService.listSentEmails();

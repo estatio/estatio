@@ -1,17 +1,15 @@
 package org.incode.platform.dom.docfragment.integtests.dom.docfragment.fixture.sub;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
+import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
 
-public class DocFragment_tearDown extends FixtureScript {
+import org.incode.module.docfragment.dom.impl.DocFragment;
+
+public class DocFragment_tearDown extends TeardownFixtureAbstract2 {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        isisJdoSupport.executeUpdate("delete from \"incodeDocFragment\".\"DocFragment\"");
+        deleteFrom(DocFragment.class);
     }
 
-
-    @javax.inject.Inject
-    IsisJdoSupport isisJdoSupport;
 
 }

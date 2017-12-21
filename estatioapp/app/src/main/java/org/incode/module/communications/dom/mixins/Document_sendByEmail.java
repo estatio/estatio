@@ -214,13 +214,16 @@ public class Document_sendByEmail {
 
     private CommHeaderForEmail determineEmailHeader() {
         return queryResultsCache.execute(() -> {
-            final CommHeaderForEmail commHeaderForEmail = new CommHeaderForEmail();
+            final CommHeaderForEmail header = new CommHeaderForEmail();
             if(documentCommunicationSupports != null) {
                 for (DocumentCommunicationSupport emailSupport : documentCommunicationSupports) {
-                    emailSupport.inferEmailHeaderFor(document, commHeaderForEmail);;
+                    emailSupport.inferEmailHeaderFor(document, header);
+                }
+                if(header.getToChoices().isEmpty()) {
+                    header.setDisabledReason("Could not find a communication channel to use");
                 }
             }
-            return commHeaderForEmail;
+            return header;
         }, Document_sendByEmail.class, "determineEmailHeader", document);
     }
 

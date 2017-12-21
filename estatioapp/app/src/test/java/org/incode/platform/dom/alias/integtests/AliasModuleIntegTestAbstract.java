@@ -2,29 +2,26 @@ package org.incode.platform.dom.alias.integtests;
 
 import javax.inject.Inject;
 
-import org.junit.BeforeClass;
-
-import org.apache.isis.core.integtestsupport.IntegrationTestAbstract2;
+import org.apache.isis.applib.ModuleAbstract;
+import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
 
 import org.isisaddons.module.fakedata.FakeDataModule;
 import org.isisaddons.module.fakedata.dom.FakeDataService;
 
-import org.incode.platform.dom.alias.integtests.app.AliasModuleAppManifest;
-import org.incode.platform.dom.alias.integtests.demo.ExampleDomDemoDomSubmodule;
+import org.incode.platform.dom.alias.integtests.dom.alias.AliasModuleIntegrationSubmodule;
 import org.incode.platform.dom.alias.integtests.dom.alias.dom.AliasForDemoObject;
+import org.incode.platform.dom.alias.integtests.tests.alias.T_addAlias_IntegTest;
 
-public abstract class AliasModuleIntegTestAbstract extends IntegrationTestAbstract2 {
+public abstract class AliasModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
-    @BeforeClass
-    public static void initClass() {
-        bootstrapUsing(
-                AliasModuleAppManifest.BUILDER.
-                        withAdditionalModules(
-                                ExampleDomDemoDomSubmodule.class,
-                                AliasModuleIntegTestAbstract.class,
-                                FakeDataModule.class
-                        )
-                        .build());
+    public static ModuleAbstract module() {
+        return new AliasModuleIntegrationSubmodule()
+                    .withAdditionalServices(T_addAlias_IntegTest.DomainEventIntegTest.Subscriber.class)
+                    .withAdditionalModules(FakeDataModule.class);
+    }
+
+    protected AliasModuleIntegTestAbstract() {
+        super(module());
     }
 
     @Inject

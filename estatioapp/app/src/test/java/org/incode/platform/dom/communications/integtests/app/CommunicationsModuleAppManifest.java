@@ -7,21 +7,21 @@ import org.isisaddons.module.fakedata.FakeDataModule;
 import org.isisaddons.module.freemarker.dom.FreeMarkerModule;
 import org.isisaddons.module.pdfbox.dom.PdfBoxModule;
 
-import org.incode.module.communications.dom.CommunicationsModuleDomModule;
+import org.incode.module.communications.dom.CommunicationsModule;
 import org.incode.module.country.dom.CountryModule;
 import org.incode.module.document.dom.DocumentModule;
 import org.incode.platform.dom.communications.integtests.app.services.DemoAppApplicationModuleServicesSubmodule;
-import org.incode.platform.dom.communications.integtests.demo.ExampleDomDemoDomSubmodule;
+import org.incode.platform.dom.communications.integtests.demo.CommunicationsModuleDemoDomSubmodule;
 
 /**
  * Bootstrap the application.
  */
 public class CommunicationsModuleAppManifest extends AppManifestAbstract {
 
-    public static final Builder BUILDER = Builder.forModules(CommunicationsModuleDomModule.class,
+    public static final Builder BUILDER = Builder.forModules(CommunicationsModule.class,
             DocumentModule.class,
             CountryModule.class,
-            ExampleDomDemoDomSubmodule.class,
+            CommunicationsModuleDemoDomSubmodule.class,
             DemoAppApplicationModuleServicesSubmodule.class,
             PdfBoxModule.class,
             CommandModule.class,

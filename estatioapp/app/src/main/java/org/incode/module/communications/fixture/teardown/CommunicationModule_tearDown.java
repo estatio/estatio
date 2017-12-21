@@ -1,24 +1,23 @@
 package org.incode.module.communications.fixture.teardown;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
+import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
 
-public class CommunicationModule_tearDown extends FixtureScript {
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerLink;
+import org.incode.module.communications.dom.impl.comms.CommChannelRole;
+import org.incode.module.communications.dom.impl.comms.Communication;
+import org.incode.module.communications.dom.impl.paperclips.PaperclipForCommunication;
+
+public class CommunicationModule_tearDown extends TeardownFixtureAbstract2 {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-
-        isisJdoSupport.executeUpdate("delete from \"IncodeCommunications\".\"CommChannelRole\"");
-        isisJdoSupport.executeUpdate("delete from \"IncodeCommunications\".\"PaperclipForCommunication\"");
-        isisJdoSupport.executeUpdate("delete from \"IncodeCommunications\".\"Communication\"");
-
-        isisJdoSupport.executeUpdate("delete from \"IncodeCommunications\".\"CommunicationChannelOwnerLink\"");
-        isisJdoSupport.executeUpdate("delete from \"IncodeCommunications\".\"CommunicationChannel\"");
-
+        deleteFrom(CommChannelRole.class);
+        deleteFrom(PaperclipForCommunication.class);
+        deleteFrom(Communication.class);
+        deleteFrom(CommunicationChannelOwnerLink.class);
+        deleteFrom(CommunicationChannel.class);
     }
 
-
-    @javax.inject.Inject
-    private IsisJdoSupport isisJdoSupport;
 
 }

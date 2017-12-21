@@ -19,7 +19,7 @@ import org.isisaddons.module.command.dom.CommandJdo;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
-        objectType = "incodeCommunicationsDemo.FakeScheduler"
+        objectType = "incodeDocumentDemo.FakeScheduler"
 )
 @DomainServiceLayout(
         named = "Fakes",

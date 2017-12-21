@@ -17,13 +17,13 @@ import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.incode.module.communications.dom.impl.comms.Communication;
 import org.incode.module.communications.dom.impl.comms.CommunicationRepository;
-import org.incode.platform.dom.communications.integtests.CommunicationsIntegTestAbstract;
+import org.incode.platform.dom.communications.integtests.CommunicationsModuleIntegTestAbstract;
 import org.incode.platform.dom.communications.integtests.demo.dom.demowithnotes.DemoObjectWithNotes;
 import org.incode.platform.dom.communications.integtests.demo.dom.demowithnotes.DemoObjectWithNotesMenu;
 import org.incode.platform.dom.communications.integtests.dom.communications.fixture.DemoObjectWithNotes_and_DemoInvoice_and_docs_and_comms_recreate;
 import org.incode.platform.dom.communications.integtests.dom.communications.fixture.data.democust2.DemoObjectWithNote_and_DemoInvoice_create3;
 
-public class CommunicationChannelSubscription_Integtest extends CommunicationsIntegTestAbstract {
+public class CommunicationChannelSubscription_Integtest extends CommunicationsModuleIntegTestAbstract {
 
     @Inject CommunicationChannelRepository communicationChannelRepository;
 
