@@ -27,7 +27,7 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
+import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
 
 import org.estatio.module.settings.dom.ApplicationSettingCreator;
 

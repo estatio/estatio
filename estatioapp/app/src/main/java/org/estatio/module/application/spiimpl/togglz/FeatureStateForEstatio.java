@@ -1,6 +1,6 @@
 package org.estatio.module.application.spiimpl.togglz;
 
-import org.isisaddons.module.settings.dom.ApplicationSetting;
+import org.estatio.module.settings.dom.ApplicationSetting;
 import org.isisaddons.module.togglz.glue.spi.FeatureState;
 
 import org.estatio.module.settings.dom.ApplicationSettingForEstatio;

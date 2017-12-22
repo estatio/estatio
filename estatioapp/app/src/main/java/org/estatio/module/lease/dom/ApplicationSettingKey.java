@@ -20,8 +20,8 @@ package org.estatio.module.lease.dom;
 
 import org.joda.time.LocalDate;
 
-import org.isisaddons.module.settings.dom.ApplicationSetting;
-import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
+import org.estatio.module.settings.dom.ApplicationSetting;
+import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
 
 import org.estatio.module.settings.dom.ApplicationSettingCreator;
 

@@ -28,10 +28,10 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
 
-import org.isisaddons.module.settings.dom.ApplicationSetting;
-import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
-import org.isisaddons.module.settings.dom.SettingAbstract;
-import org.isisaddons.module.settings.dom.SettingType;
+import org.estatio.module.settings.dom.ApplicationSetting;
+import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
+import org.estatio.module.settings.dom.SettingAbstract;
+import org.estatio.module.settings.dom.SettingType;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 

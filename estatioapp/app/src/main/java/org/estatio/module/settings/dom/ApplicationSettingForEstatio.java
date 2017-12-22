@@ -24,8 +24,8 @@ import javax.jdo.annotations.IdentityType;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 
-import org.isisaddons.module.settings.dom.ApplicationSetting;
-import org.isisaddons.module.settings.dom.SettingType;
+import org.estatio.module.settings.dom.ApplicationSetting;
+import org.estatio.module.settings.dom.SettingType;
 
 import org.incode.module.base.dom.types.DescriptionType;
 

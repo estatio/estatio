@@ -30,9 +30,9 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.ClassUnderTest;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import org.isisaddons.module.settings.dom.ApplicationSetting;
-import org.isisaddons.module.settings.dom.SettingAbstract;
-import org.isisaddons.module.settings.dom.SettingType;
+import org.estatio.module.settings.dom.ApplicationSetting;
+import org.estatio.module.settings.dom.SettingAbstract;
+import org.estatio.module.settings.dom.SettingType;
 
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingKey;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;

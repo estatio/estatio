@@ -18,9 +18,6 @@ package org.estatio.module.settings.dom;
 
 import org.joda.time.LocalDate;
 
-import org.isisaddons.module.settings.dom.ApplicationSetting;
-import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
-
 public interface ApplicationSettingCreator {
     void create(ApplicationSettingsServiceRW appSettings);
     ApplicationSetting find(ApplicationSettingsServiceRW appSettings);

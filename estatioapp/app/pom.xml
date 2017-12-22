@@ -186,10 +186,6 @@ language governing permissions and limitations under the License.
             <artifactId>isis-module-servletapi-dom</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.isisaddons.module.settings</groupId>
-            <artifactId>isis-module-settings-dom</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.isisaddons.module.stringinterpolator</groupId>
             <artifactId>isis-module-stringinterpolator-dom</artifactId>
         </dependency>
