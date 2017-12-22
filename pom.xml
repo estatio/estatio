@@ -21,7 +21,8 @@ language governing permissions and limitations under the License.
     <parent>
         <groupId>org.incode</groupId>
         <artifactId>incode-parent</artifactId>
-        <version>1.15.1.2.20171215-1520</version>
+        <!-- NB: also update incode-platform.version property below -->
+        <version>1.15.1.3.20171222-1145</version>
     </parent>
 
     <groupId>org.estatio</groupId>
@@ -29,7 +30,7 @@ language governing permissions and limitations under the License.
     <version>1.24.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Estatio (OS)</name>
+    <name>Estatio (Open Source)</name>
     <description>
         Estatio is modern and flexible property management software, built on Apache Isis.
         It offers real estate professionals and service providers the power and 
@@ -74,7 +75,7 @@ language governing permissions and limitations under the License.
         -->
 
         <!-- NB: also update the parent of this pom -->
-        <incode-platform.version>1.15.1.2.20171215-1520</incode-platform.version>
+        <incode-platform.version>1.15.1.3.20171222-1145</incode-platform.version>
 
         <!-- this is a temporary override, see ECP-431 to remove -->
         <mavenmixin-surefire.version>0.0.5</mavenmixin-surefire.version>

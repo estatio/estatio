@@ -21,132 +21,140 @@
     <set version="3" name="Model 1" hiview="Codemap" active="true" todo="false" list="0" />
   </restructuring>
   <grid-set sep="." version="4.2.12657">
-    <grid name="Diagram 2" enforce="true" locked="true" strict="false" excludes="">
+    <grid name="Diagram 1" enforce="true" locked="true" strict="false">
       <row>
-        <cell name="org" pattern="org.*" vexpanded="true" illegal="false" visibility="public" drill="true">
+        <cell name="estatio" pattern="" vexpanded="true" illegal="false" visibility="public" drill="true">
           <grid>
             <row>
-              <cell name="estatio" pattern="org.estatio.*" vexpanded="true" illegal="false" visibility="public" drill="true">
+              <cell name="app" pattern="" vexpanded="true" illegal="false" visibility="public" drill="true">
                 <grid>
                   <row>
-                    <cell name="app" pattern="org.estatio.app.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="EstatioAppManifestWithDemoFixture" pattern="org.estatio.app.EstatioAppManifestWithDemoFixture" vexpanded="false" illegal="false" visibility="public" drill="true" />
                   </row>
                   <row>
-                    <cell name="module" pattern="org.estatio.module.*" vexpanded="true" illegal="false" visibility="public" drill="true">
-                      <grid>
-                        <row>
-                          <cell name="application" pattern="org.estatio.module.application.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                        </row>
-                        <row>
-                          <cell name="budgetassignment" pattern="org.estatio.module.budgetassignment.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                          <cell name="guarantee" pattern="org.estatio.module.guarantee.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                        </row>
-                        <row>
-                          <cell name="capex" pattern="org.estatio.module.capex.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                          <cell name="lease" pattern="org.estatio.module.lease.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                        </row>
-                        <row>
-                          <cell name="invoice" pattern="org.estatio.module.invoice.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                        </row>
-                        <row>
-                          <cell name="assetfinancial" pattern="org.estatio.module.assetfinancial.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                          <cell name="bankmandate" pattern="org.estatio.module.bankmandate.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                          <cell name="budget" pattern="org.estatio.module.budget.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                          <cell name="registration" pattern="org.estatio.module.registration.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                        </row>
-                        <row>
-                          <cell name="agreement" pattern="org.estatio.module.agreement.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                          <cell name="asset" pattern="org.estatio.module.asset.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                          <cell name="charge" pattern="org.estatio.module.charge.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                          <cell name="financial" pattern="org.estatio.module.financial.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                        </row>
-                        <row>
-                          <cell name="index" pattern="org.estatio.module.index.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                          <cell name="party" pattern="org.estatio.module.party.*" vexpanded="false" illegal="false" visibility="public" drill="true">
-                            <grid>
-                              <row>
-                                <cell name="party" pattern="org.estatio.module.party.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                                <cell name="app" pattern="org.estatio.module.party.app.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                                <cell name="canonical" pattern="org.estatio.module.party.canonical.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                                <cell name="fixtures" pattern="org.estatio.module.party.fixtures.*" vexpanded="true" illegal="false" visibility="public" drill="true">
-                                  <grid>
-                                    <row>
-                                      <cell name="person" pattern="org.estatio.module.party.fixtures.person.*" vexpanded="true" illegal="false" visibility="public" drill="true">
-                                        <grid>
-                                          <row>
-                                            <cell name="builders" pattern="org.estatio.module.party.fixtures.person.builders.?" vexpanded="true" illegal="false" visibility="public" drill="true">
-                                              <grid>
-                                                <row>
-                                                  <cell name="PersonAndApplicationUserBuilder" pattern="org.estatio.module.party.fixtures.person.builders.PersonAndApplicationUserBuilder" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                                                </row>
-                                                <row>
-                                                  <cell name="ApplicationUserBuilder" pattern="org.estatio.module.party.fixtures.appuser.ApplicationUserBuilder" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                                                  <cell name="PersonBuilder" pattern="org.estatio.module.party.fixtures.person.builders.PersonBuilder" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                                                </row>
-                                              </grid>
-                                            </cell>
-                                          </row>
-                                        </grid>
-                                      </cell>
-                                    </row>
-                                    <row>
-                                      <cell name="fixtures" pattern="org.estatio.module.party.fixtures.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                                      <cell name="numerator" pattern="org.estatio.module.party.fixtures.numerator.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                                      <cell name="organisation" pattern="org.estatio.module.party.fixtures.organisation.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                                    </row>
-                                  </grid>
-                                </cell>
-                                <cell name="imports" pattern="org.estatio.module.party.imports.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                              </row>
-                              <row>
-                                <cell name="dom" pattern="org.estatio.module.party.dom.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                              </row>
-                            </grid>
-                          </cell>
-                          <cell name="tax" pattern="org.estatio.module.tax.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                        </row>
-                        <row>
-                          <cell name="communications" pattern="org.estatio.module.communications.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                          <cell name="countryapptenancy" pattern="org.estatio.module.countryapptenancy.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                          <cell name="link" pattern="org.estatio.module.link.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                        </row>
-                        <row>
-                          <cell name="country" pattern="org.estatio.module.country.*" vexpanded="true" illegal="false" visibility="public" drill="true">
-                            <grid>
-                              <row>
-                                <cell name="country" pattern="org.estatio.module.country.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                              </row>
-                              <row>
-                                <cell name="fixtures" pattern="org.estatio.module.country.fixtures.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                              </row>
-                            </grid>
-                          </cell>
-                          <cell name="currency" pattern="org.estatio.module.currency.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                          <cell name="docrendering" pattern="org.estatio.module.docrendering.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                          <cell name="event" pattern="org.estatio.module.event.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                          <cell name="numerator" pattern="org.estatio.module.numerator.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                          <cell name="settings" pattern="org.estatio.module.settings.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                        </row>
-                        <row>
-                          <cell name="base" pattern="org.estatio.module.base.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                          <cell name="classification" pattern="org.estatio.module.classification.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                          <cell name="docfragment" pattern="org.estatio.module.docfragment.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                          <cell name="document" pattern="org.estatio.module.document.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                          <cell name="fake" pattern="org.estatio.module.fake.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
-                        </row>
-                      </grid>
-                    </cell>
+                    <cell name="EstatioAppManifest" pattern="org.estatio.app.EstatioAppManifest" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="EstatioAppModule" pattern="org.estatio.app.EstatioAppModule" vexpanded="false" illegal="false" visibility="public" drill="true" />
                   </row>
                 </grid>
               </cell>
             </row>
             <row>
-              <cell name="isisaddons" pattern="org.isisaddons.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+              <cell name="module" pattern="" vexpanded="true" illegal="false" visibility="public" drill="true">
+                <grid>
+                  <row>
+                    <cell name="application" pattern="org.estatio.module.application.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                  </row>
+                  <row>
+                    <cell name="budgetassignment" pattern="org.estatio.module.budgetassignment.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="guarantee" pattern="org.estatio.module.guarantee.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                  </row>
+                  <row>
+                    <cell name="capex" pattern="org.estatio.module.capex.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="lease" pattern="org.estatio.module.lease.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                  </row>
+                  <row>
+                    <cell name="invoice" pattern="org.estatio.module.invoice.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                  </row>
+                  <row>
+                    <cell name="assetfinancial" pattern="org.estatio.module.assetfinancial.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="bankmandate" pattern="org.estatio.module.bankmandate.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="budget" pattern="org.estatio.module.budget.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="fake" pattern="org.estatio.module.fake.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="registration" pattern="org.estatio.module.registration.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                  </row>
+                  <row>
+                    <cell name="agreement" pattern="org.estatio.module.agreement.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="asset" pattern="org.estatio.module.asset.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="charge" pattern="org.estatio.module.charge.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="financial" pattern="org.estatio.module.financial.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                  </row>
+                  <row>
+                    <cell name="index" pattern="org.estatio.module.index.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="link" pattern="org.estatio.module.link.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="party" pattern="org.estatio.module.party.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="tax" pattern="org.estatio.module.tax.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                  </row>
+                  <row>
+                    <cell name="countryapptenancy" pattern="org.estatio.module.countryapptenancy.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="currency" pattern="org.estatio.module.currency.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="event" pattern="org.estatio.module.event.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="numerator" pattern="org.estatio.module.numerator.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="settings" pattern="org.estatio.module.settings.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                  </row>
+                  <row>
+                    <cell name="base" pattern="org.estatio.module.base.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                  </row>
+                </grid>
+              </cell>
             </row>
           </grid>
         </cell>
       </row>
-      <description>Generated from LSM "Model 1"</description>
+      <row>
+        <cell name="incode" pattern="" vexpanded="true" illegal="false" visibility="public" drill="true">
+          <grid>
+            <row>
+              <cell name="module" pattern="" vexpanded="true" illegal="false" visibility="public" drill="true">
+                <grid>
+                  <row>
+                    <cell name="communications" pattern="org.incode.module.communications.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                  </row>
+                  <row>
+                    <cell name="country" pattern="org.incode.module.country.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="docrendering" pattern="org.incode.module.docrendering.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                  </row>
+                  <row>
+                    <cell name="alias" pattern="org.incode.module.alias.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="apptenancy" pattern="org.incode.module.apptenancy.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="classification" pattern="org.incode.module.classification.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="docfragment" pattern="org.incode.module.docfragment.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="document" pattern="org.incode.module.document.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                  </row>
+                </grid>
+              </cell>
+            </row>
+          </grid>
+        </cell>
+      </row>
+      <row>
+        <cell name="isisaddons" pattern="" vexpanded="true" illegal="false" visibility="public" drill="true">
+          <grid>
+            <row>
+              <cell name="module" pattern="" vexpanded="true" illegal="false" visibility="public" drill="true">
+                <grid>
+                  <row>
+                    <cell name="audit" pattern="org.isisaddons.module.audit.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="command" pattern="org.isisaddons.module.command.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="excel" pattern="org.isisaddons.module.excel.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="fakedata" pattern="org.isisaddons.module.fakedata.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="freemarker" pattern="org.isisaddons.module.freemarker.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="pdfbox" pattern="org.isisaddons.module.pdfbox.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="poly" pattern="org.isisaddons.module.poly.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="publishmq" pattern="org.isisaddons.module.publishmq.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="security" pattern="org.isisaddons.module.security.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="servletapi" pattern="org.isisaddons.module.servletapi.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="sessionlogger" pattern="org.isisaddons.module.sessionlogger.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="stringinterpolator" pattern="org.isisaddons.module.stringinterpolator.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="togglz" pattern="org.isisaddons.module.togglz.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="xdocreport" pattern="org.isisaddons.module.xdocreport.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                  </row>
+                </grid>
+              </cell>
+              <cell name="wicket" pattern="" vexpanded="true" illegal="false" visibility="public" drill="true">
+                <grid>
+                  <row>
+                    <cell name="excel" pattern="org.isisaddons.wicket.excel.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="fullcalendar2" pattern="org.isisaddons.wicket.fullcalendar2.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="gmap3" pattern="org.isisaddons.wicket.gmap3.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                    <cell name="pdfjs" pattern="org.isisaddons.wicket.pdfjs.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                  </row>
+                </grid>
+              </cell>
+            </row>
+          </grid>
+        </cell>
+      </row>
+      <description>Top-level breakout (depth=3)</description>
     </grid>
   </grid-set>
 </local-project>
