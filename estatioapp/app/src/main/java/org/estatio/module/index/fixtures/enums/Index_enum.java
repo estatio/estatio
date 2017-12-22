@@ -25,7 +25,7 @@ import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexRepository;
 import org.estatio.module.index.fixtures.builders.IndexBuilder;

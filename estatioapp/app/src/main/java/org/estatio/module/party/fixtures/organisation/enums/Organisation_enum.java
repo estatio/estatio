@@ -22,7 +22,7 @@ import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -31,11 +31,11 @@ import org.estatio.module.party.fixtures.organisation.builders.OrganisationBuild
 
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import static org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum.Fr;
-import static org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum.Gb;
-import static org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum.It;
-import static org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum.Nl;
-import static org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum.Se;
+import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Fr;
+import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Gb;
+import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.It;
+import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Nl;
+import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Se;
 
 @Getter
 @Accessors(chain = true)

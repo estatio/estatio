@@ -68,7 +68,7 @@ import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
 import org.estatio.module.party.fixtures.numerator.enums.NumeratorForOrganisation_enum;
 import org.estatio.module.tax.EstatioTaxModule;
 
-import static org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum.Global;
+import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Global;
 
 public class EstatioDemoFixture extends DiscoverableFixtureScript {
 

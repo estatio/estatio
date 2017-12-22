@@ -29,7 +29,7 @@ import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.capex.fixtures.project.builders.ProjectBuilder;
@@ -41,8 +41,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import static org.estatio.module.asset.fixtures.property.enums.Property_enum.OxfGb;
-import static org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum.Gb;
-import static org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum.Nl;
+import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Gb;
+import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Nl;
 import static org.incode.module.base.integtests.VT.bd;
 import static org.incode.module.base.integtests.VT.ld;
 

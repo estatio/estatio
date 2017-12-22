@@ -1,4 +1,4 @@
-package org.estatio.module.base.fixtures.security.apptenancy.enums;
+package org.incode.module.apptenancy.fixtures.enums;
 
 import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
@@ -8,7 +8,7 @@ import org.apache.isis.applib.fixturescripts.setup.PersonaEnumPersistAll;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.estatio.module.base.fixtures.security.apptenancy.builders.ApplicationTenancyBuilder;
+import org.incode.module.apptenancy.fixtures.builders.ApplicationTenancyBuilder;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

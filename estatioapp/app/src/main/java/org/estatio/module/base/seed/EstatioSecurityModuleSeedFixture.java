@@ -21,7 +21,7 @@ import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 import org.isisaddons.module.security.seed.SeedUsersAndRolesFixtureScript;
 import org.isisaddons.module.togglz.glue.seed.TogglzModuleAdminRole;
 
-import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.estatio.module.base.fixtures.security.perms.personas.EstatioRolesAndPermissions;
 import org.estatio.module.base.fixtures.security.userrole.personas.EstatioAdmin_Has_EstatioAdminRole;
 import org.estatio.module.base.fixtures.security.userrole.personas.EstatioAdmin_Has_EstatioSuperuserRole;

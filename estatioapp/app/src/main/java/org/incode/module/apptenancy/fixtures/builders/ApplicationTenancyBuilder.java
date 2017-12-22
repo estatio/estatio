@@ -1,4 +1,4 @@
-package org.estatio.module.base.fixtures.security.apptenancy.builders;
+package org.incode.module.apptenancy.fixtures.builders;
 
 import javax.inject.Inject;
 

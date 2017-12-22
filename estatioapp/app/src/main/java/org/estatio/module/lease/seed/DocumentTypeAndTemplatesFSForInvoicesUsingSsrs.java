@@ -42,7 +42,7 @@ import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 
-import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;

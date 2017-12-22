@@ -47,7 +47,7 @@ import org.isisaddons.wicket.pdfjs.IncodeWktPdfJsModule;
 
 import org.incode.module.base.services.BaseServicesModule;
 
-import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.estatio.module.base.fixtures.security.perms.personas.EstatioRolesAndPermissions;
 import org.estatio.module.base.fixtures.security.userrole.personas.EstatioAdmin_Has_EstatioSuperuserRole;
 import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;

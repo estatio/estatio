@@ -35,7 +35,7 @@ import org.estatio.module.agreement.dom.AgreementRole;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
-import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.estatio.module.base.platform.fake.EstatioFakeDataService;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;

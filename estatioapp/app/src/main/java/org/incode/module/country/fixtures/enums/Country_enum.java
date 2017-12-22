@@ -8,7 +8,7 @@ import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.fixtures.builders.CountryBuilder;
 
-import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

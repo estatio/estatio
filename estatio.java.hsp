@@ -80,7 +80,7 @@
                                                   <cell name="PersonAndApplicationUserBuilder" pattern="org.estatio.module.party.fixtures.person.builders.PersonAndApplicationUserBuilder" vexpanded="false" illegal="false" visibility="public" drill="true" />
                                                 </row>
                                                 <row>
-                                                  <cell name="ApplicationUserBuilder" pattern="org.estatio.module.base.platform.security.fixtures.ApplicationUserBuilder" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                                                  <cell name="ApplicationUserBuilder" pattern="org.estatio.module.party.fixtures.appuser.ApplicationUserBuilder" vexpanded="false" illegal="false" visibility="public" drill="true" />
                                                   <cell name="PersonBuilder" pattern="org.estatio.module.party.fixtures.person.builders.PersonBuilder" vexpanded="false" illegal="false" visibility="public" drill="true" />
                                                 </row>
                                               </grid>
