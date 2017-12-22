@@ -198,7 +198,7 @@ public class BudgetImportExportService {
                 charge.getReference(),
                 charge.getName(),
                 charge.getDescription(),
-                charge.getTax().getReference(),
+                charge.getTax() !=null ? charge.getTax().getReference() : null,
                 charge.getGroup().getReference(),
                 charge.getGroup().getName(),
                 charge.getApplicability().name(),
