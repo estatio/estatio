@@ -49,6 +49,7 @@
                 <ns2:property id="auditedValue">
                     <ns2:action id="changeValues" position="BELOW"/>
                 </ns2:property>
+                <ns2:property id="controlledByBudget"/>
             </ns2:fieldSet>
         </col>
         <col span="4">
