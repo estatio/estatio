@@ -57,7 +57,7 @@ public class LeaseTermsForServiceChargeSubscriptions_IntegTest extends BudgetAss
         });
 
     }
-    
+
     @Test
     public void disable_change_values_when_controlled_by_budget_works() {
 
@@ -80,10 +80,5 @@ public class LeaseTermsForServiceChargeSubscriptions_IntegTest extends BudgetAss
         wrap(lastServiceChargeTerm).changeValues(null, null);
 
     }
-
-
-
-
-
 
 }

@@ -13,6 +13,13 @@ import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
+import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetcalculation.Status;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
+import org.estatio.module.budget.dom.partioning.PartitionItem;
+import org.estatio.module.budget.dom.partioning.Partitioning;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLinkRepository;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
@@ -21,20 +28,12 @@ import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculati
 import org.estatio.module.budgetassignment.dom.override.BudgetOverride;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideRepository;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValue;
-import org.estatio.module.budget.dom.budget.Budget;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
-import org.estatio.module.budget.dom.budgetcalculation.Status;
-import org.estatio.module.budget.dom.budgetitem.BudgetItem;
-import org.estatio.module.budget.dom.partioning.PartitionItem;
-import org.estatio.module.budget.dom.partioning.Partitioning;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.invoice.dom.PaymentMethod;
-import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItem;
-import org.estatio.module.lease.dom.LeaseItemStatus;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseStatus;
@@ -113,13 +112,13 @@ public class BudgetAssignmentService {
         for (BudgetCalculationRun run : budgetCalculationRunRepository.findByBudgetAndTypeAndStatus(budget, BudgetCalculationType.BUDGETED, Status.NEW)){
             for (BudgetCalculationResult resultForLease : run.getBudgetCalculationResults()){
 
-                LocalDate itemStartDate = run.getLease().getStartDate().isAfter(budget.getStartDate()) ?
+                LocalDate termStartDate = run.getLease().getStartDate().isAfter(budget.getStartDate()) ?
                         run.getLease().getStartDate() :
                         budget.getStartDate();
 
-                LeaseItem leaseItem = findOrCreateLeaseItemForServiceChargeBudgeted(run.getLease(), resultForLease, itemStartDate);
+                LeaseItem leaseItem = findOrCreateLeaseItemForServiceChargeBudgeted(run.getLease(), resultForLease, termStartDate);
 
-                LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseTermRepository.findOrCreateLeaseTermForInterval(leaseItem, new LocalDateInterval(itemStartDate, budget.getEndDate()));
+                LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseTermRepository.findOrCreateWithStartDate(leaseItem, new LocalDateInterval(termStartDate, budget.getEndDate()));
 
                 budgetCalculationResultLinkRepository.findOrCreateLink(resultForLease, leaseTerm);
 
@@ -135,34 +134,38 @@ public class BudgetAssignmentService {
         PaymentMethod paymentMethod;
         LeaseItem itemToCopyFrom;
 
-        // try to copy invoice frequency and payment method from a lease item
-        itemToCopyFrom = lease.findFirstItemOfTypeAndCharge(LeaseItemType.SERVICE_CHARGE, calculationResult.getInvoiceCharge());
-        if (itemToCopyFrom==null){
+        LeaseItem leaseItem = lease.findFirstItemOfTypeAndCharge(LeaseItemType.SERVICE_CHARGE, calculationResult.getInvoiceCharge());
+        if (leaseItem==null){
+
+            // try to copy invoice frequency and payment method from another lease item
+
+            // first try other service charge item
             itemToCopyFrom = lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE);
-        }
-        if (itemToCopyFrom==null){
-            if (lease.getItems().size()>0) {
+            if (itemToCopyFrom==null){
+                // then try rent item
+                itemToCopyFrom = lease.findFirstItemOfType(LeaseItemType.RENT);
+            }
+            if (itemToCopyFrom==null && lease.getItems().size()>0) {
+                // then try any item
                 itemToCopyFrom = lease.getItems().first();
             }
-        }
-        if (itemToCopyFrom!=null){
-            frequency = itemToCopyFrom.getInvoicingFrequency();
-            paymentMethod = itemToCopyFrom.getPaymentMethod();
-        } else {
-            // this is the first item on the lease: so make some guess
-            frequency = InvoicingFrequency.QUARTERLY_IN_ADVANCE;
-            paymentMethod = PaymentMethod.DIRECT_DEBIT;
-        }
+            if (itemToCopyFrom!=null){
+                frequency = itemToCopyFrom.getInvoicingFrequency();
+                paymentMethod = itemToCopyFrom.getPaymentMethod();
+            }
+            else {
+                // this is the first item on the lease: so make some guess
+                frequency = InvoicingFrequency.QUARTERLY_IN_ADVANCE;
+                paymentMethod = PaymentMethod.DIRECT_DEBIT;
+            }
 
-        LeaseItem leaseItem = lease.findFirstItemOfTypeAndCharge(LeaseItemType.SERVICE_CHARGE_BUDGETED, calculationResult.getInvoiceCharge());
-        if (leaseItem==null){
             leaseItem = lease.newItem(
-                    LeaseItemType.SERVICE_CHARGE_BUDGETED,
-                    LeaseAgreementRoleTypeEnum.LANDLORD, calculationResult.getInvoiceCharge(),
+                    LeaseItemType.SERVICE_CHARGE,
+                    LeaseAgreementRoleTypeEnum.LANDLORD,
+                    calculationResult.getInvoiceCharge(),
                     frequency,
                     paymentMethod,
                     startDate);
-            leaseItem.setStatus(LeaseItemStatus.SUSPENDED);
         }
         return leaseItem;
     }

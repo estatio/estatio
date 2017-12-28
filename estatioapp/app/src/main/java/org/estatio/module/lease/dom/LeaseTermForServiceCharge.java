@@ -24,6 +24,8 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.IsisApplibModule;
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
@@ -58,6 +60,11 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
 
     // //////////////////////////////////////
 
+    public static class changeValuesEvent extends IsisApplibModule.ActionDomainEvent<LeaseTermForServiceCharge> {
+        private static final long serialVersionUID = 1L;
+    }
+
+    @Action(domainEvent = changeValuesEvent.class)
     public LeaseTermForServiceCharge changeValues(
             final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal budgetedValue,
             final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal auditedValue) {

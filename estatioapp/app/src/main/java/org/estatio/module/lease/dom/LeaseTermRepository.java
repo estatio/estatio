@@ -243,10 +243,10 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
     }
 
     @Programmatic
-    public LeaseTerm findOrCreateLeaseTermForInterval(final LeaseItem leaseItem, final LocalDateInterval localDateInterval) {
+    public LeaseTerm findOrCreateWithStartDate(final LeaseItem leaseItem, final LocalDateInterval localDateInterval) {
         boolean leaseTermFound = false;
         for (LeaseTerm leaseTerm : leaseItem.getTerms()) {
-            if (leaseTerm.getInterval().equals(localDateInterval)) {
+            if (leaseTerm.getStartDate().equals(localDateInterval.startDate())) {
                 return leaseTerm;
             }
         }
