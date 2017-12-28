@@ -23,9 +23,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -33,6 +31,7 @@ import org.junit.runners.MethodSorters;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.integtests.VT;
 
 import org.estatio.module.asset.dom.Property;
@@ -42,6 +41,7 @@ import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermForIndexable;
+import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 import org.estatio.module.lease.dom.LeaseTermForTax;
 import org.estatio.module.lease.dom.LeaseTermRepository;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
@@ -51,15 +51,14 @@ import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForEntryFee_e
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForMarketing_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForPercentage_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceChargeBudgeted_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTax_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.incode.module.unittestsupport.dom.assertions.Asserting.assertType;
-import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LeaseTermRepository_IntegTest extends LeaseModuleIntegTestAbstract {
@@ -109,16 +108,16 @@ public class LeaseTermRepository_IntegTest extends LeaseModuleIntegTestAbstract 
             List<LeaseTerm> allLeaseTerms = leaseTermRepository.allLeaseTerms();
 
             // then
-            Assert.assertThat(allLeaseTerms.isEmpty(), is(false));
+            assertThat(allLeaseTerms.isEmpty()).isFalse();
             LeaseTerm term = allLeaseTerms.get(0);
 
             // and then
-            Assert.assertNotNull(term.getFrequency());
-            Assert.assertNotNull(term.getFrequency().nextDate(VT.ld(2012, 1, 1)));
+            assertThat(term.getFrequency()).isNotNull();
+            assertThat(term.getFrequency().nextDate(VT.ld(2012, 1, 1))).isNotNull();
 
             final LeaseTermForIndexable indexableRent = assertType(term, LeaseTermForIndexable.class);
             BigDecimal baseValue = indexableRent.getBaseValue();
-            Assert.assertEquals(VT.bd("20000.00"), baseValue);
+            assertThat(baseValue).isEqualTo(VT.bd("20000.00"));
         }
 
     }
@@ -129,8 +128,8 @@ public class LeaseTermRepository_IntegTest extends LeaseModuleIntegTestAbstract 
         public void findByPropertyAndTypeAndStartDate() throws Exception {
             Property property = lease.getProperty();
             List<LeaseTerm> results = leaseTermRepository.findByPropertyAndTypeAndStartDate(property, LeaseItemType.RENT, lease.getStartDate());
-            assertThat(results.size(), is(1));
-            assertThat(results.get(0), is(lease.getItems().first().getTerms().first()));
+            assertThat(results.size()).isEqualTo(1);
+            assertThat(results.get(0)).isEqualTo(lease.getItems().first().getTerms().first());
         }
     }
 
@@ -140,8 +139,8 @@ public class LeaseTermRepository_IntegTest extends LeaseModuleIntegTestAbstract 
         public void findStartDatesByPropertyAndType() throws Exception {
             Property property = lease.getProperty();
             List<LocalDate> results = leaseTermRepository.findStartDatesByPropertyAndType(property, LeaseItemType.RENT);
-            assertThat(results.size(), is(1));
-            assertThat(results.get(0), is(lease.getItems().first().getTerms().first().getStartDate()));
+            assertThat(results.size()).isEqualTo(1);
+            assertThat(results.get(0)).isEqualTo(lease.getItems().first().getStartDate());
         }
     }
 
@@ -154,7 +153,52 @@ public class LeaseTermRepository_IntegTest extends LeaseModuleIntegTestAbstract 
             // when
             LeaseTermForTax taxTerm = (LeaseTermForTax) taxItem.newTerm(new LocalDate(2016, 01, 01), null);
             // then
-            Assertions.assertThat(taxTerm.getEndDate()).isEqualTo(new LocalDate(2016, 12, 31));
+            assertThat(taxTerm.getEndDate()).isEqualTo(new LocalDate(2016, 12, 31));
+        }
+
+    }
+
+    public static class FindOrCreateWithStartDate extends LeaseTermRepository_IntegTest {
+
+        @Test
+        public void find_or_create_with_startDate_works_when_not_found() {
+
+            // given
+            LocalDate startDate = new LocalDate(2017, 01,01);
+            LocalDate endDate = new LocalDate(2017,12, 31);
+            LeaseItem serviceChargeItem = LeaseItemForServiceCharge_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+            assertThat(serviceChargeItem.getTerms().size()).isEqualTo(1);
+
+            // when
+            LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseTermRepository.findOrCreateWithStartDate(serviceChargeItem, new LocalDateInterval(startDate, endDate));
+
+            // then
+            assertThat(serviceChargeItem.getTerms().size()).isEqualTo(2);
+            assertThat(leaseTerm.getStartDate()).isEqualTo(startDate);
+            assertThat(leaseTerm.getEndDate()).isEqualTo(endDate);
+            assertThat(leaseTerm.getPrevious().getEndDate()).isEqualTo(startDate.minusDays(1));
+
+        }
+
+        @Test
+        public void find_or_create_with_startDate_works_when_found() {
+
+            // given
+            LocalDate startDate = new LocalDate(2010, 7,15);
+            LocalDate endDate = new LocalDate(2010,12, 31);
+            LeaseItem serviceChargeItem = LeaseItemForServiceCharge_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+            assertThat(serviceChargeItem.getTerms().size()).isEqualTo(1);
+            assertThat(serviceChargeItem.getTerms().first().getStartDate()).isEqualTo(startDate);
+            assertThat(serviceChargeItem.getTerms().first().getEndDate()).isNull();
+
+            // when
+            LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseTermRepository.findOrCreateWithStartDate(serviceChargeItem, new LocalDateInterval(startDate, endDate));
+
+            // then
+            assertThat(serviceChargeItem.getTerms().size()).isEqualTo(1);
+            assertThat(leaseTerm.getStartDate()).isEqualTo(startDate);
+            assertThat(serviceChargeItem.getTerms().first().getEndDate()).isNull();
+
         }
 
     }

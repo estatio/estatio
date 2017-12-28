@@ -395,13 +395,13 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
 
         private void validateLeaseItemsAndTerms(final Lease lease, final List<BigDecimal> values, final LocalDate startDate) {
 
-            assertThat(leaseItemRepository.findLeaseItemsByType(lease, LeaseItemType.SERVICE_CHARGE_BUDGETED).size()).isEqualTo(2);
+            assertThat(leaseItemRepository.findLeaseItemsByType(lease, LeaseItemType.SERVICE_CHARGE).size()).isEqualTo(2);
 
             assertThat(lease.getItems().first().getCharge()).isEqualTo(invoiceCharge1);
             assertThat(lease.getItems().first().getStartDate()).isEqualTo(startDate);
             assertThat(lease.getItems().first().getPaymentMethod()).isEqualTo(PaymentMethod.DIRECT_DEBIT);
             assertThat(lease.getItems().first().getInvoicingFrequency()).isEqualTo(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-            assertThat(lease.getItems().first().getStatus()).isEqualTo(LeaseItemStatus.SUSPENDED);
+            assertThat(lease.getItems().first().getStatus()).isEqualTo(LeaseItemStatus.ACTIVE);
             assertThat(lease.getItems().first().getTerms().size()).isEqualTo(1);
 
             LeaseTermForServiceCharge term1 = (LeaseTermForServiceCharge) lease.getItems().first().getTerms().first();
@@ -415,7 +415,7 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
             assertThat(lease.getItems().last().getStartDate()).isEqualTo(startDate);
             assertThat(lease.getItems().last().getPaymentMethod()).isEqualTo(PaymentMethod.DIRECT_DEBIT);
             assertThat(lease.getItems().last().getInvoicingFrequency()).isEqualTo(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-            assertThat(lease.getItems().last().getStatus()).isEqualTo(LeaseItemStatus.SUSPENDED);
+            assertThat(lease.getItems().last().getStatus()).isEqualTo(LeaseItemStatus.ACTIVE);
             assertThat(lease.getItems().last().getTerms().size()).isEqualTo(1);
 
             LeaseTermForServiceCharge term2 = (LeaseTermForServiceCharge) lease.getItems().last().getTerms().first();
@@ -458,7 +458,7 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
 
             assertThat(budgetCalculationResultLinkRepository.allBudgetCalculationResultLinks().size()).isEqualTo(12);
             l1Before = budgetCalculationResultLinkRepository.allBudgetCalculationResultLinks().get(0);
-            assertThat(l1Before.getLeaseTermForServiceCharge().getLeaseItem().getStatus()).isEqualTo(LeaseItemStatus.SUSPENDED);
+            assertThat(l1Before.getLeaseTermForServiceCharge().getLeaseItem().getStatus()).isEqualTo(LeaseItemStatus.ACTIVE);
 
             // when
             budgetCalculationService.calculatePersistedCalculations(budget);
