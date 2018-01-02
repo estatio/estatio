@@ -139,7 +139,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
     @Getter @Setter
     private String atPath;
 
-    public ApplicationTenancy getApplicationTenancy(){
+    public ApplicationTenancy getApplicationTenancy() {
         return applicationTenancyRepository.findByPath(getAtPath());
     }
 
@@ -180,13 +180,20 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
     @Getter @Setter
     private BigDecimal grossAmount;
 
-
     @CollectionLayout(defaultView = "table")
     public List<InvoiceForLease> getInvoices() {
         return invoiceForLeaseRepository
                 .findByApplicationTenancyPathAndSellerAndDueDateAndStatus(getAtPath(), getSeller(), getDueDate(), getStatus());
     }
 
+    public List<InvoiceSummaryForPropertyDueDateStatus> changeDueDates(final LocalDate newDueDate) {
+        getInvoices().forEach(invoice -> wrapperFactory.wrap(invoice).changeDueDate(newDueDate));
+        return invoiceSummaryForPropertyDueDateStatusRepository.findByAtPathAndSellerReferenceAndStatusAndDueDate(getAtPath(), getSellerReference(), getStatus(), newDueDate);
+    }
+
+    public String disableChangeDueDates() {
+        return !getStatus().invoiceIsChangable() ? "Only new and approved invoices can be changed" : null;
+    }
 
     @Inject
     PropertyRepository propertyRepository;
@@ -194,5 +201,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
     @Inject
     PartyRepository partyRepository;
 
+    @Inject
+    InvoiceSummaryForPropertyDueDateStatusRepository invoiceSummaryForPropertyDueDateStatusRepository;
 
 }

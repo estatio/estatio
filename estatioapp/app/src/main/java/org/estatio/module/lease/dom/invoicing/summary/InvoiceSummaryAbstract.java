@@ -37,13 +37,13 @@ import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
+import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancy;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
-import org.estatio.module.base.dom.EstatioRole;
 
 public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, WithApplicationTenancyAny {
 
@@ -54,7 +54,7 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
         return this;
     }
 
-    public boolean hideVerifyAll(){
+    public boolean hideVerifyAll() {
         return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
     }
 
@@ -86,14 +86,14 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
             try {
                 final InvoiceForLease._invoice mixin = mixin(InvoiceForLease._invoice.class, invoice);
                 wrapperFactory.wrapNoExecute(mixin).$$(invoiceDate);
-            } catch(InvalidException ex) {
+            } catch (InvalidException ex) {
                 final String reasonMessage =
                         ex.getInteractionEvent() != null
                                 ? ex.getInteractionEvent().getReason()
                                 : null;
                 return titleService.titleOf(invoice) + ": " +
                         (reasonMessage != null ? reasonMessage : ex.getMessage());
-            } catch(HiddenException | DisabledException ex) {
+            } catch (HiddenException | DisabledException ex) {
                 // ignore
             }
         }
@@ -115,18 +115,17 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public InvoiceSummaryAbstract saveAllAsHistoric() {
         for (Invoice invoice : getInvoices()) {
-            mixin(InvoiceForLease._saveAsHistoric.class, invoice). $$();
+            mixin(InvoiceForLease._saveAsHistoric.class, invoice).$$();
         }
         return this;
     }
 
-    public boolean hideSaveAllAsHistoric(){
+    public boolean hideSaveAllAsHistoric() {
         return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
     }
 
     @CollectionLayout(defaultView = "table")
     public abstract List<InvoiceForLease> getInvoices();
-
 
     private <T> T wrap(final T mixin) {
         return wrapperFactory.wrap(mixin);
@@ -135,7 +134,6 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
     private <P, T extends P> T mixin(final Class<T> mixinClass, final P mixedIn) {
         return factoryService.mixin(mixinClass, mixedIn);
     }
-
 
     @Inject
     protected InvoiceForLeaseRepository invoiceForLeaseRepository;
@@ -160,7 +158,5 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
 
     @Inject
     TitleService titleService;
-
-
 
 }

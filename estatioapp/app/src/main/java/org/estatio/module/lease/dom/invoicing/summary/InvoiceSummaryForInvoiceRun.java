@@ -20,9 +20,12 @@ package org.estatio.module.lease.dom.invoicing.summary;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
+
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
@@ -106,9 +109,9 @@ public class InvoiceSummaryForInvoiceRun extends InvoiceSummaryAbstract {
 
     @Getter @Setter
     private String atPath;
-    
+
     @Programmatic
-    public ApplicationTenancy getApplicationTenancy(){
+    public ApplicationTenancy getApplicationTenancy() {
         return applicationTenancyRepository.findByPath(getAtPath());
     }
 
@@ -140,9 +143,20 @@ public class InvoiceSummaryForInvoiceRun extends InvoiceSummaryAbstract {
 
     // //////////////////////////////////////
 
+    public InvoiceSummaryForInvoiceRun changeDueDates(final LocalDate newDueDate) {
+        getInvoices().forEach(invoice -> wrapperFactory.wrap(invoice).changeDueDate(newDueDate));
+        return invoiceSummaryForInvoiceRunRepository.findByRunId(this.runId);
+    }
+
+    // //////////////////////////////////////
+
     @CollectionLayout(defaultView = "table")
     public List<InvoiceForLease> getInvoices() {
         return invoiceForLeaseRepository.findByRunIdAndApplicationTenancyPath(runId, getAtPath());
     }
 
+    // //////////////////////////////////////
+
+    @Inject
+    protected InvoiceSummaryForInvoiceRunRepository invoiceSummaryForInvoiceRunRepository;
 }

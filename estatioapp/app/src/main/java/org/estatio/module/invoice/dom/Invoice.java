@@ -85,7 +85,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "dbo"   // Isis' ObjectSpecId inferred from @DomainObject#objectType
+        , schema = "dbo"   // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -127,13 +127,13 @@ import lombok.Setter;
 @Indices({
         @Index(name = "Invoice_invoiceNumber_IDX",
                 members = { "invoiceNumber" })
-        ,@Index(name = "Invoice_sendTo_IDX",
-                members = { "sendTo" })
+        , @Index(name = "Invoice_sendTo_IDX",
+        members = { "sendTo" })
 })
 @DomainObject(
         editing = Editing.DISABLED
-//        ,
-//        updatingLifecycleEvent = Invoice.UpdatingEvent.class
+        //        ,
+        //        updatingLifecycleEvent = Invoice.UpdatingEvent.class
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public abstract class Invoice<T extends Invoice<T>>
@@ -150,7 +150,8 @@ public abstract class Invoice<T extends Invoice<T>>
         return invoiceAttribute == null ? false : invoiceAttribute.isOverridden();
     }
 
-    public static class UpdatingEvent extends ObjectUpdatingEvent<Invoice> {}
+    public static class UpdatingEvent extends ObjectUpdatingEvent<Invoice> {
+    }
 
     public Invoice(final String keyProperties) {
         super(keyProperties);
@@ -241,16 +242,15 @@ public abstract class Invoice<T extends Invoice<T>>
     public Invoice updateAttribute(
             final InvoiceAttributeName name,
             @Parameter(maxLength = NotesType.Meta.MAX_LEN)
-            @ParameterLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
-            final String value,
+            @ParameterLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE) final String value,
             InvoiceAttributeAction action
-    ){
+    ) {
         final InvoiceAttribute invoiceAttribute = invoiceAttributeRepository.findByInvoiceAndName(this, name);
         if (invoiceAttribute == null) {
             invoiceAttributeRepository.newAttribute(this, name, value, action.isOverride());
         } else {
             if (action.isForceful())
-            invoiceAttribute.setValue(value);
+                invoiceAttribute.setValue(value);
             invoiceAttribute.setOverridden(action.isOverride());
         }
         return this;
@@ -270,57 +270,36 @@ public abstract class Invoice<T extends Invoice<T>>
 
     }
 
-    @Inject protected
-    InvoiceAttributeRepository invoiceAttributeRepository;
-
-    /**
-     * TODO: inline this mixin
-     */
-    @Mixin(method = "exec")
-    public static class _changeDueDate {
-
-        private final Invoice invoice;
-
-        public _changeDueDate(final Invoice invoice) {
-            this.invoice = invoice;
-        }
-
-        @Action(semantics = SemanticsOf.IDEMPOTENT)
-        @ActionLayout(contributed = Contributed.AS_ACTION)
-        public void exec(
-                final LocalDate dueDate) {
-            invoice.setDueDate(dueDate);
-        }
-
-        public LocalDate default0Exec(
-                final LocalDate dueDate) {
-            return invoice.getDueDate();
-        }
-
-        public String disableExec() {
-            if (invoice.isImmutableDueToState()) {
-                return "Due date can't be changed";
-            }
-            return null;
-        }
-
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public void changeDueDate(final LocalDate dueDate) {
+        this.setDueDate(dueDate);
     }
 
+    public LocalDate default0ChangeDueDate(final LocalDate dueDate) {
+        return this.getDueDate();
+    }
+
+    public String disableChangeDueDate() {
+        if (this.isImmutableDueToState()) {
+            return "Due date can't be changed";
+        }
+        return null;
+    }
+
+    @Inject protected
+    InvoiceAttributeRepository invoiceAttributeRepository;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = InvoiceStatus.Meta.MAX_LEN)
     @Getter @Setter
     private InvoiceStatus status;
 
-
     @javax.jdo.annotations.Column(name = "currencyId", allowsNull = "true")
     @Getter @Setter
     private Currency currency;
 
-
     @javax.jdo.annotations.Column(allowsNull = "true", length = PaymentMethod.Meta.MAX_LEN)
     @Getter @Setter
     private PaymentMethod paymentMethod;
-
 
     /**
      * TODO: inline this mixin
@@ -353,24 +332,24 @@ public abstract class Invoice<T extends Invoice<T>>
 
     /**
      * Mandatory hook
-     * @return
+     *
      * @param viewContext
+     * @return
      */
     protected abstract String reasonDisabledDueToState(final Object viewContext);
 
     /**
      * Mandatory hook
-     * @return
+     *
      * @param viewContext
+     * @return
      */
     protected abstract String reasonDisabledFinanceDetailsDueToState(final Object viewContext);
-
 
     @CollectionLayout(defaultView = "table")
     @javax.jdo.annotations.Persistent(mappedBy = "invoice")
     @Getter @Setter
     private SortedSet<InvoiceItem> items = new TreeSet<>();
-
 
     @javax.jdo.annotations.Column(allowsNull = "true")
     @Property(hidden = Where.EVERYWHERE)
@@ -386,8 +365,6 @@ public abstract class Invoice<T extends Invoice<T>>
         setLastItemSequence(nextItemSequence);
         return nextItemSequence;
     }
-
-
 
     @Property(notPersisted = true)
     public BigDecimal getTotalNetAmount() {
@@ -499,19 +476,20 @@ public abstract class Invoice<T extends Invoice<T>>
     }
 
     public Invoice verify() {
-        for (InvoiceItem ii : getItems()){
+        for (InvoiceItem ii : getItems()) {
             ii.verify();
         }
         return this;
     }
 
-    public boolean hideVerify(){
+    public boolean hideVerify() {
         return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
     }
 
     public static class InvoiceNumberType {
 
-        private InvoiceNumberType() {}
+        private InvoiceNumberType() {
+        }
 
         public static class Meta {
 
@@ -520,7 +498,8 @@ public abstract class Invoice<T extends Invoice<T>>
              */
             public static final int MAX_LEN = 16;
 
-            private Meta() {}
+            private Meta() {
+            }
 
         }
 
@@ -528,14 +507,16 @@ public abstract class Invoice<T extends Invoice<T>>
 
     public static class DescriptionType {
 
-        private DescriptionType() {}
+        private DescriptionType() {
+        }
 
         public static class Meta {
 
             public static final int MAX_LEN = InvoiceAttribute.ValueType.Meta.MAX_LEN;
             public static final int MULTI_LINE = 10;
 
-            private Meta() {}
+            private Meta() {
+            }
         }
     }
 
@@ -552,8 +533,7 @@ public abstract class Invoice<T extends Invoice<T>>
         @ActionLayout(contributed = Contributed.AS_ACTION)
         public Invoice act(
                 @Parameter(maxLength = NotesType.Meta.MAX_LEN, optionality = Optionality.OPTIONAL)
-                @ParameterLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
-                final String overrideWith) {
+                @ParameterLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE) final String overrideWith) {
             invoice.updateAttribute(this.invoiceAttributeName, overrideWith, InvoiceAttributeAction.OVERRIDE);
             return invoice;
         }
