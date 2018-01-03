@@ -58,13 +58,14 @@ public class IndexValueRepository
             indexValue = create(indexBase, startDate, value);
         }
         indexValue.setValue(value);
+        // TODO: for review: is this good practice?
         final IndexValue.UpdateEvent event = new IndexValue.UpdateEvent();
         event.setSource(indexValue);
         eventBusService.post(event);
         return indexValue;
     }
 
-    public IndexValue create(
+    private IndexValue create(
             final IndexBase indexBase,
             final LocalDate startDate,
             final BigDecimal value) {

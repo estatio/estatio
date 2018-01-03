@@ -20,6 +20,7 @@ package org.estatio.module.index.dom;
 
 import java.math.BigDecimal;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
@@ -32,12 +33,15 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.services.user.UserService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.with.WithStartDate;
 import org.incode.module.base.dom.utils.TitleBuilder;
+import org.incode.module.base.dom.with.WithStartDate;
 
+import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyCountry;
 
@@ -117,16 +121,28 @@ public class IndexValue
     @Getter @Setter
     private BigDecimal value;
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT, domainEvent = UpdateEvent.class)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT, domainEvent = RemoveEvent.class)
     public void remove() {
-        getContainer().remove(this);
+        repositoryService.removeAndFlush(this);
+    }
+
+    public String disableRemove(){
+        return !EstatioRole.SUPERUSER.isApplicableFor(userService.getUser()) ? "You need Superuser rights to remove" : null;
+    }
+
+    public static class RemoveEvent extends ActionDomainEvent<IndexValue> {
+        private static final long serialVersionUID = 1L;
     }
 
     public static class UpdateEvent extends ActionDomainEvent<IndexValue> {
         private static final long serialVersionUID = 1L;
     }
 
+    @Inject
+    private UserService userService;
 
+    @Inject
+    private RepositoryService repositoryService;
 
 
     public static class ValueType {
