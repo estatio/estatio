@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
@@ -38,7 +39,9 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -51,6 +54,7 @@ import org.incode.module.base.dom.with.WithNameGetter;
 import org.incode.module.base.dom.with.WithReferenceComparable;
 import org.incode.module.base.dom.with.WithReferenceUnique;
 
+import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPathPersisted;
@@ -149,6 +153,15 @@ public class Tax
     @Getter @Setter
     private String externalReference;
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Tax changeExternalReference(final String externalReference){
+        setExternalReference(externalReference);
+        return this;
+    }
+
+    public String disableChangeExternalReference(){
+        return !EstatioRole.SUPERUSER.isApplicableFor(userService.getUser()) ? "You need Superuser rights to change the external reference" : null;
+    }
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = DescriptionType.Meta.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL)
@@ -200,5 +213,7 @@ public class Tax
 
     @Inject
     public TaxRateRepository taxRateRepository;
+
+    @Inject UserService userService;
 
 }

@@ -14,7 +14,9 @@
                 </ns2:property>
                 <ns2:property id="reference"/>
                 <ns2:property id="name"/>
-                <ns2:property id="externalReference"/>
+                <ns2:property id="externalReference">
+                    <ns2:action id="changeExternalReference" position="BELOW"/>
+                </ns2:property>
                 <ns2:property id="applicationTenancyPath"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Application Level" id="applicationLevel">
