@@ -12,6 +12,12 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.user.UserService;
 
+import org.estatio.module.base.dom.EstatioRole;
+import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
+import org.estatio.module.budget.dom.partioning.PartitionItem;
+import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLink;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLinkRepository;
@@ -19,17 +25,9 @@ import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculati
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRunRepository;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverride;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideRepository;
-import org.estatio.module.budget.dom.budget.Budget;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
-import org.estatio.module.budget.dom.budgetcalculation.Status;
-import org.estatio.module.budget.dom.budgetitem.BudgetItem;
-import org.estatio.module.budget.dom.partioning.PartitionItem;
-import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
-import org.estatio.module.base.dom.EstatioRole;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Budget doesn't know about BudgetCalculationResultLinkRepository
@@ -85,11 +83,7 @@ public class Budget_Remove {
     }
 
     public String disableRemoveBudget(){
-        for (BudgetCalculation calculation : budgetCalculationRepository.findByBudget(budget)){
-            if (calculation.getStatus().equals(Status.ASSIGNED)){
-                return "This budget is assigned already";
-            }
-        }
+        if (budget.isAssigned()) return "This budget is assigned already";
         return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser()) ? "You need administrator rights to remove a budget" : null;
     }
 

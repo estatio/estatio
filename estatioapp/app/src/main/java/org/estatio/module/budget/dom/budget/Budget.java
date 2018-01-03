@@ -61,9 +61,11 @@ import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budget.dom.api.BudgetItemCreator;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetcalculation.Status;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemRepository;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
@@ -317,6 +319,29 @@ public class Budget extends UdoDomainObject2<Budget>
         }
 
         return this;
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    @ActionLayout()
+    public Budget removeCalculations(){
+        for (BudgetCalculation calculation : budgetCalculationRepository.findByBudget(this)) {
+            calculation.removeWithStatusNew();
+        }
+        return this;
+    }
+
+    public String disableRemoveCalculations(){
+        return isAssigned() ? "This budget is assigned" : null;
+    }
+
+    @Programmatic
+    public boolean isAssigned(){
+        for (BudgetCalculation calculation : budgetCalculationRepository.findByBudget(this)) {
+            if (calculation.getStatus() == Status.ASSIGNED){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Programmatic
