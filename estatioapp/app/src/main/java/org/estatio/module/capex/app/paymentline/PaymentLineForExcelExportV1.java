@@ -28,27 +28,30 @@ public class PaymentLineForExcelExportV1 {
     private LocalDate requestedExecutionDate;
 
     @MemberOrder(sequence = "4") @Nullable
-    private String sellerName;
+    private LocalDate paymentDate;
 
     @MemberOrder(sequence = "5") @Nullable
-    private String sellerReference;
+    private String sellerName;
 
     @MemberOrder(sequence = "6") @Nullable
-    private String propertyReference;
+    private String sellerReference;
 
     @MemberOrder(sequence = "7") @Nullable
-    private String invoiceNumber;
+    private String propertyReference;
 
     @MemberOrder(sequence = "8") @Nullable
-    private String invoiceId;
+    private String invoiceNumber;
 
     @MemberOrder(sequence = "9") @Nullable
-    private BigDecimal invoiceNetAmount;
+    private String invoiceId;
 
     @MemberOrder(sequence = "10") @Nullable
-    private BigDecimal invoiceVatAmount;
+    private BigDecimal invoiceNetAmount;
 
     @MemberOrder(sequence = "11") @Nullable
+    private BigDecimal invoiceVatAmount;
+
+    @MemberOrder(sequence = "12") @Nullable
     private BigDecimal invoiceGrossAmount;
 
 }

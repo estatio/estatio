@@ -728,6 +728,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                     getDebtorBankAccount().getIban(),
                     line.getInvoice().getInvoiceDate(),
                     getRequestedExecutionDate() != null ? this.getRequestedExecutionDate().toLocalDate() : null,
+                    null,
                     line.getInvoice().getSeller().getName(),
                     line.getInvoice().getSeller().getReference(),
                     line.getInvoice().getProperty() != null ? line.getInvoice().getProperty().getReference() : null,
