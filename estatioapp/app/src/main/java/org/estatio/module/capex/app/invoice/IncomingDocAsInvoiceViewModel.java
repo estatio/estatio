@@ -723,6 +723,12 @@ public class IncomingDocAsInvoiceViewModel
         if (budgetItem!=null && getIncomingInvoiceType()!= IncomingInvoiceType.SERVICE_CHARGES){
             return "Budget item applies only to type SERVICE_CHARGES";
         }
+        if (getIncomingInvoiceType()==IncomingInvoiceType.SERVICE_CHARGES && charge!=null){
+            return "Charge will be derived from budget item";
+        }
+        if (getIncomingInvoiceType()==IncomingInvoiceType.SERVICE_CHARGES && period!=null){
+            return "Period will be derived from budget item";
+        }
         return validatePeriod(period);
     }
 
@@ -738,6 +744,13 @@ public class IncomingDocAsInvoiceViewModel
         return getIncomingInvoiceType()!= IncomingInvoiceType.SERVICE_CHARGES;
     }
 
+    public boolean hideCharge(){
+        return getIncomingInvoiceType()== IncomingInvoiceType.SERVICE_CHARGES;
+    }
+
+    public boolean hidePeriod(){
+        return getIncomingInvoiceType()== IncomingInvoiceType.SERVICE_CHARGES;
+    }
 
 
     @Inject

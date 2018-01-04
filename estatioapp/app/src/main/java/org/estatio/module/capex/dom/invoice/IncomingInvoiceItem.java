@@ -565,6 +565,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
         setBudgetItem(budgetItem);
         if (budgetItem!=null) setCharge(budgetItem.getCharge());
         if (budgetItem!=null) setFixedAsset(budgetItem.getBudget().getProperty());
+        if (budgetItem!=null) editPeriod(String.valueOf(getBudgetItem().getBudget().getBudgetYear()));
         return this;
     }
 
@@ -709,6 +710,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
                 ReasonBuffer2.forAll("Period cannot be changed because");
 
         appendReasonIfReversalOrReported(buf);
+        appendReasonIfLinkedToABudget(buf);
 
         return buf.getReason();
     }

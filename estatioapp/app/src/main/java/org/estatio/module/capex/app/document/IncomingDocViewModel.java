@@ -511,13 +511,13 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     }
 
     protected void derivePeriodFromBudgetItem(){
-        if (hasBudgetItem() && !hasPeriod()){
+        if (hasBudgetItem()){
             setPeriod(String.valueOf(getBudgetItem().getBudget().getBudgetYear()));
         }
     }
 
     protected void deriveChargeFromBudgetItem(){
-        if (hasBudgetItem() && !hasCharge()){
+        if (hasBudgetItem()){
             setCharge(getBudgetItem().getCharge());
         }
     }
