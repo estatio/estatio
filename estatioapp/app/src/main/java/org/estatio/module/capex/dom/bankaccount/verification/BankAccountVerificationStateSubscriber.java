@@ -33,7 +33,7 @@ public class BankAccountVerificationStateSubscriber extends AbstractSubscriber {
         final BankAccountVerificationState state = stateTransitionService
                 .currentStateOf(bankAccount, BankAccountVerificationStateTransition.class);
 
-        final String title = String.format("%s - %s (%s)", bankAccount.getReference(), bankAccount.getOwner().getReference(), Enums.getFriendlyNameOf(state));
+        final String title = String.format("%s - %s (%s)", bankAccount.getName(), bankAccount.getOwner().getReference(), Enums.getFriendlyNameOf(state));
         ev.setTitle(title);
     }
 
