@@ -98,7 +98,11 @@ public class Smoke_IntegTest extends CommunicationsModuleIntegTestAbstract {
         assertThat(emailAddresses).contains(fredEmail);
 
         // and when
-        final Communication comm = wrap(documentEmail).act(fredEmail, null, null, null, null, null);
+
+        // REVIEW: should be wrapped, however the DocumentCommunicationSupportForDocumentsAttachedToInvoiceForLease
+        // vetoes this, and there is current no way to exclude classes that are not part of the "effective" module
+        //final Communication comm = wrap(documentEmail).act(fredEmail, null, null, null, null, null);
+        final Communication comm = documentEmail.act(fredEmail, null, null, null, null, null);
 
         // then
         assertThat(comm).isNotNull();
