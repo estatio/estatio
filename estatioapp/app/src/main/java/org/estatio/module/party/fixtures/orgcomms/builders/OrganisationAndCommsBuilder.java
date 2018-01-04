@@ -28,7 +28,7 @@ import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.communications.dom.impl.commchannel.PhoneOrFaxNumber;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 
-import org.estatio.module.country.fixtures.enums.Country_enum;
+import org.incode.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.party.dom.Organisation;
 
 import lombok.AllArgsConstructor;

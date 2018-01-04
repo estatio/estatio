@@ -26,7 +26,7 @@ import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
-import org.estatio.module.country.fixtures.enums.Country_enum;
+import org.incode.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;

@@ -22,7 +22,7 @@ import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 
-import org.estatio.module.base.platform.security.fixtures.ApplicationUserBuilder;
+import org.estatio.module.party.fixtures.appuser.ApplicationUserBuilder;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 

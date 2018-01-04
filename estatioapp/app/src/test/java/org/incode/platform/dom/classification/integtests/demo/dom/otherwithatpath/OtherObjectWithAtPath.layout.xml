@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bs3:row>
+        <bs3:col span="12" unreferencedActions="true">
+            <cpt:domainObject/>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="4">
+            <bs3:tabGroup>
+                <bs3:tab name="General">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="General" id="general">
+                                <cpt:property id="name"/>
+                            </cpt:fieldSet>
+                            <cpt:fieldSet name="Application Tenancy" id="app-tenancy">
+                                <cpt:property id="atPath"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Others">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Others" id="others" unreferencedProperties="true">
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Metadata">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Metadata" id="metadata">
+                                <cpt:property id="datanucleusIdLong"/>
+                                <cpt:property id="datanucleusVersionTimestamp"/>
+                                <cpt:property id="datanucleusVersionLong"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+        <bs3:col span="8" unreferencedCollections="true">
+            <cpt:collection id="classificationLinks"/>
+        </bs3:col>
+    </bs3:row>
+</bs3:grid>

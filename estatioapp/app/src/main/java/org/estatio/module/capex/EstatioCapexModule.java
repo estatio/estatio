@@ -11,6 +11,8 @@ import org.apache.isis.applib.ModuleAbstract;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
 
+import org.incode.module.document.DocumentModule;
+
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
 import org.estatio.module.budget.EstatioBudgetModule;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
@@ -31,7 +33,6 @@ import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectItem;
 import org.estatio.module.capex.dom.project.ProjectRole;
 import org.estatio.module.capex.dom.task.Task;
-import org.estatio.module.document.IncodeDomDocumentModule;
 import org.estatio.module.invoice.EstatioInvoiceModule;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceAttribute;
@@ -50,9 +51,7 @@ public class EstatioCapexModule extends ModuleAbstract {
                 new EstatioAssetFinancialModule(),
                 new EstatioBudgetModule(),
 
-                // stuff from incode platform, but which we're going to inline back into Estatio
-                new IncodeDomDocumentModule()
-
+                new DocumentModule()
         );
     }
 

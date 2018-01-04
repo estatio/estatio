@@ -26,7 +26,7 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.isisaddons.module.settings.dom.ApplicationSetting;
+import org.estatio.module.settings.dom.ApplicationSetting;
 
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingKey;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;

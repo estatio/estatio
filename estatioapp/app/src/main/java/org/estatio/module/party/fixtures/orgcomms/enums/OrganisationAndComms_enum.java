@@ -33,8 +33,8 @@ import org.estatio.module.party.fixtures.orgcomms.builders.OrganisationAndCommsB
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import static org.estatio.module.country.fixtures.enums.Country_enum.GBR;
-import static org.estatio.module.country.fixtures.enums.Country_enum.NLD;
+import static org.incode.module.country.fixtures.enums.Country_enum.GBR;
+import static org.incode.module.country.fixtures.enums.Country_enum.NLD;
 
 @AllArgsConstructor
 @Getter

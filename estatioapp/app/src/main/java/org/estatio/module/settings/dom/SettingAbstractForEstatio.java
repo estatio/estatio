@@ -29,7 +29,7 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.isisaddons.module.settings.dom.SettingType;
+import org.estatio.module.settings.dom.SettingType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -39,8 +39,8 @@ import lombok.Setter;
  * {@link javax.jdo.annotations.PersistenceCapable}, so that each subclass is its own root entity.
  */
 public abstract class SettingAbstractForEstatio 
-    extends org.isisaddons.module.settings.dom.SettingAbstract
-    implements org.isisaddons.module.settings.dom.ApplicationSetting {
+    extends org.estatio.module.settings.dom.SettingAbstract
+    implements org.estatio.module.settings.dom.ApplicationSetting {
 
     // //////////////////////////////////////
 

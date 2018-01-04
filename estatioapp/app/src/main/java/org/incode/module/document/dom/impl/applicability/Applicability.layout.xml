@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bs3:row>
+        <bs3:col span="12" unreferencedActions="true">
+            <cpt:domainObject/>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12">
+            <bs3:tabGroup>
+                <bs3:tab name="Name">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Name" id="general">
+                                <cpt:property id="documentTemplate" hidden="PARENTED_TABLES"/>
+                                <cpt:property id="domainClassName"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Other">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Other" id="other" unreferencedProperties="true">
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Metadata">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Metadata" id="metadata">
+                                <cpt:property id="datanucleusIdLong"/>
+                                <cpt:property id="datanucleusVersionTimestamp"/>
+                                <cpt:property id="datanucleusVersionLong"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+        <bs3:col span="6">
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12">
+            <cpt:fieldSet name="Details">
+                <cpt:property id="rendererModelFactoryClassName" hidden="ALL_TABLES"/>
+                <cpt:property id="attachmentAdvisorClassName" hidden="ALL_TABLES"/>
+            </cpt:fieldSet>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12" unreferencedCollections="true"/>
+    </bs3:row>
+</bs3:grid>

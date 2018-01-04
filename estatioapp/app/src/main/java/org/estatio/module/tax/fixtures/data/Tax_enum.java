@@ -9,7 +9,7 @@ import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.estatio.module.country.fixtures.enums.Country_enum;
+import org.incode.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;
 import org.estatio.module.tax.fixtures.builders.TaxBuilder;

@@ -13,7 +13,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
-import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;

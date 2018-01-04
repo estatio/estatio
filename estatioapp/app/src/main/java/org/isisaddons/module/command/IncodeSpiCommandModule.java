@@ -24,9 +24,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.collect.Sets;
 
+import org.apache.isis.applib.ModuleAbstract;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.apache.isis.applib.ModuleAbstract;
+import org.isisaddons.module.command.dom.CommandJdo;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
@@ -44,11 +45,19 @@ public final class IncodeSpiCommandModule extends ModuleAbstract {
 
     @Override
     public FixtureScript getTeardownFixture() {
+        // can't delete from CommandJdo, is searched for during teardown (IsisSession#close)
+        return null;
+    }
+
+    /**
+     * For tests that need to delete the command table first.
+     * Should be run in the @Before of the test.
+     */
+    public FixtureScript getTeardownFixtureWillDelete() {
         return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                // can't delete from CommandJdo, is searched for during teardown (IsisSession#close)
-                //deleteFrom(CommandJdo.class);
+                deleteFrom(CommandJdo.class);
             }
         };
     }

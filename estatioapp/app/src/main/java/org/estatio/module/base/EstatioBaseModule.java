@@ -24,10 +24,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.collect.Sets;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.apache.isis.applib.Module;
 import org.apache.isis.applib.ModuleAbstract;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.fixturescripts.clock.TickingClockFixture;
+
 import org.isisaddons.module.command.IncodeSpiCommandModule;
 import org.isisaddons.module.excel.IncodeLibExcelModule;
 import org.isisaddons.module.fakedata.IncodeLibFakeDataModule;
@@ -46,8 +47,7 @@ import org.isisaddons.wicket.pdfjs.IncodeWktPdfJsModule;
 
 import org.incode.module.base.services.BaseServicesModule;
 
-import org.apache.isis.applib.fixturescripts.clock.TickingClockFixture;
-import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.estatio.module.base.fixtures.security.perms.personas.EstatioRolesAndPermissions;
 import org.estatio.module.base.fixtures.security.userrole.personas.EstatioAdmin_Has_EstatioSuperuserRole;
 import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
@@ -117,7 +117,7 @@ public final class EstatioBaseModule extends ModuleAbstract {
         return new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new TickingClockFixture());
+                executionContext.executeChild(this, new TickingClockFixture().setDate("2014-05-18"));
                 executionContext.executeChild(this, new ApplicationTenancy_enum.PersistAll());
 
                 // set up 3 estatio roles

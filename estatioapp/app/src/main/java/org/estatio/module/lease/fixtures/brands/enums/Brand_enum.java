@@ -4,8 +4,8 @@ import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.country.fixtures.enums.Country_enum;
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
+import org.incode.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.dom.occupancy.tags.BrandRepository;
@@ -14,8 +14,8 @@ import org.estatio.module.lease.fixtures.brands.builder.BrandBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import static org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum.Global;
-import static org.estatio.module.country.fixtures.enums.Country_enum.NLD;
+import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Global;
+import static org.incode.module.country.fixtures.enums.Country_enum.NLD;
 import static org.estatio.module.lease.dom.occupancy.tags.BrandCoverage.INTERNATIONAL;
 
 @AllArgsConstructor

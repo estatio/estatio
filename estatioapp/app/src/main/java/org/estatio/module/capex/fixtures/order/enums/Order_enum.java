@@ -16,7 +16,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
-import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.fixtures.document.enums.IncomingPdf_enum;

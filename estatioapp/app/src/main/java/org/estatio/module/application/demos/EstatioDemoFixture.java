@@ -24,11 +24,13 @@ import java.util.stream.Stream;
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.ModuleAbstract;
-import org.apache.isis.applib.clock.TickingFixtureClock;
+import org.apache.isis.applib.fixtures.TickingFixtureClock;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.isisaddons.module.security.dom.user.AccountType;
 import org.isisaddons.module.security.seed.scripts.AbstractUserAndRolesFixtureScript;
+
+import org.incode.module.country.CountryModule;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
@@ -44,7 +46,6 @@ import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.EstatioChargeModule;
 import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
-import org.estatio.module.country.IncodeDomCountryModule;
 import org.estatio.module.currency.EstatioCurrencyModule;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.guarantee.fixtures.enums.Guarantee_enum;
@@ -67,7 +68,7 @@ import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
 import org.estatio.module.party.fixtures.numerator.enums.NumeratorForOrganisation_enum;
 import org.estatio.module.tax.EstatioTaxModule;
 
-import static org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum.Global;
+import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Global;
 
 public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
@@ -95,7 +96,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         });
 
         Stream.of(
-                new IncodeDomCountryModule(),
+                new CountryModule(),
                 new EstatioCurrencyModule(),
                 new EstatioTaxModule(),
                 new EstatioChargeModule(),

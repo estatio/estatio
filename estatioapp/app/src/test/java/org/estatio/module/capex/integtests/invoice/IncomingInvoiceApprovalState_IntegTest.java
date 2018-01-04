@@ -39,7 +39,7 @@ import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
-import org.estatio.module.country.fixtures.enums.Country_enum;
+import org.incode.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
@@ -83,8 +83,6 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
                         Person_enum.EmmaTreasurerGb);
             }
         });
-
-//        TickingFixtureClock.replaceExisting();
     }
 
     @Before
@@ -109,11 +107,6 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         assertState(bankAccount, NOT_VERIFIED);
 
     }
-
-//    @After
-//    public void tearDown() {
-//        TickingFixtureClock.reinstateExisting();
-//    }
 
     @Rule
     public TogglzRule togglzRule = TogglzRule.allDisabled(EstatioTogglzFeature.class);

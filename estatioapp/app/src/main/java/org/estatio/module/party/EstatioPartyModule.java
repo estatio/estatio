@@ -8,14 +8,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.collect.Sets;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.apache.isis.applib.Module;
 import org.apache.isis.applib.ModuleAbstract;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.incode.module.communications.CommunicationsModule;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
-import org.estatio.module.communications.IncodeDomCommunicationsModule;
 import org.estatio.module.countryapptenancy.EstatioCountryAppTenancyModule;
 import org.estatio.module.numerator.EstatioNumeratorModule;
 import org.estatio.module.party.dom.CommunicationChannelOwnerLinkForParty;
@@ -39,7 +38,7 @@ public final class EstatioPartyModule extends ModuleAbstract {
         return Sets.newHashSet(
                 new EstatioNumeratorModule(),
                 new EstatioCountryAppTenancyModule(),
-                new IncodeDomCommunicationsModule()   // for communication channels
+                new CommunicationsModule()   // for communication channels
         );
     }
 

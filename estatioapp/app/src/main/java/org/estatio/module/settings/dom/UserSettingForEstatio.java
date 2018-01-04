@@ -26,8 +26,8 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 
-import org.isisaddons.module.settings.dom.SettingType;
-import org.isisaddons.module.settings.dom.UserSetting;
+import org.estatio.module.settings.dom.SettingType;
+import org.estatio.module.settings.dom.UserSetting;
 
 import org.incode.module.base.dom.types.DescriptionType;
 import org.incode.module.base.dom.types.NameType;

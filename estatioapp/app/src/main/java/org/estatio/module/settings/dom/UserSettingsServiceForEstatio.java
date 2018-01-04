@@ -26,13 +26,13 @@ import org.apache.isis.applib.AbstractService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
 
-import org.isisaddons.module.settings.dom.SettingAbstract;
-import org.isisaddons.module.settings.dom.SettingType;
-import org.isisaddons.module.settings.dom.UserSetting;
-import org.isisaddons.module.settings.dom.UserSettingsServiceRW;
+import org.estatio.module.settings.dom.SettingAbstract;
+import org.estatio.module.settings.dom.SettingType;
+import org.estatio.module.settings.dom.UserSetting;
+import org.estatio.module.settings.dom.UserSettingsServiceRW;
 
 /**
- * An implementation of {@link org.isisaddons.module.settings.dom.UserSettingsService} that
+ * An implementation of {@link org.estatio.module.settings.dom.UserSettingsService} that
  * persists settings as entities into a JDO-backed database.
  */
 public class UserSettingsServiceForEstatio extends AbstractService implements UserSettingsServiceRW {

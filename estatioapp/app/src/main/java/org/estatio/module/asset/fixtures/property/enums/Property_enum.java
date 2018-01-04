@@ -10,17 +10,17 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.PropertyType;
 import org.estatio.module.asset.fixtures.property.builders.PropertyBuilder;
-import org.estatio.module.country.fixtures.enums.Country_enum;
+import org.incode.module.country.fixtures.enums.Country_enum;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import static org.estatio.module.asset.dom.PropertyType.SHOPPING_CENTER;
-import static org.estatio.module.country.fixtures.enums.Country_enum.FRA;
-import static org.estatio.module.country.fixtures.enums.Country_enum.GBR;
-import static org.estatio.module.country.fixtures.enums.Country_enum.ITA;
-import static org.estatio.module.country.fixtures.enums.Country_enum.NLD;
-import static org.estatio.module.country.fixtures.enums.Country_enum.SWE;
+import static org.incode.module.country.fixtures.enums.Country_enum.FRA;
+import static org.incode.module.country.fixtures.enums.Country_enum.GBR;
+import static org.incode.module.country.fixtures.enums.Country_enum.ITA;
+import static org.incode.module.country.fixtures.enums.Country_enum.NLD;
+import static org.incode.module.country.fixtures.enums.Country_enum.SWE;
 import static org.incode.module.base.integtests.VT.ld;
 
 @AllArgsConstructor

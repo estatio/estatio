@@ -38,7 +38,7 @@ import org.incode.module.base.integtests.VT;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
-import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.currency.dom.Currency;

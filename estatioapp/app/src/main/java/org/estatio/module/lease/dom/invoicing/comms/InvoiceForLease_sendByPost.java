@@ -37,7 +37,7 @@ import org.apache.isis.applib.value.Blob;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.incode.module.communications.dom.mixins.DocumentConstants;
 import org.incode.module.communications.dom.mixins.Document_sendByPost;
-import org.incode.module.document.dom.DocumentModule;
+import org.incode.module.document.DocumentModule;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.docs.DocumentState;

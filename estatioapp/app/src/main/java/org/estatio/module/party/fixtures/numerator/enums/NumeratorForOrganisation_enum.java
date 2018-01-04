@@ -2,7 +2,7 @@ package org.estatio.module.party.fixtures.numerator.enums;
 
 import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 
-import org.estatio.module.country.fixtures.enums.Country_enum;
+import org.incode.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.party.fixtures.numerator.builders.NumeratorForOrganisationBuilder;
 

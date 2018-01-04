@@ -3,6 +3,7 @@ package org.estatio.module.capex.integtests.document;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.jdo.JDOHelper;
 
 import com.google.common.io.Resources;
 
@@ -66,7 +67,7 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
         assertThat(documentBlob.getName()).isEqualTo(blob.getName());
         assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
         assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
-        assertThat(document.dnGetVersion()).isEqualTo(1L);
+        assertThat(JDOHelper.getVersion(document)).isEqualTo(1L);
         assertThat(paperclipRepository.findByDocument(document).size()).isEqualTo(0);
 
         // and then also
@@ -92,11 +93,11 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
         assertThat(incomingDocumentsAfter).hasSize(2);
         assertThat(incomingDocumentsAfter.get(0).getName()).isEqualTo(fileName);
         assertThat(incomingDocumentsAfter.get(0).getBlobBytes()).isEqualTo(similarNamedBlob.getBytes());
-        assertThat(incomingDocumentsAfter.get(0).dnGetVersion()).isEqualTo(2L);
+        assertThat(JDOHelper.getVersion(incomingDocumentsAfter.get(0))).isEqualTo(2L);
         assertThat(paperclipRepository.findByDocument(incomingDocumentsAfter.get(0)).size()).isEqualTo(1);
         assertThat(incomingDocumentsAfter.get(1).getName()).contains(fileName); // has prefix arch-[date time indication]-
         assertThat(incomingDocumentsAfter.get(1).getBlobBytes()).isEqualTo(documentBlob.getBytes());
-        assertThat(incomingDocumentsAfter.get(1).dnGetVersion()).isEqualTo(1L);
+        assertThat(JDOHelper.getVersion(incomingDocumentsAfter.get(1))).isEqualTo(1L);
         assertThat(paperclipRepository.findByDocument(incomingDocumentsAfter.get(1)).size()).isEqualTo(0);
     }
 

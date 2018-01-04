@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bs3:row>
+        <bs3:col span="12" unreferencedActions="true">
+            <cpt:domainObject/>
+            <cpt:action id="cloneWhenBlob">
+                <cpt:named>Clone</cpt:named>
+            </cpt:action>
+            <cpt:action id="cloneWhenClob">
+                <cpt:named>Clone</cpt:named>
+            </cpt:action>
+            <cpt:action id="cloneWhenText">
+                <cpt:named>Clone</cpt:named>
+            </cpt:action>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="6">
+            <bs3:tabGroup>
+                <bs3:tab name="Identifier">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Identifier">
+                                <cpt:property id="name"/>
+                                <cpt:property id="date">
+                                    <cpt:action id="changeDate" position="BELOW"/>
+                                </cpt:property>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Metadata">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Metadata" id="metadata">
+                                <cpt:action id="clearHints" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="rebuildMetamodel" position="PANEL_DROPDOWN"/>
+                                <cpt:property id="datanucleusIdLong"/>
+                                <cpt:property id="datanucleusVersionLong"/>
+                                <cpt:property id="datanucleusVersionTimestamp"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Other">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Other" unreferencedProperties="true">
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+            <cpt:fieldSet name="Details">
+                <cpt:property id="type"/>
+                <cpt:property id="atPath" hidden="ALL_TABLES"/>
+                <!-- assuming a mixin is present to look this up -->
+                <cpt:property id="applicationTenancy"/>
+                <cpt:property id="createdAt" hidden="EVERYWHERE"/>
+                <cpt:property id="previewOnly">
+                    <cpt:action id="updatePreviewOnly">
+                        <cpt:named>Toggle</cpt:named>
+                    </cpt:action>
+                </cpt:property>
+            </cpt:fieldSet>
+        </bs3:col>
+        <bs3:col span="6">
+            <bs3:tabGroup>
+                <bs3:tab name="Content">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Rendering" id="contentRendering">
+                                <cpt:property id="contentRenderingStrategy" hidden="ALL_TABLES">
+                                    <cpt:action id="changeContentRenderingStrategy">
+                                        <cpt:named>Change</cpt:named>
+                                    </cpt:action>
+                                </cpt:property>
+                            </cpt:fieldSet>
+                            <cpt:fieldSet name="Template" id="contentTemplate">
+                                <cpt:property id="sort"/>
+                                <cpt:property id="blob" hidden="ALL_TABLES">
+                                    <cpt:action id="uploadBlob">
+                                        <cpt:named>Upload</cpt:named>
+                                    </cpt:action>
+                                </cpt:property>
+                                <cpt:property id="clob" hidden="ALL_TABLES">
+                                    <cpt:action id="uploadClob">
+                                        <cpt:named>Upload</cpt:named>
+                                    </cpt:action>
+                                </cpt:property>
+                                <cpt:property id="text" hidden="ALL_TABLES" multiLine="14">
+                                    <cpt:action id="downloadTextAsClob"/>
+                                    <cpt:action id="updateText">
+                                        <cpt:named>Update</cpt:named>
+                                    </cpt:action>
+                                </cpt:property>
+                            </cpt:fieldSet>
+                            <cpt:fieldSet name="Mime type">
+                                <cpt:property id="mimeType"/>
+                                <cpt:property id="fileSuffix"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Name">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Rendering" id="nameRendering">
+                                <cpt:property id="nameRenderingStrategy" hidden="ALL_TABLES">
+                                    <cpt:action id="changeNameRenderingStrategy">
+                                        <cpt:named>Change</cpt:named>
+                                    </cpt:action>
+                                </cpt:property>
+                            </cpt:fieldSet>
+                            <cpt:fieldSet name="Template" id="subjectTemplate">
+                                <cpt:property id="nameText" hidden="ALL_TABLES">
+                                    <cpt:action id="updateNameText">
+                                        <cpt:named>Update</cpt:named>
+                                    </cpt:action>
+                                </cpt:property>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="DummyRequiredIfOnlyOneTabToShow">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Dummy">
+                                <cpt:property id="dummy">
+                                </cpt:property>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12" unreferencedCollections="false">
+            <cpt:collection id="appliesTo" defaultView="table"/>
+            <cpt:collection id="attachedTo" defaultView="table"/>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12" unreferencedCollections="true">
+        </bs3:col>
+    </bs3:row>
+</bs3:grid>

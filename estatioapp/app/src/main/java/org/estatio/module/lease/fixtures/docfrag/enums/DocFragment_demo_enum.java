@@ -30,7 +30,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.incode.module.docfragment.dom.impl.DocFragment;
 import org.incode.module.docfragment.dom.impl.DocFragmentRepository;
 
-import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.estatio.module.lease.fixtures.docfrag.builders.DocFragmentBuilder;
 import org.estatio.module.lease.seed.DocFragment_enum;
 

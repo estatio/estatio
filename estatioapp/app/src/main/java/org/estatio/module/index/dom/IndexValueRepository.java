@@ -58,7 +58,10 @@ public class IndexValueRepository
             indexValue = create(indexBase, startDate, value);
         }
         indexValue.setValue(value);
-        // TODO: for review: is this good practice?
+        // we're not sure this is good practice, but we don't have any better pattern defined in
+        // the framework to follow at the moment.
+        // The WrapperFactory currently is too much focused on the UI,
+        // rather than inter-module interactions
         final IndexValue.UpdateEvent event = new IndexValue.UpdateEvent();
         event.setSource(indexValue);
         eventBusService.post(event);

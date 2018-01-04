@@ -5,8 +5,8 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.isisaddons.module.settings.dom.ApplicationSetting;
-import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
+import org.estatio.module.settings.dom.ApplicationSetting;
+import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
 import org.isisaddons.module.togglz.glue.spi.FeatureState;
 import org.isisaddons.module.togglz.glue.spi.FeatureStateRepository;
 

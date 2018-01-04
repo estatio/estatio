@@ -18,11 +18,18 @@
  */
 package org.estatio.module.numerator.integtests;
 
+import java.util.Set;
+
+import com.google.common.collect.Sets;
+
 import org.slf4j.event.Level;
 
+import org.apache.isis.applib.Module;
 import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
 import org.apache.isis.core.runtime.headless.logging.LogConfig;
-import org.estatio.module.numerator.integtests.dom.EstatioNumeratorExampleModule;
+
+import org.estatio.module.numerator.EstatioNumeratorModule;
+import org.estatio.module.numerator.integtests.dom.NumeratorModuleNumeratorDomSubmodule;
 
 /**
  * Base class for integration tests.
@@ -31,7 +38,17 @@ public abstract class NumeratorModuleIntegTestAbstract extends IntegrationTestAb
 
     public NumeratorModuleIntegTestAbstract() {
         super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
-              new EstatioNumeratorExampleModule());
+                module()
+        );
+    }
+
+    public static EstatioNumeratorModule module() {
+        return new EstatioNumeratorModule() {
+            @Override
+            public Set<Module> getDependencies() {
+                return Sets.newHashSet(new NumeratorModuleNumeratorDomSubmodule());
+            }
+        };
     }
 
 }

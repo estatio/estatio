@@ -30,7 +30,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-// TODO: need to move this back to src/test/java
 @javax.jdo.annotations.PersistenceCapable(
         identityType=IdentityType.DATASTORE,
         schema = "simple",

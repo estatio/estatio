@@ -46,7 +46,7 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.currency.fixtures.enums.Currency_enum;
 import org.estatio.module.invoice.dom.Constants;

@@ -131,7 +131,7 @@ language governing permissions and limitations under the License.
 
     <properties>
         <isis.integTest.module>
-            org.estatio.module.application.EstatioApplicationModule
+            org.estatio.module.application.EstatioApplicationModuleWithExampleModules
         </isis.integTest.module>
     </properties>
 
@@ -166,18 +166,6 @@ language governing permissions and limitations under the License.
             <type>test-jar</type>
         </dependency>
         <dependency>
-            <groupId>org.incode.module.docrendering</groupId>
-            <artifactId>incode-module-docrendering-stringinterpolator-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.incode.module.docrendering</groupId>
-            <artifactId>incode-module-docrendering-freemarker-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.incode.module.docrendering</groupId>
-            <artifactId>incode-module-docrendering-xdocreport-dom</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.isisaddons.module.excel</groupId>
             <artifactId>isis-module-excel-dom</artifactId>
         </dependency>
@@ -198,36 +186,13 @@ language governing permissions and limitations under the License.
             <artifactId>isis-module-servletapi-dom</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.isisaddons.module.settings</groupId>
-            <artifactId>isis-module-settings-dom</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.isisaddons.module.stringinterpolator</groupId>
             <artifactId>isis-module-stringinterpolator-dom</artifactId>
         </dependency>
-
-        <!-- incode modules: generic subdomains -->
         <dependency>
-            <groupId>org.incode.module.classification</groupId>
-            <artifactId>incode-module-classification-dom</artifactId>
+            <groupId>org.isisaddons.module.freemarker</groupId>
+            <artifactId>isis-module-freemarker-dom</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.incode.module.communications</groupId>
-            <artifactId>incode-module-communications-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.incode.module.country</groupId>
-            <artifactId>incode-module-country-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.incode.module.docfragment</groupId>
-            <artifactId>incode-module-docfragment-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.incode.module.document</groupId>
-            <artifactId>incode-module-document-dom</artifactId>
-        </dependency>
-
 
         <!-- incode modules: metamodel -->
         <dependency>
@@ -403,15 +368,6 @@ language governing permissions and limitations under the License.
             <artifactId>danhaywood-java-assertjext</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.incode.module.communications</groupId>
-            <artifactId>incode-module-communications-dom</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-
-
 
     </dependencies>
 
