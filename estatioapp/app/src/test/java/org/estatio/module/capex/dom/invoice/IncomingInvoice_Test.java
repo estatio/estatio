@@ -3,6 +3,7 @@ package org.estatio.module.capex.dom.invoice;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -85,7 +86,6 @@ public class IncomingInvoice_Test {
             // then
             assertThat(result).isEqualTo("incoming invoice type, invoice number, buyer, seller, date received, due date, net amount, gross amount, (on item 1) incoming invoice type, start date, end date, net amount, vat amount, gross amount, charge required");
 
-
             // and when conditions on item satisfied
             invoice.setType(IncomingInvoiceType.PROPERTY_EXPENSES);
             invoice.setInvoiceNumber("123");
@@ -100,7 +100,6 @@ public class IncomingInvoice_Test {
             result = invoice.reasonIncomplete();
             // then
             assertThat(result).isEqualTo("buyer, seller, date received, due date, gross amount, property required");
-
 
             // and when conditions for invoice satisfied
             item1.setIncomingInvoiceType(IncomingInvoiceType.CAPEX);
@@ -117,7 +116,6 @@ public class IncomingInvoice_Test {
             // then
             assertThat(result).isEqualTo("total amount on items equal to amount on the invoice, (on item 1) project (capex), fixed asset required");
 
-
             // and when all conditions satisfied
             item1.setFixedAsset(new Property());
             item1.setProject(new Project());
@@ -129,8 +127,6 @@ public class IncomingInvoice_Test {
 
         }
     }
-
-
 
     public static class validator_Test extends IncomingInvoice_Test {
 
@@ -314,7 +310,7 @@ public class IncomingInvoice_Test {
             // and given
             invoice.setNetAmount(new BigDecimal("100.00"));
             invoice.setGrossAmount(new BigDecimal("100.00"));
-            IncomingInvoiceItem item = new IncomingInvoiceItem(){
+            IncomingInvoiceItem item = new IncomingInvoiceItem() {
                 @Override
                 void invalidateApproval() {
                     // nothing
@@ -366,9 +362,6 @@ public class IncomingInvoice_Test {
         }
     }
 
-
-
-
     public static class splitItem_Test extends IncomingInvoice_Test {
 
         @Test
@@ -378,7 +371,7 @@ public class IncomingInvoice_Test {
             invoice.setType(IncomingInvoiceType.CAPEX);
             invoice.incomingInvoiceItemRepository = mockIncomingInvoiceItemRepository;
 
-            LocalDate dueDate = new LocalDate(2018,01,01);
+            LocalDate dueDate = new LocalDate(2018, 01, 01);
             invoice.setDueDate(dueDate);
 
             String description = "some description";
@@ -401,7 +394,7 @@ public class IncomingInvoice_Test {
             BigDecimal newItemGrossAmount = new BigDecimal("60.00");
 
             // expect
-            context.checking(new Expectations(){{
+            context.checking(new Expectations() {{
                 oneOf(mockIncomingInvoiceItemRepository).addItem(
                         invoice,
                         IncomingInvoiceType.CAPEX,
@@ -419,7 +412,7 @@ public class IncomingInvoice_Test {
             }});
 
             // when
-            invoice.splitItem(itemToSplit, description, newItemNetAmount, newItemVatAmount, tax, newItemGrossAmount,charge, property, project, budgetItem, period);
+            invoice.splitItem(itemToSplit, description, newItemNetAmount, newItemVatAmount, tax, newItemGrossAmount, charge, property, project, budgetItem, period);
 
             // then
             assertThat(itemToSplit.getNetAmount()).isEqualTo(new BigDecimal("150.00"));
@@ -428,8 +421,6 @@ public class IncomingInvoice_Test {
 
         }
     }
-
-
 
     public static class mergeItem_Test extends IncomingInvoice_Test {
 
@@ -443,7 +434,7 @@ public class IncomingInvoice_Test {
             IncomingInvoiceItem targetItem = new IncomingInvoiceItem();
 
             // expect
-            context.checking(new Expectations(){{
+            context.checking(new Expectations() {{
                 oneOf(mockIncomingInvoiceItemRepository).mergeItems(
                         sourceItem, targetItem);
             }});
@@ -464,7 +455,6 @@ public class IncomingInvoice_Test {
 
         }
     }
-
 
     public static class reasonDisabledDueToApprovalStateIfAny_Test extends IncomingInvoice_Test {
 
@@ -560,9 +550,9 @@ public class IncomingInvoice_Test {
         public void when_state_other() throws Exception {
 
             for (final IncomingInvoiceApprovalState state :
-                            Arrays.asList(IncomingInvoiceApprovalState.values()).stream().
-                                    filter(x -> x != NEW && x != COMPLETED)
-                                    .collect(Collectors.toList())) {
+                    Arrays.asList(IncomingInvoiceApprovalState.values()).stream().
+                            filter(x -> x != NEW && x != COMPLETED)
+                            .collect(Collectors.toList())) {
 
                 // given
                 this.state = state;
@@ -577,12 +567,9 @@ public class IncomingInvoice_Test {
 
         }
 
-
     }
 
-
     public static class invalidateApprovalIfDiffer_Test extends IncomingInvoice_Test {
-
 
         @Test
         public void when_dont_differ_both_null() {
@@ -683,6 +670,7 @@ public class IncomingInvoice_Test {
             // then
             assertThat(reason).contains("Cannot modify", "migrated");
         }
+
         @Test
         public void when_new() {
             // given
@@ -699,18 +687,18 @@ public class IncomingInvoice_Test {
         public void when_anything_else() {
 
             Arrays.stream(IncomingInvoiceApprovalState.values())
-                  .filter(state -> state != NEW)
-                  .forEach(state -> {
+                    .filter(state -> state != NEW)
+                    .forEach(state -> {
 
-                // given
-                invoice.setApprovalState(state);
+                        // given
+                        invoice.setApprovalState(state);
 
-                // when
-                final String reason = invoice.reasonDisabledDueToStateStrict();
+                        // when
+                        final String reason = invoice.reasonDisabledDueToStateStrict();
 
-                // then
-                assertThat(reason).contains("Cannot modify").doesNotContain("migrated");
-            });
+                        // then
+                        assertThat(reason).contains("Cannot modify").doesNotContain("migrated");
+                    });
         }
 
     }
@@ -747,7 +735,7 @@ public class IncomingInvoice_Test {
             assertThat(invoice.getNetAmount()).isEqualTo("10.00");
             assertThat(invoice.getGrossAmount()).isNull();
             // and when
-            IncomingInvoiceItem item = new IncomingInvoiceItem(){
+            IncomingInvoiceItem item = new IncomingInvoiceItem() {
                 @Override
                 void invalidateApproval() {
                     // nothing
@@ -815,7 +803,7 @@ public class IncomingInvoice_Test {
     public static class IsReported extends IncomingInvoice_Test {
 
         @Test
-        public void is_reported_works() throws Exception{
+        public void is_reported_works() throws Exception {
 
             // given
             IncomingInvoiceItem unreportedItem = new IncomingInvoiceItem();
@@ -827,11 +815,130 @@ public class IncomingInvoice_Test {
             // and when
             IncomingInvoiceItem reportedItem = new IncomingInvoiceItem();
             reportedItem.setUuid(UUID.randomUUID().toString()); // set for compare in sorted set invoice#getItems()
-            reportedItem.setReportedDate(new LocalDate(2017,1,1));
+            reportedItem.setReportedDate(new LocalDate(2017, 1, 1));
             invoice.getItems().add(reportedItem);
 
             // then
             assertThat(invoice.isReported()).isTrue();
+
+        }
+
+    }
+
+    public static class ItemsIgnoringReversals extends IncomingInvoice_Test {
+
+        @Test
+        public void reportedItemsIgnoringReversals_works() {
+
+            //given
+            IncomingInvoiceItem reportedUnreversedItem = new IncomingInvoiceItem();
+            reportedUnreversedItem.setReportedDate(new LocalDate());
+            reportedUnreversedItem.setSequence(BigInteger.valueOf(1));
+
+            IncomingInvoiceItem reversal1 = new IncomingInvoiceItem();
+            reversal1.setReversalOf(new IncomingInvoiceItem());
+            reversal1.setReportedDate(new LocalDate());
+            reversal1.setSequence(BigInteger.valueOf(2));
+
+            IncomingInvoiceItem unreportedItem = new IncomingInvoiceItem();
+            unreportedItem.setSequence(BigInteger.valueOf(3));
+
+            IncomingInvoiceItem reportedReversedItem = new IncomingInvoiceItem();
+            reportedUnreversedItem.setReportedDate(new LocalDate());
+            reportedUnreversedItem.setSequence(BigInteger.valueOf(4));
+
+            IncomingInvoiceItem reversal2 = new IncomingInvoiceItem();
+            reversal2.setReversalOf(reportedReversedItem);
+            reversal2.setReportedDate(new LocalDate());
+            reversal2.setSequence(BigInteger.valueOf(5));
+
+            invoice.getItems().addAll(Arrays.asList(reportedUnreversedItem, reversal1, unreportedItem, reportedReversedItem, reversal2));
+            assertThat(invoice.getItems().size()).isEqualTo(5);
+
+            // when
+            List<IncomingInvoiceItem> result = invoice.reportedItemsIgnoringReversals();
+
+            // then
+            Assertions.assertThat(result.size()).isEqualTo(1);
+            Assertions.assertThat(result.get(0)).isEqualTo(reportedUnreversedItem);
+
+        }
+
+        @Test
+        public void unreportedItemsIgnoringReversals_works() {
+
+            //given
+            IncomingInvoiceItem reportedItem = new IncomingInvoiceItem();
+            reportedItem.setReportedDate(new LocalDate());
+            reportedItem.setSequence(BigInteger.valueOf(1));
+            IncomingInvoiceItem reversal = new IncomingInvoiceItem();
+            reversal.setReversalOf(new IncomingInvoiceItem());
+            reversal.setSequence(BigInteger.valueOf(2));
+            IncomingInvoiceItem unreportedItem = new IncomingInvoiceItem();
+            unreportedItem.setSequence(BigInteger.valueOf(3));
+            invoice.getItems().addAll(Arrays.asList(reportedItem, reversal, unreportedItem));
+
+
+            // when
+            List<IncomingInvoiceItem> result = invoice.unreportedItemsIgnoringReversals();
+
+            // then
+            Assertions.assertThat(result.size()).isEqualTo(1);
+            Assertions.assertThat(result.get(0)).isEqualTo(unreportedItem);
+
+        }
+
+    }
+
+    public static class SetTypeOnUnreportedItems extends IncomingInvoice_Test {
+
+        @Test
+        public void setTypeOnUnreportedItems_Ignoring_Reversals_works() throws Exception {
+
+            // given
+            IncomingInvoiceItem reportedItem = new IncomingInvoiceItem();
+            reportedItem.setSequence(BigInteger.valueOf(1));
+            reportedItem.setReportedDate(new LocalDate());
+            IncomingInvoiceItem reversal = new IncomingInvoiceItem();
+            reversal.setSequence(BigInteger.valueOf(2));
+            reversal.setReversalOf(new IncomingInvoiceItem());
+            IncomingInvoiceItem itemToBeModified = new IncomingInvoiceItem(){
+                @Override
+                void invalidateApproval() {}
+            };
+            itemToBeModified.setSequence(BigInteger.valueOf(3));
+            invoice.getItems().addAll(Arrays.asList(reportedItem, reversal, itemToBeModified));
+
+            // when
+            final IncomingInvoiceType typeCapex = IncomingInvoiceType.CAPEX;
+            invoice.setTypeOnUnreportedItems(typeCapex);
+
+            // then
+            Assertions.assertThat(itemToBeModified.getIncomingInvoiceType()).isEqualTo(typeCapex);
+
+        }
+
+    }
+
+    public static class ReversedItems extends IncomingInvoice_Test {
+
+        @Test
+        public void reversals_and_reversedItems_methods_work() throws Exception {
+
+            // given
+            IncomingInvoiceItem reversedItem = new IncomingInvoiceItem();
+            reversedItem.setSequence(BigInteger.valueOf(1));
+            IncomingInvoiceItem reversal = new IncomingInvoiceItem();
+            reversal.setReversalOf(reversedItem);
+            reversal.setSequence(BigInteger.valueOf(2));
+
+            invoice.getItems().addAll(Arrays.asList(reversedItem, reversal));
+
+            // when // then
+            assertThat(invoice.reversals().size()).isEqualTo(1);
+            assertThat(invoice.reversals()).contains(reversal);
+            assertThat(invoice.reversedItems().size()).isEqualTo(1);
+            assertThat(invoice.reversedItems()).contains(reversedItem);
 
         }
 

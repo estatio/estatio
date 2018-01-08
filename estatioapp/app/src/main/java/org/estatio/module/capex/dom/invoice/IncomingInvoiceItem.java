@@ -944,6 +944,16 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
         });
     }
 
+    @Programmatic
+    public boolean isReported(){
+        return getReportedDate()!=null;
+    }
+
+    @Programmatic
+    public boolean isReversal(){
+        return getReversalOf()!=null;
+    }
+
     @Inject
     @NotPersistent
     OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;

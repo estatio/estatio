@@ -62,10 +62,11 @@ public class IncomingInvoice_switchView {
         switch (items.size()) {
         case 0:
         case 1:
-            return null;
+            break;
         default:
             return "Can only switch view for invoices with a single item";
         }
+        return incomingInvoice.isReported() ? "This is invoice is reported; please make changes on entity and/or items" : null;
     }
 
     @Inject

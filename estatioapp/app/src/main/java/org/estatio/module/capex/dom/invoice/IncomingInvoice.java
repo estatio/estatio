@@ -390,15 +390,47 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Programmatic
     public void reverseReportedItemsNoCorrection() {
-        List<IncomingInvoiceItem> itemsToReverse = Lists.newArrayList(getItems()).stream().
-                filter(IncomingInvoiceItem.class::isInstance)
-                .map(IncomingInvoiceItem.class::cast)
-                .filter(x -> x.getReportedDate() != null)
-                .filter(x -> x.getReversalOf() == null)
-                .collect(Collectors.toList());
-       for (IncomingInvoiceItem itemToReverse : itemsToReverse){
+       for (IncomingInvoiceItem itemToReverse : itemsToReverse()){
            copyWithLinks(itemToReverse, Sort.REVERSAL);
        }
+    }
+
+    @Programmatic
+    public List<IncomingInvoiceItem> itemsToReverse(){
+        return reportedItemsIgnoringReversals();
+    }
+
+    @Programmatic
+    public List<IncomingInvoiceItem> reportedItemsIgnoringReversals(){
+        return Lists.newArrayList(getItems()).stream().
+                filter(IncomingInvoiceItem.class::isInstance)
+                .map(IncomingInvoiceItem.class::cast)
+                .filter(x -> x.isReported())
+                .filter(x -> !x.isReversal())
+                .filter(x->!reversedItems().contains(x)) // also ignore reported items that are already reversed
+                .collect(Collectors.toList());
+    }
+
+    List<IncomingInvoiceItem> reversedItems(){
+        return reversals().stream().map(x->x.getReversalOf()).collect(Collectors.toList());
+    }
+
+    List<IncomingInvoiceItem> reversals(){
+        return Lists.newArrayList(getItems()).stream().
+                filter(IncomingInvoiceItem.class::isInstance)
+                .map(IncomingInvoiceItem.class::cast)
+                .filter(x -> x.isReversal())
+                .collect(Collectors.toList());
+    }
+
+    @Programmatic
+    public List<IncomingInvoiceItem> unreportedItemsIgnoringReversals(){
+        return Lists.newArrayList(getItems()).stream().
+                filter(IncomingInvoiceItem.class::isInstance)
+                .map(IncomingInvoiceItem.class::cast)
+                .filter(x -> !x.isReported())
+                .filter(x -> !x.isReversal())
+                .collect(Collectors.toList());
     }
 
     enum Sort {
@@ -482,16 +514,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return choices.size() == 1 ? choices.get(0) : null;
     }
     public List<IncomingInvoiceItem> choices0ReverseItem() {
-        return Lists.newArrayList(getItems()).stream().
-                filter(IncomingInvoiceItem.class::isInstance)
-                .map(IncomingInvoiceItem.class::cast)
-                .filter(x -> x.getReportedDate() != null)
-                .filter(x -> x.getReversalOf() == null)
-                .collect(Collectors.toList());
+        return itemsToReverse();
     }
-
-
-
 
     @MemberOrder(name = "items", sequence = "2")
     public IncomingInvoice splitItem(
@@ -787,13 +811,25 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final IncomingInvoiceType type,
             final boolean changeOnItemsAsWell){
         if (changeOnItemsAsWell){
-            Lists.newArrayList(getItems())  // eagerly load (DN 4.x collections do not support streaming)
-                    .stream()
-                    .map(IncomingInvoiceItem.class::cast)
-                    .forEach(x->x.setIncomingInvoiceType(type));
+            if (isReported()){
+                reverseReportedItems();
+            }
+            setTypeOnUnreportedItems(type);
         }
         setType(type);
         return this;
+    }
+
+    void reverseReportedItems(){
+            for (IncomingInvoiceItem item : itemsToReverse()){
+                    reverseItem(item);
+            }
+    }
+
+    void setTypeOnUnreportedItems(final IncomingInvoiceType type){
+        for (IncomingInvoiceItem item : unreportedItemsIgnoringReversals()){
+            item.setIncomingInvoiceType(type);
+        }
     }
 
     public IncomingInvoiceType default0EditType(){
