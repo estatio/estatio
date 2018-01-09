@@ -50,20 +50,23 @@ import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
 
-import org.estatio.module.base.dom.UdoDomainObject2;
-import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
+import org.estatio.module.base.dom.UdoDomainObject2;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.budget.dom.Distributable;
 import org.estatio.module.budget.dom.DistributionService;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.keyitem.KeyItemRepository;
+import org.estatio.module.budget.dom.partioning.PartitionItem;
+import org.estatio.module.budget.dom.partioning.Partitioning;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -325,14 +328,6 @@ public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicatio
             if (!this.unitIntervalValidForThisKeyTable(item.getUnit())) {
                 return false;
             }
-
-            // previously we had this code, but no longer sure if it makes any sense...
-//            final Unit unit = item.getUnit();
-//            final LocalDateInterval interval = getBudget().getInterval();
-//            if (occupancyRepository.occupanciesByUnitAndInterval(unit, interval).isEmpty()) {
-//                return false;
-//            }
-
         }
         return true;
     }
@@ -362,6 +357,33 @@ public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicatio
         return this;
     }
 
+    @Programmatic
+    public List<PartitionItem> usedInPartitionItems(){
+        List<PartitionItem> result = new ArrayList<>();
+        for (Partitioning partitioning : getBudget().getPartitionings()) {
+            for (PartitionItem partitionItem : partitioning.getItems()) {
+                if (partitionItem.getKeyTable()==this){
+                    result.add(partitionItem);
+                }
+            }
+        }
+        return result;
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public Budget remove(){
+        Budget budgetToReturn = getBudget();
+        repositoryService.removeAndFlush(this);
+        return budgetToReturn;
+    }
+
+    public String disableRemove(){
+        if (!usedInPartitionItems().isEmpty()){
+            return "Please remove partition items that use this keytable first";
+        }
+        return null;
+    }
+
     // //////////////////////////////////////
 
     @Inject
@@ -373,5 +395,7 @@ public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicatio
     @Inject
     KeyItemRepository keyItemRepository;
 
+    @Inject
+    RepositoryService repositoryService;
 
 }

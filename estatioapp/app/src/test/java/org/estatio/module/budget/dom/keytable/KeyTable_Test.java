@@ -20,7 +20,12 @@ package org.estatio.module.budget.dom.keytable;
 import org.junit.Test;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
+
 import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.partioning.PartitionItem;
+import org.estatio.module.budget.dom.partioning.Partitioning;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class KeyTable_Test {
 
@@ -32,6 +37,37 @@ public class KeyTable_Test {
             newPojoTester()
                     .withFixture(pojos(Budget.class, Budget.class))
                     .exercise(pojo);
+        }
+
+    }
+
+    public static class OtherTests extends KeyTable_Test {
+
+        @Test
+        public void used_in_partition_items_works() throws Exception {
+
+            // given
+            Budget budget = new Budget();
+
+            KeyTable keyTable = new KeyTable();
+            keyTable.setBudget(budget);
+
+            PartitionItem partitionItemUsingKeyTable = new PartitionItem();
+            partitionItemUsingKeyTable.setKeyTable(keyTable);
+
+            PartitionItem otherPartitionItem = new PartitionItem();
+
+            Partitioning partitioning = new Partitioning();
+            partitioning.getItems().add(partitionItemUsingKeyTable);
+            partitioning.getItems().add(otherPartitionItem);
+            assertThat(partitioning.getItems().size()).isEqualTo(2);
+
+            budget.getPartitionings().add(partitioning);
+
+            // when, then
+            assertThat(keyTable.usedInPartitionItems().size()).isEqualTo(1);
+            assertThat(keyTable.usedInPartitionItems()).contains(partitionItemUsingKeyTable);
+
         }
 
     }
