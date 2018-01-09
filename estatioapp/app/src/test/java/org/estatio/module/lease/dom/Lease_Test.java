@@ -1253,4 +1253,45 @@ public class Lease_Test {
 
     }
 
+    public static class Finders extends Lease_Test {
+
+        @Test
+        public void findFirstActiveItemOfTypeAndChargeOnDate_works() throws Exception {
+
+            // given
+            Lease lease = new Lease();
+            LeaseItemType leaseItemType = LeaseItemType.SERVICE_CHARGE;
+            Charge charge = new Charge();
+            LocalDate date = new LocalDate(2018,1,1);
+
+            LeaseItem expiredItem = new LeaseItem();
+            expiredItem.setEndDate(new LocalDate(2017, 12, 31));
+            expiredItem.setCharge(charge);
+            expiredItem.setType(leaseItemType);
+            expiredItem.setSequence(BigInteger.valueOf(1));
+
+            LeaseItem activeItem = new LeaseItem();
+            activeItem.setCharge(charge);
+            activeItem.setType(leaseItemType);
+            activeItem.setSequence(BigInteger.valueOf(2));
+
+            LeaseItem secondActiveItem = new LeaseItem();
+            secondActiveItem.setCharge(charge);
+            secondActiveItem.setType(leaseItemType);
+            secondActiveItem.setSequence(BigInteger.valueOf(3));
+
+            lease.getItems().addAll(new TreeSet(Arrays.asList(expiredItem, activeItem, secondActiveItem)));
+            assertThat(lease.getItems().size()).isEqualTo(3);
+
+            // when
+            LeaseItem itemFound = lease.findFirstActiveItemOfTypeAndChargeOnDate(leaseItemType, charge, date);
+
+            // then
+            assertThat(itemFound).isEqualTo(activeItem);
+            assertThat(itemFound).isNotEqualTo(secondActiveItem);
+        }
+        
+        
+    }
+
 }

@@ -5,7 +5,8 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.assertj.core.api.Assertions;
+import org.jmock.Expectations;
+import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
@@ -15,10 +16,19 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.invoice.dom.PaymentMethod;
+import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseStatus;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BudgetAssignmentService_Test {
 
@@ -108,10 +118,168 @@ public class BudgetAssignmentService_Test {
         List<Lease> leasesfound = budgetAssignmentService.leasesWithActiveOccupations(budget);
 
         // then
-        Assertions.assertThat(leasesfound.size()).isEqualTo(2);
-        Assertions.assertThat(leasesfound.get(0)).isEqualTo(leaseWith1ActiveOccupancy);
-        Assertions.assertThat(leasesfound.get(1)).isEqualTo(leaseWith2ActiveOccupancies);
+        assertThat(leasesfound.size()).isEqualTo(2);
+        assertThat(leasesfound.get(0)).isEqualTo(leaseWith1ActiveOccupancy);
+        assertThat(leasesfound.get(1)).isEqualTo(leaseWith2ActiveOccupancies);
     }
 
+
+    @Test
+    public void findOrCreateLeaseItemForServiceChargeBudgeted_returns_active_item_when_found() throws Exception {
+
+        // given
+        LeaseItem itemToBeFound = new LeaseItem();
+        Lease lease = new Lease(){
+            @Override
+            public LeaseItem findFirstActiveItemOfTypeAndChargeOnDate(final LeaseItemType leaseItemType, final Charge charge, final LocalDate date){
+                return itemToBeFound;
+            }
+        };
+        BudgetCalculationResult budgetCalculationResult = new BudgetCalculationResult();
+        LocalDate termStartDate = new LocalDate(2018,1,1);
+
+        // when
+        LeaseItem itemFound = budgetAssignmentService.findOrCreateLeaseItemForServiceChargeBudgeted(lease, budgetCalculationResult, termStartDate);
+
+        // then
+        assertThat(itemFound).isEqualTo(itemToBeFound);
+        
+    }
+
+    @Mock Lease mockLease;
+
+    @Test
+    public void findOrCreateLeaseItemForServiceChargeBudgeted_works_when_item_to_copy_from_found() throws Exception {
+
+        // given
+        LeaseItem leaseItemToCopyFrom = new LeaseItem();
+        leaseItemToCopyFrom.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
+        leaseItemToCopyFrom.setPaymentMethod(PaymentMethod.CHEQUE);
+        BudgetAssignmentService budgetAssignmentService = new BudgetAssignmentService(){
+            @Override
+            LeaseItem findItemToCopyFrom(final Lease lease){
+                return leaseItemToCopyFrom;
+            }
+        };
+        Charge charge = new Charge();
+        BudgetCalculationResult budgetCalculationResult = new BudgetCalculationResult();
+        budgetCalculationResult.setInvoiceCharge(charge);
+        LocalDate termStartDate = new LocalDate(2018,1,1);
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockLease).findFirstActiveItemOfTypeAndChargeOnDate(LeaseItemType.SERVICE_CHARGE, charge, termStartDate);
+            will(returnValue(null));
+            oneOf(mockLease).newItem(
+                    LeaseItemType.SERVICE_CHARGE,
+                    LeaseAgreementRoleTypeEnum.LANDLORD,
+                    budgetCalculationResult.getInvoiceCharge(),
+                    leaseItemToCopyFrom.getInvoicingFrequency(),
+                    leaseItemToCopyFrom.getPaymentMethod(),
+                    termStartDate);
+        }});
+
+        // when
+        budgetAssignmentService.findOrCreateLeaseItemForServiceChargeBudgeted(mockLease, budgetCalculationResult, termStartDate);
+    }
+
+    @Test
+    public void findOrCreateLeaseItemForServiceChargeBudgeted_works_when_no_item_to_copy_from_found() throws Exception {
+
+        // given
+        BudgetAssignmentService budgetAssignmentService = new BudgetAssignmentService(){
+            @Override
+            LeaseItem findItemToCopyFrom(final Lease lease){
+                return null;
+            }
+        };
+        Charge charge = new Charge();
+        BudgetCalculationResult budgetCalculationResult = new BudgetCalculationResult();
+        budgetCalculationResult.setInvoiceCharge(charge);
+        LocalDate termStartDate = new LocalDate(2018,1,1);
+
+        InvoicingFrequency invoicingFrequencyGuess = InvoicingFrequency.QUARTERLY_IN_ADVANCE;
+        PaymentMethod paymentMethodGuess = PaymentMethod.DIRECT_DEBIT;
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockLease).findFirstActiveItemOfTypeAndChargeOnDate(LeaseItemType.SERVICE_CHARGE, charge, termStartDate);
+            will(returnValue(null));
+            oneOf(mockLease).newItem(
+                    LeaseItemType.SERVICE_CHARGE,
+                    LeaseAgreementRoleTypeEnum.LANDLORD,
+                    budgetCalculationResult.getInvoiceCharge(),
+                    invoicingFrequencyGuess,
+                    paymentMethodGuess,
+                    termStartDate);
+        }});
+
+        // when
+        budgetAssignmentService.findOrCreateLeaseItemForServiceChargeBudgeted(mockLease, budgetCalculationResult, termStartDate);
+    }
+
+    @Test
+    public void itemToCopyFrom_when_no_items_on_lease_returns_null() throws Exception {
+
+        // given
+        Lease lease = new Lease();
+        // when
+        LeaseItem itemFound = budgetAssignmentService.findItemToCopyFrom(lease);
+        // then
+        assertThat(itemFound).isNull();
+
+    }
+
+    @Test
+    public void itemToCopyFrom_with_lease_having_service_charge_item_works() throws Exception {
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockLease).findFirstItemOfType(LeaseItemType.SERVICE_CHARGE);
+        }});
+
+        // when
+        budgetAssignmentService.findItemToCopyFrom(mockLease);
+
+    }
+
+    @Test
+    public void itemToCopyFrom_with_lease_having_rent_item_works() throws Exception {
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockLease).findFirstItemOfType(LeaseItemType.SERVICE_CHARGE);
+            will(returnValue(null));
+            oneOf(mockLease).findFirstItemOfType(LeaseItemType.RENT);
+        }});
+
+        // when
+        budgetAssignmentService.findItemToCopyFrom(mockLease);
+
+    }
+
+    @Test
+    public void itemToCopyFrom_with_lease_having_no_rent_and_no_service_charge_item_works() throws Exception {
+
+        // given
+        LeaseItem anyItemOtherThanRentOrServiceCharge = new LeaseItem();
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockLease).findFirstItemOfType(LeaseItemType.SERVICE_CHARGE);
+            will(returnValue(null));
+            oneOf(mockLease).findFirstItemOfType(LeaseItemType.RENT);
+            will(returnValue(null));
+            allowing(mockLease).getItems();
+            will(returnValue(new TreeSet(Arrays.asList(anyItemOtherThanRentOrServiceCharge))));
+        }});
+
+        // when
+        LeaseItem itemToCopyFrom = budgetAssignmentService.findItemToCopyFrom(mockLease);
+
+        // then
+        assertThat(itemToCopyFrom).isEqualTo(anyItemOtherThanRentOrServiceCharge);
+
+    }
 
 } 

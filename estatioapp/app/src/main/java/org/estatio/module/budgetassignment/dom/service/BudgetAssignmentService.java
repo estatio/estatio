@@ -129,45 +129,34 @@ public class BudgetAssignmentService {
         }
     }
 
-    private LeaseItem findOrCreateLeaseItemForServiceChargeBudgeted(final Lease lease, final BudgetCalculationResult calculationResult, final LocalDate startDate){
-        InvoicingFrequency frequency;
-        PaymentMethod paymentMethod;
-        LeaseItem itemToCopyFrom;
+    LeaseItem findOrCreateLeaseItemForServiceChargeBudgeted(final Lease lease, final BudgetCalculationResult calculationResult, final LocalDate startDate){
 
-        LeaseItem leaseItem = lease.findFirstItemOfTypeAndCharge(LeaseItemType.SERVICE_CHARGE, calculationResult.getInvoiceCharge());
+        LeaseItem leaseItem = lease.findFirstActiveItemOfTypeAndChargeOnDate(LeaseItemType.SERVICE_CHARGE, calculationResult.getInvoiceCharge(), startDate);
+
         if (leaseItem==null){
-
-            // try to copy invoice frequency and payment method from another lease item
-
-            // first try other service charge item
-            itemToCopyFrom = lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE);
-            if (itemToCopyFrom==null){
-                // then try rent item
-                itemToCopyFrom = lease.findFirstItemOfType(LeaseItemType.RENT);
-            }
-            if (itemToCopyFrom==null && lease.getItems().size()>0) {
-                // then try any item
-                itemToCopyFrom = lease.getItems().first();
-            }
-            if (itemToCopyFrom!=null){
-                frequency = itemToCopyFrom.getInvoicingFrequency();
-                paymentMethod = itemToCopyFrom.getPaymentMethod();
-            }
-            else {
-                // this is the first item on the lease: so make some guess
-                frequency = InvoicingFrequency.QUARTERLY_IN_ADVANCE;
-                paymentMethod = PaymentMethod.DIRECT_DEBIT;
-            }
-
+            LeaseItem itemToCopyFrom = findItemToCopyFrom(lease); // try to copy invoice frequency and payment method from another lease item
             leaseItem = lease.newItem(
                     LeaseItemType.SERVICE_CHARGE,
                     LeaseAgreementRoleTypeEnum.LANDLORD,
                     calculationResult.getInvoiceCharge(),
-                    frequency,
-                    paymentMethod,
+                    itemToCopyFrom!=null ? itemToCopyFrom.getInvoicingFrequency() : InvoicingFrequency.QUARTERLY_IN_ADVANCE,
+                    itemToCopyFrom!=null ? itemToCopyFrom.getPaymentMethod() : PaymentMethod.DIRECT_DEBIT,
                     startDate);
         }
         return leaseItem;
+    }
+
+    LeaseItem findItemToCopyFrom(final Lease lease){
+        LeaseItem itemToCopyFrom = lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE);
+        if (itemToCopyFrom==null){
+            // then try rent item
+            itemToCopyFrom = lease.findFirstItemOfType(LeaseItemType.RENT);
+        }
+        if (itemToCopyFrom==null && lease.getItems().size()>0) {
+            // then try any item
+            itemToCopyFrom = lease.getItems().first();
+        }
+        return itemToCopyFrom;
     }
 
     public List<CalculationResultViewModel> getCalculationResults(final Budget budget){

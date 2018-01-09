@@ -637,6 +637,17 @@ public class Lease
         return null;
     }
 
+    @Programmatic
+    public LeaseItem findFirstActiveItemOfTypeAndChargeOnDate(final LeaseItemType leaseItemType, final Charge charge, final LocalDate date){
+        List<LeaseItem> itemsOfType = findItemsOfType(leaseItemType);
+        for (LeaseItem item : itemsOfType){
+            if (item.getCharge().equals(charge) && item.getInterval().contains(date)){
+                return item;
+            }
+        }
+        return null;
+    }
+
     // //////////////////////////////////////
 
     @CollectionLayout(render = RenderType.EAGERLY)
