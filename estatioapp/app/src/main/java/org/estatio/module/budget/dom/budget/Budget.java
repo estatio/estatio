@@ -345,6 +345,31 @@ public class Budget extends UdoDomainObject2<Budget>
     }
 
     @Programmatic
+    public boolean isAssignedForBudgeted(){
+        for (BudgetCalculation calculation : budgetCalculationRepository.findByBudget(this)) {
+            if (calculation.getCalculationType() == BudgetCalculationType.BUDGETED && calculation.getStatus() == Status.ASSIGNED){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Programmatic
+    public boolean isAssignedForActual(){
+        for (BudgetCalculation calculation : budgetCalculationRepository.findByBudget(this)) {
+            if (calculation.getCalculationType() == BudgetCalculationType.ACTUAL && calculation.getStatus() == Status.ASSIGNED){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Programmatic
+    private boolean isImmutable(){
+        return isAssignedForActual() && isAssignedForBudgeted() ? true : false;
+    }
+
+    @Programmatic
     public Budget findOrCreatePartitioningForBudgeting(){
         Partitioning partitioningForBudgeting = getPartitioningForBudgeting();
         if (partitioningForBudgeting==null){
@@ -373,7 +398,7 @@ public class Budget extends UdoDomainObject2<Budget>
     private BudgetRepository budgetRepository;
 
     @Inject
-    private BudgetCalculationRepository budgetCalculationRepository;
+    BudgetCalculationRepository budgetCalculationRepository;
 
     @Inject
     private KeyTableRepository keyTableRepository;
