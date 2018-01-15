@@ -18,6 +18,9 @@
  */
 package org.estatio.module.financial.dom;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import javax.annotation.Nullable;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
@@ -33,6 +36,7 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
@@ -45,10 +49,11 @@ import org.apache.isis.applib.services.eventbus.ObjectRemovingEvent;
 import org.apache.isis.applib.services.eventbus.ObjectUpdatedEvent;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
-import org.incode.module.base.dom.types.NameType;
+import org.incode.module.base.dom.Titled;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.country.dom.impl.Country;
 
+import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.financial.dom.utils.IBANHelper;
 import org.estatio.module.financial.dom.utils.IBANValidator;
 import org.estatio.module.party.dom.Party;
@@ -75,11 +80,13 @@ import lombok.Setter;
                         + "FROM org.estatio.module.financial.dom.BankAccount "
                         + "WHERE reference.matches(:regex)")
 })
-@DomainObject(editing = Editing.DISABLED
-        , persistedLifecycleEvent = BankAccount.PersistedLifecycleEvent.class
-        , updatedLifecycleEvent = BankAccount.UpdatedLifecycleEvent.class
-        , removingLifecycleEvent = BankAccount.RemovingLifecycleEvent.class
-        , autoCompleteRepository = BankAccountRepository.class
+@DomainObject(
+        editing = Editing.DISABLED,
+        persistedLifecycleEvent = BankAccount.PersistedLifecycleEvent.class,
+        updatedLifecycleEvent = BankAccount.UpdatedLifecycleEvent.class,
+        removingLifecycleEvent = BankAccount.RemovingLifecycleEvent.class,
+        autoCompleteRepository = BankAccountRepository.class
+        //,objectType = "org.estatio.dom.financial.bankaccount.BankAccount"
 )
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
@@ -136,6 +143,15 @@ public class BankAccount
     @Getter @Setter
     private String bic;
 
+    public BankAccount updateBic(@Nullable String bic) {
+        setBic(trimBic(bic));
+        return this;
+    }
+
+    public String default0UpdateBic() {
+        return getBic();
+    }
+
     @Property(optionality = Optionality.OPTIONAL)
     @Getter @Setter
     private Boolean preferred;
@@ -170,45 +186,31 @@ public class BankAccount
             semantics = SemanticsOf.IDEMPOTENT,
             domainEvent = ChangeEvent.class
     )
-    public BankAccount change(
-            @Parameter(maxLength = IbanType.Meta.MAX_LEN)
-            final String iban,
-            @Nullable
-            @Parameter(maxLength = AccountNumberType.Meta.MAX_LEN)
-            final String bic,
-            @Nullable
-            @Parameter(maxLength = NameType.Meta.MAX_LEN)
-            final String externalReference) {
+    public BankAccount changeIban(
+            @Parameter(maxLength = IbanType.Meta.MAX_LEN) final String iban) {
         setIban(iban);
         setName(iban);
-        setBic(trimBic(bic));
-        setExternalReference(externalReference);
-        // TODO: Changing references is not really a good thing. in this case
-        // there's no harm but we should come up with a pattern where we
-        // archive the old reference
         setReference(iban);
 
         return this;
     }
 
-    public String validate0Change(final String iban) {
+    public String default0ChangeIban() {
+        return getIban();
+    }
+
+    public String validate0ChangeIban(final String iban) {
         if (!IBANValidator.valid(iban)) {
             return "Not a valid IBAN number";
         }
         return null;
     }
 
-    public String default0Change() {
-        return getIban();
+    public String disableChangeIban(){
+        // This is a temporary measure to prevent user errors:
+        return EstatioRole.ADMINISTRATOR.isApplicableFor(getUser()) ? null : "Only administrators can change an IBAN";
     }
 
-    public String default1Change() {
-        return getBic();
-    }
-
-    public String default2Change() {
-        return getExternalReference();
-    }
 
     public BankAccount refresh() {
         IBANHelper.verifyAndUpdate(this);
@@ -225,7 +227,6 @@ public class BankAccount
     public static class RemoveEvent extends ActionDomainEvent<BankAccount> {
         private static final long serialVersionUID = 1L;
     }
-
 
 
     public static String trimBic(final String str) {
@@ -341,5 +342,55 @@ public class BankAccount
                 ev.setTitle(title);
             }
         }
+    }
+
+
+    @Mixin(method="act")
+    public static class BankAccount_lookupBic {
+
+        public static enum WebSite implements Titled {
+            IBANCALCULATOR("www.ibancalculator.com") {
+                @Override
+                URL buildUrl(String iban) throws MalformedURLException {
+                    return new URL("https://www.ibancalculator.com/validate/" + iban);
+                }
+            },
+            IBAN("www.iban.com") {
+                @Override
+                URL buildUrl(String iban) throws MalformedURLException {
+                    return new URL("https://www.iban.com");
+                }
+            };
+
+            private final String name;
+            WebSite(final String name) {
+                this.name = name;
+            }
+
+            abstract URL buildUrl(String iban) throws MalformedURLException;
+
+            @Override
+            public String title() {
+                return name;
+            }
+        }
+        private final BankAccount bankAccount;
+
+        public BankAccount_lookupBic(BankAccount bankAccount) {
+            this.bankAccount = bankAccount;
+        }
+
+        @Action(
+                semantics = SemanticsOf.SAFE
+        )
+        public URL act(
+                final WebSite webSite,
+                final String iban) throws MalformedURLException {
+            return webSite.buildUrl(iban);
+        }
+
+        public WebSite default0Act() { return WebSite.IBANCALCULATOR; }
+        public String default1Act() { return bankAccount.getIban(); }
+
     }
 }

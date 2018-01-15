@@ -78,13 +78,11 @@ public class BankAccount_Test {
             BankAccount bankAccount = new BankAccount();
             final String iban = "NL91RABO0145814734";
             assertTrue(IBANValidator.valid(iban));
-            assertNull(bankAccount.validate0Change(iban));
+            assertNull(bankAccount.validate0ChangeIban(iban));
             // When
-            bankAccount.change(iban, "BIC", "EXT");
+            bankAccount.changeIban(iban);
             // Then
             assertThat(bankAccount.getIban()).isEqualTo(iban);
-            assertThat(bankAccount.getBic()).isEqualTo("BIC");
-            assertThat(bankAccount.getExternalReference()).isEqualTo("EXT");
         }
     }
 

@@ -21,6 +21,7 @@ package org.estatio.module.financial.dom;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -151,6 +152,16 @@ public class FinancialAccount
     @javax.jdo.annotations.Column(allowsNull = "true", length = NameType.Meta.MAX_LEN)
     @Getter @Setter
     private String externalReference;
+
+
+    public FinancialAccount updateExternalReference(@Nullable String externalReference) {
+        setExternalReference(externalReference);
+        return this;
+    }
+
+    public String default0UpdateExternalReference() {
+        return getExternalReference();
+    }
 
     // //////////////////////////////////////
 

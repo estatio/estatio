@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
 
 import org.assertj.core.api.Assertions;
@@ -30,11 +31,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.sudo.SudoService;
 import org.apache.isis.applib.services.wrapper.HiddenException;
 import org.apache.isis.applib.value.Blob;
 
 import org.estatio.module.application.integtests.ApplicationModuleIntegTestAbstract;
-import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
+import org.estatio.module.base.dom.EstatioRole;
+import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
 import org.estatio.module.capex.contributions.BankAccount_attachPdfAsIbanProof;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
@@ -48,6 +51,7 @@ import org.estatio.module.capex.integtests.document.IncomingDocumentPresentation
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
+import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -67,8 +71,6 @@ import static org.estatio.module.capex.dom.bankaccount.verification.BankAccountV
 
 public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleIntegTestAbstract {
 
-
-
     @Inject
     PartyRepository partyRepository;
 
@@ -81,6 +83,8 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
     @Inject
     StateTransitionService stateTransitionService;
 
+    @Inject
+    SudoService sudoService;
 
     static void assertTransition(
             final BankAccountVerificationStateTransition transition,
@@ -349,12 +353,11 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
 
             // when
             final String validIban = "NL39ABNA0572008761";
-            final String changedExternalReference = "changed-external-reference";
-            wrap(bankAccount).change(validIban, bankAccount.getBic(), changedExternalReference);
-            transactionService.nextTransaction();
 
-            // then
-            assertThat(bankAccount.getExternalReference()).isEqualTo(changedExternalReference);
+            sudoService.sudo(EstatioAdmin.USER_NAME, Lists.newArrayList(EstatioRole.ADMINISTRATOR.getRoleName()) , () -> {
+                wrap(bankAccount).changeIban(validIban);
+            });
+            transactionService.nextTransaction();
 
             // then no new transition, though (previously we used to create a transition of NOT_VERIFIED -> NOT_VERIFIED)
             transitions = findTransitions(bankAccount);
@@ -381,7 +384,9 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
 
             // when
             final String validIban = "NL39ABNA0572008761";
-            wrap(bankAccount).change(validIban, bankAccount.getBic(), "changed-external-reference");
+            sudoService.sudo(EstatioAdmin.USER_NAME, Lists.newArrayList(EstatioRole.ADMINISTRATOR.getRoleName()), () -> {
+                wrap(bankAccount).changeIban(validIban);
+            });
             transactionService.nextTransaction();
 
             // then back to not verified.

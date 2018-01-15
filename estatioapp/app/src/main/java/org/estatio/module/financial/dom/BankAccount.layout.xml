@@ -84,14 +84,17 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="IBAN details" id="ibanDetails">
-                                <cpt:action id="change" position="PANEL"/>
-                                <cpt:property id="iban"/>
+                                <cpt:property id="iban">
+                                    <cpt:action id="changeIban" promptStyle="INLINE_AS_IF_EDIT"/>
+                                </cpt:property>
                                 <cpt:property id="validIban"/>
                                 <cpt:property id="bic">
-                                    <cpt:action id="updateBic"/>
+                                    <cpt:action id="updateBic" promptStyle="INLINE_AS_IF_EDIT"/>
                                     <cpt:action id="lookupBic"/>
                                 </cpt:property>
-                                <cpt:property id="externalReference"/>
+                                <cpt:property id="externalReference">
+                                    <cpt:action id="updateExternalReference" promptStyle="INLINE_AS_IF_EDIT"/>
+                                </cpt:property>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
