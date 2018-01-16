@@ -5,5 +5,6 @@ import org.estatio.module.capex.dom.state.State;
 public enum BankAccountVerificationState implements State<BankAccountVerificationState> {
     NOT_VERIFIED,
     VERIFIED,
-    AWAITING_PROOF
+    AWAITING_PROOF,
+    DISCARDED
 }

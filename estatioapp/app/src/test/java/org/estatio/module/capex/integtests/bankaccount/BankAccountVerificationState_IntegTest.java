@@ -1,0 +1,189 @@
+package org.estatio.module.capex.integtests.bankaccount;
+
+import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.togglz.junit.TogglzRule;
+
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
+import org.apache.isis.applib.services.sudo.SudoService;
+
+import org.incode.module.country.dom.impl.Country;
+import org.incode.module.country.dom.impl.CountryRepository;
+import org.incode.module.country.fixtures.enums.Country_enum;
+
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
+import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
+import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
+import org.estatio.module.capex.dom.bankaccount.verification.BankAccount_verificationState;
+import org.estatio.module.capex.dom.bankaccount.verification.triggers.BankAccount_discard;
+import org.estatio.module.capex.dom.bankaccount.verification.triggers.BankAccount_proofUpdated;
+import org.estatio.module.capex.dom.bankaccount.verification.triggers.BankAccount_rejectProof;
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.capex.dom.project.ProjectRepository;
+import org.estatio.module.capex.dom.task.TaskRepository;
+import org.estatio.module.capex.fixtures.incominginvoice.enums.IncomingInvoice_enum;
+import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
+import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeRepository;
+import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
+import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.role.PartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
+import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
+import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState.NOT_VERIFIED;
+
+public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTestAbstract {
+
+    Property propertyForOxf;
+    Party buyer;
+    Party seller;
+
+    Country greatBritain;
+    Charge charge_for_works;
+
+    IncomingInvoice incomingInvoice;
+
+    BankAccount bankAccount;
+    Project project;
+
+    @Before
+    public void setupData() {
+
+        runFixtureScript(new FixtureScript() {
+            @Override
+            protected void execute(final ExecutionContext ec) {
+                ec.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
+                ec.executeChild(this, new CapexChargeHierarchyXlsxFixture());
+                ec.executeChildren(this,
+                        IncomingInvoice_enum.fakeInvoice2Pdf,
+                        BankAccount_enum.TopModelGb,
+                        Person_enum.EmmaTreasurerGb,
+                        Person_enum.JonathanPropertyManagerGb);
+            }
+        });
+    }
+
+    @Before
+    public void setUp() {
+        propertyForOxf = Property_enum.OxfGb.findUsing(serviceRegistry);
+
+        buyer = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
+        seller = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
+
+        greatBritain = countryRepository.findCountry(Country_enum.GBR.getRef3());
+        charge_for_works = chargeRepository.findByReference("WORKS");
+
+        project = projectRepository.findByReference("OXF-02");
+
+        bankAccount = BankAccount_enum.TopModelGb.findUsing(serviceRegistry);
+
+        incomingInvoice = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate("65432", seller, new LocalDate(2014,5,13));
+        incomingInvoice.setBankAccount(bankAccount);
+
+        assertState(bankAccount, NOT_VERIFIED);
+
+    }
+
+    @Rule
+    public TogglzRule togglzRule = TogglzRule.allDisabled(EstatioTogglzFeature.class);
+
+    @Test
+    public void reject_then_discard_then_update_proof_works_test() {
+
+        // given
+        Person personEmmaTreasurer = Person_enum.EmmaTreasurerGb.findUsing(serviceRegistry);
+        PartyRoleType typeForTreasurer = partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.TREASURER.getKey());
+        PartyRoleType typeForPropertyManager = partyRoleTypeRepository.findByKey(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.getKey());
+        assertThat(taskRepository.findIncompleteByRole(typeForPropertyManager).size()).isEqualTo(2);
+
+        // when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(personEmmaTreasurer.getUsername(), (Runnable) () ->
+                wrap(mixin(BankAccount_rejectProof.class, bankAccount)).act("PROPERTY_MANAGER", null, "NO GOOD"));
+
+        // then
+        assertState(bankAccount, BankAccountVerificationState.AWAITING_PROOF);
+        assertThat(taskRepository.findIncompleteByRole(typeForTreasurer).size()).isEqualTo(0);
+        assertThat(taskRepository.findIncompleteByRole(typeForPropertyManager).size()).isEqualTo(3);
+
+        // and given
+        Person jonathanPropManager = Person_enum.JonathanPropertyManagerGb.findUsing(serviceRegistry);
+
+        // and when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(jonathanPropManager.getUsername(), (Runnable) () ->
+                wrap(mixin(BankAccount_discard.class, bankAccount)).act("DISCARDING"));
+
+        // then
+        assertState(bankAccount, BankAccountVerificationState.DISCARDED);
+        assertThat(taskRepository.findIncompleteByRole(typeForTreasurer).size()).isEqualTo(0);
+        assertThat(taskRepository.findIncompleteByRole(typeForPropertyManager).size()).isEqualTo(2);
+
+        // and when 'resurrecting'
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(jonathanPropManager.getUsername(), (Runnable) () ->
+                wrap(mixin(BankAccount_proofUpdated.class, bankAccount)).act("TREASURER", null, null));
+
+        // then
+        assertState(bankAccount, BankAccountVerificationState.NOT_VERIFIED);
+        assertThat(taskRepository.findIncompleteByRole(typeForTreasurer).size()).isEqualTo(1);
+        assertThat(taskRepository.findIncompleteByRole(typeForPropertyManager).size()).isEqualTo(2);
+
+        // and when discarding again by treasurer
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(personEmmaTreasurer.getUsername(), (Runnable) () ->
+                wrap(mixin(BankAccount_discard.class, bankAccount)).act("DISCARDING"));
+
+        assertState(bankAccount, BankAccountVerificationState.DISCARDED);
+        assertThat(taskRepository.findIncompleteByRole(typeForTreasurer).size()).isEqualTo(0);
+
+    }
+
+    void assertState(final BankAccount bankAccount, final BankAccountVerificationState expected) {
+        assertThat(wrap(mixin(BankAccount_verificationState.class, bankAccount)).prop()).isEqualTo(
+                expected);
+    }
+
+    @Inject
+    QueryResultsCache queryResultsCache;
+
+    @Inject
+    SudoService sudoService;
+
+    @Inject
+    ProjectRepository projectRepository;
+
+    @Inject
+    IncomingInvoiceRepository incomingInvoiceRepository;
+
+    @Inject
+    CountryRepository countryRepository;
+
+    @Inject
+    ChargeRepository chargeRepository;
+
+    @Inject
+    PartyRoleTypeRepository partyRoleTypeRepository;
+
+    @Inject
+    TaskRepository taskRepository;
+
+}
+

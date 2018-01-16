@@ -1,5 +1,6 @@
 package org.estatio.module.capex.dom.bankaccount.verification;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.capex.dom.state.AdvancePolicy;
 import org.estatio.module.capex.dom.state.NextTransitionSearchStrategy;
 import org.estatio.module.capex.dom.state.StateTransitionEvent;
@@ -16,11 +18,10 @@ import org.estatio.module.capex.dom.state.StateTransitionRepository;
 import org.estatio.module.capex.dom.state.StateTransitionServiceSupportAbstract;
 import org.estatio.module.capex.dom.state.StateTransitionType;
 import org.estatio.module.capex.dom.state.TaskAssignmentStrategy;
-import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.financial.dom.BankAccount;
-import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.IPartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 
 import lombok.Getter;
 
@@ -58,10 +59,16 @@ public enum BankAccountVerificationStateTransitionType
             TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL),
     PROOF_UPDATED(
-            BankAccountVerificationState.AWAITING_PROOF,
+            Arrays.asList(BankAccountVerificationState.AWAITING_PROOF, BankAccountVerificationState.DISCARDED),
             BankAccountVerificationState.NOT_VERIFIED,
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER),
+            AdvancePolicy.MANUAL),
+    DISCARD(
+            Arrays.asList(BankAccountVerificationState.NOT_VERIFIED, BankAccountVerificationState.AWAITING_PROOF),
+            BankAccountVerificationState.DISCARDED,
+            NextTransitionSearchStrategy.none(),
+            TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL);
 
     private final List<BankAccountVerificationState> fromStates;

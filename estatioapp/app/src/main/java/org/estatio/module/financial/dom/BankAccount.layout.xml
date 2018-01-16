@@ -134,6 +134,7 @@
                     </cpt:action>
                 </cpt:property>
                 <cpt:property id="pendingVerificationTask">
+                    <cpt:action id="discard"/>
                     <cpt:action id="verify"/>
                     <cpt:action id="rejectProof"/>
                     <cpt:action id="proofUpdated"/>
