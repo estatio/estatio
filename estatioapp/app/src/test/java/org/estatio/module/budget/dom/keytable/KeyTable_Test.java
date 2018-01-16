@@ -17,12 +17,21 @@
 
 package org.estatio.module.budget.dom.keytable;
 
+import java.util.Arrays;
+
+import org.jmock.Expectations;
+import org.jmock.auto.Mock;
+import org.junit.Rule;
 import org.junit.Test;
+
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
 import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
+import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
 import org.estatio.module.budget.dom.partioning.Partitioning;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -67,6 +76,81 @@ public class KeyTable_Test {
             // when, then
             assertThat(keyTable.usedInPartitionItems().size()).isEqualTo(1);
             assertThat(keyTable.usedInPartitionItems()).contains(partitionItemUsingKeyTable);
+
+        }
+
+        @Rule
+        public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
+
+        @Mock PartitionItemRepository mockPartitionItemRepository;
+
+        @Mock Budget mockBudget;
+
+        @Test
+        public void is_assigned_for_type_works_when_no_partition_items() throws Exception {
+
+            // given
+            KeyTable keyTable = new KeyTable();
+            keyTable.setBudget(mockBudget);
+            keyTable.partitionItemRepository = mockPartitionItemRepository;
+
+            // expect
+            context.checking(new Expectations() {{
+                allowing(mockPartitionItemRepository).findByKeyTable(keyTable);
+            }});
+
+            // when
+            assertThat(keyTable.isAssignedForTypeReason(BudgetCalculationType.BUDGETED)).isNull();
+            assertThat(keyTable.isAssignedForTypeReason(BudgetCalculationType.ACTUAL)).isNull();
+        }
+
+        @Test
+        public void is_assigned_for_type_works_for_budgeted() throws Exception {
+
+            // given
+            KeyTable keyTable = new KeyTable();
+            keyTable.setBudget(mockBudget);
+            keyTable.partitionItemRepository = mockPartitionItemRepository;
+
+            Partitioning partitioningForBudgeted = new Partitioning();
+            partitioningForBudgeted.setType(BudgetCalculationType.BUDGETED);
+            PartitionItem partitionItemBudgeted = new PartitionItem();
+            partitionItemBudgeted.setPartitioning(partitioningForBudgeted);
+
+            // expect
+            context.checking(new Expectations() {{
+                oneOf(mockPartitionItemRepository).findByKeyTable(keyTable);
+                will(returnValue(Arrays.asList(partitionItemBudgeted)));
+                oneOf(mockBudget).isAssignedForTypeReason(BudgetCalculationType.BUDGETED);
+            }});
+
+            // when
+            keyTable.isAssignedForTypeReason(BudgetCalculationType.BUDGETED);
+
+        }
+
+        @Test
+        public void is_assigned_for_type_works_for_actual() throws Exception {
+
+            // given
+            KeyTable keyTable = new KeyTable();
+            keyTable.setBudget(mockBudget);
+            keyTable.partitionItemRepository = mockPartitionItemRepository;
+
+            Partitioning partitioningForActual = new Partitioning();
+            partitioningForActual.setType(BudgetCalculationType.ACTUAL);
+            PartitionItem partitionItemActual = new PartitionItem();
+            partitionItemActual.setPartitioning(partitioningForActual);
+
+            // expect
+            context.checking(new Expectations() {{
+                oneOf(mockPartitionItemRepository).findByKeyTable(keyTable);
+                will(returnValue(Arrays.asList(partitionItemActual)));
+                oneOf(mockBudget).isAssignedForTypeReason(BudgetCalculationType.ACTUAL);
+            }});
+
+            // when
+            keyTable.isAssignedForTypeReason(BudgetCalculationType.ACTUAL);
 
         }
 

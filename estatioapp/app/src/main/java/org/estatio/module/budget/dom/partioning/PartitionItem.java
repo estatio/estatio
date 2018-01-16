@@ -49,6 +49,7 @@ import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.charge.dom.Charge;
@@ -121,23 +122,6 @@ public class PartitionItem extends UdoDomainObject2<PartitionItem> implements Wi
     @Getter @Setter
     private KeyTable keyTable;
 
-    @ActionLayout(hidden = Where.EVERYWHERE)
-    public PartitionItem changeKeyTable(final KeyTable keyTable) {
-        setKeyTable(keyTable);
-        return this;
-    }
-
-    public KeyTable default0ChangeKeyTable(final KeyTable keyTable) {
-        return getKeyTable();
-    }
-
-    public String validateChangeKeyTable(final KeyTable keyTable) {
-        if (keyTable.equals(null)) {
-            return "KeyTable can't be empty";
-        }
-        return null;
-    }
-
     @Column(allowsNull = "false", name = "budgetItemId")
     @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
@@ -165,14 +149,24 @@ public class PartitionItem extends UdoDomainObject2<PartitionItem> implements Wi
         return null;
     }
 
+    public String disableUpdatePercentage(){
+        BudgetCalculationType type = getPartitioning().getType();
+        return getBudget().isAssignedForTypeReason(type);
+    }
+
     @Persistent(mappedBy = "partitionItem", dependentElement = "true")
     @Getter @Setter
     private SortedSet<BudgetCalculation> calculations = new TreeSet<>();
 
-    @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Budget remove() {
         removeIfNotAlready(this);
         return this.getBudgetItem().getBudget();
+    }
+
+    public String disableRemove(){
+        BudgetCalculationType type = getPartitioning().getType();
+        return getBudget().isAssignedForTypeReason(type);
     }
 
     @Action(semantics = SemanticsOf.SAFE, hidden = Where.ALL_TABLES)

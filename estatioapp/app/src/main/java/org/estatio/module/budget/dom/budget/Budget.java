@@ -176,6 +176,10 @@ public class Budget extends UdoDomainObject2<Budget>
         return budgetItemRepository.validateNewBudgetItem(this, charge);
     }
 
+    public String disableNewBudgetItem(){
+        return isAssignedForTypeReason(BudgetCalculationType.ACTUAL);
+    }
+
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_ACTION)
     @MemberOrder(name = "partitionings", sequence = "1")
@@ -331,7 +335,7 @@ public class Budget extends UdoDomainObject2<Budget>
     }
 
     public String disableRemoveCalculations(){
-        return isAssigned() ? "This budget is assigned" : null;
+        return isAssigned() ? "The budget has been assigned" : null;
     }
 
     @Programmatic
@@ -345,9 +349,9 @@ public class Budget extends UdoDomainObject2<Budget>
     }
 
     @Programmatic
-    public boolean isAssignedForBudgeted(){
+    public boolean isAssignedForType(final BudgetCalculationType budgetCalculationType){
         for (BudgetCalculation calculation : budgetCalculationRepository.findByBudget(this)) {
-            if (calculation.getCalculationType() == BudgetCalculationType.BUDGETED && calculation.getStatus() == Status.ASSIGNED){
+            if (calculation.getCalculationType() == budgetCalculationType && calculation.getStatus() == Status.ASSIGNED){
                 return true;
             }
         }
@@ -355,18 +359,21 @@ public class Budget extends UdoDomainObject2<Budget>
     }
 
     @Programmatic
-    public boolean isAssignedForActual(){
-        for (BudgetCalculation calculation : budgetCalculationRepository.findByBudget(this)) {
-            if (calculation.getCalculationType() == BudgetCalculationType.ACTUAL && calculation.getStatus() == Status.ASSIGNED){
-                return true;
-            }
+    public String isAssignedForTypeReason(final BudgetCalculationType budgetCalculationType){
+        switch (budgetCalculationType) {
+
+            case BUDGETED:
+            return isAssignedForType(budgetCalculationType) ? "The budget has been assigned" : null;
+
+            case ACTUAL:
+            return isAssignedForType(budgetCalculationType) ? "The budget has been reconciled" : null;
         }
-        return false;
+        return null;
     }
 
     @Programmatic
     private boolean isImmutable(){
-        return isAssignedForActual() && isAssignedForBudgeted() ? true : false;
+        return isAssignedForType(BudgetCalculationType.ACTUAL) && isAssignedForType(BudgetCalculationType.BUDGETED) ? true : false;
     }
 
     @Programmatic

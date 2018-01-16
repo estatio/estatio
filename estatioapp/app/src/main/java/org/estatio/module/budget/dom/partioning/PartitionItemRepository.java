@@ -114,4 +114,8 @@ public class PartitionItemRepository extends UdoDomainRepositoryAndFactory<Parti
         return partitionItem;
     }
 
+    public List<PartitionItem> findByKeyTable(final KeyTable keyTable){
+        return allMatches("findByKeyTable", "keyTable", keyTable);
+    }
+
 }

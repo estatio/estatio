@@ -39,6 +39,10 @@ public class Budget_Calculate {
         return budget;
     }
 
+    public String disableCalculate(){
+        return budget.isAssignedForTypeReason(BudgetCalculationType.BUDGETED);
+    }
+
     @Inject
     private BudgetCalculationService budgetCalculationService;
 

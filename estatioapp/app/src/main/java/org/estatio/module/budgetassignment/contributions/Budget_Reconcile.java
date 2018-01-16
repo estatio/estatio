@@ -8,6 +8,7 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 
 /**
  * This currently could be inlined into Budget, however it is incomplete and my suspicion is that eventually it
@@ -28,6 +29,10 @@ public class Budget_Reconcile {
             final boolean finalCalculation) {
         // TODO: implement
         return budget;
+    }
+
+    public String disableReconcile(){
+        return budget.isAssignedForTypeReason(BudgetCalculationType.ACTUAL);
     }
 
 }

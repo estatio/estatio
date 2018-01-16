@@ -103,7 +103,7 @@ public class Budget_Test {
             }});
 
             // when // then
-            assertThat(budget.isAssignedForBudgeted()).isTrue();
+            assertThat(budget.isAssignedForType(BudgetCalculationType.BUDGETED)).isTrue();
             assertThat(budget.isAssigned()).isTrue();
 
         }
@@ -126,7 +126,7 @@ public class Budget_Test {
             }});
 
             // when // then
-            assertThat(budget.isAssignedForBudgeted()).isFalse();
+            assertThat(budget.isAssignedForType(BudgetCalculationType.BUDGETED)).isFalse();
             assertThat(budget.isAssigned()).isFalse();
 
         }
@@ -149,7 +149,7 @@ public class Budget_Test {
             }});
 
             // when // then
-            assertThat(budget.isAssignedForActual()).isTrue();
+            assertThat(budget.isAssignedForType(BudgetCalculationType.ACTUAL)).isTrue();
             assertThat(budget.isAssigned()).isTrue();
 
         }
@@ -172,7 +172,7 @@ public class Budget_Test {
             }});
 
             // when // then
-            assertThat(budget.isAssignedForActual()).isFalse();
+            assertThat(budget.isAssignedForType(BudgetCalculationType.ACTUAL)).isFalse();
             assertThat(budget.isAssigned()).isFalse();
 
         }

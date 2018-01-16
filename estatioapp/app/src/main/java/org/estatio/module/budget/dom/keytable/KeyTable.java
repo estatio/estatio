@@ -63,9 +63,11 @@ import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.budget.dom.Distributable;
 import org.estatio.module.budget.dom.DistributionService;
 import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.keyitem.KeyItemRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
+import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
 import org.estatio.module.budget.dom.partioning.Partitioning;
 
 import lombok.Getter;
@@ -174,6 +176,10 @@ public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicatio
         return null;
     }
 
+    public String disableChangeFoundationValueType(){
+        return isAssignedReason();
+    }
+
     @Column(name = "keyValueMethodId", allowsNull = "false")
     @Getter @Setter
     private KeyValueMethod keyValueMethod;
@@ -194,6 +200,10 @@ public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicatio
             return "Key value method can't be empty";
         }
         return null;
+    }
+
+    public String disableChangeKeyValueMethod(){
+        return isAssignedReason();
     }
 
     @PropertyLayout(hidden = Where.EVERYWHERE)
@@ -220,6 +230,10 @@ public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicatio
         return null;
     }
 
+    public String disableChangePrecision(){
+        return isAssignedReason();
+    }
+
     @CollectionLayout(render = RenderType.EAGERLY)
     @Persistent(mappedBy = "keyTable", dependentElement = "true")
     @Getter @Setter
@@ -241,6 +255,10 @@ public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicatio
             final BigDecimal keyValue) {
 
         return keyItemRepository.validateNewItem(this, unit, sourceValue, keyValue);
+    }
+
+    public String disableNewItem(){
+        return isAssignedReason();
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -292,6 +310,10 @@ public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicatio
         return false;
     }
 
+    public String disableGenerateItems(){
+        return isAssignedReason();
+    }
+
     // //////////////////////////////////////
 
     @MemberOrder(name = "items", sequence = "4")
@@ -302,6 +324,10 @@ public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicatio
         distributionService.distribute(new ArrayList(getItems()), getKeyValueMethod().divider(this), getPrecision());
 
         return this;
+    }
+
+    public String disableDistributeSourceValues(){
+        return isAssignedReason();
     }
 
     // //////////////////////////////////////
@@ -384,6 +410,22 @@ public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicatio
         return null;
     }
 
+    private String isAssignedReason(){
+        if (isAssignedForTypeReason(BudgetCalculationType.ACTUAL)!=null){
+            return isAssignedForTypeReason(BudgetCalculationType.ACTUAL);
+        }
+        return isAssignedForTypeReason(BudgetCalculationType.BUDGETED);
+    }
+
+    String isAssignedForTypeReason(final BudgetCalculationType budgetCalculationType){
+        for (PartitionItem partitionItem : partitionItemRepository.findByKeyTable(this)){
+            if (partitionItem.getPartitioning().getType()== budgetCalculationType){
+                return getBudget().isAssignedForTypeReason(budgetCalculationType);
+            }
+        }
+        return null;
+    }
+
     // //////////////////////////////////////
 
     @Inject
@@ -397,5 +439,8 @@ public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicatio
 
     @Inject
     RepositoryService repositoryService;
+
+    @Inject
+    PartitionItemRepository partitionItemRepository;
 
 }

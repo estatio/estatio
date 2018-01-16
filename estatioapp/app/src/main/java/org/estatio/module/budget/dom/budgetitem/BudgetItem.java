@@ -206,6 +206,9 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
         return keyTableRepository.findByBudget(getBudget());
     }
 
+    public String disableCreatePartitionItemForBudgeting(){
+        return getBudget().isAssignedForTypeReason(BudgetCalculationType.BUDGETED);
+    }
 
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
@@ -227,6 +230,10 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
 
     public List<KeyTable> choices2CreatePartitionItemForActuals() {
         return keyTableRepository.findByBudget(getBudget());
+    }
+
+    public String disableCreatePartitionItemForActuals(){
+        return getBudget().isAssignedForTypeReason(BudgetCalculationType.ACTUAL);
     }
 
     @Programmatic
