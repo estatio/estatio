@@ -31,6 +31,7 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Invoice" id="invoice">
+                                        <cpt:action id="verifySupplier" position="PANEL"/>
                                         <cpt:action id="changeInvoiceDetails" position="PANEL"/>
                                         <cpt:property id="notification" labelPosition="NONE"/>
                                         <cpt:property id="domainObject"/>
