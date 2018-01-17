@@ -49,6 +49,10 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.base.platform.applib.ReasonBuffer2;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.capex.dom.documents.BudgetItemChooser;
@@ -66,9 +70,6 @@ import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.state.StateTransitionType;
 import org.estatio.module.capex.dom.state.Stateful;
 import org.estatio.module.capex.dom.util.PeriodUtil;
-import org.estatio.module.asset.dom.FixedAsset;
-import org.estatio.module.asset.dom.Property;
-import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.currency.dom.Currency;
@@ -78,10 +79,10 @@ import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
+import org.estatio.module.party.app.services.ChamberOfCommerceCodeLookUpService;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.role.PartyRoleRepository;
-import org.estatio.module.base.platform.applib.ReasonBuffer2;
 import org.estatio.module.tax.dom.Tax;
 
 import lombok.Getter;
@@ -1078,16 +1079,19 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         }
         return this;
     }
-    public String validateEditSeller(final Party party, final boolean createRoleIfRequired){
-        if(party != null && !createRoleIfRequired) {
+    public String validateEditSeller(
+            final Party supplier,
+            final boolean createRoleIfRequired){
+        if(supplier != null && !createRoleIfRequired) {
             // requires that the supplier already has this role
-            return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+            return partyRoleRepository.validateThat(supplier, IncomingInvoiceRoleTypeEnum.SUPPLIER);
         }
         return null;
     }
     public Party default0EditSeller(){
         return getSeller();
     }
+
     public String disableEditSeller(){
 
         final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot edit seller because");
@@ -1484,6 +1488,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Inject
     @NotPersistent
     ChargeRepository chargeRepository;
+
+    @Inject
+    @NotPersistent
+    ChamberOfCommerceCodeLookUpService chamberOfCommerceCodeLookUpService;
 
 
 }
