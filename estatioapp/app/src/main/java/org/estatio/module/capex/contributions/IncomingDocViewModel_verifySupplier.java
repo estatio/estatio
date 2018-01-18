@@ -1,4 +1,4 @@
-package org.estatio.module.party.contributions;
+package org.estatio.module.capex.contributions;
 
 import java.util.List;
 
