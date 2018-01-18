@@ -510,6 +510,9 @@ public class Lease_Test {
             tenantAgreementRole.setAgreement(lease);
             lease.getRoles().add(tenantAgreementRole);
             lease.getRoles().add(landlordAgreementRole);
+            LeaseItem leaseItem = new LeaseItem();
+            leaseItem.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
+            lease.getItems().add(leaseItem);
 
             context.checking(new Expectations() {
                 {
@@ -1315,9 +1318,56 @@ public class Lease_Test {
                 will(returnValue(null));
             }});
 
-            // then
+            // when, then
             assertThat(lease.validateAssign(reference, null, null,  startDate.minusDays(1))).isEqualTo("The start date cannot be before the start date of the lease");
             assertThat(lease.validateAssign(reference, null, null,  startDate)).isNull();
+
+        }
+
+        @Mock
+        BankAccountRepository mockBankAccountRepository;
+        @Mock
+        BankMandateRepository mockBankMandateRepository;
+
+        @Test
+        public void validate_new_mandate_checks_payment_method_lease_items() throws Exception {
+
+            // given
+            String reference = "Some mandate reference";
+            Party tenant = new Organisation();
+            BankAccount bankAccount = new BankAccount();
+            lease = new Lease(){
+                @Override
+                public Party getSecondaryParty(){
+                    return tenant;
+                }
+            };
+            lease.bankAccountRepository = mockBankAccountRepository;
+            lease.bankMandateRepository = mockBankMandateRepository;
+
+            // expect
+            context.checking(new Expectations(){{
+                allowing(mockBankAccountRepository).findBankAccountsByOwner(tenant);
+                will(returnValue(Arrays.asList(bankAccount)));
+                allowing(mockBankMandateRepository).findByReference(reference);
+                will(returnValue(null));
+            }});
+
+            // when
+            LeaseItem leaseItemCheque = new LeaseItem();
+            leaseItemCheque.setPaymentMethod(PaymentMethod.CHEQUE);
+            lease.getItems().add(leaseItemCheque);
+
+            // then
+            assertThat(lease.validateNewMandate(bankAccount, reference, null, null,null, null, null)).isEqualTo("No items with payment method direct debit found");
+
+            // and when
+            LeaseItem leaseItemDirectDebit = new LeaseItem();
+            leaseItemCheque.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
+            lease.getItems().add(leaseItemDirectDebit);
+
+            // then
+            assertThat(lease.validateNewMandate(bankAccount, reference, null, null,null, null, null)).isNull();
 
         }
 

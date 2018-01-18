@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -783,7 +784,14 @@ public class Lease
         if (bankMandateRepository.findByReference(reference) != null) {
             return "Reference already exists";
         }
+        if (findItemWithPaymentMethod(PaymentMethod.DIRECT_DEBIT).isEmpty()){
+            return "No items with payment method direct debit found";
+        }
         return null;
+    }
+
+    private List<LeaseItem> findItemWithPaymentMethod(final PaymentMethod paymentMethod){
+        return Lists.newArrayList(getItems()).stream().filter(x->x.getPaymentMethod()==paymentMethod).collect(Collectors.toList());
     }
 
     private List<BankAccount> existingBankAccountsForTenant() {
