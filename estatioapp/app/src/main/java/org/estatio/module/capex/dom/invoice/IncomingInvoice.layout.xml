@@ -18,6 +18,7 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="General" id="general">
+                                        <cpt:action id="verifySupplier" position="PANEL"/>
                                         <cpt:property id="invoiceNumber">
                                             <cpt:action id="editInvoiceNumber" promptStyle="INLINE" position="RIGHT"/>
                                         </cpt:property>

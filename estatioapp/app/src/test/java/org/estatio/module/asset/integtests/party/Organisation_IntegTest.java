@@ -44,7 +44,6 @@ import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyReposit
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationPreviousName;
 import org.estatio.module.party.dom.OrganisationRepository;
-import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.numerator.enums.NumeratorForOrganisation_enum;
 import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
 
@@ -54,9 +53,6 @@ public class Organisation_IntegTest extends AssetModuleIntegTestAbstract {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
-
-    @Inject
-    PartyRepository partyRepository;
 
     @Inject
     EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;

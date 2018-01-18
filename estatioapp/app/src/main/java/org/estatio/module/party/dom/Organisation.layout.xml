@@ -70,9 +70,11 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="Registrations" id="registrations">
+                                <cpt:action id="verify" position="PANEL"/>
                                 <cpt:property id="vatCode"/>
                                 <cpt:property id="fiscalCode"/>
-                                <cpt:property id="chamberOfCommerceCode">
+                                <cpt:property id="chamberOfCommerceCode"/>
+                                <cpt:property id="verified">
                                     <cpt:action id="change" position="BELOW"/>
                                 </cpt:property>
                                 <!-- these are hidden in object form -->

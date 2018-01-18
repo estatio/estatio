@@ -35,6 +35,7 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Order" unreferencedProperties="false">
+                                        <cpt:action id="verifySupplier" position="PANEL"/>
                                         <cpt:action id="changeOrderDetails"/>
                                         <cpt:property id="notification" labelPosition="NONE"/>
                                         <cpt:property id="domainObject"/>

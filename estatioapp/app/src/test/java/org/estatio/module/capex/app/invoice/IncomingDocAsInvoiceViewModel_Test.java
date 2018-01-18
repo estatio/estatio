@@ -21,6 +21,7 @@ import org.estatio.module.capex.dom.order.OrderItemRepository;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
+import org.estatio.module.party.app.services.OrganisationNameNumberViewModel;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Party;
@@ -93,6 +94,7 @@ public class IncomingDocAsInvoiceViewModel_Test {
         Organisation seller = new Organisation();
         BankAccount bankAccount = new BankAccount();
         String sellerName = "some name";
+        OrganisationNameNumberViewModel candidate = new OrganisationNameNumberViewModel(sellerName, null);
         String iban = "NL02RABO0313246581";
 
         // expect
@@ -108,7 +110,7 @@ public class IncomingDocAsInvoiceViewModel_Test {
         }});
 
         // when
-        viewModel.createSeller(sellerName, country, iban);
+        viewModel.createSeller(candidate, country, iban);
 
         // then
         Assertions.assertThat(viewModel.getSeller()).isEqualTo(seller);

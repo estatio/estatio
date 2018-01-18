@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -65,6 +66,8 @@ import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.financial.dom.utils.IBANValidator;
+import org.estatio.module.party.app.services.ChamberOfCommerceCodeLookUpService;
+import org.estatio.module.party.app.services.OrganisationNameNumberViewModel;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Party;
@@ -186,12 +189,17 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         return this;
     }
 
+    public Party default0EditSeller(){
+        return getSeller();
+    }
+
     protected void onEditSeller(final Party seller){
     }
-    public String validateEditSeller(final Party party, final boolean createRoleIfRequired){
+
+    public String validateEditSeller(final Party supplier, final boolean createRoleIfRequired){
         if(!createRoleIfRequired) {
             // requires that the supplier already has this role
-            return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+            return partyRoleRepository.validateThat(supplier, IncomingInvoiceRoleTypeEnum.SUPPLIER);
         }
         return null;
     }
@@ -201,12 +209,13 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(named = "Create Supplier")
     public IncomingDocViewModel createSeller(
-            final String name,
+            final OrganisationNameNumberViewModel candidate,
             final Country country,
             @Parameter(optionality = Optionality.OPTIONAL)
             final String ibanNumber) {
         Organisation organisation = organisationRepository
-                .newOrganisation(null, true, name, country);
+                .newOrganisation(null, true, candidate.getOrganisationName(), country);
+        if (candidate.getChamberOfCommerceCode()!=null) organisation.setChamberOfCommerceCode(candidate.getChamberOfCommerceCode());
         setSeller(organisation);
         if (ibanNumber != null) {
             bankAccountRepository.newBankAccount(organisation, ibanNumber, null);
@@ -215,8 +224,21 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         return this;
     }
 
+    public List<OrganisationNameNumberViewModel> autoComplete0CreateSeller(@MinLength(3) final String search){
+        // TODO: take atPath from country - but how?
+        String atPath = "/FRA";
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            // nothing
+        }
+        List<OrganisationNameNumberViewModel> result =  chamberOfCommerceCodeLookUpService.getChamberOfCommerceCodeCandidatesByOrganisation(search, atPath);
+        result.add(new OrganisationNameNumberViewModel(search, null));
+        return result;
+    }
+
     public String validateCreateSeller(
-            final String name,
+            final OrganisationNameNumberViewModel name,
             final Country country,
             final String ibanNumber){
         if (ibanNumber != null && !IBANValidator.valid(ibanNumber)){
@@ -626,5 +648,8 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     @Inject
     PartyRepository partyRepository;
 
+    @XmlTransient
+    @Inject
+    ChamberOfCommerceCodeLookUpService chamberOfCommerceCodeLookUpService;
 
 }
