@@ -58,7 +58,6 @@ import org.estatio.module.lease.fixtures.invoice.enums.InvoiceForLease_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForPercentage_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
@@ -104,7 +103,6 @@ public class InvoiceService_IntegTest extends LeaseModuleIntegTestAbstract {
     LeaseItem sItem;
     LeaseItem tItem;
     LeaseItem dItem;
-    LeaseItem rfItem;
 
     public static class Lifecycle extends InvoiceService_IntegTest {
 
@@ -138,7 +136,6 @@ public class InvoiceService_IntegTest extends LeaseModuleIntegTestAbstract {
                             LeaseItemForServiceCharge_enum.OxfMiracl005Gb,
                             LeaseItemForTurnoverRent_enum.OxfMiracl005Gb,
                             LeaseItemForDiscount_enum.OxfMiracle005bGb,
-                            LeaseItemForPercentage_enum.OxfMiracl005Gb,
                             LeaseItemForDeposit_enum.OxfMiracle005bGb);
                 }
             });
@@ -148,7 +145,6 @@ public class InvoiceService_IntegTest extends LeaseModuleIntegTestAbstract {
             sItem = lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE);
             tItem = lease.findFirstItemOfType(LeaseItemType.TURNOVER_RENT);
             dItem = lease.findFirstItemOfType(LeaseItemType.DEPOSIT);
-            rfItem = lease.findFirstItemOfType(LeaseItemType.RENTAL_FEE);
         }
 
         @Test
@@ -170,7 +166,6 @@ public class InvoiceService_IntegTest extends LeaseModuleIntegTestAbstract {
             assertThat(sItem.getTerms().size(), is(2));
             assertThat(tItem.getTerms().size(), is(2));
             assertThat(dItem.getTerms().size(), is(1));
-            assertThat(rfItem.getTerms().size(), is(1));
 
             final LeaseTermForIndexable last = (LeaseTermForIndexable) rItem.getTerms().last();
             final LeaseTermForIndexable first = (LeaseTermForIndexable) rItem.getTerms().first();
@@ -180,7 +175,6 @@ public class InvoiceService_IntegTest extends LeaseModuleIntegTestAbstract {
             assertThat(last.getStartDate(), is(VT.ld(2015, 1, 1)));
             assertThat(invoiceForLeaseRepository.findByLease(lease).size(), is(0));
             assertThat(dItem.getTerms().last().getEffectiveValue(), is(VT.bd(75000).setScale(2)));
-            assertThat(rfItem.getTerms().last().getEffectiveValue(), is(VT.bd(2250).setScale(2)));
         }
 
         public void step2_calculate() throws Exception {

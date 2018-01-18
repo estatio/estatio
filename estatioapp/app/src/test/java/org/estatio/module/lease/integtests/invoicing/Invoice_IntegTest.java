@@ -33,12 +33,12 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.incode.module.base.integtests.VT;
 
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
-import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.currency.dom.Currency;
@@ -58,7 +58,6 @@ import org.estatio.module.lease.fixtures.invoice.enums.InvoiceForLease_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForPercentage_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
@@ -178,7 +177,6 @@ public class Invoice_IntegTest extends LeaseModuleIntegTestAbstract {
                             LeaseItemForServiceCharge_enum.OxfMiracl005Gb,
                             LeaseItemForTurnoverRent_enum.OxfMiracl005Gb,
                             LeaseItemForDiscount_enum.OxfMiracle005bGb,
-                            LeaseItemForPercentage_enum.OxfMiracl005Gb,
                             LeaseItemForDeposit_enum.OxfMiracle005bGb
                     );
 

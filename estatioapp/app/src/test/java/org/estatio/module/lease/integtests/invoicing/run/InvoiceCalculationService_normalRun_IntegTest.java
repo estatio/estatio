@@ -57,7 +57,6 @@ import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_en
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForEntryFee_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForMarketing_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForPercentage_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceChargeBudgeted_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
@@ -119,7 +118,6 @@ public class InvoiceCalculationService_normalRun_IntegTest extends LeaseModuleIn
                         LeaseItemForServiceCharge_enum.OxfTopModel001Gb_TA,
                         LeaseItemForServiceChargeBudgeted_enum.OxfTopModel001Gb,
                         LeaseItemForTurnoverRent_enum.OxfTopModel001Gb,
-                        LeaseItemForPercentage_enum.OxfTopModel001Gb,
                         LeaseItemForDiscount_enum.OxfTopModel001Gb,
                         LeaseItemForEntryFee_enum.OxfTopModel001Gb,
                         LeaseItemForTax_enum.OxfTopModel001Gb,
@@ -140,13 +138,12 @@ public class InvoiceCalculationService_normalRun_IntegTest extends LeaseModuleIn
                         LeaseItemForServiceCharge_enum.OxfMiracl005Gb,
                         LeaseItemForTurnoverRent_enum.OxfMiracl005Gb,
                         LeaseItemForDiscount_enum.OxfMiracle005bGb,
-                        LeaseItemForPercentage_enum.OxfMiracl005Gb,
                         LeaseItemForDeposit_enum.OxfMiracle005bGb);
             }
         });
 
         lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
-        assertThat(lease.getItems().size(), is(10));
+        assertThat(lease.getItems().size(), is(9));
 
         leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));
         leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));

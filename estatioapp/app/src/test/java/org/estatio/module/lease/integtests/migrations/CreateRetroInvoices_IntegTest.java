@@ -51,10 +51,9 @@ import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_en
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForEntryFee_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForMarketing_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForPercentage_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceChargeBudgeted_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTax_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
@@ -76,7 +75,6 @@ public class CreateRetroInvoices_IntegTest extends LeaseModuleIntegTestAbstract 
                 executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfTopModel001Gb_TA.builder());
                 executionContext.executeChild(this, LeaseItemForServiceChargeBudgeted_enum.OxfTopModel001Gb.builder());
                 executionContext.executeChild(this, LeaseItemForTurnoverRent_enum.OxfTopModel001Gb.builder());
-                executionContext.executeChild(this, LeaseItemForPercentage_enum.OxfTopModel001Gb.builder());
                 executionContext.executeChild(this, LeaseItemForDiscount_enum.OxfTopModel001Gb.builder());
                 executionContext.executeChild(this, LeaseItemForEntryFee_enum.OxfTopModel001Gb.builder());
                 executionContext.executeChild(this, LeaseItemForTax_enum.OxfTopModel001Gb.builder());
@@ -153,7 +151,7 @@ public class CreateRetroInvoices_IntegTest extends LeaseModuleIntegTestAbstract 
 
             // then
             final List<InvoiceForLease> invoicesAfterCreate = invoiceForLeaseRepository.findByLease(lease);
-            assertThat(invoicesAfterCreate.size(), is(10));
+            assertThat(invoicesAfterCreate.size(), is(8));
 
             // and given
             lease.terminate(VT.ld(2013, 10, 1));
@@ -163,8 +161,8 @@ public class CreateRetroInvoices_IntegTest extends LeaseModuleIntegTestAbstract 
 
             // then
             List<InvoiceForLease> invoicessAfterCreateLegacy = invoiceForLeaseRepository.findByLease(lease);
-            assertThat(invoicessAfterCreateLegacy.size(), is(11));
-            Invoice invoice = invoicessAfterCreateLegacy.get(10);
+            assertThat(invoicessAfterCreateLegacy.size(), is(9));
+            Invoice invoice = invoicessAfterCreateLegacy.get(8);
             assertThat(invoice.getDueDate(), is(VT.ld(2014, 2, 1)));
             assertThat(invoice.getTotalGrossAmount(), is(VT.bd("-8170.01")));
 

@@ -44,7 +44,6 @@ public enum InvoiceCalculationSelection {
             LeaseItemType.RENT_DISCOUNT,
             LeaseItemType.RENT_FIXED,
             LeaseItemType.RENT_DISCOUNT_FIXED,
-            LeaseItemType.RENTAL_FEE,
             LeaseItemType.SERVICE_CHARGE,
             LeaseItemType.SERVICE_CHARGE_BUDGETED,
             LeaseItemType.SERVICE_CHARGE_INDEXABLE,
@@ -74,8 +73,6 @@ public enum InvoiceCalculationSelection {
             LeaseItemType.ENTRY_FEE),
     ONLY_DEPOSIT(
             LeaseItemType.DEPOSIT),
-    ONLY_RENTAL_FEE(
-            LeaseItemType.RENTAL_FEE),
     ONLY_TAX(
             LeaseItemType.TAX)
     ;

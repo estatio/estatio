@@ -16,7 +16,6 @@ import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_en
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForEntryFee_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForMarketing_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForPercentage_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceChargeBudgeted_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
@@ -42,7 +41,6 @@ public enum ProlongationOption_enum implements PersonaWithFinder<ProlongationOpt
                     LeaseItemForServiceCharge_enum.OxfTopModel001Gb_TA,
                     LeaseItemForServiceChargeBudgeted_enum.OxfTopModel001Gb,
                     LeaseItemForTurnoverRent_enum.OxfTopModel001Gb,
-                    LeaseItemForPercentage_enum.OxfTopModel001Gb,
                     LeaseItemForDiscount_enum.OxfTopModel001Gb,
                     LeaseItemForEntryFee_enum.OxfTopModel001Gb,
                     LeaseItemForTax_enum.OxfTopModel001Gb,
