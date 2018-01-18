@@ -19,10 +19,12 @@
 package org.estatio.module.lease.integtests.invoicing;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,6 +45,7 @@ import org.estatio.module.lease.app.InvoiceMenu;
 import org.estatio.module.lease.app.InvoiceServiceMenu;
 import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.lease.app.NumeratorForCollectionMenu;
+import org.estatio.module.lease.contributions.Lease_calculate;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
@@ -58,6 +61,7 @@ import org.estatio.module.lease.fixtures.invoice.enums.InvoiceForLease_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForEntryFee_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
@@ -254,6 +258,46 @@ public class InvoiceService_IntegTest extends LeaseModuleIntegTestAbstract {
                 mixin(InvoiceForLease._approve.class, invoice).$$();
             }
         }
+    }
+
+    public static class RetroInvoiceForFixedInAdvanceItem extends InvoiceService_IntegTest {
+
+        @Before
+        public void setupTransactionalData() {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(final ExecutionContext ec) {
+
+                    ec.executeChildren(this,
+                            Lease_enum.OxfFix006Gb);
+                    ec.executeChildren(this,
+                            LeaseItemForRent_enum.OxfFix006Gb);
+                    ec.executeChildren(this,
+                            LeaseItemForEntryFee_enum.OxfFix006Gb);
+                }
+            });
+
+        }
+
+        @Test
+        public void retro_invoicing_fixed_in_advance_item_works() throws Exception {
+
+            // given
+            Lease leaseForFix = Lease_enum.OxfFix006Gb.findUsing(serviceRegistry);
+            Assertions.assertThat(leaseForFix).isNotNull();
+
+            // when
+            wrap(mixin(Lease_calculate.class, leaseForFix)).exec(
+                    InvoiceRunType.RETRO_RUN,
+                    Arrays.asList(LeaseItemType.ENTRY_FEE),
+                    new LocalDate(2018, 1, 1),
+                    new LocalDate(2018, 1, 1),
+                    new LocalDate(2018, 1, 2)
+                    );
+
+
+        }
+
     }
 
 }
