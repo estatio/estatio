@@ -914,6 +914,9 @@ public class Lease
             final Party tenant,
             final LocalDate startDate
     ) {
+        if (startDate.isBefore(getStartDate())){
+            return "The start date cannot be before the start date of the lease";
+        }
         return leaseRepository.findLeaseByReferenceElseNull(reference) == null ? null : "Lease reference already exists,";
     }
 

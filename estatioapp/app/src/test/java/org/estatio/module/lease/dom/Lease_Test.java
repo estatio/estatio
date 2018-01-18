@@ -1294,4 +1294,33 @@ public class Lease_Test {
         
     }
 
+    public static class OtherTests extends Lease_Test {
+
+        @Mock
+        LeaseRepository mockLeaseRepository;
+
+        @Test
+        public void validate_Assign_checks_start_date() throws Exception {
+
+            // given
+            String reference = "Some Lease Reference";
+            final LocalDate startDate = new LocalDate(2018,01,01);
+            lease = new Lease();
+            lease.setStartDate(startDate);
+            lease.leaseRepository = mockLeaseRepository;
+
+            // expect
+            context.checking(new Expectations(){{
+                allowing(mockLeaseRepository).findLeaseByReferenceElseNull(reference);
+                will(returnValue(null));
+            }});
+
+            // then
+            assertThat(lease.validateAssign(reference, null, null,  startDate.minusDays(1))).isEqualTo("The start date cannot be before the start date of the lease");
+            assertThat(lease.validateAssign(reference, null, null,  startDate)).isNull();
+
+        }
+
+    }
+
 }
