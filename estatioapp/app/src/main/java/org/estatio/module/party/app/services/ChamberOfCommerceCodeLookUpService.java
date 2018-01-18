@@ -86,15 +86,18 @@ public class ChamberOfCommerceCodeLookUpService {
 
     OrganisationNameNumberViewModel findCandidateForFranceByCode(final String code){
         SirenService sirenService = new SirenService();
-        String companyName = null;
+        SirenResult sirenResult = null;
         try {
-            companyName = sirenService.getCompanyName(code).getCompanyName();
+            sirenResult = sirenService.getCompanyName(code);
         } catch (ConnectException e) {
             messageService.warnUser(connectionWarning);
         }
-        OrganisationNameNumberViewModel result = new OrganisationNameNumberViewModel(companyName, code);
-        if (result==null) messageService.warnUser(noResultsWarning);
-        return result;
+        if (sirenResult!=null) {
+            return new OrganisationNameNumberViewModel(sirenResult.getCompanyName(), code);
+        } else {
+            messageService.warnUser(noResultsWarning);
+            return null;
+        }
     }
 
     @Inject MessageService messageService;

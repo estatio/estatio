@@ -4,7 +4,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.jmock.Expectations;
+import org.jmock.auto.Mock;
+import org.junit.Rule;
 import org.junit.Test;
+
+import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.module.party.dom.Organisation;
 
@@ -63,6 +69,29 @@ public class ChamberOfCommerceCodeLookUpServiceTest {
 
         // then
         Assertions.assertThat(result).isNotNull();
+
+    }
+
+    @Rule
+    public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
+
+    @Mock MessageService mockMessageService;
+
+    @Test
+    public void find_Candidate_For_France_By_Code_works_when_no_result() throws Exception {
+
+        // given
+        ChamberOfCommerceCodeLookUpService service = new ChamberOfCommerceCodeLookUpService();
+        service.messageService = mockMessageService;
+        String noResultsWarning = "A connection to the external Siren service could be made, but no results were returned";
+
+        // expect
+        context.checking(new Expectations(){{
+            allowing(mockMessageService).warnUser(noResultsWarning);
+        }});
+
+        // when
+        service.findCandidateForFranceByCode("some cocc that returns no results");
 
     }
 
