@@ -19,6 +19,7 @@ package org.estatio.module.party.app.services.siren;
 import java.net.ConnectException;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,7 +30,7 @@ public class SirenServiceTest {
     public static String COMPANY_CODE = "322120916";
 
     @Test
-//    @Ignore //This test can hinder a build when the service is down temporarily or returns no results
+    @Ignore //This test can hinder a build when the service is down temporarily or returns no results
     public void company_query_should_return_company_code() {
         // given
         SirenService sirenService = new SirenService();
@@ -49,7 +50,7 @@ public class SirenServiceTest {
     }
 
     @Test
-//    @Ignore //This test can hinder a build when the service is down temporarily or returns no results
+    @Ignore //This test can hinder a build when the service is down temporarily or returns no results
     public void company_code_should_return_company_name() {
         // given
         SirenService sirenService = new SirenService();
@@ -67,7 +68,7 @@ public class SirenServiceTest {
     }
 
     @Test
-//    @Ignore //This test can hinder a build when the service is down temporarily or returns no results
+    @Ignore //This test can hinder a build when the service is down temporarily or returns no results
     public void full_circle() {
         // given
         SirenService sirenService = new SirenService();
