@@ -42,6 +42,7 @@ import org.estatio.module.base.dom.apptenancy.WithApplicationTenancy;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceRepository;
+import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 
@@ -98,6 +99,14 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
             }
         }
         return null;
+    }
+
+    public String disableInvoiceAll() {
+        return getInvoices()
+                .stream()
+                .anyMatch(invoice -> invoice.getStatus().equals(InvoiceStatus.NEW))
+                ? "Invoices with status 'New' can't be invoiced"
+                : null;
     }
 
     public LocalDate default0InvoiceAll() {
