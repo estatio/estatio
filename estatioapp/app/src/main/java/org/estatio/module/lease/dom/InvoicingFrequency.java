@@ -180,7 +180,8 @@ public enum InvoicingFrequency {
         if (rrule == null) {
             LocalDate dueDateOfSourceInterval = dueDateOfInterval(sourceInterval);
             if (rangeInterval.contains(dueDateOfSourceInterval)) {
-                invoicingIntervals.add(new InvoicingInterval(sourceInterval, dueDateOfSourceInterval));
+                LocalDateInterval intervalToUse = sourceInterval.isOpenEnded() ? new LocalDateInterval(sourceInterval.startDate(), rangeInterval.endDate()) : sourceInterval;
+                invoicingIntervals.add(new InvoicingInterval(intervalToUse, dueDateOfSourceInterval));
             }
         } else {
             for (Interval interval : CalendarUtils.intervalsInRange(
