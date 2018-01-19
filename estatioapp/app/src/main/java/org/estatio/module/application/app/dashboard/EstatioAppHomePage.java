@@ -42,6 +42,8 @@ import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 
 import org.estatio.module.capex.app.DirectDebitsMenu;
 import org.estatio.module.capex.app.PaymentBatchMenu;
+import org.estatio.module.capex.app.UpcomingPaymentService;
+import org.estatio.module.capex.app.invoice.UpcomingPaymentTotal;
 import org.estatio.module.capex.app.paydd.DirectDebitsManager;
 import org.estatio.module.capex.app.paymentbatch.PaymentBatchManager;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
@@ -218,8 +220,10 @@ public class EstatioAppHomePage {
         return eventRepository.findEventsInDateRange(clockService.now(), clockService.now().plusMonths(MONTHS));
     }
 
-
-
+    @Collection(notPersisted = true)
+    public List<UpcomingPaymentTotal> getUpcomingPayments(){
+        return upcomingPaymentService.getUpcomingPayments();
+    }
 
     private EstatioAppHomePage checkStateOf(final List<Task> tasks) {
         for (Task task : tasks) {
@@ -295,6 +299,9 @@ public class EstatioAppHomePage {
 
     @Inject
     ServiceRegistry2 serviceRegistry2;
+
+    @Inject
+    UpcomingPaymentService upcomingPaymentService;
 
 
 }
