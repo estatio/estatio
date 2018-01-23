@@ -229,7 +229,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     serviceRegistry2.lookupService(BankAccountVerificationChecker.class);
 
             return bankAccountVerificationChecker.isBankAccountVerifiedFor(incomingInvoice) ||
-                   incomingInvoice.getPaymentMethod() == PaymentMethod.DIRECT_DEBIT;
+                   incomingInvoice.getPaymentMethod() == PaymentMethod.DIRECT_DEBIT ||
+                    incomingInvoice.getPaymentMethod() == PaymentMethod.MANUAL_PROCESS;
         }
     },
     PAY_BY_IBP(
