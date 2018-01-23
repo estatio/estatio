@@ -161,6 +161,7 @@
                                         <cpt:property id="approvedFully" hidden="ALL_TABLES"/>
                                         <cpt:property id="pendingApprovalTask"  hidden="ALL_TABLES">
                                             <cpt:named>Current task</cpt:named>
+                                            <cpt:action id="checkPayment"/>
                                             <cpt:action id="complete"/>
                                             <cpt:action id="approve"/>
                                             <cpt:action id="approveAsCountryDirector"/>

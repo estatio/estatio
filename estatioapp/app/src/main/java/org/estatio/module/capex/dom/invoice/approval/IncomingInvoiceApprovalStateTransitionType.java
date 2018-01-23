@@ -269,12 +269,12 @@ public enum IncomingInvoiceApprovalStateTransitionType
             return incomingInvoice.getPaymentMethod() == PaymentMethod.DIRECT_DEBIT;
         }
     },
-    PRE_PAID(
+    CHECK_PAYMENT(
             IncomingInvoiceApprovalState.PAYABLE,
             IncomingInvoiceApprovalState.PAID,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
-            TaskAssignmentStrategy.none(),
-            AdvancePolicy.AUTOMATIC) {
+            TaskAssignmentStrategy.to(PartyRoleTypeEnum.TREASURER),
+            AdvancePolicy.MANUAL) {
         @Override public boolean isMatch(
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {

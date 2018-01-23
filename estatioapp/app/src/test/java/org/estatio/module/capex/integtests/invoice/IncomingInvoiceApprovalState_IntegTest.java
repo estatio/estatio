@@ -22,11 +22,11 @@ import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.fixtures.enums.Country_enum;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
+import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccount_verificationState;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
@@ -35,9 +35,13 @@ import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStat
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_approve;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_approveAsCountryDirector;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_checkPayment;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_complete;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
+import org.estatio.module.capex.dom.state.StateTransitionService;
+import org.estatio.module.capex.dom.task.Task;
+import org.estatio.module.capex.dom.task.TaskRepository;
 import org.estatio.module.capex.fixtures.incominginvoice.enums.IncomingInvoice_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
@@ -45,7 +49,6 @@ import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
 import org.estatio.module.financial.dom.BankAccount;
-import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
@@ -180,28 +183,55 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
     }
 
     @Test
-    public void paid_by_credit_card_skips_bank_account_verification_and_payment(){
+    public void paid_by_credit_card_skips_bank_account_verification_and_creates_check_task_for_treasury(){
 
         // given
+        PartyRoleType typeForTreasurer = partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.TREASURER.getKey());
+
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getRef().toLowerCase(), (Runnable) () ->
                 wrap(incomingInvoice).changePaymentMethod(PaymentMethod.CREDIT_CARD));
-
-        // when
         sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getRef().toLowerCase(), (Runnable) () ->
                 wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.PeterPanProjectManagerGb.getRef().toLowerCase(), (Runnable) () ->
                 wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act("COUNTRY_DIRECTOR", null, null, false));
+        List<Task> tasksForTreasury = taskRepository.findIncompleteByRole(typeForTreasurer);
+        assertThat(tasksForTreasury).isEmpty();
+
+        BankAccount bankAccount = incomingInvoice.getBankAccount();
+        assertThat(bankAccount).isNotNull();
+        BankAccountVerificationState state = stateTransitionService
+                .currentStateOf(bankAccount, BankAccountVerificationStateTransition.class);
+        assertThat(state).isEqualTo(BankAccountVerificationState.NOT_VERIFIED);
+
+
+        // when
+
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.OscarCountryDirectorGb.getRef().toLowerCase(), (Runnable) () ->
                 wrap(mixin(IncomingInvoice_approveAsCountryDirector.class, incomingInvoice)).act(null, false));
 
         // then
-        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PAID);
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PAYABLE);
         List<IncomingInvoiceApprovalStateTransition> transitions = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
         assertThat(transitions.size()).isEqualTo(7);
-        assertThat(transitions.get(0).getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.PRE_PAID);
+        assertThat(transitions.get(0).getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.CHECK_PAYMENT);
+        tasksForTreasury = taskRepository.findIncompleteByRole(typeForTreasurer);
+        assertThat(tasksForTreasury.size()).isEqualTo(1);
+        assertThat(tasksForTreasury.get(0).getDescription()).isEqualTo("Check Payment");
+        // and still
+        state = stateTransitionService
+                .currentStateOf(bankAccount, BankAccountVerificationStateTransition.class);
+        assertThat(state).isEqualTo(BankAccountVerificationState.NOT_VERIFIED);
+
+        // and when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.EmmaTreasurerGb.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_checkPayment.class, incomingInvoice)).act(null, false));
+
+        // then
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PAID);
 
     }
 
@@ -221,9 +251,6 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
     IncomingInvoiceRepository incomingInvoiceRepository;
 
     @Inject
-    PropertyRepository propertyRepository;
-
-    @Inject
     PartyRepository partyRepository;
 
     @Inject
@@ -233,10 +260,12 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
     ChargeRepository chargeRepository;
 
     @Inject
-    BankAccountRepository bankAccountRepository;
-
-    @Inject
     PartyRoleTypeRepository partyRoleTypeRepository;
 
+    @Inject
+    TaskRepository taskRepository;
+
+    @Inject
+    StateTransitionService stateTransitionService;
 }
 

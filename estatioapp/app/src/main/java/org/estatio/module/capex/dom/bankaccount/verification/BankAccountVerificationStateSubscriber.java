@@ -1,5 +1,6 @@
 package org.estatio.module.capex.dom.bankaccount.verification;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import javax.inject.Inject;
@@ -21,6 +22,7 @@ import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStat
 import org.estatio.module.capex.dom.state.StateTransitionEvent;
 import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.invoice.dom.PaymentMethod;
 
 @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "100")
 public class BankAccountVerificationStateSubscriber extends AbstractSubscriber {
@@ -75,7 +77,9 @@ public class BankAccountVerificationStateSubscriber extends AbstractSubscriber {
             case COMPLETE: // do so as early as possible so that verification can run in parallel with approval
             case CHECK_BANK_ACCOUNT: // belt-n-braces, do late as well
 
-                if(bankAccountVerificationChecker.isBankAccountVerifiedFor(incomingInvoice)) {
+                if(bankAccountVerificationChecker.isBankAccountVerifiedFor(incomingInvoice) ||
+                                Arrays.asList(PaymentMethod.MANUAL_PROCESS, PaymentMethod.CREDIT_CARD).contains(incomingInvoice.getPaymentMethod())
+                        ) {
                     return;
                 }
 
