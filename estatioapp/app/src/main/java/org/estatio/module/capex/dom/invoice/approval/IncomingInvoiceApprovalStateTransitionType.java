@@ -1,5 +1,6 @@
 package org.estatio.module.capex.dom.invoice.approval;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -229,8 +230,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     serviceRegistry2.lookupService(BankAccountVerificationChecker.class);
 
             return bankAccountVerificationChecker.isBankAccountVerifiedFor(incomingInvoice) ||
-                   incomingInvoice.getPaymentMethod() == PaymentMethod.DIRECT_DEBIT ||
-                    incomingInvoice.getPaymentMethod() == PaymentMethod.MANUAL_PROCESS;
+                    Arrays.asList(PaymentMethod.DIRECT_DEBIT, PaymentMethod.MANUAL_PROCESS, PaymentMethod.CREDIT_CARD).contains(incomingInvoice.getPaymentMethod());
         }
     },
     PAY_BY_IBP(
@@ -267,6 +267,18 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
             return incomingInvoice.getPaymentMethod() == PaymentMethod.DIRECT_DEBIT;
+        }
+    },
+    PRE_PAID(
+            IncomingInvoiceApprovalState.PAYABLE,
+            IncomingInvoiceApprovalState.PAID,
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.AUTOMATIC) {
+        @Override public boolean isMatch(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            return incomingInvoice.getPaymentMethod() == PaymentMethod.CREDIT_CARD;
         }
     },
     DISCARD(

@@ -27,6 +27,7 @@ public enum PaymentMethod {
     BANK_TRANSFER,
     CASH,
     CHEQUE,
+    CREDIT_CARD,
     MANUAL_PROCESS;
 
     public String title() {

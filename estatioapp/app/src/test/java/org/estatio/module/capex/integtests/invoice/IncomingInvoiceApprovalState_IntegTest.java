@@ -1,5 +1,6 @@
 package org.estatio.module.capex.integtests.invoice;
 
+import java.util.List;
 import java.util.SortedSet;
 
 import javax.inject.Inject;
@@ -18,6 +19,7 @@ import org.apache.isis.applib.services.wrapper.DisabledException;
 
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
+import org.incode.module.country.fixtures.enums.Country_enum;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
@@ -30,6 +32,9 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_approve;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_approveAsCountryDirector;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_complete;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
@@ -39,10 +44,10 @@ import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
-import org.incode.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
+import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
@@ -80,7 +85,10 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
                 ec.executeChildren(this,
                         IncomingInvoice_enum.fakeInvoice2Pdf,
                         BankAccount_enum.TopModelGb,
-                        Person_enum.EmmaTreasurerGb);
+                        Person_enum.EmmaTreasurerGb,
+                        Person_enum.JonathanPropertyManagerGb,
+                        Person_enum.PeterPanProjectManagerGb,
+                        Person_enum.OscarCountryDirectorGb);
             }
         });
     }
@@ -169,6 +177,32 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
     void assertState(final BankAccount bankAccount, final BankAccountVerificationState expected) {
         Assertions.assertThat(wrap(mixin(BankAccount_verificationState.class, bankAccount)).prop()).isEqualTo(
                 expected);
+    }
+
+    @Test
+    public void paid_by_credit_card_skips_bank_account_verification_and_payment(){
+
+        // given
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getRef().toLowerCase(), (Runnable) () ->
+                wrap(incomingInvoice).changePaymentMethod(PaymentMethod.CREDIT_CARD));
+
+        // when
+        sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.PeterPanProjectManagerGb.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act("COUNTRY_DIRECTOR", null, null, false));
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.OscarCountryDirectorGb.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_approveAsCountryDirector.class, incomingInvoice)).act(null, false));
+
+        // then
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PAID);
+        List<IncomingInvoiceApprovalStateTransition> transitions = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitions.size()).isEqualTo(7);
+        assertThat(transitions.get(0).getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.PRE_PAID);
+
     }
 
     @Inject

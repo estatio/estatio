@@ -7,11 +7,13 @@ import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
+
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
 import org.estatio.module.asset.fixtures.person.builders.PersonFixedAssetRolesBuilder;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
+import org.estatio.module.capex.dom.project.ProjectRoleTypeEnum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
@@ -24,11 +26,6 @@ import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Fr;
-import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Gb;
-import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.It;
-import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Nl;
-import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Se;
 import static org.estatio.module.party.dom.PersonGenderType.FEMALE;
 import static org.estatio.module.party.dom.PersonGenderType.MALE;
 import static org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum.CONTACT;
@@ -36,6 +33,11 @@ import static org.estatio.module.party.fixtures.organisation.enums.Organisation_
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.PerdantFr;
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.TopModelGb;
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.YoukeaSe;
+import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Fr;
+import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Gb;
+import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.It;
+import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Nl;
+import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Se;
 
 @Getter
 @Accessors(chain = true)
@@ -139,6 +141,11 @@ public enum Person_enum
     OscarCountryDirectorGb("OPRITCHARD", "Oscar", "Pritchard", null, true, MALE, Gb,
             null, null,
             new IPartyRoleType[] { PartyRoleTypeEnum.COUNTRY_DIRECTOR },
+            new FixedAssetRoleSpec[] {}),
+
+    PeterPanProjectManagerGb("PP", "Peter", "Pan", "P", true, MALE, Gb,
+            null, null,
+            new IPartyRoleType[] { ProjectRoleTypeEnum.PROJECT_MANAGER },
             new FixedAssetRoleSpec[] {}),
 
     RosaireEvrardFr("REVRARD", "Rosaire", "Evrard", null, true, FEMALE, Fr,
