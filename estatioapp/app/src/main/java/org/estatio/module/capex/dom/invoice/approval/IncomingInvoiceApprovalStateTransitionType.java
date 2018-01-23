@@ -230,7 +230,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     serviceRegistry2.lookupService(BankAccountVerificationChecker.class);
 
             return bankAccountVerificationChecker.isBankAccountVerifiedFor(incomingInvoice) ||
-                    Arrays.asList(PaymentMethod.DIRECT_DEBIT, PaymentMethod.MANUAL_PROCESS, PaymentMethod.CREDIT_CARD).contains(incomingInvoice.getPaymentMethod());
+                    Arrays.asList(PaymentMethod.DIRECT_DEBIT, PaymentMethod.MANUAL_PROCESS, PaymentMethod.CREDIT_CARD, PaymentMethod.REFUND_BY_SUPPLIER).contains(incomingInvoice.getPaymentMethod());
         }
     },
     PAY_BY_IBP(
@@ -278,7 +278,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
         @Override public boolean isMatch(
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
-            return incomingInvoice.getPaymentMethod() == PaymentMethod.CREDIT_CARD;
+            return incomingInvoice.getPaymentMethod() == PaymentMethod.CREDIT_CARD || incomingInvoice.getPaymentMethod() == PaymentMethod.REFUND_BY_SUPPLIER;
         }
     },
     DISCARD(

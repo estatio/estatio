@@ -78,7 +78,7 @@ public class BankAccountVerificationStateSubscriber extends AbstractSubscriber {
             case CHECK_BANK_ACCOUNT: // belt-n-braces, do late as well
 
                 if(bankAccountVerificationChecker.isBankAccountVerifiedFor(incomingInvoice) ||
-                                Arrays.asList(PaymentMethod.MANUAL_PROCESS, PaymentMethod.CREDIT_CARD).contains(incomingInvoice.getPaymentMethod())
+                        Arrays.asList(PaymentMethod.MANUAL_PROCESS, PaymentMethod.CREDIT_CARD, PaymentMethod.REFUND_BY_SUPPLIER).contains(incomingInvoice.getPaymentMethod())
                         ) {
                     return;
                 }

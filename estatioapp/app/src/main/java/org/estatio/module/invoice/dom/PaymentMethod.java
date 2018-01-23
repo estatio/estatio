@@ -28,6 +28,7 @@ public enum PaymentMethod {
     CASH,
     CHEQUE,
     CREDIT_CARD,
+    REFUND_BY_SUPPLIER,
     MANUAL_PROCESS;
 
     public String title() {

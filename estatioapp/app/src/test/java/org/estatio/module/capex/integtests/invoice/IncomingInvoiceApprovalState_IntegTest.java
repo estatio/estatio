@@ -235,6 +235,59 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
 
     }
 
+    @Test
+    public void refund_by_supplier_skips_bank_account_verification_and_creates_check_task_for_treasury(){
+
+        // given
+        PartyRoleType typeForTreasurer = partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.TREASURER.getKey());
+
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getRef().toLowerCase(), (Runnable) () ->
+                wrap(incomingInvoice).changePaymentMethod(PaymentMethod.REFUND_BY_SUPPLIER));
+        sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.PeterPanProjectManagerGb.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act("COUNTRY_DIRECTOR", null, null, false));
+        List<Task> tasksForTreasury = taskRepository.findIncompleteByRole(typeForTreasurer);
+        assertThat(tasksForTreasury).isEmpty();
+
+        BankAccount bankAccount = incomingInvoice.getBankAccount();
+        assertThat(bankAccount).isNotNull();
+        BankAccountVerificationState state = stateTransitionService
+                .currentStateOf(bankAccount, BankAccountVerificationStateTransition.class);
+        assertThat(state).isEqualTo(BankAccountVerificationState.NOT_VERIFIED);
+
+
+        // when
+
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.OscarCountryDirectorGb.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_approveAsCountryDirector.class, incomingInvoice)).act(null, false));
+
+        // then
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PAYABLE);
+        List<IncomingInvoiceApprovalStateTransition> transitions = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitions.size()).isEqualTo(7);
+        assertThat(transitions.get(0).getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.CHECK_PAYMENT);
+        tasksForTreasury = taskRepository.findIncompleteByRole(typeForTreasurer);
+        assertThat(tasksForTreasury.size()).isEqualTo(1);
+        assertThat(tasksForTreasury.get(0).getDescription()).isEqualTo("Check Payment");
+        // and still
+        state = stateTransitionService
+                .currentStateOf(bankAccount, BankAccountVerificationStateTransition.class);
+        assertThat(state).isEqualTo(BankAccountVerificationState.NOT_VERIFIED);
+
+        // and when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.EmmaTreasurerGb.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_checkPayment.class, incomingInvoice)).act(null, false));
+
+        // then
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PAID);
+
+    }
+
     @Inject
     QueryResultsCache queryResultsCache;
 
