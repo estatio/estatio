@@ -301,34 +301,27 @@ public abstract class Invoice<T extends Invoice<T>>
     @Getter @Setter
     private PaymentMethod paymentMethod;
 
-    /**
-     * TODO: inline this mixin
-     */
-    @Mixin(method = "exec")
-    public static class _changePaymentMethod {
-
-        private final Invoice invoice;
-
-        public _changePaymentMethod(final Invoice invoice) {
-            this.invoice = invoice;
-        }
-
-        @Action(semantics = SemanticsOf.IDEMPOTENT)
-        @ActionLayout(contributed = Contributed.AS_ACTION)
-        public Invoice exec(final PaymentMethod paymentMethod) {
-            invoice.setPaymentMethod(paymentMethod);
-            return invoice;
-        }
-
-        public PaymentMethod default0Exec() {
-            return invoice.getPaymentMethod();
-        }
-
-        public String disableExec() {
-            final Object viewContext = invoice;
-            return invoice.reasonDisabledFinanceDetailsDueToState(viewContext);
-        }
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Invoice changePaymentMethod(final PaymentMethod paymentMethod) {
+        setPaymentMethod(paymentMethod);
+        return this;
     }
+
+    public PaymentMethod default0ChangePaymentMethod() {
+        return getPaymentMethod();
+    }
+
+    public String disableChangePaymentMethod() {
+        return reasonDisabledFinanceDetailsDueToState(this);
+    }
+
+    public String validateChangePaymentMethod(final PaymentMethod paymentMethod){
+        if (paymentMethod==PaymentMethod.MANUAL_PROCESS){
+            return "Manual process is not in use anymore.";
+        }
+        return null;
+    }
+
 
     /**
      * Mandatory hook

@@ -218,6 +218,10 @@ public class IncomingDocAsInvoiceViewModel
     public PaymentMethod defaultPaymentMethod(){
         return getPaymentMethod();
     }
+
+    public String validatePaymentMethod(final PaymentMethod paymentMethod){
+        return getDomainObject().validateChangePaymentMethod(paymentMethod);
+    }
     //endregion
 
 
