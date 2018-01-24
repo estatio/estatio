@@ -21,17 +21,14 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
-
-import org.estatio.module.settings.dom.ApplicationSetting;
-import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
-import org.estatio.module.settings.dom.SettingAbstract;
-import org.estatio.module.settings.dom.SettingType;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
@@ -98,6 +95,12 @@ public class ApplicationSettingsServiceForEstatio extends UdoDomainRepositoryAnd
             final Long value) {
         return newSetting(key, description, SettingType.LONG, value.toString());
     }
+
+    @Override
+    public void delete(final ApplicationSetting applicationSetting) {
+        repositoryService.removeAndFlush(applicationSetting);
+    }
+
     @Programmatic
     @Override
     public ApplicationSettingForEstatio newLocalDate(
@@ -131,6 +134,10 @@ public class ApplicationSettingsServiceForEstatio extends UdoDomainRepositoryAnd
     public void init(final Map<String,String> props) {
         super.init(props);
     }
+
+    @Inject
+    RepositoryService repositoryService;
+
 
 }
 
