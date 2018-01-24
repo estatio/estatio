@@ -77,13 +77,22 @@ public class AdminDashboard {
     }
 
 
-    @Property(editing = Editing.ENABLED, optionality = Optionality.OPTIONAL)
+    @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
     @XmlTransient
     public LocalDate getEpochDate() {
         return settingsService.fetchEpochDate();
     }
     public void setEpochDate(final LocalDate epochDate) {
         settingsService.updateEpochDate(epochDate);
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public AdminDashboard updateEpochDate(final LocalDate epochDate) {
+        setEpochDate(epochDate);
+        return this;
+    }
+    public LocalDate default0UpdateEpochDate() {
+        return getEpochDate();
     }
 
 
