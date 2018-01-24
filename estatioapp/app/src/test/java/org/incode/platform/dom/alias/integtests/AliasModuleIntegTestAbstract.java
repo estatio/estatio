@@ -10,13 +10,13 @@ import org.isisaddons.module.fakedata.dom.FakeDataService;
 
 import org.incode.platform.dom.alias.integtests.dom.alias.AliasModuleIntegrationSubmodule;
 import org.incode.platform.dom.alias.integtests.dom.alias.dom.AliasForDemoObject;
-import org.incode.platform.dom.alias.integtests.tests.alias.T_addAlias_IntegTest;
 
 public abstract class AliasModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
     public static ModuleAbstract module() {
         return new AliasModuleIntegrationSubmodule()
-                    .withAdditionalServices(T_addAlias_IntegTest.DomainEventIntegTest.Subscriber.class)
+                // TODO: reinstate if we ever bring in alias.  For now, having to comment out this subscriber because it is causing the 'isis.reflector.validator.checkModuleExtent' check to fail.
+                // .withAdditionalServices(T_addAlias_IntegTest.DomainEventIntegTest.Subscriber.class)
                     .withAdditionalModules(FakeDataModule.class);
     }
 
