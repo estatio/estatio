@@ -18,30 +18,14 @@
  */
 package org.estatio.module.application.app;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
-import javax.servlet.http.HttpSession;
-
-import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.application.platform.servletapi.HttpSessionProvider;
 import org.estatio.module.base.dom.UdoDomainService;
-import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
-import org.estatio.module.settings.dom.ApplicationSettingForEstatio;
-import org.estatio.module.settings.dom.ApplicationSettingsServiceForEstatio;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -59,59 +43,11 @@ public class AdministrationMenu extends UdoDomainService<AdministrationMenu> {
     }
 
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @MemberOrder(sequence = "1")
-    public void updateEpochDate(
-            @Parameter(optionality = Optionality.OPTIONAL)
-            @ParameterLayout(named = "Epoch Date")
-            final LocalDate epochDate) {
-        settingsService.updateEpochDate(epochDate);
-    }
-
-    public LocalDate default0UpdateEpochDate() {
-        return settingsService.fetchEpochDate();
-    }
-
-
-
-
     @Action(semantics = SemanticsOf.SAFE)
-    @MemberOrder(sequence = "2")
-    public List<ApplicationSettingForEstatio> listAllSettings() {
-        return applicationSettingsService.listAll()
-                    .stream()
-                .filter(ApplicationSettingForEstatio.class::isInstance)
-                .map(ApplicationSettingForEstatio.class::cast)
-                .collect(Collectors.toList());
-    }
-
-
-
-    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
-    @MemberOrder(sequence = "3")
-    public Integer httpSessionTimeout() {
-        return httpSessionProvider.getHttpSession().map(HttpSession::getMaxInactiveInterval).orElse(null);
-    }
-
-
-    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "3.5")
-    public void raiseRuntimeException() {
-        throw new RuntimeException();
+    public AdminDashboard openAdminDashboard() {
+        return new AdminDashboard();
     }
-
-
-
-
-
-    @Inject
-    HttpSessionProvider httpSessionProvider;
-
-    @Inject
-    LeaseInvoicingSettingsService settingsService;
-
-    @Inject
-    ApplicationSettingsServiceForEstatio applicationSettingsService;
 
 
 }

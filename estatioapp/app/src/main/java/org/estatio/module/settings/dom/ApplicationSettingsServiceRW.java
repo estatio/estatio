@@ -3,6 +3,7 @@ package org.estatio.module.settings.dom;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
 
 public interface ApplicationSettingsServiceRW extends ApplicationSettingsService {
 
@@ -26,4 +27,7 @@ public interface ApplicationSettingsServiceRW extends ApplicationSettingsService
     ApplicationSetting newLong(
             String name, String description, Long defaultValue);
     
+    @Programmatic
+    void delete(ApplicationSetting applicationSetting);
+
 }
