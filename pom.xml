@@ -79,7 +79,7 @@ language governing permissions and limitations under the License.
         <incode-platform.version>1.16.0</incode-platform.version>
 
         <!-- this is a temporary override, see ECP-431 to remove -->
-        <mavenmixin-surefire.version>0.0.5</mavenmixin-surefire.version>
+        <mavenmixin-surefire.version>0.0.6</mavenmixin-surefire.version>
 
         <wicketstuff.version>7.9.0</wicketstuff.version>
 

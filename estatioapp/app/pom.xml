@@ -133,6 +133,7 @@ language governing permissions and limitations under the License.
         <isis.integTest.module>
             org.estatio.module.application.EstatioApplicationModuleWithExampleModules
         </isis.integTest.module>
+        <surefire-plugin.argLine>-Xms1024m -Xmx1024m</surefire-plugin.argLine>
     </properties>
 
     <dependencies>
