@@ -19,6 +19,7 @@
 package org.estatio.module.lease.integtests.invoicing;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -42,8 +43,7 @@ import org.estatio.module.lease.dom.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.module.lease.fixtures.invoice.enums.InvoiceForLease_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class InvoiceItemForLeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
@@ -85,7 +85,7 @@ public class InvoiceItemForLeaseRepository_IntegTest extends LeaseModuleIntegTes
             List<InvoiceItemForLease> invoiceItems = invoiceItemForLeaseRepository.findByLeaseTerm(term);
 
             // then
-            assertThat(invoiceItems.size(), is(1));
+            assertThat(invoiceItems).hasSize(1);
         }
     }
 
@@ -102,9 +102,33 @@ public class InvoiceItemForLeaseRepository_IntegTest extends LeaseModuleIntegTes
             List<InvoiceItemForLease> invoiceItems = invoiceItemForLeaseRepository.findByLeaseTermAndInterval(term, interval);
 
             // then
-            assertThat(invoiceItems.size(), is(1));
+            assertThat(invoiceItems).hasSize(1);
         }
     }
+
+    public static class FindByLeaseTermAndEffectiveInterval extends InvoiceItemForLeaseRepository_IntegTest {
+
+        @Test
+        public void happy_case() throws Exception {
+            // given
+            LeaseTerm term = leaseTermRepository.findByLeaseItemAndStartDate(lease.findItemsOfType(LeaseItemType.RENT).get(0), lease.getStartDate());
+            LocalDateInterval interval = LocalDateInterval.excluding(new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1));
+
+            // when
+            Lease lease = InvoiceForLease_enum.OxfPoison003Gb.getLease_d().findUsing(serviceRegistry);
+            final Optional<InvoiceItemForLease> first = invoiceItemForLeaseRepository.findByLeaseTermAndEffectiveInterval(term, interval).stream().findFirst();
+            //then
+            assertThat(first).isPresent();
+
+            // and when
+            // checking legacy where calculation interval was not set and falls back to effective interval
+            first.get().setCalculationEndDate(null);
+            first.get().setCalculationStartDate(null);
+            //then
+            assertThat(invoiceItemForLeaseRepository.findByLeaseTermAndEffectiveInterval(term, interval).stream().findFirst()).isPresent();
+        }
+    }
+
 
     public static class FindByLeaseTermAndIntervalAndInvoiceStatusRepository extends
             InvoiceItemForLeaseRepository_IntegTest {
@@ -119,7 +143,7 @@ public class InvoiceItemForLeaseRepository_IntegTest extends LeaseModuleIntegTes
             List<InvoiceItemForLease> invoiceItems = invoiceItemForLeaseRepository.findByLeaseTermAndIntervalAndInvoiceStatus(term, interval, InvoiceStatus.NEW);
 
             // then
-            assertThat(invoiceItems.size(), is(1));
+            assertThat(invoiceItems).hasSize(1);
         }
     }
 
@@ -131,7 +155,7 @@ public class InvoiceItemForLeaseRepository_IntegTest extends LeaseModuleIntegTes
             List<InvoiceItemForLease> invoiceItems = invoiceItemForLeaseRepository.findByLeaseAndInvoiceStatus(lease, InvoiceStatus.NEW);
 
             // then
-            assertThat(invoiceItems.size(), is(2));
+            assertThat(invoiceItems).hasSize(2);
         }
     }
 
@@ -146,7 +170,7 @@ public class InvoiceItemForLeaseRepository_IntegTest extends LeaseModuleIntegTes
             List<InvoiceItemForLease> invoiceItems = invoiceItemForLeaseRepository.findByLeaseItemAndInvoiceStatus(leaseItem, InvoiceStatus.NEW);
 
             // then
-            assertThat(invoiceItems.size(), is(2));
+            assertThat(invoiceItems).hasSize(2);
         }
     }
 
@@ -161,7 +185,7 @@ public class InvoiceItemForLeaseRepository_IntegTest extends LeaseModuleIntegTes
             List<InvoiceItemForLease> invoiceItems = invoiceItemForLeaseRepository.findByLeaseTermAndInvoiceStatus(term, InvoiceStatus.NEW);
 
             // then
-            assertThat(invoiceItems.size(), is(1));
+            assertThat(invoiceItems).hasSize(1);
         }
     }
 }

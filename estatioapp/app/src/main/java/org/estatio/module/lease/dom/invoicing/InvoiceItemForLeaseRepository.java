@@ -66,6 +66,8 @@ public class InvoiceItemForLeaseRepository extends UdoDomainRepositoryAndFactory
     public InvoiceItemForLease newInvoiceItem(
             final LeaseTerm leaseTerm,
             final LocalDateInterval interval,
+            final LocalDateInterval calculationInterval,
+            final LocalDateInterval effectiveInterval,
             final LocalDate dueDate,
             final String interactionId) {
 
@@ -79,9 +81,14 @@ public class InvoiceItemForLeaseRepository extends UdoDomainRepositoryAndFactory
 
         final InvoiceItemForLease invoiceItem = newItem(invoice, dueDate);
 
+        invoiceItem.setLeaseTerm(leaseTerm);
+
         invoiceItem.setStartDate(interval.startDate());
         invoiceItem.setEndDate(interval.endDate());
-        invoiceItem.setLeaseTerm(leaseTerm);
+        invoiceItem.setEffectiveStartDate(effectiveInterval.startDate());
+        invoiceItem.setEffectiveEndDate(effectiveInterval.endDate());
+        invoiceItem.setCalculationStartDate(calculationInterval.startDate());
+        invoiceItem.setCalculationEndDate(calculationInterval.endDate());
 
         // redundantly persist, these are immutable
         // assumes only one occupancy per lease...
@@ -117,6 +124,17 @@ public class InvoiceItemForLeaseRepository extends UdoDomainRepositoryAndFactory
                 "leaseTerm", leaseTerm,
                 "startDate", interval.startDate(),
                 "endDate", interval.endDate());
+    }
+
+    @Programmatic
+    public List<InvoiceItemForLease> findByLeaseTermAndEffectiveInterval(
+            final LeaseTerm leaseTerm,
+            final LocalDateInterval effectiveInterval) {
+        return allMatches(
+                "findByLeaseTermAndEffectiveInterval",
+                "leaseTerm", leaseTerm,
+                "effectiveStartDate", effectiveInterval.startDate(),
+                "effectiveEndDate", effectiveInterval.endDate());
     }
 
     @Programmatic
@@ -168,12 +186,14 @@ public class InvoiceItemForLeaseRepository extends UdoDomainRepositoryAndFactory
     public InvoiceItemForLease createUnapprovedInvoiceItem(
             final LeaseTerm leaseTerm,
             final LocalDateInterval invoiceInterval,
+            final LocalDateInterval calculationInterval,
+            final LocalDateInterval effectiveInterval,
             final LocalDate dueDate,
             final String interactionId) {
         // TODO:Removing items returns unwanted results, perhaps remove all old
         // runs before?
         // removeUnapprovedInvoiceItems(leaseTerm, invoiceInterval);
-        return newInvoiceItem(leaseTerm, invoiceInterval, dueDate, interactionId);
+        return newInvoiceItem(leaseTerm, invoiceInterval, calculationInterval, effectiveInterval, dueDate, interactionId);
     }
 
     @Programmatic
@@ -203,20 +223,6 @@ public class InvoiceItemForLeaseRepository extends UdoDomainRepositoryAndFactory
             invoicedValue = invoicedValue.add(invoiceItem.getNetAmount());
         }
         return invoicedValue;
-    }
-
-    @Programmatic
-    public void removeUnapprovedInvoiceItems(
-            final LeaseTerm leaseTerm,
-            final LocalDateInterval interval) {
-        List<InvoiceItemForLease> invoiceItems = findByLeaseTermAndIntervalAndInvoiceStatus(
-                leaseTerm,
-                interval,
-                InvoiceStatus.NEW);
-        for (InvoiceItemForLease invoiceItem : invoiceItems) {
-            invoiceItem.remove();
-        }
-        getContainer().flush();
     }
 
     // //////////////////////////////////////

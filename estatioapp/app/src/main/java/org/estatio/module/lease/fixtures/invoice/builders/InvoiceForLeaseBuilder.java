@@ -150,7 +150,7 @@ public class InvoiceForLeaseBuilder extends BuilderScriptAbstract<InvoiceForLeas
 
         List<InvoiceItemForLease> items = Lists.newArrayList();
         for (final LeaseTerm term : terms) {
-            InvoiceItemForLease item = invoiceItemForLeaseRepository.newInvoiceItem(term, interval, startDate, null);
+            InvoiceItemForLease item = invoiceItemForLeaseRepository.newInvoiceItem(term, interval, interval, interval, startDate, null);
             item.setInvoice(invoice);
             item.setSequence(invoice.nextItemSequence());
 
