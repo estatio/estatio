@@ -193,6 +193,9 @@ public class InvoiceCalculationService_normalRun_IntegTest extends LeaseModuleIn
                 5050.00, false,
                 null);
 
+        // restore epochdate for other integ tests
+        leaseInvoicingSettingsService.updateEpochDate(VT.ld(2010, 1, 1));
+
     }
 
     @Test
@@ -213,7 +216,11 @@ public class InvoiceCalculationService_normalRun_IntegTest extends LeaseModuleIn
         calculateNormalRunAndAssert(leaseTopModelServiceChargeTerm0, VT.ld(2010,1,10), VT.ld(2010,10,2), VT.ldi(
                 "2010-10-01/2011-01-01"), 1500.00, false,
                 null);
+
+        // restore epochdate for other integ tests
+        leaseInvoicingSettingsService.updateEpochDate(VT.ld(2010, 1, 1));
     }
+
 
     @Test
     public void effective_interval_is_swapped() throws Exception {
