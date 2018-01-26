@@ -76,6 +76,13 @@ import lombok.Setter;
                         "&& startDate == :startDate " +
                         "&& endDate == :endDate "),
         @javax.jdo.annotations.Query(
+                name = "findByLeaseTermAndEffectiveInterval", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.module.lease.dom.invoicing.InvoiceItemForLease " +
+                        "WHERE leaseTerm == :leaseTerm " +
+                        "&& (calculationStartDate == :effectiveStartDate || effectiveStartDate == :effectiveStartDate) " +
+                        "&& (calculationEndDate == :effectiveEndDate || effectiveEndDate == :effectiveEndDate) "),
+        @javax.jdo.annotations.Query(
                 name = "findByLeaseTermAndIntervalAndInvoiceStatus", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.module.lease.dom.invoicing.InvoiceItemForLease " +
@@ -107,6 +114,8 @@ import lombok.Setter;
                 members = { "leaseTerm", "startDate", "endDate", "dueDate" }),
         @javax.jdo.annotations.Index(name = "InvoiceItemForLease_LeaseTerm_StartDate_EndDate_IDX",
                 members = { "leaseTerm", "startDate", "endDate" }),
+        @javax.jdo.annotations.Index(name = "InvoiceItemForLease_LeaseTerm_EffectiveStartDate_EffectiveEndDate_IDX",
+                members = { "leaseTerm", "effectiveStartDate", "effectiveEndDate" }),
 
 })
 @DomainObject(
@@ -162,6 +171,17 @@ public class InvoiceItemForLease
     @Property(optionality = Optionality.OPTIONAL)
     @Getter @Setter
     private Boolean adjustment;
+
+    @Property(optionality = Optionality.OPTIONAL)
+    @PropertyLayout(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private LocalDate calculationStartDate;
+
+    @Property(optionality = Optionality.OPTIONAL)
+    @PropertyLayout(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private LocalDate calculationEndDate;
+
 
     public final static Ordering<InvoiceItemForLease> ORDERING_BY_LEASE_TERM = new Ordering<InvoiceItemForLease>() {
         public int compare(final InvoiceItemForLease p, final InvoiceItemForLease q) {

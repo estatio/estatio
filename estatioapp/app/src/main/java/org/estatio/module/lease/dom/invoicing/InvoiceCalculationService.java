@@ -128,7 +128,12 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
     }
 
     private LocalDate systemEpochDate() {
-        return leaseInvoicingSettingsService == null ? new LocalDate(1980, 1, 1) : leaseInvoicingSettingsService.fetchEpochDate();
+        final LocalDate defaultEpochDate = new LocalDate(1980, 1, 1);
+        if (leaseInvoicingSettingsService != null) {
+            final LocalDate date = leaseInvoicingSettingsService.fetchEpochDate();
+            return date == null ? defaultEpochDate : date;
+        }
+        return defaultEpochDate;
     }
 
     private String interactionId;
@@ -302,14 +307,32 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
             // TODO: this is a hack to speed up processing by ignoring zero
             // values on a normal run
             if (result.value().compareTo(BigDecimal.ZERO) != 0 || parameters.invoiceRunType().equals(InvoiceRunType.RETRO_RUN)) {
-                BigDecimal invoicedValue = invoiceItemForLeaseRepository.invoicedValue(leaseTerm, result.invoicingInterval().asLocalDateInterval());
+                final LocalDateInterval invoicingInterval = result.invoicingInterval().asLocalDateInterval();
+                BigDecimal invoicedValue = invoiceItemForLeaseRepository.invoicedValue(leaseTerm, invoicingInterval);
                 BigDecimal newValue = result.value().subtract(invoicedValue);
+
+                //
+                LocalDateInterval calculationInterval = result.effectiveInterval();
+                LocalDateInterval effectiveInterval = calculationInterval;
+                Boolean adjustment = false;
                 if (newValue.compareTo(BigDecimal.ZERO) != 0) {
-                    boolean adjustment = invoicedValue.compareTo(BigDecimal.ZERO) != 0;
+                    if (invoicedValue.compareTo(BigDecimal.ZERO) != 0) {
+                        // Has been invoiced before
+                        if (invoiceItemForLeaseRepository.findByLeaseTermAndEffectiveInterval(leaseTerm, calculationInterval).size() > 0) {
+                            // this exact period has been invoiced before so it is an adjusment
+                            adjustment = true;
+                        } else {
+                            //there is new calculated amount which is caused by tinkering the dates
+                            effectiveInterval = rightSideLeftoverWhenSubtractingTwoIntervals(invoicingInterval, calculationInterval);
+                       }
+                    }
+
                     InvoiceItemForLease invoiceItem =
                             invoiceItemForLeaseRepository.createUnapprovedInvoiceItem(
                                     leaseTerm,
-                                    result.invoicingInterval().asLocalDateInterval(),
+                                    invoicingInterval,
+                                    calculationInterval,
+                                    effectiveInterval,
                                     parameters.invoiceDueDate(),
                                     interactionId);
                     invoiceItem.setNetAmount(newValue);
@@ -317,16 +340,6 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
                     LeaseItem leaseItem = leaseTerm.getLeaseItem();
                     Charge charge = leaseItem.getCharge();
                     invoiceItem.setCharge(charge);
-                    invoiceItem.setDueDate(parameters.invoiceDueDate());
-                    invoiceItem.setStartDate(result.invoicingInterval().startDate());
-                    invoiceItem.setEndDate(result.invoicingInterval().endDate());
-
-                    LocalDateInterval intervalToUse =
-                            adjustment
-                                    ? result.invoicingInterval().asLocalDateInterval()
-                                    : result.effectiveInterval();
-                    invoiceItem.setEffectiveStartDate(intervalToUse.startDate());
-                    invoiceItem.setEffectiveEndDate(intervalToUse.endDate());
 
                     invoiceItem.setTax(leaseItem.getEffectiveTax());
 
@@ -357,5 +370,17 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
 
     @Inject
     private LeaseRepository leaseRepository;
+
+
+    public static LocalDateInterval rightSideLeftoverWhenSubtractingTwoIntervals(final LocalDateInterval ldi1, final LocalDateInterval ldi2){
+        final LocalDateInterval ldiNew = LocalDateInterval.excluding(
+                ldi2 == null || ldi2.endDateExcluding() == null ? ldi1.startDate() : ldi2.endDateExcluding() ,
+                ldi1.endDateExcluding());
+        if (ldiNew.isValid()){
+            return ldiNew;
+        }
+        return null;
+    }
+
 
 }

@@ -34,6 +34,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.integtests.VT;
 
 import org.estatio.module.agreement.dom.AgreementRoleRepository;
 import org.estatio.module.agreement.dom.role.AgreementRoleType;
@@ -462,9 +463,22 @@ public class InvoiceCalculationService_Test {
             for (int i = 0; i < results.size(); i++) {
                 assertThat(results.get(i).value()).isEqualTo(BigDecimal.valueOf(value[i]).setScale(2));
             }
-
         }
 
     }
+
+    public static class RightLeftover extends InvoiceCalculationService_Test {
+
+        @Test
+        public void xxx() throws Exception {
+            assertThat(InvoiceCalculationService.rightSideLeftoverWhenSubtractingTwoIntervals(VT.ldi("2017-01-01/2018-01-01"), VT.ldi("2017-01-01/2017-12-01"))).isEqualTo(VT.ldi("2017-12-01/2018-01-01"));
+            assertThat(InvoiceCalculationService.rightSideLeftoverWhenSubtractingTwoIntervals(VT.ldi("2017-01-01/2018-01-01"), VT.ldi("2017-02-01/2017-12-01"))).isEqualTo(VT.ldi("2017-12-01/2018-01-01"));
+            assertThat(InvoiceCalculationService.rightSideLeftoverWhenSubtractingTwoIntervals(VT.ldi("2017-02-01/2018-01-01"), VT.ldi("----------/----------"))).isEqualTo(VT.ldi("2017-02-01/2018-01-01"));
+            assertThat(InvoiceCalculationService.rightSideLeftoverWhenSubtractingTwoIntervals(VT.ldi("2017-02-01/2018-01-01"), null)).isEqualTo(VT.ldi("2017-02-01/2018-01-01"));
+        }
+
+
+    }
+
 
 }
