@@ -254,18 +254,6 @@ public class InvoiceCalculationService_normalRun_IntegTest extends LeaseModuleIn
                 VT.ldi("2010-09-01/2010-10-01")
         );
 
-
-        //Was VT.ldi("2010-07-15/2010-10-01")
-        //Terminated VT.ldi("2010-07-15/2010-09-01")
-
-        //Delta VT.ldi("2010-09-01/2010-10-01")
-
-
-
-
-        //        wrap(new InvoiceForLease._approve(invoiceForLease)).$$();
-
-
     }
 
 

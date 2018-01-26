@@ -173,10 +173,12 @@ public class InvoiceItemForLease
     private Boolean adjustment;
 
     @Property(optionality = Optionality.OPTIONAL)
+    @PropertyLayout(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private LocalDate calculationStartDate;
 
     @Property(optionality = Optionality.OPTIONAL)
+    @PropertyLayout(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private LocalDate calculationEndDate;
 
