@@ -21,7 +21,7 @@
                 <cpt:property id="targetClass"/>
                 <cpt:property id="targetAction"/>
                 <cpt:property id="propertyId"/>
-                <cpt:property id="targetStr"/>
+                <cpt:property id="targetStr" hidden="ALL_TABLES"/>
                 <cpt:property id="arguments"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Notes" id="notes"/>
@@ -42,8 +42,8 @@
         <bs3:col span="6">
             <cpt:fieldSet name="Detail" id="detail">
                 <cpt:property id="memberIdentifier"/>
-                <cpt:property id="preValue"/>
-                <cpt:property id="postValue"/>
+                <cpt:property id="preValue"  hidden="ALL_TABLES"/>
+                <cpt:property id="postValue" hidden="ALL_TABLES"/>
                 <cpt:property id="memento"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Timings" id="timings">
@@ -55,7 +55,7 @@
             <cpt:fieldSet name="Results" id="results">
                 <cpt:property id="resultSummary"/>
                 <cpt:property id="resultStr"/>
-                <cpt:property id="causedException"/>
+                <cpt:property id="exception"/>
             </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="12">
