@@ -54,7 +54,10 @@ import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.budget.dom.api.PartitionItemCreator;
 import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetcalculation.Status;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.KeyTableRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
@@ -207,7 +210,7 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
     }
 
     public String disableCreatePartitionItemForBudgeting(){
-        return getBudget().isAssignedForTypeReason(BudgetCalculationType.BUDGETED);
+        return isAssignedForTypeReason(BudgetCalculationType.BUDGETED);
     }
 
 
@@ -233,7 +236,7 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
     }
 
     public String disableCreatePartitionItemForActuals(){
-        return getBudget().isAssignedForTypeReason(BudgetCalculationType.ACTUAL);
+        return isAssignedForTypeReason(BudgetCalculationType.ACTUAL);
     }
 
     @Programmatic
@@ -259,7 +262,7 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
 
     @Programmatic
     public BudgetItem updateOrCreateBudgetItemValue(final BigDecimal value, final LocalDate date, final BudgetCalculationType type){
-        if (value!=null) {
+        if (value!=null && !isAssignedForType(type)) {
             budgetItemValueRepository.updateOrCreateBudgetItemValue(value, this, date, type);
         }
         return this;
@@ -268,6 +271,29 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
     @Programmatic
     public PartitionItem updateOrCreatePartitionItem(final Charge charge, final KeyTable keyTable, final BigDecimal percentage){
         return partitionItemRepository.updateOrCreatePartitionItem(getBudget().getPartitioningForBudgeting(), this, charge, keyTable, percentage);
+    }
+
+    @Programmatic
+    public boolean isAssignedForType(final BudgetCalculationType budgetCalculationType){
+        for (BudgetCalculation calculation : budgetCalculationRepository.findByBudgetItemAndCalculationType(this, budgetCalculationType)) {
+            if (calculation.getStatus() == Status.ASSIGNED){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Programmatic
+    public String isAssignedForTypeReason(final BudgetCalculationType budgetCalculationType){
+        switch (budgetCalculationType) {
+
+        case BUDGETED:
+            return isAssignedForType(budgetCalculationType) ? "This item has been assigned" : null;
+
+        case ACTUAL:
+            return isAssignedForType(budgetCalculationType) ? "This item has been reconciled" : null;
+        }
+        return null;
     }
 
     @Inject
@@ -283,9 +309,12 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
     private KeyTableRepository keyTableRepository;
 
     @Inject
-    private BudgetItemValueRepository budgetItemValueRepository;
+    BudgetItemValueRepository budgetItemValueRepository;
 
     @Inject
     private ChargeRepository chargeRepository;
+
+    @Inject
+    BudgetCalculationRepository budgetCalculationRepository;
 
 }

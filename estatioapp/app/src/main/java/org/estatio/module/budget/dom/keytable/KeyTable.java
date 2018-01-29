@@ -419,8 +419,8 @@ public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicatio
 
     String isAssignedForTypeReason(final BudgetCalculationType budgetCalculationType){
         for (PartitionItem partitionItem : partitionItemRepository.findByKeyTable(this)){
-            if (partitionItem.getPartitioning().getType()== budgetCalculationType){
-                return getBudget().isAssignedForTypeReason(budgetCalculationType);
+            if (partitionItem.getBudgetItem().isAssignedForType(budgetCalculationType)){
+                return partitionItem.getBudgetItem().isAssignedForTypeReason(budgetCalculationType);
             }
         }
         return null;

@@ -151,7 +151,7 @@ public class PartitionItem extends UdoDomainObject2<PartitionItem> implements Wi
 
     public String disableUpdatePercentage(){
         BudgetCalculationType type = getPartitioning().getType();
-        return getBudget().isAssignedForTypeReason(type);
+        return getBudgetItem().isAssignedForTypeReason(type);
     }
 
     @Persistent(mappedBy = "partitionItem", dependentElement = "true")
@@ -166,7 +166,7 @@ public class PartitionItem extends UdoDomainObject2<PartitionItem> implements Wi
 
     public String disableRemove(){
         BudgetCalculationType type = getPartitioning().getType();
-        return getBudget().isAssignedForTypeReason(type);
+        return getBudgetItem().isAssignedForTypeReason(type);
     }
 
     @Action(semantics = SemanticsOf.SAFE, hidden = Where.ALL_TABLES)

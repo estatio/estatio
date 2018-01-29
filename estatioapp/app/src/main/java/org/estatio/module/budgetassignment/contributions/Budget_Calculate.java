@@ -40,7 +40,7 @@ public class Budget_Calculate {
     }
 
     public String disableCalculate(){
-        return budget.isAssignedForTypeReason(BudgetCalculationType.BUDGETED);
+        return budget.noUnassignedItemsForTypeReason(BudgetCalculationType.BUDGETED);
     }
 
     @Inject
