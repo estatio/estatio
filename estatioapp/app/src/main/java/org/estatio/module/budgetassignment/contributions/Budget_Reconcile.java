@@ -32,7 +32,7 @@ public class Budget_Reconcile {
     }
 
     public String disableReconcile(){
-        return budget.isAssignedForTypeReason(BudgetCalculationType.ACTUAL);
+        return budget.noUnassignedItemsForTypeReason(BudgetCalculationType.ACTUAL);
     }
 
 }

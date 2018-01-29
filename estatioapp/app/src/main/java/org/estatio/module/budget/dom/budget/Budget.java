@@ -57,15 +57,14 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.dom.with.WithIntervalMutable;
 
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budget.dom.api.BudgetItemCreator;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
-import org.estatio.module.budget.dom.budgetcalculation.Status;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemRepository;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
@@ -174,10 +173,6 @@ public class Budget extends UdoDomainObject2<Budget>
             final BigDecimal budgetedValue,
             final Charge charge) {
         return budgetItemRepository.validateNewBudgetItem(this, charge);
-    }
-
-    public String disableNewBudgetItem(){
-        return isAssignedForTypeReason(BudgetCalculationType.ACTUAL);
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
@@ -327,53 +322,21 @@ public class Budget extends UdoDomainObject2<Budget>
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     @ActionLayout()
-    public Budget removeCalculations(){
+    public Budget removeNewCalculations(){
         for (BudgetCalculation calculation : budgetCalculationRepository.findByBudget(this)) {
             calculation.removeWithStatusNew();
         }
         return this;
     }
 
-    public String disableRemoveCalculations(){
-        return isAssigned() ? "The budget has been assigned" : null;
-    }
-
     @Programmatic
-    public boolean isAssigned(){
-        for (BudgetCalculation calculation : budgetCalculationRepository.findByBudget(this)) {
-            if (calculation.getStatus() == Status.ASSIGNED){
-                return true;
+    public String noUnassignedItemsForTypeReason(final BudgetCalculationType type){
+        for (BudgetItem item : getItems()){
+            if (!item.isAssignedForType(type)){
+                return null;
             }
         }
-        return false;
-    }
-
-    @Programmatic
-    public boolean isAssignedForType(final BudgetCalculationType budgetCalculationType){
-        for (BudgetCalculation calculation : budgetCalculationRepository.findByBudget(this)) {
-            if (calculation.getCalculationType() == budgetCalculationType && calculation.getStatus() == Status.ASSIGNED){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Programmatic
-    public String isAssignedForTypeReason(final BudgetCalculationType budgetCalculationType){
-        switch (budgetCalculationType) {
-
-            case BUDGETED:
-            return isAssignedForType(budgetCalculationType) ? "The budget has been assigned" : null;
-
-            case ACTUAL:
-            return isAssignedForType(budgetCalculationType) ? "The budget has been reconciled" : null;
-        }
-        return null;
-    }
-
-    @Programmatic
-    private boolean isImmutable(){
-        return isAssignedForType(BudgetCalculationType.ACTUAL) && isAssignedForType(BudgetCalculationType.BUDGETED) ? true : false;
+        return type==BudgetCalculationType.BUDGETED ? "All items are calculated and assigned already" : "All items are reconciled and assigned already";
     }
 
     @Programmatic

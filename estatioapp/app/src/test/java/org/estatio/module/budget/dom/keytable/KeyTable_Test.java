@@ -30,6 +30,7 @@ import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
 import org.estatio.module.budget.dom.partioning.Partitioning;
@@ -84,14 +85,13 @@ public class KeyTable_Test {
 
         @Mock PartitionItemRepository mockPartitionItemRepository;
 
-        @Mock Budget mockBudget;
+        @Mock BudgetItem mockBudgetItem;
 
         @Test
         public void is_assigned_for_type_works_when_no_partition_items() throws Exception {
 
             // given
             KeyTable keyTable = new KeyTable();
-            keyTable.setBudget(mockBudget);
             keyTable.partitionItemRepository = mockPartitionItemRepository;
 
             // expect
@@ -109,24 +109,26 @@ public class KeyTable_Test {
 
             // given
             KeyTable keyTable = new KeyTable();
-            keyTable.setBudget(mockBudget);
             keyTable.partitionItemRepository = mockPartitionItemRepository;
 
-            Partitioning partitioningForBudgeted = new Partitioning();
-            partitioningForBudgeted.setType(BudgetCalculationType.BUDGETED);
             PartitionItem partitionItemBudgeted = new PartitionItem();
-            partitionItemBudgeted.setPartitioning(partitioningForBudgeted);
+            partitionItemBudgeted.setBudgetItem(mockBudgetItem);
 
             // expect
             context.checking(new Expectations() {{
                 oneOf(mockPartitionItemRepository).findByKeyTable(keyTable);
                 will(returnValue(Arrays.asList(partitionItemBudgeted)));
-                oneOf(mockBudget).isAssignedForTypeReason(BudgetCalculationType.BUDGETED);
+                oneOf(mockBudgetItem).isAssignedForType(BudgetCalculationType.BUDGETED);
+                will(returnValue(true));
+                oneOf(mockBudgetItem).isAssignedForTypeReason(BudgetCalculationType.BUDGETED);
+                will(returnValue("some reason"));
             }});
 
             // when
-            keyTable.isAssignedForTypeReason(BudgetCalculationType.BUDGETED);
+            String reason = keyTable.isAssignedForTypeReason(BudgetCalculationType.BUDGETED);
 
+            // then
+            assertThat(reason).isEqualTo("some reason");
         }
 
         @Test
@@ -134,23 +136,26 @@ public class KeyTable_Test {
 
             // given
             KeyTable keyTable = new KeyTable();
-            keyTable.setBudget(mockBudget);
             keyTable.partitionItemRepository = mockPartitionItemRepository;
 
-            Partitioning partitioningForActual = new Partitioning();
-            partitioningForActual.setType(BudgetCalculationType.ACTUAL);
             PartitionItem partitionItemActual = new PartitionItem();
-            partitionItemActual.setPartitioning(partitioningForActual);
+            partitionItemActual.setBudgetItem(mockBudgetItem);
 
             // expect
             context.checking(new Expectations() {{
                 oneOf(mockPartitionItemRepository).findByKeyTable(keyTable);
                 will(returnValue(Arrays.asList(partitionItemActual)));
-                oneOf(mockBudget).isAssignedForTypeReason(BudgetCalculationType.ACTUAL);
+                oneOf(mockBudgetItem).isAssignedForType(BudgetCalculationType.ACTUAL);
+                will(returnValue(true));
+                oneOf(mockBudgetItem).isAssignedForTypeReason(BudgetCalculationType.ACTUAL);
+                will(returnValue("some reason"));
             }});
 
             // when
-            keyTable.isAssignedForTypeReason(BudgetCalculationType.ACTUAL);
+            String reason =  keyTable.isAssignedForTypeReason(BudgetCalculationType.ACTUAL);
+
+            // then
+            assertThat(reason).isEqualTo("some reason");
 
         }
 

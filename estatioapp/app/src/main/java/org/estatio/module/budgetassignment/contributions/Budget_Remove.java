@@ -15,6 +15,7 @@ import org.apache.isis.applib.services.user.UserService;
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
@@ -83,7 +84,7 @@ public class Budget_Remove {
     }
 
     public String disableRemoveBudget(){
-        if (budget.isAssigned()) return "This budget is assigned already";
+        if (budget.noUnassignedItemsForTypeReason(BudgetCalculationType.BUDGETED)!=null) return "This budget is assigned already";
         return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser()) ? "You need administrator rights to remove a budget" : null;
     }
 

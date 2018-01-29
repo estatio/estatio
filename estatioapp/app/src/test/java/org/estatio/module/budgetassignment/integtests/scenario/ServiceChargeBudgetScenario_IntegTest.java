@@ -13,9 +13,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.budget.dom.budget.Budget;
-import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
@@ -43,7 +41,6 @@ import org.estatio.module.budgetassignment.fixtures.override.enums.BudgetOverrid
 import org.estatio.module.budgetassignment.fixtures.override.enums.BudgetOverrideForMax_enum;
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
-import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.InvoicingFrequency;
@@ -51,7 +48,6 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItemRepository;
 import org.estatio.module.lease.dom.LeaseItemStatus;
 import org.estatio.module.lease.dom.LeaseItemType;
-import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 
@@ -60,25 +56,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
 
     @Inject
-    PropertyRepository propertyRepository;
-
-    @Inject
-    BudgetRepository budgetRepository;
-
-    @Inject
     BudgetCalculationService budgetCalculationService;
 
     @Inject
     BudgetAssignmentService budgetAssignmentService;
 
     @Inject
-    LeaseRepository leaseRepository;
-
-    @Inject
     LeaseItemRepository leaseItemRepository;
-
-    @Inject
-    ChargeRepository chargeRepository;
 
     @Inject
     BudgetOverrideRepository budgetOverrideRepository;
@@ -217,6 +201,8 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
             assertThat(budgetedAmountFor(leaseNlBank, invoiceCharge2)).isEqualTo(U4_BVAL_2);
             assertThat(budgetedAmountFor(leaseHyper, invoiceCharge1)).isEqualTo(U5_BVAL_1);
             assertThat(budgetedAmountFor(leaseHyper, invoiceCharge2)).isEqualTo(U5_BVAL_2);
+
+            calculations.stream().forEach(x->assertThat(x.getStatus()).isEqualTo(Status.NEW));
 
         }
 
@@ -390,6 +376,15 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
             );
 
             assertThat(leaseItemRepository.findLeaseItemsByType(leaseHello6, LeaseItemType.SERVICE_CHARGE_BUDGETED).size()).isEqualTo(0);
+
+            List<BudgetCalculation> calculations = budgetCalculationRepository.findByBudget(budget);
+            calculations.stream().filter(x->!x.getUnit().getReference().equals("BUD-006")).forEach(x->assertThat(x.getStatus()).isEqualTo(Status.ASSIGNED));
+            calculations.stream().filter(x->x.getUnit().getReference().equals("BUD-006")).forEach(x->assertThat(x.getStatus()).isEqualTo(Status.NEW));
+
+            BudgetOverrideForMax oPoison = (BudgetOverrideForMax) budgetOverrideRepository.findByLease(leasePoison).get(0);
+            BudgetOverrideForFlatRate oMiracle = (BudgetOverrideForFlatRate) budgetOverrideRepository.findByLease(leaseMiracle).get(0);
+            assertThat(oPoison.getValues().first().getStatus()).isEqualTo(Status.ASSIGNED);
+            assertThat(oMiracle.getValues().first().getStatus()).isEqualTo(Status.ASSIGNED);
 
         }
 
