@@ -44,8 +44,8 @@ import org.incode.module.document.dom.impl.docs.DocumentRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
-import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.base.dom.UdoDomainService;
+import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 
 @DomainService(
@@ -85,7 +85,9 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
         return incomingDocumentRepository.matchAllIncomingDocumentsByName(nameOrBarcode);
     }
 
-    @Action(domainEvent = IncomingDocumentRepository.UploadDomainEvent.class)
+    @Action(domainEvent = IncomingDocumentRepository.UploadDomainEvent.class,
+            commandWithDtoProcessor = DeriveBlobArg0FromReturnedDocument.class
+    )
     @MemberOrder(sequence = "3")
     public Document upload(final Blob blob) {
         final String name = blob.getName();
