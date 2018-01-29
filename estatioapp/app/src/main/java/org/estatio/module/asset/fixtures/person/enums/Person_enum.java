@@ -13,7 +13,6 @@ import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
 import org.estatio.module.asset.fixtures.person.builders.PersonFixedAssetRolesBuilder;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.capex.dom.project.ProjectRoleTypeEnum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
@@ -145,7 +144,7 @@ public enum Person_enum
 
     PeterPanProjectManagerGb("PP", "Peter", "Pan", "P", true, MALE, Gb,
             null, null,
-            new IPartyRoleType[] { ProjectRoleTypeEnum.PROJECT_MANAGER },
+            new IPartyRoleType[] { },
             new FixedAssetRoleSpec[] {}),
 
     RosaireEvrardFr("REVRARD", "Rosaire", "Evrard", null, true, FEMALE, Fr,

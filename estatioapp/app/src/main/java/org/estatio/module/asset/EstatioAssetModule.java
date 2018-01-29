@@ -29,6 +29,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.Module;
 import org.apache.isis.applib.ModuleAbstract;
 
+import org.incode.module.classification.dom.ClassificationModule;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.asset.dom.CommunicationChannelOwnerLinkForFixedAsset;
@@ -47,7 +48,7 @@ public class EstatioAssetModule extends ModuleAbstract {
 
     @Override
     public Set<Module> getDependencies(){
-        return Sets.newHashSet(new EstatioPartyModule());
+        return Sets.newHashSet(new EstatioPartyModule(), new ClassificationModule());
     }
 
 

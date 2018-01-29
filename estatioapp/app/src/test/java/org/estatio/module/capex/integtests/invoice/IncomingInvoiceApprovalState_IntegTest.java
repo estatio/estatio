@@ -39,6 +39,7 @@ import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_ch
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_complete;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
+import org.estatio.module.capex.dom.project.ProjectRoleTypeEnum;
 import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.dom.task.TaskRepository;
@@ -94,6 +95,9 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
                         Person_enum.OscarCountryDirectorGb);
             }
         });
+
+        Person Peter = Person_enum.PeterPanProjectManagerGb.findUsing(serviceRegistry);
+        Peter.addRole(ProjectRoleTypeEnum.PROJECT_MANAGER);
     }
 
     @Before
