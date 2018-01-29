@@ -52,7 +52,11 @@ public enum LeaseItemForEntryFee_enum implements PersonaWithFinder<LeaseItem>, P
     OxfTopModel001Gb(Lease_enum.OxfTopModel001Gb, bi(1), LeaseItemForRent_enum.OxfTopModel001Gb,
         new TermSpec[]{
             new TermSpec(Lease_enum.OxfTopModel001Gb.getStartDate(), null, null, bd(5000))
-        })
+        }),
+    OxfFix006Gb(Lease_enum.OxfFix006Gb, bi(1), LeaseItemForRent_enum.OxfFix006Gb,
+            new TermSpec[]{
+                    new TermSpec(Lease_enum.OxfFix006Gb.getStartDate(), null, null, bd(5000))
+            })
     ;
 
     private final Lease_enum lease_d;

@@ -9,10 +9,11 @@ import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
+import org.incode.module.country.fixtures.enums.Country_enum;
+
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
-import org.incode.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
@@ -25,13 +26,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import static org.incode.module.country.fixtures.enums.Country_enum.GBR;
-import static org.incode.module.country.fixtures.enums.Country_enum.NLD;
 import static org.estatio.module.lease.dom.occupancy.tags.BrandCoverage.INTERNATIONAL;
 import static org.estatio.module.lease.dom.occupancy.tags.BrandCoverage.NATIONAL;
 import static org.estatio.module.lease.fixtures.lease.builders.LeaseBuilder.AddressesCreationPolicy;
 import static org.estatio.module.lease.fixtures.lease.builders.LeaseBuilder.InvoiceAddressCreationPolicy;
 import static org.incode.module.base.integtests.VT.ld;
+import static org.incode.module.country.fixtures.enums.Country_enum.GBR;
+import static org.incode.module.country.fixtures.enums.Country_enum.NLD;
 
 @AllArgsConstructor()
 @Getter
@@ -105,6 +106,16 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             new OccupancySpec[] {
                 // although these values were provided, adding an occupancy was disabled.  So equiv to passing in no info
                 // new OccupancySpec("004", "Pret-a-Partir", BrandCoverage.REGIONAL, Country_enum.FRA, "FASHION", "ALL", ...)
+            },
+            Person_enum.GinoVannelliGb,
+            InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
+    ),
+    OxfFix006Gb    (
+            "OXF-FIX-006", "Fixed lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.PretGb,
+            ld(2011, 7, 1), ld(2019, 1, 1),
+            new OccupancySpec[] {
+                    new OccupancySpec("006", "Fix", BrandCoverage.REGIONAL, Country_enum.FRA, "FASHION", "ALL", ld(2011, 1, 1), null)
             },
             Person_enum.GinoVannelliGb,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
