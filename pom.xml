@@ -22,7 +22,7 @@ language governing permissions and limitations under the License.
         <groupId>org.incode</groupId>
         <artifactId>incode-parent</artifactId>
         <!-- NB: also update incode-platform.version property below -->
-        <version>1.16.0.20180129-2347</version>
+        <version>1.16.0.20180130-1114</version>
     </parent>
 
     <groupId>org.estatio</groupId>
@@ -73,7 +73,7 @@ language governing permissions and limitations under the License.
         -->
 
         <!-- NB: also update the parent of this pom -->
-        <incode-platform.version>1.16.0.20180129-2347</incode-platform.version>
+        <incode-platform.version>1.16.0.20180130-1114</incode-platform.version>
 
         <wicketstuff.version>7.9.0</wicketstuff.version>
 
