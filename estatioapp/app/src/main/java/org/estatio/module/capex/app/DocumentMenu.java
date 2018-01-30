@@ -86,7 +86,7 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
     }
 
     @Action(domainEvent = IncomingDocumentRepository.UploadDomainEvent.class,
-            commandWithDtoProcessor = DeriveBlobArg0FromReturnedDocument.class
+            commandDtoProcessor = DeriveBlobArg0FromReturnedDocument.class
     )
     @MemberOrder(sequence = "3")
     public Document upload(final Blob blob) {
