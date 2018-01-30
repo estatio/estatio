@@ -22,7 +22,7 @@ language governing permissions and limitations under the License.
         <groupId>org.incode</groupId>
         <artifactId>incode-parent</artifactId>
         <!-- NB: also update incode-platform.version property below -->
-        <version>1.16.0</version>
+        <version>1.16.0.20180129-2347</version>
     </parent>
 
     <groupId>org.estatio</groupId>
@@ -65,22 +65,15 @@ language governing permissions and limitations under the License.
     </developers>
 
     <properties>
-        <isis.version>1.16.0.20180125-1027</isis.version>
+        <isis.version>1.16.0.20180129-2325</isis.version>
         <!--
         <isis.version>1.16.1-SNAPSHOT</isis.version>
+        <isis.version>1.16.0.20180125-1027</isis.version>
         <isis.version>1.16.0.20180124-1524</isis.version>
-        <isis.version>1.15.1.20171221-1739</isis.version>
-        <isis.version>1.15.1.20171220-1335</isis.version>
-        <isis.version>1.15.1.20171215-1737</isis.version>
-        <isis.version>1.15.1.20171213-1405</isis.version>
-        <isis.version>1.15.1.20171208-1726</isis.version>
         -->
 
         <!-- NB: also update the parent of this pom -->
-        <incode-platform.version>1.16.0</incode-platform.version>
-
-        <!-- this is a temporary override, see ECP-431 to remove -->
-        <mavenmixin-surefire.version>0.0.6</mavenmixin-surefire.version>
+        <incode-platform.version>1.16.0.20180129-2347</incode-platform.version>
 
         <wicketstuff.version>7.9.0</wicketstuff.version>
 
