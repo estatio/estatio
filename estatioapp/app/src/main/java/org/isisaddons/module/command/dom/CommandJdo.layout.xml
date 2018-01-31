@@ -58,6 +58,8 @@
                 <cpt:property id="exception"/>
             </cpt:fieldSet>
         </bs3:col>
+    </bs3:row>
+    <bs3:row>
         <bs3:col span="12">
             <bs3:tabGroup>
                 <bs3:tab name="Audit">
@@ -83,8 +85,20 @@
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
+                <bs3:tab name="Target">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="targetAuditEntries">
+                                <cpt:named>Audit Entries</cpt:named>
+                                <cpt:describedAs>All audit entries for the target of this command</cpt:describedAs>
+                            </cpt:collection>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
             </bs3:tabGroup>
         </bs3:col>
+    </bs3:row>
+    <bs3:row>
         <bs3:col span="12" unreferencedCollections="true">
         </bs3:col>
     </bs3:row>
