@@ -22,7 +22,7 @@ language governing permissions and limitations under the License.
         <groupId>org.incode</groupId>
         <artifactId>incode-parent</artifactId>
         <!-- NB: also update incode-platform.version property below -->
-        <version>1.16.0.20180130-1206</version>
+        <version>1.16.1-SNAPSHOT</version>
     </parent>
 
     <groupId>org.estatio</groupId>
@@ -65,15 +65,15 @@ language governing permissions and limitations under the License.
     </developers>
 
     <properties>
-        <isis.version>1.16.0.20180130-1145</isis.version>
-        <!--
         <isis.version>1.16.1-SNAPSHOT</isis.version>
+        <!--
+        <isis.version>1.16.0.20180130-1145</isis.version>
         <isis.version>1.16.0.20180125-1027</isis.version>
         <isis.version>1.16.0.20180124-1524</isis.version>
         -->
 
         <!-- NB: also update the parent of this pom -->
-        <incode-platform.version>1.16.0.20180130-1206</incode-platform.version>
+        <incode-platform.version>1.16.1-SNAPSHOT</incode-platform.version>
 
         <wicketstuff.version>7.9.0</wicketstuff.version>
 
