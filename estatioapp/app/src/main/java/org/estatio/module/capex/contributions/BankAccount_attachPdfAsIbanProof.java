@@ -18,6 +18,7 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
+import org.incode.module.base.spi.DeriveBlobFromDummyPdfArg0;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 
@@ -35,7 +36,10 @@ public class BankAccount_attachPdfAsIbanProof {
         this.bankAccount = bankAccount;
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT,
+            commandDtoProcessor = DeriveBlobFromDummyPdfArg0.class
+    )
     public BankAccount act(
             @Parameter(fileAccept = "application/pdf")
             final Blob document) {

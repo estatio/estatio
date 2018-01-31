@@ -43,6 +43,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
+import org.incode.module.document.spi.DeriveBlobFromReturnedDocumentArg0;
 
 import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
@@ -86,7 +87,7 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
     }
 
     @Action(domainEvent = IncomingDocumentRepository.UploadDomainEvent.class,
-            commandDtoProcessor = DeriveBlobArg0FromReturnedDocument.class
+            commandDtoProcessor = DeriveBlobFromReturnedDocumentArg0.class
     )
     @MemberOrder(sequence = "3")
     public Document upload(final Blob blob) {

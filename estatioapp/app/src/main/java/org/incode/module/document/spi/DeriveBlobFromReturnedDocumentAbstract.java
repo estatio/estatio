@@ -1,4 +1,4 @@
-package org.estatio.module.capex.app;
+package org.incode.module.document.spi;
 
 import javax.inject.Inject;
 
@@ -13,8 +13,14 @@ import org.apache.isis.schema.utils.CommonDtoUtils;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-public class DeriveBlobArg0FromReturnedDocument
+public abstract class DeriveBlobFromReturnedDocumentAbstract
         extends CommandDtoProcessorForActionAbstract {
+
+    private final int paramNum;
+
+    protected DeriveBlobFromReturnedDocumentAbstract(final int paramNum) {
+        this.paramNum = paramNum;
+    }
 
     @Override
     public CommandDto process(
@@ -28,7 +34,7 @@ public class DeriveBlobArg0FromReturnedDocument
         try {
             final Document document = bookmarkService.lookup(result, Document.class);
             if (document != null) {
-                ParamDto paramDto = getParamDto(commandDto, 0);
+                ParamDto paramDto = getParamDto(commandDto, paramNum);
                 CommonDtoUtils.setValueOn(paramDto, ValueType.BLOB, document.getBlob(), bookmarkService);
             }
         } catch(Exception ex) {
