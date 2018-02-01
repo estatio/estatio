@@ -211,6 +211,10 @@ language governing permissions and limitations under the License.
             <artifactId>isis-module-command-dom</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.isisaddons.module.command</groupId>
+            <artifactId>isis-module-command-replay</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.isisaddons.module.publishmq</groupId>
             <artifactId>isis-module-publishmq-dom-servicespi</artifactId>
         </dependency>

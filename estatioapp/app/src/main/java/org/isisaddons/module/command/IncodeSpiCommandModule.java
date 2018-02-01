@@ -28,7 +28,9 @@ import org.apache.isis.applib.ModuleAbstract;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.audit.AuditModule;
+import org.isisaddons.module.command.dom.CommandDomModule;
 import org.isisaddons.module.command.dom.CommandJdo;
+import org.isisaddons.module.command.replay.CommandReplayModule;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
@@ -40,7 +42,7 @@ public final class IncodeSpiCommandModule extends ModuleAbstract {
 
     @Override
     public Set<Class<?>> getAdditionalModules() {
-        return Sets.newHashSet(CommandModule.class, AuditModule.class);
+        return Sets.newHashSet(CommandDomModule.class, CommandReplayModule.class, AuditModule.class);
     }
 
 
