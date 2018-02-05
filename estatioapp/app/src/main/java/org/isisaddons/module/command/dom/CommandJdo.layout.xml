@@ -52,6 +52,9 @@
             <bs3:row>
                 <bs3:col span="6">
                     <cpt:fieldSet name="Execution" id="execution">
+                        <cpt:action id="retry" cssClassFa="fa-repeat" cssClass="btn-warning"/>
+                        <cpt:action id="exclude" cssClassFa="fa-ban" cssClass="btn-warning"/>
+                        <cpt:action id="replayNext" cssClassFa="fa-step-forward" cssClass="btn-success"/>
                         <cpt:property id="executeIn"/>
                         <cpt:property id="replayState"/>
                     </cpt:fieldSet>
