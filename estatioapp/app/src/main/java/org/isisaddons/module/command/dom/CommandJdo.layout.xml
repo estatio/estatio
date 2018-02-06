@@ -57,6 +57,7 @@
                         <cpt:action id="replayNext" cssClassFa="fa-step-forward" cssClass="btn-success"/>
                         <cpt:property id="executeIn"/>
                         <cpt:property id="replayState"/>
+                        <cpt:property id="replayStateFailureReason"/>
                     </cpt:fieldSet>
                 </bs3:col>
                 <bs3:col span="6">
