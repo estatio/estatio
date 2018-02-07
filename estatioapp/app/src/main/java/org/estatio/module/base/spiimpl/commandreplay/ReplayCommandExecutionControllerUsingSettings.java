@@ -6,6 +6,8 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.CommandPersistence;
 import org.apache.isis.applib.annotation.CommandReification;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -49,7 +51,12 @@ public class ReplayCommandExecutionControllerUsingSettings
         return State.valueOf(setting.valueAsString());
     }
 
-    @Action(command = CommandReification.DISABLED)
+    @Action(
+            commandPersistence = CommandPersistence.NOT_PERSISTED
+    )
+    @ActionLayout(
+            cssClassFa = "wrench"
+    )
     public void replayControl(State state) {
         getApplicationSetting().setValueRaw(state.name());
         messageService.informUser("Replay of commands: " + state);

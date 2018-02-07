@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.CommandReification;
+import org.apache.isis.applib.annotation.CommandPersistence;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.RestrictTo;
@@ -29,7 +29,7 @@ public class Object_impersonateUser {
 
     @Action(
             restrictTo = RestrictTo.PROTOTYPING,
-            command = CommandReification.DISABLED
+            commandPersistence = CommandPersistence.NOT_PERSISTED
     )
     @MemberOrder(sequence = "90.1")
     public Object act(

@@ -17,7 +17,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.CommandReification;
+import org.apache.isis.applib.annotation.CommandPersistence;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
@@ -126,7 +126,6 @@ public class PaymentBatchManager {
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
-            command = CommandReification.DISABLED,
             publishing = Publishing.DISABLED
     )
     public PaymentBatchManager autoCreateBatches(
@@ -218,7 +217,6 @@ public class PaymentBatchManager {
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE,
-            command = CommandReification.DISABLED,
             publishing = Publishing.DISABLED
     )
     public PaymentBatchManager reset() {
@@ -246,7 +244,6 @@ public class PaymentBatchManager {
 
     @Action(
             semantics = SemanticsOf.SAFE,
-            command = CommandReification.DISABLED,
             publishing = Publishing.DISABLED
     )
     public PaymentBatchManager nextBatch() {
@@ -279,7 +276,6 @@ public class PaymentBatchManager {
 
     @Action(
             semantics = SemanticsOf.SAFE,
-            command = CommandReification.DISABLED,
             publishing = Publishing.DISABLED
     )
     public PaymentBatchManager previousBatch() {
@@ -315,7 +311,6 @@ public class PaymentBatchManager {
 
     @Action(
             semantics = SemanticsOf.SAFE,
-            command = CommandReification.DISABLED,
             publishing = Publishing.DISABLED
     )
     public PaymentBatchManager selectBatch(final PaymentBatch paymentBatch) {
@@ -344,7 +339,6 @@ public class PaymentBatchManager {
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE,
-            command = CommandReification.DISABLED,
             publishing = Publishing.DISABLED
     )
     public PaymentBatchManager completeBatch(
@@ -384,7 +378,7 @@ public class PaymentBatchManager {
 
     @Action(
             semantics = SemanticsOf.SAFE,
-            command = CommandReification.DISABLED,
+            commandPersistence = CommandPersistence.NOT_PERSISTED,
             publishing = Publishing.DISABLED
     )
     public Blob downloadReviewPdf(
@@ -429,7 +423,7 @@ public class PaymentBatchManager {
 
     @Action(
             semantics = SemanticsOf.SAFE,
-            command = CommandReification.DISABLED,
+            commandPersistence = CommandPersistence.NOT_PERSISTED,
             publishing = Publishing.DISABLED
     )
     public Clob downloadPaymentFile(
@@ -456,7 +450,6 @@ public class PaymentBatchManager {
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
-            command = CommandReification.DISABLED,
             publishing = Publishing.DISABLED
     )
     public PaymentBatchManager addInvoiceToPayByBankAccount(
@@ -504,7 +497,6 @@ public class PaymentBatchManager {
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
-            command = CommandReification.DISABLED,
             publishing = Publishing.DISABLED
     )
     public PaymentBatchManager removeInvoice(
@@ -539,7 +531,7 @@ public class PaymentBatchManager {
 
     @Action(
             semantics = SemanticsOf.SAFE,
-            command = CommandReification.DISABLED,
+            commandPersistence = CommandPersistence.NOT_PERSISTED,
             publishing = Publishing.DISABLED
     )
     public Blob downloadExcelExportForNewBatches(
@@ -563,7 +555,7 @@ public class PaymentBatchManager {
 
     @Action(
             semantics = SemanticsOf.SAFE,
-            command = CommandReification.DISABLED,
+            commandPersistence = CommandPersistence.NOT_PERSISTED,
             publishing = Publishing.DISABLED
     )
     public Blob downloadExcelExportForCompletedBatches(
