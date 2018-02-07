@@ -39,11 +39,11 @@ import org.apache.isis.applib.value.Blob;
 import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 
+import org.incode.module.base.spi.DeriveBlobFromDummyPdfArg0;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
-import org.incode.module.document.spi.DeriveBlobFromReturnedDocumentArg0;
 
 import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
@@ -87,7 +87,8 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
     }
 
     @Action(domainEvent = IncomingDocumentRepository.UploadDomainEvent.class,
-            commandDtoProcessor = DeriveBlobFromReturnedDocumentArg0.class
+            commandDtoProcessor = DeriveBlobFromDummyPdfArg0.class
+            //commandDtoProcessor = DeriveBlobFromReturnedDocumentArg0.class
     )
     @MemberOrder(sequence = "3")
     public Document upload(final Blob blob) {
