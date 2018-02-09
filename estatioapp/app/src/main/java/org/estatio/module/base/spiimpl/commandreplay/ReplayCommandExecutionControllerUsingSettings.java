@@ -8,7 +8,6 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CommandPersistence;
-import org.apache.isis.applib.annotation.CommandReification;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -64,6 +63,7 @@ public class ReplayCommandExecutionControllerUsingSettings
     public State default0ReplayControl() {
         return getState();
     }
+
     public boolean hideReplayControl() {
         return !slaveConfig.isConfigured();
     }
