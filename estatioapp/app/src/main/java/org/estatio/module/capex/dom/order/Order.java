@@ -34,6 +34,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
@@ -965,6 +966,23 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             }
         }
         return buffer.length() == 0 ? null : buffer.toString();
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION, hidden = Where.OBJECT_FORMS)
+    public String getDescriptionSummary(){
+        StringBuffer summary = new StringBuffer();
+        boolean first = true;
+        for (OrderItem orderItem : getItems()){
+            if (orderItem.getDescription()!=null || orderItem.getDescription()!=""){
+                if (!first){
+                    summary.append(" | ");
+                }
+                summary.append(orderItem.getDescription());
+                first=false;
+            }
+        }
+        return summary.toString();
     }
 
     @Inject
