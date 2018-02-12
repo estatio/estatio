@@ -1,7 +1,5 @@
 package org.estatio.module.base.spiimpl.commandreplay;
 
-import javax.inject.Inject;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.command.Command;
@@ -9,7 +7,6 @@ import org.apache.isis.applib.services.command.CommandWithDto;
 import org.apache.isis.schema.cmd.v1.CommandDto;
 import org.apache.isis.schema.utils.CommandDtoUtils;
 
-import org.isisaddons.module.audit.dom.AuditingServiceRepository;
 import org.isisaddons.module.command.dom.CommandJdo;
 import org.isisaddons.module.command.replay.spi.CommandReplayAnalyserAbstract;
 import org.isisaddons.module.command.replay.spi.CommandReplayAnalyserResultStr;
@@ -40,22 +37,30 @@ public class CommandReplayAnalyserResultStrSimplified extends CommandReplayAnaly
 
         final CommandJdo commandJdo = (CommandJdo) command;
 
+        // if there is an exception, then pay attention to this rather than the results
+        // (have found that the master may have both a result and an exception, while on the slave have
+        // only an exception).
+        final String exceptionStr =
+                CommandDtoUtils.getUserData(dto, CommandWithDto.USERDATA_KEY_EXCEPTION);
+        if (exceptionStr != null) {
+            return null;
+        }
+
+        // no exception; check if both master and slave are either both null, or both non-null
         final String masterResultStr =
                 CommandDtoUtils.getUserData(dto, CommandWithDto.USERDATA_KEY_RETURN_VALUE);
+        final String slaveResultStr = commandJdo.getResultStr();
+
         if (masterResultStr == null) {
             return null;
         }
-
-        final String slaveResultStr = commandJdo.getResultStr();
-        if(slaveResultStr != null) {
+        if (slaveResultStr != null) {
+            // don't check for an exact match
             return null;
         }
 
-        return "Results differ.  Master was '%s', slave is null";
+        return String.format("Results differ.  Master was '%s', slave is null", masterResultStr);
     }
-
-    @Inject
-    AuditingServiceRepository auditingServiceRepository;
 
 
 }
