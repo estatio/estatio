@@ -727,7 +727,6 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
             lineVms.add(new PaymentLineForExcelExportV1(
                     getDebtorBankAccount().getIban(),
                     line.getInvoice().getInvoiceDate(),
-                    getRequestedExecutionDate() != null ? this.getRequestedExecutionDate().toLocalDate() : null,
                     null,
                     line.getInvoice().getSeller().getName(),
                     line.getInvoice().getSeller().getReference(),

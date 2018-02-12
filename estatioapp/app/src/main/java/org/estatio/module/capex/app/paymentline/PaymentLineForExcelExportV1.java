@@ -24,9 +24,6 @@ public class PaymentLineForExcelExportV1 {
     @MemberOrder(sequence = "2") @Nullable
     private LocalDate invoiceDate;
 
-    @MemberOrder(sequence = "3") @Nullable
-    private LocalDate requestedExecutionDate;
-
     @MemberOrder(sequence = "4") @Nullable
     private LocalDate paymentDate;
 
