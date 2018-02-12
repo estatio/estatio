@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.capex.dom.order.Order;
+import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.party.dom.Party;
@@ -34,8 +35,17 @@ public class Party_findOrdersByProperty {
         return orderRepository
                 .findBySellerParty(party)
                 .stream()
-                .filter(x->x.getProperty()!=null && x.getProperty().equals(property))
+                .filter(x->(x.getProperty()!=null && x.getProperty().equals(property)) || orderItemsContainProperty(x, property))
                 .collect(Collectors.toList());
+    }
+
+    private boolean orderItemsContainProperty(final Order order, final Property property){
+        for (OrderItem orderItem : order.getItems()){
+            if (orderItem.getProperty() == property){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Inject
