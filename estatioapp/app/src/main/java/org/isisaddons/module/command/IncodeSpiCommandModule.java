@@ -24,10 +24,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.collect.Sets;
 
+import org.apache.isis.applib.Module;
 import org.apache.isis.applib.ModuleAbstract;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.isisaddons.module.audit.AuditModule;
+import org.isisaddons.module.command.dom.CommandDomModule;
 import org.isisaddons.module.command.dom.CommandJdo;
+import org.isisaddons.module.command.replay.CommandReplayModule;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
@@ -38,8 +42,13 @@ import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 public final class IncodeSpiCommandModule extends ModuleAbstract {
 
     @Override
+    public Set<Module> getDependencies() {
+        return Sets.newHashSet(new CommandReplayModule());
+    }
+
+    @Override
     public Set<Class<?>> getAdditionalModules() {
-        return Sets.newHashSet(CommandModule.class);
+        return Sets.newHashSet(CommandDomModule.class, AuditModule.class);
     }
 
 

@@ -3,6 +3,7 @@ package org.estatio.module.application.contributions.impersonation;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.CommandPersistence;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.RestrictTo;
@@ -18,7 +19,10 @@ public class Object_stopImpersonating {
         this.object = object;
     }
 
-    @Action(restrictTo = RestrictTo.PROTOTYPING)
+    @Action(
+            restrictTo = RestrictTo.PROTOTYPING,
+            commandPersistence = CommandPersistence.NOT_PERSISTED
+    )
     @MemberOrder(sequence = "90.2")
     public Object act() {
 

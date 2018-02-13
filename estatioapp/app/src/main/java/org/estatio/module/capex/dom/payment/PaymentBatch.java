@@ -46,7 +46,6 @@ import org.joda.time.DateTime;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.CommandReification;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
@@ -75,10 +74,9 @@ import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
 import org.incode.module.communications.dom.mixins.DocumentConstants;
 
+import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.capex.app.paymentline.PaymentLineForExcelExportV1;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
-import org.estatio.module.base.dom.UdoDomainObject2;
-import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
@@ -96,6 +94,7 @@ import org.estatio.module.capex.platform.PdfBoxService2;
 import org.estatio.module.capex.platform.pdfmanipulator.ExtractSpec;
 import org.estatio.module.capex.platform.pdfmanipulator.PdfManipulator;
 import org.estatio.module.capex.platform.pdfmanipulator.Stamp;
+import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
@@ -341,7 +340,6 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         }
         @Action(
                 semantics = SemanticsOf.IDEMPOTENT,
-                command = CommandReification.DISABLED,
                 publishing = Publishing.DISABLED
         )
         public PaymentBatch act(
@@ -403,7 +401,6 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         }
         @Action(
                 semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE,
-                command = CommandReification.DISABLED,
                 publishing = Publishing.DISABLED
         )
         @ActionLayout(cssClassFa = "fa-mail-reply", cssClass = "btn-warning")

@@ -39,6 +39,7 @@ import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.value.Blob;
 
+import org.incode.module.base.spi.DeriveBlobFromDummyPdfArg1;
 import org.incode.module.communications.dom.impl.comms.Communication;
 import org.incode.module.document.dom.api.DocumentService;
 import org.incode.module.document.dom.impl.docs.Document;
@@ -67,7 +68,10 @@ public class InvoiceForLease_attachSupportingDocument {
         this.invoiceForLease = invoiceForLease;
     }
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @Action(
+            semantics = SemanticsOf.NON_IDEMPOTENT,
+            commandDtoProcessor = DeriveBlobFromDummyPdfArg1.class
+    )
     @ActionLayout(contributed = Contributed.AS_ACTION, cssClassFa = "paperclip")
     public Invoice $$(
             final DocumentType supportingDocumentType,
