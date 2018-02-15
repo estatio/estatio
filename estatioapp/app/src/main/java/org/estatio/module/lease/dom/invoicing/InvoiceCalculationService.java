@@ -323,7 +323,7 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
                             adjustment = true;
                         } else {
                             //there is new calculated amount which is caused by tinkering the dates
-                            effectiveInterval = rightSideLeftoverWhenSubtractingTwoIntervals(invoicingInterval, calculationInterval);
+                            effectiveInterval = attemptToCalculateRightSideLeftover(invoicingInterval, calculationInterval);
                        }
                     }
 
@@ -372,7 +372,17 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
     private LeaseRepository leaseRepository;
 
 
-    public static LocalDateInterval rightSideLeftoverWhenSubtractingTwoIntervals(final LocalDateInterval ldi1, final LocalDateInterval ldi2){
+    public static LocalDateInterval attemptToCalculateRightSideLeftover(final LocalDateInterval ldi1, final LocalDateInterval ldi2){
+        // Do not try to understand this. Consult Johan or Jeroen before reading further.
+
+        // In case you really want to know:
+
+        // When the two interval are the same we don't subtract
+        if(ldi1.equals(ldi2)){
+            return ldi1;
+        }
+
+        // You've made it this far! Great. Now the magic kicks in. See the test for what is does, it's too hard to explain.
         final LocalDateInterval ldiNew = LocalDateInterval.excluding(
                 ldi2 == null || ldi2.endDateExcluding() == null ? ldi1.startDate() : ldi2.endDateExcluding() ,
                 ldi1.endDateExcluding());

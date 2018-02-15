@@ -40,7 +40,6 @@ import org.estatio.module.agreement.dom.AgreementRoleRepository;
 import org.estatio.module.agreement.dom.role.AgreementRoleType;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
-import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.module.lease.dom.InvoicingFrequency;
@@ -49,6 +48,7 @@ import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermForTesting;
 import org.estatio.module.lease.dom.LeaseTermValueType;
+import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRate;
 import org.estatio.module.tax.dom.TaxRateRepository;
@@ -470,13 +470,17 @@ public class InvoiceCalculationService_Test {
     public static class RightLeftover extends InvoiceCalculationService_Test {
 
         @Test
-        public void xxx() throws Exception {
-            assertThat(InvoiceCalculationService.rightSideLeftoverWhenSubtractingTwoIntervals(VT.ldi("2017-01-01/2018-01-01"), VT.ldi("2017-01-01/2017-12-01"))).isEqualTo(VT.ldi("2017-12-01/2018-01-01"));
-            assertThat(InvoiceCalculationService.rightSideLeftoverWhenSubtractingTwoIntervals(VT.ldi("2017-01-01/2018-01-01"), VT.ldi("2017-02-01/2017-12-01"))).isEqualTo(VT.ldi("2017-12-01/2018-01-01"));
-            assertThat(InvoiceCalculationService.rightSideLeftoverWhenSubtractingTwoIntervals(VT.ldi("2017-02-01/2018-01-01"), VT.ldi("----------/----------"))).isEqualTo(VT.ldi("2017-02-01/2018-01-01"));
-            assertThat(InvoiceCalculationService.rightSideLeftoverWhenSubtractingTwoIntervals(VT.ldi("2017-02-01/2018-01-01"), null)).isEqualTo(VT.ldi("2017-02-01/2018-01-01"));
+        public void return_the_right_side_leftover() throws Exception {
+            assertThat(InvoiceCalculationService.attemptToCalculateRightSideLeftover(VT.ldi("2017-01-01/2018-01-01"), VT.ldi("2017-01-01/2017-12-01"))).isEqualTo(VT.ldi("2017-12-01/2018-01-01"));
+            assertThat(InvoiceCalculationService.attemptToCalculateRightSideLeftover(VT.ldi("2017-01-01/2018-01-01"), VT.ldi("2017-02-01/2017-12-01"))).isEqualTo(VT.ldi("2017-12-01/2018-01-01"));
+            assertThat(InvoiceCalculationService.attemptToCalculateRightSideLeftover(VT.ldi("2017-02-01/2018-01-01"), VT.ldi("----------/----------"))).isEqualTo(VT.ldi("2017-02-01/2018-01-01"));
+            assertThat(InvoiceCalculationService.attemptToCalculateRightSideLeftover(VT.ldi("2017-02-01/2018-01-01"), null)).isEqualTo(VT.ldi("2017-02-01/2018-01-01"));
         }
 
+        @Test
+        public void when_intervals_are_equal_return_the_interval() throws Exception {
+            assertThat(InvoiceCalculationService.attemptToCalculateRightSideLeftover(VT.ldi("2018-01-01/2018-04-01"), VT.ldi("2018-01-01/2018-04-01"))).isEqualTo(VT.ldi("2018-01-01/2018-04-01"));
+        }
 
     }
 
