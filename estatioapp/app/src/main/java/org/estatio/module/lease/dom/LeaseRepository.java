@@ -19,6 +19,7 @@
 
 package org.estatio.module.lease.dom;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -155,8 +156,11 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
     }
 
     @Programmatic
-    public Lease findLeaseByExternalReference(final String externalReference) {
-        return uniqueMatch("findByExternalReference", "externalReference", externalReference);
+    public List<Lease> matchLeaseByExternalReference(final String externalReference) {
+        return allMatches("matchByExternalReference", "externalReference", externalReference)
+                .stream()
+                .sorted(Comparator.comparing(Lease::getExternalReference).reversed())// somehow DESCENDING in JDOQL does not yield the expected results http://etutorials.org/Programming/Java+data+objects/Chapter+9.+The+JDO+Query+Language/9.6+The+Query+Filter/
+                .collect(Collectors.toList());
     }
 
     @Programmatic

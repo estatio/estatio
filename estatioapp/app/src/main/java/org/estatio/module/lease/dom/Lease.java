@@ -121,10 +121,11 @@ import static org.apache.commons.lang3.StringUtils.left;
                         + "FROM org.estatio.module.lease.dom.Lease "
                         + "WHERE reference == :reference"),
         @javax.jdo.annotations.Query(
-                name = "findByExternalReference", language = "JDOQL",
+                name = "matchByExternalReference", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.Lease "
-                        + "WHERE externalReference == :externalReference"),
+                        + "WHERE externalReference.indexOf(:externalReference) >= 0 "
+                        + "ORDER BY externalReference DESCENDING "), // somehow DESCENDING in JDOQL does not yield the expected results, so now trying to order in repo
         @javax.jdo.annotations.Query(
                 name = "matchByReferenceOrName", language = "JDOQL",
                 value = "SELECT "
