@@ -39,7 +39,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.utils.JodaPeriodUtils;
 import org.incode.module.base.dom.utils.StringUtils;
 
-import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannelTypeRepository;
 import org.estatio.module.agreement.dom.role.AgreementRoleType;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
@@ -47,6 +46,7 @@ import org.estatio.module.agreement.dom.type.AgreementType;
 import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.party.dom.Party;
 
@@ -56,7 +56,6 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
     public LeaseRepository() {
         super(LeaseRepository.class, Lease.class);
     }
-
 
     @Programmatic
     public Lease newLease(
@@ -72,6 +71,7 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
         LocalDate calculatedEndDate = calculateEndDate(startDate, endDate, duration);
         return newLease(applicationTenancy, reference.trim(), name.trim(), leaseType, startDate, calculatedEndDate, startDate, calculatedEndDate, landlord, tenant);
     }
+
     private static LocalDate calculateEndDate(
             final LocalDate startDate, final LocalDate endDate, final String duration) {
         if (duration != null) {
@@ -82,7 +82,6 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
         }
         return endDate;
     }
-
 
     @Programmatic
     public Lease newLease(
@@ -135,7 +134,7 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
         String pattern = StringUtils.wildcardToCaseInsensitiveRegex(tenantName);
         return allMatches("findByProperty", "property", property)
                 .stream()
-                .filter(x->x.getSecondaryParty().getName().matches(pattern))
+                .filter(x -> x.getSecondaryParty().getName().matches(pattern))
                 .collect(Collectors.toList());
     }
 
@@ -153,6 +152,11 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
     @Programmatic
     public Lease findLeaseByReferenceElseNull(final String reference) {
         return firstMatch("findByReference", "reference", reference);
+    }
+
+    @Programmatic
+    public Lease findLeaseByExternalReference(final String externalReference) {
+        return uniqueMatch("findByExternalReference", "externalReference", externalReference);
     }
 
     @Programmatic
@@ -197,6 +201,4 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
 
     @Inject
     AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
-
-
 }

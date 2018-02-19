@@ -121,6 +121,11 @@ import static org.apache.commons.lang3.StringUtils.left;
                         + "FROM org.estatio.module.lease.dom.Lease "
                         + "WHERE reference == :reference"),
         @javax.jdo.annotations.Query(
+                name = "findByExternalReference", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.lease.dom.Lease "
+                        + "WHERE externalReference == :externalReference"),
+        @javax.jdo.annotations.Query(
                 name = "matchByReferenceOrName", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.Lease "
