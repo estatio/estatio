@@ -16,6 +16,13 @@
                                 <ns2:property id="reference"/>
                                 <ns2:property id="name"/>
                                 <ns2:property id="description" hidden="ALL_TABLES"/>
+                                <ns2:property id="tax"/>
+                                <ns2:property id="applicability" hidden="ALL_TABLES"/>
+                                <ns2:property id="externalReference" hidden="ALL_TABLES"/>
+                                <ns2:property id="group"/>
+                                <ns2:property id="sortOrder">
+                                    <ns2:action id="change" position="BELOW"/>
+                                </ns2:property>
                             </ns2:fieldSet>
                         </col>
                     </row>
@@ -58,31 +65,22 @@
             </tabGroup>
         </col>
         <col span="8">
-            <row>
-                <col span="12">
-                    <ns2:fieldSet name="Details">
-                        <ns2:property id="tax"/>
-                        <ns2:property id="applicability" hidden="ALL_TABLES"/>
-                        <ns2:property id="externalReference" hidden="ALL_TABLES"/>
-                    </ns2:fieldSet>
-                </col>
-            </row>
-            <row>
-                <col span="12">
-                    <ns2:fieldSet name="Grouping">
-                        <ns2:property id="parent" hidden="REFERENCES_PARENT"/>
-                        <ns2:property id="group"/>
-                        <ns2:property id="sortOrder">
-                            <ns2:action id="change" position="BELOW"/>
-                        </ns2:property>
-                    </ns2:fieldSet>
-                </col>
-            </row>
-            <row>
-                <col span="12">
-                    <ns2:collection id="children"/>
-                </col>
-            </row>
+            <tabGroup>
+                <tab name="General">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Parent">
+                                <ns2:property id="parent" hidden="REFERENCES_PARENT"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="children"/>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
         </col>
         <col span="12">
             <tabGroup unreferencedCollections="true"/>
