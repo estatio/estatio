@@ -12,7 +12,9 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
+import org.isisaddons.module.excel.dom.ExcelFixture;
 import org.isisaddons.module.excel.dom.ExcelFixture2;
+import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
 import org.isisaddons.module.excel.dom.FixtureAwareRowHandler;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
@@ -33,7 +35,7 @@ import lombok.Setter;
         nature = Nature.VIEW_MODEL,
         objectType = "org.estatio.app.services.budget.ChargeImport"
 )
-public class ChargeImport implements FixtureAwareRowHandler<ChargeImport>, Importable {
+public class ChargeImport implements FixtureAwareRowHandler<ChargeImport>, ExcelFixtureRowHandler, Importable {
 
     public String title() {
         return "charge import";
@@ -116,6 +118,12 @@ public class ChargeImport implements FixtureAwareRowHandler<ChargeImport>, Impor
     }
 
     @Override
+    public List<Object> handleRow(final FixtureScript.ExecutionContext executionContext, final ExcelFixture excelFixture, final Object previousRow) {
+        return importData(previousRow);
+
+    }
+
+    @Override
     @Programmatic
     public List<Object> importData(Object previousRow) {
 
@@ -191,5 +199,4 @@ public class ChargeImport implements FixtureAwareRowHandler<ChargeImport>, Impor
 
     @Inject
     private ChargeGroupRepository chargeGroupRepository;
-
 }
