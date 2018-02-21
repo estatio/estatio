@@ -4,7 +4,7 @@
 
     <groupId>org.incode.ecp.iso20022</groupId>
     <artifactId>incode-ecp-iso20022-pain</artifactId>
-    <name>Incode iso20022 Payments Initiation (pain)</name>
+    <name>Estatio (Open Source) Payments Initiation (pain)</name>
     <version>001.001.003</version>
     <packaging>jar</packaging>
 
