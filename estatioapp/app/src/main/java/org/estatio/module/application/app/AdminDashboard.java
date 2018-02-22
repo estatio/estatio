@@ -27,6 +27,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.email.EmailService;
 
+import org.incode.module.slack.impl.SlackService;
+
 import org.estatio.module.application.platform.servletapi.HttpSessionProvider;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.settings.dom.ApplicationSettingForEstatio;

@@ -184,6 +184,19 @@ language governing permissions and limitations under the License.
                 <type>test-jar</type>
             </dependency>
 
+            <dependency>
+                <groupId>org.incode.estatio</groupId>
+                <artifactId>estatio-slack</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.estatio</groupId>
+                <artifactId>estatio-slack</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
 
             <dependency>
                 <groupId>org.incode.estatio</groupId>
@@ -263,6 +276,7 @@ language governing permissions and limitations under the License.
     <modules>
         <module>iso20022</module>
         <module>estatioapp/app</module>
+        <module>estatioapp/slack</module>
         <module>estatioapp/webapp</module>
     </modules>
 
