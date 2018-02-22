@@ -143,20 +143,17 @@ language governing permissions and limitations under the License.
             <artifactId>estatio-canonical</artifactId>
         </dependency>
 
+<!--
         <dependency>
             <groupId>org.incode.estatio</groupId>
             <artifactId>estatio-slack</artifactId>
         </dependency>
+-->
 
         <dependency>
             <groupId>org.incode.ecp.iso20022</groupId>
             <artifactId>incode-ecp-iso20022-pain</artifactId>
             <version>001.001.003</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-core-wrapper</artifactId>
         </dependency>
 
 
@@ -190,6 +187,10 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.isisaddons.module.servletapi</groupId>
             <artifactId>isis-module-servletapi-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.incode.module.slack</groupId>
+            <artifactId>incode-module-slack-dom</artifactId>
         </dependency>
         <dependency>
             <groupId>org.isisaddons.module.stringinterpolator</groupId>

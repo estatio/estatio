@@ -1,5 +1,5 @@
+<!--
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
 Copyright 2012-2014 Eurocommercial Properties NV
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -22,7 +22,10 @@ language governing permissions and limitations under the License.
         <groupId>org.incode</groupId>
         <artifactId>incode-parent</artifactId>
         <!-- NB: also update incode-platform.version property below.  Also update estatio-ecp pom.xml similarly -->
+        <version>1.16.1-SNAPSHOT</version>
+        <!--
         <version>1.16.0.20180212-1812</version>
+        -->
     </parent>
 
     <groupId>org.estatio</groupId>
@@ -76,7 +79,10 @@ language governing permissions and limitations under the License.
         -->
 
         <!-- NB: also update the parent of this pom.  Also update estatio-ecp pom.xml similarly -->
+        <incode-platform.version>1.16.1-SNAPSHOT</incode-platform.version>
+<!--
         <incode-platform.version>1.16.0.20180212-1812</incode-platform.version>
+-->
 
         <wicketstuff.version>7.9.0</wicketstuff.version>
 
@@ -186,20 +192,6 @@ language governing permissions and limitations under the License.
 
             <dependency>
                 <groupId>org.incode.estatio</groupId>
-                <artifactId>estatio-slack</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.incode.estatio</groupId>
-                <artifactId>estatio-slack</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-
-            <dependency>
-                <groupId>org.incode.estatio</groupId>
                 <artifactId>estatio-canonical</artifactId>
                 <version>${estatio-canonical.version}</version>
             </dependency>
@@ -276,7 +268,6 @@ language governing permissions and limitations under the License.
     <modules>
         <module>iso20022</module>
         <module>estatioapp/app</module>
-        <module>estatioapp/slack</module>
         <module>estatioapp/webapp</module>
     </modules>
 
