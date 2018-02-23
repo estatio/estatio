@@ -68,6 +68,7 @@ import org.apache.isis.applib.value.Clob;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.excel.dom.ExcelService;
+import org.isisaddons.module.pdfbox.dom.service.PdfBoxService;
 import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
@@ -90,7 +91,6 @@ import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.state.StateTransitionType;
 import org.estatio.module.capex.dom.state.Stateful;
 import org.estatio.module.capex.dom.util.InvoicePageRange;
-import org.estatio.module.capex.platform.PdfBoxService2;
 import org.estatio.module.capex.platform.pdfmanipulator.ExtractSpec;
 import org.estatio.module.capex.platform.pdfmanipulator.PdfManipulator;
 import org.estatio.module.capex.platform.pdfmanipulator.Stamp;
@@ -659,7 +659,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
             }
         }
 
-        byte[] pdfMergedBytes = pdfBoxService2.merge(pdfFiles);
+        byte[] pdfMergedBytes = pdfBoxService.merge(pdfFiles);
 
         pdfFiles.stream().forEach(this::cleanup);
 
@@ -739,7 +739,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     }
 
     @Inject
-    PdfBoxService2 pdfBoxService2;
+    PdfBoxService pdfBoxService;
 
     @Inject
     LookupAttachedPdfService lookupAttachedPdfService;

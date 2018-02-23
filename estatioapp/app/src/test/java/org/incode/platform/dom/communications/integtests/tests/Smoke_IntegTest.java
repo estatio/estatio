@@ -14,8 +14,8 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.apache.isis.applib.services.xactn.TransactionService;
 
-import org.isisaddons.module.command.IncodeSpiCommandModule;
 import org.isisaddons.module.command.dom.BackgroundCommandServiceJdoRepository;
+import org.isisaddons.module.command.dom.CommandDomModule;
 import org.isisaddons.module.command.dom.CommandJdo;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
@@ -70,7 +70,7 @@ public class Smoke_IntegTest extends CommunicationsModuleIntegTestAbstract {
     public void can_send_email() throws Exception {
 
         // given
-        fixtureScripts.runFixtureScript(new IncodeSpiCommandModule().getTeardownFixtureWillDelete(), null);
+        fixtureScripts.runFixtureScript(new CommandDomModule().getTeardownFixtureWillDelete(), null);
         fixtureScripts.runFixtureScript(new DemoObjectWithNotes_and_DemoInvoice_and_docs_and_comms_create(), null);
         transactionService.nextTransaction();
 

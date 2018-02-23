@@ -1,5 +1,9 @@
 package org.estatio.app;
 
-public final class EstatioAppModule {
-    private EstatioAppModule(){}
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.isis.applib.ModuleAbstract;
+
+@XmlRootElement(name = "module")
+public class EstatioAppModule extends ModuleAbstract {
 }

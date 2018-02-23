@@ -29,25 +29,31 @@ import org.apache.isis.applib.ModuleAbstract;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.clock.TickingClockFixture;
 
-import org.isisaddons.module.command.IncodeSpiCommandModule;
-import org.isisaddons.module.excel.IncodeLibExcelModule;
-import org.isisaddons.module.fakedata.IncodeLibFakeDataModule;
-import org.isisaddons.module.freemarker.IncodeLibFreeMarkerModule;
-import org.isisaddons.module.pdfbox.IncodeLibPdfBoxModule;
-import org.isisaddons.module.poly.IncodeLibPolyModule;
-import org.isisaddons.module.security.IncodeSpiSecurityModule;
-import org.isisaddons.module.servletapi.IncodeLibServletApiModule;
-import org.isisaddons.module.stringinterpolator.IncodeLibStringInterpolatorModule;
-import org.isisaddons.module.togglz.IncodeExtTogglzModule;
-import org.isisaddons.module.xdocreport.IncodeLibXDocReportModule;
-import org.isisaddons.wicket.excel.IncodeWktExcelModule;
-import org.isisaddons.wicket.fullcalendar2.IncodeWktFullCalendar2Module;
-import org.isisaddons.wicket.gmap3.IncodeWktGmap3Module;
-import org.isisaddons.wicket.pdfjs.IncodeWktPdfJsModule;
-
-import org.incode.module.base.services.BaseServicesModule;
+import org.isisaddons.module.audit.AuditModule;
+import org.isisaddons.module.command.dom.CommandDomModule;
+import org.isisaddons.module.command.replay.CommandReplayModule;
+import org.isisaddons.module.excel.ExcelModule;
+import org.isisaddons.module.fakedata.FakeDataModule;
+import org.isisaddons.module.freemarker.dom.FreeMarkerModule;
+import org.isisaddons.module.pdfbox.dom.PdfBoxModule;
+import org.isisaddons.module.poly.PolyModule;
+import org.isisaddons.module.security.SecurityModule;
+import org.isisaddons.module.servletapi.ServletApiModule;
+import org.isisaddons.module.stringinterpolator.StringInterpolatorModule;
+import org.isisaddons.module.togglz.TogglzModule;
+import org.isisaddons.module.xdocreport.dom.XDocReportModule;
+import org.isisaddons.wicket.excel.cpt.ui.ExcelUiModule;
+import org.isisaddons.wicket.fullcalendar2.cpt.applib.FullCalendar2ApplibModule;
+import org.isisaddons.wicket.fullcalendar2.cpt.ui.FullCalendar2UiModule;
+import org.isisaddons.wicket.gmap3.cpt.applib.Gmap3ApplibModule;
+import org.isisaddons.wicket.pdfjs.cpt.PdfjsCptModule;
 
 import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
+import org.incode.module.base.services.BaseServicesModule;
+import org.incode.module.errorrptslack.ErrorReportingSlackModule;
+import org.incode.module.userimpersonate.UserImpersonateModule;
+import org.incode.module.zip.ZipModule;
+
 import org.estatio.module.base.fixtures.security.perms.personas.EstatioRolesAndPermissions;
 import org.estatio.module.base.fixtures.security.userrole.personas.EstatioAdmin_Has_EstatioSuperuserRole;
 import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
@@ -69,33 +75,36 @@ public final class EstatioBaseModule extends ModuleAbstract {
                 // (nothing for incode-module-base-dom)
                 // (nothing for incode-module-fixturesupport-dom)
                 // don't include the settings module, instead we use EstatioSettingsModule
-                new IncodeLibExcelModule(),
-                new IncodeLibPdfBoxModule(),
-                new IncodeLibPolyModule(),
-                new IncodeLibServletApiModule(),
-                new IncodeLibStringInterpolatorModule(),
-                new IncodeLibFakeDataModule(),
-                new IncodeLibFreeMarkerModule(),
-                new IncodeLibXDocReportModule(),
+                new ExcelModule(),
+                new PdfBoxModule(),
+                new PolyModule(),
+                new ServletApiModule(),
+                new StringInterpolatorModule(),
+                new FakeDataModule(),
+                new FreeMarkerModule(),
+                new XDocReportModule(),
+                new UserImpersonateModule(),
+                new ZipModule(),
 
                 // spi (remaining part of ECP's app module)
-                new IncodeSpiSecurityModule(),
-                new IncodeSpiCommandModule(), // for comms!
+                new SecurityModule(),
+                new CommandReplayModule(),
+                new CommandDomModule(),
+                new AuditModule(),
+                new ErrorReportingSlackModule(),
 
                 // wkt
-                new IncodeWktExcelModule(),
-                new IncodeWktFullCalendar2Module(),
-                new IncodeWktGmap3Module(),
-                new IncodeWktPdfJsModule(),
+                new ExcelUiModule(),
+                new FullCalendar2ApplibModule(),
+                new FullCalendar2UiModule(),
+                new Gmap3ApplibModule(),
+                new PdfjsCptModule(),
 
                 // ext
-                new IncodeExtTogglzModule()
-        );
-    }
+                new TogglzModule(),
 
-    @Override
-    public Set<Class<?>> getAdditionalModules() {
-        return Sets.newHashSet(BaseServicesModule.class);
+                new BaseServicesModule()
+        );
     }
 
     @Override

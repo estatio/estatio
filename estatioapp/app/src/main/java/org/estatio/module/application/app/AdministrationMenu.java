@@ -18,12 +18,15 @@
  */
 package org.estatio.module.application.app;
 
+import javax.inject.Inject;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.registry.ServiceRegistry;
 
 import org.estatio.module.base.dom.UdoDomainService;
 
@@ -46,8 +49,10 @@ public class AdministrationMenu extends UdoDomainService<AdministrationMenu> {
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3.5")
     public AdminDashboard openAdminDashboard() {
-        return new AdminDashboard();
+        return serviceRegistry.injectServicesInto(new AdminDashboard());
     }
 
+    @Inject
+    ServiceRegistry serviceRegistry;
 
 }

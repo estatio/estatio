@@ -22,10 +22,7 @@ language governing permissions and limitations under the License.
         <groupId>org.incode</groupId>
         <artifactId>incode-parent</artifactId>
         <!-- NB: also update incode-platform.version property below.  Also update estatio-ecp pom.xml similarly -->
-        <version>1.16.1-SNAPSHOT</version>
-        <!--
-        <version>1.16.0.20180212-1812</version>
-        -->
+        <version>1.16.1.20180223-1739</version>
     </parent>
 
     <groupId>org.estatio</groupId>
@@ -68,21 +65,17 @@ language governing permissions and limitations under the License.
     </developers>
 
     <properties>
-        <isis.version>1.16.0.20180218-1042</isis.version>
+        <isis.version>1.16.1.20180223-1715</isis.version>
         <!--
-        <isis.version>1.16.1-SNAPSHOT</isis.version>
+        <isis.version>1.16.2-SNAPSHOT</isis.version>
+        <isis.version>1.16.0.20180218-1042</isis.version>
         <isis.version>1.16.0.20180212-1738</isis.version>
         <isis.version>1.16.0.20180208-1754</isis.version>
         <isis.version>1.16.0.20180130-1145</isis.version>
-        <isis.version>1.16.0.20180125-1027</isis.version>
-        <isis.version>1.16.0.20180124-1524</isis.version>
         -->
 
         <!-- NB: also update the parent of this pom.  Also update estatio-ecp pom.xml similarly -->
-        <incode-platform.version>1.16.1-SNAPSHOT</incode-platform.version>
-<!--
-        <incode-platform.version>1.16.0.20180212-1812</incode-platform.version>
--->
+        <incode-platform.version>1.16.1.20180223-1739</incode-platform.version>
 
         <wicketstuff.version>7.9.0</wicketstuff.version>
 

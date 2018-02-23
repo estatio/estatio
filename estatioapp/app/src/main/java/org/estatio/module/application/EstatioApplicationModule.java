@@ -26,6 +26,7 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.Module;
 import org.apache.isis.applib.ModuleAbstract;
+
 import org.estatio.module.budgetassignment.EstatioBudgetAssignmentModule;
 import org.estatio.module.capex.EstatioCapexModule;
 import org.estatio.module.guarantee.EstatioGuaranteeModule;

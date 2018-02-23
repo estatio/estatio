@@ -27,9 +27,10 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.email.EmailService;
 
+import org.isisaddons.module.servletapi.dom.HttpSessionProvider;
+
 import org.incode.module.slack.impl.SlackService;
 
-import org.estatio.module.application.platform.servletapi.HttpSessionProvider;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.settings.dom.ApplicationSettingForEstatio;
 import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
@@ -119,7 +120,7 @@ public class AdminDashboard {
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3.1")
-    public AdminDashboard sendTestEmail(
+    public AdminDashboard testEmail(
             @ParameterLayout(named = "To")
             final String to,
             @ParameterLayout(named = "Subject")
@@ -135,7 +136,7 @@ public class AdminDashboard {
         emailService.send(toList, ccList, bccList, subject, body);
         return this;
     }
-    public String disableSendTestEmail() {
+    public String disableTestEmail() {
         if(emailService == null) {
             return "No EmailService defined";
         }
@@ -147,13 +148,13 @@ public class AdminDashboard {
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3.2")
-    public AdminDashboard sendTestSlackMessage(
-            @ParameterLayout(named = "Message")
+    public AdminDashboard testSlack(
+            String channel,
             String message) {
-        slackService.sendMessage(message);
+        slackService.sendMessage(channel, message);
         return this;
     }
-    public String disableSendTestSlackMessage() {
+    public String disableTestSlack() {
         if (slackService == null) {
             return "No SlackService defined";
         }

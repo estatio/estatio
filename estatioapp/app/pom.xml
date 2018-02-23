@@ -143,12 +143,10 @@ language governing permissions and limitations under the License.
             <artifactId>estatio-canonical</artifactId>
         </dependency>
 
-<!--
         <dependency>
-            <groupId>org.incode.estatio</groupId>
-            <artifactId>estatio-slack</artifactId>
+            <groupId>org.apache.isis.core</groupId>
+            <artifactId>isis-core-wrapper</artifactId>
         </dependency>
--->
 
         <dependency>
             <groupId>org.incode.ecp.iso20022</groupId>
@@ -189,8 +187,8 @@ language governing permissions and limitations under the License.
             <artifactId>isis-module-servletapi-dom</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.incode.module.slack</groupId>
-            <artifactId>incode-module-slack-dom</artifactId>
+            <groupId>org.incode.module.errorrptslack</groupId>
+            <artifactId>incode-module-errorrptslack-impl</artifactId>
         </dependency>
         <dependency>
             <groupId>org.isisaddons.module.stringinterpolator</groupId>
@@ -199,6 +197,14 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.isisaddons.module.freemarker</groupId>
             <artifactId>isis-module-freemarker-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.incode.module.userimpersonate</groupId>
+            <artifactId>incode-module-userimpersonate-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.incode.module.zip</groupId>
+            <artifactId>incode-module-zip-dom</artifactId>
         </dependency>
 
         <!-- incode modules: metamodel -->

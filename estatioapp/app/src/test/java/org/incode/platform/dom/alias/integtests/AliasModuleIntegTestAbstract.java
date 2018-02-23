@@ -1,6 +1,11 @@
 package org.incode.platform.dom.alias.integtests;
 
+import java.util.Set;
+
 import javax.inject.Inject;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.ModuleAbstract;
 import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
@@ -13,11 +18,22 @@ import org.incode.platform.dom.alias.integtests.dom.alias.dom.AliasForDemoObject
 
 public abstract class AliasModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
+    @XmlRootElement(name = "module")
+    public static class MyModule extends AliasModuleIntegrationSubmodule {
+        @Override
+        public Set<org.apache.isis.applib.Module> getDependencies() {
+            final Set<org.apache.isis.applib.Module> dependencies = super.getDependencies();
+            dependencies.addAll(Sets.newHashSet(
+                    new FakeDataModule()
+            ));
+            return dependencies;
+            // TODO: reinstate if we ever bring in alias.  For now, having to comment out this subscriber because it is causing the 'isis.reflector.validator.checkModuleExtent' check to fail.
+            // .withAdditionalServices(T_addAlias_IntegTest.DomainEventIntegTest.Subscriber.class)
+        }
+    }
+
     public static ModuleAbstract module() {
-        return new AliasModuleIntegrationSubmodule()
-                // TODO: reinstate if we ever bring in alias.  For now, having to comment out this subscriber because it is causing the 'isis.reflector.validator.checkModuleExtent' check to fail.
-                // .withAdditionalServices(T_addAlias_IntegTest.DomainEventIntegTest.Subscriber.class)
-                    .withAdditionalModules(FakeDataModule.class);
+        return new MyModule();
     }
 
     protected AliasModuleIntegTestAbstract() {
@@ -37,6 +53,5 @@ public abstract class AliasModuleIntegTestAbstract extends IntegrationTestAbstra
     protected AliasForDemoObject._aliases mixinAliases(final Object aliased) {
         return mixin(AliasForDemoObject._aliases.class, aliased);
     }
-
 
 }

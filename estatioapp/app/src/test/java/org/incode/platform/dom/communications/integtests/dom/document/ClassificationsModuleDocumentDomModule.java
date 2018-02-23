@@ -1,7 +1,9 @@
 package org.incode.platform.dom.communications.integtests.dom.document;
 
-public final class ClassificationsModuleDocumentDomModule {
+import javax.xml.bind.annotation.XmlRootElement;
 
-    private ClassificationsModuleDocumentDomModule(){}
+import org.apache.isis.applib.ModuleAbstract;
 
+@XmlRootElement(name = "module")
+public class ClassificationsModuleDocumentDomModule extends ModuleAbstract {
 }

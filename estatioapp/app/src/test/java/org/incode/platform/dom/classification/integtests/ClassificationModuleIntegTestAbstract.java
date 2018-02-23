@@ -1,6 +1,11 @@
 package org.incode.platform.dom.classification.integtests;
 
+import java.util.Set;
+
 import javax.inject.Inject;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.ModuleAbstract;
 import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
@@ -16,11 +21,21 @@ import org.incode.platform.dom.classification.integtests.dom.classification.Clas
 
 public abstract class ClassificationModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
+    @XmlRootElement(name = "module")
+    public static class MyModule extends ClassificationModuleIntegrationSubmodule {
+        @Override
+        public Set<org.apache.isis.applib.Module> getDependencies() {
+            final Set<org.apache.isis.applib.Module> dependencies = super.getDependencies();
+            dependencies.addAll(Sets.newHashSet(
+                    new ClassificationAppModule(),
+                    new FakeDataModule()
+            ));
+            return dependencies;
+        }
+    }
+
     public static ModuleAbstract module() {
-        return new ClassificationModuleIntegrationSubmodule()
-                .withAdditionalModules(
-                        ClassificationAppModule.class,
-                        FakeDataModule.class);
+        return new MyModule();
     }
 
     protected ClassificationModuleIntegTestAbstract() {

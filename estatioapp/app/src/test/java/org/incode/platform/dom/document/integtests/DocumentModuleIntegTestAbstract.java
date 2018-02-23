@@ -2,9 +2,10 @@ package org.incode.platform.dom.document.integtests;
 
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.google.common.collect.Sets;
 
-import org.apache.isis.applib.Module;
 import org.apache.isis.applib.ModuleAbstract;
 import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
 
@@ -25,22 +26,26 @@ import org.incode.platform.dom.document.integtests.dom.document.dom.paperclips.o
 
 public abstract class DocumentModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
+    @XmlRootElement(name = "module")
+    public static class MyModule extends DocumentModuleIntegrationSubmodule {
+        @Override
+        public Set<org.apache.isis.applib.Module> getDependencies() {
+            final Set<org.apache.isis.applib.Module> dependencies = super.getDependencies();
+            dependencies.addAll(Sets.newHashSet(
+                    new FreemarkerDocRenderingModule(),
+                    new StringInterpolatorDocRenderingModule(),
+                    new XDocReportDocRenderingModule(),
+                    new CommandModule(),
+                    new DocumentAppModule(),
+                    new FakeDataModule()
+            ));
+            return dependencies;
+        }
+    }
+
     public static ModuleAbstract module() {
-        return new DocumentModuleIntegrationSubmodule() {
-                    @Override
-                    public Set<Module> getDependencies() {
-                        return Sets.newHashSet(
-                                new FreemarkerDocRenderingModule(),
-                                new StringInterpolatorDocRenderingModule(),
-                                new XDocReportDocRenderingModule()
-                        );
-                    }
-                }
-                .withAdditionalModules(
-                        DocumentAppModule.class,
-                        CommandModule.class,
-                        DocumentModuleIntegTestAbstract.class,
-                        FakeDataModule.class);
+        return new MyModule()
+                .withAdditionalModules(DocumentModuleIntegTestAbstract.class);
     }
 
     protected DocumentModuleIntegTestAbstract() {
@@ -82,7 +87,5 @@ public abstract class DocumentModuleIntegTestAbstract extends IntegrationTestAbs
     protected PaperclipForOtherObject._documents _documents(final OtherObject domainObject) {
         return mixin(PaperclipForOtherObject._documents.class, domainObject);
     }
-
-
 
 }

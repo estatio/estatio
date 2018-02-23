@@ -39,10 +39,15 @@ import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
+import org.isisaddons.module.pdfbox.dom.service.PdfBoxService;
 
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
+import org.incode.module.zip.impl.ZipService;
 
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.base.platform.applib.ReasonBuffer2;
 import org.estatio.module.capex.dom.coda.CodaElement;
 import org.estatio.module.capex.dom.coda.CodaMapping;
 import org.estatio.module.capex.dom.coda.CodaMappingRepository;
@@ -54,16 +59,11 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
-import org.estatio.module.capex.platform.PdfBoxService2;
-import org.estatio.module.capex.platform.ZipService;
-import org.estatio.module.capex.platform.pdfmanipulator.PdfManipulator;
 import org.estatio.module.capex.dom.state.NatureOfTransition;
 import org.estatio.module.capex.dom.state.StateTransitionRepositoryGeneric;
 import org.estatio.module.capex.dom.util.InvoicePageRange;
-import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.capex.platform.pdfmanipulator.PdfManipulator;
 import org.estatio.module.invoice.dom.InvoiceItem;
-import org.estatio.module.base.platform.applib.ReasonBuffer2;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -272,7 +272,7 @@ public class IncomingInvoiceDownloadManager {
         final List<DocumentPreparer> preparers = documentPreparersForInvoices(numFirstPages, numLastPages);
         final List<File> fileList = filesFrom(preparers);
 
-        final byte[] singlePdf = pdfBoxService2.merge(fileList);
+        final byte[] singlePdf = pdfBoxService.merge(fileList);
 
         preparers.forEach(DocumentPreparer::cleanup);
 
@@ -530,7 +530,7 @@ public class IncomingInvoiceDownloadManager {
 
     @javax.inject.Inject
     @XmlTransient
-    PdfBoxService2 pdfBoxService2;
+    PdfBoxService pdfBoxService;
 
     @javax.inject.Inject
     @XmlTransient
