@@ -5,6 +5,12 @@
             <cpt:domainObject/>
             <cpt:action id="impersonateUser"/>
             <cpt:action id="stopImpersonating"/>
+
+            <cpt:action id="testEmail"/>
+            <cpt:action id="testSlack"/>
+
+            <cpt:action id="patchDatabase"/>
+
             <cpt:action id="raiseRuntimeException"/>
 
             <cpt:action id="recentAuditEntries" hidden="EVERYWHERE"/>

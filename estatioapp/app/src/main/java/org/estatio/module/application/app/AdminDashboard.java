@@ -26,6 +26,8 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.email.EmailService;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
+import org.apache.isis.applib.services.message.MessageService;
 
 import org.isisaddons.module.servletapi.dom.HttpSessionProvider;
 
@@ -165,6 +167,16 @@ public class AdminDashboard {
     }
 
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    @MemberOrder(sequence = "3.4")
+    public AdminDashboard patchDatabase(
+            @ParameterLayout(multiLine = 10)
+            String sql) {
+        final Integer integer = isisJdoSupport.executeUpdate(sql);
+        messageService.informUser("executeUpdate(sql) returned: " + integer);
+        return this;
+    }
+
 
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
@@ -195,5 +207,13 @@ public class AdminDashboard {
     @Inject
     @XmlTransient
     HttpSessionProvider httpSessionProvider;
+
+    @Inject
+    @XmlTransient
+    IsisJdoSupport isisJdoSupport;
+
+    @Inject
+    @XmlTransient
+    MessageService messageService;
 
 }
