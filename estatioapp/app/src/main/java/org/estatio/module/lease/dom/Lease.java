@@ -32,6 +32,7 @@ import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -60,6 +61,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
+import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -73,8 +75,6 @@ import org.estatio.module.agreement.dom.AgreementRole;
 import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannel;
 import org.estatio.module.agreement.dom.role.AgreementRoleType;
 import org.estatio.module.agreement.dom.type.AgreementType;
-import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPathPersisted;
-import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
@@ -84,18 +84,20 @@ import org.estatio.module.bankmandate.dom.BankMandateAgreementTypeEnum;
 import org.estatio.module.bankmandate.dom.BankMandateRepository;
 import org.estatio.module.bankmandate.dom.Scheme;
 import org.estatio.module.bankmandate.dom.SequenceType;
+import org.estatio.module.base.dom.EstatioRole;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPathPersisted;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
+import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.base.dom.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -120,6 +122,12 @@ import static org.apache.commons.lang3.StringUtils.left;
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.Lease "
                         + "WHERE reference == :reference"),
+        @javax.jdo.annotations.Query(
+                name = "matchByExternalReference", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.lease.dom.Lease "
+                        + "WHERE externalReference.indexOf(:externalReference) >= 0 "
+                        + "ORDER BY externalReference DESC "), // somehow DESC in JDOQL does not yield the expected results, so now trying to order in repo
         @javax.jdo.annotations.Query(
                 name = "matchByReferenceOrName", language = "JDOQL",
                 value = "SELECT "
@@ -169,6 +177,7 @@ import static org.apache.commons.lang3.StringUtils.left;
 })
 @DomainObject(autoCompleteRepository = LeaseRepository.class)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+@XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class Lease
         extends Agreement
         implements WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {

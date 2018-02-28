@@ -148,7 +148,7 @@ public abstract class LeaseTerm
 
     public LeaseTerm() {
         // TODO: the integration tests fail if this is made DESCending.
-        super("leaseItem, sequence, startDate");
+        super("leaseItem, sequence, startDate, endDate");
     }
 
     // //////////////////////////////////////

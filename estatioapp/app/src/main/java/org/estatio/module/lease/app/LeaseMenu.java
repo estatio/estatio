@@ -250,6 +250,11 @@ public class LeaseMenu {
         return String.format("Verified %d leases in %s", leases.size(), JodaPeriodUtils.asString(p));
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<Lease> findLeasesByExternalReference(final String externalReference){
+        return leaseRepository.matchLeaseByExternalReference(externalReference);
+    }
+
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "99")
     public List<Lease> allLeases() {

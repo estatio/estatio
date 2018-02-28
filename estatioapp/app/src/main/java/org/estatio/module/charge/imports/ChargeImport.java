@@ -13,7 +13,9 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.excel.dom.ExcelFixture;
+import org.isisaddons.module.excel.dom.ExcelFixture2;
 import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
+import org.isisaddons.module.excel.dom.FixtureAwareRowHandler;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
@@ -33,7 +35,7 @@ import lombok.Setter;
         nature = Nature.VIEW_MODEL,
         objectType = "org.estatio.app.services.budget.ChargeImport"
 )
-public class ChargeImport implements ExcelFixtureRowHandler, Importable {
+public class ChargeImport implements FixtureAwareRowHandler<ChargeImport>, ExcelFixtureRowHandler, Importable {
 
     public String title() {
         return "charge import";
@@ -97,10 +99,28 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
     @Getter @Setter
     private String parent;
 
-    @Programmatic
+    /**
+     * To allow for usage within fixture scripts also.
+     */
+    @Setter
+    private FixtureScript.ExecutionContext executionContext;
+
+    /**
+     * To allow for usage within fixture scripts also.
+     */
+    @Setter
+    private ExcelFixture2 excelFixture2;
+
     @Override
-    public List<Object> handleRow(FixtureScript.ExecutionContext executionContext, ExcelFixture excelFixture, Object previousRow) {
+    @Programmatic
+    public void handleRow(final ChargeImport previousRow) {
+        importData(previousRow);
+    }
+
+    @Override
+    public List<Object> handleRow(final FixtureScript.ExecutionContext executionContext, final ExcelFixture excelFixture, final Object previousRow) {
         return importData(previousRow);
+
     }
 
     @Override
@@ -179,5 +199,4 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
 
     @Inject
     private ChargeGroupRepository chargeGroupRepository;
-
 }

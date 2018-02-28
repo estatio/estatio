@@ -400,6 +400,45 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
     }
 
+    public static class MatchByExternalReference extends LeaseRepository_IntegTest {
+
+        @Before
+        public void setupData() {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
+                    executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.builder());
+                }
+            });
+        }
+
+        @Test
+        public void matchByExternalReference_works() throws Exception {
+
+            // given
+            final String searchString = "1234-5678";
+
+            Lease lease1 = leaseRepository.allLeases().get(0);
+            final String externalReference1 = "1234-5678-12";
+
+            Lease lease2 = leaseRepository.allLeases().get(1);
+            final String externalReference2 = "1234-5678-13";
+
+            // when
+            lease1.setExternalReference(externalReference1);
+            lease2.setExternalReference(externalReference2);
+
+            // then
+            final List<Lease> result = leaseRepository.matchLeaseByExternalReference(searchString);
+            assertThat(result.size()).isEqualTo(2);
+            assertThat(result.get(0)).isEqualTo(lease2);
+            assertThat(result.get(1)).isEqualTo(lease1);
+        }
+
+
+    }
+
     @Inject
     FakeDataService fakeDataService;
 
