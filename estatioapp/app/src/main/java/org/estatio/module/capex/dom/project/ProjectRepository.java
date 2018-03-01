@@ -115,6 +115,10 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
         return result;
     }
 
+    public List<Project> findByParent(final Project parent) {
+        return allMatches("findByParent", "parent", parent);
+    }
+
     @Inject
     RepositoryService repositoryService;
 

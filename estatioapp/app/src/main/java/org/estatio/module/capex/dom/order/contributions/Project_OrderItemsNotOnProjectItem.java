@@ -31,6 +31,10 @@ public class Project_OrderItemsNotOnProjectItem {
         return orderItemRepository.orderItemsNotOnProjectItem(project);
     }
 
+    public boolean hideOrderItemsNotOnProjectItem(){
+        return project.isParentProject();
+    }
+
     @Inject
     OrderItemRepository orderItemRepository;
 }

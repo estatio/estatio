@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -36,6 +37,9 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
+import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.base.platform.applib.ReasonBuffer2;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.capex.dom.documents.BudgetItemChooser;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.items.FinancialItem;
@@ -45,16 +49,13 @@ import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
+import org.estatio.module.capex.dom.util.FinancialAmountUtil;
 import org.estatio.module.capex.dom.util.PeriodUtil;
-import org.estatio.module.asset.dom.FixedAsset;
-import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Applicability;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceItem;
-import org.estatio.module.capex.dom.util.FinancialAmountUtil;
-import org.estatio.module.base.platform.applib.ReasonBuffer2;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRate;
 
@@ -257,6 +258,10 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
 
     public void setProject(final Project project) {
         this.project = invalidateApprovalIfDiffer(this.project, project);
+    }
+
+    public void setProjectByPassingInvalidateApproval(final Project project){
+        this.project = project;
     }
 
 
@@ -546,11 +551,21 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
     }
 
     public List<Project> choices0EditProject(){
-        return getFixedAsset()!=null ? projectRepository.findByFixedAsset(getFixedAsset()) : null;
+        return getFixedAsset()!=null ?
+                projectRepository.findByFixedAsset(getFixedAsset())
+                        .stream()
+                        .filter(x->!x.isParentProject())
+                        .collect(Collectors.toList())
+                : null;
     }
 
     public String disableEditProject(){
         return projectIsImmutableReason();
+    }
+
+    public String validateEditProject(final Project project){
+        if (project.isParentProject()) return "Parent project is not allowed";
+        return null;
     }
 
 

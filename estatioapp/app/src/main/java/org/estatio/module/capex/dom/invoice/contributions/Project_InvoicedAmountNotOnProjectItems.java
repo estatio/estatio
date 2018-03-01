@@ -43,6 +43,10 @@ public class Project_InvoicedAmountNotOnProjectItems {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    public boolean hideInvoicedAmountNotOnProjectItems(){
+        return project.isParentProject();
+    }
+
     @Inject
     IncomingInvoiceItemRepository incomingInvoiceItemRepository;
 }

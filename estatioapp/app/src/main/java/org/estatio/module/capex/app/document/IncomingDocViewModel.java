@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -293,7 +294,12 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     private Project project;
 
     public List<Project> choicesProject(){
-        return getProperty()==null ? projectRepository.listAll() : projectRepository.findByFixedAsset(getProperty());
+        return getProperty()==null ?
+                projectRepository.listAll()
+                : projectRepository.findByFixedAsset(getProperty())
+                .stream()
+                .filter(x->!x.isParentProject())
+                .collect(Collectors.toList());
     }
 
     @XmlElement(required = false) @Nullable

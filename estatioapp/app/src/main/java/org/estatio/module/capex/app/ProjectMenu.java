@@ -20,6 +20,7 @@
 package org.estatio.module.capex.app;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -88,7 +89,8 @@ public class ProjectMenu {
     }
 
     public List<Project> choices5NewProject(){
-        return projectRepository.listAll();
+        // TODO: (ECP-438) until we find out more about the process, prevent a the choice of a project having items
+        return projectRepository.listAll().stream().filter(x->x.getItems().isEmpty()).collect(Collectors.toList());
     }
 
     @Inject

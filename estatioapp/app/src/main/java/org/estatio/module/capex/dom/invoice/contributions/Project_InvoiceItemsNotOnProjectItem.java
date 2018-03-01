@@ -34,6 +34,10 @@ public class Project_InvoiceItemsNotOnProjectItem {
                 .collect(Collectors.toList());
     }
 
+    public boolean hideInvoiceItemsNotOnProjectItem(){
+        return project.isParentProject();
+    }
+
     @Inject
     IncomingInvoiceItemRepository incomingInvoiceItemRepository;
 }

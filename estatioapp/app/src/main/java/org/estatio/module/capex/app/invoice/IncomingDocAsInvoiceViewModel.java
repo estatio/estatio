@@ -724,6 +724,7 @@ public class IncomingDocAsInvoiceViewModel
         if (project!=null && getIncomingInvoiceType()!= IncomingInvoiceType.CAPEX){
             return "Project applies only to type CAPEX";
         }
+        if (project.isParentProject()) return "Parent project is not allowed";
         if (budgetItem!=null && getIncomingInvoiceType()!= IncomingInvoiceType.SERVICE_CHARGES){
             return "Budget item applies only to type SERVICE_CHARGES";
         }

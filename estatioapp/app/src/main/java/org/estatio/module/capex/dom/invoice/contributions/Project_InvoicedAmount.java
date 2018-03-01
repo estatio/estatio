@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.module.capex.dom.project.Project;
@@ -32,7 +33,7 @@ public class Project_InvoicedAmount {
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @Column(scale = 2)
     public BigDecimal invoicedAmount(){
-        return sum(InvoiceItem::getNetAmount);
+        return project.isParentProject() ? amountWhenParentProject() : sum(InvoiceItem::getNetAmount);
     }
 
     private BigDecimal sum(final Function<InvoiceItem, BigDecimal> x) {
@@ -43,6 +44,16 @@ public class Project_InvoicedAmount {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    private BigDecimal amountWhenParentProject(){
+        BigDecimal result = BigDecimal.ZERO;
+        for (Project child : project.getChildren()){
+            result = result.add(wrapperFactory.wrap(new Project_InvoicedAmount(child)).invoicedAmount());
+        }
+        return result;
+    }
+
     @Inject
     IncomingInvoiceItemRepository incomingInvoiceItemRepository;
+
+    @Inject WrapperFactory wrapperFactory;
 }

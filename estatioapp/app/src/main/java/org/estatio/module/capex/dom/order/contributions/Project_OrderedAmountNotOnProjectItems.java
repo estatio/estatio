@@ -42,6 +42,10 @@ public class Project_OrderedAmountNotOnProjectItems {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    public boolean hideOrderedAmountNotOnProjectItems(){
+        return project.isParentProject();
+    }
+
     @Inject
     OrderItemRepository orderItemRepository;
 }

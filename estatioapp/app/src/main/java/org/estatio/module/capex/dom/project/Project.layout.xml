@@ -13,8 +13,10 @@
                     <row>
                         <col span="12">
                             <ns2:fieldSet name="Project" id="project">
+                                <ns2:action id="createParentProject" position="PANEL"/>
                                 <ns2:property id="reference"/>
                                 <ns2:property id="name"/>
+                                <ns2:property id="parent"/>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Dates" id="dates">
                                 <ns2:property id="startDate"/>
