@@ -104,6 +104,7 @@ language governing permissions and limitations under the License.
                         <goals>
                             <goal>revision</goal>
                         </goals>
+                        <phase>process-classes</phase>
                     </execution>
                 </executions>
 
