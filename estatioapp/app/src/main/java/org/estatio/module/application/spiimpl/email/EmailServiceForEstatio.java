@@ -64,7 +64,7 @@ public class EmailServiceForEstatio implements EmailService {
 
     @Override
     public boolean isConfigured() {
-        return "proxy.ecp.loc".equals(configuration.getString("isis.service.email.sender.hostname")) || delegate.isConfigured();
+        return !Strings.isNullOrEmpty(configuration.getString("isis.service.email.sender.hostname"));
     }
 
     @Inject
