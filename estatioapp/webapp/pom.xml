@@ -98,7 +98,7 @@ language governing permissions and limitations under the License.
 
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>org.estatio</groupId>
             <artifactId>estatio-app</artifactId>
         </dependency>
 
