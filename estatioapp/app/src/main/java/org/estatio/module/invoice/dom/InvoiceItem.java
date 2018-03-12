@@ -57,11 +57,11 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.dom.with.WithDescriptionGetter;
 import org.incode.module.base.dom.with.WithInterval;
 
+import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPropertyLocal;
-import org.estatio.module.charge.dom.Charge;
-import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.platform.applib.ReasonBuffer2;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRate;
 
@@ -307,6 +307,15 @@ public abstract class InvoiceItem<P extends Invoice<P>, T extends InvoiceItem<P,
         // since is hidden in .layout.xml.
         // (as a consequence, should therefore probably move this action down to InvoiceItemForLease).
         return getInvoice().isImmutableDueToState() ? "Invoice cannot be changed" : null;
+    }
+
+    public String validateChangeEffectiveDates(
+            final LocalDate effectiveStartDate,
+            final LocalDate effectiveEndDate){
+        if (effectiveEndDate.isBefore(effectiveStartDate)){
+            return "The end date is before the start date";
+        }
+        return null;
     }
 
     // //////////////////////////////////////
