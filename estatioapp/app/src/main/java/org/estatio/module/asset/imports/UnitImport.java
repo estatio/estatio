@@ -167,7 +167,7 @@ public class UnitImport implements ExcelFixtureRowHandler, Importable {
                 unit.createRole(FixedAssetRoleTypeEnum.PROPERTY_OWNER, party, null, null);
             }
         }
-        return Lists.newArrayList();
+        return Lists.newArrayList(unit);
     }
 
     //region > injected services
