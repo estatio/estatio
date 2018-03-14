@@ -157,9 +157,13 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
             BigDecimal newContractualRent = BigDecimal.ZERO;
             List<LeaseItemSource> sourceItems = getLeaseItem().getSourceItems();
             List<CalculationResult> calculationResults = new ArrayList<>();
+
             for (LeaseItemSource leaseItemSource : sourceItems) {
+                // Make the calculation interval deliberately longer then the duration of the turnover rent term to make sure
+                // that indexations that are done in retrospect are included in the calculation
+                final LocalDateInterval calculationInterval = new LocalDateInterval(getStartDate(), getEndDate().plusYears(1));
                 calculationResults.addAll(
-                        leaseItemSource.getSourceItem().calculationResults(getInterval(), this.getEndDate().plusYears(1)));
+                        leaseItemSource.getSourceItem().calculationResults(calculationInterval));
             }
             // TODO: do prorata when intervals don't match
             for (CalculationResult result : calculationResults) {

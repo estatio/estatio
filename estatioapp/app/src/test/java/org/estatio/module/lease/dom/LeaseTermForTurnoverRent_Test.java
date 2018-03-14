@@ -33,12 +33,12 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.incode.module.unittestsupport.dom.bean.PojoTester.FixtureDatumFactory;
+
 import org.estatio.module.invoice.dom.InvoicingInterval;
 import org.estatio.module.lease.dom.invoicing.InvoiceCalculationService;
-
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -82,7 +82,7 @@ public class LeaseTermForTurnoverRent_Test {
                     oneOf(leaseItemSourceRepository).findByItem(with(any(LeaseItem.class)));
                     will(returnValue(Arrays.asList(new LeaseItemSource(torItem, rentItem))));
 
-                    oneOf(rentItem).calculationResults(with(any(LocalDateInterval.class)), with(any(LocalDate.class)));
+                    oneOf(rentItem).calculationResults(with(any(LocalDateInterval.class)));
                     will(returnValue(Arrays.asList(new InvoiceCalculationService.CalculationResult(
                                     new InvoicingInterval(LocalDateInterval.parseString("2013-01-01/2013-04-01"), new LocalDate(2013, 1, 1)),
                                     LocalDateInterval.parseString("2013-01-01/2013-04-01"),

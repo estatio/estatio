@@ -743,12 +743,11 @@ public class LeaseItem
 
     @Programmatic
     public List<CalculationResult> calculationResults(
-            final LocalDateInterval interval,
-            final LocalDate dueDate
-            ) {
+            final LocalDateInterval calculationInterval
+    ) {
         List<CalculationResult> results = new ArrayList<>();
         for (LeaseTerm term : getTerms()) {
-            results.addAll(term.calculationResults(interval));
+            results.addAll(term.calculationResults(calculationInterval));
         }
         return results;
     }
