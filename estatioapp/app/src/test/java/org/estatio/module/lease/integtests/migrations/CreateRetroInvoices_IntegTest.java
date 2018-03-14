@@ -169,7 +169,7 @@ public class CreateRetroInvoices_IntegTest extends LeaseModuleIntegTestAbstract 
             // and also
             LeaseItem leaseItem = lease.findFirstItemOfType(LeaseItemType.TURNOVER_RENT);
             LeaseTermForTurnoverRent term = (LeaseTermForTurnoverRent) leaseItem.findTerm(VT.ld(2012, 1, 1));
-            assertThat(term.getContractualRent(), is(VT.bd("20846.40")));
+            assertThat(term.getContractualRent(), is(VT.bd("21058.27")));
         }
     }
 
