@@ -564,7 +564,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
     }
 
     public String validateEditProject(final Project project){
-        if (project.isParentProject()) return "Parent project is not allowed";
+        if (project!=null && project.isParentProject()) return "Parent project is not allowed";
         return null;
     }
 

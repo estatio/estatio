@@ -406,7 +406,7 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
             final BudgetItem budgetItem,
             final String period
     ) {
-        if (project.isParentProject()) return "Parent project is not allowed";
+        if (project!=null && project.isParentProject()) return "Parent project is not allowed";
         return validatePeriod(period);
     }
 

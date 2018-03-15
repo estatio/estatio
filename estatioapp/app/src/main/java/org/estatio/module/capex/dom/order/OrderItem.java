@@ -440,7 +440,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     }
 
     public String validateEditProject(final Project project){
-        if (project.isParentProject()) return "Parent project is not allowed";
+        if (project!=null && project.isParentProject()) return "Parent project is not allowed";
         return null;
     }
 
