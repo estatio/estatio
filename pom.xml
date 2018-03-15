@@ -289,27 +289,4 @@ language governing permissions and limitations under the License.
         <module>estatioapp/webapp</module>
     </modules>
 
-    <profiles>
-        <profile>
-            <id>cloudbees-snapshots</id>
-            <activation>
-                <property>
-                    <name>!skip.cloudbees-snapshots</name>
-                </property>
-            </activation>
-            <repositories>
-                <repository>
-                    <id>snapshots-repo</id>
-                    <url>http://repository-estatio.forge.cloudbees.com/snapshot/</url>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                </repository>
-            </repositories>
-        </profile>
-    </profiles>
-
 </project>
