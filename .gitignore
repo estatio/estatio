@@ -45,3 +45,5 @@ pom.xml.tag
 pom.xml.next
 pom.xml.releaseBackup
 pom.xml.versionsBackup
+
+.flattened-pom.xml
