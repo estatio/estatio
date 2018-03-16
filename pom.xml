@@ -65,8 +65,9 @@ language governing permissions and limitations under the License.
     </developers>
 
     <properties>
-        <isis.version>1.16.1.20180228-1118</isis.version>
+        <isis.version>1.16.1.20180316-1549</isis.version>
         <!--
+        <isis.version>1.16.1.20180228-1118</isis.version>
         <isis.version>1.16.2-SNAPSHOT</isis.version>
         <isis.version>1.16.0.20180130-1145</isis.version>
         <isis.version>1.16.0.20180129-2325</isis.version>
