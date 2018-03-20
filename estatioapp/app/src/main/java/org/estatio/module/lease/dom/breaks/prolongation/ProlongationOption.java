@@ -100,6 +100,10 @@ public class ProlongationOption
         return getLease();
     }
 
+    public String disableProlong(){
+        return getLease().getTenancyEndDate()!=null ? "The tenancy end date must be empty in order to prolong" : null;
+    }
+
     @Inject
     ProlongationOptionRepository prolongationOptionRepository;
 

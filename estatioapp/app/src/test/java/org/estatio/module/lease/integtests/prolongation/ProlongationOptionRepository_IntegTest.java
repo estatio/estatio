@@ -129,6 +129,7 @@ public class ProlongationOptionRepository_IntegTest extends LeaseModuleIntegTest
             Lease lease = ProlongationOption_enum.OxfTopModel001.getLease_d().findUsing(serviceRegistry);
             LocalDate leaseEndDate = lease.getEndDate();
             assertThat(leaseEndDate).isEqualTo(new LocalDate(2022, 7,14));
+            lease.setTenancyEndDate(null); // needed since EST-1804
 
             ProlongationOption option1 = prolongationOptionRepository.findByLease(lease).get(0);
 
