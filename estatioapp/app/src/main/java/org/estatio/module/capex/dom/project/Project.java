@@ -161,6 +161,48 @@ public class Project extends UdoDomainObject<Project> implements
 	@Getter @Setter
 	private Project parent;
 
+	@Action(semantics = SemanticsOf.IDEMPOTENT)
+	public Project changeProject(final String name, @Parameter(optionality = Optionality.OPTIONAL) final Project parent){
+		setName(name);
+		setParent(parent);
+		return this;
+	}
+
+	public String default0ChangeProject(){
+		return getName();
+	}
+
+	public Project default1ChangeProject(){
+		return getParent();
+	}
+
+	public List<Project> choices1ChangeProject(){
+		return projectRepository.listAll()
+				.stream()
+				.filter(x->!x.equals(this))
+				.filter(x->x.isParentProject() || x.getItems().size()==0)
+				.collect(Collectors.toList());
+	}
+
+	@Action(semantics = SemanticsOf.IDEMPOTENT)
+	public Project changeDates(@Parameter(optionality = Optionality.OPTIONAL) final LocalDate startDate, @Parameter(optionality = Optionality.OPTIONAL) final LocalDate endDate){
+		setStartDate(startDate);
+		setEndDate(endDate);
+		return this;
+	}
+
+	public LocalDate default0ChangeDates(){
+		return getStartDate();
+	}
+
+	public LocalDate default1ChangeDates(){
+		return getEndDate();
+	}
+
+	public String validateChangeDates(final LocalDate startDate, final LocalDate endDate){
+		return validateNewProject(null, startDate, endDate);
+	}
+
 	@Action(semantics = SemanticsOf.NON_IDEMPOTENT)
 	public Project createParentProject(
 			final String reference,
@@ -177,6 +219,30 @@ public class Project extends UdoDomainObject<Project> implements
 	public String disableCreateParentProject(){
 			return parent!=null ? "The project has a parent already" : null;
 	}
+
+	public String validateCreateParentProject(
+			final String reference,
+			final String name,
+			final LocalDate startDate,
+			final LocalDate endDate){
+		return validateNewProject(reference, startDate, endDate);
+	}
+
+	@Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+	@MemberOrder(sequence = "2", name = "children")
+	public Project createChildProject(final String reference, final String name, @Parameter(optionality = Optionality.OPTIONAL) final LocalDate startDate, @Parameter(optionality = Optionality.OPTIONAL) final LocalDate endDate){
+		return projectRepository.create(reference, name, startDate, endDate, getAtPath(), this);
+	}
+
+	public String validateCreateChildProject(final String reference, final String name, final LocalDate startDate, final LocalDate endDate){
+		return validateNewProject(reference, startDate, endDate);
+	}
+
+	// TODO: (ECP-438) until we find out more about the process
+	public String disableCreateChildProject(){
+		return getItems().isEmpty() ? null : "This project cannot be a parent because it has items";
+	}
+
 
 	@Action(semantics = SemanticsOf.IDEMPOTENT)
 	@MemberOrder(sequence = "1", name = "children")
@@ -268,6 +334,11 @@ public class Project extends UdoDomainObject<Project> implements
 	@Programmatic
 	public boolean isParentProject(){
 		return getChildren().isEmpty() ? false : true;
+	}
+
+	private String validateNewProject(final String reference, final LocalDate startDate, final LocalDate endDate){
+		if (projectRepository.findByReference(reference)!=null) return "There is already a project with this reference";
+		return startDate != null && endDate != null && !startDate.isBefore(endDate) ? "End date must be after start date" : null;
 	}
 
 	@Inject
