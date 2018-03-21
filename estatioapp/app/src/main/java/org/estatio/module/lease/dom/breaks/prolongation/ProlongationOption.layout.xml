@@ -20,7 +20,9 @@
                 <ns2:property id="currentBreakDate" hidden="EVERYWHERE"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Dates" id="dates">
-                <ns2:property id="prolongationPeriod"/>
+                <ns2:property id="prolongationPeriod">
+                    <ns2:action id="changeProlongationPeriod" position="BELOW"/>
+                </ns2:property>
                 <ns2:property id="exerciseDate" />
                 <ns2:property id="breakDate">
                     <ns2:action id="changeDates" position="BELOW"/>

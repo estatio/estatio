@@ -86,6 +86,19 @@ public class ProlongationOption
     @Column(length = 20)
     private String prolongationPeriod;
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public ProlongationOption changeProlongationPeriod(final String prolongationPeriod){
+        setProlongationPeriod(prolongationPeriod);
+        return this;
+    }
+
+    public String default0ChangeProlongationPeriod(){
+        return getProlongationPeriod();
+    }
+
+    public String validateChangeProlongationPeriod(final String prolongationPeriod){
+        return prolongationOptionRepository.checkProlongationAndNotificationPeriodStr(prolongationPeriod, null);
+    }
 
     @Override
     protected void createEvents() {

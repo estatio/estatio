@@ -23,6 +23,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.joda.time.Period;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -75,7 +77,21 @@ public class ProlongationOptionRepository extends UdoDomainRepositoryAndFactory<
             final String notificationPeriod,
             final String description
     ){
+        if (checkProlongationAndNotificationPeriodStr(prolongationPeriod, notificationPeriod)!=null) return checkProlongationAndNotificationPeriodStr(prolongationPeriod, notificationPeriod);
         return breakOptionRepository.checkNewBreakOptionDuplicate(lease, BreakType.PROLONGATION, lease.getEndDate());
+    }
+
+    @Programmatic
+    public String checkProlongationAndNotificationPeriodStr(final String prolongationPeriod, final String notificationPeriod){
+        final Period prolongationPeriodJoda = JodaPeriodUtils.asPeriod(prolongationPeriod);
+        if (prolongationPeriod!=null && prolongationPeriodJoda == null) {
+            return "Prolongation period format not recognized";
+        }
+        final Period notificationPeriodJoda = JodaPeriodUtils.asPeriod(notificationPeriod);
+        if (notificationPeriod!=null && notificationPeriodJoda == null) {
+            return "Notification period format not recognized";
+        }
+        return null;
     }
 
     @Programmatic
