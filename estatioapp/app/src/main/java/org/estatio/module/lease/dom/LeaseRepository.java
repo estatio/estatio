@@ -70,7 +70,7 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
             final Party landlord,
             final Party tenant) {
         LocalDate calculatedEndDate = calculateEndDate(startDate, endDate, duration);
-        return newLease(applicationTenancy, reference.trim(), name.trim(), leaseType, startDate, calculatedEndDate, startDate, calculatedEndDate, landlord, tenant);
+        return newLease(applicationTenancy, reference.trim(), name.trim(), leaseType, startDate, calculatedEndDate, startDate, null, landlord, tenant);
     }
 
     private static LocalDate calculateEndDate(
