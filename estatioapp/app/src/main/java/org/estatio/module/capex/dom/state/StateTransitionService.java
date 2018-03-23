@@ -532,7 +532,7 @@ public class StateTransitionService {
 
         final Task taskIfAny = transitionToComplete.getTask();
         if(taskIfAny != null) {
-            if(transitionType.advancePolicyFor(domainObject, serviceRegistry2).isAutomatic()) {
+            if(transitionType.advancePolicyFor(domainObject, serviceRegistry2).isAutomatic() && natureOfTransition==NatureOfTransition.AUTOMATIC) {
                 transitionToComplete.setTask(null);
                 repositoryService.removeAndFlush(taskIfAny);
                 transitionToComplete.setTask(null);
