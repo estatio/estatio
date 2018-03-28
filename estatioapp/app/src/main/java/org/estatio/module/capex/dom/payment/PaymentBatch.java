@@ -46,6 +46,7 @@ import org.joda.time.DateTime;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
@@ -264,6 +265,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
      * Document > PmtInf > CdtTrfTxInf (* many)
      */
     @Persistent(mappedBy = "batch", dependentElement = "true")
+    @CollectionLayout(sortedBy = PaymentLine.CreditorBankAccountComparator.class)
     @Getter @Setter
     private SortedSet<PaymentLine> lines = new TreeSet<>();
 

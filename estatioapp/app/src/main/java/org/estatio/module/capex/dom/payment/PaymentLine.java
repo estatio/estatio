@@ -3,6 +3,7 @@ package org.estatio.module.capex.dom.payment;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,11 +35,11 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
-import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.currency.dom.Currency;
+import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.party.dom.Party;
 
 import lombok.Getter;
@@ -213,6 +214,13 @@ public class PaymentLine extends UdoDomainObject2<PaymentLine> {
     @Programmatic
     public void remove() {
         remove(this);
+    }
+
+    public static class CreditorBankAccountComparator implements Comparator<PaymentLine> {
+        @Override
+        public int compare(PaymentLine l1, PaymentLine l2) {
+            return l1.getCreditorBankAccount().compareTo(l2.getCreditorBankAccount());
+        }
     }
 
     @Inject
