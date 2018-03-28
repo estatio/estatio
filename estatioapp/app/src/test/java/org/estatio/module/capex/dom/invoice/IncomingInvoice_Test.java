@@ -12,6 +12,7 @@ import org.jmock.Expectations;
 import org.jmock.States;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -25,6 +26,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.financial.dom.BankAccount;
@@ -939,6 +941,67 @@ public class IncomingInvoice_Test {
             assertThat(invoice.reversals()).contains(reversal);
             assertThat(invoice.reversedItems().size()).isEqualTo(1);
             assertThat(invoice.reversedItems()).contains(reversedItem);
+
+        }
+
+    }
+
+
+    @Mock
+    IncomingInvoiceApprovalStateTransition.Repository mockStateTransitionRepository;
+
+    public static class Approvals extends IncomingInvoice_Test {
+
+        @Test
+        public void get_approvals_works() throws Exception {
+
+            // given
+            IncomingInvoice invoice = new IncomingInvoice();
+            invoice.stateTransitionRepository = mockStateTransitionRepository;
+
+            IncomingInvoiceApprovalStateTransition tr1 = new IncomingInvoiceApprovalStateTransition();
+            tr1.setToState(IncomingInvoiceApprovalState.APPROVED);
+
+            IncomingInvoiceApprovalStateTransition tr2 = new IncomingInvoiceApprovalStateTransition();
+            tr2.setToState(IncomingInvoiceApprovalState.COMPLETED);
+
+            IncomingInvoiceApprovalStateTransition tr3 = new IncomingInvoiceApprovalStateTransition();
+            tr3.setToState(IncomingInvoiceApprovalState.APPROVED);
+            tr3.setCompletedBy("Manager1");
+            tr3.setCompletedOn(DateTimeFormat.forPattern("yyyy-MM-dd")
+                            .parseLocalDateTime("2017-01-01"));
+
+            IncomingInvoiceApprovalStateTransition tr4 = new IncomingInvoiceApprovalStateTransition();
+            tr4.setToState(IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR);
+            tr4.setCompletedBy("Manager2");
+            tr4.setCompletedOn(DateTimeFormat.forPattern("yyyy-MM-dd")
+                    .parseLocalDateTime("2017-01-03"));
+
+            IncomingInvoiceApprovalStateTransition tr5 = new IncomingInvoiceApprovalStateTransition();
+            tr5.setToState(IncomingInvoiceApprovalState.APPROVED_BY_CORPORATE_MANAGER);
+            tr5.setCompletedBy("Manager3");
+            tr5.setCompletedOn(DateTimeFormat.forPattern("yyyy-MM-dd")
+                    .parseLocalDateTime("2017-01-02"));
+
+            IncomingInvoiceApprovalStateTransition tr6 = new IncomingInvoiceApprovalStateTransition();
+
+            // expect
+            context.checking(new Expectations(){{
+                oneOf(mockStateTransitionRepository).findByDomainObject(invoice);
+                will(returnValue(Arrays.asList(tr1, tr2, tr3, tr4, tr5, tr6)));
+            }});
+
+            // when
+            List<IncomingInvoice.ApprovalString> approvals = invoice.getApprovals();
+
+            // then
+            assertThat(approvals.size()).isEqualTo(3);
+            assertThat(approvals.get(0).getCompletedBy()).isEqualTo(tr3.getCompletedBy());
+            assertThat(approvals.get(0).getCompletedOn()).isEqualTo("01-Jan-2017 00:00");
+            assertThat(approvals.get(1).getCompletedBy()).isEqualTo(tr5.getCompletedBy());
+            assertThat(approvals.get(1).getCompletedOn()).isEqualTo("02-Jan-2017 00:00");
+            assertThat(approvals.get(2).getCompletedBy()).isEqualTo(tr4.getCompletedBy());
+            assertThat(approvals.get(2).getCompletedOn()).isEqualTo("03-Jan-2017 00:00");
 
         }
 

@@ -1,6 +1,7 @@
 package org.estatio.module.capex.dom.invoice;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -79,12 +80,12 @@ import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
-import org.estatio.module.party.app.services.ChamberOfCommerceCodeLookUpService;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.role.PartyRoleRepository;
 import org.estatio.module.tax.dom.Tax;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -1436,9 +1437,27 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         getEventBusService().post(new ApprovalInvalidatedEvent(this));
     }
 
+    @Programmatic
+    public List<ApprovalString> getApprovals(){
+        // TODO: as of EST-1824 temporarily we will inspect the transition instead of the task on the transition
+        return stateTransitionRepository.findByDomainObject(this)
+                .stream()
+                .filter(x-> x.getToState()!=null && x.getToState().isApproval())
+                .filter(x->x.getCompletedBy()!=null)
+                .sorted(Comparator.comparing(IncomingInvoiceApprovalStateTransition::getCompletedOn)) // should always be set when completedBy is set
+                .map(x-> new ApprovalString(x.getCompletedBy(), x.getCompletedOn().toString("dd-MMM-yyyy HH:mm")))
+                .collect(Collectors.toList());
+    }
 
+    @AllArgsConstructor
+    @Getter @Setter
+    public class ApprovalString {
 
+            private String completedBy;
 
+            private String completedOn;
+
+    }
 
 
     @Override
@@ -1448,6 +1467,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .compare(getInvoiceNumber(), other.getInvoiceNumber())
                 .result();
     }
+
+    @Inject
+    @NotPersistent
+    IncomingInvoiceApprovalStateTransition.Repository stateTransitionRepository;
 
     @Inject
     @NotPersistent
@@ -1488,10 +1511,5 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Inject
     @NotPersistent
     ChargeRepository chargeRepository;
-
-    @Inject
-    @NotPersistent
-    ChamberOfCommerceCodeLookUpService chamberOfCommerceCodeLookUpService;
-
 
 }

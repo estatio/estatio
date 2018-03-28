@@ -149,7 +149,7 @@ public class PdfManipulator {
             final int rightLineSize = rightLines.size();
 
             final float height = Math.max(leftLineSize, rightLineSize) * TEXT_LINE_HEIGHT + BOX_Y_PADDING;
-            final float y = Y_BOX_BASE - height;
+            final float y = 36;
 
             float x = X_MARGIN_LEFT;
             float yLine = addLines(x, y, height, leftLines, appendStream);
