@@ -58,6 +58,7 @@ public class Project_CreateMissingItems {
         Project_OrderItemsNotOnProjectItem orderItemsMixin = new Project_OrderItemsNotOnProjectItem(project);
         serviceRegistry2.injectServicesInto(orderItemsMixin);
         for (Charge chargeCandidate : orderItemsMixin.orderItemsNotOnProjectItem().stream()
+                .filter(x->x.getCharge()!=null)
                 .map(x->x.getCharge()).collect(Collectors.toList())){
             if (!result.contains(chargeCandidate)) {
                 result.add(chargeCandidate);
@@ -66,6 +67,7 @@ public class Project_CreateMissingItems {
         Project_InvoiceItemsNotOnProjectItem invoiceItemsMixin = new Project_InvoiceItemsNotOnProjectItem(project);
         serviceRegistry2.injectServicesInto(invoiceItemsMixin);
         for (Charge chargeCandidate : invoiceItemsMixin.invoiceItemsNotOnProjectItem().stream()
+                .filter(x->x.getCharge()!=null)
                 .map(x->x.getCharge()).collect(Collectors.toList())){
             if (!result.contains(chargeCandidate)) {
                 result.add(chargeCandidate);
