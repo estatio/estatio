@@ -431,6 +431,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
                 projectRepository.findByFixedAsset(getFixedAsset())
                         .stream()
                         .filter(x->!x.isParentProject())
+                        .filter(x->x.getEndDate()==null || !x.getEndDate().isBefore(getEndDate()!=null ? getEndDate() : LocalDate.now()))
                         .collect(Collectors.toList())
                 : null;
     }

@@ -299,6 +299,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
                 : projectRepository.findByFixedAsset(getProperty())
                 .stream()
                 .filter(x->!x.isParentProject())
+                .filter(x->x.getEndDate()==null || !x.getEndDate().isBefore(getEndDateFromPeriod()!=null ? getEndDateFromPeriod() : LocalDate.now()))
                 .collect(Collectors.toList());
     }
 
