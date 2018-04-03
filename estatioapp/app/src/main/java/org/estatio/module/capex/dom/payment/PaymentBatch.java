@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URI;
 import java.nio.file.Files;
 import java.text.DecimalFormat;
@@ -77,9 +78,12 @@ import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 import org.incode.module.communications.dom.mixins.DocumentConstants;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
+import org.estatio.module.capex.app.credittransfer.CreditTransferExportLine;
+import org.estatio.module.capex.app.credittransfer.CreditTransferExportService;
 import org.estatio.module.capex.app.paymentline.PaymentLineForExcelExportV1;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalState;
@@ -706,6 +710,56 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         return null;
     }
 
+    @Action(
+            semantics = SemanticsOf.SAFE
+    )
+    public Blob downloadReviewSummary(
+            @Nullable final String documentName){
+        List<CreditTransferExportLine> exportLines = new ArrayList<>();
+        int lineNumber = 1;
+        for (CreditTransfer transfer : getTransfers()){
+            boolean newTransfer = true;
+            for (PaymentLine paymentLine : transfer.getLines()){
+                String firstUse = creditTransferExportService.isFirstUseBankAccount(transfer) ? "YES" : "no";
+                exportLines.add(
+                        new CreditTransferExportLine(
+                                lineNumber,
+                                lineNumber == 1 ? getDebtorBankAccount().getIban() : null,
+                                lineNumber == 1 ? getCreatedOn().toString("dd-MMM-yyyy HH:mm") : null,
+                                newTransfer ? transfer.getEndToEndId() : null,
+                                newTransfer ? transfer.getSellerBankAccount().getIban() : null,
+                                newTransfer ? firstUse : null,
+                                newTransfer ? transfer.getSeller().getName() : null,
+                                newTransfer ? transfer.getSeller().getReference() : null,
+                                newTransfer ? transfer.getAmount().setScale(2, RoundingMode.HALF_UP) : null,
+                                newTransfer ? transfer.getCurrency().getName() : null,
+                                paymentLine.getInvoice().getInvoiceNumber(),
+                                paymentLine.getInvoice().getInvoiceDate(),
+                                paymentLine.getInvoice().getGrossAmount().setScale(2, RoundingMode.HALF_UP),
+                                creditTransferExportService.getApprovalStateTransitionSummary(paymentLine.getInvoice()),
+                                paymentLine.getInvoice().getDescriptionSummary(),
+                                creditTransferExportService.getInvoiceDocumentName(paymentLine.getInvoice()),
+                                paymentLine.getInvoice().getType()== IncomingInvoiceType.CAPEX ?
+                                        paymentLine.getInvoice().getType().name() + " (" + paymentLine.getInvoice().getProjectSummary() + ")" :
+                                        paymentLine.getInvoice().getType().name(),
+                                paymentLine.getInvoice().getPropertySummary()
+                        )
+                );
+                newTransfer = false;
+                lineNumber ++;
+            }
+        }
+        String name = documentName!=null ? documentName.concat(".xlsx") : fileNameWithSuffix("xlsx");
+        return excelService.toExcel(
+                exportLines,
+                CreditTransferExportLine.class,
+                getRequestedExecutionDate() != null
+                        ? getRequestedExecutionDate().toString("yyyyMMdd-HHmm")
+                        : "DRAFT",
+                name);
+
+    }
+
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed= Contributed.AS_ACTION)
     public Blob downloadExcelExport(){
@@ -897,6 +951,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     @Inject
     ExcelService excelService;
 
-
+    @Inject
+    CreditTransferExportService creditTransferExportService;
 
 }

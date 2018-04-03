@@ -63,6 +63,7 @@ public enum Organisation_enum
     PoisonNl("POISON_NL", "Poison Perfumeries B.V.", Nl),
     PretGb("PRET", "Pret-a-Partir", Gb),
     TopModelGb("TOPMODEL", "Topmodel Fashion", Gb),
+    TopSellerGb("TOPSELLER", "Topseller goods", Gb),
     YoukeaSe("YOUKEA", "Youkea Furniture", Se),
     ;
 

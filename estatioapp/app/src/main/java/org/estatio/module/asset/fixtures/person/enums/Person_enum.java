@@ -13,6 +13,7 @@ import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
 import org.estatio.module.asset.fixtures.person.builders.PersonFixedAssetRolesBuilder;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
+import org.estatio.module.capex.dom.project.ProjectRoleTypeEnum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
@@ -65,7 +66,7 @@ public enum Person_enum
 
     FaithConwayGb("FCONWAY", "Faith", "Conway", null, true, FEMALE, Gb,
             null, null,
-            new IPartyRoleType[] {  },
+            new IPartyRoleType[] { ProjectRoleTypeEnum.PROJECT_MANAGER },
             new FixedAssetRoleSpec[] {}),
 
     FifineLacroixFr("FLACROIX", "Fifine", "Lacroix", null, true, FEMALE, Fr,

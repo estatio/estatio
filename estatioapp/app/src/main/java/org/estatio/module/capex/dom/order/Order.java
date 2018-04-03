@@ -974,7 +974,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         StringBuffer summary = new StringBuffer();
         boolean first = true;
         for (OrderItem orderItem : getItems()){
-            if (orderItem.getDescription()!=null || orderItem.getDescription()!=""){
+            if (orderItem.getDescription()!=null && orderItem.getDescription()!=""){
                 if (!first){
                     summary.append(" | ");
                 }

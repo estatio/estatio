@@ -38,28 +38,31 @@ import lombok.experimental.Accessors;
 public enum BankAccount_enum
         implements PersonaWithBuilderScript<BankAccount, BankAccountBuilder>, PersonaWithFinder<BankAccount> {
 
-    AcmeNl          (Organisation_enum.AcmeNl,       "NL31ABNA0580744433"),
-    HelloWorldGb    (Organisation_enum.HelloWorldGb, "GB31ABNA0580744434"),
-    HelloWorldNl    (Organisation_enum.HelloWorldNl, "NL31ABNA0580744434"),
-    MediaXGb        (Organisation_enum.MediaXGb,     "NL31ABNA0580744436"),
-    MiracleGb       (Organisation_enum.MiracleGb,    "NL31ABNA0580744439"),
+    AcmeNl          (Organisation_enum.AcmeNl,       "NL31ABNA0580744433", null),
+    HelloWorldGb    (Organisation_enum.HelloWorldGb, "GB31ABNA0580744434", "LMNOPQXXX"),
+    HelloWorldNl    (Organisation_enum.HelloWorldNl, "NL31ABNA0580744434", null),
+    MediaXGb        (Organisation_enum.MediaXGb,     "NL31ABNA0580744436", null),
+    MiracleGb       (Organisation_enum.MiracleGb,    "NL31ABNA0580744439", null),
 
     // nb: this is misnamed, is actually second bank account for HelloWorldGb party
-    Oxford          (Organisation_enum.HelloWorldGb, "NL31ABNA0580744432"),
+    Oxford          (Organisation_enum.HelloWorldGb, "NL31ABNA0580744432", null),
 
-    PoisonNl        (Organisation_enum.PoisonNl,     "NL31ABNA0580744437"),
-    PretGb          (Organisation_enum.PretGb,       "NL31ABNA0580744438"),
-    TopModelGb      (Organisation_enum.TopModelGb,   "NL31ABNA0580744435")
+    PoisonNl        (Organisation_enum.PoisonNl,     "NL31ABNA0580744437", null),
+    PretGb          (Organisation_enum.PretGb,       "NL31ABNA0580744438", null),
+    TopModelGb      (Organisation_enum.TopModelGb,   "NL31ABNA0580744435", "GHIJKXXX"),
+    TopSellerGb     (Organisation_enum.TopSellerGb,  "GB18RICG00805412069055", "ABCDEFXXX")
     ;
 
     private final Organisation_enum organisation_d;
     private final String iban;
+    private final String bic;
 
 
     @Override
     public BankAccountBuilder builder() {
         return new BankAccountBuilder()
                 .setIban(iban)
+                .setBic(bic)
                 .setPrereq((f,ec) -> f.setParty(f.objectFor(organisation_d, ec)));
     }
 

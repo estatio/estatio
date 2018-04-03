@@ -445,7 +445,28 @@ public class PaymentBatchManager {
     }
 
 
+    @Action(
+            semantics = SemanticsOf.SAFE,
+            commandPersistence = CommandPersistence.NOT_PERSISTED,
+            publishing = Publishing.DISABLED
+    )
+    public Blob downloadReviewSummary(
+            final PaymentBatch paymentBatch,
+            @Nullable final String documentName){
+        String name = documentName!=null ? documentName.concat(".xlsx") : paymentBatch.fileNameWithSuffix("xlsx");
+        return paymentBatch.downloadReviewSummary(name);
+    }
 
+    public List<PaymentBatch> choices0DownloadReviewSummary() {
+        return this.getCompletedBatches();
+    }
+
+    public String disableDownloadReviewSummary() {
+        if (this.getCompletedBatches().isEmpty()) {
+            return "No completed batches";
+        }
+        return null;
+    }
 
 
     @Action(
@@ -639,6 +660,5 @@ public class PaymentBatchManager {
     @Inject
     @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
     ExcelService excelService;
-
 
 }

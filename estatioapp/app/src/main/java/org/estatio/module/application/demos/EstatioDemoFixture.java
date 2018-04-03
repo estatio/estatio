@@ -152,6 +152,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 BankAccount_enum.AcmeNl,
                 BankAccount_enum.HelloWorldGb,
                 BankAccount_enum.TopModelGb,
+                BankAccount_enum.TopSellerGb,
                 BankAccount_enum.MediaXGb,
                 BankAccount_enum.PretGb,
                 BankAccount_enum.MiracleGb,
@@ -235,7 +236,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
         ec.executeChildren(this,
                 Order_enum.fakeOrder2Pdf,
-                IncomingInvoice_enum.fakeInvoice2Pdf);
+                IncomingInvoice_enum.fakeInvoice2Pdf,
+                IncomingInvoice_enum.fakeInvoice3Pdf);
 
     }
 

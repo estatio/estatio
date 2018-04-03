@@ -22,6 +22,7 @@ public enum IncomingPdf_enum implements PersonaWithBuilderScript<Document, Incom
 
     FakeInvoice1(IncomingPdf_enum.class, "fakeInvoice1.pdf"),
     FakeInvoice2(IncomingPdf_enum.class, "fakeInvoice2.pdf"),
+    FakeInvoice3(IncomingPdf_enum.class, "fakeInvoice3.pdf"),
     FakeOrder1(IncomingPdf_enum.class, "fakeOrder1.pdf"),
     FakeOrder2(IncomingPdf_enum.class, "fakeOrder2.pdf"),
     ;

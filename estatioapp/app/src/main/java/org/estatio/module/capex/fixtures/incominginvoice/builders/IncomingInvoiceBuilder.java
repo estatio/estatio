@@ -12,17 +12,21 @@ import org.apache.isis.applib.services.sudo.SudoService;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.capex.dom.bankaccount.verification.triggers.BankAccount_verify;
 import org.estatio.module.capex.dom.documents.categorisation.triggers.Document_categoriseAsPropertyInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_approve;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_approveAsCountryDirector;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_complete;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
-import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.dom.orderinvoice.IncomingInvoiceItem_createOrderItemLink;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Person;
@@ -46,6 +50,8 @@ public class IncomingInvoiceBuilder extends BuilderScriptAbstract<IncomingInvoic
 
     @Getter @Setter
     Organisation seller;
+    @Getter @Setter
+    BankAccount sellerBankAccount;
     @Getter @Setter
     Organisation buyer;
     @Getter @Setter
@@ -111,6 +117,18 @@ public class IncomingInvoiceBuilder extends BuilderScriptAbstract<IncomingInvoic
     @Getter @Setter
     BigDecimal orderItemLinkAmount;
 
+    @Getter @Setter
+    Person propertyManager;
+
+    @Getter @Setter
+    Person assetManager;
+
+    @Getter @Setter
+    Person countryDirector;
+
+    @Getter @Setter
+    Person treasurer;
+
     @Getter
     IncomingInvoice object;
 
@@ -122,6 +140,7 @@ public class IncomingInvoiceBuilder extends BuilderScriptAbstract<IncomingInvoic
 
         checkParam("buyer", ec, Organisation.class);
         checkParam("seller", ec, Organisation.class);
+        checkParam("sellerBankAccount", ec, BankAccount.class);
         checkParam("property", ec, Property.class);
 
         checkParam("dueDate", ec, LocalDate.class);
@@ -139,18 +158,27 @@ public class IncomingInvoiceBuilder extends BuilderScriptAbstract<IncomingInvoic
         checkParam("item1GrossAmount", ec, BigDecimal.class);
         checkParam("item1Period", ec, String.class);
 
-        checkParam("item2InvoiceType", ec, IncomingInvoiceType.class);
-        //checkParam("item2Project", ec, Project.class); // optional
-        checkParam("item2Charge", ec, Charge.class);
-        checkParam("item2Description", ec, String.class);
-        checkParam("item2NetAmount", ec, BigDecimal.class);
-        checkParam("item2VatAmount", ec, BigDecimal.class);
-        checkParam("item2GrossAmount", ec, BigDecimal.class);
-        checkParam("item2Period", ec, String.class);
+        if (getItem2InvoiceType()!=null) {
+            checkParam("item2InvoiceType", ec, IncomingInvoiceType.class);
+            //checkParam("item2Project", ec, Project.class); // optional
+            checkParam("item2Charge", ec, Charge.class);
+            checkParam("item2Description", ec, String.class);
+            checkParam("item2NetAmount", ec, BigDecimal.class);
+            checkParam("item2VatAmount", ec, BigDecimal.class);
+            checkParam("item2GrossAmount", ec, BigDecimal.class);
+            checkParam("item2Period", ec, String.class);
+        }
 
         // checkParam("orderDocument", ec, Document.class); // optional
         if(order != null) {
             checkParam("orderItemLinkAmount", ec, BigDecimal.class);
+        }
+
+        if(propertyManager!=null) {
+            checkParam("propertyManager", ec, Person.class);
+            checkParam("assetManager", ec, Person.class);
+            checkParam("countryDirector", ec, Person.class);
+            checkParam("treasurer", ec, Person.class);
         }
 
         sudoService.sudo(officeAdministrator.getUsername(), (Runnable) () ->
@@ -162,6 +190,7 @@ public class IncomingInvoiceBuilder extends BuilderScriptAbstract<IncomingInvoic
         IncomingInvoice invoice = incomingInvoiceRepository.findIncomingInvoiceByDocumentName(documentName).get(0);
         invoice.setDateReceived(dateReceived);
         invoice.setSeller(seller);
+        invoice.setBankAccount(sellerBankAccount);
         invoice.setBuyer(buyer);
         invoice.setType(invoiceType);
         invoice.setDueDate(dueDate);
@@ -191,19 +220,38 @@ public class IncomingInvoiceBuilder extends BuilderScriptAbstract<IncomingInvoic
             mixin(IncomingInvoiceItem_createOrderItemLink.class, invoiceItemToLink).act(orderItemToLink, orderItemLinkAmount);
         }
 
-        invoice.addItem(
-                item2InvoiceType,
-                item2Charge,
-                item2Description,
-                item2NetAmount,
-                item2VatAmount,
-                item2GrossAmount,
-                itemTax,
-                dueDate,
-                item2Period,
-                property,
-                item2Project,
-                null);
+        if (item2InvoiceType!=null) {
+            invoice.addItem(
+                    item2InvoiceType,
+                    item2Charge,
+                    item2Description,
+                    item2NetAmount,
+                    item2VatAmount,
+                    item2GrossAmount,
+                    itemTax,
+                    dueDate,
+                    item2Period,
+                    property,
+                    item2Project,
+                    null);
+        }
+
+        if (propertyManager!=null) {
+            // complete and approve invoice and verify bankaccount
+            sudoService.sudo(propertyManager.getUsername(), (Runnable) () ->
+                    wrap(mixin(IncomingInvoice_complete.class, invoice)).act("PROPERTY_MANAGER", null, null)
+            );
+            sudoService.sudo(assetManager.getUsername(), (Runnable) () ->
+                    wrap(mixin(IncomingInvoice_approve.class, invoice)).act("ASSET_MANAGER", null, null, false)
+            );
+            sudoService.sudo(countryDirector.getUsername(), (Runnable) () ->
+                    wrap(mixin(IncomingInvoice_approveAsCountryDirector.class, invoice)).act(null, false)
+            );
+            sudoService.sudo(treasurer.getUsername(), (Runnable) () ->
+                    wrap(mixin(BankAccount_verify.class, sellerBankAccount)).act(null)
+            );
+        }
+
     }
 
     @Inject
@@ -211,8 +259,5 @@ public class IncomingInvoiceBuilder extends BuilderScriptAbstract<IncomingInvoic
 
     @Inject
     SudoService sudoService;
-
-    @Inject
-    OrderRepository orderRepository;
 
 }

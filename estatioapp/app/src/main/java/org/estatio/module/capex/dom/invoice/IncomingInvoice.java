@@ -1,6 +1,7 @@
 package org.estatio.module.capex.dom.invoice;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -1459,6 +1460,61 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     }
 
+    @Programmatic
+    public String getDescriptionSummary(){
+        StringBuffer summary = new StringBuffer();
+        boolean first = true;
+        for (InvoiceItem item : getItems()){
+            if (item.getDescription()!=null && item.getDescription()!=""){
+                if (!first){
+                    summary.append(" | ");
+                }
+                summary.append(item.getDescription());
+                first=false;
+            }
+        }
+        return summary.toString();
+    }
+
+    @Programmatic
+    public String getProjectSummary(){
+        List<Project> distinctProjects = new ArrayList<>();
+        for (InvoiceItem item : getItems()){
+            IncomingInvoiceItem iitem = (IncomingInvoiceItem) item;
+            if (iitem.getProject()!=null && !distinctProjects.contains(iitem.getProject())){
+                distinctProjects.add(iitem.getProject());
+            }
+        }
+        StringBuffer summary = new StringBuffer();
+        for (Project project : distinctProjects){
+            if (summary.length()>0){
+                summary.append(" | ");
+            }
+            summary.append(project.getName());
+        }
+        return summary.toString();
+    }
+
+    @Programmatic
+    public String getPropertySummary(){
+        List<Property> distinctProperties = new ArrayList<>();
+        for (InvoiceItem item : getItems()){
+            IncomingInvoiceItem iitem = (IncomingInvoiceItem) item;
+            if (iitem.getFixedAsset()!=null && !distinctProperties.contains(iitem.getFixedAsset())){
+                distinctProperties.add((Property) iitem.getFixedAsset());
+            }
+        }
+        StringBuffer summary = new StringBuffer();
+        for (Property property : distinctProperties){
+            if (summary.length()>0){
+                summary.append(" | ");
+            }
+            summary.append(property.getName());
+        }
+        return summary.toString();
+    }
+
+
 
     @Override
     public int compareTo(final IncomingInvoice other) {
@@ -1470,7 +1526,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Inject
     @NotPersistent
-    IncomingInvoiceApprovalStateTransition.Repository stateTransitionRepository;
+    public IncomingInvoiceApprovalStateTransition.Repository stateTransitionRepository;
 
     @Inject
     @NotPersistent
