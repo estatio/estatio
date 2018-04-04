@@ -316,7 +316,10 @@ public class Occupancy
         return activityRepository.findBySector(sector);
     }
 
-
+    public String validateChangeClassification(final UnitSize unitSize, final Sector sector, final Activity activity, final Brand brand){
+        if (activity!=null && !activityRepository.findBySector(sector).contains(activity)) return "Activity not found for sector";
+        return null;
+    }
 
 
 

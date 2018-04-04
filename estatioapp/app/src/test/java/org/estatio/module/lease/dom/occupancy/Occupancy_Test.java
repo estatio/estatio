@@ -18,8 +18,10 @@
  */
 package org.estatio.module.lease.dom.occupancy;
 
+import java.util.Arrays;
 import java.util.List;
 
+import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -41,6 +43,7 @@ import org.incode.module.unittestsupport.dom.bean.PojoTester;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.tags.Activity;
+import org.estatio.module.lease.dom.occupancy.tags.ActivityRepository;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.Sector;
 import org.estatio.module.lease.dom.occupancy.tags.UnitSize;
@@ -193,6 +196,48 @@ public class Occupancy_Test {
 
         // then
         assertThat(lease.validateNewOccupancy(occStartDate, unit)).isEqualTo("At the start date of the occupancy this unit is not available.");
+    }
+
+    @Mock
+    ActivityRepository mockActivityRepository;
+
+    @Test
+    public void validateChangeClassification_works_when_activity_not_found_for_sector() throws Exception {
+
+        // given
+        occupancy = new Occupancy();
+        occupancy.activityRepository = mockActivityRepository;
+        Sector sector = new Sector();
+        Activity activity = new Activity();
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockActivityRepository).findBySector(sector);
+        }});
+
+        // when, then
+        assertThat(occupancy.validateChangeClassification(null, sector, activity, null)).isEqualTo("Activity not found for sector");
+
+    }
+
+    @Test
+    public void validateChangeClassification_works_when_activity_found_for_sector() throws Exception {
+
+        // given
+        occupancy = new Occupancy();
+        occupancy.activityRepository = mockActivityRepository;
+        Sector sector = new Sector();
+        Activity activity = new Activity();
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockActivityRepository).findBySector(sector);
+            will(returnValue(Arrays.asList(activity)));
+        }});
+
+        // when, then
+        assertThat(occupancy.validateChangeClassification(null, sector, activity, null)).isNull();
+
     }
 
 }
