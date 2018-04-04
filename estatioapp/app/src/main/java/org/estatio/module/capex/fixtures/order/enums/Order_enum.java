@@ -12,11 +12,11 @@ import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
-import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.fixtures.document.enums.IncomingPdf_enum;
@@ -47,6 +47,16 @@ public enum Order_enum
             Tax_enum.GB_VATSTD,
             IncomingCharge_enum.FrWorks, "order item", bd("1000.00"), bd("210.00"), bd("1210.00"), "F2016",
             IncomingCharge_enum.FrMarketing, "marketing stuff", bd("500.00"), bd("105.00"), bd("605.00"), "F2017"
+    ),
+    fakeOrder3Pdf(
+            Person_enum.DylanOfficeAdministratorGb,
+            IncomingPdf_enum.FakeOrder2, ApplicationTenancy_enum.Gb, new DateTime(2018, 1, 5, 10, 0), "estatio-user-gb",
+            Organisation_enum.TopModelGb, Organisation_enum.HelloWorldGb,
+            null, null,
+            ld(2018, 1, 5),
+            Tax_enum.GB_VATSTD,
+            IncomingCharge_enum.FrFurnitures, "order item", bd("1000.00"), bd("210.00"), bd("1210.00"), "F2018",
+            null, null, null, null, null, null
     );
 
     private final Person_enum officerAdministrator_d;
@@ -123,7 +133,7 @@ public enum Order_enum
         return orders.stream()
                 .filter(x -> Objects.equal(x.getSeller(), seller_d.findUsing(serviceRegistry)))
                 .filter(x -> Objects.equal(x.getBuyer(), buyer_d.findUsing(serviceRegistry)))
-                .filter(x -> Objects.equal(x.getProperty(), property_d.findUsing(serviceRegistry)))
+                .filter(x -> Objects.equal(x.getProperty(), property_d!=null ? property_d.findUsing(serviceRegistry) : null))
                 .filter(x -> Objects.equal(x.getEntryDate(), entryDate))
                 .findFirst()
                 .get(); // fail fast

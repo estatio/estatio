@@ -9,6 +9,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.state.AdvancePolicy;
 import org.estatio.module.capex.dom.state.NextTransitionSearchStrategy;
@@ -17,9 +18,9 @@ import org.estatio.module.capex.dom.state.StateTransitionRepository;
 import org.estatio.module.capex.dom.state.StateTransitionServiceSupportAbstract;
 import org.estatio.module.capex.dom.state.StateTransitionType;
 import org.estatio.module.capex.dom.state.TaskAssignmentStrategy;
-import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.IPartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 
 import lombok.Getter;
 
@@ -42,7 +43,7 @@ public enum OrderApprovalStateTransitionType
             OrderApprovalState.NEW,
             OrderApprovalState.APPROVED,
             NextTransitionSearchStrategy.none(),
-            TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER),
+            null, // task assignment strategy overridden below,
             AdvancePolicy.MANUAL){
 
         @Override
@@ -50,6 +51,22 @@ public enum OrderApprovalStateTransitionType
                 final Order order,
                 final ServiceRegistry2 serviceRegistry2) {
             return order.reasonIncomplete();
+        }
+        @Override
+        public TaskAssignmentStrategy getTaskAssignmentStrategy() {
+            return (TaskAssignmentStrategy<
+                    Order,
+                    OrderApprovalStateTransition,
+                    OrderApprovalStateTransitionType,
+                    OrderApprovalState>) (order, serviceRegistry2) -> {
+
+                final boolean hasProperty = order.getProperty() != null;
+                if (hasProperty) {
+                    return FixedAssetRoleTypeEnum.PROPERTY_MANAGER;
+                } else {
+                    return PartyRoleTypeEnum.OFFICE_ADMINISTRATOR;
+                }
+            };
         }
     },
     AMEND(

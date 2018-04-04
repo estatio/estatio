@@ -106,8 +106,8 @@ public class OrderBuilder extends BuilderScriptAbstract<Order, OrderBuilder> {
 
         checkParam("buyer", ec, Organisation.class);
         checkParam("seller", ec, Organisation.class);
-        checkParam("property", ec, Property.class);
-        checkParam("project", ec, Project.class);
+        if (property!=null) checkParam("property", ec, Property.class);
+        if (project!=null )checkParam("project", ec, Project.class);
 
         checkParam("entryDate", ec, LocalDate.class);
 
@@ -120,12 +120,14 @@ public class OrderBuilder extends BuilderScriptAbstract<Order, OrderBuilder> {
         checkParam("item1Charge", ec, Charge.class);
         checkParam("item1Period", ec, String.class);
 
-        checkParam("item2Description", ec, String.class);
-        checkParam("item2NetAmount", ec, BigDecimal.class);
-        checkParam("item2VatAmount", ec, BigDecimal.class);
-        checkParam("item2GrossAmount", ec, BigDecimal.class);
-        checkParam("item2Charge", ec, Charge.class);
-        checkParam("item2Period", ec, String.class);
+        if (item2Description!=null) {
+            checkParam("item2Description", ec, String.class);
+            checkParam("item2NetAmount", ec, BigDecimal.class);
+            checkParam("item2VatAmount", ec, BigDecimal.class);
+            checkParam("item2GrossAmount", ec, BigDecimal.class);
+            checkParam("item2Charge", ec, Charge.class);
+            checkParam("item2Period", ec, String.class);
+        }
 
         // given we categorise for a property
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
@@ -162,14 +164,16 @@ public class OrderBuilder extends BuilderScriptAbstract<Order, OrderBuilder> {
 
             // this does an upsert base on the charge, so we still end up with only one item
             wrap(order).addItem(item1Charge, item1Description, item1NetAmount, item1VatAmount, item1GrossAmount, itemTax,
-                    item2Period, // not a typo, but presumably the original fixture was wrong... guessing the upsert doesn't actually update this field
+                    item1Period,
                     property,
                     project,
                     null);
 
-            // add a different charge; this creates a second item
-            wrap(order).addItem(item2Charge, item2Description, item2NetAmount, item2VatAmount, item2GrossAmount,
-                    itemTax, item2Period, property, project, null);
+            if (item2Description!=null) {
+                // add a different charge; this creates a second item
+                wrap(order).addItem(item2Charge, item2Description, item2NetAmount, item2VatAmount, item2GrossAmount,
+                        itemTax, item2Period, property, project, null);
+            }
 
             this.object = order;
         });
@@ -177,7 +181,7 @@ public class OrderBuilder extends BuilderScriptAbstract<Order, OrderBuilder> {
 
         final List<OrderItem> items = Lists.newArrayList(this.object.getItems());
         firstItem = items.get(0);
-        secondItem = items.get(1);
+        secondItem = items.size()>1 ? items.get(1) : null;
 
 
     }
