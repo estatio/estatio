@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 
+import javax.annotation.Nullable;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -286,7 +287,9 @@ public abstract class InvoiceItem<P extends Invoice<P>, T extends InvoiceItem<P,
     private LocalDate effectiveEndDate;
 
     public InvoiceItem changeEffectiveDates(
+            @Nullable
             final LocalDate effectiveStartDate,
+            @Nullable
             final LocalDate effectiveEndDate) {
 
         setEffectiveStartDate(effectiveStartDate);
@@ -312,7 +315,7 @@ public abstract class InvoiceItem<P extends Invoice<P>, T extends InvoiceItem<P,
     public String validateChangeEffectiveDates(
             final LocalDate effectiveStartDate,
             final LocalDate effectiveEndDate){
-        if (effectiveEndDate.isBefore(effectiveStartDate)){
+        if (effectiveStartDate!=null && effectiveEndDate!=null && effectiveEndDate.isBefore(effectiveStartDate)){
             return "The end date is before the start date";
         }
         return null;
