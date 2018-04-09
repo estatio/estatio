@@ -290,6 +290,21 @@ public class IncomingInvoiceItemRepository {
         return filterByCompletedOrLaterInvoices(items, reportedDate);
     }
 
+    @Programmatic
+    public List<IncomingInvoiceItem> findCompletedOrLaterByReportedDate(
+            final LocalDate reportedDate) {
+
+        final List<IncomingInvoiceItem> items = repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoiceItem.class,
+                        "findByReportedDate",
+                        "reportedDate", reportedDate
+                ));
+
+        return filterByCompletedOrLaterInvoices(items, reportedDate);
+    }
+
+
     List<IncomingInvoiceItem> filterByCompletedOrLaterInvoices(
             final List<IncomingInvoiceItem> items,
             final LocalDate reportedDate) {

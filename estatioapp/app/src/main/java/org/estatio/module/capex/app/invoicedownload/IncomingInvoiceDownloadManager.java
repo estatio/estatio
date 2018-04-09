@@ -2,6 +2,7 @@ package org.estatio.module.capex.app.invoicedownload;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -257,7 +258,56 @@ public class IncomingInvoiceDownloadManager {
         return getInvoiceItems().isEmpty() ? "No invoice items to download": null;
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    public Blob downloadToExcelForAllProperties(final LocalDate startDate, final LocalDate endDate, @Nullable final String fileName) {
 
+        final List<IncomingInvoiceExport> exports = getReportedInvoiceItemsWithPropertyForPeriod(startDate, endDate).stream()
+                .map(item -> new IncomingInvoiceExport(
+                        item,
+                        documentNumberFor(item),
+                        codaElementFor(item),
+                        commentsFor(item)))
+                .sorted(Comparator.comparing(x -> x.getDocumentNumber()!=null ? x.getDocumentNumber() : "_No_Document")) // guard only for (demo)fixtures because in production a document can be expected
+                .collect(Collectors.toList());
+
+        WorksheetSpec spec = new WorksheetSpec(IncomingInvoiceDownloadManager.exportClass, "invoiceExport");
+        WorksheetContent worksheetContent = new WorksheetContent(exports, spec);
+        return excelService.toExcel(worksheetContent, fileName!=null ? fileName.concat(".xlsx") : fileNameAllProperties(startDate, endDate));
+    }
+
+    public List<LocalDate> choices0DownloadToExcelForAllProperties() {
+        return incomingInvoiceItemRepository.findDistinctReportDates();
+    }
+
+    public List<LocalDate> choices1DownloadToExcelForAllProperties(final LocalDate startDate) {
+        return startDate!=null ? incomingInvoiceItemRepository.findDistinctReportDates().stream().filter(x->!x.isBefore(startDate)).collect(Collectors.toList()) : null;
+    }
+
+    public String validateDownloadToExcelForAllProperties(final LocalDate startDate, final LocalDate endDate, final String fileName){
+        if (endDate.isBefore(startDate)) return "End date cannot be before start date";
+        return null;
+    }
+
+    @Programmatic
+    public String fileNameAllProperties(final LocalDate startDate, final LocalDate endDate) {
+        String defaultFileName = String.format("%s_%s_%s_%s",
+                exportClass.getSimpleName(),
+                "all_properties",
+                startDate,
+                endDate
+        );
+        return defaultFileName.concat(".xlsx");
+    }
+
+    @Programmatic
+    List<IncomingInvoiceItem> getReportedInvoiceItemsWithPropertyForPeriod(final LocalDate startDate, final LocalDate endDate){
+        List<IncomingInvoiceItem> result = new ArrayList<>();
+        List<LocalDate> reportedDatesInRange = incomingInvoiceItemRepository.findDistinctReportDates().stream().filter(x->!x.isBefore(startDate) && !x.isAfter(endDate)).collect(Collectors.toList());
+        for (LocalDate reportedDate : reportedDatesInRange){
+            result.addAll(incomingInvoiceItemRepository.findCompletedOrLaterByReportedDate(reportedDate).stream().filter(x->x.getFixedAsset()!=null).collect(Collectors.toList()));
+        }
+        return result;
+    }
 
 
     @Action(semantics = SemanticsOf.SAFE)
