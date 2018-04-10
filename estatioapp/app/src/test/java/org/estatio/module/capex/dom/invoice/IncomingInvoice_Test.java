@@ -1007,4 +1007,97 @@ public class IncomingInvoice_Test {
 
     }
 
+    public static class Summaries_Test extends IncomingInvoice_Test {
+
+        IncomingInvoiceItem reversedItem;
+        IncomingInvoiceItem reversal;
+        IncomingInvoiceItem regularItem1;
+        IncomingInvoiceItem regularItem2;
+
+        @Before
+        public void setup(){
+
+            reversedItem = new IncomingInvoiceItem();
+            reversedItem.setSequence(BigInteger.valueOf(1));
+            reversedItem.setInvoice(invoice);
+
+            reversal = new IncomingInvoiceItem();
+            reversal.setReversalOf(reversedItem);
+            reversal.setSequence(BigInteger.valueOf(2));
+            reversal.setInvoice(invoice);
+
+            regularItem1 = new IncomingInvoiceItem();
+            regularItem1.setSequence(BigInteger.valueOf(3));
+            regularItem1.setInvoice(invoice);
+
+            regularItem2 = new IncomingInvoiceItem();
+            regularItem2.setSequence(BigInteger.valueOf(4));
+            regularItem2.setInvoice(invoice);
+
+            invoice.getItems().addAll(Arrays.asList(regularItem2, reversedItem, reversal, regularItem1));
+
+        }
+
+        @Test
+        public void description_summary_works() throws Exception {
+
+            // given
+            reversedItem.setDescription("Reversed item description");
+            reversal.setDescription("REVERSAL of Reversed item description");
+            regularItem1.setDescription("First description");
+            regularItem2.setDescription("Second description");
+
+            //when, then
+            assertThat(invoice.getDescriptionSummary()).isEqualTo("First description | Second description");
+
+        }
+
+        @Test
+        public void project_summary_works() throws Exception {
+
+            // given
+            Project project1 = new Project();
+            project1.setName("Pr1");
+            Project project2 = new Project();
+            project2.setName("Pr2");
+            reversedItem.setProject(project1);
+            regularItem1.setProject(project2);
+            regularItem2.setProject(project2);
+
+            // when, then
+            assertThat(invoice.getProjectSummary()).isEqualTo("Pr2");
+
+            // and when
+            regularItem2.setProject(project1);
+
+            // then
+            assertThat(invoice.getProjectSummary()).isEqualTo("Pr2 | Pr1");
+
+        }
+
+        @Test
+        public void property_summary_works() throws Exception {
+
+            // given
+            Property prop1 = new Property();
+            prop1.setName("Prop1");
+            Property prop2 = new Property();
+            prop2.setName("Prop2");
+            reversedItem.setFixedAsset(prop1);
+            regularItem1.setFixedAsset(prop2);
+            regularItem2.setFixedAsset(prop2);
+
+            // when, then
+            assertThat(invoice.getPropertySummary()).isEqualTo("Prop2");
+
+            // and when
+            regularItem2.setFixedAsset(prop1);
+
+            // then
+            assertThat(invoice.getPropertySummary()).isEqualTo("Prop2 | Prop1");
+
+        }
+
+    }
+
 }

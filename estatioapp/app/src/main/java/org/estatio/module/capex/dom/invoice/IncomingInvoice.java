@@ -1465,12 +1465,13 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         StringBuffer summary = new StringBuffer();
         boolean first = true;
         for (InvoiceItem item : getItems()){
-            if (item.getDescription()!=null && item.getDescription()!=""){
-                if (!first){
+            IncomingInvoiceItem iitem = (IncomingInvoiceItem) item;
+            if (!iitem.isReversal() && !reversedItems().contains(iitem) && item.getDescription()!=null && item.getDescription()!="") {
+                if (!first) {
                     summary.append(" | ");
                 }
                 summary.append(item.getDescription());
-                first=false;
+                first = false;
             }
         }
         return summary.toString();
@@ -1481,7 +1482,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         List<Project> distinctProjects = new ArrayList<>();
         for (InvoiceItem item : getItems()){
             IncomingInvoiceItem iitem = (IncomingInvoiceItem) item;
-            if (iitem.getProject()!=null && !distinctProjects.contains(iitem.getProject())){
+            if (!iitem.isReversal() && !reversedItems().contains(iitem) && iitem.getProject()!=null && !distinctProjects.contains(iitem.getProject())){
                 distinctProjects.add(iitem.getProject());
             }
         }
@@ -1500,7 +1501,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         List<Property> distinctProperties = new ArrayList<>();
         for (InvoiceItem item : getItems()){
             IncomingInvoiceItem iitem = (IncomingInvoiceItem) item;
-            if (iitem.getFixedAsset()!=null && !distinctProperties.contains(iitem.getFixedAsset())){
+            if (!iitem.isReversal() && !reversedItems().contains(iitem) && iitem.getFixedAsset()!=null && !distinctProperties.contains(iitem.getFixedAsset())){
                 distinctProperties.add((Property) iitem.getFixedAsset());
             }
         }
