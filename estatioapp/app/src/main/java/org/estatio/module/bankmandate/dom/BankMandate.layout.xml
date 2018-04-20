@@ -30,6 +30,7 @@
                 <ns2:property id="applicationTenancy"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Metadata" id="metadata">
+                <ns2:action id="sync" position="PANEL"/>
                 <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
                 <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
                 <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>

@@ -66,6 +66,7 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="Metadata" id="metadata">
+                                <cpt:action id="sync" position="PANEL"/>
                                 <cpt:action id="recentChanges" position="PANEL_DROPDOWN"/>
                                 <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
                                 <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
