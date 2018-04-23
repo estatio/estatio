@@ -49,8 +49,6 @@ import org.apache.isis.applib.services.eventbus.ObjectRemovingEvent;
 import org.apache.isis.applib.services.eventbus.ObjectUpdatedEvent;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
 import org.incode.module.base.dom.Titled;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.country.dom.impl.Country;
@@ -217,10 +215,6 @@ public class BankAccount
     public BankAccount refresh() {
         IBANHelper.verifyAndUpdate(this);
         return this;
-    }
-
-    @Override public ApplicationTenancy getApplicationTenancy() {
-        return super.getApplicationTenancy();
     }
 
     @Action(domainEvent = BankAccount.RemoveEvent.class, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
