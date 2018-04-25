@@ -27,7 +27,7 @@ language governing permissions and limitations under the License.
 
     <groupId>org.estatio</groupId>
     <artifactId>estatio</artifactId>
-    <version>1.29.0-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
 
     <name>Estatio (Open Source)</name>
@@ -65,6 +65,8 @@ language governing permissions and limitations under the License.
     </developers>
 
     <properties>
+        <revision>1.29.0-SNAPSHOT</revision>
+
         <isis.version>1.16.1.20180316-1549</isis.version>
         <!--
         <isis.version>1.16.1.20180228-1118</isis.version>
@@ -113,6 +115,30 @@ language governing permissions and limitations under the License.
                         </mixin>
                     </mixins>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -170,14 +196,14 @@ language governing permissions and limitations under the License.
 
             <!-- Estatio modules -->
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>org.estatio</groupId>
                 <artifactId>estatio-app</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>org.estatio</groupId>
                 <artifactId>estatio-app</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -189,9 +215,9 @@ language governing permissions and limitations under the License.
             </dependency>
 
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>org.estatio</groupId>
                 <artifactId>estatio-webapp</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
             </dependency>
 
 
@@ -263,27 +289,6 @@ language governing permissions and limitations under the License.
         <module>estatioapp/webapp</module>
     </modules>
 
-    <profiles>
-        <profile>
-            <id>cloudbees-snapshots</id>
-            <activation>
-                <property>
-                    <name>!skip.cloudbees-snapshots</name>
-                </property>
-            </activation>
-            <repositories>
-                <repository>
-                    <id>snapshots-repo</id>
-                    <url>http://repository-estatio.forge.cloudbees.com/snapshot/</url>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                </repository>
-            </repositories>
-        </profile>
-    </profiles>
-
 </project>
+
+
