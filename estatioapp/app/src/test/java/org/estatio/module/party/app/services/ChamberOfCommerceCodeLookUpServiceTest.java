@@ -1,11 +1,16 @@
 package org.estatio.module.party.app.services;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -14,8 +19,16 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.module.party.dom.Organisation;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assume.assumeThat;
+
 public class ChamberOfCommerceCodeLookUpServiceTest {
 
+    @Before
+    public void setup() {
+        assumeThat(isInternetReachable(), is(true));
+    }
+    
     @Test
     public void getChamberOfCommerceCodeCandidatesByOrganisation_works() throws Exception {
 
@@ -95,4 +108,22 @@ public class ChamberOfCommerceCodeLookUpServiceTest {
 
     }
 
+    /**
+     * Tries to retrieve some content, 1 second timeout.
+     */
+    private static boolean isInternetReachable()
+    {
+        try {
+            final URL url = new URL("http://www.google.com");
+            final HttpURLConnection urlConnect = (HttpURLConnection)url.openConnection();
+            urlConnect.setConnectTimeout(1000);
+            urlConnect.getContent();
+            urlConnect.disconnect();
+        } catch (UnknownHostException e) {
+            return false;
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
+    }
 }
