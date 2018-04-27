@@ -176,11 +176,23 @@ public class StateTransitionRepositoryGeneric {
         stateTransition.setTask(taskIfAny);
 
         final LocalDateTime createdOn = taskIfAny != null ? taskIfAny.getCreatedOn() : clockService.nowAsLocalDateTime();
+
+        // horrible hack...
+        waitATickToEnsureOrderingOfStateTransitionsIsCorrect();
+
         stateTransition.setCreatedOn(createdOn);
 
         repositoryService.persistAndFlush(stateTransition);
 
         return stateTransition;
+    }
+
+    private static void waitATickToEnsureOrderingOfStateTransitionsIsCorrect() {
+        try {
+            Thread.sleep(2);
+        } catch (InterruptedException e) {
+            // ignore
+        }
     }
 
     @Programmatic
