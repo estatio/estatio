@@ -1,4 +1,4 @@
-package org.estatio.module.lease.canonical.v1;
+package org.estatio.module.lease.canonical.v2;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -10,7 +10,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.dto.DtoMappingHelper;
 
-import org.estatio.canonical.invoice.v1.InvoiceDto;
+import org.estatio.canonical.invoice.v2.InvoiceDto;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.bankmandate.dom.BankMandate;
 import org.estatio.module.base.platform.applib.DtoFactoryAbstract;
@@ -19,7 +19,8 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 
 @DomainService(
-        nature = NatureOfService.DOMAIN
+        nature = NatureOfService.DOMAIN,
+        objectType = "lease.canonical.v2.InvoiceForLeaseDtoFactory"
 )
 public class InvoiceForLeaseDtoFactory extends DtoFactoryAbstract {
 
@@ -75,18 +76,18 @@ public class InvoiceForLeaseDtoFactory extends DtoFactoryAbstract {
         return dto;
     }
 
-    private org.estatio.canonical.invoice.v1.PaymentMethod toDto(final PaymentMethod paymentMethod) {
+    private static org.estatio.canonical.invoice.v2.PaymentMethod toDto(final PaymentMethod paymentMethod) {
         switch (paymentMethod) {
         case DIRECT_DEBIT:
-            return org.estatio.canonical.invoice.v1.PaymentMethod.DIRECT_DEBIT;
+            return org.estatio.canonical.invoice.v2.PaymentMethod.DIRECT_DEBIT;
         case BILLING_ACCOUNT:
             return null;
         case BANK_TRANSFER:
-            return org.estatio.canonical.invoice.v1.PaymentMethod.BANK_TRANSFER;
+            return org.estatio.canonical.invoice.v2.PaymentMethod.BANK_TRANSFER;
         case CASH:
-            return org.estatio.canonical.invoice.v1.PaymentMethod.CASH;
+            return org.estatio.canonical.invoice.v2.PaymentMethod.CASH;
         case CHEQUE:
-            return org.estatio.canonical.invoice.v1.PaymentMethod.CHEQUE;
+            return org.estatio.canonical.invoice.v2.PaymentMethod.CHEQUE;
         default:
             // shouldn't happen, above switch is complete.
             throw new IllegalArgumentException(String.format(

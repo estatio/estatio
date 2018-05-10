@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import org.apache.isis.applib.services.dto.DtoMappingHelper;
 import org.apache.isis.applib.services.jaxb.JaxbService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.schema.common.v1.OidDto;
@@ -15,7 +16,6 @@ import org.apache.isis.schema.common.v1.OidDto;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
-import org.apache.isis.applib.services.dto.DtoMappingHelper;
 import org.estatio.canonical.party.v1.PartyDto;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;

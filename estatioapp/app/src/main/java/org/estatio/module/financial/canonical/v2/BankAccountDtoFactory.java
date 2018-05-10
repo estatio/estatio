@@ -1,4 +1,4 @@
-package org.estatio.module.financial.canonical.v1;
+package org.estatio.module.financial.canonical.v2;
 
 import javax.inject.Inject;
 
@@ -7,12 +7,13 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.dto.DtoMappingHelper;
 
-import org.estatio.canonical.financial.v1.BankAccountDto;
+import org.estatio.canonical.financial.v2.BankAccountDto;
 import org.estatio.module.base.platform.applib.DtoFactoryAbstract;
 import org.estatio.module.financial.dom.BankAccount;
 
 @DomainService(
-        nature = NatureOfService.DOMAIN
+        nature = NatureOfService.DOMAIN,
+        objectType = "financial.canonical.v2.BankAccountDtoFactory"
 )
 public class BankAccountDtoFactory extends DtoFactoryAbstract {
 

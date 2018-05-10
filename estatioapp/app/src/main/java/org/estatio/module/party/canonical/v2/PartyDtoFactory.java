@@ -1,4 +1,4 @@
-package org.estatio.module.party.canonical.v1;
+package org.estatio.module.party.canonical.v2;
 
 import java.util.SortedSet;
 
@@ -13,12 +13,13 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
-import org.estatio.canonical.party.v1.PartyDto;
+import org.estatio.canonical.party.v2.PartyDto;
 import org.estatio.module.base.platform.applib.DtoFactoryAbstract;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(
-        nature = NatureOfService.DOMAIN
+        nature = NatureOfService.DOMAIN,
+        objectType = "party.canonical.v2.PartyDtoFactory"
 )
 public class PartyDtoFactory extends DtoFactoryAbstract {
 

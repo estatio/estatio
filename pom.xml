@@ -81,7 +81,7 @@ language governing permissions and limitations under the License.
 
         <wicketstuff.version>7.9.0</wicketstuff.version>
 
-        <estatio-canonical.version>1.2.0</estatio-canonical.version>
+        <estatio-canonical.version>2.0.0-SNAPSHOT</estatio-canonical.version>
 
         <maven-checkstyle-plugin.configLocation>${project.basedir}/codequality/checkstyle.xml</maven-checkstyle-plugin.configLocation>
         <maven-pmd-plugin.ruleset>${project.basedir}/codequality/pmd.xml</maven-pmd-plugin.ruleset>

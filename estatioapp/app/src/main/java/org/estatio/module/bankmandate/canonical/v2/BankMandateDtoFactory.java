@@ -1,4 +1,4 @@
-package org.estatio.module.bankmandate.canonical.v1;
+package org.estatio.module.bankmandate.canonical.v2;
 
 import javax.inject.Inject;
 
@@ -7,15 +7,16 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.dto.DtoMappingHelper;
 
-import org.estatio.canonical.bankmandate.v1.BankMandateDto;
-import org.estatio.canonical.bankmandate.v1.Status;
+import org.estatio.canonical.bankmandate.v2.BankMandateDto;
+import org.estatio.canonical.bankmandate.v2.Status;
 import org.estatio.module.bankmandate.dom.BankMandate;
 import org.estatio.module.bankmandate.dom.Scheme;
 import org.estatio.module.bankmandate.dom.SequenceType;
 import org.estatio.module.base.platform.applib.DtoFactoryAbstract;
 
 @DomainService(
-        nature = NatureOfService.DOMAIN
+        nature = NatureOfService.DOMAIN,
+        objectType = "bankmandate.canonical.v2.BankMandateDtoFactory"
 )
 public class BankMandateDtoFactory extends DtoFactoryAbstract {
 
@@ -36,15 +37,15 @@ public class BankMandateDtoFactory extends DtoFactoryAbstract {
         return dto;
     }
 
-    private static org.estatio.canonical.bankmandate.v1.SequenceType toDto(final SequenceType sequenceType) {
+    private static org.estatio.canonical.bankmandate.v2.SequenceType toDto(final SequenceType sequenceType) {
         if(sequenceType == null) {
             return null;
         }
         switch (sequenceType) {
         case FIRST:
-            return org.estatio.canonical.bankmandate.v1.SequenceType.FIRST;
+            return org.estatio.canonical.bankmandate.v2.SequenceType.FIRST;
         case RECURRENT:
-            return org.estatio.canonical.bankmandate.v1.SequenceType.RECURRENT;
+            return org.estatio.canonical.bankmandate.v2.SequenceType.RECURRENT;
         default:
             // shouldn't happen, above switch is complete.
             throw new IllegalArgumentException(String.format(
@@ -52,15 +53,15 @@ public class BankMandateDtoFactory extends DtoFactoryAbstract {
         }
     }
 
-    private static org.estatio.canonical.bankmandate.v1.Scheme toDto(final Scheme scheme) {
+    private static org.estatio.canonical.bankmandate.v2.Scheme toDto(final Scheme scheme) {
         if(scheme == null) {
             return null;
         }
         switch (scheme) {
         case CORE:
-            return org.estatio.canonical.bankmandate.v1.Scheme.CORE;
+            return org.estatio.canonical.bankmandate.v2.Scheme.CORE;
         case B2B:
-            return org.estatio.canonical.bankmandate.v1.Scheme.B2B;
+            return org.estatio.canonical.bankmandate.v2.Scheme.B_2_B;
         default:
             // shouldn't happen, above switch is complete.
             throw new IllegalArgumentException(String.format(
@@ -69,7 +70,7 @@ public class BankMandateDtoFactory extends DtoFactoryAbstract {
     }
 
     // TODO: We've added a suffix because agreement names must be unique, remove after closing https://incodehq.atlassian.net/browse/EST-684
-    String fixup(final String reference) {
+    static String fixup(final String reference) {
         if (reference.endsWith("-M")){
             return reference.substring(0,reference.length()-2);
         }

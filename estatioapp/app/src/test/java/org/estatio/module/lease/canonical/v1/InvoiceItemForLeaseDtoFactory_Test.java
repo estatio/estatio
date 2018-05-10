@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class InvoiceItemForLeaseDtoFactory_Test {
 
-    private InvoiceItemForLease invoiceItem;
+    InvoiceItemForLease invoiceItem;
 
     @Before
     public void setUp() throws Exception {
@@ -59,54 +59,95 @@ public class InvoiceItemForLeaseDtoFactory_Test {
 
     }
 
-    @Ignore // TODO: See ECP-196
-    @Test(expected = IllegalArgumentException.class)
-    public void throw_error_when_outside_scope_of_occupancies() throws Exception {
-        //Given
-        invoiceItem.setEffectiveStartDate(new LocalDate(2014, 1, 1));
-        // When
-        InvoiceItemDto invoiceItemDto = new InvoiceItemForLeaseDtoFactory().newDto(invoiceItem);
+    public static class Occupancies_Test extends InvoiceItemForLeaseDtoFactory_Test {
+        @Ignore // TODO: See ECP-196
+        @Test(expected = IllegalArgumentException.class)
+        public void throw_error_when_outside_scope_of_occupancies() throws Exception {
+            //Given
+            invoiceItem.setEffectiveStartDate(new LocalDate(2014, 1, 1));
+            // When
+            InvoiceItemDto invoiceItemDto = new InvoiceItemForLeaseDtoFactory().newDto(invoiceItem);
+        }
+
+        @Test
+        public void occupancy_is_used_when_in_scope() throws Exception {
+            //Given
+            invoiceItem.setEffectiveStartDate(new LocalDate(2013, 10, 1));
+            // When
+            InvoiceItemDto invoiceItemDto = new InvoiceItemForLeaseDtoFactory().newDto(invoiceItem);
+            // Then
+            assertThat(invoiceItemDto.getFixedAssetReference()).isEqualTo("UN");
+            assertThat(invoiceItemDto.getOccupancyBrand()).isEqualTo("BRAND");
+        }
+
+        @Test
+        public void occupancy_is_ignored_when_invoice_item_has_unit() throws Exception {
+            //Given
+            invoiceItem.setEffectiveStartDate(new LocalDate(2013, 10, 1));
+            Unit unitOnItem = new Unit();
+            unitOnItem.setReference("XXX");
+            invoiceItem.setFixedAsset(unitOnItem);
+            // When
+            InvoiceItemDto invoiceItemDto = new InvoiceItemForLeaseDtoFactory().newDto(invoiceItem);
+            // Then
+            assertThat(invoiceItemDto.getFixedAssetReference()).isEqualTo("XXX");
+            assertThat(invoiceItemDto.getOccupancyBrand()).isEqualTo("BRAND");
+        }
     }
 
-    @Test
-    public void occupancy_is_used_when_in_scope() throws Exception {
-        //Given
-        invoiceItem.setEffectiveStartDate(new LocalDate(2013, 10, 1));
-        // When
-        InvoiceItemDto invoiceItemDto = new InvoiceItemForLeaseDtoFactory().newDto(invoiceItem);
-        // Then
-        assertThat(invoiceItemDto.getFixedAssetReference()).isEqualTo("UN");
-        assertThat(invoiceItemDto.getOccupancyBrand()).isEqualTo("BRAND");
+    public static class EffectiveStartDate_Test extends InvoiceItemForLeaseDtoFactory_Test {
+
+        @Test
+        public void fall_back_to_date_when_effective_is_empty() throws Exception {
+            //Given
+            assertThat(invoiceItem.getEffectiveStartDate()).isNull();
+            assertThat(invoiceItem.getStartDate()).isNull();
+            final LocalDate startDate = new LocalDate(2016, 1, 1);
+
+            // When
+            invoiceItem.setStartDate(startDate);
+            InvoiceItemDto invoiceItemDto = new InvoiceItemForLeaseDtoFactory().newDto(invoiceItem);
+            // Then
+            assertThat(invoiceItemDto.getStartDate().toString()).isEqualTo("2016-01-01T00:00:00.000Z");
+            assertThat(invoiceItemDto.getEffectiveStartDate().toString()).isEqualTo("2016-01-01T00:00:00.000Z");
+        }
+
     }
 
-    @Test
-    public void occupancy_is_ignored_when_invoice_item_has_unit() throws Exception {
-        //Given
-        invoiceItem.setEffectiveStartDate(new LocalDate(2013, 10, 1));
-        Unit unitOnItem = new Unit();
-        unitOnItem.setReference("XXX");
-        invoiceItem.setFixedAsset(unitOnItem);
-        // When
-        InvoiceItemDto invoiceItemDto = new InvoiceItemForLeaseDtoFactory().newDto(invoiceItem);
-        // Then
-        assertThat(invoiceItemDto.getFixedAssetReference()).isEqualTo("XXX");
-        assertThat(invoiceItemDto.getOccupancyBrand()).isEqualTo("BRAND");
+    public static class Adjustments_Test extends InvoiceItemForLeaseDtoFactory_Test {
+
+        @Test
+        public void when_not_specified() throws Exception {
+            //Given
+            invoiceItem.setAdjustment(null);
+            // When
+            InvoiceItemDto invoiceItemDto = new InvoiceItemForLeaseDtoFactory().newDto(invoiceItem);
+            // Then
+            assertThat(invoiceItemDto.isAdjustment()).isFalse();
+        }
+
+        @Test
+        public void when_not_an_adjustment() throws Exception {
+            //Given
+            invoiceItem.setAdjustment(false);
+            // When
+            InvoiceItemDto invoiceItemDto = new InvoiceItemForLeaseDtoFactory().newDto(invoiceItem);
+            // Then
+            assertThat(invoiceItemDto.isAdjustment()).isFalse();
+        }
+
+        @Test
+        public void when_is_an_adjustment() throws Exception {
+            //Given
+            invoiceItem.setAdjustment(true);
+            // When
+            InvoiceItemDto invoiceItemDto = new InvoiceItemForLeaseDtoFactory().newDto(invoiceItem);
+            // Then
+            assertThat(invoiceItemDto.isAdjustment()).isTrue();
+        }
+
     }
 
-    @Test
-    public void fall_back_to_date_when_effective_is_empty() throws Exception {
-        //Given
-        assertThat(invoiceItem.getEffectiveStartDate()).isNull();
-        assertThat(invoiceItem.getStartDate()).isNull();
-        final LocalDate startDate = new LocalDate(2016, 1, 1);
-
-        // When
-        invoiceItem.setStartDate(startDate);
-        InvoiceItemDto invoiceItemDto = new InvoiceItemForLeaseDtoFactory().newDto(invoiceItem);
-        // Then
-        assertThat(invoiceItemDto.getStartDate().toString()).isEqualTo("2016-01-01T00:00:00.000Z");
-        assertThat(invoiceItemDto.getEffectiveStartDate().toString()).isEqualTo("2016-01-01T00:00:00.000Z");
-    }
 
 
 }
