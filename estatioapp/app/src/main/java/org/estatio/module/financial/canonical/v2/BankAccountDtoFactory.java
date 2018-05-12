@@ -22,6 +22,8 @@ public class BankAccountDtoFactory extends DtoFactoryAbstract {
         final BankAccountDto dto = new BankAccountDto();
 
         dto.setSelf(mappingHelper.oidDtoFor(bankAccount));
+        dto.setAtPath(bankAccount.getAtPath());
+
         dto.setAccountNumber(bankAccount.getAccountNumber());
         dto.setBankParty(mappingHelper.oidDtoFor(bankAccount.getBank()));
         dto.setBranchCode(bankAccount.getBranchCode());

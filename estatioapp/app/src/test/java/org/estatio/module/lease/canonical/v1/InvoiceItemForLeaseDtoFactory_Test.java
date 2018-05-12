@@ -1,24 +1,38 @@
 package org.estatio.module.lease.canonical.v1;
 
+import org.jmock.Expectations;
+import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+
+import org.apache.isis.applib.services.dto.DtoMappingHelper;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.canonical.invoice.v1.InvoiceItemDto;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeGroup;
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
+import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.tax.dom.Tax;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class InvoiceItemForLeaseDtoFactory_Test {
+
+    @Rule
+    public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
+
+    InvoiceItemForLeaseDtoFactory invoiceItemForLeaseDtoFactory;
+
+    @Mock
+    DtoMappingHelper mockMappingHelper;
 
     InvoiceItemForLease invoiceItem;
 
@@ -57,16 +71,23 @@ public class InvoiceItemForLeaseDtoFactory_Test {
         invoiceItem.setCharge(charge);
         invoiceItem.setTax(tax);
 
+        invoiceItemForLeaseDtoFactory = new InvoiceItemForLeaseDtoFactory();
+        invoiceItemForLeaseDtoFactory.mappingHelper = mockMappingHelper;
+
+        context.checking(new Expectations() {{
+            ignoring(mockMappingHelper);
+        }});
     }
 
     public static class Occupancies_Test extends InvoiceItemForLeaseDtoFactory_Test {
+
         @Ignore // TODO: See ECP-196
         @Test(expected = IllegalArgumentException.class)
         public void throw_error_when_outside_scope_of_occupancies() throws Exception {
             //Given
             invoiceItem.setEffectiveStartDate(new LocalDate(2014, 1, 1));
             // When
-            InvoiceItemDto invoiceItemDto = new InvoiceItemForLeaseDtoFactory().newDto(invoiceItem);
+            InvoiceItemDto invoiceItemDto = invoiceItemForLeaseDtoFactory.newDto(invoiceItem);
         }
 
         @Test
@@ -74,7 +95,7 @@ public class InvoiceItemForLeaseDtoFactory_Test {
             //Given
             invoiceItem.setEffectiveStartDate(new LocalDate(2013, 10, 1));
             // When
-            InvoiceItemDto invoiceItemDto = new InvoiceItemForLeaseDtoFactory().newDto(invoiceItem);
+            InvoiceItemDto invoiceItemDto = invoiceItemForLeaseDtoFactory.newDto(invoiceItem);
             // Then
             assertThat(invoiceItemDto.getFixedAssetReference()).isEqualTo("UN");
             assertThat(invoiceItemDto.getOccupancyBrand()).isEqualTo("BRAND");
@@ -88,7 +109,7 @@ public class InvoiceItemForLeaseDtoFactory_Test {
             unitOnItem.setReference("XXX");
             invoiceItem.setFixedAsset(unitOnItem);
             // When
-            InvoiceItemDto invoiceItemDto = new InvoiceItemForLeaseDtoFactory().newDto(invoiceItem);
+            InvoiceItemDto invoiceItemDto = invoiceItemForLeaseDtoFactory.newDto(invoiceItem);
             // Then
             assertThat(invoiceItemDto.getFixedAssetReference()).isEqualTo("XXX");
             assertThat(invoiceItemDto.getOccupancyBrand()).isEqualTo("BRAND");
@@ -106,7 +127,7 @@ public class InvoiceItemForLeaseDtoFactory_Test {
 
             // When
             invoiceItem.setStartDate(startDate);
-            InvoiceItemDto invoiceItemDto = new InvoiceItemForLeaseDtoFactory().newDto(invoiceItem);
+            InvoiceItemDto invoiceItemDto = invoiceItemForLeaseDtoFactory.newDto(invoiceItem);
             // Then
             assertThat(invoiceItemDto.getStartDate().toString()).isEqualTo("2016-01-01T00:00:00.000Z");
             assertThat(invoiceItemDto.getEffectiveStartDate().toString()).isEqualTo("2016-01-01T00:00:00.000Z");
@@ -121,7 +142,7 @@ public class InvoiceItemForLeaseDtoFactory_Test {
             //Given
             invoiceItem.setAdjustment(null);
             // When
-            InvoiceItemDto invoiceItemDto = new InvoiceItemForLeaseDtoFactory().newDto(invoiceItem);
+            InvoiceItemDto invoiceItemDto = invoiceItemForLeaseDtoFactory.newDto(invoiceItem);
             // Then
             assertThat(invoiceItemDto.isAdjustment()).isFalse();
         }
@@ -131,7 +152,7 @@ public class InvoiceItemForLeaseDtoFactory_Test {
             //Given
             invoiceItem.setAdjustment(false);
             // When
-            InvoiceItemDto invoiceItemDto = new InvoiceItemForLeaseDtoFactory().newDto(invoiceItem);
+            InvoiceItemDto invoiceItemDto = invoiceItemForLeaseDtoFactory.newDto(invoiceItem);
             // Then
             assertThat(invoiceItemDto.isAdjustment()).isFalse();
         }
@@ -141,7 +162,7 @@ public class InvoiceItemForLeaseDtoFactory_Test {
             //Given
             invoiceItem.setAdjustment(true);
             // When
-            InvoiceItemDto invoiceItemDto = new InvoiceItemForLeaseDtoFactory().newDto(invoiceItem);
+            InvoiceItemDto invoiceItemDto = invoiceItemForLeaseDtoFactory.newDto(invoiceItem);
             // Then
             assertThat(invoiceItemDto.isAdjustment()).isTrue();
         }

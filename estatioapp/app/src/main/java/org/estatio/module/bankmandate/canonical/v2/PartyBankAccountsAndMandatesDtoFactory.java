@@ -80,6 +80,4 @@ public class PartyBankAccountsAndMandatesDtoFactory extends DtoFactoryAbstract {
     @Inject
     BankMandateDtoFactory bankMandateDtoFactory;
 
-    @Inject
-    DtoMappingHelper mappingHelper;
 }

@@ -23,14 +23,13 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 )
 public class InvoiceForLeaseDtoFactory extends DtoFactoryAbstract {
 
-    private final InvoiceItemForLeaseDtoFactory invoiceItemForLeaseDtoFactory = new InvoiceItemForLeaseDtoFactory();
-
     @Programmatic
     public InvoiceDto newDto(final InvoiceForLease invoiceForLease) {
         InvoiceDto dto = new InvoiceDto();
 
         dto.setSelf(mappingHelper.oidDtoFor(invoiceForLease));
         dto.setAtPath(invoiceForLease.getApplicationTenancyPath());
+
         dto.setBuyerParty(mappingHelper.oidDtoFor(invoiceForLease.getBuyer()));
         dto.setSellerParty(mappingHelper.oidDtoFor(invoiceForLease.getSeller()));
 
@@ -93,6 +92,9 @@ public class InvoiceForLeaseDtoFactory extends DtoFactoryAbstract {
                     "Payment method '%s' not recognized.", paymentMethod));
         }
     }
+
+    @Inject
+    InvoiceItemForLeaseDtoFactory invoiceItemForLeaseDtoFactory;
 
     @Inject
     DtoMappingHelper mappingHelper;

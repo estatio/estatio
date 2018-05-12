@@ -24,6 +24,7 @@ public class BankMandateDtoFactory extends DtoFactoryAbstract {
         final BankMandateDto dto = new BankMandateDto();
 
         dto.setSelf(mappingHelper.oidDtoFor(bankMandate));
+        dto.setAtPath(bankMandate.getAtPath());
 
         dto.setReference(fixup(bankMandate.getReference()));
         dto.setScheme(toDto(bankMandate.getScheme()));
@@ -69,7 +70,7 @@ public class BankMandateDtoFactory extends DtoFactoryAbstract {
     }
 
     // TODO: We've added a suffix because agreement names must be unique, remove after closing https://incodehq.atlassian.net/browse/EST-684
-    String fixup(final String reference) {
+    static String fixup(final String reference) {
         if (reference.endsWith("-M")){
             return reference.substring(0,reference.length()-2);
         }

@@ -27,6 +27,8 @@ public class PartyDtoFactory extends DtoFactoryAbstract {
     public PartyDto newDto(final Party party) {
         PartyDto dto = new PartyDto();
         dto.setSelf(mappingHelper.oidDtoFor(party));
+        dto.setAtPath(party.getAtPath());
+
         dto.setName(party.getName());
         dto.setReference(party.getReference());
 

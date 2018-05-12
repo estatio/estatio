@@ -48,7 +48,11 @@ public class PartyDtoFactory_Test {
     public void happy_case() throws Exception {
 
         // given
-        final Party p = new Organisation();
+        final Party p = new Organisation() {
+            @Override public String getAtPath() {
+                return "/FRA";
+            }
+        };
         p.setReference("12345678");
         p.setName("New Company");
 

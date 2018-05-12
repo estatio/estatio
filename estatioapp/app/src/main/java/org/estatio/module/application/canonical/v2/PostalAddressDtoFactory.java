@@ -7,24 +7,26 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.dto.DtoMappingHelper;
 
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.State;
 
 import org.estatio.canonical.communicationchannel.v2.PostalAddressDto;
+import org.estatio.module.base.platform.applib.DtoFactoryAbstract;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
         objectType = "application.canonical.v2.PostalAddressDtoFactory"
 )
-public class PostalAddressDtoFactory {
+public class PostalAddressDtoFactory extends DtoFactoryAbstract {
 
     @Programmatic
     public PostalAddressDto newDto(final PostalAddress postalAddress) {
         PostalAddressDto dto = new PostalAddressDto();
 
         dto.setSelf(mappingHelper.oidDtoFor(postalAddress));
+        dto.setAtPath(postalAddress.getAtPath());
+
         dto.setAddress1(postalAddress.getAddress1());
         dto.setAddress2(postalAddress.getAddress2());
         dto.setAddress3(postalAddress.getAddress3());

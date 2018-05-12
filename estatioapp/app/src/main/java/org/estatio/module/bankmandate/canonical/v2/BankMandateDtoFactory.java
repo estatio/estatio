@@ -25,6 +25,7 @@ public class BankMandateDtoFactory extends DtoFactoryAbstract {
         final BankMandateDto dto = new BankMandateDto();
 
         dto.setSelf(mappingHelper.oidDtoFor(bankMandate));
+        dto.setAtPath(bankMandate.getAtPath());
 
         dto.setReference(fixup(bankMandate.getReference()));
         dto.setScheme(toDto(bankMandate.getScheme()));
