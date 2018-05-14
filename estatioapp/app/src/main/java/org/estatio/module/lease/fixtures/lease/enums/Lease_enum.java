@@ -33,6 +33,7 @@ import static org.estatio.module.lease.fixtures.lease.builders.LeaseBuilder.Invo
 import static org.incode.module.base.integtests.VT.ld;
 import static org.incode.module.country.fixtures.enums.Country_enum.GBR;
 import static org.incode.module.country.fixtures.enums.Country_enum.NLD;
+import static org.incode.module.country.fixtures.enums.Country_enum.SWE;
 
 @AllArgsConstructor()
 @Getter
@@ -40,7 +41,7 @@ import static org.incode.module.country.fixtures.enums.Country_enum.NLD;
 public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderScript<Lease, LeaseBuilder> {
 
     KalPoison001Nl  (
-            "KAL-POISON-001", "Poison Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.KalNl,
+            "KAL-POISON-001", null, "Poison Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.KalNl,
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
             ld(2011, 1, 1), ld(2020, 12, 31),
             new OccupancySpec[] {
@@ -50,7 +51,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     OxfMediaX002Gb  (
-            "OXF-MEDIAX-002", "Mediax Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            "OXF-MEDIAX-002", null, "Mediax Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
             OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.MediaXGb,
             ld(2008, 1, 1), ld(2017, 12, 31),
             new OccupancySpec[] {
@@ -60,7 +61,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.CREATE
     ),
     OxfMiracl005Gb  (
-            "OXF-MIRACL-005", "Miracle lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            "OXF-MIRACL-005", null, "Miracle lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
             OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.MiracleGb,
             ld(2013, 11, 7), ld(2023, 11, 6),
             new OccupancySpec[] {
@@ -70,7 +71,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     OxfPoison003Gb  (
-            "OXF-POISON-003", "Poison Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            "OXF-POISON-003", null, "Poison Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
             OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.PoisonGb,
             ld(2011, 1, 1), ld(2020, 12, 31),
             new OccupancySpec[] {
@@ -80,7 +81,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     OxfPoison010ADVANCEGb  (
-            "OXF-POISON-010", "Poison Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            "OXF-POISON-010", null, "Poison Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
             OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.PoisonGb,
             ld(2011, 1, 1), ld(2020, 12, 31),
             new OccupancySpec[] {
@@ -90,7 +91,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     OxfPoison011ARREARSGb  (
-            "OXF-POISON-011", "Poison Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            "OXF-POISON-011", null, "Poison Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
             OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.PoisonGb,
             ld(2011, 1, 1), ld(2020, 12, 31),
             new OccupancySpec[] {
@@ -100,7 +101,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     OxfPret004Gb    (
-            "OXF-PRET-004", "Pret-a-Partir lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            "OXF-PRET-004", null, "Pret-a-Partir lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
             OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.PretGb,
             ld(2011, 7, 1), ld(2014, 6, 30),
             new OccupancySpec[] {
@@ -111,7 +112,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     OxfFix006Gb    (
-            "OXF-FIX-006", "Fixed lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            "OXF-FIX-006", null, "Fixed lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
             OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.PretGb,
             ld(2011, 7, 1), ld(2019, 1, 1),
             new OccupancySpec[] {
@@ -121,7 +122,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     OxfTopModel001Gb(
-            "OXF-TOPMODEL-001", "Topmodel Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            "OXF-TOPMODEL-001", null, "Topmodel Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
             OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.TopModelGb,
             ld(2010, 7, 15), ld(2022, 7, 14),
             new OccupancySpec[] {
@@ -131,7 +132,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.CREATE
     ),
     BudPoison001Nl(
-            "BUD-POISON-001", "Poison Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl,
+            "BUD-POISON-001", null, "Poison Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl,
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
             ld(2011, 1, 1), ld(2020, 12, 31),
             new OccupancySpec[] {
@@ -141,7 +142,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     BudMiracle002Nl(
-            "BUD-MIRACLE-002", "Miracle Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl,
+            "BUD-MIRACLE-002", null, "Miracle Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl,
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.MiracleNl,
             ld(2011, 1, 1), ld(2015, 6, 30),
             new OccupancySpec[] {
@@ -151,7 +152,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     BudHello003Nl(
-            "BUD-HELLO-003", "Hello Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl,
+            "BUD-HELLO-003", null, "Hello Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl,
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.HelloWorldNl,
             ld(2015, 4, 1), ld(2020, 12, 31),
             new OccupancySpec[] {
@@ -161,7 +162,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     BudDago004Nl(
-            "BUD-DAGO-004", "Dago Bank Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl,
+            "BUD-DAGO-004", null, "Dago Bank Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl,
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.DagoBankNl,
             ld(2011, 1, 1), ld(2015, 6, 30),
             new OccupancySpec[] {
@@ -172,7 +173,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     BudNlBank004Nl(
-            "BUD-NLBANK-004", "NL Bank Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl,
+            "BUD-NLBANK-004", null, "NL Bank Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl,
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.NlBankNl,
             ld(2015, 10, 1), ld(2020, 6, 30),
             new OccupancySpec[] {
@@ -182,7 +183,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     BudHyper005Nl(
-            "BUD-HYPER-005", "Hypermarkt Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl,
+            "BUD-HYPER-005", null, "Hypermarkt Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl,
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.HyperNl,
             ld(2015, 4, 1), ld(2015, 6, 30),
             new OccupancySpec[] {
@@ -192,7 +193,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     BudHello006Nl(
-            "BUD-HELLO-006", "Hello Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl,
+            "BUD-HELLO-006", null, "Hello Amsterdam", PropertyAndUnitsAndOwnerAndManager_enum.BudNl,
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.DagoBankNl, // tenant looks wrong here...
             ld(2011, 1, 1), ld(2014, 12, 31),
             new OccupancySpec[] {
@@ -200,6 +201,36 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.CREATE
+    ),
+    HanPoison001Se  (
+            "HAN-POISON-001", "4060-1001-02", "Poison Handla Center", PropertyAndUnitsAndOwnerAndManager_enum.HanSe,
+            OrganisationAndComms_enum.HelloWorldSe, Organisation_enum.PoisonSe,
+            ld(2011, 1, 1), ld(2020, 12, 31),
+            new OccupancySpec[] {
+                    new OccupancySpec("001", "Poison", INTERNATIONAL, SWE, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), null)
+            },
+            Person_enum.JohnDoeSe,
+            InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE
+    ),
+    HanTopModel002Se(
+            "HAN-TOPMODEL-002", "4060-0090-03", "Topmodel Handla Center", PropertyAndUnitsAndOwnerAndManager_enum.HanSe,
+            OrganisationAndComms_enum.HelloWorldSe, Organisation_enum.TopModelSe,
+            ld(2010, 7, 15), ld(2022, 7, 14),
+            new OccupancySpec[] {
+                    new OccupancySpec("002", "Topmodel", NATIONAL, SWE, "FASHION", "WOMEN", ld(2010, 7, 15), null)
+            },
+            Person_enum.GinoVannelliSe,
+            InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
+    ),
+    HanOmsHyral003Se(
+            "HAN-OMSHYRA-003", "4060-0100-05", "OmsHyra Handla Center", PropertyAndUnitsAndOwnerAndManager_enum.HanSe,
+            OrganisationAndComms_enum.HelloWorldSe, Organisation_enum.OmsHyraSe,
+            ld(2012, 6, 1), ld(2020, 5, 31),
+            new OccupancySpec[] {
+                    new OccupancySpec("003", "Omshyra", NATIONAL, SWE, "RENTALS", "CARS", ld(2012, 6, 1), null)
+            },
+            Person_enum.GinoVannelliSe,
+            InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     ;
 
@@ -217,6 +248,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     }
 
     private final String ref;
+    private final String externalRef;
     private final String name;
     private final PropertyAndUnitsAndOwnerAndManager_enum propertyAndUnits_d;
     private final OrganisationAndComms_enum landlord_d;
@@ -252,6 +284,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
 
                     f.setProperty(f.objectFor(propertyAndUnits_d.getProperty_d(), ec));
                 })
+                .setExternalRef(externalRef)
                 .setReference(ref)
                 .setName(name)
                 .setPrereq((f,ec) -> f.setLandlord(f.objectFor(landlord_d, ec)))

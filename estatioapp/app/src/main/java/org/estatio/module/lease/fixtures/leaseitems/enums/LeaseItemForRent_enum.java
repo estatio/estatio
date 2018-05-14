@@ -86,7 +86,17 @@ public enum LeaseItemForRent_enum implements PersonaWithFinder<LeaseItem>, Perso
                             null, null, null, Index_enum.IStatFoi),
                     new TermSpec(Lease_enum.OxfFix006Gb.getStartDate().plusYears(1), null, null, bd(87300),
                             ld(2011, 1, 1), ld(2012, 1, 1), ld(2012, 4, 1), Index_enum.IStatFoi),
-            })
+            }),
+    HanPoison001Se(Lease_enum.HanPoison001Se, bi(1),
+            new TermSpec[]{
+                    new TermSpec(null, null, null, bd(150000),
+                            null, null, null, Index_enum.IStatFoi)
+            }),
+    HanTopModel002Se(Lease_enum.HanTopModel002Se, bi(1),
+            new TermSpec[]{
+                    new TermSpec(null, null, null, bd(20000),
+                            ld(2010, 7, 1), ld(2011, 1, 1), ld(2011, 4, 1), Index_enum.IStatFoi)
+            }),
     ;
 
     private final Lease_enum lease_d;

@@ -28,7 +28,7 @@ import lombok.Setter;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
-        objectType = "org.estatio.dom.viewmodels.LeaseTermForTurnoverRentImport"
+        objectType = "org.estatio.dom.viewmodels.LeaseTermForFixedImport"
 )
 public class LeaseTermForFixedImport extends LeaseTermImportAbstract implements ExcelFixtureRowHandler, Importable {
 

@@ -29,9 +29,11 @@ import lombok.experimental.Accessors;
 import static org.estatio.module.party.dom.PersonGenderType.FEMALE;
 import static org.estatio.module.party.dom.PersonGenderType.MALE;
 import static org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum.CONTACT;
+import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.OmsHyraSe;
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.PastaPapaItNl;
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.PerdantFr;
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.TopModelGb;
+import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.TopModelSe;
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.YoukeaSe;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Fr;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Gb;
@@ -156,6 +158,18 @@ public enum Person_enum
     ThibaultOfficerAdministratorFr("TJOSUE", "Thibault", "Josue", null, true, MALE, Fr,
             null, null,
             new IPartyRoleType[] { PartyRoleTypeEnum.OFFICE_ADMINISTRATOR },
+            new FixedAssetRoleSpec[] {}),
+    JohnDoeSe("JDOE", "John", "Doe", "J", false, MALE, Se,
+            null, null,
+            new IPartyRoleType[] {  },
+            new FixedAssetRoleSpec[] {}),
+    GinoVannelliSe("GVANNELLI", "Gino", "Vannelli", "G", false, MALE, Se,
+            CONTACT, TopModelSe,
+            new IPartyRoleType[] {  },
+            new FixedAssetRoleSpec[] {}),
+    JonasCar("JCAR", "Jonas", "Car", "J", false, MALE, Se,
+            CONTACT, OmsHyraSe,
+            new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
     ;
 

@@ -33,6 +33,7 @@ import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerLink;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerLinkRepository;
@@ -48,7 +49,6 @@ import org.estatio.module.agreement.dom.role.AgreementRoleType;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.Unit;
-import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.estatio.module.lease.dom.AgreementRoleCommunicationChannelTypeEnum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
@@ -78,6 +78,8 @@ public final class LeaseBuilder
 
     @Getter @Setter
     String reference;
+    @Getter @Setter
+    String externalRef;
     @Getter @Setter
     String name;
     @Getter @Setter
@@ -158,6 +160,7 @@ public final class LeaseBuilder
                 landlord,
                 tenant
         );
+        lease.setExternalReference(externalRef);
         executionContext.addResult(this, lease.getReference(), lease);
 
         if (manager != null) {

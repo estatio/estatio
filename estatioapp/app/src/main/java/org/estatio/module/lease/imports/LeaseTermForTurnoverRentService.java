@@ -17,32 +17,23 @@
  */
 package org.estatio.module.lease.imports;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.NotContributed.As;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
+import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
 import org.estatio.module.base.dom.UdoDomainService;
-import org.estatio.module.asset.dom.Property;
-import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseTermRepository;
 
 @DomainService(
         menuOrder = "00",
-        objectType = "org.estatio.app.services.lease.turnoverrent.LeaseTermForTurnoverRentService"
+        objectType = "org.estatio.app.services.lease.turnoverrent.LeaseTermForTurnoverRentService",
+        nature = NatureOfService.DOMAIN
 )
-@Immutable
 public class LeaseTermForTurnoverRentService extends UdoDomainService<LeaseTermForTurnoverRentService> {
 
     public LeaseTermForTurnoverRentService() {
@@ -59,27 +50,12 @@ public class LeaseTermForTurnoverRentService extends UdoDomainService<LeaseTermF
         }
     }
 
-    // //////////////////////////////////////
-
-    @NotContributed(As.ASSOCIATION)
-    // ie *is* contributed as action
-    @NotInServiceMenu
-    public LeaseTermForTurnoverRentManager maintainTurnoverRent(
-            final Property property,
-            @Named("Start date") final LocalDate startDate) {
-        return new LeaseTermForTurnoverRentManager(property, startDate);
-    }
-
-    public List<LocalDate> choices1MaintainTurnoverRent(final Property property) {
-        return leaseTermRepository.findStartDatesByPropertyAndType(property, LeaseItemType.TURNOVER_RENT);
-    }
-
-    // //////////////////////////////////////
 
     @javax.inject.Inject
     private ExcelService excelService;
 
     @javax.inject.Inject
     private LeaseTermRepository leaseTermRepository;
+
 
 }

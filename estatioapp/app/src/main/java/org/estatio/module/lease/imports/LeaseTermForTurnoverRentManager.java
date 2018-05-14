@@ -90,7 +90,7 @@ public class LeaseTermForTurnoverRentManager {
     }
 
     public List<LocalDate> choices1SelectProperty(Property property) {
-        return leaseTermRepository.findStartDatesByPropertyAndType(property, LeaseItemType.SERVICE_CHARGE);
+        return leaseTermRepository.findStartDatesByPropertyAndType(property, LeaseItemType.TURNOVER_RENT);
     }
     //endregion
 
@@ -107,7 +107,7 @@ public class LeaseTermForTurnoverRentManager {
     }
 
     public List<LocalDate> choices0SelectStartDate() {
-        return leaseTermRepository.findStartDatesByPropertyAndType(property, LeaseItemType.SERVICE_CHARGE);
+        return leaseTermRepository.findStartDatesByPropertyAndType(property, LeaseItemType.TURNOVER_RENT);
     }
 
     public LocalDate default0SelectStartDate() {

@@ -35,6 +35,7 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 import static org.incode.module.country.fixtures.enums.Country_enum.GBR;
 import static org.incode.module.country.fixtures.enums.Country_enum.NLD;
+import static org.incode.module.country.fixtures.enums.Country_enum.SWE;
 
 @AllArgsConstructor
 @Getter
@@ -138,6 +139,14 @@ public enum OrganisationAndComms_enum
                     null,
                     null)
     }),
+    HelloWorldSe(Organisation_enum.HelloWorldSe,
+            new OrganisationAndCommsBuilder.CommsSpec[] {
+                    new OrganisationAndCommsBuilder.CommsSpec(
+                            "SomeGatan 11", null, "111 22", "Stockholm", null, SWE, true,
+                            "+46082211333",
+                            "+460822211399",
+                            "info@helloworldse.example.com")
+            }),
     ;
 
     private final Organisation_enum organisation_d;
