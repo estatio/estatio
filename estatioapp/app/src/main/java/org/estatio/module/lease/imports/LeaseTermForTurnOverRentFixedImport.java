@@ -8,10 +8,9 @@ import javax.inject.Inject;
 import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -27,6 +26,7 @@ import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTermForFixed;
 import org.estatio.module.lease.dom.LeaseTermRepository;
+import org.estatio.module.lease.dom.LeaseTermStatus;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -37,33 +37,40 @@ import lombok.Setter;
 )
 public class LeaseTermForTurnOverRentFixedImport implements ExcelFixtureRowHandler, Importable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LeaseTermForTurnOverRentFixedImport.class);
-
     @Getter @Setter
+    @MemberOrder(sequence = "1")
     private String leaseReference;
 
     @Getter @Setter
+    @MemberOrder(sequence = "2")
     private String leaseExternalReference;
 
     @Getter @Setter
+    @MemberOrder(sequence = "3")
     private LocalDate startDatePrevious;
 
     @Getter @Setter
+    @MemberOrder(sequence = "4")
     private BigDecimal valuePrevious;
 
     @Getter @Setter
+    @MemberOrder(sequence = "5")
     private LocalDate startDateCurrent;
 
     @Getter @Setter
+    @MemberOrder(sequence = "6")
     private BigDecimal valueCurrent;
 
     @Getter @Setter
+    @MemberOrder(sequence = "7")
     private LocalDate startDate;
 
     @Getter @Setter
+    @MemberOrder(sequence = "8")
     private LocalDate endDate;
 
     @Getter @Setter
+    @MemberOrder(sequence = "9")
     private BigDecimal value;
 
     @Programmatic
@@ -107,9 +114,11 @@ public class LeaseTermForTurnOverRentFixedImport implements ExcelFixtureRowHandl
         if (termToUpdate!=null){
             termToUpdate.setValue(value);
             termToUpdate.setEndDate(endDate!=null ? endDate : termToUpdate.getEndDate());
+            termToUpdate.setStatus(LeaseTermStatus.APPROVED);
         } else {
             LeaseTermForFixed newTerm = (LeaseTermForFixed) itemToUpdate.newTerm(startDate, endDate!=null ? endDate : startDate.plusYears(1).minusDays(1));
             newTerm.setValue(value);
+            newTerm.setStatus(LeaseTermStatus.APPROVED);
         }
     }
 
