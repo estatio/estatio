@@ -114,11 +114,11 @@ public class LeaseTermForTurnOverRentFixedImport implements ExcelFixtureRowHandl
         if (termToUpdate!=null){
             termToUpdate.setValue(value);
             termToUpdate.setEndDate(endDate!=null ? endDate : termToUpdate.getEndDate());
-            termToUpdate.setStatus(LeaseTermStatus.APPROVED);
+            if (value!=null && value.compareTo(BigDecimal.ZERO) > 0) termToUpdate.setStatus(LeaseTermStatus.APPROVED);
         } else {
             LeaseTermForFixed newTerm = (LeaseTermForFixed) itemToUpdate.newTerm(startDate, endDate!=null ? endDate : startDate.plusYears(1).minusDays(1));
             newTerm.setValue(value);
-            newTerm.setStatus(LeaseTermStatus.APPROVED);
+            if (value!=null && value.compareTo(BigDecimal.ZERO) > 0) newTerm.setStatus(LeaseTermStatus.APPROVED);
         }
     }
 

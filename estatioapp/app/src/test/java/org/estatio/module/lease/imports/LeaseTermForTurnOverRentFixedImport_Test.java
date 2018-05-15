@@ -191,4 +191,58 @@ public class LeaseTermForTurnOverRentFixedImport_Test {
         assertThat(leaseTermForFixed.getStatus()).isEqualTo(LeaseTermStatus.APPROVED);
     }
 
+    @Test
+    public void updateOrCreateTerm_works_when_no_value() throws Exception {
+
+        // given
+        LeaseTermForTurnOverRentFixedImport importLine = new LeaseTermForTurnOverRentFixedImport();
+        importLine.leaseTermRepository = mockLeaseTermRepository;
+
+        LeaseTermForFixed leaseTermForFixed = new LeaseTermForFixed();
+        LeaseItem leaseItem = new LeaseItem();
+
+        LocalDate startDate = new LocalDate(2018,01,01);
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockLeaseTermRepository).findByLeaseItemAndStartDate(leaseItem, startDate);
+            will(returnValue(leaseTermForFixed));
+        }});
+
+        // when
+        importLine.updateOrCreateTerm(leaseItem, startDate, null, null);
+
+        // then
+        assertThat(leaseTermForFixed.getValue()).isNull();
+        assertThat(leaseTermForFixed.getEndDate()).isNull();
+        assertThat(leaseTermForFixed.getStatus()).isNotEqualTo(LeaseTermStatus.APPROVED);
+    }
+
+    @Test
+    public void updateOrCreateTerm_works_with_zero_value() throws Exception {
+
+        // given
+        LeaseTermForTurnOverRentFixedImport importLine = new LeaseTermForTurnOverRentFixedImport();
+        importLine.leaseTermRepository = mockLeaseTermRepository;
+
+        LeaseTermForFixed leaseTermForFixed = new LeaseTermForFixed();
+        LeaseItem leaseItem = new LeaseItem();
+
+        LocalDate startDate = new LocalDate(2018,01,01);
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockLeaseTermRepository).findByLeaseItemAndStartDate(leaseItem, startDate);
+            will(returnValue(leaseTermForFixed));
+        }});
+
+        // when
+        importLine.updateOrCreateTerm(leaseItem, startDate, null, new BigDecimal("0.00"));
+
+        // then
+        assertThat(leaseTermForFixed.getValue()).isEqualTo(new BigDecimal("0.00"));
+        assertThat(leaseTermForFixed.getEndDate()).isNull();
+        assertThat(leaseTermForFixed.getStatus()).isNotEqualTo(LeaseTermStatus.APPROVED);
+    }
+
 }
