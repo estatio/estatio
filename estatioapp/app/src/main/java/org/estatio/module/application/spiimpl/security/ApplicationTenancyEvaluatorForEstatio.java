@@ -76,8 +76,19 @@ public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancy
     }
 
     boolean objectVisibleToUser(String objectTenancyPath, String userTenancyPath) {
-        final List<String> objectTenancyPathList = split(objectTenancyPath);
-        final List<String> userTenancyPathList = split(userTenancyPath);
+        List<String> userTenancyPaths = split(userTenancyPath, ';');
+        for (String tenancyPath : userTenancyPaths) {
+            boolean visibleForThisPath = objectVisibleToUserForSinglePath(objectTenancyPath, tenancyPath);
+            if(visibleForThisPath) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean objectVisibleToUserForSinglePath(final String objectTenancyPath, final String userTenancyPath) {
+        final List<String> objectTenancyPathList = split(objectTenancyPath, '/');
+        final List<String> userTenancyPathList = split(userTenancyPath, '/');
 
         for (int i = 0; i < objectTenancyPathList.size(); i++) {
             final String objectTenancyPathPart = objectTenancyPathList.get(i);
@@ -95,8 +106,19 @@ public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancy
     }
 
     boolean objectEnabledForUser(String objectTenancyPath, String userTenancyPath) {
-        final List<String> objectTenancyPathList = split(objectTenancyPath);
-        final List<String> userTenancyPathList = split(userTenancyPath);
+        List<String> userTenancyPaths = split(userTenancyPath, ';');
+        for (String tenancyPath : userTenancyPaths) {
+            boolean enabledForThisPath = objectEnabledForUserSinglePath(objectTenancyPath, tenancyPath);
+            if(enabledForThisPath) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean objectEnabledForUserSinglePath(final String objectTenancyPath, final String userTenancyPath) {
+        final List<String> objectTenancyPathList = split(objectTenancyPath, '/');
+        final List<String> userTenancyPathList = split(userTenancyPath, '/');
 
         for (int i = 0; i < objectTenancyPathList.size(); i++) {
             final String objectTenancyPathPart = objectTenancyPathList.get(i);
@@ -126,10 +148,11 @@ public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancy
         return Objects.equals(objectTenancyPathPart, baseUserTenancyPathPart);
     }
 
-    private static List<String> split(String objectTenancyPath) {
-        return FluentIterable.from(Splitter.on('/')
+    private static List<String> split(final String objectTenancyPath, final char separator) {
+        return FluentIterable.from(Splitter.on(separator)
                             .split(objectTenancyPath))
                             .filter(s -> !com.google.common.base.Strings.isNullOrEmpty(s))
+                            .transform(s -> s.trim())
                             .toList();
     }
 
