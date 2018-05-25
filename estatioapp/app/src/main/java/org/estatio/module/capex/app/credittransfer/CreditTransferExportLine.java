@@ -1,6 +1,7 @@
 package org.estatio.module.capex.app.credittransfer;
 
 import java.math.BigDecimal;
+import java.net.URL;
 
 import javax.annotation.Nullable;
 
@@ -81,6 +82,9 @@ public class CreditTransferExportLine {
 
     @MemberOrder(sequence = "17")
     private String invoiceDocumentName;
+
+    @MemberOrder(sequence = "18")
+    private String linkToInvoice;
 
     @MemberOrder(sequence = "15")
     private String invoiceType;
