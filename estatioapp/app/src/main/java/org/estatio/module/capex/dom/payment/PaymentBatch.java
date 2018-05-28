@@ -5,9 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -61,7 +59,6 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.bookmark.BookmarkService2;
 import org.apache.isis.applib.services.jaxb.JaxbService;
 import org.apache.isis.applib.services.linking.DeepLinkService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
@@ -176,11 +173,10 @@ import lombok.Setter;
 public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stateful {
 
     public static class ObjectPersistedEvent
-            extends org.apache.isis.applib.services.eventbus.ObjectPersistedEvent<PaymentBatch> {
+            extends org.apache.isis.applib.services.eventbus.ObjectPersistedEvent <PaymentBatch> {
     }
-
     public static class ObjectPersistingEvent
-            extends org.apache.isis.applib.services.eventbus.ObjectPersistingEvent<PaymentBatch> {
+            extends org.apache.isis.applib.services.eventbus.ObjectPersistingEvent <PaymentBatch> {
     }
 
     public PaymentBatch() {
@@ -190,19 +186,21 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     public PaymentBatch(
             final DateTime createdOn,
             final BankAccount debtorBankAccount,
-            final PaymentBatchApprovalState approvalState) {
+            final PaymentBatchApprovalState approvalState){
         this();
         this.createdOn = createdOn;
         this.debtorBankAccount = debtorBankAccount;
         this.approvalState = approvalState;
     }
 
+
+
     public String title() {
         switch (getApprovalState()) {
-            case NEW:
-                return titleService.titleOf(getDebtorBankAccount()) + " (new " + getCreatedOnYMD() + ")";
-            default:
-                return titleService.titleOf(getDebtorBankAccount()) + " @ " + getRequestedExecutionDate().toString("yyyyMMdd-hhmm");
+        case NEW:
+            return titleService.titleOf(getDebtorBankAccount()) + " (new " + getCreatedOnYMD() + ")";
+        default:
+            return titleService.titleOf(getDebtorBankAccount()) + " @ " + getRequestedExecutionDate().toString("yyyyMMdd-hhmm");
         }
     }
 
@@ -227,6 +225,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     @Column(allowsNull = "true")
     @Getter @Setter
     private DateTime requestedExecutionDate;
+
 
     @Property(notPersisted = true)
     public BigDecimal getTotalNetAmount() {
@@ -274,6 +273,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     @Getter @Setter
     private SortedSet<PaymentLine> lines = new TreeSet<>();
 
+
     @Programmatic
     public boolean contains(final IncomingInvoice invoice) {
         return lineIfAnyFor(invoice) != null;
@@ -281,7 +281,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
     @Programmatic
     public void addLineIfRequired(final IncomingInvoice incomingInvoice) {
-        if (!getApprovalState().isModifiable()) {
+        if(!getApprovalState().isModifiable()) {
             // no-op if not modifiable.
             // this shouldn't happen because calling actions should have appropriate guards;
             // so this is just belt-n-braces
@@ -305,8 +305,8 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                 Lists.newArrayList(getLines()).stream()
                         .map(PaymentLine::getSequence)
                         .collect(Collectors.toList());
-        for (int i = 1; i < Integer.MAX_VALUE; i++) {
-            if (!usedSequences.contains(i)) {
+        for(int i = 1; i<Integer.MAX_VALUE; i++) {
+            if(!usedSequences.contains(i)) {
                 return i;
             }
         }
@@ -323,38 +323,39 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                 .findFirst();
     }
 
+
     @Inject
     TransactionService transactionService;
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public boolean getUpstreamCreditNoteFound() {
-        return Lists.newArrayList(getLines()).stream().filter(x -> x.getUpstreamCreditNoteFound()).findAny().isPresent();
+    public boolean getUpstreamCreditNoteFound(){
+        return Lists.newArrayList(getLines()).stream().filter(x->x.getUpstreamCreditNoteFound()).findAny().isPresent();
     }
 
     /**
      * TODO: inline this mixin
      */
-    @Mixin(method = "act")
+    @Mixin(method="act")
     public static class removeInvoice {
         private final PaymentBatch paymentBatch;
-
         public removeInvoice(final PaymentBatch paymentBatch) {
             this.paymentBatch = paymentBatch;
         }
-
         @Action(
                 semantics = SemanticsOf.IDEMPOTENT,
                 publishing = Publishing.DISABLED
         )
         public PaymentBatch act(
                 final List<IncomingInvoice> incomingInvoices,
-                @ParameterLayout(describedAs = "Whether the removed invoices should also be rejected") final boolean rejectAlso,
+                @ParameterLayout(describedAs = "Whether the removed invoices should also be rejected")
+                final boolean rejectAlso,
                 @ParameterLayout(describedAs = "If rejecting, then explain why so that the error can be fixed")
-                @Nullable final String rejectionReason) {
+                @Nullable
+                final String rejectionReason) {
             for (IncomingInvoice incomingInvoice : incomingInvoices) {
                 paymentBatch.removeLineFor(incomingInvoice);
-                if (rejectAlso) {
+                if(rejectAlso) {
                     stateTransitionService.trigger(
                             incomingInvoice, IncomingInvoiceApprovalStateTransitionType.REJECT, null, rejectionReason);
                 }
@@ -369,16 +370,14 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         ) {
             return rejectAlso && rejectionReason == null ? "Provide a reason if rejecting" : null;
         }
-
         public List<IncomingInvoice> choices0Act() {
             return Lists.newArrayList(paymentBatch.getLines()).stream()
                     .map(PaymentLine::getInvoice)
                     .collect(Collectors.toList());
         }
-
         public String disableAct() {
             final String reason = paymentBatch.reasonDisabledDueToState();
-            if (reason != null) {
+            if(reason != null) {
                 return reason;
             }
             return paymentBatch.getLines().isEmpty() ? "No invoices to remove" : null;
@@ -389,7 +388,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     }
 
     @Programmatic
-    public void remove() {
+    public void remove(){
         // Clean up transitions
         approvalStateTransitionRepository.deleteFor(this);
         remove(this);
@@ -398,14 +397,12 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     /**
      * TODO: inline this mixin
      */
-    @Mixin(method = "act")
+    @Mixin(method="act")
     public static class removeAll {
         private final PaymentBatch paymentBatch;
-
         public removeAll(final PaymentBatch paymentBatch) {
             this.paymentBatch = paymentBatch;
         }
-
         @Action(
                 semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE,
                 publishing = Publishing.DISABLED
@@ -418,23 +415,26 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
         public String disableAct() {
             final String reason = paymentBatch.reasonDisabledDueToState();
-            if (reason != null) {
+            if(reason != null) {
                 return reason;
             }
             return paymentBatch.getLines().isEmpty() ? "No invoices to remove" : null;
         }
     }
 
+
     @Programmatic
     public void clearLines() {
         getLines().clear();
     }
+
 
     @Programmatic
     public void removeLineFor(final IncomingInvoice incomingInvoice) {
         Optional<PaymentLine> paymentLineIfAny = lineIfAnyFor(incomingInvoice);
         paymentLineIfAny.ifPresent(paymentLine -> getLines().remove(paymentLine));
     }
+
 
     public List<CreditTransfer> getTransfers() {
         return queryResultsCache.execute(this::doGetCreditTransfers, getClass(), "getTransfers", this);
@@ -457,7 +457,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
             final BankAccount bankAccount = linesByBankAccount.getKey();
             final List<PaymentLine> lines = linesByBankAccount.getValue();
 
-            final String sequenceNums = extractAndJoin(lines, line -> "" + line.getSequence(), "-");
+            final String sequenceNums = extractAndJoin(lines, line -> ""+line.getSequence(), "-");
             final String endToEndId = String.format("%s-%s", getId(), sequenceNums);
             creditTransfer.setEndToEndId(endToEndId);
 
@@ -466,9 +466,9 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
             creditTransfer.setLines(lines);
 
             final BigDecimal amount = lines.stream()
-                    .map(PaymentLine::getAmount)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-            if (!lines.isEmpty()) {
+                                            .map(PaymentLine::getAmount)
+                                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+            if(!lines.isEmpty()) {
                 // should always be non-empty, just playing safe...
                 final PaymentLine firstLine = lines.get(0);
                 creditTransfer.setCurrency(firstLine.getCurrency());
@@ -492,12 +492,9 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         return transfers;
     }
 
-    private static <T> Collector<T, ?, List<T>> toSortedList(Comparator<? super T> c) {
+    private static <T> Collector<T,?,List<T>> toSortedList(Comparator<? super T> c) {
         return Collectors.collectingAndThen(
-                Collectors.toCollection(ArrayList::new), l -> {
-                    l.sort(c);
-                    return l;
-                });
+                Collectors.toCollection(ArrayList::new), l->{ l.sort(c); return l; } );
     }
 
     String extractAndJoin(final List<PaymentLine> lines, final Function<PaymentLine, String> func, final String separator) {
@@ -518,7 +515,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
             S extends State<S>
             > S getStateOf(
             final Class<ST> stateTransitionClass) {
-        if (stateTransitionClass == PaymentBatchApprovalStateTransition.class) {
+        if(stateTransitionClass == PaymentBatchApprovalStateTransition.class) {
             return (S) approvalState;
         }
         return null;
@@ -532,8 +529,8 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
             S extends State<S>
             > void setStateOf(
             final Class<ST> stateTransitionClass, final S newState) {
-        if (stateTransitionClass == PaymentBatchApprovalStateTransition.class) {
-            setApprovalState((PaymentBatchApprovalState) newState);
+        if(stateTransitionClass == PaymentBatchApprovalStateTransition.class) {
+            setApprovalState( (PaymentBatchApprovalState) newState );
         }
     }
 
@@ -548,24 +545,21 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     /**
      * TODO: inline this mixin
      */
-    @Mixin(method = "act")
+    @Mixin(method="act")
     public static class downloadPaymentFile {
         private final PaymentBatch paymentBatch;
-
         public downloadPaymentFile(final PaymentBatch paymentBatch) {
             this.paymentBatch = paymentBatch;
         }
-
         @Action(semantics = SemanticsOf.SAFE)
-        @ActionLayout(contributed = Contributed.AS_ACTION)
+        @ActionLayout(contributed= Contributed.AS_ACTION)
         public Clob act(final String documentName) {
             Document document = paymentBatch.convertToXmlDocument();
             String xml = jaxbService.toXml(document);
             return new Clob(documentName, "text/xml", xml);
         }
-
         public String disableAct() {
-            if (paymentBatch.getLines().isEmpty()) {
+            if(paymentBatch.getLines().isEmpty()) {
                 return "No payment lines";
             }
             if (paymentBatch.getApprovalState() == PaymentBatchApprovalState.NEW) {
@@ -573,22 +567,25 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
             }
             return null;
         }
-
         public String default0Act() {
             return paymentBatch.fileNameWithSuffix("xml");
         }
+
 
         @Inject
         JaxbService jaxbService;
 
     }
 
+
     @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ACTION)
+    @ActionLayout(contributed= Contributed.AS_ACTION)
     public Blob downloadReviewPdf(
             final String documentName,
-            @ParameterLayout(named = "How many first pages of each invoice's PDF?") final Integer numFirstPages,
-            @ParameterLayout(named = "How many final pages of each invoice's PDF?") final Integer numLastPages) throws IOException {
+            @ParameterLayout(named = "How many first pages of each invoice's PDF?")
+            final Integer numFirstPages,
+            @ParameterLayout(named = "How many final pages of each invoice's PDF?")
+            final Integer numLastPages) throws IOException {
 
         final List<File> pdfFiles = Lists.newArrayList();
 
@@ -604,7 +601,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                 final Optional<org.incode.module.document.dom.impl.docs.Document> invoiceDocIfAny =
                         lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(invoice);
 
-                if (invoiceDocIfAny.isPresent()) {
+                if(invoiceDocIfAny.isPresent()) {
                     final org.incode.module.document.dom.impl.docs.Document invoiceDoc = invoiceDocIfAny.get();
                     final byte[] invoiceDocBytes = invoiceDoc.asBytes();
 
@@ -627,7 +624,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
                     boolean attachProof = false;
                     final String proof;
-                    if (ibanProofDocIfAny.isPresent()) {
+                    if(ibanProofDocIfAny.isPresent()) {
                         final org.incode.module.document.dom.impl.docs.Document ibanProofDoc = ibanProofDocIfAny.get();
                         if (DocumentTypeData.IBAN_PROOF.isDocTypeFor(ibanProofDoc)) {
                             proof = "Separate IBAN proof (next page)";
@@ -648,7 +645,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
                     appendTempFile(extractedInvoiceDocBytes, documentName, pdfFiles);
 
-                    if (attachProof) {
+                    if(attachProof) {
                         final org.incode.module.document.dom.impl.docs.Document ibanProofDoc = ibanProofDocIfAny.get();
                         final byte[] ibanProofBytes = ibanProofDoc.asBytes();
                         final byte[] firstPageIbanProofDocBytes =
@@ -692,11 +689,9 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     public String default0DownloadReviewPdf() {
         return this.fileNameWithSuffix("pdf");
     }
-
     public Integer default1DownloadReviewPdf() {
         return 1;
     }
-
     public List<Integer> choices1DownloadReviewPdf() {
         return InvoicePageRange.firstPageChoices();
     }
@@ -704,13 +699,12 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     public Integer default2DownloadReviewPdf() {
         return 0;
     }
-
     public List<Integer> choices2DownloadReviewPdf() {
         return InvoicePageRange.lastPageChoices();
     }
 
     public String disableDownloadReviewPdf() {
-        if (this.getLines().isEmpty()) {
+        if(this.getLines().isEmpty()) {
             return "No payment lines";
         }
         return null;
@@ -720,20 +714,13 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
             semantics = SemanticsOf.SAFE
     )
     public Blob downloadReviewSummary(
-            @Nullable final String documentName) {
+            @Nullable final String documentName){
         List<CreditTransferExportLine> exportLines = new ArrayList<>();
         int lineNumber = 1;
-        for (CreditTransfer transfer : getTransfers()) {
+        for (CreditTransfer transfer : getTransfers()){
             boolean newTransfer = true;
-            for (PaymentLine paymentLine : transfer.getLines()) {
+            for (PaymentLine paymentLine : transfer.getLines()){
                 String firstUse = creditTransferExportService.isFirstUseBankAccount(transfer) ? "YES" : "no";
-                String invoiceUrl;
-                try {
-                    invoiceUrl = deepLinkService.deepLinkFor(paymentLine.getInvoice()).toURL().toString();
-                } catch (MalformedURLException e) {
-                    invoiceUrl = "";
-                }
-
                 exportLines.add(
                         new CreditTransferExportLine(
                                 lineNumber,
@@ -752,42 +739,34 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                                 creditTransferExportService.getApprovalStateTransitionSummary(paymentLine.getInvoice()),
                                 paymentLine.getInvoice().getDescriptionSummary(),
                                 creditTransferExportService.getInvoiceDocumentName(paymentLine.getInvoice()),
-                                invoiceUrl,
-                                paymentLine.getInvoice().getType() == IncomingInvoiceType.CAPEX ?
+                                paymentLine.getInvoice().getType()== IncomingInvoiceType.CAPEX ?
                                         paymentLine.getInvoice().getType().name() + " (" + paymentLine.getInvoice().getProjectSummary() + ")" :
                                         paymentLine.getInvoice().getType().name(),
                                 paymentLine.getInvoice().getPropertySummary()
                         )
                 );
                 newTransfer = false;
-                lineNumber++;
+                lineNumber ++;
             }
         }
-
-        String name = documentName != null ? documentName.concat(".xlsx") : fileNameWithSuffix("xlsx");
+        String name = documentName!=null ? documentName.concat(".xlsx") : fileNameWithSuffix("xlsx");
         return excelService.toExcel(
                 exportLines,
                 CreditTransferExportLine.class,
-
                 getRequestedExecutionDate() != null
-                        ?
-
-                        getRequestedExecutionDate().
-
-                                toString("yyyyMMdd-HHmm")
+                        ? getRequestedExecutionDate().toString("yyyyMMdd-HHmm")
                         : "DRAFT",
                 name);
 
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ACTION)
-    public Blob downloadExcelExport() {
+    @ActionLayout(contributed= Contributed.AS_ACTION)
+    public Blob downloadExcelExport(){
         return excelService.toExcel(paymentLinesForExcelExport(), PaymentLineForExcelExportV1.class, "export", title().concat("-export.xlsx"));
     }
 
-    @Programmatic
-    public List<PaymentLineForExcelExportV1> paymentLinesForExcelExport() {
+    @Programmatic public List<PaymentLineForExcelExportV1> paymentLinesForExcelExport(){
         List<PaymentLineForExcelExportV1> lineVms = new ArrayList<>();
         for (PaymentLine line : getLines()) {
             lineVms.add(new PaymentLineForExcelExportV1(
@@ -822,16 +801,14 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     @Inject
     PdfManipulator pdfManipulator;
 
-    @Inject BookmarkService2 bookmarkService;
-
     @Programmatic
     public String fileNameWithSuffix(String suffix) {
         return String.format("%s-%s.%s",
-                getDebtorBankAccount().getReference(),
-                (getRequestedExecutionDate() != null
-                        ? getRequestedExecutionDate().toString("yyyyMMdd-HHmm")
-                        : "DRAFT"),
-                suffix);
+                    getDebtorBankAccount().getReference(),
+                    (getRequestedExecutionDate() != null
+                            ? getRequestedExecutionDate().toString("yyyyMMdd-HHmm")
+                            : "DRAFT"),
+                    suffix);
     }
 
     //region > convertToXmlDocument
@@ -886,21 +863,11 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
     static String ctryFor(final HasAtPath hasAtPath) {
         String applicationTenancyPath = hasAtPath.getAtPath();
-        if (applicationTenancyPath.startsWith("/FRA")) {
-            return "FR";
-        }
-        if (applicationTenancyPath.startsWith("/ITA")) {
-            return "IT";
-        }
-        if (applicationTenancyPath.startsWith("/SWE")) {
-            return "SW";
-        }
-        if (applicationTenancyPath.startsWith("/NLD")) {
-            return "NL";
-        }
-        if (applicationTenancyPath.startsWith("/GBR")) {
-            return "GB";
-        }
+        if(applicationTenancyPath.startsWith("/FRA")) { return "FR"; }
+        if(applicationTenancyPath.startsWith("/ITA")) { return "IT"; }
+        if(applicationTenancyPath.startsWith("/SWE")) { return "SW"; }
+        if(applicationTenancyPath.startsWith("/NLD")) { return "NL"; }
+        if(applicationTenancyPath.startsWith("/GBR")) { return "GB"; }
         return "NL";
     }
 
@@ -939,8 +906,9 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         return getCreatedOn().toString("yyyy-MM-dd");
     }
 
+
     private static XMLGregorianCalendar newDateTime(final DateTime dateTime) {
-        if (dateTime == null) {
+        if(dateTime == null) {
             return null;
         }
         try {
