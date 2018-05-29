@@ -37,6 +37,7 @@ import static org.estatio.module.party.fixtures.organisation.enums.Organisation_
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.YoukeaSe;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Fr;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Gb;
+import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.GbFr;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.It;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Nl;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Se;
@@ -56,7 +57,7 @@ public enum Person_enum
             new IPartyRoleType[] { PartyRoleTypeEnum.TREASURER },
             new FixedAssetRoleSpec[] {}),
 
-    DylanOfficeAdministratorGb("DCLAYTON", "Dylan", "Clayton", null, true, MALE, Gb,
+    DylanOfficeAdministratorGb("DCLAYTON", "Dylan", "Clayton", null, true, MALE, GbFr,
             null, null,
             new IPartyRoleType[] { PartyRoleTypeEnum.OFFICE_ADMINISTRATOR },
             new FixedAssetRoleSpec[] {}),
