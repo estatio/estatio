@@ -72,10 +72,13 @@ public class BuyerFinder {
         case "5":
             countryPrefix = "GB";
             break;
+        case "6":
+            countryPrefix = "BE";
+            break;
         default:
             return null;
         }
-        String partyReference = countryPrefix.concat(barcodeSerie.substring(1,3));
+        String partyReference = countryPrefix.equals("BE") ? "BE00" : countryPrefix.concat(barcodeSerie.substring(1,3));
         return partyRepository.findPartyByReference(partyReference);
     }
 

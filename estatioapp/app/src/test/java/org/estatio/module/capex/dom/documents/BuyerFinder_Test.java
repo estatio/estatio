@@ -11,8 +11,6 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.module.capex.dom.documents.BuyerFinder;
-import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.party.dom.PartyRepository;
 
@@ -35,6 +33,7 @@ public class BuyerFinder_Test {
         testWhenParamIsInvoice("304xxxxxxx.pdf", "FR04");
         testWhenParamIsInvoice("305xxxxxxx.pdf", "FR05");
         testWhenParamIsInvoice("307xxxxxxx.pdf", "FR07");
+        testWhenParamIsInvoice("6010xxxxxx.pdf", "BE00");
 
         testWhenParamIsDocument("301xxxxxxx.pdf", "FR01");
         testWhenParamIsDocument("302xxxxxxx.pdf", "FR02");
@@ -42,6 +41,7 @@ public class BuyerFinder_Test {
         testWhenParamIsDocument("304xxxxxxx.pdf", "FR04");
         testWhenParamIsDocument("305xxxxxxx.pdf", "FR05");
         testWhenParamIsDocument("307xxxxxxx.pdf", "FR07");
+        testWhenParamIsDocument("6010xxxxxx.pdf", "BE00");
 
         testerWhenNullOrTooShort(null);
         testerWhenNullOrTooShort("12");
