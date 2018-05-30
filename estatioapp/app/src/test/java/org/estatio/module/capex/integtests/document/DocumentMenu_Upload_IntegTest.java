@@ -72,7 +72,7 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
         final Blob documentBlob = document.getBlob();
 
         assertThat(ApplicationTenancy_enum.GbFr.getPath()).isEqualTo("/GBR;/FRA");
-        assertThat(document.getAtPath()).isEqualTo(ApplicationTenancy_enum.GbFr.getPath());
+        assertThat(document.getAtPath()).isEqualTo("/GBR"); // due to (temporary?) method ApplicationUser#getFirstAtPathUsingSeparator ECP-677
         assertThat(documentBlob.getName()).isEqualTo(blob.getName());
         assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
         assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());

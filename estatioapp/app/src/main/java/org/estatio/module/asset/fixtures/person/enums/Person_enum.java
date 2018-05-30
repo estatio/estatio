@@ -13,7 +13,6 @@ import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
 import org.estatio.module.asset.fixtures.person.builders.PersonFixedAssetRolesBuilder;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.capex.dom.project.ProjectRoleTypeEnum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
@@ -47,32 +46,32 @@ import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enu
 public enum Person_enum
         implements PersonaWithBuilderScript<Person, PersonAndRolesBuilder>, PersonaWithFinder<Person> {
 
-    AgnethaFaltskogSe("AFALTSKOG", "Agnetha", "Faltskog", "A", false, FEMALE, Se,
+    AgnethaFaltskogSe("AFALTSKOG", "Agnetha", "Faltskog", "A", false, FEMALE, Se, Se,
             CONTACT, YoukeaSe,
             new IPartyRoleType[] { },
             new FixedAssetRoleSpec[] {}),
 
-    BrunoTreasurerFr("BJEREMIE", "Bruno", "Jeremei", null, true, MALE, Fr,
+    BrunoTreasurerFr("BJEREMIE", "Bruno", "Jeremei", null, true, MALE, Fr, Fr,
             null, null,
             new IPartyRoleType[] { PartyRoleTypeEnum.TREASURER },
             new FixedAssetRoleSpec[] {}),
 
-    DylanOfficeAdministratorGb("DCLAYTON", "Dylan", "Clayton", null, true, MALE, GbFr,
+    DylanOfficeAdministratorGb("DCLAYTON", "Dylan", "Clayton", null, true, MALE, Gb, GbFr, //Since ECP-677 multiple security atPath
             null, null,
             new IPartyRoleType[] { PartyRoleTypeEnum.OFFICE_ADMINISTRATOR },
             new FixedAssetRoleSpec[] {}),
 
-    EmmaTreasurerGb("EFARMER", "Emma", "Farmer", "E", true, FEMALE, Gb,
+    EmmaTreasurerGb("EFARMER", "Emma", "Farmer", "E", true, FEMALE, Gb, Gb,
             null, null,
             new IPartyRoleType[] { PartyRoleTypeEnum.TREASURER },
             new FixedAssetRoleSpec[] {}),
 
-    FaithConwayGb("FCONWAY", "Faith", "Conway", null, true, FEMALE, Gb,
+    FaithConwayGb("FCONWAY", "Faith", "Conway", null, true, FEMALE, Gb, Gb,
             null, null,
-            new IPartyRoleType[] { ProjectRoleTypeEnum.PROJECT_MANAGER },
+            new IPartyRoleType[] {},
             new FixedAssetRoleSpec[] {}),
 
-    FifineLacroixFr("FLACROIX", "Fifine", "Lacroix", null, true, FEMALE, Fr,
+    FifineLacroixFr("FLACROIX", "Fifine", "Lacroix", null, true, FEMALE, Fr, Fr,
             null, null,
             new IPartyRoleType[] { FixedAssetRoleTypeEnum.PROPERTY_MANAGER },
             new FixedAssetRoleSpec[] {
@@ -80,95 +79,95 @@ public enum Person_enum
                 new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, Property_enum.MnsFr),
             }),
 
-    FleuretteRenaudFr("FRENAUD", "Fleurette", "Renaud", null, false, FEMALE, Fr,
+    FleuretteRenaudFr("FRENAUD", "Fleurette", "Renaud", null, false, FEMALE, Fr, Fr,
             null, null,
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
 
-    FloellaAssetManagerGb("FBEAUTIFUL", "Floella", "Beautiful", null, true, FEMALE, Gb,
+    FloellaAssetManagerGb("FBEAUTIFUL", "Floella", "Beautiful", null, true, FEMALE, Gb, Gb,
             null, null,
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {
                 new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.ASSET_MANAGER, Property_enum.OxfGb)
             }),
 
-    GabrielHerveFr("GHERVE", "Gabriel", "Herve", null, true, FEMALE, Fr,
+    GabrielHerveFr("GHERVE", "Gabriel", "Herve", null, true, FEMALE, Fr, Fr,
             null, null,
             new IPartyRoleType[] { PartyRoleTypeEnum.COUNTRY_DIRECTOR },
             new FixedAssetRoleSpec[] {}),
 
-    GinoVannelliGb("GVANNELLI", "Gino", "Vannelli", "G", false, MALE, Gb,
+    GinoVannelliGb("GVANNELLI", "Gino", "Vannelli", "G", false, MALE, Gb, Gb,
             CONTACT, TopModelGb,
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
 
-    JeanneDarcFr("JDARC", "Jeanne", "D'Arc", "J", false, MALE, Fr,
+    JeanneDarcFr("JDARC", "Jeanne", "D'Arc", "J", false, MALE, Fr, Fr,
             CONTACT, PerdantFr,
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
 
-    JohnDoeNl("JDOE", "John", "Doe", "J", false, MALE, Nl,
+    JohnDoeNl("JDOE", "John", "Doe", "J", false, MALE, Nl, Nl,
             null, null,
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
 
-    JohnSmithGb("JSMTH", "John", "Smith", "J", false, MALE, Gb,
+    JohnSmithGb("JSMTH", "John", "Smith", "J", false, MALE, Gb, Gb,
             null, null,
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
 
-    JonathanPropertyManagerGb("JRICE", "Jonathan", "Rice", null, true, MALE, Gb,
+    JonathanPropertyManagerGb("JRICE", "Jonathan", "Rice", null, true, MALE, Gb, Gb,
             null, null,
             new IPartyRoleType[] { FixedAssetRoleTypeEnum.PROPERTY_MANAGER },
             new FixedAssetRoleSpec[] {
                 new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, Property_enum.OxfGb)
             }),
 
-    LinusTorvaldsNl("LTORVALDS", "Linus", "Torvalds", "L", false, MALE, Nl,
+    LinusTorvaldsNl("LTORVALDS", "Linus", "Torvalds", "L", false, MALE, Nl, Nl,
             null, null,
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
 
-    LucianoPavarottiIt("LPAVAROTTI", "Luciano", "Pavarotti", "L", false, MALE, It,
+    LucianoPavarottiIt("LPAVAROTTI", "Luciano", "Pavarotti", "L", false, MALE, It, It,
             CONTACT, PastaPapaItNl,
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
 
-    OlivePropertyManagerFr("OBEAUSOLIEL", "Olive", "Beusoleil", null, true, FEMALE, Fr,
+    OlivePropertyManagerFr("OBEAUSOLIEL", "Olive", "Beusoleil", null, true, FEMALE, Fr, Fr,
             null, null,
             new IPartyRoleType[] { FixedAssetRoleTypeEnum.PROPERTY_MANAGER },
             new FixedAssetRoleSpec[] {
                 new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, Property_enum.MacFr)
             }),
 
-    OscarCountryDirectorGb("OPRITCHARD", "Oscar", "Pritchard", null, true, MALE, Gb,
+    OscarCountryDirectorGb("OPRITCHARD", "Oscar", "Pritchard", null, true, MALE, Gb, Gb,
             null, null,
             new IPartyRoleType[] { PartyRoleTypeEnum.COUNTRY_DIRECTOR },
             new FixedAssetRoleSpec[] {}),
 
-    PeterPanProjectManagerGb("PP", "Peter", "Pan", "P", true, MALE, Gb,
+    PeterPanProjectManagerGb("PP", "Peter", "Pan", "P", true, MALE, Gb, Gb,
             null, null,
             new IPartyRoleType[] { },
             new FixedAssetRoleSpec[] {}),
 
-    RosaireEvrardFr("REVRARD", "Rosaire", "Evrard", null, true, FEMALE, Fr,
+    RosaireEvrardFr("REVRARD", "Rosaire", "Evrard", null, true, FEMALE, Fr, Fr,
             null, null,
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
 
-    ThibaultOfficerAdministratorFr("TJOSUE", "Thibault", "Josue", null, true, MALE, Fr,
+    ThibaultOfficerAdministratorFr("TJOSUE", "Thibault", "Josue", null, true, MALE, Fr, Fr,
             null, null,
             new IPartyRoleType[] { PartyRoleTypeEnum.OFFICE_ADMINISTRATOR },
             new FixedAssetRoleSpec[] {}),
-    JohnDoeSe("JDOE", "John", "Doe", "J", false, MALE, Se,
+    JohnDoeSe("JDOE", "John", "Doe", "J", false, MALE, Se, Se,
             null, null,
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
-    GinoVannelliSe("GVANNELLI", "Gino", "Vannelli", "G", false, MALE, Se,
+    GinoVannelliSe("GVANNELLI", "Gino", "Vannelli", "G", false, MALE, Se, Se,
             CONTACT, TopModelSe,
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
-    JonasCar("JCAR", "Jonas", "Car", "J", false, MALE, Se,
+    JonasCar("JCAR", "Jonas", "Car", "J", false, MALE, Se, Se,
             CONTACT, OmsHyraSe,
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
@@ -185,6 +184,7 @@ public enum Person_enum
     private final String lastName;
     private final String initials;
     private final String securityUserName;
+    private final ApplicationTenancy_enum securityAtPath;
     private final PersonGenderType personGenderType;
     private final ApplicationTenancy_enum applicationTenancy_d;
 
@@ -202,6 +202,7 @@ public enum Person_enum
             final boolean setupSecurityUser,
             final PersonGenderType personGenderType,
             final ApplicationTenancy_enum applicationTenancy_d,
+            final ApplicationTenancy_enum securityAtPath,
             final PartyRelationshipTypeEnum partyRelationshipType,
             final Organisation_enum partyFrom_d,
             final IPartyRoleType[] partyRoleTypes,
@@ -213,6 +214,7 @@ public enum Person_enum
         this.securityUserName = setupSecurityUser ? ref.toLowerCase() : null;
         this.personGenderType = personGenderType;
         this.applicationTenancy_d = applicationTenancy_d;
+        this.securityAtPath = securityAtPath;
 
         this.partyFrom_d = partyFrom_d;
         this.partyRelationshipType = partyRelationshipType;
@@ -239,6 +241,7 @@ public enum Person_enum
                 .setLastName(getLastName())
                 .setInitials(getInitials())
                 .setSecurityUsername(getSecurityUserName())
+                .setSecurityAtPath(getSecurityAtPath().getPath())
                 .setPersonGenderType(getPersonGenderType())
                 .setAtPath(getApplicationTenancy_d().getPath())
                 .setRelationshipType(getPartyRelationshipType())

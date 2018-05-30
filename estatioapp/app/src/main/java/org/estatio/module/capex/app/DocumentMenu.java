@@ -94,7 +94,7 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
         final String name = blob.getName();
         final DocumentType type = DocumentTypeData.INCOMING.findUsing(documentTypeRepository);
         final ApplicationUser me = meService.me();
-        String atPath = me != null ? me.getAtPath() : null;
+        String atPath = me != null ? me.getFirstAtPathUsingSeparator(';') : null;
         if (atPath == null) {
             atPath = "/";
         }

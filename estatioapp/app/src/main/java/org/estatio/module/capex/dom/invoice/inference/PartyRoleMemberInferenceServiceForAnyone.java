@@ -24,7 +24,7 @@ public class PartyRoleMemberInferenceServiceForAnyone implements PartyRoleMember
 
         // as used to provide a list of choices for the end-user to select for the next task
 
-        final String myPath = meService.me().getAtPath();
+        final String myPath = meService.me().getFirstAtPathUsingSeparator(';');
         final List<Person> people = personRepository.findWithUsername();
         return people.stream()
                 .filter(x -> Objects.equals(x.getApplicationTenancyPath(), myPath))

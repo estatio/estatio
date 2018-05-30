@@ -91,7 +91,7 @@ public class BrandMenu extends UdoDomainRepositoryAndFactory<Brand> {
             final String group,
             final Country countryIfAny) {
 
-        final String atPath = meService.me().getAtPath();
+        final String atPath = meService.me().getFirstAtPathUsingSeparator(';');
         final ApplicationTenancyLevel userAtPath = ApplicationTenancyLevel.of(atPath);
         if(countryIfAny == null && (userAtPath == null || !userAtPath.isRoot())) {
             return "You may only create country-specific brands";

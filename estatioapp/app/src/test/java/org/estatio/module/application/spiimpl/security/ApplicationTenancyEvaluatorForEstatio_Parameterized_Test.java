@@ -69,8 +69,6 @@ public class ApplicationTenancyEvaluatorForEstatio_Parameterized_Test {
                         {"/BEL", " /FRA ; /BEL ", true, true},
                         {"/ITA", " /FRA; /BEL ", false, false},
 
-                        {"/FRA;/BEL", "/FRA", true, true},
-                        {"/FRA;/BEL", "/ITA", false, false},
                 }
         );
     }

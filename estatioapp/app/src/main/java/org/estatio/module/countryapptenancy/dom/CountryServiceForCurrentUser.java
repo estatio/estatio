@@ -38,7 +38,7 @@ public class CountryServiceForCurrentUser {
 
     @Programmatic
     public List<Country> countriesForCurrentUser() {
-        final String currentUserAtPath = meService.me().getAtPath();
+        final String currentUserAtPath = meService.me().getFirstAtPathUsingSeparator(';');
         final String currentUserCountryRef = AtPathUtils.toCountryRefRegex(currentUserAtPath);
         return countryRepository.findCountries(currentUserCountryRef);
     }

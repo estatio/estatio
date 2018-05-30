@@ -47,6 +47,9 @@ public final class ApplicationUserBuilder
     private String securityUsername;
 
     @Getter @Setter
+    private String securityAtPath;
+
+    @Getter @Setter
     private String securityUserAccountCloneFrom;
 
     @Getter
@@ -57,6 +60,7 @@ public final class ApplicationUserBuilder
 
         checkParam("person", executionContext, Person.class);
         checkParam("securityUsername", executionContext, String.class);
+        checkParam("securityAtPath", executionContext, String.class);
 
         defaultParam("securityUserAccountCloneFrom", executionContext, "estatio-admin");
 
@@ -71,7 +75,7 @@ public final class ApplicationUserBuilder
                     securityUsername,
                     new Password("pass"), new Password("pass"),
                     userToCloneFrom, true, null);
-            object.setAtPath(person.getAtPath());
+            object.setAtPath(securityAtPath);
             person.setUsername(securityUsername);
 
             executionContext.addResult(this, securityUsername, userToCloneFrom);

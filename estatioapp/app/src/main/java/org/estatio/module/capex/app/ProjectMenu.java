@@ -78,7 +78,7 @@ public class ProjectMenu {
     }
 
     public ApplicationTenancy default4NewProject() {
-        final String usersAtPath = meService.me().getAtPath();
+        final String usersAtPath = meService.me().getFirstAtPathUsingSeparator(';');
         // can't use ApplicationTenancyRepository#findByPath because that uses uniqueMatch, and there might not be any match.
         return repositoryService.firstMatch(
                 new QueryDefault<>(ApplicationTenancy.class, "findByPath", "path", usersAtPath));
