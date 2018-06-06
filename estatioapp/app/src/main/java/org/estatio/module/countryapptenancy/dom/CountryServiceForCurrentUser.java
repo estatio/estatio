@@ -18,6 +18,7 @@
  */
 package org.estatio.module.countryapptenancy.dom;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -38,14 +39,18 @@ public class CountryServiceForCurrentUser {
 
     @Programmatic
     public List<Country> countriesForCurrentUser() {
-        final String currentUserAtPath = meService.me().getFirstAtPathUsingSeparator(';');
-        final String currentUserCountryRef = AtPathUtils.toCountryRefRegex(currentUserAtPath);
-        return countryRepository.findCountries(currentUserCountryRef);
+        List<Country> result = new ArrayList<>();
+        final List<String> currentUserAtPaths = meService.me().getAllAtPathsUsingSeparator(';');
+        for (String currentUserAtPath : currentUserAtPaths){
+            final String currentUserCountryRef = AtPathUtils.toCountryRefRegex(currentUserAtPath);
+            result.addAll(countryRepository.findCountries(currentUserCountryRef));
+        }
+        return result;
     }
 
     @Inject
-    private CountryRepository countryRepository;
+    CountryRepository countryRepository;
     @Inject
-    private MeService meService;
+    MeService meService;
 
 }
