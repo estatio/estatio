@@ -42,6 +42,7 @@ import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 import org.isisaddons.module.pdfbox.dom.service.PdfBoxService;
 
+import org.incode.module.country.dom.impl.Country;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.zip.impl.ZipService;
@@ -64,6 +65,7 @@ import org.estatio.module.capex.dom.state.NatureOfTransition;
 import org.estatio.module.capex.dom.state.StateTransitionRepositoryGeneric;
 import org.estatio.module.capex.dom.util.InvoicePageRange;
 import org.estatio.module.capex.platform.pdfmanipulator.PdfManipulator;
+import org.estatio.module.countryapptenancy.dom.CountryServiceForCurrentUser;
 import org.estatio.module.invoice.dom.InvoiceItem;
 
 import lombok.Getter;
@@ -95,10 +97,12 @@ public class IncomingInvoiceDownloadManager {
 
     public IncomingInvoiceDownloadManager(
             final Property property,
+            final Country country,
             final LocalDate reportedDate,
             final IncomingInvoiceType incomingInvoiceType) {
         this.reportedDate = reportedDate;
         this.property = property;
+        this.country = country;
         this.incomingInvoiceType = incomingInvoiceType;
     }
 
@@ -107,6 +111,10 @@ public class IncomingInvoiceDownloadManager {
     @Getter @Setter
     private Property property;
 
+    @XmlElement(required = false)
+    @Nullable
+    @Getter @Setter
+    private Country country;
 
     @XmlTransient
     @Programmatic
@@ -146,13 +154,23 @@ public class IncomingInvoiceDownloadManager {
     }
 
     List<IncomingInvoiceItem> getInvoiceItems() {
+        List<IncomingInvoiceItem> result = new ArrayList<>();
         if(getIncomingInvoiceType() == null) {
-            return incomingInvoiceItemRepository.findCompletedOrLaterByFixedAssetAndReportedDate(
-                    getProperty(), getReportedDate());
+            result.addAll(incomingInvoiceItemRepository.findCompletedOrLaterByFixedAssetAndReportedDate(
+                    getProperty(), getReportedDate()));
         } else {
-            return incomingInvoiceItemRepository.findCompletedOrLaterByFixedAssetAndIncomingInvoiceTypeAndReportedDate(
-                    getProperty(), getIncomingInvoiceType(), getReportedDate());
+            result.addAll(incomingInvoiceItemRepository.findCompletedOrLaterByFixedAssetAndIncomingInvoiceTypeAndReportedDate(
+                    getProperty(), getIncomingInvoiceType(), getReportedDate()));
         }
+        return filterInvoiceItemsByCountryOfBuyer(getCountry(), result);
+    }
+
+    List<IncomingInvoiceItem> filterInvoiceItemsByCountryOfBuyer(final Country country, final List<IncomingInvoiceItem> invoiceItems){
+        return country == null
+                    ? invoiceItems
+                    : invoiceItems.stream()
+                .filter(x->x.getInvoice().getBuyer().getApplicationTenancyPath().contains(country.getReference()))
+                .collect(Collectors.toList());
     }
 
 
@@ -166,7 +184,7 @@ public class IncomingInvoiceDownloadManager {
             }
         }
         return new IncomingInvoiceDownloadManager(
-                property, reportedDate, incomingInvoiceType);
+                property, country, reportedDate, incomingInvoiceType);
     }
     public String disableReport() {
         ReasonBuffer2 buf = ReasonBuffer2.forSingle();
@@ -183,7 +201,7 @@ public class IncomingInvoiceDownloadManager {
             @Nullable
             final LocalDate reportedDate){
         return new IncomingInvoiceDownloadManager(
-                property, reportedDate, incomingInvoiceType);
+                property, country, reportedDate, incomingInvoiceType);
     }
 
     public LocalDate default0ChangeReportedDate() {
@@ -203,7 +221,7 @@ public class IncomingInvoiceDownloadManager {
             @Nullable
             final Property property){
         return new IncomingInvoiceDownloadManager(
-                property, reportedDate, incomingInvoiceType);
+                property, property!=null ? property.getCountry() : null, reportedDate, incomingInvoiceType);
     }
 
     public Property default0ChangeProperty() {
@@ -214,6 +232,23 @@ public class IncomingInvoiceDownloadManager {
         return propertyRepository.allProperties();
     }
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @ActionLayout(contributed= Contributed.AS_ACTION)
+    public IncomingInvoiceDownloadManager changeCountry(
+            @Nullable
+            final Country country){
+        return new IncomingInvoiceDownloadManager(
+                property, country, reportedDate, incomingInvoiceType);
+    }
+
+    public List<Country> choices0ChangeCountry() {
+        return countryServiceForCurrentUser.countriesForCurrentUser();
+    }
+
+    public Country default0ChangeCountry() {
+        return getCountry();
+    }
+
 
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
@@ -222,7 +257,7 @@ public class IncomingInvoiceDownloadManager {
             @Nullable
             final IncomingInvoiceType incomingInvoiceType){
         return new IncomingInvoiceDownloadManager(
-                property, reportedDate, incomingInvoiceType);
+                property, country, reportedDate, incomingInvoiceType);
     }
 
     public IncomingInvoiceType default0ChangeType() {
@@ -589,6 +624,10 @@ public class IncomingInvoiceDownloadManager {
     @javax.inject.Inject
     @XmlTransient
     ClockService clockService;
+
+    @javax.inject.Inject
+    @XmlTransient
+    CountryServiceForCurrentUser countryServiceForCurrentUser;
 
 
 }

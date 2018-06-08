@@ -3,10 +3,12 @@ package org.incode.module.country.dom.impl;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.types.ReferenceType;
@@ -51,6 +53,7 @@ import lombok.Setter;
                         + "WHERE reference.matches(:reference)")
 })
 @DomainObject(editing = Editing.DISABLED, bounded = true)
+@XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class Country  {
 
     /**
