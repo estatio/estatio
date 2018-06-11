@@ -732,11 +732,11 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                                 paymentLine.getInvoice().getGrossAmount().setScale(2, RoundingMode.HALF_UP),
                                 creditTransferExportService.getApprovalStateTransitionSummary(paymentLine.getInvoice()),
                                 paymentLine.getInvoice().getDescriptionSummary(),
-                                creditTransferExportService.getInvoiceDocumentName(paymentLine.getInvoice()),
                                 paymentLine.getInvoice().getType()== IncomingInvoiceType.CAPEX ?
                                         paymentLine.getInvoice().getType().name() + " (" + paymentLine.getInvoice().getProjectSummary() + ")" :
                                         paymentLine.getInvoice().getType().name(),
-                                paymentLine.getInvoice().getPropertySummary()
+                                paymentLine.getInvoice().getPropertySummary(),
+                                creditTransferExportService.getInvoiceDocumentName(paymentLine.getInvoice())
                         )
                 );
                 newTransfer = false;
