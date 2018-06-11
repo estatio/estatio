@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 
 import javax.annotation.Nullable;
 
-import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ViewModel;
 
@@ -20,73 +18,48 @@ public class CreditTransferExportLine {
 
     // transfer information
 
-    @MemberOrder(sequence = "0")
+    @MemberOrder(sequence = "1")
     @Nullable
     private int line;
 
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "2")
     @Nullable
     private String debtorBankAccount;
 
-    @MemberOrder(sequence = "2")
-    @Nullable
-    private String paymentBatchCreatedOn;
-
     @MemberOrder(sequence = "3")
-    @Nullable
-    private String paymentId;
-
-    @MemberOrder(sequence = "4")
     @Nullable
     private String sellerBankAccount;
 
-    @MemberOrder(sequence = "5")
+    @MemberOrder(sequence = "4")
     @Nullable
     private String newIban;
 
-    @MemberOrder(sequence = "6")
+    @MemberOrder(sequence = "5")
     @Nullable
     private String sellerName;
 
-    @MemberOrder(sequence = "7")
-    @Nullable
-    private String sellerReference;
-
-    @MemberOrder(sequence = "8")
-    @Nullable
-    private BigDecimal paymentAmount;
-
-    @MemberOrder(sequence = "9")
-    @Nullable
-    private String currency;
-
     // invoice information
-
-    @MemberOrder(sequence = "10")
+    @MemberOrder(sequence = "6")
     @Nullable
     private String invoiceNumber;
 
-    @MemberOrder(sequence = "11")
-    @Nullable
-    private LocalDate invoiceDate;
-
-    @MemberOrder(sequence = "12")
+    @MemberOrder(sequence = "7")
     private BigDecimal invoiceGrossAmount;
 
-    @MemberOrder(sequence = "13")
+    @MemberOrder(sequence = "8")
     private String approvals;
 
-    @MemberOrder(sequence = "14")
+    @MemberOrder(sequence = "9")
     private String invoiceDescriptionSummary;
 
-    @MemberOrder(sequence = "17")
-    private String invoiceDocumentName;
-
-    @MemberOrder(sequence = "15")
+    @MemberOrder(sequence = "10")
     private String invoiceType;
 
-    @MemberOrder(sequence = "16")
+    @MemberOrder(sequence = "11")
     @Nullable
     private String property;
+
+    @MemberOrder(sequence = "12")
+    private String invoiceDocumentName;
 
 }

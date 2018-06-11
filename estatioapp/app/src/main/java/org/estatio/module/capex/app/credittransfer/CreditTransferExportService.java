@@ -46,13 +46,12 @@ public class CreditTransferExportService {
 
     @Programmatic
     public String getApprovalStateTransitionSummary(final IncomingInvoice invoice) {
-
         StringBuilder builder = new StringBuilder();
+        Boolean first = true;
         for (IncomingInvoice.ApprovalString approvalString : invoice.getApprovals()){
+            if (!first) builder.append(" " + Character.toString((char)10)); // line break within a cell
             builder.append(approvalString.getCompletedBy());
-            builder.append(" on ");
-            builder.append(approvalString.getCompletedOn());
-            builder.append(" \r\n");
+            first = false;
         }
         return builder.toString();
     }

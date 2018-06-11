@@ -133,7 +133,7 @@ public class CreditTransferExportService_Test {
         String result = service.getApprovalStateTransitionSummary(invoice);
 
         // then
-        Assertions.assertThat(result).isEqualTo("some manager on 01-Jan-2017 00:00 \r\n");
+        Assertions.assertThat(result).isEqualTo("some manager");
 
     }
 
