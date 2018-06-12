@@ -108,6 +108,22 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
         assertThat(incomingDocumentsAfter.get(1).getBlobBytes()).isEqualTo(documentBlob.getBytes());
         assertThat(JDOHelper.getVersion(incomingDocumentsAfter.get(1))).isEqualTo(1L);
         assertThat(paperclipRepository.findByDocument(incomingDocumentsAfter.get(1)).size()).isEqualTo(0);
+
+        // and when since ECP-676 atPath derived from filename for France and Belgium
+        final String belgianBarCode = "6010012345.pdf";
+        final Blob belgianBlob = new Blob(belgianBarCode, "application/pdf", pdfBytes2);
+        Document belgianDocument = wrap(documentMenu).upload(belgianBlob);
+
+        // then
+        assertThat(belgianDocument.getAtPath()).isEqualTo("/BEL");
+
+        // and when since ECP-676 atPath derived from filename for France and Belgium
+        final String frenchBarCode = "3010012345.pdf";
+        final Blob frenchBlob = new Blob(frenchBarCode, "application/pdf", pdfBytes2);
+        Document frenchDocument = wrap(documentMenu).upload(frenchBlob);
+
+        // then
+        assertThat(frenchDocument.getAtPath()).isEqualTo("/FRA");
     }
 
 

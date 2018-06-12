@@ -98,10 +98,22 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
         if (atPath == null) {
             atPath = "/";
         }
+        atPath = overrideUserAtPathUsingDocumentName(atPath, name);
         return incomingDocumentRepository.upsertAndArchive(type, atPath, name, blob);
     }
 
-
+    String overrideUserAtPathUsingDocumentName(final String atPath, final String documentName){
+        String countryPrefix = documentBarcodeService.countryPrefixFromBarcode(documentName);
+        if (countryPrefix == null) return atPath;
+        switch (countryPrefix) {
+            case "FR":
+                return "/FRA";
+            case "BE":
+                return "/BEL";
+            default:
+                return atPath;
+        }
+    }
 
     @Inject
     MeService meService;
@@ -117,5 +129,8 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
 
     @Inject
     IncomingDocumentRepository incomingDocumentRepository;
+
+    @Inject
+    DocumentBarcodeService documentBarcodeService;
 
 }
