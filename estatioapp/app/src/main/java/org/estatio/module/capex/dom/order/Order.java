@@ -22,6 +22,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
+import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 import javax.validation.constraints.Digits;
@@ -143,6 +144,7 @@ import lombok.Setter;
 @Indices({
         @Index(name = "Order_sellerOrderReference_IDX", members = { "sellerOrderReference" })
 })
+@Unique(name = "Order_reference_UNQ", members = { "orderNumber" })
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "orders.Order",
