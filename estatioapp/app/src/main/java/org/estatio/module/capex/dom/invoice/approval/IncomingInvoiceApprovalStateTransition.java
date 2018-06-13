@@ -15,6 +15,8 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.state.StateTransitionAbstract;
@@ -84,6 +86,7 @@ public class IncomingInvoiceApprovalStateTransition
      * If null, then this transition is not yet complete.
      */
     @Column(allowsNull = "true")
+    @PropertyLayout(hidden = Where.ALL_TABLES)
     @Getter @Setter
     private IncomingInvoiceApprovalState toState;
 
