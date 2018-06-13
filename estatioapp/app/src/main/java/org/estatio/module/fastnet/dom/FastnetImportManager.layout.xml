@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd"
+          xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bs3:row>
+        <bs3:col span="12">
+            <cpt:domainObject/>
+            <cpt:action id="doImport"/>
+            <cpt:action id="downloadAnalysis"/>
+            <cpt:action id="downloadImportLog"/>
+        </bs3:col>
+        <bs3:col span="0" unreferencedActions="true">
+            <cpt:action id="recentAuditEntries"/>
+            <cpt:action id="findChangesByDate"/>
+            <cpt:action id="recentChanges"/>
+            <cpt:action id="impersonateUser"/>
+            <cpt:action id="stopImpersonating"/>
+            <cpt:action id="clearHints"/>
+            <cpt:action id="downloadLayoutXml"/>
+            <cpt:action id="openRestApi"/>
+            <cpt:action id="rebuildMetamodel"/>
+            <cpt:action id="recentCommands"/>
+            <cpt:action id="links"/>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="4">
+            <cpt:fieldSet name="General" id="general" unreferencedProperties="true">
+                <cpt:property id="analysisSummary"/>
+            </cpt:fieldSet>
+        </bs3:col>
+        <bs3:col span="8" unreferencedCollections="true">
+        </bs3:col>
+    </bs3:row>
+</bs3:grid>
