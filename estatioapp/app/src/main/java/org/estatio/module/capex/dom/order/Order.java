@@ -1,6 +1,7 @@
 package org.estatio.module.capex.dom.order;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -81,7 +82,6 @@ import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.dom.Supplier;
 import org.estatio.module.party.dom.role.PartyRoleRepository;
 import org.estatio.module.tax.dom.Tax;
 
@@ -366,7 +366,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return null;
     }
 
-    public List<Supplier> autoComplete0EditSeller(final String search){
+    public List<Party> autoComplete0EditSeller(final String search){
         return partyRepository.autoCompleteSupplier(search, getAtPath());
     }
 
@@ -408,7 +408,8 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         } catch (InterruptedException e) {
             // nothing
         }
-        List<OrganisationNameNumberViewModel> result =  chamberOfCommerceCodeLookUpService.getChamberOfCommerceCodeCandidatesByOrganisation(search, atPath);
+        List<OrganisationNameNumberViewModel> result = new ArrayList<>();
+        result.addAll(chamberOfCommerceCodeLookUpService.getChamberOfCommerceCodeCandidatesByOrganisation(search, atPath));
         result.add(new OrganisationNameNumberViewModel(search, null));
         return result;
     }

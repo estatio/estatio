@@ -83,7 +83,6 @@ import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.dom.Supplier;
 import org.estatio.module.party.dom.role.PartyRoleRepository;
 import org.estatio.module.tax.dom.Tax;
 
@@ -1095,10 +1094,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return getSeller();
     }
 
-    public List<Supplier> autoComplete0EditSeller(final String search){
-        return partyRepository.autoCompleteSupplier(search, getAtPath())
-                .stream()
-                .collect(Collectors.toList());
+    public List<Party> autoComplete0EditSeller(final String search){
+        return partyRepository.autoCompleteSupplier(search, getAtPath());
     }
 
     public String disableEditSeller(){

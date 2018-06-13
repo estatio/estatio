@@ -120,21 +120,18 @@ public class PartyRepository extends UdoDomainRepositoryAndFactory<Party> {
     // //////////////////////////////////////
 
     @Programmatic
-    public List<Supplier> autoCompleteSupplier(final String searchPhrase){
+    public List<Organisation> autoCompleteSupplier(final String searchPhrase){
         return autoComplete(searchPhrase).stream()
                 .filter(Organisation.class::isInstance)
                 .map(Organisation.class::cast)
-                .map(x->new Supplier(x))
                 .collect(Collectors.toList());
     }
 
     @Programmatic
-    public List<Supplier> autoCompleteSupplier(final String searchPhrase, final String atPath){
+    public List<Party> autoCompleteSupplier(final String searchPhrase, final String atPath){
         return autoComplete(searchPhrase).stream()
                 .filter(Organisation.class::isInstance)
-                .map(Organisation.class::cast)
                 .filter(x->x.getAtPath().contains(atPath))
-                .map(x->new Supplier(x))
                 .collect(Collectors.toList());
     }
 

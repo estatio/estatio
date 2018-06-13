@@ -73,7 +73,6 @@ import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.dom.Supplier;
 import org.estatio.module.party.dom.role.PartyRoleRepository;
 import org.estatio.module.tax.dom.Tax;
 
@@ -195,10 +194,8 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         return getSeller();
     }
 
-    public List<Supplier> autoComplete0EditSeller(final String search){
-        return partyRepository.autoCompleteSupplier(search, getDocument().getAtPath())
-                .stream()
-                .collect(Collectors.toList());
+    public List<Party> autoComplete0EditSeller(final String search){
+        return partyRepository.autoCompleteSupplier(search, getDocument().getAtPath());
     }
 
     protected void onEditSeller(final Party seller){
@@ -223,6 +220,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
             final String ibanNumber) {
         Organisation organisation = organisationRepository
                 .newOrganisation(null, true, candidate.getOrganisationName(), country);
+        partyRoleRepository.findOrCreate(organisation, IncomingInvoiceRoleTypeEnum.SUPPLIER);
         if (candidate.getChamberOfCommerceCode()!=null) organisation.setChamberOfCommerceCode(candidate.getChamberOfCommerceCode());
         setSeller(organisation);
         if (ibanNumber != null) {
@@ -239,7 +237,8 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         } catch (InterruptedException e) {
             // nothing
         }
-        List<OrganisationNameNumberViewModel> result =  chamberOfCommerceCodeLookUpService.getChamberOfCommerceCodeCandidatesByOrganisation(search, atPath);
+        List<OrganisationNameNumberViewModel> result = new ArrayList<>();
+        result.addAll(chamberOfCommerceCodeLookUpService.getChamberOfCommerceCodeCandidatesByOrganisation(search, atPath));
         result.add(new OrganisationNameNumberViewModel(search, null));
         return result;
     }
@@ -655,7 +654,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
     @XmlTransient
     @Inject
-    PartyRoleRepository partyRoleRepository;
+    public PartyRoleRepository partyRoleRepository;
 
     @XmlTransient
     @Inject

@@ -15,6 +15,7 @@ import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.capex.dom.documents.BuyerFinder;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
@@ -25,6 +26,7 @@ import org.estatio.module.party.app.services.OrganisationNameNumberViewModel;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.role.PartyRoleRepository;
 
 public class IncomingDocAsInvoiceViewModel_Test {
 
@@ -82,6 +84,8 @@ public class IncomingDocAsInvoiceViewModel_Test {
 
     @Mock BankAccountRepository mockBankAccountRepository;
 
+    @Mock PartyRoleRepository mockPartyRoleRepository;
+
     @Test
     public void bankaccount_is_set_when_creating_seller(){
 
@@ -89,6 +93,7 @@ public class IncomingDocAsInvoiceViewModel_Test {
         IncomingDocAsInvoiceViewModel viewModel = new IncomingDocAsInvoiceViewModel();
         viewModel.organisationRepository = mockOrganisationRepo;
         viewModel.bankAccountRepository = mockBankAccountRepository;
+        viewModel.partyRoleRepository = mockPartyRoleRepository;
 
         Country country = new Country();
         Organisation seller = new Organisation();
@@ -102,6 +107,7 @@ public class IncomingDocAsInvoiceViewModel_Test {
 
             oneOf(mockOrganisationRepo).newOrganisation(null, true, sellerName, country);
             will(returnValue(seller));
+            oneOf(mockPartyRoleRepository).findOrCreate(seller, IncomingInvoiceRoleTypeEnum.SUPPLIER);
             oneOf(mockBankAccountRepository).newBankAccount(seller,iban, null);
             will(returnValue(bankAccount));
             oneOf(mockBankAccountRepository).getFirstBankAccountOfPartyOrNull(seller);
