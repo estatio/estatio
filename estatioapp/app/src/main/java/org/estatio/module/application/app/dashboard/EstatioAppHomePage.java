@@ -242,7 +242,7 @@ public class EstatioAppHomePage {
                 final Class<?> collectionType,
                 final List<String> propertyIds) {
             if(parent instanceof EstatioAppHomePage && IncomingInvoice.class.isAssignableFrom(collectionType)) {
-                return Lists.newArrayList("seller", "property", "grossAmount", "invoiceDate", "number");
+                return Lists.newArrayList("seller", "property", "grossAmount", "dateReceived", "number");
             }
             return null;
         }
