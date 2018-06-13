@@ -337,7 +337,7 @@ public class IncomingInvoiceDownloadManager {
     @Programmatic
     List<IncomingInvoiceItem> getReportedInvoiceItemsWithPropertyForPeriod(final LocalDate startDate, final LocalDate endDate){
         List<IncomingInvoiceItem> result = new ArrayList<>();
-        List<LocalDate> reportedDatesInRange = incomingInvoiceItemRepository.findDistinctReportDates().stream().filter(x->!x.isBefore(startDate) && !x.isAfter(endDate)).collect(Collectors.toList());
+        List<LocalDate> reportedDatesInRange = incomingInvoiceItemRepository.findDistinctReportDates().stream().filter(x->!x.isBefore(startDate) && !x.isAfter(endDate)).distinct().collect(Collectors.toList());
         for (LocalDate reportedDate : reportedDatesInRange){
             result.addAll(incomingInvoiceItemRepository.findCompletedOrLaterByReportedDate(reportedDate).stream().filter(x->x.getFixedAsset()!=null).collect(Collectors.toList()));
         }
