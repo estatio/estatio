@@ -28,6 +28,7 @@ public class ChamberOfCommerceCodeLookUpService {
     }
 
     public List<OrganisationNameNumberViewModel> getChamberOfCommerceCodeCandidatesByOrganisation(final String name, final String atPath) {
+        if (atPath==null) return Collections.emptyList();
 
         switch (atPath){
         case "/FRA":

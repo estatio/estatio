@@ -73,6 +73,7 @@ import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.dom.Supplier;
 import org.estatio.module.party.dom.role.PartyRoleRepository;
 import org.estatio.module.tax.dom.Tax;
 
@@ -194,6 +195,12 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         return getSeller();
     }
 
+    public List<Supplier> autoComplete0EditSeller(final String search){
+        return partyRepository.autoCompleteSupplier(search, getDocument().getAtPath())
+                .stream()
+                .collect(Collectors.toList());
+    }
+
     protected void onEditSeller(final Party seller){
     }
 
@@ -226,8 +233,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     }
 
     public List<OrganisationNameNumberViewModel> autoComplete0CreateSeller(@MinLength(3) final String search){
-        // TODO: take atPath from country - but how?
-        String atPath = "/FRA";
+        String atPath = getDocument().getAtPath();
         try {
             TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {

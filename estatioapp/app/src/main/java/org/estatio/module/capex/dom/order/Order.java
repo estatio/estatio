@@ -367,7 +367,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public List<Supplier> autoComplete0EditSeller(final String search){
-        return partyRepository.autoCompleteSupplier(search);
+        return partyRepository.autoCompleteSupplier(search, getAtPath());
     }
 
     public Party default0EditSeller(){
@@ -402,8 +402,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public List<OrganisationNameNumberViewModel> autoComplete0CreateSeller(@MinLength(3) final String search){
-        // TODO: take atPath from country - but how?
-        String atPath = "/FRA";
+        String atPath = getAtPath();
         try {
             TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {
