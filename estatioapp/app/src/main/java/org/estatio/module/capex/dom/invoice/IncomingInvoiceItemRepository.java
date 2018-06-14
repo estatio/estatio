@@ -333,6 +333,7 @@ public class IncomingInvoiceItemRepository {
         query.setResultClass(LocalDate.class);
         query.setResult("distinct reportedDate");
         query.setOrdering("reportedDate descending");
+        query.setFilter("reportedDate != null"); // EST-1838: Null value was set to LocalDate#now by DN
         return executeListAndClose(query);
     }
 
