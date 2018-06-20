@@ -85,6 +85,9 @@ public final class PersonAndRolesBuilder extends BuilderScriptAbstract<Person, P
     private String securityUsername;
 
     @Getter @Setter
+    private String securityAtPath;
+
+    @Getter @Setter
     private String securityUserAccountCloneFrom;
 
     @Getter
@@ -129,6 +132,7 @@ public final class PersonAndRolesBuilder extends BuilderScriptAbstract<Person, P
             applicationUser = new ApplicationUserBuilder()
                     .setPerson(object)
                     .setSecurityUsername(securityUsername)
+                    .setSecurityAtPath(securityAtPath)
                     .setSecurityUserAccountCloneFrom(securityUserAccountCloneFrom)
                     .build(this, executionContext)
                     .getObject();

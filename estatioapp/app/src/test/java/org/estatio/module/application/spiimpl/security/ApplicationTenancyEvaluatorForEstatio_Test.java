@@ -20,8 +20,6 @@ package org.estatio.module.application.spiimpl.security;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.module.application.spiimpl.security.ApplicationTenancyEvaluatorForEstatio;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ApplicationTenancyEvaluatorForEstatio_Test {

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bs3:grid
+        xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/links http://isis.apache.org/applib/layout/links/links.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd"
+        xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:lnk="http://isis.apache.org/applib/layout/links" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bs3:row>
+        <bs3:col span="12" unreferencedActions="true">
+            <cpt:domainObject/>
+            <cpt:action id="recentAuditEntries"/>
+            <cpt:action id="findChangesByDate"/>
+            <cpt:action id="recentChanges"/>
+            <cpt:action id="impersonateUser"/>
+            <cpt:action id="stopImpersonating"/>
+            <cpt:action id="importData"/>
+            <cpt:action id="links"/>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="4">
+            <cpt:fieldSet name="Key properties" id="keyproperties">
+                <cpt:property id="lease"/>
+                <cpt:property id="exportDate"/>
+                <cpt:property id="applied"/>
+                <cpt:property id="kontraktNr"/>
+                <cpt:property id="kontraktFrom"/>
+                <cpt:property id="kontraktTom"/>
+                <cpt:property id="kundNr"/>
+                <cpt:property id="hyresgast"/>
+            </cpt:fieldSet>
+            <cpt:fieldSet name="General" id="general" unreferencedProperties="true">
+                <cpt:property id="datanucleusIdLong"/>
+                <cpt:property id="datanucleusVersionLong"/>
+                <cpt:property id="datanucleusVersionTimestamp"/>
+                <cpt:property id="arshyra"/>
+                <cpt:property id="arshyraPerKvm"/>
+                <cpt:property id="arsmoms"/>
+                <cpt:property id="avflyttningsDatum"/>
+                <cpt:property id="bankName"/>
+                <cpt:property id="bashyra"/>
+                <cpt:property id="beskrivning"/>
+                <cpt:property id="betpertyp"/>
+                <cpt:property id="depositDebit"/>
+                <cpt:property id="depositRef"/>
+                <cpt:property id="el"/>
+                <cpt:property id="evdInSd"/>
+                <cpt:property id="expiringDate"/>
+                <cpt:property id="extraUpps1KontraktTomHg"/>
+                <cpt:property id="extraUpps1SenastHg"/>
+                <cpt:property id="extraUpps1UtflkodHg"/>
+                <cpt:property id="extraUpps2KontraktTomHg"/>
+                <cpt:property id="extraUpps2SenastHg"/>
+                <cpt:property id="extraUpps2UtflkodHg"/>
+                <cpt:property id="extraUpps3KontraktTomtHg"/>
+                <cpt:property id="extraUpps3SenastHg"/>
+                <cpt:property id="extraUppstid1Hg"/>
+                <cpt:property id="extraUppstid2Hg"/>
+                <cpt:property id="extraVillkor1Hg"/>
+                <cpt:property id="extraVillkor3Hg"/>
+                <cpt:property id="fastighetsBeteckning"/>
+                <cpt:property id="fastighetsNummer"/>
+                <cpt:property id="fastighetsskatt"/>
+                <cpt:property id="forlangningstidHg"/>
+                <cpt:property id="forlangningstidHv"/>
+                <cpt:property id="forvaltaransvarig"/>
+                <cpt:property id="fskattproc"/>
+                <cpt:property id="futureRentRollLine"/>
+                <cpt:property id="hyrainklindex"/>
+                <cpt:property id="importDate"/>
+                <cpt:property id="indexandel"/>
+                <cpt:property id="indextal"/>
+                <cpt:property id="indextillagg"/>
+                <cpt:property id="inflyttningsDatum"/>
+                <cpt:property id="inflyttningsDatumAsDate"/>
+                <cpt:property id="inflyttningsKod"/>
+                <cpt:property id="kabeltv"/>
+                <cpt:property id="klientNamn"/>
+                <cpt:property id="klientNummer"/>
+                <cpt:property id="kontraktFrom"/>
+                <cpt:property id="kontraktTom"/>
+                <cpt:property id="kyla"/>
+                <cpt:property id="marknBidrag"/>
+                <cpt:property id="moms"/>
+                <cpt:property id="notering"/>
+                <cpt:property id="objektTyp"/>
+                <cpt:property id="objektTypKod"/>
+                <cpt:property id="objektsNummer"/>
+                <cpt:property id="okand"/>
+                <cpt:property id="omsAndelProc"/>
+                <cpt:property id="omsBasDat"/>
+                <cpt:property id="omsBasIndex"/>
+                <cpt:property id="omsHyraInklIndex"/>
+                <cpt:property id="omsIndexBel"/>
+                <cpt:property id="omsMinHyra"/>
+                <cpt:property id="omsOverskut"/>
+                <cpt:property id="omsattProc"/>
+                <cpt:property id="omsattning"/>
+                <cpt:property id="omsattningHyra"/>
+                <cpt:property id="ovrigt"/>
+                <cpt:property id="periodhyra"/>
+                <cpt:property id="populärNamn"/>
+                <cpt:property id="procAndring"/>
+                <cpt:property id="rabatt"/>
+                <cpt:property id="regDatum"/>
+                <cpt:property id="rentalUnitEndDate"/>
+                <cpt:property id="rentalUnitStartDate"/>
+                <cpt:property id="saTillagg"/>
+                <cpt:property id="senastuppsagd"/>
+                <cpt:property id="senastuppsagdHg"/>
+                <cpt:property id="spaceUnitsStartDate"/>
+                <cpt:property id="status"/>
+                <cpt:property id="total"/>
+                <cpt:property id="totalKvm"/>
+                <cpt:property id="typeOfDeposit"/>
+                <cpt:property id="typeOfPremises"/>
+                <cpt:property id="uppsagDav"/>
+                <cpt:property id="uppsagd"/>
+                <cpt:property id="uppsagningstidHg"/>
+                <cpt:property id="uppsagningstidHv"/>
+                <cpt:property id="utflyttningsKod"/>
+                <cpt:property id="utskrivetDatum"/>
+                <cpt:property id="va"/>
+                <cpt:property id="vakantFrom"/>
+                <cpt:property id="varme"/>
+                <cpt:property id="yta"/>
+            </cpt:fieldSet>
+        </bs3:col>
+        <bs3:col span="8" unreferencedCollections="true">
+            <cpt:collection id="chargingLines"/>
+        </bs3:col>
+    </bs3:row>
+</bs3:grid>

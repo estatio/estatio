@@ -11,12 +11,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
+import org.apache.isis.applib.services.sudo.SudoService;
 import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.applib.value.Blob;
 
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.capex.app.DocumentMenu;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
@@ -38,6 +42,7 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
             @Override
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
+                executionContext.executeChild(this, Person_enum.DylanOfficeAdministratorGb);
             }
         });
     }
@@ -54,7 +59,9 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
         final byte[] pdfBytes = Resources.toByteArray(
                 Resources.getResource(DocumentMenu_Upload_IntegTest.class, fileName));
         final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);
-        wrap(documentMenu).upload(blob);
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.DylanOfficeAdministratorGb.getRef().toLowerCase(), (Runnable) () ->
+                wrap(documentMenu).upload(blob));
         transactionService.nextTransaction();
 
         // then
@@ -64,6 +71,8 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
         final Document document = incomingDocumentsAfter.get(0);
         final Blob documentBlob = document.getBlob();
 
+        assertThat(ApplicationTenancy_enum.GbFr.getPath()).isEqualTo("/GBR;/FRA");
+        assertThat(document.getAtPath()).isEqualTo("/GBR"); // due to (temporary?) method ApplicationUser#getFirstAtPathUsingSeparator ECP-677
         assertThat(documentBlob.getName()).isEqualTo(blob.getName());
         assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
         assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
@@ -99,6 +108,22 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
         assertThat(incomingDocumentsAfter.get(1).getBlobBytes()).isEqualTo(documentBlob.getBytes());
         assertThat(JDOHelper.getVersion(incomingDocumentsAfter.get(1))).isEqualTo(1L);
         assertThat(paperclipRepository.findByDocument(incomingDocumentsAfter.get(1)).size()).isEqualTo(0);
+
+        // and when since ECP-676 atPath derived from filename for France and Belgium
+        final String belgianBarCode = "6010012345.pdf";
+        final Blob belgianBlob = new Blob(belgianBarCode, "application/pdf", pdfBytes2);
+        Document belgianDocument = wrap(documentMenu).upload(belgianBlob);
+
+        // then
+        assertThat(belgianDocument.getAtPath()).isEqualTo("/BEL");
+
+        // and when since ECP-676 atPath derived from filename for France and Belgium
+        final String frenchBarCode = "3010012345.pdf";
+        final Blob frenchBlob = new Blob(frenchBarCode, "application/pdf", pdfBytes2);
+        Document frenchDocument = wrap(documentMenu).upload(frenchBlob);
+
+        // then
+        assertThat(frenchDocument.getAtPath()).isEqualTo("/FRA");
     }
 
 
@@ -136,5 +161,11 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
 
     @Inject
     PaperclipRepository paperclipRepository;
+
+    @Inject
+    QueryResultsCache queryResultsCache;
+
+    @Inject
+    SudoService sudoService;
 
 }

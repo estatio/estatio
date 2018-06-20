@@ -725,24 +725,18 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                         new CreditTransferExportLine(
                                 lineNumber,
                                 lineNumber == 1 ? getDebtorBankAccount().getIban() : null,
-                                lineNumber == 1 ? getCreatedOn().toString("dd-MMM-yyyy HH:mm") : null,
-                                newTransfer ? transfer.getEndToEndId() : null,
                                 newTransfer ? transfer.getSellerBankAccount().getIban() : null,
                                 newTransfer ? firstUse : null,
                                 newTransfer ? transfer.getSeller().getName() : null,
-                                newTransfer ? transfer.getSeller().getReference() : null,
-                                newTransfer ? transfer.getAmount().setScale(2, RoundingMode.HALF_UP) : null,
-                                newTransfer ? transfer.getCurrency().getName() : null,
                                 paymentLine.getInvoice().getInvoiceNumber(),
-                                paymentLine.getInvoice().getInvoiceDate(),
                                 paymentLine.getInvoice().getGrossAmount().setScale(2, RoundingMode.HALF_UP),
                                 creditTransferExportService.getApprovalStateTransitionSummary(paymentLine.getInvoice()),
                                 paymentLine.getInvoice().getDescriptionSummary(),
-                                creditTransferExportService.getInvoiceDocumentName(paymentLine.getInvoice()),
                                 paymentLine.getInvoice().getType()== IncomingInvoiceType.CAPEX ?
                                         paymentLine.getInvoice().getType().name() + " (" + paymentLine.getInvoice().getProjectSummary() + ")" :
                                         paymentLine.getInvoice().getType().name(),
-                                paymentLine.getInvoice().getPropertySummary()
+                                paymentLine.getInvoice().getPropertySummary(),
+                                creditTransferExportService.getInvoiceDocumentName(paymentLine.getInvoice())
                         )
                 );
                 newTransfer = false;

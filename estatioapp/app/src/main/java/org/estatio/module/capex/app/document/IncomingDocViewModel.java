@@ -194,6 +194,10 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         return getSeller();
     }
 
+    public List<Party> autoComplete0EditSeller(final String search){
+        return partyRepository.autoCompleteSupplier(search, getDocument().getAtPath());
+    }
+
     protected void onEditSeller(final Party seller){
     }
 
@@ -216,6 +220,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
             final String ibanNumber) {
         Organisation organisation = organisationRepository
                 .newOrganisation(null, true, candidate.getOrganisationName(), country);
+        partyRoleRepository.findOrCreate(organisation, IncomingInvoiceRoleTypeEnum.SUPPLIER);
         if (candidate.getChamberOfCommerceCode()!=null) organisation.setChamberOfCommerceCode(candidate.getChamberOfCommerceCode());
         setSeller(organisation);
         if (ibanNumber != null) {
@@ -226,14 +231,14 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     }
 
     public List<OrganisationNameNumberViewModel> autoComplete0CreateSeller(@MinLength(3) final String search){
-        // TODO: take atPath from country - but how?
-        String atPath = "/FRA";
+        String atPath = getDocument().getAtPath();
         try {
             TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {
             // nothing
         }
-        List<OrganisationNameNumberViewModel> result =  chamberOfCommerceCodeLookUpService.getChamberOfCommerceCodeCandidatesByOrganisation(search, atPath);
+        List<OrganisationNameNumberViewModel> result = new ArrayList<>();
+        result.addAll(chamberOfCommerceCodeLookUpService.getChamberOfCommerceCodeCandidatesByOrganisation(search, atPath));
         result.add(new OrganisationNameNumberViewModel(search, null));
         return result;
     }
@@ -649,7 +654,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
     @XmlTransient
     @Inject
-    PartyRoleRepository partyRoleRepository;
+    public PartyRoleRepository partyRoleRepository;
 
     @XmlTransient
     @Inject

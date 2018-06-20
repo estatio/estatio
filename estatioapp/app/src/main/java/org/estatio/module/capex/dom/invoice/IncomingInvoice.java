@@ -1094,6 +1094,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return getSeller();
     }
 
+    public List<Party> autoComplete0EditSeller(final String search){
+        return partyRepository.autoCompleteSupplier(search, getAtPath());
+    }
+
     public String disableEditSeller(){
 
         final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot edit seller because");

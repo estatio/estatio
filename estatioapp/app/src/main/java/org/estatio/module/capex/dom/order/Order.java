@@ -1,6 +1,7 @@
 package org.estatio.module.capex.dom.order;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -22,6 +23,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
+import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 import javax.validation.constraints.Digits;
@@ -80,7 +82,6 @@ import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.dom.Supplier;
 import org.estatio.module.party.dom.role.PartyRoleRepository;
 import org.estatio.module.tax.dom.Tax;
 
@@ -143,6 +144,7 @@ import lombok.Setter;
 @Indices({
         @Index(name = "Order_sellerOrderReference_IDX", members = { "sellerOrderReference" })
 })
+@Unique(name = "Order_reference_UNQ", members = { "orderNumber" })
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "orders.Order",
@@ -364,8 +366,8 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return null;
     }
 
-    public List<Supplier> autoComplete0EditSeller(final String search){
-        return partyRepository.autoCompleteSupplier(search);
+    public List<Party> autoComplete0EditSeller(final String search){
+        return partyRepository.autoCompleteSupplier(search, getAtPath());
     }
 
     public Party default0EditSeller(){
@@ -400,14 +402,14 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public List<OrganisationNameNumberViewModel> autoComplete0CreateSeller(@MinLength(3) final String search){
-        // TODO: take atPath from country - but how?
-        String atPath = "/FRA";
+        String atPath = getAtPath();
         try {
             TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {
             // nothing
         }
-        List<OrganisationNameNumberViewModel> result =  chamberOfCommerceCodeLookUpService.getChamberOfCommerceCodeCandidatesByOrganisation(search, atPath);
+        List<OrganisationNameNumberViewModel> result = new ArrayList<>();
+        result.addAll(chamberOfCommerceCodeLookUpService.getChamberOfCommerceCodeCandidatesByOrganisation(search, atPath));
         result.add(new OrganisationNameNumberViewModel(search, null));
         return result;
     }

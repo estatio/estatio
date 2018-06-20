@@ -232,6 +232,16 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             Person_enum.GinoVannelliSe,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
+    HanDoubleCharge004Se(
+            "HAN-DOUBLECHARGE-004", "4124-1007-01", "OmsHyra Handla Center", PropertyAndUnitsAndOwnerAndManager_enum.HanSe,
+            OrganisationAndComms_enum.HelloWorldSe, Organisation_enum.OmsHyraSe,
+            ld(2012, 6, 1), ld(2020, 5, 31),
+            new OccupancySpec[] {
+        new OccupancySpec("004", "Omshyra", NATIONAL, SWE, "RENTALS", "CARS", ld(2012, 6, 1), null)
+    },
+    Person_enum.GinoVannelliSe,
+    InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
+    ),
     ;
 
     @AllArgsConstructor

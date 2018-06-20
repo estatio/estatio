@@ -60,6 +60,9 @@ public final class PersonAndApplicationUserBuilder
     private String securityUsername;
 
     @Getter @Setter
+    private String securityAtPath;
+
+    @Getter @Setter
     private String securityUserAccountCloneFrom;
 
     @Getter
@@ -88,6 +91,7 @@ public final class PersonAndApplicationUserBuilder
             applicationUser = new ApplicationUserBuilder()
                     .setSecurityUsername(securityUsername)
                     .setSecurityUserAccountCloneFrom(securityUserAccountCloneFrom)
+                    .setSecurityAtPath(securityAtPath)
                     .build(this, executionContext)
                     .getObject();
         }

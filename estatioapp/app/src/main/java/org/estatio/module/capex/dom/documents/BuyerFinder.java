@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.module.capex.app.DocumentBarcodeService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.party.dom.Party;
@@ -54,28 +55,10 @@ public class BuyerFinder {
     private Party partyDerivedFromBarcodeSerie(final String barcodeSerie){
         if (barcodeSerie==null) return null;
 
-        String countryPrefix;
-        String firstChar = barcodeSerie.substring(0,1);
-        switch (firstChar){
-        case "1":
-            countryPrefix = "NL";
-            break;
-        case "2":
-            countryPrefix = "IT";
-            break;
-        case "3":
-            countryPrefix = "FR";
-            break;
-        case "4":
-            countryPrefix = "SE";
-            break;
-        case "5":
-            countryPrefix = "GB";
-            break;
-        default:
-            return null;
-        }
-        String partyReference = countryPrefix.concat(barcodeSerie.substring(1,3));
+        String countryPrefix = documentBarcodeService.countryPrefixFromBarcode(barcodeSerie);
+        if (countryPrefix == null) return null;
+
+        String partyReference = countryPrefix.equals("BE") ? "BE00" : countryPrefix.concat(barcodeSerie.substring(1,3));
         return partyRepository.findPartyByReference(partyReference);
     }
 
@@ -84,5 +67,8 @@ public class BuyerFinder {
 
     @Inject
     PartyRepository partyRepository;
+
+    @Inject
+    DocumentBarcodeService documentBarcodeService;
 
 }

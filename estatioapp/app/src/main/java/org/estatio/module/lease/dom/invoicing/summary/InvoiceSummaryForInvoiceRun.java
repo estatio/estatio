@@ -45,6 +45,7 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import lombok.Getter;
 import lombok.Setter;
 
+// NOTE: this view also is maintained by fly db
 /**
  * View model that surfaces information about each runId along with summary
  * details of its invoices in their various states.

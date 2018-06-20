@@ -48,6 +48,7 @@ import org.estatio.module.party.dom.PartyRepository;
 import lombok.Getter;
 import lombok.Setter;
 
+// NOTE: this view also is maintained by fly db
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.NONDURABLE,
         table = "InvoiceSummaryForPropertyDueDateStatus",

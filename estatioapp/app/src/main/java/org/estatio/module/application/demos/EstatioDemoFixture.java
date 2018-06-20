@@ -176,7 +176,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 Lease_enum.OxfPret004Gb,
                 Lease_enum.OxfMiracl005Gb,
                 Lease_enum.KalPoison001Nl,
-                Lease_enum.OxfTopModel001Gb);
+                Lease_enum.OxfTopModel001Gb,
+                Lease_enum.HanOmsHyral003Se);
 
         ec.executeChildren(this,
                 BreakOption_enum.OxfPoison003Gb_FIXED,
