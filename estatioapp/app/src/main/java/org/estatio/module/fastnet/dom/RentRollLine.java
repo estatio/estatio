@@ -58,10 +58,11 @@ import lombok.Setter;
                         + "WHERE keyToLeaseExternalReference == :keyToLeaseExternalReference "
                         + "ORDER BY exportDate DESC"),
         @Query(
-                name = "findByObjektsNummerAndEvdInSd", language = "JDOQL",
+                name = "findByObjektsNummerAndKontraktNrAndEvdInSd", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.fastnet.dom.RentRollLine "
                         + "WHERE objektsNummer == :objektsNummer && "
+                        + "kontraktNr == :kontraktNr && "
                         + "evdInSd == :evdInSd "),
         @Query(
                 name = "findByExportDate", language = "JDOQL",
@@ -80,8 +81,8 @@ import lombok.Setter;
 })
 @Uniques({
         @Unique(
-                name = "RentRollLine_objektsNummer_evdInSd_UNQ",
-                members = { "objektsNummer", "evdInSd" }
+                name = "RentRollLine_objektsNummer_kontraktNr_evdInSd_UNQ",
+                members = { "objektsNummer", "kontraktNr", "evdInSd" }
         )
 })
 @DomainObject(
@@ -556,7 +557,7 @@ public class RentRollLine implements Importable {
 
     @Override
     public List<Object> importData(final Object previousRow) {
-        if (rentRollLineRepository.findByObjektsNummerAndEvdInSd(getObjektsNummer(), getEvdInSd()) == null) {
+        if (rentRollLineRepository.findByObjektsNummerAndKontraktNrAndEvdInSd(getObjektsNummer(), getKontraktNr(), getEvdInSd()) == null) {
             setKeyToLeaseExternalReference(keyToLeaseExternalReference());
             setExportDate(getImportDate().toLocalDate());
             repositoryService.persistAndFlush(this);
