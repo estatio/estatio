@@ -52,12 +52,13 @@ public class RentRollLineRepository {
     }
 
     @Programmatic
-    public RentRollLine findByObjektsNummerAndEvdInSd(final String objektsNummer, final LocalDateTime evdInSd) {
+    public RentRollLine findByObjektsNummerAndKontraktNrAndEvdInSd(final String objektsNummer, final String kontraktNr, final LocalDateTime evdInSd) {
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
                         RentRollLine.class,
-                        "findByObjektsNummerAndEvdInSd",
+                        "findByObjektsNummerAndKontraktNrAndEvdInSd",
                         "objektsNummer", objektsNummer,
+                        "kontraktNr", kontraktNr,
                         "evdInSd", evdInSd));
     }
 
