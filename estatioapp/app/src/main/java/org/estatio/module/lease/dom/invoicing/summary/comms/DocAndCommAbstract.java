@@ -85,7 +85,7 @@ public abstract class DocAndCommAbstract<T extends DocAndCommAbstract<T>> {
             );
         }
 
-        <T extends DocAndCommAbstract<T>> List<T> documentsAndCommunicationsFor(
+        public <T extends DocAndCommAbstract<T>> List<T> documentsAndCommunicationsFor(
                 final Invoice<?> invoice,
                 final DncProvider<T> provider) {
             return documentsAndCommunicationsFor(Collections.singletonList(invoice), provider);
