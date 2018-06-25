@@ -54,7 +54,6 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="Metadata" id="metadata">
-                                <cpt:action id="sync"/>
                                 <cpt:action id="recentChanges" position="PANEL_DROPDOWN"/>
                                 <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
                                 <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
@@ -129,6 +128,11 @@
                     </bs3:row>
                 </bs3:tab>
             </bs3:tabGroup>
+            <cpt:fieldSet id="Coda Integration">
+                <cpt:property id="codaStatus" hidden="ALL_TABLES">
+                    <cpt:action id="sync"/>
+                </cpt:property>
+            </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="4">
             <bs3:tabGroup>
