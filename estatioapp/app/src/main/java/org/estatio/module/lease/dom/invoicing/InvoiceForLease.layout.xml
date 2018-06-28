@@ -129,8 +129,11 @@
                 </bs3:tab>
             </bs3:tabGroup>
             <cpt:fieldSet id="Coda Integration">
-                <cpt:property id="codaStatus" hidden="ALL_TABLES">
+                <cpt:property id="codaStatus">
                     <cpt:action id="sync"/>
+                    <cpt:action id="codaStatusOpen">
+                        <cpt:named>Open</cpt:named>
+                    </cpt:action>
                 </cpt:property>
             </cpt:fieldSet>
         </bs3:col>
