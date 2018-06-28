@@ -469,8 +469,10 @@ public class InvoiceForLease
             invoiceForLease.setInvoiceDate(invoiceDate);
             invoiceForLease.setStatus(InvoiceStatus.INVOICED);
 
-            messageService.informUser("Assigned " + invoiceForLease.getInvoiceNumber() + " to invoice " + titleService.titleOf(
-                    invoiceForLease));
+            messageService.informUser(
+                    String.format("Assigned %s to invoice %s",
+                            invoiceForLease.getInvoiceNumber(),
+                            titleService.titleOf(invoiceForLease)));
             return invoiceForLease;
         }
 

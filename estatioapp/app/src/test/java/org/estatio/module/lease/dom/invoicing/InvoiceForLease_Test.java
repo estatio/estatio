@@ -183,6 +183,7 @@ public class InvoiceForLease_Test {
             invoice_invoice.numeratorRepository = mockNumeratorRepository;
             invoice_invoice.titleService = mockTitleService;
             invoice_invoice.messageService = mockMessageService;
+            invoice_invoice.invoiceRepository = mockInvoiceRepository;
 
             // expect
             context.checking(new Expectations() {{
