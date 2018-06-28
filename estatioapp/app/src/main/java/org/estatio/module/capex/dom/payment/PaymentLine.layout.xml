@@ -44,7 +44,6 @@
                                 <cpt:action id="recentAuditEntries" position="PANEL_DROPDOWN"/>
                                 <cpt:action id="findChangesByDate" position="PANEL_DROPDOWN"/>
                                 <cpt:action id="recentChanges" position="PANEL_DROPDOWN"/>
-                                <cpt:action id="sync" position="PANEL_DROPDOWN"/>
                                 <cpt:action id="links" position="PANEL_DROPDOWN"/>
 
                                 <cpt:property id="id"/>

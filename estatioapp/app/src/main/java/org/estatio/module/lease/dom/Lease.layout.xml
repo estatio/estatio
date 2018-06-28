@@ -11,7 +11,6 @@
             <ns2:action id="recentChanges"/>
             <ns2:action id="findByLeaseAndInvoiceStatus"/>
             <ns2:action id="links"/>
-            <ns2:action id="sync"/>
             <ns2:action id="primaryOccupancy" hidden="EVERYWHERE"/>
             <ns2:action id="remove"/>
         </col>

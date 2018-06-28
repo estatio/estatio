@@ -54,6 +54,7 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.base.dom.EstatioRole;
+import org.estatio.module.base.dom.Syncable;
 import org.estatio.module.financial.dom.utils.IBANHelper;
 import org.estatio.module.financial.dom.utils.IBANValidator;
 import org.estatio.module.party.dom.Party;
@@ -94,7 +95,7 @@ import lombok.Setter;
 )
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class BankAccount
-        extends FinancialAccount {
+        extends FinancialAccount implements Syncable {
 
     public static class PersistedLifecycleEvent extends ObjectPersistedEvent<BankAccount> {}
     public static class UpdatedLifecycleEvent extends ObjectUpdatedEvent<BankAccount> {}
