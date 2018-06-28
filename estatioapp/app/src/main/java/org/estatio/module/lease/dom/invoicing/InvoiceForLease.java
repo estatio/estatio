@@ -338,7 +338,7 @@ public class InvoiceForLease
     }
 
     /**
-     * TODO: inline this mixin
+     * TODO: inline this mixin: nb will need to update camel-config.xml when do so, and allow for a transition period
      */
     @Mixin
     public static class _collect {
@@ -352,7 +352,15 @@ public class InvoiceForLease
         @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
         @ActionLayout(contributed = Contributed.AS_ACTION)
         public Invoice $$() {
-            return doCollect();
+
+            // Safeguards to do nothing if erroneously called without a wrapper.
+            if (hide$$() || disable$$() != null) {
+                return invoice;
+            }
+
+            final Numerator numerator = collectionNumerator();
+            invoice.setCollectionNumber(numerator.nextIncrementStr());
+            return invoice;
         }
 
         public boolean hide$$() {
@@ -366,6 +374,7 @@ public class InvoiceForLease
             }
             final Numerator numerator = collectionNumerator();
             if (numerator == null) {
+                // This is what disables the 'collect' functionality outside of Italy.
                 return "No 'collection number' numerator found for invoice's property";
             }
             if (invoice.getStatus() != InvoiceStatus.APPROVED) {
@@ -384,22 +393,7 @@ public class InvoiceForLease
             return null;
         }
 
-        // perhaps we should also store the specific bank mandate on the invoice
-        // that we want to deduct the money from
-        // is this a concept of account then?
-
-        @Programmatic
-        public Invoice doCollect() {
-            if (hide$$()) {
-                return invoice;
-            }
-            if (disable$$() != null) {
-                return invoice;
-            }
-            final Numerator numerator = collectionNumerator();
-            invoice.setCollectionNumber(numerator.nextIncrementStr());
-            return invoice;
-        }
+        // TODO: REVIEW, perhaps we should also store the specific bank mandate on the invoice that we want to deduct the money from.  Is this a concept of account then?
 
         private Numerator collectionNumerator() {
             return numeratorRepository.findCollectionNumberNumerator();
@@ -449,7 +443,7 @@ public class InvoiceForLease
     }
 
     /**
-     * TODO: inline this mixin
+     * TODO: inline this mixin: nb will need to update camel-config.xml when do so, and allow for a transition period
      */
     @Mixin
     public static class _invoice {
@@ -463,8 +457,9 @@ public class InvoiceForLease
         @ActionLayout(contributed = Contributed.AS_ACTION)
         public Invoice $$(final LocalDate invoiceDate) {
 
-            if (disable$$() != null) {
-                return invoiceForLease; // Safeguard to do nothing when called without a wrapper.
+            // Safeguards to do nothing if erroneously called without a wrapper.
+            if (disable$$() != null || validate0$$(invoiceDate) != null) {
+                return invoiceForLease;
             }
 
             final Numerator numerator = numeratorRepository

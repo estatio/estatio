@@ -4,10 +4,10 @@
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
             <ns2:action id="invoiceAll"/>
-            <ns2:action id="zapAll"/>
             <ns2:action id="approveAll"/>
             <ns2:action id="collectAll"/>
             <ns2:action id="removeAll"/>
+            <ns2:action id="republishAll"/>
             <ns2:action id="saveAllAsHistoric"/>
             <ns2:action id="links"/>
         </col>

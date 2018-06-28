@@ -1,5 +1,6 @@
-package org.estatio.module.coda.contributions;
+package org.estatio.module.coda.contributions.codastatus;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.linking.DeepLinkService;
 
 import org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage;
 import org.isisaddons.module.publishmq.dom.jdo.status.StatusMessageRepository;
@@ -28,11 +30,11 @@ public class InvoiceForLease_codaStatusOpen {
     }
 
     /**
-     * Returns the text of the first status message of most recent published event.
+     * Opens up the StatusMessage, if any.
      */
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public StatusMessage act() {
+    public Object act() {
         final Optional<StatusMessage> statusMessage = findStatusMessage();
         return statusMessage.orElse(null);
     }
@@ -56,7 +58,21 @@ public class InvoiceForLease_codaStatusOpen {
                 .findFirst();
     }
 
+    /**
+     * Attempts to convert into a URL so will open in new tab.
+     */
+    private Object asUrl(final StatusMessage statusMessage) {
+        try {
+            final URI uri = deepLinkService.deepLinkFor(statusMessage);
+            return uri.toURL();
+        } catch (Exception e) {
+            return statusMessage;
+        }
+    }
 
+
+    @Inject
+    DeepLinkService deepLinkService;
     @Inject
     StatusMessageSummaryCache statusMessageSummaryCache;
     @Inject

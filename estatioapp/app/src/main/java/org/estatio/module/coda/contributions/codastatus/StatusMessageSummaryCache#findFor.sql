@@ -15,8 +15,7 @@ select i.id             as invoiceId
     on 'org.estatio.dom.invoice.Invoice:' + convert(varchar,i.id) = pe.target
    and pe.memberIdentifier in (
 	'org.estatio.module.lease.dom.invoicing.InvoiceForLease$_invoice#$$()',
-	'org.estatio.module.lease.dom.invoicing.InvoiceForLease$_collect#$$()',
-	'org.estatio.module.ecpsync.contributions.UdoDomainObject2_sync#$$()'
+	'org.estatio.module.lease.dom.invoicing.InvoiceForLease$_collect#$$()'
 	)
   left join isispublishmq.StatusMessage sm
     on pe.transactionId = sm.transactionId

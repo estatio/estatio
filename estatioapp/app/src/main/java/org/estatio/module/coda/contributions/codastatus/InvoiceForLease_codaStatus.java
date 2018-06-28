@@ -1,4 +1,4 @@
-package org.estatio.module.coda.contributions;
+package org.estatio.module.coda.contributions.codastatus;
 
 import javax.inject.Inject;
 

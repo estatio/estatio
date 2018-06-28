@@ -1,4 +1,4 @@
-package org.estatio.module.coda.contributions;
+package org.estatio.module.coda.contributions.codastatus;
 
 import java.io.IOException;
 import java.net.URL;

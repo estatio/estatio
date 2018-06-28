@@ -9,7 +9,6 @@
             <ns2:action id="invoice"/>
             <ns2:action id="collect"/>
             <ns2:action id="attachSupportingDocument"/>
-            <ns2:action id="sync"/>
             <ns2:action id="remove"/>
         </col>
     </row>

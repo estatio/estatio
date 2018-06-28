@@ -30,9 +30,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.services.user.UserService;
-import org.apache.isis.applib.services.wrapper.DisabledException;
-import org.apache.isis.applib.services.wrapper.HiddenException;
-import org.apache.isis.applib.services.wrapper.InvalidException;
+import org.apache.isis.applib.services.wrapper.InteractionException;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
@@ -69,7 +67,15 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     public Object collectAll() {
         for (Invoice invoice : getInvoices()) {
-            mixin(InvoiceForLease._collect.class, invoice).doCollect();
+            try {
+                mixin(InvoiceForLease._collect.class, invoice).$$();
+            } catch(InteractionException ex) {
+                // we simply ignore any exceptions thrown; we rely on the wrapper around Invoice#collect(...) action
+                // to check its invariants.
+                //
+                // from the end-user's perspective, some invoices simply won't transition into a COLLECTED state
+                // and no event will be published (so no posting of prelim letters to Coda)
+            }
         }
         return this;
     }
@@ -77,30 +83,42 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Object invoiceAll(final LocalDate invoiceDate) {
         for (Invoice invoice : getInvoices()) {
-            wrap(mixin(InvoiceForLease._invoice.class, invoice)).$$(invoiceDate);
+            try {
+                wrap(mixin(InvoiceForLease._invoice.class, invoice)).$$(invoiceDate);
+            } catch(InteractionException ex) {
+                // we simply ignore any exceptions thrown; we rely on the wrapper around Invoice#invoice(...) action
+                // to check its invariants.
+                //
+                // from the end-user's perspective, some invoices simply won't transition into an INVOICED state
+                // and no event will be published (so no posting to Coda)
+            }
         }
         return this;
     }
 
-    public String validate0InvoiceAll(final LocalDate invoiceDate) {
-        for (Invoice invoice : getInvoices()) {
-            try {
-                final InvoiceForLease._invoice mixin = mixin(InvoiceForLease._invoice.class, invoice);
-                wrapperFactory.wrapNoExecute(mixin).$$(invoiceDate);
-            } catch (InvalidException ex) {
-                final String reasonMessage =
-                        ex.getInteractionEvent() != null
-                                ? ex.getInteractionEvent().getReason()
-                                : null;
-                return titleService.titleOf(invoice) + ": " +
-                        (reasonMessage != null ? reasonMessage : ex.getMessage());
-            } catch (HiddenException | DisabledException ex) {
-                // ignore
-            }
-        }
-        return null;
-    }
+//    public String validate0InvoiceAll(final LocalDate invoiceDate) {
+//        for (Invoice invoice : getInvoices()) {
+//            try {
+//                final InvoiceForLease._invoice mixin = mixin(InvoiceForLease._invoice.class, invoice);
+//                wrapperFactory.wrapNoExecute(mixin).$$(invoiceDate);
+//            } catch (InvalidException ex) {
+//                final String reasonMessage =
+//                        ex.getInteractionEvent() != null
+//                                ? ex.getInteractionEvent().getReason()
+//                                : null;
+//                return titleService.titleOf(invoice) + ": " +
+//                        (reasonMessage != null ? reasonMessage : ex.getMessage());
+//            } catch (HiddenException | DisabledException ex) {
+//                // ignore
+//            }
+//        }
+//        return null;
+//    }
 
+    /**
+     * It doesn't harm to do this, but note that
+     * @return
+     */
     public String disableInvoiceAll() {
         return getInvoices()
                 .stream()
