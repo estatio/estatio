@@ -101,7 +101,7 @@ public class StatusMessageSummaryCache implements WithTransactionScope {
     }
 
     private String readSql() {
-        final URL resource = Resources.getResource(getClass(), "StatusMessageSummaryCache#findFor.sql");
+        final URL resource = Resources.getResource(getClass(), "StatusMessageSummaryCache~findFor.sql");
         final String s;
         try {
             s = Resources.toString(resource, Charsets.UTF_8);
