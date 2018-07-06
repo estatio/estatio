@@ -631,6 +631,21 @@ public class InvoiceForLease
     @javax.inject.Inject
     NumeratorForCollectionRepository numeratorRepository;
 
+
+    @Programmatic
+    public LocalDate getCodaValDate() {
+        // for invoices (status == INVOICED), the invoiceDate will be set.
+        // for prelim letters (status == COLLECTED), only the dueDate will be set.
+        return coalesce(getInvoiceDate(), getDueDate());
+    }
+
+    private static <T> T coalesce(final T... values) {
+        for (final T value : values) {
+            if(value != null) return value;
+        }
+        return null;
+    }
+
     /**
      * TODO: inline this mixin
      */

@@ -21,6 +21,7 @@ package org.estatio.module.lease.app;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
@@ -34,15 +35,16 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceRepository;
@@ -145,10 +147,20 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3")
     public List<Invoice> findInvoicesByInvoiceNumber(
-            final String invoiceNumber) {
+            final String invoiceNumber,
+            @Nullable
+            @ParameterLayout(describedAs = "Invoice numbers are reset each year")
+            final Integer year) {
         return invoiceRepository.findMatchingInvoiceNumber(invoiceNumber).stream()
                 .filter(i -> i instanceof InvoiceForLease)
+                .filter(i -> {
+                    final LocalDate codaValDate = ((InvoiceForLease) i).getCodaValDate();
+                    return year == null || codaValDate == null || codaValDate.getYear() == year;
+                })
                 .collect(Collectors.toList());
+    }
+    public Integer default1FindInvoicesByInvoiceNumber() {
+        return clockService.now().getYear();
     }
 
 
