@@ -22,7 +22,7 @@ language governing permissions and limitations under the License.
         <groupId>org.incode</groupId>
         <artifactId>incode-parent</artifactId>
         <!-- NB: also update incode-platform.version property below.  Also update estatio-ecp pom.xml similarly -->
-        <version>1.16.2.20180704-2126-e962fc24</version>
+        <version>1.16.2.20180707-1320-eca4c55a</version>
         <relativePath/>
     </parent>
 
@@ -78,7 +78,7 @@ language governing permissions and limitations under the License.
         -->
 
         <!-- NB: also update the parent of this pom.  Also update estatio-ecp pom.xml similarly -->
-        <incode-platform.version>1.16.2.20180704-2126-e962fc24</incode-platform.version>
+        <incode-platform.version>1.16.2.20180707-1320-eca4c55a</incode-platform.version>
 
         <wicketstuff.version>7.9.0</wicketstuff.version>
 
@@ -293,7 +293,7 @@ language governing permissions and limitations under the License.
 
     <profiles>
 
-        <!-- TODO: move up to incode-build -->
+        <!-- required to pull down parent pom (incode-parent) -->
         <profile>
             <id>incode-cloud-maven</id>
             <activation>
@@ -334,130 +334,8 @@ language governing permissions and limitations under the License.
             </pluginRepositories>
         </profile>
 
-        <!-- TODO: move up to incode-build -->
-        <profile>
-            <id>incode-cloud-maven-dev</id>
-            <activation>
-                <property>
-                    <name>incode-cloud-maven-dev</name>
-                </property>
-            </activation>
-            <repositories>
-                <repository>
-                    <id>incode-cloud-maven-dev</id>
-                    <url>https://repo.incode.cloud/repository/maven-dev/</url>
-                    <name>Incode Cloud (maven-dev)</name>
-                    <releases>
-                        <enabled>true</enabled>
-                        <updatePolicy>always</updatePolicy>
-                        <checksumPolicy>fail</checksumPolicy>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                        <updatePolicy>always</updatePolicy>
-                        <checksumPolicy>fail</checksumPolicy>
-                    </snapshots>
-                    <layout>default</layout>
-                </repository>
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>incode-cloud-maven-dev</id>
-                    <name>Incode Cloud (maven-dev)</name>
-                    <releases>
-                        <enabled>true</enabled>
-                        <updatePolicy>never</updatePolicy>
-                        <checksumPolicy>fail</checksumPolicy>
-                    </releases>
-                    <url>https://repo.incode.cloud/repository/maven-dev/</url>
-                    <layout>default</layout>
-                </pluginRepository>
-            </pluginRepositories>
-        </profile>
-
-        <!-- TODO: move up to incode-build -->
-        <profile>
-            <id>incode-cloud-maven-test</id>
-            <activation>
-                <property>
-                    <name>incode-cloud-maven-test</name>
-                </property>
-            </activation>
-            <repositories>
-                <repository>
-                    <id>incode-cloud-maven-test</id>
-                    <url>https://repo.incode.cloud/repository/maven-test/</url>
-                    <name>Incode Cloud (maven-test)</name>
-                    <releases>
-                        <enabled>true</enabled>
-                        <updatePolicy>always</updatePolicy>
-                        <checksumPolicy>fail</checksumPolicy>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                        <updatePolicy>always</updatePolicy>
-                        <checksumPolicy>fail</checksumPolicy>
-                    </snapshots>
-                    <layout>default</layout>
-                </repository>
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>incode-cloud-maven-test</id>
-                    <name>Incode Cloud (maven-test)</name>
-                    <releases>
-                        <enabled>true</enabled>
-                        <updatePolicy>never</updatePolicy>
-                        <checksumPolicy>fail</checksumPolicy>
-                    </releases>
-                    <url>https://repo.incode.cloud/repository/maven-test/</url>
-                    <layout>default</layout>
-                </pluginRepository>
-            </pluginRepositories>
-        </profile>
-
-        <!-- TODO: move up to incode-build -->
-        <profile>
-            <id>incode-cloud-maven-prod</id>
-            <activation>
-                <property>
-                    <name>incode-cloud-maven-prod</name>
-                </property>
-            </activation>
-            <repositories>
-                <repository>
-                    <id>incode-cloud-maven-prod</id>
-                    <url>https://repo.incode.cloud/repository/maven-prod/</url>
-                    <name>Incode Cloud (maven-prod)</name>
-                    <releases>
-                        <enabled>true</enabled>
-                        <updatePolicy>always</updatePolicy>
-                        <checksumPolicy>fail</checksumPolicy>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                        <updatePolicy>always</updatePolicy>
-                        <checksumPolicy>fail</checksumPolicy>
-                    </snapshots>
-                    <layout>default</layout>
-                </repository>
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>incode-cloud-maven-prod</id>
-                    <name>Incode Cloud (maven-prod)</name>
-                    <releases>
-                        <enabled>true</enabled>
-                        <updatePolicy>never</updatePolicy>
-                        <checksumPolicy>fail</checksumPolicy>
-                    </releases>
-                    <url>https://repo.incode.cloud/repository/maven-prod/</url>
-                    <layout>default</layout>
-                </pluginRepository>
-            </pluginRepositories>
-        </profile>
-
     </profiles>
+
 </project>
 
 
