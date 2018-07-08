@@ -1,5 +1,1 @@
-#
-# explicitly ignoring Microsoft JDBC4 jar
-# (cannot redistribute, licensing)
-#
-sqljdbc4.jar
+
