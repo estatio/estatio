@@ -266,14 +266,6 @@ language governing permissions and limitations under the License.
             <artifactId>isis-wicket-pdfjs-cpt</artifactId>
         </dependency>
 
-        <dependency>
-            <!--
-            because isis-wicket-gmap3-cpt excludes wicketstuff-gmap3 (wrong wicket version)
-            -->
-            <groupId>org.wicketstuff</groupId>
-            <artifactId>wicketstuff-gmap3</artifactId>
-        </dependency>
-
 
 
 

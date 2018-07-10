@@ -1,11 +1,10 @@
 select invoiceId, smTransactionId, smTimestamp, smMessage
  from (
-select i.id             as invoiceId
-      ,sm.transactionId as smTransactionId
-      ,sm.timestamp     as smTimestamp
-      ,sm.message       as smMessage
-	  ,ROW_NUMBER ( )
-    OVER ( PARTITION BY i.id ORDER BY sm.timestamp DESC ) as row_number
+select i.id                                                                as invoiceId
+      ,sm.transactionId                                                    as smTransactionId
+      ,sm.timestamp                                                        as smTimestamp
+      ,sm.message                                                          as smMessage
+	  ,ROW_NUMBER () OVER ( PARTITION BY i.id ORDER BY sm.timestamp DESC ) as row_number
   from dbo.Invoice original
   join dbo.Invoice i
 	on i.atPath = original.atPath
@@ -19,6 +18,7 @@ select i.id             as invoiceId
 	)
   left join isispublishmq.StatusMessage sm
     on pe.transactionId = sm.transactionId
+   and pe.sequence      = sm.sequence
  where original.id = :invoiceId
  ) x
  where x.row_number = 1
