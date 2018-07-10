@@ -152,7 +152,7 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.incode.ecp.iso20022</groupId>
             <artifactId>incode-ecp-iso20022-pain</artifactId>
-            <version>001.001.003</version>
+            <version>001.001.003.20180710-0937-724f0c26</version>
         </dependency>
 
 
