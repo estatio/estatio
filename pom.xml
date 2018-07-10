@@ -88,7 +88,7 @@ language governing permissions and limitations under the License.
         <maven-pmd-plugin.ruleset>${project.basedir}/codequality/pmd.xml</maven-pmd-plugin.ruleset>
 
         <lombok.version>1.18.0</lombok.version>
-        <rfc-2445.version>1.0-SNAPSHOT</rfc-2445.version>
+        <rfc-2445.version>0.0.20110304.20180710-0922-720a7586</rfc-2445.version>
         <joda-time.version>2.3</joda-time.version>
         <freemarker.version>2.3.25-incubating</freemarker.version>
         <jdom.version>2.0.2</jdom.version>
@@ -242,16 +242,6 @@ language governing permissions and limitations under the License.
                 <version>${commons-lang3.version}</version>
             </dependency>
 
-            <!-- download:
-                 $ curl https://google-rfc-2445.googlecode.com/files/rfc2445-4Mar2011.jar > rfc2445-4Mar2011.jar
-                 install to ~/.m2/repo using:
-                 $ mvn install:install-file \
-                     -Dfile=rfc2445-4Mar2011.jar \
-                     -DgroupId=com.google \
-                     -DartifactId=rfc-2445 \
-                     -Dversion=0.0.20110304 \
-                     -Dpackaging=jar
-             -->
             <dependency>
                 <groupId>com.google</groupId>
                 <artifactId>rfc-2445</artifactId>
