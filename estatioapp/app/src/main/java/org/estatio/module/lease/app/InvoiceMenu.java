@@ -19,10 +19,14 @@
 package org.estatio.module.lease.app;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
 
@@ -39,12 +43,14 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.coda.contributions.republish.InvoiceForLease_republish;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceRepository;
@@ -146,15 +152,16 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3")
-    public List<Invoice> findInvoicesByInvoiceNumber(
+    public List<InvoiceForLease> findInvoicesByInvoiceNumber(
             final String invoiceNumber,
             @Nullable
             @ParameterLayout(describedAs = "Invoice numbers are reset each year")
             final Integer year) {
         return invoiceRepository.findMatchingInvoiceNumber(invoiceNumber).stream()
-                .filter(i -> i instanceof InvoiceForLease)
+                .filter(InvoiceForLease.class::isInstance)
+                .map(InvoiceForLease.class::cast)
                 .filter(i -> {
-                    final LocalDate codaValDate = ((InvoiceForLease) i).getCodaValDate();
+                    final LocalDate codaValDate = i.getCodaValDate();
                     return year == null || codaValDate == null || codaValDate.getYear() == year;
                 })
                 .collect(Collectors.toList());
@@ -191,6 +198,45 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
                 .collect(Collectors.toList());
     }
 
+    // //////////////////////////////////////
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT, restrictTo = RestrictTo.PROTOTYPING)
+    @MemberOrder(sequence = "98")
+    public List<InvoiceForLease> republish(
+            @ParameterLayout(describedAs = "invoice number prefix, eg 'CAR' (as in 'CAR-0144')")
+            final String invoiceNumberPrefix,
+            @ParameterLayout(describedAs = "invoice number suffices, eg '144,145,150' (for 'CAR-0144', 'CAR-0145', 'CAR-0150')")
+            final String invoiceNumberSuffices,
+            final int year
+    ) {
+        final List<String> invoiceNumberSuffixList =
+                Lists.newArrayList(Splitter.on(',').split(invoiceNumberSuffices));
+
+        final List<InvoiceForLease> invoiceList = invoiceNumberSuffixList.stream()
+                .map(num -> String.format("%s-%04d", invoiceNumberPrefix, Integer.parseInt(num)))
+                .map(invoiceNumber -> {
+                    final List<InvoiceForLease> invoices = findInvoicesByInvoiceNumber(invoiceNumber, year);
+                    return invoices.size() == 1 ? invoices.get(0) : null;
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        invoiceList.forEach(invoice -> factoryService.mixin(InvoiceForLease_republish.class, invoice).act());
+
+        return invoiceList;
+    }
+
+
+    public String default0Republish() {
+        return "CAR";
+    }
+    public String default1Republish() {
+        return "144,145,150";
+    }
+    public int default2Republish() {
+        return clockService.now().getYear();
+    }
+
 
     @Inject
     InvoiceSummaryForPropertyInvoiceDateRepository invoiceSummaryForPropertyInvoiceDateRepository;
@@ -212,5 +258,8 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
 
     @Inject
     EstatioApplicationTenancyRepositoryForLease estatioApplicationTenancyRepositoryForLease;
+
+    @Inject
+    FactoryService factoryService;
 
 }
