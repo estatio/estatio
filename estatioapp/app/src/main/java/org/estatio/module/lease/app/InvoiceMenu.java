@@ -212,8 +212,10 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
             @Nullable
             final String invoiceNumberSuffices,
             @ParameterLayout(describedAs = "invoice number suffices from (inclusive), eg '144' (for 'CAR-0144', ...)")
+            @Nullable
             final Integer invoiceNumberFrom,
             @ParameterLayout(describedAs = "invoice number suffices to (inclusive), eg '150' (for ..., 'CAR-0150')")
+            @Nullable
             final Integer invoiceNumberTo,
             final int year
     ) {
