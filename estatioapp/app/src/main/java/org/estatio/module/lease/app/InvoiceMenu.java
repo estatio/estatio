@@ -26,7 +26,10 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import com.google.common.base.Splitter;
+import com.google.common.collect.ContiguousSet;
+import com.google.common.collect.DiscreteDomain;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Range;
 
 import org.joda.time.LocalDate;
 
@@ -206,14 +209,25 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
             @ParameterLayout(describedAs = "invoice number prefix, eg 'CAR' (as in 'CAR-0144')")
             final String invoiceNumberPrefix,
             @ParameterLayout(describedAs = "invoice number suffices, eg '144,145,150' (for 'CAR-0144', 'CAR-0145', 'CAR-0150')")
+            @Nullable
             final String invoiceNumberSuffices,
+            @ParameterLayout(describedAs = "invoice number suffices from (inclusive), eg '144' (for 'CAR-0144', ...)")
+            final Integer invoiceNumberFrom,
+            @ParameterLayout(describedAs = "invoice number suffices to (inclusive), eg '150' (for ..., 'CAR-0150')")
+            final Integer invoiceNumberTo,
             final int year
     ) {
-        final List<String> invoiceNumberSuffixList =
-                Lists.newArrayList(Splitter.on(',').split(invoiceNumberSuffices));
+        final List<Integer> invoiceNumberSuffixList;
+        if(invoiceNumberSuffices != null) {
+            invoiceNumberSuffixList = Lists.newArrayList(Splitter.on(',').split(invoiceNumberSuffices))
+                                        .stream().map(Integer::parseInt).collect(Collectors.toList());
+        } else {
+            invoiceNumberSuffixList = ContiguousSet.create(
+                            Range.closed(invoiceNumberFrom, invoiceNumberTo), DiscreteDomain.integers()).asList();
+        }
 
         final List<InvoiceForLease> invoiceList = invoiceNumberSuffixList.stream()
-                .map(num -> String.format("%s-%04d", invoiceNumberPrefix, Integer.parseInt(num)))
+                .map(num -> String.format("%s-%04d", invoiceNumberPrefix, num))
                 .map(invoiceNumber -> {
                     final List<InvoiceForLease> invoices = findInvoicesByInvoiceNumber(invoiceNumber, year);
                     return invoices.size() == 1 ? invoices.get(0) : null;
@@ -230,11 +244,35 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
     public String default0Republish() {
         return "CAR";
     }
-    public String default1Republish() {
-        return "144,145,150";
-    }
-    public int default2Republish() {
+    public int default4Republish() {
         return clockService.now().getYear();
+    }
+
+    public String validateRepublish(
+            final String invoiceNumberPrefix,
+            final String invoiceNumberSuffices,
+            final Integer invoiceNumberFrom,
+            final Integer invoiceNumberTo,
+            final int year) {
+        if(invoiceNumberSuffices == null) {
+            if (invoiceNumberFrom == null || invoiceNumberTo == null) {
+                return "Specify invoice number suffices, or from/to range";
+            } else if (invoiceNumberFrom != null && invoiceNumberTo == null) {
+                return "Also specify invoice number to";
+
+            } else if (invoiceNumberFrom == null && invoiceNumberTo != null) {
+                return "Also specify invoice number from";
+
+            } else /*(invoiceNumberFrom != null && invoiceNumberTo != null)*/ {
+                return null;
+            }
+        } else {
+            if (invoiceNumberFrom != null || invoiceNumberTo != null) {
+                return "Specify invoice number suffices, or from/to range";
+            } else {
+                return null;
+            }
+        }
     }
 
 
