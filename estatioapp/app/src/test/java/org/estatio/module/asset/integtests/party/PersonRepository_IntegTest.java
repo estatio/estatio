@@ -27,7 +27,6 @@ import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 import org.estatio.module.party.dom.PersonRepository;
@@ -54,7 +53,7 @@ public class PersonRepository_IntegTest extends AssetModuleIntegTestAbstract {
 
                     executionContext.executeChildren(this,
                             Person_enum.DylanOfficeAdministratorGb,
-                            Person_enum.JonathanPropertyManagerGb,
+                            Person_enum.JonathanIncomingInvoiceManagerGb,
                             Person_enum.FaithConwayGb,  // gb country administrator
                             Person_enum.OscarCountryDirectorGb,
                             Person_enum.EmmaTreasurerGb,
@@ -72,7 +71,7 @@ public class PersonRepository_IntegTest extends AssetModuleIntegTestAbstract {
         public void happy_case() {
             assertSize(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR, "/FRA", 1);
             assertSize(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR, "/GBR", 1);
-            assertSize(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, "/GBR", 1);
+            assertSize(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER, "/GBR", 1);
             assertSize(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR, "/FRA", 1);
         }
 

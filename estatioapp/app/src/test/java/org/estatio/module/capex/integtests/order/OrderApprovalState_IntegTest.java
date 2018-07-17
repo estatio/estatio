@@ -19,7 +19,6 @@ import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.fixtures.enums.Country_enum;
 
-import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.module.capex.dom.order.Order;
@@ -63,7 +62,7 @@ public class OrderApprovalState_IntegTest extends CapexModuleIntegTestAbstract {
                 ec.executeChildren(this,
                         Order_enum.fakeOrder3Pdf,
                         Person_enum.DylanOfficeAdministratorGb,
-                        Person_enum.JonathanPropertyManagerGb);
+                        Person_enum.JonathanIncomingInvoiceManagerGb);
             }
         });
 
@@ -96,16 +95,16 @@ public class OrderApprovalState_IntegTest extends CapexModuleIntegTestAbstract {
 
         // given
         Person personJonathan = (Person) partyRepository.findPartyByReference(
-                Person_enum.JonathanPropertyManagerGb.getRef());
+                Person_enum.JonathanIncomingInvoiceManagerGb.getRef());
         SortedSet<PartyRole> rolesforJonathan = personJonathan.getRoles();
         assertThat(rolesforJonathan.size()).isEqualTo(1);
-        assertThat(rolesforJonathan.first().getRoleType()).isEqualTo(partyRoleTypeRepository.findByKey(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.getKey()));
+        assertThat(rolesforJonathan.first().getRoleType()).isEqualTo(partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.getKey()));
 
 
         // when
         try {
             queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-            sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getRef().toLowerCase(), (Runnable) () ->
+            sudoService.sudo(Person_enum.JonathanIncomingInvoiceManagerGb.getRef().toLowerCase(), (Runnable) () ->
                     wrap(mixin(Order_completeWithApproval.class, order)).act( personJonathan, new LocalDate(2018,1, 6), null));
         } catch (DisabledException e){
             error = e;

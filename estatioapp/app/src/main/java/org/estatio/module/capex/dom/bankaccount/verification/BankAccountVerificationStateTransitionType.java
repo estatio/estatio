@@ -10,7 +10,6 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.capex.dom.state.AdvancePolicy;
 import org.estatio.module.capex.dom.state.NextTransitionSearchStrategy;
 import org.estatio.module.capex.dom.state.StateTransitionEvent;
@@ -62,7 +61,7 @@ public enum BankAccountVerificationStateTransitionType
             Arrays.asList(BankAccountVerificationState.AWAITING_PROOF, BankAccountVerificationState.DISCARDED),
             BankAccountVerificationState.NOT_VERIFIED,
             NextTransitionSearchStrategy.firstMatching(),
-            TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER),
+            TaskAssignmentStrategy.to(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER),
             AdvancePolicy.MANUAL),
     DISCARD(
             Arrays.asList(BankAccountVerificationState.NOT_VERIFIED, BankAccountVerificationState.AWAITING_PROOF),

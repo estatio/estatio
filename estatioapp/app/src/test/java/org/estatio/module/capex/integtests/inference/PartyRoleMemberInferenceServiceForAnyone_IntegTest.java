@@ -27,7 +27,6 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.sudo.SudoService;
 
-import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.capex.dom.invoice.inference.PartyRoleMemberInferenceServiceForAnyone;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
@@ -46,7 +45,7 @@ public class PartyRoleMemberInferenceServiceForAnyone_IntegTest extends CapexMod
             @Override
             protected void execute(final ExecutionContext executionContext) {
 
-                executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.builder());
+                executionContext.executeChild(this, Person_enum.JonathanIncomingInvoiceManagerGb.builder());
                 executionContext.executeChild(this, Person_enum.DylanOfficeAdministratorGb.builder());
                 executionContext.executeChild(this, Person_enum.EmmaTreasurerGb.builder());
                 executionContext.executeChild(this, Person_enum.FloellaAssetManagerGb.builder());
@@ -61,11 +60,11 @@ public class PartyRoleMemberInferenceServiceForAnyone_IntegTest extends CapexMod
     @Test
     public void infer_members_of_takes_role_into_account() throws Exception {
 
-        sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getSecurityUserName(), () -> {
+        sudoService.sudo(Person_enum.JonathanIncomingInvoiceManagerGb.getSecurityUserName(), () -> {
 
             Assertions.assertThat(partyRoleMemberInferenceServiceForAnyone.inferMembersOf(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR).size()).isEqualTo(1);
             Assertions.assertThat(partyRoleMemberInferenceServiceForAnyone.inferMembersOf(PartyRoleTypeEnum.TREASURER).size()).isEqualTo(1);
-            Assertions.assertThat(partyRoleMemberInferenceServiceForAnyone.inferMembersOf(FixedAssetRoleTypeEnum.PROPERTY_MANAGER).size()).isEqualTo(1);
+            Assertions.assertThat(partyRoleMemberInferenceServiceForAnyone.inferMembersOf(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER).size()).isEqualTo(1);
             Assertions.assertThat(partyRoleMemberInferenceServiceForAnyone.inferMembersOf(null).size()).isEqualTo(4);
 
         });

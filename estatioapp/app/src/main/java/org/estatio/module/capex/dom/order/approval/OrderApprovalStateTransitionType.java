@@ -9,7 +9,6 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.state.AdvancePolicy;
 import org.estatio.module.capex.dom.state.NextTransitionSearchStrategy;
@@ -62,7 +61,7 @@ public enum OrderApprovalStateTransitionType
 
                 final boolean hasProperty = order.getProperty() != null;
                 if (hasProperty) {
-                    return FixedAssetRoleTypeEnum.PROPERTY_MANAGER;
+                    return PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER;
                 }
                 if (order.getType()==null) return null;
                 switch (order.getType()) {
@@ -72,7 +71,7 @@ public enum OrderApprovalStateTransitionType
                     // this case should not be hit, because the upstream document categorisation process
                     // should have also set a property in this case, so the previous check would have been satisfied
                     // just adding this case in the switch stmt "for completeness"
-                    return FixedAssetRoleTypeEnum.PROPERTY_MANAGER;
+                    return PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER;
                 case LOCAL_EXPENSES:
                     return PartyRoleTypeEnum.OFFICE_ADMINISTRATOR;
                 case CORPORATE_EXPENSES:

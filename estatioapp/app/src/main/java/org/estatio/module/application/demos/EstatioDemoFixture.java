@@ -127,7 +127,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         ec.executeChildren(this,
                 Person_enum.LinusTorvaldsNl,
                 Person_enum.GinoVannelliGb, Person_enum.DylanOfficeAdministratorGb,
-                Person_enum.JonathanPropertyManagerGb,
+                Person_enum.JonathanIncomingInvoiceManagerGb,
                 Person_enum.FaithConwayGb,
                 Person_enum.OscarCountryDirectorGb,
                 Person_enum.EmmaTreasurerGb,

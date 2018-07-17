@@ -91,7 +91,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
                         IncomingInvoice_enum.fakeInvoice2Pdf,
                         BankAccount_enum.TopModelGb,
                         Person_enum.EmmaTreasurerGb,
-                        Person_enum.JonathanPropertyManagerGb,
+                        Person_enum.JonathanIncomingInvoiceManagerGb,
                         Person_enum.PeterPanProjectManagerGb,
                         Person_enum.OscarCountryDirectorGb);
             }
@@ -149,7 +149,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         }
 
         assertThat(error.getMessage()).isNotNull();
-        assertThat(error.getMessage()).contains("Reason: Task assigned to 'PROPERTY_MANAGER' role");
+        assertThat(error.getMessage()).contains("Reason: Task assigned to 'INCOMING_INVOICE_MANAGER' role");
 
     }
 
@@ -161,12 +161,12 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         // given
         Person personEmma = (Person) partyRepository.findPartyByReference(
                 Person_enum.EmmaTreasurerGb.getRef());
-        PartyRoleType roleAsPropertyManager = partyRoleTypeRepository.findByKey("PROPERTY_MANAGER");
-        personEmma.addRole(roleAsPropertyManager);
+        PartyRoleType roleAsIncInvoiceManager = partyRoleTypeRepository.findByKey("INCOMING_INVOICE_MANAGER");
+        personEmma.addRole(roleAsIncInvoiceManager);
         transactionService.nextTransaction();
         SortedSet<PartyRole> rolesforEmma = personEmma.getRoles();
         assertThat(rolesforEmma.size()).isEqualTo(2);
-        assertThat(rolesforEmma.first().getRoleType()).isEqualTo(partyRoleTypeRepository.findByKey("PROPERTY_MANAGER"));
+        assertThat(rolesforEmma.first().getRoleType()).isEqualTo(partyRoleTypeRepository.findByKey("INCOMING_INVOICE_MANAGER"));
 
         // when
         try {
@@ -194,9 +194,9 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         PartyRoleType typeForTreasurer = partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.TREASURER.getKey());
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getRef().toLowerCase(), (Runnable) () ->
+        sudoService.sudo(Person_enum.JonathanIncomingInvoiceManagerGb.getRef().toLowerCase(), (Runnable) () ->
                 wrap(incomingInvoice).changePaymentMethod(PaymentMethod.CREDIT_CARD));
-        sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getRef().toLowerCase(), (Runnable) () ->
+        sudoService.sudo(Person_enum.JonathanIncomingInvoiceManagerGb.getRef().toLowerCase(), (Runnable) () ->
                 wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.PeterPanProjectManagerGb.getRef().toLowerCase(), (Runnable) () ->
@@ -247,9 +247,9 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         PartyRoleType typeForTreasurer = partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.TREASURER.getKey());
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getRef().toLowerCase(), (Runnable) () ->
+        sudoService.sudo(Person_enum.JonathanIncomingInvoiceManagerGb.getRef().toLowerCase(), (Runnable) () ->
                 wrap(incomingInvoice).changePaymentMethod(PaymentMethod.REFUND_BY_SUPPLIER));
-        sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getRef().toLowerCase(), (Runnable) () ->
+        sudoService.sudo(Person_enum.JonathanIncomingInvoiceManagerGb.getRef().toLowerCase(), (Runnable) () ->
                 wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.PeterPanProjectManagerGb.getRef().toLowerCase(), (Runnable) () ->
@@ -300,7 +300,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
 
         // when
-        sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getRef().toLowerCase(), (Runnable) () ->
+        sudoService.sudo(Person_enum.JonathanIncomingInvoiceManagerGb.getRef().toLowerCase(), (Runnable) () ->
                 wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.PeterPanProjectManagerGb.getRef().toLowerCase(), (Runnable) () ->
@@ -312,7 +312,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         sudoService.sudo(Person_enum.EmmaTreasurerGb.getRef().toLowerCase(), (Runnable) () ->
                 wrap(mixin(IncomingInvoice_reject.class, incomingInvoice)).act("TREASURER",null, "No good"));
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getRef().toLowerCase(), (Runnable) () ->
+        sudoService.sudo(Person_enum.JonathanIncomingInvoiceManagerGb.getRef().toLowerCase(), (Runnable) () ->
                 wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
 
         // then
@@ -331,7 +331,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         Assertions.assertThat(transitionsOfInvoice.get(4).getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.COMPLETE);
         Assertions.assertThat(transitionsOfInvoice.get(4).isCompleted()).isTrue();
         Assertions.assertThat(transitionsOfInvoice.get(4).getTask()).isNotNull();
-        Assertions.assertThat(transitionsOfInvoice.get(4).getCompletedBy()).isEqualTo(Person_enum.JonathanPropertyManagerGb.getRef().toLowerCase());
+        Assertions.assertThat(transitionsOfInvoice.get(4).getCompletedBy()).isEqualTo(Person_enum.JonathanIncomingInvoiceManagerGb.getRef().toLowerCase());
         Assertions.assertThat(transitionsOfInvoice.get(5).getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.REJECT);
         Assertions.assertThat(transitionsOfInvoice.get(5).isCompleted()).isTrue();
         Assertions.assertThat(transitionsOfInvoice.get(5).getTask()).isNull();
@@ -351,7 +351,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         Assertions.assertThat(transitionsOfInvoice.get(9).getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.COMPLETE);
         Assertions.assertThat(transitionsOfInvoice.get(9).isCompleted()).isTrue();
         Assertions.assertThat(transitionsOfInvoice.get(9).getTask()).isNotNull();
-        Assertions.assertThat(transitionsOfInvoice.get(9).getCompletedBy()).isEqualTo(Person_enum.JonathanPropertyManagerGb.getRef().toLowerCase());
+        Assertions.assertThat(transitionsOfInvoice.get(9).getCompletedBy()).isEqualTo(Person_enum.JonathanIncomingInvoiceManagerGb.getRef().toLowerCase());
         Assertions.assertThat(transitionsOfInvoice.get(10).getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.INSTANTIATE);
         Assertions.assertThat(transitionsOfInvoice.get(10).isCompleted()).isTrue();
         Assertions.assertThat(transitionsOfInvoice.get(10).getTask()).isNull();

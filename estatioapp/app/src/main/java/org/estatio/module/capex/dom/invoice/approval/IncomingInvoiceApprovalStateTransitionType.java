@@ -75,7 +75,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
 
                 final boolean hasProperty = incomingInvoice.getProperty() != null;
                 if (hasProperty) {
-                    return FixedAssetRoleTypeEnum.PROPERTY_MANAGER;
+                    return PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER;
                 }
                 // guard since EST-1508 type can be not set
                 if (incomingInvoice.getType()==null) return null;
@@ -86,7 +86,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     // this case should not be hit, because the upstream document categorisation process
                     // should have also set a property in this case, so the previous check would have been satisfied
                     // just adding this case in the switch stmt "for completeness"
-                    return FixedAssetRoleTypeEnum.PROPERTY_MANAGER;
+                    return PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER;
                 case LOCAL_EXPENSES:
                     return PartyRoleTypeEnum.OFFICE_ADMINISTRATOR;
                 case CORPORATE_EXPENSES:
