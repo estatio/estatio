@@ -28,6 +28,9 @@
                                             <cpt:action id="editSeller" promptStyle="INLINE" position="RIGHT"/>
                                             <cpt:action id="createSeller" promptStyle="INLINE" position="RIGHT"/>
                                         </cpt:property>
+                                        <cpt:property id="type">
+                                            <cpt:action id="editType" promptStyle="INLINE" position="RIGHT"/>
+                                        </cpt:property>
                                         <cpt:property id="sellerOrderReference">
                                             <cpt:action id="editSellerOrderReference" promptStyle="INLINE" position="RIGHT"/>
                                         </cpt:property>

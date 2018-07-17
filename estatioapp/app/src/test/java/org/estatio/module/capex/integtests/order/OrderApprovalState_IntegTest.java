@@ -90,7 +90,7 @@ public class OrderApprovalState_IntegTest extends CapexModuleIntegTestAbstract {
     public TogglzRule togglzRule = TogglzRule.allDisabled(EstatioTogglzFeature.class);
 
     @Test
-    public void complete_order_without_property_should_fail_when_not_having_office_administrator_role_test() {
+    public void complete_order_of_type_local_expenses_should_fail_when_not_having_office_administrator_role_test() {
 
         Exception error = new Exception();
 
@@ -117,7 +117,7 @@ public class OrderApprovalState_IntegTest extends CapexModuleIntegTestAbstract {
     }
 
     @Test
-    public void complete_order_without_property_works_when_having_office_administrator_role_test() {
+    public void complete_order_of_type_local_expenses_works_when_having_office_administrator_role_test() {
 
         // given
         Person personDylan = (Person) partyRepository.findPartyByReference(

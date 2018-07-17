@@ -11,6 +11,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.module.capex.app.document.IncomingDocViewModel;
 import org.estatio.module.capex.dom.documents.categorisation.triggers.Document_categoriseAsOrder;
 import org.estatio.module.capex.dom.documents.categorisation.triggers.Task_mixinDocumentAbstract;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.asset.dom.Property;
 
@@ -38,10 +39,11 @@ public class Task_categoriseDocumentAsOrder
     @ActionLayout(contributed = Contributed.AS_ACTION, cssClassFa = "folder-open-o")
     public Object act(
             @Nullable final Property property,
+            final IncomingInvoiceType orderType,
             @Nullable final String comment,
             final boolean goToNext) {
         final Object nextTaskIfAny = nextTaskOrWarnIfRequired(goToNext);
-        Object mixinResult = mixin().act(property, comment);
+        Object mixinResult = mixin().act(property, orderType, comment);
         if(mixinResult instanceof IncomingDocViewModel) {
             IncomingDocViewModel viewModel = (IncomingDocViewModel) mixinResult;
             // to support 'goToNext' when finished with the view model
@@ -52,12 +54,17 @@ public class Task_categoriseDocumentAsOrder
 
     public String validateAct(
             final Property property,
+            final IncomingInvoiceType orderType,
             final String comment,
             final boolean goToNext) {
-        return mixin().validateAct(property, comment);
+        return mixin().validateAct(property, orderType, comment);
     }
 
-    public boolean default2Act() {
+    public IncomingInvoiceType default1Act() {
+        return IncomingInvoiceType.CAPEX;
+    }
+
+    public boolean default3Act() {
         return true;
     }
 

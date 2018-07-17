@@ -26,6 +26,7 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.party.dom.Organisation;
@@ -110,6 +111,7 @@ public class OrderRepository {
     @Programmatic
     public Order create(
             final Property property,
+            final IncomingInvoiceType orderType,
             final String orderNumber,
             final String sellerOrderReference,
             final LocalDate entryDate,
@@ -128,6 +130,7 @@ public class OrderRepository {
 
         final Order order = new Order(
                 property,
+                orderType,
                 orderNumber == null ? numerator.nextIncrementStr() : orderNumber,
                 sellerOrderReference,
                 entryDate,
@@ -144,6 +147,7 @@ public class OrderRepository {
     @Programmatic
     public Order upsert(
             final Property property,
+            final IncomingInvoiceType orderType,
             final String number,
             final String sellerOrderReference,
             final LocalDate entryDate,
@@ -154,7 +158,7 @@ public class OrderRepository {
             final OrderApprovalState approvalStateIfAny) {
         Order order = findByOrderNumber(number);
         if (order == null) {
-            order = create(property, number, sellerOrderReference, entryDate, orderDate,
+            order = create(property, orderType, number, sellerOrderReference, entryDate, orderDate,
                     seller, buyer, atPath, approvalStateIfAny);
         } else {
             updateOrder(

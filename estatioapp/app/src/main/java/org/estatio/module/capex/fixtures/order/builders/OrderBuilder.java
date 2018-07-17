@@ -21,6 +21,7 @@ import org.estatio.module.capex.app.order.IncomingDocAsOrderViewModel;
 import org.estatio.module.capex.app.order.Order_switchView;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.dom.documents.categorisation.triggers.Document_categoriseAsOrder;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderRepository;
@@ -58,6 +59,8 @@ public class OrderBuilder extends BuilderScriptAbstract<Order, OrderBuilder> {
     Project project;
     @Getter @Setter
     Property property;
+    @Getter @Setter
+    IncomingInvoiceType orderType;
 
     @Getter @Setter
     LocalDate entryDate;
@@ -106,6 +109,7 @@ public class OrderBuilder extends BuilderScriptAbstract<Order, OrderBuilder> {
 
         checkParam("buyer", ec, Organisation.class);
         checkParam("seller", ec, Organisation.class);
+        checkParam("type", ec, IncomingInvoiceType.class);
         if (property!=null) checkParam("property", ec, Property.class);
         if (project!=null )checkParam("project", ec, Project.class);
 
@@ -134,7 +138,7 @@ public class OrderBuilder extends BuilderScriptAbstract<Order, OrderBuilder> {
         sudoService.sudo(officeAdministrator.getUsername(), () -> {
 
             final String comment = "";
-            wrap(mixin(Document_categoriseAsOrder.class,document)).act(property, comment);
+            wrap(mixin(Document_categoriseAsOrder.class,document)).act(property, orderType, comment);
 
             // given most/all of the info has been completed  (not using our view model here).
             final String documentName = document.getName();
@@ -146,6 +150,7 @@ public class OrderBuilder extends BuilderScriptAbstract<Order, OrderBuilder> {
                     mixin(IncomingDocAsOrderViewModel.changeOrderDetails.class, viewModel);
             wrap(changeOrderDetails).act(changeOrderDetails.default0Act(), buyer, seller, changeOrderDetails.default3Act(), changeOrderDetails.default4Act());
 
+            wrap(viewModel).setOrderType(orderType);
             wrap(viewModel).setTax(itemTax);
             wrap(viewModel).setProperty(property);
             wrap(viewModel).setProject(project);

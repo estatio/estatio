@@ -38,7 +38,9 @@ public class OrderRepository_Test {
 
         // when
         orderRepository.upsert(
-                property, number,
+                property,
+                null,
+                number,
                 sellerOrderReference,
                 entryDate,
                 orderDate,

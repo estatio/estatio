@@ -50,8 +50,8 @@ public class OrderRepository_IntegTest extends CapexModuleIntegTestAbstract {
 
             Party seller = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
-            Order orderMade1 = orderRepository.create(property,"123", sellerOrderReference, orderDate.plusDays(4),orderDate, seller, null, "/GBR", null);
-            Order orderMade2 = orderRepository.create(property,"456", sellerOrderReference, orderDate.plusDays(5),orderDate.plusDays(1), seller, null, "/GBR", null);
+            Order orderMade1 = orderRepository.create(property,null,"123", sellerOrderReference, orderDate.plusDays(4),orderDate, seller, null, "/GBR", null);
+            Order orderMade2 = orderRepository.create(property,null, "456", sellerOrderReference, orderDate.plusDays(5),orderDate.plusDays(1), seller, null, "/GBR", null);
 
             // when
             Order orderFound = orderRepository.findBySellerOrderReferenceAndSellerAndOrderDate(sellerOrderReference, seller, orderDate);

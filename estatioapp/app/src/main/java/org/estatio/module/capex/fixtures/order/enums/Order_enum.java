@@ -17,6 +17,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.fixtures.document.enums.IncomingPdf_enum;
@@ -39,7 +40,7 @@ public enum Order_enum
         implements PersonaWithFinder<Order>, PersonaWithBuilderScript<Order, OrderBuilder> {
 
     fakeOrder2Pdf(
-            Person_enum.DylanOfficeAdministratorGb,
+            IncomingInvoiceType.CAPEX, Person_enum.DylanOfficeAdministratorGb,
             IncomingPdf_enum.FakeOrder2, ApplicationTenancy_enum.Gb, new DateTime(2014, 3, 5, 10, 0), "estatio-user-gb",
             Organisation_enum.TopModelGb, Organisation_enum.HelloWorldGb,
             Project_enum.OxfProject, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
@@ -49,7 +50,7 @@ public enum Order_enum
             IncomingCharge_enum.FrMarketing, "marketing stuff", bd("500.00"), bd("105.00"), bd("605.00"), "F2017"
     ),
     fakeOrder3Pdf(
-            Person_enum.DylanOfficeAdministratorGb,
+            IncomingInvoiceType.LOCAL_EXPENSES, Person_enum.DylanOfficeAdministratorGb,
             IncomingPdf_enum.FakeOrder2, ApplicationTenancy_enum.Gb, new DateTime(2018, 1, 5, 10, 0), "estatio-user-gb",
             Organisation_enum.TopModelGb, Organisation_enum.HelloWorldGb,
             null, null,
@@ -58,6 +59,8 @@ public enum Order_enum
             IncomingCharge_enum.FrFurnitures, "order item", bd("1000.00"), bd("210.00"), bd("1210.00"), "F2018",
             null, null, null, null, null, null
     );
+
+    private final IncomingInvoiceType orderType;
 
     private final Person_enum officerAdministrator_d;
 
@@ -105,6 +108,7 @@ public enum Order_enum
                 .setPrereq((f,ec) -> f.setProject(f.objectFor(project_d, ec)))
                 .setPrereq((f,ec) -> f.setProperty(f.objectFor(property_d, ec)))
                 .setEntryDate(entryDate)
+                .setOrderType(orderType)
 
                 .setPrereq((f,ec) -> f.setItemTax(f.objectFor(itemTax_d, ec)))
 

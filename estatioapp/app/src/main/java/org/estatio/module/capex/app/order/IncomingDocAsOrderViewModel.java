@@ -33,13 +33,14 @@ import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.module.capex.dom.documents.BuyerFinder;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.capex.app.document.IncomingDocViewModel;
+import org.estatio.module.capex.dom.documents.BuyerFinder;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.dom.project.Project;
-import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.party.dom.Party;
 
@@ -56,6 +57,7 @@ import lombok.Setter;
 @XmlType(
         propOrder = {
                 "document",
+                "orderType",
                 "orderNumber",
                 "buyer",
                 "seller",
@@ -88,11 +90,15 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
     public IncomingDocAsOrderViewModel(final Order order, final Document document) {
         super(document);
         this.domainObject = order;
+        this.orderType = order.getType();
     }
 
     @Property(editing = Editing.DISABLED)
     @PropertyLayout(named = "Order")
     Order domainObject;
+
+    @Property(editing = Editing.ENABLED)
+    private IncomingInvoiceType orderType;
 
     @Property(editing = Editing.ENABLED)
     private String orderNumber;
@@ -197,6 +203,7 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
     public Order save() {
 
         Order order = getDomainObject();
+        order.setType(getOrderType());
         order.setOrderNumber(getOrderNumber());
         order.setSellerOrderReference(getSellerOrderReference());
         order.setEntryDate(clockService.now());
@@ -238,6 +245,9 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
     }
 
     public String disableSave() {
+        if (getType()==null){
+            return "Type is required";
+        }
         return reasonNotEditableIfAny();
     }
 

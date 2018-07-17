@@ -63,6 +63,7 @@ import org.estatio.module.capex.dom.documents.BudgetItemChooser;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalStateTransition;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
@@ -175,6 +176,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     public Order(
             final org.estatio.module.asset.dom.Property property,
+            final IncomingInvoiceType orderType,
             final String orderNumber,
             final String sellerOrderReference,
             final LocalDate entryDate,
@@ -185,6 +187,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final OrderApprovalState approvalStateIfAny) {
         this();
         this.property = property;
+        this.type = orderType;
         this.orderNumber = orderNumber;
         this.sellerOrderReference = sellerOrderReference;
         this.entryDate = entryDate;
@@ -261,6 +264,37 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         for (OrderItem item : getItems()){
             if (item.isLinkedToInvoiceItem()){
                 return "Property cannot be changed because an item is linked to an invoice";
+            }
+        }
+        return null;
+    }
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private IncomingInvoiceType type;
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Order editType(
+            final IncomingInvoiceType type){
+        setType(type);
+        return this;
+    }
+
+    public String disableEditType(){
+        if (isImmutable()){
+            return orderImmutableReason();
+        }
+        return typeIsImmutableReason();
+    }
+
+    public IncomingInvoiceType default0EditType(){
+        return getType();
+    }
+
+    private String typeIsImmutableReason(){
+        for (OrderItem item : getItems()){
+            if (item.isLinkedToInvoiceItem()){
+                return "Type cannot be changed because an item is linked to an invoice";
             }
         }
         return null;
@@ -915,11 +949,13 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     public String reasonIncomplete(){
 
         String orderValidatorResult = new Validator()
+                .checkNotNull(getType(),"type")
                 .checkNotNull(getOrderNumber(),"order number")
                 .checkNotNull(getBuyer(), "buyer")
                 .checkNotNull(getSeller(), "seller")
                 .checkNotNull(getNetAmount(), "net amount")
                 .checkNotNull(getGrossAmount(), "gross amount")
+                .validateForOrderType(this)
                 .getResult();
 
         return mergeReasonItemsIncomplete(orderValidatorResult);
@@ -953,6 +989,28 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             if (mandatoryProperty == null) {
                 setResult(result == null ? propertyName : result.concat(", ").concat(propertyName));
             }
+            return this;
+        }
+
+        Order.Validator validateForOrderType(Order order){
+            if (order == null) return this;
+            if (order.getType() == null) return this;
+
+            String message;
+            switch (order.getType()){
+
+            case CAPEX:
+            case SERVICE_CHARGES:
+            case PROPERTY_EXPENSES:
+                message = "property";
+                if (order.getProperty()==null){
+                    setResult(result==null ? message : result.concat(", ").concat(message));
+                }
+                break;
+
+            default:
+            }
+
             return this;
         }
 
