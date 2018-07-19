@@ -68,7 +68,7 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
     public Object collectAll() {
         for (Invoice invoice : getInvoices()) {
             try {
-                mixin(InvoiceForLease._collect.class, invoice).$$();
+                wrap(mixin(InvoiceForLease._collect.class, invoice)).$$();
             } catch(InteractionException ex) {
                 // we simply ignore any exceptions thrown; we rely on the wrapper around Invoice#collect(...) action
                 // to check its invariants.
