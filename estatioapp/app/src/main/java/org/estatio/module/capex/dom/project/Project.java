@@ -190,8 +190,8 @@ public class Project extends UdoDomainObject<Project> implements
 	    repositoryService.remove(this);
 	}
 
-    public String disableDelete(){
-	    return this.items.isEmpty() ? null : "This project cannot be deleted because it has items";
+    public boolean hideDelete(){
+	    return !this.items.isEmpty();
 	}
 
 
