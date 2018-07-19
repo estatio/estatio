@@ -118,8 +118,8 @@ public class LeaseTermsForDeposit_IntegTest extends LeaseModuleIntegTestAbstract
 
             // then
             assertThat(invoiceForLeaseRepository.findByLease(topmodelLease).size()).isEqualTo(2);
-            assertThat(invoiceForLeaseRepository.findByLease(topmodelLease).get(0).getTotalNetAmount()).isEqualTo(new BigDecimal("10000.00"));
-            assertThat(invoiceForLeaseRepository.findByLease(topmodelLease).get(1).getTotalNetAmount()).isEqualTo(new BigDecimal("652.51"));
+            assertThat(invoiceForLeaseRepository.findByLease(topmodelLease).get(0).getTotalNetAmount()).isEqualTo(new BigDecimal("652.51"));
+            assertThat(invoiceForLeaseRepository.findByLease(topmodelLease).get(1).getTotalNetAmount()).isEqualTo(new BigDecimal("10000.00"));
 
             // and after approval of first invoice only the delta is invoiced
             final Invoice invoice = invoiceForLeaseRepository.findByLease(topmodelLease).get(0);
@@ -133,7 +133,7 @@ public class LeaseTermsForDeposit_IntegTest extends LeaseModuleIntegTestAbstract
 
             // then
             assertThat(invoiceForLeaseRepository.findByLease(topmodelLease).size()).isEqualTo(2);
-            assertThat(invoiceForLeaseRepository.findByLease(topmodelLease).get(1).getTotalNetAmount()).isEqualTo(new BigDecimal("652.51"));
+            assertThat(invoiceForLeaseRepository.findByLease(topmodelLease).get(0).getTotalNetAmount()).isEqualTo(new BigDecimal("652.51"));
 
             // and after terminating the invoiced deposit is credited
             depositTerm = (LeaseTermForDeposit) topmodelLease.findFirstItemOfType(LeaseItemType.DEPOSIT).getTerms().first();
@@ -149,7 +149,7 @@ public class LeaseTermsForDeposit_IntegTest extends LeaseModuleIntegTestAbstract
 
             //then
             assertThat(invoiceForLeaseRepository.findByLease(topmodelLease).size()).isEqualTo(3);
-            assertThat(invoiceForLeaseRepository.findByLease(topmodelLease).get(2).getTotalNetAmount()).isEqualTo(new BigDecimal("-10652.51"));
+            assertThat(invoiceForLeaseRepository.findByLease(topmodelLease).get(1).getTotalNetAmount()).isEqualTo(new BigDecimal("-10652.51"));
 
         }
 

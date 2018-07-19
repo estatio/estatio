@@ -33,7 +33,7 @@ import lombok.experimental.Accessors;
 import static org.estatio.module.asset.fixtures.person.enums.Person_enum.DylanOfficeAdministratorGb;
 import static org.estatio.module.asset.fixtures.person.enums.Person_enum.EmmaTreasurerGb;
 import static org.estatio.module.asset.fixtures.person.enums.Person_enum.FloellaAssetManagerGb;
-import static org.estatio.module.asset.fixtures.person.enums.Person_enum.JonathanPropertyManagerGb;
+import static org.estatio.module.asset.fixtures.person.enums.Person_enum.JonathanIncomingInvoiceManagerGb;
 import static org.estatio.module.asset.fixtures.person.enums.Person_enum.OscarCountryDirectorGb;
 import static org.estatio.module.capex.dom.invoice.IncomingInvoiceType.CAPEX;
 import static org.estatio.module.capex.dom.invoice.IncomingInvoiceType.PROPERTY_EXPENSES;
@@ -77,7 +77,7 @@ public enum IncomingInvoice_enum
             null, null, null, null, null, null, null,null,
             null,
             null,
-            JonathanPropertyManagerGb,
+            JonathanIncomingInvoiceManagerGb,
             FloellaAssetManagerGb,
             OscarCountryDirectorGb,
             EmmaTreasurerGb

@@ -6,6 +6,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 public enum PartyRoleTypeEnum implements IPartyRoleType {
 
     OFFICE_ADMINISTRATOR,
+    INCOMING_INVOICE_MANAGER,
     COUNTRY_DIRECTOR,
     TREASURER,
     CORPORATE_ADMINISTRATOR,

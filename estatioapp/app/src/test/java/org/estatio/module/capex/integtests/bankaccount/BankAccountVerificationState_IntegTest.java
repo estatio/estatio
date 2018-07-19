@@ -17,7 +17,6 @@ import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.fixtures.enums.Country_enum;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
@@ -75,7 +74,7 @@ public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTest
                         IncomingInvoice_enum.fakeInvoice2Pdf,
                         BankAccount_enum.TopModelGb,
                         Person_enum.EmmaTreasurerGb,
-                        Person_enum.JonathanPropertyManagerGb);
+                        Person_enum.JonathanIncomingInvoiceManagerGb);
             }
         });
     }
@@ -110,8 +109,8 @@ public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTest
         // given
         Person personEmmaTreasurer = Person_enum.EmmaTreasurerGb.findUsing(serviceRegistry);
         PartyRoleType typeForTreasurer = partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.TREASURER.getKey());
-        PartyRoleType typeForPropertyManager = partyRoleTypeRepository.findByKey(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.getKey());
-        assertThat(taskRepository.findIncompleteByRole(typeForPropertyManager).size()).isEqualTo(2);
+        PartyRoleType typeForIncInvoiceManager = partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.getKey());
+        assertThat(taskRepository.findIncompleteByRole(typeForIncInvoiceManager).size()).isEqualTo(2);
 
         // when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
@@ -121,10 +120,10 @@ public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTest
         // then
         assertState(bankAccount, BankAccountVerificationState.AWAITING_PROOF);
         assertThat(taskRepository.findIncompleteByRole(typeForTreasurer).size()).isEqualTo(0);
-        assertThat(taskRepository.findIncompleteByRole(typeForPropertyManager).size()).isEqualTo(3);
+        assertThat(taskRepository.findIncompleteByRole(typeForIncInvoiceManager).size()).isEqualTo(3);
 
         // and given
-        Person jonathanPropManager = Person_enum.JonathanPropertyManagerGb.findUsing(serviceRegistry);
+        Person jonathanPropManager = Person_enum.JonathanIncomingInvoiceManagerGb.findUsing(serviceRegistry);
 
         // and when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
@@ -134,7 +133,7 @@ public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTest
         // then
         assertState(bankAccount, BankAccountVerificationState.DISCARDED);
         assertThat(taskRepository.findIncompleteByRole(typeForTreasurer).size()).isEqualTo(0);
-        assertThat(taskRepository.findIncompleteByRole(typeForPropertyManager).size()).isEqualTo(2);
+        assertThat(taskRepository.findIncompleteByRole(typeForIncInvoiceManager).size()).isEqualTo(2);
 
         // and when 'resurrecting'
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
@@ -144,7 +143,7 @@ public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTest
         // then
         assertState(bankAccount, BankAccountVerificationState.NOT_VERIFIED);
         assertThat(taskRepository.findIncompleteByRole(typeForTreasurer).size()).isEqualTo(1);
-        assertThat(taskRepository.findIncompleteByRole(typeForPropertyManager).size()).isEqualTo(2);
+        assertThat(taskRepository.findIncompleteByRole(typeForIncInvoiceManager).size()).isEqualTo(2);
 
         // and when discarding again by treasurer
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache

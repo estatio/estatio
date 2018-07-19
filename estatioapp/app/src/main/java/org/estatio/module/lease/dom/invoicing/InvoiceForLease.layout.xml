@@ -207,6 +207,9 @@
                                 <cpt:action id="sendByPostPrelimLetter" cssClassFa="print">
                                     <cpt:named>Send by post</cpt:named>
                                 </cpt:action>
+                                <cpt:action id="downloadPreliminaryLetters">
+                                    <cpt:named>Download PDF</cpt:named>
+                                </cpt:action>
                             </cpt:collection>
                             <cpt:collection id="invoiceDocs">
                                 <cpt:action id="prepareInvoiceDoc">
@@ -217,6 +220,9 @@
                                 </cpt:action>
                                 <cpt:action id="sendByPostInvoiceDoc" cssClassFa="print">
                                     <cpt:named>Send by post</cpt:named>
+                                </cpt:action>
+                                <cpt:action id="downloadInvoiceDocs">
+                                    <cpt:named>Download PDF</cpt:named>
                                 </cpt:action>
                             </cpt:collection>
                         </bs3:col>

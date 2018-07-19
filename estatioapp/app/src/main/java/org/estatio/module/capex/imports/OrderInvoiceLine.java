@@ -278,6 +278,7 @@ public class OrderInvoiceLine {
             if(isOrder) {
                 Order order = orderRepository.upsert(
                         property,
+                        null,
                         line.getOrderNumber(),
                         line.getSeller(),
                         line.entryDate,

@@ -19,7 +19,6 @@ import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.fixtures.enums.Country_enum;
 
-import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.module.capex.dom.order.Order;
@@ -63,7 +62,7 @@ public class OrderApprovalState_IntegTest extends CapexModuleIntegTestAbstract {
                 ec.executeChildren(this,
                         Order_enum.fakeOrder3Pdf,
                         Person_enum.DylanOfficeAdministratorGb,
-                        Person_enum.JonathanPropertyManagerGb);
+                        Person_enum.JonathanIncomingInvoiceManagerGb);
             }
         });
 
@@ -90,22 +89,22 @@ public class OrderApprovalState_IntegTest extends CapexModuleIntegTestAbstract {
     public TogglzRule togglzRule = TogglzRule.allDisabled(EstatioTogglzFeature.class);
 
     @Test
-    public void complete_order_without_property_should_fail_when_not_having_office_administrator_role_test() {
+    public void complete_order_of_type_local_expenses_should_fail_when_not_having_office_administrator_role_test() {
 
         Exception error = new Exception();
 
         // given
         Person personJonathan = (Person) partyRepository.findPartyByReference(
-                Person_enum.JonathanPropertyManagerGb.getRef());
+                Person_enum.JonathanIncomingInvoiceManagerGb.getRef());
         SortedSet<PartyRole> rolesforJonathan = personJonathan.getRoles();
         assertThat(rolesforJonathan.size()).isEqualTo(1);
-        assertThat(rolesforJonathan.first().getRoleType()).isEqualTo(partyRoleTypeRepository.findByKey(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.getKey()));
+        assertThat(rolesforJonathan.first().getRoleType()).isEqualTo(partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.getKey()));
 
 
         // when
         try {
             queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-            sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getRef().toLowerCase(), (Runnable) () ->
+            sudoService.sudo(Person_enum.JonathanIncomingInvoiceManagerGb.getRef().toLowerCase(), (Runnable) () ->
                     wrap(mixin(Order_completeWithApproval.class, order)).act( personJonathan, new LocalDate(2018,1, 6), null));
         } catch (DisabledException e){
             error = e;
@@ -117,7 +116,7 @@ public class OrderApprovalState_IntegTest extends CapexModuleIntegTestAbstract {
     }
 
     @Test
-    public void complete_order_without_property_works_when_having_office_administrator_role_test() {
+    public void complete_order_of_type_local_expenses_works_when_having_office_administrator_role_test() {
 
         // given
         Person personDylan = (Person) partyRepository.findPartyByReference(

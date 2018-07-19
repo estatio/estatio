@@ -30,7 +30,6 @@ import org.estatio.module.capex.dom.order.approval.triggers.Order_discard;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.capex.fixtures.incominginvoice.enums.IncomingInvoice_enum;
-import org.estatio.module.capex.fixtures.order.builders.OrderBuilder;
 import org.estatio.module.capex.fixtures.order.enums.Order_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
@@ -60,7 +59,7 @@ public class Order_withLinks_IntegTest extends CapexModuleIntegTestAbstract {
                         Budget_enum.OxfBudget2015,
                         Budget_enum.OxfBudget2016,
                         IncomingInvoice_enum.fakeInvoice2Pdf,
-                        Person_enum.JonathanPropertyManagerGb);
+                        Person_enum.JonathanIncomingInvoiceManagerGb);
             }
         });
         order = Order_enum.fakeOrder2Pdf.findUsing(serviceRegistry);
@@ -90,7 +89,7 @@ public class Order_withLinks_IntegTest extends CapexModuleIntegTestAbstract {
         // when
         final Order_discard mixin = mixin(Order_discard.class, order);
 
-        sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getSecurityUserName(), () -> {
+        sudoService.sudo(Person_enum.JonathanIncomingInvoiceManagerGb.getSecurityUserName(), () -> {
             wrap(mixin).act("Discarding junk");
         });
 

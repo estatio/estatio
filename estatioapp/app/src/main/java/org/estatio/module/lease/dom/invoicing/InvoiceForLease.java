@@ -106,7 +106,7 @@ import lombok.Setter;
                 value = "SELECT " +
                         "FROM org.estatio.module.invoice.dom.Invoice " +
                         "WHERE lease == :lease " +
-                        "ORDER BY invoiceDate DESC"),
+                        "ORDER BY dueDate DESC"),
         @javax.jdo.annotations.Query(
                    name = "findByFixedAssetAndStatus", language = "JDOQL",
                 value = "SELECT " +

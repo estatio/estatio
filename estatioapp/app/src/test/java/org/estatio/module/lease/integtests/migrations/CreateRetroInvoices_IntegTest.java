@@ -162,7 +162,7 @@ public class CreateRetroInvoices_IntegTest extends LeaseModuleIntegTestAbstract 
             // then
             List<InvoiceForLease> invoicessAfterCreateLegacy = invoiceForLeaseRepository.findByLease(lease);
             assertThat(invoicessAfterCreateLegacy.size(), is(9));
-            Invoice invoice = invoicessAfterCreateLegacy.get(8);
+            Invoice invoice = invoicessAfterCreateLegacy.get(0);
             assertThat(invoice.getDueDate(), is(VT.ld(2014, 2, 1)));
             assertThat(invoice.getTotalGrossAmount(), is(VT.bd("-8170.01")));
 

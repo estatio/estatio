@@ -73,7 +73,7 @@ public enum Person_enum
 
     FifineLacroixFr("FLACROIX", "Fifine", "Lacroix", null, true, FEMALE, Fr, Fr,
             null, null,
-            new IPartyRoleType[] { FixedAssetRoleTypeEnum.PROPERTY_MANAGER },
+            new IPartyRoleType[] { PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER },
             new FixedAssetRoleSpec[] {
                 new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, Property_enum.VivFr),
                 new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, Property_enum.MnsFr),
@@ -116,12 +116,10 @@ public enum Person_enum
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
 
-    JonathanPropertyManagerGb("JRICE", "Jonathan", "Rice", null, true, MALE, Gb, Gb,
+    JonathanIncomingInvoiceManagerGb("JRICE", "Jonathan", "Rice", null, true, MALE, Gb, Gb,
             null, null,
-            new IPartyRoleType[] { FixedAssetRoleTypeEnum.PROPERTY_MANAGER },
-            new FixedAssetRoleSpec[] {
-                new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, Property_enum.OxfGb)
-            }),
+            new IPartyRoleType[] { PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER },
+            new FixedAssetRoleSpec[] {}),
 
     LinusTorvaldsNl("LTORVALDS", "Linus", "Torvalds", "L", false, MALE, Nl, Nl,
             null, null,
@@ -135,7 +133,7 @@ public enum Person_enum
 
     OlivePropertyManagerFr("OBEAUSOLIEL", "Olive", "Beusoleil", null, true, FEMALE, Fr, Fr,
             null, null,
-            new IPartyRoleType[] { FixedAssetRoleTypeEnum.PROPERTY_MANAGER },
+            new IPartyRoleType[] { PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER },
             new FixedAssetRoleSpec[] {
                 new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, Property_enum.MacFr)
             }),

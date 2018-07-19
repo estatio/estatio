@@ -66,7 +66,7 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
 
                 executionContext.executeChildren(this,
                         Order_enum.fakeOrder2Pdf,
-                        Person_enum.JonathanPropertyManagerGb);
+                        Person_enum.JonathanIncomingInvoiceManagerGb);
             }
         });
         order = Order_enum.fakeOrder2Pdf.findUsing(serviceRegistry);
@@ -97,7 +97,7 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
         assertNotNull(order);
 
         // when
-        approve(Person_enum.JonathanPropertyManagerGb.getSecurityUserName(), this.order);
+        approve(Person_enum.JonathanIncomingInvoiceManagerGb.getSecurityUserName(), this.order);
 
         // then
         assertThat(this.order.getApprovalState()).isEqualTo(OrderApprovalState.APPROVED);
@@ -115,7 +115,7 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
         final Order_discard mixin = mixin(Order_discard.class, order);
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getSecurityUserName(), () -> {
+        sudoService.sudo(Person_enum.JonathanIncomingInvoiceManagerGb.getSecurityUserName(), () -> {
             wrap(mixin).act("Discarding junk");
         });
 
@@ -130,7 +130,7 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
 
         // given
         assertNotNull(order);
-        approve(Person_enum.JonathanPropertyManagerGb.getSecurityUserName(), order);
+        approve(Person_enum.JonathanIncomingInvoiceManagerGb.getSecurityUserName(), order);
         assertThat(order.getApprovalState()).isEqualTo(OrderApprovalState.APPROVED);
 
         // expect
@@ -140,7 +140,7 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
         final Order_discard mixin = mixin(Order_discard.class, order);
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getSecurityUserName(), () -> {
+        sudoService.sudo(Person_enum.JonathanIncomingInvoiceManagerGb.getSecurityUserName(), () -> {
             wrap(mixin).act("Discarding junk");
         });
 
@@ -151,7 +151,7 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
 
         // given
         assertNotNull(order);
-        approve(Person_enum.JonathanPropertyManagerGb.getSecurityUserName(), order);
+        approve(Person_enum.JonathanIncomingInvoiceManagerGb.getSecurityUserName(), order);
         assertThat(order.getApprovalState()).isEqualTo(OrderApprovalState.APPROVED);
 
         // when
@@ -162,7 +162,7 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
         final String comment = "some reason";
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getSecurityUserName(), () -> {
+        sudoService.sudo(Person_enum.JonathanIncomingInvoiceManagerGb.getSecurityUserName(), () -> {
             wrap(mixin).act(role, person, comment);
         });
 
@@ -195,7 +195,7 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
         final String comment = "some reason";
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getSecurityUserName(), () -> {
+        sudoService.sudo(Person_enum.JonathanIncomingInvoiceManagerGb.getSecurityUserName(), () -> {
             wrap(mixin).act(comment);
         });
         queryResultsCache.resetForNextTransaction();
@@ -215,7 +215,7 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
 
         // given
         assertNotNull(order);
-        approve(Person_enum.JonathanPropertyManagerGb.getSecurityUserName(), order);
+        approve(Person_enum.JonathanIncomingInvoiceManagerGb.getSecurityUserName(), order);
         assertThat(order.getApprovalState()).isNotEqualTo(OrderApprovalState.NEW);
 
         // expect
@@ -228,7 +228,7 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
         final String comment = "some reason";
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getSecurityUserName(), () -> {
+        sudoService.sudo(Person_enum.JonathanIncomingInvoiceManagerGb.getSecurityUserName(), () -> {
             wrap(mixin).act(comment);
         });
     }

@@ -27,7 +27,6 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.sudo.SudoService;
 
-import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
@@ -45,7 +44,7 @@ public class PartyRoleTypeService_IntegTest extends CapexModuleIntegTestAbstract
             @Override
             protected void execute(final ExecutionContext executionContext) {
 
-                executionContext.executeChild(this, Person_enum.JonathanPropertyManagerGb.builder());
+                executionContext.executeChild(this, Person_enum.JonathanIncomingInvoiceManagerGb.builder());
                 executionContext.executeChild(this, Person_enum.DylanOfficeAdministratorGb.builder());
                 executionContext.executeChild(this, Person_enum.EmmaTreasurerGb.builder());
                 executionContext.executeChild(this, Person_enum.FloellaAssetManagerGb.builder());
@@ -58,11 +57,11 @@ public class PartyRoleTypeService_IntegTest extends CapexModuleIntegTestAbstract
     @Test
     public void partyRoleTypeService_members_of_takes_role_into_account(){
 
-        sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getSecurityUserName(), () -> {
+        sudoService.sudo(Person_enum.JonathanIncomingInvoiceManagerGb.getSecurityUserName(), () -> {
 
             Assertions.assertThat(partyRoleTypeService.membersOf(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR).size()).isEqualTo(1);
             Assertions.assertThat(partyRoleTypeService.membersOf(PartyRoleTypeEnum.TREASURER).size()).isEqualTo(1);
-            Assertions.assertThat(partyRoleTypeService.membersOf(FixedAssetRoleTypeEnum.PROPERTY_MANAGER).size()).isEqualTo(1);
+            Assertions.assertThat(partyRoleTypeService.membersOf(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER).size()).isEqualTo(1);
             Assertions.assertThat(partyRoleTypeService.membersOf(null).size()).isEqualTo(4);
 
         });

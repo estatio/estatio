@@ -39,6 +39,7 @@
                                         <cpt:action id="changeOrderDetails"/>
                                         <cpt:property id="notification" labelPosition="NONE"/>
                                         <cpt:property id="domainObject"/>
+                                        <cpt:property id="orderType" promptStyle="INLINE"/>
                                         <cpt:property id="property" promptStyle="INLINE"/>
                                         <cpt:property id="orderNumber" promptStyle="INLINE"/>
                                         <cpt:property id="buyer" promptStyle="INLINE"/>
