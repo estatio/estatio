@@ -134,7 +134,6 @@ public abstract class CommunicationChannelOwner_newChannelContributions  {
         return choices1NewEmail().get(0);
     }
 
-    @Programmatic
     public String validateNewEmail(
             final CommunicationChannelOwner owner,
             final CommunicationChannelType type,
