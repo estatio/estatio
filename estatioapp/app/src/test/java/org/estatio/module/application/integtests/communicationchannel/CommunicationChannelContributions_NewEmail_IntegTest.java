@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner_newChannelContributions;
@@ -65,4 +66,26 @@ public class CommunicationChannelContributions_NewEmail_IntegTest extends Applic
         Assertions.assertThat(communicationChannel).isInstanceOf(EmailAddress.class);
         Assertions.assertThat(((EmailAddress)communicationChannel).getEmailAddress()).isEqualTo(emailAddress);
     }
+
+    @Test
+    public void sadCase_wronglyFormattedEmail() throws Exception{
+        final Party party = fs.getObject();
+
+        // given
+        final SortedSet<CommunicationChannel> before = communicationChannelContributions.communicationChannels(party);
+        Assertions.assertThat(before).isEmpty();
+
+        // then
+        expectedExceptions.expect(InvalidException.class);
+        expectedExceptions.expectMessage("This email address is invalid");
+
+        // when
+        final String emailAddress = "Badly formatted @email address .it";
+        wrap(communicationChannelContributions).newEmail(party, CommunicationChannelType.EMAIL_ADDRESS, emailAddress);
+
+        // finally
+        final SortedSet<CommunicationChannel> after = communicationChannelContributions.communicationChannels(party);
+        Assertions.assertThat(after).isEmpty();
+    }
+
 }
