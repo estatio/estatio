@@ -57,6 +57,7 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
@@ -109,7 +110,7 @@ public class Project extends UdoDomainObject<Project> implements
 	public Project() {
 		super("reference, name, startDate");
 	}
-	
+
 	public String title(){
 		return TitleBuilder.start().withReference(getReference()).withName(getName()).toString();
 	}
@@ -183,6 +184,16 @@ public class Project extends UdoDomainObject<Project> implements
 				.filter(x->x.isParentProject() || x.getItems().size()==0)
 				.collect(Collectors.toList());
 	}
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void delete(){
+	    repositoryService.remove(this);
+	}
+
+    public String disableDelete(){
+	    return this.items.isEmpty() ? null : "This project cannot be deleted because it has items";
+	}
+
 
 	@Action(semantics = SemanticsOf.IDEMPOTENT)
 	public Project changeDates(@Parameter(optionality = Optionality.OPTIONAL) final LocalDate startDate, @Parameter(optionality = Optionality.OPTIONAL) final LocalDate endDate){
@@ -355,5 +366,8 @@ public class Project extends UdoDomainObject<Project> implements
 
 	@Inject
 	WrapperFactory wrapperFactory;
+
+    @Inject
+    RepositoryService repositoryService;
 
 }
