@@ -430,7 +430,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
         if(proposedNetAmount == null) return null; // shouldn't occur, I think.
         final BigDecimal netAmountLinked = orderItemInvoiceItemLinkRepository
                 .calculateNetAmountLinkedFromInvoiceItem(this);
-        if(proposedNetAmount.compareTo(netAmountLinked) < 0) {
+        if(proposedNetAmount.abs().compareTo(netAmountLinked.abs()) < 0) {
             return "Cannot be less than the amount already linked (" + netAmountLinked + ")";
         }
         return null;
@@ -441,7 +441,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
             final BigDecimal proposedGrossAmount,
             final Tax tax) {
         if(proposedNetAmount == null || proposedGrossAmount == null) return null; // shouldn't occur, I think.
-        if(proposedNetAmount.compareTo(proposedGrossAmount) > 0) {
+        if(proposedNetAmount.abs().compareTo(proposedGrossAmount.abs()) > 0) {
             return "Net amount cannot be greater than the gross amount";
         }
         return null;
