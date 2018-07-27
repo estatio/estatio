@@ -3,7 +3,9 @@
     <row>
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
-            <ns2:action id="republishAll"/>
+            <ns2:action id="republishAll">
+                <ns2:named>Sync All to Coda again</ns2:named>
+            </ns2:action>
             <ns2:action id="links"/>
         </col>
     </row>

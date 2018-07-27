@@ -29,7 +29,6 @@ public class InvoiceForLease_republish {
     )
     @ActionLayout(
             cssClassFa = "share-alt",
-            cssClass = "btn-warning",
             contributed = Contributed.AS_ACTION
     )
     @MemberOrder(sequence = "999")

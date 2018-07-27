@@ -160,9 +160,12 @@
                             </cpt:fieldSet>
                             <cpt:fieldSet id="Coda Integration">
                                 <cpt:property id="codaStatus" multiLine="3">
-                                    <cpt:action id="republish"/>
+                                    <cpt:named>Coda Sync Status</cpt:named>
+                                    <cpt:action id="republish">
+                                        <cpt:named>Sync again</cpt:named>
+                                    </cpt:action>
                                     <cpt:action id="codaStatusOpen">
-                                        <cpt:named>Status detail...</cpt:named>
+                                        <cpt:named>Show detail...</cpt:named>
                                     </cpt:action>
                                 </cpt:property>
                             </cpt:fieldSet>
