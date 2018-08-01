@@ -17,6 +17,7 @@
  */
 package org.estatio.module.lease.dom.invoicing.summary;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -27,21 +28,29 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
+import org.incode.module.document.dom.impl.types.DocumentType;
+import org.incode.module.document.dom.spi.DocumentAttachmentAdvisor;
 
-import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
+import org.estatio.module.lease.dom.invoicing.comms.InvoiceForLease_attachSupportingDocument;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 
@@ -196,13 +205,58 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
         return !getStatus().invoiceIsChangable() ? "Only new and approved invoices can be changed" : null;
     }
 
-    @Inject
-    PropertyRepository propertyRepository;
+    @Action(associateWith = "invoices", associateWithSequence = "1" )
+    public InvoiceSummaryForPropertyDueDateStatus attachSupportingDocument(
+            final List<InvoiceForLease> invoices,
+            final DocumentType supportingDocumentType,
+            @Parameter(fileAccept = "application/pdf")
+            @ParameterLayout(named = "Receipt (PDF)")
+            final Blob blob,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final String fileName,
+            final String roleName
+    ){
+        invoices.forEach(invoice->{
+            final InvoiceForLease_attachSupportingDocument invoice_attachSupportingDocument = factoryService.mixin(InvoiceForLease_attachSupportingDocument.class, invoice);
+                    try {
+                        wrapperFactory.wrap(invoice_attachSupportingDocument).$$(
+                            supportingDocumentType, blob, fileName, roleName
+                        );
+                    } catch (IOException e) {
+                        // do nothing
+                    }
+                }
+        );
+        return this;
+    }
+
+    public List<DocumentType> choices1AttachSupportingDocument() {
+        return documentAttachmentAdvisor.documentTypeChoicesFor(null);
+    }
+
+    public DocumentType default1AttachSupportingDocument() {
+        return documentAttachmentAdvisor.documentTypeDefaultFor(null);
+    }
+
+    public List<String> choices4AttachSupportingDocument() {
+        return documentAttachmentAdvisor.roleNameChoicesFor(null);
+    }
+
+    public String default4AttachSupportingDocument() {
+        return documentAttachmentAdvisor.roleNameDefaultFor(null);
+    }
 
     @Inject
     PartyRepository partyRepository;
 
     @Inject
     InvoiceSummaryForPropertyDueDateStatusRepository invoiceSummaryForPropertyDueDateStatusRepository;
+
+    @Inject
+    FactoryService factoryService;
+
+    @Inject
+    DocumentAttachmentAdvisor documentAttachmentAdvisor;
+
 
 }
