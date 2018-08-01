@@ -148,7 +148,7 @@ public class FinancialAccountTransaction
     }
 
     public boolean hideChangeTransactionDetails(){
-        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
+        return !EstatioRole.SUPERUSER.isApplicableFor(getUser());
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
