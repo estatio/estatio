@@ -22,7 +22,7 @@ language governing permissions and limitations under the License.
         <groupId>org.incode</groupId>
         <artifactId>incode-parent</artifactId>
         <!-- NB: also update incode-platform.version property below. -->
-        <version>1.16.2.20180710-1343-21c38b2f</version>
+        <version>1.16.2.20180801-1903-65c6b0b7</version>
         <relativePath/>
     </parent>
 
@@ -80,7 +80,7 @@ language governing permissions and limitations under the License.
         Also specify the incode-platform.version by changing the parent's version, above.
         And, update the pom.xml for estatio-ecp and ecp-camel similarly
          -->
-        <incode-platform.version>1.16.2.20180710-1343-21c38b2f</incode-platform.version>
+        <incode-platform.version>1.16.2.20180801-1903-65c6b0b7</incode-platform.version>
 
         <estatio-canonical.version>2.0.0-M1.20180706-1047-f6fd67fd</estatio-canonical.version>
 
@@ -122,9 +122,6 @@ language governing permissions and limitations under the License.
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
                 <version>1.0.0</version>
-                <configuration>
-                    <updatePomFile>true</updatePomFile>
-                </configuration>
                 <executions>
                     <execution>
                         <id>flatten</id>
@@ -132,6 +129,21 @@ language governing permissions and limitations under the License.
                         <goals>
                             <goal>flatten</goal>
                         </goals>
+                        <configuration>
+                            <updatePomFile>true</updatePomFile>
+                            <pomElements>
+                                <parent>resolve</parent>
+                                <name>resolve</name>
+                                <description>resolve</description>
+                                <url>resolve</url>
+                                <scm>resolve</scm>
+                                <developers>resolve</developers>
+                                <properties>resolve</properties>
+                                <dependencyManagement>resolve</dependencyManagement>
+                                <dependencies>resolve</dependencies>
+                                <profiles>resolve</profiles>
+                            </pomElements>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>flatten.clean</id>
