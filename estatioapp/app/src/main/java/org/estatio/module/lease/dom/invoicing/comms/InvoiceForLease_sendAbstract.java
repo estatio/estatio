@@ -35,11 +35,11 @@ import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.incode.module.communications.dom.impl.comms.Communication;
 import org.incode.module.communications.dom.mixins.DocumentConstants;
+import org.incode.module.communications.dom.mixins.Document_communicationAttachments;
 import org.incode.module.communications.dom.mixins.Document_sendByEmail;
 import org.incode.module.communications.dom.mixins.Document_sendByPost;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentSort;
-import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
@@ -113,13 +113,10 @@ public abstract class InvoiceForLease_sendAbstract {
         appendBytesIfPdf(prelimLetterOrInvoiceDoc, pdfBytes);
 
         // and any attachments that are PDFs are also merged in
-        final List<Paperclip> paperclips = paperclipRepository.findByDocument(prelimLetterOrInvoiceDoc);
-        for (Paperclip paperclip : paperclips) {
-            final Object objAttachedToDocument = paperclip.getAttachedTo();
-            if(objAttachedToDocument instanceof Document) {
-                final Document docAttachedToDocument = (Document) objAttachedToDocument;
-                appendBytesIfPdf(docAttachedToDocument, pdfBytes);
-            }
+        // implemented in same fashion as in Document_sendByEmail
+        final List<Document> communicationAttachments = attachmentProvider.attachmentsFor(prelimLetterOrInvoiceDoc);
+        for (Document attachedDoc : communicationAttachments) {
+            appendBytesIfPdf(attachedDoc, pdfBytes);
         }
     }
 
@@ -138,6 +135,8 @@ public abstract class InvoiceForLease_sendAbstract {
     }
 
 
+    @Inject
+    Document_communicationAttachments.Provider attachmentProvider;
 
     @Inject
     FactoryService factoryService;

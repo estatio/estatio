@@ -72,7 +72,7 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByPostAbstract 
             final PostalAddress postalAddress = invoice_sendByPost.default1$$(prelimLetterOrInvoiceNote);
 
             invoice_sendByPost.createPostalCommunicationAsSent(prelimLetterOrInvoiceNote, postalAddress);
-            invoice_sendByPost.appendPdfBytes(prelimLetterOrInvoiceNote, pdfBytes);
+            invoice_sendByPost.appendPdfBytes(prelimLetterOrInvoiceNote, pdfBytes); // TODO: EST-1807 his seems method not to pick up supporting documents
         }
 
         final byte[] mergedBytes = pdfBoxService.merge(pdfBytes.toArray(new byte[][] {}));
