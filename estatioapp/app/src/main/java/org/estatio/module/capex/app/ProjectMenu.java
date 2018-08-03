@@ -32,6 +32,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.query.QueryDefault;
@@ -40,6 +41,8 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+
+import org.incode.module.base.dom.types.ReferenceType;
 
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
@@ -68,7 +71,7 @@ public class ProjectMenu {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Project newProject(
-            final String reference,
+            final @Parameter(maxLength = ReferenceType.Meta.MAX_LEN) String reference,
             final String name,
             final @Nullable LocalDate startDate,
             final @Nullable LocalDate endDate,

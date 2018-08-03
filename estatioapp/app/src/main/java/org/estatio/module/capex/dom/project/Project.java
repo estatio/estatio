@@ -79,281 +79,279 @@ import lombok.Getter;
 import lombok.Setter;
 
 @PersistenceCapable(
-		identityType = IdentityType.DATASTORE
-		,schema = "dbo"
+        identityType = IdentityType.DATASTORE
+        , schema = "dbo"
 )
 @DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
-@Unique(members={"reference"})
+@Unique(members = { "reference" })
 @Queries({
-		@Query(name = "findByReference", language = "JDOQL", value = "SELECT "
-				+ "FROM org.estatio.module.capex.dom.project.Project "
-				+ "WHERE reference == :reference "),
-		@Query(name = "matchByReferenceOrName", language = "JDOQL", value = "SELECT "
-				+ "FROM org.estatio.module.capex.dom.project.Project "
-				+ "WHERE reference.matches(:matcher) || name.matches(:matcher) "),
-		@Query(name = "findByParent", language = "JDOQL", value = "SELECT "
-				+ "FROM org.estatio.module.capex.dom.project.Project "
-				+ "WHERE parent == :parent ")
+        @Query(name = "findByReference", language = "JDOQL", value = "SELECT "
+                + "FROM org.estatio.module.capex.dom.project.Project "
+                + "WHERE reference == :reference "),
+        @Query(name = "matchByReferenceOrName", language = "JDOQL", value = "SELECT "
+                + "FROM org.estatio.module.capex.dom.project.Project "
+                + "WHERE reference.matches(:matcher) || name.matches(:matcher) "),
+        @Query(name = "findByParent", language = "JDOQL", value = "SELECT "
+                + "FROM org.estatio.module.capex.dom.project.Project "
+                + "WHERE parent == :parent ")
 })
 @DomainObject(
-		editing = Editing.DISABLED,
-		objectType = "org.estatio.capex.dom.project.Project",
-		autoCompleteRepository = ProjectRepository.class
+        editing = Editing.DISABLED,
+        objectType = "org.estatio.capex.dom.project.Project",
+        autoCompleteRepository = ProjectRepository.class
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class Project extends UdoDomainObject<Project> implements
-		WithReferenceUnique, WithApplicationTenancyGlobalAndCountry {
+        WithReferenceUnique, WithApplicationTenancyGlobalAndCountry {
 
-	public Project() {
-		super("reference, name, startDate");
-	}
-	
-	public String title(){
-		return TitleBuilder.start().withReference(getReference()).withName(getName()).toString();
-	}
+    public Project() {
+        super("reference, name, startDate");
+    }
 
-	@Column(length = ReferenceType.Meta.MAX_LEN, allowsNull = "false")
-	@Property(regexPattern = ReferenceType.Meta.REGEX)
-	@PropertyLayout(describedAs = "Unique reference code for this project")
-	@Getter @Setter
-	private String reference;
+    public String title() {
+        return TitleBuilder.start().withReference(getReference()).withName(getName()).toString();
+    }
 
-	@Column(length = NameType.Meta.MAX_LEN, allowsNull = "false")
+    @Column(length = ReferenceType.Meta.MAX_LEN, allowsNull = "false")
+    @Property(regexPattern = ReferenceType.Meta.REGEX)
+    @PropertyLayout(describedAs = "Unique reference code for this project")
+    @Getter @Setter
+    private String reference;
+
+    @Column(length = NameType.Meta.MAX_LEN, allowsNull = "false")
     @Getter @Setter
     private String name;
 
-	@Column(allowsNull = "true")
+    @Column(allowsNull = "true")
     @Getter @Setter
     private LocalDate startDate;
 
-	@Column(allowsNull = "true")
-	@Persistent
-	@MemberOrder(sequence="4")
+    @Column(allowsNull = "true")
+    @Persistent
+    @MemberOrder(sequence = "4")
     @Getter @Setter
     private LocalDate endDate;
 
-	@Column(allowsNull = "false", length = AtPathType.Meta.MAX_LEN)
-	@Getter @Setter
-	@Property(hidden = Where.EVERYWHERE)
-	@PropertyLayout(named = "Application Level Path")
-	private String atPath;
+    @Column(allowsNull = "false", length = AtPathType.Meta.MAX_LEN)
+    @Getter @Setter
+    @Property(hidden = Where.EVERYWHERE)
+    @PropertyLayout(named = "Application Level Path")
+    private String atPath;
 
-	@PropertyLayout(
-			named = "Application Level",
-			describedAs = "Determines those users for whom this object is available to view and/or modify.",
-			hidden = Where.PARENTED_TABLES
-	)
-	public ApplicationTenancy getApplicationTenancy() {
-		return applicationTenancyRepository.findByPath(getAtPath());
-	}
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify.",
+            hidden = Where.PARENTED_TABLES
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return applicationTenancyRepository.findByPath(getAtPath());
+    }
 
-	@Persistent(mappedBy = "project", dependentElement = "true")
-	@Getter @Setter
-	private SortedSet<ProjectItem> items = new TreeSet<>();
+    @Persistent(mappedBy = "project", dependentElement = "true")
+    @Getter @Setter
+    private SortedSet<ProjectItem> items = new TreeSet<>();
 
-	@Persistent(mappedBy = "parent", dependentElement = "true")
-	@Getter @Setter
-	private SortedSet<Project> children = new TreeSet<Project>();
+    @Persistent(mappedBy = "parent", dependentElement = "true")
+    @Getter @Setter
+    private SortedSet<Project> children = new TreeSet<Project>();
 
-	@Column(allowsNull = "true", name = "parentId")
-	@Getter @Setter
-	private Project parent;
+    @Column(allowsNull = "true", name = "parentId")
+    @Getter @Setter
+    private Project parent;
 
-	@Action(semantics = SemanticsOf.IDEMPOTENT)
-	public Project changeProject(final String name, @Parameter(optionality = Optionality.OPTIONAL) final Project parent){
-		setName(name);
-		setParent(parent);
-		return this;
-	}
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Project changeProject(final String name, @Parameter(optionality = Optionality.OPTIONAL) final Project parent) {
+        setName(name);
+        setParent(parent);
+        return this;
+    }
 
-	public String default0ChangeProject(){
-		return getName();
-	}
+    public String default0ChangeProject() {
+        return getName();
+    }
 
-	public Project default1ChangeProject(){
-		return getParent();
-	}
+    public Project default1ChangeProject() {
+        return getParent();
+    }
 
-	public List<Project> choices1ChangeProject(){
-		return projectRepository.listAll()
-				.stream()
-				.filter(x->!x.equals(this))
-				.filter(x->x.isParentProject() || x.getItems().size()==0)
-				.collect(Collectors.toList());
-	}
+    public List<Project> choices1ChangeProject() {
+        return projectRepository.listAll()
+                .stream()
+                .filter(x -> !x.equals(this))
+                .filter(x -> x.isParentProject() || x.getItems().size() == 0)
+                .collect(Collectors.toList());
+    }
 
-	@Action(semantics = SemanticsOf.IDEMPOTENT)
-	public Project changeDates(@Parameter(optionality = Optionality.OPTIONAL) final LocalDate startDate, @Parameter(optionality = Optionality.OPTIONAL) final LocalDate endDate){
-		setStartDate(startDate);
-		setEndDate(endDate);
-		return this;
-	}
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Project changeDates(@Parameter(optionality = Optionality.OPTIONAL) final LocalDate startDate, @Parameter(optionality = Optionality.OPTIONAL) final LocalDate endDate) {
+        setStartDate(startDate);
+        setEndDate(endDate);
+        return this;
+    }
 
-	public LocalDate default0ChangeDates(){
-		return getStartDate();
-	}
+    public LocalDate default0ChangeDates() {
+        return getStartDate();
+    }
 
-	public LocalDate default1ChangeDates(){
-		return getEndDate();
-	}
+    public LocalDate default1ChangeDates() {
+        return getEndDate();
+    }
 
-	public String validateChangeDates(final LocalDate startDate, final LocalDate endDate){
-		return validateNewProject(null, startDate, endDate);
-	}
+    public String validateChangeDates(final LocalDate startDate, final LocalDate endDate) {
+        return validateNewProject(null, startDate, endDate);
+    }
 
-	@Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-	public Project createParentProject(
-			final String reference,
-			final String name,
-			@Parameter(optionality = Optionality.OPTIONAL)
-			final LocalDate startDate,
-			@Parameter(optionality = Optionality.OPTIONAL)
-			final LocalDate endDate){
-			Project parent = projectRepository.create(reference, name, startDate, endDate, getAtPath(), null);
-		    wrapperFactory.wrap(parent).addChildProject(this);
-			return parent;
-	}
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public Project createParentProject(
+            final @Parameter(maxLength = ReferenceType.Meta.MAX_LEN) String reference,
+            final String name,
+            @Parameter(optionality = Optionality.OPTIONAL) final LocalDate startDate,
+            @Parameter(optionality = Optionality.OPTIONAL) final LocalDate endDate) {
+        Project parent = projectRepository.create(reference, name, startDate, endDate, getAtPath(), null);
+        wrapperFactory.wrap(parent).addChildProject(this);
+        return parent;
+    }
 
-	public String disableCreateParentProject(){
-			return parent!=null ? "The project has a parent already" : null;
-	}
+    public String disableCreateParentProject() {
+        return parent != null ? "The project has a parent already" : null;
+    }
 
-	public String validateCreateParentProject(
-			final String reference,
-			final String name,
-			final LocalDate startDate,
-			final LocalDate endDate){
-		return validateNewProject(reference, startDate, endDate);
-	}
+    public String validateCreateParentProject(
+            final String reference,
+            final String name,
+            final LocalDate startDate,
+            final LocalDate endDate) {
+        return validateNewProject(reference, startDate, endDate);
+    }
 
-	@Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-	@MemberOrder(sequence = "2", name = "children")
-	public Project createChildProject(final String reference, final String name, @Parameter(optionality = Optionality.OPTIONAL) final LocalDate startDate, @Parameter(optionality = Optionality.OPTIONAL) final LocalDate endDate){
-		return projectRepository.create(reference, name, startDate, endDate, getAtPath(), this);
-	}
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @MemberOrder(sequence = "2", name = "children")
+    public Project createChildProject(
+            final @Parameter(maxLength = ReferenceType.Meta.MAX_LEN) String reference,
+            final String name,
+            @Parameter(optionality = Optionality.OPTIONAL) final LocalDate startDate,
+            @Parameter(optionality = Optionality.OPTIONAL) final LocalDate endDate) {
+        return projectRepository.create(reference, name, startDate, endDate, getAtPath(), this);
+    }
 
-	public String validateCreateChildProject(final String reference, final String name, final LocalDate startDate, final LocalDate endDate){
-		return validateNewProject(reference, startDate, endDate);
-	}
+    public String validateCreateChildProject(final String reference, final String name, final LocalDate startDate, final LocalDate endDate) {
+        return validateNewProject(reference, startDate, endDate);
+    }
 
-	// TODO: (ECP-438) until we find out more about the process
-	public String disableCreateChildProject(){
-		return getItems().isEmpty() ? null : "This project cannot be a parent because it has items";
-	}
+    // TODO: (ECP-438) until we find out more about the process
+    public String disableCreateChildProject() {
+        return getItems().isEmpty() ? null : "This project cannot be a parent because it has items";
+    }
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @MemberOrder(sequence = "1", name = "children")
+    public Project addChildProject(final Project child) {
+        child.setParent(this);
+        return this;
+    }
 
-	@Action(semantics = SemanticsOf.IDEMPOTENT)
-	@MemberOrder(sequence = "1", name = "children")
-	public Project addChildProject(final Project child){
-			child.setParent(this);
-			return this;
-	}
+    public String validateAddChildProject(final Project child) {
+        if (child.getParent() != null)
+            return "The child project is linked to a parent already";
+        if (child == this)
+            return "A project cannot have itself as a child";
+        return null;
+    }
 
-	public String validateAddChildProject(final Project child){
-		if (child.getParent()!=null) return "The child project is linked to a parent already";
-		if (child==this) return "A project cannot have itself as a child";
-		return null;
-	}
+    public List<Project> autoComplete0AddChildProject(final String search) {
+        return projectRepository.findProject(search)
+                .stream()
+                .filter(x -> x != this)
+                .filter(x -> !getChildren().contains(x))
+                .filter(x -> x.getAtPath().equals(getAtPath()))
+                .collect(Collectors.toList());
+    }
 
-	public List<Project> autoComplete0AddChildProject(final String search){
-		return projectRepository.findProject(search)
-				.stream()
-				.filter(x->x!=this)
-				.filter(x->!getChildren().contains(x))
-				.filter(x->x.getAtPath().equals(getAtPath()))
-				.collect(Collectors.toList());
-	}
+    // TODO: (ECP-438) until we find out more about the process
+    public String disableAddChildProject() {
+        return getItems().isEmpty() ? null : "This project cannot be a parent because it has items";
+    }
 
-	// TODO: (ECP-438) until we find out more about the process
-	public String disableAddChildProject(){
-		return getItems().isEmpty() ? null : "This project cannot be a parent because it has items";
-	}
+    @MemberOrder(name = "items", sequence = "1")
+    public Project addItem(
+            final Charge charge,
+            final String description,
+            @Parameter(optionality = Optionality.OPTIONAL) final BigDecimal budgetedAmount,
+            @Parameter(optionality = Optionality.OPTIONAL) final LocalDate startDate,
+            @Parameter(optionality = Optionality.OPTIONAL) final LocalDate endDate,
+            final org.estatio.module.asset.dom.Property property,
+            @Parameter(optionality = Optionality.OPTIONAL) final Tax tax
+    ) {
+        projectItemRepository.findOrCreate(
+                this, charge, description, budgetedAmount, startDate, endDate, property, tax);
+        return this;
+    }
 
-	@MemberOrder(name="items", sequence = "1")
-	public Project addItem(
-			final Charge charge,
-			final String description,
-			@Parameter(optionality = Optionality.OPTIONAL)
-			final BigDecimal budgetedAmount,
-			@Parameter(optionality = Optionality.OPTIONAL)
-			final LocalDate startDate,
-			@Parameter(optionality = Optionality.OPTIONAL)
-			final LocalDate endDate,
-			final org.estatio.module.asset.dom.Property property,
-			@Parameter(optionality = Optionality.OPTIONAL)
-			final Tax tax
-	) {
-		projectItemRepository.findOrCreate(
-				this, charge, description, budgetedAmount, startDate, endDate, property, tax);
-		return this;
-	}
+    // TODO: (ECP-438) until we find out more about the process
+    public String disableAddItem() {
+        return isParentProject() ? "This project is a parent" : null;
+    }
 
-	// TODO: (ECP-438) until we find out more about the process
-	public String disableAddItem(){
-		return isParentProject() ? "This project is a parent" : null;
-	}
+    @Persistent(mappedBy = "project")
+    @Getter @Setter
+    private SortedSet<ProjectRole> roles = new TreeSet<>();
 
-	@Persistent(mappedBy = "project")
-	@Getter @Setter
-	private SortedSet<ProjectRole> roles = new TreeSet<>();
+    @MemberOrder(name = "roles", sequence = "1")
+    public Project newRole(
+            final Party party,
+            final ProjectRoleTypeEnum type,
+            @Parameter(optionality = Optionality.OPTIONAL) final LocalDate startDate,
+            @Parameter(optionality = Optionality.OPTIONAL) final LocalDate endDate) {
+        projectRoleRepository.create(this, party, type, startDate, endDate);
+        return this;
+    }
 
-	@MemberOrder(name = "roles", sequence = "1")
-	public Project newRole(
-			final Party party,
-			final ProjectRoleTypeEnum type,
-			@Parameter(optionality = Optionality.OPTIONAL)
-			final LocalDate startDate,
-			@Parameter(optionality = Optionality.OPTIONAL)
-			final LocalDate endDate){
-		projectRoleRepository.create(this, party, type, startDate, endDate);
-		return this;
-	}
+    @Property(notPersisted = true)
+    public BigDecimal getBudgetedAmount() {
+        return isParentProject() ? budgetedAmountWhenParentProject() : sum(ProjectItem::getBudgetedAmount);
+    }
 
-	@Property(notPersisted = true)
-	public BigDecimal getBudgetedAmount(){
-		return isParentProject()? budgetedAmountWhenParentProject() : sum(ProjectItem::getBudgetedAmount);
-	}
+    private BigDecimal sum(final Function<ProjectItem, BigDecimal> x) {
+        return Lists.newArrayList(getItems()).stream()
+                .map(x)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 
-	private BigDecimal sum(final Function<ProjectItem, BigDecimal> x) {
-		return Lists.newArrayList(getItems()).stream()
-				.map(x)
-				.filter(Objects::nonNull)
-				.reduce(BigDecimal.ZERO, BigDecimal::add);
-	}
+    private BigDecimal budgetedAmountWhenParentProject() {
+        BigDecimal result = BigDecimal.ZERO;
+        for (Project child : getChildren()) {
+            result = result.add(child.getBudgetedAmount());
+        }
+        return result;
+    }
 
-	private BigDecimal budgetedAmountWhenParentProject(){
-		BigDecimal result = BigDecimal.ZERO;
-		for (Project child : getChildren()){
-			result = result.add(child.getBudgetedAmount());
-		}
-		return result;
-	}
+    @Programmatic
+    public boolean isParentProject() {
+        return getChildren().isEmpty() ? false : true;
+    }
 
-	@Programmatic
-	public boolean isParentProject(){
-		return getChildren().isEmpty() ? false : true;
-	}
+    private String validateNewProject(final String reference, final LocalDate startDate, final LocalDate endDate) {
+        if (projectRepository.findByReference(reference) != null)
+            return "There is already a project with this reference";
+        return startDate != null && endDate != null && !startDate.isBefore(endDate) ? "End date must be after start date" : null;
+    }
 
-	private String validateNewProject(final String reference, final LocalDate startDate, final LocalDate endDate){
-		if (projectRepository.findByReference(reference)!=null) return "There is already a project with this reference";
-		return startDate != null && endDate != null && !startDate.isBefore(endDate) ? "End date must be after start date" : null;
-	}
+    @Inject
+    ApplicationTenancyRepository applicationTenancyRepository;
 
-	@Inject
-	ApplicationTenancyRepository applicationTenancyRepository;
+    @Inject
+    ProjectItemRepository projectItemRepository;
 
-	@Inject
-	ProjectItemRepository projectItemRepository;
+    @Inject
+    private ProjectRoleRepository projectRoleRepository;
 
-	@Inject
-	private ProjectRoleRepository projectRoleRepository;
+    @Inject
+    ProjectRepository projectRepository;
 
-	@Inject
-	ProjectRepository projectRepository;
-
-	@Inject
-	WrapperFactory wrapperFactory;
+    @Inject
+    WrapperFactory wrapperFactory;
 
 }
