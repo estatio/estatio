@@ -21,8 +21,8 @@ language governing permissions and limitations under the License.
     <parent>
         <groupId>org.incode</groupId>
         <artifactId>incode-parent</artifactId>
-        <!-- NB: also update incode-platform.version property below.  Also update estatio-ecp pom.xml similarly -->
-        <version>1.16.1.20180630-1352</version>
+        <!-- NB: also update incode-platform.version property below. -->
+        <version>1.16.2.20180801-1903-65c6b0b7</version>
         <relativePath/>
     </parent>
 
@@ -68,26 +68,27 @@ language governing permissions and limitations under the License.
     <properties>
         <revision>1.29.0-SNAPSHOT</revision>
 
-        <isis.version>1.16.1.20180316-1549</isis.version>
+        <isis.version>1.16.2.20180709-1350-5d9f4f7c</isis.version>
         <!--
+        <isis.version>1.16.2.20180705-2207-210fd1e3</isis.version>
+        <isis.version>1.16.1.20180316-1549</isis.version>
         <isis.version>1.16.1.20180228-1118</isis.version>
         <isis.version>1.16.2-SNAPSHOT</isis.version>
-        <isis.version>1.16.0.20180130-1145</isis.version>
-        <isis.version>1.16.0.20180129-2325</isis.version>
         -->
 
-        <!-- NB: also update the parent of this pom.  Also update estatio-ecp pom.xml similarly -->
-        <incode-platform.version>1.16.1.20180630-1352</incode-platform.version>
+        <!--
+        Also specify the incode-platform.version by changing the parent's version, above.
+        And, update the pom.xml for estatio-ecp and ecp-camel similarly
+         -->
+        <incode-platform.version>1.16.2.20180801-1903-65c6b0b7</incode-platform.version>
 
-        <wicketstuff.version>7.9.0</wicketstuff.version>
-
-        <estatio-canonical.version>1.2.0</estatio-canonical.version>
+        <estatio-canonical.version>2.0.0-M1.20180706-1047-f6fd67fd</estatio-canonical.version>
 
         <maven-checkstyle-plugin.configLocation>${project.basedir}/codequality/checkstyle.xml</maven-checkstyle-plugin.configLocation>
         <maven-pmd-plugin.ruleset>${project.basedir}/codequality/pmd.xml</maven-pmd-plugin.ruleset>
 
-        <lombok.version>1.16.6</lombok.version>
-        <rfc-2445.version>1.0-SNAPSHOT</rfc-2445.version>
+        <lombok.version>1.18.0</lombok.version>
+        <rfc-2445.version>0.0.20110304.20180710-0922-720a7586</rfc-2445.version>
         <joda-time.version>2.3</joda-time.version>
         <freemarker.version>2.3.25-incubating</freemarker.version>
         <jdom.version>2.0.2</jdom.version>
@@ -121,9 +122,6 @@ language governing permissions and limitations under the License.
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
                 <version>1.0.0</version>
-                <configuration>
-                    <updatePomFile>true</updatePomFile>
-                </configuration>
                 <executions>
                     <execution>
                         <id>flatten</id>
@@ -131,6 +129,21 @@ language governing permissions and limitations under the License.
                         <goals>
                             <goal>flatten</goal>
                         </goals>
+                        <configuration>
+                            <updatePomFile>true</updatePomFile>
+                            <pomElements>
+                                <parent>resolve</parent>
+                                <name>resolve</name>
+                                <description>resolve</description>
+                                <url>resolve</url>
+                                <scm>resolve</scm>
+                                <developers>resolve</developers>
+                                <properties>resolve</properties>
+                                <dependencyManagement>resolve</dependencyManagement>
+                                <dependencies>resolve</dependencies>
+                                <profiles>resolve</profiles>
+                            </pomElements>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>flatten.clean</id>
@@ -176,23 +189,6 @@ language governing permissions and limitations under the License.
                 <scope>test</scope>
             </dependency>
 
-            <!-- viewer extensions -->
-            <dependency>
-                <groupId>org.isisaddons.wicket.gmap3</groupId>
-                <artifactId>isis-wicket-gmap3-cpt</artifactId>
-                <version>${incode-platform.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.wicketstuff</groupId>
-                        <artifactId>wicketstuff-gmap3</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.wicketstuff</groupId>
-                <artifactId>wicketstuff-gmap3</artifactId>
-                <version>${wicketstuff.version}</version>
-            </dependency>
 
 
             <!-- Estatio modules -->
@@ -241,16 +237,6 @@ language governing permissions and limitations under the License.
                 <version>${commons-lang3.version}</version>
             </dependency>
 
-            <!-- download:
-                 $ curl https://google-rfc-2445.googlecode.com/files/rfc2445-4Mar2011.jar > rfc2445-4Mar2011.jar
-                 install to ~/.m2/repo using:
-                 $ mvn install:install-file \
-                     -Dfile=rfc2445-4Mar2011.jar \
-                     -DgroupId=com.google \
-                     -DartifactId=rfc-2445 \
-                     -Dversion=0.0.20110304 \
-                     -Dpackaging=jar
-             -->
             <dependency>
                 <groupId>com.google</groupId>
                 <artifactId>rfc-2445</artifactId>
@@ -281,46 +267,558 @@ language governing permissions and limitations under the License.
                 <version>${lombok.version}</version>
             </dependency>
 
+            <!--
+            it ought not to be necessary to specify the version explicitly, however there is an issue with IntelliJ's
+            maven support.  If both the Incode Platform and Estatio are in the IDE workspace, and then try to use
+            a -SNAPSHOT of the Incode Platform as the parent, then the IDE doesn't correctly distinguish between the
+             ${revision} property defined for the incode-parent pom.xml vs the ${revision} defined for Estatio itself;
+             it's a namespacing issue, perhaps because both are resolved in the same maven reactor (?)
+
+            The net result is an incorrect classpath, so compilation issues.
+            The fix is to redefine all of the submodules here, explicitly forcing the version.
+
+            (Note that the issue only arises with -SNAPSHOTs; in normal releases the version is flattened into the pom).
+            -->
+
+            <dependency>
+                <groupId>org.isisaddons.metamodel.paraname8</groupId>
+                <artifactId>isis-metamodel-paraname8-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.metamodel.paraname8</groupId>
+                <artifactId>isis-metamodel-paraname8-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.incode.module.base</groupId>
+                <artifactId>incode-module-base-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.base</groupId>
+                <artifactId>incode-module-base-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.incode.module.fixturesupport</groupId>
+                <artifactId>incode-module-fixturesupport-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.fixturesupport</groupId>
+                <artifactId>incode-module-fixturesupport-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.incode.module.integtestsupport</groupId>
+                <artifactId>incode-module-integtestsupport-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.integtestsupport</groupId>
+                <artifactId>incode-module-integtestsupport-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.incode.module.unittestsupport</groupId>
+                <artifactId>incode-module-unittestsupport-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.unittestsupport</groupId>
+                <artifactId>incode-module-unittestsupport-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.module.audit</groupId>
+                <artifactId>isis-module-audit-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.audit</groupId>
+                <artifactId>isis-module-audit-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.module.command</groupId>
+                <artifactId>isis-module-command-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.command</groupId>
+                <artifactId>isis-module-command-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.module.command</groupId>
+                <artifactId>isis-module-command-replay</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.command</groupId>
+                <artifactId>isis-module-command-replay</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.module.docx</groupId>
+                <artifactId>isis-module-docx-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.docx</groupId>
+                <artifactId>isis-module-docx-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.incode.module.errorrptjira</groupId>
+                <artifactId>incode-module-errorrptjira-impl</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.errorrptjira</groupId>
+                <artifactId>incode-module-errorrptjira-impl</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.incode.module.errorrptslack</groupId>
+                <artifactId>incode-module-errorrptslack-impl</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.errorrptslack</groupId>
+                <artifactId>incode-module-errorrptslack-impl</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.module.excel</groupId>
+                <artifactId>isis-module-excel-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.excel</groupId>
+                <artifactId>isis-module-excel-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.module.fakedata</groupId>
+                <artifactId>isis-module-fakedata-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.fakedata</groupId>
+                <artifactId>isis-module-fakedata-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.module.flywaydb</groupId>
+                <artifactId>isis-module-flywaydb-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.flywaydb</groupId>
+                <artifactId>isis-module-flywaydb-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.module.freemarker</groupId>
+                <artifactId>isis-module-freemarker-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.freemarker</groupId>
+                <artifactId>isis-module-freemarker-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.incode.module.jaxrsclient</groupId>
+                <artifactId>incode-module-jaxrsclient-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.jaxrsclient</groupId>
+                <artifactId>incode-module-jaxrsclient-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.module.pdfbox</groupId>
+                <artifactId>isis-module-pdfbox-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.pdfbox</groupId>
+                <artifactId>isis-module-pdfbox-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.module.poly</groupId>
+                <artifactId>isis-module-poly-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.poly</groupId>
+                <artifactId>isis-module-poly-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.module.publishmq</groupId>
+                <artifactId>isis-module-publishmq-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.publishmq</groupId>
+                <artifactId>isis-module-publishmq-dom-servicespi</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.publishmq</groupId>
+                <artifactId>isis-module-publishmq-dom-servicespi</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.publishmq</groupId>
+                <artifactId>isis-module-publishmq-dom-jdo</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.publishmq</groupId>
+                <artifactId>isis-module-publishmq-dom-jdo</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.publishmq</groupId>
+                <artifactId>isis-module-publishmq-dom-camel</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.publishmq</groupId>
+                <artifactId>isis-module-publishmq-dom-camel</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.publishmq</groupId>
+                <artifactId>isis-module-publishmq-dom-statusclient</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.publishmq</groupId>
+                <artifactId>isis-module-publishmq-dom-statusclient</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.module.quartz</groupId>
+                <artifactId>isis-module-quartz-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.quartz</groupId>
+                <artifactId>isis-module-quartz-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.module.security</groupId>
+                <artifactId>isis-module-security-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.security</groupId>
+                <artifactId>isis-module-security-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.module.servletapi</groupId>
+                <artifactId>isis-module-servletapi-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.servletapi</groupId>
+                <artifactId>isis-module-servletapi-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.module.sessionlogger</groupId>
+                <artifactId>isis-module-sessionlogger-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.sessionlogger</groupId>
+                <artifactId>isis-module-sessionlogger-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.incode.example.settings</groupId>
+                <artifactId>incode-example-settings-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.example.settings</groupId>
+                <artifactId>incode-example-settings-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.module.stringinterpolator</groupId>
+                <artifactId>isis-module-stringinterpolator-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.stringinterpolator</groupId>
+                <artifactId>isis-module-stringinterpolator-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.incode.module.slack</groupId>
+                <artifactId>incode-module-slack-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.slack</groupId>
+                <artifactId>incode-module-slack-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.incode.module.slack</groupId>
+                <artifactId>incode-module-slack-main</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.module.togglz</groupId>
+                <artifactId>isis-module-togglz-glue</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.togglz</groupId>
+                <artifactId>isis-module-togglz-glue</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.incode.module.userimpersonate</groupId>
+                <artifactId>incode-module-userimpersonate-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.userimpersonate</groupId>
+                <artifactId>incode-module-userimpersonate-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.module.xdocreport</groupId>
+                <artifactId>isis-module-xdocreport-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.xdocreport</groupId>
+                <artifactId>isis-module-xdocreport-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.incode.module.zip</groupId>
+                <artifactId>incode-module-zip-dom</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.zip</groupId>
+                <artifactId>incode-module-zip-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.wicket.excel</groupId>
+                <artifactId>isis-wicket-excel-cpt</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.wicket.excel</groupId>
+                <artifactId>isis-wicket-excel-cpt</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
+                <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
+                <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.wicket.gmap3</groupId>
+                <artifactId>isis-wicket-gmap3-cpt</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.wicket.gmap3</groupId>
+                <artifactId>isis-wicket-gmap3-cpt</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.wicket.pdfjs</groupId>
+                <artifactId>isis-wicket-pdfjs-cpt</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.wicket.pdfjs</groupId>
+                <artifactId>isis-wicket-pdfjs-cpt</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.wicket.summernote</groupId>
+                <artifactId>isis-wicket-summernote-cpt</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.wicket.summernote</groupId>
+                <artifactId>isis-wicket-summernote-cpt</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.wicket.wickedcharts</groupId>
+                <artifactId>isis-wicket-wickedcharts-cpt</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.wicket.wickedcharts</groupId>
+                <artifactId>isis-wicket-wickedcharts-cpt</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 
     <modules>
-        <module>iso20022</module>
         <module>estatioapp/app</module>
         <module>estatioapp/webapp</module>
     </modules>
 
     <profiles>
-        <!-- inlined from incode-build:2.4 -->
+
+        <!-- required to pull down parent pom (incode-parent) -->
         <profile>
-            <id>cloudbees-estatio-repositories</id>
+            <id>incode-cloud-maven</id>
             <activation>
                 <property>
-                    <name>!skip.cloudbees-estatio-repositories</name>
+                    <name>!skip.incode-cloud-maven</name>
                 </property>
             </activation>
             <repositories>
                 <repository>
-                    <id>cloudbees-estatio-snapshots</id>
-                    <url>http://repository-estatio.forge.cloudbees.com/snapshot/</url>
-                    <name>CloudBees Snapshots (and Interim Releases)</name>
-                    <releases>
-                        <enabled>true</enabled>
-                        <updatePolicy>always</updatePolicy>
-                        <checksumPolicy>fail</checksumPolicy>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                        <updatePolicy>always</updatePolicy>
-                        <checksumPolicy>fail</checksumPolicy>
-                    </snapshots>
-                    <layout>default</layout>
-                </repository>
-                <repository>
-                    <id>cloudbees-estatio-releases</id>
-                    <name>Cloudbees Releases</name>
-                    <url>http://repository-estatio.forge.cloudbees.com/release/</url>
-                    <layout>default</layout>
+                    <id>incode-cloud-maven</id>
+                    <url>https://repo.incode.cloud/repository/maven/</url>
+                    <name>Incode Cloud (maven)</name>
                     <releases>
                         <enabled>true</enabled>
                         <updatePolicy>always</updatePolicy>
@@ -328,66 +826,29 @@ language governing permissions and limitations under the License.
                     </releases>
                     <snapshots>
                         <enabled>false</enabled>
+                        <updatePolicy>always</updatePolicy>
+                        <checksumPolicy>fail</checksumPolicy>
                     </snapshots>
+                    <layout>default</layout>
                 </repository>
             </repositories>
             <pluginRepositories>
                 <pluginRepository>
-                    <id>cloudbees-estatio-snapshots</id>
-                    <name>CloudBees Snapshots (and Interim Releases)</name>
+                    <id>incode-cloud-maven</id>
+                    <name>Incode Cloud (maven)</name>
                     <releases>
                         <enabled>true</enabled>
                         <updatePolicy>never</updatePolicy>
                         <checksumPolicy>fail</checksumPolicy>
                     </releases>
-                    <url>http://repository-estatio.forge.cloudbees.com/snapshot/</url>
+                    <url>https://repo.incode.cloud/repository/maven/</url>
                     <layout>default</layout>
                 </pluginRepository>
             </pluginRepositories>
         </profile>
-        <profile>
-            <id>sonatype-snapshots</id>
-            <activation>
-                <property>
-                    <name>!skip.sonatype-snapshots</name>
-                </property>
-            </activation>
-            <repositories>
-                <repository>
-                    <id>sonatype-snapshots</id>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-                    <snapshots>
-                        <enabled>true</enabled>
-                        <updatePolicy>always</updatePolicy>
-                        <checksumPolicy>fail</checksumPolicy>
-                    </snapshots>
-                </repository>
-            </repositories>
-        </profile>
-        <profile>
-            <id>apache-snapshots</id>
-            <activation>
-                <property>
-                    <name>!skip.apache-snapshots</name>
-                </property>
-            </activation>
-            <repositories>
-                <repository>
-                    <id>apache.snapshots</id>
-                    <name>Apache Snapshots</name>
-                    <url>https://repository.apache.org/content/repositories/snapshots/</url>
-                    <releases>
-                        <enabled>false</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                        <updatePolicy>always</updatePolicy>
-                        <checksumPolicy>fail</checksumPolicy>
-                    </snapshots>
-                </repository>
-            </repositories>
-        </profile>
+
     </profiles>
+
 </project>
 
 

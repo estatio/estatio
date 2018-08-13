@@ -9,9 +9,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import org.apache.isis.applib.services.dto.DtoMappingHelper;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.apache.isis.applib.services.dto.DtoMappingHelper;
 import org.estatio.canonical.invoice.v1.InvoiceDto;
 import org.estatio.canonical.invoice.v1.PaymentMethod;
 import org.estatio.module.charge.dom.Charge;
@@ -27,6 +27,7 @@ public class InvoiceForLeaseDtoFactory_Test {
 
     private InvoiceForLease invoice;
     private InvoiceForLeaseDtoFactory invoiceForLeaseDtoFactory;
+    private InvoiceItemForLeaseDtoFactory invoiceItemForLeaseDtoFactory;
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
@@ -37,7 +38,11 @@ public class InvoiceForLeaseDtoFactory_Test {
     @Before
     public void setUp() throws Exception {
         invoiceForLeaseDtoFactory = new InvoiceForLeaseDtoFactory();
+        invoiceItemForLeaseDtoFactory = new InvoiceItemForLeaseDtoFactory();
+
+        invoiceForLeaseDtoFactory.invoiceItemForLeaseDtoFactory = invoiceItemForLeaseDtoFactory;
         invoiceForLeaseDtoFactory.mappingHelper = mockMappingHelper;
+        invoiceItemForLeaseDtoFactory.mappingHelper = mockMappingHelper;
 
         context.checking(new Expectations() {{
             ignoring(mockMappingHelper);

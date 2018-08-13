@@ -152,7 +152,7 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.incode.ecp.iso20022</groupId>
             <artifactId>incode-ecp-iso20022-pain</artifactId>
-            <version>001.001.003</version>
+            <version>001.001.003.20180710-0937-724f0c26</version>
         </dependency>
 
 
@@ -266,14 +266,6 @@ language governing permissions and limitations under the License.
             <artifactId>isis-wicket-pdfjs-cpt</artifactId>
         </dependency>
 
-        <dependency>
-            <!--
-            because isis-wicket-gmap3-cpt excludes wicketstuff-gmap3 (wrong wicket version)
-            -->
-            <groupId>org.wicketstuff</groupId>
-            <artifactId>wicketstuff-gmap3</artifactId>
-        </dependency>
-
 
 
 
@@ -284,16 +276,6 @@ language governing permissions and limitations under the License.
         </dependency>
 
 
-        <!-- download:
-     $ curl https://google-rfc-2445.googlecode.com/files/rfc2445-4Mar2011.jar > rfc2445-4Mar2011.jar
-     install to ~/.m2/repo using:
-     $ mvn install:install-file \
-         -Dfile=rfc2445-4Mar2011.jar \
-         -DgroupId=com.google \
-         -DartifactId=rfc-2445 \
-         -Dversion=0.0.20110304 \
-         -Dpackaging=jar
- -->
         <dependency>
             <groupId>com.google</groupId>
             <artifactId>rfc-2445</artifactId>

@@ -1,4 +1,4 @@
-package org.estatio.module.application.canonical.v1;
+package org.estatio.module.application.canonical.v2;
 
 import javax.inject.Inject;
 
@@ -11,11 +11,12 @@ import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.State;
 
-import org.estatio.canonical.communicationchannel.v1.PostalAddressDto;
+import org.estatio.canonical.communicationchannel.v2.PostalAddressDto;
 import org.estatio.module.base.platform.applib.DtoFactoryAbstract;
 
 @DomainService(
-        nature = NatureOfService.DOMAIN
+        nature = NatureOfService.DOMAIN,
+        objectType = "application.canonical.v2.PostalAddressDtoFactory"
 )
 public class PostalAddressDtoFactory extends DtoFactoryAbstract {
 

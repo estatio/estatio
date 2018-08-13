@@ -183,6 +183,7 @@ public class InvoiceForLease_Test {
             invoice_invoice.numeratorRepository = mockNumeratorRepository;
             invoice_invoice.titleService = mockTitleService;
             invoice_invoice.messageService = mockMessageService;
+            invoice_invoice.invoiceRepository = mockInvoiceRepository;
 
             // expect
             context.checking(new Expectations() {{
@@ -303,7 +304,7 @@ public class InvoiceForLease_Test {
 
             assertThat(invoice_collect.hide$$()).isFalse();
             assertThat(invoice_collect.disable$$()).isNull();
-            invoice_collect.doCollect();
+            invoice_collect.$$();
 
             assertThat(invoice.getCollectionNumber()).isEqualTo("XXX-00011");
         }
@@ -320,7 +321,7 @@ public class InvoiceForLease_Test {
 
             assertThat(invoice_collect.hide$$()).isFalse();
             assertThat(invoice_collect.disable$$()).isEqualTo("No mandate assigned to invoice's lease");
-            invoice_collect.doCollect();
+            invoice_collect.$$();
 
             assertThat(invoice.getCollectionNumber()).isNull();
         }
@@ -336,7 +337,7 @@ public class InvoiceForLease_Test {
             final InvoiceForLease._collect invoice_collect = new InvoiceForLease._collect(invoice);
             assertThat(invoice_collect.hide$$()).isFalse();
             assertThat(invoice_collect.disable$$()).isEqualTo("Collection number already assigned");
-            invoice_collect.doCollect();
+            invoice_collect.$$();
 
             assertThat(invoice.getCollectionNumber()).isEqualTo("SOME-COLLECTION-NUMBER");
         }
@@ -353,7 +354,7 @@ public class InvoiceForLease_Test {
             assertThat(invoice_collect.hide$$()).isFalse();
             assertThat(invoice_collect.disable$$()).isEqualTo("No 'collection number' numerator found for invoice's property");
 
-            invoice_collect.doCollect();
+            invoice_collect.$$();
             assertThat(invoice.getCollectionNumber()).isNull();
         }
 
@@ -370,7 +371,7 @@ public class InvoiceForLease_Test {
             assertThat(invoice_collect.hide$$()).isTrue();
             assertThat(invoice_collect.disable$$()).isEqualTo("No mandate assigned to invoice's lease");
 
-            invoice_collect.doCollect();
+            invoice_collect.$$();
 
             assertThat(invoice.getCollectionNumber()).isNull();
         }
@@ -391,7 +392,7 @@ public class InvoiceForLease_Test {
             assertThat(invoice_collect.disable$$()).isEqualTo("Must be in status of 'approved'");
 
             // and
-            invoice_collect.doCollect();
+            invoice_collect.$$();
 
             // then
             assertThat(invoice.getCollectionNumber()).isNull();

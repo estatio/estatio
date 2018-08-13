@@ -19,9 +19,17 @@
 package org.estatio.module.lease.app;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
+
+import com.google.common.base.Splitter;
+import com.google.common.collect.ContiguousSet;
+import com.google.common.collect.DiscreteDomain;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Range;
 
 import org.joda.time.LocalDate;
 
@@ -34,15 +42,18 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.coda.contributions.republish.InvoiceForLease_republish;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceRepository;
@@ -144,11 +155,22 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3")
-    public List<Invoice> findInvoicesByInvoiceNumber(
-            final String invoiceNumber) {
+    public List<InvoiceForLease> findInvoicesByInvoiceNumber(
+            final String invoiceNumber,
+            @Nullable
+            @ParameterLayout(describedAs = "Invoice numbers are reset each year")
+            final Integer year) {
         return invoiceRepository.findMatchingInvoiceNumber(invoiceNumber).stream()
-                .filter(i -> i instanceof InvoiceForLease)
+                .filter(InvoiceForLease.class::isInstance)
+                .map(InvoiceForLease.class::cast)
+                .filter(i -> {
+                    final LocalDate codaValDate = i.getCodaValDate();
+                    return year == null || codaValDate == null || codaValDate.getYear() == year;
+                })
                 .collect(Collectors.toList());
+    }
+    public Integer default1FindInvoicesByInvoiceNumber() {
+        return clockService.now().getYear();
     }
 
 
@@ -179,6 +201,82 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
                 .collect(Collectors.toList());
     }
 
+    // //////////////////////////////////////
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT, restrictTo = RestrictTo.PROTOTYPING)
+    @MemberOrder(sequence = "98")
+    public List<InvoiceForLease> republish(
+            @ParameterLayout(describedAs = "invoice number prefix, eg 'CAR' (as in 'CAR-0144')")
+            final String invoiceNumberPrefix,
+            @ParameterLayout(describedAs = "invoice number suffices, eg '144,145,150' (for 'CAR-0144', 'CAR-0145', 'CAR-0150')")
+            @Nullable
+            final String invoiceNumberSuffices,
+            @ParameterLayout(describedAs = "invoice number suffices from (inclusive), eg '144' (for 'CAR-0144', ...)")
+            @Nullable
+            final Integer invoiceNumberFrom,
+            @ParameterLayout(describedAs = "invoice number suffices to (inclusive), eg '150' (for ..., 'CAR-0150')")
+            @Nullable
+            final Integer invoiceNumberTo,
+            final int year
+    ) {
+        final List<Integer> invoiceNumberSuffixList;
+        if(invoiceNumberSuffices != null) {
+            invoiceNumberSuffixList = Lists.newArrayList(Splitter.on(',').split(invoiceNumberSuffices))
+                                        .stream().map(Integer::parseInt).collect(Collectors.toList());
+        } else {
+            invoiceNumberSuffixList = ContiguousSet.create(
+                            Range.closed(invoiceNumberFrom, invoiceNumberTo), DiscreteDomain.integers()).asList();
+        }
+
+        final List<InvoiceForLease> invoiceList = invoiceNumberSuffixList.stream()
+                .map(num -> String.format("%s-%04d", invoiceNumberPrefix, num))
+                .map(invoiceNumber -> {
+                    final List<InvoiceForLease> invoices = findInvoicesByInvoiceNumber(invoiceNumber, year);
+                    return invoices.size() == 1 ? invoices.get(0) : null;
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        invoiceList.forEach(invoice -> factoryService.mixin(InvoiceForLease_republish.class, invoice).act());
+
+        return invoiceList;
+    }
+
+
+    public String default0Republish() {
+        return "CAR";
+    }
+    public int default4Republish() {
+        return clockService.now().getYear();
+    }
+
+    public String validateRepublish(
+            final String invoiceNumberPrefix,
+            final String invoiceNumberSuffices,
+            final Integer invoiceNumberFrom,
+            final Integer invoiceNumberTo,
+            final int year) {
+        if(invoiceNumberSuffices == null) {
+            if (invoiceNumberFrom == null || invoiceNumberTo == null) {
+                return "Specify invoice number suffices, or from/to range";
+            } else if (invoiceNumberFrom != null && invoiceNumberTo == null) {
+                return "Also specify invoice number to";
+
+            } else if (invoiceNumberFrom == null && invoiceNumberTo != null) {
+                return "Also specify invoice number from";
+
+            } else /*(invoiceNumberFrom != null && invoiceNumberTo != null)*/ {
+                return null;
+            }
+        } else {
+            if (invoiceNumberFrom != null || invoiceNumberTo != null) {
+                return "Specify invoice number suffices, or from/to range";
+            } else {
+                return null;
+            }
+        }
+    }
+
 
     @Inject
     InvoiceSummaryForPropertyInvoiceDateRepository invoiceSummaryForPropertyInvoiceDateRepository;
@@ -200,5 +298,8 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
 
     @Inject
     EstatioApplicationTenancyRepositoryForLease estatioApplicationTenancyRepositoryForLease;
+
+    @Inject
+    FactoryService factoryService;
 
 }

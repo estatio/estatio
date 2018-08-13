@@ -60,6 +60,13 @@ public class InvoiceRepository extends UdoDomainRepositoryAndFactory<Invoice> {
                 "seller", party);
     }
 
+    /**
+     * Finds all invoices for the invoice number (invoice numbers are reused in Italy, at least, new sequence each year)
+     *
+     * <p>
+     *     Ordered most recent first.
+     * </p>
+     */
     @Programmatic
     public List<Invoice> findMatchingInvoiceNumber(final String invoiceNumber) {
         return allMatches("findMatchingInvoiceNumber",

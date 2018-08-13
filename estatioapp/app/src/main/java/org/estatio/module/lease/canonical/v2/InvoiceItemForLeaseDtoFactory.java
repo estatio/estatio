@@ -1,4 +1,4 @@
-package org.estatio.module.lease.canonical.v1;
+package org.estatio.module.lease.canonical.v2;
 
 import java.util.Optional;
 import java.util.SortedSet;
@@ -10,7 +10,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.dto.DtoMappingHelper;
 
-import org.estatio.canonical.invoice.v1.InvoiceItemDto;
+import org.estatio.canonical.invoice.v2.InvoiceItemType;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.base.platform.applib.DtoFactoryAbstract;
 import org.estatio.module.charge.dom.Charge;
@@ -25,13 +25,14 @@ import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRate;
 
 @DomainService(
-        nature = NatureOfService.DOMAIN
+        nature = NatureOfService.DOMAIN,
+        objectType = "lease.canonical.v2.InvoiceItemForLeaseDtoFactory"
 )
 public class InvoiceItemForLeaseDtoFactory extends DtoFactoryAbstract {
 
     @Programmatic
-    public InvoiceItemDto newDto(final InvoiceItem item) {
-        InvoiceItemDto dto = new InvoiceItemDto();
+    public InvoiceItemType newDto(final InvoiceItem item) {
+        InvoiceItemType dto = new InvoiceItemType();
 
         dto.setSelf(mappingHelper.oidDtoFor(item));
 

@@ -54,7 +54,6 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="Metadata" id="metadata">
-                                <cpt:action id="sync"/>
                                 <cpt:action id="recentChanges" position="PANEL_DROPDOWN"/>
                                 <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
                                 <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
@@ -131,23 +130,23 @@
             </bs3:tabGroup>
         </bs3:col>
         <bs3:col span="4">
-            <bs3:tabGroup>
+            <bs3:tabGroup collapseIfOne="false">
                 <bs3:tab name="Dates and Amounts">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:fieldSet name="Dates" id="dates">
+                            <cpt:fieldSet id="dates">
                                 <cpt:property id="invoiceDate"/>
                                 <cpt:property id="dueDate">
                                     <cpt:action id="changeDueDate" position="BELOW"/>
                                 </cpt:property>
                             </cpt:fieldSet>
-                            <cpt:fieldSet name="Payment" id="payment">
+                            <cpt:fieldSet id="payment">
                                 <cpt:property id="paymentMethod">
                                     <cpt:action id="changePaymentMethod" position="BELOW"/>
                                 </cpt:property>
                                 <cpt:property id="paidBy"/>
                             </cpt:fieldSet>
-                            <cpt:fieldSet name="Amounts" id="amounts">
+                            <cpt:fieldSet id="amounts">
                                 <cpt:property id="totalNetAmount">
                                     <cpt:named>Net amount</cpt:named>
                                 </cpt:property>
@@ -159,14 +158,16 @@
                                 </cpt:property>
                                 <cpt:property id="currency"/>
                             </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Dummy">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="dummy-to-make-first-tab-appear">
-                                <cpt:property id="dummy"/>
+                            <cpt:fieldSet id="Coda Integration">
+                                <cpt:property id="codaStatus" multiLine="3">
+                                    <cpt:named>Coda Sync Status</cpt:named>
+                                    <cpt:action id="republish">
+                                        <cpt:named>Sync again</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="codaStatusOpen">
+                                        <cpt:named>Show detail...</cpt:named>
+                                    </cpt:action>
+                                </cpt:property>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
