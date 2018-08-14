@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.text.DecimalFormat;
@@ -721,6 +722,12 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
             boolean newTransfer = true;
             for (PaymentLine paymentLine : transfer.getLines()){
                 String firstUse = creditTransferExportService.isFirstUseBankAccount(transfer) ? "YES" : "no";
+                String invoiceUrl;
+                try {
+                    invoiceUrl = deepLinkService.deepLinkFor(paymentLine.getInvoice()).toURL().toString();
+                } catch (MalformedURLException e) {
+                    invoiceUrl = "";
+                }
                 exportLines.add(
                         new CreditTransferExportLine(
                                 lineNumber,
@@ -736,7 +743,8 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                                         paymentLine.getInvoice().getType().name() + " (" + paymentLine.getInvoice().getProjectSummary() + ")" :
                                         paymentLine.getInvoice().getType().name(),
                                 paymentLine.getInvoice().getPropertySummary(),
-                                creditTransferExportService.getInvoiceDocumentName(paymentLine.getInvoice())
+                                creditTransferExportService.getInvoiceDocumentName(paymentLine.getInvoice()),
+                                invoiceUrl
                         )
                 );
                 newTransfer = false;

@@ -7,6 +7,8 @@ import javax.annotation.Nullable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ViewModel;
 
+import org.isisaddons.module.excel.dom.HyperLink;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -61,5 +63,9 @@ public class CreditTransferExportLine {
 
     @MemberOrder(sequence = "12")
     private String invoiceDocumentName;
+
+    @MemberOrder(sequence = "13")
+    @HyperLink
+    private String linkToInvoice;
 
 }
