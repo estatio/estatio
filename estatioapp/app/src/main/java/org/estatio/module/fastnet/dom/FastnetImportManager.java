@@ -161,7 +161,7 @@ public class FastnetImportManager {
     }
 
     @Action(associateWith = "readyForImport", publishing = Publishing.DISABLED)
-    @ActionLayout(named = "import")
+    @ActionLayout(named = "import and apply")
     @CollectionLayout(defaultView = "excel")
     public FastnetImportManager doImport() {
 

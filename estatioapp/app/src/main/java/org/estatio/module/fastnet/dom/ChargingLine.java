@@ -25,6 +25,7 @@ import org.joda.time.LocalDateTime;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -391,6 +392,7 @@ public class ChargingLine implements Importable {
     }
 
     @Override
+    @Programmatic
     public List<Object> importData(final Object previousRow) {
         setKeyToLeaseExternalReference(keyToLeaseExternalReference());
         setKeyToChargeReference(keyToChargeReference());
