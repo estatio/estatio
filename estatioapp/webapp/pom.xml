@@ -107,6 +107,34 @@ language governing permissions and limitations under the License.
             <artifactId>isis-mavendeps-webapp</artifactId>
             <type>pom</type>
         </dependency>
+        <!--
+        -->
+
+        <!-- HACK: inlining mavendeps-webapp dependencies
+         TODO: This is a work-a-round making org.apache.isis.WebServer available in intelliJ configuration
+        There is may be the chance of a version conflict, since the classes are now added to the WAR
+        -->
+        <dependency>
+            <groupId>org.apache.isis.core</groupId>
+            <artifactId>isis-core-viewer-wicket-impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.isis.core</groupId>
+            <artifactId>isis-core-viewer-restfulobjects-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.isis.core</groupId>
+            <artifactId>isis-core-security-shiro</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.isis.core</groupId>
+            <artifactId>isis-core-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-servlet_3.0_spec</artifactId>
+        </dependency>
+
 
         <dependency>
             <groupId>org.isisaddons.metamodel.paraname8</groupId>
