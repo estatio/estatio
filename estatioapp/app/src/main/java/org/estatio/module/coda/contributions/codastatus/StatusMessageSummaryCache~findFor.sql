@@ -10,7 +10,7 @@ select i.id                                                                as in
 	on i.atPath = original.atPath
     and i.status = original.status
 	and i.dueDate = original.dueDate
-  left join isispublishmq.PublishedEvent pe
+  left outer hash join isispublishmq.PublishedEvent pe
     on 'org.estatio.dom.invoice.Invoice:' + convert(varchar,i.id) = pe.target
    and pe.memberIdentifier in (
 	'org.estatio.module.lease.dom.invoicing.InvoiceForLease$_invoice#$$()',
