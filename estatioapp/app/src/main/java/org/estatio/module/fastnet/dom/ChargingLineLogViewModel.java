@@ -14,7 +14,7 @@ import lombok.Setter;
 @ViewModel
 @Getter @Setter
 @AllArgsConstructor
-public class ChargingLineLogViewModel {
+public class ChargingLineLogViewModel implements Comparable<ChargingLineLogViewModel> {
 
     public ChargingLineLogViewModel(){};
 
@@ -48,4 +48,23 @@ public class ChargingLineLogViewModel {
     @MemberOrder(sequence = "10")
     private LocalDate exportDate;
 
+    @Override
+    public int compareTo(final ChargingLineLogViewModel o) {
+        if (getLeaseReference()!=null && o.getLeaseReference()!=null) {
+            return getLeaseReference().compareTo(o.getLeaseReference());
+        }
+        if (getLeaseReference()==null && o.getLeaseReference()!=null){
+            return -1;
+        }
+        if (getLeaseReference()!=null && o.getLeaseReference()==null){
+            return 1;
+        }
+        if (getKeyToLeaseExternalReference()!=null && o.getKeyToLeaseExternalReference()!=null){
+            return getKeyToLeaseExternalReference().compareTo(o.getKeyToLeaseExternalReference());
+        }
+        if (getApplied()!=null && o.getApplied()!=null){
+            return getApplied().compareTo(o.getApplied());
+        }
+        return 0;
+    }
 }

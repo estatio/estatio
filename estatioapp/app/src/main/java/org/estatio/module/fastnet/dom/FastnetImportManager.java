@@ -3,7 +3,6 @@ package org.estatio.module.fastnet.dom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -27,6 +26,8 @@ import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
+
+import org.estatio.module.fastnet.app.FastnetImportMenu;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -222,25 +223,7 @@ public class FastnetImportManager {
     }
 
     private Blob downloadImportLog(){
-        List<ChargingLineLogViewModel> linesWithLogMessage = chargingLineRepository.findByExportDate(getExportDate())
-                .stream()
-                .filter(line->line.getImportLog()!=null)
-                .map(line->new ChargingLineLogViewModel(
-                        line.getImportLog(),
-                        line.getApplied(),
-                        line.getImportStatus(),
-                        line.getLease()!=null ? line.getLease().getReference() : null,
-                        line.getKeyToLeaseExternalReference(),
-                        line.getKeyToChargeReference(),
-                        line.getFromDat(),
-                        line.getTomDat(),
-                        line.getArsBel(),
-                        line.getExportDate()
-                        ))
-                .collect(Collectors.toList());
-        WorksheetSpec spec0 = new WorksheetSpec(ChargingLineLogViewModel.class, "lines with log message");
-        WorksheetContent content0 = new WorksheetContent(linesWithLogMessage, spec0);
-        return excelService.toExcel(content0, "import log " + getExportDate().toString("yyyy-MM-dd") + ".xlsx");
+        return fastnetImportMenu.fastnetImportLog(getExportDate());
     }
 
     @XmlTransient
@@ -254,5 +237,9 @@ public class FastnetImportManager {
     @XmlTransient
     @Inject
     ChargingLineRepository chargingLineRepository;
+
+    @XmlTransient
+    @Inject
+    FastnetImportMenu fastnetImportMenu;
 
 }
