@@ -153,12 +153,12 @@ public class ChargingLineRepository {
     }
 
     @Programmatic
-    public List<ChargingLine> importChargingItems(final Blob spreadsheet) {
+    public List<ChargingLine> importChargingItems(final Blob spreadsheet, final Boolean nonDiscardedOnly) {
         List<ChargingLine> chargingLines =
                 excelService.fromExcel(spreadsheet, ChargingLine.class, "Charging", Mode.RELAXED);
         chargingLines.forEach(x -> {
             serviceRegistry2.injectServicesInto(x);
-            x.importData(null);
+            x.importChargingLine(nonDiscardedOnly);
         });
         try {
             List<ChargingLine> chargingFutureLines =
@@ -173,7 +173,7 @@ public class ChargingLineRepository {
                 chargingFutureLines.forEach(x -> {
                     if (futureKontrakts.contains(x.getKontraktNr())) {
                         serviceRegistry2.injectServicesInto(x);
-                        x.importData(null);
+                        x.importChargingLine(nonDiscardedOnly);
                     }
                 });
             }

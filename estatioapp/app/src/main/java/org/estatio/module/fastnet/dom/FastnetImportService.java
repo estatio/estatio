@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.services.message.MessageService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.country.dom.impl.Country;
@@ -35,6 +34,7 @@ import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseItemStatus;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTerm;
@@ -82,9 +82,13 @@ public class FastnetImportService {
         List<FastNetChargingOnLeaseDataLine> chargingDataLinesForActiveLeasesNotInImport = chargingOnLeaseDataLineRepo.findByExportDate(exportDate);
         long chargingDatalines = System.currentTimeMillis();
 
-        List<Lease> activeLeasesNotInImport = getLeasesNotInImport(chargingDataLinesForActiveLeasesNotInImport);
+        List<Lease> activeLeasesNotInImport = getLeasesNotInImport(chargingDataLinesForActiveLeasesNotInImport, exportDate);
         List<LeaseViewModel> toViewmodels = activeLeasesNotInImport.stream().filter(x -> !x.getReference().startsWith("Z-")).map(x -> new LeaseViewModel(x.getReference(), x.getExternalReference())).collect(Collectors.toList());
         fastnetImportManager.getActiveLeasesNotInImport().addAll(toViewmodels);
+
+        List<Lease> leasesWithActiveRentNotInImport = getLeasesWithActiveRentItemsNotInImport(activeLeasesNotInImport, exportDate);
+        List<LeaseViewModel> toViewmodels2 = leasesWithActiveRentNotInImport.stream().map(x -> new LeaseViewModel(x.getReference(), x.getExternalReference())).collect(Collectors.toList());
+        fastnetImportManager.getLeasesWithActiveRentNotInImport().addAll(toViewmodels2);
         long activeleasesnotinimport = System.currentTimeMillis();
 
         List<FastNetChargingOnLeaseDataLine> chargingDataLinesChargeNotFound = chargingDataLines
@@ -162,11 +166,26 @@ public class FastnetImportService {
         return fastnetImportManager;
     }
 
-    List<Lease> getLeasesNotInImport(final List<FastNetChargingOnLeaseDataLine> chargingDataLines) {
+    List<Lease> getLeasesNotInImport(final List<FastNetChargingOnLeaseDataLine> chargingDataLines, final LocalDate exportDate) {
         final List<String> externalRefsInChargingDataLines = chargingDataLines.stream().map(FastNetChargingOnLeaseDataLine::getKeyToLeaseExternalReference).collect(Collectors.toList());
-        List<Lease> activeLeasesNotInImport = activeSwedishLeases();
+        List<Lease> activeLeasesNotInImport = activeSwedishLeases(exportDate);
         activeLeasesNotInImport.removeIf(lease -> externalRefsInChargingDataLines.contains(lease.getExternalReference()));
         return activeLeasesNotInImport;
+    }
+
+    List<Lease> getLeasesWithActiveRentItemsNotInImport(List<Lease> leasesNotInImport, final LocalDate exportDate) {
+        return leasesNotInImport.stream().filter(x->hasActiveRentItem(x, exportDate)).collect(Collectors.toList());
+    }
+
+    private boolean hasActiveRentItem(final Lease lease, final LocalDate exportDate) {
+        for (LeaseItem item : lease.getItems()){
+            if (Arrays.asList(LeaseItemType.RENT_FIXED, LeaseItemType.RENT_DISCOUNT, LeaseItemType.RENT_DISCOUNT_FIXED, LeaseItemType.RENT).contains(item.getType())){
+                if (item.getStatus()==LeaseItemStatus.ACTIVE && (item.getEndDate()==null || !item.getEndDate().isBefore(exportDate))){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private String getChargeRefMapKey(final FastNetChargingOnLeaseDataLine cdl) {
@@ -787,7 +806,7 @@ public class FastnetImportService {
         return chargeRepository.findByReference("SE".concat(kod).concat("-").concat(kod2));
     }
 
-    List<Lease> activeSwedishLeases() {
+    List<Lease> activeSwedishLeases(final LocalDate exportDate) {
         List<Lease> result = new ArrayList<>();
         Country sweden = countryRepository.findCountry("SWE");
         List<Property> propertiesForSweden = propertyRepository.allProperties().stream()
@@ -796,9 +815,9 @@ public class FastnetImportService {
                                 &&
                                 (x.getDisposalDate() == null
                                         ||
-                                        x.getDisposalDate().isAfter(LocalDate.now()))
+                                        x.getDisposalDate().isAfter(exportDate))
                 ).collect(Collectors.toList());
-        propertiesForSweden.forEach(x -> result.addAll(leaseRepository.findByAssetAndActiveOnDate(x, LocalDate.now())));
+        propertiesForSweden.forEach(x -> result.addAll(leaseRepository.findByAssetAndActiveOnDate(x, exportDate)));
         return result;
     }
 
@@ -817,7 +836,5 @@ public class FastnetImportService {
     @Inject FastNetRentRollOnLeaseDataLineRepo rentRollOnLeaseDataLineRepo;
 
     @Inject FastNetChargingOnLeaseDataLineRepo chargingOnLeaseDataLineRepo;
-
-    @Inject MessageService messageService;
 
 }

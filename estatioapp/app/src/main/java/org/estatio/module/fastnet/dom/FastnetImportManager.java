@@ -47,8 +47,8 @@ import lombok.Setter;
                 "linesForItemUpdate",
                 "linesForItemCreation",
                 "activeLeasesNotInImport",
+                "leasesWithActiveRentNotInImport",
                 "discardedLines"
-
         }
 )
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -160,10 +160,18 @@ public class FastnetImportManager {
         return this.activeLeasesNotInImport;
     }
 
-    @Action(associateWith = "readyForImport", publishing = Publishing.DISABLED)
+    @Setter
+    private List<LeaseViewModel> leasesWithActiveRentNotInImport = new ArrayList<>();
+
+    @Programmatic
+    public List<LeaseViewModel> getLeasesWithActiveRentNotInImport() {
+        return this.leasesWithActiveRentNotInImport;
+    }
+
+    @Action(publishing = Publishing.DISABLED)
     @ActionLayout(named = "import and apply")
     @CollectionLayout(defaultView = "excel")
-    public FastnetImportManager doImport() {
+    public Blob doImport() {
 
         getLinesForItemUpdate().forEach(cdl -> {
             fastnetImportService.updateOrCreateItem(cdl);
@@ -181,38 +189,39 @@ public class FastnetImportManager {
             fastnetImportService.noUpdate(cdl);
         });
 
-        return this;
+        return downloadImportLog();
     }
 
     @Action()
     public Blob downloadAnalysis() {
-        WorksheetSpec spec0 = new WorksheetSpec(LeaseViewModel.class, "activeLeasesNotInImport");
-        WorksheetContent content0 = new WorksheetContent(getActiveLeasesNotInImport(), spec0);
+//        WorksheetSpec spec0 = new WorksheetSpec(LeaseViewModel.class, "activeLeasesNotInImport");
+//        WorksheetContent content0 = new WorksheetContent(getActiveLeasesNotInImport(), spec0);
+        WorksheetSpec spec00 = new WorksheetSpec(LeaseViewModel.class, "leasesWithRentNotInImport");
+        WorksheetContent content00 = new WorksheetContent(getLeasesWithActiveRentNotInImport(), spec00);
         WorksheetSpec spec1 = new WorksheetSpec(FastNetRentRollOnLeaseDataLine.class, "nonMatchingDataLines");
         WorksheetContent content1 = new WorksheetContent(getNonMatchingDataLines(), spec1);
         WorksheetSpec spec2 = new WorksheetSpec(FastNetRentRollOnLeaseDataLine.class, "partialMatchingDataLines");
         WorksheetContent content2 = new WorksheetContent(getPartialMatchingDataLines(), spec2);
-        WorksheetSpec spec3 = new WorksheetSpec(FastNetRentRollOnLeaseDataLine.class, "noChargingDetails");
-        WorksheetContent content3 = new WorksheetContent(getNoChargingDetails(), spec3);
+//        WorksheetSpec spec3 = new WorksheetSpec(FastNetRentRollOnLeaseDataLine.class, "noChargingDetails");
+//        WorksheetContent content3 = new WorksheetContent(getNoChargingDetails(), spec3);
         WorksheetSpec spec4 = new WorksheetSpec(FastNetRentRollOnLeaseDataLine.class, "doubleExternalReferences");
         WorksheetContent content4 = new WorksheetContent(getDoubleExternalReferences(), spec4);
         WorksheetSpec spec5 = new WorksheetSpec(FastNetChargingOnLeaseDataLine.class, "chargeNotFound");
         WorksheetContent content5 = new WorksheetContent(getChargeNotFound(), spec5);
-        WorksheetSpec spec6 = new WorksheetSpec(FastNetChargingOnLeaseDataLine.class, "duplicateChargeReferences");
-        WorksheetContent content6 = new WorksheetContent(getDuplicateChargeReferences(), spec6);
-        WorksheetSpec spec7 = new WorksheetSpec(FastNetChargingOnLeaseDataLine.class, "noUpdateNeeded");
-        WorksheetContent content7 = new WorksheetContent(getNoUpdateNeeded(), spec7);
+//        WorksheetSpec spec6 = new WorksheetSpec(FastNetChargingOnLeaseDataLine.class, "duplicateChargeReferences");
+//        WorksheetContent content6 = new WorksheetContent(getDuplicateChargeReferences(), spec6);
+//        WorksheetSpec spec7 = new WorksheetSpec(FastNetChargingOnLeaseDataLine.class, "noUpdateNeeded");
+//        WorksheetContent content7 = new WorksheetContent(getNoUpdateNeeded(), spec7);
         WorksheetSpec spec8 = new WorksheetSpec(FastNetChargingOnLeaseDataLine.class, "linesForItemUpdate");
         WorksheetContent content8 = new WorksheetContent(getLinesForItemUpdate(), spec8);
         WorksheetSpec spec9 = new WorksheetSpec(FastNetChargingOnLeaseDataLine.class, "linesForItemCreation");
         WorksheetContent content9 = new WorksheetContent(getLinesForItemCreation(), spec9);
         WorksheetSpec spec10 = new WorksheetSpec(FastNetChargingOnLeaseDataLine.class, "discardedLines");
         WorksheetContent content10 = new WorksheetContent(getDiscardedLines(), spec10);
-        return excelService.toExcel(Arrays.asList(content0, content1, content2, content3, content4, content5, content6, content7, content8, content9, content10), "analysis export date " + getExportDate().toString("yyyy-MM-dd") + ".xlsx");
+        return excelService.toExcel(Arrays.asList(content00, content1, content2, content4, content5, content8, content9, content10), "analysis export date " + getExportDate().toString("yyyy-MM-dd") + ".xlsx");
     }
 
-    @Action
-    public Blob downloadImportLog(){
+    private Blob downloadImportLog(){
         List<ChargingLineLogViewModel> linesWithLogMessage = chargingLineRepository.findByExportDate(getExportDate())
                 .stream()
                 .filter(line->line.getImportLog()!=null)

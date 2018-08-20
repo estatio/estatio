@@ -391,6 +391,22 @@ public class ChargingLine implements Importable {
         return false;
     }
 
+    @Programmatic
+    public List<Object> importChargingLine(final boolean nonDiscardedOnly) {
+        if (nonDiscardedOnly) {
+            if (chargeRepository.findByReference(keyToChargeReference())!= null &&
+                    chargeRepository.findByReference(keyToChargeReference()).getGroup().getReference().equals("SE_DISCARD")){
+                // do not import
+                return Collections.emptyList();
+            } else {
+                return importData(null);
+            }
+
+        } else {
+            return importData(null);
+        }
+    }
+
     @Override
     @Programmatic
     public List<Object> importData(final Object previousRow) {
