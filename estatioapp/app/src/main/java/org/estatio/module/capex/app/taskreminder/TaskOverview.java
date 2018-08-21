@@ -14,6 +14,8 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 
+import org.isisaddons.module.security.dom.tenancy.HasAtPath;
+
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.dom.task.TaskRepository;
 import org.estatio.module.party.dom.Person;
@@ -27,7 +29,7 @@ import lombok.Setter;
         objectType = "org.estatio.module.capex.app.taskreminder.TaskOverview"
 )
 @NoArgsConstructor
-public class TaskOverview {
+public class TaskOverview implements HasAtPath {
 
     public TaskOverview(
             final Person person) {
@@ -80,6 +82,10 @@ public class TaskOverview {
         return taskReminderService.disableSendReminder(person, getListOfTasksOverdue());
     }
 
+    @Override public String getAtPath() {
+        return person.getAtPath();
+    }
+
     @Inject
     private ClockService clockService;
 
@@ -88,6 +94,5 @@ public class TaskOverview {
 
     @Inject
     private TaskRepository taskRepository;
-
 }
 
