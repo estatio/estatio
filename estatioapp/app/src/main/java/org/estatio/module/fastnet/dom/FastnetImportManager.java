@@ -20,6 +20,7 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Publishing;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
@@ -169,7 +170,7 @@ public class FastnetImportManager {
         return this.leasesWithActiveRentNotInImport;
     }
 
-    @Action(publishing = Publishing.DISABLED)
+    @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     @ActionLayout(named = "import and apply")
     @CollectionLayout(defaultView = "excel")
     public Blob doImport() {
