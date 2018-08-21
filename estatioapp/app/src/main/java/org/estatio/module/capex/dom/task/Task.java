@@ -18,6 +18,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.google.common.collect.Lists;
 
+import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.annotation.Action;
@@ -41,6 +42,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
+import org.estatio.module.capex.app.taskreminder.TaskOverview;
 import org.estatio.module.capex.dom.state.State;
 import org.estatio.module.capex.dom.state.StateTransition;
 import org.estatio.module.capex.dom.state.StateTransitionService;
@@ -225,6 +227,14 @@ public class Task implements Comparable<Task>, WithApplicationTenancy {
     @Getter @Setter
     @Column(allowsNull = "true")
     private LocalDateTime completedOn;
+
+    /**
+     * Used to determine whether a person has been reminded of their overdue tasks recently through {@link TaskOverview#sendReminder() sendReminder}.
+     */
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    @Property(hidden = Where.EVERYWHERE)
+    private LocalDate remindedOn;
 
     /**
      * Copy of the {@link StateTransition#getCompletedBy()} () completedBy} property of the {@link StateTransition} that {@link StateTransition#getTask() refers} to this task.

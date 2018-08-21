@@ -19,7 +19,9 @@
 package org.estatio.module.application.spiimpl.email;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import javax.activation.DataSource;
 import javax.annotation.PostConstruct;
@@ -37,7 +39,6 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.core.commons.config.IsisConfiguration;
 import org.apache.isis.core.runtime.services.email.EmailServiceDefault;
-
 
 // a copy of EmailServiceDefault, with a couple of tweaks
 @DomainService(
@@ -75,7 +76,7 @@ public class EmailServiceThrowingException {
     @Programmatic
     public void init() {
 
-        if(initialized) {
+        if (initialized) {
             return;
         }
 
@@ -85,7 +86,7 @@ public class EmailServiceThrowingException {
 
         initialized = true;
 
-        if(!isConfigured()) {
+        if (!isConfigured()) {
             LOG.warn("NOT configured");
         } else {
             LOG.debug("configured");
@@ -122,14 +123,36 @@ public class EmailServiceThrowingException {
     //endregion
 
     //region > send
+    @Programmatic
+    public boolean send(
+            final List<String> toList, final List<String> ccList, final List<String> bccList, final String subject, final String body,
+            final DataSource... attachments) {
+        return send(toList, ccList, bccList, senderEmailAddress, subject, body, attachments);
+    }
 
     @Programmatic
-    public boolean send(final List<String> toList, final List<String> ccList, final List<String> bccList, final String subject, final String body,
+    public boolean send(
+            final List<String> toList, final List<String> ccList, final List<String> bccList, final String from, final String subject, final String body,
             final DataSource... attachments) {
 
         try {
+            String passwordToUse = senderEmailPassword;
+
+            if (!from.equals(senderEmailAddress)) {
+                final String emailKey = configuration.asMap()
+                        .entrySet()
+                        .stream()
+                        .filter(entry -> from.equals(entry.getValue()))
+                        .map(Map.Entry::getKey)
+                        .collect(Collectors.toList())
+                        .get(0);
+                passwordToUse = configuration.getString(emailKey.replaceFirst("address", "password"));
+            }
+
             final ImageHtmlEmail email = new ImageHtmlEmail();
-            email.setAuthenticator(new DefaultAuthenticator(senderEmailAddress, senderEmailPassword));
+
+            email.setAuthenticator(new DefaultAuthenticator(from, passwordToUse));
+
             email.setHostName(getSenderEmailHostName());
             email.setSmtpPort(senderEmailPort);
             email.setStartTLSEnabled(getSenderEmailTlsEnabled());
@@ -141,7 +164,6 @@ public class EmailServiceThrowingException {
             email.setSocketTimeout(2000);
             email.setSocketConnectionTimeout(2000);
 
-
             final Properties properties = email.getMailSession().getProperties();
 
             // TODO ISIS-987: check whether all these are required and extract as configuration settings
@@ -152,8 +174,7 @@ public class EmailServiceThrowingException {
             properties.put("mail.smtps.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
             properties.put("mail.smtps.socketFactory.fallback", "false");
 
-
-            email.setFrom(senderEmailAddress);
+            email.setFrom(from);
 
             email.setSubject(subject);
             email.setHtmlMsg(body);
@@ -165,13 +186,13 @@ public class EmailServiceThrowingException {
                 }
             }
 
-            if(notEmpty(toList)) {
+            if (notEmpty(toList)) {
                 email.addTo(toList.toArray(new String[toList.size()]));
             }
-            if(notEmpty(ccList)) {
+            if (notEmpty(ccList)) {
                 email.addCc(ccList.toArray(new String[ccList.size()]));
             }
-            if(notEmpty(bccList)) {
+            if (notEmpty(bccList)) {
                 email.addBcc(bccList.toArray(new String[bccList.size()]));
             }
 
@@ -183,7 +204,6 @@ public class EmailServiceThrowingException {
             // change from default impl.
             //
             LOG.error("An error occurred while trying to send an email about user email verification", ex);
-
 
             throw new RuntimeException(ex);
         }
@@ -197,7 +217,6 @@ public class EmailServiceThrowingException {
         return toList != null && !toList.isEmpty();
     }
     //endregion
-
 
     //endregion
 

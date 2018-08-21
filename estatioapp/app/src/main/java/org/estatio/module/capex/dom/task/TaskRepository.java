@@ -243,7 +243,7 @@ public class TaskRepository {
     }
 
 
-    List<Task> findIncompleteByPersonAssignedTo(final Person personAssignedTo) {
+    public List<Task> findIncompleteByPersonAssignedTo(final Person personAssignedTo) {
         return queryResultsCache.execute(
                 () -> doFindIncompleteByPersonAssignedTo(personAssignedTo),
                 getClass(),

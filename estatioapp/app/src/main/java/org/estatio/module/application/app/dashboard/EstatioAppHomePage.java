@@ -46,6 +46,8 @@ import org.estatio.module.capex.app.UpcomingPaymentService;
 import org.estatio.module.capex.app.invoice.UpcomingPaymentTotal;
 import org.estatio.module.capex.app.paydd.DirectDebitsManager;
 import org.estatio.module.capex.app.paymentbatch.PaymentBatchManager;
+import org.estatio.module.capex.app.taskreminder.TaskOverview;
+import org.estatio.module.capex.app.taskreminder.TaskReminderService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
@@ -60,6 +62,7 @@ import org.estatio.module.event.dom.EventRepository;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 
 @DomainObject(
@@ -121,6 +124,32 @@ public class EstatioAppHomePage {
             return "No Person set up for current user";
         }
         return choices0AssignTasksToMe().isEmpty() ? "No tasks to assign" : null;
+    }
+
+    @Collection(notPersisted = true)
+    public List<TaskOverview> getAssignedTasksPerPerson() {
+        return taskReminderService.getTaskOverviews();
+    }
+
+    public EstatioAppHomePage sendReminder(final Person recipient) {
+        taskReminderService.getTaskOverviewForPerson(recipient).sendReminder();
+        return this;
+    }
+
+    public String disableSendReminder() {
+        return choices0SendReminder().isEmpty() ? "There are no persons with overdue tasks" : null;
+    }
+
+    public List<Person> choices0SendReminder() {
+        return getAssignedTasksPerPerson().stream()
+                .filter(to -> !to.getListOfTasksOverdue().isEmpty())
+                .map(TaskOverview::getPerson)
+                .collect(Collectors.toList());
+    }
+
+    public String validateSendReminder(final Person recipient) {
+        // TODO: add command and invalidate if reminder has been sent today already, or no email address config'd
+        return null;
     }
 
 
@@ -303,5 +332,7 @@ public class EstatioAppHomePage {
     @Inject
     UpcomingPaymentService upcomingPaymentService;
 
+    @Inject
+    private TaskReminderService taskReminderService;
 
 }
