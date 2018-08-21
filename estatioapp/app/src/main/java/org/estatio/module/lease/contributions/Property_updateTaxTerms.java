@@ -9,6 +9,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.message.MessageService;
 
@@ -26,7 +27,7 @@ public class Property_updateTaxTerms {
         this.property = property;
     }
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE, restrictTo = RestrictTo.PROTOTYPING)
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public Property updateTaxTerms(final LocalDate paymentDate) {
         leaseRepository.findByAssetAndActiveOnDate(property, paymentDate).forEach(lease->{
