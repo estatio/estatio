@@ -19,6 +19,7 @@
 package org.estatio.module.lease.app;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -43,18 +44,20 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 
+import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyEvaluator;
 
 import org.incode.module.base.dom.utils.JodaPeriodUtils;
 import org.incode.module.base.dom.utils.StringUtils;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
 import org.estatio.module.asset.dom.EstatioApplicationTenancyRepositoryForProperty;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.FixedAssetRepository;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
@@ -238,7 +241,7 @@ public class LeaseMenu {
             final LeaseItemType leaseItemType,
             final LocalDate untilDate) {
         DateTime start = DateTime.now();
-        List<Lease> leases = allLeases();
+        List<Lease> leases = filterForUser(allLeases());
         for (Lease lease : leases) {
             for (LeaseItem leaseItem : lease.getItems()) {
                 if (leaseItem.getType().equals(leaseItemType)) {
@@ -248,6 +251,13 @@ public class LeaseMenu {
         }
         Period p = new Period(start, DateTime.now());
         return String.format("Verified %d leases in %s", leases.size(), JodaPeriodUtils.asString(p));
+    }
+
+    List<Lease> filterForUser(List<Lease> leasesToFilter){
+        return leasesToFilter.
+                stream()
+                .filter(lease -> applicationTenancyEvaluator.hides(lease, meService.me())==null || applicationTenancyEvaluator.hides(lease, meService.me()).isEmpty())
+                .collect(Collectors.toList());
     }
 
     @Action(semantics = SemanticsOf.SAFE)
@@ -287,5 +297,11 @@ public class LeaseMenu {
 
     @Inject
     private LeaseTypeRepository leaseTypeRepository;
+
+    @Inject
+    private ApplicationTenancyEvaluator applicationTenancyEvaluator;
+
+    @Inject
+    private MeService meService;
 
 }
