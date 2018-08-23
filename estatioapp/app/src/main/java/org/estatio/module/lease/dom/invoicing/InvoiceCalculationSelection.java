@@ -24,20 +24,9 @@ public enum InvoiceCalculationSelection {
     ALL_DISCOUNT(
             LeaseItemType.RENT_DISCOUNT_FIXED,
             LeaseItemType.RENT_DISCOUNT),
-    ALL_ITEMS_USED(
+    DEFAULT_ITEMS(
             LeaseItemType.RENT,
-            LeaseItemType.RENT_DISCOUNT,
-            LeaseItemType.RENT_FIXED,
-            LeaseItemType.RENT_DISCOUNT_FIXED,
-            LeaseItemType.SERVICE_CHARGE,
-            LeaseItemType.SERVICE_CHARGE_INDEXABLE,
-            LeaseItemType.SERVICE_CHARGE_DISCOUNT_FIXED,
-            LeaseItemType.TAX,
-            LeaseItemType.TURNOVER_RENT,
-            LeaseItemType.ENTRY_FEE,
-            LeaseItemType.DEPOSIT,
-            LeaseItemType.MARKETING,
-            LeaseItemType.PROPERTY_TAX
+            LeaseItemType.SERVICE_CHARGE
     ),
     ALL_ITEMS(
             LeaseItemType.RENT,
