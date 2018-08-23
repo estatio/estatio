@@ -60,21 +60,21 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
+import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.platform.docfragment.FragmentRenderService;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceAttributeName;
 import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.invoicing.ssrs.InvoiceAttributesVM;
 import org.estatio.module.lease.dom.invoicing.ssrs.InvoiceItemAttributesVM;
-import org.estatio.module.base.dom.EstatioRole;
+import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.numerator.dom.Numerator;
 
 import lombok.Getter;
@@ -437,6 +437,7 @@ public class InvoiceForLease
             if (!hide$$() && disable$$() == null) {
                 invoiceForLease.setStatus(InvoiceStatus.APPROVED);
                 invoiceForLease.setRunId(null);
+                invoiceForLease.resetDescriptions();
             }
         }
 
@@ -717,8 +718,16 @@ public class InvoiceForLease
         }
     }
 
+    @Programmatic
+    public InvoiceForLease resetDescriptions() {
+        updateAttribute(InvoiceAttributeName.INVOICE_DESCRIPTION, fragmentRenderService.render(new InvoiceAttributesVM(this), InvoiceAttributeName.INVOICE_DESCRIPTION.getFragmentName()),
+                Invoice.InvoiceAttributeAction.RESET);
+        updateAttribute(InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION, fragmentRenderService.render(new InvoiceAttributesVM(this), InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION.getFragmentName()),
+                Invoice.InvoiceAttributeAction.RESET);
+        return this;
+    }
+
     @javax.inject.Inject
     FragmentRenderService fragmentRenderService;
-
 
 }
