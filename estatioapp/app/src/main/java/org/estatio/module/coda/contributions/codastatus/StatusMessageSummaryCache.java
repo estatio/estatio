@@ -70,6 +70,7 @@ public class StatusMessageSummaryCache implements WithTransactionScope {
     @Programmatic
     public StatusMessageSummary findFor(final InvoiceForLease invoice) {
         final Long invoiceId = idFor(invoice);
+        if (invoiceId==null) return null;
 
         Optional<StatusMessageSummary> statusMessageOpt = statusMessageByInvoiceId.get(invoiceId);
         if (statusMessageOpt == null) {
@@ -96,7 +97,7 @@ public class StatusMessageSummaryCache implements WithTransactionScope {
         return (List<InvoiceIdAndStatusMessageSummary>) query.executeWithMap(ImmutableMap.of("invoiceId", invoiceId));
     }
 
-    private Long idFor(final Object object) {
+    Long idFor(final Object object) {
         return factoryService.mixin(Persistable_datanucleusIdLong.class, object).prop();
     }
 
