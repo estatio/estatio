@@ -40,14 +40,10 @@ import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.fixtures.property.builders.PropertyAndUnitsAndOwnerAndManagerBuilder;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.lease.contributions.Property_updateTaxTerms;
 import org.estatio.module.lease.contributions.Property_vacantUnits;
-import org.estatio.module.lease.dom.LeaseItem;
-import org.estatio.module.lease.dom.LeaseTermForTax;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTax_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -182,94 +178,6 @@ public class Property_IntegTest extends LeaseModuleIntegTestAbstract {
             // then
             //
             assertThat(property.getDisposalDate()).isEqualTo(disposalDate);
-
-        }
-
-    }
-
-    public static class SetPaymentDateForTax extends Property_IntegTest {
-
-        @Before
-        public void setupData() {
-            runFixtureScript(new FixtureScript() {
-                @Override
-                protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, LeaseItemForTax_enum.OxfTopModel001Gb.builder());
-                }
-            });
-        }
-
-        @Test
-        public void set_payment_date_for_tax_works() throws Exception {
-
-            // given
-            Property oxf = Property_enum.OxfGb.findUsing(serviceRegistry);
-            LocalDate paymentDate = new LocalDate(2011,7,15);
-
-            // when
-            mixin(Property_updateTaxTerms.class, oxf).updateTaxTerms(paymentDate);
-
-            // then
-            LeaseItem itemForTax = LeaseItemForTax_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
-            assertThat(itemForTax.getTerms()).hasSize(2);
-            LeaseTermForTax termForTax  = (LeaseTermForTax) itemForTax.getTerms().last();
-            assertThat(termForTax.getPaymentDate()).isEqualTo(paymentDate);
-
-        }
-
-        @Test
-        public void payment_date_for_tax_not_overridden_when_already_set() throws Exception {
-
-            // given
-            Property oxf = Property_enum.OxfGb.findUsing(serviceRegistry);
-            LocalDate paymentDate = new LocalDate(2011,7,15);
-            LocalDate secondPaymentDate = new LocalDate(2011,7,16);
-
-            // when
-            mixin(Property_updateTaxTerms.class, oxf).updateTaxTerms(paymentDate);
-            mixin(Property_updateTaxTerms.class, oxf).updateTaxTerms(secondPaymentDate);
-
-            // then
-            LeaseItem itemForTax = LeaseItemForTax_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
-            assertThat(itemForTax.getTerms()).hasSize(2);
-            LeaseTermForTax termForTax  = (LeaseTermForTax) itemForTax.getTerms().last();
-            assertThat(termForTax.getPaymentDate()).isEqualTo(paymentDate);
-
-        }
-
-        @Test
-        public void payment_date_for_tax_not_set_when_not_payment_date_after_end_date() throws Exception {
-
-            // given
-            Property oxf = Property_enum.OxfGb.findUsing(serviceRegistry);
-            LocalDate paymentDate = new LocalDate(2022,7,15);
-
-            // when
-            mixin(Property_updateTaxTerms.class, oxf).updateTaxTerms(paymentDate);
-
-            // then
-            LeaseItem itemForTax = LeaseItemForTax_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
-            assertThat(itemForTax.getTerms()).hasSize(12);
-            LeaseTermForTax termForTax  = (LeaseTermForTax) itemForTax.getTerms().last();
-            assertThat(termForTax.getPaymentDate()).isNull();
-
-        }
-
-        @Test
-        public void payment_date_for_tax_not_set_when_not_payment_date_before_start_date() throws Exception {
-
-            // given
-            Property oxf = Property_enum.OxfGb.findUsing(serviceRegistry);
-            LocalDate paymentDate = new LocalDate(2010,7,14);
-
-            // when
-            mixin(Property_updateTaxTerms.class, oxf).updateTaxTerms(paymentDate);
-
-            // then
-            LeaseItem itemForTax = LeaseItemForTax_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
-            assertThat(itemForTax.getTerms()).hasSize(1);
-            LeaseTermForTax termForTax  = (LeaseTermForTax) itemForTax.getTerms().last();
-            assertThat(termForTax.getPaymentDate()).isNull();
 
         }
 
