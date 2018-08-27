@@ -46,17 +46,31 @@ public class IncomingInvoiceDownloadManager_Test {
                         new LocalDate(2017, 1, 1),
                         new LocalDate(2017, 1, 30),
                         new LocalDate(2017, 1, 31));
+        Country france = new Country("FRA", "FR", "France" );
+        Country belgium = new Country("BEL", "BE", "Belgium" );
+        Property property1 = new Property();
+        property1.setCountry(france);
+        Property property2 = new Property();
+        property2.setCountry(france);
+        Property property3 = new Property();
+        property3.setCountry(belgium);
+
         IncomingInvoiceItem item1 = new IncomingInvoiceItem(){
             @Override public FixedAsset getFixedAsset() {
-                return new Property();
+                return property1;
             }
         };
         IncomingInvoiceItem item2 = new IncomingInvoiceItem(){
             @Override public FixedAsset getFixedAsset() {
-                return new Property();
+                return property2;
             }
         };
-        IncomingInvoiceItem item3 = new IncomingInvoiceItem();
+        IncomingInvoiceItem item3 = new IncomingInvoiceItem(){
+            @Override public FixedAsset getFixedAsset() {
+                return property3;
+            }
+        };
+        IncomingInvoiceItem item4 = new IncomingInvoiceItem();
 
         // expect
         context.checking(new Expectations(){{
@@ -71,11 +85,12 @@ public class IncomingInvoiceDownloadManager_Test {
         }});
 
         // when
-        List<IncomingInvoiceItem> result = manager.getReportedInvoiceItemsWithPropertyForPeriod(startDate, endDate);
+        List<IncomingInvoiceItem> result = manager.getReportedInvoiceItemsWithPropertyForPeriodAndCountry(startDate, endDate, france);
 
         // then
         assertThat(result.size()).isEqualTo(2);
         assertThat(result).doesNotContain(item3);
+        assertThat(result).doesNotContain(item4);
 
     }
 

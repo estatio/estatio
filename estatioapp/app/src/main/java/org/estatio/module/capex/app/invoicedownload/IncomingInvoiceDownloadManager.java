@@ -47,6 +47,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.zip.impl.ZipService;
 
+import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.base.platform.applib.ReasonBuffer2;
@@ -294,9 +295,9 @@ public class IncomingInvoiceDownloadManager {
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    public Blob downloadToExcelForAllProperties(final LocalDate startDate, final LocalDate endDate, @Nullable final String fileName) {
+    public Blob downloadToExcelForAllProperties(final LocalDate startDate, final LocalDate endDate, final Country country, @Nullable final String fileName) {
 
-        final List<IncomingInvoiceExport> exports = getReportedInvoiceItemsWithPropertyForPeriod(startDate, endDate).stream()
+        final List<IncomingInvoiceExport> exports = getReportedInvoiceItemsWithPropertyForPeriodAndCountry(startDate, endDate, country).stream()
                 .map(item -> new IncomingInvoiceExport(
                         item,
                         documentNumberFor(item),
@@ -318,7 +319,11 @@ public class IncomingInvoiceDownloadManager {
         return startDate!=null ? incomingInvoiceItemRepository.findDistinctReportDates().stream().filter(x->!x.isBefore(startDate)).collect(Collectors.toList()) : null;
     }
 
-    public String validateDownloadToExcelForAllProperties(final LocalDate startDate, final LocalDate endDate, final String fileName){
+    public List<Country> choices2DownloadToExcelForAllProperties(){
+        return countryServiceForCurrentUser.countriesForCurrentUser();
+    }
+
+    public String validateDownloadToExcelForAllProperties(final LocalDate startDate, final LocalDate endDate, final Country country, final String fileName){
         if (endDate.isBefore(startDate)) return "End date cannot be before start date";
         return null;
     }
@@ -335,13 +340,26 @@ public class IncomingInvoiceDownloadManager {
     }
 
     @Programmatic
-    List<IncomingInvoiceItem> getReportedInvoiceItemsWithPropertyForPeriod(final LocalDate startDate, final LocalDate endDate){
+    List<IncomingInvoiceItem> getReportedInvoiceItemsWithPropertyForPeriodAndCountry(final LocalDate startDate, final LocalDate endDate, final Country country){
         List<IncomingInvoiceItem> result = new ArrayList<>();
         List<LocalDate> reportedDatesInRange = incomingInvoiceItemRepository.findDistinctReportDates().stream().filter(x->!x.isBefore(startDate) && !x.isAfter(endDate)).collect(Collectors.toList());
         for (LocalDate reportedDate : reportedDatesInRange){
-            result.addAll(incomingInvoiceItemRepository.findCompletedOrLaterByReportedDate(reportedDate).stream().filter(x->x.getFixedAsset()!=null).collect(Collectors.toList()));
+            result.addAll(incomingInvoiceItemRepository.findCompletedOrLaterByReportedDate(reportedDate).stream()
+                    .filter(x->x.getFixedAsset()!=null)
+                    .filter(x->hasCountry(x.getFixedAsset(), country))
+                    .collect(Collectors.toList()));
         }
         return result;
+    }
+
+    private boolean hasCountry(final FixedAsset fixedAsset, final Country country){
+        if (fixedAsset!=null && fixedAsset.getClass().isAssignableFrom(Property.class)){
+            Property castedFa = (Property) fixedAsset;
+            if (castedFa.getCountry()!=null && castedFa.getCountry()==country){
+                return true;
+            }
+        }
+        return false;
     }
 
 
