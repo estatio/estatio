@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
@@ -82,7 +83,9 @@ public class TaskOverview implements HasAtPath {
         return taskReminderService.disableSendReminder(person, getListOfTasksOverdue());
     }
 
-    @Override public String getAtPath() {
+    @Override
+    @Programmatic
+    public String getAtPath() {
         return person.getAtPath();
     }
 
