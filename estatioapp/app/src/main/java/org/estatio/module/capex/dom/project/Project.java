@@ -57,6 +57,8 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
@@ -71,6 +73,8 @@ import org.incode.module.docfragment.dom.types.AtPathType;
 
 import org.estatio.module.base.dom.UdoDomainObject;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
+import org.estatio.module.capex.dom.invoice.contributions.Project_InvoiceItemsNotOnProjectItem;
+import org.estatio.module.capex.dom.order.contributions.Project_OrderItemsNotOnProjectItem;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.tax.dom.Tax;
@@ -184,7 +188,24 @@ public class Project extends UdoDomainObject<Project> implements
                 .collect(Collectors.toList());
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
+	@Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+	public void delete(){
+		repositoryService.remove(this);
+	}
+
+	public boolean hideDelete() {
+    	for (ProjectItem item : getItems()){
+    		if (item.hideDelete()) return true;
+		}
+		// TODO: use events when decoupling
+        if (!factoryService.mixin(Project_InvoiceItemsNotOnProjectItem.class, this).invoiceItemsNotOnProjectItem().isEmpty() ||
+            !factoryService.mixin(Project_OrderItemsNotOnProjectItem.class, this).orderItemsNotOnProjectItem().isEmpty()){
+                return true;
+            }
+		return false;
+	}
+	
+	@Action(semantics = SemanticsOf.IDEMPOTENT)
     public Project changeDates(@Parameter(optionality = Optionality.OPTIONAL) final LocalDate startDate, @Parameter(optionality = Optionality.OPTIONAL) final LocalDate endDate) {
         setStartDate(startDate);
         setEndDate(endDate);
@@ -353,5 +374,12 @@ public class Project extends UdoDomainObject<Project> implements
 
     @Inject
     WrapperFactory wrapperFactory;
+
+	@Inject
+	RepositoryService repositoryService;
+
+	@Inject
+    FactoryService factoryService;
+
 
 }

@@ -20,6 +20,7 @@ package org.estatio.module.capex.dom.project;
 
 import java.math.BigDecimal;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -44,6 +45,8 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -53,8 +56,10 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 import org.estatio.module.base.dom.UdoDomainObject;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.capex.dom.invoice.contributions.ProjectItem_IncomingInvoiceItems;
 import org.estatio.module.capex.dom.items.FinancialItem;
 import org.estatio.module.capex.dom.items.FinancialItemType;
+import org.estatio.module.capex.dom.order.contributions.ProjectItem_OrderItems;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.tax.dom.Tax;
 
@@ -140,6 +145,18 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> implements Financi
 		return this;
 	}
 
+	@Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+	public void delete(){
+		repositoryService.remove(this);
+	}
+
+	public boolean hideDelete() {
+		// TODO: use events when decoupling in the future
+		if (factoryService.mixin(ProjectItem_OrderItems.class, this).orderItems().isEmpty() &&
+			factoryService.mixin(ProjectItem_IncomingInvoiceItems.class, this).invoiceItems().isEmpty()) return false;
+		return true;
+	}
+
 	@Override
 	@Programmatic
 	public ApplicationTenancy getApplicationTenancy() {
@@ -163,4 +180,10 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> implements Financi
 	public FixedAsset<?> getFixedAsset() {
 		return getProperty();
 	}
+
+	@Inject
+	RepositoryService repositoryService;
+
+	@Inject
+	FactoryService factoryService;
 }
