@@ -26,7 +26,16 @@ public enum InvoiceCalculationSelection {
             LeaseItemType.RENT_DISCOUNT),
     DEFAULT_ITEMS(
             LeaseItemType.RENT,
-            LeaseItemType.SERVICE_CHARGE
+            LeaseItemType.RENT_FIXED,
+            LeaseItemType.RENT_DISCOUNT,
+            LeaseItemType.RENT_DISCOUNT_FIXED,
+            LeaseItemType.SERVICE_CHARGE,
+            LeaseItemType.SERVICE_CHARGE_INDEXABLE,
+            LeaseItemType.SERVICE_CHARGE_DISCOUNT_FIXED,
+            LeaseItemType.DEPOSIT,
+            LeaseItemType.TAX,
+            LeaseItemType.MARKETING,
+            LeaseItemType.PROPERTY_TAX
     ),
     ALL_ITEMS(
             LeaseItemType.RENT,
