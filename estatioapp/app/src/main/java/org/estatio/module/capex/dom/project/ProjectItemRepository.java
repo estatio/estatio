@@ -1,6 +1,7 @@
 package org.estatio.module.capex.dom.project;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -13,6 +14,7 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.tax.dom.Tax;
 
@@ -20,7 +22,11 @@ import org.estatio.module.tax.dom.Tax;
         nature = NatureOfService.DOMAIN,
         repositoryFor = ProjectItem.class
 )
-public class ProjectItemRepository {
+public class ProjectItemRepository extends UdoDomainRepositoryAndFactory<ProjectItem> {
+
+    public ProjectItemRepository() {
+        super(ProjectItemRepository.class, ProjectItem.class);
+    }
 
     @Programmatic
     public ProjectItem findByProjectAndCharge(final Project project, final Charge charge) {
@@ -76,6 +82,10 @@ public class ProjectItemRepository {
         return projectItem;
     }
 
+    @Programmatic
+    public List<ProjectItem> listAll(){
+        return allInstances();
+    }
 
     @Inject
     RepositoryService repositoryService;

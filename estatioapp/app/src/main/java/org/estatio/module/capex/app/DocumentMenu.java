@@ -103,6 +103,7 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
     }
 
     String overrideUserAtPathUsingDocumentName(final String atPath, final String documentName){
+        if (!isBarcode(documentName)) return atPath; // country prefix can be derived from barcodes only
         String countryPrefix = documentBarcodeService.countryPrefixFromBarcode(documentName);
         if (countryPrefix == null) return atPath;
         switch (countryPrefix) {
@@ -113,6 +114,10 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
             default:
                 return atPath;
         }
+    }
+
+    private boolean isBarcode(final String documentName) {
+        return documentName.replace(".pdf", "").matches("\\d+");
     }
 
     @Inject

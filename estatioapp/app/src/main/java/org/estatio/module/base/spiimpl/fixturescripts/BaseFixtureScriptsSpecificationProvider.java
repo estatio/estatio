@@ -33,7 +33,7 @@ public class BaseFixtureScriptsSpecificationProvider implements FixtureScriptsSp
     }
 
     protected FixtureScriptsSpecification.Builder builder() {
-        return FixtureScriptsSpecification.builder(BaseFixtureScriptsSpecificationProvider.class)
+        return FixtureScriptsSpecification.builder("org.estatio")
                 .withRunScriptDropDown(FixtureScriptsSpecification.DropDownPolicy.CHOICES)
                 // this can be overridden on a fixture-by-fixture basis if the fixture implements FixtureScriptWithExecutionStrategy
                 .with(FixtureScripts.MultipleExecutionStrategy.EXECUTE_ONCE_BY_CLASS);

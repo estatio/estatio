@@ -103,5 +103,8 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
     @Inject
     private NumeratorRepository numeratorRepository;
 
+    @Inject
+    PartyRepository partyRepository;
+
 
 }

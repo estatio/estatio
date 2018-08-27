@@ -22,7 +22,7 @@ public class DocumentMenu_Test {
         // given
         DocumentMenu menu = new DocumentMenu();
         menu.documentBarcodeService = mockDocumentBarcodeService;
-        String barcode = "6010012345";
+        String barcode = "6010012345.pdf";
         String userAtPath = "/FRA";
 
         // expect
@@ -45,7 +45,7 @@ public class DocumentMenu_Test {
         // given
         DocumentMenu menu = new DocumentMenu();
         menu.documentBarcodeService = mockDocumentBarcodeService;
-        String barcode = "6010012345";
+        String barcode = "6010012345.pdf";
         String userAtPath = "/FRA";
 
         // expect
@@ -62,4 +62,19 @@ public class DocumentMenu_Test {
 
     }
 
+    @Test
+    public void overrideUserAtPathUsingDocumentName_works_when_not_barcode() throws Exception {
+
+        // given
+        DocumentMenu menu = new DocumentMenu();
+        String filename = "3625 GIG 679 226 - ASF srl.pdf";
+        String userAtPath = "/ITA";
+
+        // when
+        String overriddenAtPath = menu.overrideUserAtPathUsingDocumentName(userAtPath, filename);
+
+        // then
+        Assertions.assertThat(overriddenAtPath).isEqualTo("/ITA");
+
+    }
 }

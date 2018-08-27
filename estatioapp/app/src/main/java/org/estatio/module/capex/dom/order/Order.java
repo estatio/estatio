@@ -46,16 +46,22 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.util.TitleBuffer;
+import org.apache.isis.applib.value.Blob;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.country.dom.impl.Country;
+import org.incode.module.document.dom.api.DocumentService;
 import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.types.DocumentType;
+import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
@@ -77,6 +83,7 @@ import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.financial.dom.utils.IBANValidator;
+import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.party.app.services.ChamberOfCommerceCodeLookUpService;
 import org.estatio.module.party.app.services.OrganisationNameNumberViewModel;
 import org.estatio.module.party.dom.Organisation;
@@ -1045,6 +1052,20 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return summary.toString();
     }
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT, restrictTo = RestrictTo.PROTOTYPING)
+    public Order attachPdf(final Blob pdf){
+        return newDocument(pdf);
+    }
+
+    @Programmatic
+    public Order newDocument(final Blob pdf){
+        Document currentDoc = lookupAttachedPdfService.lookupOrderPdfFrom(this).isPresent() ? lookupAttachedPdfService.lookupOrderPdfFrom(this).get() : null;
+        DocumentType type = DocumentTypeData.INCOMING_ORDER.findUsing(documentTypeRepository);
+        documentService.createAndAttachDocumentForBlob(type, this.getAtPath(), pdf.getName(), pdf, null, this);
+        if (currentDoc!=null) messageService.warnUser("Order now has multiple documents attached.");
+        return this;
+    }
+
     @Inject
     LookupAttachedPdfService lookupAttachedPdfService;
 
@@ -1075,5 +1096,13 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     @Inject
     ChamberOfCommerceCodeLookUpService chamberOfCommerceCodeLookUpService;
 
+    @Inject
+    DocumentService documentService;
+
+    @Inject
+    DocumentTypeRepository documentTypeRepository;
+
+    @Inject
+    MessageService messageService;
 
 }
