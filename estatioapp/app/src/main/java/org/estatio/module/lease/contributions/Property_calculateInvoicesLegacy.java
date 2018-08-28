@@ -57,7 +57,7 @@ public class Property_calculateInvoicesLegacy {
     }
 
     public InvoiceCalculationSelection default1Exec() {
-        return invoiceServiceMenu.default2CalculateInvoicesForPropertyLegacy();
+        return invoiceServiceMenu.default2CalculateInvoicesForPropertyLegacy(property);
     }
 
     public LocalDate default2Exec() {

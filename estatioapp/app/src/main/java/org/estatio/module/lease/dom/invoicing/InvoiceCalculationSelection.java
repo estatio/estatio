@@ -18,13 +18,13 @@ public enum InvoiceCalculationSelection {
             LeaseItemType.RENT,
             LeaseItemType.RENT_FIXED,
             LeaseItemType.RENT_DISCOUNT),
-    ALL_SERVICE_CHARGE(
-            LeaseItemType.SERVICE_CHARGE,
-            LeaseItemType.SERVICE_CHARGE_INDEXABLE),
-    ALL_DISCOUNT(
-            LeaseItemType.RENT_DISCOUNT_FIXED,
-            LeaseItemType.RENT_DISCOUNT),
-    DEFAULT_ITEMS(
+    // NOTE: called in f.e. InvoiceServiceMenu#doDefault2CalculateInvoicesForProperty() using InvoiceCalculationSelection.values()[2];
+    DEFAULT_ITEMS_ITA(
+            LeaseItemType.RENT,
+            LeaseItemType.SERVICE_CHARGE
+    ),
+    // NOTE: called in f.e. InvoiceServiceMenu#doDefault2CalculateInvoicesForProperty() using InvoiceCalculationSelection.values()[3];
+    DEFAULT_ITEMS_FRA(
             LeaseItemType.RENT,
             LeaseItemType.RENT_FIXED,
             LeaseItemType.RENT_DISCOUNT,
@@ -53,26 +53,8 @@ public enum InvoiceCalculationSelection {
             LeaseItemType.MARKETING,
             LeaseItemType.PROPERTY_TAX
     ),
-    ONLY_RENT(
-            LeaseItemType.RENT),
-    ONLY_RENT_DISCOUNT(
-            LeaseItemType.RENT_DISCOUNT),
-    ONLY_RENT_FIXED(
-            LeaseItemType.RENT_FIXED),
-    ONLY_TURNOVER_RENT(
-            LeaseItemType.TURNOVER_RENT),
-    ONLY_SERVICE_CHARGE(
-            LeaseItemType.SERVICE_CHARGE),
-    ONLY_SERVICE_CHARGE_INDEXABLE(
-            LeaseItemType.SERVICE_CHARGE),
-    ONLY_DISCOUNT(
-            LeaseItemType.RENT_DISCOUNT_FIXED),
-    ONLY_ENTRY_FEE(
-            LeaseItemType.ENTRY_FEE),
     ONLY_DEPOSIT(
-            LeaseItemType.DEPOSIT),
-    ONLY_TAX(
-            LeaseItemType.TAX)
+            LeaseItemType.DEPOSIT)
     ;
 
     private LeaseItemType[] selectedTypes;

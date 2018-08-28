@@ -50,7 +50,7 @@ public class Lease_calculate {
     }
 
     public List<LeaseItemType> default1Exec() {
-        return invoiceServiceMenu.default2Calculate();
+        return invoiceServiceMenu.default2Calculate(lease);
     }
 
     public LocalDate default2Exec() {

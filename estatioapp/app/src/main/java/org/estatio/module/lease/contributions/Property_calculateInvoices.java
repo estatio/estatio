@@ -60,7 +60,7 @@ public class Property_calculateInvoices {
     }
 
     public List<LeaseItemType> default1Exec() {
-        return invoiceServiceMenu.default2CalculateInvoicesForProperty();
+        return invoiceServiceMenu.default2CalculateInvoicesForProperty(property);
     }
 
     public LocalDate default2Exec() {

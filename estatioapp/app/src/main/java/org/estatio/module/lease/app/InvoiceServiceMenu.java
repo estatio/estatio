@@ -73,8 +73,8 @@ public class InvoiceServiceMenu extends UdoDomainService<InvoiceServiceMenu> {
         return doDefault1CalculateInvoicesForProperty();
     }
 
-    public InvoiceCalculationSelection default2CalculateInvoicesForPropertyLegacy() {
-        return doDefault2CalculateInvoicesForProperty();
+    public InvoiceCalculationSelection default2CalculateInvoicesForPropertyLegacy(final Property property) {
+        return doDefault2CalculateInvoicesForProperty(property);
     }
 
     public LocalDate default3CalculateInvoicesForPropertyLegacy() {
@@ -134,8 +134,8 @@ public class InvoiceServiceMenu extends UdoDomainService<InvoiceServiceMenu> {
         return doDefault1CalculateInvoicesForProperty();
     }
 
-    public List<LeaseItemType> default2CalculateInvoicesForProperty() {
-        return doDefault2CalculateInvoicesForProperty().selectedTypes();
+    public List<LeaseItemType> default2CalculateInvoicesForProperty(final Property property) {
+        return doDefault2CalculateInvoicesForProperty(property).selectedTypes();
     }
 
     public LocalDate default3CalculateInvoicesForProperty() {
@@ -189,8 +189,11 @@ public class InvoiceServiceMenu extends UdoDomainService<InvoiceServiceMenu> {
         return InvoiceRunType.values()[0];
     }
 
-    private InvoiceCalculationSelection doDefault2CalculateInvoicesForProperty() {
-        return InvoiceCalculationSelection.values()[4];
+    private InvoiceCalculationSelection doDefault2CalculateInvoicesForProperty(final Property property) {
+        if (property.getCountry()!=null && property.getCountry().getReference().equals("ITA")){
+            return InvoiceCalculationSelection.values()[2];
+        }
+        return InvoiceCalculationSelection.values()[3];
     }
 
     private LocalDate doDefault3CalculateInvoicesForProperty() {
@@ -304,8 +307,8 @@ public class InvoiceServiceMenu extends UdoDomainService<InvoiceServiceMenu> {
         return doDefault1Calculate();
     }
 
-    public InvoiceCalculationSelection default2CalculateLegacy() {
-        return doDefault2Calculate();
+    public InvoiceCalculationSelection default2CalculateLegacy(final Lease lease) {
+        return doDefault2Calculate(lease);
     }
 
     public LocalDate default3CalculateLegacy() {
@@ -357,8 +360,8 @@ public class InvoiceServiceMenu extends UdoDomainService<InvoiceServiceMenu> {
         return doDefault1Calculate();
     }
 
-    public List<LeaseItemType> default2Calculate() {
-        return doDefault2Calculate().selectedTypes();
+    public List<LeaseItemType> default2Calculate(final Lease lease) {
+        return doDefault2Calculate(lease).selectedTypes();
     }
 
     public LocalDate default3Calculate() {
@@ -414,8 +417,11 @@ public class InvoiceServiceMenu extends UdoDomainService<InvoiceServiceMenu> {
         return InvoiceRunType.values()[0];
     }
 
-    private InvoiceCalculationSelection doDefault2Calculate() {
-        return InvoiceCalculationSelection.values()[4];
+    private InvoiceCalculationSelection doDefault2Calculate(final Lease lease) {
+        if (lease.getProperty()!=null && lease.getProperty().getCountry()!=null && lease.getProperty().getCountry().getReference().equals("ITA")){
+            return InvoiceCalculationSelection.values()[2];
+        }
+        return InvoiceCalculationSelection.values()[3];
     }
 
     private LocalDate doDefault3Calculate() {

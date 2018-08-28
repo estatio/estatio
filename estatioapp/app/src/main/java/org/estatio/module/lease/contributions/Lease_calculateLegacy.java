@@ -46,7 +46,7 @@ public class Lease_calculateLegacy {
     }
 
     public InvoiceCalculationSelection default1Exec() {
-        return invoiceServiceMenu.default2CalculateLegacy();
+        return invoiceServiceMenu.default2CalculateLegacy(lease);
     }
 
     public LocalDate default2Exec() {
