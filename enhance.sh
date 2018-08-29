@@ -1,3 +1,2 @@
 #!/usr/bin/env bash
-mvn datanucleus:enhance -pl estatioapp/app -DmetadataDirectory="target/classes" -o
-mvn datanucleus:enhance -pl estatioapp/app -DmetadataDirectory="target/test-classes" -o
+mvn datanucleus:enhance@process-classes datanucleus:enhance@process-test-classes -pl estatioapp/app -o
