@@ -28,6 +28,7 @@ import org.apache.isis.core.metamodel.services.jdosupport.Persistable_datanucleu
 
 import org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage;
 
+import org.estatio.module.coda.dom.DatabaseInferrerService;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 
 import lombok.Getter;
@@ -37,6 +38,8 @@ import lombok.Setter;
         nature = NatureOfService.DOMAIN
 )
 public class StatusMessageSummaryCache implements WithTransactionScope {
+
+    private String sql;
 
     public static class InvoiceIdAndStatusMessageSummary {
         @Getter @Setter
@@ -102,7 +105,16 @@ public class StatusMessageSummaryCache implements WithTransactionScope {
     }
 
     private String readSql() {
-        final URL resource = Resources.getResource(getClass(), "StatusMessageSummaryCache~findFor.sql");
+        if(sql == null) {
+            sql = readSqlFromResource();
+        }
+        return sql;
+    }
+
+    private String readSqlFromResource() {
+        final URL resource = Resources.getResource(getClass(),
+                String.format("StatusMessageSummaryCache~findFor.%s.sql",
+                              databaseInferrerService.getDriver().lowerCaseName()));
         final String s;
         try {
             s = Resources.toString(resource, Charsets.UTF_8);
@@ -137,4 +149,6 @@ public class StatusMessageSummaryCache implements WithTransactionScope {
     IsisJdoSupport isisJdoSupport;
     @Inject
     FactoryService factoryService;
+    @Inject
+    DatabaseInferrerService databaseInferrerService;
 }
