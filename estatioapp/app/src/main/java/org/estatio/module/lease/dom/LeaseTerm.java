@@ -30,6 +30,8 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Unique;
+import javax.jdo.annotations.Uniques;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -88,6 +90,10 @@ import lombok.Setter;
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
+@Uniques({
+        @Unique(
+                name = "LeaseTerm_leaseItem_startDate_sequence_UNQ",
+                members = {"leaseItem", "startDate", "sequence"}) })
 @javax.jdo.annotations.Indices({
         @javax.jdo.annotations.Index(
                 name = "LeaseTerm_leaseItem_sequence_IDX",
