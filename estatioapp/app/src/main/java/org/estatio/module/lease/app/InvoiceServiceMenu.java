@@ -17,8 +17,12 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.module.base.dom.UdoDomainService;
+import org.incode.module.country.dom.impl.CountryRepository;
+
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.base.dom.UdoDomainService;
+import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
+import org.estatio.module.countryapptenancy.dom.CountryServiceForCurrentUser;
 import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItemType;
@@ -28,7 +32,6 @@ import org.estatio.module.lease.dom.invoicing.InvoiceCalculationSelection;
 import org.estatio.module.lease.dom.invoicing.InvoiceCalculationService;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForInvoiceRun;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForInvoiceRunRepository;
-import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -73,8 +76,8 @@ public class InvoiceServiceMenu extends UdoDomainService<InvoiceServiceMenu> {
         return doDefault1CalculateInvoicesForProperty();
     }
 
-    public InvoiceCalculationSelection default2CalculateInvoicesForPropertyLegacy(final Property property) {
-        return doDefault2CalculateInvoicesForProperty(property);
+    public InvoiceCalculationSelection default2CalculateInvoicesForPropertyLegacy() {
+        return doDefault2CalculateInvoicesForProperty();
     }
 
     public LocalDate default3CalculateInvoicesForPropertyLegacy() {
@@ -134,8 +137,8 @@ public class InvoiceServiceMenu extends UdoDomainService<InvoiceServiceMenu> {
         return doDefault1CalculateInvoicesForProperty();
     }
 
-    public List<LeaseItemType> default2CalculateInvoicesForProperty(final Property property) {
-        return doDefault2CalculateInvoicesForProperty(property).selectedTypes();
+    public List<LeaseItemType> default2CalculateInvoicesForProperty() {
+        return doDefault2CalculateInvoicesForProperty().selectedTypes();
     }
 
     public LocalDate default3CalculateInvoicesForProperty() {
@@ -189,8 +192,8 @@ public class InvoiceServiceMenu extends UdoDomainService<InvoiceServiceMenu> {
         return InvoiceRunType.values()[0];
     }
 
-    private InvoiceCalculationSelection doDefault2CalculateInvoicesForProperty(final Property property) {
-        if (property.getCountry()!=null && property.getCountry().getReference().equals("ITA")){
+    InvoiceCalculationSelection doDefault2CalculateInvoicesForProperty() {
+        if (countryServiceForCurrentUser.countriesForCurrentUser().contains(countryRepository.findCountry("ITA"))){
             return InvoiceCalculationSelection.values()[2];
         }
         return InvoiceCalculationSelection.values()[3];
@@ -470,6 +473,12 @@ public class InvoiceServiceMenu extends UdoDomainService<InvoiceServiceMenu> {
 
     @javax.inject.Inject
     private InvoiceSummaryForInvoiceRunRepository invoiceSummaries;
+
+    @javax.inject.Inject
+    CountryRepository countryRepository;
+
+    @javax.inject.Inject
+    CountryServiceForCurrentUser countryServiceForCurrentUser;
 
 
 
