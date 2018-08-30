@@ -8,11 +8,11 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.services.dto.DtoMappingHelper;
 
 import org.estatio.canonical.bankaccountsandmandates.v2.BankAccountsAndMandatesDto;
 import org.estatio.canonical.bankmandate.v2.BankMandateType;
 import org.estatio.canonical.financial.v2.BankAccountType;
+import org.estatio.module.agreement.dom.Agreement;
 import org.estatio.module.agreement.dom.AgreementRole;
 import org.estatio.module.agreement.dom.AgreementRoleRepository;
 import org.estatio.module.agreement.dom.role.AgreementRoleType;
@@ -41,29 +41,47 @@ public class PartyBankAccountsAndMandatesDtoFactory extends DtoFactoryAbstract {
 
         final BankAccountsAndMandatesDto dto = new BankAccountsAndMandatesDto();
 
-        final List<FinancialAccount> financialAccountList = financialAccountRepository.findAccountsByTypeOwner(FinancialAccountType.BANK_ACCOUNT, party);
-        final List<BankAccountType> bankAccountDtos =
-                financialAccountList.stream()
-                        .map(x -> bankAccountDtoFactory.newDto((BankAccount) x))
-                        .map(BankAccountType.class::cast)
-                        .collect(Collectors.toList());
-
+        final List<FinancialAccount> bankAccounts = findBankAccountsFor(party);
+        final List<BankAccountType> bankAccountDtos = asBankAccountDtos(bankAccounts);
         dto.setBankAccounts(bankAccountDtos);
 
-        final AgreementType bankMandateAt = agreementTypeRepository.find(BankMandateAgreementTypeEnum.MANDATE);
-        final AgreementRoleType debtorOfMandate = agreementRoleTypeRepository.findByAgreementTypeAndTitle(bankMandateAt, BankMandateAgreementRoleTypeEnum.DEBTOR.getTitle());
-        final List<AgreementRole> agreementRoles = agreementRoleRepository.findByPartyAndType(party, debtorOfMandate);
-
-        final List<BankMandateType> mandateDtos =
-                agreementRoles.stream()
-                        .map(AgreementRole::getAgreement)
-                        .map(x -> bankMandateDtoFactory.newDto((BankMandate) x))
-                        .map(BankMandateType.class::cast)
-                        .collect(Collectors.toList());
-
+        final List<Agreement> bankMandates = findBankMandatesFor(party);
+        final List<BankMandateType> mandateDtos = asBankMandateDtos(bankMandates);
         dto.setBankMandates(mandateDtos);
 
         return dto;
+    }
+
+    private List<FinancialAccount> findBankAccountsFor(final Party party) {
+        return financialAccountRepository.findAccountsByTypeOwner(FinancialAccountType.BANK_ACCOUNT, party);
+    }
+
+    private List<BankAccountType> asBankAccountDtos(final List<FinancialAccount> bankAccounts) {
+        return bankAccounts.stream()
+                .map(BankAccount.class::cast)
+                .map(x -> bankAccountDtoFactory.newDto(x))
+                .map(BankAccountType.class::cast)
+                .collect(Collectors.toList());
+    }
+
+    private List<Agreement> findBankMandatesFor(final Party party) {
+        final AgreementType bankMandateAt =
+                agreementTypeRepository.find(BankMandateAgreementTypeEnum.MANDATE);
+        final AgreementRoleType debtorOfMandate =
+                agreementRoleTypeRepository.findByAgreementTypeAndTitle(
+                        bankMandateAt, BankMandateAgreementRoleTypeEnum.DEBTOR.getTitle());
+        final List<AgreementRole> agreementRoles =
+                agreementRoleRepository.findByPartyAndType(party, debtorOfMandate);
+
+        return agreementRoles.stream().map(AgreementRole::getAgreement).collect(Collectors.toList());
+    }
+
+    private List<BankMandateType> asBankMandateDtos(final List<Agreement> bankMandates) {
+        return bankMandates.stream()
+                .map(BankMandate.class::cast)
+                .map(x -> bankMandateDtoFactory.newDto(x))
+                .map(BankMandateType.class::cast)
+                .collect(Collectors.toList());
     }
 
     @Inject
