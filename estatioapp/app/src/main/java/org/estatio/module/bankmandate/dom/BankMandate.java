@@ -39,12 +39,11 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.types.NameType;
 
 import org.estatio.module.agreement.dom.Agreement;
-import org.estatio.module.base.dom.Syncable;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
+import org.estatio.module.financial.dom.FinancialAccount;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -67,7 +66,7 @@ import lombok.Setter;
 @DomainObject(editing = Editing.DISABLED)
 public class BankMandate
         extends Agreement
-        implements WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted, Syncable {
+        implements WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {
 
     // //////////////////////////////////////
 

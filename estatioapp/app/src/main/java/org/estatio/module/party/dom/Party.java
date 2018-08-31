@@ -59,7 +59,6 @@ import org.incode.module.base.dom.with.WithNameComparable;
 import org.incode.module.base.dom.with.WithReferenceUnique;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
 
-import org.estatio.module.base.dom.Syncable;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRole;
@@ -140,7 +139,7 @@ import lombok.Setter;
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public abstract class Party
         extends UdoDomainObject2<Party>
-        implements WithNameComparable<Party>, WithReferenceUnique, CommunicationChannelOwner, Syncable {
+        implements WithNameComparable<Party>, WithReferenceUnique, CommunicationChannelOwner {
 
     public Party() {
         super("name");

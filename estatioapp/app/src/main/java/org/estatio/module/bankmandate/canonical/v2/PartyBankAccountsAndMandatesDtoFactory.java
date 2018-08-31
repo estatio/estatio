@@ -30,6 +30,11 @@ import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccountType;
 import org.estatio.module.party.dom.Party;
 
+/**
+ * This code is currently (as of EST-1854) unused - we have removed the ability to sync arbitrary Parties (with all of
+ * their Bank accounts and bank mandates) because it's no longer safe to assume that the party is a tenant; it could be
+ * a supplier.
+ */
 @DomainService(
         nature = NatureOfService.DOMAIN,
         objectType = "bankmandate.canonical.v2.PartyBankAccountsAndMandatesDtoFactory"
