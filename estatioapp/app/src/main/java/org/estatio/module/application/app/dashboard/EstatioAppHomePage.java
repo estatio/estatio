@@ -77,7 +77,6 @@ public class EstatioAppHomePage {
         return "Home Page";
     }
 
-
     ////////////////////////////////////////////////
 
     @Collection(notPersisted = true)
@@ -94,7 +93,6 @@ public class EstatioAppHomePage {
         return taskRepository.findIncompleteForMe();
     }
 
-
     @Action(
             semantics = SemanticsOf.IDEMPOTENT
     )
@@ -105,9 +103,6 @@ public class EstatioAppHomePage {
         return checkStateOf(getTasksForMe());
     }
 
-
-
-
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public EstatioAppHomePage assignTasksToMe(final List<Task> unassignedTasks) {
         for (Task unassignedTask : unassignedTasks) {
@@ -116,11 +111,13 @@ public class EstatioAppHomePage {
 
         return this;
     }
+
     public List<Task> choices0AssignTasksToMe() {
         return taskRepository.findIncompleteForMyRolesAndUnassigned();
     }
+
     public String disableAssignTasksToMe() {
-        if(personRepository.me() == null) {
+        if (personRepository.me() == null) {
             return "No Person set up for current user";
         }
         return choices0AssignTasksToMe().isEmpty() ? "No tasks to assign" : null;
@@ -148,10 +145,8 @@ public class EstatioAppHomePage {
     }
 
     public String validateSendReminder(final Person recipient) {
-        // TODO: add command and invalidate if reminder has been sent today already, or no email address config'd
-        return null;
+        return taskReminderService.disableSendReminder(recipient, taskReminderService.getTaskOverviewForPerson(recipient).getListOfTasksOverdue());
     }
-
 
     ////////////////////////////////////////////////
 
@@ -174,11 +169,10 @@ public class EstatioAppHomePage {
         return incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK);
     }
 
-
     @Collection(notPersisted = true)
     public List<IncomingInvoice> getIncomingInvoicesPayableByTransferNotInBatch() {
         return incomingInvoiceRepository.findNotInAnyPaymentBatchByApprovalStateAndPaymentMethod(
-                                                IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.BANK_TRANSFER);
+                IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.BANK_TRANSFER);
     }
 
     @Collection(notPersisted = true)
@@ -194,7 +188,7 @@ public class EstatioAppHomePage {
     @Collection(notPersisted = true)
     public List<IncomingInvoice> getIncomingInvoicesPayableByOther() {
         final List<IncomingInvoice> invoices = Lists.newArrayList(
-                incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.PAYABLE) );
+                incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.PAYABLE));
 
         final List<IncomingInvoice> byDirectDebit = getIncomingInvoicesPayableByDirectDebit();
         final List<IncomingInvoice> byTransfer = getIncomingInvoicesPayableAndBankTransfer();
@@ -250,7 +244,7 @@ public class EstatioAppHomePage {
     }
 
     @Collection(notPersisted = true)
-    public List<UpcomingPaymentTotal> getUpcomingPayments(){
+    public List<UpcomingPaymentTotal> getUpcomingPayments() {
         return upcomingPaymentService.getUpcomingPayments();
     }
 
@@ -270,7 +264,7 @@ public class EstatioAppHomePage {
                 final String collectionId,
                 final Class<?> collectionType,
                 final List<String> propertyIds) {
-            if(parent instanceof EstatioAppHomePage && IncomingInvoice.class.isAssignableFrom(collectionType)) {
+            if (parent instanceof EstatioAppHomePage && IncomingInvoice.class.isAssignableFrom(collectionType)) {
                 return Lists.newArrayList("seller", "property", "grossAmount", "dateReceived", "number");
             }
             return null;
