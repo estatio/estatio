@@ -180,6 +180,15 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
         return leaseTerms;
     }
 
+    @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
+    public List<LeaseTerm> findByPropertyAndType(
+            final Property property,
+            final LeaseItemType leaseItemType) {
+        return allMatches("findByPropertyAndType",
+                "property", property,
+                "leaseItemType", leaseItemType);
+    }
+
     // //////////////////////////////////////
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -205,6 +214,18 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
             }
         }
         return result.stream().sorted().collect(Collectors.toList());
+    }
+
+    @Programmatic
+    public List<LeaseTermForServiceCharge> findServiceChargeByPropertyAndItemTypeWithStartDateInPeriod(final Property property, final List<LeaseItemType> leaseItemTypes, final LocalDate startDate, final LocalDate endDate) {
+        List<LeaseTermForServiceCharge> result = new ArrayList<>();
+        for (LeaseItemType type : leaseItemTypes) {
+            result.addAll((List) findByPropertyAndType(property, type));
+        }
+        return result.stream()
+                .filter(lt->!lt.getStartDate().isBefore(startDate))
+                .filter(lt->!lt.getStartDate().isAfter(endDate))
+                .collect(Collectors.toList());
     }
 
     @Action(semantics = SemanticsOf.SAFE)

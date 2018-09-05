@@ -114,10 +114,14 @@ public class LeaseTermForTurnOverRentFixedImport implements ExcelFixtureRowHandl
         if (termToUpdate!=null){
             termToUpdate.setValue(value);
             termToUpdate.setEndDate(endDate!=null ? endDate : termToUpdate.getEndDate());
+            // TODO: this means that a term with turnover rent value of 0.00 never will be approved by this import. Is that what the users expect?
+            // TODO: also I observed a case with negative value! So maybe abs must be taken?
             if (value!=null && value.compareTo(BigDecimal.ZERO) > 0) termToUpdate.setStatus(LeaseTermStatus.APPROVED);
         } else {
             LeaseTermForFixed newTerm = (LeaseTermForFixed) itemToUpdate.newTerm(startDate, endDate!=null ? endDate : startDate.plusYears(1).minusDays(1));
             newTerm.setValue(value);
+            // TODO: this means that a term with turnover rent value of 0.00 never will be approved by this import. Is that what the users expect?
+            // TODO: also I observed a case with negative value! So maybe abs must be taken?
             if (value!=null && value.compareTo(BigDecimal.ZERO) > 0) newTerm.setStatus(LeaseTermStatus.APPROVED);
         }
     }
@@ -128,5 +132,6 @@ public class LeaseTermForTurnOverRentFixedImport implements ExcelFixtureRowHandl
     @Inject
     LeaseTermRepository leaseTermRepository;
 
-    @Inject MessageService messageService;
+    @Inject
+    MessageService messageService;
 }

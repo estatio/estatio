@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
@@ -42,7 +44,9 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.lease.dom.LeaseItemRepository;
 import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 import org.estatio.module.lease.dom.LeaseTermRepository;
 
@@ -60,9 +64,10 @@ public class LeaseTermForServiceChargeBudgetAuditManager  {
     public LeaseTermForServiceChargeBudgetAuditManager() {
     }
 
-    public LeaseTermForServiceChargeBudgetAuditManager(Property property, final List<LeaseItemType> leaseItemTypes, LocalDate startDate) {
+    public LeaseTermForServiceChargeBudgetAuditManager(Property property, final List<LeaseItemType> leaseItemTypes, LocalDate startDate, LocalDate endDate) {
         this.property = property;
         this.startDate = startDate;
+        this.endDate = endDate;
         this.leaseItemTypes = typesToString(leaseItemTypes);
     }
 
@@ -84,12 +89,16 @@ public class LeaseTermForServiceChargeBudgetAuditManager  {
     private LocalDate startDate;
 
     @Getter @Setter
+    @org.apache.isis.applib.annotation.Property(optionality = Optionality.OPTIONAL)
+    private LocalDate endDate;
+
+    @Getter @Setter
     public String leaseItemTypes;
 
     //region > serviceCharges (derived collection)
 
     public List<LeaseTermForServiceChargeBudgetAuditLineItem> getServiceCharges() {
-        final List<LeaseTermForServiceCharge> terms = leaseTermRepository.findServiceChargeByPropertyAndItemTypeAndStartDate(getProperty(), typesFromString(getLeaseItemTypes()), getStartDate());
+        final List<LeaseTermForServiceCharge> terms = leaseTermRepository.findServiceChargeByPropertyAndItemTypeWithStartDateInPeriod(getProperty(), typesFromString(getLeaseItemTypes()), getStartDate(), getEndDate());
         return Lists.transform(terms, newLeaseTermForServiceChargeAuditBulkUpdate());
     }
 
@@ -97,6 +106,7 @@ public class LeaseTermForServiceChargeBudgetAuditManager  {
         return new Function<LeaseTermForServiceCharge, LeaseTermForServiceChargeBudgetAuditLineItem>() {
             @Override
             public LeaseTermForServiceChargeBudgetAuditLineItem apply(final LeaseTermForServiceCharge leaseTerm) {
+
                 return new LeaseTermForServiceChargeBudgetAuditLineItem(leaseTerm);
             }
         };
@@ -108,7 +118,7 @@ public class LeaseTermForServiceChargeBudgetAuditManager  {
     //region > download (action)
     @Action(semantics = SemanticsOf.SAFE)
     public Blob download() {
-        final String fileName = "ServiceChargeBulkUpdate-" + getProperty().getReference() + "@" + getStartDate() + ".xlsx";
+        final String fileName = "ServiceChargeUpdate-" + getProperty().getReference() + "@" + getStartDate() + "-" + getEndDate() + ".xlsx";
         final List<LeaseTermForServiceChargeBudgetAuditLineItem> lineItems = getServiceCharges();
         return excelService.toExcel(lineItems, LeaseTermForServiceChargeBudgetAuditLineItem.class, "lease terms", fileName);
     }
@@ -153,11 +163,17 @@ public class LeaseTermForServiceChargeBudgetAuditManager  {
     }
 
     //region > injected services
-    @javax.inject.Inject
+    @Inject
     private LeaseTermRepository leaseTermRepository;
 
-    @javax.inject.Inject
+    @Inject
     private ExcelService excelService;
+
+    @Inject
+    private LeaseItemRepository leaseItemRepository;
+
+    @Inject
+    private LeaseRepository leaseRepository;
     //endregion
 
 }

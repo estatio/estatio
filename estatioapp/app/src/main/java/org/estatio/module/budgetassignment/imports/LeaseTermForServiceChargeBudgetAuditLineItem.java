@@ -46,6 +46,7 @@ public class LeaseTermForServiceChargeBudgetAuditLineItem {
     public LeaseTermForServiceChargeBudgetAuditLineItem() {}
 
     public LeaseTermForServiceChargeBudgetAuditLineItem(LeaseTermForServiceCharge leaseTerm) {
+        this.externalLeaseReference = leaseTerm.getLeaseItem().getLease().getExternalReference();
         this.leaseTerm = leaseTerm;
         this.auditedValue = leaseTerm.getAuditedValue();
         this.budgetedValue = leaseTerm.getBudgetedValue();
@@ -64,8 +65,11 @@ public class LeaseTermForServiceChargeBudgetAuditLineItem {
 
 
     @Getter @Setter
-    private LeaseTermForServiceCharge leaseTerm;
+    @Property(optionality = Optionality.OPTIONAL)
+    private String externalLeaseReference;
 
+    @Getter @Setter
+    private LeaseTermForServiceCharge leaseTerm;
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true") // is this ignored?
     @Property(optionality = Optionality.OPTIONAL)

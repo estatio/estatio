@@ -130,6 +130,14 @@ import lombok.Setter;
                         + "   && (lu.unit.property == :property) "
                         + "VARIABLES org.estatio.module.lease.dom.occupancy.Occupancy lu"),
         @javax.jdo.annotations.Query(
+                name = "findByPropertyAndType", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.lease.dom.LeaseTerm "
+                        + "WHERE leaseItem.type == :leaseItemType "
+                        + "   && leaseItem.lease.occupancies.contains(lu) "
+                        + "   && (lu.unit.property == :property) "
+                        + "VARIABLES org.estatio.module.lease.dom.occupancy.Occupancy lu"),
+        @javax.jdo.annotations.Query(
                 name = "findStartDatesByPropertyAndType", language = "JDOQL",
                 value = "SELECT DISTINCT startDate "
                         + "FROM org.estatio.module.lease.dom.LeaseTerm "
