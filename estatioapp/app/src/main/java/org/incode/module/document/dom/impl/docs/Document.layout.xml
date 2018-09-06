@@ -109,6 +109,22 @@
                 <!-- if communication module also configured, then it will contribute a 'coverNoteFor' property -->
                 <cpt:property id="coverNoteFor" hidden="ALL_TABLES"/>
             </cpt:fieldSet>
+            <cpt:fieldSet name="Document Details">
+                <cpt:property id="sort" hidden="ALL_TABLES">
+                    <cpt:action id="movedToExternalUrl"/>
+                </cpt:property>
+                <cpt:property id="blob" hidden="ALL_TABLES">
+                </cpt:property>
+                <cpt:property id="clob" hidden="ALL_TABLES">
+                </cpt:property>
+                <cpt:property id="text" hidden="ALL_TABLES" multiLine="14">
+                    <cpt:action id="downloadTextAsClob"/>
+                </cpt:property>
+                <cpt:property id="externalUrl" hidden="ALL_TABLES">
+                    <cpt:action id="downloadExternalUrlAsClob"/>
+                    <cpt:action id="downloadExternalUrlAsBlob"/>
+                </cpt:property>
+            </cpt:fieldSet>
 
         </bs3:col>
         <bs3:col span="6">
@@ -116,22 +132,8 @@
                 <bs3:tab name="Document">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:fieldSet name="Content" id="content">
-                                <cpt:action id="movedToExternalUrl"/>
-                                <cpt:property id="sort" hidden="ALL_TABLES"/>
-                                <cpt:property id="blob" hidden="ALL_TABLES">
-                                </cpt:property>
-                                <cpt:property id="pdf" hidden="ALL_TABLES">
-                                </cpt:property>
-                                <cpt:property id="clob" hidden="ALL_TABLES">
-                                </cpt:property>
-                                <cpt:property id="text" hidden="ALL_TABLES" multiLine="14">
-                                    <cpt:action id="downloadTextAsClob"/>
-                                </cpt:property>
-                                <cpt:property id="externalUrl" hidden="ALL_TABLES">
-                                    <cpt:action id="downloadExternalUrlAsClob"/>
-                                    <cpt:action id="downloadExternalUrlAsBlob"/>
-                                </cpt:property>
+                            <cpt:fieldSet id="content">
+                                <cpt:property id="pdf" hidden="ALL_TABLES"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>

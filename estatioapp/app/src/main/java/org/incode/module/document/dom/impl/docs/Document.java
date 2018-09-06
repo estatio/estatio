@@ -26,7 +26,6 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
@@ -69,6 +68,14 @@ import lombok.Setter;
                         + "   && atPath == :atPath "
                         + "   && name   == :name "
                         + "ORDER BY createdAt DESC "),
+        @Query(
+                name = "findOldestBySortAndCreatedAtBefore", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.incode.module.document.dom.impl.docs.Document "
+                        + "WHERE sort      == :sort "
+                        + "   && createdAt <= :before "
+                        + "ORDER BY createdAt ASC "
+                        + "RANGE 0,10"),
         @Query(
                 // uses NOT IN
                 name = "findWithNoPaperclips", language = "JDOQL",
@@ -305,16 +312,6 @@ public class Document extends DocumentAbstract<Document> {
     //endregion
 
 
-    //region > asChars, asBytes (programmatic)
-    @Programmatic
-    public String asChars() {
-        return getSort().asChars(this);
-    }
-    @Programmatic
-    public byte[] asBytes() {
-        return getSort().asBytes(this);
-    }
-    //endregion
 
     //region > injected services
     @Inject

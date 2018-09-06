@@ -40,8 +40,9 @@ public interface UrlDownloadService {
 
         @Programmatic
         public Blob downloadAsBlob(final Document document) {
+            final String externalUrl = document.getExternalUrl();
             try {
-                final URL url = new URL(document.getExternalUrl());
+                final URL url = new URL(externalUrl);
 
                 final HttpURLConnection httpConn = openConnection(url);
                 if (httpConn == null) {
@@ -63,8 +64,10 @@ public interface UrlDownloadService {
                 return new Blob(document.getName(), mimeType.getBaseType(), bytes);
 
             } catch (IOException e) {
-                messageService.warnUser(TranslatableString.tr(
-                        "Could not download from URL"),
+                messageService.warnUser(
+                        TranslatableString.tr(
+                                "Could not download URL: {url}",
+                                "url", externalUrl),
                         UrlDownloadService.class, "download");
                 return null;
             }
@@ -73,8 +76,9 @@ public interface UrlDownloadService {
 
         @Programmatic
         public Clob downloadAsClob(final Document document) {
+            final String externalUrl = document.getExternalUrl();
             try {
-                final URL url = new URL(document.getExternalUrl());
+                final URL url = new URL(externalUrl);
 
                 final HttpURLConnection httpConn = openConnection(url);
                 if (httpConn == null) {
@@ -99,8 +103,10 @@ public interface UrlDownloadService {
 
                 return new Clob(document.getName(), mimeType.getBaseType(), chars);
             } catch (IOException e) {
-                messageService.warnUser(TranslatableString.tr(
-                        "Could not download from URL"),
+                messageService.warnUser(
+                        TranslatableString.tr(
+                                "Could not download URL: {url}",
+                                "url", externalUrl),
                         UrlDownloadService.class, "downloadExternalUrlAsClob");
                 return null;
             }
@@ -110,9 +116,11 @@ public interface UrlDownloadService {
             final HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
             final int responseCode = httpConn.getResponseCode();
             if (responseCode != HttpURLConnection.HTTP_OK) {
-                messageService.warnUser(TranslatableString.tr(
-                        "Could not download from URL (responseCode: {responseCode})",
-                        "responseCode", "" + responseCode),
+                messageService.warnUser(
+                            TranslatableString.tr(
+                                    "Could not download URL: {responseCode}: {url}",
+                                    "responseCode", "" + responseCode,
+                                    "url", url.toExternalForm()),
                         UrlDownloadService.class, "openConnection");
                 return null;
             }

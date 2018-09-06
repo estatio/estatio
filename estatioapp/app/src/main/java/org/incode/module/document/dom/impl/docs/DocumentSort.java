@@ -1,18 +1,20 @@
 package org.incode.module.document.dom.impl.docs;
 
-import org.apache.commons.io.output.NullOutputStream;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.services.factory.FactoryService;
-import org.apache.isis.applib.value.Blob;
-import org.apache.isis.applib.value.Clob;
-
-import javax.activation.DataSource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+
+import javax.activation.DataSource;
+
+import org.apache.commons.io.output.NullOutputStream;
+
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.value.Blob;
+import org.apache.isis.applib.value.Clob;
 
 public enum DocumentSort {
     /**
@@ -81,7 +83,7 @@ public enum DocumentSort {
         public byte[] asBytes(final DocumentAbstract<?> document) {
             final FactoryService factoryService = document.factoryService;
             final Blob blob = factoryService.mixin(Document_downloadExternalUrlAsBlob.class, document).$$();
-            return blob.getBytes();
+            return blob != null ? blob.getBytes() : null;
         }
     },
     /**

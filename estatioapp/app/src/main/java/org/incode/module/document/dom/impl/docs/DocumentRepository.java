@@ -12,8 +12,6 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.clock.ClockService;
-import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
-import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.document.dom.impl.types.DocumentType;
@@ -61,6 +59,16 @@ public class DocumentRepository {
     }
 
     @Programmatic
+    public List<Document> findOldestBySortAndCreatedAtBefore(final DocumentSort sort) {
+        final DateTime threeMonthsAgo = clockService.nowAsDateTime().minusMonths(3);
+        return repositoryService.allMatches(new QueryDefault<>(
+                Document.class,
+                "findOldestBySortAndCreatedAtBefore",
+                "sort", sort,
+                "before", threeMonthsAgo));
+    }
+
+    @Programmatic
     public List<Document> findBetween(final LocalDate startDate, final LocalDate endDateIfAny) {
 
         final DateTime startDateTime = startDate.toDateTimeAtStartOfDay();
@@ -94,19 +102,10 @@ public class DocumentRepository {
     }
 
 
-    //region > injected services
-
-    @Inject
-    QueryResultsCache queryResultsCache;
-
-    @Inject
-    IsisJdoSupport isisJdoSupport;
     @Inject
     RepositoryService repositoryService;
     @Inject
     ClockService clockService;
 
-
-    //endregion
 
 }

@@ -71,9 +71,65 @@ import lombok.Setter;
 public class AdminDashboard {
 
     public static final String KEY_ESTATIO_MOTD = "estatio.motd";
+    public static final String KEY_MINIO_ARCHIVE_FOR_CALLER = "docBlobServer.caller";
 
     public String title() { return "Admin Dashboard"; }
 
+
+    public enum DocBlobArchiveCaller {
+        CAMEL("camel"),
+        BATCH("batch"),
+        CAMEL_AND_BATCH("camel,batch"),
+        NONE("none");
+
+        private final String title;
+        DocBlobArchiveCaller(final String title) {
+            this.title = title;
+        }
+
+        public String title() {
+            return title;
+        }
+
+        public static DocBlobArchiveCaller lookup(final String title) {
+            final DocBlobArchiveCaller[] values = values();
+            for (final DocBlobArchiveCaller value : values) {
+                if(value.title().equalsIgnoreCase(title)) {
+                    return value;
+                }
+            }
+            return null;
+        }
+
+    }
+
+    @Property(
+            editing = Editing.ENABLED,
+            optionality = Optionality.OPTIONAL
+    )
+    @XmlTransient
+    public DocBlobArchiveCaller getDocBlobServerCaller() {
+        ApplicationSettingForEstatio applicationSetting =
+                (ApplicationSettingForEstatio) applicationSettingsServiceRW.find(KEY_MINIO_ARCHIVE_FOR_CALLER);
+        return applicationSetting != null
+                ? DocBlobArchiveCaller.lookup(applicationSetting.valueAsString())
+                : null;
+    }
+    public void setDocBlobServerCaller(DocBlobArchiveCaller caller) {
+        ApplicationSettingForEstatio applicationSetting =
+                (ApplicationSettingForEstatio) applicationSettingsServiceRW.find(KEY_MINIO_ARCHIVE_FOR_CALLER);
+        if(applicationSetting != null) {
+            if(caller != null) {
+                applicationSetting.setValueRaw(caller.title());
+            } else {
+                applicationSettingsServiceRW.delete(applicationSetting);
+            }
+        } else {
+            if(caller != null) {
+                applicationSettingsServiceRW.newString(KEY_MINIO_ARCHIVE_FOR_CALLER, "Which caller(s) to enable the archive of document blobs to Minio", caller.title());
+            }
+        }
+    }
 
     @Property(
             editing = Editing.ENABLED,
