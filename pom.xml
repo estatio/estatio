@@ -66,7 +66,7 @@ language governing permissions and limitations under the License.
     </developers>
 
     <properties>
-        <revision>1.29.0-SNAPSHOT</revision>
+        <revision>SNAPSHOT</revision>
 
         <isis.version>1.16.2.20180709-1350-5d9f4f7c</isis.version>
         <!--
@@ -78,7 +78,7 @@ language governing permissions and limitations under the License.
 
         <!--
         Also specify the incode-platform.version by changing the parent's version, above.
-        And, update the pom.xml for estatio-ecp and ecp-camel similarly
+        And, update the pom.xml for estatio-ecp similarly
          -->
         <incode-platform.version>1.16.2.20180801-1903-65c6b0b7</incode-platform.version>
 
