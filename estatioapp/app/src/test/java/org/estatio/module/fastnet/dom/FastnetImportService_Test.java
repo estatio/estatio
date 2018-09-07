@@ -1210,4 +1210,54 @@ public class FastnetImportService_Test {
 
     }
 
+    @Test
+    public void hasActiveManualRentOnDate_works() throws Exception {
+
+        // given
+        FastnetImportService service = new FastnetImportService();
+        Lease lease = new Lease();
+        LocalDate date = new LocalDate(2018,1,1);
+
+        // when, then
+        assertThat(service.hasActiveManualRentOnDate(date, lease)).isFalse();
+
+        // and when
+        Charge charge = new Charge();
+        charge.setReference("RENT");
+        LeaseItem item = new LeaseItem();
+        item.setType(LeaseItemType.RENT);
+        item.setCharge(charge);
+        item.setStartDate(date);
+        item.setLease(lease);
+        lease.getItems().add(item);
+
+        // then
+        assertThat(service.hasActiveManualRentOnDate(date, lease)).isFalse();
+
+        // and when
+        LeaseTermForTesting term = new LeaseTermForTesting();
+        term.setValue(new BigDecimal("0.01"));
+        term.setLeaseItem(item);
+        item.getTerms().add(term);
+
+        // then
+        assertThat(service.hasActiveManualRentOnDate(date, lease)).isTrue();
+
+        // and when
+        term.setValue(new BigDecimal("0.00"));
+        // then
+        assertThat(service.hasActiveManualRentOnDate(date, lease)).isFalse();
+
+        // and when
+        term.setValue(new BigDecimal("0.01"));
+        Charge importedRentCharge = new Charge();
+        importedRentCharge.setReference("SExxx-x");
+        item.setCharge(importedRentCharge);
+
+        // then
+        assertThat(service.hasActiveManualRentOnDate(date, lease)).isFalse();
+
+
+    }
+
 }
