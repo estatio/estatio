@@ -821,6 +821,32 @@ public class FastnetImportService {
         return result;
     }
 
+    @Programmatic
+    public List<Lease> rentLinesForLeasesHavingManualRentOn(final LocalDate date) {
+        return activeSwedishLeases(date)
+                .stream()
+                .filter(l->hasActiveManualRentOnDate(date, l))
+                .collect(Collectors.toList());
+    }
+
+    boolean hasActiveManualRentOnDate(final LocalDate date, final Lease lease){
+        for (LeaseItem item : lease.getItems()){
+            List<LeaseItemType> rentTypes = Arrays.asList(
+                    LeaseItemType.RENT,
+                    LeaseItemType.RENT_FIXED,
+                    LeaseItemType.RENT_DISCOUNT,
+                    LeaseItemType.RENT_DISCOUNT_FIXED
+            );
+            if (rentTypes.contains(item.getType())
+                    && !item.getCharge().getReference().startsWith("SE")
+                    && item.valueForDate(date).compareTo(BigDecimal.ZERO)!=0){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     @Inject
     LeaseRepository leaseRepository;
 
@@ -836,5 +862,4 @@ public class FastnetImportService {
     @Inject FastNetRentRollOnLeaseDataLineRepo rentRollOnLeaseDataLineRepo;
 
     @Inject FastNetChargingOnLeaseDataLineRepo chargingOnLeaseDataLineRepo;
-
 }

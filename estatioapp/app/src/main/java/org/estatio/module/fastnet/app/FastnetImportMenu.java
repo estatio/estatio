@@ -26,6 +26,7 @@ import org.estatio.module.fastnet.dom.ChargingLineRepository;
 import org.estatio.module.fastnet.dom.FastnetImportManager;
 import org.estatio.module.fastnet.dom.FastnetImportService;
 import org.estatio.module.fastnet.dom.ImportStatus;
+import org.estatio.module.fastnet.dom.LeaseViewModel;
 import org.estatio.module.fastnet.dom.RentRollLineRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY, objectType = "org.estatio.module.fastnet.app.FastnetImportMenu")
@@ -82,11 +83,19 @@ public class FastnetImportMenu {
                 ))
                 .sorted()
                 .collect(Collectors.toList());
+        List<LeaseViewModel> leasesWithActiveManualRentOnDate = fastnetImportService.rentLinesForLeasesHavingManualRentOn(date)
+                .stream()
+                .map(lease->new LeaseViewModel(
+                    lease.getReference(), lease.getExternalReference()
+                ))
+                .collect(Collectors.toList());
         WorksheetSpec spec0 = new WorksheetSpec(ChargingLineLogViewModel.class, "lines with log message");
         WorksheetContent content0 = new WorksheetContent(linesWithLogMessage, spec0);
-        WorksheetSpec spec1 = new WorksheetSpec(ChargingLineLogViewModel.class, "applied lines without message");
-        WorksheetContent content1 = new WorksheetContent(linesWithOutMessage, spec1);
-        return excelService.toExcel(Arrays.asList(content0, content1), "import log " + date.toString("yyyy-MM-dd") + ".xlsx");
+        WorksheetSpec spec1 = new WorksheetSpec(LeaseViewModel.class, "leases with active manual rent");
+        WorksheetContent content1 = new WorksheetContent(leasesWithActiveManualRentOnDate, spec1);
+        WorksheetSpec spec2 = new WorksheetSpec(ChargingLineLogViewModel.class, "applied lines without message");
+        WorksheetContent content2 = new WorksheetContent(linesWithOutMessage, spec2);
+        return excelService.toExcel(Arrays.asList(content0, content1, content2), "import log " + date.toString("yyyy-MM-dd") + ".xlsx");
     }
 
     public List<LocalDate> choices0FastnetImportLog() {
