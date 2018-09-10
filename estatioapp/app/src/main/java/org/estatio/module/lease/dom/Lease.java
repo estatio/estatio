@@ -60,6 +60,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
@@ -531,7 +532,27 @@ public class Lease
                     "Charge (with app tenancy level '%s') is not valid for this lease",
                     charge.getApplicationTenancyPath());
         }
+        // ECP-769 extra validation for Sweden
+        if (getAtPath()!=null && getAtPath().startsWith("/SWE/")){
 
+            switch (type) {
+            case SERVICE_CHARGE:
+                if (!charge.getReference().equals("SERVICE_CHARGE")) messageService.warnUser("Are you sure? Charge normally is 'service charge' for type service charge");
+                break;
+            case MARKETING:
+                if (!charge.getReference().equals("MARKETING_CONTRIBUTION")) messageService.warnUser("Are you sure? Charge normally is 'marketing contribution' for type marketing");
+                break;
+            case PROPERTY_TAX:
+                if (!charge.getReference().equals("PROPERTY_TAX")) messageService.warnUser("Are you sure? Charge normally is 'property tax' for type property tax");
+                break;
+            case TURNOVER_RENT_FIXED:
+                if (!charge.getReference().equals("TURNOVER_RENT")) messageService.warnUser("Are you sure? Charge normally is 'turnover rent' for type turnover rent fixed");
+                break;
+            default:
+                messageService.warnUser(String.format("Are you sure? Items of type %s are normally are not entered manually.", type));
+            }
+
+        }
         return null;
     }
 
@@ -1190,6 +1211,8 @@ public class Lease
 
     @Inject
     private WrapperFactory wrapperFactory;
+
+    @Inject MessageService messageService;
 
 
 

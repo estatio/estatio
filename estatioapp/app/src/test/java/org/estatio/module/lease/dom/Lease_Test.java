@@ -38,6 +38,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
@@ -1368,6 +1369,80 @@ public class Lease_Test {
 
             // then
             assertThat(lease.validateNewMandate(bankAccount, reference, null, null,null, null, null)).isNull();
+
+        }
+
+        @Mock MessageService mockMessageService;
+
+        @Test
+        public void validate_new_item_works_for_sweden() throws Exception {
+
+            // given
+            Charge charge = new Charge();
+            charge.setReference("Some reference");
+            Charge chargeForServiceCharges = new Charge();
+            chargeForServiceCharges.setReference("SERVICE_CHARGE");
+            Charge chargeForMarketing = new Charge();
+            chargeForMarketing.setReference("MARKETING_CONTRIBUTION");
+            Charge chargeForPropertyTax = new Charge();
+            chargeForPropertyTax.setReference("PROPERTY_TAX");
+            Charge chargeForTurnoverRent = new Charge();
+            chargeForTurnoverRent.setReference("TURNOVER_RENT");
+            lease = new Lease(){
+                @Override
+                public ApplicationTenancy getApplicationTenancy() {
+                    ApplicationTenancy applicationTenancy = new ApplicationTenancy();
+                    applicationTenancy.setPath("/SWE/etc/etc...");
+                    return applicationTenancy;
+                }
+                @Override
+                public List<Charge> choices2NewItem() {
+                    return Arrays.asList(charge, chargeForServiceCharges, chargeForMarketing, chargeForPropertyTax, chargeForTurnoverRent);
+                }
+            };
+            lease.messageService = mockMessageService;
+
+            // expect
+            context.checking(new Expectations(){{
+                oneOf(mockMessageService).warnUser("Are you sure? Items of type RENT_FIXED are normally are not entered manually.");
+            }});
+            // when
+            lease.validateNewItem(LeaseItemType.RENT_FIXED, null, charge, null, null, null);
+
+            // and expect
+            context.checking(new Expectations(){{
+                oneOf(mockMessageService).warnUser("Are you sure? Charge normally is 'service charge' for type service charge");
+            }});
+            // when
+            lease.validateNewItem(LeaseItemType.SERVICE_CHARGE, null, charge, null, null, null);
+
+            // and expect
+            context.checking(new Expectations(){{
+                oneOf(mockMessageService).warnUser("Are you sure? Charge normally is 'marketing contribution' for type marketing");
+            }});
+            // when
+            lease.validateNewItem(LeaseItemType.MARKETING, null, charge, null, null, null);
+
+            // and expect
+            context.checking(new Expectations(){{
+                oneOf(mockMessageService).warnUser("Are you sure? Charge normally is 'property tax' for type property tax");
+            }});
+            // when
+            lease.validateNewItem(LeaseItemType.PROPERTY_TAX, null, charge, null, null, null);
+
+            // and expect
+            context.checking(new Expectations(){{
+                oneOf(mockMessageService).warnUser("Are you sure? Charge normally is 'turnover rent' for type turnover rent fixed");
+            }});
+            // when
+            lease.validateNewItem(LeaseItemType.TURNOVER_RENT_FIXED, null, charge, null, null, null);
+
+            // and expect nothing
+            // when
+            lease.validateNewItem(LeaseItemType.SERVICE_CHARGE, null, chargeForServiceCharges, null, null, null);
+            lease.validateNewItem(LeaseItemType.MARKETING, null, chargeForMarketing, null, null, null);
+            lease.validateNewItem(LeaseItemType.PROPERTY_TAX, null, chargeForPropertyTax, null, null, null);
+            lease.validateNewItem(LeaseItemType.TURNOVER_RENT_FIXED, null, chargeForTurnoverRent, null, null, null);
 
         }
 
