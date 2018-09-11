@@ -171,7 +171,20 @@ public class EmailServiceThrowingException {
             final List<String> toList, final List<String> ccList, final List<String> bccList, final String from, final String subject, final String body,
             final DataSource... attachments) {
 
+        final ImageHtmlEmail email = buildMessage(toList, ccList, bccList, from, subject, body, attachments);
+        sendMessage(email);
 
+        return true;
+    }
+
+    private ImageHtmlEmail buildMessage(
+            final List<String> toList,
+            final List<String> ccList,
+            final List<String> bccList,
+            final String from,
+            final String subject,
+            final String body,
+            final DataSource[] attachments) {
         final ImageHtmlEmail email;
         try {
             String passwordToUse = senderEmailPassword;
@@ -235,7 +248,10 @@ public class EmailServiceThrowingException {
 
             throw new RuntimeException(ex);
         }
+        return email;
+    }
 
+    private void sendMessage(final ImageHtmlEmail email) {
         int[] backoffIntervals = buildBackoffIntervals(attempts, backoffInterval);
         for (final int backoffInterval : backoffIntervals) {
             try {
@@ -243,15 +259,16 @@ public class EmailServiceThrowingException {
                 break;
             } catch (EmailException e) {
                 if(backoffInterval == 0) {
-                    LOG.error("Failed to send an email after " + backoffIntervals.length + " attempts; giving up", e);
+                    LOG.error(String.format("Failed to send an email after %d attempts; giving up",
+                            backoffIntervals.length), e);
                     throw new RuntimeException(e);
                 } else {
-                    LOG.warn("Failed to send an email; sleeping for " + backoffInterval + " seconds then will retry", e);
+                    LOG.warn(String.format("Failed to send an email; sleeping for %d seconds then will retry",
+                            backoffInterval), e);
                 }
                 sleepInSecs(backoffInterval);
             }
         }
-        return true;
     }
 
     static int[] buildBackoffIntervals(final int attempts, final int backoffInterval) {
