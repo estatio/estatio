@@ -61,9 +61,25 @@ public class EmailServiceThrowingException {
     private static final String ISIS_SERVICE_EMAIL_TLS_ENABLED = "isis.service.email.tls.enabled";
     private static final boolean ISIS_SERVICE_EMAIL_TLS_ENABLED_DEFAULT = true;
 
+    private static final String ISIS_SOCKET_TIMEOUT = "isis.service.email.socket.timeout";
+    private static final int ISIS_SOCKET_TIMEOUT_DEFAULT = 60;
+
+    private static final String ISIS_SOCKET_CONNECTION_TIMEOUT = "isis.service.email.socket.connection.timeout";
+    private static final int ISIS_SOCKET_CONNECTION_TIMEOUT_DEFAULT = 60;
+
+    private static final String ISIS_BACKOFF_INTERVAL = "isis.service.email.backoff.interval";
+    private static final int ISIS_BACKOFF_INTERVAL_DEFAULT = 5;
+
+    private static final String ISIS_ATTEMPTS = "isis.service.email.attempts";
+    private static final int ISIS_ATTEMPTS_DEFAULT = 3;
+
     private String senderEmailAddress;
     private String senderEmailPassword;
     private Integer senderEmailPort;
+    private int socketTimeout;
+    private int socketConnectionTimeout;
+    private int backoffInterval;
+    private int attempts;
     //endregion
 
     //region > init
@@ -83,6 +99,10 @@ public class EmailServiceThrowingException {
         senderEmailAddress = getSenderEmailAddress();
         senderEmailPassword = getSenderEmailPassword();
         senderEmailPort = getSenderEmailPort();
+        socketTimeout = getSocketTimeout();
+        socketConnectionTimeout = getSocketConnectionTimeout();
+        backoffInterval = getBackoffInterval();
+        attempts = getAttempts();
 
         initialized = true;
 
@@ -112,6 +132,22 @@ public class EmailServiceThrowingException {
     protected Boolean getSenderEmailTlsEnabled() {
         return configuration.getBoolean(ISIS_SERVICE_EMAIL_TLS_ENABLED, ISIS_SERVICE_EMAIL_TLS_ENABLED_DEFAULT);
     }
+
+    protected int getSocketTimeout() {
+        return configuration.getInteger(ISIS_SOCKET_TIMEOUT, ISIS_SOCKET_TIMEOUT_DEFAULT);
+    }
+
+    protected int getSocketConnectionTimeout() {
+        return configuration.getInteger(ISIS_SOCKET_CONNECTION_TIMEOUT, ISIS_SOCKET_CONNECTION_TIMEOUT_DEFAULT);
+    }
+
+    protected int getBackoffInterval() {
+        return configuration.getInteger(ISIS_BACKOFF_INTERVAL, ISIS_BACKOFF_INTERVAL_DEFAULT);
+    }
+
+    protected int getAttempts() {
+        return configuration.getInteger(ISIS_ATTEMPTS, ISIS_ATTEMPTS_DEFAULT);
+    }
     //endregion
 
     //region > isConfigured
@@ -135,6 +171,8 @@ public class EmailServiceThrowingException {
             final List<String> toList, final List<String> ccList, final List<String> bccList, final String from, final String subject, final String body,
             final DataSource... attachments) {
 
+
+        final ImageHtmlEmail email;
         try {
             String passwordToUse = senderEmailPassword;
 
@@ -149,7 +187,7 @@ public class EmailServiceThrowingException {
                 passwordToUse = configuration.getString(emailKey.replaceFirst("address", "password"));
             }
 
-            final ImageHtmlEmail email = new ImageHtmlEmail();
+            email = new ImageHtmlEmail();
 
             email.setAuthenticator(new DefaultAuthenticator(from, passwordToUse));
 
@@ -158,21 +196,13 @@ public class EmailServiceThrowingException {
             email.setStartTLSEnabled(getSenderEmailTlsEnabled());
             email.setDataSourceResolver(new DataSourceClassPathResolver("/", true));
 
-            //
-            // change from default impl.
-            //
-            email.setSocketTimeout(2000);
-            email.setSocketConnectionTimeout(2000);
+            email.setSocketTimeout(this.socketTimeout);
+            email.setSocketConnectionTimeout(this.socketConnectionTimeout);
 
             final Properties properties = email.getMailSession().getProperties();
 
-            // TODO ISIS-987: check whether all these are required and extract as configuration settings
-            properties.put("mail.smtps.auth", "true");
             properties.put("mail.debug", "true");
-            properties.put("mail.smtps.port", "" + senderEmailPort);
-            properties.put("mail.smtps.socketFactory.port", "" + senderEmailPort);
-            properties.put("mail.smtps.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-            properties.put("mail.smtps.socketFactory.fallback", "false");
+
 
             email.setFrom(from);
 
@@ -196,19 +226,51 @@ public class EmailServiceThrowingException {
                 email.addBcc(bccList.toArray(new String[bccList.size()]));
             }
 
-            email.send();
-
         } catch (EmailException ex) {
 
             //
             // change from default impl.
             //
-            LOG.error("An error occurred while trying to send an email about user email verification", ex);
+            LOG.error("An error occurred while trying to prepare an email to be sent", ex);
 
             throw new RuntimeException(ex);
         }
 
+        int[] backoffIntervals = buildBackoffIntervals(attempts, backoffInterval);
+        for (final int backoffInterval : backoffIntervals) {
+            try {
+                email.send();
+                break;
+            } catch (EmailException e) {
+                if(backoffInterval == 0) {
+                    LOG.error("Failed to send an email after " + backoffIntervals.length + " attempts; giving up", e);
+                    throw new RuntimeException(e);
+                } else {
+                    LOG.warn("Failed to send an email; sleeping for " + backoffInterval + " seconds then will retry", e);
+                }
+                sleepInSecs(backoffInterval);
+            }
+        }
         return true;
+    }
+
+    static int[] buildBackoffIntervals(final int attempts, final int backoffInterval) {
+        int[] backoffIntervals = new int[attempts];
+        for (int i = 0; i < backoffIntervals.length; i++) {
+            backoffIntervals[i] = backoffInterval;
+            if(i == backoffIntervals.length - 1) {
+                backoffIntervals[i] = 0;
+            }
+        }
+        return backoffIntervals;
+    }
+
+    private static void sleepInSecs(final int backoffInterval) {
+        try {
+            Thread.sleep(backoffInterval * 1000);
+        } catch (InterruptedException e1) {
+            // ignore
+        }
     }
     //endregion
 
