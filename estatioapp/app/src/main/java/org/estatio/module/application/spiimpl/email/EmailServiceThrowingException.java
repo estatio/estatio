@@ -73,13 +73,6 @@ public class EmailServiceThrowingException {
     private static final String ISIS_ATTEMPTS = "isis.service.email.attempts";
     private static final int ISIS_ATTEMPTS_DEFAULT = 3;
 
-    private String senderEmailAddress;
-    private String senderEmailPassword;
-    private Integer senderEmailPort;
-    private int socketTimeout;
-    private int socketConnectionTimeout;
-    private int backoffInterval;
-    private int attempts;
     //endregion
 
     //region > init
@@ -95,14 +88,6 @@ public class EmailServiceThrowingException {
         if (initialized) {
             return;
         }
-
-        senderEmailAddress = getSenderEmailAddress();
-        senderEmailPassword = getSenderEmailPassword();
-        senderEmailPort = getSenderEmailPort();
-        socketTimeout = getSocketTimeout();
-        socketConnectionTimeout = getSocketConnectionTimeout();
-        backoffInterval = getBackoffInterval();
-        attempts = getAttempts();
 
         initialized = true;
 
@@ -154,27 +139,48 @@ public class EmailServiceThrowingException {
 
     @Programmatic
     public boolean isConfigured() {
-        return !Strings.isNullOrEmpty(senderEmailAddress) && !Strings.isNullOrEmpty(senderEmailPassword);
+        return !Strings.isNullOrEmpty(getSenderEmailAddress()) && !Strings.isNullOrEmpty(getSenderEmailPassword());
     }
     //endregion
 
     //region > send
     @Programmatic
     public boolean send(
-            final List<String> toList, final List<String> ccList, final List<String> bccList, final String subject, final String body,
-            final DataSource... attachments) {
-        return send(toList, ccList, bccList, senderEmailAddress, subject, body, attachments);
+            final List<String> toList, final List<String> ccList, final List<String> bccList,
+            final String subject, final String body, final DataSource... attachments) {
+        return send(toList, ccList, bccList, getSenderEmailAddress(), subject, body, attachments);
     }
 
     @Programmatic
     public boolean send(
-            final List<String> toList, final List<String> ccList, final List<String> bccList, final String from, final String subject, final String body,
-            final DataSource... attachments) {
+            final List<String> toList, final List<String> ccList, final List<String> bccList,
+            final String from,
+            final String subject, final String body, final DataSource... attachments) {
 
-        final ImageHtmlEmail email = buildMessage(toList, ccList, bccList, from, subject, body, attachments);
-        sendMessage(email);
+        final int[] backoffIntervals = buildBackoffIntervals(getAttempts(), getBackoffInterval());
+        for (final int backoffInterval : backoffIntervals) {
+            if (buildAndSendMessage(
+                    toList, ccList, bccList, from, subject, body, attachments,
+                    backoffInterval, backoffIntervals.length)) {
+                break;
+            }
+        }
 
         return true;
+    }
+
+    private boolean buildAndSendMessage(
+            final List<String> toList,
+            final List<String> ccList,
+            final List<String> bccList,
+            final String from,
+            final String subject,
+            final String body,
+            final DataSource[] attachments, final int backoffInterval,
+            final int numBackoffIntervals) {
+
+        final ImageHtmlEmail email = buildMessage(toList, ccList, bccList, from, subject, body, attachments);
+        return sendMessage(email, backoffInterval, numBackoffIntervals);
     }
 
     private ImageHtmlEmail buildMessage(
@@ -185,11 +191,12 @@ public class EmailServiceThrowingException {
             final String subject,
             final String body,
             final DataSource[] attachments) {
+
         final ImageHtmlEmail email;
         try {
-            String passwordToUse = senderEmailPassword;
+            String passwordToUse = getSenderEmailPassword();
 
-            if (!from.equals(senderEmailAddress)) {
+            if (!from.equals(getSenderEmailAddress())) {
                 final String emailKey = configuration.asMap()
                         .entrySet()
                         .stream()
@@ -203,22 +210,19 @@ public class EmailServiceThrowingException {
             email = new ImageHtmlEmail();
 
             email.setAuthenticator(new DefaultAuthenticator(from, passwordToUse));
-
             email.setHostName(getSenderEmailHostName());
-            email.setSmtpPort(senderEmailPort);
+            email.setSmtpPort(getSenderEmailPort());
             email.setStartTLSEnabled(getSenderEmailTlsEnabled());
             email.setDataSourceResolver(new DataSourceClassPathResolver("/", true));
 
-            email.setSocketTimeout(this.socketTimeout);
-            email.setSocketConnectionTimeout(this.socketConnectionTimeout);
+            email.setSocketTimeout(getSocketTimeout());
+            email.setSocketConnectionTimeout(getSocketConnectionTimeout());
 
             final Properties properties = email.getMailSession().getProperties();
 
             properties.put("mail.debug", "true");
 
-
             email.setFrom(from);
-
             email.setSubject(subject);
             email.setHtmlMsg(body);
             email.setCharset("windows-1252");
@@ -230,20 +234,17 @@ public class EmailServiceThrowingException {
             }
 
             if (notEmpty(toList)) {
-                email.addTo(toList.toArray(new String[toList.size()]));
+                email.addTo(toList.toArray(new String[0]));
             }
             if (notEmpty(ccList)) {
-                email.addCc(ccList.toArray(new String[ccList.size()]));
+                email.addCc(ccList.toArray(new String[0]));
             }
             if (notEmpty(bccList)) {
-                email.addBcc(bccList.toArray(new String[bccList.size()]));
+                email.addBcc(bccList.toArray(new String[0]));
             }
 
         } catch (EmailException ex) {
 
-            //
-            // change from default impl.
-            //
             LOG.error("An error occurred while trying to prepare an email to be sent", ex);
 
             throw new RuntimeException(ex);
@@ -251,24 +252,22 @@ public class EmailServiceThrowingException {
         return email;
     }
 
-    private void sendMessage(final ImageHtmlEmail email) {
-        int[] backoffIntervals = buildBackoffIntervals(attempts, backoffInterval);
-        for (final int backoffInterval : backoffIntervals) {
-            try {
-                email.send();
-                break;
-            } catch (EmailException e) {
-                if(backoffInterval == 0) {
-                    LOG.error(String.format("Failed to send an email after %d attempts; giving up",
-                            backoffIntervals.length), e);
-                    throw new RuntimeException(e);
-                } else {
-                    LOG.warn(String.format("Failed to send an email; sleeping for %d seconds then will retry",
-                            backoffInterval), e);
-                }
-                sleepInSecs(backoffInterval);
+    private boolean sendMessage(final ImageHtmlEmail email, final int backoffInterval, final int numBackoffIntervals) {
+        try {
+            email.send();
+            return true;
+        } catch (EmailException e) {
+            if(backoffInterval == 0) {
+                LOG.error(String.format("Failed to send an email after %d attempts; giving up",
+                        numBackoffIntervals), e);
+                throw new RuntimeException(e);
+            } else {
+                LOG.warn(String.format("Failed to send an email; sleeping for %d seconds then will retry",
+                        backoffInterval), e);
             }
+            sleepInSecs(backoffInterval);
         }
+        return false;
     }
 
     static int[] buildBackoffIntervals(final int attempts, final int backoffInterval) {
