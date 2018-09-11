@@ -62,13 +62,13 @@ public class EmailServiceThrowingException {
     private static final boolean ISIS_SERVICE_EMAIL_TLS_ENABLED_DEFAULT = true;
 
     private static final String ISIS_SOCKET_TIMEOUT = "isis.service.email.socket.timeout";
-    private static final int ISIS_SOCKET_TIMEOUT_DEFAULT = 60;
+    private static final int ISIS_SOCKET_TIMEOUT_DEFAULT = 5000;
 
     private static final String ISIS_SOCKET_CONNECTION_TIMEOUT = "isis.service.email.socket.connection.timeout";
-    private static final int ISIS_SOCKET_CONNECTION_TIMEOUT_DEFAULT = 60;
+    private static final int ISIS_SOCKET_CONNECTION_TIMEOUT_DEFAULT = 5000;
 
     private static final String ISIS_BACKOFF_INTERVAL = "isis.service.email.backoff.interval";
-    private static final int ISIS_BACKOFF_INTERVAL_DEFAULT = 5;
+    private static final int ISIS_BACKOFF_INTERVAL_DEFAULT = 5000;
 
     private static final String ISIS_ATTEMPTS = "isis.service.email.attempts";
     private static final int ISIS_ATTEMPTS_DEFAULT = 3;
@@ -176,11 +176,12 @@ public class EmailServiceThrowingException {
             final String from,
             final String subject,
             final String body,
-            final DataSource[] attachments, final int backoffInterval,
-            final int numBackoffIntervals) {
+            final DataSource[] attachments,
+            final int backoffIntervalMs, final int numBackoffIntervals) {
 
-        final ImageHtmlEmail email = buildMessage(toList, ccList, bccList, from, subject, body, attachments);
-        return sendMessage(email, backoffInterval, numBackoffIntervals);
+        final ImageHtmlEmail email = buildMessage(
+                toList, ccList, bccList, from, subject, body, attachments);
+        return sendMessage(email, backoffIntervalMs, numBackoffIntervals);
     }
 
     private ImageHtmlEmail buildMessage(
@@ -252,22 +253,26 @@ public class EmailServiceThrowingException {
         return email;
     }
 
-    private boolean sendMessage(final ImageHtmlEmail email, final int backoffInterval, final int numBackoffIntervals) {
+    private boolean sendMessage(
+            final ImageHtmlEmail email, final int backoffIntervalMs, final int numBackoffIntervals) {
         try {
             email.send();
             return true;
-        } catch (EmailException e) {
-            if(backoffInterval == 0) {
-                LOG.error(String.format("Failed to send an email after %d attempts; giving up",
-                        numBackoffIntervals), e);
-                throw new RuntimeException(e);
-            } else {
-                LOG.warn(String.format("Failed to send an email; sleeping for %d seconds then will retry",
-                        backoffInterval), e);
+        } catch (EmailException ex) {
+
+            if(backoffIntervalMs == 0) {
+                LOG.error(String.format(
+                            "Failed to send an email after %d attempts; giving up", numBackoffIntervals),
+                          ex);
+                throw new RuntimeException(ex);
             }
-            sleepInSecs(backoffInterval);
+
+            LOG.warn(String.format(
+                        "Failed to send an email; sleeping for %d seconds then will retry", backoffIntervalMs),
+                     ex);
+            sleep(backoffIntervalMs);
+            return false;
         }
-        return false;
     }
 
     static int[] buildBackoffIntervals(final int attempts, final int backoffInterval) {
@@ -281,9 +286,9 @@ public class EmailServiceThrowingException {
         return backoffIntervals;
     }
 
-    private static void sleepInSecs(final int backoffInterval) {
+    private static void sleep(final int backoffIntervalMs) {
         try {
-            Thread.sleep(backoffInterval * 1000);
+            Thread.sleep(backoffIntervalMs);
         } catch (InterruptedException e1) {
             // ignore
         }
