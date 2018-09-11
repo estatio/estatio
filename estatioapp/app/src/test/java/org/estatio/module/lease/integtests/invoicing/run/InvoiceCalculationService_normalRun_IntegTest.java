@@ -56,7 +56,6 @@ import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_e
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForEntryFee_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForMarketing_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceChargeBudgeted_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTax_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
@@ -111,7 +110,6 @@ public class InvoiceCalculationService_normalRun_IntegTest extends LeaseModuleIn
                         LeaseItemForRent_enum.OxfTopModel001Gb,
                         LeaseItemForServiceCharge_enum.OxfTopModel001Gb,
                         LeaseItemForServiceCharge_enum.OxfTopModel001Gb_TA,
-                        LeaseItemForServiceChargeBudgeted_enum.OxfTopModel001Gb,
                         LeaseItemForTurnoverRent_enum.OxfTopModel001Gb,
                         LeaseItemForDiscount_enum.OxfTopModel001Gb,
                         LeaseItemForEntryFee_enum.OxfTopModel001Gb,
@@ -138,7 +136,7 @@ public class InvoiceCalculationService_normalRun_IntegTest extends LeaseModuleIn
         });
 
         lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
-        assertThat(lease.getItems().size()).isEqualTo(9);
+        assertThat(lease.getItems().size()).isEqualTo(8);
 
         leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));
         leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));

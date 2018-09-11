@@ -375,8 +375,6 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
                     leaseHyper.getStartDate()
             );
 
-            assertThat(leaseItemRepository.findLeaseItemsByType(leaseHello6, LeaseItemType.SERVICE_CHARGE_BUDGETED).size()).isEqualTo(0);
-
             List<BudgetCalculation> calculations = budgetCalculationRepository.findByBudget(budget);
             calculations.stream().filter(x->!x.getUnit().getReference().equals("BUD-006")).forEach(x->assertThat(x.getStatus()).isEqualTo(Status.ASSIGNED));
             calculations.stream().filter(x->x.getUnit().getReference().equals("BUD-006")).forEach(x->assertThat(x.getStatus()).isEqualTo(Status.NEW));

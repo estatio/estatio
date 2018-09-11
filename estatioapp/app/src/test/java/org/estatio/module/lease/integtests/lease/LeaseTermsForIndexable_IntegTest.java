@@ -40,7 +40,6 @@ import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_e
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForEntryFee_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForMarketing_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceChargeBudgeted_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTax_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
@@ -61,7 +60,6 @@ public class LeaseTermsForIndexable_IntegTest extends LeaseModuleIntegTestAbstra
                 executionContext.executeChild(this, LeaseItemForRent_enum.OxfTopModel001Gb.builder());
                 executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfTopModel001Gb.builder());
                 executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfTopModel001Gb_TA.builder());
-                executionContext.executeChild(this, LeaseItemForServiceChargeBudgeted_enum.OxfTopModel001Gb.builder());
                 executionContext.executeChild(this, LeaseItemForTurnoverRent_enum.OxfTopModel001Gb.builder());
                 executionContext.executeChild(this, LeaseItemForDiscount_enum.OxfTopModel001Gb.builder());
                 executionContext.executeChild(this, LeaseItemForEntryFee_enum.OxfTopModel001Gb.builder());
