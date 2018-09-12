@@ -32,8 +32,11 @@ import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
+import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.security.app.user.MeService;
@@ -104,20 +107,64 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
 
     String overrideUserAtPathUsingDocumentName(final String atPath, final String documentName){
         if (!isBarcode(documentName)) return atPath; // country prefix can be derived from barcodes only
+        return deriveAtPathFromBarcode(documentName)!=null ? deriveAtPathFromBarcode(documentName) : atPath;
+    }
+
+    String deriveAtPathFromBarcode(final String documentName) {
         String countryPrefix = documentBarcodeService.countryPrefixFromBarcode(documentName);
-        if (countryPrefix == null) return atPath;
+        if (countryPrefix == null) return null;
         switch (countryPrefix) {
             case "FR":
                 return "/FRA";
             case "BE":
                 return "/BEL";
+            case "GB":
+                return "/GBR";
             default:
-                return atPath;
+                return null;
         }
     }
 
     private boolean isBarcode(final String documentName) {
         return documentName.replace(".pdf", "").matches("\\d+");
+    }
+
+
+
+    // TODO: move this to a service I suppose ...
+    @Action(
+            commandDtoProcessor = DeriveBlobFromReturnedDocumentArg0.class  // TODO: What to do with this one? Assume not being picked up when programmatic ...
+    )
+    @Programmatic
+    public Document uploadGeneric(final Blob blob, final String documentType, final boolean barcodeInDocName, @Parameter(optionality = Optionality.OPTIONAL) final String atPath) throws IllegalArgumentException {
+
+        // implementation that supports barcode docs for incoming orders and invoices France and Belgium
+        DocumentTypeData documentTypeData = DocumentTypeData.valueOf(documentType);
+        final DocumentType type = documentTypeData.findUsing(documentTypeRepository);
+        final String name = blob.getName();
+
+        if (documentTypeData==DocumentTypeData.INCOMING && barcodeInDocName) {
+            Document result =  incomingDocumentRepository.upsertAndArchive(type, deriveAtPathFromBarcode(name), name, blob);
+            IncomingDocumentRepository.UploadDomainEvent event = new IncomingDocumentRepository.UploadDomainEvent();
+            event.setReturnValue(result);
+            event.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
+            eventBusService.post(event);
+
+            return result;
+        }
+
+        // implementation that supports order docs for Italy
+        if (documentTypeData==DocumentTypeData.INCOMING_ORDER && !barcodeInDocName && atPath.startsWith("/ITA")){
+            return incomingDocumentRepository.upsert(type, atPath, name, blob);
+        }
+
+        // implementation that supports order docs for Italy
+        if (documentTypeData==DocumentTypeData.TAX_REGISTER && !barcodeInDocName && atPath.startsWith("/ITA")){
+            return incomingDocumentRepository.upsert(type, atPath, name, blob);
+        }
+
+        throw new IllegalArgumentException(String.format("Combination documentType =  %s, barcodeInDocName = %s and atPath = %s is not supported", documentType, barcodeInDocName, atPath));
+
     }
 
     @Inject
@@ -137,5 +184,8 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
 
     @Inject
     DocumentBarcodeService documentBarcodeService;
+
+    @Inject
+    EventBusService eventBusService;
 
 }

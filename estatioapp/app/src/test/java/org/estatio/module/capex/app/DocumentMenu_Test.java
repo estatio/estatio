@@ -5,8 +5,12 @@ import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
+import org.apache.isis.applib.value.Blob;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
+import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 public class DocumentMenu_Test {
 
@@ -27,7 +31,7 @@ public class DocumentMenu_Test {
 
         // expect
         context.checking(new Expectations(){{
-            oneOf(mockDocumentBarcodeService).countryPrefixFromBarcode(barcode);
+            allowing(mockDocumentBarcodeService).countryPrefixFromBarcode(barcode);
             will(returnValue("BE"));
         }});
 
@@ -75,6 +79,44 @@ public class DocumentMenu_Test {
 
         // then
         Assertions.assertThat(overriddenAtPath).isEqualTo("/ITA");
+
+    }
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
+    @Test
+    public void upload_generic_when_using_non_existing_doc_type_data() throws Exception {
+
+        // given
+        DocumentMenu menu = new DocumentMenu();
+        // expect
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("No enum constant org.estatio.module.invoice.dom.DocumentTypeData.NON_EXISTING_TYPE");
+        // when
+        menu.uploadGeneric(null, "NON_EXISTING_TYPE", true, null);
+
+    }
+
+
+    @Mock DocumentTypeRepository mockDocumentTypeRepository;
+
+    @Test
+    public void upload_generic_when_not_supported() throws Exception {
+
+        // given
+        DocumentMenu menu = new DocumentMenu();
+        menu.documentTypeRepository = mockDocumentTypeRepository;
+        Blob blob = new Blob("some_name", "application/pdf",null);
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockDocumentTypeRepository).findByReference("INCOMING_ORDER");
+        }});
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Combination documentType =  INCOMING_ORDER, barcodeInDocName = true and atPath = /ITA is not supported");
+        // when
+        menu.uploadGeneric(blob, "INCOMING_ORDER", true, "/ITA");
 
     }
 }

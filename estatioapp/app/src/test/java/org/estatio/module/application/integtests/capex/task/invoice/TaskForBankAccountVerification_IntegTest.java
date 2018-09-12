@@ -199,7 +199,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
             // bank accounts now need BICs so can verify
             bankAccount.setBic("123456789");
 
-            final String fileName = "1020100123.pdf";
+            final String fileName = "5020100123.pdf";
             final byte[] pdfBytes = Resources.toByteArray(
                     Resources.getResource(IncomingDocumentPresentationSubscriber_IntegTest.class, fileName));
             final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);

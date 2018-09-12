@@ -52,7 +52,7 @@ public enum DocumentTypeData {
 
     // supporting docs
     SUPPLIER_RECEIPT("SUPPLIER-RECEIPT", "Supplier Receipt (for Invoice)", null, null, INVOICE, null),
-    TAX_REGISTER("TAX-REGISTER", "Tax Register (for Invoice)", null, null, INVOICE, null),
+    TAX_REGISTER("TAX-REGISTER", "Tax Register (for Invoice)", null, null, INVOICE, Nature.INCOMING),
     CALCULATION("CALCULATION", "Calculation (for Preliminary Letter)", null, null, PRELIM_LETTER, null),
     SPECIAL_COMMUNICATION("SPECIAL-COMMUNICATION", "Special Communication (for Preliminary Letter)", null, null, PRELIM_LETTER, null),
 

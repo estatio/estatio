@@ -168,6 +168,21 @@ public class IncomingDocumentRepository extends DocumentRepository {
         }
     }
 
+    @Programmatic
+    public Document upsert(final DocumentType type, final String atPath, final String name, final Blob blob){
+        synchronized (this) {
+            Document document = null;
+            final List<Document> incomingDocumentsWithSameName = findAllIncomingDocumentsByName(name);
+            if (incomingDocumentsWithSameName.size()>0){
+                document = incomingDocumentsWithSameName.get(0);
+            }
+            if (document==null) {
+                document = documentService.createForBlob(type, atPath, name, blob);
+            }
+            return document;
+        }
+    }
+
     @Inject
     QueryResultsCache queryResultsCache;
 

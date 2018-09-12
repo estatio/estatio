@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.applib.value.Blob;
 
@@ -42,7 +41,7 @@ public class IncomingDocumentPresentationSubscriber_IntegTest extends CapexModul
         assertThat(incomingDocumentsBefore).isEmpty();
 
         // given
-        final String fileName = "1020100123.pdf";
+        final String fileName = "5020100123.pdf";
         final byte[] pdfBytes = Resources.toByteArray(
                 Resources.getResource(IncomingDocumentPresentationSubscriber_IntegTest.class, fileName));
         final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);
