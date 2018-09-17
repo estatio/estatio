@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.assertj.core.util.Lists;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -33,8 +34,8 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.base.dom.utils.StringUtils;
 
-import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(repositoryFor = Project.class, nature = NatureOfService.DOMAIN)
 public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
@@ -115,11 +116,15 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
         return result;
     }
 
+    public List<Project> findUsingAtPath(final String atPath) {
+        if (atPath==null) return Lists.emptyList();
+        return listAll().stream().filter(p->p.getAtPath().startsWith(atPath)).collect(Collectors.toList());
+    }
+
     public List<Project> findByParent(final Project parent) {
         return allMatches("findByParent", "parent", parent);
     }
 
     @Inject
     RepositoryService repositoryService;
-
 }

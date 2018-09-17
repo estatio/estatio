@@ -51,8 +51,8 @@ public class ProjectImportAdapter implements FixtureAwareRowHandler<ProjectImpor
         if (getNoCommessa()!=null) {
             ProjectImport line = new ProjectImport();
             serviceRegistry2.injectServicesInto(line);
-            line.setReference(deriveProjectReference(getNoCommessa()));
-            line.setName(deriveProjectName(getCausale()));
+            line.setProjectReference(deriveProjectReference(getNoCommessa()));
+            line.setProjectName(deriveProjectName(getCausale()));
             line.setAtPath("/ITA");
             line.importData(null);
         }

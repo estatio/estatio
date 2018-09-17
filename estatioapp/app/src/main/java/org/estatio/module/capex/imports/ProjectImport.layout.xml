@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <row>
+        <col span="12" unreferencedActions="true">
+        </col>
+    </row>
+    <row>
+        <col span="12">
+            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+                <ns2:property id="projectReference" />
+                <ns2:property id="projectName" />
+                <ns2:property id="startDate" />
+                <ns2:property id="endDate" />
+                <ns2:property id="parentReference" />
+                <ns2:property id="itemWorkTypeReference" />
+                <ns2:property id="itemDescription" />
+                <ns2:property id="itemBudgetedAmount" />
+                <ns2:property id="itemStartDate" />
+                <ns2:property id="itemEndDate" />
+                <ns2:property id="itemPropertyReference" />
+                <ns2:property id="itemTaxReference" />
+                <ns2:property id="atPath" />
+            </ns2:fieldSet>
+        </col>
+    </row>
+    <row>
+        <col span="12" unreferencedCollections="true">
+        </col>
+    </row>
+</grid>

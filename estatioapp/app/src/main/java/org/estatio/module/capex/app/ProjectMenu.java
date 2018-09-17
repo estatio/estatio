@@ -43,9 +43,12 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.base.dom.types.ReferenceType;
+import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
+import org.estatio.module.capex.imports.ProjectImportManager;
+import org.estatio.module.countryapptenancy.dom.CountryServiceForCurrentUser;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -96,6 +99,20 @@ public class ProjectMenu {
         return projectRepository.listAll().stream().filter(x->x.getItems().isEmpty()).collect(Collectors.toList());
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    public ProjectImportManager importProjects(final Country country){
+        return new ProjectImportManager(country);
+    }
+
+    public Country default0ImportProjects(){
+        return countryServiceForCurrentUser.countriesForCurrentUser().isEmpty() ? null : countryServiceForCurrentUser.countriesForCurrentUser().get(0);
+    }
+
+    public List<Country> choices0ImportProjects(){
+        return countryServiceForCurrentUser.countriesForCurrentUser();
+    }
+
+
     @Inject
     ProjectRepository projectRepository;
     @Inject
@@ -104,4 +121,6 @@ public class ProjectMenu {
     RepositoryService repositoryService;
     @Inject
     MeService meService;
+    @Inject
+    CountryServiceForCurrentUser countryServiceForCurrentUser;
 }

@@ -39,10 +39,10 @@ import lombok.Setter;
 public class ProjectImport implements Importable, ExcelFixtureRowHandler {
 
     @Getter @Setter
-    private String reference;
+    private String projectReference;
 
     @Getter @Setter
-    private String name;
+    private String projectName;
 
     @Getter @Setter
     private LocalDate startDate;
@@ -57,7 +57,7 @@ public class ProjectImport implements Importable, ExcelFixtureRowHandler {
     private String parentReference;
 
     @Getter @Setter
-    private String itemChargeReference;
+    private String itemWorkTypeReference;
 
     @Getter @Setter
     private String itemDescription;
@@ -98,11 +98,11 @@ public class ProjectImport implements Importable, ExcelFixtureRowHandler {
                 throw new ApplicationException(String.format("Parent with reference %s has items and cannot be a parent therefore.", getAtPath()));
             }
         }
-        Project project = findOrCreateProjectAndUpdateParent(getReference(), getName(), getStartDate(), getEndDate(), getAtPath(), parent);
+        Project project = findOrCreateProjectAndUpdateParent(getProjectReference(), getProjectName(), getStartDate(), getEndDate(), getAtPath(), parent);
 
-        if (getItemChargeReference()!=null) {
+        if (getItemWorkTypeReference()!=null) {
 
-            Charge charge = chargeRepository.findByReference(getItemChargeReference());
+            Charge charge = chargeRepository.findByReference(getItemWorkTypeReference());
             Property property = propertyRepository.findPropertyByReference(getItemPropertyReference());
             Tax tax = taxRepository.findByReference(getItemTaxReference());
             wrapperFactory.wrap(project).addItem(charge, getItemDescription(), getItemBudgetedAmount(), getItemStartDate(), getItemEndDate(), property, tax);

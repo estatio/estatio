@@ -132,4 +132,39 @@ public class ProjectRepository_Test {
         }
 
     }
+
+
+
+    public static class FindByCountry extends ProjectRepository_Test {
+
+        @Test
+        public void findByCountry_Works() throws Exception {
+
+            // given
+            Project projectForIta = new Project();
+            projectForIta.setAtPath("/ITA/SOMETHING");
+            Project projectForFra = new Project();
+            projectForFra.setAtPath("/FRA/SOMETHING");
+            Project projectForAll = new Project();
+            projectForAll.setAtPath("/");
+
+            ProjectRepository projectRepository = new ProjectRepository(){
+                @Override
+                public List<Project> listAll(){
+                    return Arrays.asList(projectForAll, projectForIta, projectForFra);
+                }
+            };
+
+            String atPathForCountryIta = "/ITA";
+
+            // when, then
+            assertThat(projectRepository.findUsingAtPath(atPathForCountryIta)).hasSize(1);
+            assertThat(projectRepository.findUsingAtPath(atPathForCountryIta)).contains(projectForIta);
+
+            assertThat(projectRepository.findUsingAtPath(null)).hasSize(0);
+
+        }
+
+    }
+
 }
