@@ -349,6 +349,16 @@ public class Project extends UdoDomainObject<Project> implements
         return result;
     }
 
+    public List<BudgetForPeriod> getPeriodBudgets(){
+        return budgetForPeriodRepository.findProject(this);
+    }
+
+    @Action(associateWith="budgetsForPeriod", associateWithSequence="1")
+    public Project newPeriodBudget(final BigDecimal amount, final LocalDate startDate, final LocalDate endDate){
+        budgetForPeriodRepository.findOrCreate(this, amount, startDate, endDate);
+        return this;
+    }
+
     @Programmatic
     public boolean isParentProject() {
         return getChildren().isEmpty() ? false : true;
@@ -380,6 +390,9 @@ public class Project extends UdoDomainObject<Project> implements
 
 	@Inject
     FactoryService factoryService;
+
+	@Inject
+    BudgetForPeriodRepository budgetForPeriodRepository;
 
 
 }
