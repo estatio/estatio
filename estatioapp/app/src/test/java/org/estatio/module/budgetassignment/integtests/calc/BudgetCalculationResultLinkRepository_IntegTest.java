@@ -79,7 +79,7 @@ public class BudgetCalculationResultLinkRepository_IntegTest extends BudgetAssig
         charge = Charge_enum.GbServiceCharge.findUsing(serviceRegistry);
         leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
         run = budgetCalculationRunRepository.createBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.BUDGETED, Status.NEW);
-        leaseItem = leaseTopModel.newItem(LeaseItemType.SERVICE_CHARGE_BUDGETED, LeaseAgreementRoleTypeEnum.LANDLORD, charge, InvoicingFrequency.MONTHLY_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT, leaseTopModel.getStartDate());
+        leaseItem = leaseTopModel.newItem(LeaseItemType.SERVICE_CHARGE, LeaseAgreementRoleTypeEnum.LANDLORD, charge, InvoicingFrequency.MONTHLY_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT, leaseTopModel.getStartDate());
     }
 
     public static class NewLink extends BudgetCalculationResultLinkRepository_IntegTest {

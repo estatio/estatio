@@ -150,13 +150,6 @@ public class LeaseTermRepository_Test {
             // valid
             testValidate(leaseItem, null, new LocalDate(2014, 1, 1), new LocalDate(2014, 1, 1), null);
 
-            // when
-            leaseItem.setType(LeaseItemType.SERVICE_CHARGE_BUDGETED);
-            // invalid
-            testValidate(leaseItem, null, new LocalDate(2014, 1, 1), null, "A term of type SERVICE_CHARGE_BUDGETED should have an end date");
-            // valid
-            testValidate(leaseItem, null, new LocalDate(2014, 1, 1), new LocalDate(2014, 1, 1), null);
-
         }
 
         private void testValidate(LeaseItem leaseItem, LeaseTerm previous, LocalDate startDate, LocalDate endDate, String value) {

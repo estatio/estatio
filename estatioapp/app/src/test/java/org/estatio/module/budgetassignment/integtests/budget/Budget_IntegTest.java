@@ -27,7 +27,6 @@ import org.estatio.module.budgetassignment.fixtures.override.enums.BudgetOverrid
 import org.estatio.module.budgetassignment.fixtures.override.enums.BudgetOverrideForMax_enum;
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceChargeBudgeted_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -56,7 +55,6 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
                     executionContext.executeChildT(this, BudgetOverrideForFlatRate_enum.BudMiracle002Nl_2015.builder());
                     executionContext.executeChildT(this, BudgetOverrideForMax_enum.BudPoison001Nl_2015.builder());
 
-                    executionContext.executeChild(this, LeaseItemForServiceChargeBudgeted_enum.OxfTopModel001Gb.builder());
                 }
             });
         }
@@ -139,7 +137,6 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
                     executionContext.executeChildT(this, BudgetOverrideForFlatRate_enum.BudMiracle002Nl_2015.builder());
                     executionContext.executeChildT(this, BudgetOverrideForMax_enum.BudPoison001Nl_2015.builder());
 
-                    executionContext.executeChild(this, LeaseItemForServiceChargeBudgeted_enum.OxfTopModel001Gb.builder());
                 }
             });
 
@@ -176,7 +173,6 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
                     executionContext.executeChildT(this, BudgetOverrideForFlatRate_enum.BudMiracle002Nl_2015.builder());
                     executionContext.executeChildT(this, BudgetOverrideForMax_enum.BudPoison001Nl_2015.builder());
 
-                    executionContext.executeChild(this, LeaseItemForServiceChargeBudgeted_enum.OxfTopModel001Gb.builder());
                     executionContext.executeChild(this, Budget_enum.OxfBudget2016.builder());
                 }
             });

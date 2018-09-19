@@ -22,8 +22,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import org.estatio.module.lease.dom.LeaseItemType;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class LeaseItemType_Test {
@@ -36,7 +34,7 @@ public class LeaseItemType_Test {
         List<LeaseItemType> typesForServiceChargeFound = LeaseItemType.typesForLeaseTermForServiceCharge();
 
         // then
-        assertThat(typesForServiceChargeFound.size()).isEqualTo(4);
+        assertThat(typesForServiceChargeFound.size()).isEqualTo(3);
         assertThat(typesForServiceChargeFound.get(0)).isEqualTo(LeaseItemType.SERVICE_CHARGE);
     }
 

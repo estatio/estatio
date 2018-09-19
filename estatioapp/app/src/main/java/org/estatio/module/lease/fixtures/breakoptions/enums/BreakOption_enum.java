@@ -36,8 +36,6 @@ public enum BreakOption_enum implements PersonaWithFinder<BreakOption>, PersonaW
         // prereqs
         executionContext.executeChild(this, LeaseItemForRent_enum.OxfTopModel001Gb.builder());
         executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfTopModel001Gb.builder());
-        executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfTopModel001Gb_TA.builder());
-        executionContext.executeChild(this, LeaseItemForServiceChargeBudgeted_enum.OxfTopModel001Gb.builder());
         executionContext.executeChild(this, LeaseItemForTurnoverRent_enum.OxfTopModel001Gb.builder());
         executionContext.executeChild(this, LeaseItemForDiscount_enum.OxfTopModel001Gb.builder());
         executionContext.executeChild(this, LeaseItemForEntryFee_enum.OxfTopModel001Gb.builder());

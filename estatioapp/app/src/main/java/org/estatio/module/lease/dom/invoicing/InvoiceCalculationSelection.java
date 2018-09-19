@@ -43,7 +43,6 @@ public enum InvoiceCalculationSelection {
             LeaseItemType.RENT_FIXED,
             LeaseItemType.RENT_DISCOUNT_FIXED,
             LeaseItemType.SERVICE_CHARGE,
-            LeaseItemType.SERVICE_CHARGE_BUDGETED,
             LeaseItemType.SERVICE_CHARGE_INDEXABLE,
             LeaseItemType.SERVICE_CHARGE_DISCOUNT_FIXED,
             LeaseItemType.TAX,

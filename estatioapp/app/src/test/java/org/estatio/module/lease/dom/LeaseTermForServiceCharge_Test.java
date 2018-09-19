@@ -33,10 +33,10 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.incode.module.unittestsupport.dom.bean.PojoTester;
+
 import org.estatio.module.index.dom.Index;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
 
 public class LeaseTermForServiceCharge_Test {
 
@@ -142,30 +142,6 @@ public class LeaseTermForServiceCharge_Test {
         @SuppressWarnings({ "rawtypes", "unchecked" })
         private static PojoTester.FixtureDatumFactory<LeaseTermStatus> statii() {
             return new PojoTester.FixtureDatumFactory(LeaseTermStatus.class, (Object[])LeaseTermStatus.values());
-        }
-
-    }
-
-    public static class AllowsOpenEndate extends LeaseTermForServiceCharge_Test {
-
-        LeaseTermForServiceCharge term;
-        LeaseItem item;
-
-        @Before
-        public void setUp(){
-            term = new LeaseTermForServiceCharge();
-            item = new LeaseItem();
-            term.setLeaseItem(item);
-        }
-
-        @Test
-        public void noOpenEndDateAllowed() {
-
-            // when
-            item.setType(LeaseItemType.SERVICE_CHARGE_BUDGETED);
-            // then
-            assertFalse(term.allowOpenEndDate());
-
         }
 
     }
