@@ -28,15 +28,15 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.capex.dom.project.BudgetForPeriod;
-import org.estatio.module.capex.dom.project.BudgetForPeriodRepository;
+import org.estatio.module.capex.dom.project.ProjectTerm;
+import org.estatio.module.capex.dom.project.ProjectTermRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
-public class BudgetForPeriodRepository_IntegTest extends CapexModuleIntegTestAbstract {
+public class ProjectTermRepository_IntegTest extends CapexModuleIntegTestAbstract {
 
     @Before
     public void setupData() {
@@ -49,43 +49,51 @@ public class BudgetForPeriodRepository_IntegTest extends CapexModuleIntegTestAbs
     }
 
     @Test
-    public void create_project_budget_works() throws Exception {
+    public void create_project_term_works() throws Exception {
 
         // given
         Project projectForKal = Project_enum.KalProject1.findUsing(serviceRegistry);
-        assertThat(projectForKal.getPeriodBudgets()).isEmpty();
+        assertThat(projectForKal.getProjectTerms()).isEmpty();
 
         // when
         final BigDecimal amount = new BigDecimal("10000.00");
         final LocalDate startDate = new LocalDate(2018, 1, 1);
         final LocalDate endDate = new LocalDate(2018, 3, 31);
-        projectForKal.newPeriodBudget(amount, startDate, endDate);
+        projectForKal.newProjectTerm(amount, startDate, endDate);
 
         // then
-        assertThat(budgetForPeriodRepository.listAll()).hasSize(1);
-        assertThat(projectForKal.getPeriodBudgets()).hasSize(1);
-        BudgetForPeriod budget = projectForKal.getPeriodBudgets().get(0);
+        assertThat(projectTermRepository.listAll()).hasSize(1);
+        assertThat(projectForKal.getProjectTerms()).hasSize(1);
+        ProjectTerm budget = projectForKal.getProjectTerms().get(0);
         assertThat(budget.getProject()).isEqualTo(projectForKal);
-        assertThat(budget.getAmount()).isEqualTo(amount);
+        assertThat(budget.getBudgetedAmount()).isEqualTo(amount);
         assertThat(budget.getStartDate()).isEqualTo(startDate);
         assertThat(budget.getEndDate()).isEqualTo(endDate);
+
+        // and when
+        final BigDecimal otherAmount = new BigDecimal("12345.00");
+        projectForKal.newProjectTerm(otherAmount, startDate, endDate);
+
+        // then still
+        assertThat(projectForKal.getProjectTerms()).hasSize(1);
+        assertThat(projectForKal.getProjectTerms().get(0).getBudgetedAmount()).isEqualTo(amount);
 
         // and when
         final BigDecimal amount2 = new BigDecimal("20000.00");
         final LocalDate startDate2 = new LocalDate(2018, 4, 1);
         final LocalDate endDate2 = new LocalDate(2018, 6, 30);
-        projectForKal.newPeriodBudget(amount2, startDate2, endDate2);
+        projectForKal.newProjectTerm(amount2, startDate2, endDate2);
 
         // then sorted by date desc
-        assertThat(projectForKal.getPeriodBudgets()).hasSize(2);
-        assertThat(projectForKal.getPeriodBudgets().get(0).getStartDate()).isEqualTo(startDate2);
-        assertThat(projectForKal.getPeriodBudgets().get(0).getEndDate()).isEqualTo(endDate2);
-        assertThat(projectForKal.getPeriodBudgets().get(0).getAmount()).isEqualTo(amount2);
-        assertThat(projectForKal.getPeriodBudgets().get(1).getStartDate()).isEqualTo(startDate);
+        assertThat(projectForKal.getProjectTerms()).hasSize(2);
+        assertThat(projectForKal.getProjectTerms().get(0).getStartDate()).isEqualTo(startDate2);
+        assertThat(projectForKal.getProjectTerms().get(0).getEndDate()).isEqualTo(endDate2);
+        assertThat(projectForKal.getProjectTerms().get(0).getBudgetedAmount()).isEqualTo(amount2);
+        assertThat(projectForKal.getProjectTerms().get(1).getStartDate()).isEqualTo(startDate);
 
     }
 
     @Inject
-    BudgetForPeriodRepository budgetForPeriodRepository;
+    ProjectTermRepository projectTermRepository;
 
 }

@@ -34,38 +34,38 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
-@DomainService(repositoryFor = BudgetForPeriod.class, nature = NatureOfService.DOMAIN)
-public class BudgetForPeriodRepository extends UdoDomainRepositoryAndFactory<BudgetForPeriod> {
+@DomainService(repositoryFor = ProjectTerm.class, nature = NatureOfService.DOMAIN)
+public class ProjectTermRepository extends UdoDomainRepositoryAndFactory<ProjectTerm> {
 
-    public BudgetForPeriodRepository() {
-        super(BudgetForPeriodRepository.class, BudgetForPeriod.class);
+    public ProjectTermRepository() {
+        super(ProjectTermRepository.class, ProjectTerm.class);
     }
 
     @Programmatic
-    public List<BudgetForPeriod> listAll() {
+    public List<ProjectTerm> listAll() {
         return allInstances();
     }
 
     @Programmatic
-    public List<BudgetForPeriod> findProject(final Project project) {
+    public List<ProjectTerm> findProject(final Project project) {
         return allMatches("findByProject", "project", project).stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
     }
 
     @Programmatic
-    public BudgetForPeriod findUnique(final Project project, final LocalDate startDate) {
+    public ProjectTerm findUnique(final Project project, final LocalDate startDate) {
         return uniqueMatch("findByProjectAndStartDate", "project", project, "startDate", startDate);
     }
 
     @Programmatic
-    public BudgetForPeriod create(
+    public ProjectTerm create(
             final Project project,
             final BigDecimal amount,
             final LocalDate startDate,
             final LocalDate endDate) {
 
-        BudgetForPeriod budget = repositoryService.instantiate(BudgetForPeriod.class);
+        ProjectTerm budget = repositoryService.instantiate(ProjectTerm.class);
         budget.setProject(project);
-        budget.setAmount(amount);
+        budget.setBudgetedAmount(amount);
         budget.setStartDate(startDate);
         budget.setEndDate(endDate);
 
@@ -75,12 +75,12 @@ public class BudgetForPeriodRepository extends UdoDomainRepositoryAndFactory<Bud
     }
 
     @Programmatic
-    public BudgetForPeriod findOrCreate(
+    public ProjectTerm findOrCreate(
             final Project project,
             final BigDecimal amount,
             final LocalDate startDate,
             final LocalDate endDate) {
-        BudgetForPeriod budget = findUnique(project, startDate);
+        ProjectTerm budget = findUnique(project, startDate);
         if(budget == null) {
             budget = create(project, amount, startDate, endDate);
         }

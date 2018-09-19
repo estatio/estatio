@@ -349,13 +349,13 @@ public class Project extends UdoDomainObject<Project> implements
         return result;
     }
 
-    public List<BudgetForPeriod> getPeriodBudgets(){
-        return budgetForPeriodRepository.findProject(this);
+    public List<ProjectTerm> getProjectTerms(){
+        return projectTermRepository.findProject(this);
     }
 
     @Action(associateWith="budgetsForPeriod", associateWithSequence="1")
-    public Project newPeriodBudget(final BigDecimal amount, final LocalDate startDate, final LocalDate endDate){
-        budgetForPeriodRepository.findOrCreate(this, amount, startDate, endDate);
+    public Project newProjectTerm(final BigDecimal amount, final LocalDate startDate, final LocalDate endDate){
+        projectTermRepository.findOrCreate(this, amount, startDate, endDate);
         return this;
     }
 
@@ -392,7 +392,7 @@ public class Project extends UdoDomainObject<Project> implements
     FactoryService factoryService;
 
 	@Inject
-    BudgetForPeriodRepository budgetForPeriodRepository;
+    ProjectTermRepository projectTermRepository;
 
 
 }

@@ -58,32 +58,32 @@ import lombok.Setter;
 )
 @DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
-@Unique(name = "BudgetForPeriod_project_startDate_UNQ", members = { "project", "startDate" })
+@Unique(name = "ProjectTerm_project_startDate_UNQ", members = { "project", "startDate" })
 @Queries({
         @Query(name = "findByProject", language = "JDOQL", value = "SELECT "
-                + "FROM org.estatio.module.capex.dom.project.BudgetForPeriod "
+                + "FROM org.estatio.module.capex.dom.project.ProjectTerm "
                 + "WHERE project == :project "),
         @Query(name = "findByProjectAndStartDate", language = "JDOQL", value = "SELECT "
-                + "FROM org.estatio.module.capex.dom.project.BudgetForPeriod "
+                + "FROM org.estatio.module.capex.dom.project.ProjectTerm "
                 + "WHERE project == :project && "
                 + "startDate == :startDate ")
 })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.capex.dom.project.BudgetForPeriod"
+        objectType = "org.estatio.capex.dom.project.ProjectTerm"
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
-public class BudgetForPeriod extends UdoDomainObject<BudgetForPeriod> {
+public class ProjectTerm extends UdoDomainObject<ProjectTerm> {
 
-    public BudgetForPeriod() {
+    public ProjectTerm() {
         super("project, startDate");
     }
 
     public String title() {
         return TitleBuilder.start()
                 .withParent(getProject())
-                .withName(getAmount())
+                .withName(getBudgetedAmount())
                 .withName(getInterval())
                 .toString();
     }
@@ -94,7 +94,7 @@ public class BudgetForPeriod extends UdoDomainObject<BudgetForPeriod> {
 
     @Getter @Setter
     @Column(allowsNull = "false", scale = MoneyType.Meta.SCALE)
-    private BigDecimal amount;
+    private BigDecimal budgetedAmount;
 
     @Getter @Setter
     @Column(allowsNull = "false")
