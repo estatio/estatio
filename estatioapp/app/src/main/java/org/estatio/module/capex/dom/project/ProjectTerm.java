@@ -19,6 +19,7 @@
 package org.estatio.module.capex.dom.project;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
@@ -30,16 +31,23 @@ import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import javax.validation.constraints.Digits;
 
+import org.assertj.core.util.Lists;
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -48,6 +56,7 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.base.dom.UdoDomainObject;
+import org.estatio.module.capex.dom.order.Order;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -73,7 +82,6 @@ import lombok.Setter;
         objectType = "org.estatio.capex.dom.project.ProjectTerm"
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
-@XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class ProjectTerm extends UdoDomainObject<ProjectTerm> {
 
     public ProjectTerm() {
@@ -83,8 +91,8 @@ public class ProjectTerm extends UdoDomainObject<ProjectTerm> {
     public String title() {
         return TitleBuilder.start()
                 .withParent(getProject())
+                .withName(getInterval() + " ")
                 .withName(getBudgetedAmount())
-                .withName(getInterval())
                 .toString();
     }
 
@@ -96,6 +104,12 @@ public class ProjectTerm extends UdoDomainObject<ProjectTerm> {
     @Column(allowsNull = "false", scale = MoneyType.Meta.SCALE)
     private BigDecimal budgetedAmount;
 
+    @Property()
+    public Integer getPercentageOfTotalBudget(){
+        // TODO: implement
+        return 100;
+    }
+
     @Getter @Setter
     @Column(allowsNull = "false")
     private LocalDate startDate;
@@ -104,9 +118,45 @@ public class ProjectTerm extends UdoDomainObject<ProjectTerm> {
     @Column(allowsNull = "false")
     private LocalDate endDate;
 
+    @Property()
+    @Digits(integer = 13, fraction = 2)
+    public BigDecimal getOrderedAmount(){
+        // TODO: implement
+        return BigDecimal.ZERO;
+    }
+
+    @Property()
+    @Digits(integer = 13, fraction = 2)
+    public BigDecimal getPaidAmount(){
+        // TODO: implement
+        return BigDecimal.ZERO;
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public List<Order> getOrders(){
+        // TODO: implement
+        return Lists.emptyList();
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public List<Order> getInvoices(){
+        // TODO: implement
+        return Lists.emptyList();
+    }
+
+    @PropertyLayout(hidden = Where.EVERYWHERE)
     @Override
     public ApplicationTenancy getApplicationTenancy() {
         return getProject().getApplicationTenancy();
+    }
+
+    @PropertyLayout(hidden = Where.EVERYWHERE)
+    @Override
+    public String getAtPath() {
+        final ApplicationTenancy applicationTenancy = getApplicationTenancy();
+        return applicationTenancy != null ? applicationTenancy.getPath() : null;
     }
 
     @Programmatic

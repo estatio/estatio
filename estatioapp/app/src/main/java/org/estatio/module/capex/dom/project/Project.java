@@ -353,7 +353,7 @@ public class Project extends UdoDomainObject<Project> implements
         return projectTermRepository.findProject(this);
     }
 
-    @Action(associateWith="budgetsForPeriod", associateWithSequence="1")
+    @Action(associateWith="projectTerms", associateWithSequence="1")
     public Project newProjectTerm(final BigDecimal amount, final LocalDate startDate, final LocalDate endDate){
         projectTermRepository.findOrCreate(this, amount, startDate, endDate);
         return this;
