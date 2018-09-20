@@ -84,12 +84,14 @@ public class ProjectTermRepository_IntegTest extends CapexModuleIntegTestAbstrac
         final LocalDate endDate2 = new LocalDate(2018, 6, 30);
         projectForKal.newProjectTerm(amount2, startDate2, endDate2);
 
-        // then sorted by date desc
+        // then sorted by date asc
         assertThat(projectForKal.getProjectTerms()).hasSize(2);
-        assertThat(projectForKal.getProjectTerms().get(0).getStartDate()).isEqualTo(startDate2);
-        assertThat(projectForKal.getProjectTerms().get(0).getEndDate()).isEqualTo(endDate2);
-        assertThat(projectForKal.getProjectTerms().get(0).getBudgetedAmount()).isEqualTo(amount2);
-        assertThat(projectForKal.getProjectTerms().get(1).getStartDate()).isEqualTo(startDate);
+        assertThat(projectForKal.getProjectTerms().get(0).getStartDate()).isEqualTo(startDate);
+        assertThat(projectForKal.getProjectTerms().get(0).getEndDate()).isEqualTo(endDate);
+        assertThat(projectForKal.getProjectTerms().get(0).getBudgetedAmount()).isEqualTo(amount);
+        assertThat(projectForKal.getProjectTerms().get(1).getStartDate()).isEqualTo(startDate2);
+        assertThat(projectForKal.getProjectTerms().get(1).getEndDate()).isEqualTo(endDate2);
+        assertThat(projectForKal.getProjectTerms().get(1).getBudgetedAmount()).isEqualTo(amount2);
 
     }
 

@@ -19,7 +19,6 @@
 package org.estatio.module.capex.dom.project;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,7 +47,7 @@ public class ProjectTermRepository extends UdoDomainRepositoryAndFactory<Project
 
     @Programmatic
     public List<ProjectTerm> findProject(final Project project) {
-        return allMatches("findByProject", "project", project).stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+        return allMatches("findByProject", "project", project).stream().sorted().collect(Collectors.toList());
     }
 
     @Programmatic
