@@ -32,6 +32,7 @@ import static org.estatio.module.party.fixtures.organisation.enums.Organisation_
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.PastaPapaItNl;
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.PerdantFr;
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.TopModelGb;
+import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.TopModelIt;
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.TopModelSe;
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.YoukeaSe;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Fr;
@@ -128,6 +129,11 @@ public enum Person_enum
 
     LucianoPavarottiIt("LPAVAROTTI", "Luciano", "Pavarotti", "L", false, MALE, It, It,
             CONTACT, PastaPapaItNl,
+            new IPartyRoleType[] {  },
+            new FixedAssetRoleSpec[] {}),
+
+    RonRondelliIt("LRONDELLI", "Ronaldo", "Rondelli", "R", false, MALE, It, It,
+            CONTACT, TopModelIt,
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
 

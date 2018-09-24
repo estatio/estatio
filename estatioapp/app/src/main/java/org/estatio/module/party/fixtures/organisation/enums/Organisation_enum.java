@@ -58,6 +58,7 @@ public enum Organisation_enum
     MiracleNl("MIRACLE_NL", "Miracle Shoes (NL)", Nl),
     NlBankNl("NLBANK_NL", "NlBank (NL)", Nl),
     PastaPapaItNl("PASTAPAPA", "Pasta Papa Food", It),
+    TopModelIt("TOPMODEL", "Topmodel Fashion", It),
     PerdantFr("PERDANT", "Perdant Clothing", Fr),
     PoisonGb("POISON_GB", "Poison Perfumeries", Gb),
     PoisonNl("POISON_NL", "Poison Perfumeries B.V.", Nl),

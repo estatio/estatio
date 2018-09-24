@@ -34,6 +34,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import static org.incode.module.country.fixtures.enums.Country_enum.GBR;
+import static org.incode.module.country.fixtures.enums.Country_enum.ITA;
 import static org.incode.module.country.fixtures.enums.Country_enum.NLD;
 import static org.incode.module.country.fixtures.enums.Country_enum.SWE;
 
@@ -146,6 +147,13 @@ public enum OrganisationAndComms_enum
                             "+46082211333",
                             "+460822211399",
                             "info@helloworldse.example.com")
+            }),
+    HelloWorldIt(Organisation_enum.HelloWorldIt,
+            new OrganisationAndCommsBuilder.CommsSpec[] {
+                    new OrganisationAndCommsBuilder.CommsSpec("Via Melchiorre Gioia 100", null, "20124", "Milan", null, ITA, true,
+                            "+39202211333",
+                            "+392022211399",
+                            "info@helloita.example.com")
             }),
     ;
 
