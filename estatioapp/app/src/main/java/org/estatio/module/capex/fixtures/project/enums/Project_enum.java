@@ -28,8 +28,9 @@ import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
+
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.capex.fixtures.project.builders.ProjectBuilder;
@@ -41,7 +42,9 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import static org.estatio.module.asset.fixtures.property.enums.Property_enum.OxfGb;
+import static org.estatio.module.asset.fixtures.property.enums.Property_enum.RonIt;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Gb;
+import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.It;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Nl;
 import static org.incode.module.base.integtests.VT.bd;
 import static org.incode.module.base.integtests.VT.ld;
@@ -64,6 +67,13 @@ public enum Project_enum implements PersonaWithBuilderScript<Project, ProjectBui
     ),
     KalProject2 ("PR2", "Broaden entrance", ld(1999, 4, 1), ld(1999, 5, 1), Nl,
             new ItemSpec[]{}
+    ),
+    RonProject  ("RON-01", "New extension", ld(2018, 1, 1), ld(2021, 7, 1), It,
+            new ItemSpec[]{
+                    new ItemSpec(IncomingCharge_enum.ItPurchase, "purchase (acquisto)", bd("90000.00"), null, null, RonIt, null),
+                    new ItemSpec(IncomingCharge_enum.ItConstruction, "construction (costruzione)", bd("3000000.00"), null, null, RonIt, null),
+
+            }
     ),
     ;
 

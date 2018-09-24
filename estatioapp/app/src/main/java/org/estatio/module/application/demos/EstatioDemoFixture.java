@@ -177,7 +177,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 Lease_enum.OxfMiracl005Gb,
                 Lease_enum.KalPoison001Nl,
                 Lease_enum.OxfTopModel001Gb,
-                Lease_enum.HanOmsHyral003Se);
+                Lease_enum.HanOmsHyral003Se,
+                Lease_enum.RonTopModel001It);
 
         ec.executeChildren(this,
                 BreakOption_enum.OxfPoison003Gb_FIXED,
@@ -204,17 +205,15 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 LeaseItemForRent_enum.HanPoison001Se,
                 LeaseItemForRent_enum.HanTopModel002Se,
                 LeaseItemForTurnoverRentFixed_enum.HanPoison001Se,
-                LeaseItemForTurnoverRentFixed_enum.HanTopModel002Se);
+                LeaseItemForTurnoverRentFixed_enum.HanTopModel002Se,
+                LeaseItemForRent_enum.RonTopModel001It,
+                LeaseItemForTax_enum.RonTopModel001It);
 
         ec.executeChildren(this,
                 InvoiceForLease_enum.OxfPoison003Gb,
                 InvoiceForLease_enum.KalPoison001Nl,
                 InvoiceForLease_enum.OxfMiracl005Gb);
 
-        ec.executeChildren(this,
-                Project_enum.KalProject1,
-                Project_enum.KalProject2,
-                Project_enum.GraProject);
 
         ec.executeChildren(this,
                 Budget_enum.OxfBudget2015,
@@ -231,6 +230,12 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 new CapexChargeHierarchyXlsxFixture());
         ec.executeChild(this,
                 new OrderInvoiceImportForDemoXlsxFixture());
+
+        ec.executeChildren(this,
+                Project_enum.KalProject1,
+                Project_enum.KalProject2,
+                Project_enum.GraProject,
+                Project_enum.RonProject);
 
         ec.executeChildren(this,
                 new DocumentTypesAndTemplatesForCapexFixture(),
