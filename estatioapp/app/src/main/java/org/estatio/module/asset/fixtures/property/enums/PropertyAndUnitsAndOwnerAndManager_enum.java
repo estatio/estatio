@@ -29,7 +29,7 @@ public enum PropertyAndUnitsAndOwnerAndManager_enum implements
             Person_enum.JohnDoeNl, null, null
     ) {
     },
-    CARTEST (Property_enum.CARTEST,
+    RonIt(Property_enum.RonIt,
             0,
             Organisation_enum.HelloWorldIt, ld(1999, 1, 1), ld(2000, 1, 1),
             Person_enum.LucianoPavarottiIt, null, null

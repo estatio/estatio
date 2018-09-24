@@ -144,7 +144,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 PropertyAndUnitsAndOwnerAndManager_enum.HanSe,
                 PropertyAndUnitsAndOwnerAndManager_enum.MnsFr,
                 PropertyAndUnitsAndOwnerAndManager_enum.MacFr,
-                PropertyAndUnitsAndOwnerAndManager_enum.CARTEST);
+                PropertyAndUnitsAndOwnerAndManager_enum.RonIt);
 
         ec.executeChildren(this,
                 NumeratorForOrganisation_enum.Fra);
