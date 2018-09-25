@@ -64,6 +64,8 @@ public final class ProjectBuilder extends BuilderScriptAbstract<Project, Project
     private Project parent;
     @Getter @Setter
     private List<ItemSpec> itemSpecs = Lists.newArrayList();
+    @Getter @Setter
+    private List<TermSpec> termSpecs = Lists.newArrayList();
 
     @Getter
     private Project object;
@@ -80,6 +82,14 @@ public final class ProjectBuilder extends BuilderScriptAbstract<Project, Project
         private final Tax tax;
     }
 
+    @AllArgsConstructor
+    @Data
+    public static class TermSpec {
+        private final BigDecimal budgetedAmount;
+        private final LocalDate startDate;
+        private final LocalDate endDate;
+    }
+
     @Override
     protected void execute(final ExecutionContext ec) {
 
@@ -91,6 +101,10 @@ public final class ProjectBuilder extends BuilderScriptAbstract<Project, Project
 
         for (ItemSpec i : itemSpecs) {
             project.addItem(i.charge, i.description, i.budgetedAmount, i.startDate, i.endDate, i.property, i.tax );
+        }
+
+        for (TermSpec t : termSpecs) {
+            project.newProjectTerm(t.budgetedAmount, t.startDate, t.endDate);
         }
 
         object = project;
