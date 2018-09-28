@@ -25,6 +25,7 @@ public enum ApplicationTenancy_enum
     GlobalOnly  ("/_",          "Global only"),
 
     Fr          ("/FRA",        "France"),
+    FrBe        ("/FRA;/BEL",   "France - Belgium"),
     FrOther     ("/FRA/_",      "France - Other"),
     FrViv       ("/FRA/VIV",    "Vive (FRA)"),
     FrVivDefault("/FRA/VIV/_",  "Vive (FRA) - Default"),

@@ -131,7 +131,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 Person_enum.FaithConwayGb,
                 Person_enum.OscarCountryDirectorGb,
                 Person_enum.EmmaTreasurerGb,
-                Person_enum.ThibaultOfficerAdministratorFr,
+                Person_enum.DanielOfficeAdministratorFr,
                 Person_enum.FifineLacroixFr,
                 Person_enum.OlivePropertyManagerFr,
                 Person_enum.RosaireEvrardFr,

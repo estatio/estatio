@@ -10,16 +10,10 @@ import org.junit.Test;
 import org.apache.isis.applib.fixtures.TickingFixtureClock;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.clock.ClockService;
-import org.apache.isis.applib.services.linking.DeepLinkService;
-import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.wrapper.DisabledException;
-import org.apache.isis.applib.services.wrapper.InvalidException;
-
-import org.isisaddons.module.command.dom.CommandServiceJdoRepository;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
-import org.incode.platform.dom.communications.integtests.app.services.fakeemail.FakeEmailService;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.capex.app.taskreminder.TaskOverview;
@@ -46,7 +40,7 @@ public class TaskOverview_IntegTest extends CapexModuleIntegTestAbstract {
                     executionContext.executeChild(this, new CapexChargeHierarchyXlsxFixture());
                     executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
                     executionContext.executeChild(this, IncomingInvoice_enum.fakeInvoice2Pdf.builder());
-                    executionContext.executeChild(this, Person_enum.ThibaultOfficerAdministratorFr.builder());
+                    executionContext.executeChild(this, Person_enum.DanielOfficeAdministratorFr.builder());
                     executionContext.executeChild(this, Person_enum.FleuretteRenaudFr.builder());
                 }
             });
@@ -55,7 +49,7 @@ public class TaskOverview_IntegTest extends CapexModuleIntegTestAbstract {
         @Test
         public void noOverdueTasks() {
             // given
-            final Person person = Person_enum.ThibaultOfficerAdministratorFr.findUsing(serviceRegistry);
+            final Person person = Person_enum.DanielOfficeAdministratorFr.findUsing(serviceRegistry);
             final TaskOverview overview = serviceRegistry.injectServicesInto(new TaskOverview(person));
 
             //   then
@@ -89,7 +83,7 @@ public class TaskOverview_IntegTest extends CapexModuleIntegTestAbstract {
                     executionContext.executeChild(this, new CapexChargeHierarchyXlsxFixture());
                     executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
                     executionContext.executeChild(this, IncomingInvoice_enum.fakeInvoice2Pdf.builder());
-                    executionContext.executeChild(this, Person_enum.ThibaultOfficerAdministratorFr.builder());
+                    executionContext.executeChild(this, Person_enum.DanielOfficeAdministratorFr.builder());
                     executionContext.executeChild(this, Person_enum.FleuretteRenaudFr.builder());
                 }
             });
