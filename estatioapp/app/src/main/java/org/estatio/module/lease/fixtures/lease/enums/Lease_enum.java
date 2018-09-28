@@ -251,7 +251,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
                     new OccupancySpec("001", "Topmodel", NATIONAL, ITA, "FASHION", "WOMEN", ld(2010, 7, 15), null)
             },
             Person_enum.RonRondelliIt,
-            InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.CREATE
+            InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     ;
 

@@ -82,11 +82,11 @@ public enum OrganisationAndComms_enum
     }),
     HelloWorldFr(Organisation_enum.HelloWorldFr,
             new OrganisationAndCommsBuilder.CommsSpec[] {
-                    new OrganisationAndCommsBuilder.CommsSpec("5 Covent Garden", null, "W1A1AA", "London", null, FRA, true,
-                            "+44202211333",
-                            "+442022211399",
+                    new OrganisationAndCommsBuilder.CommsSpec("5 Jardin du Convent", null, "W1A1AA", "Paris", null, FRA, true,
+                            "+33202211333",
+                            "+332022211399",
                             "info@hello.example.com"),
-                    new OrganisationAndCommsBuilder.CommsSpec("1 Circle Square", null, "W2AXXX", "London", null, FRA, true,
+                    new OrganisationAndCommsBuilder.CommsSpec("1 Place Ronde", null, "W2AXXX", "Paris", null, FRA, true,
                             null,
                             null,
                             null)
