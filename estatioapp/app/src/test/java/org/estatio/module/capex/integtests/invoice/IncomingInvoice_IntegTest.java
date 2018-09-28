@@ -40,11 +40,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class IncomingInvoice_IntegTest extends CapexModuleIntegTestAbstract {
 
-    Property propertyForOxf;
+    Property propertyForViv;
     Party buyer;
     Party seller;
 
-    Country greatBritain;
+    Country france;
     Charge charge_for_marketing;
     Charge charge_for_other;
 
@@ -64,7 +64,7 @@ public class IncomingInvoice_IntegTest extends CapexModuleIntegTestAbstract {
 
                 ec.executeChildren(this,
                         IncomingInvoice_enum.fakeInvoice2Pdf,
-                        BankAccount_enum.TopModelGb);
+                        BankAccount_enum.TopModelFr);
             }
         });
     }
@@ -90,16 +90,16 @@ public class IncomingInvoice_IntegTest extends CapexModuleIntegTestAbstract {
     }
 
     private void incomingInvoiceSetup() {
-        propertyForOxf = Property_enum.OxfGb.findUsing(serviceRegistry);
+        propertyForViv = Property_enum.VivFr.findUsing(serviceRegistry);
 
-        buyer = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
-        seller = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
+        buyer = OrganisationAndComms_enum.HelloWorldFr.findUsing(serviceRegistry);
+        seller = OrganisationAndComms_enum.TopModelFr.findUsing(serviceRegistry);
 
-        greatBritain = Country_enum.GBR.findUsing(serviceRegistry);
+        france = Country_enum.FRA.findUsing(serviceRegistry);
         charge_for_marketing = chargeRepository.findByReference(IncomingCharge_enum.FrMarketing.getReference());
         charge_for_other = chargeRepository.findByReference(IncomingCharge_enum.FrOther.getReference());
 
-        bankAccount = bankAccountRepository.findBankAccountByReference(seller, BankAccount_enum.TopModelGb.getIban());
+        bankAccount = bankAccountRepository.findBankAccountByReference(seller, BankAccount_enum.TopModelFr.getIban());
 
         incomingInvoice = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate("65432", seller, new LocalDate(2014,5,13));
         incomingInvoice.setBankAccount(bankAccount);
