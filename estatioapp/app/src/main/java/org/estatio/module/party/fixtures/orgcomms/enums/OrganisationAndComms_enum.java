@@ -33,6 +33,7 @@ import org.estatio.module.party.fixtures.orgcomms.builders.OrganisationAndCommsB
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import static org.incode.module.country.fixtures.enums.Country_enum.FRA;
 import static org.incode.module.country.fixtures.enums.Country_enum.GBR;
 import static org.incode.module.country.fixtures.enums.Country_enum.ITA;
 import static org.incode.module.country.fixtures.enums.Country_enum.NLD;
@@ -78,6 +79,17 @@ public enum OrganisationAndComms_enum
                     null,
                     null,
                     null)
+    }),
+    HelloWorldFr(Organisation_enum.HelloWorldFr,
+            new OrganisationAndCommsBuilder.CommsSpec[] {
+                    new OrganisationAndCommsBuilder.CommsSpec("5 Covent Garden", null, "W1A1AA", "London", null, FRA, true,
+                            "+44202211333",
+                            "+442022211399",
+                            "info@hello.example.com"),
+                    new OrganisationAndCommsBuilder.CommsSpec("1 Circle Square", null, "W2AXXX", "London", null, FRA, true,
+                            null,
+                            null,
+                            null)
     }),
     HyperNl(Organisation_enum.HyperNl,
         new OrganisationAndCommsBuilder.CommsSpec[] {
@@ -140,6 +152,19 @@ public enum OrganisationAndComms_enum
                     null,
                     null)
     }),
+    TopModelFr(Organisation_enum.TopModelFr,
+            new OrganisationAndCommsBuilder.CommsSpec[] {
+                    new OrganisationAndCommsBuilder.CommsSpec(
+                            "2 Top Road", null, "W2AXXX", "London", null, FRA, true,
+                            "+31202211333",
+                            "+312022211399",
+                            "info@topmodel.example.com"),
+                    new OrganisationAndCommsBuilder.CommsSpec(
+                            "1 Circle Square", null, "W2AXXX", "London", null, FRA, true,
+                            null,
+                            null,
+                            null)
+            }),
     HelloWorldSe(Organisation_enum.HelloWorldSe,
             new OrganisationAndCommsBuilder.CommsSpec[] {
                     new OrganisationAndCommsBuilder.CommsSpec(

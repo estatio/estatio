@@ -126,7 +126,9 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
         ec.executeChildren(this,
                 Person_enum.LinusTorvaldsNl,
-                Person_enum.GinoVannelliGb, Person_enum.DylanOfficeAdministratorGb,
+                Person_enum.GinoVannelliGb,
+//                Person_enum.DylanOfficeAdministratorGb,
+                Person_enum.DanielOfficeAdministratorFr,
                 Person_enum.JonathanIncomingInvoiceManagerGb,
                 Person_enum.FaithConwayGb,
                 Person_enum.OscarCountryDirectorGb,
@@ -135,7 +137,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 Person_enum.FifineLacroixFr,
                 Person_enum.OlivePropertyManagerFr,
                 Person_enum.RosaireEvrardFr,
-                Person_enum.GabrielHerveFr,
+                Person_enum.GabrielCountryDirectorFr,
                 Person_enum.BrunoTreasurerFr);
 
         ec.executeChildren(this,
@@ -235,7 +237,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 Project_enum.KalProject1,
                 Project_enum.KalProject2,
                 Project_enum.GraProject,
-                Project_enum.RonProject);
+                Project_enum.RonProjectIt);
 
         ec.executeChildren(this,
                 new DocumentTypesAndTemplatesForCapexFixture(),

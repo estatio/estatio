@@ -30,14 +30,14 @@ import org.estatio.module.tax.fixtures.data.Tax_enum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import static org.estatio.module.asset.fixtures.person.enums.Person_enum.DylanOfficeAdministratorGb;
-import static org.estatio.module.asset.fixtures.person.enums.Person_enum.EmmaTreasurerGb;
-import static org.estatio.module.asset.fixtures.person.enums.Person_enum.FloellaAssetManagerGb;
-import static org.estatio.module.asset.fixtures.person.enums.Person_enum.JonathanIncomingInvoiceManagerGb;
-import static org.estatio.module.asset.fixtures.person.enums.Person_enum.OscarCountryDirectorGb;
+import static org.estatio.module.asset.fixtures.person.enums.Person_enum.BrunoTreasurerFr;
+import static org.estatio.module.asset.fixtures.person.enums.Person_enum.DanielOfficeAdministratorFr;
+import static org.estatio.module.asset.fixtures.person.enums.Person_enum.FloellaAssetManagerFr;
+import static org.estatio.module.asset.fixtures.person.enums.Person_enum.GabrielCountryDirectorFr;
+import static org.estatio.module.asset.fixtures.person.enums.Person_enum.OlivePropertyManagerFr;
 import static org.estatio.module.capex.dom.invoice.IncomingInvoiceType.CAPEX;
 import static org.estatio.module.capex.dom.invoice.IncomingInvoiceType.PROPERTY_EXPENSES;
-import static org.estatio.module.capex.fixtures.project.enums.Project_enum.OxfProject;
+import static org.estatio.module.capex.fixtures.project.enums.Project_enum.VivProjectFr;
 import static org.estatio.module.charge.fixtures.incoming.enums.IncomingCharge_enum.FrOther;
 import static org.estatio.module.charge.fixtures.incoming.enums.IncomingCharge_enum.FrWorks;
 import static org.incode.module.base.integtests.VT.bd;
@@ -50,37 +50,37 @@ public enum IncomingInvoice_enum
         implements PersonaWithFinder<IncomingInvoice>, PersonaWithBuilderScript<IncomingInvoice, IncomingInvoiceBuilder> {
 
     fakeInvoice2Pdf(
-            DylanOfficeAdministratorGb,
-            IncomingPdf_enum.FakeInvoice2, ApplicationTenancy_enum.Gb, new DateTime(2014,5,22,11,10), "estatio-user-gb",
-            Organisation_enum.TopModelGb, BankAccount_enum.TopModelGb, Organisation_enum.HelloWorldGb,
-            PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            DanielOfficeAdministratorFr,
+            IncomingPdf_enum.FakeInvoice2, ApplicationTenancy_enum.Fr, new DateTime(2014,5,22,11,10), "estatio-user-fr",
+            Organisation_enum.TopModelFr, BankAccount_enum.TopModelFr, Organisation_enum.HelloWorldFr,
+            PropertyAndUnitsAndOwnerAndManager_enum.VivFr,
             CAPEX, "65432", PaymentMethod.BANK_TRANSFER,
             ld(2014, 5, 15), ld(2014,6,15), ld(2014,5,13),
             bd("300.00"), bd("363.00"),
-            Tax_enum.GB_VATSTD,
-            CAPEX, FrWorks, "works done", bd("200.00"), bd("42.00"), bd("242.00"), "F2014", OxfProject,
+            Tax_enum.FR_VATSTD,
+            CAPEX, FrWorks, "works done", bd("200.00"), bd("42.00"), bd("242.00"), "F2014", VivProjectFr,
             PROPERTY_EXPENSES, FrOther, "some expenses", bd("100.00"), bd("21.00"), bd("121.00"), "F2014",null,
             Order_enum.fakeOrder2Pdf,
             bd("200.00"),
             null, null, null, null
     ),
     fakeInvoice3Pdf(
-            DylanOfficeAdministratorGb,
-            IncomingPdf_enum.FakeInvoice3, ApplicationTenancy_enum.Gb, new DateTime(2014,5,22,11,10), "estatio-user-gb",
-            Organisation_enum.TopSellerGb, BankAccount_enum.TopSellerGb, Organisation_enum.HelloWorldGb,
-            PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            DanielOfficeAdministratorFr,
+            IncomingPdf_enum.FakeInvoice3, ApplicationTenancy_enum.Fr, new DateTime(2014,5,22,11,10), "estatio-user-fr",
+            Organisation_enum.TopSellerFr, BankAccount_enum.TopSellerFr, Organisation_enum.HelloWorldFr,
+            PropertyAndUnitsAndOwnerAndManager_enum.VivFr,
             PROPERTY_EXPENSES, "13579", PaymentMethod.BANK_TRANSFER,
             ld(2014, 5, 15), ld(2014,6,15), ld(2014,5,13),
             bd("500.00"), bd("600.00"),
-            Tax_enum.GB_VATSTD,
+            Tax_enum.FR_VATSTD,
             PROPERTY_EXPENSES, FrOther, "some property expenses", bd("500.00"), bd("100.00"), bd("600.00"), "F2014", null,
             null, null, null, null, null, null, null,null,
             null,
             null,
-            JonathanIncomingInvoiceManagerGb,
-            FloellaAssetManagerGb,
-            OscarCountryDirectorGb,
-            EmmaTreasurerGb
+            OlivePropertyManagerFr,
+            FloellaAssetManagerFr,
+            GabrielCountryDirectorFr,
+            BrunoTreasurerFr
     );
 
     private final Person_enum officerAdministrator_d;

@@ -60,6 +60,8 @@ public enum Organisation_enum
     PastaPapaItNl("PASTAPAPA", "Pasta Papa Food", It),
     TopModelIt("TOPMODEL", "Topmodel Fashion", It),
     PerdantFr("PERDANT", "Perdant Clothing", Fr),
+    TopModelFr("TOPMODEL", "Topmodel Fashion", Fr),
+    TopSellerFr("TOPSELLER", "Topseller goods", Fr),
     PoisonGb("POISON_GB", "Poison Perfumeries", Gb),
     PoisonNl("POISON_NL", "Poison Perfumeries B.V.", Nl),
     PretGb("PRET", "Pret-a-Partir", Gb),

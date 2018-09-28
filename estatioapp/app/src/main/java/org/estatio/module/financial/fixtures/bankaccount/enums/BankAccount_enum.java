@@ -50,7 +50,9 @@ public enum BankAccount_enum
     PoisonNl        (Organisation_enum.PoisonNl,     "NL31ABNA0580744437", null),
     PretGb          (Organisation_enum.PretGb,       "NL31ABNA0580744438", null),
     TopModelGb      (Organisation_enum.TopModelGb,   "NL31ABNA0580744435", "GHIJKXXX"),
-    TopSellerGb     (Organisation_enum.TopSellerGb,  "GB18RICG00805412069055", "ABCDEFXXX")
+    TopSellerGb     (Organisation_enum.TopSellerGb,  "GB18RICG00805412069055", "ABCDEFXXX"),
+    TopModelFr      (Organisation_enum.TopModelFr,   "FR9330066332383551387118361", "GHIJKXXX"),
+    TopSellerFr     (Organisation_enum.TopSellerFr,  "FR2330066995477635719853146", "ABCDEFXXX")
     ;
 
     private final Organisation_enum organisation_d;

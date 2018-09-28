@@ -43,6 +43,8 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 import static org.estatio.module.asset.fixtures.property.enums.Property_enum.OxfGb;
 import static org.estatio.module.asset.fixtures.property.enums.Property_enum.RonIt;
+import static org.estatio.module.asset.fixtures.property.enums.Property_enum.VivFr;
+import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Fr;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Gb;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.It;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Nl;
@@ -72,7 +74,13 @@ public enum Project_enum implements PersonaWithBuilderScript<Project, ProjectBui
             new ItemSpec[]{},
             new TermSpec[]{}
     ),
-    RonProject  ("RON-01", "New extension", ld(2018, 1, 1), ld(2021, 7, 1), It,
+    VivProjectFr  ("VIV-01", "New extension", ld(2016, 1, 1), ld(2019, 7, 1), Fr,
+            new ItemSpec[]{
+                    new ItemSpec(IncomingCharge_enum.FrWorks, "works", bd("40000.00"), null, null, VivFr, null)
+            },
+            new TermSpec[]{}
+    ),
+    RonProjectIt    ("RON-01", "New extension", ld(2018, 1, 1), ld(2021, 7, 1), It,
             new ItemSpec[]{
                     new ItemSpec(IncomingCharge_enum.ItPurchase, "purchase (acquisto)", bd("90000.00"), null, null, RonIt, null),
                     new ItemSpec(IncomingCharge_enum.ItConstruction, "construction (costruzione)", bd("3000000.00"), null, null, RonIt, null),

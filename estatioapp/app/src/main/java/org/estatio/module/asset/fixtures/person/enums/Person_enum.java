@@ -38,7 +38,6 @@ import static org.estatio.module.party.fixtures.organisation.enums.Organisation_
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Fr;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.FrBe;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Gb;
-import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.GbFr;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.It;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Nl;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Se;
@@ -60,13 +59,18 @@ public enum Person_enum
             new IPartyRoleType[] { PartyRoleTypeEnum.OFFICE_ADMINISTRATOR },
             new FixedAssetRoleSpec[] {}),
 
-    DylanOfficeAdministratorGb("DCLAYTON", "Dylan", "Clayton", null, true, MALE, Gb, GbFr, //Since ECP-677 multiple security atPath TODO: move test to FrBe
+    DylanOfficeAdministratorGb("DCLAYTON", "Dylan", "Clayton", null, true, MALE, Gb, Gb,
             null, null,
             new IPartyRoleType[] { PartyRoleTypeEnum.OFFICE_ADMINISTRATOR },
             new FixedAssetRoleSpec[] {}),
 
     // incoming invoice manager, property manager
     JonathanIncomingInvoiceManagerGb("JRICE", "Jonathan", "Rice", null, true, MALE, Gb, Gb,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER },
+            new FixedAssetRoleSpec[] {}),
+
+    BertrandIncomingInvoiceManagerFr("BGESTIONNAIRE", "Olive", "GestiannaireFacturesEntrant", null, true, MALE, Fr, Fr,
             null, null,
             new IPartyRoleType[] { PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER },
             new FixedAssetRoleSpec[] {}),
@@ -94,8 +98,22 @@ public enum Person_enum
                     new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.ASSET_MANAGER, Property_enum.OxfGb)
             }),
 
+    FloellaAssetManagerFr("FGESTION", "Floella", "Gestionnaire d' Actifs", null, true, FEMALE, Fr, Fr,
+            null, null,
+            new IPartyRoleType[] {  },
+            new FixedAssetRoleSpec[] {
+                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.ASSET_MANAGER, Property_enum.VivFr)
+            }),
+
+    FloellaAssetManagerIt("FGESTORE", "Floella", "Gestore Patrimoniale", null, true, FEMALE, It, It,
+            null, null,
+            new IPartyRoleType[] {  },
+            new FixedAssetRoleSpec[] {
+                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.ASSET_MANAGER, Property_enum.RonIt)
+            }),
+
     // country director
-    GabrielHerveFr("GHERVE", "Gabriel", "Herve", null, true, FEMALE, Fr, Fr,
+    GabrielCountryDirectorFr("GRESPONSABLE", "Gabriel", "Responsable", null, true, FEMALE, Fr, Fr,
             null, null,
             new IPartyRoleType[] { PartyRoleTypeEnum.COUNTRY_DIRECTOR },
             new FixedAssetRoleSpec[] {}),
@@ -175,6 +193,11 @@ public enum Person_enum
             new FixedAssetRoleSpec[] {}),
 
     PeterPanProjectManagerGb("PP", "Peter", "Pan", "P", true, MALE, Gb, Gb,
+            null, null,
+            new IPartyRoleType[] { },
+            new FixedAssetRoleSpec[] {}),
+
+    PeterPanProjectManagerFr("PP", "Peter", "Pan", "P", true, MALE, Fr, Fr,
             null, null,
             new IPartyRoleType[] { },
             new FixedAssetRoleSpec[] {}),
