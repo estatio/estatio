@@ -164,7 +164,13 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
 
     private String deriveChargeReference(){
         if (getWorkType()==null) return null;
-        return IncomingChargeImportAdapter.ITA_INCOMING_CHARGE_PREFIX + getWorkType().toString();
+        return IncomingChargeImportAdapter.ITA_OLD_WORKTYPE_PREFIX + workTypeCodeFromNo(getWorkType());
+    }
+
+    private String workTypeCodeFromNo(final Integer worktype){
+        if (worktype<10) return "00".concat(worktype.toString());
+        if (worktype<100) return "0".concat(worktype.toString());
+        return worktype.toString();
     }
 
     private String deriveProjectReference(){

@@ -17,7 +17,9 @@ import lombok.Setter;
 
 public class IncomingChargeImportAdapter implements FixtureAwareRowHandler<IncomingChargeImportAdapter>, ExcelMetaDataEnabled {
 
-    public static final String ITA_INCOMING_CHARGE_PREFIX = "I";
+    public static final String ITA_WORKTYPE_PREFIX = "ITWT";
+
+    public static final String ITA_OLD_WORKTYPE_PREFIX = "OLD";
 
     @Getter @Setter @Nullable
     private String excelSheetName;
@@ -26,16 +28,16 @@ public class IncomingChargeImportAdapter implements FixtureAwareRowHandler<Incom
     private Integer excelRowNumber;
 
     @Getter @Setter @Nullable
-    private Integer no;
+    private String reference;
 
     @Getter @Setter @Nullable
-    private String descriptionIta;
+    private String name;
 
     @Getter @Setter @Nullable
-    private String descriptionEng;
+    private String description;
 
     @Getter @Setter @Nullable
-    private String comment;
+    private String mappedTo;
 
     /**
      * To allow for usage within fixture scripts also.
@@ -50,16 +52,17 @@ public class IncomingChargeImportAdapter implements FixtureAwareRowHandler<Incom
     private ExcelFixture2 excelFixture2;
 
     public IncomingChargeImportAdapter handle(final IncomingChargeImportAdapter previousRow){
-        if (getNo()!=null) {
+        if (getReference()!=null) {
             ChargeImport line = new ChargeImport();
             serviceRegistry2.injectServicesInto(line);
-            line.setReference(deriveChargeReference(getNo()));
-            line.setName(deriveChargeName());
-            line.setDescription(deriveDescription());
+            line.setReference(getReference());
+            line.setName(getName());
+            line.setDescription(getDescription());
             line.setApplicability("INCOMING");
             line.setAtPath("/ITA");
             line.setChargeGroupReference("I");
             line.setChargeGroupName("Incoming");
+            line.setExternalReference(getMappedTo());
             line.importData(null);
         }
         return this;
@@ -76,56 +79,6 @@ public class IncomingChargeImportAdapter implements FixtureAwareRowHandler<Incom
                 }
             }
 
-    }
-
-    private String deriveChargeReference(final Integer input){
-        return ITA_INCOMING_CHARGE_PREFIX.concat(input.toString());
-    }
-
-    private String deriveChargeName(){
-        StringBuilder builder = new StringBuilder();
-        builder
-                .append(getNo().toString())
-                .append(" ");
-        if (getDescriptionEng()!=null && getDescriptionEng().length()>0){
-            builder.append(clean(getDescriptionEng()));
-
-        } else {
-            builder.append(clean(getDescriptionIta()));
-        }
-        return limitLength(builder.toString(), 50);
-    }
-
-    private String deriveDescription(){
-        StringBuilder builder = new StringBuilder();
-        if (getDescriptionEng()!=null && getDescriptionEng().length()>0){
-            builder.append(clean(getDescriptionEng()))
-                    .append(" | ");
-
-        }
-        builder.append(clean(getDescriptionIta()));
-        if (getComment()!=null){
-            builder.append(" (")
-                    .append(getComment())
-                    .append(")");
-        }
-        return limitLength(builder.toString(), 254);
-    }
-
-    private String clean(final String input){
-        if (input==null){
-            return null;
-        }
-        String result = input.trim();
-        return result.trim();
-    }
-
-    String limitLength(final String input, final int length) {
-        if (input.length()<=length){
-            return input;
-        } else {
-            return input.substring(0, length);
-        }
     }
 
     @Inject ServiceRegistry2 serviceRegistry2;
