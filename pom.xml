@@ -66,15 +66,10 @@ language governing permissions and limitations under the License.
     </developers>
 
     <properties>
-        <revision>SNAPSHOT</revision>
+        <!-- DO NOT CHANGE: versioning is specified externally in CI using -Drevision=... -->
+        <revision>1.0.0-SNAPSHOT</revision>
 
-        <isis.version>1.16.2.20180709-1350-5d9f4f7c</isis.version>
-        <!--
-        <isis.version>1.16.2.20180705-2207-210fd1e3</isis.version>
-        <isis.version>1.16.1.20180316-1549</isis.version>
-        <isis.version>1.16.1.20180228-1118</isis.version>
-        <isis.version>1.16.2-SNAPSHOT</isis.version>
-        -->
+        <isis.version>1.16.2.20180921-0633-408d6647</isis.version>
 
         <!--
         Also specify the incode-platform.version by changing the parent's version, above.
