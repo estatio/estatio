@@ -59,6 +59,9 @@ public class ProjectImport implements Importable, ExcelFixtureRowHandler, Fixtur
     private String parentReference;
 
     @Getter @Setter
+    private boolean archived;
+
+    @Getter @Setter
     private String itemWorkTypeReference;
 
     @Getter @Setter
@@ -101,6 +104,9 @@ public class ProjectImport implements Importable, ExcelFixtureRowHandler, Fixtur
             }
         }
         Project project = findOrCreateProjectAndUpdateParent(getProjectReference(), getProjectName(), getStartDate(), getEndDate(), getAtPath(), parent);
+        if (isArchived()){
+            project.archive();
+        }
 
         if (getItemWorkTypeReference()!=null) {
 

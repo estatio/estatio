@@ -24,6 +24,9 @@ public class ProjectImportAdapter implements FixtureAwareRowHandler<ProjectImpor
     private Integer excelRowNumber;
 
     @Getter @Setter @Nullable
+    private String archived;
+
+    @Getter @Setter @Nullable
     private Integer noCommessa;
 
     @Getter @Setter @Nullable
@@ -54,6 +57,9 @@ public class ProjectImportAdapter implements FixtureAwareRowHandler<ProjectImpor
             line.setProjectReference(deriveProjectReference(getNoCommessa()));
             line.setProjectName(deriveProjectName(getCausale()));
             line.setAtPath("/ITA");
+            if (getArchived()!=null && getArchived().equals("YES")){
+                line.setArchived(true);
+            }
             line.importData(null);
         }
         return this;
