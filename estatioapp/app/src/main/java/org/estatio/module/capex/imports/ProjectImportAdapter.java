@@ -1,7 +1,11 @@
 package org.estatio.module.capex.imports;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+
+import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
@@ -78,8 +82,21 @@ public class ProjectImportAdapter implements FixtureAwareRowHandler<ProjectImpor
 
     }
 
-    private String deriveProjectReference(final Integer input){
-        return ITA_PROJECT_PREFIX.concat(input.toString());
+    private String deriveProjectReference(final Integer noCommessa){
+        String noCommessaToReference = ITA_PROJECT_PREFIX.concat(noCommessa.toString());
+        return handleDoubles(noCommessaToReference, getCentroDiCosto());
+    }
+
+    String handleDoubles(final String possibleDoubleReference, final String centroDiCosto) {
+        List<String> doubles =
+                Lists.newArrayList(
+                        "ITPR154",
+                        "ITPR184",
+                        "ITPR190",
+                        "ITPR192");
+        return doubles.contains(possibleDoubleReference) ?
+                possibleDoubleReference + " [DOUBLE] " + centroDiCosto
+                : possibleDoubleReference;
     }
 
     private String deriveProjectName(final String input){
