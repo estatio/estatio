@@ -32,9 +32,6 @@ import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 
-import org.estatio.module.tax.dom.Tax;
-import org.estatio.module.tax.dom.TaxRate;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TaxRate_Test {
