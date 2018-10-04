@@ -18,10 +18,20 @@
  */
 package org.estatio.module.agreement.dom;
 
+import javax.jdo.annotations.DiscriminatorStrategy;
+
+import org.apache.isis.applib.annotation.DomainObject;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.module.agreement.dom.Agreement;
-
+@DomainObject(
+        objectType = "org.estatio.module.agreement.dom.AgreementForTesting"
+)
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.VALUE_MAP,
+        column = "discriminator",
+        value = "org.estatio.module.agreement.dom.AgreementForTesting"
+)
 public class AgreementForTesting extends Agreement {
 
     public AgreementForTesting() {
