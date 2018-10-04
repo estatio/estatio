@@ -58,7 +58,7 @@ public class ProjectImportAdapter implements FixtureAwareRowHandler<ProjectImpor
         if (getNoCommessa()!=null) {
             ProjectImport line = new ProjectImport();
             serviceRegistry2.injectServicesInto(line);
-            line.setProjectReference(deriveProjectReference(getNoCommessa()));
+            line.setProjectReference(deriveProjectReference(getNoCommessa(), getCentroDiCosto()));
             line.setProjectName(deriveProjectName(getCausale()));
             line.setAtPath("/ITA");
             if (getArchived()!=null && getArchived().equals("YES")){
@@ -82,12 +82,12 @@ public class ProjectImportAdapter implements FixtureAwareRowHandler<ProjectImpor
 
     }
 
-    private String deriveProjectReference(final Integer noCommessa){
+    public static String deriveProjectReference(final Integer noCommessa, final String centroDiCosto ){
         String noCommessaToReference = ITA_PROJECT_PREFIX.concat(noCommessa.toString());
-        return handleDoubles(noCommessaToReference, getCentroDiCosto());
+        return handleDoubles(noCommessaToReference, centroDiCosto);
     }
 
-    String handleDoubles(final String possibleDoubleReference, final String centroDiCosto) {
+    public static String handleDoubles(final String possibleDoubleReference, final String centroDiCosto) {
         List<String> doubles =
                 Lists.newArrayList(
                         "ITPR154",

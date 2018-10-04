@@ -177,7 +177,8 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
 
     private String deriveProjectReference(){
         if (getCommessa()==null) return null;
-        return ProjectImportAdapter.ITA_PROJECT_PREFIX + getCommessa().toString();
+        if (getCentro()==null) return ProjectImportAdapter.ITA_PROJECT_PREFIX + getCommessa().toString();
+        return ProjectImportAdapter.deriveProjectReference(getCommessa(), getCentro());
     }
 
     private LocalDate deriveStartDate(){
