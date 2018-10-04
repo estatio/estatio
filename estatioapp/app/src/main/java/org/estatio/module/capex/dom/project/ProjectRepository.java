@@ -50,6 +50,11 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
     }
 
     @Programmatic
+    public List<Project> allUnarchivedProjects() {
+        return listAll().stream().filter(p->!p.isArchived()).collect(Collectors.toList());
+    }
+
+    @Programmatic
     public List<Project> findProject(String searchStr) {
         return allMatches("matchByReferenceOrName", "matcher", StringUtils.wildcardToCaseInsensitiveRegex(searchStr));
     }
@@ -101,12 +106,12 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
         final String refRegex = StringUtils.wildcardToCaseInsensitiveRegex("*".concat(searchPhrase).concat("*"));
         return allMatches("matchByReferenceOrName",
                 "matcher", refRegex
-        );
+        ).stream().filter(p->!p.isArchived()).collect(Collectors.toList());
     }
 
     public List<Project> findByFixedAsset(final FixedAsset fixedAsset){
         List<Project> result = new ArrayList<>();
-        for (Project project : listAll()){
+        for (Project project : allUnarchivedProjects()){
             List<ProjectItem> itemsFound = project.getItems().stream().filter(x->x.getFixedAsset()==fixedAsset).collect(Collectors.toList());
             if (itemsFound.size()>0){
                 result.add(project);
@@ -116,13 +121,12 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
         return result;
     }
 
+    @Programmatic
     public List<Project> findUsingAtPath(final String atPath) {
         if (atPath==null) return Lists.emptyList();
-        return listAll().stream().filter(p->p.getAtPath().startsWith(atPath)).collect(Collectors.toList());
-    }
-
-    public List<Project> findByParent(final Project parent) {
-        return allMatches("findByParent", "parent", parent);
+        return allUnarchivedProjects().stream()
+                .filter(p->p.getAtPath().startsWith(atPath))
+                .collect(Collectors.toList());
     }
 
     @Inject

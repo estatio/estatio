@@ -370,6 +370,29 @@ public class Project extends UdoDomainObject<Project> implements
         return startDate != null && endDate != null && !startDate.isBefore(endDate) ? "End date must be after start date" : null;
     }
 
+    @Getter @Setter
+    private boolean archived;
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Project archive(){
+        setArchived(true);
+        return this;
+    }
+
+    public boolean hideArchive(){
+        return isArchived();
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Project unArchive(){
+        setArchived(false);
+        return this;
+    }
+
+    public boolean hideUnArchive(){
+        return !isArchived();
+    }
+
     @Inject
     ApplicationTenancyRepository applicationTenancyRepository;
 

@@ -67,8 +67,13 @@ public class ProjectMenu {
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    public List<Project> findProject(final @ParameterLayout(named = "Name or reference") String searchStr) {
-        return projectRepository.findProject(searchStr);
+    public List<Project> findProject(final @ParameterLayout(named = "Name or reference") String searchStr, final boolean includeArchived) {
+        return includeArchived ?
+                projectRepository.findProject(searchStr) :
+                projectRepository.findProject(searchStr)
+                        .stream()
+                        .filter(p->!p.isArchived())
+                        .collect(Collectors.toList());
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)

@@ -21,6 +21,8 @@ package org.estatio.module.capex.dom.project;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -125,6 +127,12 @@ public class ProjectRepository_Test {
             assertThat(projectsFound.get(0)).isEqualTo(project1);
 
             // and when
+            project1.archive();
+            projectsFound = projectRepository.findByFixedAsset(propertyToFind);
+            // then
+            assertThat(projectsFound.size()).isEqualTo(0);
+
+            // and when
             projectsFound = projectRepository.findByFixedAsset(someUnit);
 
             // then
@@ -162,6 +170,39 @@ public class ProjectRepository_Test {
             assertThat(projectRepository.findUsingAtPath(atPathForCountryIta)).contains(projectForIta);
 
             assertThat(projectRepository.findUsingAtPath(null)).hasSize(0);
+
+            // and when
+            projectForIta.archive();
+            // then
+            assertThat(projectRepository.findUsingAtPath(atPathForCountryIta)).isEmpty();
+
+        }
+
+    }
+
+    public static class OtherTests extends ProjectRepository_Test {
+
+        @Test
+        public void autoComplete_filters_out_archived() throws Exception {
+
+            // given
+            Project project = new Project();
+            String searchPhrase = "123";
+            projectRepository = new ProjectRepository(){
+                @Override
+                protected List<Project> allMatches(final String queryName, final Object... paramArgs){
+                    return Lists.newArrayList(project);
+                }
+            };
+
+            // when, then
+            assertThat(projectRepository.autoComplete(searchPhrase)).hasSize(1);
+
+            // and when
+            project.archive();
+
+            // then
+            assertThat(projectRepository.autoComplete(searchPhrase)).isEmpty();
 
         }
 

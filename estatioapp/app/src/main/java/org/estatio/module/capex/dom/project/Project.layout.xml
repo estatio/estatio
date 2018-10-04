@@ -37,6 +37,12 @@
                 <tab name="Other">
                     <row>
                         <col span="12">
+                            <ns2:fieldSet name="Archive" id="archive">
+                                <ns2:property id="archived">
+                                        <ns2:action id="archive" position="PANEL_DROPDOWN"/>
+                                        <ns2:action id="unArchive" position="PANEL_DROPDOWN"/>
+                                </ns2:property>
+                            </ns2:fieldSet>
                             <ns2:fieldSet name="Application Tenancy" id="general">
                                 <ns2:property id="applicationTenancy"/>
                                 <ns2:property id="atPath"/>
