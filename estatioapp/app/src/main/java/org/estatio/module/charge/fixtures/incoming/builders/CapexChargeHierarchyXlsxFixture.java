@@ -6,6 +6,8 @@ import javax.inject.Inject;
 
 import com.google.common.io.Resources;
 
+import org.apache.isis.applib.annotation.DomainObject;
+
 import org.isisaddons.module.excel.dom.ExcelFixture2;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 import org.isisaddons.module.excel.dom.util.Mode;
@@ -13,6 +15,9 @@ import org.isisaddons.module.excel.dom.util.Mode;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 
+@DomainObject(
+        objectType = "org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture"
+)
 public class CapexChargeHierarchyXlsxFixture extends ExcelFixture2 {
 
     @Inject

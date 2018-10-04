@@ -6,8 +6,9 @@ import javax.annotation.Nullable;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ViewModel;
+import org.apache.isis.applib.annotation.Nature;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.payment.PaymentBatch;
@@ -17,7 +18,10 @@ import org.estatio.module.invoice.dom.PaymentMethod;
 import lombok.Getter;
 import lombok.Setter;
 
-@ViewModel()
+@DomainObject(
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.module.capex.app.paymentline.PaymentLineExportV1"
+)
 @Getter @Setter
 public class PaymentLineExportV1 {
 

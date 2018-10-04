@@ -27,7 +27,10 @@ import org.estatio.module.tax.dom.TaxRepository;
 import lombok.Getter;
 import lombok.Setter;
 
-@DomainObject(nature = Nature.VIEW_MODEL)
+@DomainObject(
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.module.tax.imports.TaxImport"
+)
 public class TaxImport implements ExcelFixtureRowHandler, Importable {
 
     @Getter @Setter

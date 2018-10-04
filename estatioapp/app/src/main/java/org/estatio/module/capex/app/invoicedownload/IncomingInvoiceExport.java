@@ -6,19 +6,23 @@ import javax.annotation.Nullable;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ViewModel;
+import org.apache.isis.applib.annotation.Nature;
 
+import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.capex.dom.coda.CodaElement;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.project.Project;
-import org.estatio.module.asset.dom.FixedAsset;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@ViewModel()
+@DomainObject(
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.module.capex.app.invoicedownload.IncomingInvoiceExport"
+)
 @Getter @Setter
 public class IncomingInvoiceExport {
 
