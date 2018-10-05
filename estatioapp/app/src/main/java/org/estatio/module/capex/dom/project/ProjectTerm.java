@@ -19,6 +19,8 @@
 package org.estatio.module.capex.dom.project;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.List;
 
 import javax.jdo.annotations.Column;
@@ -43,6 +45,8 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -97,7 +101,7 @@ public class ProjectTerm extends UdoDomainObject<ProjectTerm> {
     }
 
     @Getter @Setter
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", name = "projectId")
     private Project project;
 
     @Getter @Setter
@@ -106,8 +110,10 @@ public class ProjectTerm extends UdoDomainObject<ProjectTerm> {
 
     @Property()
     public Integer getPercentageOfTotalBudget(){
-        // TODO: implement
-        return 100;
+        if (getProject().getBudgetedAmount()==null || getProject().getBudgetedAmount().compareTo(BigDecimal.ZERO) == 0) return 0;
+        BigDecimal fraction = getBudgetedAmount().divide(getProject().getBudgetedAmount(), MathContext.DECIMAL64);
+        BigDecimal percentageAsBd = fraction.multiply(new BigDecimal("100")).setScale(0, RoundingMode.HALF_UP);
+        return percentageAsBd.intValueExact();
     }
 
     @Getter @Setter
@@ -144,6 +150,23 @@ public class ProjectTerm extends UdoDomainObject<ProjectTerm> {
     public List<Order> getInvoices(){
         // TODO: implement
         return Lists.emptyList();
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public ProjectTerm amendBudgetedAmount(
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final BigDecimal add,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final BigDecimal subtract){
+        BigDecimal newAmount = getBudgetedAmount()!=null ? getBudgetedAmount() : BigDecimal.ZERO;
+        if (add!=null){
+            newAmount = newAmount.add(add);
+        }
+        if (subtract!=null){
+            newAmount = newAmount.subtract(subtract);
+        }
+        setBudgetedAmount(newAmount);
+        return this;
     }
 
     @PropertyLayout(hidden = Where.EVERYWHERE)
