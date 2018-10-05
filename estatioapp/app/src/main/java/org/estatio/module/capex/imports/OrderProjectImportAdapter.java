@@ -136,7 +136,16 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
     }
 
     public String deriverOrderNumber(){
-        return getNumero()!=null ? getNumero().toString() : null;
+        if (getNumero()==null) return null;
+        StringBuilder builder = new StringBuilder();
+        builder.append(getNumero().toString());
+        builder.append("/");
+        if (getCentro()!=null) builder.append(getCentro());
+        builder.append("/");
+        if (getProgressivoCentro()!=null) builder.append(getProgressivoCentro().toString());
+        builder.append("/");
+        if (getCommessa()!=null) builder.append(getCommessa());
+        return builder.toString();
     }
 
     private void importSeller() {
