@@ -128,7 +128,7 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> implements Financi
 	@Getter @Setter
 	private Tax tax;
 
-	@Action(semantics = SemanticsOf.IDEMPOTENT)
+	@Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
 	public ProjectItem amendAmount(
 			@Parameter(optionality = Optionality.OPTIONAL)
 			final BigDecimal add,

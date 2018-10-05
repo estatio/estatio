@@ -302,7 +302,7 @@ public class Project extends UdoDomainObject<Project> implements
             @Parameter(optionality = Optionality.OPTIONAL) final BigDecimal budgetedAmount,
             @Parameter(optionality = Optionality.OPTIONAL) final LocalDate startDate,
             @Parameter(optionality = Optionality.OPTIONAL) final LocalDate endDate,
-            final org.estatio.module.asset.dom.Property property,
+            @Parameter(optionality = Optionality.OPTIONAL) final org.estatio.module.asset.dom.Property property,
             @Parameter(optionality = Optionality.OPTIONAL) final Tax tax
     ) {
         projectItemRepository.findOrCreate(
