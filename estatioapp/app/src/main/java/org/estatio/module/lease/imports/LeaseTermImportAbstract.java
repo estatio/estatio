@@ -26,7 +26,7 @@ import org.estatio.module.lease.dom.LeaseRepository;
 import lombok.Getter;
 import lombok.Setter;
 
-public class LeaseTermImportAbstract {
+public abstract class LeaseTermImportAbstract {
 
     @Inject
     LeaseRepository leaseRepository;

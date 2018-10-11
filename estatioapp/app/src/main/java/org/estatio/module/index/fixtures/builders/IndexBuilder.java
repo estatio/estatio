@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -54,6 +55,7 @@ public class IndexBuilder extends BuilderScriptAbstract<Index, IndexBuilder> {
     @Getter @Setter
     String name;
 
+    @Programmatic
     @Getter @Setter
     List<Base> bases;
 

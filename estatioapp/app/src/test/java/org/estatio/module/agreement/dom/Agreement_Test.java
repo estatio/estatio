@@ -20,8 +20,6 @@ package org.estatio.module.agreement.dom;
 
 import java.util.List;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
-
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
@@ -38,7 +36,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
@@ -220,14 +218,7 @@ public class Agreement_Test {
         private Party creditor;
         private Party debtor;
 
-        @DomainObject(
-                objectType = "org.estatio.module.agreement.dom.Agreement_Test.FindParty.AgreementForSubtypeTesting"
-        )
-        @javax.jdo.annotations.Discriminator(
-                strategy = DiscriminatorStrategy.VALUE_MAP,
-                column = "discriminator",
-                value = "org.estatio.module.agreement.dom.Agreement_Test.FindParty.AgreementForSubtypeTesting"
-        )
+        @Programmatic
         public static class AgreementForSubtypeTesting extends Agreement {
 
             public AgreementForSubtypeTesting() {

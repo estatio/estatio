@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.PropertyRepository;
@@ -31,6 +32,7 @@ import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.registration.dom.LandRegister;
 import org.estatio.module.registration.dom.LandRegisters;
 
+@Programmatic
 public class LandRegisterForOxfordUnit001 extends FixtureScript {
 
     @Override

@@ -1,8 +1,10 @@
 package org.estatio.module.lease.dom;
 
+import org.apache.isis.applib.annotation.Programmatic;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-@javax.jdo.annotations.Discriminator("org.estatio.module.lease.dom.LeaseForTesting")
+@Programmatic
 public class LeaseForTesting extends Lease {
 
     public void setSecurityApplicationTenancyRepository(ApplicationTenancyRepository securityApplicationTenancyRepository){

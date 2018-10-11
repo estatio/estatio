@@ -18,11 +18,11 @@
  */
 package org.estatio.module.charge.fixtures.chargegroups.enums;
 
-import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.registry.ServiceRegistry2;
-
 import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.charge.dom.ChargeGroup;
 import org.estatio.module.charge.dom.ChargeGroupRepository;
@@ -66,6 +66,7 @@ public enum ChargeGroup_enum implements PersonaWithBuilderScript<ChargeGroup, Ch
                         .setDescription(description);
     }
 
+    @Programmatic
     public static class PersistAll extends FixtureScript {
 
         @Override

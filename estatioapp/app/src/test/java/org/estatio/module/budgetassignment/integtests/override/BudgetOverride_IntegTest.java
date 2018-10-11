@@ -58,11 +58,12 @@ public class BudgetOverride_IntegTest extends BudgetAssignmentModuleIntegTestAbs
         Charge invoiceCharge = Charge_enum.GbServiceCharge.findUsing(serviceRegistry);
         BigDecimal overrideValue = new BigDecimal("1234.56");
         String reason = "Some reason";
-        budgetOverrideForFixed = wrap(budgetOverrideRepository).newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge, null, null, reason);
+
+        budgetOverrideForFixed = budgetOverrideRepository.newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge, null, null, reason);
         assertThat(budgetOverrideValueRepository.allBudgetOverrideValues().size()).isEqualTo(0);
 
         // when
-        budgetOverrideForFixed.findOrCreateValues(new LocalDate(2015, 01,01));
+        budgetOverrideForFixed.findOrCreateValues(new LocalDate(2015, 1, 1));
 
         // then
         assertThat(budgetOverrideForFixed.getValues().size()).isEqualTo(2);
@@ -70,7 +71,7 @@ public class BudgetOverride_IntegTest extends BudgetAssignmentModuleIntegTestAbs
         assertThat(budgetOverrideForFixed.getValues().last().getType()).isEqualTo(BudgetCalculationType.ACTUAL);
 
         // and when again
-        budgetOverrideForFixed.findOrCreateValues(new LocalDate(2015, 01,01));
+        budgetOverrideForFixed.findOrCreateValues(new LocalDate(2015, 1, 1));
 
         // then still
         assertThat(budgetOverrideForFixed.getValues().size()).isEqualTo(2);

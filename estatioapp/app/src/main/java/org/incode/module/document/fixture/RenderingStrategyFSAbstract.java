@@ -2,6 +2,7 @@ package org.incode.module.document.fixture;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.document.dom.impl.docs.DocumentNature;
@@ -9,6 +10,7 @@ import org.incode.module.document.dom.impl.renderers.Renderer;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository;
 
+@Programmatic
 public abstract class RenderingStrategyFSAbstract extends FixtureScript {
 
     @Override

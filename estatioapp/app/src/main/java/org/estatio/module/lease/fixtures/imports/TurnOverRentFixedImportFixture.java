@@ -4,9 +4,11 @@ import java.io.IOException;
 
 import com.google.common.io.Resources;
 
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.value.Blob;
 
+@Programmatic
 public class TurnOverRentFixedImportFixture extends FixtureScript {
 
     @Override

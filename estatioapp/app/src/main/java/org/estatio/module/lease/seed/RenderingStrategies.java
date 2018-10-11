@@ -18,12 +18,15 @@
  */
 package org.estatio.module.lease.seed;
 
+import org.apache.isis.applib.annotation.Programmatic;
+
 import org.incode.module.docrendering.freemarker.fixture.RenderingStrategyFSForFreemarker;
 import org.incode.module.docrendering.stringinterpolator.fixture.RenderingStrategyFSForStringInterpolator;
 import org.incode.module.docrendering.stringinterpolator.fixture.RenderingStrategyFSForStringInterpolatorCaptureUrl;
 import org.incode.module.docrendering.stringinterpolator.fixture.RenderingStrategyFSForStringInterpolatorPreviewAndCaptureUrl;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 
+@Programmatic
 public class RenderingStrategies extends DocumentTemplateFSAbstract {
 
     public static final String REF_SIPC = RenderingStrategyFSForStringInterpolatorPreviewAndCaptureUrl.REF;

@@ -20,12 +20,14 @@ package org.estatio.module.index.fixtures.enums;
 
 import java.util.Arrays;
 
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
+
 import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexRepository;
 import org.estatio.module.index.fixtures.builders.IndexBuilder;
@@ -100,6 +102,7 @@ public enum Index_enum implements PersonaWithBuilderScript<Index, IndexBuilder>,
         return indexRepository.findByReference(reference);
     }
 
+    @Programmatic
     public static class PersistAll extends FixtureScript {
 
         @Override

@@ -18,20 +18,11 @@
  */
 package org.estatio.module.invoice.dom;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
-
-import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-@DomainObject(
-        objectType = "org.estatio.module.invoice.dom.InvoiceItemForTesting"
-)
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.VALUE_MAP,
-        column = "discriminator",
-        value = "org.estatio.module.invoice.dom.InvoiceItemForTesting"
-)
+@Programmatic
 public class InvoiceItemForTesting extends InvoiceItem {
 
     public InvoiceItemForTesting(final Invoice invoice) {

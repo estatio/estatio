@@ -22,13 +22,11 @@ import java.math.BigDecimal;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Programmatic;
+
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.module.lease.dom.LeaseItem;
-import org.estatio.module.lease.dom.LeaseTerm;
-import org.estatio.module.lease.dom.LeaseTermValueType;
-
-@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.LeaseTermForTesting")
+@Programmatic
 public class LeaseTermForTesting extends LeaseTerm {
 
     public LeaseTermForTesting() {

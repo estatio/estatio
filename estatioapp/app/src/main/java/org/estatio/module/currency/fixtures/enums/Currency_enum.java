@@ -18,6 +18,7 @@
  */
 package org.estatio.module.currency.fixtures.enums;
 
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -57,6 +58,7 @@ public enum Currency_enum implements PersonaWithBuilderScript<Currency,CurrencyB
                 .setName(name);
     }
 
+    @Programmatic
     public static class PersistAll extends FixtureScript {
 
         @Override

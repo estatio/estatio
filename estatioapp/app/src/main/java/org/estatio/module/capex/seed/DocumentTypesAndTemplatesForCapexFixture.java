@@ -19,8 +19,12 @@ package org.estatio.module.capex.seed;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
+@DomainObject(
+        objectType = "org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture"
+)
 public class DocumentTypesAndTemplatesForCapexFixture extends DiscoverableFixtureScript {
 
     private final LocalDate templateDateIfAny;

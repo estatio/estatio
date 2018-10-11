@@ -28,6 +28,7 @@ import com.google.common.collect.Lists;
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 import org.apache.isis.applib.services.factory.FactoryService;
@@ -51,6 +52,9 @@ import static org.incode.module.base.integtests.VT.ld;
  * Replays the invoice creation process
  * 
  */
+@DomainObject(
+        objectType = "org.estatio.module.lease.migrations.CreateRetroInvoices"
+)
 public class CreateRetroInvoices extends DiscoverableFixtureScript {
 
     private static LocalDate EPOCH_START_DATE = ld(2013, 1, 1);

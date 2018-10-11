@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
@@ -14,6 +15,7 @@ import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
+@Programmatic
 public abstract class DocumentTemplateFSAbstract extends FixtureScript {
 
     @Override

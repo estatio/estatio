@@ -1,10 +1,11 @@
 package org.incode.module.apptenancy.fixtures.enums;
 
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
+import org.apache.isis.applib.fixturescripts.setup.PersonaEnumPersistAll;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.apache.isis.applib.fixturescripts.setup.PersonaEnumPersistAll;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
@@ -83,6 +84,7 @@ public enum ApplicationTenancy_enum
                 .setPathOfParent(getPathOfParent());
     }
 
+    @Programmatic
     public static class PersistAll
             extends PersonaEnumPersistAll<ApplicationTenancy_enum, ApplicationTenancy, ApplicationTenancyBuilder> {
         public PersistAll() {

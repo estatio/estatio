@@ -63,11 +63,11 @@ public class BudgetOverrideValueRepository_IntegTest extends BudgetAssignmentMod
         Charge invoiceCharge = Charge_enum.GbServiceCharge.findUsing(serviceRegistry);
         BigDecimal overrideValue = new BigDecimal("1234.56");
         String reason = "Some reason";
-        budgetOverrideForFixed = wrap(budgetOverrideRepository).newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge, null, null, reason);
+        budgetOverrideForFixed = budgetOverrideRepository.newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge, null, null, reason);
         assertThat(budgetOverrideValueRepository.allBudgetOverrideValues().size()).isEqualTo(0);
 
         // when
-        budgetOverrideValue = wrap(budgetOverrideValueRepository).findOrCreateOverrideValue(calculatedValue, budgetOverrideForFixed, BudgetCalculationType.BUDGETED);
+        budgetOverrideValue = budgetOverrideValueRepository.findOrCreateOverrideValue(calculatedValue, budgetOverrideForFixed, BudgetCalculationType.BUDGETED);
 
         // then
         assertThat(budgetOverrideValueRepository.allBudgetOverrideValues().size()).isEqualTo(1);
@@ -78,7 +78,7 @@ public class BudgetOverrideValueRepository_IntegTest extends BudgetAssignmentMod
         assertThat(budgetOverrideValue.getApplicationTenancy()).isEqualTo(budgetOverrideForFixed.getApplicationTenancy());
 
         // and when again
-        budgetOverrideValue = wrap(budgetOverrideValueRepository).findOrCreateOverrideValue(calculatedValue, budgetOverrideForFixed, BudgetCalculationType.BUDGETED);
+        budgetOverrideValue = budgetOverrideValueRepository.findOrCreateOverrideValue(calculatedValue, budgetOverrideForFixed, BudgetCalculationType.BUDGETED);
 
         // then still
         assertThat(budgetOverrideValueRepository.allBudgetOverrideValues().size()).isEqualTo(1);

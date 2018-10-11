@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.ModuleAbstract;
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.fixtures.TickingFixtureClock;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
@@ -70,6 +71,9 @@ import org.estatio.module.tax.EstatioTaxModule;
 
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Global;
 
+@DomainObject(
+        objectType = "org.estatio.module.application.demos.EstatioDemoFixture"
+)
 public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
     public EstatioDemoFixture() {

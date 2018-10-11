@@ -22,12 +22,14 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.fakedata.dom.FakeDataService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 
@@ -35,7 +37,6 @@ import org.estatio.module.agreement.dom.AgreementRole;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
-import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.estatio.module.base.platform.fake.EstatioFakeDataService;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
@@ -51,6 +52,7 @@ import org.estatio.module.party.dom.PartyRepository;
 import lombok.Getter;
 import lombok.Setter;
 
+@Programmatic
 public class LeaseBuilderLEGACY extends FixtureScript {
 
     @Getter @Setter

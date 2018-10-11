@@ -179,8 +179,8 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
             // given
 
             // when
-            calculations = wrap(budgetCalculationService).calculatePersistedCalculations(budget);
-            calculationRuns = wrap(budgetAssignmentService).calculateResultsForLeases(budget, BudgetCalculationType.BUDGETED);
+            calculations = budgetCalculationService.calculatePersistedCalculations(budget);
+            calculationRuns = budgetAssignmentService.calculateResultsForLeases(budget, BudgetCalculationType.BUDGETED);
             calculationResultViewModels = budgetAssignmentService.getCalculationResults(budget);
 
             // then

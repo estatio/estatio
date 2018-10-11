@@ -2,6 +2,7 @@ package org.incode.module.country.fixture;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.country.dom.impl.Country;
@@ -9,6 +10,7 @@ import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.dom.impl.State;
 import org.incode.module.country.dom.impl.StateRepository;
 
+@Programmatic
 public class StatesRefData extends FixtureScript {
 
     public static final String GBR = "GBR";
