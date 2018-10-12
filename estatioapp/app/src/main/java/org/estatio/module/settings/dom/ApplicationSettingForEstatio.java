@@ -22,10 +22,7 @@ package org.estatio.module.settings.dom;
 import javax.jdo.annotations.IdentityType;
 
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-
-import org.estatio.module.settings.dom.ApplicationSetting;
-import org.estatio.module.settings.dom.SettingType;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
 
 import org.incode.module.base.dom.types.DescriptionType;
 
@@ -55,7 +52,7 @@ import lombok.Setter;
 @DomainObject(
         objectType = "org.estatio.domsettings.ApplicationSettingForEstatio"
 )
-@DomainServiceLayout(named = "Application Setting")
+@DomainObjectLayout(named = "Application Setting")
 public class ApplicationSettingForEstatio extends SettingAbstractForEstatio implements ApplicationSetting {
 
     @javax.jdo.annotations.Column(allowsNull="false", length= SettingKeyType.Meta.MAX_LEN)

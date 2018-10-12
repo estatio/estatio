@@ -18,12 +18,16 @@ package org.estatio.module.base.fixtures.security.users.personas;
 
 import java.util.Arrays;
 
+import org.apache.isis.applib.annotation.Programmatic;
+
 import org.isisaddons.module.security.dom.user.AccountType;
 import org.isisaddons.module.security.seed.scripts.AbstractUserAndRolesFixtureScript;
 
 import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
+
 import org.estatio.module.base.fixtures.security.perms.personas.EstatioUserRoleAndPermissions;
 
+@Programmatic
 public class EstatioUserInSweden extends AbstractUserAndRolesFixtureScript {
 
     public static final String USER_NAME = "estatio-user-se";

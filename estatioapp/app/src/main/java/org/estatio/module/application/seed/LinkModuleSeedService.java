@@ -27,6 +27,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
@@ -125,6 +126,7 @@ public class LinkModuleSeedService {
         }
     }
 
+    @Programmatic
     static class SeedLink extends FixtureScript {
 
         @Override

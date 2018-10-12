@@ -24,15 +24,12 @@ import org.apache.isis.applib.annotation.HomePage;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.base.dom.UdoDomainService;
-
-@DomainService(menuOrder = "90", nature = NatureOfService.DOMAIN)
-public class EstatioAppHomePageService extends UdoDomainService<EstatioAppHomePageService> {
-
-    public EstatioAppHomePageService() {
-        super(EstatioAppHomePageService.class);
-    }
-
+@DomainService(
+        menuOrder = "90",
+        nature = NatureOfService.DOMAIN,
+        objectType = "org.estatio.module.application.app.dashboard.EstatioAppHomePageService"
+)
+public class EstatioAppHomePageService {
 
     @Action(semantics = SemanticsOf.SAFE)
     @HomePage

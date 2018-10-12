@@ -22,7 +22,7 @@ language governing permissions and limitations under the License.
         <groupId>org.incode</groupId>
         <artifactId>incode-parent</artifactId>
         <!-- NB: also update incode-platform.version property below. -->
-        <version>1.16.2.20180801-1903-65c6b0b7</version>
+        <version>1.16.2.20181005-1256-dd4c627d</version>
         <relativePath/>
     </parent>
 
@@ -66,21 +66,19 @@ language governing permissions and limitations under the License.
     </developers>
 
     <properties>
-        <revision>SNAPSHOT</revision>
+        <!-- DO NOT CHANGE: versioning is specified externally in CI using -Drevision=... -->
+        <revision>1.0.0-SNAPSHOT</revision>
 
-        <isis.version>1.16.2.20180709-1350-5d9f4f7c</isis.version>
-        <!--
-        <isis.version>1.16.2.20180705-2207-210fd1e3</isis.version>
-        <isis.version>1.16.1.20180316-1549</isis.version>
-        <isis.version>1.16.1.20180228-1118</isis.version>
-        <isis.version>1.16.2-SNAPSHOT</isis.version>
-        -->
+<!--
+        <isis.version>1.16.2.20180921-0633-408d6647</isis.version>
+-->
+        <isis.version>${revision}</isis.version>
 
         <!--
         Also specify the incode-platform.version by changing the parent's version, above.
         And, update the pom.xml for estatio-ecp similarly
          -->
-        <incode-platform.version>1.16.2.20180801-1903-65c6b0b7</incode-platform.version>
+        <incode-platform.version>1.16.2.20181005-1256-dd4c627d</incode-platform.version>
 
         <estatio-canonical.version>2.0.0-M1.20180706-1047-f6fd67fd</estatio-canonical.version>
 

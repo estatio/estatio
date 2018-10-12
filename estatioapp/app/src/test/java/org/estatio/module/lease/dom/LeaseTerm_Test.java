@@ -34,6 +34,7 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
@@ -316,21 +317,8 @@ public class LeaseTerm_Test {
         }
 
         protected LeaseTerm doCreateWithIntervalMutable(final WithIntervalMutable.Helper<LeaseTerm> mockChangeDates) {
-            return new LeaseTerm() {
-                @Override WithIntervalMutable.Helper<LeaseTerm> getChangeDates() {
-                    return mockChangeDates;
-                }
 
-                @Override
-                public BigDecimal getEffectiveValue() {
-                    return null;
-                }
-
-                @Override
-                public BigDecimal valueForDate(LocalDate dueDate) {
-                    return null;
-                }
-            };
+            return new MyLeaseTerm(mockChangeDates);
         }
 
         // //////////////////////////////////////
@@ -351,6 +339,28 @@ public class LeaseTerm_Test {
             assertThat(leaseTerm.getChangeDates()).isNotNull();
         }
 
+        @Programmatic
+        private static class MyLeaseTerm extends LeaseTerm {
+            private final Helper<LeaseTerm> mockChangeDates;
+
+            public MyLeaseTerm(final Helper<LeaseTerm> mockChangeDates) {
+                this.mockChangeDates = mockChangeDates;
+            }
+
+            @Override Helper<LeaseTerm> getChangeDates() {
+                return mockChangeDates;
+            }
+
+            @Override
+            public BigDecimal getEffectiveValue() {
+                return null;
+            }
+
+            @Override
+            public BigDecimal valueForDate(LocalDate dueDate) {
+                return null;
+            }
+        }
     }
 
     public static class CompareTo extends ComparableContractTest_compareTo<LeaseTerm> {
@@ -440,27 +450,14 @@ public class LeaseTerm_Test {
 
     public static class ChangeDates extends LeaseTerm_Test {
 
-        private LeaseTerm term, prev, next;
+        private LeaseTerm term;
+        private LeaseTerm prev;
+        private LeaseTerm next;
 
         @Before
         public void setUp() throws Exception {
-            term = new LeaseTermForTesting(null, new LocalDate(2010, 1, 1), new LocalDate(2010, 12, 31), null) {
-                @Override
-                public LeaseTerm getPrevious() {
-                    return prev;
-                }
-
-                @Override
-                public LeaseTerm getNext() {
-                    return next;
-                }
-            };
-            prev = new LeaseTermForTesting(null, new LocalDate(2009, 1, 1), new LocalDate(2009, 12, 31), null) {
-                @Override
-                public LeaseTerm getNext() {
-                    return term;
-                }
-            };
+            term = new MyLeaseTermForTesting();
+            prev = new MyLeaseTermForTesting2();
             next = new LeaseTermForTesting(null, new LocalDate(2011, 1, 1), new LocalDate(2011, 12, 31), null);
 
         }
@@ -484,6 +481,34 @@ public class LeaseTerm_Test {
 
         }
 
+        @Programmatic
+        private class MyLeaseTermForTesting extends LeaseTermForTesting {
+            public MyLeaseTermForTesting() {
+                super(null, new LocalDate(2010, 1, 1), new LocalDate(2010, 12, 31), null);
+            }
+
+            @Override
+            public LeaseTerm getPrevious() {
+                return prev;
+            }
+
+            @Override
+            public LeaseTerm getNext() {
+                return next;
+            }
+        }
+
+        @Programmatic
+        private class MyLeaseTermForTesting2 extends LeaseTermForTesting {
+            public MyLeaseTermForTesting2() {
+                super(null, new LocalDate(2009, 1, 1), new LocalDate(2009, 12, 31), null);
+            }
+
+            @Override
+            public LeaseTerm getNext() {
+                return term;
+            }
+        }
     }
 
 }

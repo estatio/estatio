@@ -20,6 +20,7 @@ package org.estatio.module.lease.fixtures;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
@@ -27,6 +28,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.estatio.module.lease.dom.LeaseType;
 import org.estatio.module.lease.dom.LeaseTypeRepository;
 
+@Programmatic
 public class LeaseTypeForItalyRefData extends FixtureScript {
 
     private enum LeaseTypeData {

@@ -40,9 +40,8 @@ public class FinancialAccountRepository_create_IntegTest extends FinancialModule
         final FinancialAccountType[] financialAccountTypes = FinancialAccountType.values();
         for (final FinancialAccountType financialAccountType : financialAccountTypes) {
 
-            final String someRef = fakeDataService.strings().fixed(4);
-            final String someName = fakeDataService.strings().upper(20);
-
+            String someRef = fakeDataService.strings().digits(4);
+            String someName = fakeDataService.strings().upper(20);
 
             // given
             final List<FinancialAccount> before = financialAccountRepository.allAccounts();

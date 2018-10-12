@@ -11,8 +11,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.wrapper.InvalidException;
 
+import org.estatio.module.application.app.BudgetMenu;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
@@ -27,6 +27,8 @@ public class BudgetRepository_IntegTest extends BudgetModuleIntegTestAbstract {
 
     @Inject
     BudgetRepository budgetRepository;
+    @Inject
+    BudgetMenu budgetMenu;
 
     @Inject
     PropertyRepository propertyRepository;
@@ -67,14 +69,16 @@ public class BudgetRepository_IntegTest extends BudgetModuleIntegTestAbstract {
             // given
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
             // when
-            final Budget budget = budgetRepository.findByPropertyAndStartDate(property, new LocalDate(2015, 01, 01));
+            final Budget budget = budgetRepository.findByPropertyAndStartDate(property, new LocalDate(2015, 1, 1));
             // then
             assertThat(budget.getProperty()).isEqualTo(property);
-            assertThat(budget.getStartDate()).isEqualTo(new LocalDate(2015, 01, 01));
+            assertThat(budget.getStartDate()).isEqualTo(new LocalDate(2015, 1, 1));
             assertThat(budget.getEndDate()).isEqualTo(new LocalDate(2015, 12, 31));
 
             // and when
-            final Budget budgetNotToBeFound = budgetRepository.findByPropertyAndStartDate(property, new LocalDate(2015, 01, 02));
+            final Budget budgetNotToBeFound = budgetRepository.findByPropertyAndStartDate(property, new LocalDate(2015,
+                    1,
+                    2));
             //then
             assertThat(budgetNotToBeFound).isEqualTo(null);
         }
@@ -88,17 +92,17 @@ public class BudgetRepository_IntegTest extends BudgetModuleIntegTestAbstract {
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
 
             // when (case existing budget found)
-            final Budget budget = budgetRepository.findOrCreateBudget(property, new LocalDate(2015, 01, 01), new LocalDate(2015, 12, 31));
+            final Budget budget = budgetRepository.findOrCreateBudget(property, new LocalDate(2015, 1, 1), new LocalDate(2015, 12, 31));
             // then
             assertThat(budget.getProperty()).isEqualTo(property);
-            assertThat(budget.getStartDate()).isEqualTo(new LocalDate(2015, 01, 01));
+            assertThat(budget.getStartDate()).isEqualTo(new LocalDate(2015, 1, 1));
             assertThat(budget.getEndDate()).isEqualTo(new LocalDate(2015, 12, 31));
 
             // and when (case no existing budget found)
-            final Budget budgetToBeCreated = budgetRepository.findOrCreateBudget(property, new LocalDate(2017, 01, 01), new LocalDate(2017, 12, 31));
+            final Budget budgetToBeCreated = budgetRepository.findOrCreateBudget(property, new LocalDate(2017, 1, 1), new LocalDate(2017, 12, 31));
             //then
             assertThat(budgetToBeCreated.getProperty()).isEqualTo(property);
-            assertThat(budgetToBeCreated.getStartDate()).isEqualTo(new LocalDate(2017, 01, 01));
+            assertThat(budgetToBeCreated.getStartDate()).isEqualTo(new LocalDate(2017, 1, 1));
             assertThat(budgetToBeCreated.getEndDate()).isEqualTo(new LocalDate(2017, 12, 31));
             final List<Budget> budgetList = budgetRepository.findByProperty(property);
             assertThat(budgetList.size()).isEqualTo(3);
@@ -113,10 +117,10 @@ public class BudgetRepository_IntegTest extends BudgetModuleIntegTestAbstract {
             // given
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
             // when
-            final Budget budget = budgetRepository.findByPropertyAndDate(property, new LocalDate(2015, 01, 01));
+            final Budget budget = budgetRepository.findByPropertyAndDate(property, new LocalDate(2015, 1, 1));
             // then
             assertThat(budget.getProperty()).isEqualTo(property);
-            assertThat(budget.getStartDate()).isEqualTo(new LocalDate(2015, 01, 01));
+            assertThat(budget.getStartDate()).isEqualTo(new LocalDate(2015, 1, 1));
             assertThat(budget.getEndDate()).isEqualTo(new LocalDate(2015, 12, 31));
 
             // and when end date is given
@@ -147,12 +151,12 @@ public class BudgetRepository_IntegTest extends BudgetModuleIntegTestAbstract {
             // given
             final Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
 
-            //then
-            expectedException.expect(InvalidException.class);
-            expectedException.expectMessage("Reason: A budget should have an end date in the same year as start date");
-
             // when
-            wrap(budgetRepository).newBudget(property, new LocalDate(2010,01,01), new LocalDate(2011,01,01));
+            final String reason = budgetRepository
+                    .validateNewBudget(property, new LocalDate(2010, 1, 1), new LocalDate(2011, 1, 1));
+
+            //then
+            assertThat(reason).isEqualTo("A budget should have an end date in the same year as start date");
 
         }
 
@@ -162,11 +166,11 @@ public class BudgetRepository_IntegTest extends BudgetModuleIntegTestAbstract {
             // given
             final Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
 
-            //then
-            expectedException.expect(InvalidException.class);
-
             // when
-            wrap(budgetRepository).newBudget(property, null, new LocalDate(2010,12,31));
+            final String reason = budgetRepository.validateNewBudget(property, null, new LocalDate(2010, 12, 31));
+
+            //then
+            assertThat(reason).isNotNull().isNotEmpty();
         }
 
         @Test
@@ -175,12 +179,11 @@ public class BudgetRepository_IntegTest extends BudgetModuleIntegTestAbstract {
             // given
             final Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
 
-            //then
-            expectedException.expect(InvalidException.class);
-            expectedException.expectMessage("Reason: End date can not be before start date");
-
             // when
-            wrap(budgetRepository).newBudget(property, new LocalDate(2010,01,03), new LocalDate(2010,01,01));
+            final String reason = budgetRepository
+                    .validateNewBudget(property, new LocalDate(2010, 1, 3), new LocalDate(2010, 1, 1));
+            // then
+            assertThat(reason).isEqualTo("End date can not be before start date");
 
         }
 
@@ -189,15 +192,15 @@ public class BudgetRepository_IntegTest extends BudgetModuleIntegTestAbstract {
 
             // given
             final Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
-            final Budget budget = budgetRepository.findByPropertyAndDate(property, new LocalDate(2015, 01, 01));
+            final Budget budget = budgetRepository.findByPropertyAndDate(property, new LocalDate(2015, 1, 1));
 
-            //then
-            expectedException.expect(InvalidException.class);
-            expectedException.expectMessage("Reason: A budget cannot overlap an existing budget");
 
             //when
-            wrap(budgetRepository).newBudget(property, new LocalDate(2015,12,30), new LocalDate(2015,12,31));
+            final String reason = budgetRepository
+                    .validateNewBudget(property, new LocalDate(2015, 12, 30), new LocalDate(2015, 12, 31));
 
+            //then
+            assertThat(reason).isEqualTo("A budget cannot overlap an existing budget.");
         }
 
     }

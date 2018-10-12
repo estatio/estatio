@@ -21,10 +21,10 @@ package org.estatio.module.party.dom;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.apache.isis.applib.annotation.Programmatic;
+
 import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
-
-import org.estatio.module.party.dom.PartyRegistration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,12 +40,7 @@ public class PartyRegistration_Test {
         }
 
         protected PartyRegistration doCreateWithIntervalMutable(final WithIntervalMutable.Helper<PartyRegistration> mockChangeDates) {
-            return new PartyRegistration() {
-                @Override
-                WithIntervalMutable.Helper<PartyRegistration> getChangeDates() {
-                    return mockChangeDates;
-                }
-            };
+            return new MyPartyRegistration(mockChangeDates);
         }
 
         // //////////////////////////////////////
@@ -56,5 +51,18 @@ public class PartyRegistration_Test {
             assertThat(partyRegistration.getChangeDates()).isNotNull();
         }
 
+        @Programmatic
+        private static class MyPartyRegistration extends PartyRegistration {
+            private final Helper<PartyRegistration> mockChangeDates;
+
+            public MyPartyRegistration(final Helper<PartyRegistration> mockChangeDates) {
+                this.mockChangeDates = mockChangeDates;
+            }
+
+            @Override
+            Helper<PartyRegistration> getChangeDates() {
+                return mockChangeDates;
+            }
+        }
     }
 }

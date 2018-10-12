@@ -387,6 +387,7 @@ public class LeaseItem
     // //////////////////////////////////////
 
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public LeaseItem copy(
             final LocalDate startDate,
             final InvoicingFrequency invoicingFrequency,
@@ -476,7 +477,10 @@ public class LeaseItem
     @Getter @Setter
     private InvoicingFrequency invoicingFrequency;
 
-    @Action(domainEvent = ChangeInvoicingFrequencyEvent.class)
+    @Action(
+            domainEvent = ChangeInvoicingFrequencyEvent.class,
+            semantics = SemanticsOf.IDEMPOTENT
+    )
     public LeaseItem changeInvoicingFrequency(final InvoicingFrequency invoicingFrequency) {
         setInvoicingFrequency(invoicingFrequency);
         return this;
@@ -500,6 +504,7 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public LeaseItem changeCharge(final Charge charge) {
         setCharge(charge);
         return this;
@@ -618,6 +623,7 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public LeaseTerm newTerm(
             final LocalDate startDate,
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
@@ -666,6 +672,7 @@ public class LeaseItem
         return !getType().useSource();
     }
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "2", name = "sourceItems")
     public LeaseItem newSourceItem(
             final LeaseItem sourceItem

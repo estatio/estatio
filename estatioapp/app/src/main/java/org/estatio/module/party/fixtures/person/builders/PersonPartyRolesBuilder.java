@@ -25,6 +25,7 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
 import org.estatio.module.party.dom.Person;
@@ -50,10 +51,12 @@ public final class PersonPartyRolesBuilder
     @Getter
     private List<IPartyRoleType> partyRoleTypes = Lists.newArrayList();
 
+    @Programmatic
     public PersonPartyRolesBuilder addPartyRoleType(IPartyRoleType partyRoleType) {
         partyRoleTypes.add(partyRoleType);
         return this;
     }
+    @Programmatic
     public PersonPartyRolesBuilder addPartyRoleTypes(Collection<IPartyRoleType> partyRoleTypes) {
         this.partyRoleTypes.addAll(partyRoleTypes);
         return this;

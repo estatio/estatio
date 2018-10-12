@@ -4,8 +4,9 @@ import java.math.BigDecimal;
 
 import javax.annotation.Nullable;
 
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ViewModel;
+import org.apache.isis.applib.annotation.Nature;
 
 import org.isisaddons.module.excel.dom.HyperLink;
 
@@ -13,7 +14,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@ViewModel()
+@DomainObject(
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.module.capex.app.credittransfer.CreditTransferExportLine"
+)
 @Getter @Setter
 @AllArgsConstructor
 public class CreditTransferExportLine {

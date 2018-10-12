@@ -4,97 +4,101 @@ import java.math.BigDecimal;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.ViewModel;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Nature;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 
-@ViewModel
+@DomainObject(
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.module.fastnet.dom.FastNetChargingOnLeaseDataLine2"
+)
 @Getter @Setter
 @AllArgsConstructor
 public class FastNetChargingOnLeaseDataLine2 {
 
-        // keys 3
-        private String keyToLeaseExternalReference;
+    // keys 3
+    private String keyToLeaseExternalReference;
 
-        private String keyToChargeReference;
+    private String keyToChargeReference;
 
-        private LocalDate exportDate;
+    private LocalDate exportDate;
 
-        // charging 12
+    // charging 12
 
-        private String kontraktNr;
+    private String kontraktNr;
 
-        private String kundNr;
+    private String kundNr;
 
-        private String kod;
+    private String kod;
 
-        private String kod2;
+    private String kod2;
 
-        private String kontText;
+    private String kontText;
 
-        private String kontText2;
+    private String kontText2;
 
-        private String fromDat;
+    private String fromDat;
 
-        private String tomDat;
+    private String tomDat;
 
-        private String debPer;
+    private String debPer;
 
-        private String firstPosStart;
+    private String firstPosStart;
 
-        private BigDecimal arsBel;
+    private BigDecimal arsBel;
 
-        private LocalDate applied;
+    private LocalDate applied;
 
-        // lease 9
+    // lease 9
 
-        private String leaseReference;
+    private String leaseReference;
 
-        private String externalReference;
+    private String externalReference;
 
-        private String tenantName;
+    private String tenantName;
 
-        private String tenantReference;
+    private String tenantReference;
 
-        private String leaseStatus;
+    private String leaseStatus;
 
-        private LocalDate tenancyStartDate;
+    private LocalDate tenancyStartDate;
 
-        private LocalDate tenancyEndDate;
+    private LocalDate tenancyEndDate;
 
-        private LocalDate leaseStartDate;
+    private LocalDate leaseStartDate;
 
-        private LocalDate leaseEndDate;
+    private LocalDate leaseEndDate;
 
-        // lease item 5
+    // lease item 5
 
-        private String leaseItemType;
+    private String leaseItemType;
 
-        private String invoicingFrequency;
+    private String invoicingFrequency;
 
-        private LocalDate leaseItemStartDate;
+    private LocalDate leaseItemStartDate;
 
-        private LocalDate leaseItemEndDate;
+    private LocalDate leaseItemEndDate;
 
-        private String chargeReference;
+    private String chargeReference;
 
-        // lease term 7
+    // lease term 7
 
-        private LocalDate leaseTermStartDate;
+    private LocalDate leaseTermStartDate;
 
-        private LocalDate leaseTermEndDate;
+    private LocalDate leaseTermEndDate;
 
-        private String leaseTermStatus;
+    private String leaseTermStatus;
 
-        private BigDecimal baseValue;
+    private BigDecimal baseValue;
 
-        private BigDecimal settledValue;
+    private BigDecimal settledValue;
 
-        private BigDecimal value;
+    private BigDecimal value;
 
-        private BigDecimal budgetedValue;
+    private BigDecimal budgetedValue;
 
 }

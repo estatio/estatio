@@ -72,7 +72,7 @@ public class BudgetCalculationRunRepository_IntegTest extends BudgetAssignmentMo
             assertThat(budgetCalculationRunRepository.allBudgetCalculationRuns().size()).isEqualTo(0);
 
             // when
-            BudgetCalculationRun run = wrap(budgetCalculationRunRepository).findOrCreateNewBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.BUDGETED);
+            BudgetCalculationRun run = budgetCalculationRunRepository.findOrCreateNewBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.BUDGETED);
 
             // then
             assertThat(budgetCalculationRunRepository.allBudgetCalculationRuns().size()).isEqualTo(1);
@@ -83,13 +83,13 @@ public class BudgetCalculationRunRepository_IntegTest extends BudgetAssignmentMo
             assertThat(run.getStatus()).isEqualTo(Status.NEW);
 
             // and when again
-            wrap(budgetCalculationRunRepository).findOrCreateNewBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.BUDGETED);
+            budgetCalculationRunRepository.findOrCreateNewBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.BUDGETED);
 
             // then is idemPotent
             assertThat(budgetCalculationRunRepository.allBudgetCalculationRuns().size()).isEqualTo(1);
 
             // and when again
-            run = wrap(budgetCalculationRunRepository).findOrCreateNewBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.ACTUAL);
+            run = budgetCalculationRunRepository.findOrCreateNewBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.ACTUAL);
 
             // then
             assertThat(budgetCalculationRunRepository.allBudgetCalculationRuns().size()).isEqualTo(2);
@@ -110,7 +110,7 @@ public class BudgetCalculationRunRepository_IntegTest extends BudgetAssignmentMo
             assertThat(budgetCalculationRunRepository.findByLease(leaseTopModel).size()).isEqualTo(0);
 
             // when
-            wrap(budgetCalculationRunRepository).findOrCreateNewBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.BUDGETED);
+            budgetCalculationRunRepository.findOrCreateNewBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.BUDGETED);
 
             // then
             assertThat(budgetCalculationRunRepository.findByLease(leaseTopModel).size()).isEqualTo(1);
@@ -128,7 +128,7 @@ public class BudgetCalculationRunRepository_IntegTest extends BudgetAssignmentMo
             Lease leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
 
             // when
-            wrap(budgetCalculationRunRepository).findOrCreateNewBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.BUDGETED);
+            budgetCalculationRunRepository.findOrCreateNewBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.BUDGETED);
 
             // then
             assertThat(budgetCalculationRunRepository.findByBudget(budget2015).size()).isEqualTo(1);
@@ -146,7 +146,7 @@ public class BudgetCalculationRunRepository_IntegTest extends BudgetAssignmentMo
             Lease leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
 
             // when
-            wrap(budgetCalculationRunRepository).findOrCreateNewBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.BUDGETED);
+            budgetCalculationRunRepository.findOrCreateNewBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.BUDGETED);
 
             // then
             assertThat(budgetCalculationRunRepository.findByBudgetAndType(budget2015, BudgetCalculationType.BUDGETED).size()).isEqualTo(1);
@@ -165,7 +165,7 @@ public class BudgetCalculationRunRepository_IntegTest extends BudgetAssignmentMo
             Lease leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
 
             // when
-            wrap(budgetCalculationRunRepository).findOrCreateNewBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.BUDGETED);
+            budgetCalculationRunRepository.findOrCreateNewBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.BUDGETED);
 
             // then
             assertThat(budgetCalculationRunRepository.findByBudgetAndTypeAndStatus(budget2015, BudgetCalculationType.BUDGETED, Status.NEW).size()).isEqualTo(1);

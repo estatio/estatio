@@ -19,8 +19,12 @@ package org.estatio.module.lease.seed;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
+@DomainObject(
+        objectType = "org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture"
+)
 public class DocumentTypesAndTemplatesForLeaseFixture extends DiscoverableFixtureScript {
 
     private final LocalDate templateDateIfAny;

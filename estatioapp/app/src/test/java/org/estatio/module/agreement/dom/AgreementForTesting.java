@@ -18,10 +18,11 @@
  */
 package org.estatio.module.agreement.dom;
 
+import org.apache.isis.applib.annotation.Programmatic;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.module.agreement.dom.Agreement;
-
+@Programmatic
 public class AgreementForTesting extends Agreement {
 
     public AgreementForTesting() {

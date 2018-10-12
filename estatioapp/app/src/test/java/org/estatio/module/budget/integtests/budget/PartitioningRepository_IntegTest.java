@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
@@ -81,16 +80,18 @@ public class PartitioningRepository_IntegTest extends BudgetModuleIntegTestAbstr
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
             Budget budget = budgetRepository.findByPropertyAndStartDate(property,
                     Budget_enum.OxfBudget2015.getStartDate());
-            wrap(partitioningRepository).newPartitioning(budget, budget.getStartDate().plusDays(1), budget.getStartDate().plusDays(2), BudgetCalculationType.BUDGETED);
+            partitioningRepository.newPartitioning(budget, budget.getStartDate().plusDays(1), budget.getStartDate().plusDays(2), BudgetCalculationType.BUDGETED);
             transactionService.flushTransaction();
             assertThat(budget.getPartitionings().size()).isEqualTo(1);
 
-            // and expect
-            expectedException.expect(InvalidException.class);
-            expectedException.expectMessage("Reason: Only one partitioning of type BUDGETED is supported");
 
             // when again
-            wrap(partitioningRepository).newPartitioning(budget, budget.getStartDate().plusDays(3), budget.getEndDate(), BudgetCalculationType.BUDGETED);
+            final String reason = partitioningRepository
+                    .validateNewPartitioning(budget, budget.getStartDate().plusDays(3), budget.getEndDate(),
+                            BudgetCalculationType.BUDGETED);
+
+            // then
+            assertThat(reason).isEqualTo("Only one partitioning of type BUDGETED is supported");
 
         }
 
@@ -101,14 +102,15 @@ public class PartitioningRepository_IntegTest extends BudgetModuleIntegTestAbstr
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
             Budget budget = budgetRepository.findByPropertyAndStartDate(property,
                     Budget_enum.OxfBudget2015.getStartDate());
-            wrap(partitioningRepository).newPartitioning(budget, budget.getStartDate(), budget.getEndDate(), BudgetCalculationType.ACTUAL);
-
-            // and expect
-            expectedException.expect(InvalidException.class);
-            expectedException.expectMessage("Reason: This partitioning already exists");
+            partitioningRepository.newPartitioning(budget, budget.getStartDate(), budget.getEndDate(), BudgetCalculationType.ACTUAL);
 
             // when again
-            wrap(partitioningRepository).newPartitioning(budget, budget.getStartDate(), budget.getEndDate(), BudgetCalculationType.ACTUAL);
+            final String reason = partitioningRepository
+                    .validateNewPartitioning(budget, budget.getStartDate(), budget.getEndDate(),
+                            BudgetCalculationType.ACTUAL);
+
+            // then
+            assertThat(reason).isEqualTo("This partitioning already exists");
 
         }
 

@@ -16,6 +16,7 @@
  */
 package org.estatio.module.base.seed;
 
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.isisaddons.module.security.seed.SeedUsersAndRolesFixtureScript;
@@ -40,6 +41,9 @@ import org.estatio.module.base.fixtures.security.users.personas.EstatioUserInIta
 import org.estatio.module.base.fixtures.security.users.personas.EstatioUserInNetherlands;
 import org.estatio.module.base.fixtures.security.users.personas.EstatioUserInSweden;
 
+@DomainObject(
+        objectType = "org.estatio.module.base.seed.EstatioSecurityModuleSeedFixture"
+)
 public class EstatioSecurityModuleSeedFixture extends DiscoverableFixtureScript {
 
     @Override

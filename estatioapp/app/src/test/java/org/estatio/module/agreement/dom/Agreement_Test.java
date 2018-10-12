@@ -36,6 +36,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
@@ -217,6 +218,7 @@ public class Agreement_Test {
         private Party creditor;
         private Party debtor;
 
+        @Programmatic
         public static class AgreementForSubtypeTesting extends Agreement {
 
             public AgreementForSubtypeTesting() {

@@ -4,14 +4,18 @@ import java.math.BigDecimal;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ViewModel;
+import org.apache.isis.applib.annotation.Nature;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@ViewModel
+@DomainObject(
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.module.fastnet.dom.ChargingLineLogViewModel"
+)
 @Getter @Setter
 @AllArgsConstructor
 public class ChargingLineLogViewModel implements Comparable<ChargingLineLogViewModel> {

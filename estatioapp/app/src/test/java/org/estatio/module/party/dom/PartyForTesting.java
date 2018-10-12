@@ -18,11 +18,11 @@
  */
 package org.estatio.module.party.dom;
 
+import org.apache.isis.applib.annotation.Programmatic;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.module.party.dom.Party;
-
-@javax.jdo.annotations.Discriminator("org.estatio.dom.party.PartyForTesting")
+@Programmatic
 public class PartyForTesting extends Party {
 
     private final ApplicationTenancy applicationTenancy;

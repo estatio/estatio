@@ -71,7 +71,7 @@ public class BudgetCalculationResultRepository_IntegTest extends BudgetAssignmen
         budgetsForOxf = budgetRepository.findByProperty(propertyOxf);
         budget2015 = budgetRepository.findByPropertyAndStartDate(propertyOxf, Budget_enum.OxfBudget2015.getStartDate());
         leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
-        run = wrap(budgetCalculationRunRepository).findOrCreateNewBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.BUDGETED);
+        run = budgetCalculationRunRepository.findOrCreateNewBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.BUDGETED);
     }
 
     public static class FindOrCreate extends BudgetCalculationResultRepository_IntegTest {
@@ -84,7 +84,7 @@ public class BudgetCalculationResultRepository_IntegTest extends BudgetAssignmen
             Charge invoiceCharge = Charge_enum.GbServiceCharge.findUsing(serviceRegistry);
 
             // when
-            BudgetCalculationResult result = wrap(budgetCalculationResultRepository).findOrCreateBudgetCalculationResult(run, invoiceCharge);
+            BudgetCalculationResult result = budgetCalculationResultRepository.findOrCreateBudgetCalculationResult(run, invoiceCharge);
 
             // then
             assertThat(budgetCalculationResultRepository.allBudgetCalculationResults().size()).isEqualTo(1);
@@ -92,7 +92,7 @@ public class BudgetCalculationResultRepository_IntegTest extends BudgetAssignmen
             assertThat(result.getInvoiceCharge()).isEqualTo(invoiceCharge);
 
             // and when again
-            wrap(budgetCalculationResultRepository).findOrCreateBudgetCalculationResult(run, invoiceCharge);
+            budgetCalculationResultRepository.findOrCreateBudgetCalculationResult(run, invoiceCharge);
 
             // then is idemPotent
             assertThat(budgetCalculationResultRepository.allBudgetCalculationResults().size()).isEqualTo(1);

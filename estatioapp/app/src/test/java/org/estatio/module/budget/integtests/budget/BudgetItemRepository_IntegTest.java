@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
@@ -107,7 +106,7 @@ public class BudgetItemRepository_IntegTest extends BudgetModuleIntegTestAbstrac
             assertThat(budget.getItems().size()).isEqualTo(2);
 
             // when
-            budgetItem = wrap(budgetItemRepository).newBudgetItem(budget, budgetedValue, charge);
+            budgetItem = budgetItemRepository.newBudgetItem(budget, budgetedValue, charge);
 
             // then
             assertThat(budget.getItems().size()).isEqualTo(3);
@@ -131,12 +130,11 @@ public class BudgetItemRepository_IntegTest extends BudgetModuleIntegTestAbstrac
             Charge charge = Charge_enum.GbIncomingCharge1.findUsing(serviceRegistry);
             budgetedValue = bd("1234.56");
 
-            // expect
-            expectedException.expect(InvalidException.class);
-            expectedException.expectMessage("Reason: There is already an item with this charge");
-
             // when
-            wrap(budgetItemRepository).newBudgetItem(budget, budgetedValue, charge);
+            final String reason = budgetItemRepository.validateNewBudgetItem(budget, budgetedValue, charge);
+
+            // then
+            assertThat(reason).isEqualTo("There is already an item with this charge.");
 
         }
 

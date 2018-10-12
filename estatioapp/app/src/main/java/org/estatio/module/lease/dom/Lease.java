@@ -390,7 +390,10 @@ public class Lease
 
     // //////////////////////////////////////
 
-    @Action(domainEvent = ChangeDatesEvent.class)
+    @Action(
+            domainEvent = ChangeDatesEvent.class,
+            semantics = SemanticsOf.IDEMPOTENT
+    )
     public Lease changeTenancyDates(
             final LocalDate startDate,
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {

@@ -93,7 +93,7 @@ public class BudgetCalculationResultLinkRepository_IntegTest extends BudgetAssig
             assertThat(budgetCalculationResultLinkRepository.allBudgetCalculationResultLinks().size()).isEqualTo(0);
 
             // when
-            BudgetCalculationResultLink link = wrap(budgetCalculationResultLinkRepository).createBudgetCalculationResultLink(result, leaseTerm);
+            BudgetCalculationResultLink link = budgetCalculationResultLinkRepository.createBudgetCalculationResultLink(result, leaseTerm);
 
             // then
             assertThat(budgetCalculationResultLinkRepository.allBudgetCalculationResultLinks().size()).isEqualTo(1);
@@ -114,7 +114,7 @@ public class BudgetCalculationResultLinkRepository_IntegTest extends BudgetAssig
             assertThat(budgetCalculationResultLinkRepository.allBudgetCalculationResultLinks().size()).isEqualTo(0);
 
             // when
-            BudgetCalculationResultLink link = wrap(budgetCalculationResultLinkRepository).createBudgetCalculationResultLink(result, leaseTerm);
+            BudgetCalculationResultLink link = budgetCalculationResultLinkRepository.createBudgetCalculationResultLink(result, leaseTerm);
 
             // then
             assertThat(budgetCalculationResultLinkRepository.findUnique(result, leaseTerm)).isEqualTo(link);
@@ -134,7 +134,7 @@ public class BudgetCalculationResultLinkRepository_IntegTest extends BudgetAssig
             assertThat(budgetCalculationResultLinkRepository.allBudgetCalculationResultLinks().size()).isEqualTo(0);
 
             // when
-            BudgetCalculationResultLink link = wrap(budgetCalculationResultLinkRepository).createBudgetCalculationResultLink(result, leaseTerm);
+            BudgetCalculationResultLink link = budgetCalculationResultLinkRepository.createBudgetCalculationResultLink(result, leaseTerm);
 
             // then
             assertThat(budgetCalculationResultLinkRepository.findByCalculationResult(result).size()).isEqualTo(1);
@@ -152,7 +152,7 @@ public class BudgetCalculationResultLinkRepository_IntegTest extends BudgetAssig
             assertThat(budgetCalculationResultLinkRepository.allBudgetCalculationResultLinks().size()).isEqualTo(0);
 
             // when
-            BudgetCalculationResultLink link = wrap(budgetCalculationResultLinkRepository).createBudgetCalculationResultLink(result, leaseTerm);
+            BudgetCalculationResultLink link = budgetCalculationResultLinkRepository.createBudgetCalculationResultLink(result, leaseTerm);
 
             // then
             assertThat(budgetCalculationResultLinkRepository.findByLeaseTerm(leaseTerm).size()).isEqualTo(1);

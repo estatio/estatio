@@ -6,7 +6,8 @@ import javax.jdo.annotations.Column;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.ViewModel;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.excel.dom.ExcelFixture2;
@@ -32,7 +33,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-@ViewModel
+@DomainObject(
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.module.capex.imports.CodaMappingImport"
+)
 @NoArgsConstructor
 public class CodaMappingImport implements FixtureAwareRowHandler<CodaMappingImport> {
 

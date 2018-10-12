@@ -19,13 +19,11 @@
 package org.estatio.module.asset.dom;
 
 
-import javax.jdo.annotations.Discriminator;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.module.asset.dom.FixedAsset;
-
-@Discriminator("org.estatio.dom.asset.FixedAssetForTesting")
+@Programmatic
 public class FixedAssetForTesting extends FixedAsset {
 
     public ApplicationTenancy getApplicationTenancy() {

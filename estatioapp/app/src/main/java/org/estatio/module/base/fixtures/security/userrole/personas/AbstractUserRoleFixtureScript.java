@@ -16,6 +16,7 @@
  */
 package org.estatio.module.base.fixtures.security.userrole.personas;
 
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.security.dom.role.ApplicationRole;
@@ -23,6 +24,7 @@ import org.isisaddons.module.security.dom.role.ApplicationRoleRepository;
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 import org.isisaddons.module.security.dom.user.ApplicationUserRepository;
 
+@Programmatic
 public abstract class AbstractUserRoleFixtureScript extends FixtureScript {
 
     private final String userName;

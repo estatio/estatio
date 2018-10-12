@@ -26,17 +26,15 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.ClassUnderTest;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.estatio.module.settings.dom.ApplicationSetting;
+import org.estatio.module.settings.dom.ApplicationSettingsServiceForEstatio;
 import org.estatio.module.settings.dom.SettingAbstract;
 import org.estatio.module.settings.dom.SettingType;
-
-import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingKey;
-import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
-import org.estatio.module.settings.dom.ApplicationSettingsServiceForEstatio;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -65,6 +63,7 @@ public class LeaseInvoicingSettingsService_Test {
     @ClassUnderTest
     private EstatioSettingsServiceForTesting estatioSettingsService;
 
+    @Programmatic
     static class ApplicationSettingForTesting extends SettingAbstract implements ApplicationSetting {
         private String valueRaw;
         private SettingType type;

@@ -16,9 +16,11 @@
  */
 package org.estatio.module.base.fixtures.security;
 
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
+@Programmatic
 public class EstatioSecurityModuleTearDown extends FixtureScript {
 
     @Override

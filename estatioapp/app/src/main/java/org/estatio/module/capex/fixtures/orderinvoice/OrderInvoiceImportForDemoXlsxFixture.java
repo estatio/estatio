@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import com.google.common.io.Resources;
 
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.fixturescripts.FixtureResult;
 import org.apache.isis.applib.services.factory.FactoryService;
 
@@ -14,6 +15,9 @@ import org.isisaddons.module.excel.dom.util.Mode;
 import org.estatio.module.capex.imports.OrderInvoiceImportHandler;
 import org.estatio.module.capex.imports.OrderInvoiceLine;
 
+@DomainObject(
+        objectType = "org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceImportForDemoXlsxFixture"
+)
 public class OrderInvoiceImportForDemoXlsxFixture extends ExcelFixture2 {
 
     @Override

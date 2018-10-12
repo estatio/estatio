@@ -24,6 +24,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
@@ -54,6 +55,7 @@ public class FixedAssetRegistrationContributions_Test {
 
         private FixedAsset_registrationContributions target;
 
+        @Programmatic
         public static class FoobarAssetRegistration extends FixedAssetRegistration {
 
             @Override

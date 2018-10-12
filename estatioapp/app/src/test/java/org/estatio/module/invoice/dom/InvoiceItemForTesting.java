@@ -18,12 +18,11 @@
  */
 package org.estatio.module.invoice.dom;
 
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.module.invoice.dom.Invoice;
-import org.estatio.module.invoice.dom.InvoiceItem;
-
+@Programmatic
 public class InvoiceItemForTesting extends InvoiceItem {
 
     public InvoiceItemForTesting(final Invoice invoice) {

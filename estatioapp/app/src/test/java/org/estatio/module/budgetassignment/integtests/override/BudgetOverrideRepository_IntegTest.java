@@ -6,12 +6,9 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
@@ -69,7 +66,7 @@ public class BudgetOverrideRepository_IntegTest extends BudgetAssignmentModuleIn
             assertThat(budgetOverrideRepository.allBudgetOverrides().size()).isEqualTo(0);
 
             // when
-            BudgetOverrideForFixed budgetOverrideForFixed = wrap(budgetOverrideRepository).newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge, null, null, reason);
+            BudgetOverrideForFixed budgetOverrideForFixed = budgetOverrideRepository.newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge, null, null, reason);
 
             // then
             assertThat(budgetOverrideRepository.allBudgetOverrides().size()).isEqualTo(1);
@@ -83,9 +80,6 @@ public class BudgetOverrideRepository_IntegTest extends BudgetAssignmentModuleIn
 
     public static class ValidateNewBudgetOverride extends BudgetOverrideRepository_IntegTest {
 
-        @Rule
-        public ExpectedException expectedException = ExpectedException.none();
-
         @Test
         public void sameInvoiceChargeAndTypeInOverlappingIntervalIsInvalid() {
             // given
@@ -95,21 +89,19 @@ public class BudgetOverrideRepository_IntegTest extends BudgetAssignmentModuleIn
             String reason = "Some reason";
             LocalDate endDate = new LocalDate(2014,12,31);
             LocalDate startDate = new LocalDate(2015,01,01);
-            wrap(budgetOverrideRepository).newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, endDate, invoiceCharge, null, BudgetCalculationType.BUDGETED, reason);
+            budgetOverrideRepository.newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, endDate, invoiceCharge, null, BudgetCalculationType.BUDGETED, reason);
             assertThat(budgetOverrideRepository.allBudgetOverrides().size()).isEqualTo(1);
 
             // when
-            wrap(budgetOverrideRepository).newBudgetOverrideForFixed(overrideValue, leaseTopModel, startDate, null, invoiceCharge, null, BudgetCalculationType.BUDGETED, reason);
-            wrap(budgetOverrideRepository).newBudgetOverrideForFixed(overrideValue, leaseTopModel, startDate, null, invoiceCharge, null, BudgetCalculationType.ACTUAL, reason);
+            budgetOverrideRepository.newBudgetOverrideForFixed(overrideValue, leaseTopModel, startDate, null, invoiceCharge, null, BudgetCalculationType.BUDGETED, reason);
+            budgetOverrideRepository.newBudgetOverrideForFixed(overrideValue, leaseTopModel, startDate, null, invoiceCharge, null, BudgetCalculationType.ACTUAL, reason);
             assertThat(budgetOverrideRepository.allBudgetOverrides().size()).isEqualTo(3);
 
-            // and expect
-            expectedException.expect(InvalidException.class);
-            expectedException.expectMessage("Conflicting budget overrides found");
-
             // when
-            wrap(budgetOverrideRepository).newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge, null, null, reason);
-
+            final String valReason = budgetOverrideRepository
+                    .validateNewBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge, null,
+                            null, reason);
+            assertThat(valReason).contains("Conflicting budget overrides found");
         }
 
         @Test
@@ -121,22 +113,20 @@ public class BudgetOverrideRepository_IntegTest extends BudgetAssignmentModuleIn
             Charge incomingCharge2 = Charge_enum.GbIncomingCharge2.findUsing(serviceRegistry);
             BigDecimal overrideValue = new BigDecimal("1234.56");
             String reason = "Some reason";
-            wrap(budgetOverrideRepository).newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge, incomingCharge1, null, reason);
+            budgetOverrideRepository.newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge, incomingCharge1, null, reason);
             assertThat(budgetOverrideRepository.allBudgetOverrides().size()).isEqualTo(1);
 
             // when
-            wrap(budgetOverrideRepository).newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge, incomingCharge2, null, reason);
+            budgetOverrideRepository.newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge, incomingCharge2, null, reason);
 
             // then
             assertThat(budgetOverrideRepository.allBudgetOverrides().size()).isEqualTo(2);
 
-            // and expect
-            expectedException.expect(InvalidException.class);
-            expectedException.expectMessage("Conflicting budget overrides found");
-
             // when
-            wrap(budgetOverrideRepository).newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge, incomingCharge2, null, reason);
-
+            final String valReason = budgetOverrideRepository
+                    .validateNewBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge,
+                            incomingCharge2, null, reason);
+            assertThat(valReason).contains("Conflicting budget overrides found");
         }
 
     }
@@ -156,7 +146,7 @@ public class BudgetOverrideRepository_IntegTest extends BudgetAssignmentModuleIn
             assertThat(budgetOverrideRepository.findByLease(leaseTopModel).size()).isEqualTo(0);
 
             // when
-            BudgetOverrideForFixed budgetOverrideForFixed = wrap(budgetOverrideRepository).newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge, null, null, reason);
+            BudgetOverrideForFixed budgetOverrideForFixed = budgetOverrideRepository.newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge, null, null, reason);
 
             // then
             assertThat(budgetOverrideRepository.findByLease(leaseTopModel).size()).isEqualTo(1);
@@ -176,7 +166,7 @@ public class BudgetOverrideRepository_IntegTest extends BudgetAssignmentModuleIn
         String reason = "Some reason";
 
         // when
-        BudgetOverrideForFixed budgetOverrideForFixed = wrap(budgetOverrideRepository).newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge, null, null, reason);
+        BudgetOverrideForFixed budgetOverrideForFixed = budgetOverrideRepository.newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge, null, null, reason);
 
         // then
         assertThat(budgetOverrideRepository.findByLeaseAndInvoiceCharge(leaseTopModel, invoiceCharge).size()).isEqualTo(1);

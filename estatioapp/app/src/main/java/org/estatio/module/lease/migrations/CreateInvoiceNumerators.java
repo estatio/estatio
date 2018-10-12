@@ -21,6 +21,7 @@ package org.estatio.module.lease.migrations;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -37,6 +38,9 @@ import org.estatio.module.numerator.dom.Numerator;
 
 import static org.incode.module.base.integtests.VT.bi;
 
+@DomainObject(
+        objectType = "org.estatio.module.lease.migrations.CreateInvoiceNumerators"
+)
 public class CreateInvoiceNumerators extends DiscoverableFixtureScript {
 
 

@@ -16,8 +16,10 @@
  */
 package org.estatio.module.base.fixtures.security.perms.personas;
 
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+@Programmatic
 public class EstatioRolesAndPermissions extends FixtureScript {
 
     @Override

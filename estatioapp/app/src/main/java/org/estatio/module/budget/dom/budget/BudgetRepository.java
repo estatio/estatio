@@ -29,9 +29,10 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.module.asset.dom.Property;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(repositoryFor = Budget.class, nature = NatureOfService.DOMAIN)
 @DomainServiceLayout()
@@ -90,7 +91,7 @@ public class BudgetRepository extends UdoDomainRepositoryAndFactory<Budget> {
         if (year < 2000 || year > 3000){
             return "This is not a valid year";
         }
-        return validateNewBudget(property, new LocalDate(year, 01, 01), new LocalDate(year, 12, 31));
+        return validateNewBudget(property, new LocalDate(year, 1, 1), new LocalDate(year, 12, 31));
     }
 
     @Programmatic

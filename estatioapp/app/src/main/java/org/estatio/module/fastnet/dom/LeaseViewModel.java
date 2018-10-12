@@ -1,11 +1,15 @@
 package org.estatio.module.fastnet.dom;
 
-import org.apache.isis.applib.annotation.ViewModel;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Nature;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@ViewModel
+@DomainObject(
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.module.fastnet.dom.LeaseViewModel"
+)
 @Getter @Setter
 public class LeaseViewModel {
 
