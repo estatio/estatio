@@ -44,7 +44,7 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
             @Override
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
-                executionContext.executeChild(this, Person_enum.DylanOfficeAdministratorGb);
+                executionContext.executeChild(this, Person_enum.DanielOfficeAdministratorFr);
             }
         });
     }
@@ -57,12 +57,12 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
         assertThat(incomingDocumentsBefore).isEmpty();
 
         // when
-        final String fileName = "5020100123.pdf";
+        final String fileName = "3020100123.pdf";
         final byte[] pdfBytes = Resources.toByteArray(
                 Resources.getResource(DocumentMenu_Upload_IntegTest.class, fileName));
         final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(Person_enum.DylanOfficeAdministratorGb.getRef().toLowerCase(), (Runnable) () ->
+        sudoService.sudo(Person_enum.DanielOfficeAdministratorFr.getRef().toLowerCase(), (Runnable) () ->
                 wrap(documentMenu).upload(blob));
         transactionService.nextTransaction();
 
@@ -73,8 +73,8 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
         final Document document = incomingDocumentsAfter.get(0);
         final Blob documentBlob = document.getBlob();
 
-        assertThat(ApplicationTenancy_enum.GbFr.getPath()).isEqualTo("/GBR;/FRA");
-        assertThat(document.getAtPath()).isEqualTo("/GBR");
+        assertThat(ApplicationTenancy_enum.FrBe.getPath()).isEqualTo("/FRA;/BEL");
+        assertThat(document.getAtPath()).isEqualTo("/FRA");
         assertThat(documentBlob.getName()).isEqualTo(blob.getName());
         assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
         assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
@@ -92,7 +92,7 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
                 null, INSTANTIATE, NEW);
 
         // and when
-        final String fileName2 = "5020100123-altered.pdf";
+        final String fileName2 = "3020100123-altered.pdf";
         final byte[] pdfBytes2 = Resources.toByteArray(
                 Resources.getResource(DocumentMenu_Upload_IntegTest.class, fileName2));
         final Blob similarNamedBlob = new Blob(fileName, "application/pdf", pdfBytes2);
@@ -119,13 +119,6 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
         // then
         assertThat(belgianDocument.getAtPath()).isEqualTo("/BEL");
 
-        // and when since ECP-676 atPath derived from filename for France and Belgium
-        final String frenchBarCode = "3010012345.pdf";
-        final Blob frenchBlob = new Blob(frenchBarCode, "application/pdf", pdfBytes2);
-        Document frenchDocument = wrap(documentMenu).upload(frenchBlob);
-
-        // then
-        assertThat(frenchDocument.getAtPath()).isEqualTo("/FRA");
     }
 
 
@@ -156,13 +149,12 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
         assertThat(incomingDocumentsBefore).isEmpty();
 
         // when
-        final String fileName = "5020100123.pdf";
+        final String fileName = "3020100123.pdf";
         final byte[] pdfBytes = Resources.toByteArray(
                 Resources.getResource(DocumentMenu_Upload_IntegTest.class, fileName));
         final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(Person_enum.DylanOfficeAdministratorGb.getRef().toLowerCase(), (Runnable) () ->
-                documentMenu.uploadGeneric(blob, "INCOMING", true, null));
+        documentMenu.uploadGeneric(blob, "INCOMING", true, null);
         transactionService.nextTransaction();
 
         // then
@@ -172,7 +164,7 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
         final Document document = incomingDocumentsAfter.get(0);
         final Blob documentBlob = document.getBlob();
 
-        assertThat(document.getAtPath()).isEqualTo("/GBR");
+        assertThat(document.getAtPath()).isEqualTo("/FRA");
         assertThat(documentBlob.getName()).isEqualTo(blob.getName());
         assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
         assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
@@ -190,7 +182,7 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
                 null, INSTANTIATE, NEW);
 
         // and when
-        final String fileName2 = "5020100123-altered.pdf";
+        final String fileName2 = "3020100123-altered.pdf";
         final byte[] pdfBytes2 = Resources.toByteArray(
                 Resources.getResource(DocumentMenu_Upload_IntegTest.class, fileName2));
         final Blob similarNamedBlob = new Blob(fileName, "application/pdf", pdfBytes2);
@@ -216,13 +208,6 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
 
         // then
         assertThat(belgianDocument.getAtPath()).isEqualTo("/BEL");
-
-        final String frenchBarCode = "3010012345.pdf";
-        final Blob frenchBlob = new Blob(frenchBarCode, "application/pdf", pdfBytes2);
-        Document frenchDocument = documentMenu.upload(frenchBlob);
-
-        // then
-        assertThat(frenchDocument.getAtPath()).isEqualTo("/FRA");
 
     }
 
@@ -257,7 +242,7 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
 
         // and when again uploading doc with the same name (but different bytes)
         final byte[] pdfBytes2 = Resources.toByteArray(
-                Resources.getResource(DocumentMenu_Upload_IntegTest.class, "5020100123-altered.pdf"));
+                Resources.getResource(DocumentMenu_Upload_IntegTest.class, "3020100123-altered.pdf"));
         final Blob similarNamedBlobWithDifferentBytes = new Blob(fileName, "application/pdf", pdfBytes2);
         documentMenu.uploadGeneric(similarNamedBlobWithDifferentBytes, "INCOMING_ORDER", false, "/ITA");
         transactionService.nextTransaction();

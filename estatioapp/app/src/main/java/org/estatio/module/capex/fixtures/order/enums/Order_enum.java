@@ -40,22 +40,22 @@ public enum Order_enum
         implements PersonaWithFinder<Order>, PersonaWithBuilderScript<Order, OrderBuilder> {
 
     fakeOrder2Pdf(
-            IncomingInvoiceType.CAPEX, Person_enum.DylanOfficeAdministratorGb,
-            IncomingPdf_enum.FakeOrder2, ApplicationTenancy_enum.Gb, new DateTime(2014, 3, 5, 10, 0), "estatio-user-gb",
-            Organisation_enum.TopModelGb, Organisation_enum.HelloWorldGb,
-            Project_enum.OxfProject, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            IncomingInvoiceType.CAPEX, Person_enum.DanielOfficeAdministratorFr,
+            IncomingPdf_enum.FakeOrder2, ApplicationTenancy_enum.Fr, new DateTime(2014, 3, 5, 10, 0), "estatio-user-fr",
+            Organisation_enum.TopModelFr, Organisation_enum.HelloWorldFr,
+            Project_enum.VivProjectFr, PropertyAndUnitsAndOwnerAndManager_enum.VivFr,
             ld(2014, 3, 6),
-            Tax_enum.GB_VATSTD,
+            Tax_enum.FR_VATSTD,
             IncomingCharge_enum.FrWorks, "order item", bd("1000.00"), bd("210.00"), bd("1210.00"), "F2016",
             IncomingCharge_enum.FrMarketing, "marketing stuff", bd("500.00"), bd("105.00"), bd("605.00"), "F2017"
     ),
     fakeOrder3Pdf(
-            IncomingInvoiceType.LOCAL_EXPENSES, Person_enum.DylanOfficeAdministratorGb,
-            IncomingPdf_enum.FakeOrder2, ApplicationTenancy_enum.Gb, new DateTime(2018, 1, 5, 10, 0), "estatio-user-gb",
-            Organisation_enum.TopModelGb, Organisation_enum.HelloWorldGb,
+            IncomingInvoiceType.LOCAL_EXPENSES, Person_enum.DanielOfficeAdministratorFr,
+            IncomingPdf_enum.FakeOrder2, ApplicationTenancy_enum.Fr, new DateTime(2018, 1, 5, 10, 0), "estatio-user-fr",
+            Organisation_enum.TopModelFr, Organisation_enum.HelloWorldFr,
             null, null,
             ld(2018, 1, 5),
-            Tax_enum.GB_VATSTD,
+            Tax_enum.FR_VATSTD,
             IncomingCharge_enum.FrFurnitures, "order item", bd("1000.00"), bd("210.00"), bd("1210.00"), "F2018",
             null, null, null, null, null, null
     );

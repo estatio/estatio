@@ -46,7 +46,7 @@ public class OrderApprovalState_IntegTest extends CapexModuleIntegTestAbstract {
     Party buyer;
     Party seller;
 
-    Country greatBritain;
+    Country france;
     Charge charge_for_works;
 
     Order order;
@@ -61,8 +61,8 @@ public class OrderApprovalState_IntegTest extends CapexModuleIntegTestAbstract {
                 ec.executeChild(this, new CapexChargeHierarchyXlsxFixture());
                 ec.executeChildren(this,
                         Order_enum.fakeOrder3Pdf,
-                        Person_enum.DylanOfficeAdministratorGb,
-                        Person_enum.JonathanIncomingInvoiceManagerGb);
+                        Person_enum.DanielOfficeAdministratorFr,
+                        Person_enum.BertrandIncomingInvoiceManagerFr);
             }
         });
 
@@ -71,10 +71,10 @@ public class OrderApprovalState_IntegTest extends CapexModuleIntegTestAbstract {
     @Before
     public void setUp() {
 
-        buyer = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
-        seller = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
+        buyer = OrganisationAndComms_enum.HelloWorldFr.findUsing(serviceRegistry);
+        seller = OrganisationAndComms_enum.TopModelFr.findUsing(serviceRegistry);
 
-        greatBritain = countryRepository.findCountry(Country_enum.GBR.getRef3());
+        france = countryRepository.findCountry(Country_enum.FRA.getRef3());
         charge_for_works = chargeRepository.findByReference("WORKS");
 
         order = Order_enum.fakeOrder3Pdf.findUsing(serviceRegistry);
@@ -94,9 +94,9 @@ public class OrderApprovalState_IntegTest extends CapexModuleIntegTestAbstract {
         Exception error = new Exception();
 
         // given
-        Person personJonathan = (Person) partyRepository.findPartyByReference(
-                Person_enum.JonathanIncomingInvoiceManagerGb.getRef());
-        SortedSet<PartyRole> rolesforJonathan = personJonathan.getRoles();
+        Person personOlive = (Person) partyRepository.findPartyByReference(
+                Person_enum.BertrandIncomingInvoiceManagerFr.getRef());
+        SortedSet<PartyRole> rolesforJonathan = personOlive.getRoles();
         assertThat(rolesforJonathan.size()).isEqualTo(1);
         assertThat(rolesforJonathan.first().getRoleType()).isEqualTo(partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.getKey()));
 
@@ -104,8 +104,8 @@ public class OrderApprovalState_IntegTest extends CapexModuleIntegTestAbstract {
         // when
         try {
             queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-            sudoService.sudo(Person_enum.JonathanIncomingInvoiceManagerGb.getRef().toLowerCase(), (Runnable) () ->
-                    wrap(mixin(Order_completeWithApproval.class, order)).act( personJonathan, new LocalDate(2018,1, 6), null));
+            sudoService.sudo(Person_enum.BertrandIncomingInvoiceManagerFr.getRef().toLowerCase(), (Runnable) () ->
+                    wrap(mixin(Order_completeWithApproval.class, order)).act( personOlive, new LocalDate(2018,1, 6), null));
         } catch (DisabledException e){
             error = e;
         }
@@ -119,9 +119,9 @@ public class OrderApprovalState_IntegTest extends CapexModuleIntegTestAbstract {
     public void complete_order_of_type_local_expenses_works_when_having_office_administrator_role_test() {
 
         // given
-        Person personDylan = (Person) partyRepository.findPartyByReference(
-                Person_enum.DylanOfficeAdministratorGb.getRef());
-        SortedSet<PartyRole> rolesforDylan = personDylan.getRoles();
+        Person personDaniel = (Person) partyRepository.findPartyByReference(
+                Person_enum.DanielOfficeAdministratorFr.getRef());
+        SortedSet<PartyRole> rolesforDylan = personDaniel.getRoles();
         assertThat(rolesforDylan.size()).isEqualTo(1);
         assertThat(rolesforDylan.first().getRoleType()).isEqualTo(partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR.getKey()));
 
@@ -129,8 +129,8 @@ public class OrderApprovalState_IntegTest extends CapexModuleIntegTestAbstract {
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         setFixtureClockDate(2018,1, 6);
-        sudoService.sudo(Person_enum.DylanOfficeAdministratorGb.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(Order_completeWithApproval.class, order)).act( personDylan, new LocalDate(2018,1, 6), null));
+        sudoService.sudo(Person_enum.DanielOfficeAdministratorFr.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(Order_completeWithApproval.class, order)).act( personDaniel, new LocalDate(2018,1, 6), null));
         assertThat(order.getApprovalState()).isEqualTo(OrderApprovalState.APPROVED);
         assertThat(taskRepository.findIncompleteByRole(partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR.getKey())).size()).isEqualTo(0);
 

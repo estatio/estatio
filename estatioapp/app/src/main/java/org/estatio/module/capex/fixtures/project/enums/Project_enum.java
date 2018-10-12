@@ -28,8 +28,9 @@ import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
+
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.capex.fixtures.project.builders.ProjectBuilder;
@@ -41,7 +42,11 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import static org.estatio.module.asset.fixtures.property.enums.Property_enum.OxfGb;
+import static org.estatio.module.asset.fixtures.property.enums.Property_enum.RonIt;
+import static org.estatio.module.asset.fixtures.property.enums.Property_enum.VivFr;
+import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Fr;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Gb;
+import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.It;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Nl;
 import static org.incode.module.base.integtests.VT.bd;
 import static org.incode.module.base.integtests.VT.ld;
@@ -54,16 +59,39 @@ public enum Project_enum implements PersonaWithBuilderScript<Project, ProjectBui
     OxfProject  ("OXF-02", "New extension", ld(2016, 1, 1), ld(2019, 7, 1), Gb,
             new ItemSpec[]{
                 new ItemSpec(IncomingCharge_enum.FrWorks, "works", bd("40000.00"), null, null, OxfGb, null)
-            }
+            },
+            new TermSpec[]{}
     ),
     GraProject  ("PR3", "Place commercial signs", ld(1999, 1, 1), ld(1999, 7, 1), Nl,
-            new ItemSpec[]{}
+            new ItemSpec[]{},
+            new TermSpec[]{}
     ),
     KalProject1 ("PR1", "Augment parkingplace", ld(1999, 1, 1), ld(1999, 7, 1), Nl,
-            new ItemSpec[]{}
+            new ItemSpec[]{},
+            new TermSpec[]{}
     ),
     KalProject2 ("PR2", "Broaden entrance", ld(1999, 4, 1), ld(1999, 5, 1), Nl,
-            new ItemSpec[]{}
+            new ItemSpec[]{},
+            new TermSpec[]{}
+    ),
+    VivProjectFr  ("VIV-01", "New extension", ld(2016, 1, 1), ld(2019, 7, 1), Fr,
+            new ItemSpec[]{
+                    new ItemSpec(IncomingCharge_enum.FrWorks, "works", bd("40000.00"), null, null, VivFr, null)
+            },
+            new TermSpec[]{}
+    ),
+    RonProjectIt    ("RON-01", "New extension", ld(2018, 1, 1), ld(2021, 7, 1), It,
+            new ItemSpec[]{
+                    new ItemSpec(IncomingCharge_enum.ItPurchase, "purchase (acquisto)", bd("90000.00"), null, null, RonIt, null),
+                    new ItemSpec(IncomingCharge_enum.ItConstruction, "construction (costruzione)", bd("3000000.00"), null, null, RonIt, null),
+
+            },
+            new TermSpec[]{
+                    new TermSpec(bd("50000.00"), new LocalDate(2018,1,1), new LocalDate(2018,3,31)),
+                    new TermSpec(bd("100000.00"), new LocalDate(2018,4,1), new LocalDate(2018,6,30)),
+                    new TermSpec(bd("200000.00"), new LocalDate(2018,7,1), new LocalDate(2018,9,30)),
+                    new TermSpec(bd("500000.00"), new LocalDate(2018,10,1), new LocalDate(2018,12,31))
+            }
     ),
     ;
 
@@ -78,12 +106,20 @@ public enum Project_enum implements PersonaWithBuilderScript<Project, ProjectBui
         private final Property_enum property_d;
         private final Tax_enum tax_d;
     }
+    @AllArgsConstructor
+    @Data
+    public static class TermSpec {
+        private final BigDecimal budgetedAmount;
+        private final LocalDate startDate;
+        private final LocalDate endDate;
+    }
     private final String ref;
     private final String name;
     private final LocalDate startDate;
     private final LocalDate endDate;
     private final ApplicationTenancy_enum applicationTenancy;
     private final ItemSpec[] itemSpecs;
+    private final TermSpec[] termSpecs;
 
     @Override
     public ProjectBuilder builder() {
@@ -103,6 +139,13 @@ public enum Project_enum implements PersonaWithBuilderScript<Project, ProjectBui
                                 x.endDate,
                                 f.objectFor(x.property_d, ec),
                                 f.objectFor(x.tax_d, ec)))
+                        .collect(Collectors.toList())))
+                .setPrereq((f,ec) -> f.setTermSpecs(Arrays.stream(termSpecs)
+                        .map(x -> new ProjectBuilder.TermSpec(
+                                x.budgetedAmount,
+                                x.startDate,
+                                x.endDate
+                        ))
                         .collect(Collectors.toList())))
                 ;
     }

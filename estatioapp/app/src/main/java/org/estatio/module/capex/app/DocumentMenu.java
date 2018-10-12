@@ -118,8 +118,8 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
                 return "/FRA";
             case "BE":
                 return "/BEL";
-            case "GB":
-                return "/GBR";
+            case "IT":
+                return "/ITA";
             default:
                 return null;
         }

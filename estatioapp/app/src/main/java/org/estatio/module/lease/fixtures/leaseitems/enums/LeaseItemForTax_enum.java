@@ -36,7 +36,6 @@ import org.estatio.module.lease.dom.LeaseTermFrequency;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.builders.LeaseItemForTaxBuilder;
 import org.estatio.module.lease.fixtures.leaseitems.builders.LeaseTermForTaxBuilder;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -54,6 +53,10 @@ public enum LeaseItemForTax_enum implements PersonaWithFinder<LeaseItem>, Person
         new TermSpec[]{
             new TermSpec(Lease_enum.OxfTopModel001Gb.getStartDate(), null, null, bd(1), bd(50), true)
         }),
+    RonTopModel001It(Lease_enum.RonTopModel001It, bi(1), LeaseItemForRent_enum.RonTopModel001It,
+            new TermSpec[]{
+                    new TermSpec(Lease_enum.RonTopModel001It.getStartDate(), null, null, bd(1), bd(50), true)
+            }),
     ;
 
     private final Lease_enum lease_d;

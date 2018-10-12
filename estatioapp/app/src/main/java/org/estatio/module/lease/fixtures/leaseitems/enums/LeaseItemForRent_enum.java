@@ -97,6 +97,11 @@ public enum LeaseItemForRent_enum implements PersonaWithFinder<LeaseItem>, Perso
                     new TermSpec(null, null, null, bd(20000),
                             ld(2010, 7, 1), ld(2011, 1, 1), ld(2011, 4, 1), Index_enum.IStatFoi)
             }),
+    RonTopModel001It(Lease_enum.RonTopModel001It, bi(1),
+            new TermSpec[]{
+                    new TermSpec(null, null, null, bd(20000),
+                            ld(2010, 7, 1), ld(2011, 1, 1), ld(2011, 4, 1), Index_enum.IStatFoi)
+            }),
     ;
 
     private final Lease_enum lease_d;

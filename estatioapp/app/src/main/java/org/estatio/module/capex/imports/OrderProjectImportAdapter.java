@@ -136,7 +136,16 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
     }
 
     public String deriverOrderNumber(){
-        return getNumero()!=null ? getNumero().toString() : null;
+        if (getNumero()==null) return null;
+        StringBuilder builder = new StringBuilder();
+        builder.append(getNumero().toString());
+        builder.append("/");
+        if (getCentro()!=null) builder.append(getCentro());
+        builder.append("/");
+        if (getProgressivoCentro()!=null) builder.append(getProgressivoCentro().toString());
+        builder.append("/");
+        if (getCommessa()!=null) builder.append(getCommessa());
+        return builder.toString();
     }
 
     private void importSeller() {
@@ -151,12 +160,12 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
     private void createProjectItemIfNotAlready(){
         Project project = projectRepository.findByReference(deriveProjectReference());
         if (project==null) {
-            LOG.error(String.format("Project not found for order number %s and project reference", getNumero().toString(), deriveProjectReference()));
+            LOG.error(String.format("Project not found for order number %s and project reference %s", getNumero().toString(), deriveProjectReference()));
             return;
         }
         Charge charge = chargeRepository.findByReference(deriveChargeReference());
         if (charge==null) {
-            LOG.error(String.format("Charge not found for order number %s and charge reference", getNumero().toString(), deriveChargeReference()));
+            LOG.error(String.format("Charge not found for order number %s and charge reference %s", getNumero().toString(), deriveChargeReference()));
             return;
         }
         projectItemRepository.findOrCreate(project, charge, charge.getName(), null, null, null, null,null);
@@ -164,12 +173,21 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
 
     private String deriveChargeReference(){
         if (getWorkType()==null) return null;
-        return IncomingChargeImportAdapter.ITA_INCOMING_CHARGE_PREFIX + getWorkType().toString();
+        Charge oldCharge = chargeRepository.findByReference(IncomingChargeImportAdapter.ITA_OLD_WORKTYPE_PREFIX + workTypeCodeFromNo(getWorkType()));
+        if (oldCharge==null) return null;
+        return oldCharge.getExternalReference()!=null ? oldCharge.getExternalReference() : oldCharge.getReference();
+    }
+
+    private String workTypeCodeFromNo(final Integer worktype){
+        if (worktype<10) return "00".concat(worktype.toString());
+        if (worktype<100) return "0".concat(worktype.toString());
+        return worktype.toString();
     }
 
     private String deriveProjectReference(){
         if (getCommessa()==null) return null;
-        return ProjectImportAdapter.ITA_PROJECT_PREFIX + getCommessa().toString();
+        if (getCentro()==null) return ProjectImportAdapter.ITA_PROJECT_PREFIX + getCommessa().toString();
+        return ProjectImportAdapter.deriveProjectReference(getCommessa(), getCentro());
     }
 
     private LocalDate deriveStartDate(){

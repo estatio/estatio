@@ -29,10 +29,10 @@ public enum PropertyAndUnitsAndOwnerAndManager_enum implements
             Person_enum.JohnDoeNl, null, null
     ) {
     },
-    CARTEST (Property_enum.CARTEST,
-            0,
+    RonIt   (Property_enum.RonIt,
+            5,
             Organisation_enum.HelloWorldIt, ld(1999, 1, 1), ld(2000, 1, 1),
-            Person_enum.LucianoPavarottiIt, null, null
+            Person_enum.RonRondelliIt, null, null
     ),
     GraIt   (Property_enum.GraIt,
             55,

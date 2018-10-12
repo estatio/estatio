@@ -58,7 +58,10 @@ public enum Organisation_enum
     MiracleNl("MIRACLE_NL", "Miracle Shoes (NL)", Nl),
     NlBankNl("NLBANK_NL", "NlBank (NL)", Nl),
     PastaPapaItNl("PASTAPAPA", "Pasta Papa Food", It),
+    TopModelIt("TOPMODEL_IT", "Topmodel Fashion", It),
     PerdantFr("PERDANT", "Perdant Clothing", Fr),
+    TopModelFr("TOPMODEL_FR", "Topmodel Fashion", Fr),
+    TopSellerFr("TOPSELLER_FR", "Topseller goods", Fr),
     PoisonGb("POISON_GB", "Poison Perfumeries", Gb),
     PoisonNl("POISON_NL", "Poison Perfumeries B.V.", Nl),
     PretGb("PRET", "Pret-a-Partir", Gb),
@@ -66,7 +69,7 @@ public enum Organisation_enum
     TopSellerGb("TOPSELLER", "Topseller goods", Gb),
     YoukeaSe("YOUKEA", "Youkea Furniture", Se),
     PoisonSe("POISON_SE", "Poison Perfumeries", Se),
-    TopModelSe("TOPMODEL", "Topmodel Fashion", Se),
+    TopModelSe("TOPMODEL_SE", "Topmodel Fashion", Se),
     OmsHyraSe("OMSHYRA", "Omshyra rentals", Se),
     ;
 

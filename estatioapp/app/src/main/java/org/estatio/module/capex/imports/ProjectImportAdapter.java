@@ -1,7 +1,11 @@
 package org.estatio.module.capex.imports;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+
+import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
@@ -22,6 +26,9 @@ public class ProjectImportAdapter implements FixtureAwareRowHandler<ProjectImpor
 
     @Getter @Setter @Nullable
     private Integer excelRowNumber;
+
+    @Getter @Setter @Nullable
+    private String archived;
 
     @Getter @Setter @Nullable
     private Integer noCommessa;
@@ -51,9 +58,12 @@ public class ProjectImportAdapter implements FixtureAwareRowHandler<ProjectImpor
         if (getNoCommessa()!=null) {
             ProjectImport line = new ProjectImport();
             serviceRegistry2.injectServicesInto(line);
-            line.setReference(deriveProjectReference(getNoCommessa()));
-            line.setName(deriveProjectName(getCausale()));
+            line.setProjectReference(deriveProjectReference(getNoCommessa(), getCentroDiCosto()));
+            line.setProjectName(deriveProjectName(getCausale()));
             line.setAtPath("/ITA");
+            if (getArchived()!=null && getArchived().equals("YES")){
+                line.setArchived(true);
+            }
             line.importData(null);
         }
         return this;
@@ -72,8 +82,21 @@ public class ProjectImportAdapter implements FixtureAwareRowHandler<ProjectImpor
 
     }
 
-    private String deriveProjectReference(final Integer input){
-        return ITA_PROJECT_PREFIX.concat(input.toString());
+    public static String deriveProjectReference(final Integer noCommessa, final String centroDiCosto ){
+        String noCommessaToReference = ITA_PROJECT_PREFIX.concat(noCommessa.toString());
+        return handleDoubles(noCommessaToReference, centroDiCosto);
+    }
+
+    public static String handleDoubles(final String possibleDoubleReference, final String centroDiCosto) {
+        List<String> doubles =
+                Lists.newArrayList(
+                        "ITPR154",
+                        "ITPR184",
+                        "ITPR190",
+                        "ITPR192");
+        return doubles.contains(possibleDoubleReference) ?
+                possibleDoubleReference + " [DOUBLE] " + centroDiCosto
+                : possibleDoubleReference;
     }
 
     private String deriveProjectName(final String input){

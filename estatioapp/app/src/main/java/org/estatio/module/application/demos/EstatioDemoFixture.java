@@ -130,16 +130,20 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
         ec.executeChildren(this,
                 Person_enum.LinusTorvaldsNl,
-                Person_enum.GinoVannelliGb, Person_enum.DylanOfficeAdministratorGb,
+                Person_enum.GinoVannelliGb,
+                Person_enum.DylanOfficeAdministratorGb,
+                Person_enum.DanielOfficeAdministratorFr,
                 Person_enum.JonathanIncomingInvoiceManagerGb,
+                Person_enum.BertrandIncomingInvoiceManagerFr,
                 Person_enum.FaithConwayGb,
                 Person_enum.OscarCountryDirectorGb,
                 Person_enum.EmmaTreasurerGb,
-                Person_enum.ThibaultOfficerAdministratorFr,
+                Person_enum.BrunoTreasurerFr,
+                Person_enum.DanielOfficeAdministratorFr,
                 Person_enum.FifineLacroixFr,
                 Person_enum.OlivePropertyManagerFr,
                 Person_enum.RosaireEvrardFr,
-                Person_enum.GabrielHerveFr,
+                Person_enum.GabrielCountryDirectorFr,
                 Person_enum.BrunoTreasurerFr);
 
         ec.executeChildren(this,
@@ -148,7 +152,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 PropertyAndUnitsAndOwnerAndManager_enum.HanSe,
                 PropertyAndUnitsAndOwnerAndManager_enum.MnsFr,
                 PropertyAndUnitsAndOwnerAndManager_enum.MacFr,
-                PropertyAndUnitsAndOwnerAndManager_enum.CARTEST);
+                PropertyAndUnitsAndOwnerAndManager_enum.RonIt);
 
         ec.executeChildren(this,
                 NumeratorForOrganisation_enum.Fra);
@@ -158,6 +162,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 BankAccount_enum.HelloWorldGb,
                 BankAccount_enum.TopModelGb,
                 BankAccount_enum.TopSellerGb,
+                BankAccount_enum.TopModelFr,
+                BankAccount_enum.TopSellerFr,
                 BankAccount_enum.MediaXGb,
                 BankAccount_enum.PretGb,
                 BankAccount_enum.MiracleGb,
@@ -181,7 +187,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 Lease_enum.OxfMiracl005Gb,
                 Lease_enum.KalPoison001Nl,
                 Lease_enum.OxfTopModel001Gb,
-                Lease_enum.HanOmsHyral003Se);
+                Lease_enum.HanOmsHyral003Se,
+                Lease_enum.RonTopModel001It);
 
         ec.executeChildren(this,
                 BreakOption_enum.OxfPoison003Gb_FIXED,
@@ -208,17 +215,15 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 LeaseItemForRent_enum.HanPoison001Se,
                 LeaseItemForRent_enum.HanTopModel002Se,
                 LeaseItemForTurnoverRentFixed_enum.HanPoison001Se,
-                LeaseItemForTurnoverRentFixed_enum.HanTopModel002Se);
+                LeaseItemForTurnoverRentFixed_enum.HanTopModel002Se,
+                LeaseItemForRent_enum.RonTopModel001It,
+                LeaseItemForTax_enum.RonTopModel001It);
 
         ec.executeChildren(this,
                 InvoiceForLease_enum.OxfPoison003Gb,
                 InvoiceForLease_enum.KalPoison001Nl,
                 InvoiceForLease_enum.OxfMiracl005Gb);
 
-        ec.executeChildren(this,
-                Project_enum.KalProject1,
-                Project_enum.KalProject2,
-                Project_enum.GraProject);
 
         ec.executeChildren(this,
                 Budget_enum.OxfBudget2015,
@@ -235,6 +240,13 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 new CapexChargeHierarchyXlsxFixture());
         ec.executeChild(this,
                 new OrderInvoiceImportForDemoXlsxFixture());
+
+        ec.executeChildren(this,
+                Project_enum.KalProject1,
+                Project_enum.KalProject2,
+                Project_enum.GraProject,
+                Project_enum.VivProjectFr,
+                Project_enum.RonProjectIt);
 
         ec.executeChildren(this,
                 new DocumentTypesAndTemplatesForCapexFixture(),

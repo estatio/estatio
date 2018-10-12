@@ -57,11 +57,11 @@ public class PersonRepository_IntegTest extends AssetModuleIntegTestAbstract {
                             Person_enum.FaithConwayGb,  // gb country administrator
                             Person_enum.OscarCountryDirectorGb,
                             Person_enum.EmmaTreasurerGb,
-                            Person_enum.ThibaultOfficerAdministratorFr,
+                            Person_enum.DanielOfficeAdministratorFr,
                             Person_enum.FifineLacroixFr, // fr property mgr for VIV and MNS
                             Person_enum.OlivePropertyManagerFr,
                             Person_enum.RosaireEvrardFr,  // fr country administrator
-                            Person_enum.GabrielHerveFr,  // fr country director
+                            Person_enum.GabrielCountryDirectorFr,  // fr country director
                             Person_enum.BrunoTreasurerFr);
                 }
             });

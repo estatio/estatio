@@ -6,22 +6,23 @@ import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
+import org.incode.module.country.fixtures.enums.Country_enum;
+
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.PropertyType;
 import org.estatio.module.asset.fixtures.property.builders.PropertyBuilder;
-import org.incode.module.country.fixtures.enums.Country_enum;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import static org.estatio.module.asset.dom.PropertyType.SHOPPING_CENTER;
+import static org.incode.module.base.integtests.VT.ld;
 import static org.incode.module.country.fixtures.enums.Country_enum.FRA;
 import static org.incode.module.country.fixtures.enums.Country_enum.GBR;
 import static org.incode.module.country.fixtures.enums.Country_enum.ITA;
 import static org.incode.module.country.fixtures.enums.Country_enum.NLD;
 import static org.incode.module.country.fixtures.enums.Country_enum.SWE;
-import static org.incode.module.base.integtests.VT.ld;
 
 @AllArgsConstructor
 @Getter
@@ -30,8 +31,8 @@ public enum Property_enum implements PersonaWithFinder<Property>, PersonaWithBui
 
     BudNl   ("BUD", "BudgetToren", "Amsterdam", NLD, SHOPPING_CENTER,
             ld(2003, 12, 1), ld(2003, 12, 1), "52.37597;4.90814"),
-    CARTEST ("CAR", "Centro Carosello test", "Milano", ITA, SHOPPING_CENTER,
-            ld(2004, 5, 6), ld(2008, 6, 1), "45.5399865;9.3263305"),
+    RonIt   ("RON", "Centro Rondello", "Milano", ITA, SHOPPING_CENTER,
+            ld(2009, 2, 1), ld(2010, 7, 1), "45.5399865;9.3263305"),
     GraIt   ("GRA", "Centro Grande Punto", "Milano", ITA, SHOPPING_CENTER,
             ld(2004, 5, 6), ld(2008, 6, 1), "45.5399865;9.3263305"),
     HanSe   ("HAN", "Handla Center", "Malmo", SWE, SHOPPING_CENTER,

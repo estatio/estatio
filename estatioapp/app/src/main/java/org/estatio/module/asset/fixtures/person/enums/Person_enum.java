@@ -32,11 +32,12 @@ import static org.estatio.module.party.fixtures.organisation.enums.Organisation_
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.PastaPapaItNl;
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.PerdantFr;
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.TopModelGb;
+import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.TopModelIt;
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.TopModelSe;
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.YoukeaSe;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Fr;
+import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.FrBe;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Gb;
-import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.GbFr;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.It;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Nl;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Se;
@@ -46,19 +47,92 @@ import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enu
 public enum Person_enum
         implements PersonaWithBuilderScript<Person, PersonAndRolesBuilder>, PersonaWithFinder<Person> {
 
-    AgnethaFaltskogSe("AFALTSKOG", "Agnetha", "Faltskog", "A", false, FEMALE, Se, Se,
-            CONTACT, YoukeaSe,
-            new IPartyRoleType[] { },
+
+    // office administrator,
+    DanielOfficeAdministratorFr("DADMINISTRATEUR", "Daniel", "Administrateur", null, true, MALE, Fr, FrBe, //Since ECP-677 multiple security atPath
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.OFFICE_ADMINISTRATOR },
             new FixedAssetRoleSpec[] {}),
 
-    BrunoTreasurerFr("BJEREMIE", "Bruno", "Jeremei", null, true, MALE, Fr, Fr,
+    DomenicoOfficeAdministratorIt("DAMMINISTRATORE", "Domenico", "Amministratore", null, true, MALE, It, It,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.OFFICE_ADMINISTRATOR },
+            new FixedAssetRoleSpec[] {}),
+
+    DylanOfficeAdministratorGb("DCLAYTON", "Dylan", "Clayton", null, true, MALE, Gb, Gb,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.OFFICE_ADMINISTRATOR },
+            new FixedAssetRoleSpec[] {}),
+
+    // incoming invoice manager, property manager
+    JonathanIncomingInvoiceManagerGb("JRICE", "Jonathan", "Rice", null, true, MALE, Gb, Gb,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER },
+            new FixedAssetRoleSpec[] {}),
+
+    BertrandIncomingInvoiceManagerFr("BGESTIONNAIRE", "Olive", "GestiannaireFacturesEntrant", null, true, MALE, Fr, Fr,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER },
+            new FixedAssetRoleSpec[] {}),
+
+    OlivePropertyManagerFr("OBEAUSOLIEL", "Olive", "Beusoleil", null, true, FEMALE, Fr, Fr,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER },
+            new FixedAssetRoleSpec[] {
+                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, Property_enum.MacFr)
+            }),
+
+    FifineLacroixFr("FLACROIX", "Fifine", "Lacroix", null, true, FEMALE, Fr, Fr,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER },
+            new FixedAssetRoleSpec[] {
+                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, Property_enum.VivFr),
+                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, Property_enum.MnsFr),
+            }),
+
+    // asset manager
+    FloellaAssetManagerGb("FBEAUTIFUL", "Floella", "Beautiful", null, true, FEMALE, Gb, Gb,
+            null, null,
+            new IPartyRoleType[] {  },
+            new FixedAssetRoleSpec[] {
+                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.ASSET_MANAGER, Property_enum.OxfGb)
+            }),
+
+    FloellaAssetManagerFr("FGESTION", "Floella", "Gestionnaire d' Actifs", null, true, FEMALE, Fr, Fr,
+            null, null,
+            new IPartyRoleType[] {  },
+            new FixedAssetRoleSpec[] {
+                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.ASSET_MANAGER, Property_enum.VivFr)
+            }),
+
+    FloellaAssetManagerIt("FGESTORE", "Floella", "Gestore Patrimoniale", null, true, FEMALE, It, It,
+            null, null,
+            new IPartyRoleType[] {  },
+            new FixedAssetRoleSpec[] {
+                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.ASSET_MANAGER, Property_enum.RonIt)
+            }),
+
+    // country director
+    GabrielCountryDirectorFr("GRESPONSABLE", "Gabriel", "Responsable", null, true, FEMALE, Fr, Fr,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.COUNTRY_DIRECTOR },
+            new FixedAssetRoleSpec[] {}),
+
+    OscarCountryDirectorGb("OPRITCHARD", "Oscar", "Pritchard", null, true, MALE, Gb, Gb,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.COUNTRY_DIRECTOR },
+            new FixedAssetRoleSpec[] {}),
+
+
+    // treasurer
+    BrunoTreasurerFr("BTRESORIER", "Bruno", "Trésorier", null, true, MALE, Fr, Fr,
             null, null,
             new IPartyRoleType[] { PartyRoleTypeEnum.TREASURER },
             new FixedAssetRoleSpec[] {}),
 
-    DylanOfficeAdministratorGb("DCLAYTON", "Dylan", "Clayton", null, true, MALE, Gb, GbFr, //Since ECP-677 multiple security atPath
+    LucaTreasurerIt("LTESORIERE", "Luca", "Tesoriere", null, true, MALE, It, It,
             null, null,
-            new IPartyRoleType[] { PartyRoleTypeEnum.OFFICE_ADMINISTRATOR },
+            new IPartyRoleType[] { PartyRoleTypeEnum.TREASURER },
             new FixedAssetRoleSpec[] {}),
 
     EmmaTreasurerGb("EFARMER", "Emma", "Farmer", "E", true, FEMALE, Gb, Gb,
@@ -66,34 +140,21 @@ public enum Person_enum
             new IPartyRoleType[] { PartyRoleTypeEnum.TREASURER },
             new FixedAssetRoleSpec[] {}),
 
+
+
+    AgnethaFaltskogSe("AFALTSKOG", "Agnetha", "Faltskog", "A", false, FEMALE, Se, Se,
+            CONTACT, YoukeaSe,
+            new IPartyRoleType[] { },
+            new FixedAssetRoleSpec[] {}),
+
     FaithConwayGb("FCONWAY", "Faith", "Conway", null, true, FEMALE, Gb, Gb,
             null, null,
             new IPartyRoleType[] {},
             new FixedAssetRoleSpec[] {}),
 
-    FifineLacroixFr("FLACROIX", "Fifine", "Lacroix", null, true, FEMALE, Fr, Fr,
-            null, null,
-            new IPartyRoleType[] { PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER },
-            new FixedAssetRoleSpec[] {
-                new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, Property_enum.VivFr),
-                new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, Property_enum.MnsFr),
-            }),
-
     FleuretteRenaudFr("FRENAUD", "Fleurette", "Renaud", null, false, FEMALE, Fr, Fr,
             null, null,
             new IPartyRoleType[] {  },
-            new FixedAssetRoleSpec[] {}),
-
-    FloellaAssetManagerGb("FBEAUTIFUL", "Floella", "Beautiful", null, true, FEMALE, Gb, Gb,
-            null, null,
-            new IPartyRoleType[] {  },
-            new FixedAssetRoleSpec[] {
-                new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.ASSET_MANAGER, Property_enum.OxfGb)
-            }),
-
-    GabrielHerveFr("GHERVE", "Gabriel", "Herve", null, true, FEMALE, Fr, Fr,
-            null, null,
-            new IPartyRoleType[] { PartyRoleTypeEnum.COUNTRY_DIRECTOR },
             new FixedAssetRoleSpec[] {}),
 
     GinoVannelliGb("GVANNELLI", "Gino", "Vannelli", "G", false, MALE, Gb, Gb,
@@ -116,11 +177,6 @@ public enum Person_enum
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
 
-    JonathanIncomingInvoiceManagerGb("JRICE", "Jonathan", "Rice", null, true, MALE, Gb, Gb,
-            null, null,
-            new IPartyRoleType[] { PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER },
-            new FixedAssetRoleSpec[] {}),
-
     LinusTorvaldsNl("LTORVALDS", "Linus", "Torvalds", "L", false, MALE, Nl, Nl,
             null, null,
             new IPartyRoleType[] {  },
@@ -131,19 +187,17 @@ public enum Person_enum
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
 
-    OlivePropertyManagerFr("OBEAUSOLIEL", "Olive", "Beusoleil", null, true, FEMALE, Fr, Fr,
-            null, null,
-            new IPartyRoleType[] { PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER },
-            new FixedAssetRoleSpec[] {
-                new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, Property_enum.MacFr)
-            }),
-
-    OscarCountryDirectorGb("OPRITCHARD", "Oscar", "Pritchard", null, true, MALE, Gb, Gb,
-            null, null,
-            new IPartyRoleType[] { PartyRoleTypeEnum.COUNTRY_DIRECTOR },
+    RonRondelliIt("LRONDELLI", "Ronaldo", "Rondelli", "R", false, MALE, It, It,
+            CONTACT, TopModelIt,
+            new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
 
     PeterPanProjectManagerGb("PP", "Peter", "Pan", "P", true, MALE, Gb, Gb,
+            null, null,
+            new IPartyRoleType[] { },
+            new FixedAssetRoleSpec[] {}),
+
+    PeterPanProjectManagerFr("PP", "Peter", "Pan", "P", true, MALE, Fr, Fr,
             null, null,
             new IPartyRoleType[] { },
             new FixedAssetRoleSpec[] {}),
@@ -153,18 +207,16 @@ public enum Person_enum
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
 
-    ThibaultOfficerAdministratorFr("TJOSUE", "Thibault", "Josue", null, true, MALE, Fr, Fr,
-            null, null,
-            new IPartyRoleType[] { PartyRoleTypeEnum.OFFICE_ADMINISTRATOR },
-            new FixedAssetRoleSpec[] {}),
     JohnDoeSe("JDOE", "John", "Doe", "J", false, MALE, Se, Se,
             null, null,
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
+
     GinoVannelliSe("GVANNELLI", "Gino", "Vannelli", "G", false, MALE, Se, Se,
             CONTACT, TopModelSe,
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
+
     JonasCar("JCAR", "Jonas", "Car", "J", false, MALE, Se, Se,
             CONTACT, OmsHyraSe,
             new IPartyRoleType[] {  },

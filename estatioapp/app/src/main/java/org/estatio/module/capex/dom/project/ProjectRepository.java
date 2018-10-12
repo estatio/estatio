@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.assertj.core.util.Lists;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -33,8 +34,8 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.base.dom.utils.StringUtils;
 
-import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(repositoryFor = Project.class, nature = NatureOfService.DOMAIN)
 public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
@@ -46,6 +47,11 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
     @Programmatic
     public List<Project> listAll() {
         return allInstances();
+    }
+
+    @Programmatic
+    public List<Project> allUnarchivedProjects() {
+        return listAll().stream().filter(p->!p.isArchived()).collect(Collectors.toList());
     }
 
     @Programmatic
@@ -100,12 +106,12 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
         final String refRegex = StringUtils.wildcardToCaseInsensitiveRegex("*".concat(searchPhrase).concat("*"));
         return allMatches("matchByReferenceOrName",
                 "matcher", refRegex
-        );
+        ).stream().filter(p->!p.isArchived()).collect(Collectors.toList());
     }
 
     public List<Project> findByFixedAsset(final FixedAsset fixedAsset){
         List<Project> result = new ArrayList<>();
-        for (Project project : listAll()){
+        for (Project project : allUnarchivedProjects()){
             List<ProjectItem> itemsFound = project.getItems().stream().filter(x->x.getFixedAsset()==fixedAsset).collect(Collectors.toList());
             if (itemsFound.size()>0){
                 result.add(project);
@@ -115,11 +121,14 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
         return result;
     }
 
-    public List<Project> findByParent(final Project parent) {
-        return allMatches("findByParent", "parent", parent);
+    @Programmatic
+    public List<Project> findUsingAtPath(final String atPath) {
+        if (atPath==null) return Lists.emptyList();
+        return allUnarchivedProjects().stream()
+                .filter(p->p.getAtPath().startsWith(atPath))
+                .collect(Collectors.toList());
     }
 
     @Inject
     RepositoryService repositoryService;
-
 }

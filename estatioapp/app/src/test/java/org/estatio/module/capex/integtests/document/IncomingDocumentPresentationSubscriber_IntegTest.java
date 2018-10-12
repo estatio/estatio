@@ -41,7 +41,7 @@ public class IncomingDocumentPresentationSubscriber_IntegTest extends CapexModul
         assertThat(incomingDocumentsBefore).isEmpty();
 
         // given
-        final String fileName = "5020100123.pdf";
+        final String fileName = "3020100123.pdf";
         final byte[] pdfBytes = Resources.toByteArray(
                 Resources.getResource(IncomingDocumentPresentationSubscriber_IntegTest.class, fileName));
         final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);

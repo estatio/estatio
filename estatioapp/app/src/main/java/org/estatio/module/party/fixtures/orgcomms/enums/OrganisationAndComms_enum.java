@@ -33,7 +33,9 @@ import org.estatio.module.party.fixtures.orgcomms.builders.OrganisationAndCommsB
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import static org.incode.module.country.fixtures.enums.Country_enum.FRA;
 import static org.incode.module.country.fixtures.enums.Country_enum.GBR;
+import static org.incode.module.country.fixtures.enums.Country_enum.ITA;
 import static org.incode.module.country.fixtures.enums.Country_enum.NLD;
 import static org.incode.module.country.fixtures.enums.Country_enum.SWE;
 
@@ -77,6 +79,17 @@ public enum OrganisationAndComms_enum
                     null,
                     null,
                     null)
+    }),
+    HelloWorldFr(Organisation_enum.HelloWorldFr,
+            new OrganisationAndCommsBuilder.CommsSpec[] {
+                    new OrganisationAndCommsBuilder.CommsSpec("5 Jardin du Convent", null, "W1A1AA", "Paris", null, FRA, true,
+                            "+33202211333",
+                            "+332022211399",
+                            "info@hello.example.com"),
+                    new OrganisationAndCommsBuilder.CommsSpec("1 Place Ronde", null, "W2AXXX", "Paris", null, FRA, true,
+                            null,
+                            null,
+                            null)
     }),
     HyperNl(Organisation_enum.HyperNl,
         new OrganisationAndCommsBuilder.CommsSpec[] {
@@ -139,6 +152,19 @@ public enum OrganisationAndComms_enum
                     null,
                     null)
     }),
+    TopModelFr(Organisation_enum.TopModelFr,
+            new OrganisationAndCommsBuilder.CommsSpec[] {
+                    new OrganisationAndCommsBuilder.CommsSpec(
+                            "2 Top Road", null, "W2AXXX", "London", null, FRA, true,
+                            "+31202211333",
+                            "+312022211399",
+                            "info@topmodel.example.com"),
+                    new OrganisationAndCommsBuilder.CommsSpec(
+                            "1 Circle Square", null, "W2AXXX", "London", null, FRA, true,
+                            null,
+                            null,
+                            null)
+            }),
     HelloWorldSe(Organisation_enum.HelloWorldSe,
             new OrganisationAndCommsBuilder.CommsSpec[] {
                     new OrganisationAndCommsBuilder.CommsSpec(
@@ -146,6 +172,13 @@ public enum OrganisationAndComms_enum
                             "+46082211333",
                             "+460822211399",
                             "info@helloworldse.example.com")
+            }),
+    HelloWorldIt(Organisation_enum.HelloWorldIt,
+            new OrganisationAndCommsBuilder.CommsSpec[] {
+                    new OrganisationAndCommsBuilder.CommsSpec("Via Melchiorre Gioia 100", null, "20124", "Milan", null, ITA, true,
+                            "+39202211333",
+                            "+392022211399",
+                            "info@helloita.example.com")
             }),
     ;
 

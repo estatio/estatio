@@ -50,11 +50,11 @@ import static org.estatio.module.capex.dom.bankaccount.verification.BankAccountV
 
 public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTestAbstract {
 
-    Property propertyForOxf;
+    Property propertyForViv;
     Party buyer;
     Party seller;
 
-    Country greatBritain;
+    Country france;
     Charge charge_for_works;
 
     IncomingInvoice incomingInvoice;
@@ -72,26 +72,26 @@ public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTest
                 ec.executeChild(this, new CapexChargeHierarchyXlsxFixture());
                 ec.executeChildren(this,
                         IncomingInvoice_enum.fakeInvoice2Pdf,
-                        BankAccount_enum.TopModelGb,
-                        Person_enum.EmmaTreasurerGb,
-                        Person_enum.JonathanIncomingInvoiceManagerGb);
+                        BankAccount_enum.TopModelFr,
+                        Person_enum.BrunoTreasurerFr,
+                        Person_enum.BertrandIncomingInvoiceManagerFr);
             }
         });
     }
 
     @Before
     public void setUp() {
-        propertyForOxf = Property_enum.OxfGb.findUsing(serviceRegistry);
+        propertyForViv = Property_enum.VivFr.findUsing(serviceRegistry);
 
-        buyer = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
-        seller = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
+        buyer = OrganisationAndComms_enum.HelloWorldFr.findUsing(serviceRegistry);
+        seller = OrganisationAndComms_enum.TopModelFr.findUsing(serviceRegistry);
 
-        greatBritain = countryRepository.findCountry(Country_enum.GBR.getRef3());
+        france = countryRepository.findCountry(Country_enum.FRA.getRef3());
         charge_for_works = chargeRepository.findByReference("WORKS");
 
         project = projectRepository.findByReference("OXF-02");
 
-        bankAccount = BankAccount_enum.TopModelGb.findUsing(serviceRegistry);
+        bankAccount = BankAccount_enum.TopModelFr.findUsing(serviceRegistry);
 
         incomingInvoice = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate("65432", seller, new LocalDate(2014,5,13));
         incomingInvoice.setBankAccount(bankAccount);
@@ -107,14 +107,14 @@ public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTest
     public void reject_then_discard_then_update_proof_works_test() {
 
         // given
-        Person personEmmaTreasurer = Person_enum.EmmaTreasurerGb.findUsing(serviceRegistry);
+        Person personBrunoTreasurer = Person_enum.BrunoTreasurerFr.findUsing(serviceRegistry);
         PartyRoleType typeForTreasurer = partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.TREASURER.getKey());
         PartyRoleType typeForIncInvoiceManager = partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.getKey());
         assertThat(taskRepository.findIncompleteByRole(typeForIncInvoiceManager).size()).isEqualTo(2);
 
         // when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(personEmmaTreasurer.getUsername(), (Runnable) () ->
+        sudoService.sudo(personBrunoTreasurer.getUsername(), (Runnable) () ->
                 wrap(mixin(BankAccount_rejectProof.class, bankAccount)).act("PROPERTY_MANAGER", null, "NO GOOD"));
 
         // then
@@ -123,11 +123,11 @@ public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTest
         assertThat(taskRepository.findIncompleteByRole(typeForIncInvoiceManager).size()).isEqualTo(3);
 
         // and given
-        Person jonathanPropManager = Person_enum.JonathanIncomingInvoiceManagerGb.findUsing(serviceRegistry);
+        Person bertrandPropManager = Person_enum.BertrandIncomingInvoiceManagerFr.findUsing(serviceRegistry);
 
         // and when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(jonathanPropManager.getUsername(), (Runnable) () ->
+        sudoService.sudo(bertrandPropManager.getUsername(), (Runnable) () ->
                 wrap(mixin(BankAccount_discard.class, bankAccount)).act("DISCARDING"));
 
         // then
@@ -137,7 +137,7 @@ public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTest
 
         // and when 'resurrecting'
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(jonathanPropManager.getUsername(), (Runnable) () ->
+        sudoService.sudo(bertrandPropManager.getUsername(), (Runnable) () ->
                 wrap(mixin(BankAccount_proofUpdated.class, bankAccount)).act("TREASURER", null, null));
 
         // then
@@ -147,7 +147,7 @@ public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTest
 
         // and when discarding again by treasurer
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(personEmmaTreasurer.getUsername(), (Runnable) () ->
+        sudoService.sudo(personBrunoTreasurer.getUsername(), (Runnable) () ->
                 wrap(mixin(BankAccount_discard.class, bankAccount)).act("DISCARDING"));
 
         assertState(bankAccount, BankAccountVerificationState.DISCARDED);

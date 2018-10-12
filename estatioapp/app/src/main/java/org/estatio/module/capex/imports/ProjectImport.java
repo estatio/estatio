@@ -17,7 +17,9 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.excel.dom.ExcelFixture;
+import org.isisaddons.module.excel.dom.ExcelFixture2;
 import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
+import org.isisaddons.module.excel.dom.FixtureAwareRowHandler;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
@@ -36,13 +38,13 @@ import lombok.Setter;
         nature = Nature.VIEW_MODEL,
         objectType = "org.estatio.module.capex.imports.ProjectImport"
 )
-public class ProjectImport implements Importable, ExcelFixtureRowHandler {
+public class ProjectImport implements Importable, ExcelFixtureRowHandler, FixtureAwareRowHandler<ProjectImport> {
 
     @Getter @Setter
-    private String reference;
+    private String projectReference;
 
     @Getter @Setter
-    private String name;
+    private String projectName;
 
     @Getter @Setter
     private LocalDate startDate;
@@ -57,7 +59,10 @@ public class ProjectImport implements Importable, ExcelFixtureRowHandler {
     private String parentReference;
 
     @Getter @Setter
-    private String itemChargeReference;
+    private boolean archived;
+
+    @Getter @Setter
+    private String itemWorkTypeReference;
 
     @Getter @Setter
     private String itemDescription;
@@ -98,11 +103,14 @@ public class ProjectImport implements Importable, ExcelFixtureRowHandler {
                 throw new ApplicationException(String.format("Parent with reference %s has items and cannot be a parent therefore.", getAtPath()));
             }
         }
-        Project project = findOrCreateProjectAndUpdateParent(getReference(), getName(), getStartDate(), getEndDate(), getAtPath(), parent);
+        Project project = findOrCreateProjectAndUpdateParent(getProjectReference(), getProjectName(), getStartDate(), getEndDate(), getAtPath(), parent);
+        if (isArchived()){
+            project.archive();
+        }
 
-        if (getItemChargeReference()!=null) {
+        if (getItemWorkTypeReference()!=null) {
 
-            Charge charge = chargeRepository.findByReference(getItemChargeReference());
+            Charge charge = chargeRepository.findByReference(getItemWorkTypeReference());
             Property property = propertyRepository.findPropertyByReference(getItemPropertyReference());
             Tax tax = taxRepository.findByReference(getItemTaxReference());
             wrapperFactory.wrap(project).addItem(charge, getItemDescription(), getItemBudgetedAmount(), getItemStartDate(), getItemEndDate(), property, tax);
@@ -121,6 +129,31 @@ public class ProjectImport implements Importable, ExcelFixtureRowHandler {
     @Override
     public List<Object> handleRow(final FixtureScript.ExecutionContext executionContext, final ExcelFixture excelFixture, final Object previousRow) {
         return importData(previousRow);
+    }
+
+
+    /**
+     * To allow for usage within fixture scripts also.
+     */
+    @Setter
+    private FixtureScript.ExecutionContext executionContext;
+
+    /**
+     * To allow for usage within fixture scripts also.
+     */
+    @Setter
+    private ExcelFixture2 excelFixture2;
+    @Override
+    public void handleRow(final ProjectImport previousRow) {
+
+        if(executionContext != null && excelFixture2 != null) {
+            if (executionContext.getParameterAsBoolean("testMode")!=null && executionContext.getParameterAsBoolean("testMode")){
+                executionContext.addResult(excelFixture2, this.importData(previousRow));
+            } else {
+                this.importData(previousRow);
+            }
+        }
+
     }
 
     @Inject ProjectRepository projectRepository;

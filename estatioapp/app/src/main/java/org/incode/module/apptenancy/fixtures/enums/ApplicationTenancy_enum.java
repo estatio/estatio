@@ -26,6 +26,7 @@ public enum ApplicationTenancy_enum
     GlobalOnly  ("/_",          "Global only"),
 
     Fr          ("/FRA",        "France"),
+    FrBe        ("/FRA;/BEL",   "France - Belgium"), //Since ECP-677
     FrOther     ("/FRA/_",      "France - Other"),
     FrViv       ("/FRA/VIV",    "Vive (FRA)"),
     FrVivDefault("/FRA/VIV/_",  "Vive (FRA) - Default"),
@@ -38,7 +39,6 @@ public enum ApplicationTenancy_enum
     SeHanTa     ("/SWE/HAN/ta", "Handla (SWE) Tenants Association"),
 
     Gb          ("/GBR",        "Great Britain"),
-    GbFr        ("/GBR;/FRA",    "Great Britain - France"), //Since ECP-677
     GbOther     ("/GBR/_",      "Great Britain - Other"),
     GbOxf       ("/GBR/OXF",    "Oxford (GBR)"),
     GbOxfDefault("/GBR/OXF/_",  "Oxford (GBR) - Default"),

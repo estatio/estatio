@@ -60,11 +60,11 @@ public class PartyRoleRepository_IntegTest extends AssetModuleIntegTestAbstract 
                     executionContext.executeChild(this, Person_enum.FaithConwayGb.builder());  // gb (no role)
                     executionContext.executeChild(this, Person_enum.OscarCountryDirectorGb.builder());  // gb country director
                     executionContext.executeChild(this, Person_enum.EmmaTreasurerGb.builder());   // gb treasurer
-                    executionContext.executeChild(this, Person_enum.ThibaultOfficerAdministratorFr.builder());  // fr mailroom
+                    executionContext.executeChild(this, Person_enum.DanielOfficeAdministratorFr.builder());  // fr mailroom
                     executionContext.executeChild(this, Person_enum.FifineLacroixFr.builder());  // fr property mgr for VIV and MNS and inc invoice mgr
                     executionContext.executeChild(this, Person_enum.OlivePropertyManagerFr.builder());  // fr property mgr for MAC and inc invoice mgr
                     executionContext.executeChild(this, Person_enum.RosaireEvrardFr.builder());  // fr (no role)
-                    executionContext.executeChild(this, Person_enum.GabrielHerveFr.builder());  // fr country director
+                    executionContext.executeChild(this, Person_enum.GabrielCountryDirectorFr.builder());  // fr country director
                     executionContext.executeChild(this, Person_enum.BrunoTreasurerFr.builder()); // fr treasurer
                 }
             });

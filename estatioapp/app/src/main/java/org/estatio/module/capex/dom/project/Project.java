@@ -302,7 +302,7 @@ public class Project extends UdoDomainObject<Project> implements
             @Parameter(optionality = Optionality.OPTIONAL) final BigDecimal budgetedAmount,
             @Parameter(optionality = Optionality.OPTIONAL) final LocalDate startDate,
             @Parameter(optionality = Optionality.OPTIONAL) final LocalDate endDate,
-            final org.estatio.module.asset.dom.Property property,
+            @Parameter(optionality = Optionality.OPTIONAL) final org.estatio.module.asset.dom.Property property,
             @Parameter(optionality = Optionality.OPTIONAL) final Tax tax
     ) {
         projectItemRepository.findOrCreate(
@@ -349,6 +349,16 @@ public class Project extends UdoDomainObject<Project> implements
         return result;
     }
 
+    public List<ProjectTerm> getProjectTerms(){
+        return projectTermRepository.findProject(this);
+    }
+
+    @Action(associateWith="projectTerms", associateWithSequence="1")
+    public Project newProjectTerm(final BigDecimal amount, final LocalDate startDate, final LocalDate endDate){
+        projectTermRepository.findOrCreate(this, amount, startDate, endDate);
+        return this;
+    }
+
     @Programmatic
     public boolean isParentProject() {
         return getChildren().isEmpty() ? false : true;
@@ -358,6 +368,29 @@ public class Project extends UdoDomainObject<Project> implements
         if (projectRepository.findByReference(reference) != null)
             return "There is already a project with this reference";
         return startDate != null && endDate != null && !startDate.isBefore(endDate) ? "End date must be after start date" : null;
+    }
+
+    @Getter @Setter
+    private boolean archived;
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Project archive(){
+        setArchived(true);
+        return this;
+    }
+
+    public boolean hideArchive(){
+        return isArchived();
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Project unArchive(){
+        setArchived(false);
+        return this;
+    }
+
+    public boolean hideUnArchive(){
+        return !isArchived();
     }
 
     @Inject
@@ -380,6 +413,9 @@ public class Project extends UdoDomainObject<Project> implements
 
 	@Inject
     FactoryService factoryService;
+
+	@Inject
+    ProjectTermRepository projectTermRepository;
 
 
 }

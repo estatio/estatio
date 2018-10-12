@@ -24,7 +24,7 @@ import lombok.experimental.Accessors;
 public enum PropertyOwnerNumerator_enum implements PersonaWithFinder<Numerator>, PersonaWithBuilderScript<Numerator, PropertyOwnerNumeratorBuilder> {
 
     BudNl   (PropertyAndUnitsAndOwnerAndManager_enum.BudNl),
-    CARTEST (PropertyAndUnitsAndOwnerAndManager_enum.CARTEST),
+    RonIt   (PropertyAndUnitsAndOwnerAndManager_enum.RonIt),
     GraIt   (PropertyAndUnitsAndOwnerAndManager_enum.GraIt),
     HanSe   (PropertyAndUnitsAndOwnerAndManager_enum.HanSe),
     KalNl   (PropertyAndUnitsAndOwnerAndManager_enum.KalNl),

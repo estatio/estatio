@@ -32,6 +32,7 @@ import static org.estatio.module.lease.fixtures.lease.builders.LeaseBuilder.Addr
 import static org.estatio.module.lease.fixtures.lease.builders.LeaseBuilder.InvoiceAddressCreationPolicy;
 import static org.incode.module.base.integtests.VT.ld;
 import static org.incode.module.country.fixtures.enums.Country_enum.GBR;
+import static org.incode.module.country.fixtures.enums.Country_enum.ITA;
 import static org.incode.module.country.fixtures.enums.Country_enum.NLD;
 import static org.incode.module.country.fixtures.enums.Country_enum.SWE;
 
@@ -241,6 +242,16 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     },
     Person_enum.GinoVannelliSe,
     InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
+    ),
+    RonTopModel001It(
+            "RON-TOPMODEL-001", null, "Topmodel Lease", PropertyAndUnitsAndOwnerAndManager_enum.RonIt,
+            OrganisationAndComms_enum.HelloWorldIt, Organisation_enum.TopModelIt,
+            ld(2010, 7, 15), ld(2022, 7, 14),
+            new OccupancySpec[] {
+                    new OccupancySpec("001", "Topmodel", NATIONAL, ITA, "FASHION", "WOMEN", ld(2010, 7, 15), null)
+            },
+            Person_enum.RonRondelliIt,
+            InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     ;
 
