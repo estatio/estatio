@@ -145,6 +145,26 @@ public class OrderRepository {
     }
 
     @Programmatic
+    public Order findOrCreate(
+            final Property property,
+            final IncomingInvoiceType orderType,
+            final String number,
+            final String sellerOrderReference,
+            final LocalDate entryDate,
+            final LocalDate orderDate,
+            final Party seller,
+            final Party buyer,
+            final String atPath,
+            final OrderApprovalState approvalStateIfAny) {
+        Order order = findByOrderNumber(number);
+        if (order == null) {
+            order = create(property, orderType, number, sellerOrderReference, entryDate, orderDate,
+                    seller, buyer, atPath, approvalStateIfAny);
+        }
+        return order;
+    }
+
+    @Programmatic
     public Order upsert(
             final Property property,
             final IncomingInvoiceType orderType,
