@@ -25,6 +25,12 @@ import org.apache.isis.applib.ModuleAbstract;
 @XmlRootElement(name = "module")
 public final class EstatioCodaModule extends ModuleAbstract {
 
+    public enum FeedName {
+        CODA_DOC,
+        CODA_SUPPLIER
+    }
+
     public EstatioCodaModule(){}
+
 
 }

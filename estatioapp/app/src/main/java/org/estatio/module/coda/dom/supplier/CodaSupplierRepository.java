@@ -5,9 +5,7 @@ import java.util.List;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
-import org.apache.isis.applib.value.TimeStamp;
 
 import org.estatio.module.party.dom.Organisation;
 
@@ -24,8 +22,7 @@ public class CodaSupplierRepository {
 
     @Programmatic
     public CodaSupplier findByReference(
-            final String reference
-    ) {
+            final String reference) {
         return repositoryService.uniqueMatch(
                 new org.apache.isis.applib.query.QueryDefault<>(
                         CodaSupplier.class,
@@ -34,48 +31,45 @@ public class CodaSupplierRepository {
     }
 
     @Programmatic
-    public TimeStamp findHighWaterMark() {
-        return repositoryService.uniqueMatch(
-                new org.apache.isis.applib.query.QueryDefault<>(
-                        TimeStamp.class,
-                        "findHighWaterMark"));
-    }
-
-    @Programmatic
-    public CodaSupplier createSupplier(
+    public CodaSupplier create(
             final String reference,
             final String shortName,
-            final TimeStamp modifyDate,
-            final Organisation supplier) {
-        final CodaSupplier codaSupplier = new CodaSupplier();
-        serviceRegistry2.injectServicesInto(codaSupplier);
-        codaSupplier.setReference(reference);
-        codaSupplier.setShortName(shortName);
-        codaSupplier.setModifyDate(modifyDate);
-        codaSupplier.setOrganisation(supplier);
-        repositoryService.persist(codaSupplier);
-        return codaSupplier;
+            final Organisation organisation) {
+        return repositoryService.persist(new CodaSupplier(reference, shortName, organisation));
     }
 
+    /**
+     * Similar to {@link #upsert(String, String, Organisation)}, but will NOT update any fields for a
+     * {@link CodaSupplier} that already exists.
+     */
     @Programmatic
-    public CodaSupplier upsertSupplier(
+    public CodaSupplier findOrCreate(
             final String reference,
             final String shortName,
-            final TimeStamp modifyDate,
             final Organisation supplier) {
         CodaSupplier codaSupplier = findByReference(reference);
         if (codaSupplier == null) {
-            codaSupplier = createSupplier(reference, shortName, modifyDate, supplier);
-        } else {
-            codaSupplier.setShortName(shortName);
-            codaSupplier.setModifyDate(modifyDate);
+            codaSupplier = create(reference, shortName, supplier);
+        }
+        return codaSupplier;
+    }
+
+    /**
+     * Similar to {@link #create(String, String, Organisation)}, but will update any non-key fields if the
+     * {@link CodaSupplier} already exists.
+     */
+    @Programmatic
+    public CodaSupplier upsert(
+            final String reference,
+            final String shortName,
+            final Organisation supplier) {
+        CodaSupplier codaSupplier = findByReference(reference);
+        if (codaSupplier == null) {
+            codaSupplier = create(reference, shortName, supplier);
         }
         return codaSupplier;
     }
 
     @javax.inject.Inject
     RepositoryService repositoryService;
-
-    @javax.inject.Inject
-    ServiceRegistry2 serviceRegistry2;
 }
