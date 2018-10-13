@@ -9,7 +9,8 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
-        repositoryFor = CodaDocHead.class
+        repositoryFor = CodaDocHead.class,
+        objectType = "coda.CodaDocHeadRepository"
 )
 public class CodaDocHeadRepository {
 

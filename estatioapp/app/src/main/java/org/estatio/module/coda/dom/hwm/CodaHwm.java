@@ -37,7 +37,7 @@ import lombok.Setter;
  */
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
-        schema = "coda",
+        schema = "dbo",
         table = "CodaHwm"
 )
 @DatastoreIdentity(
@@ -56,6 +56,7 @@ import lombok.Setter;
 })
 @Unique(name = "CodaHwm_feedName_cmpCode", members = { "feedName", "cmpCode" })
 @DomainObject(
+        objectType = "coda.CodaHwm",
         editing = Editing.DISABLED
 )
 @DomainObjectLayout(

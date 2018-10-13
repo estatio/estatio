@@ -28,7 +28,7 @@ import lombok.Setter;
  */
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
-        schema = "coda",
+        schema = "dbo",
         table = "CodaBankAccount"
 )
 @DatastoreIdentity(
@@ -57,6 +57,7 @@ import lombok.Setter;
 })
 @Unique(name = "CodaBankAccount_supplier_iban_UNQ", members = { "supplier", "iban" })
 @DomainObject(
+        objectType = "coda.CodaBankAccount",
         editing = Editing.DISABLED
 )
 @DomainObjectLayout(

@@ -11,7 +11,8 @@ import org.estatio.module.party.dom.Organisation;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
-        repositoryFor = CodaSupplier.class
+        repositoryFor = CodaSupplier.class,
+        objectType = "coda.CodaSupplierRepository"
 )
 public class CodaSupplierRepository {
 
@@ -33,39 +34,42 @@ public class CodaSupplierRepository {
     @Programmatic
     public CodaSupplier create(
             final String reference,
+            final String name,
             final String shortName,
             final Organisation organisation) {
-        return repositoryService.persist(new CodaSupplier(reference, shortName, organisation));
+        return repositoryService.persist(new CodaSupplier(reference, name, shortName, organisation));
     }
 
     /**
-     * Similar to {@link #upsert(String, String, Organisation)}, but will NOT update any fields for a
+     * Similar to {@link #upsert(String, String, String, Organisation)}, but will NOT update any fields for a
      * {@link CodaSupplier} that already exists.
      */
     @Programmatic
     public CodaSupplier findOrCreate(
             final String reference,
+            final String name,
             final String shortName,
             final Organisation supplier) {
         CodaSupplier codaSupplier = findByReference(reference);
         if (codaSupplier == null) {
-            codaSupplier = create(reference, shortName, supplier);
+            codaSupplier = create(reference, name, shortName, supplier);
         }
         return codaSupplier;
     }
 
     /**
-     * Similar to {@link #create(String, String, Organisation)}, but will update any non-key fields if the
+     * Similar to {@link #create(String, String, String, Organisation)}, but will update any non-key fields if the
      * {@link CodaSupplier} already exists.
      */
     @Programmatic
     public CodaSupplier upsert(
             final String reference,
+            final String name,
             final String shortName,
             final Organisation supplier) {
         CodaSupplier codaSupplier = findByReference(reference);
         if (codaSupplier == null) {
-            codaSupplier = create(reference, shortName, supplier);
+            codaSupplier = create(reference, name, shortName, supplier);
         }
         return codaSupplier;
     }

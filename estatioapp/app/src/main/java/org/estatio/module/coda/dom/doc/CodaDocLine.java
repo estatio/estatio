@@ -26,7 +26,7 @@ import lombok.Setter;
 @PersistenceCapable(
         // TODO: REVIEW: EST-1862: an alternative design would be to use the docHead/lineNum as the unique (application) key.
         identityType = IdentityType.DATASTORE,
-        schema = "coda",
+        schema = "dbo",
         table = "CodaDocLine"
 )
 @DatastoreIdentity(
@@ -45,6 +45,7 @@ import lombok.Setter;
 })
 @Unique(name = "CodaDocLine_docHead_lineNum_UNQ", members = { "docHead", "lineNum" })
 @DomainObject(
+        objectType = "coda.CodaDocLine",
         editing = Editing.DISABLED
 )
 @DomainObjectLayout(

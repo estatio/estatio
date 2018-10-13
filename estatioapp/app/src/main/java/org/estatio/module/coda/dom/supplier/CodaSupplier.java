@@ -32,7 +32,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
-        schema = "coda",
+        schema = "dbo",
         table = "CodaSupplier"
 )
 @DatastoreIdentity(
@@ -50,6 +50,7 @@ import lombok.Setter;
 })
 @Unique(name = "CodaSupplier_reference_UNQ", members = { "reference" })
 @DomainObject(
+        objectType = "coda.CodaSupplier",
         editing = Editing.DISABLED
 )
 @DomainObjectLayout(
@@ -58,24 +59,34 @@ import lombok.Setter;
 public class CodaSupplier implements Comparable<CodaSupplier> {
 
     public CodaSupplier(){}
-    public CodaSupplier(final String reference, final String shortName, final Organisation organisation) {
+    public CodaSupplier(
+            final String reference,
+            final String name,
+            final String shortName,
+            final Organisation organisation) {
         this.reference = reference;
+        this.name = name;
         this.shortName = shortName;
         this.organisation = organisation;
     }
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", length = 72)
     @Property()
     @Getter @Setter
     private String reference;
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", length = 36)
+    @Property()
+    @Getter @Setter
+    private String name;
+
+    @Column(allowsNull = "false", length = 20)
     @Property()
     @Getter @Setter
     private String shortName;
 
     // TODO: REVIEW: EST-1862: this is optional, but do we make this mandatory and automatically create Estatio orgs if missing?
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", name="organisationId")
     @Property()
     @Getter @Setter
     private Organisation organisation;

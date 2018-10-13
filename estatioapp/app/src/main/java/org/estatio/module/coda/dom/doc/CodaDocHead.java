@@ -33,7 +33,7 @@ import lombok.Setter;
 @PersistenceCapable(
         // TODO: REVIEW: EST-1862: an alternative design would be to use the cmpCode/docCode/docNum as the unique (application) key.
         identityType = IdentityType.DATASTORE,
-        schema = "coda",
+        schema = "dbo",
         table = "CodaDocHead"
 )
 @DatastoreIdentity(
@@ -53,6 +53,7 @@ import lombok.Setter;
 })
 @Unique(name = "CodaDocHead_cmpCode_docCode_docNum_UNQ", members = { "cmpCode", "docCode", "docNum" })
 @DomainObject(
+        objectType = "coda.CodaDocHead",
         editing = Editing.DISABLED
 )
 @DomainObjectLayout(
@@ -89,7 +90,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     private String docNum;
 
     // TODO: REVIEW: EST-1862: have left this null, but perhaps that is wrong and there would always be a corresponding Estatio incoming invoice?
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", name="incomingInvoiceId")
     @Property
     @Getter @Setter
     private IncomingInvoice incomingInvoice;

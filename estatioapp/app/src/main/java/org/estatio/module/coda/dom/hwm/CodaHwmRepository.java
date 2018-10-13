@@ -13,7 +13,8 @@ import org.estatio.module.coda.dom.supplier.CodaBankAccount;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
-        repositoryFor = CodaHwm.class
+        repositoryFor = CodaHwm.class,
+        objectType = "coda.CodaHwmRepository"
 )
 public class CodaHwmRepository {
 

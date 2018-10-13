@@ -7,7 +7,8 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
-        repositoryFor = CodaDocLine.class
+        repositoryFor = CodaDocLine.class,
+        objectType = "coda.CodaDocLineRepository"
 )
 public class CodaDocLineRepository {
 
