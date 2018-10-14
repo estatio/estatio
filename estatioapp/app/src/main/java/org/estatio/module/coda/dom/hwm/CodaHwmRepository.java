@@ -9,14 +9,14 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.estatio.module.coda.dom.supplier.CodaBankAccount;
-
 @DomainService(
         nature = NatureOfService.DOMAIN,
         repositoryFor = CodaHwm.class,
         objectType = "coda.CodaHwmRepository"
 )
 public class CodaHwmRepository {
+
+    public static final LocalDateTime LAST_RAN_DEFAULT = new LocalDateTime(2000,1,1,0,0);
 
     @Programmatic
     public List<CodaHwm> listAll() {
@@ -35,42 +35,34 @@ public class CodaHwmRepository {
                         "cmpCode", cmpCode));
     }
 
-    @Programmatic
-    public CodaHwm create(
-            final String feedName,
-            final String cmpCode,
-            final LocalDateTime lastRan) {
-        return repositoryService.persist(new CodaHwm(feedName, cmpCode, lastRan));
-    }
-
     /**
-     * Similar to {@link #upsert(String, String, LocalDateTime)}, but will NOT update any fields for
-     * a {@link CodaBankAccount} that already exists.
+     * If does not previously exist, then creates with a {@link CodaHwm#getLastRan() lastRan} set to an
+     * epoch date of {@link CodaHwmRepository#LAST_RAN_DEFAULT}, namely 1-Jan-2000.
+     *
+     * @param feedName
+     * @param cmpCode
+     * @return
      */
     @Programmatic
     public CodaHwm findOrCreate(
             final String feedName,
-            final String cmpCode,
-            final LocalDateTime lastRan) {
+            final String cmpCode) {
         CodaHwm hwm = findByFeedNameAndCmpCode(feedName, cmpCode);
         if (hwm == null) {
-            hwm = create(feedName, cmpCode, lastRan);
+            hwm = repositoryService.persist(new CodaHwm(feedName, cmpCode, LAST_RAN_DEFAULT));
         }
         return hwm;
     }
 
-    /**
-     * Same as {@link #findByFeedNameAndCmpCode(String, String)} , but will update any non-key fields
-     * if the {@link CodaHwm} already exists.
-     */
     @Programmatic
-    public CodaHwm upsert(
+    public CodaHwm update(
             final String feedName,
             final String cmpCode,
             final LocalDateTime lastRan) {
         CodaHwm hwm = findByFeedNameAndCmpCode(feedName, cmpCode);
         if (hwm == null) {
-            hwm = create(feedName, cmpCode, lastRan);
+            throw new IllegalArgumentException(
+                    String.format("No CodaHwm found for feedName: '%s', cmpCode: '%s'", feedName, cmpCode));
         } else {
             hwm.setLastRan(lastRan);
         }
