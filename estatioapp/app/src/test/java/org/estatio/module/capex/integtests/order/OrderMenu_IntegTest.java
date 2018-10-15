@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.sudo.SudoService;
+import org.apache.isis.applib.services.wrapper.HiddenException;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
@@ -45,7 +46,8 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
                     executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.RonIt.builder());
                     executionContext.executeChild(this, new CapexChargeHierarchyXlsxFixture());
                     executionContext.executeChild(this, Project_enum.RonProjectIt.builder());
-                    executionContext.executeChild(this, Person_enum.DomenicoOfficeAdministratorIt.builder());
+                    executionContext.executeChild(this, Person_enum.CarmenIncomingInvoiceManagerIt.builder());
+                    executionContext.executeChild(this, Person_enum.JonathanIncomingInvoiceManagerGb.builder());
                 }
             });
         }
@@ -57,11 +59,11 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
             final Project project = Project_enum.RonProjectIt.findUsing(serviceRegistry);
             final Charge charge = IncomingCharge_enum.ItConstruction.findUsing(serviceRegistry);
 
-            final Person officeAdministrator = Person_enum.DomenicoOfficeAdministratorIt.findUsing(serviceRegistry);
+            final Person incomingInvoiceManager = Person_enum.CarmenIncomingInvoiceManagerIt.findUsing(serviceRegistry);
 
             // when
             queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-            final Order order = sudoService.sudo(officeAdministrator.getUsername(), () ->
+            final Order order = sudoService.sudo(incomingInvoiceManager.getUsername(), () ->
                     wrap(orderMenu).createOrder(property, project, charge));
 
             // then
@@ -79,5 +81,21 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
 
         }
 
+        @Test
+        public void createOrderForItaly_sadCase() throws Exception {
+            // given
+            final Property property = PropertyAndUnitsAndOwnerAndManager_enum.RonIt.getProperty_d().findUsing(serviceRegistry);
+            final Project project = Project_enum.RonProjectIt.findUsing(serviceRegistry);
+            final Charge charge = IncomingCharge_enum.ItConstruction.findUsing(serviceRegistry);
+
+            final Person incomingInvoiceManager = Person_enum.JonathanIncomingInvoiceManagerGb.findUsing(serviceRegistry);
+
+            // then
+            expectedExceptions.expect(HiddenException.class);
+
+            // when
+            sudoService.sudo(incomingInvoiceManager.getUsername(), () ->
+                    wrap(orderMenu).createOrder(property, project, charge));
+        }
     }
 }
