@@ -32,6 +32,7 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
+import org.estatio.module.capex.dom.order.approval.triggers.Order_instantiate;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.imports.OrderProjectImportAdapter;
 import org.estatio.module.charge.dom.Charge;
@@ -65,7 +66,9 @@ public class OrderMenu {
             final Project project,
             final Charge charge) {
         final String userAtPath = meService.me().getAtPath();
-        return orderRepository.create(property, project, charge, userAtPath);
+        final Order order = orderRepository.create(property, project, charge, userAtPath);
+        new Order_instantiate(order).act();
+        return order;
     }
 
     public boolean hideCreateOrder() {
