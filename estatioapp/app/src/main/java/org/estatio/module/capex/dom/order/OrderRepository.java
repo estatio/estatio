@@ -165,9 +165,11 @@ public class OrderRepository {
 
             return toItaOrderNumber(numerator.nextIncrementStr(), property, project, charge);
         } else {
-            numerator = numeratorRepository.findNumerator(
+            numerator = numeratorRepository.findOrCreateNumerator(
                     "Order number",
                     null,
+                    "%05d",
+                    BigInteger.ZERO,
                     applicationTenancyRepository.findByPath(atPath));
 
             return numerator.nextIncrementStr();

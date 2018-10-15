@@ -32,7 +32,6 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
-import org.estatio.module.capex.dom.order.approval.triggers.Order_instantiate;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.imports.OrderProjectImportAdapter;
 import org.estatio.module.charge.dom.Charge;
@@ -56,7 +55,7 @@ import lombok.Setter;
 public class OrderMenu {
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
-    public List<Order> allOrders(){
+    public List<Order> allOrders() {
         return orderRepository.listAll();
     }
 
@@ -66,9 +65,7 @@ public class OrderMenu {
             final Project project,
             final Charge charge) {
         final String userAtPath = meService.me().getAtPath();
-        final Order order = orderRepository.create(property, project, charge, userAtPath);
-        new Order_instantiate(order).act();
-        return order;
+        return orderRepository.create(property, project, charge, userAtPath);
     }
 
     public boolean hideCreateOrder() {
@@ -81,7 +78,7 @@ public class OrderMenu {
             @Nullable final String sellerNameOrReference,
             @ParameterLayout(named = "Order Date (Approximately)")
             @Nullable final LocalDate orderDate
-    ){
+    ) {
         return new OrderMenu.OrderFinder(orderRepository, partyRepository)
                 .filterOrFindByDocumentName(barcode)
                 .filterOrFindBySeller(sellerNameOrReference)
@@ -89,11 +86,11 @@ public class OrderMenu {
                 .getResult();
     }
 
-    public String validateFindOrder(final String barcode, final String sellerNameOfReference, final LocalDate orderDate){
-        if (barcode!=null && barcode.length()<3){
+    public String validateFindOrder(final String barcode, final String sellerNameOfReference, final LocalDate orderDate) {
+        if (barcode != null && barcode.length() < 3) {
             return "Give at least 3 characters for barcode (document name)";
         }
-        if (sellerNameOfReference!=null && sellerNameOfReference.length()<3){
+        if (sellerNameOfReference != null && sellerNameOfReference.length() < 3) {
             return "Give at least 3 characters for seller name or reference";
         }
         return null;
@@ -101,7 +98,7 @@ public class OrderMenu {
 
     static class OrderFinder {
 
-        public OrderFinder(OrderRepository orderRepository, PartyRepository partyRepository){
+        public OrderFinder(OrderRepository orderRepository, PartyRepository partyRepository) {
             this.result = new ArrayList<>();
             this.orderRepository = orderRepository;
             this.partyRepository = partyRepository;
@@ -114,12 +111,12 @@ public class OrderMenu {
 
         PartyRepository partyRepository;
 
-
-        OrderMenu.OrderFinder filterOrFindByDocumentName(final String barcode){
-            if (barcode==null) return this;
+        OrderMenu.OrderFinder filterOrFindByDocumentName(final String barcode) {
+            if (barcode == null)
+                return this;
 
             List<Order> resultsForBarcode = orderRepository.findOrderByDocumentName(barcode);
-            if (!this.result.isEmpty()){
+            if (!this.result.isEmpty()) {
                 filterByDocumentNameResults(resultsForBarcode);
             } else {
                 setResult(resultsForBarcode);
@@ -127,8 +124,9 @@ public class OrderMenu {
             return this;
         }
 
-        OrderMenu.OrderFinder filterOrFindBySeller(final String sellerNameOrReference){
-            if (sellerNameOrReference==null || sellerNameOrReference.equals("")) return this;
+        OrderMenu.OrderFinder filterOrFindBySeller(final String sellerNameOrReference) {
+            if (sellerNameOrReference == null || sellerNameOrReference.equals(""))
+                return this;
 
             List<Organisation> sellerCandidates =
                     partyRepository.findParties("*".concat(sellerNameOrReference).concat("*"))
@@ -146,11 +144,12 @@ public class OrderMenu {
             return this;
         }
 
-        OrderMenu.OrderFinder filterOrFindByOrderDate(final LocalDate orderDate){
-            if (orderDate==null) return this;
+        OrderMenu.OrderFinder filterOrFindByOrderDate(final LocalDate orderDate) {
+            if (orderDate == null)
+                return this;
             LocalDate orderDateStart = orderDate.minusDays(5);
             LocalDate orderDateEnd = orderDate.plusDays(5);
-            if (!this.result.isEmpty()){
+            if (!this.result.isEmpty()) {
                 filterByOrderDate(orderDateStart, orderDateEnd);
             } else {
                 createResultForOrderDate(orderDateStart, orderDateEnd);
@@ -158,28 +157,28 @@ public class OrderMenu {
             return this;
         }
 
-        void filterByDocumentNameResults(List<Order> resultsForBarcode){
+        void filterByDocumentNameResults(List<Order> resultsForBarcode) {
             setResult(
                     this.result
                             .stream()
-                            .filter(x->resultsForBarcode.contains(x))
+                            .filter(x -> resultsForBarcode.contains(x))
                             .collect(Collectors.toList())
             );
         }
 
-        void filterBySellerCandidates(final List<Organisation> sellerCandidates){
-            if (sellerCandidates.isEmpty()){
+        void filterBySellerCandidates(final List<Organisation> sellerCandidates) {
+            if (sellerCandidates.isEmpty()) {
                 // reset result
                 this.result = new ArrayList<>();
             } else {
                 // filter result
                 Predicate<Order> isInSellerCandidatesList =
-                        x->sellerCandidates.contains(x.getSeller());
+                        x -> sellerCandidates.contains(x.getSeller());
                 setResult(result.stream().filter(isInSellerCandidatesList).collect(Collectors.toList()));
             }
         }
 
-        void createResultForSellerCandidates(final List<Organisation> sellerCandidates){
+        void createResultForSellerCandidates(final List<Organisation> sellerCandidates) {
             for (Organisation candidate : sellerCandidates) {
                 this.result.addAll(
                         orderRepository.findBySeller(candidate)
@@ -189,9 +188,9 @@ public class OrderMenu {
             }
         }
 
-        void filterByOrderDate(final LocalDate orderDateStart, final LocalDate orderDateEnd){
-            Predicate<Order> hasOrderDate = x->x.getOrderDate()!=null;
-            Predicate<Order> orderDateInInterval = x->new LocalDateInterval(orderDateStart, orderDateEnd).contains(x.getOrderDate());
+        void filterByOrderDate(final LocalDate orderDateStart, final LocalDate orderDateEnd) {
+            Predicate<Order> hasOrderDate = x -> x.getOrderDate() != null;
+            Predicate<Order> orderDateInInterval = x -> new LocalDateInterval(orderDateStart, orderDateEnd).contains(x.getOrderDate());
             setResult(
                     this.result
                             .stream()
@@ -201,9 +200,9 @@ public class OrderMenu {
             );
         }
 
-        void createResultForOrderDate(final LocalDate orderDateStart, final LocalDate orderDateEnd){
-            Predicate<Order> hasOrderDate = x->x.getOrderDate()!=null;
-            Predicate<Order> orderDateInInterval = x->new LocalDateInterval(orderDateStart, orderDateEnd).contains(x.getOrderDate());
+        void createResultForOrderDate(final LocalDate orderDateStart, final LocalDate orderDateEnd) {
+            Predicate<Order> hasOrderDate = x -> x.getOrderDate() != null;
+            Predicate<Order> orderDateInInterval = x -> new LocalDateInterval(orderDateStart, orderDateEnd).contains(x.getOrderDate());
             setResult(
                     orderRepository.listAll()
                             .stream()
@@ -217,7 +216,6 @@ public class OrderMenu {
 
     ///////////////////////////////////////////
 
-
     @Action(semantics = SemanticsOf.SAFE)
     public List<Order> findOrdersByOrderDate(final LocalDate fromDate, final LocalDate toDate) {
         return orderRepository.findByOrderDateBetween(fromDate, toDate);
@@ -230,8 +228,6 @@ public class OrderMenu {
     public LocalDate default1FindOrdersByOrderDate() {
         return clockService.now();
     }
-
-
 
     ///////////////////////////////////////////
 
@@ -265,20 +261,20 @@ public class OrderMenu {
                 applicationTenancyRepository.findByPath(atPath));
     }
 
-    public String validateCreateOrderNumberNumerator(final String format, final String atPath){
+    public String validateCreateOrderNumberNumerator(final String format, final String atPath) {
         return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser()) ? "You need administrator rights to create an order numerator" : null;
     }
 
     ///////////////////////////////////////////
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    public List<Order> importOrdersItaly(final org.apache.isis.applib.value.Blob orderSheet){
+    public List<Order> importOrdersItaly(final org.apache.isis.applib.value.Blob orderSheet) {
         List<Order> result = new ArrayList<>();
-        for (OrderProjectImportAdapter adapter : excelService.fromExcel(orderSheet, OrderProjectImportAdapter.class, "ECP Juma", Mode.RELAXED)){
+        for (OrderProjectImportAdapter adapter : excelService.fromExcel(orderSheet, OrderProjectImportAdapter.class, "ECP Juma", Mode.RELAXED)) {
             adapter.handle(null);
-            if (adapter.deriverOrderNumber()!=null) {
+            if (adapter.deriverOrderNumber() != null) {
                 Order order = orderRepository.findByOrderNumber(adapter.deriverOrderNumber());
-                if (order!=null && !result.contains(order)){
+                if (order != null && !result.contains(order)) {
                     result.add(order);
                 }
             }

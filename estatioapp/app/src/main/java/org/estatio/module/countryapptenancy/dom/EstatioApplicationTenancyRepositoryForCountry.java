@@ -43,7 +43,7 @@ public class EstatioApplicationTenancyRepositoryForCountry {
     // - OrganisationMenu, OrganisationRepository, PersonRepository,
     // - IndexMenu, IndexValuesMaintenanceMenu
     // - EstatioApplicationTenancyRepositoryForProperty
-    // - NumeratorForOrganisationBuilder
+    // - NumeratorBuilder
     // - ProgramRepository
     public ApplicationTenancy findOrCreateTenancyFor(final Country countryIfAny) {
         if(countryIfAny == null) {

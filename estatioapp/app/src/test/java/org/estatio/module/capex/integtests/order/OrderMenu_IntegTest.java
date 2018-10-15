@@ -14,6 +14,8 @@ import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.capex.app.OrderMenu;
 import org.estatio.module.capex.dom.order.Order;
+import org.estatio.module.capex.dom.order.OrderItem;
+import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.order.approval.transitions.Order_approvalTransitions;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
@@ -64,7 +66,16 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
 
             // then
             assertThat(order.getOrderNumber()).isEqualTo("0001/RON/001/001");
+            assertThat(order.getProperty()).isEqualTo(property);
+            assertThat(order.getApprovalState()).isEqualTo(OrderApprovalState.NEW);
             assertThat(mixin(Order_approvalTransitions.class, order).coll()).hasSize(2);
+
+            assertThat(order.getItems()).hasSize(1);
+            final OrderItem item = order.getItems().first();
+
+            assertThat(item.getProperty()).isEqualTo(property);
+            assertThat(item.getProject()).isEqualTo(project);
+            assertThat(item.getCharge()).isEqualTo(charge);
 
         }
 
