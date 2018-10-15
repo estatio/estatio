@@ -23,14 +23,18 @@ import org.apache.isis.applib.services.user.UserService;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.util.Mode;
+import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
+import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.imports.OrderProjectImportAdapter;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
 import org.estatio.module.party.dom.Organisation;
@@ -55,6 +59,18 @@ public class OrderMenu {
         return orderRepository.listAll();
     }
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public Order createOrder(
+            final Property property,
+            final Project project,
+            final Charge charge) {
+        final String userAtPath = meService.me().getAtPath();
+        return orderRepository.create(property, project, charge, userAtPath);
+    }
+
+    public boolean hideCreateOrder() {
+        return !meService.me().getAtPath().startsWith("/ITA");
+    }
 
     @Action(semantics = SemanticsOf.SAFE)
     public List<Order> findOrder(
@@ -212,7 +228,7 @@ public class OrderMenu {
         return clockService.now();
     }
 
-    
+
 
     ///////////////////////////////////////////
 
@@ -284,6 +300,9 @@ public class OrderMenu {
 
     @Inject
     UserService userService;
+
+    @Inject
+    MeService meService;
 
     @Inject ExcelService excelService;
 

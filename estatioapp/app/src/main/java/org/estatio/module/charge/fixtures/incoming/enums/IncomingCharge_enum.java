@@ -52,7 +52,7 @@ public enum IncomingCharge_enum implements PersonaWithFinder<Charge> {
     FrFurnitures("FURNITURES / DECORATION"),
     FrOther("OTHER"),
     ItPurchase("PURCHASE"),
-    ItConstruction("CONSTRUCTION"),
+    ItConstruction("ITWT001"),
     ;
 
     private final String reference;

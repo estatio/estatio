@@ -80,7 +80,7 @@ public enum Project_enum implements PersonaWithBuilderScript<Project, ProjectBui
             },
             new TermSpec[]{}
     ),
-    RonProjectIt    ("RON-01", "New extension", ld(2018, 1, 1), ld(2021, 7, 1), It,
+    RonProjectIt    ("ITPR001", "New extension", ld(2018, 1, 1), ld(2021, 7, 1), It,
             new ItemSpec[]{
                     new ItemSpec(IncomingCharge_enum.ItPurchase, "purchase (acquisto)", bd("90000.00"), null, null, RonIt, null),
                     new ItemSpec(IncomingCharge_enum.ItConstruction, "construction (costruzione)", bd("3000000.00"), null, null, RonIt, null),

@@ -29,6 +29,8 @@ import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -111,6 +113,19 @@ public class OrderRepository {
     @Programmatic
     public Order create(
             final Property property,
+            final Project project,
+            final Charge charge,
+            final String atPath) {
+        final String orderNumber = generateNextOrderNumberForCountry(property, project, charge, atPath);
+        final Order order = create(property, null, orderNumber, null, null, null, null, null, atPath, null);
+        order.addItem(charge, null, null, null, null, null, null, property, project, null);
+
+        return order;
+    }
+
+    @Programmatic
+    public Order create(
+            final Property property,
             final IncomingInvoiceType orderType,
             final String orderNumber,
             final String sellerOrderReference,
@@ -120,18 +135,10 @@ public class OrderRepository {
             final Party buyer,
             final String atPath,
             final OrderApprovalState approvalStateIfAny) {
-
-        final Numerator numerator = numeratorRepository.findOrCreateNumerator(
-                "Order number",
-                null,
-                "%05d",
-                BigInteger.ZERO,
-                applicationTenancyRepository.findByPath(atPath));
-
         final Order order = new Order(
                 property,
                 orderType,
-                orderNumber == null ? numerator.nextIncrementStr() : orderNumber,
+                orderNumber == null ? generateNextOrderNumberForCountry(null, null, null, atPath) : orderNumber,
                 sellerOrderReference,
                 entryDate,
                 orderDate,
@@ -142,6 +149,31 @@ public class OrderRepository {
         serviceRegistry2.injectServicesInto(order);
         repositoryService.persistAndFlush(order);
         return order;
+    }
+
+    private String generateNextOrderNumberForCountry(
+            final Property property,
+            final Project project,
+            final Charge charge,
+            final String atPath) {
+        final Numerator numerator;
+        if (atPath.startsWith("/ITA")) {
+            numerator = numeratorRepository.findOrCreateNumerator(
+                    "Order number",
+                    null,
+                    "%04d",
+                    BigInteger.ZERO,
+                    applicationTenancyRepository.findByPath(atPath));
+
+            return numerator.nextIncrementStr() + "/" + property.getReference() + "/" + project.getReference() + "/" + charge.getReference();
+        } else {
+            numerator = numeratorRepository.findNumerator(
+                    "Order number",
+                    null,
+                    applicationTenancyRepository.findByPath(atPath));
+
+            return numerator.nextIncrementStr();
+        }
     }
 
     @Programmatic
