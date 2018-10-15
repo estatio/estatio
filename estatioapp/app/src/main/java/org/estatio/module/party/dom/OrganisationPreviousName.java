@@ -86,7 +86,7 @@ public class OrganisationPreviousName implements Comparable<OrganisationPrevious
     private Organisation organisation;
 
 
-    @Column(allowsNull = "false", length = NameType.Meta.MAX_LEN)
+    @Column(allowsNull = "false", length = Party.NameType.Meta.MAX_LEN)
     @lombok.NonNull
     private String name;
 
