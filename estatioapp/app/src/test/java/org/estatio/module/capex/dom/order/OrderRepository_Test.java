@@ -3,8 +3,10 @@ package org.estatio.module.capex.dom.order;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
-import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
+import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 
@@ -18,7 +20,7 @@ public class OrderRepository_Test {
     public void upsert_when_already_exists() throws Exception {
 
         // given
-        OrderRepository orderRepository = new OrderRepository(){
+        OrderRepository orderRepository = new OrderRepository() {
             @Override
             public Order findByOrderNumber(final String orderNumber) {
                 return order;
@@ -26,8 +28,8 @@ public class OrderRepository_Test {
         };
         String number = "some number";
         String sellerOrderReference = "ref";
-        LocalDate entryDate = new LocalDate(2017,1,1);
-        LocalDate orderDate = new LocalDate(2017,1,2);
+        LocalDate entryDate = new LocalDate(2017, 1, 1);
+        LocalDate orderDate = new LocalDate(2017, 1, 2);
         Party seller = new Organisation();
         Party buyer = new Organisation();
         Property property = new Property();
@@ -60,6 +62,24 @@ public class OrderRepository_Test {
         assertThat(order.getAtPath()).isEqualTo(atPath);
         assertThat(order.getApprovalState()).isNull(); // is ignored.
 
+    }
+
+    @Test
+    public void strip_ita_references_for_order_number() throws Exception {
+        // given
+        final String nextIncrement = "0005";
+        final Property property = new Property();
+        property.setReference("RON");
+        final Project project = new Project();
+        project.setReference("ITPR001");
+        final Charge charge = new Charge();
+        charge.setReference("ITWT002");
+
+        // when
+        final String orderNumber = OrderRepository.toItaOrderNumber(nextIncrement, property, project, charge);
+
+        // then
+        assertThat(orderNumber).isEqualTo("0005/RON/001/002");
     }
 
 }

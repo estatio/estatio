@@ -25,17 +25,17 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
-import org.estatio.module.asset.dom.Property;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.numerator.dom.Numerator;
+import org.estatio.module.numerator.dom.NumeratorRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.numerator.dom.Numerator;
-import org.estatio.module.numerator.dom.NumeratorRepository;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -58,7 +58,7 @@ public class OrderRepository {
     }
 
     @Programmatic
-    public Order findBySellerOrderReferenceAndSellerAndOrderDate(final String sellerOrderReference, final Party seller, final LocalDate orderDate){
+    public Order findBySellerOrderReferenceAndSellerAndOrderDate(final String sellerOrderReference, final Party seller, final LocalDate orderDate) {
         return repositoryService.firstMatch(
                 new QueryDefault<>(
                         Order.class,
@@ -77,8 +77,6 @@ public class OrderRepository {
                         "sellerOrderReference", sellerOrderReference,
                         "seller", seller));
     }
-
-
 
     @Programmatic
     public List<Order> findByOrderDateBetween(final LocalDate fromDate, final LocalDate toDate) {
@@ -165,7 +163,7 @@ public class OrderRepository {
                     BigInteger.ZERO,
                     applicationTenancyRepository.findByPath(atPath));
 
-            return numerator.nextIncrementStr() + "/" + property.getReference() + "/" + project.getReference() + "/" + charge.getReference();
+            return toItaOrderNumber(numerator.nextIncrementStr(), property, project, charge);
         } else {
             numerator = numeratorRepository.findNumerator(
                     "Order number",
@@ -174,6 +172,16 @@ public class OrderRepository {
 
             return numerator.nextIncrementStr();
         }
+    }
+
+    public static String toItaOrderNumber(
+            final String nextIncrement,
+            final Property property,
+            final Project project,
+            final Charge charge) {
+        final String projectNumber = project.getReference().replaceAll("[^0-9.]", "");
+        final String chargeNumber = charge.getReference().replaceAll("[^0-9.]", "");
+        return String.format("%s/%s/%s/%s", nextIncrement, property.getReference(), projectNumber, chargeNumber);
     }
 
     @Programmatic
@@ -235,7 +243,7 @@ public class OrderRepository {
             final Party seller,
             final Party buyer,
             final String atPath
-    ){
+    ) {
         order.setProperty(property);
         order.setSellerOrderReference(sellerOrderReference);
         order.setEntryDate(entryDate);
@@ -270,9 +278,9 @@ public class OrderRepository {
     @Programmatic
     public List<Order> matchBySellerReferenceOrName(final String searchString) {
         List<Order> result = new ArrayList<>();
-        for (Party party : partyRepository.findParties(searchString)){
+        for (Party party : partyRepository.findParties(searchString)) {
             for (Order order : findBySellerParty(party)) {
-                if (!result.contains(order)){
+                if (!result.contains(order)) {
                     result.add(order);
                 }
             }
@@ -281,11 +289,11 @@ public class OrderRepository {
     }
 
     @Programmatic
-    public List<Order> findOrderByDocumentName(final String name){
-        List <Order> result = new ArrayList<>();
-        for (Document doc : incomingDocumentRepository.matchAllIncomingDocumentsByName(name)){
-            for (Paperclip paperclip : paperclipRepository.findByDocument(doc)){
-                if (paperclip.getAttachedTo().getClass().isAssignableFrom(Order.class)){
+    public List<Order> findOrderByDocumentName(final String name) {
+        List<Order> result = new ArrayList<>();
+        for (Document doc : incomingDocumentRepository.matchAllIncomingDocumentsByName(name)) {
+            for (Paperclip paperclip : paperclipRepository.findByDocument(doc)) {
+                if (paperclip.getAttachedTo().getClass().isAssignableFrom(Order.class)) {
                     final Order attachedTo = (Order) paperclip.getAttachedTo();
                     if (!result.contains(attachedTo)) {
                         result.add(attachedTo);
@@ -316,7 +324,5 @@ public class OrderRepository {
     @Inject ApplicationTenancyRepository applicationTenancyRepository;
 
     @Inject PartyRepository partyRepository;
-
-
 
 }
