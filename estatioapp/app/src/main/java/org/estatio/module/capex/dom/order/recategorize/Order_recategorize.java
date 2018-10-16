@@ -20,6 +20,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.xactn.TransactionService2;
 
+import org.isisaddons.module.security.app.user.MeService;
+
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
@@ -84,6 +86,10 @@ public class Order_recategorize {
         return null;
     }
 
+    public boolean hideAct() {
+        return meService.me().getAtPath().startsWith("/ITA");
+    }
+
     private Document lookupPdf() {
         final Optional<Document> document = lookupAttachedPdfService.lookupOrderPdfFrom(order);
         return document.orElse(null);
@@ -100,6 +106,9 @@ public class Order_recategorize {
 
     @Inject
     StateTransitionService stateTransitionService;
+
+    @Inject
+    private MeService meService;
 
     /////////////////////////////////////////////////////////////////
 
