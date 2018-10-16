@@ -54,6 +54,7 @@ import org.apache.isis.applib.util.TitleBuffer;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
+import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
@@ -463,6 +464,10 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             return String.format("%s is not a valid iban number", ibanNumber);
         }
         return null;
+    }
+
+    public boolean hideCreateSeller() {
+        return meService.me().getAtPath().startsWith("/ITA");
     }
 
     public String disableCreateSeller(){
@@ -1104,5 +1109,8 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Inject
     MessageService messageService;
+
+    @Inject
+    private MeService meService;
 
 }
