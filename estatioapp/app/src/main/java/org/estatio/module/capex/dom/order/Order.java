@@ -546,6 +546,10 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public List<Charge> choices0AddItem(){
+        if (meService.me().getAtPath().startsWith("/ITA")) {
+            return chargeRepository.choicesItalianWorkTypes();
+        }
+
         List<Charge> result = chargeRepository.allIncoming();
         for (OrderItem item : getItems()) {
             if (item.getCharge()!=null && result.contains(item.getCharge())) {

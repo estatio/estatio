@@ -37,29 +37,30 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
+import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.AbstractInterval;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
+import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.base.dom.UdoDomainObject2;
+import org.estatio.module.base.platform.applib.ReasonBuffer2;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.capex.dom.documents.BudgetItemChooser;
 import org.estatio.module.capex.dom.items.FinancialItem;
 import org.estatio.module.capex.dom.items.FinancialItemType;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
+import org.estatio.module.capex.dom.util.FinancialAmountUtil;
 import org.estatio.module.capex.dom.util.PeriodUtil;
-import org.estatio.module.base.dom.UdoDomainObject2;
-import org.estatio.module.asset.dom.FixedAsset;
-import org.estatio.module.asset.dom.Property;
-import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Applicability;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.invoice.dom.InvoiceItem;
-import org.estatio.module.capex.dom.util.FinancialAmountUtil;
-import org.estatio.module.base.platform.applib.ReasonBuffer2;
 import org.estatio.module.tax.dom.Tax;
 
 import lombok.Getter;
@@ -140,19 +141,19 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     public String title() {
         final TitleBuilder titleBuilder = TitleBuilder.start()
                 .withName(getDescription());
-        if (getNetAmount()!=null) {
+        if (getNetAmount() != null) {
             titleBuilder
-                .withName(" outstanding ")
-                .withName(netAmountOutstanding())
-                .withName(" of: ")
-                .withName(getNetAmount());
+                    .withName(" outstanding ")
+                    .withName(netAmountOutstanding())
+                    .withName(" of: ")
+                    .withName(getNetAmount());
         }
-        if (getCharge()!=null){
+        if (getCharge() != null) {
             titleBuilder
-            .withName(" ")
-            .withName(getCharge().getReference());
+                    .withName(" ")
+                    .withName(getCharge().getReference());
         }
-        if (getOrdr().getSellerOrderReference()!=null) {
+        if (getOrdr().getSellerOrderReference() != null) {
             titleBuilder
                     .withName(" order: ")
                     .withName(getOrdr().getSellerOrderReference());
@@ -161,7 +162,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
                     .withName(" order: ")
                     .withName(getOrdr().getOrderNumber());
         }
-        if(isOverspent()) {
+        if (isOverspent()) {
             titleBuilder.withName(" (overspent)");
         }
         return titleBuilder.toString();
@@ -170,8 +171,6 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     public String cssClass() {
         return isOverspent() ? "overspent" : null;
     }
-
-
 
     public OrderItem() {
         super("ordr,charge");
@@ -205,8 +204,6 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         this.budgetItem = budgetItem;
     }
 
-
-
     public boolean isOverspent() {
         final BigDecimal netAmount = coalesce(getNetAmount(), BigDecimal.ZERO);
 
@@ -220,7 +217,6 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         return amount != null ? amount : other;
     }
 
-
     /**
      * Renamed from 'order' to avoid reserve keyword issues.
      */
@@ -233,8 +229,6 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     @Getter @Setter
     private Charge charge;
 
-
-
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(promptStyle = PromptStyle.INLINE)
     public OrderItem editCharge(@Nullable final Charge charge) {
@@ -242,31 +236,32 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         return this;
     }
 
-    public Charge default0EditCharge(){
+    public Charge default0EditCharge() {
         return getCharge();
     }
 
-    public List<Charge> autoComplete0EditCharge(@MinLength(3) String search){
-        return chargeRepository.findByApplicabilityAndMatchOnReferenceOrName(search, Applicability.INCOMING)
-                .stream()
-                .filter(x->chargeNotUsedOnOrder(x))
-                .collect(Collectors.toList());
+    public List<Charge> autoComplete0EditCharge(@MinLength(3) String search) {
+        return meService.me().getAtPath().startsWith("/ITA") ?
+                chargeRepository.choicesItalianWorkTypes() :
+                chargeRepository.findByApplicabilityAndMatchOnReferenceOrName(search, Applicability.INCOMING)
+                        .stream()
+                        .filter(x -> chargeNotUsedOnOrder(x))
+                        .collect(Collectors.toList());
     }
 
-    public String disableEditCharge(){
+    public String disableEditCharge() {
         return itemImmutableReasonIfIsImmutable();
     }
 
     @Programmatic
-    boolean chargeNotUsedOnOrder(final Charge charge){
-        for (OrderItem item : this.getOrdr().getItems()){
-            if (item.getCharge()==charge){
+    boolean chargeNotUsedOnOrder(final Charge charge) {
+        for (OrderItem item : this.getOrdr().getItems()) {
+            if (item.getCharge() == charge) {
                 return false;
             }
         }
         return true;
     }
-
 
     @Column(allowsNull = "true", length = 255)
     @Getter @Setter
@@ -275,18 +270,14 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(promptStyle = PromptStyle.INLINE)
     public OrderItem editDescription(
-            @ParameterLayout(multiLine = InvoiceItem.DescriptionType.Meta.MULTI_LINE)
-            final String description) {
+            @ParameterLayout(multiLine = InvoiceItem.DescriptionType.Meta.MULTI_LINE) final String description) {
         setDescription(description);
         return this;
     }
 
-    public String default0EditDescription(){
+    public String default0EditDescription() {
         return getDescription();
     }
-
-
-
 
     @Column(allowsNull = "true", scale = 2)
     @Getter @Setter
@@ -304,21 +295,14 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     @Getter @Setter
     private Tax tax;
 
-
-
-
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public OrderItem updateAmounts(
-            @Digits(integer=13, fraction = 2)
-            final BigDecimal netAmount,
+            @Digits(integer = 13, fraction = 2) final BigDecimal netAmount,
             @Nullable
-            @Digits(integer=13, fraction = 2)
-            final BigDecimal vatAmount,
+            @Digits(integer = 13, fraction = 2) final BigDecimal vatAmount,
             @Nullable
-            @Digits(integer=13, fraction = 2)
-            final BigDecimal grossAmount,
-            @Nullable
-            final Tax tax){
+            @Digits(integer = 13, fraction = 2) final BigDecimal grossAmount,
+            @Nullable final Tax tax) {
         setNetAmount(netAmount);
         setVatAmount(vatAmount);
         setGrossAmount(grossAmount);
@@ -326,29 +310,27 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         return this;
     }
 
-    public BigDecimal default0UpdateAmounts(){
+    public BigDecimal default0UpdateAmounts() {
         return getNetAmount();
     }
 
-    public BigDecimal default1UpdateAmounts(){
+    public BigDecimal default1UpdateAmounts() {
         return getVatAmount();
     }
 
-    public BigDecimal default2UpdateAmounts(){
+    public BigDecimal default2UpdateAmounts() {
         return getGrossAmount();
     }
 
-    public Tax default3UpdateAmounts(){
+    public Tax default3UpdateAmounts() {
         return getTax();
     }
 
-    public String disableUpdateAmounts(){
+    public String disableUpdateAmounts() {
         ReasonBuffer2 buf = ReasonBuffer2.forSingle();
         itemImmutableIfOrderImmutable(buf);
         return buf.getReason();
     }
-
-
 
     @Getter @Setter
     @Column(allowsNull = "true")
@@ -358,31 +340,25 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     @Column(allowsNull = "true")
     private LocalDate endDate;
 
-
-
-
-    public OrderItem editPeriod(@Nullable final String period){
-        if (PeriodUtil.isValidPeriod(period)){
+    public OrderItem editPeriod(@Nullable final String period) {
+        if (PeriodUtil.isValidPeriod(period)) {
             setStartDate(PeriodUtil.yearFromPeriod(period).startDate());
             setEndDate(PeriodUtil.yearFromPeriod(period).endDate());
         }
         return this;
     }
 
-    public String default0EditPeriod(){
+    public String default0EditPeriod() {
         return PeriodUtil.periodFromInterval(new LocalDateInterval(getStartDate(), getEndDate()));
     }
 
-    public String validateEditPeriod(final String period){
+    public String validateEditPeriod(final String period) {
         return PeriodUtil.isValidPeriod(period) ? null : "Not a valid period";
     }
 
-    public String disableEditPeriod(){
+    public String disableEditPeriod() {
         return itemImmutableReasonIfIsImmutable();
     }
-
-
-
 
     @Column(allowsNull = "true", name = "propertyId")
     @PropertyLayout(hidden = Where.ALL_TABLES)
@@ -392,22 +368,18 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(promptStyle = PromptStyle.INLINE)
     public OrderItem editProperty(
-            @Nullable
-            final Property property){
+            @Nullable final Property property) {
         setProperty(property);
         return this;
     }
 
-    public Property default0EditProperty(){
+    public Property default0EditProperty() {
         return (Property) getFixedAsset();
     }
 
-    public String disableEditProperty(){
+    public String disableEditProperty() {
         return itemImmutableReasonIfIsImmutable();
     }
-
-
-
 
     @Column(allowsNull = "true", name = "projectId")
     @Getter @Setter
@@ -416,53 +388,53 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(promptStyle = PromptStyle.INLINE)
     public OrderItem editProject(
-            @Nullable
-            final Project project){
+            @Nullable final Project project) {
         setProject(project);
         return this;
     }
 
-    public Project default0EditProject(){
+    public Project default0EditProject() {
         return getProject();
     }
 
-    public List<Project> choices0EditProject(){
-        return getFixedAsset()!=null ?
+    public List<Project> choices0EditProject() {
+        return getFixedAsset() != null ?
                 projectRepository.findByFixedAsset(getFixedAsset())
                         .stream()
-                        .filter(x->!x.isParentProject())
-                        .filter(x->x.getEndDate()==null || !x.getEndDate().isBefore(getEndDate()!=null ? getEndDate() : LocalDate.now()))
+                        .filter(x -> !x.isParentProject())
+                        .filter(x -> x.getEndDate() == null || !x.getEndDate().isBefore(getEndDate() != null ? getEndDate() : LocalDate.now()))
                         .collect(Collectors.toList())
                 : null;
     }
 
-    public String disableEditProject(){
+    public String disableEditProject() {
         return itemImmutableReasonIfIsImmutable();
     }
 
-    public String validateEditProject(final Project project){
-        if (project!=null && project.isParentProject()) return "Parent project is not allowed";
+    public String validateEditProject(final Project project) {
+        if (project != null && project.isParentProject())
+            return "Parent project is not allowed";
         return null;
     }
 
-
     @Getter @Setter
-    @Column(allowsNull = "true", name="budgetItemId")
+    @Column(allowsNull = "true", name = "budgetItemId")
     @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     private BudgetItem budgetItem;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(promptStyle = PromptStyle.INLINE)
     public OrderItem editBudgetItem(
-            @Nullable
-            final BudgetItem budgetItem){
+            @Nullable final BudgetItem budgetItem) {
         setBudgetItem(budgetItem);
-        if (budgetItem!=null) setCharge(budgetItem.getCharge());
-        if (budgetItem!=null) setProperty(budgetItem.getBudget().getProperty());
+        if (budgetItem != null)
+            setCharge(budgetItem.getCharge());
+        if (budgetItem != null)
+            setProperty(budgetItem.getBudget().getProperty());
         return this;
     }
 
-    public BudgetItem default0EditBudgetItem(){
+    public BudgetItem default0EditBudgetItem() {
         return getBudgetItem();
     }
 
@@ -470,7 +442,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         return budgetItemChooser.choicesBudgetItemFor(getProperty(), getCharge());
     }
 
-    public String disableEditBudgetItem(){
+    public String disableEditBudgetItem() {
         return itemImmutableReasonIfIsImmutable();
     }
 
@@ -483,8 +455,6 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     public ApplicationTenancy getApplicationTenancy() {
         return getOrdr().getApplicationTenancy();
     }
-
-
 
     //region > FinancialItem impl'n (not otherwise implemented by the entity's properties)
     @Override
@@ -505,13 +475,13 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     //endregion
 
     @Programmatic
-    public String getPeriod(){
+    public String getPeriod() {
         return PeriodUtil.periodFromInterval(new LocalDateInterval(getStartDate(), getEndDate(), AbstractInterval.IntervalEnding.INCLUDING_END_DATE));
     }
 
     @Programmatic
-    public boolean isInvoiced(){
-        if (getNetAmount()==null){
+    public boolean isInvoiced() {
+        if (getNetAmount() == null) {
             return false;
         }
         return netAmountInvoiced().abs().compareTo(getNetAmount().abs()) >= 0;
@@ -519,8 +489,8 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     }
 
     @Programmatic
-    public BigDecimal netAmountOutstanding(){
-        return getNetAmount()!=null ? getNetAmount().subtract(netAmountInvoiced()) : BigDecimal.ZERO;
+    public BigDecimal netAmountOutstanding() {
+        return getNetAmount() != null ? getNetAmount().subtract(netAmountInvoiced()) : BigDecimal.ZERO;
     }
 
     @Programmatic
@@ -529,18 +499,17 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     }
 
     @Programmatic
-    private boolean isImmutable(){
+    private boolean isImmutable() {
         return getOrdr().isImmutable() || isLinkedToInvoiceItem();
     }
 
     @Programmatic
-    public boolean isLinkedToInvoiceItem(){
-        return ! orderItemInvoiceItemLinkRepository.findByOrderItem(this).isEmpty();
+    public boolean isLinkedToInvoiceItem() {
+        return !orderItemInvoiceItemLinkRepository.findByOrderItem(this).isEmpty();
     }
 
-
     @Programmatic
-    public String reasonIncomplete(){
+    public String reasonIncomplete() {
         return new Validator()
                 .checkNotNull(getDescription(), "description")
                 .checkNotNull(getCharge(), "charge")
@@ -554,37 +523,37 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
 
     static class Validator {
 
-        public Validator(){
+        public Validator() {
             this.result = null;
         }
 
         @Setter
         String result;
 
-        String getResult(){
-            return result!=null ? result.concat(" required") : null;
+        String getResult() {
+            return result != null ? result.concat(" required") : null;
         }
 
-        Validator checkNotNull(Object mandatoryProperty, String propertyName){
-            if (mandatoryProperty == null){
-                setResult(result==null ? propertyName : result.concat(", ").concat(propertyName));
+        Validator checkNotNull(Object mandatoryProperty, String propertyName) {
+            if (mandatoryProperty == null) {
+                setResult(result == null ? propertyName : result.concat(", ").concat(propertyName));
             }
             return this;
         }
 
         Validator validateConsistentDimensions(OrderItem orderItem) {
             String message;
-            if (orderItem.getProject()!=null && orderItem.getBudgetItem()!=null){
+            if (orderItem.getProject() != null && orderItem.getBudgetItem() != null) {
                 message = "either project or budget item - not both";
-                setResult(result==null ? message : result.concat(", ").concat(message));
+                setResult(result == null ? message : result.concat(", ").concat(message));
             }
-            if (orderItem.getProject()!=null && orderItem.getProperty()==null){
+            if (orderItem.getProject() != null && orderItem.getProperty() == null) {
                 message = "when project filled in then property";
-                setResult(result==null ? message : result.concat(", ").concat(message));
+                setResult(result == null ? message : result.concat(", ").concat(message));
             }
-            if (orderItem.getBudgetItem()!=null && orderItem.getProperty()==null){
+            if (orderItem.getBudgetItem() != null && orderItem.getProperty() == null) {
                 message = "when budget item filled in then property";
-                setResult(result==null ? message : result.concat(", ").concat(message));
+                setResult(result == null ? message : result.concat(", ").concat(message));
             }
             return this;
         }
@@ -605,17 +574,14 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         setGrossAmount(FinancialAmountUtil.addHandlingNulls(getGrossAmount(), grossAmountToAdd));
     }
 
-
-
-
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    public Order removeItem(){
+    public Order removeItem() {
         Order order = getOrdr();
         repositoryService.removeAndFlush(this);
         return order;
     }
 
-    public String disableRemoveItem(){
+    public String disableRemoveItem() {
         return itemImmutableReasonIfIsImmutable();
     }
 
@@ -648,5 +614,8 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
 
     @Inject
     private BudgetItemChooser budgetItemChooser;
+
+    @Inject
+    private MeService meService;
 
 }

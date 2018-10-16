@@ -168,6 +168,11 @@ public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
         );
     }
 
+    @Programmatic
+    public List<Charge> choicesItalianWorkTypes() {
+        return matchOnReferenceOrName(StringUtils.wildcardToCaseInsensitiveRegex("ITWT*"));
+    }
+
     // //////////////////////////////////////
 
     @Programmatic
@@ -189,20 +194,19 @@ public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
         return allMatches("findByApplicabilityAndMatchOnReferenceOrName",
                 "applicability1", applicability,
                 "applicability2", Applicability.IN_AND_OUT,
-                "regex", StringUtils.wildcardToCaseInsensitiveRegex("*"+regex+"*"));
+                "regex", StringUtils.wildcardToCaseInsensitiveRegex("*" + regex + "*"));
     }
 
     @Programmatic
-    public List<Charge> autoComplete(@MinLength(3) final String search){
-        return matchOnReferenceOrName(StringUtils.wildcardToCaseInsensitiveRegex("*"+search+"*"));
+    public List<Charge> autoComplete(@MinLength(3) final String search) {
+        return matchOnReferenceOrName(StringUtils.wildcardToCaseInsensitiveRegex("*" + search + "*"));
     }
 
     public Charge findOrCreate(final String atPath, final String reference, final String name, final String description, Applicability applicability) {
         final Charge charge = findByReference(reference);
         if (charge != null)
-                return charge;
-        return create(reference,name,description, atPath, applicability);
+            return charge;
+        return create(reference, name, description, atPath, applicability);
     }
-
 
 }

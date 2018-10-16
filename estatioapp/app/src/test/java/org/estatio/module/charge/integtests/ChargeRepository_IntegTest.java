@@ -30,10 +30,16 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
+import org.incode.module.country.fixtures.enums.Country_enum;
+
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
-import org.incode.module.country.fixtures.enums.Country_enum;
+import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ChargeRepository_IntegTest extends ChargeModuleIntegTestAbstract {
 
@@ -54,7 +60,6 @@ public class ChargeRepository_IntegTest extends ChargeModuleIntegTestAbstract {
     public static class ChargeRepositoryForCountry extends ChargeRepository_IntegTest {
 
         private List<Charge> gbCharges;
-
 
         @Inject
         private ChargeRepository chargeRepository;
@@ -99,7 +104,7 @@ public class ChargeRepository_IntegTest extends ChargeModuleIntegTestAbstract {
             final List<Charge> chargeList = chargeRepository.chargesForCountry("/" + Country_enum.GBR.getRef3());
 
             // then
-            Assertions.assertThat(chargeList).containsOnly(gbCharges.toArray(new Charge[gbCharges.size()]));
+            assertThat(chargeList).containsOnly(gbCharges.toArray(new Charge[gbCharges.size()]));
         }
 
         @Test
@@ -108,7 +113,7 @@ public class ChargeRepository_IntegTest extends ChargeModuleIntegTestAbstract {
             final List<Charge> chargeList = chargeRepository.chargesForCountry("/" + Country_enum.GBR.getRef3() + "/OXF");
 
             // then
-            Assertions.assertThat(chargeList).containsOnly(gbCharges.toArray(new Charge[gbCharges.size()]));
+            assertThat(chargeList).containsOnly(gbCharges.toArray(new Charge[gbCharges.size()]));
         }
 
         @Test
@@ -117,7 +122,35 @@ public class ChargeRepository_IntegTest extends ChargeModuleIntegTestAbstract {
             final List<Charge> chargeList = chargeRepository.chargesForCountry("/" + Country_enum.GBR.getRef3() + "/OXF/ta");
 
             // then
-            Assertions.assertThat(chargeList).containsOnly(gbCharges.toArray(new Charge[gbCharges.size()]));
+            assertThat(chargeList).containsOnly(gbCharges.toArray(new Charge[gbCharges.size()]));
+        }
+
+    }
+
+    public static class ChoicesItalianWorkTypes extends ChargeRepository_IntegTest {
+
+        @Inject
+        private ChargeRepository chargeRepository;
+        
+        @Before
+        public void setUp() throws Exception {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(final FixtureScript.ExecutionContext ec) {
+                    //                    ec.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
+                    ec.executeChild(this, new CapexChargeHierarchyXlsxFixture());
+                }
+            });
+        }
+        
+        @Test
+        public void happyCase() throws Exception {
+            // when
+            List<Charge> italianWorkTypeChoices = chargeRepository.choicesItalianWorkTypes();
+            
+            // then
+            assertThat(italianWorkTypeChoices).hasSize(1);
+            assertThat(italianWorkTypeChoices.get(0).getReference()).startsWith("ITWT");
         }
 
     }

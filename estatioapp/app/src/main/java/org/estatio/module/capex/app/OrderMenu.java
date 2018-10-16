@@ -35,6 +35,7 @@ import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.imports.OrderProjectImportAdapter;
 import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
 import org.estatio.module.party.dom.Organisation;
@@ -66,6 +67,10 @@ public class OrderMenu {
             final Charge charge) {
         final String userAtPath = meService.me().getAtPath();
         return orderRepository.create(property, project, charge, userAtPath);
+    }
+
+    public List<Charge> choices2CreateOrder() {
+        return chargeRepository.choicesItalianWorkTypes();
     }
 
     public boolean hideCreateOrder() {
@@ -305,4 +310,5 @@ public class OrderMenu {
 
     @Inject ExcelService excelService;
 
+    @Inject ChargeRepository chargeRepository;
 }
