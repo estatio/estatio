@@ -12,6 +12,8 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
+import org.isisaddons.module.security.app.user.MeService;
+
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
@@ -45,6 +47,10 @@ public class Order_switchView {
     }
 
     public boolean hideAct() {
+        if (meService.me().getAtPath().startsWith("/ITA")) {
+            return true;
+        }
+
         Optional<Document> documentIfAny = lookupAttachedPdfService.lookupOrderPdfFrom(order);
         return !documentIfAny.isPresent();
     }
@@ -64,4 +70,7 @@ public class Order_switchView {
 
     @Inject
     ServiceRegistry2 serviceRegistry2;
+
+    @Inject
+    private MeService meService;
 }
