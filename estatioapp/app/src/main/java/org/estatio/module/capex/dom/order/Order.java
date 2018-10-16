@@ -603,7 +603,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public boolean hideAddItem() {
-        return getItems().isEmpty();
+        return meService.me().getAtPath().startsWith("/ITA") && !getItems().isEmpty();
     }
 
     @MemberOrder(name = "items", sequence = "2")
@@ -648,7 +648,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public boolean hideSplitItem(){
-        return getItems().isEmpty();
+        return getItems().isEmpty() || meService.me().getAtPath().startsWith("/ITA");
     }
 
     public OrderItem default0SplitItem() {
@@ -760,7 +760,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public boolean hideMergeItems(){
-        return getItems().isEmpty();
+        return getItems().isEmpty() || meService.me().getAtPath().startsWith("/ITA");
     }
 
     public OrderItem default0MergeItems() {
