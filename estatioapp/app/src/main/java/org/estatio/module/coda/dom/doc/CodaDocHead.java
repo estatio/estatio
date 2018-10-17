@@ -1,5 +1,6 @@
 package org.estatio.module.coda.dom.doc;
 
+import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -16,6 +17,8 @@ import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.ComparisonChain;
+
+import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
@@ -65,13 +68,13 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     public CodaDocHead(
             final String cmpCode,
             final String docCode,
-            final String docNum,
-            final IncomingInvoice incomingInvoice) {
+            final String docNum) {
 
         this.cmpCode = cmpCode;
         this.docCode = docCode;
         this.docNum = docNum;
-        this.incomingInvoice = incomingInvoice;
+
+        this.validationStatus = ValidationStatus.VALID;
     }
 
     @Column(allowsNull = "false", length = 12)
@@ -89,7 +92,6 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Getter @Setter
     private String docNum;
 
-    // TODO: REVIEW: EST-1862: have left this null, but perhaps that is wrong and there would always be a corresponding Estatio incoming invoice?
     @Column(allowsNull = "true", name="incomingInvoiceId")
     @Property
     @Getter @Setter
@@ -101,10 +103,59 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     private SortedSet<CodaDocLine> lines = new TreeSet<>();
 
     @Programmatic
-    public void upsertLine(final int lineNum, final String extRef3, final String extRef5) {
-        lineRepository.upsert(this, lineNum, extRef3, extRef5);
+    public CodaDocLine upsertLine(
+            final int lineNum,
+            final String accountCode,
+            final BigDecimal docValue,
+            final BigDecimal docSumTax,
+            final LocalDateTime valueDate,
+            final String extRef3,
+            final String extRef5,
+            final String elmBankAccount,
+            final String userRef1,
+            final Character userStatus) {
+        return lineRepository.upsert(this, lineNum, accountCode, docValue, docSumTax, valueDate, extRef3, extRef5, elmBankAccount, userRef1, userStatus);
     }
 
+    @Column(allowsNull = "false")
+    @Property()
+    @Getter @Setter
+    private ValidationStatus validationStatus;
+
+
+    public enum IgnoreStatus {
+        /**
+         * The document should not be ignored.
+         *
+         * If its {@link CodaDocHead#getValidationStatus() validation status} is {@link ValidationStatus#VALID}, then
+         * there will be corresponding Estatio entities for the various implicitly referenced objects (property, project,
+         * order, charge and incoming invoice).
+         *
+         * If its {@link CodaDocHead#getValidationStatus() validation status} is {@link ValidationStatus#INVALID}, then
+         * there will be NO corresponding Estatio entities and the {@link CodaDocHead document} will be brought to the
+         * users' attention as an exception.
+         *
+         *
+         */
+        NOT_IGNORED,
+        /**
+         * The document corresponds to an archived project (so should be ignored).
+         */
+        PROJECT_ARCHIVED,
+        /**
+         * The document should be ignored for some other reason.
+         */
+        IGNORED_OTHER,
+        ;
+    }
+
+    /**
+     * Whether this document should be ignored (even if {@link #getValidationStatus() validation status} says that it is invalid.
+     */
+    @Column(allowsNull = "false")
+    @Property()
+    @Getter @Setter
+    private IgnoreStatus ignoreStatus;
 
     //region > compareTo, toString
     @Override

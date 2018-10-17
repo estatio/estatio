@@ -75,10 +75,19 @@ import lombok.Setter;
                         + "FROM org.estatio.module.financial.dom.BankAccount "
                         + "WHERE reference == :reference"),
         @javax.jdo.annotations.Query(
+                name = "findByIban", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.financial.dom.BankAccount "
+                        + "WHERE iban == :iban"),
+        @javax.jdo.annotations.Query(
                 name = "matchOnReference", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.financial.dom.BankAccount "
                         + "WHERE reference.matches(:regex)")
+})
+@javax.jdo.annotations.Indices({
+        @javax.jdo.annotations.Index(name = "BankAccount_iban",
+                members = { "iban" }),
 })
 @DomainObject(
         editing = Editing.DISABLED,

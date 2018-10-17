@@ -1,5 +1,9 @@
 package org.estatio.module.coda.dom.doc;
 
+import java.math.BigDecimal;
+
+import org.joda.time.LocalDateTime;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -34,10 +38,19 @@ public class CodaDocLineRepository {
     public CodaDocLine create(
             final CodaDocHead docHead,
             final int lineNum,
+            final String accountCode,
+            final BigDecimal docValue,
+            final BigDecimal docSumTax,
+            final LocalDateTime valueDate,
             final String extRef3,
-            final String extRef5) {
+            final String extRef5,
+            final String elmBankAccount,
+            final String userRef1,
+            final Character userStatus) {
         return repositoryService.persist(
-                new CodaDocLine(docHead, lineNum, extRef3, extRef5));
+                new CodaDocLine(docHead, lineNum, accountCode, docValue,
+                                docSumTax, valueDate, extRef3, extRef5,
+                                elmBankAccount, userRef1, userStatus));
     }
 
     @Programmatic
@@ -52,20 +65,35 @@ public class CodaDocLineRepository {
     }
 
     @Programmatic
-    public CodaDocHead upsert(
+    public CodaDocLine upsert(
             final CodaDocHead docHead,
             final int lineNum,
+            final String accountCode,
+            final BigDecimal docValue,
+            final BigDecimal docSumTax,
+            final LocalDateTime valueDate,
             final String extRef3,
-            final String extRef5) {
+            final String extRef5,
+            final String elmBankAccount,
+            final String userRef1,
+            final Character userStatus) {
 
         final CodaDocLine docLine = findByDocHeadAndLineNum(docHead, lineNum);
         if(docLine == null) {
-            create(docHead, lineNum, extRef3, extRef5);
+            create(docHead, lineNum, accountCode, docValue, docSumTax, valueDate, extRef3, extRef5,
+                    elmBankAccount, userRef1, userStatus);
         } else {
+            docLine.setAccountCode(accountCode);
+            docLine.setDocValue(docValue);
+            docLine.setDocSumTax(docSumTax);
+            docLine.setValueDate(valueDate);
             docLine.setExtRef3(extRef3);
             docLine.setExtRef5(extRef5);
+            docLine.setElmBankAccount(elmBankAccount);
+            docLine.setUserRef1(userRef1);
+            docLine.setUserStatus(userStatus);
         }
-        return docHead;
+        return docLine;
     }
 
     @javax.inject.Inject

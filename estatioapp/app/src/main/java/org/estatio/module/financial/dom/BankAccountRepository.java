@@ -35,6 +35,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.incode.module.base.dom.utils.StringUtils;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = BankAccount.class)
@@ -68,6 +69,18 @@ public class BankAccountRepository extends UdoDomainRepositoryAndFactory<BankAcc
                 .stream()
                 .filter(x->x.getDeprecated()==null || !x.getDeprecated())
                 .collect(Collectors.toList());
+    }
+
+    @Programmatic
+    public void upsertBankAccount(
+            final Organisation party,
+            final String iban,
+            final String bic) {
+        final BankAccount bankAccount =
+                findBankAccountByReference(party, iban);
+        if(bankAccount == null) {
+            newBankAccount(party, iban, bic);
+        }
     }
 
     @Programmatic
@@ -108,4 +121,5 @@ public class BankAccountRepository extends UdoDomainRepositoryAndFactory<BankAcc
 
     @Inject
     FinancialAccountRepository financialAccountRepository;
+
 }
