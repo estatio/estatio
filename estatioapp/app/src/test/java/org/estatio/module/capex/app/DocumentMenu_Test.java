@@ -107,7 +107,7 @@ public class DocumentMenu_Test {
         // given
         DocumentMenu menu = new DocumentMenu();
         menu.documentTypeRepository = mockDocumentTypeRepository;
-        Blob blob = new Blob("some_name", "application/pdf",null);
+        Blob blob = new Blob("some_name", "application/pdf", new byte[0]);
 
         // expect
         context.checking(new Expectations(){{

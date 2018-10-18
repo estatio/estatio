@@ -27,7 +27,6 @@ import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -40,8 +39,6 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.util.TitleBuffer;
-
-import org.incode.module.base.dom.types.NameType;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -59,9 +56,6 @@ import lombok.Setter;
 @Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version"
-)
-@Unique(
-        name = "Organisation"
 )
 @DomainObject(
         objectType = "org.estatio.dom.party.OrganisationPreviousName"
@@ -86,7 +80,7 @@ public class OrganisationPreviousName implements Comparable<OrganisationPrevious
     private Organisation organisation;
 
 
-    @Column(allowsNull = "false", length = NameType.Meta.MAX_LEN)
+    @Column(allowsNull = "false", length = Party.NameType.Meta.MAX_LEN)
     @lombok.NonNull
     private String name;
 
