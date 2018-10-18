@@ -44,7 +44,7 @@ import lombok.Setter;
         @Query(
                 name = "findByDocHeadAndLineNum", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLineValidation "
+                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
                         + "WHERE docLine == :docLine ")
 })
 @Unique(name = "CodaDocLine_docHead_lineNum_UNQ", members = { "docHead", "lineNum" })
