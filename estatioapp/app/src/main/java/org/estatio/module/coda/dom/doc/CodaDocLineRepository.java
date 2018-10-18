@@ -39,6 +39,8 @@ public class CodaDocLineRepository {
             final CodaDocHead docHead,
             final int lineNum,
             final String accountCode,
+            final String supplierPartyRef,
+            final String description,
             final BigDecimal docValue,
             final BigDecimal docSumTax,
             final LocalDateTime valueDate,
@@ -48,9 +50,9 @@ public class CodaDocLineRepository {
             final String userRef1,
             final Character userStatus) {
         return repositoryService.persist(
-                new CodaDocLine(docHead, lineNum, accountCode, docValue,
-                                docSumTax, valueDate, extRef3, extRef5,
-                                elmBankAccount, userRef1, userStatus));
+                new CodaDocLine(docHead, lineNum, accountCode, supplierPartyRef , description,
+                        docValue, docSumTax, valueDate, extRef3,
+                        extRef5, elmBankAccount, userRef1, userStatus));
     }
 
     @Programmatic
@@ -69,6 +71,8 @@ public class CodaDocLineRepository {
             final CodaDocHead docHead,
             final int lineNum,
             final String accountCode,
+            final String supplierPartyRef,
+            final String description,
             final BigDecimal docValue,
             final BigDecimal docSumTax,
             final LocalDateTime valueDate,
@@ -80,7 +84,7 @@ public class CodaDocLineRepository {
 
         final CodaDocLine docLine = findByDocHeadAndLineNum(docHead, lineNum);
         if(docLine == null) {
-            create(docHead, lineNum, accountCode, docValue, docSumTax, valueDate, extRef3, extRef5,
+            create(docHead, lineNum, accountCode, supplierPartyRef, description, docValue, docSumTax, valueDate, extRef3, extRef5,
                     elmBankAccount, userRef1, userStatus);
         } else {
             docLine.setAccountCode(accountCode);

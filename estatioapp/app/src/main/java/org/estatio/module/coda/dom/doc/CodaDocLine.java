@@ -30,7 +30,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @PersistenceCapable(
-        // TODO: REVIEW: EST-1862: an alternative design would be to use the docHead/lineNum as the unique (application) key.
         identityType = IdentityType.DATASTORE,
         schema = "dbo",
         table = "CodaDocLine"
@@ -45,9 +44,8 @@ import lombok.Setter;
         @Query(
                 name = "findByDocHeadAndLineNum", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
-                        + "WHERE docHead == :docHead && "
-                        + "      lineNum == :lineNum ")
+                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLineValidation "
+                        + "WHERE docLine == :docLine ")
 })
 @Unique(name = "CodaDocLine_docHead_lineNum_UNQ", members = { "docHead", "lineNum" })
 @DomainObject(
@@ -64,6 +62,8 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
             final CodaDocHead docHead,
             final int lineNum,
             final String accountCode,
+            final String supplierPartyRef,
+            final String description,
             final BigDecimal docValue,
             final BigDecimal docSumTax,
             final LocalDateTime valueDate,
@@ -76,6 +76,8 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
         this.docHead = docHead;
         this.lineNum = lineNum;
         this.accountCode = accountCode;
+        this.supplierPartyRef = supplierPartyRef;
+        this.description = description;
         this.docValue = docValue;
         this.docSumTax = docSumTax;
         this.valueDate = valueDate;
@@ -85,6 +87,8 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
         this.userRef1 = userRef1;
         this.userStatus = userStatus;
 
+        this.supplierBankAccountValidationStatus = ValidationStatus.INVALID;
+        this.extRefValidationStatus = ValidationStatus.INVALID;
         this.orderValidationStatus = ValidationStatus.INVALID;
         this.projectValidationStatus = ValidationStatus.INVALID;
         this.propertyValidationStatus = ValidationStatus.INVALID;
@@ -105,6 +109,19 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Property()
     @Getter @Setter
     private String accountCode;
+
+    /**
+     * Derived from the last portion of {@link #getAccountCode()}.
+     */
+    @Column(allowsNull = "true", length = 72)
+    @Property()
+    @Getter @Setter
+    private String supplierPartyRef;
+
+    @Column(allowsNull = "true", length = 36)
+    @Property()
+    @Getter @Setter
+    private String description;
 
     @Column(allowsNull = "true", scale = 2)
     @Property()
@@ -156,6 +173,8 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Getter @Setter
     private String elmBankAccount;
 
+
+
     @Column(allowsNull = "true", length = 4000)
     @Property()
     @PropertyLayout(multiLine = 5)
@@ -175,35 +194,36 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
         setReasonInvalid(reasonInvalid);
     }
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", length = 20)
     @Property()
     @Getter @Setter
     private ValidationStatus extRefValidationStatus;
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", length = 20)
     @Property()
     @Getter @Setter
     private ValidationStatus propertyValidationStatus;
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", length = 20)
     @Property()
     @Getter @Setter
     private ValidationStatus supplierBankAccountValidationStatus;
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", length = 20)
     @Property()
     @Getter @Setter
     private ValidationStatus orderValidationStatus;
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", length = 20)
     @Property()
     @Getter @Setter
     private ValidationStatus projectValidationStatus;
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", length = 20)
     @Property()
     @Getter @Setter
     private ValidationStatus workTypeValidationStatus;
+
 
     @Override
     public int compareTo(final CodaDocLine other) {

@@ -92,10 +92,13 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Getter @Setter
     private String docNum;
 
+
+
     @Column(allowsNull = "true", name="incomingInvoiceId")
     @Property
     @Getter @Setter
     private IncomingInvoice incomingInvoice;
+
 
     @javax.jdo.annotations.Persistent(mappedBy = "docHead", defaultFetchGroup = "true")
     @CollectionLayout(defaultView = "table", paged = 999)
@@ -106,6 +109,8 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     public CodaDocLine upsertLine(
             final int lineNum,
             final String accountCode,
+            final String supplierPartyRef,
+            final String description,
             final BigDecimal docValue,
             final BigDecimal docSumTax,
             final LocalDateTime valueDate,
@@ -114,16 +119,18 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
             final String elmBankAccount,
             final String userRef1,
             final Character userStatus) {
-        return lineRepository.upsert(this, lineNum, accountCode, docValue, docSumTax, valueDate, extRef3, extRef5, elmBankAccount, userRef1, userStatus);
+        return lineRepository.upsert(this,
+                    lineNum, accountCode, supplierPartyRef, description,
+                    docValue, docSumTax, valueDate, extRef3, extRef5, elmBankAccount, userRef1, userStatus);
     }
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", length = 20)
     @Property()
     @Getter @Setter
     private ValidationStatus validationStatus;
 
 
-    public enum IgnoreStatus {
+    public enum Handling {
         /**
          * The document should not be ignored.
          *
@@ -137,25 +144,25 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
          *
          *
          */
-        NOT_IGNORED,
+        INCLUDE,
         /**
-         * The document corresponds to an archived project (so should be ignored).
+         * The document corresponds to an archived project (so should be excluded from processing).
          */
-        PROJECT_ARCHIVED,
+        EXCLUDE_PROJECT_ARCHIVED,
         /**
-         * The document should be ignored for some other reason.
+         * The document should be excluded from processing for some other reason.
          */
-        IGNORED_OTHER,
+        EXCLUDE_OTHER,
         ;
     }
 
     /**
-     * Whether this document should be ignored (even if {@link #getValidationStatus() validation status} says that it is invalid.
+     * How this document should be handled (override {@link #getValidationStatus() validation status}).
      */
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", length = 30)
     @Property()
     @Getter @Setter
-    private IgnoreStatus ignoreStatus;
+    private Handling handling;
 
     //region > compareTo, toString
     @Override
