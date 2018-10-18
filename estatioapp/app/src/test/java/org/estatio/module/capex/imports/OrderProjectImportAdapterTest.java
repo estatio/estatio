@@ -17,7 +17,7 @@ public class OrderProjectImportAdapterTest {
         adapter.setNumero(2234);
         adapter.setCentro("CAR");
         adapter.setProgressivoCentro(694);
-        adapter.setCommessa(192);
+        adapter.setCommessa("192");
 
         // then
         Assertions.assertThat(adapter.deriverOrderNumber()).isEqualTo("2234/CAR/694/192");
@@ -34,7 +34,7 @@ public class OrderProjectImportAdapterTest {
         adapter.setNumero(null);
         adapter.setCentro("CAR");
         adapter.setProgressivoCentro(694);
-        adapter.setCommessa(192);
+        adapter.setCommessa("192");
 
         // then
         Assertions.assertThat(adapter.deriverOrderNumber()).isNull();
@@ -43,7 +43,7 @@ public class OrderProjectImportAdapterTest {
         adapter.setNumero(2234);
         adapter.setCentro(null);
         adapter.setProgressivoCentro(694);
-        adapter.setCommessa(192);
+        adapter.setCommessa("192");
 
         // then
         Assertions.assertThat(adapter.deriverOrderNumber()).isEqualTo("2234//694/192");
@@ -52,7 +52,7 @@ public class OrderProjectImportAdapterTest {
         adapter.setNumero(2234);
         adapter.setCentro("CAR");
         adapter.setProgressivoCentro(null);
-        adapter.setCommessa(192);
+        adapter.setCommessa("192");
 
         // then
         Assertions.assertThat(adapter.deriverOrderNumber()).isEqualTo("2234/CAR//192");

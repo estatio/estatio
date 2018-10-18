@@ -1,6 +1,10 @@
 package org.estatio.module.capex.dom.order;
 
 import java.math.BigDecimal;
+import java.util.Set;
+
+import com.google.common.base.Splitter;
+import com.google.common.collect.Sets;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -10,11 +14,11 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.util.PeriodUtil;
-import org.estatio.module.asset.dom.Property;
-import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.tax.dom.Tax;
@@ -30,7 +34,6 @@ public class Order_Test {
         Order order = new Order();
         OrderItem item1 = new OrderItem();
         order.getItems().add(item1);
-
 
         // when
         String result = order.reasonIncomplete();
@@ -60,7 +63,7 @@ public class Order_Test {
 
         // then
         assertThat(result).isNull();
-        
+
     }
 
     @Test
@@ -89,7 +92,6 @@ public class Order_Test {
         assertThat(result).isEqualTo("property, (on item) when project filled in then property required");
 
     }
-
 
     @Test
     public void minimalRequiredDataToComplete_consitent_dimensions_for_property_budgetItem() throws Exception {
@@ -176,7 +178,7 @@ public class Order_Test {
         BigDecimal newItemGrossAmount = new BigDecimal("60.00");
 
         // expect
-        context.checking(new Expectations(){{
+        context.checking(new Expectations() {{
             oneOf(mockOrderItemRepository).upsert(
                     order,
                     charge,
@@ -193,7 +195,7 @@ public class Order_Test {
         }});
 
         // when
-        order.splitItem(itemToSplit, description, newItemNetAmount, newItemVatAmount, tax, newItemGrossAmount,charge, property, project, budgetItem, period);
+        order.splitItem(itemToSplit, description, newItemNetAmount, newItemVatAmount, tax, newItemGrossAmount, charge, property, project, budgetItem, period);
 
     }
 
@@ -208,13 +210,36 @@ public class Order_Test {
         OrderItem targetItem = new OrderItem();
 
         // expect
-        context.checking(new Expectations(){{
+        context.checking(new Expectations() {{
             oneOf(mockOrderItemRepository).mergeItems(
                     sourceItem, targetItem);
         }});
 
         // when
         order.mergeItems(sourceItem, targetItem);
+
+    }
+
+    @Test
+    public void mergingComments() throws Exception {
+        Set<String> s1 = Sets.newLinkedHashSet(Splitter.on(" ").split("Scansione documentazione pratica VV.FF."));
+        Set<String> s2 = Sets.newLinkedHashSet(Splitter.on(" ").split("Scansione documentazione pratica VV.FF. - Integrazione n. 1"));
+        Set<String> s3 = Sets.newLinkedHashSet(Splitter.on(" ").split("Scansione documentazione pratica VV.FF. - Integrazione n. 2"));
+        Set<String> s4 = Sets.newLinkedHashSet(Splitter.on(" ").split("Scansione documentazione pratica VV.FF. - Integrazione n. 3"));
+        Set<String> s5 = Sets.newLinkedHashSet(Splitter.on(" ").split("Scansione documentazione pratica VV.FF. - Integrazione n. 4"));
+        Set<String> s6 = Sets.newLinkedHashSet(Splitter.on(" ").split("Scansione documentazione pratica VV.FF. - Integrazione n. 5"));
+        Set<String> s7 = Sets.newLinkedHashSet(Splitter.on(" ").split("Scansione documentazione pratica VV.FF. - Integrazione n. 6"));
+
+        Set<String> intersection1 = Sets.union(s1, s2);
+        Set<String> intersection2 = Sets.union(intersection1, s3);
+        Set<String> intersection3 = Sets.union(intersection2, s4);
+        Set<String> intersection4 = Sets.union(intersection3, s5);
+        Set<String> intersection5 = Sets.union(intersection4, s6);
+        Set<String> intersection6 = Sets.union(intersection5, s7);
+
+        final String result = String.join(" ", intersection6);
+
+        assertThat(result).isEqualTo("Scansione documentazione pratica VV.FF. - Integrazione n. 1 2 3 4 5 6");
 
     }
 

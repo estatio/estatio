@@ -1,9 +1,13 @@
 package org.estatio.module.capex.imports;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+
+import com.google.common.base.Splitter;
+import com.google.common.collect.Sets;
 
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -46,10 +50,10 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
     private Integer progressivoCentro;
 
     @Getter @Setter @Nullable
-    private Integer commessa;
+    private String commessa;
 
     @Getter @Setter @Nullable
-    private Integer workType;
+    private String workType;
 
     @Getter @Setter @Nullable
     private Integer integrazione;
@@ -87,7 +91,6 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
     @Getter @Setter @Nullable
     private String note;
 
-
     /**
      * To allow for usage within fixture scripts also.
      */
@@ -100,10 +103,19 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
     @Setter
     private ExcelFixture2 excelFixture2;
 
-    public OrderProjectImportAdapter handle(final OrderProjectImportAdapter previousRow){
-        if (getCodiceFornitore()!=null && getFornitore()!=null) importSeller();
-        if (getNumero()!=null && getCentro()!=null) importOrder();
-        if (deriveProjectReference()!=null && deriveChargeReference()!=null) createProjectItemIfNotAlready();
+    public OrderProjectImportAdapter handle(final OrderProjectImportAdapter previousRow) {
+        correctCodiceFornitoreIfNecessary();
+
+        if (previousRow != null && getNumero() != null && previousRow.getNumero() != null && getNumero().equals(previousRow.getNumero())) {
+            mergeIntegrazioneLines(previousRow);
+        }
+
+        if (getCodiceFornitore() != null && getFornitore() != null)
+            importSeller();
+        if (getNumero() != null && getCentro() != null)
+            importOrder();
+        if (deriveProjectReference() != null && deriveChargeReference() != null)
+            createProjectItemIfNotAlready();
         return this;
     }
 
@@ -135,16 +147,71 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
         newLine.importData(null);
     }
 
-    public String deriverOrderNumber(){
-        if (getNumero()==null) return null;
+    private void mergeIntegrazioneLines(final OrderProjectImportAdapter previousLine) {
+        // update oggetto
+        final String newOggetto = mergeOggettos(previousLine);
+        setOggetto(newOggetto);
+
+        // keep integrazione of this line
+        // keep date of this line TODO: is this desirable?
+
+        // update importo netto iva
+        if (previousLine.getImportoNettoIVA() != null && getImportoNettoIVA() != null) {
+            setImportoNettoIVA(previousLine.getImportoNettoIVA().add(getImportoNettoIVA()));
+        } else if (previousLine.getImportoNettoIVA() != null && getImportoNettoIVA() == null) {
+            setImportoNettoIVA(previousLine.getImportoNettoIVA());
+        }
+
+        // update cassaProfess
+        if (previousLine.getCassaProfess() != null && getCassaProfess() != null) {
+            setCassaProfess(previousLine.getCassaProfess().add(getCassaProfess()));
+        } else if (previousLine.getCassaProfess() != null && getCassaProfess() == null) {
+            setCassaProfess(previousLine.getCassaProfess());
+        }
+
+        // update importo totale
+        if (previousLine.getImportoTotale() != null && getImportoTotale() != null) {
+            setImportoTotale(previousLine.getImportoTotale().add(getImportoTotale()));
+        } else if (previousLine.getImportoTotale() != null && getImportoTotale() == null) {
+            setImportoTotale(previousLine.getImportoTotale());
+        }
+
+        // update iva
+        if (previousLine.getIva() != null && getIva() != null) {
+            setIva(previousLine.getIva().add(getIva()));
+        } else if (previousLine.getIva() != null && getIva() == null) {
+            setIva(previousLine.getIva());
+        }
+
+        // update totale con iva
+        if (previousLine.getTotaleConIVA() != null && getTotaleConIVA() != null) {
+            setTotaleConIVA(previousLine.getTotaleConIVA().add(getTotaleConIVA()));
+        } else if (previousLine.getTotaleConIVA() != null && getTotaleConIVA() == null) {
+            setTotaleConIVA(previousLine.getTotaleConIVA());
+        }
+
+    }
+
+    private String mergeOggettos(final OrderProjectImportAdapter predecessor) {
+        Set<String> previousOggetto = Sets.newLinkedHashSet(Splitter.on(" ").split(predecessor.getOggetto()));
+        Set<String> currentOggetto = Sets.newLinkedHashSet(Splitter.on(" ").split(getOggetto()));
+        return String.join(" ", Sets.union(previousOggetto, currentOggetto));
+    }
+
+    public String deriverOrderNumber() {
+        if (getNumero() == null)
+            return null;
         StringBuilder builder = new StringBuilder();
         builder.append(getNumero().toString());
         builder.append("/");
-        if (getCentro()!=null) builder.append(getCentro());
+        if (getCentro() != null)
+            builder.append(getCentro());
         builder.append("/");
-        if (getProgressivoCentro()!=null) builder.append(getProgressivoCentro().toString());
+        if (getProgressivoCentro() != null)
+            builder.append(getProgressivoCentro().toString());
         builder.append("/");
-        if (getCommessa()!=null) builder.append(getCommessa());
+        if (getCommessa() != null)
+            builder.append(getCommessa());
         return builder.toString();
     }
 
@@ -157,53 +224,67 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
         organisationImport.importData(null);
     }
 
-    private void createProjectItemIfNotAlready(){
+    private void createProjectItemIfNotAlready() {
         Project project = projectRepository.findByReference(deriveProjectReference());
-        if (project==null) {
+        if (project == null) {
             LOG.error(String.format("Project not found for order number %s and project reference %s", getNumero().toString(), deriveProjectReference()));
             return;
         }
         Charge charge = chargeRepository.findByReference(deriveChargeReference());
-        if (charge==null) {
+        if (charge == null) {
             LOG.error(String.format("Charge not found for order number %s and charge reference %s", getNumero().toString(), deriveChargeReference()));
             return;
         }
-        projectItemRepository.findOrCreate(project, charge, charge.getName(), null, null, null, null,null);
+        projectItemRepository.findOrCreate(project, charge, charge.getName(), null, null, null, null, null);
     }
 
-    private String deriveChargeReference(){
-        if (getWorkType()==null) return null;
+    private void correctCodiceFornitoreIfNecessary() {
+        if (getCodiceFornitore() != null && !getCodiceFornitore().startsWith("IT")) {
+            setCodiceFornitore("IT" + getCodiceFornitore());
+        }
+    }
+
+    private String deriveChargeReference() {
+        if (getWorkType() == null)
+            return null;
         Charge oldCharge = chargeRepository.findByReference(IncomingChargeImportAdapter.ITA_OLD_WORKTYPE_PREFIX + workTypeCodeFromNo(getWorkType()));
-        if (oldCharge==null) return null;
-        return oldCharge.getExternalReference()!=null ? oldCharge.getExternalReference() : oldCharge.getReference();
+        if (oldCharge == null)
+            return null;
+        return oldCharge.getExternalReference() != null ? oldCharge.getExternalReference() : oldCharge.getReference();
     }
 
-    private String workTypeCodeFromNo(final Integer worktype){
-        if (worktype<10) return "00".concat(worktype.toString());
-        if (worktype<100) return "0".concat(worktype.toString());
-        return worktype.toString();
+    private String workTypeCodeFromNo(final String worktype) {
+        if (worktype.length() == 1)
+            return "00".concat(worktype);
+        if (worktype.length() == 2)
+            return "0".concat(worktype);
+        return worktype;
     }
 
-    private String deriveProjectReference(){
-        if (getCommessa()==null) return null;
-        if (getCentro()==null) return ProjectImportAdapter.ITA_PROJECT_PREFIX + getCommessa().toString();
+    private String deriveProjectReference() {
+        if (getCommessa() == null)
+            return null;
+        if (getCentro() == null)
+            return ProjectImportAdapter.ITA_PROJECT_PREFIX + getCommessa().toString();
         return ProjectImportAdapter.deriveProjectReference(getCommessa(), getCentro());
     }
 
-    private LocalDate deriveStartDate(){
-        if (getData()==null) return null;
+    private LocalDate deriveStartDate() {
+        if (getData() == null)
+            return null;
         return getData().getMonthOfYear() < 7 ?
-                new LocalDate(getData().getYear()-1, 7, 1) :
+                new LocalDate(getData().getYear() - 1, 7, 1) :
                 new LocalDate(getData().getYear(), 7, 1);
     }
 
-    private LocalDate deriveEndDate(){
-        if (deriveStartDate()==null) return null;
+    private LocalDate deriveEndDate() {
+        if (deriveStartDate() == null)
+            return null;
         return deriveStartDate().plusYears(1).minusDays(1);
     }
 
-    private String clean(final String input){
-        if (input==null){
+    private String clean(final String input) {
+        if (input == null) {
             return null;
         }
         String result = input.trim();
@@ -211,8 +292,9 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
     }
 
     String limitLength(final String input, final int length) {
-        if (input==null) return input;
-        if (input.length()<=length){
+        if (input == null)
+            return input;
+        if (input.length() <= length) {
             return input;
         } else {
             return input.substring(0, length);
@@ -221,8 +303,8 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
 
     @Override
     public void handleRow(final OrderProjectImportAdapter previousRow) {
-        if(executionContext != null && excelFixture2 != null) {
-            if (executionContext.getParameterAsBoolean("testMode")!=null && executionContext.getParameterAsBoolean("testMode")){
+        if (executionContext != null && excelFixture2 != null) {
+            if (executionContext.getParameterAsBoolean("testMode") != null && executionContext.getParameterAsBoolean("testMode")) {
                 executionContext.addResult(excelFixture2, this.handle(previousRow));
             } else {
                 this.handle(previousRow);
