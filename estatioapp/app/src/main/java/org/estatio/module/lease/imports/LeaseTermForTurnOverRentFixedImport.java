@@ -19,6 +19,8 @@ import org.apache.isis.applib.services.message.MessageService;
 import org.isisaddons.module.excel.dom.ExcelFixture;
 import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
 import org.estatio.module.base.dom.Importable;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
@@ -87,6 +89,10 @@ public class LeaseTermForTurnOverRentFixedImport implements ExcelFixtureRowHandl
             messageService.warnUser(String.format("Lease with reference %s not found", getLeaseReference()));
             return Lists.newArrayList();
         }
+        if (reasonLineInValid()!=null){
+            messageService.warnUser(reasonLineInValid());
+            return Lists.newArrayList();
+        }
         if (leaseToUpdate.findItemsOfType(LeaseItemType.TURNOVER_RENT_FIXED).size()>1){
             messageService.warnUser(String.format("Multiple lease items of type TURNOVER_RENT_FIXED found on lease with reference %s; could not update.", getLeaseReference()));
             return Lists.newArrayList();
@@ -105,6 +111,26 @@ public class LeaseTermForTurnOverRentFixedImport implements ExcelFixtureRowHandl
         }
 
         return Lists.newArrayList();
+    }
+
+    String reasonLineInValid(){
+
+        StringBuilder builder = new StringBuilder();
+        if (getValuePreviousYear()!=null && (getStartDatePreviousYear()==null || getEndDatePreviousYear()==null)){
+            builder.append(String.format("Missing date found for previous year for lease with reference %s; please correct.", getLeaseReference()));
+        }
+
+        if (getValue()!=null && (getStartDate()==null || getEndDate()==null)){
+            builder.append(String.format("Missing date found for lease with reference %s; please correct.", getLeaseReference()));
+        }
+
+        LocalDateInterval previous = new LocalDateInterval(getStartDatePreviousYear(), getEndDatePreviousYear());
+        LocalDateInterval current = new LocalDateInterval(getStartDate(), getEndDate());
+        if (getValuePreviousYear()!=null && getValue()!=null && previous.overlaps(current)){
+            builder.append(String.format("Overlapping interval found for lease with reference %s; please correct.", getLeaseReference()));
+        }
+
+        return builder.toString().isEmpty() ? null : builder.toString();
     }
 
     void updateOrCreateTerm(final LeaseItem itemToUpdate, final LocalDate startDate, final LocalDate endDate, final BigDecimal value) {

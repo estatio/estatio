@@ -135,7 +135,8 @@ public class LeasetermForTurnoverRentFixedImport_IntegTest extends LeaseModuleIn
     ServiceRegistry2 serviceRegistry2;
 
 
-    @Inject TransactionService3 transactionService2;
+    @Inject
+    TransactionService3 transactionService2;
 
 
 }

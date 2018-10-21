@@ -34,14 +34,24 @@ public class LeaseTermForTurnOverRentFixedImport_Test {
     /*
     SCENARIO's
 
+    check for overlapping terms
+    check for empty dates when value not empty
+    check for start dates in correct year
+
     value = empty ==> do nothing
 
+    if value previous not is empty:
+        if term found by start date => update term for value and end date
+        else warn previous term not found for lease ...
 
-    term found (same start, end) => update value
-    term not found
-    ==> no overlap
-
-
+    if value current not empty:
+        if term found by start date => update term for value and end date
+        else
+        check for existing term overlapping the year
+        ==> if overlapping term starts before start of the year and set end date previous day before start current; create current term
+        ==> if overlapping term starts after start of the year: update term with start, end and value
+        else
+        create new term
      */
 
     @Test
@@ -293,6 +303,40 @@ public class LeaseTermForTurnOverRentFixedImport_Test {
         // when
         importLine.importData();
 
+    }
+
+
+    @Test
+    public void reason_invalid_works() throws Exception {
+
+        // given
+        LeaseTermForTurnOverRentFixedImport importLine = new LeaseTermForTurnOverRentFixedImport();
+        importLine.setLeaseReference("LEASE_REF");
+        // when, then
+        assertThat(importLine.reasonLineInValid()).isNull();
+
+        // and when
+        importLine.setValuePreviousYear(BigDecimal.ONE);
+        // then
+        assertThat(importLine.reasonLineInValid()).isEqualTo("Missing date found for previous year for lease with reference LEASE_REF; please correct.");
+
+        // and when
+        importLine.setValue(BigDecimal.ONE);
+        // then
+        assertThat(importLine.reasonLineInValid()).isEqualTo("Missing date found for previous year for lease with reference LEASE_REF; please correct.Missing date found for lease with reference LEASE_REF; please correct.Overlapping interval found for lease with reference LEASE_REF; please correct.");
+
+        // and when
+        importLine.setStartDatePreviousYear(new LocalDate(2017,1,1));
+        importLine.setEndDatePreviousYear(new LocalDate(2018,1,1));
+        importLine.setStartDate(new LocalDate(2018,1,1));
+        importLine.setEndDate(new LocalDate(2018,12,31));
+        // then
+        assertThat(importLine.reasonLineInValid()).isEqualTo("Overlapping interval found for lease with reference LEASE_REF; please correct.");
+
+        // and when
+        importLine.setEndDatePreviousYear(new LocalDate(2017,12,1));
+        // then finally again
+        assertThat(importLine.reasonLineInValid()).isNull();
     }
 
 }
