@@ -107,6 +107,7 @@ public class LeaseTermForTurnoverRentFixedImportManager {
             List<LeaseItem> torItems = leaseItemRepository.findLeaseItemsByType(x, LeaseItemType.TURNOVER_RENT_FIXED);
             torItems.forEach(tor->{
                 LeaseTermForTurnOverRentFixedImport line = new LeaseTermForTurnOverRentFixedImport();
+                line.setYear(getYear());
                 line.setLeaseReference(x.getReference());
                 line.setLeaseExternalReference(x.getExternalReference());
                 tor.getTerms().forEach(torTerm -> {

@@ -2,6 +2,7 @@ package org.estatio.module.lease.imports;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -26,6 +27,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermForFixed;
 import org.estatio.module.lease.dom.LeaseTermRepository;
 import org.estatio.module.lease.dom.LeaseTermStatus;
@@ -71,6 +73,10 @@ public class LeaseTermForTurnOverRentFixedImport implements ExcelFixtureRowHandl
     @MemberOrder(sequence = "8")
     private BigDecimal value;
 
+    @Getter @Setter
+    @MemberOrder(sequence = "8")
+    private Integer year;
+
     @Programmatic
     @Override
     public List<Object> handleRow(FixtureScript.ExecutionContext executionContext, ExcelFixture excelFixture, Object o) {
@@ -103,10 +109,10 @@ public class LeaseTermForTurnOverRentFixedImport implements ExcelFixtureRowHandl
             return Lists.newArrayList();
         }
 
-        if (getValuePreviousYear()!=null && getStartDatePreviousYear() !=null) {
-            updateOrCreateTerm(itemToUpdate, getStartDatePreviousYear(), getStartDate()!=null ? getStartDate().minusDays(1) : null, getValuePreviousYear());
+        if (getValuePreviousYear()!=null) {
+            updateTerm(itemToUpdate, getStartDatePreviousYear(), getEndDatePreviousYear(), getValuePreviousYear());
         }
-        if (getValue()!=null && getStartDate() !=null) {
+        if (getValue()!=null) {
             updateOrCreateTerm(itemToUpdate, getStartDate(), getEndDate(), getValue());
         }
 
@@ -116,13 +122,24 @@ public class LeaseTermForTurnOverRentFixedImport implements ExcelFixtureRowHandl
     String reasonLineInValid(){
 
         StringBuilder builder = new StringBuilder();
-        if (getValuePreviousYear()!=null && (getStartDatePreviousYear()==null || getEndDatePreviousYear()==null)){
-            builder.append(String.format("Missing date found for previous year for lease with reference %s; please correct.", getLeaseReference()));
+        if (getValuePreviousYear()!=null) {
+            if (getStartDatePreviousYear()==null || getEndDatePreviousYear()==null){
+                builder.append(String.format("Missing date found for previous year for lease with reference %s; please correct.", getLeaseReference()));
+            }
+            if (getStartDatePreviousYear()!=null && getStartDatePreviousYear().getYear() != getYear()-1){
+                builder.append(String.format("Start date previous year should be in %s for lease with reference %s; please correct.", getYear()-1, getLeaseReference()));
+            }
         }
 
-        if (getValue()!=null && (getStartDate()==null || getEndDate()==null)){
-            builder.append(String.format("Missing date found for lease with reference %s; please correct.", getLeaseReference()));
+        if (getValue()!=null) {
+            if (getStartDate()==null || getEndDate()==null) {
+                builder.append(String.format("Missing date found for lease with reference %s; please correct.", getLeaseReference()));
+            }
+            if (getStartDate()!=null && getStartDate().getYear() != getYear()){
+                builder.append(String.format("Start date should be in %s for lease with reference %s; please correct.", getYear(), getLeaseReference()));
+            }
         }
+
 
         LocalDateInterval previous = new LocalDateInterval(getStartDatePreviousYear(), getEndDatePreviousYear());
         LocalDateInterval current = new LocalDateInterval(getStartDate(), getEndDate());
@@ -135,19 +152,54 @@ public class LeaseTermForTurnOverRentFixedImport implements ExcelFixtureRowHandl
 
     void updateOrCreateTerm(final LeaseItem itemToUpdate, final LocalDate startDate, final LocalDate endDate, final BigDecimal value) {
         LeaseTermForFixed termToUpdate = (LeaseTermForFixed) leaseTermRepository.findByLeaseItemAndStartDate(itemToUpdate, startDate);
+        final List<LeaseTerm> possibleOverlappingTerms = Lists.newArrayList(itemToUpdate.getTerms())
+                .stream()
+                .filter(term->term.getInterval().overlaps(new LocalDateInterval(startDate, endDate)))
+                .filter(term->term.getStatus()==LeaseTermStatus.APPROVED)
+                .collect(Collectors.toList());
+
+        if (!possibleOverlappingTerms.isEmpty() && possibleOverlappingTerms.size()>1){
+
+            messageService.warnUser(String.format("Multiple overlapping previous terms found for lease %s; please correct", getLeaseReference()));
+
+        } else {
+
+            if (termToUpdate==null) {
+                if (!possibleOverlappingTerms.isEmpty()){
+                    LeaseTerm overlappingTerm = possibleOverlappingTerms.get(0);
+                    if (overlappingTerm.getStartDate().isAfter(startDate)){
+                        termToUpdate = (LeaseTermForFixed) overlappingTerm;
+                    } else {
+                        overlappingTerm.setEndDate(startDate.minusDays(1));
+                    }
+                }
+            }
+
+            if (termToUpdate!=null){
+                termToUpdate.setStartDate(startDate);
+                termToUpdate.setEndDate(endDate);
+                termToUpdate.setValue(value);
+                termToUpdate.setStatus(LeaseTermStatus.APPROVED);
+            } else {
+                LeaseTermForFixed newTerm = (LeaseTermForFixed) itemToUpdate.newTerm(startDate, endDate);
+                newTerm.setValue(value);
+                newTerm.setStatus(LeaseTermStatus.APPROVED);
+            }
+
+        }
+
+    }
+
+    void updateTerm(final LeaseItem itemToUpdate, final LocalDate startDate, final LocalDate endDate, final BigDecimal value){
+        LeaseTermForFixed termToUpdate = (LeaseTermForFixed) leaseTermRepository.findByLeaseItemAndStartDate(itemToUpdate, startDate);
         if (termToUpdate!=null){
             termToUpdate.setValue(value);
-            termToUpdate.setEndDate(endDate!=null ? endDate : termToUpdate.getEndDate());
-            // TODO: this means that a term with turnover rent value of 0.00 never will be approved by this import. Is that what the users expect?
-            // TODO: also I observed a case with negative value! So maybe abs must be taken?
-            if (value!=null && value.compareTo(BigDecimal.ZERO) > 0) termToUpdate.setStatus(LeaseTermStatus.APPROVED);
+            termToUpdate.setEndDate(endDate);
+            termToUpdate.setStatus(LeaseTermStatus.APPROVED);
         } else {
-            LeaseTermForFixed newTerm = (LeaseTermForFixed) itemToUpdate.newTerm(startDate, endDate!=null ? endDate : startDate.plusYears(1).minusDays(1));
-            newTerm.setValue(value);
-            // TODO: this means that a term with turnover rent value of 0.00 never will be approved by this import. Is that what the users expect?
-            // TODO: also I observed a case with negative value! So maybe abs must be taken?
-            if (value!=null && value.compareTo(BigDecimal.ZERO) > 0) newTerm.setStatus(LeaseTermStatus.APPROVED);
+            messageService.warnUser(String.format("Previous term not found for lease %s", getLeaseReference()));
         }
+
     }
 
     @Inject
