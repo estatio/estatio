@@ -82,6 +82,14 @@ public class LeaseTermForTurnoverRentFixedImportManager {
     @Getter @Setter
     private int year;
 
+    private LocalDate startOfTheYear(){
+        return new LocalDate(getYear(), 1, 1);
+    }
+
+    private LocalDate endOfTheYear(){
+        return new LocalDate(getYear(), 12, 31);
+    }
+
     //region > download (action)
     @Action(semantics = SemanticsOf.SAFE)
     public Blob download() {
@@ -102,15 +110,11 @@ public class LeaseTermForTurnoverRentFixedImportManager {
                 line.setLeaseReference(x.getReference());
                 line.setLeaseExternalReference(x.getExternalReference());
                 tor.getTerms().forEach(torTerm -> {
-                    if (torTerm.getStartDate().getYear()==getYear()-2) {
-                        LeaseTermForFixed term = (LeaseTermForFixed) torTerm;
-                        line.setStartDatePrevious(term.getStartDate());
-                        line.setValuePrevious(term.getValue());
-                    }
                     if (torTerm.getStartDate().getYear()==getYear()-1) {
                         LeaseTermForFixed term = (LeaseTermForFixed) torTerm;
-                        line.setStartDateCurrent(term.getStartDate());
-                        line.setValueCurrent(term.getValue());
+                        line.setStartDatePreviousYear(term.getStartDate());
+                        line.setEndDatePreviousYear(term.getEndDate());
+                        line.setValuePreviousYear(term.getValue());
                     }
                     if (torTerm.getStartDate().getYear()==getYear()) {
                         LeaseTermForFixed term = (LeaseTermForFixed) torTerm;
@@ -120,15 +124,24 @@ public class LeaseTermForTurnoverRentFixedImportManager {
                     }
                 });
                 // every item should produce a line since autocreate is turned off (ECP-806)
-                if (line.getStartDateCurrent()==null && line.getStartDate()==null) {
-                    line.setStartDate(new LocalDate(getYear(), 1, 1));
-                    line.setEndDate(new LocalDate(getYear(), 12, 31));
+                if (line.getEndDatePreviousYear()==null && line.getStartDate()==null) {
+                    line.setStartDate(startOfTheYear());
+                    line.setEndDate(endOfTheYear());
+                }
+                if (line.getEndDatePreviousYear()!=null && line.getStartDate()==null){
+                    line.setStartDate(determineNextTermStartDate(line.getEndDatePreviousYear()));
+                    line.setEndDate(endOfTheYear());
                 }
                 result.add(line);
             });
         });
 
         return result;
+    }
+
+    LocalDate determineNextTermStartDate(final LocalDate endDatePreviousYear){
+        return endDatePreviousYear.isBefore(startOfTheYear()) ? startOfTheYear() : endDatePreviousYear.plusDays(1);
+
     }
 
     //endregion

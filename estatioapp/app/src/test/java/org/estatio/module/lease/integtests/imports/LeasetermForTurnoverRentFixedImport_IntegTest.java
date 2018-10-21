@@ -87,8 +87,8 @@ public class LeasetermForTurnoverRentFixedImport_IntegTest extends LeaseModuleIn
         assertThat(termForPoison.getValue()).isEqualTo(new BigDecimal("20000.00"));
         final LeaseTermForTurnOverRentFixedImport termForTopModel = manager.getTurnoverRentLines().get(1);
         assertThat(termForTopModel.getLeaseReference()).isEqualTo(Lease_enum.HanTopModel002Se.findUsing(serviceRegistry2).getReference());
-        assertThat(termForTopModel.getStartDateCurrent()).isEqualTo(new LocalDate(2010,7,15));
-        assertThat(termForTopModel.getValueCurrent()).isEqualTo(new BigDecimal("2000.00"));
+        assertThat(termForTopModel.getStartDatePreviousYear()).isEqualTo(new LocalDate(2010,7,15));
+        assertThat(termForTopModel.getValuePreviousYear()).isEqualTo(new BigDecimal("2000.00"));
         
     }
 

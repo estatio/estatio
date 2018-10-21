@@ -31,6 +31,19 @@ public class LeaseTermForTurnOverRentFixedImport_Test {
 
     @Mock LeaseTermRepository mockLeaseTermRepository;
 
+    /*
+    SCENARIO's
+
+    value = empty ==> do nothing
+
+
+    term found (same start, end) => update value
+    term not found
+    ==> no overlap
+
+
+     */
+
     @Test
     public void updateOrCreateTerm_works_for_new_term_with_end_date() throws Exception {
 

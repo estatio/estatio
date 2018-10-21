@@ -47,30 +47,26 @@ public class LeaseTermForTurnOverRentFixedImport implements ExcelFixtureRowHandl
 
     @Getter @Setter
     @MemberOrder(sequence = "3")
-    private LocalDate startDatePrevious;
+    private LocalDate startDatePreviousYear;
 
     @Getter @Setter
     @MemberOrder(sequence = "4")
-    private BigDecimal valuePrevious;
+    private LocalDate endDatePreviousYear;
 
     @Getter @Setter
     @MemberOrder(sequence = "5")
-    private LocalDate startDateCurrent;
+    private BigDecimal valuePreviousYear;
 
     @Getter @Setter
     @MemberOrder(sequence = "6")
-    private BigDecimal valueCurrent;
-
-    @Getter @Setter
-    @MemberOrder(sequence = "7")
     private LocalDate startDate;
 
     @Getter @Setter
-    @MemberOrder(sequence = "8")
+    @MemberOrder(sequence = "7")
     private LocalDate endDate;
 
     @Getter @Setter
-    @MemberOrder(sequence = "9")
+    @MemberOrder(sequence = "8")
     private BigDecimal value;
 
     @Programmatic
@@ -100,11 +96,9 @@ public class LeaseTermForTurnOverRentFixedImport implements ExcelFixtureRowHandl
             messageService.warnUser(String.format("No lease item of type TURNOVER_RENT_FIXED found on lease with reference %s", getLeaseReference()));
             return Lists.newArrayList();
         }
-        if (getValuePrevious()!=null && getStartDatePrevious() !=null) {
-            updateOrCreateTerm(itemToUpdate, getStartDatePrevious(), getStartDateCurrent()!=null ? getStartDateCurrent().minusDays(1) : null, getValuePrevious());
-        }
-        if (getValueCurrent()!=null && getStartDateCurrent() !=null) {
-            updateOrCreateTerm(itemToUpdate, getStartDateCurrent(), getStartDate()!=null ? getStartDate().minusDays(1) : null, getValueCurrent());
+
+        if (getValuePreviousYear()!=null && getStartDatePreviousYear() !=null) {
+            updateOrCreateTerm(itemToUpdate, getStartDatePreviousYear(), getStartDate()!=null ? getStartDate().minusDays(1) : null, getValuePreviousYear());
         }
         if (getValue()!=null && getStartDate() !=null) {
             updateOrCreateTerm(itemToUpdate, getStartDate(), getEndDate(), getValue());
