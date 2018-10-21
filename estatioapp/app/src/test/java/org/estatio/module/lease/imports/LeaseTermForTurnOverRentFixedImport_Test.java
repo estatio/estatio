@@ -1,6 +1,8 @@
 package org.estatio.module.lease.imports;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -8,10 +10,13 @@ import org.joda.time.LocalDate;
 import org.junit.Rule;
 import org.junit.Test;
 
+import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermForFixed;
 import org.estatio.module.lease.dom.LeaseTermRepository;
@@ -243,6 +248,38 @@ public class LeaseTermForTurnOverRentFixedImport_Test {
         assertThat(leaseTermForFixed.getValue()).isEqualTo(new BigDecimal("0.00"));
         assertThat(leaseTermForFixed.getEndDate()).isNull();
         assertThat(leaseTermForFixed.getStatus()).isNotEqualTo(LeaseTermStatus.APPROVED);
+    }
+
+    @Mock LeaseRepository mockLeaseRepository;
+
+    @Mock MessageService mockMessageService;
+
+    @Test
+    public void multiple_items_found() throws Exception {
+
+        // given
+        LeaseTermForTurnOverRentFixedImport importLine = new LeaseTermForTurnOverRentFixedImport();
+        importLine.leaseRepository = mockLeaseRepository;
+        importLine.messageService = mockMessageService;
+        importLine.setLeaseReference("Some ref");
+
+        Lease lease = new Lease() {
+            @Override
+            public List<LeaseItem> findItemsOfType(final LeaseItemType type) {
+                return Arrays.asList(new LeaseItem(), new LeaseItem());
+            }
+        };
+
+        // expext
+        context.checking(new Expectations(){{
+            oneOf(mockLeaseRepository).findLeaseByReference("Some ref");
+            will(returnValue(lease));
+            oneOf(mockMessageService).warnUser("Multiple lease items of type TURNOVER_RENT_FIXED found on lease with reference Some ref; could not update.");
+        }});
+
+        // when
+        importLine.importData();
+
     }
 
 }

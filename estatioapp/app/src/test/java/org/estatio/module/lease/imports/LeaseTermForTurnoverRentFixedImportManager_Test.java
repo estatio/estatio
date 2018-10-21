@@ -77,10 +77,16 @@ public class LeaseTermForTurnoverRentFixedImportManager_Test {
         final List<LeaseTermForTurnOverRentFixedImport> turnoverRentLines = manager.getTurnoverRentLines();
 
         // then
-        Assertions.assertThat(turnoverRentLines).hasSize(1);
-        LeaseTermForTurnOverRentFixedImport line = turnoverRentLines.get(0);
-        Assertions.assertThat(line.getValueCurrent()).isEqualTo(valueCurrent);
-        Assertions.assertThat(line.getStartDateCurrent()).isEqualTo(startDateCurrent);
+        Assertions.assertThat(turnoverRentLines).hasSize(2);
+        LeaseTermForTurnOverRentFixedImport line1 = turnoverRentLines.get(0);
+        Assertions.assertThat(line1.getValueCurrent()).isEqualTo(valueCurrent);
+        Assertions.assertThat(line1.getStartDateCurrent()).isEqualTo(startDateCurrent);
+        Assertions.assertThat(line1.getStartDate()).isNull();
+        Assertions.assertThat(line1.getEndDate()).isNull();
+        LeaseTermForTurnOverRentFixedImport line2 = turnoverRentLines.get(1);
+        Assertions.assertThat(line2.getValueCurrent()).isNull();
+        Assertions.assertThat(line2.getStartDate()).isEqualTo(new LocalDate(2018,1,1));
+        Assertions.assertThat(line2.getEndDate()).isEqualTo(new LocalDate(2018,12,31));
 
     }
 

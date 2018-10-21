@@ -91,6 +91,10 @@ public class LeaseTermForTurnOverRentFixedImport implements ExcelFixtureRowHandl
             messageService.warnUser(String.format("Lease with reference %s not found", getLeaseReference()));
             return Lists.newArrayList();
         }
+        if (leaseToUpdate.findItemsOfType(LeaseItemType.TURNOVER_RENT_FIXED).size()>1){
+            messageService.warnUser(String.format("Multiple lease items of type TURNOVER_RENT_FIXED found on lease with reference %s; could not update.", getLeaseReference()));
+            return Lists.newArrayList();
+        }
         LeaseItem itemToUpdate = leaseToUpdate.findFirstItemOfType(LeaseItemType.TURNOVER_RENT_FIXED);
         if (itemToUpdate == null) {
             messageService.warnUser(String.format("No lease item of type TURNOVER_RENT_FIXED found on lease with reference %s", getLeaseReference()));

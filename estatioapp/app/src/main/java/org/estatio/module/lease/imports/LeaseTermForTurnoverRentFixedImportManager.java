@@ -22,6 +22,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
@@ -117,9 +119,12 @@ public class LeaseTermForTurnoverRentFixedImportManager {
                         line.setValue(term.getValue());
                     }
                 });
-                if (line.getValue()!=null || line.getValuePrevious()!=null || line.getValueCurrent()!=null) {
-                    result.add(line);
+                // every item should produce a line since autocreate is turned off (ECP-806)
+                if (line.getStartDateCurrent()==null && line.getStartDate()==null) {
+                    line.setStartDate(new LocalDate(getYear(), 1, 1));
+                    line.setEndDate(new LocalDate(getYear(), 12, 31));
                 }
+                result.add(line);
             });
         });
 
