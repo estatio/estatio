@@ -83,7 +83,7 @@ public class ProjectImportAdapter implements FixtureAwareRowHandler<ProjectImpor
     }
 
     public static String deriveProjectReference(final String noCommessa, final String centroDiCosto ){
-        String noCommessaToReference = ITA_PROJECT_PREFIX.concat(noCommessa);
+        String noCommessaToReference = noCommessa.length() == 3 ? ITA_PROJECT_PREFIX.concat(noCommessa) : ITA_PROJECT_PREFIX.concat("0" + noCommessa);
         return handleDoubles(noCommessaToReference, centroDiCosto);
     }
 

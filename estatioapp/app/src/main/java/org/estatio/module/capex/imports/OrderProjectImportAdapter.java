@@ -247,10 +247,22 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
     private String deriveChargeReference() {
         if (getWorkType() == null)
             return null;
-        Charge oldCharge = chargeRepository.findByReference(IncomingChargeImportAdapter.ITA_OLD_WORKTYPE_PREFIX + workTypeCodeFromNo(getWorkType()));
-        if (oldCharge == null)
-            return null;
-        return oldCharge.getExternalReference() != null ? oldCharge.getExternalReference() : oldCharge.getReference();
+
+        if (getWorkType().length() == 3) { // TODO: bit hacky, but new work types in ORDINI ECP are only 3 character work types
+            Charge newCharge = chargeRepository.findByReference(IncomingChargeImportAdapter.ITA_WORKTYPE_PREFIX + getWorkType());
+
+            if (newCharge == null)
+                return null;
+
+            return newCharge.getExternalReference() != null ? newCharge.getExternalReference() : newCharge.getReference();
+        } else {
+            Charge oldCharge = chargeRepository.findByReference(IncomingChargeImportAdapter.ITA_OLD_WORKTYPE_PREFIX + workTypeCodeFromNo(getWorkType()));
+
+            if (oldCharge == null)
+                return null;
+
+            return oldCharge.getExternalReference() != null ? oldCharge.getExternalReference() : oldCharge.getReference();
+        }
     }
 
     private String workTypeCodeFromNo(final String worktype) {
