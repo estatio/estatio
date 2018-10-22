@@ -198,6 +198,7 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
         return String.join(" ", Sets.union(previousOggetto, currentOggetto));
     }
 
+    // TODO: add new order number format
     public String deriverOrderNumber() {
         if (getNumero() == null)
             return null;
@@ -207,11 +208,19 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
         if (getCentro() != null)
             builder.append(getCentro());
         builder.append("/");
-        if (getProgressivoCentro() != null)
+
+        if (getProgressivoCentro() != null && getCommessa() != null) {
             builder.append(getProgressivoCentro().toString());
-        builder.append("/");
-        if (getCommessa() != null)
+            builder.append("/");
             builder.append(getCommessa());
+        } else if (getCommessa() != null && getWorkType() != null) {
+            builder.append(getCommessa());
+            builder.append("/");
+            builder.append(getWorkType());
+        } else {
+            builder.append("/");
+        }
+
         return builder.toString();
     }
 
