@@ -19,9 +19,11 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.module.base.dom.Importable;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.dom.role.PartyRoleRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -81,6 +83,7 @@ public class OrganisationImport implements ExcelFixtureRowHandler, Importable {
         org.setName(name);
         org.setFiscalCode(fiscalCode);
         org.setVatCode(vatCode);
+        org.addRole(IncomingInvoiceRoleTypeEnum.SUPPLIER);
         if (chamberOfCommerceCode != null && !chamberOfCommerceCode.matches("[ \t]+")) {
             org.setChamberOfCommerceCode(chamberOfCommerceCode.replace(" ",""));
         }
