@@ -1,5 +1,6 @@
 package org.estatio.module.capex.app;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
@@ -30,6 +32,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.base.dom.EstatioRole;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.dom.project.Project;
@@ -39,7 +42,9 @@ import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
 import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.tax.dom.Tax;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -64,9 +69,27 @@ public class OrderMenu {
     public Order createOrder(
             final Property property,
             final Project project,
-            final Charge charge) {
+            final Charge charge,
+            @Nullable final Organisation buyer,
+            @Nullable final Organisation supplier,
+            final LocalDate orderDate,
+            @Nullable final BigDecimal netAmount,
+            @Nullable final Tax tax,
+            @Nullable final String description) {
         final String userAtPath = meService.me().getAtPath();
-        return orderRepository.create(property, project, charge, userAtPath);
+        return orderRepository.create(property, project, charge, buyer, supplier, orderDate, netAmount, tax, description, userAtPath);
+    }
+
+    public List<Party> autoComplete3CreateOrder(@MinLength(3) final String searchPhrase) {
+        return partyRepository.autoCompleteWithRole(searchPhrase, IncomingInvoiceRoleTypeEnum.ECP);
+    }
+
+    public List<Party> autoComplete4CreateOrder(@MinLength(3) final String search) {
+        return partyRepository.autoCompleteWithRole(search, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+    }
+
+    public LocalDate default5CreateOrder() {
+        return clockService.now();
     }
 
     public List<Charge> choices2CreateOrder() {

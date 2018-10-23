@@ -1,5 +1,6 @@
 package org.estatio.module.capex.dom.order;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,7 @@ import org.estatio.module.numerator.dom.NumeratorRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.tax.dom.Tax;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -114,10 +116,16 @@ public class OrderRepository {
             final Property property,
             final Project project,
             final Charge charge,
+            final Organisation buyer,
+            final Organisation supplier,
+            final LocalDate orderDate,
+            final BigDecimal netAmount,
+            final Tax tax,
+            final String description,
             final String atPath) {
         final String orderNumber = generateNextOrderNumberForCountry(property, project, charge, atPath);
-        final Order order = create(property, null, orderNumber, null, clockService.now(), clockService.now(), null, null, atPath, null);
-        order.addItem(charge, null, null, null, null, null, null, property, project, null);
+        final Order order = create(property, null, orderNumber, null, clockService.now(), orderDate, supplier, buyer, atPath, null);
+        order.addItem(charge, description, netAmount, null, null, tax, null, property, project, null);
 
         return order;
     }
