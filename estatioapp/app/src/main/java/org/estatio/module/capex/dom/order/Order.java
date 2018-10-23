@@ -333,6 +333,10 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     @PropertyLayout(named = "Supplier order ref.")
     private String sellerOrderReference;
 
+    public boolean hideSellerOrderReference() {
+        return meService.me().getAtPath().startsWith("/ITA");
+    }
+
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Order editSellerOrderReference(
             @Nullable
