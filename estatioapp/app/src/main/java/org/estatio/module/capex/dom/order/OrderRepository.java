@@ -14,6 +14,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
@@ -115,7 +116,7 @@ public class OrderRepository {
             final Charge charge,
             final String atPath) {
         final String orderNumber = generateNextOrderNumberForCountry(property, project, charge, atPath);
-        final Order order = create(property, null, orderNumber, null, null, null, null, null, atPath, null);
+        final Order order = create(property, null, orderNumber, null, clockService.now(), clockService.now(), null, null, atPath, null);
         order.addItem(charge, null, null, null, null, null, null, property, project, null);
 
         return order;
@@ -326,5 +327,8 @@ public class OrderRepository {
     @Inject ApplicationTenancyRepository applicationTenancyRepository;
 
     @Inject PartyRepository partyRepository;
+
+    @Inject
+    private ClockService clockService;
 
 }
