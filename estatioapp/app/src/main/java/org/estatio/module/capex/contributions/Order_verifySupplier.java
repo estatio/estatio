@@ -2,9 +2,13 @@ package org.estatio.module.capex.contributions;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
+
+import org.isisaddons.module.security.app.user.MeService;
 
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.party.app.services.OrganisationNameNumberViewModel;
@@ -32,8 +36,15 @@ public class Order_verifySupplier {
     }
 
     public boolean hide$$(){
+        if (meService.me().getAtPath().startsWith("/ITA")) {
+            return true;
+        }
+
         Organisation orgToVerify = (Organisation) order.getSeller();
         return orgToVerify==null || orgToVerify.isVerified();
     }
+
+    @Inject
+    private MeService meService;
 
 }
