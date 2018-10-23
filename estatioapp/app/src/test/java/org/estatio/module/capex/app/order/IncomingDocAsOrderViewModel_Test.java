@@ -13,7 +13,6 @@ import org.junit.Test;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.estatio.module.capex.app.order.IncomingDocAsOrderViewModel;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
 import org.estatio.module.capex.dom.order.OrderRepository;
@@ -36,6 +35,7 @@ public class IncomingDocAsOrderViewModel_Test {
         // given
         IncomingDocAsOrderViewModel incomingDocAsOrderViewModel = new IncomingDocAsOrderViewModel();
         Order order = new Order();
+        order.setAtPath("/FRA");
         incomingDocAsOrderViewModel.clockService = mockClockService;
         order.orderItemRepository = mockOrderItemRepository;
 

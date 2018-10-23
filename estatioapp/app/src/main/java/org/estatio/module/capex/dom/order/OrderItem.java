@@ -563,7 +563,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
 
         Validator checkGrossAmountForNonItaOnly(OrderItem orderItem){
             if (!orderItem.getOrdr().getAtPath().startsWith("/ITA")){
-                setResult(result == null ? "gross amount" : result.concat(", ").concat("gross amount"));
+                if (orderItem.getGrossAmount()==null) {
+                    setResult(result == null ? "gross amount" : result.concat(", ").concat("gross amount"));
+                }
             }
             return this;
         }

@@ -32,8 +32,10 @@ public class Order_Test {
 
         // given
         Order order = new Order();
+        order.setAtPath("/FRA");
         OrderItem item1 = new OrderItem();
         order.getItems().add(item1);
+        item1.setOrdr(order);
 
         // when
         String result = order.reasonIncomplete();
@@ -71,7 +73,9 @@ public class Order_Test {
 
         // given
         Order order = new Order();
+        order.setAtPath("/FRA");
         OrderItem item1 = new OrderItem();
+        item1.setOrdr(order);
         order.getItems().add(item1);
         order.setOrderNumber("123");
         order.setType(IncomingInvoiceType.CAPEX);
@@ -98,6 +102,7 @@ public class Order_Test {
 
         // given
         Order order = new Order();
+        order.setAtPath("/FRA");
         OrderItem item1 = new OrderItem();
         order.getItems().add(item1);
         order.setOrderNumber("123");
@@ -110,6 +115,7 @@ public class Order_Test {
         item1.setCharge(new Charge());
         item1.setStartDate(new LocalDate());
         item1.setEndDate(new LocalDate());
+        item1.setOrdr(order);
 
         // when
         item1.setBudgetItem(new BudgetItem());
@@ -125,7 +131,9 @@ public class Order_Test {
 
         // given
         Order order = new Order();
+        order.setAtPath("/FRA");
         OrderItem item1 = new OrderItem();
+        item1.setOrdr(order);
         order.getItems().add(item1);
         order.setOrderNumber("123");
         order.setType(IncomingInvoiceType.CAPEX);
