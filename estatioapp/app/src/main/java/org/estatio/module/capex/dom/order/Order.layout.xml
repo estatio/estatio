@@ -15,6 +15,7 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Order" id="order">
+                                        <cpt:action id="retrieveCodaSupplier" position="PANEL"/>
                                         <cpt:action id="verifySupplier" position="PANEL"/>
                                         <cpt:action id="changeOrderDetails" position="PANEL"/>
                                         <cpt:action id="itemDetails" position="PANEL"/>
