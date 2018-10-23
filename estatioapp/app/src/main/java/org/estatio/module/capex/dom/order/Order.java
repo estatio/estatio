@@ -282,6 +282,10 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     @Column(allowsNull = "true")
     private IncomingInvoiceType type;
 
+    public boolean hideType() {
+        return meService.me().getAtPath().startsWith("/ITA");
+    }
+
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Order editType(
             final IncomingInvoiceType type) {
