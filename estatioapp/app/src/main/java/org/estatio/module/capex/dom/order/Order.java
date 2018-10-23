@@ -168,13 +168,15 @@ import lombok.Setter;
 public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     public static class ObjectPersistedEvent
-            extends org.apache.isis.applib.services.eventbus.ObjectPersistedEvent <Order> {
+            extends org.apache.isis.applib.services.eventbus.ObjectPersistedEvent<Order> {
     }
+
     public static class ObjectPersistingEvent
-            extends org.apache.isis.applib.services.eventbus.ObjectPersistingEvent <Order> {
+            extends org.apache.isis.applib.services.eventbus.ObjectPersistingEvent<Order> {
     }
+
     public static class ObjectRemovingEvent
-            extends org.apache.isis.applib.services.eventbus.ObjectRemovingEvent <Order> {
+            extends org.apache.isis.applib.services.eventbus.ObjectRemovingEvent<Order> {
     }
 
     public Order() {
@@ -214,12 +216,12 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         document.ifPresent(d -> buf.append(d.getName()));
 
         final Party seller = getSeller();
-        if(seller != null) {
+        if (seller != null) {
             buf.append(": ", seller);
         }
 
         final String orderNumber = getOrderNumber();
-        if(orderNumber != null) {
+        if (orderNumber != null) {
             buf.append(", ", orderNumber);
         }
 
@@ -231,7 +233,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
      * or could potentially relate to individual units within the property.
      *
      * <p>
-     *     This follows the same pattern as {@link IncomingInvoice}.
+     * This follows the same pattern as {@link IncomingInvoice}.
      * </p>
      */
     @javax.jdo.annotations.Column(name = "propertyId", allowsNull = "true")
@@ -240,37 +242,36 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Order editProperty(
-            @Nullable
-            final org.estatio.module.asset.dom.Property property,
-            final boolean changeOnItemsAsWell){
+            @Nullable final org.estatio.module.asset.dom.Property property,
+            final boolean changeOnItemsAsWell) {
         setProperty(property);
-        if (changeOnItemsAsWell){
+        if (changeOnItemsAsWell) {
             com.google.common.collect.Lists.newArrayList(getItems())  // eagerly load (DN 4.x collections do not support streaming)
                     .stream()
                     .map(OrderItem.class::cast)
-                    .forEach(x->x.setProperty(property));
+                    .forEach(x -> x.setProperty(property));
         }
         return this;
     }
 
-    public org.estatio.module.asset.dom.Property default0EditProperty(){
+    public org.estatio.module.asset.dom.Property default0EditProperty() {
         return getProperty();
     }
 
-    public boolean default1EditProperty(){
+    public boolean default1EditProperty() {
         return true;
     }
 
-    public String disableEditProperty(){
-        if (isImmutable()){
+    public String disableEditProperty() {
+        if (isImmutable()) {
             return orderImmutableReason();
         }
         return propertyIsImmutableReason();
     }
 
-    private String propertyIsImmutableReason(){
-        for (OrderItem item : getItems()){
-            if (item.isLinkedToInvoiceItem()){
+    private String propertyIsImmutableReason() {
+        for (OrderItem item : getItems()) {
+            if (item.isLinkedToInvoiceItem()) {
                 return "Property cannot be changed because an item is linked to an invoice";
             }
         }
@@ -283,25 +284,25 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Order editType(
-            final IncomingInvoiceType type){
+            final IncomingInvoiceType type) {
         setType(type);
         return this;
     }
 
-    public String disableEditType(){
-        if (isImmutable()){
+    public String disableEditType() {
+        if (isImmutable()) {
             return orderImmutableReason();
         }
         return typeIsImmutableReason();
     }
 
-    public IncomingInvoiceType default0EditType(){
+    public IncomingInvoiceType default0EditType() {
         return getType();
     }
 
-    private String typeIsImmutableReason(){
-        for (OrderItem item : getItems()){
-            if (item.isLinkedToInvoiceItem()){
+    private String typeIsImmutableReason() {
+        for (OrderItem item : getItems()) {
+            if (item.isLinkedToInvoiceItem()) {
                 return "Type cannot be changed because an item is linked to an invoice";
             }
         }
@@ -314,17 +315,16 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Order editOrderNumber(
-            @Nullable
-            final String orderNumber){
+            @Nullable final String orderNumber) {
         setOrderNumber(orderNumber);
         return this;
     }
 
-    public String default0EditOrderNumber(){
+    public String default0EditOrderNumber() {
         return getOrderNumber();
     }
 
-    public String disableEditOrderNumber(){
+    public String disableEditOrderNumber() {
         return orderImmutableReason();
     }
 
@@ -339,17 +339,16 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Order editSellerOrderReference(
-            @Nullable
-            final String sellerOrderReference){
+            @Nullable final String sellerOrderReference) {
         setSellerOrderReference(sellerOrderReference);
         return this;
     }
 
-    public String default0EditSellerOrderReference(){
+    public String default0EditSellerOrderReference() {
         return getSellerOrderReference();
     }
 
-    public String disableEditSellerOrderReference(){
+    public String disableEditSellerOrderReference() {
         return orderImmutableReason();
     }
 
@@ -362,25 +361,23 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     private LocalDate orderDate;
 
     public Order changeDates(
-            @Nullable
-            final LocalDate orderDate,
-            @Nullable
-            final LocalDate entryDate
-    ){
+            @Nullable final LocalDate orderDate,
+            @Nullable final LocalDate entryDate
+    ) {
         setOrderDate(orderDate);
         setEntryDate(entryDate);
         return this;
     }
 
-    public LocalDate default0ChangeDates(){
+    public LocalDate default0ChangeDates() {
         return getOrderDate();
     }
 
-    public LocalDate default1ChangeDates(){
+    public LocalDate default1ChangeDates() {
         return getEntryDate();
     }
 
-    public String disableChangeDates(){
+    public String disableChangeDates() {
         return orderImmutableReason();
     }
 
@@ -392,11 +389,10 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(named = "Edit Supplier")
     public Order editSeller(
-            @Nullable
-            final Party supplier,
-            final boolean createRoleIfRequired){
+            @Nullable final Party supplier,
+            final boolean createRoleIfRequired) {
         setSeller(supplier);
-        if(supplier != null && createRoleIfRequired) {
+        if (supplier != null && createRoleIfRequired) {
             partyRoleRepository.findOrCreate(supplier, IncomingInvoiceRoleTypeEnum.SUPPLIER);
         }
         return this;
@@ -404,24 +400,24 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     public String validateEditSeller(
             final Party supplier,
-            final boolean createRoleIfRequired){
-        if(supplier != null && !createRoleIfRequired) {
+            final boolean createRoleIfRequired) {
+        if (supplier != null && !createRoleIfRequired) {
             // requires that the supplier already has this role
             return partyRoleRepository.validateThat(supplier, IncomingInvoiceRoleTypeEnum.SUPPLIER);
         }
         return null;
     }
 
-    public List<Party> autoComplete0EditSeller(final String search){
+    public List<Party> autoComplete0EditSeller(final String search) {
         return partyRepository.autoCompleteSupplier(search, getAtPath());
     }
 
-    public Party default0EditSeller(){
+    public Party default0EditSeller() {
         return getSeller();
     }
 
-    public String disableEditSeller(){
-        if (isImmutable()){
+    public String disableEditSeller() {
+        if (isImmutable()) {
             return orderImmutableReason();
         }
         return sellerIsImmutableReason();
@@ -434,11 +430,11 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     public Order createSeller(
             final OrganisationNameNumberViewModel candidate,
             final Country country,
-            @Nullable
-            final String ibanNumber) {
+            @Nullable final String ibanNumber) {
         Organisation organisation = organisationRepository
                 .newOrganisation(null, true, candidate.getOrganisationName(), country);
-        if (candidate.getChamberOfCommerceCode()!=null) organisation.setChamberOfCommerceCode(candidate.getChamberOfCommerceCode());
+        if (candidate.getChamberOfCommerceCode() != null)
+            organisation.setChamberOfCommerceCode(candidate.getChamberOfCommerceCode());
         setSeller(organisation);
         if (ibanNumber != null) {
             bankAccountRepository.newBankAccount(organisation, ibanNumber, null);
@@ -447,7 +443,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return this;
     }
 
-    public List<OrganisationNameNumberViewModel> autoComplete0CreateSeller(@MinLength(3) final String search){
+    public List<OrganisationNameNumberViewModel> autoComplete0CreateSeller(@MinLength(3) final String search) {
         String atPath = getAtPath();
         try {
             TimeUnit.SECONDS.sleep(1);
@@ -463,8 +459,8 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     public String validateCreateSeller(
             final OrganisationNameNumberViewModel candidate,
             final Country country,
-            final String ibanNumber){
-        if (ibanNumber != null && !IBANValidator.valid(ibanNumber)){
+            final String ibanNumber) {
+        if (ibanNumber != null && !IBANValidator.valid(ibanNumber)) {
             return String.format("%s is not a valid iban number", ibanNumber);
         }
         return null;
@@ -474,16 +470,16 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return meService.me().getAtPath().startsWith("/ITA");
     }
 
-    public String disableCreateSeller(){
-        if (isImmutable()){
+    public String disableCreateSeller() {
+        if (isImmutable()) {
             return orderImmutableReason();
         }
         return sellerIsImmutableReason();
     }
 
-    private String sellerIsImmutableReason(){
-        for (OrderItem item : getItems()){
-            if (item.isLinkedToInvoiceItem()){
+    private String sellerIsImmutableReason() {
+        for (OrderItem item : getItems()) {
+            if (item.isLinkedToInvoiceItem()) {
                 return "Seller cannot be changed because an item is linked to an invoice";
             }
         }
@@ -498,26 +494,24 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(named = "Edit ECP (as buyer)")
     public Order editBuyer(
-            @Nullable
-            final Party buyer){
+            @Nullable final Party buyer) {
         setBuyer(buyer);
         return this;
     }
 
-    public List<Party> autoComplete0EditBuyer(@MinLength(3) final String searchPhrase){
+    public List<Party> autoComplete0EditBuyer(@MinLength(3) final String searchPhrase) {
         return partyRepository.autoCompleteWithRole(searchPhrase, IncomingInvoiceRoleTypeEnum.ECP);
     }
 
-    public String validate0EditBuyer(final Party party){
+    public String validate0EditBuyer(final Party party) {
         return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.ECP);
     }
 
-
-    public Party default0EditBuyer(){
+    public Party default0EditBuyer() {
         return getBuyer();
     }
 
-    public String disableEditBuyer(){
+    public String disableEditBuyer() {
         return orderImmutableReason();
     }
 
@@ -525,18 +519,15 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     @Getter @Setter
     private SortedSet<OrderItem> items = new TreeSet<>();
 
-    @MemberOrder(name="items", sequence = "1")
+    @MemberOrder(name = "items", sequence = "1")
     public Order addItem(
             final Charge charge,
             @Nullable final String description,
-            @Digits(integer=13, fraction = 2)
-            final BigDecimal netAmount,
+            @Digits(integer = 13, fraction = 2) final BigDecimal netAmount,
             @Nullable
-            @Digits(integer=13, fraction = 2)
-            final BigDecimal vatAmount,
+            @Digits(integer = 13, fraction = 2) final BigDecimal vatAmount,
             @Nullable
-            @Digits(integer=13, fraction = 2)
-            final BigDecimal grossAmount,
+            @Digits(integer = 13, fraction = 2) final BigDecimal grossAmount,
             @Nullable final Tax tax,
             @Nullable final String period,
             @Nullable final org.estatio.module.asset.dom.Property property,
@@ -549,33 +540,34 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return this;
     }
 
-    public List<Charge> choices0AddItem(){
+    public List<Charge> choices0AddItem() {
         if (meService.me().getAtPath().startsWith("/ITA")) {
             return chargeRepository.choicesItalianWorkTypes();
         }
 
         List<Charge> result = chargeRepository.allIncoming();
         for (OrderItem item : getItems()) {
-            if (item.getCharge()!=null && result.contains(item.getCharge())) {
+            if (item.getCharge() != null && result.contains(item.getCharge())) {
                 result.remove(item.getCharge());
             }
         }
         return result;
     }
 
-    public String default6AddItem(){
-        return ofFirstItem(OrderItem::getStartDate)!=null ? PeriodUtil.periodFromInterval(new LocalDateInterval(ofFirstItem(OrderItem::getStartDate), ofFirstItem(OrderItem::getEndDate))) : null;
+    public String default6AddItem() {
+        return ofFirstItem(OrderItem::getStartDate) != null ? PeriodUtil.periodFromInterval(new LocalDateInterval(ofFirstItem(OrderItem::getStartDate), ofFirstItem(OrderItem::getEndDate))) : null;
     }
 
-    public org.estatio.module.asset.dom.Property default7AddItem(){
+    public org.estatio.module.asset.dom.Property default7AddItem() {
         return ofFirstItem(OrderItem::getProperty);
     }
 
-    public Project default8AddItem(){
+    public Project default8AddItem() {
         return ofFirstItem(OrderItem::getProject);
     }
 
-    public String validateAddItem(final Charge charge,
+    public String validateAddItem(
+            final Charge charge,
             final String description,
             final BigDecimal netAmount,
             final BigDecimal vatAmount,
@@ -584,8 +576,8 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final String period,
             final org.estatio.module.asset.dom.Property property,
             final Project project,
-            final BudgetItem budgetItem){
-        if (period!=null && !period.equals("")) {
+            final BudgetItem budgetItem) {
+        if (period != null && !period.equals("")) {
             return PeriodUtil.isValidPeriod(period) ? null : "Not a valid period";
         }
         return null;
@@ -614,24 +606,16 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     public Order splitItem(
             final OrderItem itemToSplit,
             final String newItemDescription,
-            @Digits(integer = 13, fraction = 2)
-            final BigDecimal newItemNetAmount,
+            @Digits(integer = 13, fraction = 2) final BigDecimal newItemNetAmount,
             @Nullable
-            @Digits(integer = 13, fraction = 2)
-            final BigDecimal newItemVatAmount,
-            @Nullable
-            final Tax newItemtax,
-            @Digits(integer = 13, fraction = 2)
-            final BigDecimal newItemGrossAmount,
+            @Digits(integer = 13, fraction = 2) final BigDecimal newItemVatAmount,
+            @Nullable final Tax newItemtax,
+            @Digits(integer = 13, fraction = 2) final BigDecimal newItemGrossAmount,
             final Charge newItemCharge,
-            @Nullable
-            final org.estatio.module.asset.dom.Property newItemProperty,
-            @Nullable
-            final Project newItemProject,
-            @Nullable
-            final BudgetItem newItemBudgetItem,
-            @Nullable
-            final String newItemPeriod
+            @Nullable final org.estatio.module.asset.dom.Property newItemProperty,
+            @Nullable final Project newItemProject,
+            @Nullable final BudgetItem newItemBudgetItem,
+            @Nullable final String newItemPeriod
     ) {
         itemToSplit.subtractAmounts(newItemNetAmount, newItemVatAmount, newItemGrossAmount);
         orderItemRepository.upsert(
@@ -651,12 +635,12 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return this;
     }
 
-    public boolean hideSplitItem(){
+    public boolean hideSplitItem() {
         return getItems().isEmpty() || meService.me().getAtPath().startsWith("/ITA");
     }
 
     public OrderItem default0SplitItem() {
-        return firstItemIfAny()!=null ? getItems().first() : null;
+        return firstItemIfAny() != null ? getItems().first() : null;
     }
 
     public Tax default4SplitItem() {
@@ -695,10 +679,10 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final Project newItemProject,
             final BudgetItem newItemBudgetItem,
             final String newItemPeriod
-    ){
+    ) {
         List<Charge> result = chargeRepository.allIncoming();
         for (OrderItem item : getItems()) {
-            if (item.getCharge()!=null && result.contains(item.getCharge())) {
+            if (item.getCharge() != null && result.contains(item.getCharge())) {
                 result.remove(item.getCharge());
             }
         }
@@ -732,7 +716,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final org.estatio.module.asset.dom.Property newItemProperty,
             final Project newItemProject,
             final BudgetItem newItemBudgetItem,
-            final String newItemPeriod){
+            final String newItemPeriod) {
         return newItemPeriod == null ? null : PeriodUtil.reasonInvalidPeriod(newItemPeriod);
     }
 
@@ -744,14 +728,14 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Programmatic
     public Optional<OrderItem> firstItemIfAny() {
-        return  getItems().stream()
+        return getItems().stream()
                 .findFirst();
     }
 
     @MemberOrder(name = "items", sequence = "3")
     public Order mergeItems(
             final OrderItem item,
-            final OrderItem mergeInto){
+            final OrderItem mergeInto) {
         orderItemRepository.mergeItems(item, mergeInto);
         return this;
     }
@@ -763,16 +747,16 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return getItems().size() < 2 ? "Merge needs 2 or more items" : null;
     }
 
-    public boolean hideMergeItems(){
+    public boolean hideMergeItems() {
         return getItems().isEmpty() || meService.me().getAtPath().startsWith("/ITA");
     }
 
     public OrderItem default0MergeItems() {
-        return firstItemIfAny()!=null ? getItems().last() : null;
+        return firstItemIfAny() != null ? getItems().last() : null;
     }
 
     public OrderItem default1MergeItems() {
-        return firstItemIfAny()!=null ? getItems().first() : null;
+        return firstItemIfAny() != null ? getItems().first() : null;
     }
 
     public List<OrderItem> choices0MergeItems() {
@@ -782,10 +766,10 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     public List<OrderItem> choices1MergeItems(
             final OrderItem item,
             final OrderItem mergeInto) {
-        return getItems().stream().filter(x->!x.equals(item)).map(OrderItem.class::cast).collect(Collectors.toList());
+        return getItems().stream().filter(x -> !x.equals(item)).map(OrderItem.class::cast).collect(Collectors.toList());
     }
 
-    public boolean isInvoiced(){
+    public boolean isInvoiced() {
         return getNetAmountInvoiced().abs().compareTo(getNetAmount().abs()) >= 0;
     }
 
@@ -816,8 +800,6 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-
-
     @javax.jdo.annotations.Column(
             length = ApplicationTenancy.MAX_LENGTH_PATH,
             allowsNull = "false"
@@ -834,7 +816,6 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     public ApplicationTenancy getApplicationTenancy() {
         return securityApplicationTenancyRepository.findByPathCached(getAtPath());
     }
-
 
     @Column(allowsNull = "true", length = 255)
     @Getter @Setter
@@ -865,7 +846,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             S extends State<S>
             > S getStateOf(
             final Class<ST> stateTransitionClass) {
-        if(stateTransitionClass == OrderApprovalStateTransition.class) {
+        if (stateTransitionClass == OrderApprovalStateTransition.class) {
             return (S) approvalState;
         }
         return null;
@@ -879,22 +860,19 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             S extends State<S>
             > void setStateOf(
             final Class<ST> stateTransitionClass, final S newState) {
-        if(stateTransitionClass == OrderApprovalStateTransition.class) {
-            setApprovalState( (OrderApprovalState) newState );
+        if (stateTransitionClass == OrderApprovalStateTransition.class) {
+            setApprovalState((OrderApprovalState) newState);
         }
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Order changeOrderDetails(
             final String orderNumber,
-            @ParameterLayout(named = "ECP (as buyer)")
-            final Party ecpAsBuyer,
+            @ParameterLayout(named = "ECP (as buyer)") final Party ecpAsBuyer,
             final Party supplier,
-            @Nullable
-            final String sellerOrderReference,
-            @Nullable
-            final LocalDate orderDate
-    ){
+            @Nullable final String sellerOrderReference,
+            @Nullable final LocalDate orderDate
+    ) {
         setOrderNumber(orderNumber);
         setBuyer(ecpAsBuyer);
         setSeller(supplier);
@@ -903,39 +881,39 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return this;
     }
 
-    public List<Party> autoComplete1ChangeOrderDetails(@MinLength(3) final String searchPhrase){
+    public List<Party> autoComplete1ChangeOrderDetails(@MinLength(3) final String searchPhrase) {
         return partyRepository.autoCompleteWithRole(searchPhrase, IncomingInvoiceRoleTypeEnum.ECP);
     }
 
-    public String validate1ChangeOrderDetails(final Party party){
+    public String validate1ChangeOrderDetails(final Party party) {
         return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.ECP);
     }
 
-    public List<Party> autoComplete2ChangeOrderDetails(@MinLength(3) final String searchPhrase){
+    public List<Party> autoComplete2ChangeOrderDetails(@MinLength(3) final String searchPhrase) {
         return partyRepository.autoCompleteWithRole(searchPhrase, IncomingInvoiceRoleTypeEnum.SUPPLIER);
     }
 
-    public String validate2ChangeOrderDetails(final Party party){
+    public String validate2ChangeOrderDetails(final Party party) {
         return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.SUPPLIER);
     }
 
-    public String default0ChangeOrderDetails(){
+    public String default0ChangeOrderDetails() {
         return getOrderNumber();
     }
 
-    public Party default1ChangeOrderDetails(){
+    public Party default1ChangeOrderDetails() {
         return getBuyer();
     }
 
-    public Party default2ChangeOrderDetails(){
+    public Party default2ChangeOrderDetails() {
         return getSeller();
     }
 
-    public String default3ChangeOrderDetails(){
+    public String default3ChangeOrderDetails() {
         return getSellerOrderReference();
     }
 
-    public LocalDate default4ChangeOrderDetails(){
+    public LocalDate default4ChangeOrderDetails() {
         return getOrderDate();
     }
 
@@ -952,21 +930,20 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     @Programmatic
-    public boolean isImmutable(){
-        return reasonDisabledDueToState()!=null;
+    public boolean isImmutable() {
+        return reasonDisabledDueToState() != null;
     }
 
-    private String orderImmutableReason(){
+    private String orderImmutableReason() {
         return reasonDisabledDueToState();
     }
 
-
     @Programmatic
-    public String reasonIncomplete(){
+    public String reasonIncomplete() {
 
         String orderValidatorResult = new Validator()
-                .checkNotNull(getType(),"type")
-                .checkNotNull(getOrderNumber(),"order number")
+                .checkNotNull(getType(), "type")
+                .checkNotNull(getOrderNumber(), "order number")
                 .checkNotNull(getBuyer(), "buyer")
                 .checkNotNull(getSeller(), "seller")
                 .checkNotNull(getNetAmount(), "net amount")
@@ -978,9 +955,9 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     }
 
-    private String mergeReasonItemsIncomplete(final String validatorResult){
-        if (reasonItemsIncomplete()!=null) {
-            return validatorResult!=null ?
+    private String mergeReasonItemsIncomplete(final String validatorResult) {
+        if (reasonItemsIncomplete() != null) {
+            return validatorResult != null ?
                     validatorResult.replace(" required", ", ").concat(reasonItemsIncomplete())
                     : reasonItemsIncomplete();
         } else {
@@ -1008,23 +985,25 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             return this;
         }
 
-        Order.Validator validateForOrderType(Order order){
-            if (order == null) return this;
-            if (order.getType() == null) return this;
+        Order.Validator validateForOrderType(Order order) {
+            if (order == null)
+                return this;
+            if (order.getType() == null)
+                return this;
 
             String message;
-            switch (order.getType()){
+            switch (order.getType()) {
 
-            case CAPEX:
-            case SERVICE_CHARGES:
-            case PROPERTY_EXPENSES:
-                message = "property";
-                if (order.getProperty()==null){
-                    setResult(result==null ? message : result.concat(", ").concat(message));
-                }
-                break;
+                case CAPEX:
+                case SERVICE_CHARGES:
+                case PROPERTY_EXPENSES:
+                    message = "property";
+                    if (order.getProperty() == null) {
+                        setResult(result == null ? message : result.concat(", ").concat(message));
+                    }
+                    break;
 
-            default:
+                default:
             }
 
             return this;
@@ -1033,10 +1012,10 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     @Programmatic
-    public String reasonItemsIncomplete(){
+    public String reasonItemsIncomplete() {
         StringBuffer buffer = new StringBuffer();
-        for (OrderItem item : getItems()){
-            if (item.reasonIncomplete()!=null) {
+        for (OrderItem item : getItems()) {
+            if (item.reasonIncomplete() != null) {
                 buffer.append("(on item) ");
                 buffer.append(item.reasonIncomplete());
             }
@@ -1046,32 +1025,33 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION, hidden = Where.OBJECT_FORMS)
-    public String getDescriptionSummary(){
+    public String getDescriptionSummary() {
         StringBuffer summary = new StringBuffer();
         boolean first = true;
-        for (OrderItem orderItem : getItems()){
-            if (orderItem.getDescription()!=null && orderItem.getDescription()!=""){
-                if (!first){
+        for (OrderItem orderItem : getItems()) {
+            if (orderItem.getDescription() != null && orderItem.getDescription() != "") {
+                if (!first) {
                     summary.append(" | ");
                 }
                 summary.append(orderItem.getDescription());
-                first=false;
+                first = false;
             }
         }
         return summary.toString();
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT, restrictTo = RestrictTo.PROTOTYPING)
-    public Order attachPdf(final Blob pdf){
+    public Order attachPdf(final Blob pdf) {
         return newDocument(pdf);
     }
 
     @Programmatic
-    public Order newDocument(final Blob pdf){
+    public Order newDocument(final Blob pdf) {
         Document currentDoc = lookupAttachedPdfService.lookupOrderPdfFrom(this).isPresent() ? lookupAttachedPdfService.lookupOrderPdfFrom(this).get() : null;
         DocumentType type = DocumentTypeData.INCOMING_ORDER.findUsing(documentTypeRepository);
         documentService.createAndAttachDocumentForBlob(type, this.getAtPath(), pdf.getName(), pdf, null, this);
-        if (currentDoc!=null) messageService.warnUser("Order now has multiple documents attached.");
+        if (currentDoc != null)
+            messageService.warnUser("Order now has multiple documents attached.");
         return this;
     }
 
