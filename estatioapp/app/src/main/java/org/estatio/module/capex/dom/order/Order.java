@@ -606,10 +606,6 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return orderImmutableReason();
     }
 
-    public boolean hideAddItem() {
-        return meService.me().getAtPath().startsWith("/ITA") && !getItems().isEmpty();
-    }
-
     @MemberOrder(name = "items", sequence = "2")
     public Order splitItem(
             final OrderItem itemToSplit,
