@@ -103,6 +103,7 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
 
     public OrderProjectImportAdapter handle(final OrderProjectImportAdapter previousRow) {
         correctCodiceFornitoreIfNecessary();
+        correctComessaIfNecessary();
 
         if (getCodiceFornitore() != null && getFornitore() != null)
             importSeller();
@@ -215,6 +216,12 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
     private void correctCodiceFornitoreIfNecessary() {
         if (getCodiceFornitore() != null && !getCodiceFornitore().startsWith("IT")) {
             setCodiceFornitore("IT" + getCodiceFornitore());
+        }
+    }
+
+    private void correctComessaIfNecessary() {
+        if (getCommessa() != null && getCommessa().trim().endsWith("R")) {
+            setCommessa(getCommessa().trim().replace("R", ""));
         }
     }
 
