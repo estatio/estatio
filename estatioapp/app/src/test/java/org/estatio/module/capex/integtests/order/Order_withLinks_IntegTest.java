@@ -79,7 +79,6 @@ public class Order_withLinks_IntegTest extends CapexModuleIntegTestAbstract {
     Order order;
     OrderItem orderItem;
 
-
     @Test
     public void cannot_discard_when_has_linked_items() throws Exception {
 
@@ -148,7 +147,9 @@ public class Order_withLinks_IntegTest extends CapexModuleIntegTestAbstract {
         expectedExceptions.expect(DisabledException.class);
 
         // when
-        wrap(orderItem).editPeriod("F2018");
+        sudoService.sudo(Person_enum.JonathanIncomingInvoiceManagerGb.getSecurityUserName(), () ->
+                wrap(orderItem).editPeriod("F2018")
+        );
     }
 
     @Test
@@ -166,9 +167,9 @@ public class Order_withLinks_IntegTest extends CapexModuleIntegTestAbstract {
     public void can_update_amounts_even_when_has_linked_items() throws Exception {
 
         // when
-        final BigDecimal newNetAmt = fakeDataService.bigDecimals().any(13,2).abs();
-        final BigDecimal newVatAmt = fakeDataService.bigDecimals().any(13,2).abs();
-        final BigDecimal newGrossAmt = fakeDataService.bigDecimals().any(13,2).abs();
+        final BigDecimal newNetAmt = fakeDataService.bigDecimals().any(13, 2).abs();
+        final BigDecimal newVatAmt = fakeDataService.bigDecimals().any(13, 2).abs();
+        final BigDecimal newGrossAmt = fakeDataService.bigDecimals().any(13, 2).abs();
         final Tax tax = fakeDataService.collections().anyOf(taxRepository.allTaxes());
 
         wrap(orderItem).updateAmounts(newNetAmt, newVatAmt, newGrossAmt, tax);
@@ -179,7 +180,6 @@ public class Order_withLinks_IntegTest extends CapexModuleIntegTestAbstract {
         assertThat(orderItem.getGrossAmount()).isEqualTo(newGrossAmt);
         assertThat(orderItem.getTax()).isEqualTo(tax);
     }
-
 
     @Inject
     QueryResultsCache queryResultsCache;
@@ -204,6 +204,5 @@ public class Order_withLinks_IntegTest extends CapexModuleIntegTestAbstract {
 
     @Inject
     FakeDataService fakeDataService;
-
 
 }
