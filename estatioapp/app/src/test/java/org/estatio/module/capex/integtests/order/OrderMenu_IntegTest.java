@@ -64,7 +64,7 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
             // when
             queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
             final Order order = sudoService.sudo(incomingInvoiceManager.getUsername(), () ->
-                    wrap(orderMenu).createOrder(property, project, charge));
+                    wrap(orderMenu).createOrder(property, project, charge, null, null, orderMenu.default5CreateOrder(), null, null, null));
 
             // then
             assertThat(order.getOrderNumber()).isEqualTo("0001/RON/001/001");
@@ -95,7 +95,7 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
 
             // when
             sudoService.sudo(incomingInvoiceManager.getUsername(), () ->
-                    wrap(orderMenu).createOrder(property, project, charge));
+                    wrap(orderMenu).createOrder(property, project, charge, null, null, orderMenu.default5CreateOrder(), null, null, null));
         }
     }
 }
