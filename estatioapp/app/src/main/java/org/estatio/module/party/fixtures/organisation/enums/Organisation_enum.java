@@ -71,6 +71,7 @@ public enum Organisation_enum
     PoisonSe("POISON_SE", "Poison Perfumeries", Se),
     TopModelSe("TOPMODEL_SE", "Topmodel Fashion", Se),
     OmsHyraSe("OMSHYRA", "Omshyra rentals", Se),
+    IncomingBuyerIt("IT01", "Buyer Organisation", It),
     ;
 
     private final String ref;
