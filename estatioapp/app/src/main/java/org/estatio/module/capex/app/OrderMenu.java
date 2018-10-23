@@ -277,8 +277,8 @@ public class OrderMenu {
         List<Order> result = new ArrayList<>();
         for (OrderProjectImportAdapter adapter : excelService.fromExcel(orderSheet, OrderProjectImportAdapter.class, "ECP Juma", Mode.RELAXED)) {
             adapter.handle(null);
-            if (adapter.deriverOrderNumber() != null) {
-                Order order = orderRepository.findByOrderNumber(adapter.deriverOrderNumber());
+            if (adapter.deriveOrderNumber() != null) {
+                Order order = orderRepository.findByOrderNumber(adapter.deriveOrderNumber());
                 if (order != null && !result.contains(order)) {
                     result.add(order);
                 }

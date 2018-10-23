@@ -123,7 +123,7 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
         OrderImport newLine = new OrderImport(
                 getCentro(),
                 "CAPEX",
-                deriverOrderNumber(),
+                deriveOrderNumber(),
                 null,
                 getData(),
                 getData(),
@@ -198,8 +198,7 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
         return String.join(" ", Sets.union(previousOggetto, currentOggetto));
     }
 
-    // TODO: add new order number format
-    public String deriverOrderNumber() {
+    public String deriveOrderNumber() {
         if (getNumero() == null)
             return null;
         StringBuilder builder = new StringBuilder();
@@ -218,7 +217,13 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
             builder.append("/");
             builder.append(getWorkType());
         } else {
+            if (getProgressivoCentro() != null) {
+                builder.append(getProgressivoCentro());
+            }
             builder.append("/");
+            if (getCommessa() != null) {
+                builder.append(getCommessa());
+            }
         }
 
         return builder.toString();
