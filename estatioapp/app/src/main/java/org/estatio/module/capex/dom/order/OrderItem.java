@@ -173,7 +173,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     }
 
     public OrderItem() {
-        super("ordr,charge");
+        super("ordr,charge,description");
     }
 
     public OrderItem(
