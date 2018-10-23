@@ -13,7 +13,6 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
-import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 import javax.validation.constraints.Digits;
@@ -520,7 +519,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
                 .checkNotNull(getStartDate(), "start date")
                 .checkNotNull(getEndDate(), "end date")
                 .checkNotNull(getNetAmount(), "net amount")
-                .checkNotNull(getGrossAmount(), "gross amount")
+                .checkGrossAmountForNonItaOnly(this)
                 .validateConsistentDimensions(this)
                 .getResult();
     }
@@ -558,6 +557,13 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
             if (orderItem.getBudgetItem() != null && orderItem.getProperty() == null) {
                 message = "when budget item filled in then property";
                 setResult(result == null ? message : result.concat(", ").concat(message));
+            }
+            return this;
+        }
+
+        Validator checkGrossAmountForNonItaOnly(OrderItem orderItem){
+            if (!orderItem.getOrdr().getAtPath().startsWith("/ITA")){
+                setResult(result == null ? "gross amount" : result.concat(", ").concat("gross amount"));
             }
             return this;
         }
