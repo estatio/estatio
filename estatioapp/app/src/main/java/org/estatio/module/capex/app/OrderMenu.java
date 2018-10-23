@@ -33,6 +33,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.dom.project.Project;
@@ -65,6 +66,9 @@ public class OrderMenu {
         return orderRepository.listAll();
     }
 
+    /**
+     *  Specifically for Italian order process
+     */
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public Order createOrder(
             final Property property,
@@ -77,7 +81,7 @@ public class OrderMenu {
             @Nullable final Tax tax,
             @Nullable final String description) {
         final String userAtPath = meService.me().getAtPath();
-        return orderRepository.create(property, project, charge, buyer, supplier, orderDate, netAmount, tax, description, userAtPath);
+        return orderRepository.create(property, project, charge, buyer, supplier, orderDate, netAmount, tax, description, IncomingInvoiceType.ITA_ORDER_INVOICE, userAtPath);
     }
 
     public List<Party> autoComplete3CreateOrder(@MinLength(3) final String searchPhrase) {

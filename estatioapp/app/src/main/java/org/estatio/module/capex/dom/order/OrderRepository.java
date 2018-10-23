@@ -110,7 +110,7 @@ public class OrderRepository {
                         "matchByOrderNumber",
                         "orderNumber", pattern));
     }
-
+    
     @Programmatic
     public Order create(
             final Property property,
@@ -122,9 +122,10 @@ public class OrderRepository {
             final BigDecimal netAmount,
             final Tax tax,
             final String description,
+            final IncomingInvoiceType type,
             final String atPath) {
         final String orderNumber = generateNextOrderNumberForCountry(property, project, charge, atPath);
-        final Order order = create(property, null, orderNumber, null, clockService.now(), orderDate, supplier, buyer, atPath, null);
+        final Order order = create(property, type, orderNumber, null, clockService.now(), orderDate, supplier, buyer, atPath, null);
         order.addItem(charge, description, netAmount, null, null, tax, orderDate == null ? null : String.valueOf(orderDate.getYear()), property, project, null);
 
         return order;

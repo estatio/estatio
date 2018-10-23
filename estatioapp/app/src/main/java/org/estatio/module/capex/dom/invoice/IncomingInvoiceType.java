@@ -18,6 +18,7 @@ public enum IncomingInvoiceType {
     TANGIBLE_FIXED_ASSET,
     INTERCOMPANY,
     RE_INVOICING,
+    ITA_ORDER_INVOICE,
     ;
 
     @Programmatic
