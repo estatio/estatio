@@ -538,9 +538,15 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             @Nullable final Project project,
             @Nullable final BudgetItem budgetItem
     ) {
-        orderItemRepository.upsert(
-                this, charge, description, netAmount, vatAmount, grossAmount, tax, PeriodUtil.yearFromPeriod(period).startDate(), PeriodUtil.yearFromPeriod(period).endDate(), property, project, budgetItem);
-        // (we think there's) no need to add to the getItems(), because the item points back to this order.
+        // TODO: this is a quick fix for demo purposes; needs a better implementation
+        if (getAtPath().startsWith("/ITA")) {
+            orderItemRepository.create(
+                    this, charge, description, netAmount, vatAmount, grossAmount, tax, PeriodUtil.yearFromPeriod(period).startDate(), PeriodUtil.yearFromPeriod(period).endDate(), property, project, budgetItem);
+        } else {
+            orderItemRepository.upsert(
+                    this, charge, description, netAmount, vatAmount, grossAmount, tax, PeriodUtil.yearFromPeriod(period).startDate(), PeriodUtil.yearFromPeriod(period).endDate(), property, project, budgetItem);
+            // (we think there's) no need to add to the getItems(), because the item points back to this order.
+        }
         return this;
     }
 

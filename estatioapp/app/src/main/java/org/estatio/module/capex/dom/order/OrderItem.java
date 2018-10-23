@@ -127,7 +127,7 @@ import lombok.Setter;
                         + "WHERE budgetItem == :budgetItem ")
 })
 
-@Unique(name = "OrderItem_order_charge_UNQ", members = { "ordr", "charge" })
+//@Unique(name = "OrderItem_order_charge_UNQ", members = { "ordr", "charge" }) TODO: commented out for Order#addItem
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "orders.OrderItem"
