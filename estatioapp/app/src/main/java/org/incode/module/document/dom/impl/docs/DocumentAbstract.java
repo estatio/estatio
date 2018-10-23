@@ -32,6 +32,8 @@ import org.apache.isis.applib.util.ObjectContracts;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
+import org.isisaddons.module.security.dom.tenancy.HasAtPath;
+
 import org.incode.module.document.DocumentModule;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.types.AtPathType;
@@ -67,7 +69,7 @@ import lombok.Setter;
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
 )
-public abstract class DocumentAbstract<T extends DocumentAbstract> implements Comparable<T> {
+public abstract class DocumentAbstract<T extends DocumentAbstract> implements Comparable<T>, HasAtPath {
 
     //region > domain event classes
     public static abstract class PropertyDomainEvent<T> extends DocumentModule.PropertyDomainEvent<DocumentAbstract, T> { }

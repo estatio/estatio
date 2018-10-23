@@ -80,15 +80,17 @@ public class LeasetermForTurnoverRentFixedImport_IntegTest extends LeaseModuleIn
 
         // then
         assertThat(manager.getTurnoverRentLines()).hasSize(2);
-        final LeaseTermForTurnOverRentFixedImport termForPoison = manager.getTurnoverRentLines().get(0);
-        assertThat(termForPoison.getLeaseReference()).isEqualTo(Lease_enum.HanPoison001Se.findUsing(serviceRegistry2).getReference());
-        assertThat(termForPoison.getStartDate()).isEqualTo(new LocalDate(2011,1,1));
-        assertThat(termForPoison.getEndDate()).isEqualTo(new LocalDate(2011,12,31));
-        assertThat(termForPoison.getValue()).isEqualTo(new BigDecimal("20000.00"));
-        final LeaseTermForTurnOverRentFixedImport termForTopModel = manager.getTurnoverRentLines().get(1);
-        assertThat(termForTopModel.getLeaseReference()).isEqualTo(Lease_enum.HanTopModel002Se.findUsing(serviceRegistry2).getReference());
-        assertThat(termForTopModel.getStartDateCurrent()).isEqualTo(new LocalDate(2010,7,15));
-        assertThat(termForTopModel.getValueCurrent()).isEqualTo(new BigDecimal("2000.00"));
+        final LeaseTermForTurnOverRentFixedImport lineForPoison = manager.getTurnoverRentLines().get(0);
+        assertThat(lineForPoison.getLeaseReference()).isEqualTo(Lease_enum.HanPoison001Se.findUsing(serviceRegistry2).getReference());
+        assertThat(lineForPoison.getStartDate()).isEqualTo(new LocalDate(2011,1,1));
+        assertThat(lineForPoison.getEndDate()).isEqualTo(new LocalDate(2011,12,31));
+        assertThat(lineForPoison.getValue()).isEqualTo(new BigDecimal("20000.00"));
+        assertThat(lineForPoison.getYear()).isEqualTo(2011);
+        final LeaseTermForTurnOverRentFixedImport lineForTopModel = manager.getTurnoverRentLines().get(1);
+        assertThat(lineForTopModel.getLeaseReference()).isEqualTo(Lease_enum.HanTopModel002Se.findUsing(serviceRegistry2).getReference());
+        assertThat(lineForTopModel.getStartDatePreviousYear()).isEqualTo(new LocalDate(2010,7,15));
+        assertThat(lineForTopModel.getValuePreviousYear()).isEqualTo(new BigDecimal("2000.00"));
+        assertThat(lineForTopModel.getYear()).isEqualTo(2011);
         
     }
 
@@ -117,8 +119,7 @@ public class LeasetermForTurnoverRentFixedImport_IntegTest extends LeaseModuleIn
         final LocalDate endDate2011 = new LocalDate(2011, 12, 31);
 
         final LeaseTerm term1Poison = itemForPoison.findTerm(startDate2010);
-        assertThat(term1Poison.getEffectiveValue()).isEqualTo(new BigDecimal("18000.00"));
-        assertThat(term1Poison.getEndDate()).isEqualTo(endDate2010);
+        assertThat(term1Poison).isNull(); // previous terms, when not found, are no longer created since ECP-806
         final LeaseTerm term2Poison = itemForPoison.findTerm(startDate2011);
         assertThat(term2Poison.getEffectiveValue()).isEqualTo(new BigDecimal("21000.00"));
         assertThat(term2Poison.getEndDate()).isEqualTo(endDate2011);
@@ -135,7 +136,8 @@ public class LeasetermForTurnoverRentFixedImport_IntegTest extends LeaseModuleIn
     ServiceRegistry2 serviceRegistry2;
 
 
-    @Inject TransactionService3 transactionService2;
+    @Inject
+    TransactionService3 transactionService2;
 
 
 }
