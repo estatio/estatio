@@ -348,6 +348,10 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         return this;
     }
 
+    public boolean hideEditPeriod() {
+        return meService.me().getAtPath().startsWith("/ITA");
+    }
+
     public String default0EditPeriod() {
         return PeriodUtil.periodFromInterval(new LocalDateInterval(getStartDate(), getEndDate()));
     }

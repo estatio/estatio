@@ -125,7 +125,7 @@ public class OrderRepository {
             final String atPath) {
         final String orderNumber = generateNextOrderNumberForCountry(property, project, charge, atPath);
         final Order order = create(property, null, orderNumber, null, clockService.now(), orderDate, supplier, buyer, atPath, null);
-        order.addItem(charge, description, netAmount, null, null, tax, null, property, project, null);
+        order.addItem(charge, description, netAmount, null, null, tax, orderDate == null ? null : String.valueOf(orderDate.getYear()), property, project, null);
 
         return order;
     }
