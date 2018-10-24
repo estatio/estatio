@@ -36,7 +36,7 @@ public class Order_verifySupplier {
     }
 
     public boolean hide$$(){
-        if (meService.me().getAtPath().startsWith("/ITA")) {
+        if (!meService.me().getAtPath().startsWith("/ITA")) {
             return true;
         }
 
