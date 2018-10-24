@@ -1,12 +1,13 @@
 package org.estatio.module.capex.contributions;
 
 import javax.inject.Inject;
-import javax.jdo.annotations.Order;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.isisaddons.module.security.app.user.MeService;
+
+import org.estatio.module.capex.dom.order.Order;
 
 @Mixin
 public class Order_retrieveCodaSupplier {
@@ -18,7 +19,7 @@ public class Order_retrieveCodaSupplier {
     }
 
     @Action()
-    public Order $$(final String partyReference) {
+    public Order $$(final String supplierReference) {
         // TODO: use party ref to retrieve from Coda
         return order;
     }
