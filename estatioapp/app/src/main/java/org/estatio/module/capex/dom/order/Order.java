@@ -538,16 +538,29 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             @Nullable final Project project,
             @Nullable final BudgetItem budgetItem
     ) {
-        // TODO: this is a quick fix for demo purposes; needs a better implementation
-        if (getAtPath().startsWith("/ITA")) {
-            orderItemRepository.create(
-                    this, charge, description, netAmount, vatAmount, grossAmount, tax, PeriodUtil.yearFromPeriod(period).startDate(), PeriodUtil.yearFromPeriod(period).endDate(), property, project, budgetItem);
-        } else {
-            orderItemRepository.upsert(
-                    this, charge, description, netAmount, vatAmount, grossAmount, tax, PeriodUtil.yearFromPeriod(period).startDate(), PeriodUtil.yearFromPeriod(period).endDate(), property, project, budgetItem);
-            // (we think there's) no need to add to the getItems(), because the item points back to this order.
-        }
+        orderItemRepository.upsert(
+                    this, charge, description, netAmount, vatAmount, grossAmount, tax, PeriodUtil.yearFromPeriod(period).startDate(), PeriodUtil.yearFromPeriod(period).endDate(), property, project, budgetItem, determineItemNumber(charge));
+
         return this;
+    }
+
+    private int determineItemNumber(final Charge chargeNewItem){
+        if (getAtPath().startsWith("/ITA")){
+            List<OrderItem> itemsWithSameCharge = Lists.newArrayList(getItems()).stream()
+                    .filter(x->x.getCharge()!=null)
+                    .filter(x->x.getCharge().equals(chargeNewItem))
+                    .collect(Collectors.toList());
+            return itemsWithSameCharge.size();
+        } else {
+            return 0;
+        }
+    }
+
+    public Charge default0AddItem() {
+        if (meService.me().getAtPath().startsWith("/ITA")) {
+            return getItems().isEmpty() ? null : getItems().first().getCharge();
+        }
+        return null;
     }
 
     public List<Charge> choices0AddItem() {
@@ -640,8 +653,8 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
                 newItemPeriod != null ? PeriodUtil.yearFromPeriod(newItemPeriod).endDate() : null,
                 newItemProperty,
                 newItemProject,
-                newItemBudgetItem
-        );
+                newItemBudgetItem,
+                0);
         return this;
     }
 

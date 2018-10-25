@@ -13,6 +13,7 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
+import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 import javax.validation.constraints.Digits;
@@ -88,11 +89,12 @@ import lombok.Setter;
                         + "FROM org.estatio.module.capex.dom.order.OrderItem "
                         + "WHERE ordr.seller == :seller &&  property == :property "),
         @Query(
-                name = "findByOrderAndCharge", language = "JDOQL",
+                name = "findByOrderAndChargeAndItemNumber", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.order.OrderItem "
                         + "WHERE ordr == :ordr "
-                        + "   && charge == :charge "),
+                        + "   && charge == :charge "
+                        + "   && number == :number "),
         @Query(
                 name = "findByProjectAndCharge", language = "JDOQL",
                 value = "SELECT "
@@ -126,7 +128,7 @@ import lombok.Setter;
                         + "WHERE budgetItem == :budgetItem ")
 })
 
-//@Unique(name = "OrderItem_order_charge_UNQ", members = { "ordr", "charge" }) TODO: commented out for Order#addItem
+@Unique(name = "OrderItem_order_charge_number_UNQ", members = { "ordr", "charge", "number" })
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "orders.OrderItem"
@@ -172,7 +174,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     }
 
     public OrderItem() {
-        super("ordr,charge,description");
+        super("ordr,charge,number");
     }
 
     public OrderItem(
@@ -187,7 +189,8 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
             final LocalDate endDate,
             final Property property,
             final Project project,
-            final BudgetItem budgetItem) {
+            final BudgetItem budgetItem,
+            final int number) {
         this();
         this.ordr = ordr;
         this.charge = charge;
@@ -201,6 +204,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         this.property = property;
         this.project = project;
         this.budgetItem = budgetItem;
+        this.number = number;
     }
 
     public boolean isOverspent() {
@@ -448,6 +452,10 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     public String disableEditBudgetItem() {
         return itemImmutableReasonIfIsImmutable();
     }
+
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    private int number;
 
     @PropertyLayout(
             named = "Application Level",

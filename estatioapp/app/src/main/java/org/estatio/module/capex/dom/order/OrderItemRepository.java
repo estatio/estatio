@@ -34,13 +34,14 @@ import org.estatio.module.tax.dom.Tax;
 public class OrderItemRepository {
 
     @Programmatic
-    public OrderItem findByOrderAndCharge(final Order order, final Charge charge) {
+    public OrderItem findUnique(final Order order, final Charge charge, final int itemNumber) {
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
                         OrderItem.class,
-                        "findByOrderAndCharge",
+                        "findByOrderAndChargeAndItemNumber",
                         "ordr", order,
-                        "charge", charge
+                        "charge", charge,
+                        "number", itemNumber
                 ));
     }
 
@@ -58,12 +59,13 @@ public class OrderItemRepository {
             final LocalDate endDate,
             final Property property,
             final Project project,
-            final BudgetItem budgetItem) {
+            final BudgetItem budgetItem,
+            final int itemNumber) {
         final OrderItem orderItem =
                 new OrderItem(
                         order,charge, description,
                         netAmount, vatAmount, grossAmount,
-                        tax, startDate, endDate, property, project, budgetItem);
+                        tax, startDate, endDate, property, project, budgetItem, itemNumber);
         serviceRegistry2.injectServicesInto(orderItem);
         repositoryService.persistAndFlush(orderItem);
         return orderItem;
@@ -82,11 +84,12 @@ public class OrderItemRepository {
             final LocalDate endDate,
             final Property property,
             final Project project,
-            final BudgetItem budgetItem) {
-        OrderItem orderItem = findByOrderAndCharge(order, charge);
+            final BudgetItem budgetItem,
+            final int itemNumber) {
+        OrderItem orderItem = findUnique(order, charge, itemNumber);
         if (orderItem == null) {
             orderItem = create(order, charge, description, netAmount, vatAmount, grossAmount, tax, startDate, endDate,
-                    property, project, budgetItem);
+                    property, project, budgetItem, itemNumber);
         } else {
             updateOrderItem(orderItem,
                     description,

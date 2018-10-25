@@ -58,8 +58,8 @@ public class Order_itemDetails {
                     PeriodUtil.yearFromPeriod(period).endDate(),
                     order.getProperty(),
                     project,
-                    budgetItem
-            );
+                    budgetItem,
+                    0);
         }
         return order;
     }

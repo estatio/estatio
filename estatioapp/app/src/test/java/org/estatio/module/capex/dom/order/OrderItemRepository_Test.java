@@ -42,7 +42,7 @@ public class OrderItemRepository_Test {
         // given
         OrderItemRepository orderItemRepository = new OrderItemRepository(){
             @Override
-            public OrderItem findByOrderAndCharge(final Order order, final Charge charge) {
+            public OrderItem findUnique(final Order order, final Charge charge, final int itemNumber) {
                 return orderItem;
             }
         };
@@ -73,8 +73,8 @@ public class OrderItemRepository_Test {
                 endDate,
                 property,
                 project,
-                budgetItem
-                );
+                budgetItem,
+                0);
 
         // then
         assertThat(orderItem.getOrdr()).isNull();
@@ -89,6 +89,7 @@ public class OrderItemRepository_Test {
         assertThat(orderItem.getProperty()).isEqualTo(property);
         assertThat(orderItem.getProject()).isEqualTo(project);
         assertThat(orderItem.getBudgetItem()).isEqualTo(budgetItem);
+        assertThat(orderItem.getNumber()).isEqualTo(0);
     }
 
     @Mock

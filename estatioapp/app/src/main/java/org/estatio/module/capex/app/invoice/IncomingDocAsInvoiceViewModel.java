@@ -265,7 +265,7 @@ public class IncomingDocAsInvoiceViewModel
     private void autoFillIn(){
         if (hasOrderItem()){
             Order order = orderRepository.findByOrderNumber(getOrderItem().getOrdr().getOrderNumber());
-            OrderItem orderItem = orderItemRepository.findByOrderAndCharge(order, getOrderItem().getCharge());
+            OrderItem orderItem = orderItemRepository.findUnique(order, getOrderItem().getCharge(), 0);
             if (!(hasNetAmount() && hasGrossAmount() && hasVatAmount())){
                 setNetAmount(orderItem.getNetAmount());
                 setVatAmount(orderItem.getVatAmount());
@@ -513,7 +513,7 @@ public class IncomingDocAsInvoiceViewModel
         if (getOrderItem()!=null){
             Order order = getOrderItem().getOrdr();
             Charge chargeFromWrapper = getOrderItem().getCharge();
-            OrderItem orderItemToLink = orderItemRepository.findByOrderAndCharge(order, chargeFromWrapper);
+            OrderItem orderItemToLink = orderItemRepository.findUnique(order, chargeFromWrapper, 0);
             orderItemInvoiceItemLinkRepository.findOrCreateLink(orderItemToLink, firstItem, firstItem.getNetAmount());
         } else {
             // remove all (or the one and only) link.

@@ -59,8 +59,7 @@ public class IncomingDocAsOrderViewModel_Test {
                     netAmount,
                     vatAmount,
                     grossAmount,
-                    null, null, null, null, null, null
-            );
+                    null, null, null, null, null, null, 0);
         }});
 
         // when

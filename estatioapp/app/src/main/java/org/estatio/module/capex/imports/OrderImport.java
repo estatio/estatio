@@ -73,8 +73,8 @@ public class OrderImport implements FixtureAwareRowHandler<OrderImport>, ExcelFi
             final LocalDate startDate,
             final LocalDate endDate,
             final String itemPropertyReference,
-            final String projectReference
-    ) {
+            final String projectReference,
+            final int itemNumber) {
         this();
         this.orderPropertyReference = orderPropertyReference;
         this.orderType = orderType;
@@ -97,6 +97,7 @@ public class OrderImport implements FixtureAwareRowHandler<OrderImport>, ExcelFi
         this.endDate = endDate;
         this.itemPropertyReference = itemPropertyReference;
         this.projectReference = projectReference;
+        this.itemNumber = itemNumber;
     }
 
     // order
@@ -144,6 +145,8 @@ public class OrderImport implements FixtureAwareRowHandler<OrderImport>, ExcelFi
     private String itemPropertyReference;
     @Getter @Setter
     private String projectReference;
+    @Getter @Setter
+    private int itemNumber;
 
 
     /**
@@ -204,8 +207,8 @@ public class OrderImport implements FixtureAwareRowHandler<OrderImport>, ExcelFi
                 getEndDate(),
                 propertyRepository.findPropertyByReference(getItemPropertyReference()),
                 projectRepository.findByReference(getProjectReference()),
-                null
-        );
+                null,
+                getItemNumber());
     }
 
     private void createTransitionsIfNotAlready(final Order order){

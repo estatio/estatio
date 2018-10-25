@@ -62,6 +62,7 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="Dimensions" id="dimensions">
+                                <cpt:property id="number"/>
                                 <cpt:property id="charge">
                                     <cpt:action id="editCharge" promptStyle="INLINE" position="RIGHT"/>
                                 </cpt:property>

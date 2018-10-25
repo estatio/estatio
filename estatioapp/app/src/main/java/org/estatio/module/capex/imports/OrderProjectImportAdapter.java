@@ -144,8 +144,11 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
                 deriveStartDate(), // TODO: ask users concerning the period (how to derive the financial year)
                 deriveEndDate(),
                 getCentro(),
-                deriveProjectReference()
-        );
+                deriveProjectReference(),
+                0
+                // TODO: I suppose change this to
+                // getIntegrazione()==null ? 0 : getIntegrazione()
+                );
     }
 
     private void importIntegrazioneLine() {

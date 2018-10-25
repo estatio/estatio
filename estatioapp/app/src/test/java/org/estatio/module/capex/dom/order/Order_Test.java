@@ -199,7 +199,7 @@ public class Order_Test {
                     PeriodUtil.yearFromPeriod(period).endDate(),
                     property,
                     project,
-                    budgetItem);
+                    budgetItem, 0);
         }});
 
         // when
@@ -250,5 +250,121 @@ public class Order_Test {
         assertThat(result).isEqualTo("Scansione documentazione pratica VV.FF. - Integrazione n. 1 2 3 4 5 6");
 
     }
+
+    @Test
+    public void addItem_works_for_ita_when_no_items() throws Exception {
+
+        // given
+        Order order = new Order();
+        order.orderItemRepository = mockOrderItemRepository;
+        order.setAtPath("/ITA");
+        Charge chargeForIta = new Charge();
+
+        // expect
+        int expectedNumber = 0;
+        context.checking(new Expectations(){{
+            oneOf(mockOrderItemRepository).upsert(order, chargeForIta, null, null, null, null, null, null, null, null, null, null, expectedNumber);
+        }});
+
+        // when
+        order.addItem(chargeForIta, null, null, null, null, null, null, null, null, null);
+
+    }
+
+
+    @Test
+    public void addItem_works_for_ita_when_item_with_same_charge() throws Exception {
+
+        // given
+        Order order = new Order();
+        order.orderItemRepository = mockOrderItemRepository;
+        order.setAtPath("/ITA");
+        Charge chargeForIta = new Charge();
+
+        OrderItem existingItem = new OrderItem();
+        existingItem.setCharge(chargeForIta);
+        order.getItems().add(existingItem);
+
+
+        // expect
+        int expectedNumber = 1;
+        context.checking(new Expectations(){{
+            oneOf(mockOrderItemRepository).upsert(order, chargeForIta, null, null, null, null, null, null, null, null, null, null, expectedNumber);
+        }});
+
+        // when
+        order.addItem(chargeForIta, null, null, null, null, null, null, null, null, null);
+    }
+
+    @Test
+    public void addItem_works_for_ita_when_item_with_other_charge_only_hypothetical() throws Exception {
+
+        // given
+        Order order = new Order();
+        order.orderItemRepository = mockOrderItemRepository;
+        order.setAtPath("/ITA");
+        Charge chargeForIta = new Charge();
+        Charge otherChargeForIta = new Charge();
+
+
+        OrderItem existingItem = new OrderItem();
+        existingItem.setCharge(otherChargeForIta);
+        order.getItems().add(existingItem);
+
+
+        // expect
+        int expectedNumber = 0;
+        context.checking(new Expectations(){{
+            oneOf(mockOrderItemRepository).upsert(order, chargeForIta, null, null, null, null, null, null, null, null, null, null, expectedNumber);
+        }});
+
+        // when
+        order.addItem(chargeForIta, null, null, null, null, null, null, null, null, null);
+    }
+
+    @Test
+    public void addItem_works_for_fra_when_no_items() throws Exception {
+
+        // given
+        Order order = new Order();
+        order.orderItemRepository = mockOrderItemRepository;
+        order.setAtPath("/FRA");
+        Charge chargeForFra = new Charge();
+
+        // expect
+        int expectedNumber = 0;
+        context.checking(new Expectations(){{
+            oneOf(mockOrderItemRepository).upsert(order, chargeForFra, null, null, null, null, null, null, null, null, null, null, expectedNumber);
+        }});
+
+        // when
+        order.addItem(chargeForFra, null, null, null, null, null, null, null, null, null);
+
+    }
+
+    @Test
+    public void addItem_works_for_fra_when_item_with_same_charge() throws Exception {
+
+        // given
+        Order order = new Order();
+        order.orderItemRepository = mockOrderItemRepository;
+        order.setAtPath("/FRA");
+        Charge chargeForFra = new Charge();
+
+        OrderItem existingItem = new OrderItem();
+        existingItem.setCharge(chargeForFra);
+        order.getItems().add(existingItem);
+
+
+        // expect
+        int expectedNumber = 0;
+        context.checking(new Expectations(){{
+            oneOf(mockOrderItemRepository).upsert(order, chargeForFra, null, null, null, null, null, null, null, null, null, null, expectedNumber);
+        }});
+
+        // when
+        order.addItem(chargeForFra, null, null, null, null, null, null, null, null, null);
+    }
+
 
 }
