@@ -1,7 +1,9 @@
 package org.estatio.module.application.app;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -16,6 +18,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Collection;
+import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -25,6 +28,8 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.config.ConfigurationProperty;
+import org.apache.isis.applib.services.config.ConfigurationService;
 import org.apache.isis.applib.services.email.EmailService;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.message.MessageService;
@@ -187,6 +192,29 @@ public class AdminDashboard {
 
 
 
+    @Collection
+    @CollectionLayout(defaultView = "table")
+    public Set<ConfigurationProperty> getConnections(){
+        return configurationService.allProperties().stream()
+                .filter(this::match)
+                .collect(Collectors.toSet());
+    }
+
+    private boolean match(final ConfigurationProperty prop) {
+        final List<String> props = Arrays.asList(
+                "estatio.application.cmisServerDefaultRepoBaseUrl",
+                "estatio.application.reportServerBaseUrl",
+                "estatio.datawarehouse.ConnectionURL",
+                "incode.module.docrendering.stringinterpolator.UrlDownloaderUsingNtlmCredentials.host",
+                "isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL",
+                "isis.service.email.sender.hostname",
+                "isis.services.PublisherServiceUsingActiveMq.vmTransportUri");
+        return props.contains(prop.getKey());
+    }
+
+    @Inject
+    @XmlTransient
+    ConfigurationService configurationService;
 
     @Inject
     @XmlTransient
