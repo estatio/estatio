@@ -16,9 +16,9 @@ public enum ValidationStatus {
      * For {@link CodaDocHead}s, indicates that all elements of all {@link CodaDocLine}s are valid.
      *
      * <p>
-     *     By "elements" we mean {@link CodaDocLine#getOrderValidationStatus()},
-     *     {@link CodaDocLine#getPropertyValidationStatus()}, {@link CodaDocLine#getProjectValidationStatus()} and
-     *     {@link CodaDocLine#getWorkTypeValidationStatus()}.
+     *     By "elements" we mean {@link CodaDocLine#getExtRefOrderValidationStatus()},
+     *     {@link CodaDocLine#getExtRefPropertyValidationStatus()}, {@link CodaDocLine#getExtRefProjectValidationStatus()} and
+     *     {@link CodaDocLine#getExtRefWorkTypeValidationStatus()}.
      * </p>
      */
     VALID,
