@@ -2,6 +2,7 @@ package org.estatio.module.capex.imports;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -28,6 +29,8 @@ import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
 import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
+import org.estatio.module.capex.dom.order.approval.OrderApprovalStateTransition;
+import org.estatio.module.capex.dom.order.approval.OrderApprovalStateTransitionType;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.party.dom.Organisation;
@@ -184,6 +187,7 @@ public class OrderImport implements FixtureAwareRowHandler<OrderImport>, ExcelFi
             Order order = orderRepository.upsert(property, orderType, getOrderNumber(), getSellerOrderReference(), getEntryDate(), getOrderDate(), seller, buyer, "/ITA", approvalState);
             order.setApprovedBy(getApprovedBy());
             order.setApprovedOn(getApprovedOn());
+            createTransitionsIfNotAlready(order);
         return order;
     }
 
@@ -204,6 +208,33 @@ public class OrderImport implements FixtureAwareRowHandler<OrderImport>, ExcelFi
         );
     }
 
+    private void createTransitionsIfNotAlready(final Order order){
+        final List<OrderApprovalStateTransition> stateTransitions = stateTransitionRepository.findByDomainObject(order);
+        final List<OrderApprovalStateTransition> instantiationTransitions = stateTransitions.stream()
+                    .filter(t->t.getTransitionType()==OrderApprovalStateTransitionType.INSTANTIATE)
+                    .collect(Collectors.toList());
+        final List<OrderApprovalStateTransition> completionTransitions = stateTransitions.stream()
+                .filter(t->t.getTransitionType()==OrderApprovalStateTransitionType.COMPLETE_WITH_APPROVAL)
+                .collect(Collectors.toList());
+
+        if (instantiationTransitions.isEmpty()){
+            OrderApprovalStateTransition instTrans = stateTransitionRepository.create(order, OrderApprovalStateTransitionType.INSTANTIATE,null,null,null,null);
+            instTrans.setToState(OrderApprovalState.NEW);
+            instTrans.setCompleted(true);
+            instTrans.setCompletedBy("import");
+            instTrans.setComment("import");
+        }
+        if (order.getApprovalState().equals(OrderApprovalState.APPROVED) && completionTransitions.isEmpty()){
+            OrderApprovalStateTransition complTrans =stateTransitionRepository.create(order, OrderApprovalStateTransitionType.COMPLETE_WITH_APPROVAL,OrderApprovalState.NEW,null,null,null);
+            complTrans.setFromState(OrderApprovalState.NEW);
+            complTrans.setToState(OrderApprovalState.APPROVED);
+            complTrans.setCompleted(true);
+            complTrans.setCompletedBy("import");
+            complTrans.setComment("import");
+        }
+
+    }
+
     @Inject PartyRepository partyRepository;
 
     @Inject PropertyRepository propertyRepository;
@@ -215,5 +246,8 @@ public class OrderImport implements FixtureAwareRowHandler<OrderImport>, ExcelFi
     @Inject OrderItemRepository orderItemRepository;
 
     @Inject ProjectRepository projectRepository;
+
+    @Inject
+    OrderApprovalStateTransition.Repository stateTransitionRepository;
 
 }
