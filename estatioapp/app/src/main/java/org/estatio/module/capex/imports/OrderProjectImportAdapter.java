@@ -45,7 +45,7 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
     private String centro;
 
     @Getter @Setter @Nullable
-    private Integer progressivoCentro;
+    private String progressivoCentro;
 
     @Getter @Setter @Nullable
     private String commessa;
@@ -104,6 +104,7 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
     public OrderProjectImportAdapter handle(final OrderProjectImportAdapter previousRow) {
         correctCodiceFornitoreIfNecessary();
         correctComessaIfNecessary();
+        correctProgressivoCentroIfNecessary();
 
         if (getCodiceFornitore() != null && getFornitore() != null)
             importSeller();
@@ -170,7 +171,7 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
         builder.append("/");
 
         if (getProgressivoCentro() != null && getCommessa() != null) {
-            builder.append(getProgressivoCentro().toString());
+            builder.append(getProgressivoCentro());
             builder.append("/");
             builder.append(getCommessa());
         } else if (getCommessa() != null && getWorkType() != null) {
@@ -214,15 +215,21 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
     }
 
     private void correctCodiceFornitoreIfNecessary() {
-        if (getCodiceFornitore() != null && !getCodiceFornitore().startsWith("IT")) {
+        if (getCodiceFornitore() != null && !getCodiceFornitore().startsWith("IT"))
             setCodiceFornitore("IT" + getCodiceFornitore());
-        }
     }
 
     private void correctComessaIfNecessary() {
-        if (getCommessa() != null && getCommessa().trim().endsWith("R")) {
+        if (getCommessa() != null && getCommessa().trim().endsWith("R"))
             setCommessa(getCommessa().trim().replace("R", ""));
-        }
+    }
+
+    public void correctProgressivoCentroIfNecessary() {
+        if (getProgressivoCentro() != null && getProgressivoCentro().length() == 1)
+            setProgressivoCentro("00".concat(getProgressivoCentro()));
+
+        if (getProgressivoCentro() != null && getProgressivoCentro().length() == 2)
+            setProgressivoCentro("0".concat(getProgressivoCentro()));
     }
 
     private String deriveChargeReference() {

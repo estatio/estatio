@@ -3,6 +3,8 @@ package org.estatio.module.capex.imports;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class OrderProjectImportAdapterTest {
 
     @Test
@@ -14,12 +16,40 @@ public class OrderProjectImportAdapterTest {
         // when
         adapter.setNumero(2234);
         adapter.setCentro("CAR");
-        adapter.setProgressivoCentro(694);
+        adapter.setProgressivoCentro("694");
         adapter.setCommessa("192");
 
         // then
-        Assertions.assertThat(adapter.deriveOrderNumber()).isEqualTo("2234/CAR/694/192");
+        assertThat(adapter.deriveOrderNumber()).isEqualTo("2234/CAR/694/192");
 
+    }
+
+    @Test
+    public void appendsZerosToProgressivoCentro() throws Exception {
+        // given
+        OrderProjectImportAdapter adapter = new OrderProjectImportAdapter();
+        adapter.setProgressivoCentro("1");
+        assertThat(adapter.getProgressivoCentro()).isEqualTo("1");
+
+        // when
+        adapter.correctProgressivoCentroIfNecessary();
+        
+        // then
+        assertThat(adapter.getProgressivoCentro()).isEqualTo("001");
+
+        // and when
+        adapter.setProgressivoCentro("11");
+        adapter.correctProgressivoCentroIfNecessary();
+
+        // then
+        assertThat(adapter.getProgressivoCentro()).isEqualTo("011");
+
+        // and when
+        adapter.setProgressivoCentro("111");
+        adapter.correctProgressivoCentroIfNecessary();
+
+        // then
+        assertThat(adapter.getProgressivoCentro()).isEqualTo("111");
     }
 
     @Test
@@ -31,22 +61,22 @@ public class OrderProjectImportAdapterTest {
         // when
         adapter.setNumero(null);
         adapter.setCentro("CAR");
-        adapter.setProgressivoCentro(694);
+        adapter.setProgressivoCentro("694");
         adapter.setCommessa("192");
         adapter.setWorkType(null);
 
         // then
-        Assertions.assertThat(adapter.deriveOrderNumber()).isNull();
+        assertThat(adapter.deriveOrderNumber()).isNull();
 
         // and when
         adapter.setNumero(2234);
         adapter.setCentro(null);
-        adapter.setProgressivoCentro(694);
+        adapter.setProgressivoCentro("694");
         adapter.setCommessa("192");
         adapter.setWorkType(null);
 
         // then
-        Assertions.assertThat(adapter.deriveOrderNumber()).isEqualTo("2234//694/192");
+        assertThat(adapter.deriveOrderNumber()).isEqualTo("2234//694/192");
 
         // and when
         adapter.setNumero(2234);
@@ -56,17 +86,17 @@ public class OrderProjectImportAdapterTest {
         adapter.setWorkType(null);
 
         // then
-        Assertions.assertThat(adapter.deriveOrderNumber()).isEqualTo("2234/CAR//192");
+        assertThat(adapter.deriveOrderNumber()).isEqualTo("2234/CAR//192");
 
         // and when
         adapter.setNumero(2234);
         adapter.setCentro("CAR");
-        adapter.setProgressivoCentro(694);
+        adapter.setProgressivoCentro("694");
         adapter.setCommessa(null);
         adapter.setWorkType(null);
 
         // then
-        Assertions.assertThat(adapter.deriveOrderNumber()).isEqualTo("2234/CAR/694/");
+        assertThat(adapter.deriveOrderNumber()).isEqualTo("2234/CAR/694/");
     }
 
     @Test
@@ -82,7 +112,7 @@ public class OrderProjectImportAdapterTest {
         adapter.setWorkType("001");
 
         // then
-        Assertions.assertThat(adapter.deriveOrderNumber()).isNull();
+        assertThat(adapter.deriveOrderNumber()).isNull();
 
         // and when
         adapter.setNumero(2234);
@@ -92,6 +122,6 @@ public class OrderProjectImportAdapterTest {
         adapter.setWorkType("001");
 
         // then
-        Assertions.assertThat(adapter.deriveOrderNumber()).isEqualTo("2234//192/001");
+        assertThat(adapter.deriveOrderNumber()).isEqualTo("2234//192/001");
     }
 }
