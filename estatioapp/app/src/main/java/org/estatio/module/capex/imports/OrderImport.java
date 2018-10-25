@@ -221,6 +221,7 @@ public class OrderImport implements FixtureAwareRowHandler<OrderImport>, ExcelFi
             OrderApprovalStateTransition instTrans = stateTransitionRepository.create(order, OrderApprovalStateTransitionType.INSTANTIATE,null,null,null,null);
             instTrans.setToState(OrderApprovalState.NEW);
             instTrans.setCompleted(true);
+            instTrans.setCompletedOn(instTrans.getCreatedOn());
             instTrans.setCompletedBy("import");
             instTrans.setComment("import");
         }
@@ -229,6 +230,7 @@ public class OrderImport implements FixtureAwareRowHandler<OrderImport>, ExcelFi
             complTrans.setFromState(OrderApprovalState.NEW);
             complTrans.setToState(OrderApprovalState.APPROVED);
             complTrans.setCompleted(true);
+            complTrans.setCompletedOn(complTrans.getCreatedOn());
             complTrans.setCompletedBy("import");
             complTrans.setComment("import");
         }
