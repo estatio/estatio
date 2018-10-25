@@ -47,7 +47,7 @@ public class Order_changeCharge {
         if (!meService.me().getAtPath().startsWith("/ITA"))
             return true;
 
-        return !personRepository.me().hasPartyRoleType(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.findUsing(partyRoleTypeRepository));
+        return personRepository.me()==null ? true : !personRepository.me().hasPartyRoleType(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.findUsing(partyRoleTypeRepository));
     }
 
     @Inject
