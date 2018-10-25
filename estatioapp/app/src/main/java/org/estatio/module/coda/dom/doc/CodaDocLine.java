@@ -2,6 +2,7 @@ package org.estatio.module.coda.dom.doc;
 
 import java.math.BigDecimal;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -24,7 +25,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.title.TitleService;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -45,7 +46,8 @@ import lombok.Setter;
                 name = "findByDocHeadAndLineNum", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
-                        + "WHERE docLine == :docLine ")
+                        + "WHERE docHead == :docHead "
+                        + "   && lineNum == :lineNum ")
 })
 @Unique(name = "CodaDocLine_docHead_lineNum_UNQ", members = { "docHead", "lineNum" })
 @DomainObject(
@@ -62,7 +64,6 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
             final CodaDocHead docHead,
             final int lineNum,
             final String accountCode,
-            final String supplierPartyRef,
             final String description,
             final BigDecimal docValue,
             final BigDecimal docSumTax,
@@ -76,7 +77,6 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
         this.docHead = docHead;
         this.lineNum = lineNum;
         this.accountCode = accountCode;
-        this.supplierPartyRef = supplierPartyRef;
         this.description = description;
         this.docValue = docValue;
         this.docSumTax = docSumTax;
@@ -87,16 +87,45 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
         this.userRef1 = userRef1;
         this.userStatus = userStatus;
 
-        this.supplierBankAccountValidationStatus = ValidationStatus.INVALID;
-        this.extRefValidationStatus = ValidationStatus.INVALID;
-        this.orderValidationStatus = ValidationStatus.INVALID;
-        this.projectValidationStatus = ValidationStatus.INVALID;
-        this.propertyValidationStatus = ValidationStatus.INVALID;
-        this.workTypeValidationStatus = ValidationStatus.INVALID;
+        resetValidation();
     }
 
+    @Programmatic
+    public void resetValidation() {
+
+        setAccountCodeValidationStatus(ValidationStatus.NOT_CHECKED);
+
+        setSupplierPartyRefValidationStatus(ValidationStatus.NOT_CHECKED);
+        setSupplierPartyRef(null);
+
+        setSupplierBankAccountValidationStatus(ValidationStatus.NOT_CHECKED);
+
+        setExtRefValidationStatus(ValidationStatus.NOT_CHECKED);
+
+        setOrderValidationStatus(ValidationStatus.NOT_CHECKED);
+        setOrderGlobalNumerator(null);
+
+        setProjectValidationStatus(ValidationStatus.NOT_CHECKED);
+        setProjectCode(null);
+
+        setPropertyValidationStatus(ValidationStatus.NOT_CHECKED);
+        setPropertyCode(null);
+
+        setWorkTypeValidationStatus(ValidationStatus.NOT_CHECKED);
+        setWorkType(null);
+
+        setReasonInvalid(null);
+    }
+
+    public String title() {
+        return String.format("%s | # %d", titleService.titleOf(getDocHead()), getLineNum());
+    }
+
+    @Inject
+    TitleService titleService;
+
     @Column(allowsNull = "false", name = "docHeadId")
-    @Property(hidden = Where.PARENTED_TABLES)
+    @Property
     @Getter @Setter
     private CodaDocHead docHead;
 
@@ -109,14 +138,6 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Property()
     @Getter @Setter
     private String accountCode;
-
-    /**
-     * Derived from the last portion of {@link #getAccountCode()}.
-     */
-    @Column(allowsNull = "true", length = 72)
-    @Property()
-    @Getter @Setter
-    private String supplierPartyRef;
 
     @Column(allowsNull = "true", length = 36)
     @Property()
@@ -197,12 +218,22 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Column(allowsNull = "false", length = 20)
     @Property()
     @Getter @Setter
-    private ValidationStatus extRefValidationStatus;
+    private ValidationStatus accountCodeValidationStatus;
+
 
     @Column(allowsNull = "false", length = 20)
     @Property()
     @Getter @Setter
-    private ValidationStatus propertyValidationStatus;
+    private ValidationStatus supplierPartyRefValidationStatus;
+
+    /**
+     * Derived from the last portion of {@link #getAccountCode()}, only populated if
+     * {@link #getAccountCodeValidationStatus()} is {@link ValidationStatus#VALID valid}
+     */
+    @Column(allowsNull = "true", length = 72)
+    @Property()
+    @Getter @Setter
+    private String supplierPartyRef;
 
     @Column(allowsNull = "false", length = 20)
     @Property()
@@ -212,17 +243,59 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Column(allowsNull = "false", length = 20)
     @Property()
     @Getter @Setter
+    private ValidationStatus extRefValidationStatus;
+
+    @Column(allowsNull = "false", length = 20)
+    @Property()
+    @Getter @Setter
     private ValidationStatus orderValidationStatus;
+
+    /**
+     * As parsed from extRef3/extRef5, only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
+     */
+    @Column(allowsNull = "true", length = 30)
+    @Property()
+    @Getter @Setter
+    private String orderGlobalNumerator;
+
+    @Column(allowsNull = "false", length = 20)
+    @Property()
+    @Getter @Setter
+    private ValidationStatus propertyValidationStatus;
+
+    /**
+     * As parsed from extRef3/extRef5, only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
+     */
+    @Column(allowsNull = "true", length = 30)
+    @Property()
+    @Getter @Setter
+    private String propertyCode;
 
     @Column(allowsNull = "false", length = 20)
     @Property()
     @Getter @Setter
     private ValidationStatus projectValidationStatus;
 
+    /**
+     * As parsed from extRef3/extRef5, only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
+     */
+    @Column(allowsNull = "true", length = 30)
+    @Property()
+    @Getter @Setter
+    private String projectCode;
+
     @Column(allowsNull = "false", length = 20)
     @Property()
     @Getter @Setter
     private ValidationStatus workTypeValidationStatus;
+
+    /**
+     * As parsed from extRef3/extRef5, only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
+     */
+    @Column(allowsNull = "true", length = 30)
+    @Property()
+    @Getter @Setter
+    private String workType;
 
 
     @Override
@@ -237,8 +310,8 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
         return "CodaDocLine{" +
                 "docHead=" + docHead +
                 ", lineNum=" + lineNum +
+                ", accountCode='" + accountCode + '\'' +
                 ", extRef3='" + extRef3 + '\'' +
-                ", extRef5='" + extRef5 + '\'' +
                 ", extRef5='" + extRef5 + '\'' +
                 '}';
     }

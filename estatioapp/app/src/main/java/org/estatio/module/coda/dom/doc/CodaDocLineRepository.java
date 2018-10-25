@@ -1,12 +1,16 @@
 package org.estatio.module.coda.dom.doc;
 
 import java.math.BigDecimal;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 @DomainService(
@@ -17,7 +21,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 public class CodaDocLineRepository {
 
     @Programmatic
-    public java.util.List<CodaDocLine> listAll() {
+    public List<CodaDocLine> listAll() {
         return repositoryService.allInstances(CodaDocLine.class);
     }
 
@@ -27,7 +31,7 @@ public class CodaDocLineRepository {
             final int lineNum
     ) {
         return repositoryService.uniqueMatch(
-                new org.apache.isis.applib.query.QueryDefault<>(
+                new QueryDefault<>(
                         CodaDocLine.class,
                         "findByDocHeadAndLineNum",
                         "docHead", docHead,
@@ -39,7 +43,6 @@ public class CodaDocLineRepository {
             final CodaDocHead docHead,
             final int lineNum,
             final String accountCode,
-            final String supplierPartyRef,
             final String description,
             final BigDecimal docValue,
             final BigDecimal docSumTax,
@@ -50,7 +53,7 @@ public class CodaDocLineRepository {
             final String userRef1,
             final Character userStatus) {
         return repositoryService.persist(
-                new CodaDocLine(docHead, lineNum, accountCode, supplierPartyRef , description,
+                new CodaDocLine(docHead, lineNum, accountCode, description,
                         docValue, docSumTax, valueDate, extRef3,
                         extRef5, elmBankAccount, userRef1, userStatus));
     }
@@ -71,7 +74,6 @@ public class CodaDocLineRepository {
             final CodaDocHead docHead,
             final int lineNum,
             final String accountCode,
-            final String supplierPartyRef,
             final String description,
             final BigDecimal docValue,
             final BigDecimal docSumTax,
@@ -82,12 +84,13 @@ public class CodaDocLineRepository {
             final String userRef1,
             final Character userStatus) {
 
-        final CodaDocLine docLine = findByDocHeadAndLineNum(docHead, lineNum);
+        CodaDocLine docLine = findByDocHeadAndLineNum(docHead, lineNum);
         if(docLine == null) {
-            create(docHead, lineNum, accountCode, supplierPartyRef, description, docValue, docSumTax, valueDate, extRef3, extRef5,
+            return create(docHead, lineNum, accountCode, description, docValue, docSumTax, valueDate, extRef3, extRef5,
                     elmBankAccount, userRef1, userStatus);
         } else {
             docLine.setAccountCode(accountCode);
+            docLine.setDescription(description);
             docLine.setDocValue(docValue);
             docLine.setDocSumTax(docSumTax);
             docLine.setValueDate(valueDate);
@@ -100,7 +103,7 @@ public class CodaDocLineRepository {
         return docLine;
     }
 
-    @javax.inject.Inject
+    @Inject
     RepositoryService repositoryService;
 
 }

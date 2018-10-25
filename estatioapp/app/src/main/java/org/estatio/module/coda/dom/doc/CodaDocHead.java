@@ -74,8 +74,15 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         this.docCode = docCode;
         this.docNum = docNum;
 
-        this.validationStatus = ValidationStatus.VALID;
+        this.validationStatus = ValidationStatus.NOT_CHECKED;
+        this.handling = Handling.INCLUDE;
+        this.numberOfLines = 0;
     }
+
+    public String title() {
+        return String.format("%s | %s | %s", getCmpCode(), getDocCode(), getDocNum());
+    }
+
 
     @Column(allowsNull = "false", length = 12)
     @Property()
@@ -91,6 +98,11 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Property()
     @Getter @Setter
     private String docNum;
+
+    @Column(allowsNull = "false")
+    @Property()
+    @Getter @Setter
+    private int numberOfLines;
 
 
 
@@ -109,7 +121,6 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     public CodaDocLine upsertLine(
             final int lineNum,
             final String accountCode,
-            final String supplierPartyRef,
             final String description,
             final BigDecimal docValue,
             final BigDecimal docSumTax,
@@ -120,7 +131,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
             final String userRef1,
             final Character userStatus) {
         return lineRepository.upsert(this,
-                    lineNum, accountCode, supplierPartyRef, description,
+                    lineNum, accountCode, description,
                     docValue, docSumTax, valueDate, extRef3, extRef5, elmBankAccount, userRef1, userStatus);
     }
 

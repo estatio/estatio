@@ -27,7 +27,11 @@ public enum ValidationStatus {
      *
      * For {@link CodaDocHead}s, indicates that one or more {@link CodaDocLine}s has an invalid element.
      */
-    INVALID;
+    INVALID,
+    /**
+     * When re-validating, initially start off in a state of not checked.
+     */
+    NOT_CHECKED;
 
     public static ValidationStatus invalidIfNull(final Object obj) {
         return obj != null ? VALID : INVALID;
@@ -35,7 +39,7 @@ public enum ValidationStatus {
 
     public static ValidationStatus deriveFrom(final List<ValidationStatus> statuses) {
         for (final ValidationStatus status : statuses) {
-            if(status == INVALID) {
+            if(status != VALID) {
                 return INVALID;
             }
         }
@@ -43,5 +47,9 @@ public enum ValidationStatus {
     }
     public static ValidationStatus deriveFrom(final ValidationStatus... statuses) {
         return deriveFrom(Arrays.asList(statuses));
+    }
+
+    public boolean isValid() {
+        return this == VALID;
     }
 }
