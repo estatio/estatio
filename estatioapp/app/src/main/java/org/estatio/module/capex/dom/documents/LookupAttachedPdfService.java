@@ -1,5 +1,6 @@
 package org.estatio.module.capex.dom.documents;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -50,12 +51,27 @@ public class LookupAttachedPdfService {
 
     @Programmatic
     public Optional<Document> lookupOrderPdfFrom(final Order order) {
-        return lookupPdfFrom(order, DocumentTypeData.INCOMING_ORDER, null);
+        return lookupMostRecentPdfFrom(order, DocumentTypeData.INCOMING_ORDER, null);
     }
 
     @Programmatic
     public List<Document> lookupOrderPdfsFrom(final Order order) {
         return lookupPdfsFrom(order, DocumentTypeData.INCOMING_ORDER, null);
+    }
+
+    @Programmatic
+    public Optional<Document> lookupMostRecentPdfFrom(
+            final Object domainObject,
+            final DocumentTypeData documentTypeDataIfAny,
+            final String roleNameIfAny) {
+        final List<Document> documents = lookupPdfsFrom(domainObject, documentTypeDataIfAny, roleNameIfAny);
+        return documents.isEmpty()
+                ? Optional.empty()
+                : Optional.of(
+                documents.stream()
+                        .sorted(Comparator.comparing(Document::getCreatedAt, Comparator.nullsLast(Comparator.reverseOrder())))
+                        .collect(Collectors.toList())
+                        .get(0));
     }
 
     @Programmatic
@@ -94,7 +110,6 @@ public class LookupAttachedPdfService {
                 .filter(document -> Objects.equals(document.getMimeType(), "application/pdf"))
                 .collect(Collectors.toList());
     }
-
 
     @Inject
     QueryResultsCache queryResultsCache;
