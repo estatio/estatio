@@ -1,6 +1,8 @@
 package org.estatio.module.capex.imports;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -148,7 +150,7 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
                 0
                 // TODO: I suppose change this to
                 // getIntegrazione()==null ? 0 : getIntegrazione()
-                );
+        );
     }
 
     private void importIntegrazioneLine() {
@@ -269,7 +271,7 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
             return null;
         if (getCentro() == null)
             return ProjectImportAdapter.ITA_PROJECT_PREFIX + getCommessa();
-        return ProjectImportAdapter.deriveProjectReference(getCommessa(), getCentro());
+        return ProjectImportAdapter.deriveProjectReference(getCommessa());
     }
 
     private LocalDate deriveStartDate() {

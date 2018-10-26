@@ -86,51 +86,55 @@ public class ProjectImport implements Importable, ExcelFixtureRowHandler, Fixtur
     @Override
     public List<Object> importData(final Object previousRow) {
 
-        if (previousRow!=null){
+        if (previousRow != null) {
             // TODO: support sparse sheets ?
         }
         Project parent = null;
-        if (getParentReference() !=null) {
+        if (getParentReference() != null) {
             parent = projectRepository.findByReference(getParentReference());
             if (parent == null) {
                 throw new ApplicationException(String.format("Parent with reference %s not found.", getParentReference()));
             }
-            if (! parent.getAtPath().equals(getAtPath())) {
+            if (!parent.getAtPath().equals(getAtPath())) {
                 throw new ApplicationException(String.format("AtPath parent %s does not match %s.", getParentReference(), getAtPath()));
             }
-            if (!parent.getItems().isEmpty()){
+            if (!parent.getItems().isEmpty()) {
                 // TODO: (ECP-438) until we find out more about the process, prevent a the choice of a project having items
                 throw new ApplicationException(String.format("Parent with reference %s has items and cannot be a parent therefore.", getAtPath()));
             }
         }
         Project project = findOrCreateProjectAndUpdateParent(getProjectReference(), getProjectName(), getStartDate(), getEndDate(), getAtPath(), parent);
-        if (isArchived()){
+        if (isArchived()) {
             project.archive();
         }
 
-        if (getItemWorkTypeReference()!=null) {
-
+        if (getItemWorkTypeReference() != null) {
             Charge charge = chargeRepository.findByReference(getItemWorkTypeReference());
             Property property = propertyRepository.findPropertyByReference(getItemPropertyReference());
             Tax tax = taxRepository.findByReference(getItemTaxReference());
-            wrapperFactory.wrap(project).addItem(charge, getItemDescription(), getItemBudgetedAmount(), getItemStartDate(), getItemEndDate(), property, tax);
+
+            if (project.getItems().isEmpty()) {
+                wrapperFactory.wrap(project).addItem(charge, getItemDescription(), getItemBudgetedAmount(), getItemStartDate(), getItemEndDate(), property, tax);
+            } else {
+                project.getItems().forEach(item -> item.setProperty(null));
+                wrapperFactory.wrap(project).addItem(charge, getItemDescription(), getItemBudgetedAmount(), getItemStartDate(), getItemEndDate(), null, tax);
+            }
 
         }
         return Lists.newArrayList(project);
     }
 
-    Project findOrCreateProjectAndUpdateParent(final String reference, final String name, final LocalDate startDate, final LocalDate endDate, final String atPath, final Project parent){
+    Project findOrCreateProjectAndUpdateParent(final String reference, final String name, final LocalDate startDate, final LocalDate endDate, final String atPath, final Project parent) {
         Project project = projectRepository.findOrCreate(reference, name, startDate, endDate, atPath, parent);
-        if (parent!=null) project.setParent(parent);
+        if (parent != null)
+            project.setParent(parent);
         return project;
     }
-
 
     @Override
     public List<Object> handleRow(final FixtureScript.ExecutionContext executionContext, final ExcelFixture excelFixture, final Object previousRow) {
         return importData(previousRow);
     }
-
 
     /**
      * To allow for usage within fixture scripts also.
@@ -143,11 +147,12 @@ public class ProjectImport implements Importable, ExcelFixtureRowHandler, Fixtur
      */
     @Setter
     private ExcelFixture2 excelFixture2;
+
     @Override
     public void handleRow(final ProjectImport previousRow) {
 
-        if(executionContext != null && excelFixture2 != null) {
-            if (executionContext.getParameterAsBoolean("testMode")!=null && executionContext.getParameterAsBoolean("testMode")){
+        if (executionContext != null && excelFixture2 != null) {
+            if (executionContext.getParameterAsBoolean("testMode") != null && executionContext.getParameterAsBoolean("testMode")) {
                 executionContext.addResult(excelFixture2, this.importData(previousRow));
             } else {
                 this.importData(previousRow);
