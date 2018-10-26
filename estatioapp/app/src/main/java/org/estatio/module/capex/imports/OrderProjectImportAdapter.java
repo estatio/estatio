@@ -147,9 +147,7 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
                 deriveEndDate(),
                 getCentro(),
                 deriveProjectReference(),
-                0
-                // TODO: I suppose change this to
-                // getIntegrazione()==null ? 0 : getIntegrazione()
+                getIntegrazione() == null ? 0 : getIntegrazione()
         );
     }
 
