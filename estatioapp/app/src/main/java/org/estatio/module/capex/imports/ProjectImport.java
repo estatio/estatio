@@ -113,13 +113,7 @@ public class ProjectImport implements Importable, ExcelFixtureRowHandler, Fixtur
             Property property = propertyRepository.findPropertyByReference(getItemPropertyReference());
             Tax tax = taxRepository.findByReference(getItemTaxReference());
 
-            if (project.getItems().isEmpty()) {
-                wrapperFactory.wrap(project).addItem(charge, getItemDescription(), getItemBudgetedAmount(), getItemStartDate(), getItemEndDate(), property, tax);
-            } else {
-                project.getItems().forEach(item -> item.setProperty(null));
-                wrapperFactory.wrap(project).addItem(charge, getItemDescription(), getItemBudgetedAmount(), getItemStartDate(), getItemEndDate(), null, tax);
-            }
-
+            wrapperFactory.wrap(project).addItem(charge, getItemDescription(), getItemBudgetedAmount(), getItemStartDate(), getItemEndDate(), property, tax);
         }
         return Lists.newArrayList(project);
     }
