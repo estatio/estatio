@@ -19,10 +19,6 @@
 package org.estatio.module.lease.dom.invoicing;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
@@ -35,18 +31,17 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 
-import org.estatio.module.agreement.dom.Agreement;
-import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.agreement.dom.Agreement;
+import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
+import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.invoice.dom.Invoice;
-import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.AgreementRoleCommunicationChannelTypeEnum;
-import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
-import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(repositoryFor = InvoiceForLease.class, nature = NatureOfService.DOMAIN)
@@ -258,34 +253,6 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
         }
     }
 
-    @Programmatic
-    public List<InvoiceForLease> findInvoicesByInvoiceNumber(
-            final String invoiceNumber,
-            final Integer yearIfAny) {
-        return invoiceRepository.findMatchingInvoiceNumber(invoiceNumber).stream()
-                .filter(InvoiceForLease.class::isInstance)
-                .map(InvoiceForLease.class::cast)
-                .filter(i -> {
-                    final LocalDate codaValDate = i.getCodaValDate();
-                    return yearIfAny == null || codaValDate == null || codaValDate.getYear() == yearIfAny;
-                })
-                .collect(Collectors.toList());
-    }
-
-    @Programmatic
-    public Optional<InvoiceForLease> findInvoiceByInvoiceNumber(
-            final String invoiceNumber,
-            final Integer year) {
-        return invoiceRepository.findMatchingInvoiceNumber(invoiceNumber).stream()
-                .filter(InvoiceForLease.class::isInstance)
-                .map(InvoiceForLease.class::cast)
-                .filter(i -> {
-                    final LocalDate codaValDate = i.getCodaValDate();
-                    return codaValDate != null && codaValDate.getYear() == year;
-                })
-                .findFirst();
-    }
-
     @javax.inject.Inject
     FactoryService factoryService;
 
@@ -295,8 +262,5 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
 
     @javax.inject.Inject
     LeaseInvoicingSettingsService settingsService;
-
-    @Inject
-    InvoiceRepository invoiceRepository;
 
 }
