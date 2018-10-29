@@ -25,6 +25,7 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.base.dom.Importable;
 import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.capex.dom.project.ProjectItemRepository;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
@@ -113,7 +114,7 @@ public class ProjectImport implements Importable, ExcelFixtureRowHandler, Fixtur
             Property property = propertyRepository.findPropertyByReference(getItemPropertyReference());
             Tax tax = taxRepository.findByReference(getItemTaxReference());
 
-            wrapperFactory.wrap(project).addItem(charge, getItemDescription(), getItemBudgetedAmount(), getItemStartDate(), getItemEndDate(), property, tax);
+            projectItemRepository.upsert(project, charge, getItemDescription(), getItemBudgetedAmount(), getItemStartDate(), getItemEndDate(), property, tax);
         }
         return Lists.newArrayList(project);
     }
@@ -156,6 +157,8 @@ public class ProjectImport implements Importable, ExcelFixtureRowHandler, Fixtur
     }
 
     @Inject ProjectRepository projectRepository;
+
+    @Inject ProjectItemRepository projectItemRepository;
 
     @Inject ChargeRepository chargeRepository;
 

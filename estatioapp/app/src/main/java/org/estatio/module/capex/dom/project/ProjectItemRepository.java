@@ -83,6 +83,34 @@ public class ProjectItemRepository extends UdoDomainRepositoryAndFactory<Project
     }
 
     @Programmatic
+    public ProjectItem upsert(
+            final Project project,
+            final Charge charge,
+            final String description,
+            final BigDecimal budgetedAmount,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final Property property,
+            final Tax tax
+    ) {
+        ProjectItem projectItem = findByProjectAndCharge(project, charge);
+
+        if (projectItem == null) {
+            return create(project, charge, description, budgetedAmount, startDate, endDate,
+                    property, tax);
+        }
+
+        projectItem.setDescription(description);
+        projectItem.setBudgetedAmount(budgetedAmount);
+        projectItem.setStartDate(startDate);
+        projectItem.setEndDate(endDate);
+        projectItem.setProperty(property);
+        projectItem.setTax(tax);
+
+        return projectItem;
+    }
+
+    @Programmatic
     public List<ProjectItem> listAll(){
         return allInstances();
     }

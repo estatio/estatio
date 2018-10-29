@@ -151,18 +151,6 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
         );
     }
 
-    private void importIntegrazioneLine() {
-        final Order order = orderRepository.findByOrderNumber(deriveOrderNumber());
-
-        if (order == null)
-            throw new IllegalStateException(String.format("Trying to add line to invoice number %s", deriveOrderNumber()));
-
-        final OrderImport newLine = getOrderImport();
-        serviceRegistry2.injectServicesInto(newLine);
-
-        // todo
-    }
-
     public String deriveOrderNumber() {
         if (getNumero() == null)
             return null;
