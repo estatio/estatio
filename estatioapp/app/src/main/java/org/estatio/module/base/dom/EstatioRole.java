@@ -13,7 +13,8 @@ public enum EstatioRole {
 
     USER("estatio-user"),
     ADMINISTRATOR("estatio-admin"),
-    SUPERUSER("estatio-superuser");
+    SUPERUSER("estatio-superuser"),
+    CAPEX_USER("estatio-capex-user");
 
     @Getter
     private String roleName;
