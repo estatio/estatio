@@ -160,15 +160,9 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
             @Nullable
             @ParameterLayout(describedAs = "Invoice numbers are reset each year")
             final Integer year) {
-        return invoiceRepository.findMatchingInvoiceNumber(invoiceNumber).stream()
-                .filter(InvoiceForLease.class::isInstance)
-                .map(InvoiceForLease.class::cast)
-                .filter(i -> {
-                    final LocalDate codaValDate = i.getCodaValDate();
-                    return year == null || codaValDate == null || codaValDate.getYear() == year;
-                })
-                .collect(Collectors.toList());
+        return invoiceForLeaseRepository.findInvoicesByInvoiceNumber(invoiceNumber, year);
     }
+
     public Integer default1FindInvoicesByInvoiceNumber() {
         return clockService.now().getYear();
     }
