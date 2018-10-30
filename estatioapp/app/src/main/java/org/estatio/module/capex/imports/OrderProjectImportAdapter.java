@@ -1,8 +1,6 @@
 package org.estatio.module.capex.imports;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -18,7 +16,6 @@ import org.isisaddons.module.excel.dom.ExcelFixture2;
 import org.isisaddons.module.excel.dom.ExcelMetaDataEnabled;
 import org.isisaddons.module.excel.dom.FixtureAwareRowHandler;
 
-import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectItemRepository;
@@ -252,7 +249,7 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
         return worktype;
     }
 
-    private String deriveProjectReference() {
+    public String deriveProjectReference() {
         if (getCommessa() == null)
             return null;
         if (getCentro() == null)

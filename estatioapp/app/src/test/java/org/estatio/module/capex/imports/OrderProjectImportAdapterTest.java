@@ -1,6 +1,5 @@
 package org.estatio.module.capex.imports;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -123,5 +122,19 @@ public class OrderProjectImportAdapterTest {
 
         // then
         assertThat(adapter.deriveOrderNumber()).isEqualTo("2234//192/001");
+    }
+
+    @Test
+    public void deriveProjectNumberTest() {
+
+        // given
+        OrderProjectImportAdapter adapter = new OrderProjectImportAdapter();
+
+        // when
+        adapter.setCommessa("106");
+
+        // then
+        assertThat(adapter.deriveProjectReference()).isEqualTo("ITPR106");
+
     }
 }
