@@ -13,6 +13,7 @@ import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
 
 import org.incode.module.document.DocumentModule;
 
+import org.estatio.canonical.EstatioCanonicalModule;
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
 import org.estatio.module.budget.EstatioBudgetModule;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
@@ -52,7 +53,8 @@ public class EstatioCapexModule extends ModuleAbstract {
                 new EstatioAssetFinancialModule(),
                 new EstatioBudgetModule(),
 
-                new DocumentModule()
+                new DocumentModule(),
+                new EstatioCanonicalModule()
         );
     }
 
