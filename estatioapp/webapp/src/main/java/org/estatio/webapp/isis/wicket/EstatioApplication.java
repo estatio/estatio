@@ -41,14 +41,6 @@ public class EstatioApplication extends IsisWicketApplication {
     private static final long serialVersionUID = 1L;
 
     @Override
-    protected void init() {
-        super.init();
-
-        IBootstrapSettings settings = Bootstrap.getSettings();
-        settings.setThemeProvider(new BootswatchThemeProvider(BootswatchTheme.Sandstone));
-    }
-
-    @Override
     protected Module newIsisWicketModule() {
         final Module isisDefaults = super.newIsisWicketModule();
         final Module estatioOverrides = new AbstractModule() {
