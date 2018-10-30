@@ -23,11 +23,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.datanucleus.query.typesafe.TypesafeQuery;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
 import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -75,6 +78,20 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
         persistIfNotAlready(property);
         return property;
     }
+
+
+    @Programmatic
+    public void ping() {
+
+        final TypesafeQuery<Property> q = isisJdoSupport.newTypesafeQuery(Property.class);
+        final QProperty cand = QProperty.candidate();
+        q.orderBy(cand.reference.asc());
+        q.range(0,2);
+
+    }
+
+    @Programmatic
+    IsisJdoSupport isisJdoSupport;
 
     // //////////////////////////////////////
 
