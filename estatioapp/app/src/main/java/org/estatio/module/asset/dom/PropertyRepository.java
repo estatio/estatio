@@ -37,7 +37,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.utils.StringUtils;
 import org.incode.module.country.dom.impl.Country;
-import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
@@ -90,9 +89,6 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
 
     }
 
-    @Programmatic
-    IsisJdoSupport isisJdoSupport;
-
     // //////////////////////////////////////
 
     public List<Property> findProperties(
@@ -129,6 +125,12 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
     // //////////////////////////////////////
 
     @Inject
+    MeService meService;
+
+    @Inject
+    IsisJdoSupport isisJdoSupport;
+
+    @Inject
     EstatioApplicationTenancyRepositoryForProperty estatioApplicationTenancyRepository;
 
     /**
@@ -138,13 +140,5 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
         this.estatioApplicationTenancyRepository = estatioApplicationTenancyRepository;
     }
 
-    @Inject
-    PropertyRepository propertyRepository;
-
-    @Inject
-    CountryRepository countryRepository;
-
-    @Inject
-    MeService meService;
 
 }
