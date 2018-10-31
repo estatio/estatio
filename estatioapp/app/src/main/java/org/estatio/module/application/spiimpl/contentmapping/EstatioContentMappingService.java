@@ -20,6 +20,7 @@ package org.estatio.module.application.spiimpl.contentmapping;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.ws.rs.core.MediaType;
 
@@ -31,16 +32,19 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.conmap.ContentMappingService;
 
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
+import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.canonical.bankmandate.v1.BankAccountsAndMandatesDto;
+import org.estatio.canonical.documents.v2.DocumentsDto;
 import org.estatio.canonical.party.v1.PartyDto;
 import org.estatio.module.application.canonical.v1.PostalAddressDtoFactory;
-import org.estatio.module.financial.canonical.v1.BankAccountDtoFactory;
-import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.bankmandate.canonical.v1.BankMandateDtoFactory;
 import org.estatio.module.bankmandate.canonical.v1.PartyBankAccountsAndMandatesDtoFactory;
 import org.estatio.module.bankmandate.dom.BankMandate;
+import org.estatio.module.financial.canonical.v1.BankAccountDtoFactory;
+import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.lease.canonical.v1.InvoiceForLeaseDtoFactory;
+import org.estatio.module.lease.contentmapping.DocumentsDtoFactory;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.party.canonical.v1.PartyDtoFactory;
 import org.estatio.module.party.dom.Party;
@@ -80,6 +84,9 @@ public class EstatioContentMappingService implements ContentMappingService {
         if(object instanceof PostalAddress) {
             return postalAddressDtoFactory.newDto((PostalAddress)object);
         }
+        if(object instanceof List && Objects.equals(domainType, DocumentsDto.class.getName())) {
+            return documentsDtoFactory.newDto((List<Document>)object);
+        }
 
         return null;
     }
@@ -98,6 +105,9 @@ public class EstatioContentMappingService implements ContentMappingService {
 
     @javax.inject.Inject
     BankAccountDtoFactory bankAccountDtoFactory;
+
+    @javax.inject.Inject
+    DocumentsDtoFactory documentsDtoFactory;
 
     @javax.inject.Inject
     BankMandateDtoFactory bankMandateDtoFactory;
