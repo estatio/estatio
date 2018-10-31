@@ -25,30 +25,44 @@
     </bs3:row>
     <bs3:row>
         <bs3:col span="12">
+            <cpt:fieldSet id="kibana" name="">
+                <cpt:property id="kibanaLog" labelPosition="NONE">
+                    <cpt:action id="openKibanaLog" cssClassFa="log"/>
+                </cpt:property>
+            </cpt:fieldSet>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12">
             <cpt:fieldSet name="Message of the Day">
                  <cpt:property id="motd"/>
             </cpt:fieldSet>
         </bs3:col>
     </bs3:row>
     <bs3:row>
-        <bs3:col span="6">
-            <cpt:fieldSet name="Settings" id="settings">
-                <cpt:property id="epochDate">
-                    <cpt:action id="updateEpochDate">
-                        <cpt:named>Update</cpt:named>
-                    </cpt:action>
-                </cpt:property>
-            </cpt:fieldSet>
+        <bs3:col span="6" unreferencedCollections="true">
+            <bs3:row>
+                <bs3:col span="12">
+                    <cpt:collection id="applicationSettings"/>
+                </bs3:col>
+            </bs3:row>
+            <bs3:row>
+                <bs3:col span="12">
+                    <cpt:fieldSet name="Configuration" id="other"  unreferencedProperties="true">
+                        <cpt:property id="httpSessionTimeout"/>
+                    </cpt:fieldSet>
+                    <cpt:fieldSet name="Settings" id="settings">
+                        <cpt:property id="epochDate">
+                            <cpt:action id="updateEpochDate">
+                                <cpt:named>Update</cpt:named>
+                            </cpt:action>
+                        </cpt:property>
+                    </cpt:fieldSet>
+                </bs3:col>
+            </bs3:row>
         </bs3:col>
-        <bs3:col span="6">
-            <cpt:fieldSet name="Configuration" id="other"  unreferencedProperties="true">
-                <cpt:property id="httpSessionTimeout"/>
-            </cpt:fieldSet>
-        </bs3:col>
-    </bs3:row>
-    <bs3:row>
-        <bs3:col span="12" unreferencedCollections="true">
-            <cpt:collection id="applicationSettings"/>
+        <bs3:col span="6" unreferencedCollections="true">
+            <cpt:collection id="connections"/>
         </bs3:col>
     </bs3:row>
 </bs3:grid>

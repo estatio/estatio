@@ -1,5 +1,7 @@
 package org.estatio.module.application.app;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -33,14 +35,19 @@ import org.apache.isis.applib.services.config.ConfigurationService;
 import org.apache.isis.applib.services.email.EmailService;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.applib.value.Markup;
 
 import org.isisaddons.module.servletapi.dom.HttpSessionProvider;
+import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
 import org.incode.module.slack.impl.SlackService;
 
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.settings.dom.ApplicationSettingForEstatio;
 import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @DomainObject(
         // WORKAROUND: using fqcn as objectType because Isis' invalidation of cache in prototyping mode causing NPEs in some situations
@@ -212,9 +219,62 @@ public class AdminDashboard {
         return props.contains(prop.getKey());
     }
 
+    public Markup getKibanaLog() {
+        return new Markup(stringInterpolatorService.interpolate(
+                this, "<iframe src=\"${properties['estatio.application.kibanaEmbeddedLogUrl']}?embed=true\" height=\"${this.kibanaLogHeight}\" width=\"${this.kibanaLogWidth}\"></iframe>"));
+    }
+    public boolean hideKibanaLog() {
+        return interpolateOpenLogUrl() == null;
+    }
+
+    @Getter @Setter
+    @Property(hidden = Where.EVERYWHERE)
+    private int kibanaLogWidth = 1400;
+    @Getter @Setter
+    @Property(hidden = Where.EVERYWHERE)
+    private int kibanaLogHeight = 800;
+
+    public AdminDashboard updateKibanaLogDimensions(
+            int width,
+            int height
+    ) {
+        this.setKibanaLogWidth(width);
+        this.setKibanaLogHeight(height);
+        return this;
+    }
+    public boolean hideUpdateKibanaLogDimensions() {
+        return interpolateOpenLogUrl() == null;
+    }
+    public int default0UpdateKibanaLogDimensions() {
+        return getKibanaLogWidth();
+    }
+    public int default1UpdateKibanaLogDimensions() {
+        return getKibanaLogHeight();
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public URL openKibanaLog() throws MalformedURLException {
+        return interpolateOpenLogUrl();
+    }
+    public boolean hideOpenKibanaLog() {
+        return interpolateOpenLogUrl() == null;
+    }
+
+    private URL interpolateOpenLogUrl()  {
+        try {
+            return new URL(stringInterpolatorService.interpolate(this, "${properties['estatio.application.kibanaOpenLogUrl']}"));
+        } catch (MalformedURLException e) {
+            return null;
+        }
+    }
+
     @Inject
     @XmlTransient
     ConfigurationService configurationService;
+
+    @Inject
+    @XmlTransient
+    StringInterpolatorService stringInterpolatorService;
 
     @Inject
     @XmlTransient
