@@ -17,6 +17,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -24,7 +25,6 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.user.UserService;
 
 import org.isisaddons.module.excel.dom.ExcelService;
-import org.isisaddons.module.excel.dom.util.Mode;
 import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
@@ -37,7 +37,6 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.dom.project.Project;
-import org.estatio.module.capex.imports.OrderProjectImportAdapter;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.numerator.dom.Numerator;
@@ -67,11 +66,12 @@ public class OrderMenu {
     }
 
     /**
-     *  Specifically for Italian order process
+     * Specifically for Italian order process
      */
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public Order createOrder(
-            final Property property,
+            @Nullable final Property property,
+            @Nullable @Parameter(maxLength = 3) final String multiPropertyReference,
             final Project project,
             final Charge charge,
             @Nullable final Organisation buyer,
@@ -81,22 +81,42 @@ public class OrderMenu {
             @Nullable final Tax tax,
             @Nullable final String description) {
         final String userAtPath = meService.me().getAtPath();
-        return orderRepository.create(property, project, charge, buyer, supplier, orderDate, netAmount, tax, description, IncomingInvoiceType.ITA_ORDER_INVOICE, userAtPath);
+        return orderRepository.create(property, multiPropertyReference, project, charge, buyer, supplier, orderDate, netAmount, tax, description, IncomingInvoiceType.ITA_ORDER_INVOICE, userAtPath);
     }
 
-    public List<Party> autoComplete3CreateOrder(@MinLength(3) final String searchPhrase) {
+    public String validateCreateOrder(
+            final Property property,
+            final String multiPropertyReference,
+            final Project project,
+            final Charge charge,
+            final Organisation buyer,
+            final Organisation supplier,
+            final LocalDate orderDate,
+            final BigDecimal netAmount,
+            final Tax tax,
+            final String description) {
+        if (property == null && multiPropertyReference == null)
+            return "Either a property or a reference for multiple properties must be defined";
+
+        if (property != null && multiPropertyReference != null)
+            return "Can not define both property and multi property reference";
+
+        return null;
+    }
+
+    public List<Party> autoComplete4CreateOrder(@MinLength(3) final String searchPhrase) {
         return partyRepository.autoCompleteWithRole(searchPhrase, IncomingInvoiceRoleTypeEnum.ECP);
     }
 
-    public List<Party> autoComplete4CreateOrder(@MinLength(3) final String search) {
+    public List<Party> autoComplete5CreateOrder(@MinLength(3) final String search) {
         return partyRepository.autoCompleteWithRole(search, IncomingInvoiceRoleTypeEnum.SUPPLIER);
     }
 
-    public LocalDate default5CreateOrder() {
+    public LocalDate default6CreateOrder() {
         return clockService.now();
     }
 
-    public List<Charge> choices2CreateOrder() {
+    public List<Charge> choices3CreateOrder() {
         return chargeRepository.choicesItalianWorkTypes();
     }
 
@@ -295,23 +315,6 @@ public class OrderMenu {
 
     public String validateCreateOrderNumberNumerator(final String format, final String atPath) {
         return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser()) ? "You need administrator rights to create an order numerator" : null;
-    }
-
-    ///////////////////////////////////////////
-
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    public List<Order> importOrdersItaly(final org.apache.isis.applib.value.Blob orderSheet) {
-        List<Order> result = new ArrayList<>();
-        for (OrderProjectImportAdapter adapter : excelService.fromExcel(orderSheet, OrderProjectImportAdapter.class, "ECP Juma", Mode.RELAXED)) {
-            adapter.handle(null);
-            if (adapter.deriveOrderNumber() != null) {
-                Order order = orderRepository.findByOrderNumber(adapter.deriveOrderNumber());
-                if (order != null && !result.contains(order)) {
-                    result.add(order);
-                }
-            }
-        }
-        return result;
     }
 
     @Inject
