@@ -31,6 +31,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.google.common.collect.Lists;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -322,6 +323,19 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             @Nullable final String orderNumber) {
         setOrderNumber(orderNumber);
         return this;
+    }
+
+    public String validateEditOrderNumber(final String orderNumber) {
+        if (StringUtils.countMatches(orderNumber, "/") != 3)
+            return "Order number format incorrect; should be aaaa/bbb/ccc/ddd";
+
+        final String currentNumeratorValue = getOrderNumber().split("/")[0];
+        final String newNumeratorValue = orderNumber.split("/")[0];
+
+        if (!currentNumeratorValue.equals(newNumeratorValue))
+            return String.format("First element of order number (%s) can not be changed", currentNumeratorValue);
+
+        return null;
     }
 
     public String default0EditOrderNumber() {

@@ -229,29 +229,6 @@ public class Order_Test {
     }
 
     @Test
-    public void mergingComments() throws Exception {
-        Set<String> s1 = Sets.newLinkedHashSet(Splitter.on(" ").split("Scansione documentazione pratica VV.FF."));
-        Set<String> s2 = Sets.newLinkedHashSet(Splitter.on(" ").split("Scansione documentazione pratica VV.FF. - Integrazione n. 1"));
-        Set<String> s3 = Sets.newLinkedHashSet(Splitter.on(" ").split("Scansione documentazione pratica VV.FF. - Integrazione n. 2"));
-        Set<String> s4 = Sets.newLinkedHashSet(Splitter.on(" ").split("Scansione documentazione pratica VV.FF. - Integrazione n. 3"));
-        Set<String> s5 = Sets.newLinkedHashSet(Splitter.on(" ").split("Scansione documentazione pratica VV.FF. - Integrazione n. 4"));
-        Set<String> s6 = Sets.newLinkedHashSet(Splitter.on(" ").split("Scansione documentazione pratica VV.FF. - Integrazione n. 5"));
-        Set<String> s7 = Sets.newLinkedHashSet(Splitter.on(" ").split("Scansione documentazione pratica VV.FF. - Integrazione n. 6"));
-
-        Set<String> intersection1 = Sets.union(s1, s2);
-        Set<String> intersection2 = Sets.union(intersection1, s3);
-        Set<String> intersection3 = Sets.union(intersection2, s4);
-        Set<String> intersection4 = Sets.union(intersection3, s5);
-        Set<String> intersection5 = Sets.union(intersection4, s6);
-        Set<String> intersection6 = Sets.union(intersection5, s7);
-
-        final String result = String.join(" ", intersection6);
-
-        assertThat(result).isEqualTo("Scansione documentazione pratica VV.FF. - Integrazione n. 1 2 3 4 5 6");
-
-    }
-
-    @Test
     public void addItem_works_for_ita_when_no_items() throws Exception {
 
         // given
@@ -366,5 +343,43 @@ public class Order_Test {
         order.addItem(chargeForFra, null, null, null, null, null, null, null, null, null);
     }
 
+    @Test
+    public void editOrderNumber_happyCase() throws Exception {
+        // given
+        final Order order = new Order();
+        order.setOrderNumber("0001/CUR/001/001");
+
+        // when
+        final String validation = order.validateEditOrderNumber("0001/GEN/002/002");
+
+        // then
+        assertThat(validation).isNull();
+    }
+
+    @Test
+    public void editOrderNumber_sadCase_incorrect_amount_separators() throws Exception {
+        // given
+        final Order order = new Order();
+        order.setOrderNumber("0001/CUR/001/001");
+
+        // when
+        final String validation = order.validateEditOrderNumber("0001/GEN/002.002");
+
+        // then
+        assertThat(validation).isEqualTo("Order number format incorrect; should be aaaa/bbb/ccc/ddd");
+    }
+
+    @Test
+    public void editOrderNumber_sadCase_numerator_value_changed() throws Exception {
+        // given
+        final Order order = new Order();
+        order.setOrderNumber("0001/CUR/001/001");
+
+        // when
+        final String validation = order.validateEditOrderNumber("0002/CUR/001/001");
+
+        // then
+        assertThat(validation).isEqualTo("First element of order number (0001) can not be changed");
+    }
 
 }
