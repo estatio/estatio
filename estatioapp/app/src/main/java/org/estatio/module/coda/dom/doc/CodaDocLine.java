@@ -154,23 +154,6 @@ import lombok.Setter;
                         + "   && extRefOrderValidationStatus == :extRefOrderValidationStatus "
         ),
         @Query(
-                name = "findByHandlingAndExtRefValidationStatusAndExtRefPropertyValidationStatusAndExtRefProperty", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
-                        + "WHERE handling                       == :handling "
-                        + "   && extRefValidationStatus         == :extRefValidationStatus "
-                        + "   && extRefPropertyValidationStatus == :extRefPropertyValidationStatus "
-                        + "   && extRefProperty                 == :extRefProperty "
-        ),
-        @Query(
-                name = "findByHandlingAndExtRefValidationStatusAndExtRefPropertyValidationStatus", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
-                        + "WHERE handling                       == :handling "
-                        + "   && extRefValidationStatus         == :extRefValidationStatus "
-                        + "   && extRefPropertyValidationStatus == :extRefPropertyValidationStatus "
-        ),
-        @Query(
                 name = "findByHandlingAndExtRefValidationStatusAndExtRefProjectValidationStatusAndExtRefProject", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
@@ -241,8 +224,6 @@ import lombok.Setter;
 
     @Index(name = "CodaDocLine_orderValidation_IDX",
             members = { "handling", "extRefValidationStatus", "extRefOrderValidationStatus", "extRefOrder" }),
-    @Index(name = "CodaDocLine_propertyValidation_IDX",
-            members = { "handling", "extRefValidationStatus", "extRefPropertyValidationStatus", "extRefProperty" }),
     @Index(name = "CodaDocLine_projectValidation_IDX",
             members = { "handling", "extRefValidationStatus", "extRefProjectValidationStatus", "extRefProject" }),
     @Index(name = "CodaDocLine_workTypeValidation_IDX",
@@ -270,6 +251,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
             final BigDecimal docSumTax,
             final LocalDateTime valueDate,
             final String extRef3,
+            final String extRef4,
             final String extRef5,
             final String elmBankAccount,
             final String userRef1,
@@ -284,6 +266,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
         this.docSumTax = docSumTax;
         this.valueDate = valueDate;
         this.extRef3 = extRef3;
+        this.extRef4 = extRef4;
         this.extRef5 = extRef5;
         this.elmBankAccount = elmBankAccount;
         this.userRef1 = userRef1;
@@ -319,8 +302,8 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
         setExtRefProjectValidationStatus(ValidationStatus.NOT_CHECKED);
         setExtRefProject(null);
 
-        setExtRefPropertyValidationStatus(ValidationStatus.NOT_CHECKED);
-        setExtRefProperty(null);
+        setExtRefCostCentreValidationStatus(ValidationStatus.NOT_CHECKED);
+        setExtRefCostCentre(null);
 
         setExtRefWorkTypeValidationStatus(ValidationStatus.NOT_CHECKED);
         setExtRefWorkType(null);
@@ -378,6 +361,11 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Property()
     @Getter @Setter
     private String extRef3;
+
+    @Column(allowsNull = "true", length = 32)
+    @Property()
+    @Getter @Setter
+    private String extRef4;
 
     @Column(allowsNull = "true", length = 32)
     @Property()
@@ -505,7 +493,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     private ValidationStatus extRefOrderValidationStatus;
 
     /**
-     * As parsed from extRef3/extRef5, only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
+     * As parsed from extRef3/extRef4/extRef5, only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
      */
     @Column(allowsNull = "true", length = 30)
     @Property()
@@ -517,15 +505,15 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Column(allowsNull = "false", length = 20)
     @Property()
     @Getter @Setter
-    private ValidationStatus extRefPropertyValidationStatus;
+    private ValidationStatus extRefCostCentreValidationStatus;
 
     /**
-     * As parsed from extRef3/extRef5, only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
+     * As parsed from extRef3/extRef4/extRef5, only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
      */
     @Column(allowsNull = "true", length = 30)
     @Property()
     @Getter @Setter
-    private String extRefProperty;
+    private String extRefCostCentre;
 
 
 
@@ -535,7 +523,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     private ValidationStatus extRefProjectValidationStatus;
 
     /**
-     * As parsed from extRef3/extRef5, only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
+     * As parsed from extRef3/extRef4/extRef5, only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
      */
     @Column(allowsNull = "true", length = 30)
     @Property()
@@ -550,7 +538,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     private ValidationStatus extRefWorkTypeValidationStatus;
 
     /**
-     * As parsed from extRef3/extRef5, only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
+     * As parsed from extRef3/extRef4/extRef5, only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
      */
     @Column(allowsNull = "true", length = 30)
     @Property()

@@ -126,6 +126,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
             final BigDecimal docSumTax,
             final LocalDateTime valueDate,
             final String extRef3,
+            final String extRef4,
             final String extRef5,
             final String elmBankAccount,
             final String userRef1,
@@ -133,7 +134,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
             final String mediaCode) {
         return lineRepository.upsert(this,
                     lineNum, accountCode, description,
-                    docValue, docSumTax, valueDate, extRef3, extRef5, elmBankAccount, userRef1, userStatus, mediaCode);
+                    docValue, docSumTax, valueDate, extRef3, extRef4, extRef5, elmBankAccount, userRef1, userStatus, mediaCode);
     }
 
     @Column(allowsNull = "false", length = 20)

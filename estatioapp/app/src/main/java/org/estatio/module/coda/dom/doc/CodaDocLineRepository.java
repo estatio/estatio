@@ -284,50 +284,6 @@ public class CodaDocLineRepository {
 
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidExtRefProperty(final String extRefProperty) {
-        return findByHandlingAndExtRefValidationStatusAndExtRefPropertyValidationStatusAndExtRefProperty(
-                Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID, extRefProperty);
-    }
-
-    @Programmatic
-    public List<CodaDocLine> findWithInvalidProperties() {
-        return findByHandlingAndExtRefValidationStatusAndExtRefPropertyValidationStatus(
-                Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID);
-    }
-
-
-    List<CodaDocLine> findByHandlingAndExtRefValidationStatusAndExtRefPropertyValidationStatusAndExtRefProperty(
-            final Handling handling,
-            final ValidationStatus extRefValidationStatus,
-            final ValidationStatus extRefPropertyValidationStatus,
-            final String extRefProperty) {
-        return repositoryService.allMatches(
-                new QueryDefault<>(
-                        CodaDocLine.class,
-                        "findByHandlingAndExtRefValidationStatusAndExtRefPropertyValidationStatusAndExtRefProperty",
-                        "handling", handling,
-                        "extRefValidationStatus", extRefValidationStatus,
-                        "extRefPropertyValidationStatus", extRefPropertyValidationStatus,
-                        "extRefProperty", extRefProperty
-                ));
-    }
-
-    List<CodaDocLine> findByHandlingAndExtRefValidationStatusAndExtRefPropertyValidationStatus(
-            final Handling handling,
-            final ValidationStatus extRefValidationStatus,
-            final ValidationStatus extRefPropertyValidationStatus) {
-        return repositoryService.allMatches(
-                new QueryDefault<>(
-                        CodaDocLine.class,
-                        "handling", handling,
-                        "findByHandlingAndExtRefValidationStatusAndExtRefPropertyValidationStatus",
-                        "extRefValidationStatus", extRefValidationStatus,
-                        "extRefPropertyValidationStatus", extRefPropertyValidationStatus
-                ));
-    }
-
-
-    @Programmatic
     public List<CodaDocLine> findWithInvalidExtRefProject(final String extRefProject) {
         return findByHandlingAndExtRefValidationStatusAndExtRefProjectValidationStatusAndExtRefProject(
                     Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID, extRefProject);
@@ -460,7 +416,7 @@ public class CodaDocLineRepository {
             final BigDecimal docSumTax,
             final LocalDateTime valueDate,
             final String extRef3,
-            final String extRef5,
+            final String extRef4, final String extRef5,
             final String elmBankAccount,
             final String userRef1,
             final Character userStatus,
@@ -468,7 +424,7 @@ public class CodaDocLineRepository {
         return repositoryService.persist(
                 new CodaDocLine(docHead, lineNum, accountCode, description,
                         docValue, docSumTax, valueDate, extRef3,
-                        extRef5, elmBankAccount, userRef1, userStatus, mediaCode));
+                        extRef4, extRef5, elmBankAccount, userRef1, userStatus, mediaCode));
     }
 
     @Programmatic
@@ -492,6 +448,7 @@ public class CodaDocLineRepository {
             final BigDecimal docSumTax,
             final LocalDateTime valueDate,
             final String extRef3,
+            final String extRef4,
             final String extRef5,
             final String elmBankAccount,
             final String userRef1,
@@ -500,7 +457,8 @@ public class CodaDocLineRepository {
 
         CodaDocLine docLine = findByDocHeadAndLineNum(docHead, lineNum);
         if(docLine == null) {
-            return create(docHead, lineNum, accountCode, description, docValue, docSumTax, valueDate, extRef3, extRef5,
+            return create(docHead, lineNum, accountCode, description, docValue, docSumTax, valueDate, extRef3, extRef4,
+                    extRef5,
                     elmBankAccount, userRef1, userStatus, mediaCode);
         } else {
             docLine.setAccountCode(accountCode);
