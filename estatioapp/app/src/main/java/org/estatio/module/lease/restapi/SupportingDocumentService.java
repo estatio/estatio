@@ -18,7 +18,6 @@
  */
 package org.estatio.module.lease.restapi;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,11 +31,11 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
-import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
+import org.estatio.module.lease.dom.paperclips.PaperclipsForInvoiceForLeaseRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_REST_ONLY,
@@ -50,18 +49,12 @@ public class SupportingDocumentService {
             final int year) {
         final Optional<InvoiceForLease> invoiceIfAny =
                 invoiceForLeaseRepository.findInvoiceByInvoiceNumber(invoiceNumber, year);
-        if(invoiceIfAny.isPresent()) {
-            final List<Paperclip> paperclips = paperclipRepository.findByAttachedTo(invoiceIfAny.get());
-            return paperclips
-                    .stream()
-                    .map(Paperclip::getDocument)
-                    .filter(Document.class::isInstance)
-                    .map(Document.class::cast)
-                    .filter(this::supportsInvoice)
-                    .collect(Collectors.toList());
-        } else {
-            return Collections.emptyList();
-        }
+        return paperclipsForInvoiceForLeaseRepository.streamPaperclips(invoiceIfAny)
+                .map(Paperclip::getDocument)
+                .filter(Document.class::isInstance)
+                .map(Document.class::cast)
+                .filter(this::supportsInvoice)
+                .collect(Collectors.toList());
     }
 
     private boolean supportsInvoice(final Document document) {
@@ -74,7 +67,7 @@ public class SupportingDocumentService {
     InvoiceForLeaseRepository invoiceForLeaseRepository;
 
     @Inject
-    PaperclipRepository paperclipRepository;
+    PaperclipsForInvoiceForLeaseRepository paperclipsForInvoiceForLeaseRepository;
 
 
 }
