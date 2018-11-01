@@ -137,13 +137,13 @@ import lombok.Setter;
         ),
 
         @Query(
-                name = "findByHandlingAndExtRefValidationStatusAndExtRefOrderValidationStatusAndExtRefOrder", language = "JDOQL",
+                name = "findByHandlingAndExtRefValidationStatusAndExtRefOrderValidationStatusAndOrderNumber", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
                         + "WHERE handling                    == :handling "
                         + "   && extRefValidationStatus      == :extRefValidationStatus "
                         + "   && extRefOrderValidationStatus == :extRefOrderValidationStatus "
-                        + "   && extRefOrder                 == :extRefOrder "
+                        + "   && orderNumber                 == :orderNumber "
         ),
         @Query(
                 name = "findByHandlingAndExtRefValidationStatusAndExtRefOrderValidationStatus", language = "JDOQL",
@@ -154,13 +154,13 @@ import lombok.Setter;
                         + "   && extRefOrderValidationStatus == :extRefOrderValidationStatus "
         ),
         @Query(
-                name = "findByHandlingAndExtRefValidationStatusAndExtRefProjectValidationStatusAndExtRefProject", language = "JDOQL",
+                name = "findByHandlingAndExtRefValidationStatusAndExtRefProjectValidationStatusAndProjectReference", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
                         + "WHERE handling                      == :handling "
                         + "   && extRefValidationStatus        == :extRefValidationStatus "
                         + "   && extRefProjectValidationStatus == :extRefProjectValidationStatus "
-                        + "   && extRefProject                 == :extRefProject "
+                        + "   && projectReference              == :projectReference "
         ),
         @Query(
                 name = "findByHandlingAndExtRefValidationStatusAndExtRefProjectValidationStatus", language = "JDOQL",
@@ -171,13 +171,13 @@ import lombok.Setter;
                         + "   && extRefProjectValidationStatus == :extRefProjectValidationStatus "
         ),
         @Query(
-                name = "findByHandlingAndExtRefValidationStatusAndExtRefWorkTypeValidationStatusAndExtRefWorkType", language = "JDOQL",
+                name = "findByHandlingAndExtRefValidationStatusAndExtRefWorkTypeValidationStatusAndChargeReference", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
                         + "WHERE handling                       == :handling "
                         + "   && extRefValidationStatus         == :extRefValidationStatus "
-                        + "   && extRefWorkType                 == :extRefWorkType "
                         + "   && extRefWorkTypeValidationStatus == :extRefWorkTypeValidationStatus "
+                        + "   && chargeReference                == :chargeReference "
         ),
         @Query(
                 name = "findByHandlingAndExtRefValidationStatusAndExtRefWorkTypeValidationStatus", language = "JDOQL",
@@ -223,11 +223,11 @@ import lombok.Setter;
             members = { "handling", "extRefValidationStatus", "extRef3", "extRef5" }),
 
     @Index(name = "CodaDocLine_orderValidation_IDX",
-            members = { "handling", "extRefValidationStatus", "extRefOrderValidationStatus", "extRefOrder" }),
+            members = { "handling", "extRefValidationStatus", "extRefOrderValidationStatus", "orderNumber" }),
     @Index(name = "CodaDocLine_projectValidation_IDX",
-            members = { "handling", "extRefValidationStatus", "extRefProjectValidationStatus", "extRefProject" }),
+            members = { "handling", "extRefValidationStatus", "extRefProjectValidationStatus", "projectReference" }),
     @Index(name = "CodaDocLine_workTypeValidation_IDX",
-            members = { "handling", "extRefValidationStatus", "extRefWorkTypeValidationStatus", "extRefWorkType" }),
+            members = { "handling", "extRefValidationStatus", "extRefWorkTypeValidationStatus", "chargeReference" }),
 
     @Index(name = "CodaDocLine_mediaCodeValidation_IDX",
             members = { "handling", "mediaCodeValidationStatus", "mediaCode" }),
@@ -297,16 +297,16 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
         setExtRefValidationStatus(ValidationStatus.NOT_CHECKED);
 
         setExtRefOrderValidationStatus(ValidationStatus.NOT_CHECKED);
-        setExtRefOrder(null);
+        setOrderNumber(null);
 
         setExtRefProjectValidationStatus(ValidationStatus.NOT_CHECKED);
-        setExtRefProject(null);
+        setProjectReference(null);
 
         setExtRefCostCentreValidationStatus(ValidationStatus.NOT_CHECKED);
         setExtRefCostCentre(null);
 
         setExtRefWorkTypeValidationStatus(ValidationStatus.NOT_CHECKED);
-        setExtRefWorkType(null);
+        setChargeReference(null);
 
         setMediaCodeValidationStatus(ValidationStatus.NOT_CHECKED);
         setCodaPaymentMethod(null);
@@ -494,11 +494,15 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
 
     /**
      * As parsed from extRef3/extRef4/extRef5, only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
+     *
+     * Is the normalized version of the extRef3.
+     * For old style, is nn/CCC/ll/WWW   (nn and ll are not normalized, are verbatim)
+     * For new style, is nn/CCC/PPP/WWW  (nn is not normalized).
      */
     @Column(allowsNull = "true", length = 30)
     @Property()
     @Getter @Setter
-    private String extRefOrder;
+    private String orderNumber;
 
 
 
@@ -523,12 +527,14 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     private ValidationStatus extRefProjectValidationStatus;
 
     /**
-     * As parsed from extRef3/extRef4/extRef5, only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
+     * As parsed from extRef3/extRef4/extRef5, normalized to 3 digits and prefixed with 'ITPR'.
+     *
+     * Only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid},
      */
     @Column(allowsNull = "true", length = 30)
     @Property()
     @Getter @Setter
-    private String extRefProject;
+    private String projectReference;
 
 
 
@@ -538,12 +544,16 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     private ValidationStatus extRefWorkTypeValidationStatus;
 
     /**
-     * As parsed from extRef3/extRef4/extRef5, only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
+     * As parsed from extRef3/extRef4/extRef5, normalized to 3 digits and prefixed with either 'ITWT'
+     * (if was a new format, or an old format where the lookup from old charge to new charge could be performed) or
+     * prefixed with 'OLD' (if was old format, and no lookup of new charge from old was possible)
+     *
+     * Only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
      */
     @Column(allowsNull = "true", length = 30)
     @Property()
     @Getter @Setter
-    private String extRefWorkType;
+    private String chargeReference;
 
 
     @Column(allowsNull = "false", length = 20)

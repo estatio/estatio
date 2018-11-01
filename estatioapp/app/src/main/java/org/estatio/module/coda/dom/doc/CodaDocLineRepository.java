@@ -116,7 +116,7 @@ public class CodaDocLineRepository {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         CodaDocLine.class,
-                        "findByHandlingAndAccountCodeValidationStatusAndAccountCodeEl5ValidationStatusAndAccountCodeEl5",
+                        "findByHandlingAndAccountCodeValidationStatusAndAccountCodeEl5ValidationStatus",
                         "handling", handling,
                         "accountCodeValidationStatus", accountCodeValidationStatus,
                         "accountCodeEl5ValidationStatus", accountCodeEl5ValidationStatus
@@ -158,7 +158,7 @@ public class CodaDocLineRepository {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         CodaDocLine.class,
-                        "findByHandlingAndAccountCodeValidationStatusAndAccountCodeEl6ValidationStatusAndAccountCodeEl6",
+                        "findByHandlingAndAccountCodeValidationStatusAndAccountCodeEl6ValidationStatus",
                         "handling", handling,
                         "accountCodeValidationStatus", accountCodeValidationStatus,
                         "accountCodeEl6ValidationStatus", accountCodeEl6ValidationStatus
@@ -242,30 +242,30 @@ public class CodaDocLineRepository {
     }
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidOrder(final String extRefOrder) {
-        return findByHandlingAndExtRefValidationStatusAndExtRefOrderValidationStatusAndExtRefOrder(
-                    Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID, extRefOrder);
+    public List<CodaDocLine> findWithInvalidOrderNumber(final String orderNumber) {
+        return findByHandlingAndExtRefValidationStatusAndExtRefOrderValidationStatusAndOrderNumber(
+                    Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID, orderNumber);
     }
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidOrders() {
+    public List<CodaDocLine> findWithInvalidOrderNumbers() {
         return findByHandlingAndExtRefValidationStatusAndExtRefOrderValidationStatus(
                     Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID);
     }
 
-    List<CodaDocLine> findByHandlingAndExtRefValidationStatusAndExtRefOrderValidationStatusAndExtRefOrder(
+    List<CodaDocLine> findByHandlingAndExtRefValidationStatusAndExtRefOrderValidationStatusAndOrderNumber(
             final Handling handling,
             final ValidationStatus extRefValidationStatus,
             final ValidationStatus extRefOrderValidationStatus,
-            final String extRefOrder) {
+            final String orderNumber) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         CodaDocLine.class,
-                        "findByHandlingAndExtRefValidationStatusAndExtRefOrderValidationStatusAndExtRefOrder",
+                        "findByHandlingAndExtRefValidationStatusAndExtRefOrderValidationStatusAndOrderNumber",
                         "handling", handling,
                         "extRefValidationStatus", extRefValidationStatus,
                         "extRefOrderValidationStatus", extRefOrderValidationStatus,
-                        "extRefOrder", extRefOrder
+                        "orderNumber", orderNumber
                 ));
     }
 
@@ -284,9 +284,9 @@ public class CodaDocLineRepository {
 
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidExtRefProject(final String extRefProject) {
-        return findByHandlingAndExtRefValidationStatusAndExtRefProjectValidationStatusAndExtRefProject(
-                    Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID, extRefProject);
+    public List<CodaDocLine> findWithInvalidExtRefProject(final String projectReference) {
+        return findByHandlingAndExtRefValidationStatusAndExtRefProjectValidationStatusAndProjectReference(
+                    Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID, projectReference);
     }
 
     @Programmatic
@@ -296,19 +296,19 @@ public class CodaDocLineRepository {
     }
 
 
-    List<CodaDocLine> findByHandlingAndExtRefValidationStatusAndExtRefProjectValidationStatusAndExtRefProject(
+    List<CodaDocLine> findByHandlingAndExtRefValidationStatusAndExtRefProjectValidationStatusAndProjectReference(
             final Handling handling,
             final ValidationStatus extRefValidationStatus,
             final ValidationStatus extRefProjectValidationStatus,
-            final String extRefProject) {
+            final String projectReference) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         CodaDocLine.class,
-                        "findByHandlingAndExtRefValidationStatusAndExtRefProjectValidationStatusAndExtRefProject",
+                        "findByHandlingAndExtRefValidationStatusAndExtRefProjectValidationStatusAndProjectReference",
                         "handling", handling,
                         "extRefValidationStatus", extRefValidationStatus,
                         "extRefProjectValidationStatus", extRefProjectValidationStatus,
-                        "extRefProject", extRefProject
+                        "projectReference", projectReference
                     ));
     }
 
@@ -327,30 +327,30 @@ public class CodaDocLineRepository {
     }
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidExtRefWorkType(final String extRefWorkType) {
-        return findByHandlingAndExtRefValidationStatusAndExtRefWorkTypeValidationStatusAndExtRefWorkType(
-                Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID, extRefWorkType);
+    public List<CodaDocLine> findWithInvalidChargeReference(final String chargeReference) {
+        return findByHandlingAndExtRefValidationStatusAndExtRefWorkTypeValidationStatusAndChargeReference(
+                Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID, chargeReference);
     }
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidExtRefWorkTypes() {
+    public List<CodaDocLine> findWithInvalidChargeReferences() {
         return findByHandlingAndExtRefValidationStatusAndExtRefWorkTypeValidationStatus(
                 Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID);
     }
 
-    List<CodaDocLine> findByHandlingAndExtRefValidationStatusAndExtRefWorkTypeValidationStatusAndExtRefWorkType(
+    List<CodaDocLine> findByHandlingAndExtRefValidationStatusAndExtRefWorkTypeValidationStatusAndChargeReference(
             final Handling handling,
             final ValidationStatus extRefValidationStatus,
             final ValidationStatus extRefWorkTypeValidationStatus,
-            final String extRefWorkType) {
+            final String chargeReference) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         CodaDocLine.class,
-                        "findByHandlingAndExtRefValidationStatusAndExtRefWorkTypeValidationStatusAndExtRefWorkType",
+                        "findByHandlingAndExtRefValidationStatusAndExtRefWorkTypeValidationStatusAndChargeReference",
                         "handling", handling,
                         "extRefValidationStatus", extRefValidationStatus,
                         "extRefWorkTypeValidationStatus", extRefWorkTypeValidationStatus,
-                        "extRefWorkType", extRefWorkType
+                        "chargeReference", chargeReference
                 ));
     }
 
@@ -361,8 +361,8 @@ public class CodaDocLineRepository {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         CodaDocLine.class,
-                        "handling", handling,
                         "findByHandlingAndExtRefValidationStatusAndExtRefWorkTypeValidationStatus",
+                        "handling", handling,
                         "extRefValidationStatus", extRefValidationStatus,
                         "extRefWorkTypeValidationStatus", extRefWorkTypeValidationStatus
                 ));
