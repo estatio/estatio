@@ -114,6 +114,7 @@ public class OrderRepository {
     @Programmatic
     public Order create(
             final Property property,
+            final String multiPropertyReference,
             final Project project,
             final Charge charge,
             final Organisation buyer,
@@ -124,7 +125,7 @@ public class OrderRepository {
             final String description,
             final IncomingInvoiceType type,
             final String atPath) {
-        final String orderNumber = generateNextOrderNumberForCountry(property, project, charge, atPath);
+        final String orderNumber = generateNextOrderNumberForCountry(property, multiPropertyReference, project, charge, atPath);
         final Order order = create(property, type, orderNumber, null, clockService.now(), orderDate, supplier, buyer, atPath, null);
         order.addItem(charge, description, netAmount, null, null, tax, orderDate == null ? null : String.valueOf(orderDate.getYear()), property, project, null);
 
@@ -146,7 +147,7 @@ public class OrderRepository {
         final Order order = new Order(
                 property,
                 orderType,
-                orderNumber == null ? generateNextOrderNumberForCountry(null, null, null, atPath) : orderNumber,
+                orderNumber == null ? generateNextOrderNumberForCountry(null, null, null, null, atPath) : orderNumber,
                 sellerOrderReference,
                 entryDate,
                 orderDate,
@@ -161,6 +162,7 @@ public class OrderRepository {
 
     private String generateNextOrderNumberForCountry(
             final Property property,
+            final String multiPropertyReference,
             final Project project,
             final Charge charge,
             final String atPath) {
@@ -173,7 +175,7 @@ public class OrderRepository {
                     BigInteger.ZERO,
                     applicationTenancyRepository.findByPath(atPath));
 
-            return toItaOrderNumber(numerator.nextIncrementStr(), property, project, charge);
+            return toItaOrderNumber(numerator.nextIncrementStr(), property, multiPropertyReference, project, charge);
         } else {
             numerator = numeratorRepository.findOrCreateNumerator(
                     "Order number",
@@ -189,11 +191,12 @@ public class OrderRepository {
     public static String toItaOrderNumber(
             final String nextIncrement,
             final Property property,
+            final String multiPropertyReference,
             final Project project,
             final Charge charge) {
         final String projectNumber = project.getReference().replaceAll("[^0-9.]", "");
         final String chargeNumber = charge.getReference().replaceAll("[^0-9.]", "");
-        return String.format("%s/%s/%s/%s", nextIncrement, property.getReference(), projectNumber, chargeNumber);
+        return String.format("%s/%s/%s/%s", nextIncrement, property != null ? property.getReference() : multiPropertyReference, projectNumber, chargeNumber);
     }
 
     @Programmatic

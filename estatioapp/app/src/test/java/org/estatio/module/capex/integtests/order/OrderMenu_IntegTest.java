@@ -9,6 +9,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.sudo.SudoService;
 import org.apache.isis.applib.services.wrapper.HiddenException;
+import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
@@ -53,7 +54,7 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
         }
 
         @Test
-        public void createOrderForItaly_happyCase() throws Exception {
+        public void createOrderForItaly_happyCase_with_property() throws Exception {
             // given
             final Property property = PropertyAndUnitsAndOwnerAndManager_enum.RonIt.getProperty_d().findUsing(serviceRegistry);
             final Project project = Project_enum.RonProjectIt.findUsing(serviceRegistry);
@@ -64,7 +65,7 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
             // when
             queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
             final Order order = sudoService.sudo(incomingInvoiceManager.getUsername(), () ->
-                    wrap(orderMenu).createOrder(property, project, charge, null, null, orderMenu.default5CreateOrder(), null, null, null));
+                    wrap(orderMenu).createOrder(property, null, project, charge, null, null, orderMenu.default6CreateOrder(), null, null, null));
 
             // then
             assertThat(order.getOrderNumber()).isEqualTo("0001/RON/001/001");
@@ -82,7 +83,35 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
         }
 
         @Test
-        public void createOrderForItaly_sadCase() throws Exception {
+        public void createOrderForItaly_happyCase_with_multi_property_ref() throws Exception {
+            // given
+            final Project project = Project_enum.RonProjectIt.findUsing(serviceRegistry);
+            final Charge charge = IncomingCharge_enum.ItConstruction.findUsing(serviceRegistry);
+
+            final Person incomingInvoiceManager = Person_enum.CarmenIncomingInvoiceManagerIt.findUsing(serviceRegistry);
+
+            // when
+            queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+            final Order order = sudoService.sudo(incomingInvoiceManager.getUsername(), () ->
+                    wrap(orderMenu).createOrder(null, "GEN", project, charge, null, null, orderMenu.default6CreateOrder(), null, null, null));
+
+            // then
+            assertThat(order.getOrderNumber()).isEqualTo("0001/GEN/001/001");
+            assertThat(order.getProperty()).isNull();
+            assertThat(order.getApprovalState()).isEqualTo(OrderApprovalState.NEW);
+            assertThat(mixin(Order_approvalTransitions.class, order).coll()).hasSize(2);
+
+            assertThat(order.getItems()).hasSize(1);
+            final OrderItem item = order.getItems().first();
+
+            assertThat(item.getProperty()).isNull();
+            assertThat(item.getProject()).isEqualTo(project);
+            assertThat(item.getCharge()).isEqualTo(charge);
+
+        }
+
+        @Test
+        public void createOrderForItaly_sadCase_hidden_for_non_italians() throws Exception {
             // given
             final Property property = PropertyAndUnitsAndOwnerAndManager_enum.RonIt.getProperty_d().findUsing(serviceRegistry);
             final Project project = Project_enum.RonProjectIt.findUsing(serviceRegistry);
@@ -95,7 +124,43 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
 
             // when
             sudoService.sudo(incomingInvoiceManager.getUsername(), () ->
-                    wrap(orderMenu).createOrder(property, project, charge, null, null, orderMenu.default5CreateOrder(), null, null, null));
+                    wrap(orderMenu).createOrder(property, null, project, charge, null, null, orderMenu.default6CreateOrder(), null, null, null));
+        }
+
+        @Test
+        public void createOrderForItaly_sadCase_both_property_and_ref() throws Exception {
+            // given
+            final Property property = PropertyAndUnitsAndOwnerAndManager_enum.RonIt.getProperty_d().findUsing(serviceRegistry);
+            final Project project = Project_enum.RonProjectIt.findUsing(serviceRegistry);
+            final Charge charge = IncomingCharge_enum.ItConstruction.findUsing(serviceRegistry);
+
+            final Person incomingInvoiceManager = Person_enum.CarmenIncomingInvoiceManagerIt.findUsing(serviceRegistry);
+
+            // then
+            expectedExceptions.expect(InvalidException.class);
+            expectedExceptions.expectMessage("Can not define both property and multi property reference");
+
+            // when
+            sudoService.sudo(incomingInvoiceManager.getUsername(), () ->
+                    wrap(orderMenu).createOrder(property, "GEN", project, charge, null, null, orderMenu.default6CreateOrder(), null, null, null));
+        }
+
+        @Test
+        public void createOrderForItaly_sadCase_neither_property_and_ref() throws Exception {
+            // given
+            final Property property = PropertyAndUnitsAndOwnerAndManager_enum.RonIt.getProperty_d().findUsing(serviceRegistry);
+            final Project project = Project_enum.RonProjectIt.findUsing(serviceRegistry);
+            final Charge charge = IncomingCharge_enum.ItConstruction.findUsing(serviceRegistry);
+
+            final Person incomingInvoiceManager = Person_enum.CarmenIncomingInvoiceManagerIt.findUsing(serviceRegistry);
+
+            // then
+            expectedExceptions.expect(InvalidException.class);
+            expectedExceptions.expectMessage("Either a property or a reference for multiple properties must be defined");
+
+            // when
+            sudoService.sudo(incomingInvoiceManager.getUsername(), () ->
+                    wrap(orderMenu).createOrder(null, null, project, charge, null, null, orderMenu.default6CreateOrder(), null, null, null));
         }
     }
 }

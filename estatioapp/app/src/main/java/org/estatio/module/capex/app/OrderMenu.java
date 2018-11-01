@@ -17,6 +17,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -67,11 +68,12 @@ public class OrderMenu {
     }
 
     /**
-     *  Specifically for Italian order process
+     * Specifically for Italian order process
      */
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public Order createOrder(
-            final Property property,
+            @Nullable final Property property,
+            @Nullable @Parameter(maxLength = 3) final String multiPropertyReference,
             final Project project,
             final Charge charge,
             @Nullable final Organisation buyer,
@@ -81,22 +83,42 @@ public class OrderMenu {
             @Nullable final Tax tax,
             @Nullable final String description) {
         final String userAtPath = meService.me().getAtPath();
-        return orderRepository.create(property, project, charge, buyer, supplier, orderDate, netAmount, tax, description, IncomingInvoiceType.ITA_ORDER_INVOICE, userAtPath);
+        return orderRepository.create(property, multiPropertyReference, project, charge, buyer, supplier, orderDate, netAmount, tax, description, IncomingInvoiceType.ITA_ORDER_INVOICE, userAtPath);
     }
 
-    public List<Party> autoComplete3CreateOrder(@MinLength(3) final String searchPhrase) {
+    public String validateCreateOrder(
+            final Property property,
+            final String multiPropertyReference,
+            final Project project,
+            final Charge charge,
+            final Organisation buyer,
+            final Organisation supplier,
+            final LocalDate orderDate,
+            final BigDecimal netAmount,
+            final Tax tax,
+            final String description) {
+        if (property == null && multiPropertyReference == null)
+            return "Either a property or a reference for multiple properties must be defined";
+
+        if (property != null && multiPropertyReference != null)
+            return "Can not define both property and multi property reference";
+
+        return null;
+    }
+
+    public List<Party> autoComplete4CreateOrder(@MinLength(3) final String searchPhrase) {
         return partyRepository.autoCompleteWithRole(searchPhrase, IncomingInvoiceRoleTypeEnum.ECP);
     }
 
-    public List<Party> autoComplete4CreateOrder(@MinLength(3) final String search) {
+    public List<Party> autoComplete5CreateOrder(@MinLength(3) final String search) {
         return partyRepository.autoCompleteWithRole(search, IncomingInvoiceRoleTypeEnum.SUPPLIER);
     }
 
-    public LocalDate default5CreateOrder() {
+    public LocalDate default6CreateOrder() {
         return clockService.now();
     }
 
-    public List<Charge> choices2CreateOrder() {
+    public List<Charge> choices3CreateOrder() {
         return chargeRepository.choicesItalianWorkTypes();
     }
 

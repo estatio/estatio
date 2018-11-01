@@ -76,7 +76,7 @@ public class OrderRepository_Test {
         charge.setReference("ITWT002");
 
         // when
-        final String orderNumber = OrderRepository.toItaOrderNumber(nextIncrement, property, project, charge);
+        final String orderNumber = OrderRepository.toItaOrderNumber(nextIncrement, property, null, project, charge);
 
         // then
         assertThat(orderNumber).isEqualTo("0005/RON/001/002");
