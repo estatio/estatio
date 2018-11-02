@@ -2,6 +2,7 @@ package org.estatio.module.capex.app;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class DocumentBarcodeService {
@@ -27,7 +28,39 @@ public class DocumentBarcodeService {
         default:
             return null;
         }
-
     }
+
+    @Programmatic
+    public String deriveAtPathFromBarcode(final String documentName) {
+        String countryPrefix = countryPrefixFromBarcode(documentName);
+        if (countryPrefix == null) return null;
+        switch (countryPrefix) {
+            case "FR":
+                return "/FRA";
+            case "BE":
+                return "/BEL";
+            case "IT":
+                return "/ITA";
+            default:
+                return null;
+        }
+    }
+
+    String overrideUserAtPathUsingDocumentName(
+            final String atPath,
+            final String documentName){
+
+        if (!isBarcode(documentName)) {
+            return atPath; // country prefix can be derived from barcodes only
+        }
+
+        final String derived = deriveAtPathFromBarcode(documentName);
+        return derived != null ? derived : atPath;
+    }
+
+    boolean isBarcode(final String documentName) {
+        return documentName.replace(".pdf", "").matches("\\d+");
+    }
+
 
 }
