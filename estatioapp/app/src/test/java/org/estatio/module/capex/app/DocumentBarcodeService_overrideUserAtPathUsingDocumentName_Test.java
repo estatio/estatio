@@ -19,17 +19,11 @@ public class DocumentBarcodeService_overrideUserAtPathUsingDocumentName_Test {
         documentBarcodeService = new DocumentBarcodeService();
     }
     @Test
-    public void works_when_overriding() throws Exception {
+    public void when_barcode_trump_atPath() throws Exception {
 
         // given
         String barcode = "6010012345.pdf";
         String userAtPath = "/FRA";
-
-//        // expect
-//        context.checking(new Expectations(){{
-//            allowing(mockDocumentBarcodeService).countryPrefixFromBarcode(barcode);
-//            will(returnValue("BE"));
-//        }});
 
         // when
         String overriddenAtPath = documentBarcodeService.overrideUserAtPathUsingDocumentName(userAtPath, barcode);
@@ -40,17 +34,11 @@ public class DocumentBarcodeService_overrideUserAtPathUsingDocumentName_Test {
     }
 
     @Test
-    public void overrideUserAtPathUsingDocumentName_works_when_not_overriding() throws Exception {
+    public void when_barcode_and_atPath_in_alignment() throws Exception {
 
         // given
-        String barcode = "6010012345.pdf";
+        String barcode = "1010012345.pdf";
         String userAtPath = "/FRA";
-
-        // expect
-//        context.checking(new Expectations(){{
-//            oneOf(mockDocumentBarcodeService).countryPrefixFromBarcode(barcode);
-//            will(returnValue(null));
-//        }});
 
         // when
         String overriddenAtPath = documentBarcodeService.overrideUserAtPathUsingDocumentName(userAtPath, barcode);
@@ -61,7 +49,7 @@ public class DocumentBarcodeService_overrideUserAtPathUsingDocumentName_Test {
     }
 
     @Test
-    public void works_when_not_barcode() throws Exception {
+    public void when_not_barcode() throws Exception {
 
         // given
         String filename = "3625 GIG 679 226 - ASF srl.pdf";
