@@ -63,6 +63,7 @@
         </bs3:col>
         <bs3:col span="6" unreferencedCollections="true">
             <cpt:collection id="connections"/>
+            <cpt:collection id="codaHwms"/>
         </bs3:col>
     </bs3:row>
 </bs3:grid>

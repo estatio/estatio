@@ -17,8 +17,10 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
@@ -30,18 +32,25 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.config.ConfigurationProperty;
 import org.apache.isis.applib.services.config.ConfigurationService;
 import org.apache.isis.applib.services.email.EmailService;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.value.Markup;
+import org.apache.isis.core.metamodel.services.configinternal.ConfigurationServiceInternal;
+import org.apache.isis.core.metamodel.specloader.ServiceInitializer;
 
+import org.isisaddons.module.publishmq.dom.servicespi.PublisherServiceUsingActiveMq;
 import org.isisaddons.module.servletapi.dom.HttpSessionProvider;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
 import org.incode.module.slack.impl.SlackService;
 
+import org.estatio.module.coda.EstatioCodaModule;
+import org.estatio.module.coda.dom.hwm.CodaHwm;
+import org.estatio.module.coda.dom.hwm.CodaHwmRepository;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.settings.dom.ApplicationSettingForEstatio;
 import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
@@ -267,6 +276,97 @@ public class AdminDashboard {
             return null;
         }
     }
+
+
+    @Collection
+    @CollectionLayout(defaultView = "table")
+    public List<CodaHwm> getCodaHwms() {
+        return codaHwmRepository.listAll();
+    }
+
+    @Action(
+        semantics = SemanticsOf.NON_IDEMPOTENT,
+        associateWith = "codaHwms",
+        associateWithSequence = "1"
+    )
+    @ActionLayout(named = "Create")
+    public AdminDashboard createCodaHwm(
+            final EstatioCodaModule.FeedName feedName,
+            final String cmpCode,
+            final LocalDateTime lastRan) {
+        CodaHwm codaHwm = codaHwmRepository.findByFeedNameAndCmpCode(feedName.name(), cmpCode);
+        if(codaHwm != null) {
+            messageService.warnUser("That feed already exists");
+            return this;
+        }
+        codaHwm = codaHwmRepository.findOrCreate(feedName.name(), cmpCode);
+        codaHwm.setLastRan(lastRan);
+        return this;
+    }
+    public List<String> choices1CreateCodaHwm() {
+        return codaCmpCodeService.listAll();
+    }
+    public LocalDateTime default2CreateCodaHwm() {
+        return clockService.nowAsLocalDateTime();
+    }
+
+    @Action(
+        semantics = SemanticsOf.IDEMPOTENT,
+        associateWith = "codaHwms",
+        associateWithSequence = "2"
+    )
+    @ActionLayout(named = "Update")
+    public AdminDashboard updateCodaHwm(
+            final CodaHwm codaHwm,
+            final LocalDateTime lastRan) {
+        codaHwm.setLastRan(lastRan);
+        return this;
+    }
+    public String disableUpdateCodaHwm() {
+        return getCodaHwms().isEmpty() ? "No HWMs to update": null;
+    }
+    public List<CodaHwm> choices0UpdateCodaHwm() {
+        return getCodaHwms();
+    }
+    // not yet supported...
+    //public LocalDateTime default1UpdateCodaHwm(CodaHwm codaHwm) {
+    //    return codaHwm.getLastRan();
+    //}
+
+
+
+    @Inject
+    CodaCmpCodeService codaCmpCodeService;
+
+
+    /**
+     * Allows Camel to be restarted without having to restart the application.
+     */
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE, restrictTo = RestrictTo.PROTOTYPING)
+    public void reinitPublisherService() {
+
+        final ServiceInitializer serviceInitializer =
+                new ServiceInitializer(
+                    isisConfiguration, Arrays.asList(publisherServiceUsingActiveMq));
+        serviceInitializer.validate();
+        serviceInitializer.preDestroy();
+        serviceInitializer.postConstruct();
+    }
+
+    @Inject
+    ClockService clockService;
+
+    @Inject
+    @XmlTransient
+    CodaHwmRepository codaHwmRepository;
+
+    @Inject
+    @XmlTransient
+    PublisherServiceUsingActiveMq publisherServiceUsingActiveMq;
+
+    @Inject
+    @XmlTransient
+    ConfigurationServiceInternal isisConfiguration;
 
     @Inject
     @XmlTransient
