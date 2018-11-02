@@ -6,7 +6,11 @@ import org.isisaddons.module.security.dom.permission.ApplicationPermissionMode;
 import org.isisaddons.module.security.dom.permission.ApplicationPermissionRule;
 import org.isisaddons.module.security.seed.scripts.AbstractRoleAndPermissionsFixtureScript;
 
+import org.estatio.module.asset.app.PropertyMenu;
 import org.estatio.module.base.dom.EstatioRole;
+import org.estatio.module.charge.app.ChargeMenu;
+import org.estatio.module.party.app.PartyMenu;
+import org.estatio.module.party.app.PersonMenu;
 
 @Programmatic
 public class EstatioCapexUserRoleAndPermissions extends AbstractRoleAndPermissionsFixtureScript {
@@ -27,10 +31,10 @@ public class EstatioCapexUserRoleAndPermissions extends AbstractRoleAndPermissio
         newViewingPermission("org.estatio.webapp.services.other");
         newChangingPermission("org.estatio.module.capex");
         newChangingPermission("org.estatio.module.application.app.dashboard");
-        newChangingPermission("org.estatio.module.asset.app.PropertyMenu#findProperties");
-        newChangingPermission("org.estatio.module.charge.app.ChargeMenu#findCharge");
-        newChangingPermission("org.estatio.module.party.app.PartyMenu#findParties");
-        newChangingPermission("org.estatio.module.party.app.PersonMenu#findPerson");
+        newActionPermission(PropertyMenu.class, "findProperties");
+        newActionPermission(ChargeMenu.class, "findCharge");
+        newActionPermission(PartyMenu.class, "findParties");
+        newActionPermission(PersonMenu.class, "findPerson");
     }
 
     private void newChangingPermission(String packageSuffix) {
@@ -46,4 +50,14 @@ public class EstatioCapexUserRoleAndPermissions extends AbstractRoleAndPermissio
                 ApplicationPermissionMode.VIEWING,
                 packageSuffix);
     }
+
+    private void newActionPermission(Class clasz, String actionName) {
+        newMemberPermissions(
+                ApplicationPermissionRule.ALLOW,
+                ApplicationPermissionMode.CHANGING,
+                clasz,
+                actionName
+        );
+    }
+    
 }
