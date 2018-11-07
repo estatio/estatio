@@ -1,5 +1,7 @@
 package org.estatio.module.coda.dom.doc;
 
+import java.util.TreeSet;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,11 +16,17 @@ public class CodaDocHead_validate_Test {
     @Before
     public void setUp() throws Exception {
 
-
-        codaDocHead = new CodaDocHead();
+        codaDocHead = new CodaDocHead("IT01", "FR-GEN", "123");
+        codaDocHead.setLines(new TreeSet<>());
 
         line1 = new CodaDocLine();
+        line1.setDocHead(codaDocHead);
+        line1.setLineNum(1);
+
         line2 = new CodaDocLine();
+        line2.setDocHead(codaDocHead);
+        line2.setLineNum(2);
+
         codaDocHead.getLines().add(line1);
         codaDocHead.getLines().add(line2);
     }
