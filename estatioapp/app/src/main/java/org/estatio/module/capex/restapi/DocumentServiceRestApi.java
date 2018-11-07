@@ -63,8 +63,8 @@ public class DocumentServiceRestApi extends UdoDomainService<DocumentServiceRest
         final DocumentType type = documentTypeData.findUsing(documentTypeRepository);
         final String name = blob.getName();
 
-        if (documentTypeData==DocumentTypeData.INCOMING && barcodeInDocName) {
-            Document result =  incomingDocumentRepository.upsertAndArchive(type, documentBarcodeService.deriveAtPathFromBarcode(name), name, blob);
+        if (documentTypeData == DocumentTypeData.INCOMING && barcodeInDocName) {
+            Document result = incomingDocumentRepository.upsertAndArchive(type, documentBarcodeService.deriveAtPathFromBarcode(name), name, blob);
             IncomingDocumentRepository.UploadDomainEvent event = new IncomingDocumentRepository.UploadDomainEvent();
             event.setReturnValue(result);
             event.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
@@ -73,20 +73,20 @@ public class DocumentServiceRestApi extends UdoDomainService<DocumentServiceRest
             return result;
         }
 
+        // implementation that supports order docs for Italy //TODO: shouldn't this be INCOMING_INVOICE ? see next impl
+        // implementation that supports invoice docs for Italy
         // implementation that supports order docs for Italy
-        if (documentTypeData==DocumentTypeData.INCOMING_ORDER && !barcodeInDocName && atPath.startsWith("/ITA")){
-            return incomingDocumentRepository.upsert(type, atPath, name, blob);
-        }
-
-        // implementation that supports order docs for Italy
-        if (documentTypeData==DocumentTypeData.TAX_REGISTER && !barcodeInDocName && atPath.startsWith("/ITA")){
-            return incomingDocumentRepository.upsert(type, atPath, name, blob);
+        if (!barcodeInDocName && atPath.startsWith("/ITA")) {
+            if (documentTypeData == DocumentTypeData.INCOMING_ORDER ||
+                    documentTypeData == DocumentTypeData.INCOMING_INVOICE ||
+                    documentTypeData == DocumentTypeData.TAX_REGISTER) {
+                return incomingDocumentRepository.upsert(type, atPath, name, blob);
+            }
         }
 
         throw new IllegalArgumentException(String.format("Combination documentType =  %s, barcodeInDocName = %s and atPath = %s is not supported", documentType, barcodeInDocName, atPath));
 
     }
-
 
     @Inject
     DocumentTypeRepository documentTypeRepository;
