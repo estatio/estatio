@@ -172,7 +172,9 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
             editing = Editing.DISABLED
     )
     public Blob getBlob() {
-        return new Blob(getName(), getMimeType(), getBlobBytes());
+        return getSort().equals(DocumentSort.BLOB) ?
+                new Blob(getName(), getMimeType(), getBlobBytes()) :
+                null;
 
     }
     @Programmatic
@@ -207,8 +209,9 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
             editing = Editing.DISABLED
     )
     public Clob getClob() {
-        return new Clob(getName(), getMimeType(), getClobChars());
-
+        return getSort().equals(DocumentSort.CLOB) ?
+                new Clob(getName(), getMimeType(), getClobChars()) :
+                null;
     }
     @Programmatic
     public void modifyClob(Clob clob) {
