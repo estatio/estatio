@@ -1077,7 +1077,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return summary.toString();
     }
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT, restrictTo = RestrictTo.PROTOTYPING)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public Order attachPdf(final Blob pdf) {
         return newDocument(pdf);
     }
