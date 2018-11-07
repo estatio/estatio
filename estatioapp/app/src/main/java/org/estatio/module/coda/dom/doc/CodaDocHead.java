@@ -1,6 +1,7 @@
 package org.estatio.module.coda.dom.doc;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -17,6 +18,7 @@ import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDateTime;
 
@@ -150,6 +152,16 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Getter @Setter
     private Handling handling;
 
+    @Programmatic
+    public void validate() {
+        final Optional<CodaDocLine> invalidLines = Lists.newArrayList(getLines()).stream()
+                .filter(codaDocLine -> codaDocLine.getReasonInvalid() != null)
+                .findAny();
+        setValidationStatus( ! invalidLines.isPresent()
+                ? ValidationStatus.VALID
+                : ValidationStatus.INVALID);
+    }
+
     //region > compareTo, toString
     @Override
     public int compareTo(final CodaDocHead other) {
@@ -173,4 +185,5 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
     @Inject
     CodaDocLineRepository lineRepository;
+
 }
