@@ -41,17 +41,21 @@ public class CodaDocHeadRepository {
     }
 
     @Programmatic
-    public CodaDocHead findOrCreate(
+    public CodaDocHead replace(
             final String cmpCode,
             final String docCode,
             final String docNum) {
         CodaDocHead codaDocHead = findByCmpCodeAndDocCodeAndDocNum(cmpCode, docCode, docNum);
-        if (codaDocHead == null) {
-            codaDocHead = create(cmpCode, docCode, docNum);
+        if (codaDocHead != null) {
+            delete(codaDocHead);
         }
+        codaDocHead = create(cmpCode, docCode, docNum);
         return codaDocHead;
     }
 
+    private void delete(final CodaDocHead codaDocHead) {
+        repositoryService.removeAndFlush(codaDocHead);
+    }
 
     @javax.inject.Inject
     RepositoryService repositoryService;

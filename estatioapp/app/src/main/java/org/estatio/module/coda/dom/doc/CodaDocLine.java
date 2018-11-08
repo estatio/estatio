@@ -30,6 +30,8 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.services.title.TitleService;
 
+import org.estatio.module.party.dom.Organisation;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -245,11 +247,13 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     public CodaDocLine(
             final CodaDocHead docHead,
             final int lineNum,
+            final LineType lineType,
             final String accountCode,
             final String description,
             final BigDecimal docValue,
             final BigDecimal docSumTax,
             final LocalDateTime valueDate,
+            final String extRef2,
             final String extRef3,
             final String extRef4,
             final String extRef5,
@@ -260,11 +264,13 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
 
         this.docHead = docHead;
         this.lineNum = lineNum;
+        this.lineType = lineType;
         this.accountCode = accountCode;
         this.description = description;
         this.docValue = docValue;
         this.docSumTax = docSumTax;
         this.valueDate = valueDate;
+        this.extRef2 = extRef2;
         this.extRef3 = extRef3;
         this.extRef4 = extRef4;
         this.extRef5 = extRef5;
@@ -275,43 +281,42 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
 
         this.handling = Handling.ATTENTION;
 
-        resetValidation();
-    }
 
-    @Programmatic
-    public void resetValidation() {
+        //
+        // and set all the 'derived' stuff to its initial value
+        //
+        this.accountCodeValidationStatus = ValidationStatus.NOT_CHECKED;
 
-        setAccountCodeValidationStatus(ValidationStatus.NOT_CHECKED);
+        this.accountCodeEl3 = null;
+        this.accountCodeEl3ValidationStatus = ValidationStatus.NOT_CHECKED;
 
-        setAccountCodeEl3ValidationStatus(ValidationStatus.NOT_CHECKED);
-        setAccountCodeEl3(null);
+        this.accountCodeEl5 = null;
+        this.accountCodeEl5ValidationStatus = ValidationStatus.NOT_CHECKED;
 
-        setAccountCodeEl5ValidationStatus(ValidationStatus.NOT_CHECKED);
-        setAccountCodeEl5(null);
+        this.accountCodeEl6 = null;
+        this.accountCodeEl6ValidationStatus = ValidationStatus.NOT_CHECKED;
+        this.accountCodeEl6Supplier = null;
 
-        setAccountCodeEl6ValidationStatus(ValidationStatus.NOT_CHECKED);
-        setAccountCodeEl6(null);
+        this.supplierBankAccountValidationStatus = ValidationStatus.NOT_CHECKED;
 
-        setSupplierBankAccountValidationStatus(ValidationStatus.NOT_CHECKED);
+        this.extRefValidationStatus = ValidationStatus.NOT_CHECKED;
 
-        setExtRefValidationStatus(ValidationStatus.NOT_CHECKED);
+        this.orderNumber = null;
+        this.extRefOrderValidationStatus = ValidationStatus.NOT_CHECKED;
 
-        setExtRefOrderValidationStatus(ValidationStatus.NOT_CHECKED);
-        setOrderNumber(null);
+        this.projectReference = null;
+        this.extRefProjectValidationStatus = ValidationStatus.NOT_CHECKED;
 
-        setExtRefProjectValidationStatus(ValidationStatus.NOT_CHECKED);
-        setProjectReference(null);
+        this.extRefCostCentre = null;
+        this.extRefCostCentreValidationStatus = ValidationStatus.NOT_CHECKED;
 
-        setExtRefCostCentreValidationStatus(ValidationStatus.NOT_CHECKED);
-        setExtRefCostCentre(null);
+        this.chargeReference = null;
+        this.extRefWorkTypeValidationStatus = ValidationStatus.NOT_CHECKED;
 
-        setExtRefWorkTypeValidationStatus(ValidationStatus.NOT_CHECKED);
-        setChargeReference(null);
+        this.codaPaymentMethod = null;
+        this.mediaCodeValidationStatus = ValidationStatus.NOT_CHECKED;
 
-        setMediaCodeValidationStatus(ValidationStatus.NOT_CHECKED);
-        setCodaPaymentMethod(null);
-
-        setReasonInvalid(null);
+        this.reasonInvalid = null;
     }
 
     public String title() {
@@ -330,6 +335,11 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Property()
     @Getter @Setter
     private int lineNum;
+
+    @Column(allowsNull = "false", length = 8)
+    @Property()
+    @Getter @Setter
+    private LineType lineType;
 
     @Column(allowsNull = "true", length = 72)
     @Property()
@@ -356,6 +366,14 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Property()
     @Getter @Setter
     private LocalDateTime valueDate;
+
+    /**
+     * Supplier invoice number.
+     */
+    @Column(allowsNull = "true", length = 32)
+    @Property()
+    @Getter @Setter
+    private String extRef2;
 
     @Column(allowsNull = "true", length = 32)
     @Property()
@@ -465,6 +483,11 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Property()
     @Getter @Setter
     private ValidationStatus accountCodeEl6ValidationStatus;
+
+    @Column(allowsNull = "true", name="accountCodeEl6SupplierId")
+    @Property()
+    @Getter @Setter
+    private Organisation accountCodeEl6Supplier;
 
     /**
      * Derived from the last portion of {@link #getAccountCode()}, only populated if

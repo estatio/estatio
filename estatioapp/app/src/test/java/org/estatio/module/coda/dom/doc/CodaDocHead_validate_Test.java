@@ -34,31 +34,31 @@ public class CodaDocHead_validate_Test {
     @Test
     public void all_lines_valid() throws Exception {
         // given
-        assertThat(codaDocHead.getValidationStatus()).isEqualTo(ValidationStatus.NOT_CHECKED);
+        assertThat(codaDocHead.getLineValidationStatus()).isEqualTo(ValidationStatus.NOT_CHECKED);
         line1.setReasonInvalid(null);
         line2.setReasonInvalid(null);
 
         // when
-        codaDocHead.validate();
+        codaDocHead.validateLines();
 
         // then
-        assertThat(codaDocHead.getValidationStatus()).isEqualTo(ValidationStatus.VALID);
+        assertThat(codaDocHead.getLineValidationStatus()).isEqualTo(ValidationStatus.VALID);
     }
 
     @Test
     public void some_lines_invalid() throws Exception {
 
         // given
-        assertThat(codaDocHead.getValidationStatus()).isEqualTo(ValidationStatus.NOT_CHECKED);
+        assertThat(codaDocHead.getLineValidationStatus()).isEqualTo(ValidationStatus.NOT_CHECKED);
         line1.setReasonInvalid("Project not found for code: 'ITPR239'\n"
                 + "Charge not found for old-style work type: 'OLD005'\n"
                 + "Order not found for order num: '4111/GD5/006/239'");
         line2.setReasonInvalid(null);
 
         // when
-        codaDocHead.validate();
+        codaDocHead.validateLines();
 
         // then
-        assertThat(codaDocHead.getValidationStatus()).isEqualTo(ValidationStatus.INVALID);
+        assertThat(codaDocHead.getLineValidationStatus()).isEqualTo(ValidationStatus.INVALID);
     }
 }

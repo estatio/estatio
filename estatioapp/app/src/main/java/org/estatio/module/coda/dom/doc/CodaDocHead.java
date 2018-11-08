@@ -29,8 +29,10 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.party.dom.Organisation;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -76,15 +78,28 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         this.docCode = docCode;
         this.docNum = docNum;
 
-        this.validationStatus = ValidationStatus.NOT_CHECKED;
-        this.handling = Handling.ATTENTION;
         this.numberOfLines = 0;
+
+        //
+        // and set all the 'derived' stuff to its initial value
+        //
+
+        this.handling = Handling.ATTENTION;
+
+        this.lineValidationStatus = ValidationStatus.NOT_CHECKED;
+
+        this.cmpCodeValidationStatus = ValidationStatus.NOT_CHECKED;
+        this.cmpCodeBuyer = null;
+
+        summaryLineIsPresentValidationStatus = ValidationStatus.NOT_CHECKED;
+        analysisLineIsPresentValidationStatus = ValidationStatus.NOT_CHECKED;
+
+        this.reasonInvalid = null;
     }
 
     public String title() {
         return String.format("%s | %s | %s", getCmpCode(), getDocCode(), getDocNum());
     }
-
 
     @Column(allowsNull = "false", length = 12)
     @Property()
@@ -108,25 +123,77 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
 
 
+    @Column(allowsNull = "true", length = 4000)
+    @Property()
+    @PropertyLayout(multiLine = 5)
+    @Getter @Setter
+    private String reasonInvalid;
+
+    @Programmatic
+    public void appendInvalidReason(final String reasonFormat, Object... args) {
+        final String reason = String.format(reasonFormat, args);
+        String reasonInvalid = getReasonInvalid();
+        if(reasonInvalid != null) {
+            reasonInvalid += "\n";
+        } else {
+            reasonInvalid = "";
+        }
+        reasonInvalid += reason;
+        setReasonInvalid(reasonInvalid);
+    }
+
+    @Column(allowsNull = "false", length = 20)
+    @Property()
+    @Getter @Setter
+    private ValidationStatus cmpCodeValidationStatus;
+
+    @Column(allowsNull = "true", name="cmpCodeBuyerId")
+    @Property()
+    @Getter @Setter
+    private Organisation cmpCodeBuyer;
+
+
+
     @Column(allowsNull = "true", name="incomingInvoiceId")
     @Property
     @Getter @Setter
     private IncomingInvoice incomingInvoice;
 
-
-    @javax.jdo.annotations.Persistent(mappedBy = "docHead", defaultFetchGroup = "true")
+    /**
+     * Cascade delete of all {@link CodaDocLine}s if the parent {@link CodaDocHead} is deleted.
+     */
+    @javax.jdo.annotations.Persistent(mappedBy = "docHead", defaultFetchGroup = "true", dependent = "true")
     @CollectionLayout(defaultView = "table", paged = 999)
     @Getter @Setter
     private SortedSet<CodaDocLine> lines = new TreeSet<>();
 
     @Programmatic
+    public CodaDocLine summaryLine() {
+        return findFirstLineByType(LineType.SUMMARY);
+    }
+
+    @Programmatic
+    public CodaDocLine analysisLine() {
+        return findFirstLineByType(LineType.ANALYSIS);
+    }
+
+    CodaDocLine findFirstLineByType(final LineType lineType) {
+        return Lists.newArrayList(getLines()).stream()
+                .filter(x -> x.getLineType() == lineType)
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Programmatic
     public CodaDocLine upsertLine(
             final int lineNum,
+            final LineType lineType,
             final String accountCode,
             final String description,
             final BigDecimal docValue,
             final BigDecimal docSumTax,
             final LocalDateTime valueDate,
+            final String extRef2,
             final String extRef3,
             final String extRef4,
             final String extRef5,
@@ -135,22 +202,40 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
             final Character userStatus,
             final String mediaCode) {
         return lineRepository.upsert(this,
-                    lineNum, accountCode, description,
-                    docValue, docSumTax, valueDate, extRef3, extRef4, extRef5, elmBankAccount, userRef1, userStatus, mediaCode);
+                    lineNum, lineType, accountCode, description,
+                    docValue, docSumTax, valueDate,
+                    extRef2, extRef3, extRef4, extRef5,
+                    elmBankAccount, userRef1, userStatus, mediaCode);
     }
 
     @Column(allowsNull = "false", length = 20)
     @Property()
     @Getter @Setter
-    private ValidationStatus validationStatus;
+    private ValidationStatus lineValidationStatus;
+
+    @Column(allowsNull = "false", length = 20)
+    @Property()
+    @Getter @Setter
+    private ValidationStatus summaryLineIsPresentValidationStatus;
+
+    @Column(allowsNull = "false", length = 20)
+    @Property()
+    @Getter @Setter
+    private ValidationStatus analysisLineIsPresentValidationStatus;
 
     /**
-     * How this document should be handled (override {@link #getValidationStatus() validation status}).
+     * How this document should be handled (override {@link #getLineValidationStatus() validation status}).
      */
     @Column(allowsNull = "false", length = 30)
     @Property()
     @Getter @Setter
     private Handling handling;
+
+    @Programmatic
+    public void handleAs(Handling handling) {
+        this.setHandling(handling);
+        Lists.newArrayList(getLines()).forEach(codaDocLine -> codaDocLine.setHandling(handling));
+    }
 
     /**
      * Indicates the location of this document.
@@ -162,13 +247,23 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
 
     @Programmatic
-    public void validate() {
+    public void validateLines() {
         final Optional<CodaDocLine> invalidLines = Lists.newArrayList(getLines()).stream()
                 .filter(codaDocLine -> codaDocLine.getReasonInvalid() != null)
                 .findAny();
-        setValidationStatus( ! invalidLines.isPresent() || getLocation() == null
-                ? ValidationStatus.VALID
-                : ValidationStatus.INVALID);
+
+        if (!invalidLines.isPresent()) {
+            setLineValidationStatus(ValidationStatus.VALID);
+        } else {
+            setLineValidationStatus(ValidationStatus.INVALID);
+            appendInvalidReason("Lines are invalid");
+        }
+    }
+
+    @Programmatic
+    public boolean isValid() {
+        return getCmpCodeValidationStatus() == ValidationStatus.VALID &&
+               getLineValidationStatus() == ValidationStatus.VALID;
     }
 
     //region > compareTo, toString
