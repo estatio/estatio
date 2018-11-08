@@ -3,6 +3,7 @@ package org.estatio.module.coda.dom.doc;
 import com.google.common.collect.Sets;
 
 import org.assertj.core.api.Assertions;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,7 +13,7 @@ public class CodaDocHead_summaryLine_Test {
 
     @Before
     public void setUp() throws Exception {
-        codaDocHead = new CodaDocHead("IT01", "FR-GEN", "12345");
+        codaDocHead = new CodaDocHead("IT01", "FR-GEN", "12345", LocalDate.now(), LocalDate.now());
         codaDocHead.setLines(Sets.newTreeSet());
     }
 

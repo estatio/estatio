@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
-import org.joda.time.LocalDateTime;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,7 +32,7 @@ public class CodaDocLineRepository_create_Test {
         codaDocLineRepository = new CodaDocLineRepository();
         codaDocLineRepository.repositoryService = mockRepositoryService;
 
-        docHead = new CodaDocHead("IT01", "FR-GEN", "12345");
+        docHead = new CodaDocHead("IT01", "FR-GEN", "12345", LocalDate.now(), LocalDate.now());
     }
 
     @Test
@@ -50,8 +50,8 @@ public class CodaDocLineRepository_create_Test {
         // when
         final CodaDocLine codaDocLine = codaDocLineRepository
                 .create(docHead, 1, LineType.SUMMARY, "ACCOUNT_CODE", "description",
-                        BigDecimal.TEN, BigDecimal.ONE, LocalDateTime.now(), "EXTREF2", "EXTREF3", "EXTREF4", "EXTREF5",
-                        "IBAN", "USER_REF1", 'X', "MEDIA_CODE");
+                        BigDecimal.TEN, BigDecimal.ONE, LocalDate.now() , LocalDate.now(), "EXTREF2", "EXTREF3", "EXTREF4",
+                        "EXTREF5", "IBAN", "USER_REF1", 'X', "MEDIA_CODE");
 
         // then
         assertThat(codaDocLine.getHandling()).isEqualTo(Handling.ATTENTION);

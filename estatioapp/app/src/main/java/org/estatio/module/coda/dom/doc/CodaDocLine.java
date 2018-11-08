@@ -20,7 +20,7 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.base.Strings;
 import com.google.common.collect.ComparisonChain;
 
-import org.joda.time.LocalDateTime;
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
@@ -32,6 +32,7 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.services.title.TitleService;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.party.dom.Organisation;
 
 import lombok.Getter;
@@ -254,7 +255,8 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
             final String description,
             final BigDecimal docValue,
             final BigDecimal docSumTax,
-            final LocalDateTime valueDate,
+            final LocalDate dueDate,
+            final LocalDate vatRegistrationDate,
             final String extRef2,
             final String extRef3,
             final String extRef4,
@@ -271,7 +273,8 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
         this.description = description;
         this.docValue = docValue;
         this.docSumTax = docSumTax;
-        this.valueDate = valueDate;
+        this.dueDate = dueDate;
+        this.vatRegistrationDate = vatRegistrationDate;
         this.extRef2 = extRef2;
         this.extRef3 = extRef3;
         this.extRef4 = extRef4;
@@ -376,7 +379,13 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @javax.jdo.annotations.Persistent
     @Property()
     @Getter @Setter
-    private LocalDateTime valueDate;
+    private LocalDate dueDate;
+
+    @Column(allowsNull = "true")
+    @javax.jdo.annotations.Persistent
+    @Property()
+    @Getter @Setter
+    private LocalDate vatRegistrationDate;
 
     /**
      * Supplier invoice number.
@@ -541,6 +550,11 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Property()
     @Getter @Setter
     private ValidationStatus supplierBankAccountValidationStatus;
+
+    @Column(allowsNull = "true", name = "supplierBankAccountId")
+    @Property()
+    @Getter @Setter
+    private BankAccount supplierBankAccount;
 
 
     @Column(allowsNull = "false", length = 20)

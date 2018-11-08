@@ -1,5 +1,7 @@
 package org.estatio.module.coda.dom.doc;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -36,20 +38,24 @@ public class CodaDocHeadRepository {
     public CodaDocHead create(
             final String cmpCode,
             final String docCode,
-            final String docNum) {
-        return repositoryService.persist(new CodaDocHead(cmpCode, docCode, docNum));
+            final String docNum,
+            final LocalDate inputDate,
+            final LocalDate docDate) {
+        return repositoryService.persist(new CodaDocHead(cmpCode, docCode, docNum, inputDate, docDate));
     }
 
     @Programmatic
     public CodaDocHead replace(
             final String cmpCode,
             final String docCode,
-            final String docNum) {
+            final String docNum,
+            final LocalDate inputDate,
+            final LocalDate docDate) {
         CodaDocHead codaDocHead = findByCmpCodeAndDocCodeAndDocNum(cmpCode, docCode, docNum);
         if (codaDocHead != null) {
             delete(codaDocHead);
         }
-        codaDocHead = create(cmpCode, docCode, docNum);
+        codaDocHead = create(cmpCode, docCode, docNum, inputDate, docDate);
         return codaDocHead;
     }
 

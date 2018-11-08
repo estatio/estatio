@@ -18,6 +18,8 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
@@ -73,11 +75,15 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     public CodaDocHead(
             final String cmpCode,
             final String docCode,
-            final String docNum) {
+            final String docNum,
+            final LocalDate inputDate,
+            final LocalDate docDate) {
 
         this.cmpCode = cmpCode;
         this.docCode = docCode;
         this.docNum = docNum;
+        this.inputDate = inputDate;
+        this.docDate = docDate;
 
         this.numberOfLines = 0;
 
@@ -124,6 +130,18 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Property()
     @Getter @Setter
     private String docNum;
+
+    @Column(allowsNull = "true")
+    @javax.jdo.annotations.Persistent
+    @Property()
+    @Getter @Setter
+    private LocalDate inputDate;
+
+    @Column(allowsNull = "true")
+    @javax.jdo.annotations.Persistent
+    @Property()
+    @Getter @Setter
+    private LocalDate docDate;
 
     @Column(allowsNull = "false")
     @Property()

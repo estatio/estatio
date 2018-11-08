@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.joda.time.LocalDateTime;
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -426,7 +426,8 @@ public class CodaDocLineRepository {
             final String description,
             final BigDecimal docValue,
             final BigDecimal docSumTax,
-            final LocalDateTime valueDate,
+            final LocalDate dueDate,
+            final LocalDate vatRegistrationDate,
             final String extRef2,
             final String extRef3,
             final String extRef4,
@@ -437,7 +438,7 @@ public class CodaDocLineRepository {
             final String mediaCode) {
         return repositoryService.persist(
                 new CodaDocLine(docHead, lineNum, lineType, accountCode, description,
-                        docValue, docSumTax, valueDate, extRef2, extRef3,
+                        docValue, docSumTax, dueDate, vatRegistrationDate, extRef2, extRef3,
                         extRef4, extRef5, elmBankAccount, userRef1, userStatus, mediaCode));
     }
 

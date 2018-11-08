@@ -2,6 +2,7 @@ package org.estatio.module.coda.dom.doc;
 
 import java.util.TreeSet;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,7 +17,7 @@ public class CodaDocHead_validate_Test {
     @Before
     public void setUp() throws Exception {
 
-        codaDocHead = new CodaDocHead("IT01", "FR-GEN", "123");
+        codaDocHead = new CodaDocHead("IT01", "FR-GEN", "123", LocalDate.now(), LocalDate.now());
         codaDocHead.setLines(new TreeSet<>());
 
         line1 = new CodaDocLine();

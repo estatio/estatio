@@ -2,6 +2,7 @@ package org.estatio.module.coda.dom.doc;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -41,7 +42,8 @@ public class CodaDocHeadRepository_replace_Test {
         }});
 
         // when
-        final CodaDocHead docHead = codaDocHeadRepository.replace("IT01", "FR-GEN", "123");
+        final CodaDocHead docHead =
+                codaDocHeadRepository.replace("IT01", "FR-GEN", "123", LocalDate.now(), LocalDate.now());
     }
 
     @Test
@@ -62,7 +64,8 @@ public class CodaDocHeadRepository_replace_Test {
         }});
 
         // when
-        final CodaDocHead nextDocHead = codaDocHeadRepository.replace("IT01", "FR-GEN", "123");
+        final CodaDocHead nextDocHead =
+                codaDocHeadRepository.replace("IT01", "FR-GEN", "123", LocalDate.now(), LocalDate.now());
 
         // then
         assertThat(nextDocHead).isNotSameAs(originalDocHead);
