@@ -141,6 +141,27 @@ public class AdminDashboard {
     }
 
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public AdminDashboard retrieveCodaSupplier(
+            final String supplierReference) {
+        return this;
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public AdminDashboard retrieveCodaDoc(
+            final String cmpCode,
+            final String docCode,
+            final int docNum) {
+        return this;
+    }
+    public List<String> choices0RetrieveCodaDoc() {
+        return codaCmpCodeService.listAll();
+    }
+    public String default1RetrieveCodaDoc() {
+        return "FR-GEN";
+    }
+
+
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3.1")
     public AdminDashboard testEmail(

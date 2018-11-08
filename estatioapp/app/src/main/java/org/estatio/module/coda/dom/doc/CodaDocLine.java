@@ -273,7 +273,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
         this.userStatus = userStatus;
         this.mediaCode = mediaCode;
 
-        this.handling = Handling.INCLUDE;
+        this.handling = Handling.ATTENTION;
 
         resetValidation();
     }

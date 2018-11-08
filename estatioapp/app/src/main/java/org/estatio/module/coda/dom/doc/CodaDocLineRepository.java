@@ -38,12 +38,7 @@ public class CodaDocLineRepository {
     }
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidAccountCodes() {
-        return findByHandlingAndAccountCodeValidationStatus(
-                Handling.INCLUDE, ValidationStatus.INVALID);
-    }
-
-    List<CodaDocLine> findByHandlingAndAccountCodeValidationStatus(
+    public List<CodaDocLine> findByHandlingAndAccountCodeValidationStatus(
             final Handling handling,
             final ValidationStatus accountCodeValidationStatus) {
         return repositoryService.allMatches(
@@ -56,15 +51,18 @@ public class CodaDocLineRepository {
     }
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidEl3s() {
+    public List<CodaDocLine> findWithInvalidEl3s(final Handling handling) {
         return findByHandlingAndAccountCodeValidationStatusAndAccountCodeEl3ValidationStatus(
-                Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID);
+                handling, ValidationStatus.VALID, ValidationStatus.INVALID);
     }
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidEl3(final String accountCodeEl3) {
+    public List<CodaDocLine> findWithInvalidEl3(
+            final Handling handling,
+            final ValidationStatus accountCodeValidationStatus,
+            final String accountCodeEl3) {
         return findByHandlingAndAccountCodeValidationStatusAndAccountCodeEl3ValidationStatusAndAccountCodeEl3(
-                Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID, accountCodeEl3);
+                handling, accountCodeValidationStatus, ValidationStatus.INVALID, accountCodeEl3);
     }
 
     List<CodaDocLine> findByHandlingAndAccountCodeValidationStatusAndAccountCodeEl3ValidationStatus(
@@ -98,15 +96,18 @@ public class CodaDocLineRepository {
     }
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidEl5s() {
+    public List<CodaDocLine> findWithInvalidEl5s(final Handling handling) {
         return findByHandlingAndAccountCodeValidationStatusAndAccountCodeEl5ValidationStatus(
-                Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID);
+                handling, ValidationStatus.VALID, ValidationStatus.INVALID);
     }
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidEl5(final String accountCodeEl5) {
+    public List<CodaDocLine> findWithInvalidEl5(
+            final Handling handling,
+            final ValidationStatus accountCodeValidationStatus,
+            final String accountCodeEl5) {
         return findByHandlingAndAccountCodeValidationStatusAndAccountCodeEl5ValidationStatusAndAccountCodeEl5(
-                Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID, accountCodeEl5);
+                handling, accountCodeValidationStatus, ValidationStatus.INVALID, accountCodeEl5);
     }
 
     List<CodaDocLine> findByHandlingAndAccountCodeValidationStatusAndAccountCodeEl5ValidationStatus(
@@ -140,15 +141,18 @@ public class CodaDocLineRepository {
     }
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidEl6s() {
+    public List<CodaDocLine> findWithInvalidEl6s(final Handling handling) {
         return findByHandlingAndAccountCodeValidationStatusAndAccountCodeEl6ValidationStatus(
-                Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID);
+                handling, ValidationStatus.VALID, ValidationStatus.INVALID);
     }
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidEl6(final String accountCodeEl6) {
+    public List<CodaDocLine> findWithInvalidEl6(
+            final Handling handling,
+            final ValidationStatus accountCodeValidationStatus,
+            final String accountCodeEl6) {
         return findByHandlingAndAccountCodeValidationStatusAndAccountCodeEl6ValidationStatusAndAccountCodeEl6(
-                Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID, accountCodeEl6);
+                handling, accountCodeValidationStatus, ValidationStatus.INVALID, accountCodeEl6);
     }
 
     List<CodaDocLine> findByHandlingAndAccountCodeValidationStatusAndAccountCodeEl6ValidationStatus(
@@ -182,15 +186,18 @@ public class CodaDocLineRepository {
     }
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidSupplierBankAccounts() {
+    public List<CodaDocLine> findWithInvalidSupplierBankAccounts(final Handling handling) {
         return findByHandlingAndAccountCodeValidationStatusAndSupplierBankAccountValidationStatus(
-                Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID);
+                handling, ValidationStatus.VALID, ValidationStatus.INVALID);
     }
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidSupplierBankAccount(final String supplierBankAccount) {
+    public List<CodaDocLine> findWithInvalidSupplierBankAccount(
+            final Handling handling,
+            final ValidationStatus accountCodeValidationStatus,
+            final String supplierBankAccount) {
         return findByHandlingAndAccountCodeValidationStatusAndSupplierBankAccountValidationStatusAndElmBankAccount(
-                Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID, supplierBankAccount);
+                handling, accountCodeValidationStatus, ValidationStatus.INVALID, supplierBankAccount);
     }
 
     List<CodaDocLine> findByHandlingAndAccountCodeValidationStatusAndSupplierBankAccountValidationStatus(
@@ -224,12 +231,7 @@ public class CodaDocLineRepository {
     }
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidExtRef() {
-        return findByHandlingAndExtRefValidationStatus(
-                Handling.INCLUDE, ValidationStatus.INVALID);
-    }
-
-    List<CodaDocLine> findByHandlingAndExtRefValidationStatus(
+    public List<CodaDocLine> findByHandlingAndExtRefValidationStatus(
             final Handling handling,
             final ValidationStatus extRefValidationStatus) {
         return repositoryService.allMatches(
@@ -242,15 +244,18 @@ public class CodaDocLineRepository {
     }
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidOrderNumber(final String orderNumber) {
+    public List<CodaDocLine> findWithInvalidOrderNumber(
+            final Handling handling,
+            final ValidationStatus extRefValidationStatus,
+            final String orderNumber) {
         return findByHandlingAndExtRefValidationStatusAndExtRefOrderValidationStatusAndOrderNumber(
-                    Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID, orderNumber);
+                handling, extRefValidationStatus, ValidationStatus.INVALID, orderNumber);
     }
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidOrderNumbers() {
+    public List<CodaDocLine> findWithInvalidOrderNumbers(final Handling handling) {
         return findByHandlingAndExtRefValidationStatusAndExtRefOrderValidationStatus(
-                    Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID);
+                handling, ValidationStatus.VALID, ValidationStatus.INVALID);
     }
 
     List<CodaDocLine> findByHandlingAndExtRefValidationStatusAndExtRefOrderValidationStatusAndOrderNumber(
@@ -284,15 +289,18 @@ public class CodaDocLineRepository {
 
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidExtRefProject(final String projectReference) {
+    public List<CodaDocLine> findWithInvalidExtRefProject(
+            final Handling handling,
+            final ValidationStatus extRefValidationStatus,
+            final String projectReference) {
         return findByHandlingAndExtRefValidationStatusAndExtRefProjectValidationStatusAndProjectReference(
-                    Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID, projectReference);
+                handling, extRefValidationStatus, ValidationStatus.INVALID, projectReference);
     }
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidExtRefProjects() {
+    public List<CodaDocLine> findWithInvalidExtRefProjects(final Handling handling) {
         return findByHandlingAndExtRefValidationStatusAndExtRefProjectValidationStatus(
-                    Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID);
+                handling, ValidationStatus.VALID, ValidationStatus.INVALID);
     }
 
 
@@ -327,15 +335,16 @@ public class CodaDocLineRepository {
     }
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidChargeReference(final String chargeReference) {
+    public List<CodaDocLine> findWithInvalidChargeReference(
+            final Handling handling, final ValidationStatus extRefValidationStatus, final String chargeReference) {
         return findByHandlingAndExtRefValidationStatusAndExtRefWorkTypeValidationStatusAndChargeReference(
-                Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID, chargeReference);
+                handling, extRefValidationStatus, ValidationStatus.INVALID, chargeReference);
     }
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidChargeReferences() {
+    public List<CodaDocLine> findWithInvalidChargeReferences(final Handling handling) {
         return findByHandlingAndExtRefValidationStatusAndExtRefWorkTypeValidationStatus(
-                Handling.INCLUDE, ValidationStatus.VALID, ValidationStatus.INVALID);
+                handling, ValidationStatus.VALID, ValidationStatus.INVALID);
     }
 
     List<CodaDocLine> findByHandlingAndExtRefValidationStatusAndExtRefWorkTypeValidationStatusAndChargeReference(
@@ -369,15 +378,17 @@ public class CodaDocLineRepository {
     }
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidMediaCode(final String mediaCode) {
+    public List<CodaDocLine> findWithInvalidMediaCode(
+            final Handling handling,
+            final String mediaCode) {
         return findByHandlingAndMediaCodeValidationStatusAndMediaCode(
-                Handling.INCLUDE, ValidationStatus.INVALID, mediaCode);
+                handling, ValidationStatus.INVALID, mediaCode);
     }
 
     @Programmatic
-    public List<CodaDocLine> findWithInvalidMediaCodes() {
+    public List<CodaDocLine> findWithInvalidMediaCodes(final Handling handling) {
         return findByHandlingAndMediaCodeValidationStatus(
-                Handling.INCLUDE, ValidationStatus.INVALID);
+                handling, ValidationStatus.INVALID);
     }
 
     List<CodaDocLine> findByHandlingAndMediaCodeValidationStatus(

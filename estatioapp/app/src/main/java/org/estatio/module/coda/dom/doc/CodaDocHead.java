@@ -77,7 +77,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         this.docNum = docNum;
 
         this.validationStatus = ValidationStatus.NOT_CHECKED;
-        this.handling = Handling.INCLUDE;
+        this.handling = Handling.ATTENTION;
         this.numberOfLines = 0;
     }
 
@@ -152,12 +152,21 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Getter @Setter
     private Handling handling;
 
+    /**
+     * Indicates the location of this document.
+     */
+    @Column(allowsNull = "true", length = 12)
+    @Property()
+    @Getter @Setter
+    private Location location;
+
+
     @Programmatic
     public void validate() {
         final Optional<CodaDocLine> invalidLines = Lists.newArrayList(getLines()).stream()
                 .filter(codaDocLine -> codaDocLine.getReasonInvalid() != null)
                 .findAny();
-        setValidationStatus( ! invalidLines.isPresent()
+        setValidationStatus( ! invalidLines.isPresent() || getLocation() == null
                 ? ValidationStatus.VALID
                 : ValidationStatus.INVALID);
     }

@@ -2,26 +2,16 @@ package org.estatio.module.coda.dom.doc;
 
 public enum Handling {
     /**
-     * The document should not be ignored.
-     *
-     * If its {@link CodaDocHead#getValidationStatus() validation status} is {@link ValidationStatus#VALID}, then
-     * there will be corresponding Estatio entities for the various implicitly referenced objects (property, project,
-     * order, charge and incoming invoice).
-     *
-     * If its {@link CodaDocHead#getValidationStatus() validation status} is {@link ValidationStatus#INVALID}, then
-     * there will be NO corresponding Estatio entities and the {@link CodaDocHead document} will be brought to the
-     * users' attention as an exception.
-     *
-     *
+     * The document was valid and an Estatio invoice has been created for it.
      */
-    INCLUDE,
+    SYNCED,
     /**
-     * The document corresponds to an archived project (so should be excluded from processing).
+     * The document should not be ignored, but has validation problems and so needs attention.
      */
-    EXCLUDE_PROJECT_ARCHIVED,
+    ATTENTION,
     /**
-     * The document should be excluded from processing for some other reason.
+     * The document has been marked as to be ignored; it will not be synced.
      */
-    EXCLUDE_OTHER,
+    EXCLUDED
     ;
 }
