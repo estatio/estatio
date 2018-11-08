@@ -17,6 +17,7 @@ import javax.jdo.annotations.Uniques;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ComparisonChain;
 
 import org.joda.time.LocalDateTime;
@@ -30,6 +31,7 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.services.title.TitleService;
 
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.party.dom.Organisation;
 
 import lombok.Getter;
@@ -279,45 +281,54 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
         this.userStatus = userStatus;
         this.mediaCode = mediaCode;
 
-        this.handling = Handling.ATTENTION;
-
 
         //
-        // and set all the 'derived' stuff to its initial value
+        // set all the 'derived' stuff to its initial value
         //
-        this.accountCodeValidationStatus = ValidationStatus.NOT_CHECKED;
+        resetValidationAndDerivations();
 
-        this.accountCodeEl3 = null;
-        this.accountCodeEl3ValidationStatus = ValidationStatus.NOT_CHECKED;
-
-        this.accountCodeEl5 = null;
-        this.accountCodeEl5ValidationStatus = ValidationStatus.NOT_CHECKED;
-
-        this.accountCodeEl6 = null;
-        this.accountCodeEl6ValidationStatus = ValidationStatus.NOT_CHECKED;
-        this.accountCodeEl6Supplier = null;
-
-        this.supplierBankAccountValidationStatus = ValidationStatus.NOT_CHECKED;
-
-        this.extRefValidationStatus = ValidationStatus.NOT_CHECKED;
-
-        this.orderNumber = null;
-        this.extRefOrderValidationStatus = ValidationStatus.NOT_CHECKED;
-
-        this.projectReference = null;
-        this.extRefProjectValidationStatus = ValidationStatus.NOT_CHECKED;
-
-        this.extRefCostCentre = null;
-        this.extRefCostCentreValidationStatus = ValidationStatus.NOT_CHECKED;
-
-        this.chargeReference = null;
-        this.extRefWorkTypeValidationStatus = ValidationStatus.NOT_CHECKED;
-
-        this.codaPaymentMethod = null;
-        this.mediaCodeValidationStatus = ValidationStatus.NOT_CHECKED;
-
-        this.reasonInvalid = null;
     }
+
+    void resetValidationAndDerivations() {
+
+        // use setters so that DN is aware
+
+        setHandling(Handling.ATTENTION);
+        
+        setAccountCodeValidationStatus(ValidationStatus.NOT_CHECKED);
+
+        setAccountCodeEl3(null);
+        setAccountCodeEl3ValidationStatus(ValidationStatus.NOT_CHECKED);
+
+        setAccountCodeEl5(null);
+        setAccountCodeEl5ValidationStatus(ValidationStatus.NOT_CHECKED);
+
+        setAccountCodeEl6(null);
+        setAccountCodeEl6ValidationStatus(ValidationStatus.NOT_CHECKED);
+        setAccountCodeEl6Supplier(null);
+
+        setSupplierBankAccountValidationStatus(ValidationStatus.NOT_CHECKED);
+
+        setExtRefValidationStatus(ValidationStatus.NOT_CHECKED);
+
+        setOrderNumber(null);
+        setExtRefOrderValidationStatus(ValidationStatus.NOT_CHECKED);
+
+        setProjectReference(null);
+        setExtRefProjectValidationStatus(ValidationStatus.NOT_CHECKED);
+
+        setExtRefCostCentre(null);
+        setExtRefCostCentreValidationStatus(ValidationStatus.NOT_CHECKED);
+
+        setChargeReference(null);
+        setExtRefWorkTypeValidationStatus(ValidationStatus.NOT_CHECKED);
+
+        setCodaPaymentMethod(null);
+        setMediaCodeValidationStatus(ValidationStatus.NOT_CHECKED);
+
+        setReasonInvalid(null);
+    }
+
 
     public String title() {
         return String.format("%s | # %d", titleService.titleOf(getDocHead()), getLineNum());
@@ -441,6 +452,16 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
         setReasonInvalid(reasonInvalid);
     }
 
+    @Programmatic
+    public boolean isValid() {
+        return getReasonInvalid() == null;
+    }
+
+    @Programmatic
+    public boolean isInvalid() {
+        return !isValid();
+    }
+
     @Column(allowsNull = "false", length = 20)
     @Property()
     @Getter @Setter
@@ -462,6 +483,24 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Getter @Setter
     private String accountCodeEl3;
 
+    /**
+     * There is no validation around this; it's a best effort.
+     *
+     * That's why there's no ValidationStatus field for this, and no Property field as a reference to read.
+     */
+    public String getEl3PropertyReference() {
+        final String el3 = getAccountCodeEl3();
+
+        if(Strings.isNullOrEmpty(el3) || el3.length() <= 6) {
+            return null;
+        }
+
+        if(el3.startsWith("ITG")) {
+            return null;
+        }
+
+        return el3.substring(3, 6);
+    }
 
 
     @Column(allowsNull = "false", length = 20)
@@ -589,7 +628,13 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Getter @Setter
     private CodaPaymentMethod codaPaymentMethod;
 
-
+    /**
+     * Populated only for analysis lines.
+     */
+    @Column(length = 50, allowsNull = "true")
+    @Property()
+    @Getter @Setter
+    private IncomingInvoiceType incomingInvoiceType;
 
 
     /**

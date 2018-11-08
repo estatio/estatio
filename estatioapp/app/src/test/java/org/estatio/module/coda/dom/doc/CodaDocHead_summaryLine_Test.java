@@ -22,7 +22,7 @@ public class CodaDocHead_summaryLine_Test {
         final CodaDocLine line1 = addLine(codaDocHead, 1, LineType.SUMMARY);
 
         // when
-        final CodaDocLine codaDocLine = codaDocHead.summaryLine();
+        final CodaDocLine codaDocLine = codaDocHead.summaryDocLine();
 
         // then
         Assertions.assertThat(codaDocLine).isNotNull();
@@ -34,7 +34,7 @@ public class CodaDocHead_summaryLine_Test {
     public void when_none() throws Exception {
 
         // when
-        final CodaDocLine codaDocLine = codaDocHead.summaryLine();
+        final CodaDocLine codaDocLine = codaDocHead.summaryDocLine();
 
         // then
         Assertions.assertThat(codaDocLine).isNull();
@@ -50,7 +50,7 @@ public class CodaDocHead_summaryLine_Test {
         final CodaDocLine line3 = addLine(codaDocHead, 4, LineType.SUMMARY);
 
         // when
-        final CodaDocLine codaDocLine = codaDocHead.summaryLine();
+        final CodaDocLine codaDocLine = codaDocHead.summaryDocLine();
 
         // then
         Assertions.assertThat(codaDocLine).isNotNull();

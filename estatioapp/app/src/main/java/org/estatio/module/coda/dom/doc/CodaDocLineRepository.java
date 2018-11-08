@@ -452,48 +452,6 @@ public class CodaDocLineRepository {
         return docHead;
     }
 
-    @Programmatic
-    public CodaDocLine upsert(
-            final CodaDocHead docHead,
-            final int lineNum,
-            final LineType lineType,
-            final String accountCode,
-            final String description,
-            final BigDecimal docValue,
-            final BigDecimal docSumTax,
-            final LocalDateTime valueDate,
-            final String extRef2,
-            final String extRef3,
-            final String extRef4,
-            final String extRef5,
-            final String elmBankAccount,
-            final String userRef1,
-            final Character userStatus,
-            final String mediaCode) {
-
-        CodaDocLine docLine = findByDocHeadAndLineNum(docHead, lineNum);
-        if(docLine == null) {
-            return create(docHead, lineNum, lineType, accountCode, description, docValue, docSumTax, valueDate,
-                    extRef2, extRef3, extRef4, extRef5,
-                    elmBankAccount, userRef1, userStatus, mediaCode);
-        } else {
-            docLine.setAccountCode(accountCode);
-            docLine.setDescription(description);
-            docLine.setDocValue(docValue);
-            docLine.setDocSumTax(docSumTax);
-            docLine.setValueDate(valueDate);
-            docLine.setExtRef2(extRef2);
-            docLine.setExtRef3(extRef3);
-            docLine.setExtRef4(extRef4);
-            docLine.setExtRef5(extRef5);
-            docLine.setElmBankAccount(elmBankAccount);
-            docLine.setUserRef1(userRef1);
-            docLine.setUserStatus(userStatus);
-        }
-        docLine.setHandling(Handling.ATTENTION);
-        return docLine;
-    }
-
     @Inject
     RepositoryService repositoryService;
 

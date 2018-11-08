@@ -2,10 +2,7 @@ package org.estatio.module.coda.dom.doc;
 
 import java.math.BigDecimal;
 
-import org.hamcrest.Description;
 import org.jmock.Expectations;
-import org.jmock.api.Action;
-import org.jmock.api.Invocation;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDateTime;
 import org.junit.Before;
@@ -19,7 +16,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CodaDocLineRepository_upsert_Test {
+public class CodaDocLineRepository_create_Test {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
@@ -52,7 +49,7 @@ public class CodaDocLineRepository_upsert_Test {
 
         // when
         final CodaDocLine codaDocLine = codaDocLineRepository
-                .upsert(docHead, 1, LineType.SUMMARY, "ACCOUNT_CODE", "description",
+                .create(docHead, 1, LineType.SUMMARY, "ACCOUNT_CODE", "description",
                         BigDecimal.TEN, BigDecimal.ONE, LocalDateTime.now(), "EXTREF2", "EXTREF3", "EXTREF4", "EXTREF5",
                         "IBAN", "USER_REF1", 'X', "MEDIA_CODE");
 
@@ -60,30 +57,5 @@ public class CodaDocLineRepository_upsert_Test {
         assertThat(codaDocLine.getHandling()).isEqualTo(Handling.ATTENTION);
     }
 
-    @Test
-    public void when_does_exist() throws Exception {
-
-        // given
-        final CodaDocLine existingDocLine = new CodaDocLine();
-        existingDocLine.setHandling(Handling.SYNCED);
-
-        assertThat(existingDocLine.getHandling()).isEqualTo(Handling.SYNCED);
-
-        // expecting
-        context.checking(new Expectations() {{
-            allowing(mockRepositoryService).uniqueMatch(with(any(QueryDefault.class)));
-            will(returnValue(existingDocLine));
-        }});
-
-        // when
-        final CodaDocLine codaDocLine = codaDocLineRepository
-                .upsert(docHead, 1, LineType.SUMMARY, "ACCOUNT_CODE", "description",
-                        BigDecimal.TEN, BigDecimal.ONE, LocalDateTime.now(), "EXTREF2", "EXTREF3", "EXTREF4", "EXTREF5",
-                        "IBAN", "USER_REF1", 'X', "MEDIA_CODE");
-
-        // then
-        assertThat(codaDocLine).isSameAs(existingDocLine);
-        assertThat(existingDocLine.getHandling()).isEqualTo(Handling.ATTENTION);
-    }
 
 }

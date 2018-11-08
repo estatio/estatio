@@ -1,7 +1,5 @@
 package org.estatio.module.coda.dom.doc;
 
-import java.math.BigDecimal;
-import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -20,8 +18,6 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
 
-import org.joda.time.LocalDateTime;
-
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
@@ -32,7 +28,12 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.dom.role.PartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -84,17 +85,25 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         // and set all the 'derived' stuff to its initial value
         //
 
-        this.handling = Handling.ATTENTION;
+        resetValidationAndDerivations();
+    }
 
-        this.lineValidationStatus = ValidationStatus.NOT_CHECKED;
+    void resetValidationAndDerivations() {
 
-        this.cmpCodeValidationStatus = ValidationStatus.NOT_CHECKED;
-        this.cmpCodeBuyer = null;
+        // use setters so that DN is aware
+        setHandling(Handling.ATTENTION);
 
-        summaryLineIsPresentValidationStatus = ValidationStatus.NOT_CHECKED;
-        analysisLineIsPresentValidationStatus = ValidationStatus.NOT_CHECKED;
+        setLineValidationStatus(ValidationStatus.NOT_CHECKED);
 
-        this.reasonInvalid = null;
+        setCmpCodeValidationStatus(ValidationStatus.NOT_CHECKED);
+        setCmpCodeBuyer(null);
+
+        setSummaryLineIsPresentValidationStatus(ValidationStatus.NOT_CHECKED);
+        setAnalysisLineIsPresentValidationStatus(ValidationStatus.NOT_CHECKED);
+
+        setReasonInvalid(null);
+
+        Lists.newArrayList(getLines()).forEach(CodaDocLine::resetValidationAndDerivations);
     }
 
     public String title() {
@@ -168,12 +177,12 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     private SortedSet<CodaDocLine> lines = new TreeSet<>();
 
     @Programmatic
-    public CodaDocLine summaryLine() {
+    public CodaDocLine summaryDocLine() {
         return findFirstLineByType(LineType.SUMMARY);
     }
 
     @Programmatic
-    public CodaDocLine analysisLine() {
+    public CodaDocLine analysisDocLine() {
         return findFirstLineByType(LineType.ANALYSIS);
     }
 
@@ -184,29 +193,6 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
                 .orElse(null);
     }
 
-    @Programmatic
-    public CodaDocLine upsertLine(
-            final int lineNum,
-            final LineType lineType,
-            final String accountCode,
-            final String description,
-            final BigDecimal docValue,
-            final BigDecimal docSumTax,
-            final LocalDateTime valueDate,
-            final String extRef2,
-            final String extRef3,
-            final String extRef4,
-            final String extRef5,
-            final String elmBankAccount,
-            final String userRef1,
-            final Character userStatus,
-            final String mediaCode) {
-        return lineRepository.upsert(this,
-                    lineNum, lineType, accountCode, description,
-                    docValue, docSumTax, valueDate,
-                    extRef2, extRef3, extRef4, extRef5,
-                    elmBankAccount, userRef1, userStatus, mediaCode);
-    }
 
     @Column(allowsNull = "false", length = 20)
     @Property()
@@ -233,6 +219,9 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
     @Programmatic
     public void handleAs(Handling handling) {
+        if(this.getHandling() == Handling.SYNCED) {
+            return;
+        }
         this.setHandling(handling);
         Lists.newArrayList(getLines()).forEach(codaDocLine -> codaDocLine.setHandling(handling));
     }
@@ -245,25 +234,102 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Getter @Setter
     private Location location;
 
+    /**
+     * Necessary to decouple because some of the validation relies on Coda WSDL, which is proprietary
+     * and so cannot be in the open source package.
+     */
+    public interface LineValidator {
+        void validateSummaryDocLine(CodaDocLine summaryDocLine);
 
-    @Programmatic
-    public void validateLines() {
-        final Optional<CodaDocLine> invalidLines = Lists.newArrayList(getLines()).stream()
-                .filter(codaDocLine -> codaDocLine.getReasonInvalid() != null)
-                .findAny();
+        void validateAnalysisDocLine(CodaDocLine analysisDocLine);
 
-        if (!invalidLines.isPresent()) {
-            setLineValidationStatus(ValidationStatus.VALID);
-        } else {
-            setLineValidationStatus(ValidationStatus.INVALID);
-            appendInvalidReason("Lines are invalid");
-        }
+        LineValidator NOOP = new LineValidator() {
+            @Override public void validateSummaryDocLine(final CodaDocLine summaryDocLine) {
+            }
+
+            @Override public void validateAnalysisDocLine(final CodaDocLine analysisDocLine) {
+
+            }
+        };
     }
 
     @Programmatic
+    public void validate() {
+        validateUsing(this.lineValidator);
+    }
+
+    void validateUsing(LineValidator lineValidator) {
+
+        //
+        // validate buyer
+        //
+        final String buyerRef = getCmpCode();
+        final Party buyerParty = partyRepository.findPartyByReference(buyerRef);
+        final PartyRoleType ecpRoleType =
+                IncomingInvoiceRoleTypeEnum.ECP.findUsing(partyRoleTypeRepository);
+        if(buyerParty == null) {
+            setCmpCodeValidationStatus(ValidationStatus.INVALID);
+            appendInvalidReason("No buyer party found for cmpCode '%s'", buyerRef);
+        } else if(!(buyerParty instanceof Organisation)) {
+            setCmpCodeValidationStatus(ValidationStatus.INVALID);
+            appendInvalidReason("Party found for cmpCode '%s' is not an Organisation", buyerRef);
+        } else if(! buyerParty.hasPartyRoleType(ecpRoleType)) {
+            setCmpCodeValidationStatus(ValidationStatus.INVALID);
+            appendInvalidReason("Organisation '%s' does not have ECP role", buyerRef);
+        }
+
+        // if get this far and not yet invalid, then must be valid.
+        if(getCmpCodeValidationStatus() != ValidationStatus.INVALID) {
+            setCmpCodeValidationStatus(ValidationStatus.VALID);
+            setCmpCodeBuyer((Organisation) buyerParty);
+        }
+
+        //
+        // TODO: validate location from header
+        //
+
+
+        //
+        // validate lines
+        //
+        validateLines(lineValidator);
+
+    }
+
+    private void validateLines(final LineValidator lineValidator) {
+
+        final CodaDocLine summaryDocLine = summaryDocLine();
+        if(summaryDocLine != null) {
+            lineValidator.validateSummaryDocLine(summaryDocLine);
+        }
+        final CodaDocLine analysisDocLine = analysisDocLine();
+        if(analysisDocLine != null) {
+            lineValidator.validateAnalysisDocLine(analysisDocLine);
+        }
+
+
+        final long numInvalidLines = Lists.newArrayList(getLines()).stream()
+                .filter(CodaDocLine::isInvalid)
+                .count();
+
+        if (numInvalidLines == 0) {
+            setLineValidationStatus(ValidationStatus.VALID);
+        } else {
+            setLineValidationStatus(ValidationStatus.INVALID);
+            appendInvalidReason(numInvalidLines + " line"
+                    + (numberOfLines == 1 ? " is" : "s are")
+                    + " invalid");
+        }
+    }
+
+
+    @Programmatic
     public boolean isValid() {
-        return getCmpCodeValidationStatus() == ValidationStatus.VALID &&
-               getLineValidationStatus() == ValidationStatus.VALID;
+        return getReasonInvalid() == null;
+    }
+    @Programmatic
+    public boolean isInvalid() {
+        return !isValid();
     }
 
     //region > compareTo, toString
@@ -288,6 +354,12 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     //endregion
 
     @Inject
-    CodaDocLineRepository lineRepository;
+    PartyRepository partyRepository;
+
+    @Inject
+    PartyRoleTypeRepository partyRoleTypeRepository;
+
+    @Inject
+    CodaDocHead.LineValidator lineValidator;
 
 }
