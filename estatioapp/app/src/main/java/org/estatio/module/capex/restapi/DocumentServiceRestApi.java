@@ -58,34 +58,38 @@ public class DocumentServiceRestApi extends UdoDomainService<DocumentServiceRest
             final boolean barcodeInDocName,
             @Parameter(optionality = Optionality.OPTIONAL) final String atPath) throws IllegalArgumentException {
 
-        // implementation that supports barcode docs for incoming orders and invoices France and Belgium
         DocumentTypeData documentTypeData = DocumentTypeData.valueOf(documentType);
         final DocumentType type = documentTypeData.findUsing(documentTypeRepository);
         final String name = blob.getName();
 
-        if (documentTypeData == DocumentTypeData.INCOMING && barcodeInDocName) {
-            Document result = incomingDocumentRepository.upsertAndArchive(type, documentBarcodeService.deriveAtPathFromBarcode(name), name, blob);
-            IncomingDocumentRepository.UploadDomainEvent event = new IncomingDocumentRepository.UploadDomainEvent();
-            event.setReturnValue(result);
-            event.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
-            eventBusService.post(event);
+        // Could probably be done a little neater
+        switch (atPath) {
+            case "/ITA":
+                if (documentTypeData == DocumentTypeData.INCOMING && barcodeInDocName)
+                    return incomingDocumentRepository.upsert(type, atPath, name, blob);
 
-            return result;
+                else if (documentTypeData == DocumentTypeData.TAX_REGISTER && !barcodeInDocName)
+                    return incomingDocumentRepository.upsert(type, atPath, name, blob);
+
+                else
+                    throw new IllegalArgumentException(String.format("Combination documentType =  %s, barcodeInDocName = %s and atPath = %s is not supported", documentType, barcodeInDocName, atPath));
+
+            case "/FRA":
+                if (documentTypeData == DocumentTypeData.INCOMING && barcodeInDocName) {
+                    Document result = incomingDocumentRepository.upsertAndArchive(type, documentBarcodeService.deriveAtPathFromBarcode(name), name, blob);
+                    IncomingDocumentRepository.UploadDomainEvent event = new IncomingDocumentRepository.UploadDomainEvent();
+                    event.setReturnValue(result);
+                    event.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
+                    eventBusService.post(event);
+
+                    return result;
+                } else {
+                    throw new IllegalArgumentException(String.format("Combination documentType =  %s, barcodeInDocName = %s and atPath = %s is not supported", documentType, barcodeInDocName, atPath));
+                }
+
+            default:
+                throw new IllegalArgumentException(String.format("Combination documentType =  %s, barcodeInDocName = %s and atPath = %s is not supported", documentType, barcodeInDocName, atPath));
         }
-
-        // implementation that supports order docs for Italy //TODO: shouldn't this be INCOMING_INVOICE ? see next impl
-        // implementation that supports invoice docs for Italy
-        // implementation that supports order docs for Italy
-        if (!barcodeInDocName && atPath.startsWith("/ITA")) {
-            if (documentTypeData == DocumentTypeData.INCOMING_ORDER ||
-                    documentTypeData == DocumentTypeData.INCOMING_INVOICE ||
-                    documentTypeData == DocumentTypeData.TAX_REGISTER) {
-                return incomingDocumentRepository.upsert(type, atPath, name, blob);
-            }
-        }
-
-        throw new IllegalArgumentException(String.format("Combination documentType =  %s, barcodeInDocName = %s and atPath = %s is not supported", documentType, barcodeInDocName, atPath));
-
     }
 
     @Inject
