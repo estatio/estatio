@@ -205,7 +205,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     /**
      * Cascade delete of all {@link CodaDocLine}s if the parent {@link CodaDocHead} is deleted.
      */
-    @javax.jdo.annotations.Persistent(mappedBy = "docHead", defaultFetchGroup = "true", dependent = "true")
+    @javax.jdo.annotations.Persistent(mappedBy = "docHead", defaultFetchGroup = "true", dependentElement = "true")
     @CollectionLayout(defaultView = "table", paged = 999)
     @Getter @Setter
     private SortedSet<CodaDocLine> lines = new TreeSet<>();
@@ -268,25 +268,6 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Getter @Setter
     private String location;
 
-    /**
-     * Necessary to decouple because some of the validation relies on Coda WSDL, which is proprietary
-     * and so cannot be in the open source package.
-     */
-    public interface LineValidator {
-        void validateSummaryDocLine(CodaDocLine summaryDocLine);
-
-        void validateAnalysisDocLine(CodaDocLine analysisDocLine);
-
-        LineValidator NOOP = new LineValidator() {
-            @Override public void validateSummaryDocLine(final CodaDocLine summaryDocLine) {
-            }
-
-            @Override public void validateAnalysisDocLine(final CodaDocLine analysisDocLine) {
-
-            }
-        };
-    }
-
     @Programmatic
     public void validate() {
         validateUsing(this.lineValidator);
@@ -294,9 +275,14 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
     void validateUsing(LineValidator lineValidator) {
 
-        //
-        // validate buyer
-        //
+        validateBuyer();
+
+        validateLines(lineValidator);
+
+    }
+
+    void validateBuyer() {
+
         final String buyerRef = getCmpCode();
         final Party buyerParty = partyRepository.findPartyByReference(buyerRef);
         final PartyRoleType ecpRoleType =
@@ -317,17 +303,6 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
             setCmpCodeValidationStatus(ValidationStatus.VALID);
             setCmpCodeBuyer((Organisation) buyerParty);
         }
-
-        //
-        // TODO: validate location from header
-        //
-
-
-        //
-        // validate lines
-        //
-        validateLines(lineValidator);
-
     }
 
     private void validateLines(final LineValidator lineValidator) {
@@ -336,12 +311,16 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         if(summaryDocLine != null) {
             lineValidator.validateSummaryDocLine(summaryDocLine);
         }
+
         final CodaDocLine analysisDocLine = analysisDocLine();
         if(analysisDocLine != null) {
             lineValidator.validateAnalysisDocLine(analysisDocLine);
         }
 
+        updateInvalidReasonBasedOnLines();
+    }
 
+    void updateInvalidReasonBasedOnLines() {
         final long numInvalidLines = Lists.newArrayList(getLines()).stream()
                 .filter(CodaDocLine::isInvalid)
                 .count();
@@ -355,7 +334,6 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
                     + " invalid");
         }
     }
-
 
     @Programmatic
     public boolean isValid() {
@@ -394,6 +372,6 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     PartyRoleTypeRepository partyRoleTypeRepository;
 
     @Inject
-    CodaDocHead.LineValidator lineValidator;
+    LineValidator lineValidator;
 
 }

@@ -40,7 +40,7 @@ public class CodaDocHead_validate_Test {
         line2.setReasonInvalid(null);
 
         // when
-        codaDocHead.validateUsing(CodaDocHead.LineValidator.NOOP);
+        codaDocHead.validateUsing(LineValidator.NOOP);
 
         // then
         assertThat(codaDocHead.getLineValidationStatus()).isEqualTo(ValidationStatus.VALID);
@@ -57,7 +57,7 @@ public class CodaDocHead_validate_Test {
         line2.setReasonInvalid(null);
 
         // when
-        codaDocHead.validateUsing(CodaDocHead.LineValidator.NOOP);
+        codaDocHead.validateUsing(LineValidator.NOOP);
 
         // then
         assertThat(codaDocHead.getLineValidationStatus()).isEqualTo(ValidationStatus.INVALID);
