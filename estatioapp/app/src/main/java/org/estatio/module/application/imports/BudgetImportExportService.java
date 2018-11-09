@@ -78,17 +78,27 @@ public class BudgetImportExportService {
 
         if (item.getPartitionItems().size()==0){
             // create 1 line
-            lines.add(new BudgetImportExport(propertyReference,budgetStartDate,budgetEndDate, budgetChargeReference,budgetedValue,auditedValue,null,null,null, null, null));
+            lines.add(new BudgetImportExport(propertyReference,budgetStartDate,budgetEndDate, budgetChargeReference,budgetedValue,auditedValue,null,null,null, null, null, null, null));
 
         } else {
             // create a line for each partion item
             for (PartitionItem partitionItem : item.getPartitionItems()) {
-                String keyTableName = partitionItem.getKeyTable().getName();
-                String foundationValueType = partitionItem.getKeyTable().getFoundationValueType().toString();
-                String keyValueMethod = partitionItem.getKeyTable().getKeyValueMethod().toString();
-                String allocationChargeReference = partitionItem.getCharge().getReference();
-                BigDecimal percentage = partitionItem.getPercentage();
-                lines.add(new BudgetImportExport(propertyReference, budgetStartDate, budgetEndDate, budgetChargeReference, budgetedValue, auditedValue, keyTableName, foundationValueType, keyValueMethod, allocationChargeReference, percentage));
+                lines.add(
+                        new BudgetImportExport(
+                                propertyReference,
+                                budgetStartDate,
+                                budgetEndDate,
+                                budgetChargeReference,
+                                budgetedValue,
+                                auditedValue,
+                                partitionItem.getKeyTable().getName(),
+                                partitionItem.getKeyTable().getFoundationValueType().toString(),
+                                partitionItem.getKeyTable().getKeyValueMethod().toString(),
+                                partitionItem.getCharge().getReference(),
+                                partitionItem.getPercentage(),
+                                partitionItem.getFixedBudgetedAmount(),
+                                partitionItem.getFixedAuditedAmount())
+                );
             }
 
         }

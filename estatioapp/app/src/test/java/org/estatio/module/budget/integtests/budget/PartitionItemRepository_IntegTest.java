@@ -133,7 +133,7 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
             assertThat(partitionItem.getPercentage()).isEqualTo(origPercentage);
 
             // when
-            partitionItem = partitionItemRepository.updateOrCreatePartitionItem(budget.getPartitionings().first(), budgetItem, charge, keyTable, newPercentage);
+            partitionItem = partitionItemRepository.updateOrCreatePartitionItem(budget.getPartitionings().first(), budgetItem, charge, keyTable, newPercentage, null, null);
 
             // then
             assertThat(partitionItem.getBudgetItem()).isEqualTo(budgetItem);

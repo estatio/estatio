@@ -47,7 +47,7 @@ public class PartitionItem_Test {
     }
 
 
-    public static class UpdatePercentage extends PartitionItem_Test {
+    public static class OtherTests extends PartitionItem_Test {
 
         PartitionItem partitionItem = new PartitionItem();
 
@@ -75,6 +75,114 @@ public class PartitionItem_Test {
             assertThat(partitionItem.getPercentage()).isEqualTo(percentage.setScale(6));
             assertThat(partitionItem.getPercentage()).isEqualTo(new BigDecimal("100.000000"));
 
+        }
+
+        @Test
+        public void percentageOf_works() throws Exception {
+
+            assertPercentageOf(new BigDecimal("123.45"), new BigDecimal("10.000000"), new BigDecimal("12.34500000"));
+            assertPercentageOf(new BigDecimal("123.45"), new BigDecimal("10.100000"), new BigDecimal("12.46845000"));
+            assertPercentageOf(new BigDecimal("123.45"), new BigDecimal("10.000001"), new BigDecimal("12.3450012345"));
+            assertPercentageOf(new BigDecimal("100.00"), new BigDecimal("80.000000"), new BigDecimal("80.00000000"));
+
+        }
+
+        void assertPercentageOf(final BigDecimal value, final BigDecimal percentage, final BigDecimal expectedResult) {
+            assertThat(partitionItem.percentageOf(value, percentage)).isEqualTo(expectedResult);
+        }
+
+        @Test
+        public void percentage_used_for_budgeted_value() throws Exception {
+            // given
+            BudgetItem budgetItem = new BudgetItem() {
+                @Override
+                public BigDecimal getBudgetedValue(){
+                    return new BigDecimal("100.00");
+                }
+            };
+            partitionItem.setBudgetItem(budgetItem);
+            // when
+            final BigDecimal percentage = new BigDecimal("80.000000");
+            partitionItem.setPercentage(percentage);
+            // then
+            assertThat(partitionItem.getBudgetedValue()).isEqualTo(partitionItem.percentageOf(budgetItem.getBudgetedValue(), percentage));
+            assertThat(partitionItem.getBudgetedValue()).isEqualTo(new BigDecimal("80.00000000"));
+        }
+
+        @Test
+        public void fixed_budgeted_amount_overrides_percentage_for_budgeted_value() throws Exception {
+
+            // given
+            BudgetItem budgetItem = new BudgetItem() {
+                @Override
+                public BigDecimal getBudgetedValue(){
+                    return new BigDecimal("100.00");
+                }
+            };
+            partitionItem.setBudgetItem(budgetItem);
+
+            // when
+            BigDecimal fixedBudgetedAmount = new BigDecimal("123.45");
+            partitionItem.setFixedBudgetedAmount(fixedBudgetedAmount);
+            // then
+            assertThat(partitionItem.getBudgetedValue()).isEqualTo(fixedBudgetedAmount);
+
+        }
+
+        @Test
+        public void percentage_used_for_audited_value() throws Exception {
+            // given
+            BudgetItem budgetItem = new BudgetItem() {
+                @Override
+                public BigDecimal getAuditedValue(){
+                    return new BigDecimal("100.00");
+                }
+            };
+            partitionItem.setBudgetItem(budgetItem);
+            // when
+            final BigDecimal percentage = new BigDecimal("80.000000");
+            partitionItem.setPercentage(percentage);
+            // then
+            assertThat(partitionItem.getAuditedValue()).isEqualTo(partitionItem.percentageOf(budgetItem.getAuditedValue(), percentage));
+            assertThat(partitionItem.getAuditedValue()).isEqualTo(new BigDecimal("80.00000000"));
+        }
+
+        @Test
+        public void fixed_audited_amount_overrides_percentage_for_audited_value() throws Exception {
+            // given
+            BudgetItem budgetItem = new BudgetItem() {
+                @Override
+                public BigDecimal getAuditedValue(){
+                    return new BigDecimal("100.23");
+                }
+            };
+            partitionItem.setBudgetItem(budgetItem);
+
+            // when
+            BigDecimal fixedAuditedAmount = new BigDecimal("123.45");
+            partitionItem.setFixedAuditedAmount(fixedAuditedAmount);
+
+            // then
+            assertThat(partitionItem.getAuditedValue()).isEqualTo(fixedAuditedAmount);
+        }
+
+        @Test
+        public void fixed_audited_amount_overrides_percentage_for_audited_value_even_when_budget_item_has_audited_value_null() throws Exception {
+            // given
+            BudgetItem budgetItem = new BudgetItem() {
+                @Override
+                public BigDecimal getAuditedValue(){
+                    return null;
+                }
+            };
+            partitionItem.setBudgetItem(budgetItem);
+
+            // when
+            BigDecimal fixedAuditedAmount = new BigDecimal("123.45");
+            partitionItem.setFixedAuditedAmount(fixedAuditedAmount);
+
+            // then still
+            assertThat(partitionItem.getAuditedValue()).isEqualTo(fixedAuditedAmount);
         }
 
     }

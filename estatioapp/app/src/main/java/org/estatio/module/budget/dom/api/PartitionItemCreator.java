@@ -11,7 +11,9 @@ public interface PartitionItemCreator {
     PartitionItem updateOrCreatePartitionItem(
             final Charge allocationCharge,
             final KeyTable keyTable,
-            final BigDecimal percentage
+            final BigDecimal percentage,
+            final BigDecimal fixedBudgetedValue,
+            final BigDecimal fixedAuditedValue
     );
 
 }

@@ -62,7 +62,9 @@ public class BudgetImportExport implements Importable {
             final String foundationValueType,
             final String keyValueMethod,
             final String outgoingChargeReference,
-            final BigDecimal percentage
+            final BigDecimal percentage,
+            final BigDecimal fixedBudgetedAmount,
+            final BigDecimal fixedAuditedAmount
             ){
         this.propertyReference = propertyReference;
         this.budgetStartDate = budgetStartDate;
@@ -75,6 +77,8 @@ public class BudgetImportExport implements Importable {
         this.keyValueMethod = keyValueMethod;
         this.outgoingChargeReference = outgoingChargeReference;
         this.percentage = percentage;
+        this.fixedBudgetedAmount = fixedBudgetedAmount;
+        this.fixedAuditedAmount = fixedAuditedAmount;
     }
 
     @Getter @Setter
@@ -99,6 +103,10 @@ public class BudgetImportExport implements Importable {
     private String outgoingChargeReference;
     @Getter @Setter
     private BigDecimal percentage;
+    @Getter @Setter
+    private BigDecimal fixedBudgetedAmount;
+    @Getter @Setter
+    private BigDecimal fixedAuditedAmount;
 
 
     @Override
@@ -142,7 +150,7 @@ public class BudgetImportExport implements Importable {
     private PartitionItem findOrCreatePartitionItem(final BudgetItem budgetItem){
         Charge targetCharge = fetchCharge(getOutgoingChargeReference());
         KeyTable keyTable = findOrCreateKeyTable(budgetItem.getBudget(), getKeyTableName(), getFoundationValueType(), getKeyValueMethod());
-        return budgetItem.updateOrCreatePartitionItem(targetCharge, keyTable, getPercentage());
+        return budgetItem.updateOrCreatePartitionItem(targetCharge, keyTable, getPercentage(), getFixedBudgetedAmount(), getFixedAuditedAmount());
     }
 
     private Charge fetchCharge(final String chargeReference) {

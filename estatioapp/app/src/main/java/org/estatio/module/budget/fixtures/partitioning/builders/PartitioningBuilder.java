@@ -70,6 +70,8 @@ public class PartitioningBuilder extends BuilderScriptAbstract<Partitioning,Part
         private final KeyTable keyTable;
         private final Charge charge;
         private final BigDecimal percentage;
+        private final BigDecimal fixedBudgetedAmount;
+        private final BigDecimal fixedAuditedAmount;
     }
 
     @Getter
@@ -95,7 +97,7 @@ public class PartitioningBuilder extends BuilderScriptAbstract<Partitioning,Part
 
             PartitionItem partitionItem =
                     partitionItemRepository.newPartitionItem(
-                            partitioning, spec.charge, spec.keyTable, budgetItem, spec.percentage);
+                            partitioning, spec.charge, spec.keyTable, budgetItem, spec.percentage, spec.fixedBudgetedAmount, spec.fixedAuditedAmount);
 
             executionContext.addResult(this, partitionItem);
         }

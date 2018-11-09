@@ -62,7 +62,6 @@ import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.KeyTableRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
-import org.estatio.module.budget.dom.partioning.Partitioning;
 import org.estatio.module.budget.dom.partioning.PartitioningRepository;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
@@ -197,8 +196,9 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
     public PartitionItem createPartitionItemForBudgeting(
             final Charge charge,
             final KeyTable keyTable,
-            final BigDecimal percentage) {
-        return partitionItemRepository.newPartitionItem(getBudget().getPartitioningForBudgeting(), charge, keyTable, this, percentage);
+            final BigDecimal percentage,
+            final BigDecimal fixedBudgetedValue) {
+        return partitionItemRepository.newPartitionItem(getBudget().getPartitioningForBudgeting(), charge, keyTable, this, percentage, fixedBudgetedValue, null);
     }
 
     public List<Charge> choices0CreatePartitionItemForBudgeting() {
@@ -213,32 +213,6 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
         return isAssignedForTypeReason(BudgetCalculationType.BUDGETED);
     }
 
-
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    public PartitionItem createPartitionItemForActuals(
-            final Partitioning partitioning,
-            final Charge charge,
-            final KeyTable keyTable,
-            final BigDecimal percentage) {
-        return partitionItemRepository.newPartitionItem(partitioning, charge, keyTable, this, percentage);
-    }
-
-    public List<Partitioning> choices0CreatePartitionItemForActuals() {
-        return partitioningRepository.findByBudgetAndType(getBudget(), BudgetCalculationType.ACTUAL);
-    }
-
-    public List<Charge> choices1CreatePartitionItemForActuals() {
-        return chargeRepository.allOutgoing();
-    }
-
-    public List<KeyTable> choices2CreatePartitionItemForActuals() {
-        return keyTableRepository.findByBudget(getBudget());
-    }
-
-    public String disableCreatePartitionItemForActuals(){
-        return isAssignedForTypeReason(BudgetCalculationType.ACTUAL);
-    }
-
     @Programmatic
     public BudgetItem createCopyFor(final Budget budget) {
         // only copies of budgeted values are made
@@ -248,7 +222,7 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
             if (partitionItem.getPartitioning().getType()==BudgetCalculationType.BUDGETED) {
                 String keyTableName = partitionItem.getKeyTable().getName();
                 KeyTable correspondingTableOnbudget = keyTableRepository.findByBudgetAndName(budget, keyTableName);
-                newBudgetItemCopy.createPartitionItemForBudgeting(partitionItem.getCharge(), correspondingTableOnbudget, partitionItem.getPercentage());
+                newBudgetItemCopy.createPartitionItemForBudgeting(partitionItem.getCharge(), correspondingTableOnbudget, partitionItem.getPercentage(), partitionItem.getFixedBudgetedAmount());
             }
         }
         return newBudgetItemCopy;
@@ -269,8 +243,8 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
     }
 
     @Programmatic
-    public PartitionItem updateOrCreatePartitionItem(final Charge charge, final KeyTable keyTable, final BigDecimal percentage){
-        return partitionItemRepository.updateOrCreatePartitionItem(getBudget().getPartitioningForBudgeting(), this, charge, keyTable, percentage);
+    public PartitionItem updateOrCreatePartitionItem(final Charge charge, final KeyTable keyTable, final BigDecimal percentage, final BigDecimal fixedBudgetedAmount, final BigDecimal fixedAuditedAmount){
+        return partitionItemRepository.updateOrCreatePartitionItem(getBudget().getPartitioningForBudgeting(), this, charge, keyTable, percentage, fixedBudgetedAmount, fixedAuditedAmount);
     }
 
     @Programmatic

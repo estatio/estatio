@@ -19,6 +19,7 @@
 package org.estatio.module.budget.dom.partioning;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -36,6 +37,7 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Auditing;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -182,6 +184,23 @@ public class PartitionItem extends UdoDomainObject2<PartitionItem> implements Wi
     @PropertyLayout(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return getBudgetItem().getBudget().getApplicationTenancy();
+    }
+
+    @Programmatic
+    public BigDecimal getBudgetedValue(){
+        return getFixedBudgetedAmount() !=null ? getFixedBudgetedAmount() : percentageOf(getBudgetItem().getBudgetedValue(), getPercentage());
+    }
+
+    @Programmatic
+    public BigDecimal getAuditedValue(){
+        final BigDecimal auditedValue = getBudgetItem().getAuditedValue();
+        return getFixedAuditedAmount() !=null ? getFixedAuditedAmount() :  auditedValue!= null ? percentageOf(auditedValue, getPercentage()) : null;
+    }
+
+    BigDecimal percentageOf(final BigDecimal value, final BigDecimal percentage) {
+        return value
+                .multiply(percentage)
+                .divide(new BigDecimal("100"), MathContext.DECIMAL64);
     }
 
     @Inject

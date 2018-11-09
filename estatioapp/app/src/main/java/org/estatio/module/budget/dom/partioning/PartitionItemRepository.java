@@ -50,13 +50,17 @@ public class PartitionItemRepository extends UdoDomainRepositoryAndFactory<Parti
             final Charge charge,
             final KeyTable keyTable,
             final BudgetItem budgetItem,
-            final BigDecimal percentage) {
+            final BigDecimal percentage,
+            final BigDecimal fixedBudgetedAmount,
+            final BigDecimal fixedAuditedAmount) {
         PartitionItem partitionItem = newTransientInstance(PartitionItem.class);
         partitionItem.setPartitioning(partitioning);
         partitionItem.setCharge(charge);
         partitionItem.setKeyTable(keyTable);
         partitionItem.setBudgetItem(budgetItem);
         partitionItem.setPercentage(percentage.setScale(6, BigDecimal.ROUND_HALF_UP));
+        partitionItem.setFixedBudgetedAmount(fixedBudgetedAmount);
+        partitionItem.setFixedAuditedAmount(fixedAuditedAmount);
         persistIfNotAlready(partitionItem);
         return partitionItem;
     }
@@ -95,21 +99,25 @@ public class PartitionItemRepository extends UdoDomainRepositoryAndFactory<Parti
     }
 
     @Programmatic
-    public PartitionItem findOrCreatePartitionItem(final Partitioning partitioning, final BudgetItem budgetItem, final Charge invoiceCharge, final KeyTable keyTable, final BigDecimal percentage){
+    public PartitionItem findOrCreatePartitionItem(final Partitioning partitioning, final BudgetItem budgetItem, final Charge invoiceCharge, final KeyTable keyTable, final BigDecimal percentage, final BigDecimal fixedBudgetedAmount,
+            final BigDecimal fixedAuditedAmount){
         final PartitionItem partitionItem = findUnique(partitioning, invoiceCharge, budgetItem, keyTable);
         if (partitionItem == null) {
-            return newPartitionItem(partitioning, invoiceCharge, keyTable, budgetItem, percentage);
+            return newPartitionItem(partitioning, invoiceCharge, keyTable, budgetItem, percentage, fixedBudgetedAmount, fixedAuditedAmount);
         }
         return partitionItem;
     }
 
     @Programmatic
-    public PartitionItem updateOrCreatePartitionItem(final Partitioning partitioning, final BudgetItem budgetItem, final Charge invoiceCharge, final KeyTable keyTable, final BigDecimal percentage){
+    public PartitionItem updateOrCreatePartitionItem(final Partitioning partitioning, final BudgetItem budgetItem, final Charge invoiceCharge, final KeyTable keyTable, final BigDecimal percentage, final BigDecimal fixedBudgetedAmount,
+            final BigDecimal fixedAuditedAmount){
         final PartitionItem partitionItem = findUnique(partitioning, invoiceCharge, budgetItem, keyTable);
         if (partitionItem == null) {
-            return newPartitionItem(partitioning, invoiceCharge, keyTable, budgetItem, percentage);
+            return newPartitionItem(partitioning, invoiceCharge, keyTable, budgetItem, percentage, fixedBudgetedAmount, fixedAuditedAmount);
         } else {
             partitionItem.setPercentage(percentage);
+            partitionItem.setFixedBudgetedAmount(fixedBudgetedAmount);
+            partitionItem.setFixedAuditedAmount(fixedAuditedAmount);
         }
         return partitionItem;
     }

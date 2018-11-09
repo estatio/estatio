@@ -90,14 +90,12 @@ public class BudgetCalculationService {
 
         switch (type) {
             case BUDGETED:
-                BigDecimal budgetedTotal = percentageOf(partitionItem.getBudgetItem().getBudgetedValue(), partitionItem.getPercentage());
-                results.addAll(calculateForTotalAndType(partitionItem, budgetedTotal, BudgetCalculationType.BUDGETED));
+                results.addAll(calculateForTotalAndType(partitionItem, partitionItem.getBudgetedValue(), BudgetCalculationType.BUDGETED));
             break;
 
             case ACTUAL:
                 if (partitionItem.getBudgetItem().getAuditedValue() != null) {
-                    BigDecimal auditedTotal = percentageOf(partitionItem.getBudgetItem().getAuditedValue(), partitionItem.getPercentage());
-                    results.addAll(calculateForTotalAndType(partitionItem, auditedTotal, BudgetCalculationType.ACTUAL));
+                    results.addAll(calculateForTotalAndType(partitionItem, partitionItem.getAuditedValue(), BudgetCalculationType.ACTUAL));
                 }
             break;
         }
@@ -132,13 +130,6 @@ public class BudgetCalculationService {
         return results;
 
     }
-
-    private BigDecimal percentageOf(final BigDecimal value, final BigDecimal percentage) {
-        return value
-                .multiply(percentage)
-                .divide(new BigDecimal("100"), MathContext.DECIMAL64);
-    }
-
 
     @Inject
     private BudgetCalculationRepository budgetCalculationRepository;

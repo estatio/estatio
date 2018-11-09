@@ -144,6 +144,8 @@ public class PartitionItemRepository_Test {
             final BudgetItem budgetItem = new BudgetItem();
             final BigDecimal percentage = new BigDecimal("100.000000");
             final PartitionItem partitionItem = new PartitionItem();
+            final BigDecimal fixedBudgetedAmount = new BigDecimal("123.45");
+            final BigDecimal fixedAuditedAmount = new BigDecimal("234.56");
 
             // expect
             context.checking(new Expectations() {
@@ -156,7 +158,7 @@ public class PartitionItemRepository_Test {
             });
 
             // when
-            PartitionItem newPartitionItem = partitionItemRepository1.findOrCreatePartitionItem(partitioning, budgetItem, charge, keyTable, percentage);
+            PartitionItem newPartitionItem = partitionItemRepository1.findOrCreatePartitionItem(partitioning, budgetItem, charge, keyTable, percentage, fixedBudgetedAmount, fixedAuditedAmount);
 
             // then
             assertThat(newPartitionItem.getPartitioning()).isEqualTo(partitioning);
@@ -164,6 +166,8 @@ public class PartitionItemRepository_Test {
             assertThat(newPartitionItem.getBudgetItem()).isEqualTo(budgetItem);
             assertThat(newPartitionItem.getKeyTable()).isEqualTo(keyTable);
             assertThat(newPartitionItem.getPercentage()).isEqualTo(percentage);
+            assertThat(newPartitionItem.getFixedBudgetedAmount()).isEqualTo(fixedBudgetedAmount);
+            assertThat(newPartitionItem.getFixedAuditedAmount()).isEqualTo(fixedAuditedAmount);
 
         }
 

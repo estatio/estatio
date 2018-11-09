@@ -54,18 +54,18 @@ public enum Partitioning_enum
     OxfPartitioning2015(
             OxfBudget2015, BudgetCalculationType.BUDGETED,
             new ItemSpec[]{
-                new ItemSpec(OxfBudget2015, GbServiceCharge, Oxf2015Area, 0, bd(100)),
-                new ItemSpec(OxfBudget2015, GbServiceCharge, Oxf2015Area, 1, bd(80)),
-                new ItemSpec(OxfBudget2015, GbServiceCharge, Oxf2015Count, 1, bd(20)),
+                new ItemSpec(OxfBudget2015, GbServiceCharge, Oxf2015Area, 0, bd(100), null, null),
+                new ItemSpec(OxfBudget2015, GbServiceCharge, Oxf2015Area, 1, bd(80), null, null),
+                new ItemSpec(OxfBudget2015, GbServiceCharge, Oxf2015Count, 1, bd(20), null, null),
             }),
     BudPartitioning2015(
             BudBudget2015, BudgetCalculationType.BUDGETED,
             new ItemSpec[]{
-                new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Area, 0, bd(100)),
-                new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Area, 1, bd(80)),
-                new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Count, 1, bd(20)),
-                new ItemSpec(BudBudget2015, NlServiceCharge2, Bud2015Area, 2, bd(90)),
-                new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Count, 2, bd(10)),
+                new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Area, 0, bd(100), null, null),
+                new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Area, 1, bd(80), null, null),
+                new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Count, 1, bd(20), null, null),
+                new ItemSpec(BudBudget2015, NlServiceCharge2, Bud2015Area, 2, bd(90), null, null),
+                new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Count, 2, bd(10), null, null),
             }),
     ;
 
@@ -81,6 +81,8 @@ public enum Partitioning_enum
         private final KeyTable_enum keyTable_d;
         private final int itemIndex;
         private final BigDecimal percentage;
+        private final BigDecimal fixedBudgetedAmount;
+        private final BigDecimal fixedAuditedAmount;
 
         public Charge_enum getItemCharge_d() {
             return budget_d.getItemSpecs()[itemIndex].getCharge_d();
@@ -115,7 +117,9 @@ public enum Partitioning_enum
                                 new PartitioningBuilder.ItemSpec(
                                         f.objectFor(x.getItemCharge_d(), ec), f.objectFor(x.keyTable_d, ec),
                                         f.objectFor(x.charge_d, ec),
-                                        x.percentage)
+                                        x.percentage,
+                                        x.fixedBudgetedAmount,
+                                        x.fixedAuditedAmount)
                         ).collect(Collectors.toList())
                 ));
     }
