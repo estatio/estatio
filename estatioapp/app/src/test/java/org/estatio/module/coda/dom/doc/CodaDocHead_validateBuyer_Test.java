@@ -30,8 +30,12 @@ public class CodaDocHead_validateBuyer_Test {
     @Mock
     PartyRoleTypeRepository mockPartyRoleTypeRepository;
 
-    private CodaDocHead codaDocHead;
-    private PartyRoleType ecpRoleType;
+    PartyRoleType ecpRoleType;
+    Organisation organisationWithRole;
+    Organisation organisationWithoutRole;
+
+
+    CodaDocHead codaDocHead;
 
     @Before
     public void setUp() throws Exception {
@@ -47,8 +51,20 @@ public class CodaDocHead_validateBuyer_Test {
             will(returnValue(ecpRoleType));
         }});
 
+        organisationWithRole = new Organisation();
+        organisationWithRole.setRoles(Sets.newTreeSet());
+        final PartyRole partyRole = new PartyRole();
+        partyRole.setRoleType(ecpRoleType);
+        organisationWithRole.getRoles().add(partyRole);
+
+        organisationWithoutRole = new Organisation();
+
+
         assertThat(codaDocHead.getCmpCodeValidationStatus()).isEqualTo(ValidationStatus.NOT_CHECKED);
         assertThat(codaDocHead.getCmpCodeBuyer()).isNull();
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    assertThat(organisationWithRole.hasPartyRoleType(ecpRoleType)).isTrue();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    assertThat(organisationWithoutRole.hasPartyRoleType(ecpRoleType)).isFalse();
     }
 
     @Test
@@ -91,13 +107,12 @@ public class CodaDocHead_validateBuyer_Test {
     public void when_buyer_does_not_have_ECP_role() throws Exception {
 
         // given
-        final Organisation organisation = new Organisation();
-        assertThat(organisation.hasPartyRoleType(ecpRoleType)).isFalse();
+        assertThat(organisationWithoutRole.hasPartyRoleType(ecpRoleType)).isFalse();
 
         // expecting
         context.checking(new Expectations() {{
             allowing(mockPartyRepository).findPartyByReference("IT01");
-            will(returnValue(organisation));
+            will(returnValue(organisationWithoutRole));
 
         }});
 
@@ -114,19 +129,12 @@ public class CodaDocHead_validateBuyer_Test {
     public void when_buyer_does_have_ECP_role() throws Exception {
 
         // given
-        final Organisation organisation = new Organisation();
-        organisation.setRoles(Sets.newTreeSet());
-
-        final PartyRole partyRole = new PartyRole();
-        partyRole.setRoleType(ecpRoleType);
-        organisation.getRoles().add(partyRole);
-
-        assertThat(organisation.hasPartyRoleType(ecpRoleType)).isTrue();
+        assertThat(organisationWithRole.hasPartyRoleType(ecpRoleType)).isTrue();
 
         // expecting
         context.checking(new Expectations() {{
             allowing(mockPartyRepository).findPartyByReference("IT01");
-            will(returnValue(organisation));
+            will(returnValue(organisationWithRole));
         }});
 
         // when
@@ -134,7 +142,7 @@ public class CodaDocHead_validateBuyer_Test {
 
         // then
         assertThat(codaDocHead.getCmpCodeValidationStatus()).isEqualTo(ValidationStatus.VALID);
-        assertThat(codaDocHead.getCmpCodeBuyer()).isEqualTo(organisation);
+        assertThat(codaDocHead.getCmpCodeBuyer()).isEqualTo(organisationWithRole);
         assertThat(codaDocHead.getReasonInvalid()).isNull();
     }
 
