@@ -36,7 +36,6 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Auditing;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -98,13 +97,10 @@ public class PartitionItem extends UdoDomainObject2<PartitionItem> implements Wi
     //region > identificatiom
     public String title() {
 
-        return "Allocation of "
+        return "Partitioning from "
                 .concat(getBudgetItem().getCharge().getName()
-                .concat(" on "))
-                .concat(getCharge().getName()
-                .concat(" for ")
-                .concat(getPercentage().setScale(2, BigDecimal.ROUND_HALF_UP).toString()
-                .concat("%")));
+                .concat(" to "))
+                .concat(getCharge().getName());
     }
     //endregion
 
@@ -127,6 +123,13 @@ public class PartitionItem extends UdoDomainObject2<PartitionItem> implements Wi
     @Getter @Setter
     private BudgetItem budgetItem;
 
+    @Column(allowsNull = "true", scale = 2)
+    @Getter @Setter
+    private BigDecimal fixedBudgetedAmount;
+
+    @Column(allowsNull = "true", scale = 2)
+    @Getter @Setter
+    private BigDecimal fixedAuditedAmount;
 
     @Column(allowsNull = "false", scale = 6)
     @Getter @Setter
@@ -176,7 +179,6 @@ public class PartitionItem extends UdoDomainObject2<PartitionItem> implements Wi
     }
 
     @Override
-    @MemberOrder(sequence = "7")
     @PropertyLayout(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return getBudgetItem().getBudget().getApplicationTenancy();
