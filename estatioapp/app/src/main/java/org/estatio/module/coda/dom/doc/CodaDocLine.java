@@ -32,6 +32,7 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.services.title.TitleService;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.financial.dom.BankAccount;
@@ -582,6 +583,11 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Getter @Setter
     private String orderNumber;
 
+
+    @Column(allowsNull = "true", name = "extRefOrderItemId")
+    @Property()
+    @Getter @Setter
+    private OrderItem extRefOrderItem;
 
 
     @Column(allowsNull = "false", length = 20)

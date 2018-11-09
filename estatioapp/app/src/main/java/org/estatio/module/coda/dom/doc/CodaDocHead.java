@@ -339,6 +339,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     public boolean isValid() {
         return getReasonInvalid() == null;
     }
+
     @Programmatic
     public boolean isInvalid() {
         return !isValid();
