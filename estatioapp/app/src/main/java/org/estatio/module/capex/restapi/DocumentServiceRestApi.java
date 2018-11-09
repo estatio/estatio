@@ -56,11 +56,13 @@ public class DocumentServiceRestApi extends UdoDomainService<DocumentServiceRest
             final Blob blob,
             final String documentType,
             final boolean barcodeInDocName,
-            @Parameter(optionality = Optionality.OPTIONAL) final String atPath) throws IllegalArgumentException {
+            @Parameter(optionality = Optionality.OPTIONAL) String atPath) throws IllegalArgumentException {
 
         DocumentTypeData documentTypeData = DocumentTypeData.valueOf(documentType);
         final DocumentType type = documentTypeData.findUsing(documentTypeRepository);
         final String name = blob.getName();
+
+        atPath = atPath != null ? atPath : "/FRA";
 
         // Could probably be done a little neater
         switch (atPath) {

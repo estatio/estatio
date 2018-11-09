@@ -305,7 +305,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         }
     }
 
-    private void validateLines(final LineValidator lineValidator) {
+    void validateLines(final LineValidator lineValidator) {
 
         final CodaDocLine summaryDocLine = summaryDocLine();
         if(summaryDocLine != null) {

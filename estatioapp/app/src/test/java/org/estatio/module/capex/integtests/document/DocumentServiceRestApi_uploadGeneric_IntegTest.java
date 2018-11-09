@@ -118,18 +118,18 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
     }
 
     @Test
-    public void when_italian_order() throws Exception {
+    public void when_italian_document() throws Exception {
 
         // given
         List<Document> incomingDocumentsBefore = repository.findIncomingDocuments();
         assertThat(incomingDocumentsBefore).isEmpty();
 
         // when
-        final String fileName = "some_order.pdf";
+        final String fileName = "3010101234.pdf";
         final byte[] pdfBytes = Resources.toByteArray(
                 Resources.getResource(DocumentServiceRestApi_uploadGeneric_IntegTest.class, fileName));
         final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);
-        documentService.uploadGeneric(blob, "INCOMING_ORDER", false, "/ITA");
+        documentService.uploadGeneric(blob, "INCOMING", true, "/ITA");
         transactionService.nextTransaction();
 
         // then
@@ -144,13 +144,13 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
         assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
         assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
         assertThat(JDOHelper.getVersion(document)).isEqualTo(1L);
-        assertThat(document.getType()).isEqualTo(DocumentTypeData.INCOMING_ORDER.findUsing(documentTypeRepository));
+        assertThat(document.getType()).isEqualTo(DocumentTypeData.INCOMING.findUsing(documentTypeRepository));
 
         // and when again uploading doc with the same name (but different bytes)
         final byte[] pdfBytes2 = Resources.toByteArray(
-                Resources.getResource(DocumentServiceRestApi_uploadGeneric_IntegTest.class, "3020100123-altered.pdf"));
+                Resources.getResource(DocumentServiceRestApi_uploadGeneric_IntegTest.class, "3010101234-altered.pdf"));
         final Blob similarNamedBlobWithDifferentBytes = new Blob(fileName, "application/pdf", pdfBytes2);
-        documentService.uploadGeneric(similarNamedBlobWithDifferentBytes, "INCOMING_ORDER", false, "/ITA");
+        documentService.uploadGeneric(similarNamedBlobWithDifferentBytes, "INCOMING", true, "/ITA");
         transactionService.nextTransaction();
 
         // then still
@@ -165,7 +165,7 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
         assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
         assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
         assertThat(JDOHelper.getVersion(document)).isEqualTo(1L);
-        assertThat(document.getType()).isEqualTo(DocumentTypeData.INCOMING_ORDER.findUsing(documentTypeRepository));
+        assertThat(document.getType()).isEqualTo(DocumentTypeData.INCOMING.findUsing(documentTypeRepository));
     }
 
     @Test
