@@ -77,13 +77,17 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
             final String docCode,
             final String docNum,
             final LocalDate inputDate,
-            final LocalDate docDate) {
+            final LocalDate docDate,
+            final String codaPeriod,
+            final String location) {
 
         this.cmpCode = cmpCode;
         this.docCode = docCode;
         this.docNum = docNum;
         this.inputDate = inputDate;
         this.docDate = docDate;
+        this.codaPeriod = codaPeriod;
+        this.location = location;
 
         this.numberOfLines = 0;
 
@@ -142,6 +146,18 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Property()
     @Getter @Setter
     private LocalDate docDate;
+
+    /**
+     * For example, '2019/1' meaning the first period of the financial year 2018-2019, ie July 2018
+     * ("take away 6 months from the date you think it is").
+     *
+     * The biggest we have seen in the DB is 2014/9999.  Clearly a hack, and none for 'FR-GEN', but anyway...
+     */
+    @Column(allowsNull = "false", length = 9)
+    @javax.jdo.annotations.Persistent
+    @Property()
+    @Getter @Setter
+    private String codaPeriod;
 
     @Column(allowsNull = "false")
     @Property()
@@ -250,7 +266,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Column(allowsNull = "true", length = 12)
     @Property()
     @Getter @Setter
-    private Location location;
+    private String location;
 
     /**
      * Necessary to decouple because some of the validation relies on Coda WSDL, which is proprietary

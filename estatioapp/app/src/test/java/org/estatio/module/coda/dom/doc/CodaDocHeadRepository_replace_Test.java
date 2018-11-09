@@ -43,7 +43,7 @@ public class CodaDocHeadRepository_replace_Test {
 
         // when
         final CodaDocHead docHead =
-                codaDocHeadRepository.replace("IT01", "FR-GEN", "123", LocalDate.now(), LocalDate.now());
+                codaDocHeadRepository.replace("IT01", "FR-GEN", "123", LocalDate.now(), LocalDate.now(), "2019/1", "books");
     }
 
     @Test
@@ -65,7 +65,7 @@ public class CodaDocHeadRepository_replace_Test {
 
         // when
         final CodaDocHead nextDocHead =
-                codaDocHeadRepository.replace("IT01", "FR-GEN", "123", LocalDate.now(), LocalDate.now());
+                codaDocHeadRepository.replace("IT01", "FR-GEN", "123", LocalDate.now(), LocalDate.now(), "2019/1", "books");
 
         // then
         assertThat(nextDocHead).isNotSameAs(originalDocHead);

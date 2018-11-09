@@ -23,12 +23,12 @@ public class PeriodUtil {
         LocalDate endDate = null;
         if (financialYearPattern.matcher(period).matches()){
             Integer year = Integer.valueOf(period.substring(1,5));
-            startDate = new LocalDate(year-1, 07, 01);
-            endDate = new LocalDate(year, 06, 30);
+            startDate = new LocalDate(year-1, 7, 1);
+            endDate = new LocalDate(year, 6, 30);
         }
         if (yearPattern.matcher(period).matches()){
             Integer year = Integer.valueOf(period.substring(0,4));
-            startDate = new LocalDate(year, 01, 01);
+            startDate = new LocalDate(year, 1, 1);
             endDate = new LocalDate(year, 12, 31);
         }
         return new LocalDateInterval(startDate, endDate);

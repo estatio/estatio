@@ -40,8 +40,11 @@ public class CodaDocHeadRepository {
             final String docCode,
             final String docNum,
             final LocalDate inputDate,
-            final LocalDate docDate) {
-        return repositoryService.persist(new CodaDocHead(cmpCode, docCode, docNum, inputDate, docDate));
+            final LocalDate docDate,
+            final String codaPeriod,
+            final String location) {
+        return repositoryService.persist(
+                new CodaDocHead(cmpCode, docCode, docNum, inputDate, docDate, codaPeriod, location));
     }
 
     @Programmatic
@@ -50,12 +53,14 @@ public class CodaDocHeadRepository {
             final String docCode,
             final String docNum,
             final LocalDate inputDate,
-            final LocalDate docDate) {
+            final LocalDate docDate,
+            final String codaPeriod,
+            final String location) {
         CodaDocHead codaDocHead = findByCmpCodeAndDocCodeAndDocNum(cmpCode, docCode, docNum);
         if (codaDocHead != null) {
             delete(codaDocHead);
         }
-        codaDocHead = create(cmpCode, docCode, docNum, inputDate, docDate);
+        codaDocHead = create(cmpCode, docCode, docNum, inputDate, docDate, codaPeriod, location);
         return codaDocHead;
     }
 

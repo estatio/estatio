@@ -197,11 +197,11 @@ public class IncomingInvoiceRepository {
             final InvoiceStatus invoiceStatus,
             final LocalDate dateReceived,
             final BankAccount bankAccount,
-            final IncomingInvoiceApprovalState approvalStateIfAny) {
+            final IncomingInvoiceApprovalState approvalState) {
         final Currency currency = currencyRepository.findCurrency("EUR");
         final IncomingInvoice invoice =
                 new IncomingInvoice(type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate,
-                        paymentMethod, invoiceStatus, dateReceived, bankAccount, approvalStateIfAny);
+                        paymentMethod, invoiceStatus, dateReceived, bankAccount, approvalState);
         invoice.setCurrency(currency);
         serviceRegistry2.injectServicesInto(invoice);
         repositoryService.persistAndFlush(invoice);
@@ -224,11 +224,11 @@ public class IncomingInvoiceRepository {
             final InvoiceStatus invoiceStatus,
             final LocalDate dateReceived,
             final BankAccount bankAccount,
-            final IncomingInvoiceApprovalState approvalStateIfAny) {
+            final IncomingInvoiceApprovalState approvalState) {
         IncomingInvoice invoice = findByInvoiceNumberAndSellerAndInvoiceDate(invoiceNumber, seller, invoiceDate);
         if (invoice == null) {
             invoice = create(type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount,
-                    approvalStateIfAny);
+                    approvalState);
         } else {
             updateInvoice(invoice, property, atPath, buyer, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount);
         }

@@ -17,7 +17,7 @@ public class CodaDocHead_validate_Test {
     @Before
     public void setUp() throws Exception {
 
-        codaDocHead = new CodaDocHead("IT01", "FR-GEN", "123", LocalDate.now(), LocalDate.now());
+        codaDocHead = new CodaDocHead("IT01", "FR-GEN", "123", LocalDate.now(), LocalDate.now(), "2019/1", "books");
         codaDocHead.setLines(new TreeSet<>());
 
         line1 = new CodaDocLine();

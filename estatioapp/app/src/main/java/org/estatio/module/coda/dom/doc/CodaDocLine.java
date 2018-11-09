@@ -32,6 +32,8 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.services.title.TitleService;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.party.dom.Organisation;
 
@@ -612,12 +614,22 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Getter @Setter
     private String projectReference;
 
+    @Column(allowsNull = "true", name = "extRefProjectId")
+    @Property()
+    @Getter @Setter
+    private Project extRefProject;
 
 
     @Column(allowsNull = "false", length = 20)
     @Property()
     @Getter @Setter
     private ValidationStatus extRefWorkTypeValidationStatus;
+
+
+    @Column(allowsNull = "true", name = "extRefWorkTypeChargeId")
+    @Property()
+    @Getter @Setter
+    private Charge extRefWorkTypeCharge;
 
     /**
      * As parsed from extRef3/extRef4/extRef5, normalized to 3 digits and prefixed with either 'ITWT'
