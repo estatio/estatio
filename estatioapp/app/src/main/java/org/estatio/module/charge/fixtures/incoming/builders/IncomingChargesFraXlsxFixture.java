@@ -29,7 +29,7 @@ public class IncomingChargesFraXlsxFixture extends ExcelFixture2 {
         Charge before = chargeRepository.findByReference("WORKS");
         List<Charge> beforeAll = chargeRepository.listAll();
 
-        setExcelResource(Resources.getResource(getClass(), "CapexChargeHierarchy.xlsx"));
+        setExcelResource(Resources.getResource(getClass(), "IncomingChargesFra.xlsx"));
 
         setMatcher(sheetName -> {
             if(sheetName.startsWith("ChargeHierarchy")) {

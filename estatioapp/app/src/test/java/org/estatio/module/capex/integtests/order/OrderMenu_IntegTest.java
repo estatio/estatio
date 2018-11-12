@@ -23,7 +23,7 @@ import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
-import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesItaXlsxFixture;
 import org.estatio.module.charge.fixtures.incoming.enums.IncomingCharge_enum;
 import org.estatio.module.party.dom.Person;
 
@@ -45,7 +45,7 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.RonIt.builder());
-                    executionContext.executeChild(this, new IncomingChargesFraXlsxFixture());
+                    executionContext.executeChild(this, new IncomingChargesItaXlsxFixture());
                     executionContext.executeChild(this, Project_enum.RonProjectIt.builder());
                     executionContext.executeChild(this, Person_enum.CarmenIncomingInvoiceManagerIt.builder());
                     executionContext.executeChild(this, Person_enum.JonathanIncomingInvoiceManagerGb.builder());
