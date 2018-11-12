@@ -48,6 +48,7 @@ public enum BankAccount_enum
     Oxford          (Organisation_enum.HelloWorldGb, "NL31ABNA0580744432", null),
 
     PoisonNl        (Organisation_enum.PoisonNl,     "NL31ABNA0580744437", null),
+    TopModelIt      (Organisation_enum.TopModelIt,   "IT18Q0300203280564194689911", null),
     PretGb          (Organisation_enum.PretGb,       "NL31ABNA0580744438", null),
     TopModelGb      (Organisation_enum.TopModelGb,   "NL31ABNA0580744435", "GHIJKXXX"),
     TopSellerGb     (Organisation_enum.TopSellerGb,  "GB18RICG00805412069055", "ABCDEFXXX"),
