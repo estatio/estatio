@@ -18,7 +18,7 @@ import org.estatio.module.charge.dom.ChargeRepository;
 @DomainObject(
         objectType = "org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture"
 )
-public class CapexChargeHierarchyXlsxFixture extends ExcelFixture2 {
+public class IncomingChargesFraXlsxFixture extends ExcelFixture2 {
 
     @Inject
     ChargeRepository chargeRepository;

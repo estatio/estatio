@@ -46,7 +46,7 @@ import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceImportForDemoX
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.EstatioChargeModule;
-import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
 import org.estatio.module.currency.EstatioCurrencyModule;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.guarantee.fixtures.enums.Guarantee_enum;
@@ -237,7 +237,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 Partitioning_enum.OxfPartitioning2015);
 
         ec.executeChild(this,
-                new CapexChargeHierarchyXlsxFixture());
+                new IncomingChargesFraXlsxFixture());
         ec.executeChild(this,
                 new OrderInvoiceImportForDemoXlsxFixture());
 

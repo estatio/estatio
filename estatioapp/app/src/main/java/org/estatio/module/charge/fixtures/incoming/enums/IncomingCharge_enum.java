@@ -23,14 +23,16 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesItaXlsxFixture;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
 /**
- * Counterpart of {@link CapexChargeHierarchyXlsxFixture}, provides type-safe lookup of charges set up in the CapexChargeHierarchy.xlsx spreadsheet.
+ * Counterpart of both the {@link IncomingChargesFraXlsxFixture} and {@link IncomingChargesItaXlsxFixture},
+ * provides type-safe lookup of charges set up in their respective spreadsheets.
  */
 @AllArgsConstructor()
 @Getter
@@ -51,8 +53,12 @@ public enum IncomingCharge_enum implements PersonaWithFinder<Charge> {
     FrInsurance("INSURANCE"),
     FrFurnitures("FURNITURES / DECORATION"),
     FrOther("OTHER"),
-    ItPurchase("PURCHASE"),
-    ItConstruction("ITWT001"),
+
+    ItAcquisition("ITWT001"),
+    ItExternalConsultantCosts("ITWT004"),
+    ItConstruction("ITWT005"),
+    ItInternalConsultantCosts("ITWT008"),
+
     ;
 
     private final String reference;

@@ -21,7 +21,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
-import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
@@ -43,7 +43,7 @@ public class IncomingInvoiceItemRepository_IntegTest extends CapexModuleIntegTes
             @Override
             protected void execute(final ExecutionContext executionContext) {
 
-                executionContext.executeChild(this, new CapexChargeHierarchyXlsxFixture());
+                executionContext.executeChild(this, new IncomingChargesFraXlsxFixture());
                 executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.builder());
                 executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.builder());
                 executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.builder());

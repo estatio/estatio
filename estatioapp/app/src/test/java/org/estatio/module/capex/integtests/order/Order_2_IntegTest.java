@@ -37,7 +37,7 @@ import org.estatio.module.capex.dom.order.recategorize.Order_recategorize;
 import org.estatio.module.capex.fixtures.order.enums.Order_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
-import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 
@@ -62,7 +62,7 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
 
                 executionContext.executeChildren(this,
                         new DocumentTypesAndTemplatesForCapexFixture(templateDate),
-                        new CapexChargeHierarchyXlsxFixture());
+                        new IncomingChargesFraXlsxFixture());
 
                 executionContext.executeChildren(this,
                         Order_enum.fakeOrder2Pdf,
