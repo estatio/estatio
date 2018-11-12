@@ -17,7 +17,6 @@ import javax.jdo.annotations.Uniques;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.ComparisonChain;
 
 import org.joda.time.LocalDate;
@@ -487,7 +486,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     private ValidationStatus accountCodeEl3ValidationStatus;
 
     /**
-     * Derived from the last portion of {@link #getAccountCode()}, only populated if
+     * Derived from the el3 portion of {@link #getAccountCode()}, only populated if
      * {@link #getAccountCodeValidationStatus()} is {@link ValidationStatus#VALID valid}
      */
     @Column(allowsNull = "true", length = 72)
@@ -496,23 +495,18 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     private String accountCodeEl3;
 
     /**
-     * There is no validation around this; it's a best effort.
+     * Derived from certain characters of el3 of {@link #getAccountCode()}, only populated if
+     * {@link #getAccountCodeValidationStatus()} is {@link ValidationStatus#VALID valid}
      *
-     * That's why there's no ValidationStatus field for this, and no Property field as a reference to read.
+     * There is no validation around this; it's a best effort.
+     * We've chosen to persist this rather than calculate on the fly in order to support querying
+     * of this versus the {@link #getExtRefCostCentre() cost centre} derived from extRef3.
      */
-    public String getEl3PropertyReference() {
-        final String el3 = getAccountCodeEl3();
+    @Column(allowsNull = "true", length = 3)
+    @Property()
+    @Getter @Setter
+    private String accountCodeEl3PropertyReference;
 
-        if(Strings.isNullOrEmpty(el3) || el3.length() <= 6) {
-            return null;
-        }
-
-        if(el3.startsWith("ITG")) {
-            return null;
-        }
-
-        return el3.substring(3, 6);
-    }
 
 
     @Column(allowsNull = "false", length = 20)
