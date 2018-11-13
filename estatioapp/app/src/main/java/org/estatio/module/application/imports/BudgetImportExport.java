@@ -14,11 +14,15 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.estatio.module.base.dom.Importable;
+import org.isisaddons.module.excel.dom.ExcelFixture2;
+import org.isisaddons.module.excel.dom.FixtureAwareRowHandler;
+
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.base.dom.Importable;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
@@ -43,7 +47,7 @@ import lombok.Setter;
         nature = Nature.VIEW_MODEL,
         objectType = "org.estatio.app.services.budget.BudgetImportExport"
 )
-public class BudgetImportExport implements Importable {
+public class BudgetImportExport implements Importable, FixtureAwareRowHandler<BudgetImportExport> {
 
     public String title() {
         return "Budget Import / Export";
@@ -135,7 +139,7 @@ public class BudgetImportExport implements Importable {
         }
         Charge incomingCharge = fetchCharge(getIncomingChargeReference());
         BudgetItem budgetItem = findOrCreateBudgetAndBudgetItem(incomingCharge);
-        if (getOutgoingChargeReference()!=null && getKeyTableName()!=null && getFoundationValueType()!=null && getKeyValueMethod()!=null && percentage!=null) {
+        if (getOutgoingChargeReference()!=null && getKeyTableName()!=null && getFoundationValueType()!=null && getKeyValueMethod()!=null) {
            findOrCreatePartitionItem(budgetItem);
         }
         return Lists.newArrayList(budgetItem.getBudget());
@@ -158,6 +162,7 @@ public class BudgetImportExport implements Importable {
         Property property = propertyRepository.findPropertyByReference(getPropertyReference());
         if (property == null) throw  new ApplicationException(String.format("Property with reference [%s] not found.", getPropertyReference()));
         Budget budget = budgetRepository.findOrCreateBudget(property, getBudgetStartDate(), getBudgetEndDate());
+        budget.findOrCreatePartitioningForBudgeting();
         BudgetItem budgetItem = budget
                 .findOrCreateBudgetItem(incomingCharge)
                 .updateOrCreateBudgetItemValue(getBudgetedValue(), getBudgetStartDate(), BudgetCalculationType.BUDGETED)
@@ -169,7 +174,7 @@ public class BudgetImportExport implements Importable {
     private PartitionItem findOrCreatePartitionItem(final BudgetItem budgetItem){
         Charge targetCharge = fetchCharge(getOutgoingChargeReference());
         KeyTable keyTable = findOrCreateKeyTable(budgetItem.getBudget(), getKeyTableName(), getFoundationValueType(), getKeyValueMethod());
-        return budgetItem.updateOrCreatePartitionItem(targetCharge, keyTable, getPercentage(), getFixedBudgetedAmount(), getFixedAuditedAmount());
+        return budgetItem.updateOrCreatePartitionItem(targetCharge, keyTable, getPercentage()==null ? BigDecimal.ZERO : getPercentage(), getFixedBudgetedAmount()==null || getFixedBudgetedAmount().equals(BigDecimal.ZERO) ? null : getFixedBudgetedAmount(), getFixedAuditedAmount()==null || getFixedAuditedAmount().equals(BigDecimal.ZERO) ? null : getFixedAuditedAmount());
     }
 
     private Charge fetchCharge(final String chargeReference) {
@@ -183,6 +188,23 @@ public class BudgetImportExport implements Importable {
 
     private KeyTable findOrCreateKeyTable(final Budget budget, final String keyTableName, final String foundationValueType, final String keyValueMethod){
        return keyTableRepository.findOrCreateBudgetKeyTable(budget, keyTableName, FoundationValueType.valueOf(foundationValueType), KeyValueMethod.valueOf(keyValueMethod), 6);
+    }
+
+    /**
+     * To allow for usage within fixture scripts also.
+     */
+    @Setter
+    private FixtureScript.ExecutionContext executionContext;
+
+    /**
+     * To allow for usage within fixture scripts also.
+     */
+    @Setter
+    private ExcelFixture2 excelFixture2;
+
+    @Override
+    public void handleRow(final BudgetImportExport previousRow) {
+        importData(previousRow);
     }
 
     @Inject
