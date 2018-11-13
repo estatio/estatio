@@ -97,7 +97,8 @@ public class BudgetImportExportService {
                                 partitionItem.getCharge().getReference(),
                                 partitionItem.getPercentage(),
                                 partitionItem.getFixedBudgetedAmount(),
-                                partitionItem.getFixedAuditedAmount(), null)
+                                partitionItem.getFixedAuditedAmount(),
+                                item.getCalculationDescription())
                 );
             }
 
