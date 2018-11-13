@@ -296,17 +296,17 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public CodaDocHead revalidate() {
-        resetValidationAndDerivations();
-        validateUsing(this.lineValidator);
+        revalidateOnly();
+        updateEstatioObjects();
         return this;
     }
 
-    void validateUsing(LineValidator lineValidator) {
-
+    @Programmatic
+    public CodaDocHead revalidateOnly() {
+        resetValidationAndDerivations();
         validateBuyer();
-
-        validateLines(lineValidator);
-
+        validateLines();
+        return this;
     }
 
     void validateBuyer() {
@@ -333,7 +333,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         }
     }
 
-    void validateLines(final LineValidator lineValidator) {
+    void validateLines() {
 
         final CodaDocLine summaryDocLine = summaryDocLine();
         if(summaryDocLine != null) {
@@ -357,6 +357,21 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
                     appendInvalidReason(codaDocLine.getLineType() + ": " + codaDocLine.getReasonInvalid());
                 });
     }
+
+    void updateEstatioObjects() {
+
+        final ErrorSet hardErrors = new ErrorSet();
+        final ErrorSet softErrors = new ErrorSet();
+        softErrors.addIfNotEmpty(getReasonInvalid());
+
+        final IncomingInvoice incomingInvoice = docUpdater.updateIncomingInvoice(this);
+
+        docUpdater.updateSyncAndHandling(this, incomingInvoice);
+        docUpdater.updateLinkToOrderItem(this, softErrors);
+        docUpdater.updatePaperclip(this, softErrors);
+        docUpdater.updatePendingTask(this, hardErrors, softErrors);
+    }
+
 
     @Programmatic
     public boolean isValid() {
@@ -579,6 +594,9 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
     @Inject
     LineValidator lineValidator;
+
+    @Inject
+    DocUpdater docUpdater;
 
     @Inject
     PropertyRepository propertyRepository;
