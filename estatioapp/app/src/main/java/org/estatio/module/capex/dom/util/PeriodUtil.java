@@ -14,7 +14,6 @@ public class PeriodUtil {
     public static Pattern financialYearPattern = Pattern.compile("^F\\d{4}.*");
     public static Pattern yearPattern = Pattern.compile("^\\d{4}.*");
 
-    @Nullable
     public static LocalDateInterval yearFromPeriod(final String period){
         if (period == null) {
             return new LocalDateInterval(); // Interval with open start and end date

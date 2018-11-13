@@ -32,7 +32,7 @@ public class CodaDocLineRepository_create_Test {
         codaDocLineRepository = new CodaDocLineRepository();
         codaDocLineRepository.repositoryService = mockRepositoryService;
 
-        docHead = new CodaDocHead("IT01", "FR-GEN", "12345", LocalDate.now(), LocalDate.now(), "2019/1", "books");
+        docHead = new CodaDocHead("IT01", "FR-GEN", "12345", (short)1, LocalDate.now(), LocalDate.now(), "2019/1", "books");
     }
 
     @Test

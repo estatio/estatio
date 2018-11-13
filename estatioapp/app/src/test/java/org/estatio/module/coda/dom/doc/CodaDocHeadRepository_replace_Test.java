@@ -32,25 +32,33 @@ public class CodaDocHeadRepository_replace_Test {
     @Test
     public void when_does_not_exist() throws Exception {
 
+        // given
+        final CodaDocHead replacementDocHead =
+                new CodaDocHead("IT01", "FR-GEN", "123", (short)1, LocalDate.now(), LocalDate.now(), "2019/1", "books");
+
         // expecting
         context.checking(new Expectations() {{
             allowing(mockRepositoryService).uniqueMatch(with(any(QueryDefault.class)));
             will(returnValue(null));
 
-            oneOf(mockRepositoryService).persist(with(any(CodaDocHead.class)));
+            oneOf(mockRepositoryService).persist(with(replacementDocHead));
             will(JMockActions.returnArgument(0));
         }});
 
         // when
-        final CodaDocHead docHead =
-                codaDocHeadRepository.replace("IT01", "FR-GEN", "123", LocalDate.now(), LocalDate.now(), "2019/1", "books");
+        final CodaDocHead docHead = codaDocHeadRepository.persistAsReplacementIfRequired(replacementDocHead);
+
+        // then
+        assertThat(docHead).isSameAs(replacementDocHead);
     }
 
     @Test
     public void when_does_exist() throws Exception {
 
         // given
-        final CodaDocHead originalDocHead =new CodaDocHead();
+        final CodaDocHead originalDocHead = new CodaDocHead();
+        final CodaDocHead replacementDocHead =
+                new CodaDocHead("IT01", "FR-GEN", "123", (short)1, LocalDate.now(), LocalDate.now(), "2019/1", "books");
 
         // expecting
         context.checking(new Expectations() {{
@@ -59,15 +67,15 @@ public class CodaDocHeadRepository_replace_Test {
 
             oneOf(mockRepositoryService).removeAndFlush(with(originalDocHead));
 
-            oneOf(mockRepositoryService).persist(with(any(CodaDocHead.class)));
+            oneOf(mockRepositoryService).persist(with(replacementDocHead));
             will(JMockActions.returnArgument(0));
         }});
 
         // when
-        final CodaDocHead nextDocHead =
-                codaDocHeadRepository.replace("IT01", "FR-GEN", "123", LocalDate.now(), LocalDate.now(), "2019/1", "books");
+        final CodaDocHead nextDocHead = codaDocHeadRepository.persistAsReplacementIfRequired(replacementDocHead);
 
         // then
         assertThat(nextDocHead).isNotSameAs(originalDocHead);
+        assertThat(nextDocHead).isSameAs(replacementDocHead);
     }
 }

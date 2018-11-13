@@ -1,11 +1,10 @@
 package org.estatio.module.coda.dom.doc;
 
-import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.services.title.TitleService;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -35,33 +34,28 @@ public class CodaDocHeadRepository {
     }
 
     @Programmatic
-    public CodaDocHead create(
-            final String cmpCode,
-            final String docCode,
-            final String docNum,
-            final LocalDate inputDate,
-            final LocalDate docDate,
-            final String codaPeriod,
-            final String location) {
-        return repositoryService.persist(
-                new CodaDocHead(cmpCode, docCode, docNum, inputDate, docDate, codaPeriod, location));
+    public CodaDocHead findByCandidate(
+            final CodaDocHead codaDocHead
+    ) {
+        final String cmpCode = codaDocHead.getCmpCode();
+        final String docCode = codaDocHead.getDocCode();
+        final String docNum = codaDocHead.getDocNum();
+        return findByCmpCodeAndDocCodeAndDocNum(cmpCode, docCode, docNum);
     }
 
     @Programmatic
-    public CodaDocHead replace(
-            final String cmpCode,
-            final String docCode,
-            final String docNum,
-            final LocalDate inputDate,
-            final LocalDate docDate,
-            final String codaPeriod,
-            final String location) {
-        CodaDocHead codaDocHead = findByCmpCodeAndDocCodeAndDocNum(cmpCode, docCode, docNum);
-        if (codaDocHead != null) {
-            delete(codaDocHead);
+    public CodaDocHead persistAsReplacementIfRequired(final CodaDocHead codaDocHead) {
+        // sanity check
+        if(repositoryService.isPersistent(codaDocHead)) {
+            throw new IllegalStateException(
+                    String.format("CodaDocHead %s is already persistent", titleService.titleOf(codaDocHead)));
         }
-        codaDocHead = create(cmpCode, docCode, docNum, inputDate, docDate, codaPeriod, location);
-        return codaDocHead;
+
+        CodaDocHead existingCodaDocHead = findByCandidate(codaDocHead);
+        if (existingCodaDocHead != null) {
+            delete(existingCodaDocHead);
+        }
+        return repositoryService.persist(codaDocHead);
     }
 
     private void delete(final CodaDocHead codaDocHead) {
@@ -70,4 +64,6 @@ public class CodaDocHeadRepository {
 
     @javax.inject.Inject
     RepositoryService repositoryService;
+    @javax.inject.Inject
+    TitleService titleService;
 }

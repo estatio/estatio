@@ -1,5 +1,7 @@
 package org.estatio.module.coda.dom.doc;
 
+import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -31,14 +33,22 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.module.capex.dom.order.OrderItem;
+import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.role.PartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -78,6 +88,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
             final String cmpCode,
             final String docCode,
             final String docNum,
+            final short codaTimeStamp,
             final LocalDate inputDate,
             final LocalDate docDate,
             final String codaPeriod,
@@ -86,6 +97,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         this.cmpCode = cmpCode;
         this.docCode = docCode;
         this.docNum = docNum;
+        this.codaTimeStamp = codaTimeStamp;
         this.inputDate = inputDate;
         this.docDate = docDate;
         this.codaPeriod = codaPeriod;
@@ -136,6 +148,11 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Property()
     @Getter @Setter
     private String docNum;
+
+    @Column(allowsNull = "false")
+    @Property()
+    @Getter @Setter
+    private short codaTimeStamp;
 
     @Column(allowsNull = "true")
     @javax.jdo.annotations.Persistent
@@ -191,6 +208,12 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Property()
     @Getter @Setter
     private ValidationStatus cmpCodeValidationStatus;
+    /**
+     * to avoid clutter; highly unlikely this will be invalid.
+     */
+    public boolean hideCmpCodeValidationStatus() {
+        return getCmpCodeBuyer() != null;
+    }
 
     @Column(allowsNull = "true", name="cmpCodeBuyerId")
     @Property()
@@ -345,6 +368,179 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         return !isValid();
     }
 
+    @Programmatic
+    public Party getSummaryLineAccountCodeEl6Supplier() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getAccountCodeEl6Supplier() : null;
+    }
+
+    @Programmatic
+    public IncomingInvoiceType getAnalysisLineIncomingInvoiceType() {
+        final CodaDocLine docLine = analysisDocLine();
+        return docLine != null ? docLine.getIncomingInvoiceType() : null;
+    }
+
+    @Programmatic
+    public String getSummaryLineExtRef2() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getExtRef2() : null;
+    }
+
+    @Programmatic
+    public org.estatio.module.asset.dom.Property getSummaryLineProperty() {
+        final CodaDocLine docLine = summaryDocLine();
+        final String elPropRefIfAny = docLine != null ? docLine.getAccountCodeEl3PropertyReference() : null;
+        return elPropRefIfAny != null
+                        ? propertyRepository.findPropertyByReference(elPropRefIfAny)
+                        : null;
+    }
+
+    @Programmatic
+    public BankAccount getSummaryLineSupplierBankAccount() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getSupplierBankAccount() : null;
+    }
+
+    @Programmatic
+    public PaymentMethod getSummaryLinePaymentMethod() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getCodaPaymentMethod().asPaymentMethod() : null;
+    }
+
+    @Programmatic
+    public LocalDate getSummaryLineValueDate() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getValueDate() : null;
+    }
+
+    @Programmatic
+    public LocalDate getSummaryLineDueDate() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getDueDate() : null;
+    }
+
+    @Programmatic
+    public String getSummaryLineDescription() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getDescription() : null;
+    }
+
+    @Programmatic
+    public Charge getSummaryLineExtRefWorkTypeCharge() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getExtRefWorkTypeCharge() : null;
+    }
+
+    @Programmatic
+    public Project getSummaryLineExtRefProject() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getExtRefProject() : null;
+    }
+
+    @Programmatic
+    public BigDecimal getSummaryLineDocValue() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getDocValue() : null;
+    }
+
+    @Programmatic
+    public BigDecimal getSummaryLineDocSumTax() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getDocSumTax() : null;
+    }
+
+    @Programmatic
+    public String getSummaryLineAccountCodeEl3PropertyReference() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getAccountCodeEl3PropertyReference() : null;
+    }
+
+    @Programmatic
+    public String getSummaryLineExtRefCostCentre() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getExtRefCostCentre() : null;
+    }
+
+    @Programmatic
+    public String getSummaryLineUserRef1() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getUserRef1() : null;
+    }
+
+    @Programmatic
+    public OrderItem getSummaryLineExtRefOrderItem() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getExtRefOrderItem() : null;
+    }
+
+    @Data
+    public static class Comparison {
+        public enum Type {
+            DIFFERS_INVALIDATING_APPROVALS,
+            DIFFERS_RETAIN_APPROVALS,
+            SAME,
+            NO_PREVIOUS
+        }
+        private final Type type;
+        /**
+         * Only populated if {@link #getType()} is {@link Type#DIFFERS_INVALIDATING_APPROVALS}.
+         */
+        private final String reason;
+        public static Comparison same() { return new Comparison(Comparison.Type.SAME, null);}
+        public static Comparison invalidatesApprovals(final String reason) { return new Comparison(Type.DIFFERS_INVALIDATING_APPROVALS, reason);}
+        public static Comparison retainsApprovals() { return new Comparison(Type.DIFFERS_RETAIN_APPROVALS, null);}
+        public static Comparison noPrevious() { return new Comparison(Type.NO_PREVIOUS, null);}
+    }
+
+
+    @Programmatic
+    public boolean isSameAs(final CodaDocHead other) {
+        if(other == null) {
+            return false;
+        }
+        return other == this || other.getCodaTimeStamp() == getCodaTimeStamp();
+    }
+
+    @Programmatic
+    Comparison compareWithPrevious() {
+        CodaDocHead existing = codaDocHeadRepository.findByCandidate(this);
+        if(isSameAs(existing)) {
+            return new Comparison(Comparison.Type.SAME, null);
+        }
+        return compareWith(existing);
+    }
+
+    @Programmatic
+    public Comparison compareWith(final CodaDocHead existing) {
+        if(existing == null) {
+            return Comparison.noPrevious();
+        }
+        if(isSameAs(existing)) {
+            return Comparison.same();
+        }
+        CodaDocLine summaryDocLine = summaryDocLine();
+        CodaDocLine existingSummaryDocLine = existing.summaryDocLine();
+        if(summaryDocLine != null && existingSummaryDocLine == null) {
+            return Comparison.invalidatesApprovals("Previous had no summary doc line");
+        }
+        if(summaryDocLine == null && existingSummaryDocLine != null) {
+            return Comparison.invalidatesApprovals("Replacement has no summary doc line");
+        }
+        if(summaryDocLine != null && existingSummaryDocLine != null) {
+            if(!Objects.equals(summaryDocLine.getSupplierBankAccount(), existingSummaryDocLine.getSupplierBankAccount())) {
+                return Comparison.invalidatesApprovals("Supplier bank account has changed");
+            }
+            if(!Objects.equals(summaryDocLine.getDocValue(), existingSummaryDocLine.getDocValue())) {
+                return Comparison.invalidatesApprovals("Gross amount has changed");
+            }
+            if(!Objects.equals(summaryDocLine.getDocSumTax(), existingSummaryDocLine.getDocSumTax())) {
+                return Comparison.invalidatesApprovals("VAT amount has changed");
+            }
+        }
+
+        return Comparison.retainsApprovals();
+    }
+
     //region > compareTo, toString
     @Override
     public int compareTo(final CodaDocHead other) {
@@ -367,6 +563,9 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     //endregion
 
     @Inject
+    CodaDocHeadRepository codaDocHeadRepository;
+
+    @Inject
     PartyRepository partyRepository;
 
     @Inject
@@ -374,5 +573,8 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
     @Inject
     LineValidator lineValidator;
+
+    @Inject
+    PropertyRepository propertyRepository;
 
 }

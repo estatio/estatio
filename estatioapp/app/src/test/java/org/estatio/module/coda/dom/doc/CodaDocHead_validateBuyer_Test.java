@@ -39,7 +39,7 @@ public class CodaDocHead_validateBuyer_Test {
 
     @Before
     public void setUp() throws Exception {
-        codaDocHead = new CodaDocHead("IT01", null, null, null, null, null, null);
+        codaDocHead = new CodaDocHead("IT01", null, null, (short)1, null, null, null, null);
         codaDocHead.partyRepository = mockPartyRepository;
         codaDocHead.partyRoleTypeRepository = mockPartyRoleTypeRepository;
 
