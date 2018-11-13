@@ -186,6 +186,10 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
     @Getter @Setter
     private Charge charge;
 
+    @Column(allowsNull = "true", length = 255)
+    @Getter @Setter
+    private String calculationDescription;
+
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<PartitionItem> getPartitionItems(){

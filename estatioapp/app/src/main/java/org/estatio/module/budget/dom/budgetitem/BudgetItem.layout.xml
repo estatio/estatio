@@ -22,6 +22,7 @@
                                 </ns2:property>
                                 <ns2:property id="budgetedValue"/>
                                 <ns2:property id="auditedValue"/>
+                                <ns2:property id="calculationDescription"/>
                                 <ns2:property id="applicationTenancy"/>
                             </ns2:fieldSet>
                         </col>

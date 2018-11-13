@@ -8,17 +8,20 @@
     <row>
         <col span="4">
             <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
-                <ns2:property id="propertyReference"/>
                 <ns2:property id="budgetStartDate"/>
                 <ns2:property id="budgetEndDate"/>
                 <ns2:property id="incomingChargeReference"/>
                 <ns2:property id="budgetedValue"/>
+                <ns2:property id="fixedBudgetedAmount"/>
                 <ns2:property id="auditedValue"/>
+                <ns2:property id="fixedAuditedAmount"/>
+                <ns2:property id="calculationDescription"/>
                 <ns2:property id="keyTableName"/>
                 <ns2:property id="foundationValueType"/>
                 <ns2:property id="keyValueMethod"/>
                 <ns2:property id="outgoingChargeReference"/>
                 <ns2:property id="percentage"/>
+                <ns2:property id="propertyReference"/>
             </ns2:fieldSet>
         </col>
         <col span="8" unreferencedCollections="true"/>

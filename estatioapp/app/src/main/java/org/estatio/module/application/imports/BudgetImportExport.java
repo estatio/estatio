@@ -11,6 +11,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.repository.RepositoryService;
@@ -64,8 +65,8 @@ public class BudgetImportExport implements Importable {
             final String outgoingChargeReference,
             final BigDecimal percentage,
             final BigDecimal fixedBudgetedAmount,
-            final BigDecimal fixedAuditedAmount
-            ){
+            final BigDecimal fixedAuditedAmount,
+            final String calculationDescription){
         this.propertyReference = propertyReference;
         this.budgetStartDate = budgetStartDate;
         this.budgetEndDate = budgetEndDate;
@@ -79,34 +80,51 @@ public class BudgetImportExport implements Importable {
         this.percentage = percentage;
         this.fixedBudgetedAmount = fixedBudgetedAmount;
         this.fixedAuditedAmount = fixedAuditedAmount;
+        this.calculationDescription = calculationDescription;
     }
 
     @Getter @Setter
+    @MemberOrder(sequence = "14")
     private String propertyReference;
     @Getter @Setter
+    @MemberOrder(sequence = "1")
     private LocalDate budgetStartDate;
     @Getter @Setter
+    @MemberOrder(sequence = "2")
     private LocalDate budgetEndDate;
     @Getter @Setter
+    @MemberOrder(sequence = "3")
     private String incomingChargeReference;
     @Getter @Setter
+    @MemberOrder(sequence = "4")
     private BigDecimal budgetedValue;
     @Getter @Setter
+    @MemberOrder(sequence = "6")
     private BigDecimal auditedValue;
     @Getter @Setter
+    @MemberOrder(sequence = "9")
     private String keyTableName;
     @Getter @Setter
+    @MemberOrder(sequence = "10")
     private String foundationValueType;
     @Getter @Setter
+    @MemberOrder(sequence = "11")
     private String keyValueMethod;
     @Getter @Setter
+    @MemberOrder(sequence = "12")
     private String outgoingChargeReference;
     @Getter @Setter
+    @MemberOrder(sequence = "13")
     private BigDecimal percentage;
     @Getter @Setter
+    @MemberOrder(sequence = "5")
     private BigDecimal fixedBudgetedAmount;
     @Getter @Setter
+    @MemberOrder(sequence = "7")
     private BigDecimal fixedAuditedAmount;
+    @Getter @Setter
+    @MemberOrder(sequence = "8")
+    private String calculationDescription;
 
 
     @Override
@@ -144,6 +162,7 @@ public class BudgetImportExport implements Importable {
                 .findOrCreateBudgetItem(incomingCharge)
                 .updateOrCreateBudgetItemValue(getBudgetedValue(), getBudgetStartDate(), BudgetCalculationType.BUDGETED)
                 .updateOrCreateBudgetItemValue(getAuditedValue(), getBudgetEndDate(), BudgetCalculationType.ACTUAL);
+        budgetItem.setCalculationDescription(getCalculationDescription());
         return budgetItem;
     }
 
