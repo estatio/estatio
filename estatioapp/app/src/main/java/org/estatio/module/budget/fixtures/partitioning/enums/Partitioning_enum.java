@@ -61,7 +61,7 @@ public enum Partitioning_enum
     BudPartitioning2015(
             BudBudget2015, BudgetCalculationType.BUDGETED,
             new ItemSpec[]{
-                new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Area, 0, bd(100), null, null),
+                new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Area, 0, bd(0), bd(10000.00), null),
                 new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Area, 1, bd(80), null, null),
                 new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Count, 1, bd(20), null, null),
                 new ItemSpec(BudBudget2015, NlServiceCharge2, Bud2015Area, 2, bd(90), null, null),
