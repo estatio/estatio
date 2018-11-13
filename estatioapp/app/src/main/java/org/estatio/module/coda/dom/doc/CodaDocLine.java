@@ -19,15 +19,19 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.ComparisonChain;
 
+import org.axonframework.eventhandling.annotation.EventHandler;
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.services.eventbus.PropertyDomainEvent;
 import org.apache.isis.applib.services.title.TitleService;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
@@ -248,6 +252,17 @@ import lombok.Setter;
 )
 public class CodaDocLine implements Comparable<CodaDocLine> {
 
+    /**
+     * For properties that are only populated for summary lines.
+     */
+    public static class SummaryOnlyPropertyDomainEvent extends PropertyDomainEvent<CodaDocLine, Object> {}
+
+    /**
+     * For properties that are only populated for analysis lines.
+     */
+    public static class AnalysisOnlyPropertyDomainEvent extends PropertyDomainEvent<CodaDocLine, Object> {}
+
+
     public CodaDocLine(){}
     public CodaDocLine(
             final CodaDocHead docHead,
@@ -258,7 +273,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
             final BigDecimal docValue,
             final BigDecimal docSumTax,
             final LocalDate dueDate,
-            final LocalDate vatRegistrationDate,
+            final LocalDate valueDate,
             final String extRef2,
             final String extRef3,
             final String extRef4,
@@ -276,7 +291,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
         this.docValue = docValue;
         this.docSumTax = docSumTax;
         this.dueDate = dueDate;
-        this.vatRegistrationDate = vatRegistrationDate;
+        this.valueDate = valueDate;
         this.extRef2 = extRef2;
         this.extRef3 = extRef3;
         this.extRef4 = extRef4;
@@ -363,52 +378,52 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     private String accountCode;
 
     @Column(allowsNull = "true", length = 36)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private String description;
 
     @Column(allowsNull = "true", scale = 2)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private BigDecimal docValue;
 
     @Column(allowsNull = "true", scale = 2)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private BigDecimal docSumTax;
 
     @Column(allowsNull = "true")
     @javax.jdo.annotations.Persistent
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private LocalDate dueDate;
 
     @Column(allowsNull = "true")
     @javax.jdo.annotations.Persistent
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
-    private LocalDate vatRegistrationDate;
+    private LocalDate valueDate;
 
     /**
      * Supplier invoice number.
      */
     @Column(allowsNull = "true", length = 32)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private String extRef2;
 
     @Column(allowsNull = "true", length = 32)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private String extRef3;
 
     @Column(allowsNull = "true", length = 32)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private String extRef4;
 
     @Column(allowsNull = "true", length = 32)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private String extRef5;
 
@@ -416,7 +431,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
      * Corresponds to barcode number
      */
     @Column(allowsNull = "true", length = 35)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private String userRef1;
 
@@ -424,7 +439,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
      * Encodes whether this has been paid.
      */
     @Column(allowsNull = "true")
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private Character userStatus;
 
@@ -432,12 +447,12 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
      * Corresponds to IBAN
      */
     @Column(allowsNull = "true", length = 36)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private String elmBankAccount;
 
     @Column(allowsNull = "true", length = 12)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private String mediaCode;
 
@@ -481,7 +496,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
 
 
     @Column(allowsNull = "false", length = 20)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private ValidationStatus accountCodeEl3ValidationStatus;
 
@@ -490,7 +505,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
      * {@link #getAccountCodeValidationStatus()} is {@link ValidationStatus#VALID valid}
      */
     @Column(allowsNull = "true", length = 72)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private String accountCodeEl3;
 
@@ -503,7 +518,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
      * of this versus the {@link #getExtRefCostCentre() cost centre} derived from extRef3.
      */
     @Column(allowsNull = "true", length = 3)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private String accountCodeEl3PropertyReference;
 
@@ -525,12 +540,13 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
 
 
     @Column(allowsNull = "false", length = 20)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private ValidationStatus accountCodeEl6ValidationStatus;
 
+
     @Column(allowsNull = "true", name="accountCodeEl6SupplierId")
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private Organisation accountCodeEl6Supplier;
 
@@ -539,29 +555,29 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
      * {@link #getAccountCodeValidationStatus()} is {@link ValidationStatus#VALID valid}
      */
     @Column(allowsNull = "true", length = 72)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private String accountCodeEl6;
 
     @Column(allowsNull = "false", length = 20)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private ValidationStatus supplierBankAccountValidationStatus;
 
     @Column(allowsNull = "true", name = "supplierBankAccountId")
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private BankAccount supplierBankAccount;
 
 
     @Column(allowsNull = "false", length = 20)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private ValidationStatus extRefValidationStatus;
 
 
     @Column(allowsNull = "false", length = 20)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private ValidationStatus extRefOrderValidationStatus;
 
@@ -573,19 +589,19 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
      * For new style, is nn/CCC/PPP/WWW  (nn is not normalized).
      */
     @Column(allowsNull = "true", length = 30)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private String orderNumber;
 
 
     @Column(allowsNull = "true", name = "extRefOrderItemId")
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private OrderItem extRefOrderItem;
 
 
     @Column(allowsNull = "false", length = 20)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private ValidationStatus extRefCostCentreValidationStatus;
 
@@ -593,14 +609,14 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
      * As parsed from extRef3/extRef4/extRef5, only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
      */
     @Column(allowsNull = "true", length = 30)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private String extRefCostCentre;
 
 
 
     @Column(allowsNull = "false", length = 20)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private ValidationStatus extRefProjectValidationStatus;
 
@@ -610,24 +626,24 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
      * Only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid},
      */
     @Column(allowsNull = "true", length = 30)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private String projectReference;
 
     @Column(allowsNull = "true", name = "extRefProjectId")
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private Project extRefProject;
 
 
     @Column(allowsNull = "false", length = 20)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private ValidationStatus extRefWorkTypeValidationStatus;
 
 
     @Column(allowsNull = "true", name = "extRefWorkTypeChargeId")
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private Charge extRefWorkTypeCharge;
 
@@ -639,18 +655,18 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
      * Only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
      */
     @Column(allowsNull = "true", length = 30)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private String chargeReference;
 
 
     @Column(allowsNull = "false", length = 20)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private ValidationStatus mediaCodeValidationStatus;
 
     @Column(allowsNull = "true", length = 12)
-    @Property()
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private CodaPaymentMethod codaPaymentMethod;
 
@@ -658,7 +674,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
      * Populated only for analysis lines.
      */
     @Column(length = 50, allowsNull = "true")
-    @Property()
+    @Property(domainEvent = AnalysisOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private IncomingInvoiceType incomingInvoiceType;
 
@@ -688,6 +704,47 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
                 ", extRef3='" + extRef3 + '\'' +
                 ", extRef5='" + extRef5 + '\'' +
                 '}';
+    }
+
+    @DomainService
+    public static class PropertyVisibilityAdvisor extends AbstractSubscriber {
+
+        @EventHandler
+        public void on(SummaryOnlyPropertyDomainEvent ev) {
+            switch (ev.getEventPhase()) {
+            case HIDE:
+                LineType lineType = ev.getSource().getLineType();
+                if(lineType == null) {
+                    return;
+                }
+                switch (lineType) {
+                case SUMMARY:
+                    break;
+                default:
+                    ev.hide();
+                    break;
+                }
+                break;
+            }
+        }
+        @EventHandler
+        public void on(AnalysisOnlyPropertyDomainEvent ev) {
+            switch (ev.getEventPhase()) {
+            case HIDE:
+                LineType lineType = ev.getSource().getLineType();
+                if(lineType == null) {
+                    return;
+                }
+                switch (lineType) {
+                case ANALYSIS:
+                    break;
+                default:
+                    ev.hide();
+                    break;
+                }
+                break;
+            }
+        }
     }
 
 }

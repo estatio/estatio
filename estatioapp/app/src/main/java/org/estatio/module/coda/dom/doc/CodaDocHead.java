@@ -20,6 +20,7 @@ import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
@@ -28,6 +29,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
@@ -268,9 +270,12 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Getter @Setter
     private String location;
 
-    @Programmatic
-    public void validate() {
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public CodaDocHead revalidate() {
+        resetValidationAndDerivations();
         validateUsing(this.lineValidator);
+        return this;
     }
 
     void validateUsing(LineValidator lineValidator) {
@@ -321,18 +326,13 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     }
 
     void updateInvalidReasonBasedOnLines() {
-        final long numInvalidLines = Lists.newArrayList(getLines()).stream()
+        setLineValidationStatus(ValidationStatus.VALID);
+        Lists.newArrayList(getLines()).stream()
                 .filter(CodaDocLine::isInvalid)
-                .count();
-
-        if (numInvalidLines == 0) {
-            setLineValidationStatus(ValidationStatus.VALID);
-        } else {
-            setLineValidationStatus(ValidationStatus.INVALID);
-            appendInvalidReason(numInvalidLines + " line"
-                    + (numberOfLines == 1 ? " is" : "s are")
-                    + " invalid");
-        }
+                .forEach(codaDocLine -> {
+                    setLineValidationStatus(ValidationStatus.INVALID);
+                    appendInvalidReason(codaDocLine.getLineType() + ": " + codaDocLine.getReasonInvalid());
+                });
     }
 
     @Programmatic

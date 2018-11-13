@@ -1,65 +1,80 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/links http://isis.apache.org/applib/layout/links/links.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:lnk="http://isis.apache.org/applib/layout/links" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <bs3:row>
-        <bs3:col span="12" unreferencedActions="true">
-            <cpt:domainObject/>
-            <cpt:action id="impersonateUser"/>
-            <cpt:action id="stopImpersonating"/>
-        </bs3:col>
-    </bs3:row>
-    <bs3:row>
         <bs3:col span="4">
-            <bs3:tabGroup>
-                <bs3:tab name="General">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="General" id="general">
-                                <cpt:property id="docHead"/>
-                                <cpt:property id="lineNum"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Other">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Other" id="other" unreferencedProperties="true">
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Metadata">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Metadata" id="metadata">
-                                <cpt:action id="recentAuditEntries" position="PANEL_DROPDOWN"/>
-                                <cpt:action id="findChangesByDate" position="PANEL_DROPDOWN"/>
-                                <cpt:action id="recentChanges" position="PANEL_DROPDOWN"/>
-                                <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                                <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                                <cpt:action id="links"/>
-                                <cpt:property id="datanucleusIdLong"/>
-                                <cpt:property id="datanucleusVersionLong"/>
-                                <cpt:property id="datanucleusVersionTimestamp"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-            </bs3:tabGroup>
-            <cpt:fieldSet name="Description">
-                <cpt:property id="description"/>
-                <cpt:property id="chargeReference"/>
-                <cpt:property id="userRef1"/>
-            </cpt:fieldSet>
-            <cpt:fieldSet name="Financials and Dates">
-                <cpt:property id="docSumTax"/>
-                <cpt:property id="docValue"/>
-                <cpt:property id="valueDate"/>
-            </cpt:fieldSet>
-            <cpt:fieldSet name="Payment" id="paymentDetails">
-                <cpt:property id="mediaCode"/>
-                <cpt:property id="userStatus"/>
-            </cpt:fieldSet>
+            <bs3:row>
+                <bs3:col span="12" unreferencedActions="true">
+                    <cpt:domainObject/>
+                    <cpt:action id="impersonateUser"/>
+                    <cpt:action id="stopImpersonating"/>
+                </bs3:col>
+            </bs3:row>
+            <bs3:row>
+                <bs3:col span="12">
+                    <bs3:tabGroup>
+                        <bs3:tab name="General">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="General" id="general">
+                                        <cpt:property id="docHead"/>
+                                        <cpt:property id="lineNum"/>
+                                        <cpt:property id="lineType"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Other">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Other" id="other" unreferencedProperties="true">
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Metadata">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Metadata" id="metadata">
+                                        <cpt:action id="recentAuditEntries" position="PANEL_DROPDOWN"/>
+                                        <cpt:action id="findChangesByDate" position="PANEL_DROPDOWN"/>
+                                        <cpt:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                                        <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                        <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                        <cpt:action id="links" position="PANEL"/>
+                                        <cpt:property id="datanucleusIdLong"/>
+                                        <cpt:property id="datanucleusVersionLong"/>
+                                        <cpt:property id="datanucleusVersionTimestamp"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                    </bs3:tabGroup>
+                    <cpt:fieldSet name="Description">
+                        <cpt:property id="description"/>
+                        <cpt:property id="incomingInvoiceType"/>
+                        <cpt:property id="userRef1">
+                            <cpt:named>User Ref 1 (Barcode)</cpt:named>
+                        </cpt:property>
+                    </cpt:fieldSet>
+                    <cpt:fieldSet name="Dates">
+                        <cpt:property id="dueDate"/>
+                        <cpt:property id="valueDate">
+                            <cpt:named>Value Date (VAT Reg Date)</cpt:named>
+                        </cpt:property>
+                    </cpt:fieldSet>
+                    <cpt:fieldSet name="Amounts">
+                        <cpt:property id="docValue">
+                            <cpt:named>Doc Value (Gross Amount)</cpt:named>
+                        </cpt:property>
+                        <cpt:property id="docSumTax">
+                            <cpt:named>Doc Sum Tax (VAT Amount)</cpt:named>
+                        </cpt:property>
+                    </cpt:fieldSet>
+                    <cpt:fieldSet name="Payment" id="paymentDetails">
+                        <cpt:property id="userStatus"/>
+                    </cpt:fieldSet>
+                </bs3:col>
+            </bs3:row>
         </bs3:col>
         <bs3:col span="8">
             <bs3:row>
@@ -90,28 +105,75 @@
                         <bs3:tab name="Account Code Validation">
                             <bs3:row>
                                 <bs3:col span="9">
-                                    <cpt:fieldSet name="" id="accountcode">
+                                    <cpt:fieldSet name="" id="accountCode">
                                         <cpt:property id="accountCode"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                                <bs3:col span="3">
+                                    <cpt:fieldSet name="" id="accountCodeValidation">
+                                        <cpt:property id="accountCodeValidationStatus" labelPosition="NONE"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                            <bs3:row>
+                                <bs3:col span="9">
+                                    <cpt:fieldSet name="" id="accountCodeEl3">
                                         <cpt:property id="accountCodeEl3">
                                             <cpt:named>El 3</cpt:named>
                                         </cpt:property>
-                                        <cpt:property id="accountCodeEl5">
-                                            <cpt:named>El 5</cpt:named>
+                                        <cpt:property id="accountCodeEl3PropertyReference">
+                                            <cpt:named>Property Reference</cpt:named>
                                         </cpt:property>
-                                        <cpt:property id="accountCodeEl6">
-                                            <cpt:named>El 6</cpt:named>
-                                        </cpt:property>
-                                        <cpt:property id="elmBankAccount">
-                                            <cpt:named>Supplier IBAN</cpt:named>
+                                        <cpt:property id="accountCodeEl6Supplier">
+                                            <cpt:named>Supplier</cpt:named>
                                         </cpt:property>
                                     </cpt:fieldSet>
                                 </bs3:col>
                                 <bs3:col span="3">
                                     <cpt:fieldSet name="" id="accountcodevalidation">
-                                        <cpt:property id="accountCodeValidationStatus" labelPosition="NONE"/>
                                         <cpt:property id="accountCodeEl3ValidationStatus" labelPosition="NONE"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                            <bs3:row>
+                                <bs3:col span="9">
+                                    <cpt:fieldSet name="" id="accountCodeEl5">
+                                        <cpt:property id="accountCodeEl5">
+                                            <cpt:named>El 5</cpt:named>
+                                        </cpt:property>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                                <bs3:col span="3">
+                                    <cpt:fieldSet name="" id="accountCodeEl5ValidationStatus">
                                         <cpt:property id="accountCodeEl5ValidationStatus" labelPosition="NONE"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                            <bs3:row>
+                                <bs3:col span="9">
+                                    <cpt:fieldSet name="" id="accountCodeEl6">
+                                        <cpt:property id="accountCodeEl6">
+                                            <cpt:named>El 6</cpt:named>
+                                        </cpt:property>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                                <bs3:col span="3">
+                                    <cpt:fieldSet name="" id="accountCodeEl6ValidationStatus">
                                         <cpt:property id="accountCodeEl6ValidationStatus" labelPosition="NONE"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                            <bs3:row>
+                                <bs3:col span="9">
+                                    <cpt:fieldSet name="" id="elmBankAccount">
+                                        <cpt:property id="elmBankAccount">
+                                            <cpt:named>Supplier IBAN</cpt:named>
+                                        </cpt:property>
+                                        <cpt:property id="supplierBankAccount"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                                <bs3:col span="3">
+                                    <cpt:fieldSet name="" id="elmBankAccountValidationStatus">
                                         <cpt:property id="supplierBankAccountValidationStatus" labelPosition="NONE"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
@@ -123,6 +185,7 @@
                             <bs3:row>
                                 <bs3:col span="9">
                                     <cpt:fieldSet name="" id="payment">
+                                        <cpt:property id="mediaCode"/>
                                         <cpt:property id="codaPaymentMethod"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
@@ -140,48 +203,73 @@
                         <bs3:tab name="External Reference Validation">
                             <bs3:row>
                                 <bs3:col span="9">
-                                    <cpt:fieldSet name="" id="ExternalReferenceMain">
-                                        <cpt:property id="extRef3"/>
-                                        <cpt:property id="extRef4"/>
-                                        <cpt:property id="extRef5"/>
+                                    <cpt:fieldSet name="" id="extRef2">
+                                        <cpt:property id="extRef2">
+                                            <cpt:named>Ext Ref 2 (supplier invoice number)</cpt:named>
+                                        </cpt:property>
                                     </cpt:fieldSet>
                                 </bs3:col>
                                 <bs3:col span="3">
-                                    <cpt:fieldSet name="" id="ExternalReferenceMainValidation">
-                                        <cpt:property id="extRefValidationStatus" labelPosition="TOP">
-                                            <cpt:named>extRef3/4/5:</cpt:named>
-                                        </cpt:property>
-                                        <cpt:property id="extRefWorkTypeValidationStatus" labelPosition="TOP">
-                                            <cpt:named>Work type:</cpt:named>
-                                        </cpt:property>
-                                    </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>
                             <bs3:row>
                                 <bs3:col span="9">
-                                    <cpt:fieldSet name="" id="ExternalReferenceCostCentre">
+                                    <cpt:fieldSet name="" id="extRef3">
+                                        <cpt:property id="extRef3"/>
+                                        <cpt:property id="orderNumber"/>
+                                        <cpt:property id="extRefOrderItem">
+                                            <cpt:named>Order item</cpt:named>
+                                        </cpt:property>
                                         <cpt:property id="extRefCostCentre">
                                             <cpt:named>Cost centre</cpt:named>
                                         </cpt:property>
                                     </cpt:fieldSet>
                                 </bs3:col>
                                 <bs3:col span="3">
-                                    <cpt:fieldSet name="" id="ExternalReferenceCostCentreValidation">
-                                        <cpt:property id="extRefCostCentreValidationStatus" labelPosition="NONE"/>
+                                    <cpt:fieldSet name="" id="extRef3_4_5Validation">
+                                        <cpt:property id="extRefValidationStatus" labelPosition="TOP">
+                                            <cpt:named>extRef fields ?</cpt:named>
+                                        </cpt:property>
+                                        <cpt:property id="extRefOrderValidationStatus" labelPosition="TOP">
+                                            <cpt:named>Order?</cpt:named>
+                                        </cpt:property>
+                                        <cpt:property id="extRefCostCentreValidationStatus" labelPosition="TOP" hidden="EVERYWHERE">
+                                            <cpt:named>Cost centre?</cpt:named>
+                                        </cpt:property>
                                     </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>
                             <bs3:row>
                                 <bs3:col span="9">
-                                    <cpt:fieldSet name="" id="ExternalReference">
-                                        <cpt:property id="orderNumber"/>
+                                    <cpt:fieldSet name="" id="extRef4">
+                                        <cpt:property id="extRef4"/>
                                         <cpt:property id="projectReference"/>
+                                        <cpt:property id="extRefProject">
+                                            <cpt:named>Project</cpt:named>
+                                        </cpt:property>
                                     </cpt:fieldSet>
                                 </bs3:col>
                                 <bs3:col span="3">
-                                    <cpt:fieldSet name="" id="ExternalReferenceValidation">
-                                        <cpt:property id="extRefOrderValidationStatus" labelPosition="NONE"/>
+                                    <cpt:fieldSet name="" id="extRef4Validation">
                                         <cpt:property id="extRefProjectValidationStatus" labelPosition="NONE"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                            <bs3:row>
+                                <bs3:col span="9">
+                                    <cpt:fieldSet name="" id="extRef5">
+                                        <cpt:property id="extRef5"/>
+                                        <cpt:property id="chargeReference">
+                                            <cpt:named>Charge reference</cpt:named>
+                                        </cpt:property>
+                                        <cpt:property id="extRefWorkTypeCharge">
+                                            <cpt:named>Charge</cpt:named>
+                                        </cpt:property>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                                <bs3:col span="3">
+                                    <cpt:fieldSet name="" id="extRef5Validation">
+                                        <cpt:property id="extRefWorkTypeValidationStatus" labelPosition="NONE"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>
