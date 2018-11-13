@@ -468,6 +468,12 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     }
 
     @Programmatic
+    public String getSummaryLineDocumentName() {
+        final String ref1 = getSummaryLineUserRef1();
+        return ref1 != null ? ref1 + ".pdf" : null;
+    }
+
+    @Programmatic
     public OrderItem getSummaryLineExtRefOrderItem() {
         final CodaDocLine docLine = summaryDocLine();
         return docLine != null ? docLine.getExtRefOrderItem() : null;

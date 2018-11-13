@@ -11,11 +11,11 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
-import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(repositoryFor = OrderItemInvoiceItemLink.class, nature = NatureOfService.DOMAIN)
 public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFactory<OrderItemInvoiceItemLink> {
@@ -152,9 +152,8 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-
-
-    void removeLink(final OrderItemInvoiceItemLink link) {
+    @Programmatic
+    public void removeLink(final OrderItemInvoiceItemLink link) {
         remove(link);
     }
 
