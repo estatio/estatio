@@ -301,6 +301,9 @@ public class DerivedObjectUpdater {
                 // userRef1 removed, so delete the existing paperclip.
                 paperclipRepository.delete(existingPaperclipIfAny);
 
+                // reset the existing document back to vanilla 'INCOMING'
+                existingPaperclipIfAny.getDocument().setType(incomingDocumentType);
+
             } else {
 
                 if(!Objects.equals(existingDocumentNameIfAny, documentName)) {
