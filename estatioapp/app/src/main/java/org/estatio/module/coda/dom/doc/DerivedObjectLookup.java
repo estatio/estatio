@@ -17,8 +17,6 @@ import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkReposit
 @DomainService(nature = NatureOfService.DOMAIN)
 public class DerivedObjectLookup {
 
-    static final String AT_PATH = "/ITA";
-
     public IncomingInvoice invoiceIfAnyFrom(final CodaDocHead docHead) {
         return docHead != null ? docHead.getIncomingInvoice() : null;
     }

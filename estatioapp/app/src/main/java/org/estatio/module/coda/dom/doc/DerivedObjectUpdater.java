@@ -11,6 +11,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.services.wrapper.DisabledException;
 import org.apache.isis.applib.services.wrapper.HiddenException;
 import org.apache.isis.applib.services.wrapper.InvalidException;
@@ -36,6 +37,7 @@ import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.orderinvoice.IncomingInvoiceItem_createOrderItemLink;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
+import org.estatio.module.capex.dom.orderinvoice.OrderItem_removeInvoiceItemLink;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.task.Task;
@@ -227,10 +229,15 @@ public class DerivedObjectUpdater {
                     existingLinkIfAny.getOrderItem() != orderItem ||
                     existingLinkIfAny.getInvoiceItem() != invoiceItem) {
 
-                // just update the link to refer to the different order item and/or invoice item
-                existingLinkIfAny.setOrderItem(orderItem);
-                existingLinkIfAny.setInvoiceItem(invoiceItem);
-                existingLinkIfAny.setNetAmount(netAmount);
+                // we remove the existing link...
+                final boolean removedLink =
+                        removeLinkIfPossible(existingLinkIfAny.getOrderItem(), existingLinkIfAny.getInvoiceItem(), softErrors);
+
+                // ... and recreate, because
+                if(removedLink) {
+                    linkIfPossible(orderItem, invoiceItem, softErrors);
+                }
+
 
             } else {
 
@@ -246,20 +253,53 @@ public class DerivedObjectUpdater {
                 //
                 // create the link, if we can
                 //
-                if (orderItem != null && invoiceItem != null) {
-                    try {
-                        wrapperFactory.wrap(
-                                factoryService.mixin(IncomingInvoiceItem_createOrderItemLink.class, invoiceItem))
-                                .act(orderItem, invoiceItem.getNetAmount());
-                    } catch(HiddenException ex) {
-                        softErrors.add("Failed to link to order");
-                    } catch(DisabledException | InvalidException ex) {
-                        softErrors.add(ex.getMessage());
-                    }
-                }
+                linkIfPossible(orderItem, invoiceItem, softErrors);
             } else {
                 // nothing to do.
                 // There was no link previously, and the current doc head is invalid so don't create one yet.
+            }
+        }
+    }
+
+    boolean removeLinkIfPossible(
+            final OrderItem orderItem,
+            final IncomingInvoiceItem invoiceItem,
+            final ErrorSet softErrors) {
+
+        if (orderItem != null && invoiceItem != null) {
+            try {
+                wrapperFactory.wrap(
+                        factoryService.mixin(OrderItem_removeInvoiceItemLink.class, orderItem))
+                        .act(invoiceItem);
+            } catch(HiddenException ex) {
+                softErrors.add(
+                        "Failed to remove existing link between '%s' and '%s'",
+                        titleService.titleOf(orderItem), titleService.titleOf(invoiceItem));
+                return false;
+            } catch(DisabledException | InvalidException ex) {
+                softErrors.add(ex.getMessage());
+                return false;
+            }
+        }
+        return true;
+    }
+
+    void linkIfPossible(
+            final OrderItem orderItem,
+            final IncomingInvoiceItem invoiceItem,
+            final ErrorSet softErrors) {
+
+        if (orderItem != null && invoiceItem != null) {
+            try {
+                wrapperFactory.wrap(
+                        factoryService.mixin(IncomingInvoiceItem_createOrderItemLink.class, invoiceItem))
+                        .act(orderItem, invoiceItem.getNetAmount());
+            } catch(HiddenException ex) {
+                softErrors.add(
+                        "Failed to create a link between '%s' and '%s'",
+                        titleService.titleOf(orderItem), titleService.titleOf(invoiceItem));
+            } catch(DisabledException | InvalidException ex) {
+                softErrors.add(ex.getMessage());
             }
         }
     }
@@ -411,6 +451,9 @@ public class DerivedObjectUpdater {
                 : null
                 : null;
     }
+
+    @Inject
+    TitleService titleService;
 
     @Inject
     PaperclipRepository paperclipRepository;
