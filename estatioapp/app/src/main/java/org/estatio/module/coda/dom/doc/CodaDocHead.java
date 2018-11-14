@@ -10,6 +10,7 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
@@ -364,12 +365,12 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         final ErrorSet softErrors = new ErrorSet();
         softErrors.addIfNotEmpty(getReasonInvalid());
 
-        final IncomingInvoice incomingInvoice = docUpdater.updateIncomingInvoice(this);
+        final IncomingInvoice incomingInvoice = derivedObjectUpdater.updateIncomingInvoice(this);
 
-        docUpdater.updateSyncAndHandling(this, incomingInvoice);
-        docUpdater.updateLinkToOrderItem(this, softErrors);
-        docUpdater.updatePaperclip(this, softErrors);
-        docUpdater.updatePendingTask(this, hardErrors, softErrors);
+        derivedObjectUpdater.updateSyncAndHandling(this, incomingInvoice);
+        derivedObjectUpdater.updateLinkToOrderItem(this, softErrors);
+        derivedObjectUpdater.updatePaperclip(this, softErrors);
+        derivedObjectUpdater.updatePendingTask(this, hardErrors, softErrors);
     }
 
 
@@ -583,21 +584,27 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
     //endregion
 
+    @NotPersistent
     @Inject
     CodaDocHeadRepository codaDocHeadRepository;
 
+    @NotPersistent
     @Inject
     PartyRepository partyRepository;
 
+    @NotPersistent
     @Inject
     PartyRoleTypeRepository partyRoleTypeRepository;
 
+    @NotPersistent
     @Inject
     LineValidator lineValidator;
 
+    @NotPersistent
     @Inject
-    DocUpdater docUpdater;
+    DerivedObjectUpdater derivedObjectUpdater;
 
+    @NotPersistent
     @Inject
     PropertyRepository propertyRepository;
 
