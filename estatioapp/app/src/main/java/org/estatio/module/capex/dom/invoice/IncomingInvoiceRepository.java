@@ -197,11 +197,11 @@ public class IncomingInvoiceRepository {
             final InvoiceStatus invoiceStatus,
             final LocalDate dateReceived,
             final BankAccount bankAccount,
-            final IncomingInvoiceApprovalState approvalStateIfAny) {
+            final IncomingInvoiceApprovalState approvalState) {
         final Currency currency = currencyRepository.findCurrency("EUR");
         final IncomingInvoice invoice =
                 new IncomingInvoice(type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate,
-                        paymentMethod, invoiceStatus, dateReceived, bankAccount, approvalStateIfAny);
+                        paymentMethod, invoiceStatus, dateReceived, bankAccount, approvalState);
         invoice.setCurrency(currency);
         serviceRegistry2.injectServicesInto(invoice);
         repositoryService.persistAndFlush(invoice);
@@ -209,7 +209,8 @@ public class IncomingInvoiceRepository {
     }
 
 
-    // Note: this method uses a first match on invoicenumber, seller and invoicedate which in practice can be assumed to be unique, but technically is not
+    // Note: this method uses a first match on invoicenumber, seller and invoicedate
+    // which in practice can be assumed to be unique, though technically is not
     @Programmatic
     public IncomingInvoice upsert(
             final IncomingInvoiceType type,
@@ -224,17 +225,20 @@ public class IncomingInvoiceRepository {
             final InvoiceStatus invoiceStatus,
             final LocalDate dateReceived,
             final BankAccount bankAccount,
-            final IncomingInvoiceApprovalState approvalStateIfAny) {
+            final IncomingInvoiceApprovalState approvalState) {
         IncomingInvoice invoice = findByInvoiceNumberAndSellerAndInvoiceDate(invoiceNumber, seller, invoiceDate);
         if (invoice == null) {
             invoice = create(type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount,
-                    approvalStateIfAny);
+                    approvalState);
         } else {
             updateInvoice(invoice, property, atPath, buyer, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount);
         }
         return invoice;
     }
 
+    /**
+     * Doesn't allow the update of the {@link IncomingInvoice}'s {@link IncomingInvoice#getInvoiceNumber() invoice number}, {@link IncomingInvoice#getSeller() seller} or {@link IncomingInvoice#getInvoiceDate() invoice date} because these are used as effective primary keys to locate the invoice when performing an {@link #upsert(IncomingInvoiceType, String, Property, String, Party, Party, LocalDate, LocalDate, PaymentMethod, InvoiceStatus, LocalDate, BankAccount, IncomingInvoiceApprovalState)}.
+     */
     private void updateInvoice(
             final IncomingInvoice invoice,
             final Property property,
@@ -245,14 +249,50 @@ public class IncomingInvoiceRepository {
             final InvoiceStatus invoiceStatus,
             final LocalDate dateReceived,
             final BankAccount bankAccount){
+        updateInvoice(invoice,
+                invoice.getType(),
+                invoice.getInvoiceNumber(),
+                property,
+                atPath,
+                buyer,
+                invoice.getSeller(),
+                invoice.getInvoiceDate(),
+                dueDate,
+                paymentMethod,
+                invoiceStatus,
+                dateReceived,
+                bankAccount);
+    }
+
+    @Programmatic
+    public IncomingInvoice updateInvoice(
+            final IncomingInvoice invoice,
+            final IncomingInvoiceType type,
+            final String invoiceNumber,
+            final Property property,
+            final String atPath,
+            final Party buyer,
+            final Party seller,
+            final LocalDate invoiceDate,
+            final LocalDate dueDate,
+            final PaymentMethod paymentMethod,
+            final InvoiceStatus invoiceStatus,
+            final LocalDate dateReceived,
+            final BankAccount bankAccount){
+        invoice.setType(type);
+        invoice.setInvoiceNumber(invoiceNumber);
         invoice.setProperty(property);
         invoice.setApplicationTenancyPath(atPath);
         invoice.setBuyer(buyer);
+        invoice.setSeller(seller);
+        invoice.setInvoiceDate(invoiceDate);
         invoice.setDueDate(dueDate);
         invoice.setPaymentMethod(paymentMethod);
         invoice.setStatus(invoiceStatus);
         invoice.setDateReceived(dateReceived);
         invoice.setBankAccount(bankAccount);
+
+        return invoice;
     }
 
     @Programmatic

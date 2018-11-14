@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.jdo.JDOHelper;
+import javax.ws.rs.HEAD;
 
 import com.google.common.io.Resources;
 
@@ -60,7 +61,9 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
                 Resources.getResource(DocumentServiceRestApi_uploadGeneric_IntegTest.class, fileName));
         final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+
         wrap(documentService).uploadGeneric(blob, "INCOMING", "/FRA");
+
         transactionService.nextTransaction();
 
         // then
@@ -92,7 +95,9 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
         final byte[] pdfBytes2 = Resources.toByteArray(
                 Resources.getResource(DocumentServiceRestApi_uploadGeneric_IntegTest.class, fileName2));
         final Blob similarNamedBlob = new Blob(fileName, "application/pdf", pdfBytes2);
-        documentService.uploadGeneric(similarNamedBlob, "INCOMING", "/FRA");
+
+        wrap(documentService).uploadGeneric(similarNamedBlob, "INCOMING", "/FRA");
+
         transactionService.nextTransaction();
 
         // then
@@ -107,9 +112,10 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
         assertThat(JDOHelper.getVersion(incomingDocumentsAfter.get(1))).isEqualTo(1L);
         assertThat(paperclipRepository.findByDocument(incomingDocumentsAfter.get(1)).size()).isEqualTo(0);
 
+
         final String belgianBarCode = "6010012345.pdf";
         final Blob belgianBlob = new Blob(belgianBarCode, "application/pdf", pdfBytes2);
-        Document belgianDocument = documentService.uploadGeneric(belgianBlob, "INCOMING", "/FRA");
+        Document belgianDocument = wrap(documentService).uploadGeneric(belgianBlob, "INCOMING", "/FRA");
 
         // then
         assertThat(belgianDocument.getAtPath()).isEqualTo("/BEL");
@@ -124,11 +130,13 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
         assertThat(incomingDocumentsBefore).isEmpty();
 
         // when
+
         final String fileName = "2010101234.pdf";
         final byte[] pdfBytes = Resources.toByteArray(
                 Resources.getResource(DocumentServiceRestApi_uploadGeneric_IntegTest.class, fileName));
         final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);
-        documentService.uploadGeneric(blob, "INCOMING", "/ITA");
+        wrap(documentService).uploadGeneric(blob, "INCOMING", "/ITA");
+
         transactionService.nextTransaction();
 
         // then
@@ -144,6 +152,7 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
         assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
         assertThat(JDOHelper.getVersion(document)).isEqualTo(1L);
         assertThat(document.getType()).isEqualTo(DocumentTypeData.INCOMING.findUsing(documentTypeRepository));
+
 
         // and then also
         assertThat(stateTransitionRepository.findByDomainObject(document)).hasSize(0);
@@ -164,6 +173,7 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
         documentBlob = document.getBlob();
 
         assertThat(document.getAtPath()).isEqualTo("/ITA");
+
         assertThat(documentBlob.getName()).isEqualTo(similarNamedBlobWithDifferentBytes.getName());
         assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(similarNamedBlobWithDifferentBytes.getMimeType().getBaseType());
         assertThat(documentBlob.getBytes()).isEqualTo(similarNamedBlobWithDifferentBytes.getBytes());
@@ -173,10 +183,6 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
 
         assertThat(document.getAtPath()).isEqualTo("/ITA");
         assertThat(documentBlob.getName()).contains(blob.getName());
-        assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
-        assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
-        assertThat(JDOHelper.getVersion(document)).isEqualTo(1L);
-        assertThat(document.getType()).isEqualTo(DocumentTypeData.INCOMING.findUsing(documentTypeRepository));
     }
 
     @Test
@@ -192,13 +198,14 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
                 Resources.getResource(DocumentServiceRestApi_uploadGeneric_IntegTest.class, fileName));
         final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);
 
-        documentService.uploadGeneric(blob, "TAX_REGISTER", "/ITA");
+
+        wrap(documentService).uploadGeneric(blob, "TAX_REGISTER", "/ITA");
+
         transactionService.nextTransaction();
 
         // then
         List<Document> incomingDocumentsAfter = repository.findAllIncomingDocuments();
         assertThat(incomingDocumentsAfter).hasSize(1);
-
 
         Document document = incomingDocumentsAfter.get(0);
         Blob documentBlob = document.getBlob();
@@ -219,11 +226,13 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
             final IncomingDocumentCategorisationState to) {
 
         assertThat(transition.getTransitionType()).isEqualTo(type);
+
         if (from != null) {
             assertThat(transition.getFromState()).isEqualTo(from);
         } else {
             assertThat(transition.getFromState()).isNull();
         }
+
         if (to != null) {
             assertThat(transition.getToState()).isEqualTo(to);
         } else {

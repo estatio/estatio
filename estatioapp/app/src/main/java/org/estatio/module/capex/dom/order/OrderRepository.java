@@ -126,7 +126,8 @@ public class OrderRepository {
             final IncomingInvoiceType type,
             final String atPath) {
         final String orderNumber = generateNextOrderNumberForCountry(property, multiPropertyReference, project, charge, atPath);
-        final Order order = create(property, type, orderNumber, null, clockService.now(), orderDate, supplier, buyer, atPath, null);
+        final Order order = create(property, orderNumber, null, clockService.now(), orderDate, supplier, buyer, type,
+                atPath, null);
         order.addItem(charge, description, netAmount, null, null, tax, orderDate == null ? null : String.valueOf(orderDate.getYear()), property, project, null);
 
         return order;
@@ -135,13 +136,13 @@ public class OrderRepository {
     @Programmatic
     public Order create(
             final Property property,
-            final IncomingInvoiceType orderType,
             final String orderNumber,
             final String sellerOrderReference,
             final LocalDate entryDate,
             final LocalDate orderDate,
             final Party seller,
             final Party buyer,
+            final IncomingInvoiceType orderType,
             final String atPath,
             final OrderApprovalState approvalStateIfAny) {
         final Order order = new Order(
@@ -213,8 +214,8 @@ public class OrderRepository {
             final OrderApprovalState approvalStateIfAny) {
         Order order = findByOrderNumber(number);
         if (order == null) {
-            order = create(property, orderType, number, sellerOrderReference, entryDate, orderDate,
-                    seller, buyer, atPath, approvalStateIfAny);
+            order = create(property, number, sellerOrderReference, entryDate, orderDate, seller, buyer, orderType,
+                    atPath, approvalStateIfAny);
         }
         return order;
     }
@@ -233,8 +234,8 @@ public class OrderRepository {
             final OrderApprovalState approvalStateIfAny) {
         Order order = findByOrderNumber(number);
         if (order == null) {
-            order = create(property, orderType, number, sellerOrderReference, entryDate, orderDate,
-                    seller, buyer, atPath, approvalStateIfAny);
+            order = create(property, number, sellerOrderReference, entryDate, orderDate, seller, buyer, orderType,
+                    atPath, approvalStateIfAny);
         } else {
             updateOrder(
                     order,

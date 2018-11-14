@@ -44,7 +44,7 @@ import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectItem;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.capex.dom.task.TaskRepository;
-import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
 import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceImportForDemoXlsxFixture;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 
@@ -56,7 +56,7 @@ public class OrderInvoiceImport_IntegTest extends CapexModuleIntegTestAbstract {
 
         @Before
         public void setupData() {
-//            runFixtureScript(new EstatioBaseLineFixture(), new CapexChargeHierarchyXlsxFixture(), new PropertyAndOwnerAndManagerForOxfGb());
+//            runFixtureScript(new EstatioBaseLineFixture(), new IncomingChargesFraXlsxFixture(), new PropertyAndOwnerAndManagerForOxfGb());
 
             runFixtureScript(new FixtureScript() {
                 @Override
@@ -117,7 +117,7 @@ public class OrderInvoiceImport_IntegTest extends CapexModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final FixtureScript.ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new CapexChargeHierarchyXlsxFixture());
+                    executionContext.executeChild(this, new IncomingChargesFraXlsxFixture());
                     executionContext.executeChild(this, new OrderInvoiceImportForDemoXlsxFixture());
                 }
             });

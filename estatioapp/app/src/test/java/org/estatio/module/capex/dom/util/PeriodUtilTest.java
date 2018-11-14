@@ -6,9 +6,56 @@ import org.junit.Test;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.module.capex.dom.util.PeriodUtil;
-
 public class PeriodUtilTest {
+
+    @Test
+    public void coda_year_syntax() throws Exception {
+
+        // given
+        String period = "2019/1"; // as per Coda
+
+        // then this produces garbage
+        // really, should put a guard around this to prevent this from being accepted.
+        Assertions.assertThat(PeriodUtil.yearFromPeriod(period).toString())
+                .isEqualTo("2019-01-01/2020-01-01");
+
+    }
+
+    @Test
+    public void financial_year_syntax() throws Exception {
+
+        // given
+        String period = "F2019"; // represents the 2018/2019 financial year
+
+        // then
+        Assertions.assertThat(PeriodUtil.yearFromPeriod(period).toString())
+                .isEqualTo("2018-07-01/2019-07-01");
+
+    }
+
+    @Test
+    public void financial_year_syntax_with_month() throws Exception {
+
+        // given
+        String period = "F2019/1"; // represents the 2018/2019 financial year
+
+        // then
+        Assertions.assertThat(PeriodUtil.yearFromPeriod(period).toString())
+                .isEqualTo("2018-07-01/2019-07-01");
+
+    }
+
+    @Test
+    public void financial_year_syntax_with_month_4() throws Exception {
+
+        // given
+        String period = "F2019/4"; // represents the 2018/2019 financial year
+
+        // then
+        Assertions.assertThat(PeriodUtil.yearFromPeriod(period).toString())
+                .isEqualTo("2018-07-01/2019-07-01");
+
+    }
 
     @Test
     public void yearFromPeriod_success() throws Exception {

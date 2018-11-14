@@ -34,7 +34,7 @@ import org.estatio.module.capex.fixtures.order.enums.Order_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;
 
@@ -53,7 +53,7 @@ public class Order_withLinks_IntegTest extends CapexModuleIntegTestAbstract {
             @Override
             protected void execute(final ExecutionContext ec) {
                 ec.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
-                ec.executeChild(this, new CapexChargeHierarchyXlsxFixture());
+                ec.executeChild(this, new IncomingChargesFraXlsxFixture());
                 ec.executeChildren(this,
                         Order_enum.fakeOrder2Pdf,
                         Budget_enum.OxfBudget2015,

@@ -30,7 +30,7 @@ import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
@@ -58,7 +58,7 @@ public class OrderApprovalState_IntegTest extends CapexModuleIntegTestAbstract {
             @Override
             protected void execute(final ExecutionContext ec) {
                 ec.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
-                ec.executeChild(this, new CapexChargeHierarchyXlsxFixture());
+                ec.executeChild(this, new IncomingChargesFraXlsxFixture());
                 ec.executeChildren(this,
                         Order_enum.fakeOrder3Pdf,
                         Person_enum.DanielOfficeAdministratorFr,

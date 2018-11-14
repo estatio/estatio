@@ -34,7 +34,6 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
-import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.security.app.user.MeService;
@@ -64,13 +63,11 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
         super(DocumentMenu.class);
     }
 
-
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "1")
     public List<Document> findDocuments(
             final LocalDate startDate,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final LocalDate endDate
+            @Parameter(optionality = Optionality.OPTIONAL) final LocalDate endDate
     ) {
         return documentRepository.findBetween(startDate, endDate);
     }
@@ -80,10 +77,9 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
         return clockService.now().plusDays(-7);
     }
 
-
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
-    public List<Document> matchIncomingDocumentsByName(@MinLength(3) final String nameOrBarcode){
+    public List<Document> matchIncomingDocumentsByName(@MinLength(3) final String nameOrBarcode) {
         return incomingDocumentRepository.matchAllIncomingDocumentsByName(nameOrBarcode);
     }
 
@@ -120,8 +116,5 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
 
     @Inject
     DocumentBarcodeService documentBarcodeService;
-
-    @Inject
-    EventBusService eventBusService;
 
 }

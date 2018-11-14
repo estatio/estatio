@@ -48,7 +48,7 @@ public enum Organisation_enum
     DagoBankNl("DAGOBANK_NL", "DagoBank (NL)", Nl),
     HelloWorldFr("HELLOWORLD_FR", "Hello World Properties (France)", Fr),
     HelloWorldGb("HELLOWORLD_GB", "Hello World Properties", Gb),
-    HelloWorldIt("HELLOWORLD_IT", "Hello World Properties (Italy)", It),
+    HelloWorldIt("HW_IT", "Hello World Properties (Italy)", It),
     HelloWorldNl("HELLOWORLD_NL", "Hello World Properties (NL)", Nl),
     HelloWorldSe("HELLOWORLD_SE", "Hello World Properties (Sweden)", Se),
     HyperNl("HYPER_NL", "Hypermarkt (NL)", Nl),

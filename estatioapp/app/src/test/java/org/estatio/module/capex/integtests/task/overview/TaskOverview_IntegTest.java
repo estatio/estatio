@@ -23,7 +23,7 @@ import org.estatio.module.capex.dom.task.TaskRepository;
 import org.estatio.module.capex.fixtures.incominginvoice.enums.IncomingInvoice_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
-import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
 import org.estatio.module.party.dom.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,7 +37,7 @@ public class TaskOverview_IntegTest extends CapexModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new CapexChargeHierarchyXlsxFixture());
+                    executionContext.executeChild(this, new IncomingChargesFraXlsxFixture());
                     executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
                     executionContext.executeChild(this, IncomingInvoice_enum.fakeInvoice2Pdf.builder());
                     executionContext.executeChild(this, Person_enum.DanielOfficeAdministratorFr.builder());
@@ -80,7 +80,7 @@ public class TaskOverview_IntegTest extends CapexModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new CapexChargeHierarchyXlsxFixture());
+                    executionContext.executeChild(this, new IncomingChargesFraXlsxFixture());
                     executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
                     executionContext.executeChild(this, IncomingInvoice_enum.fakeInvoice2Pdf.builder());
                     executionContext.executeChild(this, Person_enum.DanielOfficeAdministratorFr.builder());

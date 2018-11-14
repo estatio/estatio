@@ -23,7 +23,6 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.value.Blob;
 
 import org.incode.module.document.dom.impl.docs.Document;
@@ -54,7 +53,6 @@ public class DocumentServiceRestApi extends UdoDomainService<DocumentServiceRest
             final Blob blob,
             final String documentType,
             final String atPath) throws IllegalArgumentException {
-
         DocumentTypeData documentTypeData = DocumentTypeData.valueOf(documentType);
         final DocumentType type = documentTypeData.findUsing(documentTypeRepository);
         final String name = blob.getName();
@@ -76,9 +74,6 @@ public class DocumentServiceRestApi extends UdoDomainService<DocumentServiceRest
 
     @Inject
     IncomingDocumentRepository incomingDocumentRepository;
-
-    @Inject
-    EventBusService eventBusService;
 
     @Inject
     DocumentBarcodeService documentBarcodeService;

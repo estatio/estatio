@@ -62,6 +62,10 @@ import lombok.Setter;
                 name = "DocumentAbstract_atPath_type_IDX",
                 members = { "atPath", "type" }
         ),
+        @Index(
+                name = "DocumentAbstract_type_atPath_name_IDX",
+                members = { "type", "atPath", "name" }
+        ),
 })
 @DomainObject(
         editing = Editing.DISABLED

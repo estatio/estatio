@@ -25,7 +25,6 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +36,7 @@ import org.incode.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
-import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesItaXlsxFixture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -138,7 +137,7 @@ public class ChargeRepository_IntegTest extends ChargeModuleIntegTestAbstract {
                 @Override
                 protected void execute(final FixtureScript.ExecutionContext ec) {
                     //                    ec.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
-                    ec.executeChild(this, new CapexChargeHierarchyXlsxFixture());
+                    ec.executeChild(this, new IncomingChargesItaXlsxFixture());
                 }
             });
         }
@@ -149,7 +148,7 @@ public class ChargeRepository_IntegTest extends ChargeModuleIntegTestAbstract {
             List<Charge> italianWorkTypeChoices = chargeRepository.choicesItalianWorkTypes();
             
             // then
-            assertThat(italianWorkTypeChoices).hasSize(1);
+            assertThat(italianWorkTypeChoices).hasSize(17);
             assertThat(italianWorkTypeChoices.get(0).getReference()).startsWith("ITWT");
         }
 

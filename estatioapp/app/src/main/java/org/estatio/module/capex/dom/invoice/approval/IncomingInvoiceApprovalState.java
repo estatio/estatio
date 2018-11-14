@@ -2,24 +2,31 @@ package org.estatio.module.capex.dom.invoice.approval;
 
 import org.estatio.module.capex.dom.state.State;
 
+import lombok.Getter;
+
 public enum IncomingInvoiceApprovalState implements State<IncomingInvoiceApprovalState> {
-    NEW(false),
-    COMPLETED(false),
-    DISCARDED(false),
-    APPROVED(true),
-    APPROVED_BY_COUNTRY_DIRECTOR(true),
-    APPROVED_BY_CORPORATE_MANAGER(true),
-    PENDING_BANK_ACCOUNT_CHECK(false),
-    PAYABLE(false),
-    PAID(false);
+    NEW                          (false, false),
+    COMPLETED                    (false, false),
+    DISCARDED                    (false, true ),
+    APPROVED                     (true,  false),
+    APPROVED_BY_COUNTRY_DIRECTOR (true,  false),
+    APPROVED_BY_CORPORATE_MANAGER(true,  false),
+    PENDING_BANK_ACCOUNT_CHECK   (false, false),
+    PAYABLE                      (false, false),
+    PAID                         (false, true );
 
-    private final boolean isApproval;
+    @Getter
+    private final boolean approval;
+    @Getter
+    private final boolean finalState;
 
-    private IncomingInvoiceApprovalState(final boolean isApproval) {
-        this.isApproval = isApproval;
+    private IncomingInvoiceApprovalState(
+            final boolean approval,
+            final boolean finalState) {
+        this.approval = approval;
+        this.finalState = finalState;
     }
 
-    public boolean isApproval(){
-        return this.isApproval;
-    }
+    public boolean isNotFinal() { return ! isFinalState(); }
+
 }

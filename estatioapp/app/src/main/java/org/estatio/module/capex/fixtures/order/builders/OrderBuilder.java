@@ -17,6 +17,8 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
+import org.estatio.module.capex.app.OrderMenu;
 import org.estatio.module.capex.app.order.IncomingDocAsOrderViewModel;
 import org.estatio.module.capex.app.order.Order_switchView;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
@@ -25,6 +27,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderRepository;
+import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.charge.dom.Charge;
@@ -48,8 +51,17 @@ public class OrderBuilder extends BuilderScriptAbstract<Order, OrderBuilder> {
 
     @Getter @Setter
     Person officeAdministrator;
+    /**
+     * As used in France; either this or orderNumber is specified
+     */
     @Getter @Setter
     Document document;
+
+    /**
+     * As used in Italy; either this or document is specified.
+     */
+    @Getter @Setter
+    String orderNumber;
 
     @Getter @Setter
     Organisation seller;
@@ -105,17 +117,19 @@ public class OrderBuilder extends BuilderScriptAbstract<Order, OrderBuilder> {
     protected void execute(final ExecutionContext ec) {
 
         checkParam("officeAdministrator", ec, Person.class);
-        checkParam("document", ec, Document.class);
+        if(document != null) {
+            // French method
+            checkParam("document", ec, Document.class);
+        } else {
+            // Italian method
+            checkParam("orderNumber", ec, String.class);
+        }
 
         checkParam("buyer", ec, Organisation.class);
         checkParam("seller", ec, Organisation.class);
         checkParam("type", ec, IncomingInvoiceType.class);
-        if (property!=null) checkParam("property", ec, Property.class);
-        if (project!=null )checkParam("project", ec, Project.class);
 
         checkParam("entryDate", ec, LocalDate.class);
-
-        checkParam("itemTax", ec, Tax.class);
 
         checkParam("item1Description", ec, String.class);
         checkParam("item1NetAmount", ec, BigDecimal.class);
@@ -137,42 +151,57 @@ public class OrderBuilder extends BuilderScriptAbstract<Order, OrderBuilder> {
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(officeAdministrator.getUsername(), () -> {
 
-            final String comment = "";
-            wrap(mixin(Document_categoriseAsOrder.class,document)).act(property, orderType, comment);
+            Order order;
+            if(document != null) {
+                // the French method, to create from the document
+                final String comment = "";
+                wrap(mixin(Document_categoriseAsOrder.class,document)).act(property, orderType, comment);
 
-            // given most/all of the info has been completed  (not using our view model here).
-            final String documentName = document.getName();
-            Order order = orderRepository.findOrderByDocumentName(documentName).get(0);
+                // given most/all of the info has been completed  (not using our view model here).
+                final String documentName = document.getName();
+                order = orderRepository.findOrderByDocumentName(documentName).get(0);
 
-            // only way to create a first order item "legally" is through the view model
-            final IncomingDocAsOrderViewModel viewModel = mixin(Order_switchView.class, order).act();
-            final IncomingDocAsOrderViewModel.changeOrderDetails changeOrderDetails =
-                    mixin(IncomingDocAsOrderViewModel.changeOrderDetails.class, viewModel);
-            wrap(changeOrderDetails).act(changeOrderDetails.default0Act(), buyer, seller, changeOrderDetails.default3Act(), changeOrderDetails.default4Act());
+                // only way to create a first order item "legally" is through the view model
+                final IncomingDocAsOrderViewModel viewModel = mixin(Order_switchView.class, order).act();
+                final IncomingDocAsOrderViewModel.changeOrderDetails changeOrderDetails =
+                        mixin(IncomingDocAsOrderViewModel.changeOrderDetails.class, viewModel);
+                wrap(changeOrderDetails).act(changeOrderDetails.default0Act(), buyer, seller, changeOrderDetails.default3Act(), changeOrderDetails.default4Act());
 
-            wrap(viewModel).setOrderType(orderType);
-            wrap(viewModel).setTax(itemTax);
-            wrap(viewModel).setProperty(property);
-            wrap(viewModel).setProject(project);
+                wrap(viewModel).setOrderType(orderType);
+                wrap(viewModel).setTax(itemTax);
+                wrap(viewModel).setProperty(property);
+                wrap(viewModel).setProject(project);
 
-            wrap(viewModel).editCharge(item1Charge);
-            wrap(viewModel).setDescription(item1Description);
-            wrap(viewModel).setNetAmount(item1NetAmount);
-            wrap(viewModel).setVatAmount(item1VatAmount);
-            wrap(viewModel).setGrossAmount(item1GrossAmount);
-            wrap(viewModel).setPeriod(item1Period);
-            wrap(viewModel).setBudgetItem(null);
+                wrap(viewModel).editCharge(item1Charge);
+                wrap(viewModel).setDescription(item1Description);
+                wrap(viewModel).setNetAmount(item1NetAmount);
+                wrap(viewModel).setVatAmount(item1VatAmount);
+                wrap(viewModel).setGrossAmount(item1GrossAmount);
+                wrap(viewModel).setPeriod(item1Period);
+                wrap(viewModel).setBudgetItem(null);
 
-            wrap(viewModel).save();
+                wrap(viewModel).save();
 
-            wrap(order).changeDates(order.default0ChangeDates(), entryDate);
+                wrap(order).changeDates(order.default0ChangeDates(), entryDate);
 
+            } else {
+                // the Italian method, to create from OrderMenu
+
+                final String sellerOrderReference = null;
+                final LocalDate orderDate = entryDate;
+                order = orderRepository.create(property, orderNumber, sellerOrderReference, entryDate, orderDate, seller, buyer, IncomingInvoiceType.ITA_ORDER_INVOICE, "/ITA", OrderApprovalState.NEW);
+
+
+            }
+
+
+            BudgetItem budgetItem = null;
             // this does an upsert base on the charge, so we still end up with only one item
             wrap(order).addItem(item1Charge, item1Description, item1NetAmount, item1VatAmount, item1GrossAmount, itemTax,
                     item1Period,
                     property,
                     project,
-                    null);
+                    budgetItem);
 
             if (item2Description!=null) {
                 // add a different charge; this creates a second item
@@ -200,6 +229,9 @@ public class OrderBuilder extends BuilderScriptAbstract<Order, OrderBuilder> {
 
     @Inject
     PropertyRepository propertyRepository;
+
+    @Inject
+    OrderMenu orderMenu;
 
     @Inject
     OrderRepository orderRepository;

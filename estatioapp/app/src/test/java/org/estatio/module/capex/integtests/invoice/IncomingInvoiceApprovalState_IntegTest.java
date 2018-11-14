@@ -49,7 +49,7 @@ import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.invoice.dom.PaymentMethod;
@@ -86,7 +86,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
             @Override
             protected void execute(final FixtureScript.ExecutionContext ec) {
                 ec.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
-                ec.executeChild(this, new CapexChargeHierarchyXlsxFixture());
+                ec.executeChild(this, new IncomingChargesFraXlsxFixture());
                 ec.executeChildren(this,
                         IncomingInvoice_enum.fakeInvoice2Pdf,
                         BankAccount_enum.TopModelFr,

@@ -159,5 +159,4 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
     @Inject
     SudoService sudoService;
 
-
 }

@@ -63,6 +63,7 @@ public final class PropertyOwnerBuilder
         final FixedAssetRole fixedAssetRole = property
                 .addRoleIfDoesNotExist(owner, FixedAssetRoleTypeEnum.PROPERTY_OWNER, startDate, endDate);
 
+
         ec.addResult(this, fixedAssetRole);
 
         this.object = fixedAssetRole;

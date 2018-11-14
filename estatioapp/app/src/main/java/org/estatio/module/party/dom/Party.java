@@ -144,6 +144,10 @@ public abstract class Party
     public Party() {
         super("name");
     }
+    public Party(final String reference) {
+        this();
+        setReference(reference);
+    }
 
     public String title() {
         return TitleBuilder.start()

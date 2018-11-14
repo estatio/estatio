@@ -57,13 +57,14 @@ public class Document_categoriseAsOrder
         // create order
         final Order order = orderRepository.create(
                 property,
+                null, null, clockService.now(), null, null, buyerFinder.buyerDerivedFromDocumentName(document),
                 orderType,
-                null, // order number
-                null, //sellerOrderReference
-                clockService.now(), // entryDate
-                null, // orderDate
-                null, // seller
-                buyerFinder.buyerDerivedFromDocumentName(document), // buyer
+                // order number
+                //sellerOrderReference
+                // entryDate
+                // orderDate
+                // seller
+                // buyer
                 document.getAtPath(),
                 null  // approval state... will cause state transition to be created automatically by subscriber
         );

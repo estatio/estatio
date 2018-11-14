@@ -23,7 +23,7 @@ import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
-import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesItaXlsxFixture;
 import org.estatio.module.charge.fixtures.incoming.enums.IncomingCharge_enum;
 import org.estatio.module.party.dom.Person;
 
@@ -45,7 +45,7 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.RonIt.builder());
-                    executionContext.executeChild(this, new CapexChargeHierarchyXlsxFixture());
+                    executionContext.executeChild(this, new IncomingChargesItaXlsxFixture());
                     executionContext.executeChild(this, Project_enum.RonProjectIt.builder());
                     executionContext.executeChild(this, Person_enum.CarmenIncomingInvoiceManagerIt.builder());
                     executionContext.executeChild(this, Person_enum.JonathanIncomingInvoiceManagerGb.builder());
@@ -58,7 +58,7 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
             // given
             final Property property = PropertyAndUnitsAndOwnerAndManager_enum.RonIt.getProperty_d().findUsing(serviceRegistry);
             final Project project = Project_enum.RonProjectIt.findUsing(serviceRegistry);
-            final Charge charge = IncomingCharge_enum.ItConstruction.findUsing(serviceRegistry);
+            final Charge charge = IncomingCharge_enum.ItAcquisition.findUsing(serviceRegistry);
 
             final Person incomingInvoiceManager = Person_enum.CarmenIncomingInvoiceManagerIt.findUsing(serviceRegistry);
 
@@ -86,7 +86,7 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
         public void createOrderForItaly_happyCase_with_multi_property_ref() throws Exception {
             // given
             final Project project = Project_enum.RonProjectIt.findUsing(serviceRegistry);
-            final Charge charge = IncomingCharge_enum.ItConstruction.findUsing(serviceRegistry);
+            final Charge charge = IncomingCharge_enum.ItAcquisition.findUsing(serviceRegistry);
 
             final Person incomingInvoiceManager = Person_enum.CarmenIncomingInvoiceManagerIt.findUsing(serviceRegistry);
 
@@ -115,7 +115,7 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
             // given
             final Property property = PropertyAndUnitsAndOwnerAndManager_enum.RonIt.getProperty_d().findUsing(serviceRegistry);
             final Project project = Project_enum.RonProjectIt.findUsing(serviceRegistry);
-            final Charge charge = IncomingCharge_enum.ItConstruction.findUsing(serviceRegistry);
+            final Charge charge = IncomingCharge_enum.ItAcquisition.findUsing(serviceRegistry);
 
             final Person incomingInvoiceManager = Person_enum.JonathanIncomingInvoiceManagerGb.findUsing(serviceRegistry);
 
@@ -132,7 +132,7 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
             // given
             final Property property = PropertyAndUnitsAndOwnerAndManager_enum.RonIt.getProperty_d().findUsing(serviceRegistry);
             final Project project = Project_enum.RonProjectIt.findUsing(serviceRegistry);
-            final Charge charge = IncomingCharge_enum.ItConstruction.findUsing(serviceRegistry);
+            final Charge charge = IncomingCharge_enum.ItAcquisition.findUsing(serviceRegistry);
 
             final Person incomingInvoiceManager = Person_enum.CarmenIncomingInvoiceManagerIt.findUsing(serviceRegistry);
 
@@ -150,7 +150,7 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
             // given
             final Property property = PropertyAndUnitsAndOwnerAndManager_enum.RonIt.getProperty_d().findUsing(serviceRegistry);
             final Project project = Project_enum.RonProjectIt.findUsing(serviceRegistry);
-            final Charge charge = IncomingCharge_enum.ItConstruction.findUsing(serviceRegistry);
+            final Charge charge = IncomingCharge_enum.ItAcquisition.findUsing(serviceRegistry);
 
             final Person incomingInvoiceManager = Person_enum.CarmenIncomingInvoiceManagerIt.findUsing(serviceRegistry);
 

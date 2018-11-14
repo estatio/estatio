@@ -239,7 +239,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final InvoiceStatus invoiceStatus,
             final LocalDate dateReceived,
             final BankAccount bankAccount,
-            final IncomingInvoiceApprovalState approvalStateIfAny){
+            final IncomingInvoiceApprovalState approvalState){
         super("invoiceNumber");
         setType(typeIfAny);
         setInvoiceNumber(invoiceNumber);
@@ -253,7 +253,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         setStatus(invoiceStatus);
         setDateReceived(dateReceived);
         setBankAccount(bankAccount);
-        setApprovalState(approvalStateIfAny);
+        setApprovalState(approvalState);
     }
 
     public String title() {
