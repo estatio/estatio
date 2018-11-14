@@ -42,4 +42,8 @@ public final class ErrorSet {
     public boolean isEmpty() {
         return commentList.isEmpty();
     }
+
+    public String toString() {
+        return getText();
+    }
 }

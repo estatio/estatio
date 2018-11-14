@@ -365,7 +365,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         final ErrorSet softErrors = new ErrorSet();
         softErrors.addIfNotEmpty(getReasonInvalid());
 
-        final IncomingInvoice incomingInvoice = derivedObjectUpdater.updateIncomingInvoice(this);
+        final IncomingInvoice incomingInvoice = derivedObjectUpdater.upsertIncomingInvoice(this);
 
         derivedObjectUpdater.updateSyncAndHandling(this, incomingInvoice);
         derivedObjectUpdater.updateLinkToOrderItem(this, softErrors);

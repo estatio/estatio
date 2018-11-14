@@ -55,14 +55,14 @@ public class DerivedObjectUpdater {
     static final String AT_PATH = "/ITA";
 
 
-    public IncomingInvoice updateIncomingInvoice(
+    public IncomingInvoice upsertIncomingInvoice(
             final CodaDocHead docHead) {
         IncomingInvoice incomingInvoiceIfAny = derivedObjectLookup.invoiceIfAnyFrom(docHead);
-        return updateIncomingInvoice(docHead, incomingInvoiceIfAny);
+        return upsertIncomingInvoice(docHead, incomingInvoiceIfAny);
     }
 
 
-    public IncomingInvoice updateIncomingInvoice(
+    public IncomingInvoice upsertIncomingInvoice(
             final CodaDocHead docHead,
             final IncomingInvoice existingInvoiceIfAny) {
 
@@ -197,7 +197,6 @@ public class DerivedObjectUpdater {
             final CodaDocHead docHead,
             final ErrorSet softErrors) {
 
-        final IncomingInvoice incomingInvoiceIfAny = derivedObjectLookup.invoiceIfAnyFrom(docHead);
         final OrderItemInvoiceItemLink linkIfAny = derivedObjectLookup.linkIfAnyFrom(docHead);
 
         updateLinkToOrderItem(docHead, linkIfAny, softErrors);
@@ -225,7 +224,8 @@ public class DerivedObjectUpdater {
                 linkRepository.removeLink(existingLinkIfAny);
 
             } else if(
-                    existingLinkIfAny.getOrderItem() != orderItem || existingLinkIfAny.getInvoiceItem() != invoiceItem) {
+                    existingLinkIfAny.getOrderItem() != orderItem ||
+                    existingLinkIfAny.getInvoiceItem() != invoiceItem) {
 
                 // just update the link to refer to the different order item and/or invoice item
                 existingLinkIfAny.setOrderItem(orderItem);
@@ -271,12 +271,10 @@ public class DerivedObjectUpdater {
             final CodaDocHead docHead,
             final ErrorSet softErrors) {
 
-        final IncomingInvoice incomingInvoiceIfAny = derivedObjectLookup.invoiceIfAnyFrom(docHead);
         final Paperclip paperclipIfAny = derivedObjectLookup.paperclipIfAnyFrom(docHead);
         final String documentNameIfAny = derivedObjectLookup.documentNameIfAnyFrom(docHead);
 
         updatePaperclip(docHead, paperclipIfAny, documentNameIfAny, softErrors);
-
     }
 
     /**
@@ -288,10 +286,12 @@ public class DerivedObjectUpdater {
             final String existingDocumentNameIfAny,
             final ErrorSet softErrors) {
 
-        final IncomingInvoice incomingInvoice = derivedObjectLookup.invoiceIfAnyFrom(docHead);
-
-        final DocumentType documentType =
+        final DocumentType incomingDocumentType =
+                DocumentTypeData.INCOMING.findUsing(documentTypeRepository);
+        final DocumentType incomingInvoiceDocumentType =
                 DocumentTypeData.INCOMING_INVOICE.findUsing(documentTypeRepository);
+
+        final IncomingInvoice incomingInvoice = derivedObjectLookup.invoiceIfAnyFrom(docHead);
 
         if(existingPaperclipIfAny != null) {
 
@@ -305,18 +305,22 @@ public class DerivedObjectUpdater {
 
                 if(!Objects.equals(existingDocumentNameIfAny, documentName)) {
 
+                    // reset the existing document back to vanilla 'INCOMING'
+                    existingPaperclipIfAny.getDocument().setType(incomingDocumentType);
+
                     // userRef1 has been changed, so attempt to point to new Document
                     final List<Document> documents =
-                            documentRepository.findByTypeAndNameAndAtPath(documentType, AT_PATH, documentName);
+                            documentRepository.findByTypeAndNameAndAtPath(incomingDocumentType, AT_PATH, documentName);
                     switch (documents.size()) {
                     case 0:
-                        // could not locate new Document, so delete old paperclip
+                        // could not locate new Document, so delete old paperclip and reset document
                         paperclipRepository.delete(existingPaperclipIfAny);
                         break;
                     case 1:
                         // update the paperclip to point to the new document.
                         final Document document = documents.get(0);
                         existingPaperclipIfAny.setDocument(document);
+                        document.setType(incomingInvoiceDocumentType);
                         break;
                     default:
                         // could not locate a unique Document, so delete
@@ -336,7 +340,7 @@ public class DerivedObjectUpdater {
 
                 // userRef1 has been entered, there was no paperclip previously
                 final List<Document> documents =
-                        documentRepository.findByTypeAndNameAndAtPath(documentType, "/ITA", documentName);
+                        documentRepository.findByTypeAndNameAndAtPath(incomingDocumentType, "/ITA", documentName);
                 switch (documents.size()) {
                 case 0:
                     // nothing to do
@@ -345,6 +349,7 @@ public class DerivedObjectUpdater {
                     // attach
                     final Document document = documents.get(0);
                     paperclipRepository.attach(document, null, incomingInvoice);
+                    document.setType(incomingInvoiceDocumentType);
                     break;
                 default:
                     // could not locate a unique Document, so do nothing
