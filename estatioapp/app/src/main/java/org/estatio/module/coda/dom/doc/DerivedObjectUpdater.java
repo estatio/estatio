@@ -413,16 +413,13 @@ public class DerivedObjectUpdater {
      */
     public void updatePendingTask(
             final CodaDocHead docHead,
-            final ErrorSet hardErrors,
-            final ErrorSet softErrors) {
+            final ErrorSet errors) {
 
         final IncomingInvoice incomingInvoice = derivedObjectLookup.invoiceIfAnyFrom(docHead);
 
-        if (hardErrors.isEmpty() && softErrors.isEmpty()) {
+        if (errors.isEmpty()) {
             return;
         }
-
-        final ErrorSet combinedErrors = hardErrors.merge(softErrors);
 
         // still waiting to be completed;
         // update the current task, if possible
@@ -437,7 +434,7 @@ public class DerivedObjectUpdater {
             // update the task will the issues identified.
             final Task task = pendingTransition.getTask();
             if(task != null) {
-                task.setDescription(combinedErrors.getText());
+                task.setDescription(errors.getText());
             }
             break;
         }

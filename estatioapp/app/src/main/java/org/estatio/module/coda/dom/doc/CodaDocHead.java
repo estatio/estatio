@@ -370,7 +370,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         derivedObjectUpdater.updateSyncAndHandling(this, incomingInvoice);
         derivedObjectUpdater.updateLinkToOrderItem(this, softErrors);
         derivedObjectUpdater.updatePaperclip(this, softErrors);
-        derivedObjectUpdater.updatePendingTask(this, hardErrors, softErrors);
+        derivedObjectUpdater.updatePendingTask(this, hardErrors);
     }
 
 

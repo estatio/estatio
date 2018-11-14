@@ -20,19 +20,6 @@ public final class ErrorSet {
         return addIfNotEmpty(String.format(format, args));
     }
 
-    public ErrorSet merge(final ErrorSet other) {
-        final ErrorSet errorSet = new ErrorSet();
-        errorSet.addAll(this);
-        errorSet.addAll(other);
-        return errorSet;
-    }
-
-    private void addAll(final ErrorSet errorSet) {
-        for (final String s : errorSet.commentList) {
-            add(s);
-        }
-    }
-
     public String getText() {
         return String.join("\n", commentList);
     }
