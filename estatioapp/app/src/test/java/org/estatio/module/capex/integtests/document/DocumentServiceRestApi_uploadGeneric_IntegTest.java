@@ -12,29 +12,29 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
-import org.apache.isis.applib.services.sudo.SudoService;
 import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.applib.value.Blob;
 
-import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
+import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.capex.app.DocumentMenu;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
+import org.estatio.module.capex.restapi.DocumentServiceRestApi;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
+import org.estatio.module.invoice.dom.DocumentTypeData;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationState.NEW;
 import static org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.CATEGORISE;
 import static org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.INSTANTIATE;
 
-public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract {
+public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleIntegTestAbstract {
 
     @Before
     public void setupData() {
@@ -48,7 +48,7 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
     }
 
     @Test
-    public void happy_case() throws Exception {
+    public void when_incoming_document() throws Exception {
 
         // given
         List<Document> incomingDocumentsBefore = repository.findIncomingDocuments();
@@ -57,11 +57,10 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
         // when
         final String fileName = "3020100123.pdf";
         final byte[] pdfBytes = Resources.toByteArray(
-                Resources.getResource(DocumentMenu_Upload_IntegTest.class, fileName));
+                Resources.getResource(DocumentServiceRestApi_uploadGeneric_IntegTest.class, fileName));
         final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(Person_enum.DanielOfficeAdministratorFr.getRef().toLowerCase(), (Runnable) () ->
-                wrap(documentMenu).upload(blob));
+        wrap(documentService).uploadGeneric(blob, "INCOMING", "/FRA");
         transactionService.nextTransaction();
 
         // then
@@ -71,7 +70,6 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
         final Document document = incomingDocumentsAfter.get(0);
         final Blob documentBlob = document.getBlob();
 
-        assertThat(ApplicationTenancy_enum.FrBe.getPath()).isEqualTo("/FRA;/BEL");
         assertThat(document.getAtPath()).isEqualTo("/FRA");
         assertThat(documentBlob.getName()).isEqualTo(blob.getName());
         assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
@@ -92,9 +90,9 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
         // and when
         final String fileName2 = "3020100123-altered.pdf";
         final byte[] pdfBytes2 = Resources.toByteArray(
-                Resources.getResource(DocumentMenu_Upload_IntegTest.class, fileName2));
+                Resources.getResource(DocumentServiceRestApi_uploadGeneric_IntegTest.class, fileName2));
         final Blob similarNamedBlob = new Blob(fileName, "application/pdf", pdfBytes2);
-        wrap(documentMenu).upload(similarNamedBlob);
+        documentService.uploadGeneric(similarNamedBlob, "INCOMING", "/FRA");
         transactionService.nextTransaction();
 
         // then
@@ -109,13 +107,108 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
         assertThat(JDOHelper.getVersion(incomingDocumentsAfter.get(1))).isEqualTo(1L);
         assertThat(paperclipRepository.findByDocument(incomingDocumentsAfter.get(1)).size()).isEqualTo(0);
 
-        // and when since ECP-676 atPath derived from filename for France and Belgium
         final String belgianBarCode = "6010012345.pdf";
         final Blob belgianBlob = new Blob(belgianBarCode, "application/pdf", pdfBytes2);
-        Document belgianDocument = wrap(documentMenu).upload(belgianBlob);
+        Document belgianDocument = documentService.uploadGeneric(belgianBlob, "INCOMING", "/FRA");
 
         // then
         assertThat(belgianDocument.getAtPath()).isEqualTo("/BEL");
+
+    }
+
+    @Test
+    public void when_italian_document() throws Exception {
+
+        // given
+        List<Document> incomingDocumentsBefore = repository.findIncomingDocuments();
+        assertThat(incomingDocumentsBefore).isEmpty();
+
+        // when
+        final String fileName = "2010101234.pdf";
+        final byte[] pdfBytes = Resources.toByteArray(
+                Resources.getResource(DocumentServiceRestApi_uploadGeneric_IntegTest.class, fileName));
+        final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);
+        documentService.uploadGeneric(blob, "INCOMING", "/ITA");
+        transactionService.nextTransaction();
+
+        // then
+        List<Document> incomingDocumentsAfter = repository.findAllIncomingDocuments();
+        assertThat(incomingDocumentsAfter).hasSize(1);
+
+        Document document = incomingDocumentsAfter.get(0);
+        Blob documentBlob = document.getBlob();
+
+        assertThat(document.getAtPath()).isEqualTo("/ITA");
+        assertThat(documentBlob.getName()).isEqualTo(blob.getName());
+        assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
+        assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
+        assertThat(JDOHelper.getVersion(document)).isEqualTo(1L);
+        assertThat(document.getType()).isEqualTo(DocumentTypeData.INCOMING.findUsing(documentTypeRepository));
+
+        // and then also
+        assertThat(stateTransitionRepository.findByDomainObject(document)).hasSize(0);
+        // TODO: when implemented assert link between doc and inc inv
+
+        // and when again uploading doc with the same name (but different bytes)
+        final byte[] pdfBytes2 = Resources.toByteArray(
+                Resources.getResource(DocumentServiceRestApi_uploadGeneric_IntegTest.class, "2010101234-altered.pdf"));
+        final Blob similarNamedBlobWithDifferentBytes = new Blob(fileName, "application/pdf", pdfBytes2);
+        wrap(documentService).uploadGeneric(similarNamedBlobWithDifferentBytes, "INCOMING", "/ITA");
+        transactionService.nextTransaction();
+
+        // then
+        incomingDocumentsAfter = repository.findAllIncomingDocuments();
+        assertThat(incomingDocumentsAfter).hasSize(2);
+
+        document = incomingDocumentsAfter.get(0);
+        documentBlob = document.getBlob();
+
+        assertThat(document.getAtPath()).isEqualTo("/ITA");
+        assertThat(documentBlob.getName()).isEqualTo(similarNamedBlobWithDifferentBytes.getName());
+        assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(similarNamedBlobWithDifferentBytes.getMimeType().getBaseType());
+        assertThat(documentBlob.getBytes()).isEqualTo(similarNamedBlobWithDifferentBytes.getBytes());
+
+        document = incomingDocumentsAfter.get(1);
+        documentBlob = document.getBlob();
+
+        assertThat(document.getAtPath()).isEqualTo("/ITA");
+        assertThat(documentBlob.getName()).contains(blob.getName());
+        assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
+        assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
+        assertThat(JDOHelper.getVersion(document)).isEqualTo(1L);
+        assertThat(document.getType()).isEqualTo(DocumentTypeData.INCOMING.findUsing(documentTypeRepository));
+    }
+
+    @Test
+    public void when_italian_tax_receipt() throws Exception {
+
+        // given
+        List<Document> incomingDocumentsBefore = repository.findIncomingDocuments();
+        assertThat(incomingDocumentsBefore).isEmpty();
+
+        // when
+        final String fileName = "some_tax_receipt.pdf";
+        final byte[] pdfBytes = Resources.toByteArray(
+                Resources.getResource(DocumentServiceRestApi_uploadGeneric_IntegTest.class, fileName));
+        final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);
+
+        documentService.uploadGeneric(blob, "TAX_REGISTER", "/ITA");
+        transactionService.nextTransaction();
+
+        // then
+        List<Document> incomingDocumentsAfter = repository.findAllIncomingDocuments();
+        assertThat(incomingDocumentsAfter).hasSize(1);
+
+
+        Document document = incomingDocumentsAfter.get(0);
+        Blob documentBlob = document.getBlob();
+
+        assertThat(document.getAtPath()).isEqualTo("/ITA");
+        assertThat(documentBlob.getName()).isEqualTo(blob.getName());
+        assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
+        assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
+        assertThat(JDOHelper.getVersion(document)).isEqualTo(1L);
+        assertThat(document.getType()).isEqualTo(DocumentTypeData.TAX_REGISTER.findUsing(documentTypeRepository));
 
     }
 
@@ -145,7 +238,7 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
     IncomingDocumentCategorisationStateTransition.Repository stateTransitionRepository;
 
     @Inject
-    DocumentMenu documentMenu;
+    DocumentServiceRestApi documentService;
 
     @Inject
     TransactionService transactionService;
@@ -156,8 +249,6 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
     @Inject
     QueryResultsCache queryResultsCache;
 
-    @Inject
-    SudoService sudoService;
-
+    @Inject DocumentTypeRepository documentTypeRepository;
 
 }
