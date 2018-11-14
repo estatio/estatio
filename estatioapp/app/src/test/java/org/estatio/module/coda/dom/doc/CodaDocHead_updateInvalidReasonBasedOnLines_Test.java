@@ -38,7 +38,9 @@ public class CodaDocHead_updateInvalidReasonBasedOnLines_Test {
     @Test
     public void when_some_lines_are_invalid() throws Exception {
         // given
+        line1.setLineType(LineType.SUMMARY);
         line1.setReasonInvalid("line 1 is bad");
+        line2.setLineType(LineType.ANALYSIS);
         line2.setReasonInvalid("line 2 is bad");
         assertThat(codaDocHead.getReasonInvalid()).isNull();
 
@@ -47,7 +49,7 @@ public class CodaDocHead_updateInvalidReasonBasedOnLines_Test {
 
         // then
         assertThat(codaDocHead.getReasonInvalid()).isNotNull();
-        assertThat(codaDocHead.getReasonInvalid()).isEqualTo("2 lines are invalid");
+        assertThat(codaDocHead.getReasonInvalid()).isEqualTo("SUMMARY: line 1 is bad\nANALYSIS: line 2 is bad");
     }
 
 

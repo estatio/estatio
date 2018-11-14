@@ -48,7 +48,7 @@ public class CodaDocHeadRepository {
         // sanity check
         if(repositoryService.isPersistent(codaDocHead)) {
             throw new IllegalStateException(
-                    String.format("CodaDocHead %s is already persistent", titleService.titleOf(codaDocHead)));
+                    String.format("CodaDocHead '%s' is already persistent", titleService.titleOf(codaDocHead)));
         }
 
         CodaDocHead existingCodaDocHead = findByCandidate(codaDocHead);
