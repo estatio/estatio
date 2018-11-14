@@ -32,7 +32,7 @@ public class DocumentMenu_Test {
 
         // given
         DocumentBarcodeService documentBarcodeService = new DocumentBarcodeService();
-        String barcode = "6010012345.pdf";
+        String barcode = "7010012345.pdf";
         String userAtPath = "/FRA";
 
         // when
