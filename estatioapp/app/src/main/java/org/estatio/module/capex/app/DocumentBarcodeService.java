@@ -13,20 +13,20 @@ public class DocumentBarcodeService {
         String firstChar = barcodeSerie.substring(0, 1);
 
         switch (firstChar) {
-        case "1":
-            return "NL";
-        case "2":
-            return "IT";
-        case "3":
-            return "FR";
-        case "4":
-            return "SE";
-        case "5":
-            return "GB";
-        case "6":
-            return "BE";
-        default:
-            return null;
+            case "1":
+                return "NL";
+            case "2":
+                return "IT";
+            case "3":
+                return "FR";
+            case "4":
+                return "SE";
+            case "5":
+                return "GB";
+            case "6":
+                return "BE";
+            default:
+                return null;
         }
     }
 

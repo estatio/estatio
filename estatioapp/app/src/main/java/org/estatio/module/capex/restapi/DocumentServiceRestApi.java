@@ -23,9 +23,6 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.value.Blob;
 
@@ -50,47 +47,27 @@ public class DocumentServiceRestApi extends UdoDomainService<DocumentServiceRest
     }
 
     @Action(
+            domainEvent = IncomingDocumentRepository.UploadDomainEvent.class,
             commandDtoProcessor = DeriveBlobFromReturnedDocumentArg0.class
     )
     public Document uploadGeneric(
             final Blob blob,
             final String documentType,
-            final boolean barcodeInDocName,
-            @Parameter(optionality = Optionality.OPTIONAL) String atPath) throws IllegalArgumentException {
+            final String atPath) throws IllegalArgumentException {
 
         DocumentTypeData documentTypeData = DocumentTypeData.valueOf(documentType);
         final DocumentType type = documentTypeData.findUsing(documentTypeRepository);
         final String name = blob.getName();
 
-        atPath = atPath != null ? atPath : "/FRA";
+        switch (documentTypeData) {
+            case INCOMING:
+                return incomingDocumentRepository.upsertAndArchive(type, documentBarcodeService.deriveAtPathFromBarcode(name), name, blob);
 
-        // Could probably be done a little neater
-        switch (atPath) {
-            case "/ITA":
-                if (documentTypeData == DocumentTypeData.INCOMING && barcodeInDocName)
-                    return incomingDocumentRepository.upsert(type, atPath, name, blob);
-
-                else if (documentTypeData == DocumentTypeData.TAX_REGISTER && !barcodeInDocName)
-                    return incomingDocumentRepository.upsert(type, atPath, name, blob);
-
-                else
-                    throw new IllegalArgumentException(String.format("Combination documentType =  %s, barcodeInDocName = %s and atPath = %s is not supported", documentType, barcodeInDocName, atPath));
-
-            case "/FRA":
-                if (documentTypeData == DocumentTypeData.INCOMING && barcodeInDocName) {
-                    Document result = incomingDocumentRepository.upsertAndArchive(type, documentBarcodeService.deriveAtPathFromBarcode(name), name, blob);
-                    IncomingDocumentRepository.UploadDomainEvent event = new IncomingDocumentRepository.UploadDomainEvent();
-                    event.setReturnValue(result);
-                    event.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
-                    eventBusService.post(event);
-
-                    return result;
-                } else {
-                    throw new IllegalArgumentException(String.format("Combination documentType =  %s, barcodeInDocName = %s and atPath = %s is not supported", documentType, barcodeInDocName, atPath));
-                }
+            case TAX_REGISTER:
+                return incomingDocumentRepository.upsertAndArchive(type, atPath, name, blob);
 
             default:
-                throw new IllegalArgumentException(String.format("Combination documentType =  %s, barcodeInDocName = %s and atPath = %s is not supported", documentType, barcodeInDocName, atPath));
+                throw new IllegalArgumentException(String.format("DocumentType %s is not supported", documentType));
         }
     }
 

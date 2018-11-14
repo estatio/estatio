@@ -19,7 +19,6 @@ import org.apache.isis.applib.value.Blob;
 import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
-import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.capex.app.DocumentMenu;
@@ -120,7 +119,6 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
 
     }
 
-
     static void assertTransition(
             final IncomingDocumentCategorisationStateTransition transition,
             final IncomingDocumentCategorisationState from,
@@ -128,18 +126,17 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
             final IncomingDocumentCategorisationState to) {
 
         assertThat(transition.getTransitionType()).isEqualTo(type);
-        if(from != null) {
+        if (from != null) {
             assertThat(transition.getFromState()).isEqualTo(from);
         } else {
             assertThat(transition.getFromState()).isNull();
         }
-        if(to != null) {
+        if (to != null) {
             assertThat(transition.getToState()).isEqualTo(to);
         } else {
             assertThat(transition.getToState()).isNull();
         }
     }
-
 
     @Inject
     IncomingDocumentRepository repository;
@@ -161,7 +158,5 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
 
     @Inject
     SudoService sudoService;
-
-    @Inject DocumentTypeRepository documentTypeRepository;
 
 }
