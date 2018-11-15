@@ -43,7 +43,7 @@ import lombok.Setter;
                         + "FROM org.estatio.module.coda.dom.costcentre.CostCentre "
                         + "WHERE element3 == :element3 ")
 })
-@Unique(name = "CostCentre_element3", members = { "element3" })
+@Unique(name = "CostCentre_element3_UNQ", members = { "element3" })
 @DomainObject(
         objectType = "coda.CostCentre",
         editing = Editing.DISABLED,
