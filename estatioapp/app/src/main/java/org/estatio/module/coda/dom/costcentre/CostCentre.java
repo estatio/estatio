@@ -18,6 +18,7 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 
 import org.estatio.module.asset.dom.PropertyRepository;
@@ -105,7 +106,8 @@ public class CostCentre implements Comparable<CostCentre> {
 
     //endregion
 
-    @Inject
+    @Programmatic
+    @Inject @Setter
     PropertyRepository propertyRepository;
 
 }
