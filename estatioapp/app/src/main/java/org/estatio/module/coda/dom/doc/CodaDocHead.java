@@ -433,7 +433,11 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Programmatic
     public PaymentMethod getSummaryLinePaymentMethod() {
         final CodaDocLine docLine = summaryDocLine();
-        return docLine != null ? docLine.getCodaPaymentMethod().asPaymentMethod() : null;
+        if (docLine == null) {
+            return null;
+        }
+        final CodaPaymentMethod codaPaymentMethod = docLine.getCodaPaymentMethod();
+        return codaPaymentMethod != null ? codaPaymentMethod.asPaymentMethod() : null;
     }
 
     @Programmatic
