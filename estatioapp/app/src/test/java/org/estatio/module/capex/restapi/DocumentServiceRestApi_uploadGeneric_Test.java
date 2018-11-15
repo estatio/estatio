@@ -38,25 +38,27 @@ public class DocumentServiceRestApi_uploadGeneric_Test {
         expectedException.expectMessage("No enum constant org.estatio.module.invoice.dom.DocumentTypeData.NON_EXISTING_TYPE");
 
         // when
-        service.uploadGeneric(null, "NON_EXISTING_TYPE", true, null);
+        service.uploadGeneric(null, "NON_EXISTING_TYPE", "/ITA");
 
     }
 
     @Test
-    public void when_not_supported() throws Exception {
+    public void when_using_unsupported_doc_type_data() throws Exception {
 
         // given
-        Blob blob = new Blob("some_name", "application/pdf", new byte[0]);
+        final Blob blob = new Blob("Foo", "application/pdf", new byte[20]);
 
         // expect
-        context.checking(new Expectations(){{
-            oneOf(mockDocumentTypeRepository).findByReference("INCOMING_ORDER");
-        }});
         expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("Combination documentType =  INCOMING_ORDER, barcodeInDocName = true and atPath = /ITA is not supported");
+        expectedException.expectMessage("DocumentType INCOMING_INVOICE is not supported");
+
+        context.checking(new Expectations() {{
+            oneOf(mockDocumentTypeRepository).findByReference("INCOMING_INVOICE");
+        }});
 
         // when
-        service.uploadGeneric(blob, "INCOMING_ORDER", true, "/ITA");
+        service.uploadGeneric(blob, "INCOMING_INVOICE", "/ITA");
 
     }
+
 }
