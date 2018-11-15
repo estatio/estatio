@@ -30,6 +30,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
 
 import org.estatio.module.capex.EstatioCapexModule;
+import org.estatio.module.coda.dom.costcentre.CostCentre;
 import org.estatio.module.coda.dom.doc.CodaDocHead;
 import org.estatio.module.coda.dom.doc.CodaDocLine;
 
@@ -54,6 +55,7 @@ public final class EstatioCodaModule extends ModuleAbstract {
             protected void execute(final FixtureScript.ExecutionContext executionContext) {
                 deleteFrom(CodaDocLine.class);
                 deleteFrom(CodaDocHead.class);
+                deleteFrom(CostCentre.class);
             }
 
         };
