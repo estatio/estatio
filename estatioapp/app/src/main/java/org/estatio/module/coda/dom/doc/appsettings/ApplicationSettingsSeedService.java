@@ -44,10 +44,6 @@ public class ApplicationSettingsSeedService
     @PostConstruct
     public void init(final Map<String,String> props) {
         super.init(props);
-        if(System.getProperty("isis.headless") != null) {
-            return;
-        }
-
         installDefaultsIfRequired();
     }
 

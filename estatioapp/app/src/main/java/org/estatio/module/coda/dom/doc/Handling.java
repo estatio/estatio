@@ -2,16 +2,28 @@ package org.estatio.module.coda.dom.doc;
 
 public enum Handling {
     /**
-     * The document was valid and an Estatio invoice has been created for it.
+     * The document has been marked as to be ignored; it will not be validated nor sync'd.
      */
-    SYNCED,
+    EXCLUDED,
     /**
-     * The document should not be ignored, but has validation problems and so needs attention.
+     * The document should not be ignored, but has validation errors and so needs attention.
      */
     ATTENTION,
     /**
-     * The document has been marked as to be ignored; it will not be synced.
+     * The document was valid but an Estatio invoice has not yet been created for it.
+     *
+     * <p>
+     *     Whether auto-syncing occurs depends on the ApplicationSetting.
+     * </p>
      */
-    EXCLUDED
+    VALID,
+    /**
+     * The document was valid and an Estatio invoice (and related objects) has been (or is about to be) created for it.
+     */
+    SYNCED,
     ;
+
+    public boolean isSynced() {
+        return this == SYNCED;
+    }
 }
