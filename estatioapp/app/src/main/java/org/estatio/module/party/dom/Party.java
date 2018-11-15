@@ -275,12 +275,17 @@ public abstract class Party
 
     @Programmatic
     public boolean hasPartyRoleType(final PartyRoleType partyRoleType){
+        return getPartyRole(partyRoleType) != null;
+    }
+
+    @Programmatic
+    public PartyRole getPartyRole(final PartyRoleType partyRoleType){
         for (PartyRole role : getRoles()){
             if (role.getRoleType() == partyRoleType){
-                return true;
+                return role;
             }
         }
-        return false;
+        return null;
     }
 
     @Override
