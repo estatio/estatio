@@ -18,8 +18,6 @@
  */
 package org.estatio.module.party.fixtures.roles.builders;
 
-import java.util.Objects;
-
 import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
@@ -36,8 +34,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"reference"}, callSuper = false)
-@ToString(of={"reference"})
+@EqualsAndHashCode(of={"organisation","partyRoleType"}, callSuper = false)
+@ToString(of={"organisation","partyRoleType"})
 @Accessors(chain = true)
 public final class PartyRoleBuilder
         extends BuilderScriptAbstract<PartyRole, PartyRoleBuilder> {
@@ -73,18 +71,5 @@ public final class PartyRoleBuilder
     @Inject
     PartyRoleTypeRepository partyRoleTypeRepository;
 
-    @Override public boolean equals(final Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        final PartyRoleBuilder that = (PartyRoleBuilder) o;
-        return Objects.equals(organisation, that.organisation) &&
-                Objects.equals(object, that.object);
-    }
-
-    @Override public int hashCode() {
-        return Objects.hash(organisation, object);
-    }
 }
 

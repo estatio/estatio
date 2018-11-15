@@ -121,16 +121,13 @@
                                         <cpt:property id="accountCodeEl3">
                                             <cpt:named>El 3</cpt:named>
                                         </cpt:property>
-                                        <cpt:property id="accountCodeEl3PropertyReference">
-                                            <cpt:named>Property Reference</cpt:named>
-                                        </cpt:property>
-                                        <cpt:property id="accountCodeEl6Supplier">
-                                            <cpt:named>Supplier</cpt:named>
+                                        <cpt:property id="accountCodeEl3CostCentre">
+                                            <cpt:named>Cost Centre</cpt:named>
                                         </cpt:property>
                                     </cpt:fieldSet>
                                 </bs3:col>
                                 <bs3:col span="3">
-                                    <cpt:fieldSet name="" id="accountcodevalidation">
+                                    <cpt:fieldSet name="" id="accountCode3El3Validation">
                                         <cpt:property id="accountCodeEl3ValidationStatus" labelPosition="NONE"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
@@ -154,6 +151,9 @@
                                     <cpt:fieldSet name="" id="accountCodeEl6">
                                         <cpt:property id="accountCodeEl6">
                                             <cpt:named>El 6</cpt:named>
+                                        </cpt:property>
+                                        <cpt:property id="accountCodeEl6Supplier">
+                                            <cpt:named>Supplier</cpt:named>
                                         </cpt:property>
                                     </cpt:fieldSet>
                                 </bs3:col>

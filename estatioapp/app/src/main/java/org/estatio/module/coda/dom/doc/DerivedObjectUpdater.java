@@ -79,7 +79,7 @@ public class DerivedObjectUpdater {
         final Party seller = docHead.getSummaryLineAccountCodeEl6Supplier();
         final IncomingInvoiceType type = docHead.getAnalysisLineIncomingInvoiceType();
         final String invoiceNumber = docHead.getSummaryLineExtRef2();
-        final Property property = docHead.getSummaryLineProperty();
+        final Property property = docHead.getSummaryLineAccountEl3Property();
 
         final BankAccount bankAccount= docHead.getSummaryLineSupplierBankAccount();
 

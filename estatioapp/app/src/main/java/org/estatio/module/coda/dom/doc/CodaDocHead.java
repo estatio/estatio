@@ -419,12 +419,9 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     }
 
     @Programmatic
-    public org.estatio.module.asset.dom.Property getSummaryLineProperty() {
+    public org.estatio.module.asset.dom.Property getSummaryLineAccountEl3Property() {
         final CodaDocLine docLine = summaryDocLine();
-        final String elPropRefIfAny = docLine != null ? docLine.getAccountCodeEl3PropertyReference() : null;
-        return elPropRefIfAny != null
-                        ? propertyRepository.findPropertyByReference(elPropRefIfAny)
-                        : null;
+        return docLine != null ? docLine.getAccountEl3Property() : null;
     }
 
     @Programmatic
@@ -479,12 +476,6 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     public BigDecimal getSummaryLineDocSumTax() {
         final CodaDocLine docLine = summaryDocLine();
         return docLine != null ? docLine.getDocSumTax() : null;
-    }
-
-    @Programmatic
-    public String getSummaryLineAccountCodeEl3PropertyReference() {
-        final CodaDocLine docLine = summaryDocLine();
-        return docLine != null ? docLine.getAccountCodeEl3PropertyReference() : null;
     }
 
     @Programmatic
