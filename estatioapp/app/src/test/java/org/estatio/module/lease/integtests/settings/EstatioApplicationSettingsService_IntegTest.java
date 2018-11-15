@@ -56,7 +56,7 @@ public class EstatioApplicationSettingsService_IntegTest extends LeaseModuleInte
             // Given, when
             final List<ApplicationSetting> applicationSettings = applicationSettingsServiceForEstatio.listAll();
             // Then
-            assertThat(applicationSettings.size()).isEqualTo(1);
+            assertThat(applicationSettings.size()).isEqualTo(2);
         }
     }
 
