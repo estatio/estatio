@@ -1,11 +1,8 @@
 package org.estatio.module.coda.dom.doc;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -417,6 +414,15 @@ public class CodaDocLineRepository {
                 ));
     }
 
+    public List<CodaDocLine> findByUserRef1(final String userRef1) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        CodaDocLine.class,
+                        "findByUserRef1",
+                        "userRef1", userRef1
+                ));
+    }
+
 
     @Programmatic
     public CodaDocHead delete(
@@ -431,5 +437,4 @@ public class CodaDocLineRepository {
 
     @Inject
     RepositoryService repositoryService;
-
 }

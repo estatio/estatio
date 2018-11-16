@@ -58,6 +58,8 @@ public class DocumentBarcodeService {
         return derived != null ? derived : atPath;
     }
 
+    
+
     boolean isBarcode(final String documentName) {
         return documentName.replace(".pdf", "").matches("\\d+");
     }

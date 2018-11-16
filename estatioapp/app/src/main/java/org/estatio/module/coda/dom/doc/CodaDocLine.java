@@ -57,6 +57,11 @@ import lombok.Setter;
         column = "version")
 @Queries({
         @Query(
+                name = "findByUserRef1", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
+                        + "WHERE userRef1 == :userRef1"),
+        @Query(
                 name = "findByDocHeadAndLineNum", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
@@ -215,33 +220,33 @@ import lombok.Setter;
         ),
 })
 @Uniques({
-    @Unique(name = "CodaDocLine_docHead_lineNum_UNQ", members = { "docHead", "lineNum" }),
+        @Unique(name = "CodaDocLine_docHead_lineNum_UNQ", members = { "docHead", "lineNum" }),
 })
 @Indices({
-    @Index(name = "CodaDocLine_accountCodeValidation_IDX",
-            members = { "handling", "accountCodeValidationStatus", "accountCode" }),
-    @Index(name = "CodaDocLine_accountCodeEl3Validation_IDX",
-            members = { "handling", "accountCodeValidationStatus", "accountCodeEl3ValidationStatus", "accountCodeEl3" }),
-    @Index(name = "CodaDocLine_accountCodeEl5Validation_IDX",
-            members = { "handling", "accountCodeValidationStatus", "accountCodeEl5ValidationStatus", "accountCodeEl5" }),
-    @Index(name = "CodaDocLine_accountCodeEl6Validation_IDX",
-            members = { "handling", "accountCodeValidationStatus", "accountCodeEl6ValidationStatus", "accountCodeEl6" }),
+        @Index(name = "CodaDocLine_accountCodeValidation_IDX",
+                members = { "handling", "accountCodeValidationStatus", "accountCode" }),
+        @Index(name = "CodaDocLine_accountCodeEl3Validation_IDX",
+                members = { "handling", "accountCodeValidationStatus", "accountCodeEl3ValidationStatus", "accountCodeEl3" }),
+        @Index(name = "CodaDocLine_accountCodeEl5Validation_IDX",
+                members = { "handling", "accountCodeValidationStatus", "accountCodeEl5ValidationStatus", "accountCodeEl5" }),
+        @Index(name = "CodaDocLine_accountCodeEl6Validation_IDX",
+                members = { "handling", "accountCodeValidationStatus", "accountCodeEl6ValidationStatus", "accountCodeEl6" }),
 
-    @Index(name = "CodaDocLine_supplierBankAccountValidation_IDX",
-            members = { "handling", "accountCodeValidationStatus", "supplierBankAccountValidationStatus", "elmBankAccount" }),
+        @Index(name = "CodaDocLine_supplierBankAccountValidation_IDX",
+                members = { "handling", "accountCodeValidationStatus", "supplierBankAccountValidationStatus", "elmBankAccount" }),
 
-    @Index(name = "CodaDocLine_extRefValidation_IDX",
-            members = { "handling", "extRefValidationStatus", "extRef3", "extRef5" }),
+        @Index(name = "CodaDocLine_extRefValidation_IDX",
+                members = { "handling", "extRefValidationStatus", "extRef3", "extRef5" }),
 
-    @Index(name = "CodaDocLine_orderValidation_IDX",
-            members = { "handling", "extRefValidationStatus", "extRefOrderValidationStatus", "orderNumber" }),
-    @Index(name = "CodaDocLine_projectValidation_IDX",
-            members = { "handling", "extRefValidationStatus", "extRefProjectValidationStatus", "projectReference" }),
-    @Index(name = "CodaDocLine_workTypeValidation_IDX",
-            members = { "handling", "extRefValidationStatus", "extRefWorkTypeValidationStatus", "chargeReference" }),
+        @Index(name = "CodaDocLine_orderValidation_IDX",
+                members = { "handling", "extRefValidationStatus", "extRefOrderValidationStatus", "orderNumber" }),
+        @Index(name = "CodaDocLine_projectValidation_IDX",
+                members = { "handling", "extRefValidationStatus", "extRefProjectValidationStatus", "projectReference" }),
+        @Index(name = "CodaDocLine_workTypeValidation_IDX",
+                members = { "handling", "extRefValidationStatus", "extRefWorkTypeValidationStatus", "chargeReference" }),
 
-    @Index(name = "CodaDocLine_mediaCodeValidation_IDX",
-            members = { "handling", "mediaCodeValidationStatus", "mediaCode" }),
+        @Index(name = "CodaDocLine_mediaCodeValidation_IDX",
+                members = { "handling", "mediaCodeValidationStatus", "mediaCode" }),
 })
 @DomainObject(
         objectType = "coda.CodaDocLine",
@@ -255,15 +260,18 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     /**
      * For properties that are only populated for summary lines.
      */
-    public static class SummaryOnlyPropertyDomainEvent extends PropertyDomainEvent<CodaDocLine, Object> {}
+    public static class SummaryOnlyPropertyDomainEvent extends PropertyDomainEvent<CodaDocLine, Object> {
+    }
 
     /**
      * For properties that are only populated for analysis lines.
      */
-    public static class AnalysisOnlyPropertyDomainEvent extends PropertyDomainEvent<CodaDocLine, Object> {}
+    public static class AnalysisOnlyPropertyDomainEvent extends PropertyDomainEvent<CodaDocLine, Object> {
+    }
 
+    public CodaDocLine() {
+    }
 
-    public CodaDocLine(){}
     public CodaDocLine(
             final CodaDocHead docHead,
             final int lineNum,
@@ -301,7 +309,6 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
         this.userStatus = userStatus;
         this.mediaCode = mediaCode;
 
-
         //
         // set all the 'derived' stuff to its initial value
         //
@@ -314,7 +321,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
         // use setters so that DN is aware
 
         setHandling(Handling.ATTENTION);
-        
+
         setAccountCodeValidationStatus(ValidationStatus.NOT_CHECKED);
 
         setAccountCodeEl3(null);
@@ -348,7 +355,6 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
 
         setReasonInvalid(null);
     }
-
 
     public String title() {
         return String.format("%s | # %d", titleService.titleOf(getDocHead()), getLineNum());
@@ -456,9 +462,6 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Getter @Setter
     private String mediaCode;
 
-
-
-
     @Column(allowsNull = "true", length = 4000)
     @Property()
     @PropertyLayout(multiLine = 5)
@@ -469,7 +472,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     public void appendInvalidReason(final String reasonFormat, Object... args) {
         final String reason = String.format(reasonFormat, args);
         String reasonInvalid = getReasonInvalid();
-        if(reasonInvalid != null) {
+        if (reasonInvalid != null) {
             reasonInvalid += "\n";
         } else {
             reasonInvalid = "";
@@ -493,8 +496,6 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Getter @Setter
     private ValidationStatus accountCodeValidationStatus;
 
-
-
     @Column(allowsNull = "false", length = 20)
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
@@ -512,7 +513,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     /**
      * Derived from certain characters of el3 of {@link #getAccountCode()}, only populated if
      * {@link #getAccountCodeValidationStatus()} is {@link ValidationStatus#VALID valid}
-     *
+     * <p>
      * There is no validation around this; it's a best effort.
      * We've chosen to persist this rather than calculate on the fly in order to support querying
      * of this versus the {@link #getExtRefCostCentre() cost centre} derived from extRef3.
@@ -521,8 +522,6 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private String accountCodeEl3PropertyReference;
-
-
 
     @Column(allowsNull = "false", length = 20)
     @Property()
@@ -538,14 +537,12 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Getter @Setter
     private String accountCodeEl5;
 
-
     @Column(allowsNull = "false", length = 20)
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private ValidationStatus accountCodeEl6ValidationStatus;
 
-
-    @Column(allowsNull = "true", name="accountCodeEl6SupplierId")
+    @Column(allowsNull = "true", name = "accountCodeEl6SupplierId")
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private Organisation accountCodeEl6Supplier;
@@ -569,12 +566,10 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Getter @Setter
     private BankAccount supplierBankAccount;
 
-
     @Column(allowsNull = "false", length = 20)
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private ValidationStatus extRefValidationStatus;
-
 
     @Column(allowsNull = "false", length = 20)
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
@@ -583,7 +578,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
 
     /**
      * As parsed from extRef3/extRef4/extRef5, only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
-     *
+     * <p>
      * Is the normalized version of the extRef3.
      * For old style, is nn/CCC/ll/WWW   (nn and ll are not normalized, are verbatim)
      * For new style, is nn/CCC/PPP/WWW  (nn is not normalized).
@@ -593,12 +588,10 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Getter @Setter
     private String orderNumber;
 
-
     @Column(allowsNull = "true", name = "extRefOrderItemId")
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private OrderItem extRefOrderItem;
-
 
     @Column(allowsNull = "false", length = 20)
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
@@ -613,8 +606,6 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Getter @Setter
     private String extRefCostCentre;
 
-
-
     @Column(allowsNull = "false", length = 20)
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
@@ -622,7 +613,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
 
     /**
      * As parsed from extRef3/extRef4/extRef5, normalized to 3 digits and prefixed with 'ITPR'.
-     *
+     * <p>
      * Only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid},
      */
     @Column(allowsNull = "true", length = 30)
@@ -635,12 +626,10 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Getter @Setter
     private Project extRefProject;
 
-
     @Column(allowsNull = "false", length = 20)
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private ValidationStatus extRefWorkTypeValidationStatus;
-
 
     @Column(allowsNull = "true", name = "extRefWorkTypeChargeId")
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
@@ -651,14 +640,13 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
      * As parsed from extRef3/extRef4/extRef5, normalized to 3 digits and prefixed with either 'ITWT'
      * (if was a new format, or an old format where the lookup from old charge to new charge could be performed) or
      * prefixed with 'OLD' (if was old format, and no lookup of new charge from old was possible)
-     *
+     * <p>
      * Only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
      */
     @Column(allowsNull = "true", length = 30)
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private String chargeReference;
-
 
     @Column(allowsNull = "false", length = 20)
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
@@ -678,7 +666,6 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Getter @Setter
     private IncomingInvoiceType incomingInvoiceType;
 
-
     /**
      * Derived from parent {@link CodaDocHead#getHandling()}, for performance.
      */
@@ -686,7 +673,6 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Property()
     @Getter @Setter
     private Handling handling;
-
 
     @Override
     public int compareTo(final CodaDocLine other) {
@@ -696,7 +682,8 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
                 .result();
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return "CodaDocLine{" +
                 "docHead=" + docHead +
                 ", lineNum=" + lineNum +
@@ -712,37 +699,38 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
         @EventHandler
         public void on(SummaryOnlyPropertyDomainEvent ev) {
             switch (ev.getEventPhase()) {
-            case HIDE:
-                LineType lineType = ev.getSource().getLineType();
-                if(lineType == null) {
-                    return;
-                }
-                switch (lineType) {
-                case SUMMARY:
+                case HIDE:
+                    LineType lineType = ev.getSource().getLineType();
+                    if (lineType == null) {
+                        return;
+                    }
+                    switch (lineType) {
+                        case SUMMARY:
+                            break;
+                        default:
+                            ev.hide();
+                            break;
+                    }
                     break;
-                default:
-                    ev.hide();
-                    break;
-                }
-                break;
             }
         }
+
         @EventHandler
         public void on(AnalysisOnlyPropertyDomainEvent ev) {
             switch (ev.getEventPhase()) {
-            case HIDE:
-                LineType lineType = ev.getSource().getLineType();
-                if(lineType == null) {
-                    return;
-                }
-                switch (lineType) {
-                case ANALYSIS:
+                case HIDE:
+                    LineType lineType = ev.getSource().getLineType();
+                    if (lineType == null) {
+                        return;
+                    }
+                    switch (lineType) {
+                        case ANALYSIS:
+                            break;
+                        default:
+                            ev.hide();
+                            break;
+                    }
                     break;
-                default:
-                    ev.hide();
-                    break;
-                }
-                break;
             }
         }
     }

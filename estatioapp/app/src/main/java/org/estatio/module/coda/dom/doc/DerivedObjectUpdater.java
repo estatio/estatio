@@ -10,6 +10,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.services.wrapper.DisabledException;
@@ -50,12 +51,10 @@ import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.tax.dom.Tax;
 
-
 @DomainService(nature = NatureOfService.DOMAIN)
 public class DerivedObjectUpdater {
 
     static final String AT_PATH = "/ITA";
-
 
     public IncomingInvoice upsertIncomingInvoice(
             final CodaDocHead docHead) {
@@ -63,6 +62,11 @@ public class DerivedObjectUpdater {
         return upsertIncomingInvoice(docHead, incomingInvoiceIfAny);
     }
 
+    public static class UpsertIncomingInvoiceEvent extends ActionDomainEvent<Object> {
+        public String getUserRef1() {
+            return this.getArguments() != null ? ((CodaDocLine) this.getArguments().get(0)).getUserRef1() : null;
+        }
+    }
 
     public IncomingInvoice upsertIncomingInvoice(
             final CodaDocHead docHead,
@@ -75,14 +79,14 @@ public class DerivedObjectUpdater {
         // CodaDocHead is invalid even if a previous one was valid.  We simply align the Estatio objects
         // (if there are any) with whatever CodaDocHead says).
         //
-        final Party buyer= docHead.getCmpCodeBuyer();
+        final Party buyer = docHead.getCmpCodeBuyer();
 
         final Party seller = docHead.getSummaryLineAccountCodeEl6Supplier();
         final IncomingInvoiceType type = docHead.getAnalysisLineIncomingInvoiceType();
         final String invoiceNumber = docHead.getSummaryLineExtRef2();
         final Property property = docHead.getSummaryLineProperty();
 
-        final BankAccount bankAccount= docHead.getSummaryLineSupplierBankAccount();
+        final BankAccount bankAccount = docHead.getSummaryLineSupplierBankAccount();
 
         final PaymentMethod paymentMethod = docHead.getSummaryLinePaymentMethod();
 
@@ -93,7 +97,7 @@ public class DerivedObjectUpdater {
         final LocalDate vatRegistrationDate = docHead.getSummaryLineValueDate();
 
         final LocalDate dateReceived = docHead.getInputDate();
-        final LocalDate invoiceDate= docHead.getDocDate();
+        final LocalDate invoiceDate = docHead.getDocDate();
         final LocalDate dueDate = docHead.getSummaryLineDueDate();
 
         final InvoiceStatus invoiceStatus = InvoiceStatus.NEW; // we don't care, this is for outgoing invoices.
@@ -112,12 +116,11 @@ public class DerivedObjectUpdater {
         final String period = Util.asFinancialYear(docHead.getCodaPeriod());
         final Tax tax = null;
 
-
         //
         // update the incoming invoice (we simply blindly follow Coda, since Coda always leads.
         //
         final IncomingInvoice incomingInvoice;
-        if(existingInvoiceIfAny != null) {
+        if (existingInvoiceIfAny != null) {
 
             incomingInvoice = existingInvoiceIfAny;
             incomingInvoiceRepository.updateInvoice(
@@ -126,11 +129,10 @@ public class DerivedObjectUpdater {
                     invoiceDate, dueDate, paymentMethod,
                     invoiceStatus, dateReceived, bankAccount);
 
-
             //
             // also update the existing item
             //
-            if(existingInvoiceItemIfAny != null) {
+            if (existingInvoiceItemIfAny != null) {
 
                 final LocalDateInterval ldi = PeriodUtil.yearFromPeriod(period);
 
@@ -152,7 +154,7 @@ public class DerivedObjectUpdater {
         } else {
 
             // if there isn't an invoice already, then we only create one if the docHead is valid.
-            if(docHead.isValid()) {
+            if (docHead.isValid()) {
 
                 // as a side-effect, the approvalState will be set to NEW
                 // (subscriber on ObjectPersist)
@@ -180,7 +182,7 @@ public class DerivedObjectUpdater {
 
     /**
      * associate the IncomingInvoice (if we have one) with the CodaDocHEad (irrespective of whether valid or not)
-     *
+     * <p>
      * eg, new CodaDocHead is valid, and just created an IncomingInvoice, so associate together
      * or, new CodaDocHead is invalid, in which case no IncomingInvoice created, so is just set to null
      * or, replacement CodaDocHead, also valid, copy over IncomingInvoice from previous valid
@@ -217,27 +219,26 @@ public class DerivedObjectUpdater {
         final BigDecimal netAmount = Util.subtract(grossAmount, vatAmount);
 
         final OrderItem orderItem = docHead.getSummaryLineExtRefOrderItem();
-        if(existingLinkIfAny != null) {
+        if (existingLinkIfAny != null) {
 
-            if(orderItem == null || invoiceItem == null) {
+            if (orderItem == null || invoiceItem == null) {
 
                 // the CodaDocHead no longer identifies either an order item or invoice item,
                 // so we just discard the link
                 linkRepository.removeLink(existingLinkIfAny);
 
-            } else if(
+            } else if (
                     existingLinkIfAny.getOrderItem() != orderItem ||
-                    existingLinkIfAny.getInvoiceItem() != invoiceItem) {
+                            existingLinkIfAny.getInvoiceItem() != invoiceItem) {
 
                 // we remove the existing link...
                 final boolean removedLink =
                         removeLinkIfPossible(existingLinkIfAny.getOrderItem(), existingLinkIfAny.getInvoiceItem(), softErrors);
 
                 // ... and recreate, because
-                if(removedLink) {
+                if (removedLink) {
                     linkIfPossible(orderItem, invoiceItem, softErrors);
                 }
-
 
             } else {
 
@@ -248,7 +249,7 @@ public class DerivedObjectUpdater {
         } else {
 
             // if we're valid, then replace and Estatio invoice
-            if(docHead.isValid()) {
+            if (docHead.isValid()) {
 
                 //
                 // create the link, if we can
@@ -271,12 +272,12 @@ public class DerivedObjectUpdater {
                 wrapperFactory.wrap(
                         factoryService.mixin(OrderItem_removeInvoiceItemLink.class, orderItem))
                         .act(invoiceItem);
-            } catch(HiddenException ex) {
+            } catch (HiddenException ex) {
                 softErrors.add(
                         "Failed to remove existing link between '%s' and '%s'",
                         titleService.titleOf(orderItem), titleService.titleOf(invoiceItem));
                 return false;
-            } catch(DisabledException | InvalidException ex) {
+            } catch (DisabledException | InvalidException ex) {
                 softErrors.add(ex.getMessage());
                 return false;
             }
@@ -294,11 +295,11 @@ public class DerivedObjectUpdater {
                 wrapperFactory.wrap(
                         factoryService.mixin(IncomingInvoiceItem_createOrderItemLink.class, invoiceItem))
                         .act(orderItem, invoiceItem.getNetAmount());
-            } catch(HiddenException ex) {
+            } catch (HiddenException ex) {
                 softErrors.add(
                         "Failed to create a link between '%s' and '%s'",
                         titleService.titleOf(orderItem), titleService.titleOf(invoiceItem));
-            } catch(DisabledException | InvalidException ex) {
+            } catch (DisabledException | InvalidException ex) {
                 softErrors.add(ex.getMessage());
             }
         }
@@ -333,10 +334,10 @@ public class DerivedObjectUpdater {
 
         final IncomingInvoice incomingInvoice = derivedObjectLookup.invoiceIfAnyFrom(docHead);
 
-        if(existingPaperclipIfAny != null) {
+        if (existingPaperclipIfAny != null) {
 
             final String documentName = docHead.getSummaryLineDocumentName();
-            if(documentName == null) {
+            if (documentName == null) {
 
                 // userRef1 removed, so delete the existing paperclip.
                 paperclipRepository.delete(existingPaperclipIfAny);
@@ -346,7 +347,7 @@ public class DerivedObjectUpdater {
 
             } else {
 
-                if(!Objects.equals(existingDocumentNameIfAny, documentName)) {
+                if (!Objects.equals(existingDocumentNameIfAny, documentName)) {
 
                     // reset the existing document back to vanilla 'INCOMING'
                     existingPaperclipIfAny.getDocument().setType(incomingDocumentType);
@@ -355,20 +356,20 @@ public class DerivedObjectUpdater {
                     final List<Document> documents =
                             documentRepository.findByTypeAndNameAndAtPath(incomingDocumentType, AT_PATH, documentName);
                     switch (documents.size()) {
-                    case 0:
-                        // could not locate new Document, so delete old paperclip and reset document
-                        paperclipRepository.delete(existingPaperclipIfAny);
-                        break;
-                    case 1:
-                        // update the paperclip to point to the new document.
-                        final Document document = documents.get(0);
-                        existingPaperclipIfAny.setDocument(document);
-                        document.setType(incomingInvoiceDocumentType);
-                        break;
-                    default:
-                        // could not locate a unique Document, so delete
-                        paperclipRepository.delete(existingPaperclipIfAny);
-                        softErrors.add("More than one document found named '%s'", documentName);
+                        case 0:
+                            // could not locate new Document, so delete old paperclip and reset document
+                            paperclipRepository.delete(existingPaperclipIfAny);
+                            break;
+                        case 1:
+                            // update the paperclip to point to the new document.
+                            final Document document = documents.get(0);
+                            existingPaperclipIfAny.setDocument(document);
+                            document.setType(incomingInvoiceDocumentType);
+                            break;
+                        default:
+                            // could not locate a unique Document, so delete
+                            paperclipRepository.delete(existingPaperclipIfAny);
+                            softErrors.add("More than one document found named '%s'", documentName);
                     }
                 } else {
                     // no change in the document name, so leave paperclip as it is
@@ -377,7 +378,7 @@ public class DerivedObjectUpdater {
 
         } else {
 
-            if(docHead.isValid()) {
+            if (docHead.isValid()) {
 
                 final String documentName = docHead.getSummaryLineDocumentName();
 
@@ -385,18 +386,18 @@ public class DerivedObjectUpdater {
                 final List<Document> documents =
                         documentRepository.findByTypeAndNameAndAtPath(incomingDocumentType, "/ITA", documentName);
                 switch (documents.size()) {
-                case 0:
-                    // nothing to do
-                    break;
-                case 1:
-                    // attach
-                    final Document document = documents.get(0);
-                    paperclipRepository.attach(document, null, incomingInvoice);
-                    document.setType(incomingInvoiceDocumentType);
-                    break;
-                default:
-                    // could not locate a unique Document, so do nothing
-                    softErrors.add("More than one document found named '%s'", documentName);
+                    case 0:
+                        // nothing to do
+                        break;
+                    case 1:
+                        // attach
+                        final Document document = documents.get(0);
+                        paperclipRepository.attach(document, null, incomingInvoice);
+                        document.setType(incomingInvoiceDocumentType);
+                        break;
+                    default:
+                        // could not locate a unique Document, so do nothing
+                        softErrors.add("More than one document found named '%s'", documentName);
                 }
 
             } else {
@@ -406,9 +407,8 @@ public class DerivedObjectUpdater {
     }
 
     /**
-     *
      * update task description (if pending is to complete)
-     *
+     * <p>
      * nb: note that the task description won't be updated if awaiting approval and there are only soft errors.
      */
     public void updatePendingTask(
@@ -429,17 +429,16 @@ public class DerivedObjectUpdater {
 
         final IncomingInvoiceApprovalStateTransitionType transitionType = pendingTransition.getTransitionType();
         switch (transitionType) {
-        case COMPLETE:
-            // this should always be the case; there are no other pending transitions from a state of NEW.
-            // update the task will the issues identified.
-            final Task task = pendingTransition.getTask();
-            if(task != null) {
-                task.setDescription(errors.getText());
-            }
-            break;
+            case COMPLETE:
+                // this should always be the case; there are no other pending transitions from a state of NEW.
+                // update the task will the issues identified.
+                final Task task = pendingTransition.getTask();
+                if (task != null) {
+                    task.setDescription(errors.getText());
+                }
+                break;
         }
     }
-
 
     private static IncomingInvoiceItem firstItemOf(final IncomingInvoice existingInvoiceIfAny) {
         return existingInvoiceIfAny != null
