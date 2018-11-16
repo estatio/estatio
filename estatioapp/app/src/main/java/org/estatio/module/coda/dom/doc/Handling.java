@@ -1,29 +1,30 @@
 package org.estatio.module.coda.dom.doc;
 
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+
 public enum Handling {
     /**
-     * The document has been marked as to be ignored; it will not be validated nor sync'd.
+     * The {@link CodaDocHead Coda document} has been marked as to be ignored; it will not be validated nor sync'd.
      */
     EXCLUDED,
     /**
-     * The document should not be ignored, but has validation errors and so needs attention.
-     */
-    ATTENTION,
-    /**
-     * The document was valid but an Estatio invoice has not yet been created for it.
+     * The {@link CodaDocHead Coda document} should not be ignored.
      *
      * <p>
-     *     Whether auto-syncing occurs depends on the ApplicationSetting.
+     *     At this point it may or may not have validation errors (see {@link CodaDocHead#isValid()}), but it has
+     *     not been sync'd.
      * </p>
      */
-    VALID,
+    INCLUDED,
     /**
-     * The document was valid and an Estatio invoice (and related objects) has been (or is about to be) created for it.
+     * The {@link CodaDocHead Coda document} was {@link CodaDocHead#isValid() valid} and an
+     * {@link IncomingInvoice Estatio invoice} (and related objects) has been created for it.
+     *
+     * <p>
+     *     It is no longer possible to exclude a Coda document once it has sync'd.
+     * </p>
      */
     SYNCED,
     ;
 
-    public boolean isSynced() {
-        return this == SYNCED;
-    }
 }

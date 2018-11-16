@@ -1,5 +1,8 @@
 package org.estatio.module.coda.dom.doc;
 
+import java.util.Collection;
+import java.util.List;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -58,6 +61,19 @@ public class CodaDocHeadRepository {
         return repositoryService.persist(codaDocHead);
     }
 
+    @Programmatic
+    public List<CodaDocHead> findByCodaPeriodQuarterAndHandling(
+            final String codaPeriodQuarter,
+            final Handling handling) {
+        return repositoryService.allMatches(
+                new org.apache.isis.applib.query.QueryDefault<>(
+                        CodaDocHead.class,
+                        "findByCodaPeriodQuarterAndHandling",
+                        "codaPeriodQuarter", codaPeriodQuarter,
+                        "handling", handling));
+
+    }
+
     private void delete(final CodaDocHead codaDocHead) {
         repositoryService.removeAndFlush(codaDocHead);
     }
@@ -66,4 +82,13 @@ public class CodaDocHeadRepository {
     RepositoryService repositoryService;
     @javax.inject.Inject
     TitleService titleService;
+
+    @Programmatic
+    public Collection<? extends CodaDocHead> findWithInvalidEl3(
+            final Handling handling,
+            final ValidationStatus accountCodeValidationStatus,
+            final String el3) {
+        return null;
+    }
+
 }

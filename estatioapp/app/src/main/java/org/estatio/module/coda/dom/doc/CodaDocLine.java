@@ -314,7 +314,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
 
         // use setters so that DN is aware
 
-        setHandling(Handling.ATTENTION);
+        setHandling(Handling.INCLUDED);
         
         setAccountCodeValidationStatus(ValidationStatus.NOT_CHECKED);
 

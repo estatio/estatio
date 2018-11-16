@@ -1,6 +1,9 @@
 package org.estatio.module.coda.dom.doc;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -10,6 +13,8 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Index;
+import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
@@ -73,11 +78,20 @@ import lombok.Setter;
                 name = "findByCmpCodeAndDocCodeAndDocNum", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
-                        + "WHERE cmpCode == :cmpCode && "
-                        + "      docCode == :docCode && "
-                        + "      docNum  == :docNum ")
+                        + "WHERE cmpCode == :cmpCode "
+                        + "   && docCode == :docCode "
+                        + "   && docNum  == :docNum "),
+        @Query(
+                name = "findByCodaPeriodQuarterAndHandling", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
+                        + "WHERE codaPeriodQuarter == :codaPeriodQuarter "
+                        + "   && handling          == :handling ")
 })
 @Unique(name = "CodaDocHead_cmpCode_docCode_docNum_UNQ", members = { "cmpCode", "docCode", "docNum" })
+@Indices({
+    @Index(name = "CodaDocHead_codaPeriodQuarter_handling_IDX", members = { "codaPeriodQuarter","handling" })
+})
 @DomainObject(
         objectType = "coda.CodaDocHead",
         editing = Editing.DISABLED
@@ -86,6 +100,8 @@ import lombok.Setter;
         bookmarking = BookmarkPolicy.AS_ROOT
 )
 public class CodaDocHead implements Comparable<CodaDocHead> {
+
+    static final CodaPeriodParser parser = new CodaPeriodParser();
 
     public CodaDocHead(){}
     public CodaDocHead(
@@ -109,17 +125,13 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
         this.numberOfLines = 0;
 
-        //
-        // and set all the 'derived' stuff to its initial value
-        //
-
         resetValidationAndDerivations();
     }
 
     void resetValidationAndDerivations() {
 
         // use setters so that DN is aware
-        setHandling(Handling.ATTENTION);
+        setHandling(Handling.INCLUDED);
 
         setLineValidationStatus(ValidationStatus.NOT_CHECKED);
 
@@ -131,7 +143,14 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
         setReasonInvalid(null);
 
+        setCodaPeriodQuarter(quarterFrom(getCodaPeriod()));
+
         Lists.newArrayList(getLines()).forEach(CodaDocLine::resetValidationAndDerivations);
+    }
+
+    static String quarterFrom(final String codaPeriod) {
+        final CodaPeriodParser.Parsed parsed = parser.parse(codaPeriod);
+        return parsed.asQuarter();
     }
 
     public String title() {
@@ -181,6 +200,12 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Property()
     @Getter @Setter
     private String codaPeriod;
+
+    @Column(allowsNull = "true", length = 8)
+    @javax.jdo.annotations.Persistent
+    @Property()
+    @Getter @Setter
+    private String codaPeriodQuarter;
 
     @Column(allowsNull = "false")
     @Property()
@@ -234,7 +259,8 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     /**
      * Cascade delete of all {@link CodaDocLine}s if the parent {@link CodaDocHead} is deleted.
      */
-    @javax.jdo.annotations.Persistent(mappedBy = "docHead", defaultFetchGroup = "true", dependentElement = "true")
+    @javax.jdo.annotations.Persistent(
+            mappedBy = "docHead", defaultFetchGroup = "true", dependentElement = "true")
     @CollectionLayout(defaultView = "table", paged = 999)
     @Getter @Setter
     private SortedSet<CodaDocLine> lines = new TreeSet<>();
@@ -280,13 +306,35 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Getter @Setter
     private Handling handling;
 
-    @Programmatic
-    public void handleAs(Handling handling) {
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public CodaDocHead handleAs(Handling handling) {
+        // in case invoked directly
         if(this.getHandling() == Handling.SYNCED) {
-            return;
+            return this;
         }
         this.setHandling(handling);
         Lists.newArrayList(getLines()).forEach(codaDocLine -> codaDocLine.setHandling(handling));
+        return this;
+    }
+
+    public String disableHandleAs() {
+        return getHandling() == Handling.SYNCED
+                ? "An Estatio Incoming Invoice has already been created, so the handling of this Coda document cannot be changed"
+                : null;
+    }
+    public Handling default0HandleAs() {
+        return getHandling();
+    }
+    public List<Handling> choices0HandleAs() {
+        Handling currentHandling = getHandling();
+        switch (currentHandling) {
+        case SYNCED:
+            return Collections.singletonList(Handling.SYNCED);
+        case EXCLUDED:
+        case INCLUDED:
+        default:
+            return Arrays.asList(Handling.INCLUDED, Handling.EXCLUDED);
+        }
     }
 
     /**
@@ -297,26 +345,42 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Getter @Setter
     private String location;
 
+    public enum SynchronizationPolicy {
+        /**
+         * When revalidating a {@link CodaDocHead}, if the document ends up as {@link CodaDocHead#isValid() valid},
+         * then synchronize (ie create corresponding {@link IncomingInvoice Estatio invoice} and related objects.
+         */
+        SYNC_IF_VALID,
+        /**
+         * When revalidating a {@link CodaDocHead}, then even if the document ends up as
+         * {@link CodaDocHead#isValid() valid},
+         * do NOT synchronize.
+         *
+         * <p>
+         *     Note that if the {@link CodaDocHead} was valid previously and had been sync'd, then those Estatio
+         *     objects remain.
+         * </p>
+         */
+        DONT_SYNC_EVEN_IF_VALID
+    }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public CodaDocHead revalidate() {
+    public CodaDocHead revalidate(final SynchronizationPolicy policy) {
         revalidateOnly();
-        updateEstatioObjects();
+        updateEstatioObjects(policy);
         return this;
     }
 
     @Programmatic
     public CodaDocHead revalidateOnly() {
         resetValidationAndDerivations();
+        if(getHandling() == Handling.EXCLUDED) {
+            return this;
+        }
+
         validateBuyer();
         validateLines();
 
-        setHandling(
-                isValid()
-                    ? isAutosync()
-                        ? Handling.SYNCED
-                        : Handling.VALID
-                    : Handling.ATTENTION);
         return this;
     }
 
@@ -375,18 +439,25 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
                 });
     }
 
-    void updateEstatioObjects() {
+    void updateEstatioObjects(final SynchronizationPolicy syncPolicy) {
 
         final ErrorSet hardErrors = new ErrorSet();
         final ErrorSet softErrors = new ErrorSet();
         softErrors.addIfNotEmpty(getReasonInvalid());
 
-        final IncomingInvoice incomingInvoice = derivedObjectUpdater.upsertIncomingInvoice(this);
+        final boolean syncIfNew = isValid() && syncPolicy == SynchronizationPolicy.SYNC_IF_VALID;
 
-        setIncomingInvoice(incomingInvoice);
-        derivedObjectUpdater.updateLinkToOrderItem(this, softErrors);
-        derivedObjectUpdater.updatePaperclip(this, softErrors);
-        derivedObjectUpdater.updatePendingTask(this, hardErrors);
+        final IncomingInvoice incomingInvoice = derivedObjectUpdater.upsertIncomingInvoice(this, syncIfNew);
+
+        setIncomingInvoice(incomingInvoice); // if any
+
+        derivedObjectUpdater.updateLinkToOrderItem(this, syncIfNew, softErrors);
+        derivedObjectUpdater.updatePaperclip(this, syncIfNew, softErrors);
+        derivedObjectUpdater.updatePendingTask(this, syncIfNew, hardErrors);
+
+        if(syncIfNew) {
+            setHandling(Handling.SYNCED);
+        }
     }
 
 
@@ -401,15 +472,33 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     }
 
     @Programmatic
-    public Party getSummaryLineAccountCodeEl6Supplier() {
+    public String getSummaryLineAccountCode() {
         final CodaDocLine docLine = summaryDocLine();
-        return docLine != null ? docLine.getAccountCodeEl6Supplier() : null;
+        return docLine != null ? docLine.getAccountCode() : null;
     }
 
     @Programmatic
-    public IncomingInvoiceType getAnalysisLineIncomingInvoiceType() {
-        final CodaDocLine docLine = analysisDocLine();
-        return docLine != null ? docLine.getIncomingInvoiceType() : null;
+    public String getSummaryLineAccountCodeEl3() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getAccountCodeEl3() : null;
+    }
+
+    @Programmatic
+    public String getSummaryLineAccountCodeEl5() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getAccountCodeEl5() : null;
+    }
+
+    @Programmatic
+    public String getSummaryLineAccountCodeEl6() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getAccountCodeEl6() : null;
+    }
+
+    @Programmatic
+    public Party getSummaryLineAccountCodeEl6Supplier() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getAccountCodeEl6Supplier() : null;
     }
 
     @Programmatic
@@ -422,6 +511,12 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     public org.estatio.module.asset.dom.Property getSummaryLineAccountEl3Property() {
         final CodaDocLine docLine = summaryDocLine();
         return docLine != null ? docLine.getAccountEl3Property() : null;
+    }
+
+    @Programmatic
+    public String getSummaryLineElmBankAccount() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getElmBankAccount() : null;
     }
 
     @Programmatic
@@ -459,9 +554,21 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     }
 
     @Programmatic
+    public String getSummaryLineExtRefChargeReference() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getChargeReference() : null;
+    }
+
+    @Programmatic
     public Charge getSummaryLineExtRefWorkTypeCharge() {
         final CodaDocLine docLine = summaryDocLine();
         return docLine != null ? docLine.getExtRefWorkTypeCharge() : null;
+    }
+
+    @Programmatic
+    public String getSummaryLineExtRefProjectReference() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getProjectReference() : null;
     }
 
     @Programmatic
@@ -480,6 +587,12 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     public BigDecimal getSummaryLineDocSumTax() {
         final CodaDocLine docLine = summaryDocLine();
         return docLine != null ? docLine.getDocSumTax() : null;
+    }
+
+    @Programmatic
+    public String getSummaryLineMediaCode() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getMediaCode() : null;
     }
 
     @Programmatic
@@ -505,6 +618,25 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         final CodaDocLine docLine = summaryDocLine();
         return docLine != null ? docLine.getExtRefOrderItem() : null;
     }
+
+    @Programmatic
+    public String getSummaryLineOrderNumber() {
+        final CodaDocLine docLine = summaryDocLine();
+        return docLine != null ? docLine.getOrderNumber() : null;
+    }
+
+    @Programmatic
+    public String getAnalysisLineAccountCode() {
+        final CodaDocLine docLine = analysisDocLine();
+        return docLine != null ? docLine.getAccountCode() : null;
+    }
+
+    @Programmatic
+    public IncomingInvoiceType getAnalysisLineIncomingInvoiceType() {
+        final CodaDocLine docLine = analysisDocLine();
+        return docLine != null ? docLine.getIncomingInvoiceType() : null;
+    }
+
 
     @Data
     public static class Comparison {

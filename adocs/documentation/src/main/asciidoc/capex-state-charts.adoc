@@ -49,7 +49,7 @@ state "IncomingInvoiceApprovalStateTransitionType" as iia {
             state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as iia_abcd<<Automatic>>
             state "APPROVED_BY_ \n CORPORATE_MANAGER" as iia_abcm<<Automatic>>
         }
-        note left of iia_final: mutable only\nprior to\nthis state
+        note bottom of iia_final: mutable only\nprior to\nthis state
 
         state "PENDING_BANK_\nACCOUNT_CHECK" as iia_pbac<<Automatic>>
         state "PAYABLE" as iia_payable

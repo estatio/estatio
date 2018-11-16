@@ -58,14 +58,16 @@ public class DerivedObjectUpdater {
 
 
     IncomingInvoice upsertIncomingInvoice(
-            final CodaDocHead docHead) {
+            final CodaDocHead docHead,
+            final boolean syncIfNew) {
         IncomingInvoice incomingInvoiceIfAny = derivedObjectLookup.invoiceIfAnyFrom(docHead);
-        return upsertIncomingInvoice(docHead, incomingInvoiceIfAny);
+        return upsertIncomingInvoice(docHead, incomingInvoiceIfAny, syncIfNew);
     }
 
     public IncomingInvoice upsertIncomingInvoice(
             final CodaDocHead docHead,
-            final IncomingInvoice existingInvoiceIfAny) {
+            final IncomingInvoice existingInvoiceIfAny,
+            final boolean syncIfNew) {
 
         final IncomingInvoiceItem existingInvoiceItemIfAny = firstItemOf(existingInvoiceIfAny);
 
@@ -151,7 +153,8 @@ public class DerivedObjectUpdater {
         } else {
 
             // if the DocHead is valid, and its handling is set to sync, then we create new Estatio objects
-            if(docHead.getHandling().isSynced()) {
+            // if the DocHead is valid, and sync has been requested, then we create new Estatio objects
+            if(syncIfNew) {
 
                 // as a side-effect, the approvalState will be set to NEW
                 // (subscriber on ObjectPersist)
@@ -179,16 +182,18 @@ public class DerivedObjectUpdater {
 
     void updateLinkToOrderItem(
             final CodaDocHead docHead,
+            final boolean syncIfNew,
             final ErrorSet softErrors) {
 
         final OrderItemInvoiceItemLink linkIfAny = derivedObjectLookup.linkIfAnyFrom(docHead);
 
-        updateLinkToOrderItem(docHead, linkIfAny, softErrors);
+        updateLinkToOrderItem(docHead, linkIfAny, syncIfNew, softErrors);
     }
 
     public void updateLinkToOrderItem(
             final CodaDocHead docHead,
             final OrderItemInvoiceItemLink existingLinkIfAny,
+            final boolean syncIfNew,
             final ErrorSet softErrors) {
 
         final IncomingInvoice incomingInvoice = derivedObjectLookup.invoiceIfAnyFrom(docHead);
@@ -229,8 +234,8 @@ public class DerivedObjectUpdater {
 
         } else {
 
-            // if the DocHead is valid, and its handling is set to sync, then we create new Estatio objects
-            if(docHead.getHandling().isSynced()) {
+            // if the DocHead is valid, and sync has been requested, then we create new Estatio objects
+            if(syncIfNew) {
 
                 //
                 // create the link, if we can
@@ -291,12 +296,13 @@ public class DerivedObjectUpdater {
      */
     void updatePaperclip(
             final CodaDocHead docHead,
+            final boolean syncIfNew,
             final ErrorSet softErrors) {
 
         final Paperclip paperclipIfAny = derivedObjectLookup.paperclipIfAnyFrom(docHead);
         final String documentNameIfAny = derivedObjectLookup.documentNameIfAnyFrom(docHead);
 
-        updatePaperclip(docHead, paperclipIfAny, documentNameIfAny, softErrors);
+        updatePaperclip(docHead, paperclipIfAny, documentNameIfAny, syncIfNew, softErrors);
     }
 
     /**
@@ -306,6 +312,7 @@ public class DerivedObjectUpdater {
             final CodaDocHead docHead,
             final Paperclip existingPaperclipIfAny,
             final String existingDocumentNameIfAny,
+            final boolean syncIfNew,
             final ErrorSet softErrors) {
 
         final DocumentType incomingDocumentType =
@@ -360,7 +367,7 @@ public class DerivedObjectUpdater {
         } else {
 
             // if the DocHead is valid, and its handling is set to sync, then we create new Estatio objects
-            if(docHead.getHandling().isSynced()) {
+            if(syncIfNew) {
 
                 final String documentName = docHead.getSummaryLineDocumentName();
 
@@ -396,6 +403,7 @@ public class DerivedObjectUpdater {
      */
     public void updatePendingTask(
             final CodaDocHead docHead,
+            final boolean syncIfNew,
             final ErrorSet errors) {
 
         final IncomingInvoice incomingInvoice = derivedObjectLookup.invoiceIfAnyFrom(docHead);
