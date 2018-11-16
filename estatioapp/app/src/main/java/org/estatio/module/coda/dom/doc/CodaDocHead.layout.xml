@@ -17,7 +17,7 @@
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="General" id="general">
                                         <cpt:property id="cmpCode"/>
-                                        <cpt:property id="cmpCodeBuyer">
+                                        <cpt:property id="cmpCodeBuyer" hidden="ALL_TABLES">
                                             <cpt:named>Buyer</cpt:named>
                                         </cpt:property>
                                         <cpt:property id="cmpCodeValidationStatus">

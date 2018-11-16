@@ -38,6 +38,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
@@ -235,6 +236,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
     @Column(allowsNull = "false", length = 20)
     @Property()
+    @PropertyLayout(hidden = Where.ALL_TABLES)
     @Getter @Setter
     private ValidationStatus cmpCodeValidationStatus;
     /**
@@ -290,11 +292,13 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
     @Column(allowsNull = "false", length = 20)
     @Property()
+    @PropertyLayout(named = "Summary line present?", hidden = Where.ALL_TABLES)
     @Getter @Setter
     private ValidationStatus summaryLineIsPresentValidationStatus;
 
     @Column(allowsNull = "false", length = 20)
     @Property()
+    @PropertyLayout(named = "Analysis line present?", hidden = Where.ALL_TABLES)
     @Getter @Setter
     private ValidationStatus analysisLineIsPresentValidationStatus;
 
@@ -303,6 +307,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
      */
     @Column(allowsNull = "false", length = 30)
     @Property()
+    @PropertyLayout(hidden = Where.ALL_TABLES)
     @Getter @Setter
     private Handling handling;
 

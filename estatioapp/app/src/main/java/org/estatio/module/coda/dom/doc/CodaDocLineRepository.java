@@ -1,11 +1,8 @@
 package org.estatio.module.coda.dom.doc;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -431,5 +428,17 @@ public class CodaDocLineRepository {
 
     @Inject
     RepositoryService repositoryService;
+
+    public List<CodaDocLine> findByCodaPeriodQuarterAndHandling(
+            final String codaPeriodQuarter,
+            final Handling handling) {
+        return repositoryService.allMatches(
+                new org.apache.isis.applib.query.QueryDefault<>(
+                        CodaDocLine.class,
+                        "findByCodaPeriodQuarterAndHandling",
+                        "codaPeriodQuarter", codaPeriodQuarter,
+                        "handling", handling));
+
+    }
 
 }
