@@ -38,6 +38,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.coda.dom.costcentre.CostCentre;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.party.dom.Organisation;
 
@@ -513,15 +514,24 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     /**
      * Derived from certain characters of el3 of {@link #getAccountCode()}, only populated if
      * {@link #getAccountCodeValidationStatus()} is {@link ValidationStatus#VALID valid}
-     * <p>
-     * There is no validation around this; it's a best effort.
-     * We've chosen to persist this rather than calculate on the fly in order to support querying
-     * of this versus the {@link #getExtRefCostCentre() cost centre} derived from extRef3.
      */
-    @Column(allowsNull = "true", length = 3)
+    @Column(allowsNull = "true", name = "accountCodeEl3CostCentreId")
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
-    private String accountCodeEl3PropertyReference;
+    private CostCentre accountCodeEl3CostCentre;
+
+    /**
+     * Provided as a convenience.
+     * <p>
+     * Most {@link CostCentre}s correspond to a {@link org.estatio.module.asset.dom.Property property}; the exceptions are those that are {@link CostCentre#isGeneral() general} costs.
+     */
+    @Programmatic
+    public org.estatio.module.asset.dom.Property getAccountEl3Property() {
+        final CostCentre costCentre = getAccountCodeEl3CostCentre();
+        return costCentre != null
+                ? costCentre.getProperty()
+                : null;
+    }
 
     @Column(allowsNull = "false", length = 20)
     @Property()

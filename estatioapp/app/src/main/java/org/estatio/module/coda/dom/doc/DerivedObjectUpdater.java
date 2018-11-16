@@ -56,7 +56,7 @@ public class DerivedObjectUpdater {
 
     static final String AT_PATH = "/ITA";
 
-    public IncomingInvoice upsertIncomingInvoice(
+    IncomingInvoice upsertIncomingInvoice(
             final CodaDocHead docHead) {
         IncomingInvoice incomingInvoiceIfAny = derivedObjectLookup.invoiceIfAnyFrom(docHead);
         return upsertIncomingInvoice(docHead, incomingInvoiceIfAny);
@@ -84,7 +84,7 @@ public class DerivedObjectUpdater {
         final Party seller = docHead.getSummaryLineAccountCodeEl6Supplier();
         final IncomingInvoiceType type = docHead.getAnalysisLineIncomingInvoiceType();
         final String invoiceNumber = docHead.getSummaryLineExtRef2();
-        final Property property = docHead.getSummaryLineProperty();
+        final Property property = docHead.getSummaryLineAccountEl3Property();
 
         final BankAccount bankAccount = docHead.getSummaryLineSupplierBankAccount();
 
@@ -153,8 +153,8 @@ public class DerivedObjectUpdater {
 
         } else {
 
-            // if there isn't an invoice already, then we only create one if the docHead is valid.
-            if (docHead.isValid()) {
+            // if the DocHead is valid, and its handling is set to sync, then we create new Estatio objects
+            if (docHead.getHandling().isSynced()) {
 
                 // as a side-effect, the approvalState will be set to NEW
                 // (subscriber on ObjectPersist)
@@ -180,24 +180,7 @@ public class DerivedObjectUpdater {
         return incomingInvoice;
     }
 
-    /**
-     * associate the IncomingInvoice (if we have one) with the CodaDocHEad (irrespective of whether valid or not)
-     * <p>
-     * eg, new CodaDocHead is valid, and just created an IncomingInvoice, so associate together
-     * or, new CodaDocHead is invalid, in which case no IncomingInvoice created, so is just set to null
-     * or, replacement CodaDocHead, also valid, copy over IncomingInvoice from previous valid
-     * or, replacement CodaDocHead, now some how invalid, still copy over IncomingInvoice from previous
-     */
-    public void updateSyncAndHandling(final CodaDocHead docHead, final IncomingInvoice incomingInvoice) {
-        docHead.setIncomingInvoice(incomingInvoice);
-        docHead.handleAs(
-                docHead.isValid()
-                        ? Handling.SYNCED
-                        : Handling.ATTENTION
-        );
-    }
-
-    public void updateLinkToOrderItem(
+    void updateLinkToOrderItem(
             final CodaDocHead docHead,
             final ErrorSet softErrors) {
 
@@ -248,8 +231,8 @@ public class DerivedObjectUpdater {
 
         } else {
 
-            // if we're valid, then replace and Estatio invoice
-            if (docHead.isValid()) {
+            // if the DocHead is valid, and its handling is set to sync, then we create new Estatio objects
+            if (docHead.getHandling().isSynced()) {
 
                 //
                 // create the link, if we can
@@ -308,7 +291,7 @@ public class DerivedObjectUpdater {
     /**
      * attach paperclip to Document named after 'userref1', if exists.
      */
-    public void updatePaperclip(
+    void updatePaperclip(
             final CodaDocHead docHead,
             final ErrorSet softErrors) {
 
@@ -378,7 +361,8 @@ public class DerivedObjectUpdater {
 
         } else {
 
-            if (docHead.isValid()) {
+            // if the DocHead is valid, and its handling is set to sync, then we create new Estatio objects
+            if (docHead.getHandling().isSynced()) {
 
                 final String documentName = docHead.getSummaryLineDocumentName();
 
@@ -417,7 +401,7 @@ public class DerivedObjectUpdater {
 
         final IncomingInvoice incomingInvoice = derivedObjectLookup.invoiceIfAnyFrom(docHead);
 
-        if (errors.isEmpty()) {
+        if (incomingInvoice == null || errors.isEmpty()) {
             return;
         }
 

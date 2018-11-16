@@ -41,6 +41,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.coda.dom.doc.appsettings.ApplicationSettingKey;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Organisation;
@@ -48,6 +49,8 @@ import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.role.PartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
+import org.estatio.module.settings.dom.ApplicationSetting;
+import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
 
 import lombok.Data;
 import lombok.Getter;
@@ -307,7 +310,20 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         resetValidationAndDerivations();
         validateBuyer();
         validateLines();
+
+        setHandling(
+                isValid()
+                    ? isAutosync()
+                        ? Handling.SYNCED
+                        : Handling.VALID
+                    : Handling.ATTENTION);
         return this;
+    }
+
+    private boolean isAutosync() {
+        ApplicationSetting autosyncSetting =
+                ApplicationSettingKey.autosync.find(applicationSettingsServiceRW);
+        return autosyncSetting != null && autosyncSetting.valueAsBoolean();
     }
 
     void validateBuyer() {
@@ -367,7 +383,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
         final IncomingInvoice incomingInvoice = derivedObjectUpdater.upsertIncomingInvoice(this);
 
-        derivedObjectUpdater.updateSyncAndHandling(this, incomingInvoice);
+        setIncomingInvoice(incomingInvoice);
         derivedObjectUpdater.updateLinkToOrderItem(this, softErrors);
         derivedObjectUpdater.updatePaperclip(this, softErrors);
         derivedObjectUpdater.updatePendingTask(this, hardErrors);
@@ -403,12 +419,9 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     }
 
     @Programmatic
-    public org.estatio.module.asset.dom.Property getSummaryLineProperty() {
+    public org.estatio.module.asset.dom.Property getSummaryLineAccountEl3Property() {
         final CodaDocLine docLine = summaryDocLine();
-        final String elPropRefIfAny = docLine != null ? docLine.getAccountCodeEl3PropertyReference() : null;
-        return elPropRefIfAny != null
-                        ? propertyRepository.findPropertyByReference(elPropRefIfAny)
-                        : null;
+        return docLine != null ? docLine.getAccountEl3Property() : null;
     }
 
     @Programmatic
@@ -420,7 +433,11 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Programmatic
     public PaymentMethod getSummaryLinePaymentMethod() {
         final CodaDocLine docLine = summaryDocLine();
-        return docLine != null ? docLine.getCodaPaymentMethod().asPaymentMethod() : null;
+        if (docLine == null) {
+            return null;
+        }
+        final CodaPaymentMethod codaPaymentMethod = docLine.getCodaPaymentMethod();
+        return codaPaymentMethod != null ? codaPaymentMethod.asPaymentMethod() : null;
     }
 
     @Programmatic
@@ -463,12 +480,6 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     public BigDecimal getSummaryLineDocSumTax() {
         final CodaDocLine docLine = summaryDocLine();
         return docLine != null ? docLine.getDocSumTax() : null;
-    }
-
-    @Programmatic
-    public String getSummaryLineAccountCodeEl3PropertyReference() {
-        final CodaDocLine docLine = summaryDocLine();
-        return docLine != null ? docLine.getAccountCodeEl3PropertyReference() : null;
     }
 
     @Programmatic
@@ -607,5 +618,9 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @NotPersistent
     @Inject
     PropertyRepository propertyRepository;
+
+    @NotPersistent
+    @Inject
+    ApplicationSettingsServiceRW applicationSettingsServiceRW;
 
 }

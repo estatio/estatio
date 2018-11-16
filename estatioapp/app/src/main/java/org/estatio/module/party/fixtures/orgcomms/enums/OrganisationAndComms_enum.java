@@ -25,8 +25,6 @@ import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.party.dom.Organisation;
-import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.party.fixtures.orgcomms.builders.OrganisationAndCommsBuilder;
 
@@ -194,10 +192,7 @@ public enum OrganisationAndComms_enum
 
     @Override
     public Organisation findUsing(final ServiceRegistry2 serviceRegistry) {
-        final PartyRepository partyRepository = serviceRegistry
-                .lookupService(PartyRepository.class);
-        final Party party = partyRepository.findPartyByReference(organisation_d.getRef());
-        return (Organisation) party;
+        return organisation_d.findUsing(serviceRegistry);
     }
 
 }
