@@ -429,16 +429,33 @@ public class CodaDocLineRepository {
     @Inject
     RepositoryService repositoryService;
 
-    public List<CodaDocLine> findByCodaPeriodQuarterAndHandling(
+    public List<CodaDocLine> findByCodaPeriodQuarterAndHandlingAndValidity(
             final String codaPeriodQuarter,
-            final Handling handling) {
-        return repositoryService.allMatches(
-                new org.apache.isis.applib.query.QueryDefault<>(
-                        CodaDocLine.class,
-                        "findByCodaPeriodQuarterAndHandling",
-                        "codaPeriodQuarter", codaPeriodQuarter,
-                        "handling", handling));
-
+            final Handling handling,
+            final Validity validity) {
+        switch (validity){
+        case VALID:
+            return repositoryService.allMatches(
+                    new org.apache.isis.applib.query.QueryDefault<>(
+                            CodaDocLine.class,
+                            "findByCodaPeriodQuarterAndHandlingAndValid",
+                            "codaPeriodQuarter", codaPeriodQuarter,
+                            "handling", handling));
+        case NOT_VALID:
+            return repositoryService.allMatches(
+                    new org.apache.isis.applib.query.QueryDefault<>(
+                            CodaDocLine.class,
+                            "findByCodaPeriodQuarterAndHandlingAndNotValid",
+                            "codaPeriodQuarter", codaPeriodQuarter,
+                            "handling", handling));
+        case BOTH:
+        default:
+            return repositoryService.allMatches(
+                    new org.apache.isis.applib.query.QueryDefault<>(
+                            CodaDocLine.class,
+                            "findByCodaPeriodQuarterAndHandling",
+                            "codaPeriodQuarter", codaPeriodQuarter,
+                            "handling", handling));
+        }
     }
-
 }

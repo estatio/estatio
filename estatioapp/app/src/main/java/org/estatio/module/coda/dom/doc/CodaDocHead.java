@@ -33,14 +33,16 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 
-import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
@@ -87,7 +89,22 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
                         + "WHERE codaPeriodQuarter == :codaPeriodQuarter "
-                        + "   && handling          == :handling ")
+                        + "   && handling          == :handling "),
+        @Query(
+                name = "findByCodaPeriodQuarterAndHandlingAndValid", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
+                        + "WHERE codaPeriodQuarter == :codaPeriodQuarter "
+                        + "   && handling          == :handling "
+                        + "   && reasonInvalid     == null "),
+        @Query(
+                name = "findByCodaPeriodQuarterAndHandlingAndNotValid", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
+                        + "WHERE codaPeriodQuarter == :codaPeriodQuarter "
+                        + "   && handling          == :handling "
+                        + "   && reasonInvalid     != null "
+        )
 })
 @Unique(name = "CodaDocHead_cmpCode_docCode_docNum_UNQ", members = { "cmpCode", "docCode", "docNum" })
 @Indices({
@@ -104,7 +121,9 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
     static final CodaPeriodParser parser = new CodaPeriodParser();
 
-    public CodaDocHead(){}
+    public CodaDocHead() {
+    }
+
     public CodaDocHead(
             final String cmpCode,
             final String docCode,
@@ -193,7 +212,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     /**
      * For example, '2019/1' meaning the first period of the financial year 2018-2019, ie July 2018
      * ("take away 6 months from the date you think it is").
-     *
+     * <p>
      * The biggest we have seen in the DB is 2014/9999.  Clearly a hack, and none for 'FR-GEN', but anyway...
      */
     @Column(allowsNull = "false", length = 9)
@@ -213,8 +232,6 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Getter @Setter
     private int numberOfLines;
 
-
-
     @Column(allowsNull = "true", length = 4000)
     @Property()
     @PropertyLayout(multiLine = 5)
@@ -225,7 +242,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     public void appendInvalidReason(final String reasonFormat, Object... args) {
         final String reason = String.format(reasonFormat, args);
         String reasonInvalid = getReasonInvalid();
-        if(reasonInvalid != null) {
+        if (reasonInvalid != null) {
             reasonInvalid += "\n";
         } else {
             reasonInvalid = "";
@@ -239,6 +256,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @PropertyLayout(hidden = Where.ALL_TABLES)
     @Getter @Setter
     private ValidationStatus cmpCodeValidationStatus;
+
     /**
      * to avoid clutter; highly unlikely this will be invalid.
      */
@@ -246,14 +264,12 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         return getCmpCodeBuyer() != null;
     }
 
-    @Column(allowsNull = "true", name="cmpCodeBuyerId")
+    @Column(allowsNull = "true", name = "cmpCodeBuyerId")
     @Property()
     @Getter @Setter
     private Organisation cmpCodeBuyer;
 
-
-
-    @Column(allowsNull = "true", name="incomingInvoiceId")
+    @Column(allowsNull = "true", name = "incomingInvoiceId")
     @Property
     @Getter @Setter
     private IncomingInvoice incomingInvoice;
@@ -262,7 +278,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
      * Cascade delete of all {@link CodaDocLine}s if the parent {@link CodaDocHead} is deleted.
      */
     @javax.jdo.annotations.Persistent(
-            mappedBy = "docHead", defaultFetchGroup = "true", dependentElement = "true")
+            mappedBy = "docHead", defaultFetchGroup = "false", dependentElement = "true")
     @CollectionLayout(defaultView = "table", paged = 999)
     @Getter @Setter
     private SortedSet<CodaDocLine> lines = new TreeSet<>();
@@ -283,7 +299,6 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
                 .findFirst()
                 .orElse(null);
     }
-
 
     @Column(allowsNull = "false", length = 20)
     @Property()
@@ -314,7 +329,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public CodaDocHead handleAs(Handling handling) {
         // in case invoked directly
-        if(this.getHandling() == Handling.SYNCED) {
+        if (this.getHandling() == Handling.SYNCED) {
             return this;
         }
         this.setHandling(handling);
@@ -324,12 +339,16 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
     public String disableHandleAs() {
         return getHandling() == Handling.SYNCED
-                ? "An Estatio Incoming Invoice has already been created, so the handling of this Coda document cannot be changed"
-                : null;
+                ?
+                "An Estatio Incoming Invoice has already been created, so the handling of this Coda document cannot be changed"
+                :
+                null;
     }
+
     public Handling default0HandleAs() {
         return getHandling();
     }
+
     public List<Handling> choices0HandleAs() {
         Handling currentHandling = getHandling();
         switch (currentHandling) {
@@ -362,8 +381,8 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
          * do NOT synchronize.
          *
          * <p>
-         *     Note that if the {@link CodaDocHead} was valid previously and had been sync'd, then those Estatio
-         *     objects remain.
+         * Note that if the {@link CodaDocHead} was valid previously and had been sync'd, then those Estatio
+         * objects remain.
          * </p>
          */
         DONT_SYNC_EVEN_IF_VALID
@@ -375,11 +394,14 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         updateEstatioObjects(policy);
         return this;
     }
+    public SynchronizationPolicy default0Revalidate() {
+        return SynchronizationPolicy.SYNC_IF_VALID;
+    }
 
     @Programmatic
     public CodaDocHead revalidateOnly() {
         resetValidationAndDerivations();
-        if(getHandling() == Handling.EXCLUDED) {
+        if (getHandling() == Handling.EXCLUDED) {
             return this;
         }
 
@@ -401,19 +423,19 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         final Party buyerParty = partyRepository.findPartyByReference(buyerRef);
         final PartyRoleType ecpRoleType =
                 IncomingInvoiceRoleTypeEnum.ECP.findUsing(partyRoleTypeRepository);
-        if(buyerParty == null) {
+        if (buyerParty == null) {
             setCmpCodeValidationStatus(ValidationStatus.INVALID);
             appendInvalidReason("No buyer party found for cmpCode '%s'", buyerRef);
-        } else if(!(buyerParty instanceof Organisation)) {
+        } else if (!(buyerParty instanceof Organisation)) {
             setCmpCodeValidationStatus(ValidationStatus.INVALID);
             appendInvalidReason("Party found for cmpCode '%s' is not an Organisation", buyerRef);
-        } else if(! buyerParty.hasPartyRoleType(ecpRoleType)) {
+        } else if (!buyerParty.hasPartyRoleType(ecpRoleType)) {
             setCmpCodeValidationStatus(ValidationStatus.INVALID);
             appendInvalidReason("Organisation '%s' does not have ECP role", buyerRef);
         }
 
         // if get this far and not yet invalid, then must be valid.
-        if(getCmpCodeValidationStatus() != ValidationStatus.INVALID) {
+        if (getCmpCodeValidationStatus() != ValidationStatus.INVALID) {
             setCmpCodeValidationStatus(ValidationStatus.VALID);
             setCmpCodeBuyer((Organisation) buyerParty);
         }
@@ -422,12 +444,12 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     void validateLines() {
 
         final CodaDocLine summaryDocLine = summaryDocLine();
-        if(summaryDocLine != null) {
+        if (summaryDocLine != null) {
             lineValidator.validateSummaryDocLine(summaryDocLine);
         }
 
         final CodaDocLine analysisDocLine = analysisDocLine();
-        if(analysisDocLine != null) {
+        if (analysisDocLine != null) {
             lineValidator.validateAnalysisDocLine(analysisDocLine);
         }
 
@@ -460,11 +482,10 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         derivedObjectUpdater.updatePaperclip(this, syncIfNew, softErrors);
         derivedObjectUpdater.updatePendingTask(this, syncIfNew, hardErrors);
 
-        if(syncIfNew) {
+        if (syncIfNew) {
             setHandling(Handling.SYNCED);
         }
     }
-
 
     @Programmatic
     public boolean isValid() {
@@ -642,7 +663,6 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         return docLine != null ? docLine.getIncomingInvoiceType() : null;
     }
 
-
     @Data
     public static class Comparison {
         public enum Type {
@@ -651,21 +671,33 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
             SAME,
             NO_PREVIOUS
         }
+
         private final Type type;
         /**
          * Only populated if {@link #getType()} is {@link Type#DIFFERS_INVALIDATING_APPROVALS}.
          */
         private final String reason;
-        public static Comparison same() { return new Comparison(Comparison.Type.SAME, null);}
-        public static Comparison invalidatesApprovals(final String reason) { return new Comparison(Type.DIFFERS_INVALIDATING_APPROVALS, reason);}
-        public static Comparison retainsApprovals() { return new Comparison(Type.DIFFERS_RETAIN_APPROVALS, null);}
-        public static Comparison noPrevious() { return new Comparison(Type.NO_PREVIOUS, null);}
-    }
 
+        public static Comparison same() {
+            return new Comparison(Comparison.Type.SAME, null);
+        }
+
+        public static Comparison invalidatesApprovals(final String reason) {
+            return new Comparison(Type.DIFFERS_INVALIDATING_APPROVALS, reason);
+        }
+
+        public static Comparison retainsApprovals() {
+            return new Comparison(Type.DIFFERS_RETAIN_APPROVALS, null);
+        }
+
+        public static Comparison noPrevious() {
+            return new Comparison(Type.NO_PREVIOUS, null);
+        }
+    }
 
     @Programmatic
     public boolean isSameAs(final CodaDocHead other) {
-        if(other == null) {
+        if (other == null) {
             return false;
         }
         return other == this || other.getCodaTimeStamp() == getCodaTimeStamp();
@@ -674,7 +706,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Programmatic
     Comparison compareWithPrevious() {
         CodaDocHead existing = codaDocHeadRepository.findByCandidate(this);
-        if(isSameAs(existing)) {
+        if (isSameAs(existing)) {
             return new Comparison(Comparison.Type.SAME, null);
         }
         return compareWith(existing);
@@ -682,28 +714,29 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
     @Programmatic
     public Comparison compareWith(final CodaDocHead existing) {
-        if(existing == null) {
+        if (existing == null) {
             return Comparison.noPrevious();
         }
-        if(isSameAs(existing)) {
+        if (isSameAs(existing)) {
             return Comparison.same();
         }
         CodaDocLine summaryDocLine = summaryDocLine();
         CodaDocLine existingSummaryDocLine = existing.summaryDocLine();
-        if(summaryDocLine != null && existingSummaryDocLine == null) {
+        if (summaryDocLine != null && existingSummaryDocLine == null) {
             return Comparison.invalidatesApprovals("Previous had no summary doc line");
         }
-        if(summaryDocLine == null && existingSummaryDocLine != null) {
+        if (summaryDocLine == null && existingSummaryDocLine != null) {
             return Comparison.invalidatesApprovals("Replacement has no summary doc line");
         }
-        if(summaryDocLine != null && existingSummaryDocLine != null) {
-            if(!Objects.equals(summaryDocLine.getSupplierBankAccount(), existingSummaryDocLine.getSupplierBankAccount())) {
+        if (summaryDocLine != null && existingSummaryDocLine != null) {
+            if (!Objects
+                    .equals(summaryDocLine.getSupplierBankAccount(), existingSummaryDocLine.getSupplierBankAccount())) {
                 return Comparison.invalidatesApprovals("Supplier bank account has changed");
             }
-            if(!Objects.equals(summaryDocLine.getDocValue(), existingSummaryDocLine.getDocValue())) {
+            if (!Objects.equals(summaryDocLine.getDocValue(), existingSummaryDocLine.getDocValue())) {
                 return Comparison.invalidatesApprovals("Gross amount has changed");
             }
-            if(!Objects.equals(summaryDocLine.getDocSumTax(), existingSummaryDocLine.getDocSumTax())) {
+            if (!Objects.equals(summaryDocLine.getDocSumTax(), existingSummaryDocLine.getDocSumTax())) {
                 return Comparison.invalidatesApprovals("VAT amount has changed");
             }
         }
@@ -724,7 +757,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Override
     public String toString() {
         return "CodaDocHead{" +
-                "companyCode='" + getCmpCode()+ '\'' +
+                "companyCode='" + getCmpCode() + '\'' +
                 ", docCode='" + getDocCode() + '\'' +
                 ", docNum='" + getDocNum() + '\'' +
                 '}';
@@ -754,10 +787,43 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
     @NotPersistent
     @Inject
-    PropertyRepository propertyRepository;
-
-    @NotPersistent
-    @Inject
     ApplicationSettingsServiceRW applicationSettingsServiceRW;
 
+    @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "100")
+    public static class TableColumnService implements TableColumnOrderService {
+
+        @Override
+        public List<String> orderParented(
+                final Object parent,
+                final String collectionId,
+                final Class<?> collectionType,
+                final List<String> propertyIds) {
+            if (parent instanceof CodaDocHead && "lines".equals(collectionId)) {
+                return Arrays.asList(
+                        "docHead"
+                        , "lineNum"
+                        , "accountCode"
+                        , "description"
+                        , "docValue"
+                        , "docSumTax"
+                        , "valueDate"
+                        , "extRef3"
+                        , "extRef4"
+                        , "extRef5"
+                        , "userRef1"
+                        , "userStatus"
+                        , "elmBankAccount"
+                        , "mediaCode"
+                        , "reasonInvalid"
+                );
+            }
+            return null;
+        }
+
+        @Override
+        public List<String> orderStandalone(final Class<?> collectionType, final List<String> propertyIds) {
+            return null;
+        }
+
+    }
 }

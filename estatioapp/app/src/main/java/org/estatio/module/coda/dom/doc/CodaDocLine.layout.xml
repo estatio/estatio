@@ -27,6 +27,7 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Other" id="other" unreferencedProperties="true">
+                                        <cpt:property id="handling" hidden="OBJECT_FORMS"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>
@@ -79,24 +80,11 @@
         <bs3:col span="8">
             <bs3:row>
                 <bs3:col span="12">
-                    <bs3:tabGroup collapseIfOne="false">
-                        <bs3:tab name="Validation Summary">
-                            <bs3:row>
-                                <bs3:col span="4">
-                                    <cpt:fieldSet name="" id="handling">
-                                        <cpt:property id="handling" labelPosition="TOP"/>
-                                    </cpt:fieldSet>
-                                </bs3:col>
-                                <bs3:col span="8">
-                                    <cpt:fieldSet name="" id="Validation Summary">
-                                        <cpt:property id="reasonInvalid" labelPosition="TOP">
-                                            <cpt:named>Reason(s) invalid</cpt:named>
-                                        </cpt:property>
-                                    </cpt:fieldSet>
-                                </bs3:col>
-                            </bs3:row>
-                        </bs3:tab>
-                    </bs3:tabGroup>
+                    <cpt:fieldSet name="" id="Validation Summary">
+                        <cpt:property id="reasonInvalid" labelPosition="TOP">
+                            <cpt:named>Reason(s) invalid</cpt:named>
+                        </cpt:property>
+                    </cpt:fieldSet>
                 </bs3:col>
             </bs3:row>
             <bs3:row>

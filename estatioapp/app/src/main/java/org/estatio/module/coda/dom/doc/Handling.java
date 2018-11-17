@@ -6,7 +6,7 @@ public enum Handling {
     /**
      * The {@link CodaDocHead Coda document} has been marked as to be ignored; it will not be validated nor sync'd.
      */
-    EXCLUDED,
+    EXCLUDED("Excluded"),
     /**
      * The {@link CodaDocHead Coda document} should not be ignored.
      *
@@ -15,7 +15,7 @@ public enum Handling {
      *     not been sync'd.
      * </p>
      */
-    INCLUDED,
+    INCLUDED("Not sync'd"),
     /**
      * The {@link CodaDocHead Coda document} was {@link CodaDocHead#isValid() valid} and an
      * {@link IncomingInvoice Estatio invoice} (and related objects) has been created for it.
@@ -24,7 +24,19 @@ public enum Handling {
      *     It is no longer possible to exclude a Coda document once it has sync'd.
      * </p>
      */
-    SYNCED,
+    SYNCED("Sync'd"),
     ;
+
+    private final String title;
+
+    Handling(final String title) {
+        this.title = title;
+    }
+    public String title() {
+        return title;
+    }
+    public String toString() {
+        return title;
+    }
 
 }

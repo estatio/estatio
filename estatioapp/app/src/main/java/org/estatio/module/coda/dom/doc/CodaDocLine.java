@@ -63,6 +63,20 @@ import lombok.Setter;
                         + "WHERE docHead == :docHead "
                         + "   && lineNum == :lineNum "),
         @Query(
+                name = "findByCodaPeriodQuarterAndHandlingAndValid", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
+                        + "WHERE docHead.codaPeriodQuarter == :codaPeriodQuarter "
+                        + "   && docHead.handling          == :handling "
+                        + "   && docHead.reasonInvalid     == null "),
+        @Query(
+                name = "findByCodaPeriodQuarterAndHandlingAndNotValid", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
+                        + "WHERE docHead.codaPeriodQuarter == :codaPeriodQuarter "
+                        + "   && docHead.handling          == :handling "
+                        + "   && docHead.reasonInvalid     != null "),
+        @Query(
                 name = "findByCodaPeriodQuarterAndHandling", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
