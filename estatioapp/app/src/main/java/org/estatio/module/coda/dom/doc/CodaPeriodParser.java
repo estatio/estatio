@@ -24,7 +24,9 @@ public class CodaPeriodParser {
 
             @Override
             public Parsed parse(final String codaPeriod) {
-
+                if(codaPeriod == null) {
+                    return null;
+                }
                 final Matcher matcher = PATTERN.matcher(codaPeriod);
                 if (matcher.matches()) {
                     return new Parsed(
@@ -38,12 +40,12 @@ public class CodaPeriodParser {
         },
         NOT_RECOGNIZED {
             @Override
-            public Parsed parse(final String accountCode) {
+            public Parsed parse(final String codaPeriod) {
                 return new Parsed(0, 0, this);
             }
         };
 
-        public abstract Parsed parse(final String accountCode);
+        public abstract Parsed parse(final String Period);
     }
 
 
