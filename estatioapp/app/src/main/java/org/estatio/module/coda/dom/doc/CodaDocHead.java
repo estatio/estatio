@@ -473,9 +473,8 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
     void updateEstatioObjects(final SynchronizationPolicy syncPolicy) {
 
-        final ErrorSet hardErrors = new ErrorSet();
-        final ErrorSet softErrors = new ErrorSet();
-        softErrors.addIfNotEmpty(getReasonInvalid());
+        final ErrorSet errors = new ErrorSet();
+        errors.addIfNotEmpty(getReasonInvalid());
 
         final boolean syncIfNew = isValid() && syncPolicy == SynchronizationPolicy.SYNC_IF_VALID;
 
@@ -483,9 +482,9 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
         setIncomingInvoice(incomingInvoice); // if any
 
-        derivedObjectUpdater.updateLinkToOrderItem(this, syncIfNew, softErrors);
-        derivedObjectUpdater.updatePaperclip(this, syncIfNew, softErrors);
-        derivedObjectUpdater.updatePendingTask(this, syncIfNew, hardErrors);
+        derivedObjectUpdater.updateLinkToOrderItem(this, syncIfNew, errors);
+        derivedObjectUpdater.updatePaperclip(this, syncIfNew, errors);
+        derivedObjectUpdater.updatePendingTask(this, syncIfNew, errors);
 
         if (syncIfNew) {
             setHandling(Handling.SYNCED);

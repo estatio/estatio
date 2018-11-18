@@ -418,7 +418,8 @@ public class DerivedObjectUpdater {
                 stateTransitionService.pendingTransitionOf(
                         incomingInvoice, IncomingInvoiceApprovalStateTransition.class);
 
-        final IncomingInvoiceApprovalStateTransitionType transitionType = pendingTransition.getTransitionType();
+        final IncomingInvoiceApprovalStateTransitionType transitionType =
+                pendingTransition.getTransitionType();
         switch (transitionType) {
         case COMPLETE:
             // this should always be the case; there are no other pending transitions from a state of NEW.
