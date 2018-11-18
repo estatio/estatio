@@ -3,6 +3,8 @@ package org.estatio.module.coda.dom.doc;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -94,6 +96,9 @@ public class CodaDocHeadRepository {
     }
 
     private void delete(final CodaDocHead codaDocHead) {
+        for (final CodaDocLine line : Lists.newArrayList(codaDocHead.getLines())) {
+            repositoryService.removeAndFlush(line);
+        }
         repositoryService.removeAndFlush(codaDocHead);
     }
 

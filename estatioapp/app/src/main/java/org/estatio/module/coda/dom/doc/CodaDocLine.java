@@ -8,6 +8,7 @@ import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
@@ -65,21 +66,21 @@ import lombok.Setter;
         @Query(
                 name = "findByCodaPeriodQuarterAndHandlingAndValid", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
+                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
                         + "WHERE docHead.codaPeriodQuarter == :codaPeriodQuarter "
                         + "   && docHead.handling          == :handling "
                         + "   && docHead.reasonInvalid     == null "),
         @Query(
                 name = "findByCodaPeriodQuarterAndHandlingAndNotValid", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
+                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
                         + "WHERE docHead.codaPeriodQuarter == :codaPeriodQuarter "
                         + "   && docHead.handling          == :handling "
                         + "   && docHead.reasonInvalid     != null "),
         @Query(
                 name = "findByCodaPeriodQuarterAndHandling", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
+                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
                         + "WHERE docHead.codaPeriodQuarter == :codaPeriodQuarter "
                         + "   && docHead.handling          == :handling "),
 })
@@ -200,6 +201,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Inject
     TitleService titleService;
 
+    @Persistent(defaultFetchGroup = "true")
     @Column(allowsNull = "false", name = "docHeadId")
     @Property
     @PropertyLayout(hidden = Where.REFERENCES_PARENT)

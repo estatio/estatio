@@ -27,7 +27,7 @@ public class DerivedObjectLookup {
 
         final OrderItem orderItemIfAny =
                 docHead != null
-                        ? docHead.getSummaryLineExtRefOrderItem()
+                        ? docHead.getSummaryLineExtRefOrderItem(LineCache.DEFAULT)
                         : null;
         final IncomingInvoiceItem invoiceItemIfAny = firstItemOf(invoiceIfAny);
         return orderItemIfAny != null && invoiceItemIfAny != null
@@ -37,7 +37,7 @@ public class DerivedObjectLookup {
 
     public String documentNameIfAnyFrom(final CodaDocHead docHead) {
         return docHead != null
-                ? docHead.getSummaryLineDocumentName()
+                ? docHead.getSummaryLineDocumentName(LineCache.DEFAULT)
                 : null;
     }
 

@@ -274,30 +274,35 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Getter @Setter
     private IncomingInvoice incomingInvoice;
 
-    /**
-     * Cascade delete of all {@link CodaDocLine}s if the parent {@link CodaDocHead} is deleted.
-     */
     @javax.jdo.annotations.Persistent(
-            mappedBy = "docHead", defaultFetchGroup = "false", dependentElement = "true")
+            mappedBy = "docHead", defaultFetchGroup = "false", dependentElement = "true"
+    )
     @CollectionLayout(defaultView = "table", paged = 999)
     @Getter @Setter
     private SortedSet<CodaDocLine> lines = new TreeSet<>();
 
     @Programmatic
-    public CodaDocLine summaryDocLine() {
-        return findFirstLineByType(LineType.SUMMARY);
+    public CodaDocLine summaryDocLine(final LineCache lineCache) {
+        return findFirstLineByType(LineType.SUMMARY, lineCache);
     }
 
     @Programmatic
-    public CodaDocLine analysisDocLine() {
-        return findFirstLineByType(LineType.ANALYSIS);
+    public CodaDocLine analysisDocLine(final LineCache lineCache) {
+        return findFirstLineByType(LineType.ANALYSIS, lineCache);
     }
 
-    CodaDocLine findFirstLineByType(final LineType lineType) {
-        return Lists.newArrayList(getLines()).stream()
+    CodaDocLine findFirstLineByType(final LineType lineType, final LineCache lineCache) {
+        return Lists.newArrayList(linesFor(lineCache)).stream()
                 .filter(x -> x.getLineType() == lineType)
                 .findFirst()
                 .orElse(null);
+    }
+
+    private SortedSet<CodaDocLine> linesFor() {
+        return linesFor(LineCache.DEFAULT);
+    }
+    private SortedSet<CodaDocLine> linesFor(final LineCache lineCache) {
+        return lineCache.linesFor(this);
     }
 
     @Column(allowsNull = "false", length = 20)
@@ -443,12 +448,12 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
     void validateLines() {
 
-        final CodaDocLine summaryDocLine = summaryDocLine();
+        final CodaDocLine summaryDocLine = summaryDocLine(LineCache.DEFAULT);
         if (summaryDocLine != null) {
             lineValidator.validateSummaryDocLine(summaryDocLine);
         }
 
-        final CodaDocLine analysisDocLine = analysisDocLine();
+        final CodaDocLine analysisDocLine = analysisDocLine(LineCache.DEFAULT);
         if (analysisDocLine != null) {
             lineValidator.validateAnalysisDocLine(analysisDocLine);
         }
@@ -498,62 +503,62 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     }
 
     @Programmatic
-    public String getSummaryLineAccountCode() {
-        final CodaDocLine docLine = summaryDocLine();
+    public String getSummaryLineAccountCode(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getAccountCode() : null;
     }
 
     @Programmatic
-    public String getSummaryLineAccountCodeEl3() {
-        final CodaDocLine docLine = summaryDocLine();
+    public String getSummaryLineAccountCodeEl3(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getAccountCodeEl3() : null;
     }
 
     @Programmatic
-    public String getSummaryLineAccountCodeEl5() {
-        final CodaDocLine docLine = summaryDocLine();
+    public String getSummaryLineAccountCodeEl5(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getAccountCodeEl5() : null;
     }
 
     @Programmatic
-    public String getSummaryLineAccountCodeEl6() {
-        final CodaDocLine docLine = summaryDocLine();
+    public String getSummaryLineAccountCodeEl6(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getAccountCodeEl6() : null;
     }
 
     @Programmatic
-    public Party getSummaryLineAccountCodeEl6Supplier() {
-        final CodaDocLine docLine = summaryDocLine();
+    public Party getSummaryLineAccountCodeEl6Supplier(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getAccountCodeEl6Supplier() : null;
     }
 
     @Programmatic
-    public String getSummaryLineExtRef2() {
-        final CodaDocLine docLine = summaryDocLine();
+    public String getSummaryLineExtRef2(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getExtRef2() : null;
     }
 
     @Programmatic
-    public org.estatio.module.asset.dom.Property getSummaryLineAccountEl3Property() {
-        final CodaDocLine docLine = summaryDocLine();
+    public org.estatio.module.asset.dom.Property getSummaryLineAccountEl3Property(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getAccountEl3Property() : null;
     }
 
     @Programmatic
-    public String getSummaryLineElmBankAccount() {
-        final CodaDocLine docLine = summaryDocLine();
+    public String getSummaryLineElmBankAccount(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getElmBankAccount() : null;
     }
 
     @Programmatic
-    public BankAccount getSummaryLineSupplierBankAccount() {
-        final CodaDocLine docLine = summaryDocLine();
+    public BankAccount getSummaryLineSupplierBankAccount(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getSupplierBankAccount() : null;
     }
 
     @Programmatic
-    public PaymentMethod getSummaryLinePaymentMethod() {
-        final CodaDocLine docLine = summaryDocLine();
+    public PaymentMethod getSummaryLinePaymentMethod(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         if (docLine == null) {
             return null;
         }
@@ -562,104 +567,104 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     }
 
     @Programmatic
-    public LocalDate getSummaryLineValueDate() {
-        final CodaDocLine docLine = summaryDocLine();
+    public LocalDate getSummaryLineValueDate(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getValueDate() : null;
     }
 
     @Programmatic
-    public LocalDate getSummaryLineDueDate() {
-        final CodaDocLine docLine = summaryDocLine();
+    public LocalDate getSummaryLineDueDate(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getDueDate() : null;
     }
 
     @Programmatic
-    public String getSummaryLineDescription() {
-        final CodaDocLine docLine = summaryDocLine();
+    public String getSummaryLineDescription(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getDescription() : null;
     }
 
     @Programmatic
-    public String getSummaryLineExtRefChargeReference() {
-        final CodaDocLine docLine = summaryDocLine();
+    public String getSummaryLineExtRefChargeReference(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getChargeReference() : null;
     }
 
     @Programmatic
-    public Charge getSummaryLineExtRefWorkTypeCharge() {
-        final CodaDocLine docLine = summaryDocLine();
+    public Charge getSummaryLineExtRefWorkTypeCharge(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getExtRefWorkTypeCharge() : null;
     }
 
     @Programmatic
-    public String getSummaryLineExtRefProjectReference() {
-        final CodaDocLine docLine = summaryDocLine();
+    public String getSummaryLineExtRefProjectReference(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getProjectReference() : null;
     }
 
     @Programmatic
-    public Project getSummaryLineExtRefProject() {
-        final CodaDocLine docLine = summaryDocLine();
+    public Project getSummaryLineExtRefProject(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getExtRefProject() : null;
     }
 
     @Programmatic
-    public BigDecimal getSummaryLineDocValue() {
-        final CodaDocLine docLine = summaryDocLine();
+    public BigDecimal getSummaryLineDocValue(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getDocValue() : null;
     }
 
     @Programmatic
-    public BigDecimal getSummaryLineDocSumTax() {
-        final CodaDocLine docLine = summaryDocLine();
+    public BigDecimal getSummaryLineDocSumTax(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getDocSumTax() : null;
     }
 
     @Programmatic
-    public String getSummaryLineMediaCode() {
-        final CodaDocLine docLine = summaryDocLine();
+    public String getSummaryLineMediaCode(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getMediaCode() : null;
     }
 
     @Programmatic
-    public String getSummaryLineExtRefCostCentre() {
-        final CodaDocLine docLine = summaryDocLine();
+    public String getSummaryLineExtRefCostCentre(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getExtRefCostCentre() : null;
     }
 
     @Programmatic
-    public String getSummaryLineUserRef1() {
-        final CodaDocLine docLine = summaryDocLine();
+    public String getSummaryLineUserRef1(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getUserRef1() : null;
     }
 
     @Programmatic
-    public String getSummaryLineDocumentName() {
-        final String ref1 = getSummaryLineUserRef1();
+    public String getSummaryLineDocumentName(final LineCache lineCache) {
+        final String ref1 = getSummaryLineUserRef1(lineCache);
         return ref1 != null ? ref1 + ".pdf" : null;
     }
 
     @Programmatic
-    public OrderItem getSummaryLineExtRefOrderItem() {
-        final CodaDocLine docLine = summaryDocLine();
+    public OrderItem getSummaryLineExtRefOrderItem(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getExtRefOrderItem() : null;
     }
 
     @Programmatic
-    public String getSummaryLineOrderNumber() {
-        final CodaDocLine docLine = summaryDocLine();
+    public String getSummaryLineOrderNumber(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getOrderNumber() : null;
     }
 
     @Programmatic
-    public String getAnalysisLineAccountCode() {
-        final CodaDocLine docLine = analysisDocLine();
+    public String getAnalysisLineAccountCode(final LineCache lineCache) {
+        final CodaDocLine docLine = analysisDocLine(lineCache);
         return docLine != null ? docLine.getAccountCode() : null;
     }
 
     @Programmatic
-    public IncomingInvoiceType getAnalysisLineIncomingInvoiceType() {
-        final CodaDocLine docLine = analysisDocLine();
+    public IncomingInvoiceType getAnalysisLineIncomingInvoiceType(final LineCache lineCache) {
+        final CodaDocLine docLine = analysisDocLine(lineCache);
         return docLine != null ? docLine.getIncomingInvoiceType() : null;
     }
 
@@ -720,8 +725,8 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         if (isSameAs(existing)) {
             return Comparison.same();
         }
-        CodaDocLine summaryDocLine = summaryDocLine();
-        CodaDocLine existingSummaryDocLine = existing.summaryDocLine();
+        CodaDocLine summaryDocLine = summaryDocLine(LineCache.DEFAULT);
+        CodaDocLine existingSummaryDocLine = existing.summaryDocLine(LineCache.DEFAULT);
         if (summaryDocLine != null && existingSummaryDocLine == null) {
             return Comparison.invalidatesApprovals("Previous had no summary doc line");
         }
