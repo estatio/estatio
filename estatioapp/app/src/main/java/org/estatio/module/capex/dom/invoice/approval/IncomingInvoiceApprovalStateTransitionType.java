@@ -1,5 +1,6 @@
 package org.estatio.module.capex.dom.invoice.approval;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -131,6 +132,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     return ProjectRoleTypeEnum.PROJECT_MANAGER;
                 case PROPERTY_EXPENSES:
                 case SERVICE_CHARGES:
+                case ITA_MANAGEMENT_COSTS:
                     return FixedAssetRoleTypeEnum.ASSET_MANAGER;
                 }
                 return null;
@@ -201,9 +203,51 @@ public enum IncomingInvoiceApprovalStateTransitionType
             TaskAssignmentStrategy.to(PartyRoleTypeEnum.COUNTRY_DIRECTOR),
             AdvancePolicy.AUTOMATIC) {
         @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            if (isItalian(incomingInvoice) && !hasNetAmountAboveThreshold(incomingInvoice)) {
+                return false;
+            }
+            return true;
+        }
+        @Override
         public boolean isAutoGuardSatisfied(
                 final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
             return domainObject.isApprovedFully();
+        }
+    },
+    CHECK_IN_CODA_BOOKS_WHEN_APPROVED(
+            IncomingInvoiceApprovalState.APPROVED,
+            IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS,
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.AUTOMATIC) {
+
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            // applies to italian invoices only with net amount under threshold
+            if (!isItalian(incomingInvoice)) return false;
+            if (hasNetAmountAboveThreshold(incomingInvoice)) return false;
+            return true;
+        }
+    },
+    CHECK_IN_CODA_BOOKS(
+            IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+            IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS,
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.AUTOMATIC) {
+
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            // applies to italian invoices only
+            if (!isItalian(incomingInvoice)) return false;
+            return true;
         }
     },
     CHECK_BANK_ACCOUNT(
@@ -395,6 +439,16 @@ public enum IncomingInvoiceApprovalStateTransitionType
         IncomingInvoiceApprovalStateTransition.Repository repository;
 
     }
+
+    static boolean isItalian(final IncomingInvoice incomingInvoice) {
+        return incomingInvoice.getAtPath().startsWith("/ITA");
+    }
+
+    static boolean hasNetAmountAboveThreshold(final IncomingInvoice incomingInvoice) {
+        return incomingInvoice.getNetAmount().compareTo(threshold) > 0;
+    }
+
+    static BigDecimal threshold = new BigDecimal("100000.00");
 
 }
 

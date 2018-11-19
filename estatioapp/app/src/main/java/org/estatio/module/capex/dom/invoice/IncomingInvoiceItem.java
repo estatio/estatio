@@ -802,7 +802,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
                     .checkNotNull(getNetAmount(), "net amount")
                     .checkNotNull(getVatAmount(), "vat amount")
                     .checkNotNull(getGrossAmount(), "gross amount")
-                    .checkNotNull(getCharge(), "charge")
+                    .validateForCharge(this)
                     .validateForIncomingInvoiceType(this)
                     .getResult();
     }
@@ -837,6 +837,18 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
         Validator checkNotNull(Object mandatoryProperty, String propertyName){
             if (mandatoryProperty == null){
                 setResult(result==null ? propertyName : result.concat(", ").concat(propertyName));
+            }
+            return this;
+        }
+
+        Validator validateForCharge(IncomingInvoiceItem incomingInvoiceItem){
+
+            // can be empty for Italy
+            if (incomingInvoiceItem.getIncomingInvoice().getAtPath().startsWith("/ITA")) return this;
+
+            // case France, Belgium
+            if (incomingInvoiceItem.getCharge()==null) {
+                setResult(result == null ? "charge" : result.concat(", ").concat("charge"));
             }
             return this;
         }
