@@ -36,7 +36,8 @@ public enum FixedAssetRoleTypeEnum implements TitledEnum, IPartyRoleType {
     PROPERTY_MANAGER, 
     ASSET_MANAGER, 
     PROPERTY_CONTACT,
-    TENANTS_ASSOCIATION;
+    TENANTS_ASSOCIATION,
+    CENTER_MANAGER;
 
     @Override
     public String getKey() {

@@ -28,6 +28,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import static org.estatio.module.capex.dom.invoice.IncomingInvoiceType.ITA_MANAGEMENT_COSTS;
+import static org.estatio.module.capex.dom.invoice.IncomingInvoiceType.ITA_RECOVERABLE;
 import static org.incode.module.base.integtests.VT.bd;
 import static org.incode.module.base.integtests.VT.ld;
 
@@ -45,6 +46,22 @@ public enum IncomingInvoiceNoDocument_enum
             ld(2018,01,01), ld(2018,02,10), ld (2017, 12, 20),
             bd("100000.00"), bd("122000.00"), null,
             ITA_MANAGEMENT_COSTS, null, "Some costs", bd("100000.00"), bd("22000.00"), bd("122000.00"), "F2018", null,
+            null, null, null, null, null, null, null,null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+    ),
+    invoiceForItaRecoverable(
+            ApplicationTenancy_enum.It,
+            Organisation_enum.TopModelIt, BankAccount_enum.TopModelIt, Organisation_enum.HelloWorldIt,
+            PropertyAndUnitsAndOwnerAndManager_enum.RonIt,
+            ITA_RECOVERABLE, "123456", PaymentMethod.BANK_TRANSFER,
+            ld(2018,01,01), ld(2018,02,10), ld (2017, 12, 20),
+            bd("100000.00"), bd("122000.00"), null,
+            ITA_RECOVERABLE, null, "Some recoverable costs", bd("100000.00"), bd("22000.00"), bd("122000.00"), "F2018", null,
             null, null, null, null, null, null, null,null,
             null,
             null,
