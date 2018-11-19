@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.assertj.core.util.Lists;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
@@ -32,7 +34,7 @@ public class PartyRoleMemberInferenceServiceForFixedAssetRoleAndOrder
         final FixedAsset fixedAsset = order.getProperty();
         if(fixedAsset == null) {
             // can't go any further
-            return null;
+            return Lists.emptyList();
         }
 
         final List<FixedAssetRole> fixedAssetRoles =
