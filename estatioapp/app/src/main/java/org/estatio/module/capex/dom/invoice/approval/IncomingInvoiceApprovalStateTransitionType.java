@@ -57,12 +57,21 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK,
                     IncomingInvoiceApprovalState.PAYABLE,
                     IncomingInvoiceApprovalState.APPROVED_BY_CORPORATE_MANAGER,
+                    IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS,
                     IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER
             ),
             IncomingInvoiceApprovalState.NEW,
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.none(),
-            AdvancePolicy.MANUAL),
+            AdvancePolicy.MANUAL){
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice, final ServiceRegistry2 serviceRegistry2) {
+            // exclude italian invoices that are in a state of payable
+            if (incomingInvoice.getApprovalState() == IncomingInvoiceApprovalState.PAYABLE && isItalian(incomingInvoice)) return false;
+            return true;
+        }
+    },
     COMPLETE(
             IncomingInvoiceApprovalState.NEW,
             IncomingInvoiceApprovalState.COMPLETED,
@@ -497,11 +506,11 @@ public enum IncomingInvoiceApprovalStateTransitionType
     }
 
     static boolean isItalian(final IncomingInvoice incomingInvoice) {
-        return incomingInvoice.getAtPath().startsWith("/ITA");
+        return incomingInvoice.getAtPath() !=null && incomingInvoice.getAtPath().startsWith("/ITA");
     }
 
     static boolean hasNetAmountAboveThreshold(final IncomingInvoice incomingInvoice) {
-        return incomingInvoice.getNetAmount().compareTo(threshold) > 0;
+        return incomingInvoice.getNetAmount()!=null && incomingInvoice.getNetAmount().compareTo(threshold) > 0;
     }
 
     static BigDecimal threshold = new BigDecimal("100000.00");

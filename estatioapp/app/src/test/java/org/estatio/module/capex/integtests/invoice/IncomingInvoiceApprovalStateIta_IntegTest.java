@@ -281,6 +281,16 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
     }
 
 
+    /**
+     * the opposite is tested {@link IncomingInvoiceApprovalState_IntegTest#payable_non_italian_invoice_can_be_rejected}
+     */
+    @Test
+    public void payable_italian_invoice_cannot_be_rejected() throws Exception {
+        //TODO: since at the moment we have no route to payable for Italian invoices yet
+    }
+    
+
+
     @Inject
     QueryResultsCache queryResultsCache;
 
