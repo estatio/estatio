@@ -33,6 +33,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.KeyTable;
+import org.estatio.module.budget.dom.keytable.PartitioningTable;
 import org.estatio.module.charge.dom.Charge;
 
 @DomainService(repositoryFor = PartitionItem.class, nature = NatureOfService.DOMAIN)
@@ -48,7 +49,7 @@ public class PartitionItemRepository extends UdoDomainRepositoryAndFactory<Parti
     public PartitionItem newPartitionItem(
             final Partitioning partitioning,
             final Charge charge,
-            final KeyTable keyTable,
+            final PartitioningTable partitioningTable,
             final BudgetItem budgetItem,
             final BigDecimal percentage,
             final BigDecimal fixedBudgetedAmount,
@@ -56,7 +57,7 @@ public class PartitionItemRepository extends UdoDomainRepositoryAndFactory<Parti
         PartitionItem partitionItem = newTransientInstance(PartitionItem.class);
         partitionItem.setPartitioning(partitioning);
         partitionItem.setCharge(charge);
-        partitionItem.setKeyTable(keyTable);
+        partitionItem.setPartitioningTable(partitioningTable);
         partitionItem.setBudgetItem(budgetItem);
         partitionItem.setPercentage(percentage.setScale(6, BigDecimal.ROUND_HALF_UP));
         partitionItem.setFixedBudgetedAmount(fixedBudgetedAmount);
@@ -68,11 +69,11 @@ public class PartitionItemRepository extends UdoDomainRepositoryAndFactory<Parti
     public String validateNewPartitionItem(
             final Partitioning partitioning,
             final Charge charge,
-            final KeyTable keyTable,
+            final PartitioningTable partitioningTable,
             final BudgetItem budgetItem,
             final BigDecimal percentage
     ){
-        if(findUnique(partitioning, charge, budgetItem, keyTable) != null) {
+        if(findUnique(partitioning, charge, budgetItem, partitioningTable) != null) {
             return "This partition item already exists";
         }
         return null;
@@ -94,8 +95,8 @@ public class PartitionItemRepository extends UdoDomainRepositoryAndFactory<Parti
     }
 
     @Programmatic
-    public PartitionItem findUnique(final Partitioning partitioning, final Charge charge, final BudgetItem budgetItem, final KeyTable keyTable) {
-        return uniqueMatch("findUnique", "partitioning", partitioning, "charge", charge, "budgetItem", budgetItem, "keyTable", keyTable);
+    public PartitionItem findUnique(final Partitioning partitioning, final Charge charge, final BudgetItem budgetItem, final PartitioningTable partitioningTable) {
+        return uniqueMatch("findUnique", "partitioning", partitioning, "charge", charge, "budgetItem", budgetItem, "partitioningTable", partitioningTable);
     }
 
     @Programmatic
@@ -122,8 +123,8 @@ public class PartitionItemRepository extends UdoDomainRepositoryAndFactory<Parti
         return partitionItem;
     }
 
-    public List<PartitionItem> findByKeyTable(final KeyTable keyTable){
-        return allMatches("findByKeyTable", "keyTable", keyTable);
+    public List<PartitionItem> findByPartitioningTable(final PartitioningTable partitioningTable){
+        return allMatches("findByPartitioningTable", "partitioningTable", partitioningTable);
     }
 
 }

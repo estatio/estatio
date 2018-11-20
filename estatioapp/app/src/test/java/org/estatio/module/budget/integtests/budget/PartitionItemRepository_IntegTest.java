@@ -62,7 +62,7 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
                     .validateNewPartitionItem(
                             budget.getPartitionings().first(),
                             partitionItem.getCharge(),
-                            partitionItem.getKeyTable(),
+                            partitionItem.getPartitioningTable(),
                             partitionItem.getBudgetItem(),
                             null)
             ).isEqualTo("This partition item already exists");
@@ -106,7 +106,7 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
             final PartitionItem partitionItem = partitionItemRepository.findUnique(partitioning, charge, budgetItem, keyTable);
             // then
             assertThat(partitionItem.getBudgetItem()).isEqualTo(budgetItem);
-            assertThat(partitionItem.getKeyTable()).isEqualTo(keyTable);
+            assertThat(partitionItem.getPartitioningTable()).isEqualTo(keyTable);
         }
 
     }
@@ -141,7 +141,7 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
 
             // then
             assertThat(partitionItem.getBudgetItem()).isEqualTo(budgetItem);
-            assertThat(partitionItem.getKeyTable()).isEqualTo(keyTable);
+            assertThat(partitionItem.getPartitioningTable()).isEqualTo(keyTable);
             assertThat(partitionItem.getPercentage()).isEqualTo(newPercentage);
         }
 

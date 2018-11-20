@@ -309,7 +309,7 @@ public class KeyTable extends PartitioningTable {
         List<PartitionItem> result = new ArrayList<>();
         for (Partitioning partitioning : getBudget().getPartitionings()) {
             for (PartitionItem partitionItem : partitioning.getItems()) {
-                if (partitionItem.getKeyTable()==this){
+                if (partitionItem.getPartitioningTable()==this){
                     result.add(partitionItem);
                 }
             }
@@ -339,7 +339,7 @@ public class KeyTable extends PartitioningTable {
     }
 
     String isAssignedForTypeReason(final BudgetCalculationType budgetCalculationType){
-        for (PartitionItem partitionItem : partitionItemRepository.findByKeyTable(this)){
+        for (PartitionItem partitionItem : partitionItemRepository.findByPartitioningTable(this)){
             if (partitionItem.getBudgetItem().isAssignedForType(budgetCalculationType)){
                 return partitionItem.getBudgetItem().isAssignedForTypeReason(budgetCalculationType);
             }

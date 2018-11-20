@@ -52,7 +52,7 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
-import org.estatio.module.budget.dom.keytable.KeyTable;
+import org.estatio.module.budget.dom.keytable.PartitioningTable;
 import org.estatio.module.charge.dom.Charge;
 
 import lombok.Getter;
@@ -75,17 +75,17 @@ import lombok.Setter;
                         "FROM org.estatio.module.budget.dom.partioning.PartitionItem " +
                         "WHERE budgetItem == :budgetItem "),
         @Query(
-                name = "findByKeyTable", language = "JDOQL",
+                name = "findByPartitioningTable", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.module.budget.dom.partioning.PartitionItem " +
-                        "WHERE keyTable == :keyTable "),
+                        "WHERE partitioningTable == :partitioningTable "),
         @Query(
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.module.budget.dom.partioning.PartitionItem " +
-                        "WHERE partitioning == :partitioning && charge == :charge && budgetItem == :budgetItem && keyTable == :keyTable ")
+                        "WHERE partitioning == :partitioning && charge == :charge && budgetItem == :budgetItem && partitioningTable == :partitioningTable ")
 })
-@Unique(name = "PartitionItem_partitioning_charge_budgetItem_keyTable_UNQ", members = {"partitioning", "charge", "budgetItem", "keyTable"})
+@Unique(name = "PartitionItem_partitioning_charge_budgetItem_partitioningTable_UNQ", members = {"partitioning", "charge", "budgetItem", "partitioningTable"})
 @DomainObject(
         auditing = Auditing.DISABLED,
         objectType = "org.estatio.dom.budgeting.partioning.PartitionItem"
@@ -93,7 +93,7 @@ import lombok.Setter;
 public class PartitionItem extends UdoDomainObject2<PartitionItem> implements WithApplicationTenancyProperty {
 
     public PartitionItem() {
-        super("partitioning, budgetItem, charge, keyTable");
+        super("partitioning, budgetItem, charge, partitioningTable");
     }
 
     //region > identificatiom
@@ -115,10 +115,10 @@ public class PartitionItem extends UdoDomainObject2<PartitionItem> implements Wi
     @Getter @Setter
     private Charge charge;
 
-    @Column(name="keyTableId", allowsNull = "false")
+    @Column(name="partitioningTableId", allowsNull = "false")
     @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
-    private KeyTable keyTable;
+    private PartitioningTable partitioningTable;
 
     @Column(allowsNull = "false", name = "budgetItemId")
     @PropertyLayout(hidden = Where.REFERENCES_PARENT)

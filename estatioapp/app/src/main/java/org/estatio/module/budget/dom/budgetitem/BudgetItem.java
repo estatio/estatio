@@ -230,7 +230,7 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
         for (PartitionItem partitionItem : partitionItemRepository.findByBudgetItem(this)){
             // only copies of budgeted items are made
             if (partitionItem.getPartitioning().getType()==BudgetCalculationType.BUDGETED) {
-                String keyTableName = partitionItem.getKeyTable().getName();
+                String keyTableName = partitionItem.getPartitioningTable().getName();
                 KeyTable correspondingTableOnbudget = (KeyTable) partitioningTableRepository.findByBudgetAndName(budget, keyTableName);
                 newBudgetItemCopy.createPartitionItemForBudgeting(partitionItem.getCharge(), correspondingTableOnbudget, partitionItem.getPercentage(), partitionItem.getFixedBudgetedAmount());
             }

@@ -34,6 +34,7 @@ import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.KeyTable;
+import org.estatio.module.budget.dom.keytable.PartitioningTable;
 import org.estatio.module.charge.dom.Charge;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -108,7 +109,7 @@ public class PartitionItemRepository_Test {
             assertThat(finderInteraction.getArgumentsByParameterName().get("partitioning")).isEqualTo((Object) partitioning);
             assertThat(finderInteraction.getArgumentsByParameterName().get("charge")).isEqualTo((Object) charge);
             assertThat(finderInteraction.getArgumentsByParameterName().get("budgetItem")).isEqualTo((Object) budgetItem);
-            assertThat(finderInteraction.getArgumentsByParameterName().get("keyTable")).isEqualTo((Object) keyTable);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("partitioningTable")).isEqualTo((Object) keyTable);
             assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(4);
         }
 
@@ -128,7 +129,7 @@ public class PartitionItemRepository_Test {
         public void setup() {
             partitionItemRepository1 = new PartitionItemRepository() {
                 @Override
-                public PartitionItem findUnique(final Partitioning partitioning, final Charge charge, final BudgetItem budgetItem, final KeyTable keyTable) {
+                public PartitionItem findUnique(final Partitioning partitioning, final Charge charge, final BudgetItem budgetItem, final PartitioningTable keyTable) {
                     return null;
                 }
             };
@@ -164,7 +165,7 @@ public class PartitionItemRepository_Test {
             assertThat(newPartitionItem.getPartitioning()).isEqualTo(partitioning);
             assertThat(newPartitionItem.getCharge()).isEqualTo(charge);
             assertThat(newPartitionItem.getBudgetItem()).isEqualTo(budgetItem);
-            assertThat(newPartitionItem.getKeyTable()).isEqualTo(keyTable);
+            assertThat(newPartitionItem.getPartitioningTable()).isEqualTo(keyTable);
             assertThat(newPartitionItem.getPercentage()).isEqualTo(percentage);
             assertThat(newPartitionItem.getFixedBudgetedAmount()).isEqualTo(fixedBudgetedAmount);
             assertThat(newPartitionItem.getFixedAuditedAmount()).isEqualTo(fixedAuditedAmount);

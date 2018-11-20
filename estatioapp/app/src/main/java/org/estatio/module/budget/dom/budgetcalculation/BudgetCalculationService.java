@@ -10,10 +10,11 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
+import org.estatio.module.budget.dom.keytable.KeyTable;
+import org.estatio.module.budget.dom.partioning.PartitionItem;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class BudgetCalculationService {
@@ -107,9 +108,10 @@ public class BudgetCalculationService {
 
         List<BudgetCalculationViewmodel> results = new ArrayList<>();
 
-        BigDecimal divider = partitionItem.getKeyTable().getKeyValueMethod().divider(partitionItem.getKeyTable());
+        final KeyTable keyTable = (KeyTable) partitionItem.getPartitioningTable();
+        BigDecimal divider = keyTable.getKeyValueMethod().divider(keyTable);
 
-        for (KeyItem keyItem : partitionItem.getKeyTable().getItems()) {
+        for (KeyItem keyItem : keyTable.getItems()) {
 
             BudgetCalculationViewmodel calculationResult;
 

@@ -63,7 +63,7 @@ public class KeyTable_Test {
             keyTable.setBudget(budget);
 
             PartitionItem partitionItemUsingKeyTable = new PartitionItem();
-            partitionItemUsingKeyTable.setKeyTable(keyTable);
+            partitionItemUsingKeyTable.setPartitioningTable(keyTable);
 
             PartitionItem otherPartitionItem = new PartitionItem();
 
@@ -96,7 +96,7 @@ public class KeyTable_Test {
 
             // expect
             context.checking(new Expectations() {{
-                allowing(mockPartitionItemRepository).findByKeyTable(keyTable);
+                allowing(mockPartitionItemRepository).findByPartitioningTable(keyTable);
             }});
 
             // when
@@ -116,7 +116,7 @@ public class KeyTable_Test {
 
             // expect
             context.checking(new Expectations() {{
-                oneOf(mockPartitionItemRepository).findByKeyTable(keyTable);
+                oneOf(mockPartitionItemRepository).findByPartitioningTable(keyTable);
                 will(returnValue(Arrays.asList(partitionItemBudgeted)));
                 oneOf(mockBudgetItem).isAssignedForType(BudgetCalculationType.BUDGETED);
                 will(returnValue(true));
@@ -143,7 +143,7 @@ public class KeyTable_Test {
 
             // expect
             context.checking(new Expectations() {{
-                oneOf(mockPartitionItemRepository).findByKeyTable(keyTable);
+                oneOf(mockPartitionItemRepository).findByPartitioningTable(keyTable);
                 will(returnValue(Arrays.asList(partitionItemActual)));
                 oneOf(mockBudgetItem).isAssignedForType(BudgetCalculationType.ACTUAL);
                 will(returnValue(true));

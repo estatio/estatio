@@ -30,16 +30,17 @@ import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
-import org.estatio.module.budgetassignment.imports.BudgetOverrideImportExport;
-import org.estatio.module.charge.imports.ChargeImport;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
+import org.estatio.module.budget.dom.keytable.KeyTable;
+import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverride;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideForFixed;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideForFlatRate;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideForMax;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideRepository;
-import org.estatio.module.budget.dom.budgetitem.BudgetItem;
-import org.estatio.module.budget.dom.partioning.PartitionItem;
+import org.estatio.module.budgetassignment.imports.BudgetOverrideImportExport;
 import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.imports.ChargeImport;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 
@@ -83,6 +84,7 @@ public class BudgetImportExportService {
         } else {
             // create a line for each partion item
             for (PartitionItem partitionItem : item.getPartitionItems()) {
+                final KeyTable keyTable = (KeyTable) partitionItem.getPartitioningTable();
                 lines.add(
                         new BudgetImportExport(
                                 propertyReference,
@@ -91,9 +93,9 @@ public class BudgetImportExportService {
                                 budgetChargeReference,
                                 budgetedValue,
                                 auditedValue,
-                                partitionItem.getKeyTable().getName(),
-                                partitionItem.getKeyTable().getFoundationValueType().toString(),
-                                partitionItem.getKeyTable().getKeyValueMethod().toString(),
+                                keyTable.getName(),
+                                keyTable.getFoundationValueType().toString(),
+                                keyTable.getKeyValueMethod().toString(),
                                 partitionItem.getCharge().getReference(),
                                 partitionItem.getPercentage(),
                                 partitionItem.getFixedBudgetedAmount(),

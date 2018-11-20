@@ -25,6 +25,7 @@ import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.KeyTable;
+import org.estatio.module.budget.dom.keytable.PartitioningTable;
 import org.estatio.module.charge.dom.Charge;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,7 +40,7 @@ public class PartitionItem_Test {
             newPojoTester()
                     .withFixture(pojos(Partitioning.class, Partitioning.class))
                     .withFixture(pojos(Charge.class, Charge.class))
-                    .withFixture(pojos(KeyTable.class, KeyTable.class))
+                    .withFixture(pojos(PartitioningTable.class, KeyTable.class))
                     .withFixture(pojos(BudgetItem.class, BudgetItem.class))
                     .exercise(pojo);
         }

@@ -84,7 +84,7 @@ public class BudgetCalculationService_Test {
 
             partitionItem = new PartitionItem();
             partitionItem.setBudgetItem(budgetItem);
-            partitionItem.setKeyTable(keyTable);
+            partitionItem.setPartitioningTable(keyTable);
 
             budget.getItems().add(budgetItem);
 

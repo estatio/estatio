@@ -18,6 +18,7 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationReposito
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
+import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
@@ -54,7 +55,8 @@ public class BudgetCalculationRepository_IntegTest extends BudgetModuleIntegTest
         public void happyCase() throws Exception {
             // given
             PartitionItem partitionItem = partitionItemRepository.allPartitionItems().get(0);
-            KeyItem keyItem = partitionItem.getKeyTable().getItems().first();
+            final KeyTable keyTable = (KeyTable) partitionItem.getPartitioningTable();
+            KeyItem keyItem = keyTable.getItems().first();
             BudgetCalculation newBudgetCalculation = budgetCalculationRepository.createBudgetCalculation(partitionItem, keyItem, BigDecimal.ZERO, BudgetCalculationType.BUDGETED);
 
             // when

@@ -96,7 +96,7 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
             assertThat(budget2016.getItems().first().getPartitionItems().get(0).getPartitioning()).isEqualTo(budget2016.getPartitionings().first());
             assertThat(budget2016.getItems().first().getPartitionItems().get(0).getCharge()).isEqualTo(budget2015.getItems().first().getPartitionItems().get(0).getCharge());
             assertThat(budget2016.getItems().first().getPartitionItems().get(0).getPercentage()).isEqualTo(budget2015.getItems().first().getPartitionItems().get(0).getPercentage());
-            assertThat(budget2016.getItems().first().getPartitionItems().get(0).getKeyTable().getName()).isEqualTo(budget2015.getItems().first().getPartitionItems().get(0).getKeyTable().getName());
+            assertThat(budget2016.getItems().first().getPartitionItems().get(0).getPartitioningTable().getName()).isEqualTo(budget2015.getItems().first().getPartitionItems().get(0).getPartitioningTable().getName());
 
             assertThat(budget2016.getKeyTables().size()).isEqualTo(budget2015.getKeyTables().size());
             // this serves as createCopyFor test for keyTable
