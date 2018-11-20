@@ -35,6 +35,7 @@ import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemValue;
+import org.estatio.module.budget.dom.keyitem.DirectCost;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.keytable.PartitioningTable;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
@@ -63,6 +64,7 @@ public final class EstatioBudgetModule extends ModuleAbstract {
                 deleteFrom(BudgetItemValue.class);
                 deleteFrom(BudgetItem.class);
                 deleteFrom(KeyItem.class);
+                deleteFrom(DirectCost.class);
                 deleteFrom(PartitioningTable.class);
                 deleteFrom(Budget.class);
             }

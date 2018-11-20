@@ -20,7 +20,6 @@ package org.estatio.module.budget.dom.keytable;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -186,9 +185,7 @@ public class KeyTable extends PartitioningTable {
     public KeyTable generateItems() {
 
         //delete old items
-        for (Iterator<KeyItem> it = this.getItems().iterator(); it.hasNext(); ) {
-            it.next().deleteBudgetKeyItem();
-        }
+        deleteItems();
 
         /*
         create list of input pairs: identifier - sourcevalue

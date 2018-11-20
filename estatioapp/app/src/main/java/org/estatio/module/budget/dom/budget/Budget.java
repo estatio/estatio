@@ -67,6 +67,8 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemRepository;
+import org.estatio.module.budget.dom.keytable.DirectCostTable;
+import org.estatio.module.budget.dom.keytable.DirectCostTableRepository;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.KeyTableRepository;
@@ -156,6 +158,10 @@ public class Budget extends UdoDomainObject2<Budget>
     @Getter @Setter
     private SortedSet<KeyTable> keyTables = new TreeSet<>();
 
+    @Persistent(mappedBy = "budget", dependentElement = "true")
+    @Getter @Setter
+    private SortedSet<DirectCostTable> directCostTables = new TreeSet<>();
+
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_ACTION)
     @MemberOrder(name = "items", sequence = "1")
@@ -206,6 +212,17 @@ public class Budget extends UdoDomainObject2<Budget>
         return keyTableRepository.validateNewKeyTable(this, name, foundationValueType, keyValueMethod, 6);
     }
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public DirectCostTable createDirectCostTable(
+            final String name) {
+        return directCostTableRepository.newDirectCostTable(this, name);
+    }
+
+    public String validateCreateDirectCostTable(
+            final String name) {
+        return directCostTableRepository.validateNewKeyTable(this, name);
+    }
+
     public Budget createNextBudget() {
         LocalDate start = new LocalDate(getBudgetYear()+1, 01, 01);
         LocalDate end = new LocalDate(getBudgetYear()+1, 12, 31);
@@ -224,6 +241,9 @@ public class Budget extends UdoDomainObject2<Budget>
     private Budget copyCurrentTo(final Budget newBudget) {
         for (KeyTable keyTable : getKeyTables()){
             keyTable.createCopyFor(newBudget);
+        }
+        for (DirectCostTable directCostTable : getDirectCostTables()){
+            directCostTable.createCopyFor(newBudget);
         }
         for (BudgetItem item : getItems()){
             item.createCopyFor(newBudget);
@@ -378,5 +398,8 @@ public class Budget extends UdoDomainObject2<Budget>
 
     @Inject
     private ChargeRepository chargeRepository;
+
+    @Inject
+    private DirectCostTableRepository directCostTableRepository;
 
 }
