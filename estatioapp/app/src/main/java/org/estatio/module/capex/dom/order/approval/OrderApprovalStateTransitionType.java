@@ -65,6 +65,7 @@ public enum OrderApprovalStateTransitionType
                 }
                 if (order.getType()==null) return null;
                 switch (order.getType()) {
+                case ITA_ORDER_INVOICE:
                 case CAPEX:
                 case PROPERTY_EXPENSES:
                 case SERVICE_CHARGES:
