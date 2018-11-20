@@ -18,6 +18,7 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.capex.app.OrderMenu;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
@@ -108,6 +109,7 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
             assertThat(order.getOrderNumber()).isEqualTo("0001/GEN/001/001");
             assertThat(order.getProperty()).isNull();
             assertThat(order.getApprovalState()).isEqualTo(OrderApprovalState.NEW);
+            assertThat(order.getType()).isEqualTo(IncomingInvoiceType.ITA_ORDER_INVOICE);
             assertThat(mixin(Order_approvalTransitions.class, order).coll()).hasSize(2);
 
             assertThat(order.getItems()).hasSize(1);
