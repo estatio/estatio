@@ -1,8 +1,10 @@
 package org.estatio.module.capex.dom.invoice.approval;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -12,6 +14,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationChecker;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
@@ -53,12 +56,22 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
                     IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK,
                     IncomingInvoiceApprovalState.PAYABLE,
-                    IncomingInvoiceApprovalState.APPROVED_BY_CORPORATE_MANAGER
+                    IncomingInvoiceApprovalState.APPROVED_BY_CORPORATE_MANAGER,
+                    IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS,
+                    IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER
             ),
             IncomingInvoiceApprovalState.NEW,
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.none(),
-            AdvancePolicy.MANUAL),
+            AdvancePolicy.MANUAL){
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice, final ServiceRegistry2 serviceRegistry2) {
+            // exclude italian invoices that are in a state of payable
+            if (incomingInvoice.getApprovalState() == IncomingInvoiceApprovalState.PAYABLE && isItalian(incomingInvoice)) return false;
+            return true;
+        }
+    },
     COMPLETE(
             IncomingInvoiceApprovalState.NEW,
             IncomingInvoiceApprovalState.COMPLETED,
@@ -131,6 +144,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     return ProjectRoleTypeEnum.PROJECT_MANAGER;
                 case PROPERTY_EXPENSES:
                 case SERVICE_CHARGES:
+                case ITA_MANAGEMENT_COSTS:
+                case ITA_RECOVERABLE:
                     return FixedAssetRoleTypeEnum.ASSET_MANAGER;
                 }
                 return null;
@@ -139,6 +154,11 @@ public enum IncomingInvoiceApprovalStateTransitionType
         @Override
         public boolean isMatch(
                 final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+            if (isItalian(domainObject) && domainObject.getType()!=null && domainObject.getProperty()!=null) {
+                // case where center manager italy has to approve first (APPROVE_AS_CENTER_MANAGER)
+                // the isItalian part above may be superfluous, because type ITA_RECOVERABLE should imply this
+                if (domainObject.getType() == IncomingInvoiceType.ITA_RECOVERABLE && hasCenterManager(domainObject.getProperty())) return false;
+            }
             return getTaskAssignmentStrategy().getAssignTo(domainObject, serviceRegistry2) != null;
         }
         @Override
@@ -163,6 +183,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
         public boolean isMatch(
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
+            if (isItalian(incomingInvoice)) return false;
             // guard since EST-1508 type can be not set
             if (incomingInvoice.getType()==null) return false;
             return incomingInvoice.getType() == IncomingInvoiceType.LOCAL_EXPENSES;
@@ -183,6 +204,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
         public boolean isMatch(
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
+            if (isItalian(incomingInvoice)) return false;
             // guard since EST-1508 type can be not set
             if (incomingInvoice.getType()==null) return false;
             return incomingInvoice.getType() == IncomingInvoiceType.CORPORATE_EXPENSES;
@@ -194,6 +216,51 @@ public enum IncomingInvoiceApprovalStateTransitionType
         }
 
     },
+    APPROVE_AS_CENTER_MANAGER(
+            IncomingInvoiceApprovalState.COMPLETED,
+            IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER,
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
+            TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.CENTER_MANAGER),
+            AdvancePolicy.AUTOMATIC) {
+
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+
+            // applies to italian invoices only
+            if (!isItalian(incomingInvoice)) return false;
+
+            if (incomingInvoice.getType()==null || incomingInvoice.getProperty()==null) return false;
+            return incomingInvoice.getType() == IncomingInvoiceType.ITA_RECOVERABLE && hasCenterManager(incomingInvoice.getProperty());
+        }
+
+        @Override
+        public String reasonGuardNotSatisified(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            return incomingInvoice.reasonIncomplete();
+        }
+
+        @Override
+        public boolean isAutoGuardSatisfied(
+                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+            return domainObject.isApprovedFully();
+        }
+    },
+    APPROVE_WHEN_APPROVED_BY_CENTER_MANAGER(
+            IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER,
+            IncomingInvoiceApprovalState.APPROVED,
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
+            TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.ASSET_MANAGER),
+            AdvancePolicy.AUTOMATIC) {
+
+        @Override
+        public boolean isAutoGuardSatisfied(
+                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+            return domainObject.isApprovedFully();
+        }
+    },
     APPROVE_AS_COUNTRY_DIRECTOR(
             IncomingInvoiceApprovalState.APPROVED,
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
@@ -201,9 +268,51 @@ public enum IncomingInvoiceApprovalStateTransitionType
             TaskAssignmentStrategy.to(PartyRoleTypeEnum.COUNTRY_DIRECTOR),
             AdvancePolicy.AUTOMATIC) {
         @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            if (isItalian(incomingInvoice) && !hasNetAmountAboveThreshold(incomingInvoice)) {
+                return false;
+            }
+            return true;
+        }
+        @Override
         public boolean isAutoGuardSatisfied(
                 final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
             return domainObject.isApprovedFully();
+        }
+    },
+    CHECK_IN_CODA_BOOKS_WHEN_APPROVED(
+            IncomingInvoiceApprovalState.APPROVED,
+            IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS,
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.AUTOMATIC) {
+
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            // applies to italian invoices only with net amount under threshold
+            if (!isItalian(incomingInvoice)) return false;
+            if (hasNetAmountAboveThreshold(incomingInvoice)) return false;
+            return true;
+        }
+    },
+    CHECK_IN_CODA_BOOKS(
+            IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+            IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS,
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.AUTOMATIC) {
+
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            // applies to italian invoices only
+            if (!isItalian(incomingInvoice)) return false;
+            return true;
         }
     },
     CHECK_BANK_ACCOUNT(
@@ -394,6 +503,22 @@ public enum IncomingInvoiceApprovalStateTransitionType
         @Inject
         IncomingInvoiceApprovalStateTransition.Repository repository;
 
+    }
+
+    static boolean isItalian(final IncomingInvoice incomingInvoice) {
+        return incomingInvoice.getAtPath() !=null && incomingInvoice.getAtPath().startsWith("/ITA");
+    }
+
+    static boolean hasNetAmountAboveThreshold(final IncomingInvoice incomingInvoice) {
+        return incomingInvoice.getNetAmount()!=null && incomingInvoice.getNetAmount().compareTo(threshold) > 0;
+    }
+
+    static BigDecimal threshold = new BigDecimal("100000.00");
+
+    static boolean hasCenterManager(final Property property) {
+        return ! Lists.newArrayList(property.getRoles()).stream()
+                .filter(x->x.getType()==FixedAssetRoleTypeEnum.CENTER_MANAGER)
+                .collect(Collectors.toList()).isEmpty();
     }
 
 }

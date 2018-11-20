@@ -57,9 +57,10 @@ public class DerivedObjectUpdater {
     static final String AT_PATH = "/ITA";
 
     IncomingInvoice upsertIncomingInvoice(
-            final CodaDocHead docHead) {
+            final CodaDocHead docHead,
+            final boolean syncIfNew) {
         IncomingInvoice incomingInvoiceIfAny = derivedObjectLookup.invoiceIfAnyFrom(docHead);
-        return upsertIncomingInvoice(docHead, incomingInvoiceIfAny);
+        return upsertIncomingInvoice(docHead, incomingInvoiceIfAny, syncIfNew);
     }
 
     public static class UpsertIncomingInvoiceEvent extends ActionDomainEvent<Object> {
@@ -70,7 +71,8 @@ public class DerivedObjectUpdater {
 
     public IncomingInvoice upsertIncomingInvoice(
             final CodaDocHead docHead,
-            final IncomingInvoice existingInvoiceIfAny) {
+            final IncomingInvoice existingInvoiceIfAny,
+            final boolean syncIfNew) {
 
         final IncomingInvoiceItem existingInvoiceItemIfAny = firstItemOf(existingInvoiceIfAny);
 
@@ -81,37 +83,38 @@ public class DerivedObjectUpdater {
         //
         final Party buyer = docHead.getCmpCodeBuyer();
 
-        final Party seller = docHead.getSummaryLineAccountCodeEl6Supplier();
-        final IncomingInvoiceType type = docHead.getAnalysisLineIncomingInvoiceType();
-        final String invoiceNumber = docHead.getSummaryLineExtRef2();
-        final Property property = docHead.getSummaryLineAccountEl3Property();
+        final Party seller = docHead.getSummaryLineAccountCodeEl6Supplier(LineCache.DEFAULT);
+        final IncomingInvoiceType type = docHead.getAnalysisLineIncomingInvoiceType(LineCache.DEFAULT);
+        final String invoiceNumber = docHead.getSummaryLineExtRef2(LineCache.DEFAULT);
+        final Property property = docHead.getSummaryLineAccountEl3Property(LineCache.DEFAULT);
 
-        final BankAccount bankAccount = docHead.getSummaryLineSupplierBankAccount();
+        final BankAccount bankAccount= docHead.getSummaryLineSupplierBankAccount(LineCache.DEFAULT);
 
-        final PaymentMethod paymentMethod = docHead.getSummaryLinePaymentMethod();
+        final PaymentMethod paymentMethod = docHead.getSummaryLinePaymentMethod(LineCache.DEFAULT);
 
         //
         // TODO: need to add this field to IncomingInvoice itself...
         // https://incodehq.atlassian.net/browse/EST-1890
         //
-        final LocalDate vatRegistrationDate = docHead.getSummaryLineValueDate();
+        final LocalDate vatRegistrationDate = docHead.getSummaryLineValueDate(LineCache.DEFAULT);
 
         final LocalDate dateReceived = docHead.getInputDate();
-        final LocalDate invoiceDate = docHead.getDocDate();
-        final LocalDate dueDate = docHead.getSummaryLineDueDate();
+
+        final LocalDate invoiceDate= docHead.getDocDate();
+        final LocalDate dueDate = docHead.getSummaryLineDueDate(LineCache.DEFAULT);
 
         final InvoiceStatus invoiceStatus = InvoiceStatus.NEW; // we don't care, this is for outgoing invoices.
 
         // there will be just a single InvoiceItem, combining info from
         // both the CodaDocLine summary item and the analysis one
-        final String description = docHead.getSummaryLineDescription();
+        final String description = docHead.getSummaryLineDescription(LineCache.DEFAULT);
 
-        final Charge charge = docHead.getSummaryLineExtRefWorkTypeCharge();
-        final Project project = docHead.getSummaryLineExtRefProject();
+        final Charge charge = docHead.getSummaryLineExtRefWorkTypeCharge(LineCache.DEFAULT);
+        final Project project = docHead.getSummaryLineExtRefProject(LineCache.DEFAULT);
         final BudgetItem budgetItem = null;
 
-        final BigDecimal grossAmount = docHead.getSummaryLineDocValue();
-        final BigDecimal vatAmount = docHead.getSummaryLineDocSumTax();
+        final BigDecimal grossAmount = docHead.getSummaryLineDocValue(LineCache.DEFAULT);
+        final BigDecimal vatAmount = docHead.getSummaryLineDocSumTax(LineCache.DEFAULT);
         final BigDecimal netAmount = Util.subtract(grossAmount, vatAmount);
         final String period = Util.asFinancialYear(docHead.getCodaPeriod());
         final Tax tax = null;
@@ -152,9 +155,8 @@ public class DerivedObjectUpdater {
             }
 
         } else {
-
-            // if the DocHead is valid, and its handling is set to sync, then we create new Estatio objects
-            if (docHead.getHandling().isSynced()) {
+            // if the DocHead is valid, and sync has been requested, then we create new Estatio objects
+            if(syncIfNew) {
 
                 // as a side-effect, the approvalState will be set to NEW
                 // (subscriber on ObjectPersist)
@@ -182,27 +184,29 @@ public class DerivedObjectUpdater {
 
     void updateLinkToOrderItem(
             final CodaDocHead docHead,
+            final boolean syncIfNew,
             final ErrorSet softErrors) {
 
         final OrderItemInvoiceItemLink linkIfAny = derivedObjectLookup.linkIfAnyFrom(docHead);
 
-        updateLinkToOrderItem(docHead, linkIfAny, softErrors);
+        updateLinkToOrderItem(docHead, linkIfAny, syncIfNew, softErrors);
     }
 
     public void updateLinkToOrderItem(
             final CodaDocHead docHead,
             final OrderItemInvoiceItemLink existingLinkIfAny,
+            final boolean syncIfNew,
             final ErrorSet softErrors) {
 
         final IncomingInvoice incomingInvoice = derivedObjectLookup.invoiceIfAnyFrom(docHead);
         final IncomingInvoiceItem invoiceItem = firstItemOf(incomingInvoice);
 
-        final BigDecimal grossAmount = docHead.getSummaryLineDocValue();
-        final BigDecimal vatAmount = docHead.getSummaryLineDocSumTax();
+        final BigDecimal grossAmount = docHead.getSummaryLineDocValue(LineCache.DEFAULT);
+        final BigDecimal vatAmount = docHead.getSummaryLineDocSumTax(LineCache.DEFAULT);
         final BigDecimal netAmount = Util.subtract(grossAmount, vatAmount);
 
-        final OrderItem orderItem = docHead.getSummaryLineExtRefOrderItem();
-        if (existingLinkIfAny != null) {
+        final OrderItem orderItem = docHead.getSummaryLineExtRefOrderItem(LineCache.DEFAULT);
+        if(existingLinkIfAny != null) {
 
             if (orderItem == null || invoiceItem == null) {
 
@@ -231,8 +235,8 @@ public class DerivedObjectUpdater {
 
         } else {
 
-            // if the DocHead is valid, and its handling is set to sync, then we create new Estatio objects
-            if (docHead.getHandling().isSynced()) {
+            // if the DocHead is valid, and sync has been requested, then we create new Estatio objects
+            if(syncIfNew) {
 
                 //
                 // create the link, if we can
@@ -293,12 +297,13 @@ public class DerivedObjectUpdater {
      */
     void updatePaperclip(
             final CodaDocHead docHead,
+            final boolean syncIfNew,
             final ErrorSet softErrors) {
 
         final Paperclip paperclipIfAny = derivedObjectLookup.paperclipIfAnyFrom(docHead);
         final String documentNameIfAny = derivedObjectLookup.documentNameIfAnyFrom(docHead);
 
-        updatePaperclip(docHead, paperclipIfAny, documentNameIfAny, softErrors);
+        updatePaperclip(docHead, paperclipIfAny, documentNameIfAny, syncIfNew, softErrors);
     }
 
     /**
@@ -308,6 +313,7 @@ public class DerivedObjectUpdater {
             final CodaDocHead docHead,
             final Paperclip existingPaperclipIfAny,
             final String existingDocumentNameIfAny,
+            final boolean syncIfNew,
             final ErrorSet softErrors) {
 
         final DocumentType incomingDocumentType =
@@ -319,8 +325,8 @@ public class DerivedObjectUpdater {
 
         if (existingPaperclipIfAny != null) {
 
-            final String documentName = docHead.getSummaryLineDocumentName();
-            if (documentName == null) {
+            final String documentName = docHead.getSummaryLineDocumentName(LineCache.DEFAULT);
+            if(documentName == null) {
 
                 // userRef1 removed, so delete the existing paperclip.
                 paperclipRepository.delete(existingPaperclipIfAny);
@@ -362,9 +368,9 @@ public class DerivedObjectUpdater {
         } else {
 
             // if the DocHead is valid, and its handling is set to sync, then we create new Estatio objects
-            if (docHead.getHandling().isSynced()) {
+            if(syncIfNew) {
 
-                final String documentName = docHead.getSummaryLineDocumentName();
+                final String documentName = docHead.getSummaryLineDocumentName(LineCache.DEFAULT);
 
                 // userRef1 has been entered, there was no paperclip previously
                 final List<Document> documents =
@@ -397,6 +403,7 @@ public class DerivedObjectUpdater {
      */
     public void updatePendingTask(
             final CodaDocHead docHead,
+            final boolean syncIfNew,
             final ErrorSet errors) {
 
         final IncomingInvoice incomingInvoice = derivedObjectLookup.invoiceIfAnyFrom(docHead);
@@ -411,7 +418,8 @@ public class DerivedObjectUpdater {
                 stateTransitionService.pendingTransitionOf(
                         incomingInvoice, IncomingInvoiceApprovalStateTransition.class);
 
-        final IncomingInvoiceApprovalStateTransitionType transitionType = pendingTransition.getTransitionType();
+        final IncomingInvoiceApprovalStateTransitionType transitionType =
+                pendingTransition.getTransitionType();
         switch (transitionType) {
             case COMPLETE:
                 // this should always be the case; there are no other pending transitions from a state of NEW.

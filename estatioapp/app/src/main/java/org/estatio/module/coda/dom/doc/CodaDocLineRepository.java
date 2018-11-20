@@ -284,7 +284,6 @@ public class CodaDocLineRepository {
                         "extRefOrderValidationStatus", extRefOrderValidationStatus));
     }
 
-
     @Programmatic
     public List<CodaDocLine> findWithInvalidExtRefProject(
             final Handling handling,
@@ -300,7 +299,6 @@ public class CodaDocLineRepository {
                 handling, ValidationStatus.VALID, ValidationStatus.INVALID);
     }
 
-
     List<CodaDocLine> findByHandlingAndExtRefValidationStatusAndExtRefProjectValidationStatusAndProjectReference(
             final Handling handling,
             final ValidationStatus extRefValidationStatus,
@@ -314,7 +312,7 @@ public class CodaDocLineRepository {
                         "extRefValidationStatus", extRefValidationStatus,
                         "extRefProjectValidationStatus", extRefProjectValidationStatus,
                         "projectReference", projectReference
-                    ));
+                ));
     }
 
     List<CodaDocLine> findByHandlingAndExtRefValidationStatusAndExtRefProjectValidationStatus(
@@ -423,13 +421,12 @@ public class CodaDocLineRepository {
                 ));
     }
 
-
     @Programmatic
     public CodaDocHead delete(
             final CodaDocHead docHead,
             final int lineNum) {
         final CodaDocLine docLine = findByDocHeadAndLineNum(docHead, lineNum);
-        if(docLine != null) {
+        if (docLine != null) {
             repositoryService.removeAndFlush(docLine);
         }
         return docHead;
@@ -437,4 +434,35 @@ public class CodaDocLineRepository {
 
     @Inject
     RepositoryService repositoryService;
+
+    public List<CodaDocLine> findByCodaPeriodQuarterAndHandlingAndValidity(
+            final String codaPeriodQuarter,
+            final Handling handling,
+            final Validity validity) {
+        switch (validity) {
+            case VALID:
+                return repositoryService.allMatches(
+                        new org.apache.isis.applib.query.QueryDefault<>(
+                                CodaDocLine.class,
+                                "findByCodaPeriodQuarterAndHandlingAndValid",
+                                "codaPeriodQuarter", codaPeriodQuarter,
+                                "handling", handling));
+            case NOT_VALID:
+                return repositoryService.allMatches(
+                        new org.apache.isis.applib.query.QueryDefault<>(
+                                CodaDocLine.class,
+                                "findByCodaPeriodQuarterAndHandlingAndNotValid",
+                                "codaPeriodQuarter", codaPeriodQuarter,
+                                "handling", handling));
+            case BOTH:
+            default:
+                return repositoryService.allMatches(
+                        new org.apache.isis.applib.query.QueryDefault<>(
+                                CodaDocLine.class,
+                                "findByCodaPeriodQuarterAndHandling",
+                                "codaPeriodQuarter", codaPeriodQuarter,
+                                "handling", handling));
+        }
+    }
+
 }

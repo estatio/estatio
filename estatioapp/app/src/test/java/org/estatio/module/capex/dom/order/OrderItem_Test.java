@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jmock.auto.Mock;
+import org.joda.time.LocalDate;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -16,6 +17,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
+import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.charge.dom.Charge;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -230,6 +232,71 @@ public class OrderItem_Test {
         // when, then
         assertThat(orderItem.chargeNotUsedOnOrder(someOtherCharge)).isTrue();
         assertThat(orderItem.chargeNotUsedOnOrder(chargeOnItem)).isFalse();
+    }
+
+    @Test
+    public void gross_amount_required_for_non_italian_order_item_only() throws Exception {
+        // given
+        Order order = new Order();
+        order.setAtPath("/FRA");
+        OrderItem orderItem = new OrderItem();
+        orderItem.setOrdr(order);
+        orderItem.setDescription("something");
+        orderItem.setCharge(new Charge());
+        orderItem.setStartDate(LocalDate.now());
+        orderItem.setEndDate(LocalDate.now());
+        orderItem.setNetAmount(BigDecimal.TEN);
+
+        // when, then
+        assertThat(orderItem.getOrdr().getAtPath()).startsWith("/FRA");
+        assertThat(orderItem.reasonIncomplete()).isEqualTo("gross amount required");
+
+        // and when
+        order.setAtPath("/ITA");
+        // then
+        assertThat(orderItem.getOrdr().getAtPath()).startsWith("/ITA");
+        assertThat(orderItem.reasonIncomplete()).isNull();
+    }
+
+    @Test
+    public void property_required_for_non_italian_order_when_having_project() throws Exception {
+
+        // given
+        Order order = new Order();
+        order.setAtPath("/FRA");
+        OrderItem orderItem = new OrderItem();
+        orderItem.setOrdr(order);
+        Project project = new Project();
+        orderItem.setProject(project);
+        orderItem.setDescription("something");
+        orderItem.setCharge(new Charge());
+        orderItem.setStartDate(LocalDate.now());
+        orderItem.setEndDate(LocalDate.now());
+        orderItem.setNetAmount(BigDecimal.TEN);
+        orderItem.setGrossAmount(BigDecimal.TEN);
+
+        // when, then
+        assertThat(orderItem.reasonIncomplete()).isEqualTo("when project filled in then property required");
+    }
+
+    @Test
+    public void property_NOT_required_for_italian_order_when_having_project() throws Exception {
+
+        // given
+        Order order = new Order();
+        order.setAtPath("/ITA");
+        OrderItem orderItem = new OrderItem();
+        orderItem.setOrdr(order);
+        Project project = new Project();
+        orderItem.setProject(project);
+        orderItem.setDescription("something");
+        orderItem.setCharge(new Charge());
+        orderItem.setStartDate(LocalDate.now());
+        orderItem.setEndDate(LocalDate.now());
+        orderItem.setNetAmount(BigDecimal.TEN);
+
+        // when, then
+        assertThat(orderItem.reasonIncomplete()).isNull();
     }
 
 

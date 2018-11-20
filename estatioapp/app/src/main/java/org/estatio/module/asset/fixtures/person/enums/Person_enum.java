@@ -95,6 +95,14 @@ public enum Person_enum
                     new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, Property_enum.MnsFr),
             }),
 
+    // center manager
+    IlicCenterManagerIt("IRESPONSABILE", "Ilic", "Responsabile", null, true, MALE, It, It,
+            null, null,
+            new IPartyRoleType[] {  },
+            new FixedAssetRoleSpec[] {
+                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.CENTER_MANAGER, Property_enum.RonIt)
+            }),
+
     // asset manager
     FloellaAssetManagerGb("FBEAUTIFUL", "Floella", "Beautiful", null, true, FEMALE, Gb, Gb,
             null, null,
@@ -124,6 +132,11 @@ public enum Person_enum
             new FixedAssetRoleSpec[] {}),
 
     OscarCountryDirectorGb("OPRITCHARD", "Oscar", "Pritchard", null, true, MALE, Gb, Gb,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.COUNTRY_DIRECTOR },
+            new FixedAssetRoleSpec[] {}),
+
+    RobertCountryDirectorIt("RSTRACCIATELLA", "Roberto", "Stracciatella", null, true, MALE, It, It,
             null, null,
             new IPartyRoleType[] { PartyRoleTypeEnum.COUNTRY_DIRECTOR },
             new FixedAssetRoleSpec[] {}),

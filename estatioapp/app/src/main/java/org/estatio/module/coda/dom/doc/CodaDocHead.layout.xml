@@ -5,6 +5,7 @@
             <bs3:row>
                 <bs3:col span="12" unreferencedActions="true">
                     <cpt:domainObject/>
+                    <cpt:action id="Revalidate"/>
                     <cpt:action id="impersonateUser"/>
                     <cpt:action id="stopImpersonating"/>
                 </bs3:col>
@@ -17,7 +18,7 @@
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="General" id="general">
                                         <cpt:property id="cmpCode"/>
-                                        <cpt:property id="cmpCodeBuyer">
+                                        <cpt:property id="cmpCodeBuyer" hidden="ALL_TABLES">
                                             <cpt:named>Buyer</cpt:named>
                                         </cpt:property>
                                         <cpt:property id="cmpCodeValidationStatus">
@@ -62,54 +63,43 @@
         <bs3:col span="8">
             <bs3:row>
                 <bs3:col span="12">
-                    <bs3:tabGroup collapseIfOne="false">
-                        <bs3:tab name="Validation Summary">
-                            <bs3:row>
-                                <bs3:col span="4">
-                                    <cpt:fieldSet name="" id="handling">
-                                        <cpt:property id="handling" labelPosition="TOP">
-                                            <cpt:action id="handling"
-                                                        promptStyle="INLINE_AS_IF_EDIT"/>
-                                        </cpt:property>
-                                    </cpt:fieldSet>
-                                </bs3:col>
-                                <bs3:col span="8">
-                                    <cpt:fieldSet name="" id="Validation Summary">
-                                        <cpt:property id="reasonInvalid" labelPosition="TOP">
-                                            <cpt:named>Reason(s) invalid</cpt:named>
-                                        </cpt:property>
-                                    </cpt:fieldSet>
-                                </bs3:col>
-                            </bs3:row>
-                        </bs3:tab>
-                    </bs3:tabGroup>
+                    <cpt:fieldSet id="Validation Summary">
+                        <cpt:property id="reasonInvalid" labelPosition="TOP">
+                            <cpt:named>Reason(s) invalid</cpt:named>
+                        </cpt:property>
+                    </cpt:fieldSet>
                 </bs3:col>
             </bs3:row>
             <bs3:row>
+                <bs3:col span="4">
+                    <cpt:fieldSet name="Coda Dates" id="codaDates">
+                        <cpt:property id="codaPeriodQuarter"/>
+                        <cpt:property id="codaPeriod"/>
+                        <cpt:property id="docDate"/>
+                        <cpt:property id="inputDate"/>
+                    </cpt:fieldSet>
+                </bs3:col>
+                <bs3:col span="4">
+                    <cpt:fieldSet name="Coda Location" id="codaLocation">
+                        <cpt:property id="location"/>
+                    </cpt:fieldSet>
+                </bs3:col>
+                <bs3:col span="4">
+                    <cpt:fieldSet name="Syncing to Estatio" id="sync">
+                        <cpt:property id="handling">
+                            <cpt:action id="handleAs"/>
+                        </cpt:property>
+                        <cpt:property id="incomingInvoice"/>
+                    </cpt:fieldSet>
+                </bs3:col>
+            </bs3:row>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12">
+            <bs3:row>
                 <bs3:col span="12">
-                    <bs3:tabGroup collapseIfOne="false">
-                        <bs3:tab name="Details">
-                            <bs3:row>
-                                <bs3:col span="4">
-                                    <cpt:fieldSet name="Coda Dates" id="codaDates">
-                                        <cpt:property id="codaPeriod"/>
-                                        <cpt:property id="docDate"/>
-                                        <cpt:property id="inputDate"/>
-                                    </cpt:fieldSet>
-                                </bs3:col>
-                                <bs3:col span="4">
-                                    <cpt:fieldSet name="Coda Location" id="codaLocation">
-                                        <cpt:property id="location"/>
-                                    </cpt:fieldSet>
-                                </bs3:col>
-                                <bs3:col span="4">
-                                    <cpt:fieldSet name="Syncing to Estatio" id="sync">
-                                        <cpt:property id="incomingInvoice"/>
-                                    </cpt:fieldSet>
-                                </bs3:col>
-                            </bs3:row>
-                        </bs3:tab>
-                    </bs3:tabGroup>
+                    <cpt:collection id="selectedCodaDocuments"/>
                 </bs3:col>
             </bs3:row>
         </bs3:col>
@@ -123,15 +113,6 @@
                 <cpt:property id="analysisLineIsPresentValidationStatus" labelPosition="TOP" hidden="OBJECT_FORMS"/>
             </cpt:fieldSet>
         </bs3:col>
-        <bs3:col span="12">
-            <bs3:row>
-                <bs3:col span="12">
-                    <cpt:collection id="lines"/>
-                </bs3:col>
-            </bs3:row>
-        </bs3:col>
-    </bs3:row>
-    <bs3:row>
         <bs3:col span="12" unreferencedCollections="true">
         </bs3:col>
     </bs3:row>

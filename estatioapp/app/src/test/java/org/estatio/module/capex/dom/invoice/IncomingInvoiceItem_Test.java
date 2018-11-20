@@ -163,11 +163,17 @@ public class IncomingInvoiceItem_Test {
 
 
         @Test
-        public void reasonIncomplete_works() throws Exception {
+        public void reasonIncomplete_works_for_non_italian() throws Exception {
 
             // given
             IncomingInvoiceItem item = new IncomingInvoiceItem();
-            item.setInvoice(new IncomingInvoice());
+            final IncomingInvoice invoice = new IncomingInvoice() {
+                @Override
+                public String getAtPath(){
+                    return "/FRA";
+                }
+            };
+            item.setInvoice(invoice);
 
             // when, then
             assertThat(item.reasonIncomplete()).isEqualTo("incoming invoice type, start date, end date, net amount, vat amount, gross amount, charge required");
@@ -193,6 +199,24 @@ public class IncomingInvoiceItem_Test {
             // then
             assertThat(item.reasonIncomplete()).isNull();
 
+        }
+
+        @Test
+        public void reasonIncomplete_works_for_italian() throws Exception {
+
+            // given
+            IncomingInvoiceItem item = new IncomingInvoiceItem();
+            final IncomingInvoice invoice = new IncomingInvoice() {
+                @Override
+                public String getAtPath(){
+                    return "/ITA";
+                }
+            };
+            item.setInvoice(invoice);
+
+            // when, then
+            assertThat(item.reasonIncomplete()).isEqualTo("incoming invoice type, start date, end date, net amount, vat amount, gross amount required");
+            
         }
 
     }

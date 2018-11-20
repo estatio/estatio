@@ -7,9 +7,8 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.Index;
-import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
@@ -31,6 +30,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.PropertyDomainEvent;
 import org.apache.isis.applib.services.title.TitleService;
 
@@ -68,186 +68,29 @@ import lombok.Setter;
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
                         + "WHERE docHead == :docHead "
                         + "   && lineNum == :lineNum "),
-
         @Query(
-                name = "findByHandlingAndAccountCodeValidationStatus", language = "JDOQL",
+                name = "findByCodaPeriodQuarterAndHandlingAndValid", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
-                        + "WHERE handling                    == :handling "
-                        + "   && accountCodeValidationStatus == :accountCodeValidationStatus "
-        ),
+                        + "WHERE docHead.codaPeriodQuarter == :codaPeriodQuarter "
+                        + "   && docHead.handling          == :handling "
+                        + "   && docHead.reasonInvalid     == null "),
         @Query(
-                name = "findByHandlingAndAccountCodeValidationStatusAndAccountCodeEl3ValidationStatus", language = "JDOQL",
+                name = "findByCodaPeriodQuarterAndHandlingAndNotValid", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
-                        + "WHERE handling                       == :handling "
-                        + "   && accountCodeValidationStatus    == :accountCodeValidationStatus "
-                        + "   && accountCodeEl3ValidationStatus == :accountCodeEl3ValidationStatus "
-        ),
+                        + "WHERE docHead.codaPeriodQuarter == :codaPeriodQuarter "
+                        + "   && docHead.handling          == :handling "
+                        + "   && docHead.reasonInvalid     != null "),
         @Query(
-                name = "findByHandlingAndAccountCodeValidationStatusAndAccountCodeEl3ValidationStatusAndAccountCodeEl3", language = "JDOQL",
+                name = "findByCodaPeriodQuarterAndHandling", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
-                        + "WHERE handling                       == :handling "
-                        + "   && accountCodeValidationStatus    == :accountCodeValidationStatus "
-                        + "   && accountCodeEl3ValidationStatus == :accountCodeEl3ValidationStatus "
-                        + "   && accountCodeEl3                 == :accountCodeEl3"
-        ),
-        @Query(
-                name = "findByHandlingAndAccountCodeValidationStatusAndAccountCodeEl5ValidationStatus", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
-                        + "WHERE handling                       == :handling "
-                        + "   && accountCodeValidationStatus    == :accountCodeValidationStatus "
-                        + "   && accountCodeEl5ValidationStatus == :accountCodeEl5ValidationStatus "
-        ),
-        @Query(
-                name = "findByHandlingAndAccountCodeValidationStatusAndAccountCodeEl5ValidationStatusAndAccountCodeEl5", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
-                        + "WHERE handling                       == :handling "
-                        + "   && accountCodeValidationStatus    == :accountCodeValidationStatus "
-                        + "   && accountCodeEl5ValidationStatus == :accountCodeEl5ValidationStatus "
-                        + "   && accountCodeEl5                 == :accountCodeEl5"
-        ),
-        @Query(
-                name = "findByHandlingAndAccountCodeValidationStatusAndAccountCodeEl6ValidationStatus", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
-                        + "WHERE handling                       == :handling "
-                        + "   && accountCodeValidationStatus    == :accountCodeValidationStatus "
-                        + "   && accountCodeEl6ValidationStatus == :accountCodeEl6ValidationStatus "
-        ),
-        @Query(
-                name = "findByHandlingAndAccountCodeValidationStatusAndAccountCodeEl6ValidationStatusAndAccountCodeEl6", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
-                        + "WHERE handling                       == :handling "
-                        + "   && accountCodeValidationStatus    == :accountCodeValidationStatus "
-                        + "   && accountCodeEl6ValidationStatus == :accountCodeEl6ValidationStatus "
-                        + "   && accountCodeEl6                 == :accountCodeEl6"
-        ),
-        @Query(
-                name = "findByHandlingAndAccountCodeValidationStatusAndSupplierBankAccountValidationStatus", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
-                        + "WHERE handling                            == :handling "
-                        + "   && accountCodeValidationStatus         == :accountCodeValidationStatus "
-                        + "   && supplierBankAccountValidationStatus == :supplierBankAccountValidationStatus "
-        ),
-        @Query(
-                name = "findByHandlingAndAccountCodeValidationStatusAndSupplierBankAccountValidationStatusAndElmBankAccount", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
-                        + "WHERE handling                            == :handling "
-                        + "   && accountCodeValidationStatus         == :accountCodeValidationStatus "
-                        + "   && supplierBankAccountValidationStatus == :supplierBankAccountValidationStatus "
-                        + "   && elmBankAccount                      == :elmBankAccount"
-        ),
-
-        @Query(
-                name = "findByHandlingAndExtRefValidationStatus", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
-                        + "WHERE handling               == :handling "
-                        + "   && extRefValidationStatus == :extRefValidationStatus "
-        ),
-
-        @Query(
-                name = "findByHandlingAndExtRefValidationStatusAndExtRefOrderValidationStatusAndOrderNumber", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
-                        + "WHERE handling                    == :handling "
-                        + "   && extRefValidationStatus      == :extRefValidationStatus "
-                        + "   && extRefOrderValidationStatus == :extRefOrderValidationStatus "
-                        + "   && orderNumber                 == :orderNumber "
-        ),
-        @Query(
-                name = "findByHandlingAndExtRefValidationStatusAndExtRefOrderValidationStatus", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
-                        + "WHERE handling                    == :handling "
-                        + "   && extRefValidationStatus      == :extRefValidationStatus "
-                        + "   && extRefOrderValidationStatus == :extRefOrderValidationStatus "
-        ),
-        @Query(
-                name = "findByHandlingAndExtRefValidationStatusAndExtRefProjectValidationStatusAndProjectReference", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
-                        + "WHERE handling                      == :handling "
-                        + "   && extRefValidationStatus        == :extRefValidationStatus "
-                        + "   && extRefProjectValidationStatus == :extRefProjectValidationStatus "
-                        + "   && projectReference              == :projectReference "
-        ),
-        @Query(
-                name = "findByHandlingAndExtRefValidationStatusAndExtRefProjectValidationStatus", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
-                        + "WHERE handling                      == :handling "
-                        + "   && extRefValidationStatus        == :extRefValidationStatus "
-                        + "   && extRefProjectValidationStatus == :extRefProjectValidationStatus "
-        ),
-        @Query(
-                name = "findByHandlingAndExtRefValidationStatusAndExtRefWorkTypeValidationStatusAndChargeReference", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
-                        + "WHERE handling                       == :handling "
-                        + "   && extRefValidationStatus         == :extRefValidationStatus "
-                        + "   && extRefWorkTypeValidationStatus == :extRefWorkTypeValidationStatus "
-                        + "   && chargeReference                == :chargeReference "
-        ),
-        @Query(
-                name = "findByHandlingAndExtRefValidationStatusAndExtRefWorkTypeValidationStatus", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
-                        + "WHERE handling                       == :handling "
-                        + "   && extRefValidationStatus         == :extRefValidationStatus "
-                        + "   && extRefWorkTypeValidationStatus == :extRefWorkTypeValidationStatus "
-        ),
-        @Query(
-                name = "findByHandlingAndMediaCodeValidationStatus", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
-                        + "WHERE handling                  == :handling "
-                        + "   && mediaCodeValidationStatus == :mediaCodeValidationStatus "
-        ),
-        @Query(
-                name = "findByHandlingAndMediaCodeValidationStatusAndMediaCode", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
-                        + "WHERE handling                  == :handling "
-                        + "   && mediaCodeValidationStatus == :mediaCodeValidationStatus "
-                        + "   && mediaCode                 == :mediaCode "
-        ),
+                        + "WHERE docHead.codaPeriodQuarter == :codaPeriodQuarter "
+                        + "   && docHead.handling          == :handling "),
 })
 @Uniques({
         @Unique(name = "CodaDocLine_docHead_lineNum_UNQ", members = { "docHead", "lineNum" }),
-})
-@Indices({
-        @Index(name = "CodaDocLine_accountCodeValidation_IDX",
-                members = { "handling", "accountCodeValidationStatus", "accountCode" }),
-        @Index(name = "CodaDocLine_accountCodeEl3Validation_IDX",
-                members = { "handling", "accountCodeValidationStatus", "accountCodeEl3ValidationStatus", "accountCodeEl3" }),
-        @Index(name = "CodaDocLine_accountCodeEl5Validation_IDX",
-                members = { "handling", "accountCodeValidationStatus", "accountCodeEl5ValidationStatus", "accountCodeEl5" }),
-        @Index(name = "CodaDocLine_accountCodeEl6Validation_IDX",
-                members = { "handling", "accountCodeValidationStatus", "accountCodeEl6ValidationStatus", "accountCodeEl6" }),
-
-        @Index(name = "CodaDocLine_supplierBankAccountValidation_IDX",
-                members = { "handling", "accountCodeValidationStatus", "supplierBankAccountValidationStatus", "elmBankAccount" }),
-
-        @Index(name = "CodaDocLine_extRefValidation_IDX",
-                members = { "handling", "extRefValidationStatus", "extRef3", "extRef5" }),
-
-        @Index(name = "CodaDocLine_orderValidation_IDX",
-                members = { "handling", "extRefValidationStatus", "extRefOrderValidationStatus", "orderNumber" }),
-        @Index(name = "CodaDocLine_projectValidation_IDX",
-                members = { "handling", "extRefValidationStatus", "extRefProjectValidationStatus", "projectReference" }),
-        @Index(name = "CodaDocLine_workTypeValidation_IDX",
-                members = { "handling", "extRefValidationStatus", "extRefWorkTypeValidationStatus", "chargeReference" }),
-
-        @Index(name = "CodaDocLine_mediaCodeValidation_IDX",
-                members = { "handling", "mediaCodeValidationStatus", "mediaCode" }),
 })
 @DomainObject(
         objectType = "coda.CodaDocLine",
@@ -320,9 +163,8 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     void resetValidationAndDerivations() {
 
         // use setters so that DN is aware
-
-        setHandling(Handling.ATTENTION);
-
+        setHandling(Handling.INCLUDED);
+        
         setAccountCodeValidationStatus(ValidationStatus.NOT_CHECKED);
 
         setAccountCodeEl3(null);
@@ -364,8 +206,10 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Inject
     TitleService titleService;
 
+    @Persistent(defaultFetchGroup = "true")
     @Column(allowsNull = "false", name = "docHeadId")
     @Property
+    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
     private CodaDocHead docHead;
 

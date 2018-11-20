@@ -61,6 +61,11 @@ public class IncomingInvoice_Test {
             protected EventBusService getEventBusService() {
                 return mockEventBusService;
             }
+
+            @Override
+            public String getAtPath(){
+                return "/FRA";
+            }
         };
         context.checking(new Expectations() {{
             ignoring(mockEventBusService);

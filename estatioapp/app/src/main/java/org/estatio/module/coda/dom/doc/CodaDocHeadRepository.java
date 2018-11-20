@@ -1,5 +1,10 @@
 package org.estatio.module.coda.dom.doc;
 
+import java.util.Collection;
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -58,7 +63,42 @@ public class CodaDocHeadRepository {
         return repositoryService.persist(codaDocHead);
     }
 
+    @Programmatic
+    public List<CodaDocHead> findByCodaPeriodQuarterAndHandlingAndValidity(
+            final String codaPeriodQuarter,
+            final Handling handling,
+            final Validity validity) {
+        switch (validity) {
+        case VALID:
+            return repositoryService.allMatches(
+                    new org.apache.isis.applib.query.QueryDefault<>(
+                            CodaDocHead.class,
+                            "findByCodaPeriodQuarterAndHandlingAndValid",
+                            "codaPeriodQuarter", codaPeriodQuarter,
+                            "handling", handling));
+        case NOT_VALID:
+            return repositoryService.allMatches(
+                    new org.apache.isis.applib.query.QueryDefault<>(
+                            CodaDocHead.class,
+                            "findByCodaPeriodQuarterAndHandlingAndNotValid",
+                            "codaPeriodQuarter", codaPeriodQuarter,
+                            "handling", handling));
+        case BOTH:
+        default:
+            return repositoryService.allMatches(
+                    new org.apache.isis.applib.query.QueryDefault<>(
+                            CodaDocHead.class,
+                            "findByCodaPeriodQuarterAndHandling",
+                            "codaPeriodQuarter", codaPeriodQuarter,
+                            "handling", handling));
+        }
+
+    }
+
     private void delete(final CodaDocHead codaDocHead) {
+        for (final CodaDocLine line : Lists.newArrayList(codaDocHead.getLines())) {
+            repositoryService.removeAndFlush(line);
+        }
         repositoryService.removeAndFlush(codaDocHead);
     }
 
@@ -66,4 +106,13 @@ public class CodaDocHeadRepository {
     RepositoryService repositoryService;
     @javax.inject.Inject
     TitleService titleService;
+
+    @Programmatic
+    public Collection<? extends CodaDocHead> findWithInvalidEl3(
+            final Handling handling,
+            final ValidationStatus accountCodeValidationStatus,
+            final String el3) {
+        return null;
+    }
+
 }
