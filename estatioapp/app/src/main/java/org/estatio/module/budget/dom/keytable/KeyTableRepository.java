@@ -16,11 +16,20 @@
  */
 package org.estatio.module.budget.dom.keytable;
 
-import org.apache.isis.applib.annotation.*;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.inject.Inject;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.budget.dom.budget.Budget;
-
-import java.util.List;
 
 @DomainService(repositoryFor = KeyTable.class, nature = NatureOfService.DOMAIN)
 @DomainServiceLayout()
@@ -54,8 +63,8 @@ public class KeyTableRepository extends UdoDomainRepositoryAndFactory<KeyTable> 
             final FoundationValueType foundationValueType,
             final KeyValueMethod keyValueMethod,
             final Integer numberOfDigits) {
-        if (findByBudgetAndName(budget, name)!=null) {
-            return "There is already a keytable with this name for this budget";
+        if (partitioningTableRepository.findByBudgetAndName(budget, name)!=null) {
+            return "There is already a table with this name for this budget";
         }
 
         return null;
@@ -69,35 +78,28 @@ public class KeyTableRepository extends UdoDomainRepositoryAndFactory<KeyTable> 
             final KeyValueMethod keyValueMethod,
             final Integer precision
     ) {
-        final KeyTable keyTable = findByBudgetAndName(budget, name);
-        if (keyTable !=null) {
-            return keyTable;
+        final PartitioningTable keyTableIfAny = partitioningTableRepository.findByBudgetAndName(budget, name);
+        if (keyTableIfAny !=null && keyTableIfAny.getClass().isAssignableFrom(KeyTable.class)) {
+            return (KeyTable) keyTableIfAny;
         } else {
             return newKeyTable(budget, name, foundationValueType, keyValueMethod, precision);
         }
     }
 
 
+    public List<KeyTable> autoComplete(final String search) {
+        return partitioningTableRepository.autoComplete(search)
+                .stream()
+                .filter(KeyTable.class::isInstance)
+                .map(KeyTable.class::cast)
+                .collect(Collectors.toList());
+    }
+
     @Programmatic
     public List<KeyTable> allKeyTables() {
         return allInstances();
     }
 
-
-    @Programmatic
-    public KeyTable findByBudgetAndName(final Budget budget, final String name) {
-        return uniqueMatch("findByBudgetAndName", "budget", budget, "name", name);
-    }
-
-
-    public List<KeyTable> findByBudget(Budget budget) {
-        return allMatches("findByBudget", "budget", budget);
-    }
-
-
-    @ActionLayout(hidden = Where.EVERYWHERE)
-    public List<KeyTable> autoComplete(final String search) {
-        return allMatches("findKeyTableByNameMatches", "name", search.toLowerCase());
-    }
+    @Inject PartitioningTableRepository partitioningTableRepository;
 
 }

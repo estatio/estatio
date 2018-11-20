@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -60,6 +61,7 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetcalculation.Status;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.KeyTableRepository;
+import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
 import org.estatio.module.budget.dom.partioning.PartitioningRepository;
@@ -210,7 +212,11 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
     }
 
     public List<KeyTable> choices1CreatePartitionItemForBudgeting() {
-        return keyTableRepository.findByBudget(getBudget());
+        return partitioningTableRepository.findByBudget(getBudget())
+                .stream()
+                .filter(KeyTable.class::isInstance)
+                .map (KeyTable.class::cast)
+                .collect(Collectors.toList());
     }
 
     public String disableCreatePartitionItemForBudgeting(){
@@ -225,7 +231,7 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
             // only copies of budgeted items are made
             if (partitionItem.getPartitioning().getType()==BudgetCalculationType.BUDGETED) {
                 String keyTableName = partitionItem.getKeyTable().getName();
-                KeyTable correspondingTableOnbudget = keyTableRepository.findByBudgetAndName(budget, keyTableName);
+                KeyTable correspondingTableOnbudget = (KeyTable) partitioningTableRepository.findByBudgetAndName(budget, keyTableName);
                 newBudgetItemCopy.createPartitionItemForBudgeting(partitionItem.getCharge(), correspondingTableOnbudget, partitionItem.getPercentage(), partitionItem.getFixedBudgetedAmount());
             }
         }
@@ -285,6 +291,8 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
 
     @Inject
     private KeyTableRepository keyTableRepository;
+
+    @Inject PartitioningTableRepository partitioningTableRepository;
 
     @Inject
     BudgetItemValueRepository budgetItemValueRepository;

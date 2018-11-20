@@ -24,19 +24,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.collect.Sets;
 
+import org.apache.isis.applib.Module;
+import org.apache.isis.applib.ModuleAbstract;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.asset.EstatioAssetModule;
-import org.apache.isis.applib.Module;
-import org.apache.isis.applib.ModuleAbstract;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemValue;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
-import org.estatio.module.budget.dom.keytable.KeyTable;
+import org.estatio.module.budget.dom.keytable.PartitioningTable;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.Partitioning;
 import org.estatio.module.charge.EstatioChargeModule;
@@ -63,7 +63,7 @@ public final class EstatioBudgetModule extends ModuleAbstract {
                 deleteFrom(BudgetItemValue.class);
                 deleteFrom(BudgetItem.class);
                 deleteFrom(KeyItem.class);
-                deleteFrom(KeyTable.class);
+                deleteFrom(PartitioningTable.class);
                 deleteFrom(Budget.class);
             }
         };

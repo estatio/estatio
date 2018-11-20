@@ -73,6 +73,7 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
 
             // when
             Budget budget2016 = wrap(budget2015).createNextBudget();
+            transactionService.nextTransaction();
 
             // then
             assertThat(budgetRepository.findByProperty(propertyBud).size()).isEqualTo(2);

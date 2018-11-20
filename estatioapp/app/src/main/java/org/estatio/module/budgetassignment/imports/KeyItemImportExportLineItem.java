@@ -43,6 +43,7 @@ import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.keyitem.KeyItemRepository;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.KeyTableRepository;
+import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -191,7 +192,7 @@ public class KeyItemImportExportLineItem
     public KeyTable getKeyTable() {
         if (keyTable == null) {
             Budget budget = budgetRepository.findByPropertyAndStartDate(getProperty(),getStartDate());
-            keyTable = keyTableRepository.findByBudgetAndName(budget, getKeyTableName());
+            keyTable = (KeyTable) partitioningTableRepository.findByBudgetAndName(budget, getKeyTableName());
         }
         return keyTable;
     }
@@ -236,6 +237,9 @@ public class KeyItemImportExportLineItem
 
     @Inject
     KeyTableRepository keyTableRepository;
+
+    @Inject
+    PartitioningTableRepository partitioningTableRepository;
 
     @Inject
     PropertyRepository propertyRepository;

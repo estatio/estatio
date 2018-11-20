@@ -15,6 +15,7 @@ import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.KeyTableRepository;
+import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
 import org.estatio.module.budget.dom.partioning.Partitioning;
@@ -36,6 +37,9 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
 
     @Inject
     KeyTableRepository keytablesRepository;
+
+    @Inject
+    PartitioningTableRepository partitioningTableRepository;
 
     @Before
     public void setupData() {
@@ -95,7 +99,7 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
             Budget budget = budgetRepository.findByPropertyAndStartDate(property,
                     Budget_enum.OxfBudget2015.getStartDate());
             BudgetItem budgetItem = budget.getItems().first();
-            KeyTable keyTable = keytablesRepository.findByBudget(budget).get(0);
+            KeyTable keyTable = (KeyTable) partitioningTableRepository.findByBudget(budget).get(0);
             Charge charge = Charge_enum.GbServiceCharge.findUsing(serviceRegistry);
             Partitioning partitioning = budget.getPartitionings().first();
             // when
@@ -122,7 +126,7 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
             Budget budget = budgetRepository.findByPropertyAndStartDate(property,
                     Budget_enum.OxfBudget2015.getStartDate());
             BudgetItem budgetItem = budget.getItems().first();
-            KeyTable keyTable = keytablesRepository.findByBudget(budget).get(0);
+            KeyTable keyTable = (KeyTable) partitioningTableRepository.findByBudget(budget).get(0);
             Charge charge = Charge_enum.GbServiceCharge.findUsing(serviceRegistry);
             Partitioning partitioning = budget.getPartitionings().first();
 

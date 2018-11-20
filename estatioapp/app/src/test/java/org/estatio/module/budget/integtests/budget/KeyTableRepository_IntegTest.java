@@ -15,9 +15,9 @@ import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
-import org.estatio.module.budget.dom.keytable.KeyTable;
-import org.estatio.module.budget.dom.keytable.KeyTableRepository;
 import org.estatio.module.budget.dom.keytable.KeyValueMethod;
+import org.estatio.module.budget.dom.keytable.PartitioningTable;
+import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.integtests.BudgetModuleIntegTestAbstract;
 
@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class KeyTableRepository_IntegTest extends BudgetModuleIntegTestAbstract {
 
     @Inject
-    KeyTableRepository keyTableRepository;
+    PartitioningTableRepository keyTableRepository;
 
     @Inject
     PropertyRepository propertyRepository;
@@ -61,7 +61,7 @@ public class KeyTableRepository_IntegTest extends BudgetModuleIntegTestAbstract 
             budget.createKeyTable(TABLE_NAME_1, FoundationValueType.AREA, KeyValueMethod.PROMILLE);
 
             // when
-            final KeyTable keyTable = keyTableRepository.findByBudgetAndName(budget, TABLE_NAME_1);
+            final PartitioningTable keyTable = keyTableRepository.findByBudgetAndName(budget, TABLE_NAME_1);
             // then
             assertThat(keyTable.getName()).isEqualTo(TABLE_NAME_1);
             assertThat(keyTable.getBudget().getProperty()).isEqualTo(property);
@@ -82,7 +82,7 @@ public class KeyTableRepository_IntegTest extends BudgetModuleIntegTestAbstract 
             budget.createKeyTable(TABLE_NAME_2, FoundationValueType.AREA, KeyValueMethod.PROMILLE);
 
             // when
-            final List<KeyTable> keyTables = keyTableRepository.findByBudget(budget);
+            final List<PartitioningTable> keyTables = keyTableRepository.findByBudget(budget);
             // then
             assertThat(keyTables.size()).isEqualTo(2);
             assertThat(keyTables.get(0).getBudget()).isEqualTo(budget);

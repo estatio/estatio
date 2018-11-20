@@ -26,8 +26,8 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyTable;
-import org.estatio.module.budget.dom.keytable.KeyTableRepository;
 import org.estatio.module.budget.dom.keytable.KeyValueMethod;
+import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.keytables.builders.KeyTableBuilder;
 
@@ -79,8 +79,8 @@ public enum KeyTable_enum implements PersonaWithBuilderScript<KeyTable, KeyTable
     public KeyTable findUsing(final ServiceRegistry2 serviceRegistry) {
 
         final Budget budget = budget_d.findUsing(serviceRegistry);
-        final KeyTableRepository keyTableRepository = serviceRegistry.lookupService(KeyTableRepository.class);
+        final PartitioningTableRepository partitioningTableRepository = serviceRegistry.lookupService(PartitioningTableRepository.class);
 
-        return keyTableRepository.findByBudgetAndName(budget, name);
+        return (KeyTable) partitioningTableRepository.findByBudgetAndName(budget, name);
     }
 }

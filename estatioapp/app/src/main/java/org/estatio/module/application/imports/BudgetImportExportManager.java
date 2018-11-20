@@ -44,6 +44,7 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 
+import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
 import org.estatio.module.budgetassignment.imports.BudgetOverrideImportExport;
 import org.estatio.module.budgetassignment.imports.KeyItemImportExportLineItem;
 import org.estatio.module.budgetassignment.imports.KeyItemImportExportService;
@@ -224,7 +225,7 @@ public class BudgetImportExportManager {
     private List<KeyTable> keyTablesToImport(final List<BudgetImportExport> lineItems){
         List<KeyTable> result = new ArrayList<>();
         for (BudgetImportExport lineItem :lineItems) {
-            KeyTable foundKeyTable = keyTableRepository.findByBudgetAndName(getBudget(), lineItem.getKeyTableName());
+            KeyTable foundKeyTable = (KeyTable) partitioningTableRepository.findByBudgetAndName(getBudget(), lineItem.getKeyTableName());
             if (foundKeyTable!=null && !result.contains(foundKeyTable)) {
                 result.add(foundKeyTable);
             }
@@ -274,6 +275,9 @@ public class BudgetImportExportManager {
 
     @Inject
     private KeyTableRepository keyTableRepository;
+
+    @Inject
+    PartitioningTableRepository partitioningTableRepository;
 
     @Inject
     private ServiceRegistry2 serviceRegistry2;
