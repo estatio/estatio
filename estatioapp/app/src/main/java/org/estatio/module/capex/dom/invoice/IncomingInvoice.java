@@ -904,6 +904,14 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         this.dateReceived = invalidateApprovalIfDiffer(this.dateReceived, dateReceived);
     }
 
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private LocalDate vatRegistrationDate;
+
+    public boolean hideVatRegistrationDate() {
+        return !this.getAtPath().startsWith("/ITA");
+    }
+
     // TODO: does not seem to be used, raised EST-1599 to look into removing it.
     @Getter @Setter
     @Column(allowsNull = "true", name="invoiceId")
@@ -1065,9 +1073,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return buf.getReason();
     }
 
-    
-    
-    
+
+
+
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(named = "Edit Supplier")
     public IncomingInvoice editSeller(

@@ -118,6 +118,7 @@
                                         <cpt:property id="dueDate">
                                             <cpt:action id="changeDueDate" hidden="EVERYWHERE"/>
                                         </cpt:property>
+                                        <cpt:property id="vatRegistrationDate"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>
