@@ -214,7 +214,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
     }
 
     @Test
-    public void recoverable_invoice_for_property_having_center_manager_needs_to_be_approved_by_center_manager() throws Exception {
+    public void recoverable_invoice_for_property_having_center_manager_needs_to_be_approved_by_center_manager_when_NOT_over_100000() throws Exception {
 
         List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice;
 
@@ -277,6 +277,65 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         assertThat(lastAutomatic.getFromState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED);
         assertThat(lastAutomatic.getToState()).isEqualTo(IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS);
         assertThat(lastAutomatic.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.CHECK_IN_CODA_BOOKS_WHEN_APPROVED);
+
+    }
+
+    @Test
+    public void recoverable_invoice_for_property_having_center_manager_needs_to_be_approved_by_center_manager_when_over_100000() throws Exception {
+
+        List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice;
+
+        // given
+        recoverableInvoice.changeAmounts(new BigDecimal("100000.01"), new BigDecimal("122000.01"));
+        IncomingInvoiceItem item = (IncomingInvoiceItem) recoverableInvoice.getItems().first();
+        item.addAmounts(new BigDecimal("0.01"), BigDecimal.ZERO, new BigDecimal("0.01"));
+
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_complete.class, recoverableInvoice)).act("INCOMING_INVOICE_MANAGER", null, null));
+        assertThat(recoverableInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
+
+        // when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.IlicCenterManagerIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_approveAsCenterManager.class, recoverableInvoice)).act( null, null, false));
+
+        // then
+        assertThat(recoverableInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER);
+        transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(recoverableInvoice);
+        assertThat(transitionsOfInvoice).hasSize(4);
+        final IncomingInvoiceApprovalStateTransition lastCompletedTransition = transitionsOfInvoice.get(1);
+        assertThat(lastCompletedTransition.isCompleted()).isTrue();
+        assertThat(lastCompletedTransition.getCompletedBy()).isEqualTo("iresponsabile");
+        final IncomingInvoiceApprovalStateTransition newPendingTransition = transitionsOfInvoice.get(0);
+        assertThat(newPendingTransition.isCompleted()).isFalse();
+        assertThat(newPendingTransition.getFromState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER);
+        assertThat(newPendingTransition.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR);
+        final Task newPendingTransitionTask = newPendingTransition.getTask();
+        assertThat(newPendingTransitionTask).isNotNull();
+        assertThat(newPendingTransitionTask.getAssignedTo()).isEqualTo(partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.COUNTRY_DIRECTOR.getKey()));
+        assertThat(newPendingTransitionTask.isCompleted()).isFalse();
+
+        // and when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.RobertCountryDirectorIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_approveAsCountryDirector.class, recoverableInvoice)).act( null, false));
+
+        assertThat(recoverableInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS);
+        transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(recoverableInvoice);
+        assertThat(transitionsOfInvoice).hasSize(5);
+        final IncomingInvoiceApprovalStateTransition completedByAssetManager = transitionsOfInvoice.get(1);
+        assertThat(completedByAssetManager.isCompleted()).isTrue();
+        assertThat(completedByAssetManager.getCompletedBy()).isEqualTo("rstracciatella");
+        assertThat(completedByAssetManager.getFromState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER);
+        assertThat(completedByAssetManager.getToState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR);
+        assertThat(completedByAssetManager.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR);
+        final IncomingInvoiceApprovalStateTransition lastAutomatic = transitionsOfInvoice.get(0);
+        assertThat(lastAutomatic.isCompleted()).isTrue();
+        assertThat(lastAutomatic.getCompletedBy()).isNull();
+        assertThat(lastAutomatic.getFromState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR);
+        assertThat(lastAutomatic.getToState()).isEqualTo(IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS);
+        assertThat(lastAutomatic.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.CHECK_IN_CODA_BOOKS);
 
     }
 
