@@ -254,7 +254,17 @@ public enum IncomingInvoiceApprovalStateTransitionType
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.ASSET_MANAGER),
             AdvancePolicy.AUTOMATIC) {
-
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            if (!isItalian(incomingInvoice)) return false; // superfluous but just to be explicit
+            // applies to invoices under threshold only
+            if (hasNetAmountAboveThreshold(incomingInvoice)) {
+                return false;
+            }
+            return true;
+        }
         @Override
         public boolean isAutoGuardSatisfied(
                 final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
@@ -262,7 +272,10 @@ public enum IncomingInvoiceApprovalStateTransitionType
         }
     },
     APPROVE_AS_COUNTRY_DIRECTOR(
-            IncomingInvoiceApprovalState.APPROVED,
+            Lists.newArrayList(
+                    IncomingInvoiceApprovalState.APPROVED,
+                    IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER
+                    ),
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.to(PartyRoleTypeEnum.COUNTRY_DIRECTOR),
