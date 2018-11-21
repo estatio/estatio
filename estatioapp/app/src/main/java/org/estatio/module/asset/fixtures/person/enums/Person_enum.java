@@ -13,6 +13,7 @@ import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
 import org.estatio.module.asset.fixtures.person.builders.PersonFixedAssetRolesBuilder;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
@@ -140,6 +141,13 @@ public enum Person_enum
             null, null,
             new IPartyRoleType[] { PartyRoleTypeEnum.COUNTRY_DIRECTOR },
             new FixedAssetRoleSpec[] {}),
+
+    SergioPreferredCountryDirectorIt("RGALATI", "Sergio", "Galati", null, true, MALE, It, It,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.COUNTRY_DIRECTOR, IncomingInvoiceRoleTypeEnum.PREFERRED_DIRECTOR },
+            new FixedAssetRoleSpec[] {
+                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.INV_APPROVAL_DIRECTOR, Property_enum.RonIt)
+            }),
 
 
     // treasurer

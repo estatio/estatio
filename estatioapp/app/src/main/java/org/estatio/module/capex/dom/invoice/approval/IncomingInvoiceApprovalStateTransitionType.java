@@ -281,6 +281,20 @@ public enum IncomingInvoiceApprovalStateTransitionType
             TaskAssignmentStrategy.to(PartyRoleTypeEnum.COUNTRY_DIRECTOR),
             AdvancePolicy.AUTOMATIC) {
         @Override
+        public TaskAssignmentStrategy getTaskAssignmentStrategy() {
+            return (TaskAssignmentStrategy<
+                    IncomingInvoice,
+                    IncomingInvoiceApprovalStateTransition,
+                    IncomingInvoiceApprovalStateTransitionType,
+                    IncomingInvoiceApprovalState>) (incomingInvoice, serviceRegistry2) -> {
+                // guard since EST-1508 type can be not set
+                if (incomingInvoice.getType()==null) return null;
+                // for an recoverable (ita) invoice of a property that has a center manager, take the invoice approval director (of that property)
+                if (incomingInvoice.getProperty()!=null && incomingInvoice.getType() == IncomingInvoiceType.ITA_RECOVERABLE && hasCenterManager(incomingInvoice.getProperty())) return FixedAssetRoleTypeEnum.INV_APPROVAL_DIRECTOR;
+                return PartyRoleTypeEnum.COUNTRY_DIRECTOR;
+            };
+        }
+        @Override
         public boolean isMatch(
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {

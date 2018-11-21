@@ -9,7 +9,8 @@ import org.estatio.module.party.dom.role.PartyRoleTypeServiceSupportAbstract;
 public enum IncomingInvoiceRoleTypeEnum implements IPartyRoleType {
 
     ECP,
-    SUPPLIER;
+    SUPPLIER,
+    PREFERRED_DIRECTOR;
 
     @Override
     public String getKey() {

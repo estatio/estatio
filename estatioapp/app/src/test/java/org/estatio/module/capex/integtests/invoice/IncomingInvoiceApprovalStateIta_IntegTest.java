@@ -13,6 +13,7 @@ import org.togglz.junit.TogglzRule;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.sudo.SudoService;
 
 import org.incode.module.country.dom.impl.Country;
@@ -41,10 +42,14 @@ import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.role.PartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegTestAbstract {
@@ -73,7 +78,8 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
                         Person_enum.CarmenIncomingInvoiceManagerIt,
                         Person_enum.IlicCenterManagerIt,
                         Person_enum.FloellaAssetManagerIt,
-                        Person_enum.RobertCountryDirectorIt
+                        Person_enum.RobertCountryDirectorIt,
+                        Person_enum.SergioPreferredCountryDirectorIt
                 );
             }
         });
@@ -130,22 +136,31 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS);
         transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
         assertThat(transitionsOfInvoice).hasSize(4);
+
         final IncomingInvoiceApprovalStateTransition completedByAssetManager = transitionsOfInvoice.get(1);
-        assertThat(completedByAssetManager.isCompleted()).isTrue();
-        assertThat(completedByAssetManager.getCompletedBy()).isEqualTo("fgestore");
-        assertThat(completedByAssetManager.getFromState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
-        assertThat(completedByAssetManager.getToState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED);
-        assertThat(completedByAssetManager.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.APPROVE);
+        assertTransition(completedByAssetManager, new ExpectedTransitionRestult(
+                true,
+                "fgestore",
+                IncomingInvoiceApprovalState.COMPLETED,
+                IncomingInvoiceApprovalState.APPROVED,
+                IncomingInvoiceApprovalStateTransitionType.APPROVE
+        ));
+
         final Task taskForAssetManager = completedByAssetManager.getTask();
-        assertThat(taskForAssetManager).isNotNull();
-        assertThat(taskForAssetManager.getAssignedTo()).isEqualTo(partyRoleTypeRepository.findByKey(FixedAssetRoleTypeEnum.ASSET_MANAGER.getKey()));
+        assertTask(taskForAssetManager, new ExpectedTaskResult(
+                true,
+                partyRoleTypeRepository.findByKey(FixedAssetRoleTypeEnum.ASSET_MANAGER.getKey()),
+                Person_enum.FloellaAssetManagerIt.findUsing(serviceRegistry2)
+        ));
+
         final IncomingInvoiceApprovalStateTransition lastAutomatic = transitionsOfInvoice.get(0);
-        assertThat(lastAutomatic.isCompleted()).isTrue();
-        assertThat(lastAutomatic.getCompletedBy()).isNull();
-        assertThat(lastAutomatic.getTask()).isNull();
-        assertThat(lastAutomatic.getFromState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED);
-        assertThat(lastAutomatic.getToState()).isEqualTo(IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS);
-        assertThat(lastAutomatic.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.CHECK_IN_CODA_BOOKS_WHEN_APPROVED);
+        assertTransition(lastAutomatic, new ExpectedTransitionRestult(
+                true,
+                null,
+                IncomingInvoiceApprovalState.APPROVED,
+                IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS,
+                IncomingInvoiceApprovalStateTransitionType.CHECK_IN_CODA_BOOKS_WHEN_APPROVED
+        ));
 
     }
 
@@ -170,26 +185,41 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
 
         // then
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED);
+
         transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
         assertThat(transitionsOfInvoice).hasSize(4);
+
         final IncomingInvoiceApprovalStateTransition completedByAssetManager = transitionsOfInvoice.get(1);
-        assertThat(completedByAssetManager.isCompleted()).isTrue();
-        assertThat(completedByAssetManager.getCompletedBy()).isEqualTo("fgestore");
-        assertThat(completedByAssetManager.getFromState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
-        assertThat(completedByAssetManager.getToState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED);
-        assertThat(completedByAssetManager.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.APPROVE);
+        assertTransition(completedByAssetManager,
+                new ExpectedTransitionRestult(true,
+                        "fgestore",
+                        IncomingInvoiceApprovalState.COMPLETED,
+                        IncomingInvoiceApprovalState.APPROVED,
+                        IncomingInvoiceApprovalStateTransitionType.APPROVE));
+
         final Task taskForAssetManager = completedByAssetManager.getTask();
-        assertThat(taskForAssetManager).isNotNull();
-        assertThat(taskForAssetManager.getAssignedTo()).isEqualTo(partyRoleTypeRepository.findByKey(FixedAssetRoleTypeEnum.ASSET_MANAGER.getKey()));
+        assertTask(taskForAssetManager, new ExpectedTaskResult(
+                true,
+                partyRoleTypeRepository.findByKey(FixedAssetRoleTypeEnum.ASSET_MANAGER.getKey()),
+                Person_enum.FloellaAssetManagerIt.findUsing(serviceRegistry2)
+        ));
+
         final IncomingInvoiceApprovalStateTransition nextPending = transitionsOfInvoice.get(0);
-        assertThat(nextPending.isCompleted()).isFalse();
-        assertThat(nextPending.getFromState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED);
-        assertThat(nextPending.getToState()).isNull();
-        assertThat(nextPending.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR);
+        assertTransition(nextPending,
+                new ExpectedTransitionRestult(false,
+                        null,
+                        IncomingInvoiceApprovalState.APPROVED,
+                        null,
+                        IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR
+                ));
         final Task taskForDirector = nextPending.getTask();
-        assertThat(taskForDirector).isNotNull();
-        assertThat(taskForDirector.getAssignedTo()).isEqualTo(partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.COUNTRY_DIRECTOR.getKey()));
-        assertThat(taskForDirector.isCompleted()).isFalse();
+        assertTask(taskForDirector,
+                new ExpectedTaskResult(
+                        false,
+                        partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.COUNTRY_DIRECTOR.getKey()),
+                        null
+                )
+        );
 
         // and when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
@@ -200,16 +230,25 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS);
         transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
         assertThat(transitionsOfInvoice).hasSize(5);
-        final IncomingInvoiceApprovalStateTransition completedByDirector = transitionsOfInvoice.get(1);
-        assertThat(completedByDirector.getCompletedBy()).isEqualTo("rstracciatella");
-        assertThat(completedByDirector.getTask().getCompletedBy()).isEqualTo("rstracciatella");
-        final IncomingInvoiceApprovalStateTransition lastAutomatic = transitionsOfInvoice.get(0);
-        assertThat(lastAutomatic.isCompleted()).isTrue();
-        assertThat(lastAutomatic.getCompletedBy()).isNull();
-        assertThat(lastAutomatic.getFromState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR);
-        assertThat(lastAutomatic.getToState()).isEqualTo(IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS);
-        assertThat(lastAutomatic.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.CHECK_IN_CODA_BOOKS);
 
+        final IncomingInvoiceApprovalStateTransition completedByDirector = transitionsOfInvoice.get(1);
+        assertTransition(completedByDirector, new ExpectedTransitionRestult(
+                true,
+                "rstracciatella",
+                IncomingInvoiceApprovalState.APPROVED,
+                IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+                IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR
+        ));
+        assertThat(completedByDirector.getTask().getCompletedBy()).isEqualTo("rstracciatella");
+
+        final IncomingInvoiceApprovalStateTransition lastAutomatic = transitionsOfInvoice.get(0);
+        assertTransition(lastAutomatic, new ExpectedTransitionRestult(
+                true,
+                null,
+                IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+                IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS,
+                IncomingInvoiceApprovalStateTransitionType.CHECK_IN_CODA_BOOKS
+        ));
 
     }
 
@@ -226,15 +265,22 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         assertThat(recoverableInvoice.getNetAmount()).isEqualTo(new BigDecimal("100000.00"));
         transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(recoverableInvoice);
         assertThat(transitionsOfInvoice).hasSize(3);
+
         final IncomingInvoiceApprovalStateTransition pendingTransition = transitionsOfInvoice.get(0);
-        assertThat(pendingTransition.getFromState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
-        assertThat(pendingTransition.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_CENTER_MANAGER);
-        assertThat(pendingTransition.getToState()).isNull();
-        assertThat(pendingTransition.isCompleted()).isFalse();
+        assertTransition(pendingTransition, new ExpectedTransitionRestult(
+                false,
+                null,
+                IncomingInvoiceApprovalState.COMPLETED,
+                null,
+                IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_CENTER_MANAGER
+        ));
+
         final Task pendingTransitionTask = pendingTransition.getTask();
-        assertThat(pendingTransitionTask).isNotNull();
-        assertThat(pendingTransitionTask.getAssignedTo()).isEqualTo(partyRoleTypeRepository.findByKey(FixedAssetRoleTypeEnum.CENTER_MANAGER.getKey()));
-        assertThat(pendingTransitionTask.isCompleted()).isFalse();
+        assertTask(pendingTransitionTask, new ExpectedTaskResult(
+            false,
+                partyRoleTypeRepository.findByKey(FixedAssetRoleTypeEnum.CENTER_MANAGER.getKey()),
+                Person_enum.IlicCenterManagerIt.findUsing(serviceRegistry2)
+        ));
 
         // when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
@@ -245,17 +291,34 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         assertThat(recoverableInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER);
         transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(recoverableInvoice);
         assertThat(transitionsOfInvoice).hasSize(4);
+
         final IncomingInvoiceApprovalStateTransition lastCompletedTransition = transitionsOfInvoice.get(1);
+        assertTransition(lastCompletedTransition, new ExpectedTransitionRestult(
+                true,
+                "iresponsabile",
+                IncomingInvoiceApprovalState.COMPLETED,
+                IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER,
+                IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_CENTER_MANAGER
+        ));
+
         assertThat(lastCompletedTransition.isCompleted()).isTrue();
         assertThat(lastCompletedTransition.getCompletedBy()).isEqualTo("iresponsabile");
+
         final IncomingInvoiceApprovalStateTransition newPendingTransition = transitionsOfInvoice.get(0);
-        assertThat(newPendingTransition.isCompleted()).isFalse();
-        assertThat(newPendingTransition.getFromState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER);
-        assertThat(newPendingTransition.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.APPROVE_WHEN_APPROVED_BY_CENTER_MANAGER);
+        assertTransition(newPendingTransition, new ExpectedTransitionRestult(
+                false,
+                null,
+                IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER,
+                null,
+                IncomingInvoiceApprovalStateTransitionType.APPROVE_WHEN_APPROVED_BY_CENTER_MANAGER
+        ));
+
         final Task newPendingTransitionTask = newPendingTransition.getTask();
-        assertThat(newPendingTransitionTask).isNotNull();
-        assertThat(newPendingTransitionTask.getAssignedTo()).isEqualTo(partyRoleTypeRepository.findByKey(FixedAssetRoleTypeEnum.ASSET_MANAGER.getKey()));
-        assertThat(newPendingTransitionTask.isCompleted()).isFalse();
+        assertTask(newPendingTransitionTask, new ExpectedTaskResult(
+                false,
+                partyRoleTypeRepository.findByKey(FixedAssetRoleTypeEnum.ASSET_MANAGER.getKey()),
+                Person_enum.FloellaAssetManagerIt.findUsing(serviceRegistry2)
+        ));
 
         // and when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
@@ -265,18 +328,24 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         assertThat(recoverableInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS);
         transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(recoverableInvoice);
         assertThat(transitionsOfInvoice).hasSize(5);
+
         final IncomingInvoiceApprovalStateTransition completedByAssetManager = transitionsOfInvoice.get(1);
-        assertThat(completedByAssetManager.isCompleted()).isTrue();
-        assertThat(completedByAssetManager.getCompletedBy()).isEqualTo("fgestore");
-        assertThat(completedByAssetManager.getFromState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER);
-        assertThat(completedByAssetManager.getToState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED);
-        assertThat(completedByAssetManager.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.APPROVE_WHEN_APPROVED_BY_CENTER_MANAGER);
+        assertTransition(completedByAssetManager, new ExpectedTransitionRestult(
+                true,
+                "fgestore",
+                IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER,
+                IncomingInvoiceApprovalState.APPROVED,
+                IncomingInvoiceApprovalStateTransitionType.APPROVE_WHEN_APPROVED_BY_CENTER_MANAGER
+        ));
+
         final IncomingInvoiceApprovalStateTransition lastAutomatic = transitionsOfInvoice.get(0);
-        assertThat(lastAutomatic.isCompleted()).isTrue();
-        assertThat(lastAutomatic.getCompletedBy()).isNull();
-        assertThat(lastAutomatic.getFromState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED);
-        assertThat(lastAutomatic.getToState()).isEqualTo(IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS);
-        assertThat(lastAutomatic.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.CHECK_IN_CODA_BOOKS_WHEN_APPROVED);
+        assertTransition(lastAutomatic, new ExpectedTransitionRestult(
+                true,
+                null,
+                IncomingInvoiceApprovalState.APPROVED,
+                IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS,
+                IncomingInvoiceApprovalStateTransitionType.CHECK_IN_CODA_BOOKS_WHEN_APPROVED
+        ));
 
     }
 
@@ -304,38 +373,58 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         assertThat(recoverableInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER);
         transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(recoverableInvoice);
         assertThat(transitionsOfInvoice).hasSize(4);
+
         final IncomingInvoiceApprovalStateTransition lastCompletedTransition = transitionsOfInvoice.get(1);
-        assertThat(lastCompletedTransition.isCompleted()).isTrue();
-        assertThat(lastCompletedTransition.getCompletedBy()).isEqualTo("iresponsabile");
+        assertTransition(lastCompletedTransition, new ExpectedTransitionRestult(
+                true,
+                "iresponsabile",
+                IncomingInvoiceApprovalState.COMPLETED,
+                IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER,
+                IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_CENTER_MANAGER
+        ));
+
         final IncomingInvoiceApprovalStateTransition newPendingTransition = transitionsOfInvoice.get(0);
-        assertThat(newPendingTransition.isCompleted()).isFalse();
-        assertThat(newPendingTransition.getFromState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER);
-        assertThat(newPendingTransition.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR);
+        assertTransition(newPendingTransition, new ExpectedTransitionRestult(
+                false,
+                null,
+                IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER,
+                null,
+                IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR
+        ));
+
         final Task newPendingTransitionTask = newPendingTransition.getTask();
-        assertThat(newPendingTransitionTask).isNotNull();
-        assertThat(newPendingTransitionTask.getAssignedTo()).isEqualTo(partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.COUNTRY_DIRECTOR.getKey()));
-        assertThat(newPendingTransitionTask.isCompleted()).isFalse();
+        assertTask(newPendingTransitionTask, new ExpectedTaskResult(
+                false,
+                partyRoleTypeRepository.findByKey(FixedAssetRoleTypeEnum.INV_APPROVAL_DIRECTOR.getKey()),
+                Person_enum.SergioPreferredCountryDirectorIt.findUsing(serviceRegistry2)
+        ));
 
         // and when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(Person_enum.RobertCountryDirectorIt.getRef().toLowerCase(), (Runnable) () ->
+        sudoService.sudo(Person_enum.SergioPreferredCountryDirectorIt.getRef().toLowerCase(), (Runnable) () ->
                 wrap(mixin(IncomingInvoice_approveAsCountryDirector.class, recoverableInvoice)).act( null, false));
 
         assertThat(recoverableInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS);
         transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(recoverableInvoice);
         assertThat(transitionsOfInvoice).hasSize(5);
-        final IncomingInvoiceApprovalStateTransition completedByAssetManager = transitionsOfInvoice.get(1);
-        assertThat(completedByAssetManager.isCompleted()).isTrue();
-        assertThat(completedByAssetManager.getCompletedBy()).isEqualTo("rstracciatella");
-        assertThat(completedByAssetManager.getFromState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER);
-        assertThat(completedByAssetManager.getToState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR);
-        assertThat(completedByAssetManager.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR);
+
+        final IncomingInvoiceApprovalStateTransition completedByInvoiceApprovalDirector = transitionsOfInvoice.get(1);
+        assertTransition(completedByInvoiceApprovalDirector, new ExpectedTransitionRestult(
+                true,
+                "rgalati",
+                IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER,
+                IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+                IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR
+        ));
+
         final IncomingInvoiceApprovalStateTransition lastAutomatic = transitionsOfInvoice.get(0);
-        assertThat(lastAutomatic.isCompleted()).isTrue();
-        assertThat(lastAutomatic.getCompletedBy()).isNull();
-        assertThat(lastAutomatic.getFromState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR);
-        assertThat(lastAutomatic.getToState()).isEqualTo(IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS);
-        assertThat(lastAutomatic.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.CHECK_IN_CODA_BOOKS);
+        assertTransition(lastAutomatic, new ExpectedTransitionRestult(
+                true,
+                null,
+                IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+                IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS,
+                IncomingInvoiceApprovalStateTransitionType.CHECK_IN_CODA_BOOKS
+        ));
 
     }
 
@@ -347,8 +436,45 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
     public void payable_italian_invoice_cannot_be_rejected() throws Exception {
         //TODO: since at the moment we have no route to payable for Italian invoices yet
     }
-    
 
+    private void assertTransition(IncomingInvoiceApprovalStateTransition transition, ExpectedTransitionRestult result){
+        assertThat(transition.isCompleted()).isEqualTo(result.isCompleted());
+        assertThat(transition.getCompletedBy()).isEqualTo(result.getCompletedBy());
+        assertThat(transition.getFromState()).isEqualTo(result.getFromState());
+        assertThat(transition.getToState()).isEqualTo(result.getToState());
+        assertThat(transition.getTransitionType()).isEqualTo(result.getTransitionType());
+
+    }
+
+    @AllArgsConstructor
+    @Getter
+    private class ExpectedTransitionRestult {
+        private boolean completed;
+        private String completedBy;
+        private IncomingInvoiceApprovalState fromState;
+        private IncomingInvoiceApprovalState toState;
+        private IncomingInvoiceApprovalStateTransitionType transitionType;
+    }
+
+    private void assertTask(Task task, ExpectedTaskResult result){
+        assertThat(task.isCompleted()).isEqualTo(result.isCompleted());
+        assertThat(task.getAssignedTo()).isEqualTo(result.getAssignedTo());
+        assertThat(task.getPersonAssignedTo()).isEqualTo(result.getPersonAssignedTo());
+    }
+
+    @AllArgsConstructor
+    @Getter
+    private class ExpectedTaskResult {
+        private boolean completed;
+        private PartyRoleType assignedTo;
+        private Person personAssignedTo;
+    }
+
+
+
+
+    @Inject
+    ServiceRegistry2 serviceRegistry2;
 
     @Inject
     QueryResultsCache queryResultsCache;
