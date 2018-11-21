@@ -92,10 +92,6 @@ public class DerivedObjectUpdater {
 
         final PaymentMethod paymentMethod = docHead.getSummaryLinePaymentMethod(LineCache.DEFAULT);
 
-        //
-        // TODO: need to add this field to IncomingInvoice itself...
-        // https://incodehq.atlassian.net/browse/EST-1890
-        //
         final LocalDate vatRegistrationDate = docHead.getSummaryLineValueDate(LineCache.DEFAULT);
 
         final LocalDate dateReceived = docHead.getInputDate();
@@ -129,7 +125,7 @@ public class DerivedObjectUpdater {
             incomingInvoiceRepository.updateInvoice(
                     incomingInvoice,
                     type, invoiceNumber, property, AT_PATH, buyer, seller,
-                    invoiceDate, dueDate, paymentMethod,
+                    invoiceDate, dueDate, vatRegistrationDate, paymentMethod,
                     invoiceStatus, dateReceived, bankAccount);
 
             //
@@ -163,7 +159,7 @@ public class DerivedObjectUpdater {
                 incomingInvoice =
                         incomingInvoiceRepository.create(
                                 type, invoiceNumber, property, AT_PATH, buyer, seller,
-                                invoiceDate, dueDate, paymentMethod,
+                                invoiceDate, dueDate, vatRegistrationDate, paymentMethod,
                                 invoiceStatus, dateReceived, bankAccount, null);
 
                 incomingInvoice.setGrossAmount(grossAmount);
