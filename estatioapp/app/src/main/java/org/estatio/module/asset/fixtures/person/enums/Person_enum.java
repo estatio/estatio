@@ -68,7 +68,7 @@ public enum Person_enum
     // incoming invoice manager, property manager
     CarmenIncomingInvoiceManagerIt("CRIGATONI", "Carmen", "Rigatoni", null, true, FEMALE, It, It,
             null, null,
-            new IPartyRoleType[] { PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER },
+            new IPartyRoleType[] { PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER, PartyRoleTypeEnum.ORDER_MANAGER },
             new FixedAssetRoleSpec[] {}),
 
     JonathanIncomingInvoiceManagerGb("JRICE", "Jonathan", "Rice", null, true, MALE, Gb, Gb,
