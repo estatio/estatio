@@ -28,6 +28,7 @@ import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
@@ -41,8 +42,10 @@ import org.estatio.module.capex.fixtures.incominginvoice.enums.IncomingInvoiceNo
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
+import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
@@ -79,7 +82,9 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
                         Person_enum.IlicCenterManagerIt,
                         Person_enum.FloellaAssetManagerIt,
                         Person_enum.RobertCountryDirectorIt,
-                        Person_enum.SergioPreferredCountryDirectorIt
+                        Person_enum.SergioPreferredCountryDirectorIt,
+                        Person_enum.FabrizioPreferredManagerIt,
+                        Organisation_enum.IncomingBuyerIt
                 );
             }
         });
@@ -200,7 +205,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         final Task taskForAssetManager = completedByAssetManager.getTask();
         assertTask(taskForAssetManager, new ExpectedTaskResult(
                 true,
-                partyRoleTypeRepository.findByKey(FixedAssetRoleTypeEnum.ASSET_MANAGER.getKey()),
+                FixedAssetRoleTypeEnum.ASSET_MANAGER,
                 Person_enum.FloellaAssetManagerIt.findUsing(serviceRegistry2)
         ));
 
@@ -216,7 +221,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         assertTask(taskForDirector,
                 new ExpectedTaskResult(
                         false,
-                        partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.COUNTRY_DIRECTOR.getKey()),
+                        PartyRoleTypeEnum.COUNTRY_DIRECTOR,
                         null
                 )
         );
@@ -278,7 +283,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         final Task pendingTransitionTask = pendingTransition.getTask();
         assertTask(pendingTransitionTask, new ExpectedTaskResult(
             false,
-                partyRoleTypeRepository.findByKey(FixedAssetRoleTypeEnum.CENTER_MANAGER.getKey()),
+                FixedAssetRoleTypeEnum.CENTER_MANAGER,
                 Person_enum.IlicCenterManagerIt.findUsing(serviceRegistry2)
         ));
 
@@ -316,7 +321,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         final Task newPendingTransitionTask = newPendingTransition.getTask();
         assertTask(newPendingTransitionTask, new ExpectedTaskResult(
                 false,
-                partyRoleTypeRepository.findByKey(FixedAssetRoleTypeEnum.ASSET_MANAGER.getKey()),
+                FixedAssetRoleTypeEnum.ASSET_MANAGER,
                 Person_enum.FloellaAssetManagerIt.findUsing(serviceRegistry2)
         ));
 
@@ -395,7 +400,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         final Task newPendingTransitionTask = newPendingTransition.getTask();
         assertTask(newPendingTransitionTask, new ExpectedTaskResult(
                 false,
-                partyRoleTypeRepository.findByKey(FixedAssetRoleTypeEnum.INV_APPROVAL_DIRECTOR.getKey()),
+                FixedAssetRoleTypeEnum.INV_APPROVAL_DIRECTOR,
                 Person_enum.SergioPreferredCountryDirectorIt.findUsing(serviceRegistry2)
         ));
 
@@ -411,12 +416,131 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         final IncomingInvoiceApprovalStateTransition completedByInvoiceApprovalDirector = transitionsOfInvoice.get(1);
         assertTransition(completedByInvoiceApprovalDirector, new ExpectedTransitionRestult(
                 true,
-                "rgalati",
+                "sgalati",
                 IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER,
                 IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
                 IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR
         ));
 
+        final IncomingInvoiceApprovalStateTransition lastAutomatic = transitionsOfInvoice.get(0);
+        assertTransition(lastAutomatic, new ExpectedTransitionRestult(
+                true,
+                null,
+                IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+                IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS,
+                IncomingInvoiceApprovalStateTransitionType.CHECK_IN_CODA_BOOKS
+        ));
+
+    }
+
+    @Test
+    public void when_buyer_has_role_ECP_MGT_COMPANY_then_assign_tasks_to_preferred_manager_and_director() throws Exception {
+
+        // given
+        Organisation buyerWithPreferredManagerAndDirector = Organisation_enum.IncomingBuyerIt.findUsing(serviceRegistry2);
+        buyerWithPreferredManagerAndDirector.addRole(IncomingInvoiceRoleTypeEnum.ECP_MGT_COMPANY);
+        transactionService.nextTransaction();
+        assertThat(IncomingInvoiceApprovalStateTransitionType.hasPreferredManagerAndDirector(buyerWithPreferredManagerAndDirector)).isTrue();
+        incomingInvoice.setBuyer(buyerWithPreferredManagerAndDirector);
+
+        Person preferredManager = Person_enum.FabrizioPreferredManagerIt.findUsing(serviceRegistry2);
+        final PartyRoleType preferredManagerRoleType = partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.PREFERRED_MANAGER.getKey());
+        assertThat(preferredManager.hasPartyRoleType(preferredManagerRoleType));
+
+        Person preferredDirector = Person_enum.SergioPreferredCountryDirectorIt.findUsing(serviceRegistry2);
+        final PartyRoleType preferredDirectorRoleType = partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.PREFERRED_DIRECTOR.getKey());
+        assertThat(preferredDirector.hasPartyRoleType(preferredDirectorRoleType));
+
+        // sets net amount above threshold so to approvals will be needed
+        incomingInvoice.changeAmounts(new BigDecimal("100000.01"), new BigDecimal("122000.01"));
+        IncomingInvoiceItem item = (IncomingInvoiceItem) incomingInvoice.getItems().first();
+        item.addAmounts(new BigDecimal("0.01"), BigDecimal.ZERO, new BigDecimal("0.01"));
+
+        // when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("INCOMING_INVOICE_MANAGER", null, null));
+
+        // then
+        List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitionsOfInvoice).hasSize(3);
+
+        IncomingInvoiceApprovalStateTransition nextPending = transitionsOfInvoice.get(0);
+        assertTransition(nextPending, new ExpectedTransitionRestult(
+                false,
+                null,
+                IncomingInvoiceApprovalState.COMPLETED,
+                null,
+                IncomingInvoiceApprovalStateTransitionType.APPROVE
+        ));
+        Task taskForPreferredManager = nextPending.getTask();
+        assertTask(taskForPreferredManager, new ExpectedTaskResult(
+                false,
+                PartyRoleTypeEnum.PREFERRED_MANAGER,
+                preferredManager
+        ));
+
+        // and when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.FabrizioPreferredManagerIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act("SOME_ROLE_WHY??", null, null, true));
+
+        // then
+        transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitionsOfInvoice).hasSize(4);
+
+        IncomingInvoiceApprovalStateTransition lastCompleted = transitionsOfInvoice.get(1);
+        assertTransition(lastCompleted, new ExpectedTransitionRestult(
+                true,
+                "fdarespons",
+                IncomingInvoiceApprovalState.COMPLETED,
+                IncomingInvoiceApprovalState.APPROVED,
+                IncomingInvoiceApprovalStateTransitionType.APPROVE
+        ));
+        Task lastCompletedTask = lastCompleted.getTask();
+        assertTask(lastCompletedTask, new ExpectedTaskResult(
+                true,
+                PartyRoleTypeEnum.PREFERRED_MANAGER,
+                preferredManager
+        ));
+        nextPending = transitionsOfInvoice.get(0);
+        assertTransition(nextPending, new ExpectedTransitionRestult(
+                false,
+                null,
+                IncomingInvoiceApprovalState.APPROVED,
+                null,
+                IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR
+        ));
+        Task taskForPreferredDirector = nextPending.getTask();
+        assertTask(taskForPreferredDirector, new ExpectedTaskResult(
+                false,
+                PartyRoleTypeEnum.PREFERRED_DIRECTOR,
+                preferredDirector
+        ));
+
+        // and when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.SergioPreferredCountryDirectorIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_approveAsCountryDirector.class, incomingInvoice)).act( null, true));
+
+        // then
+        transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitionsOfInvoice).hasSize(5);
+
+        lastCompleted = transitionsOfInvoice.get(1);
+        assertTransition(lastCompleted, new ExpectedTransitionRestult(
+                true,
+                "sgalati",
+                IncomingInvoiceApprovalState.APPROVED,
+                IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+                IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR
+        ));
+        lastCompletedTask = lastCompleted.getTask();
+        assertTask(lastCompletedTask, new ExpectedTaskResult(
+                true,
+                PartyRoleTypeEnum.PREFERRED_DIRECTOR,
+                preferredDirector
+        ));
         final IncomingInvoiceApprovalStateTransition lastAutomatic = transitionsOfInvoice.get(0);
         assertTransition(lastAutomatic, new ExpectedTransitionRestult(
                 true,
@@ -458,7 +582,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
 
     private void assertTask(Task task, ExpectedTaskResult result){
         assertThat(task.isCompleted()).isEqualTo(result.isCompleted());
-        assertThat(task.getAssignedTo()).isEqualTo(result.getAssignedTo());
+        assertThat(task.getAssignedTo()).isEqualTo(partyRoleTypeRepository.findByKey(result.getAssignedTo().getKey()));
         assertThat(task.getPersonAssignedTo()).isEqualTo(result.getPersonAssignedTo());
     }
 
@@ -466,12 +590,9 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
     @Getter
     private class ExpectedTaskResult {
         private boolean completed;
-        private PartyRoleType assignedTo;
+        private IPartyRoleType assignedTo;
         private Person personAssignedTo;
     }
-
-
-
 
     @Inject
     ServiceRegistry2 serviceRegistry2;

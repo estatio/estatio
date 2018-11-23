@@ -15,9 +15,10 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationChecker;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationChecker;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.project.ProjectRoleTypeEnum;
 import org.estatio.module.capex.dom.state.AdvancePolicy;
@@ -28,8 +29,10 @@ import org.estatio.module.capex.dom.state.StateTransitionServiceSupportAbstract;
 import org.estatio.module.capex.dom.state.StateTransitionType;
 import org.estatio.module.capex.dom.state.TaskAssignmentStrategy;
 import org.estatio.module.invoice.dom.PaymentMethod;
+import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.IPartyRoleType;
+import org.estatio.module.party.dom.role.PartyRole;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 
 import lombok.Getter;
@@ -136,6 +139,9 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalStateTransition,
                     IncomingInvoiceApprovalStateTransitionType,
                     IncomingInvoiceApprovalState>) (incomingInvoice, serviceRegistry2) -> {
+                if (incomingInvoice.getBuyer() != null && hasPreferredManagerAndDirector(incomingInvoice.getBuyer())) {
+                    return PartyRoleTypeEnum.PREFERRED_MANAGER;
+                }
                 // guard since EST-1508 type can be not set
                 if (incomingInvoice.getType()==null) return null;
 
@@ -287,6 +293,11 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalStateTransition,
                     IncomingInvoiceApprovalStateTransitionType,
                     IncomingInvoiceApprovalState>) (incomingInvoice, serviceRegistry2) -> {
+
+                if (incomingInvoice.getBuyer() != null && hasPreferredManagerAndDirector(incomingInvoice.getBuyer())) {
+                    return PartyRoleTypeEnum.PREFERRED_DIRECTOR;
+                }
+
                 // guard since EST-1508 type can be not set
                 if (incomingInvoice.getType()==null) return null;
                 // for an recoverable (ita) invoice of a property that has a center manager, take the invoice approval director (of that property)
@@ -546,6 +557,13 @@ public enum IncomingInvoiceApprovalStateTransitionType
         return ! Lists.newArrayList(property.getRoles()).stream()
                 .filter(x->x.getType()==FixedAssetRoleTypeEnum.CENTER_MANAGER)
                 .collect(Collectors.toList()).isEmpty();
+    }
+
+    public static boolean hasPreferredManagerAndDirector(Party buyer){
+        for (PartyRole role : buyer.getRoles()){
+            if (role.getRoleType().getKey().equals(IncomingInvoiceRoleTypeEnum.ECP_MGT_COMPANY.getKey())) return true;
+        }
+        return false;
     }
 
 }

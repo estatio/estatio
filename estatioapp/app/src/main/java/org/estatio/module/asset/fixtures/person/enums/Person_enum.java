@@ -13,7 +13,6 @@ import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
 import org.estatio.module.asset.fixtures.person.builders.PersonFixedAssetRolesBuilder;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
@@ -126,6 +125,13 @@ public enum Person_enum
                     new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.ASSET_MANAGER, Property_enum.RonIt)
             }),
 
+    // preferred manager
+    FabrizioPreferredManagerIt("FDARESPONS", "Fabrizio", "Da Respons", null, true, FEMALE, It, It,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.PREFERRED_MANAGER },
+            new FixedAssetRoleSpec[] {
+            }),
+
     // country director
     GabrielCountryDirectorFr("GRESPONSABLE", "Gabriel", "Responsable", null, true, FEMALE, Fr, Fr,
             null, null,
@@ -142,9 +148,9 @@ public enum Person_enum
             new IPartyRoleType[] { PartyRoleTypeEnum.COUNTRY_DIRECTOR },
             new FixedAssetRoleSpec[] {}),
 
-    SergioPreferredCountryDirectorIt("RGALATI", "Sergio", "Galati", null, true, MALE, It, It,
+    SergioPreferredCountryDirectorIt("SGALATI", "Sergio", "Galati", null, true, MALE, It, It,
             null, null,
-            new IPartyRoleType[] { PartyRoleTypeEnum.COUNTRY_DIRECTOR, IncomingInvoiceRoleTypeEnum.PREFERRED_DIRECTOR },
+            new IPartyRoleType[] { PartyRoleTypeEnum.COUNTRY_DIRECTOR, PartyRoleTypeEnum.PREFERRED_DIRECTOR },
             new FixedAssetRoleSpec[] {
                     new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.INV_APPROVAL_DIRECTOR, Property_enum.RonIt)
             }),

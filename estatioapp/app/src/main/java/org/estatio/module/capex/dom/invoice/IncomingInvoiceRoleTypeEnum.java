@@ -10,7 +10,7 @@ public enum IncomingInvoiceRoleTypeEnum implements IPartyRoleType {
 
     ECP,
     SUPPLIER,
-    PREFERRED_DIRECTOR;
+    ECP_MGT_COMPANY;
 
     @Override
     public String getKey() {
