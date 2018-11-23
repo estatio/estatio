@@ -31,6 +31,7 @@ public class EstatioCapexUserRoleAndPermissions extends AbstractRoleAndPermissio
         newViewingPermission("org.estatio.webapp.services.other");
         newChangingPermission("org.estatio.module.capex");
         newChangingPermission("org.estatio.module.application.app.dashboard");
+        newChangingPermission("org.estatio.module.codadoc");
         newActionPermission(PropertyMenu.class, "findProperties");
         newActionPermission(ChargeMenu.class, "findCharge");
         newActionPermission(PartyMenu.class, "findParties");
