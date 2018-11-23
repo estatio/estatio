@@ -89,6 +89,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
                         IncomingInvoiceApprovalStateTransitionType,
                         IncomingInvoiceApprovalState>) (incomingInvoice, serviceRegistry2) -> {
 
+                if (isItalian(incomingInvoice)) return PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER;
+
                 final boolean hasProperty = incomingInvoice.getProperty() != null;
                 if (hasProperty) {
                     return PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER;
