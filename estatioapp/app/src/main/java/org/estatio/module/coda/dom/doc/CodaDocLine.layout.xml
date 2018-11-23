@@ -27,6 +27,10 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Other" id="other" unreferencedProperties="true">
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                                <bs3:col span="0">
+                                    <cpt:fieldSet name="Hidden" id="hidden">
                                         <cpt:property id="handling" hidden="OBJECT_FORMS"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
@@ -205,6 +209,7 @@
                                     <cpt:fieldSet name="" id="extRef3">
                                         <cpt:property id="extRef3"/>
                                         <cpt:property id="orderNumber"/>
+                                        <cpt:property id="extRefOrderGlobalNumerator"/>
                                         <cpt:property id="extRefOrderItem">
                                             <cpt:named>Order item</cpt:named>
                                         </cpt:property>

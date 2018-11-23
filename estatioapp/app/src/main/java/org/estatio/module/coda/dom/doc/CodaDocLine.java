@@ -442,6 +442,12 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Getter @Setter
     private String orderNumber;
 
+    @Column(allowsNull = "true", length = 8)
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @Getter @Setter
+    private String extRefOrderGlobalNumerator;
+
+
     @Column(allowsNull = "true", name = "extRefOrderItemId")
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
