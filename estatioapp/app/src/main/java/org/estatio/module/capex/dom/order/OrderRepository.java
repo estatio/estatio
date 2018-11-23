@@ -60,6 +60,25 @@ public class OrderRepository {
                         "orderNumber", orderNumber));
     }
 
+    /**
+     * Although this should be unique, there is no guarantee because it is only one portion of the
+     * {@link Order#getOrderNumber()}.
+     */
+    @Programmatic
+    public List<Order> findByExtRefOrderGlobalNumerator(final String extRefOrderGlobalNumerator) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Order.class,
+                        "findByExtRefOrderGlobalNumerator",
+                        "extRefOrderGlobalNumeratorWithTrailingSlash", withTrailingSlash(extRefOrderGlobalNumerator)));
+    }
+
+    static String withTrailingSlash(final String str) {
+        if(str == null) { return null; }
+        final String trimmed = str.trim();
+        return trimmed.endsWith("/") ? trimmed : trimmed + "/";
+    }
+
     @Programmatic
     public Order findBySellerOrderReferenceAndSellerAndOrderDate(final String sellerOrderReference, final Party seller, final LocalDate orderDate) {
         return repositoryService.firstMatch(
@@ -319,6 +338,7 @@ public class OrderRepository {
         }
         return result;
     }
+
 
     @Inject
     IncomingDocumentRepository incomingDocumentRepository;

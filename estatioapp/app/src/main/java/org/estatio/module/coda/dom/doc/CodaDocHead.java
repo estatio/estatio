@@ -656,6 +656,12 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     }
 
     @Programmatic
+    public String getSummaryLineExtRefOrderGlobalNumerator(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
+        return docLine != null ? docLine.getExtRefOrderGlobalNumerator() : null;
+    }
+
+    @Programmatic
     public String getAnalysisLineAccountCode(final LineCache lineCache) {
         final CodaDocLine docLine = analysisDocLine(lineCache);
         return docLine != null ? docLine.getAccountCode() : null;
