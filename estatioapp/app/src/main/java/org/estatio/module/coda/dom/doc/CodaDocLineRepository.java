@@ -311,7 +311,7 @@ public class CodaDocLineRepository {
                         "handling", handling,
                         "extRefValidationStatus", extRefValidationStatus,
                         "extRefProjectValidationStatus", extRefProjectValidationStatus,
-                        "projectReference", projectReference
+                        "extRefProjectReference", projectReference
                 ));
     }
 

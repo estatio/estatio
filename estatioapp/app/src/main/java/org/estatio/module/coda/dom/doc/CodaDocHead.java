@@ -598,7 +598,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Programmatic
     public String getSummaryLineExtRefProjectReference(final LineCache lineCache) {
         final CodaDocLine docLine = summaryDocLine(lineCache);
-        return docLine != null ? docLine.getProjectReference() : null;
+        return docLine != null ? docLine.getExtRefProjectReference() : null;
     }
 
     @Programmatic
