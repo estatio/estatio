@@ -354,7 +354,7 @@ public class CodaDocLineRepository {
                         "handling", handling,
                         "extRefValidationStatus", extRefValidationStatus,
                         "extRefWorkTypeValidationStatus", extRefWorkTypeValidationStatus,
-                        "chargeReference", chargeReference
+                        "extRefWorkTypeChargeReference", chargeReference
                 ));
     }
 

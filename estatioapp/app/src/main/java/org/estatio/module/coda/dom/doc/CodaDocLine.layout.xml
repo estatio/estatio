@@ -241,7 +241,7 @@
                                     <cpt:fieldSet name="" id="extRef4">
                                         <cpt:property id="extRef4"/>
                                         <cpt:property id="extRefProjectReference">
-                                            <cpt:named>Project Reference</cpt:named>
+                                            <cpt:named>Project reference</cpt:named>
                                         </cpt:property>
                                         <cpt:property id="extRefProject">
                                             <cpt:named>Project</cpt:named>
@@ -258,7 +258,7 @@
                                 <bs3:col span="9">
                                     <cpt:fieldSet name="" id="extRef5">
                                         <cpt:property id="extRef5"/>
-                                        <cpt:property id="chargeReference">
+                                        <cpt:property id="extRefWorkTypeChargeReference">
                                             <cpt:named>Charge reference</cpt:named>
                                         </cpt:property>
                                         <cpt:property id="extRefWorkTypeCharge">
