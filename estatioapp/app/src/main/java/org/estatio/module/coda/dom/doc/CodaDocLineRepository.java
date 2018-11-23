@@ -267,7 +267,7 @@ public class CodaDocLineRepository {
                         "handling", handling,
                         "extRefValidationStatus", extRefValidationStatus,
                         "extRefOrderValidationStatus", extRefOrderValidationStatus,
-                        "orderNumber", orderNumber
+                        "extRef3Normalized", orderNumber
                 ));
     }
 

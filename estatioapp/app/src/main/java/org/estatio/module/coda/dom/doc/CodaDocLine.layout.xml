@@ -208,7 +208,7 @@
                                 <bs3:col span="9">
                                     <cpt:fieldSet name="" id="extRef3">
                                         <cpt:property id="extRef3"/>
-                                        <cpt:property id="orderNumber"/>
+                                        <cpt:property id="extRef3Normalized"/>
                                         <cpt:property id="extRefOrderGlobalNumerator"/>
                                         <cpt:property id="extRefOrderItem">
                                             <cpt:named>Order item</cpt:named>

@@ -650,9 +650,9 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     }
 
     @Programmatic
-    public String getSummaryLineOrderNumber(final LineCache lineCache) {
+    public String getSummaryLineExtRef3Normalized(final LineCache lineCache) {
         final CodaDocLine docLine = summaryDocLine(lineCache);
-        return docLine != null ? docLine.getOrderNumber() : null;
+        return docLine != null ? docLine.getExtRef3Normalized() : null;
     }
 
     @Programmatic
