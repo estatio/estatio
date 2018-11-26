@@ -144,6 +144,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 if (incomingInvoice.getBuyer() != null && hasPreferredManagerAndDirector(incomingInvoice.getBuyer())) {
                     return PartyRoleTypeEnum.PREFERRED_MANAGER;
                 }
+                if (isItalian(incomingInvoice) && incomingInvoice.getProperty()==null) return PartyRoleTypeEnum.CORPORATE_MANAGER;
                 // guard since EST-1508 type can be not set
                 if (incomingInvoice.getType()==null) return null;
 

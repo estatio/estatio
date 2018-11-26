@@ -552,6 +552,31 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
 
     }
 
+    @Test
+    public void when_invoice_has_no_property_approval_task_is_for_corporate_manager() throws Exception {
+
+        // given
+        incomingInvoice.setProperty(null);
+
+        // when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("INCOMING_INVOICE_MANAGER", null, null));
+
+        // then
+        List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitionsOfInvoice).hasSize(3);
+
+        IncomingInvoiceApprovalStateTransition nextPending = transitionsOfInvoice.get(0);
+        Task pendingTask = nextPending.getTask();
+        assertTask(pendingTask, new ExpectedTaskResult(
+                false,
+                PartyRoleTypeEnum.CORPORATE_MANAGER,
+                null    // in this case because no fixture is set up for this role
+        ));
+
+    }
+
 
     /**
      * the opposite is tested {@link IncomingInvoiceApprovalState_IntegTest#payable_non_italian_invoice_can_be_rejected}
