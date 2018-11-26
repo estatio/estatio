@@ -118,7 +118,7 @@ import lombok.Setter;
                 name = "findByExtRefOrderGlobalNumerator", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.order.Order "
-                        + "WHERE extRefOrderGlobalNumerator.startsWith(:extRefOrderGlobalNumeratorWithTrailingSlash) "),
+                        + "WHERE orderNumber.startsWith(:extRefOrderGlobalNumeratorWithTrailingSlash) "),
         @Query(
                 name = "matchByOrderNumber", language = "JDOQL",
                 value = "SELECT "

@@ -217,8 +217,8 @@
                                         <cpt:property id="extRefOrderItem">
                                             <cpt:named>Order item</cpt:named>
                                         </cpt:property>
-                                        <cpt:property id="extRefCostCentre">
-                                            <cpt:named>Cost centre</cpt:named>
+                                        <cpt:property id="extRefCostCentreCode">
+                                            <cpt:named>Cost centre code</cpt:named>
                                         </cpt:property>
                                     </cpt:fieldSet>
                                 </bs3:col>

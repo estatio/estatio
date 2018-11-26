@@ -187,7 +187,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
         setExtRefProjectReference(null);
         setExtRefProjectValidationStatus(ValidationStatus.NOT_CHECKED);
 
-        setExtRefCostCentre(null);
+        setExtRefCostCentreCode(null);
         setExtRefCostCentreValidationStatus(ValidationStatus.NOT_CHECKED);
 
         setExtRefWorkTypeChargeReference(null);
@@ -464,7 +464,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Column(allowsNull = "true", length = 30)
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
-    private String extRefCostCentre;
+    private String extRefCostCentreCode;
 
     @Column(allowsNull = "false", length = 20)
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)

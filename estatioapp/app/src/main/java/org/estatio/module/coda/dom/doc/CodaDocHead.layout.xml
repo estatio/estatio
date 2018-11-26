@@ -5,7 +5,8 @@
             <bs3:row>
                 <bs3:col span="12" unreferencedActions="true">
                     <cpt:domainObject/>
-                    <cpt:action id="Revalidate"/>
+                    <cpt:action id="revalidate"/>
+                    <cpt:action id="synchronize"/>
                     <cpt:action id="impersonateUser"/>
                     <cpt:action id="stopImpersonating"/>
                 </bs3:col>

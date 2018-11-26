@@ -100,6 +100,12 @@ public class Property
         extends FixedAsset<Property>
         implements Locatable, WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {
 
+    public Property() {}
+    public Property(String reference) {
+        this();
+        setReference(reference);
+    }
+
     @javax.jdo.annotations.Column(
             length = ApplicationTenancy.MAX_LENGTH_PATH,
             allowsNull = "false",

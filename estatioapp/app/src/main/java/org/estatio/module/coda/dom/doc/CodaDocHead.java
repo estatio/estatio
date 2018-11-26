@@ -393,14 +393,28 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         DONT_SYNC_EVEN_IF_VALID
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public CodaDocHead revalidate(final SynchronizationPolicy policy) {
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public CodaDocHead revalidate() {
+        return revalidateAndSync(SynchronizationPolicy.DONT_SYNC_EVEN_IF_VALID);
+    }
+    public boolean hideRevalidate() {
+        final boolean displayingIncluded = getHandling() == Handling.INCLUDED;
+        return !displayingIncluded;
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public CodaDocHead synchronize() {
+        return revalidateAndSync(SynchronizationPolicy.SYNC_IF_VALID);
+    }
+    public boolean hideSynchronize() {
+        final boolean displayingIncludedAndValid = getHandling() == Handling.INCLUDED && isValid();
+        return !displayingIncludedAndValid;
+    }
+
+    CodaDocHead revalidateAndSync(final SynchronizationPolicy policy) {
         revalidateOnly();
         updateEstatioObjects(policy);
         return this;
-    }
-    public SynchronizationPolicy default0Revalidate() {
-        return SynchronizationPolicy.SYNC_IF_VALID;
     }
 
     @Programmatic
@@ -628,7 +642,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Programmatic
     public String getSummaryLineExtRefCostCentre(final LineCache lineCache) {
         final CodaDocLine docLine = summaryDocLine(lineCache);
-        return docLine != null ? docLine.getExtRefCostCentre() : null;
+        return docLine != null ? docLine.getExtRefCostCentreCode() : null;
     }
 
     @Programmatic
