@@ -29,6 +29,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
@@ -574,6 +575,32 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
                 PartyRoleTypeEnum.CORPORATE_MANAGER,
                 null    // in this case because no fixture is set up for this role
         ));
+
+    }
+
+    @Test
+    public void italian_invoice_with_type_capex_have_approval_task_for_asset_manager() throws Exception {
+
+        // given
+        incomingInvoice.setType(IncomingInvoiceType.CAPEX);
+
+        // when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("INCOMING_INVOICE_MANAGER", null, null));
+
+        // then
+        List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitionsOfInvoice).hasSize(3);
+
+        IncomingInvoiceApprovalStateTransition nextPending = transitionsOfInvoice.get(0);
+        Task pendingTask = nextPending.getTask();
+        assertTask(pendingTask, new ExpectedTaskResult(
+                false,
+                FixedAssetRoleTypeEnum.ASSET_MANAGER,
+                Person_enum.FloellaAssetManagerIt.findUsing(serviceRegistry2)
+        ));
+
 
     }
 

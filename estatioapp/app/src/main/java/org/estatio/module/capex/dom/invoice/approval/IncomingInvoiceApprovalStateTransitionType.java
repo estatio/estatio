@@ -150,6 +150,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
 
                 switch (incomingInvoice.getType()) {
                 case CAPEX:
+                    if (isItalian(incomingInvoice)) return FixedAssetRoleTypeEnum.ASSET_MANAGER;
                     return ProjectRoleTypeEnum.PROJECT_MANAGER;
                 case PROPERTY_EXPENSES:
                 case SERVICE_CHARGES:
