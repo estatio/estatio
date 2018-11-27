@@ -142,7 +142,8 @@ public class IncomingInvoiceRepository {
     @Programmatic
     public List<IncomingInvoice> findInvoicesPayableByBankTransferWithDifferentHistoricalPaymentMethods(
             final LocalDate fromDueDate,
-            final LocalDate toDueDate) {
+            final LocalDate toDueDate,
+            final String atPath) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         IncomingInvoice.class,
@@ -150,9 +151,10 @@ public class IncomingInvoiceRepository {
                         "fromDueDate", fromDueDate,
                         "toDueDate", toDueDate))
                 .stream()
+                .filter(incomingInvoice -> incomingInvoice.getAtPath().startsWith(atPath))
                 .filter(incomingInvoice -> invoiceRepository.findBySeller(incomingInvoice.getSeller())
                         .stream()
-                        .anyMatch(invoice -> invoice.getPaymentMethod() != PaymentMethod.BANK_TRANSFER))
+                        .anyMatch(invoice -> invoice.getPaymentMethod() != PaymentMethod.BANK_TRANSFER && incomingInvoice.getPaymentMethod() != PaymentMethod.REFUND_BY_SUPPLIER))
                 .collect(Collectors.toList());
     }
 

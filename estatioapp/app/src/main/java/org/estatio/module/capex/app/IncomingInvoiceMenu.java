@@ -21,6 +21,8 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 
+import org.isisaddons.module.security.app.user.MeService;
+
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.asset.dom.Property;
@@ -309,7 +311,7 @@ public class IncomingInvoiceMenu {
     public List<IncomingInvoice> findInvoicesPayableByBankTransferWithDifferentHistoricalPaymentMethods(
             final LocalDate fromDueDate,
             final LocalDate toDueDate) {
-        return incomingInvoiceRepository.findInvoicesPayableByBankTransferWithDifferentHistoricalPaymentMethods(fromDueDate, toDueDate);
+        return incomingInvoiceRepository.findInvoicesPayableByBankTransferWithDifferentHistoricalPaymentMethods(fromDueDate, toDueDate, meService.me().getFirstAtPathUsingSeparator(';'));
     }
 
     ///////////////////////////////////////////
@@ -319,5 +321,6 @@ public class IncomingInvoiceMenu {
     @Inject PartyRepository partyRepository;
     @Inject InvoiceRepository invoiceRepository;
     @Inject IncomingInvoiceRepository incomingInvoiceRepository;
+    @Inject MeService meService;
 
 }

@@ -73,7 +73,7 @@ public class IncomingInvoiceRepository_IntegTest extends CapexModuleIntegTestAbs
         invoice2.setApprovalState(IncomingInvoiceApprovalState.PAYABLE);
 
         // when
-        List<IncomingInvoice> historicallyDifferentPaymentMethods = incomingInvoiceRepository.findInvoicesPayableByBankTransferWithDifferentHistoricalPaymentMethods(dueDate.minusDays(1), dueDate.plusDays(1));
+        List<IncomingInvoice> historicallyDifferentPaymentMethods = incomingInvoiceRepository.findInvoicesPayableByBankTransferWithDifferentHistoricalPaymentMethods(dueDate.minusDays(1), dueDate.plusDays(1), "/GBR");
 
         // then
         assertThat(historicallyDifferentPaymentMethods).containsExactly(invoice2);
@@ -82,7 +82,7 @@ public class IncomingInvoiceRepository_IntegTest extends CapexModuleIntegTestAbs
         invoice1.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
 
         // when
-        historicallyDifferentPaymentMethods = incomingInvoiceRepository.findInvoicesPayableByBankTransferWithDifferentHistoricalPaymentMethods(dueDate.minusDays(1), dueDate.plusDays(1));
+        historicallyDifferentPaymentMethods = incomingInvoiceRepository.findInvoicesPayableByBankTransferWithDifferentHistoricalPaymentMethods(dueDate.minusDays(1), dueDate.plusDays(1), "/GBR");
 
         // then
         assertThat(historicallyDifferentPaymentMethods).isEmpty();
