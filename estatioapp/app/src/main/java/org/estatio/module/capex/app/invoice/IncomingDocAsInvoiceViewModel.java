@@ -667,7 +667,7 @@ public class IncomingDocAsInvoiceViewModel
         if (getPaymentMethod() != null && getSeller() != null) {
             List<PaymentMethod> historicalPaymentMethods = invoiceRepository.findBySeller(getSeller()).stream()
                     .map(Invoice::getPaymentMethod)
-                    .filter(pm -> pm != PaymentMethod.BANK_TRANSFER)
+                    .filter(pm -> pm != PaymentMethod.BANK_TRANSFER && pm != PaymentMethod.REFUND_BY_SUPPLIER && pm != PaymentMethod.MANUAL_PROCESS)
                     .distinct()
                     .collect(Collectors.toList());
 
