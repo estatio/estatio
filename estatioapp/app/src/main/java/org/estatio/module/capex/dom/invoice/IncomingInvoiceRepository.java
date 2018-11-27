@@ -154,7 +154,7 @@ public class IncomingInvoiceRepository {
                 .filter(incomingInvoice -> incomingInvoice.getAtPath().startsWith(atPath))
                 .filter(incomingInvoice -> invoiceRepository.findBySeller(incomingInvoice.getSeller())
                         .stream()
-                        .anyMatch(invoice -> invoice.getPaymentMethod() != PaymentMethod.BANK_TRANSFER && incomingInvoice.getPaymentMethod() != PaymentMethod.REFUND_BY_SUPPLIER))
+                        .anyMatch(invoice -> invoice.getPaymentMethod() != PaymentMethod.BANK_TRANSFER && invoice.getPaymentMethod() != PaymentMethod.REFUND_BY_SUPPLIER))
                 .collect(Collectors.toList());
     }
 
