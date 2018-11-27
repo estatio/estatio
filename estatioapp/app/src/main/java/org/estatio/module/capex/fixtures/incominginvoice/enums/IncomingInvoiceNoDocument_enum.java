@@ -69,7 +69,24 @@ public enum IncomingInvoiceNoDocument_enum
             null,
             null,
             null
-    );
+    ),
+    invoiceForItaDirectDebit(
+            ApplicationTenancy_enum.It,
+            Organisation_enum.TopModelIt, BankAccount_enum.TopModelIt, Organisation_enum.HelloWorldIt,
+            PropertyAndUnitsAndOwnerAndManager_enum.RonIt,
+            ITA_RECOVERABLE, "1234567", PaymentMethod.DIRECT_DEBIT,
+            ld(2018,01,01), ld(2018,02,10), ld (2017, 12, 20),
+            bd("100000.00"), bd("122000.00"), null,
+            ITA_RECOVERABLE, null, "Some recoverable costs", bd("100000.00"), bd("22000.00"), bd("122000.00"), "F2018", null,
+            null, null, null, null, null, null, null,null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+    )
+    ;
 
     private final ApplicationTenancy_enum applicationTenancy;
 

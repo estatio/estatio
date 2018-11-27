@@ -68,6 +68,8 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
 
     IncomingInvoice recoverableInvoice;
 
+    IncomingInvoice invoiceForDirectDebit;
+
     BankAccount bankAccount;
 
     @Before
@@ -79,6 +81,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
                 ec.executeChildren(this,
                         IncomingInvoiceNoDocument_enum.invoiceForItaNoOrder,
                         IncomingInvoiceNoDocument_enum.invoiceForItaRecoverable,
+                        IncomingInvoiceNoDocument_enum.invoiceForItaDirectDebit,
                         Person_enum.CarmenIncomingInvoiceManagerIt,
                         Person_enum.IlicCenterManagerIt,
                         Person_enum.FloellaAssetManagerIt,
@@ -90,6 +93,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
                 );
             }
         });
+        transactionService.nextTransaction();
 
     }
 
@@ -109,6 +113,9 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
 
         recoverableInvoice = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate("123456", seller, new LocalDate(2017,12,20));
         recoverableInvoice.setBankAccount(bankAccount);
+
+        invoiceForDirectDebit = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate("1234567", seller, new LocalDate(2017,12,20));
+        invoiceForDirectDebit.setBankAccount(bankAccount);
 
         assertThat(incomingInvoice).isNotNull();
         assertThat(incomingInvoice.getApprovalState()).isNotNull();
@@ -624,6 +631,21 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
                 Person_enum.FloellaAssetManagerIt.findUsing(serviceRegistry2)
         ));
 
+
+    }
+
+    @Test
+    public void invoice_having_payment_method_other_then_bank_transfer_are_automatically_approved() throws Exception {
+
+        // given
+        // when
+        // then
+        List<IncomingInvoiceApprovalStateTransition> transitionsOfDirectDebitInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceForDirectDebit);
+        assertThat(transitionsOfDirectDebitInvoice).hasSize(2);
+
+        transactionService.nextTransaction();
+//        invoiceForDirectDebit = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate("1234567", seller, new LocalDate(2017,12,20));
+        assertThat(invoiceForDirectDebit.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.AUTO_PAYABLE);
 
     }
 

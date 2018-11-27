@@ -1164,10 +1164,16 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return buf.getReason();
     }
 
-    @Getter @Setter
+    //@Getter //@Setter
     @javax.jdo.annotations.Column(allowsNull = "false")
     private IncomingInvoiceApprovalState approvalState;
 
+    @Override public IncomingInvoiceApprovalState getApprovalState() {
+        return approvalState;
+    }
+    public void setApprovalState(final IncomingInvoiceApprovalState approvalState) {
+        this.approvalState = approvalState;
+    }
 
     /**
      * that is, has passed final approval step.

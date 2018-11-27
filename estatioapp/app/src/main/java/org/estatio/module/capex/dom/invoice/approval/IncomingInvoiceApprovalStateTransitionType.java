@@ -75,6 +75,20 @@ public enum IncomingInvoiceApprovalStateTransitionType
             return true;
         }
     },
+    MARK_PAYABLE_WHEN_NOT_BANK_PAYMENT_FOR_ITA(
+            IncomingInvoiceApprovalState.NEW,
+            IncomingInvoiceApprovalState.AUTO_PAYABLE,
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.AUTOMATIC){
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice, final ServiceRegistry2 serviceRegistry2) {
+            // only italian invoices that are in a state of payable
+            if (isItalian(incomingInvoice) && incomingInvoice.getPaymentMethod()!=null && incomingInvoice.getPaymentMethod()!=PaymentMethod.BANK_TRANSFER) return true;
+            return false;
+        }
+    },
     COMPLETE(
             IncomingInvoiceApprovalState.NEW,
             IncomingInvoiceApprovalState.COMPLETED,
@@ -117,6 +131,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
         @Override
         public boolean isMatch(
                 final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+            // counterpart of isMatch under MARK_PAYABLE_WHEN_NOT_BANK_PAYMENT_FOR_ITA
+            if (isItalian(domainObject) && domainObject.getPaymentMethod()!=null && domainObject.getPaymentMethod()!=PaymentMethod.BANK_TRANSFER) return false;
             return getTaskAssignmentStrategy().getAssignTo(domainObject, serviceRegistry2) != null;
         }
 
