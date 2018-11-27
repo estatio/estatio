@@ -82,6 +82,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
                         Person_enum.CarmenIncomingInvoiceManagerIt,
                         Person_enum.IlicCenterManagerIt,
                         Person_enum.FloellaAssetManagerIt,
+                        Person_enum.FlorisAssetManagerIt,
                         Person_enum.RobertCountryDirectorIt,
                         Person_enum.SergioPreferredCountryDirectorIt,
                         Person_enum.FabrizioPreferredManagerIt,
@@ -127,13 +128,35 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice;
 
         // given
+        transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitionsOfInvoice).hasSize(2);
+        IncomingInvoiceApprovalStateTransition nextpending = transitionsOfInvoice.get(0);
+        Task nextPendingTask = nextpending.getTask();
+        assertTask(nextPendingTask, new ExpectedTaskResult(
+                false,
+                PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER,
+                null        // task assigned to Role only, not to person
+        ));
+
+        // when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
                     wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("INCOMING_INVOICE_MANAGER", null, null));
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
         assertThat(incomingInvoice.getNetAmount()).isEqualTo(new BigDecimal("100000.00"));
 
-        // when
+        // then
+        transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitionsOfInvoice).hasSize(3);
+        nextpending = transitionsOfInvoice.get(0);
+        nextPendingTask = nextpending.getTask();
+        assertTask(nextPendingTask, new ExpectedTaskResult(
+                false,
+                FixedAssetRoleTypeEnum.ASSET_MANAGER,
+                Person_enum.FloellaAssetManagerIt.findUsing(serviceRegistry2)
+        ));
+
+        // and when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.FloellaAssetManagerIt.getRef().toLowerCase(), (Runnable) () ->
                 wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act("SOME_ROLE_WHY??", null, null, false));

@@ -32,7 +32,7 @@ public enum PropertyAndUnitsAndOwnerAndManager_enum implements
     RonIt   (Property_enum.RonIt,
             5,
             Organisation_enum.HelloWorldIt, ld(1999, 1, 1), ld(2000, 1, 1),
-            Person_enum.RonRondelliIt, null, null
+            Person_enum.FloellaAssetManagerIt, null, null
     ),
     GraIt   (Property_enum.GraIt,
             55,
