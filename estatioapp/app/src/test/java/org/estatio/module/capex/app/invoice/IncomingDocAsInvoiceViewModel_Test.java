@@ -22,6 +22,8 @@ import org.estatio.module.capex.dom.order.OrderItemRepository;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
+import org.estatio.module.invoice.dom.InvoiceRepository;
+import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.app.services.OrganisationNameNumberViewModel;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
@@ -30,17 +32,83 @@ import org.estatio.module.party.dom.role.PartyRoleRepository;
 
 public class IncomingDocAsInvoiceViewModel_Test {
 
+    @Rule
+    public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
+
+    @Mock OrganisationRepository mockOrganisationRepo;
+
+    @Mock BankAccountRepository mockBankAccountRepository;
+
+    @Mock PartyRoleRepository mockPartyRoleRepository;
+
+    @Mock InvoiceRepository mockInvoiceRepository;
+
+    @Mock OrderItemRepository mockOrderItemRepo;
+
     @Test
-    public void notification_BuyerBarcodeMatchValidation_works(){
+    public void notification_historicalPaymentMethod_works() throws Exception {
+        String notification;
+
+        // given
+        IncomingDocAsInvoiceViewModel viewModel = new IncomingDocAsInvoiceViewModel() {
+            @Override
+            public String doubleInvoiceCheck() {
+                return null;
+            }
+
+            @Override
+            public String buyerBarcodeMatchValidation() {
+                return null;
+            }
+        };
+        Party seller = new Organisation();
+        viewModel.setSeller(seller);
+        viewModel.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
+        viewModel.invoiceRepository = mockInvoiceRepository;
+
+        IncomingInvoice incomingInvoice1 = new IncomingInvoice();
+        incomingInvoice1.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
+        IncomingInvoice incomingInvoice2 = new IncomingInvoice();
+        incomingInvoice2.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
+        IncomingInvoice incomingInvoice3 = new IncomingInvoice();
+        incomingInvoice3.setPaymentMethod(PaymentMethod.CASH);
+
+        // expecting
+        context.checking(new Expectations() {{
+            oneOf(mockInvoiceRepository).findBySeller(seller);
+            will(returnValue(Arrays.asList(incomingInvoice1, incomingInvoice2, incomingInvoice3)));
+        }});
+
+        // when
+        notification = viewModel.getNotification();
+
+        // then
+        Assertions.assertThat(notification).isEqualTo("WARNING: payment method is set to bank transfer, but previous invoices from this seller have used the following payment methods: Direct Debit, Cash ");
+
+        // and expecting
+        context.checking(new Expectations() {{
+            oneOf(mockInvoiceRepository).findBySeller(seller);
+            will(returnValue(Arrays.asList(incomingInvoice2))); // All historical invoices use payment method BANK_TRANSFER...
+        }});
+
+        // when
+        notification = viewModel.getNotification();
+
+        // then
+        Assertions.assertThat(notification).isNull(); // ... so no warning
+    }
+
+    @Test
+    public void notification_BuyerBarcodeMatchValidation_works() {
 
         String notification;
 
         // given
         IncomingDocAsInvoiceViewModel viewModel = new IncomingDocAsInvoiceViewModel();
         Party buyerDerived = new Organisation();
-        BuyerFinder buyerFinder = new BuyerFinder(){
+        BuyerFinder buyerFinder = new BuyerFinder() {
             @Override
-            public Party buyerDerivedFromDocumentName(final IncomingInvoice incomingInvoice){
+            public Party buyerDerivedFromDocumentName(final IncomingInvoice incomingInvoice) {
                 return buyerDerived;
             }
         };
@@ -54,7 +122,6 @@ public class IncomingDocAsInvoiceViewModel_Test {
         // then
         Assertions.assertThat(notification).isEqualTo("Buyer does not match barcode (document name); ");
 
-
         // and given (buyers matching)
         viewModel.setBuyer(buyerDerived);
         // when
@@ -62,11 +129,10 @@ public class IncomingDocAsInvoiceViewModel_Test {
         // then
         Assertions.assertThat(notification).isNull();
 
-
         // and given (no buyer derived)
-        BuyerFinder buyerFinderReturningNull = new BuyerFinder(){
+        BuyerFinder buyerFinderReturningNull = new BuyerFinder() {
             @Override
-            public Party buyerDerivedFromDocumentName(final IncomingInvoice incomingInvoice){
+            public Party buyerDerivedFromDocumentName(final IncomingInvoice incomingInvoice) {
                 return null;
             }
         };
@@ -77,17 +143,8 @@ public class IncomingDocAsInvoiceViewModel_Test {
         Assertions.assertThat(notification).isNull();
     }
 
-    @Rule
-    public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
-
-    @Mock OrganisationRepository mockOrganisationRepo;
-
-    @Mock BankAccountRepository mockBankAccountRepository;
-
-    @Mock PartyRoleRepository mockPartyRoleRepository;
-
     @Test
-    public void bankaccount_is_set_when_creating_seller(){
+    public void bankaccount_is_set_when_creating_seller() {
 
         // given
         IncomingDocAsInvoiceViewModel viewModel = new IncomingDocAsInvoiceViewModel();
@@ -103,12 +160,12 @@ public class IncomingDocAsInvoiceViewModel_Test {
         String iban = "NL02RABO0313246581";
 
         // expect
-        context.checking(new Expectations(){{
+        context.checking(new Expectations() {{
 
             oneOf(mockOrganisationRepo).newOrganisation(null, true, sellerName, country);
             will(returnValue(seller));
             oneOf(mockPartyRoleRepository).findOrCreate(seller, IncomingInvoiceRoleTypeEnum.SUPPLIER);
-            oneOf(mockBankAccountRepository).newBankAccount(seller,iban, null);
+            oneOf(mockBankAccountRepository).newBankAccount(seller, iban, null);
             will(returnValue(bankAccount));
             oneOf(mockBankAccountRepository).getFirstBankAccountOfPartyOrNull(seller);
             will(returnValue(bankAccount));
@@ -124,10 +181,8 @@ public class IncomingDocAsInvoiceViewModel_Test {
 
     }
 
-    @Mock OrderItemRepository mockOrderItemRepo;
-
     @Test
-    public void choices_orderItem_filters_discarded(){
+    public void choices_orderItem_filters_discarded() {
 
         // given
         IncomingDocAsInvoiceViewModel viewModel = new IncomingDocAsInvoiceViewModel();
@@ -141,7 +196,7 @@ public class IncomingDocAsInvoiceViewModel_Test {
         item.setOrdr(order);
 
         // expect
-        context.checking(new Expectations(){{
+        context.checking(new Expectations() {{
 
             allowing(mockOrderItemRepo).findBySeller(seller);
             will(returnValue(Arrays.asList(item)));
@@ -164,7 +219,6 @@ public class IncomingDocAsInvoiceViewModel_Test {
         orderItemChoices = viewModel.choicesOrderItem();
         // then
         Assertions.assertThat(orderItemChoices).contains(item);
-
 
     }
 
