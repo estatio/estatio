@@ -168,7 +168,9 @@
                                             <cpt:action id="approveAsCorporateManager"/>
                                             <cpt:action id="approveLocalAsCountryDirector"/>
                                             <cpt:action id="approveAsCenterManager"/>
-                                            <cpt:action id="approveWhenApprovedByCenterManager"/>
+                                            <cpt:action id="approveWhenApprovedByCenterManager">
+                                                <cpt:named>Approve</cpt:named>
+                                            </cpt:action>
                                             <cpt:action id="markAsPaidByDirectDebit"/>
                                             <cpt:action id="markAsPaidByIbpManual">
                                                 <cpt:named>Mark as paid by IBP (manual process)</cpt:named>

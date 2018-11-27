@@ -67,7 +67,7 @@
                                         <cpt:named>Approve as Center Manager</cpt:named>
                                     </cpt:action>
                                     <cpt:action id=" approveIncomingInvoiceWhenApprovedByCenterManager">
-                                        <cpt:named>Approve when approved by Center Manager</cpt:named>
+                                        <cpt:named>Approve</cpt:named>
                                     </cpt:action>
                                     <cpt:action id="checkPayment" />
                                     <cpt:action id="discardIncomingInvoice">

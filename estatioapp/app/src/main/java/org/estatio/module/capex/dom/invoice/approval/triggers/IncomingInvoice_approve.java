@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import org.assertj.core.util.Lists;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Mixin;
@@ -36,7 +38,7 @@ public class IncomingInvoice_approve extends IncomingInvoice_triggerAbstract {
     )
     @ActionLayout(cssClassFa = "fa-thumbs-o-up")
     public Object act(
-            final String role,
+            @Nullable final String roleToAssignNextTo,      // ECP-855: this field serves as a hint to the user to which role the next task will be assigned
             @Nullable final Person personToAssignNextTo,
             @Nullable final String comment,
             final boolean goToNext) {
@@ -63,7 +65,7 @@ public class IncomingInvoice_approve extends IncomingInvoice_triggerAbstract {
     }
 
     public String default0Act() {
-        return enumPartyRoleTypeName();
+        return enumPartyRoleTypeName().isEmpty() ? "no further tasks" : enumPartyRoleTypeName(); // ECP-855: since this can be the only approval
     }
 
     public Person default1Act() {
@@ -71,7 +73,7 @@ public class IncomingInvoice_approve extends IncomingInvoice_triggerAbstract {
     }
 
     public List<Person> choices1Act() {
-        return choicesPersonToAssignNextTo();
+        return enumPartyRoleTypeName().isEmpty() ? Lists.emptyList() : choicesPersonToAssignNextTo(); // ECP-855: since this can be the only approval
     }
 
 }
