@@ -9,6 +9,7 @@ import org.jmock.auto.Mock;
 import org.junit.Rule;
 import org.junit.Test;
 
+import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.country.dom.impl.Country;
@@ -45,6 +46,8 @@ public class IncomingDocAsInvoiceViewModel_Test {
 
     @Mock OrderItemRepository mockOrderItemRepo;
 
+    @Mock MessageService mockMessageService;
+
     @Test
     public void notification_historicalPaymentMethod_works() throws Exception {
         String notification;
@@ -65,6 +68,7 @@ public class IncomingDocAsInvoiceViewModel_Test {
         viewModel.setSeller(seller);
         viewModel.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
         viewModel.invoiceRepository = mockInvoiceRepository;
+        viewModel.messageService = mockMessageService;
 
         IncomingInvoice incomingInvoice1 = new IncomingInvoice();
         incomingInvoice1.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
@@ -77,6 +81,7 @@ public class IncomingDocAsInvoiceViewModel_Test {
         context.checking(new Expectations() {{
             oneOf(mockInvoiceRepository).findBySeller(seller);
             will(returnValue(Arrays.asList(incomingInvoice1, incomingInvoice2, incomingInvoice3)));
+            oneOf(mockMessageService).warnUser("WARNING: payment method is set to bank transfer, but previous invoices from this seller have used the following payment methods: Direct Debit, Cash ");
         }});
 
         // when
