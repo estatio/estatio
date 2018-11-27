@@ -2,6 +2,7 @@ package org.estatio.module.capex.dom.invoice;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -22,12 +23,13 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.dom.CurrencyRepository;
+import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
@@ -43,7 +45,6 @@ public class IncomingInvoiceRepository {
         return repositoryService.allInstances(IncomingInvoice.class);
     }
 
-
     @Programmatic
     public List<IncomingInvoice> findByInvoiceDateBetween(final LocalDate fromDate, final LocalDate toDate) {
         return repositoryService.allMatches(
@@ -53,7 +54,6 @@ public class IncomingInvoiceRepository {
                         "fromDate", fromDate,
                         "toDate", toDate));
     }
-
 
     @Programmatic
     public List<IncomingInvoice> findByDueDateBetween(final LocalDate fromDate, final LocalDate toDate) {
@@ -65,7 +65,6 @@ public class IncomingInvoiceRepository {
                         "toDate", toDate));
     }
 
-
     @Programmatic
     public List<IncomingInvoice> findByPropertyAndDateReceivedBetween(final Property property, final LocalDate fromDate, final LocalDate toDate) {
         return repositoryService.allMatches(
@@ -76,7 +75,6 @@ public class IncomingInvoiceRepository {
                         "fromDate", fromDate,
                         "toDate", toDate));
     }
-
 
     @Programmatic
     public List<IncomingInvoice> findByApprovalState(final IncomingInvoiceApprovalState approvalState) {
@@ -100,7 +98,7 @@ public class IncomingInvoiceRepository {
     }
 
     @Programmatic
-    public IncomingInvoice findByInvoiceNumberAndSellerAndInvoiceDate(final String invoiceNumber, final Party seller, final LocalDate invoiceDate){
+    public IncomingInvoice findByInvoiceNumberAndSellerAndInvoiceDate(final String invoiceNumber, final Party seller, final LocalDate invoiceDate) {
         return repositoryService.firstMatch(
                 new QueryDefault<>(
                         IncomingInvoice.class,
@@ -119,7 +117,6 @@ public class IncomingInvoiceRepository {
                         "invoiceNumber", invoiceNumber,
                         "seller", seller));
     }
-
 
     @Programmatic
     public List<IncomingInvoice> findByBankAccount(final BankAccount bankAccount) {
@@ -140,6 +137,23 @@ public class IncomingInvoiceRepository {
                         "findNotInAnyPaymentBatchByApprovalStateAndPaymentMethod",
                         "approvalState", approvalState,
                         "paymentMethod", paymentMethod));
+    }
+
+    @Programmatic
+    public List<IncomingInvoice> findInvoicesPayableByBankTransferWithDifferentHistoricalPaymentMethods(
+            final LocalDate fromDueDate,
+            final LocalDate toDueDate) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoice.class,
+                        "findPayableByBankTransferAndDueDateBetween",
+                        "fromDueDate", fromDueDate,
+                        "toDueDate", toDueDate))
+                .stream()
+                .filter(incomingInvoice -> invoiceRepository.findBySeller(incomingInvoice.getSeller())
+                        .stream()
+                        .anyMatch(invoice -> invoice.getPaymentMethod() != PaymentMethod.BANK_TRANSFER))
+                .collect(Collectors.toList());
     }
 
     @Programmatic
@@ -173,9 +187,9 @@ public class IncomingInvoiceRepository {
 
         q.filter(
                 ii.items.contains(iii)
-            .and(iii.reportedDate.eq(reportedDate))
-            .and(ii.approvalState.ne(IncomingInvoiceApprovalState.NEW))
-//            .and(ii.approvalState.ne(IncomingInvoiceApprovalState.DISCARDED))  EST-1731: brings this filtering up to consuming method IncomingInvoiceItemRepository#filterByCompletedOrLaterInvoices
+                        .and(iii.reportedDate.eq(reportedDate))
+                        .and(ii.approvalState.ne(IncomingInvoiceApprovalState.NEW))
+                //            .and(ii.approvalState.ne(IncomingInvoiceApprovalState.DISCARDED))  EST-1731: brings this filtering up to consuming method IncomingInvoiceItemRepository#filterByCompletedOrLaterInvoices
         );
         final List<IncomingInvoice> incomingInvoices = Lists.newArrayList(q.executeList());
         q.closeAll();
@@ -207,7 +221,6 @@ public class IncomingInvoiceRepository {
         repositoryService.persistAndFlush(invoice);
         return invoice;
     }
-
 
     // Note: this method uses a first match on invoicenumber, seller and invoicedate
     // which in practice can be assumed to be unique, though technically is not
@@ -248,7 +261,7 @@ public class IncomingInvoiceRepository {
             final PaymentMethod paymentMethod,
             final InvoiceStatus invoiceStatus,
             final LocalDate dateReceived,
-            final BankAccount bankAccount){
+            final BankAccount bankAccount) {
         updateInvoice(invoice,
                 invoice.getType(),
                 invoice.getInvoiceNumber(),
@@ -278,7 +291,7 @@ public class IncomingInvoiceRepository {
             final PaymentMethod paymentMethod,
             final InvoiceStatus invoiceStatus,
             final LocalDate dateReceived,
-            final BankAccount bankAccount){
+            final BankAccount bankAccount) {
         invoice.setType(type);
         invoice.setInvoiceNumber(invoiceNumber);
         invoice.setProperty(property);
@@ -301,11 +314,11 @@ public class IncomingInvoiceRepository {
     }
 
     @Programmatic
-    public List<IncomingInvoice> findIncomingInvoiceByDocumentName(final String name){
-        List <IncomingInvoice> result = new ArrayList<>();
-        for (Document doc : incomingDocumentRepository.matchAllIncomingDocumentsByName(name)){
-            for (Paperclip paperclip : paperclipRepository.findByDocument(doc)){
-                if (paperclip.getAttachedTo().getClass().isAssignableFrom(IncomingInvoice.class)){
+    public List<IncomingInvoice> findIncomingInvoiceByDocumentName(final String name) {
+        List<IncomingInvoice> result = new ArrayList<>();
+        for (Document doc : incomingDocumentRepository.matchAllIncomingDocumentsByName(name)) {
+            for (Paperclip paperclip : paperclipRepository.findByDocument(doc)) {
+                if (paperclip.getAttachedTo().getClass().isAssignableFrom(IncomingInvoice.class)) {
                     final IncomingInvoice attachedTo = (IncomingInvoice) paperclip.getAttachedTo();
                     // check presence because there may be multiple scans attached to the same invoice
                     if (!result.contains(attachedTo)) {
@@ -329,5 +342,7 @@ public class IncomingInvoiceRepository {
     ServiceRegistry2 serviceRegistry2;
     @Inject
     CurrencyRepository currencyRepository;
+    @Inject
+    InvoiceRepository invoiceRepository;
 
 }

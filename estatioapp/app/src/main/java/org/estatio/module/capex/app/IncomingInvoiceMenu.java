@@ -46,7 +46,7 @@ import lombok.Setter;
 public class IncomingInvoiceMenu {
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
-    public List<IncomingInvoice> allInvoices(){
+    public List<IncomingInvoice> allInvoices() {
         return incomingInvoiceRepository.listAll();
     }
 
@@ -58,7 +58,7 @@ public class IncomingInvoiceMenu {
             @Nullable final BigDecimal grossAmount,
             @ParameterLayout(named = "Invoice Date (Approximately)")
             @Nullable final LocalDate invoiceDate
-            ){
+    ) {
         return new IncomingInvoiceFinder(invoiceRepository, incomingInvoiceRepository, partyRepository)
                 .filterOrFindByDocumentName(barcode)
                 .filterOrFindBySeller(sellerNameOrReference)
@@ -67,11 +67,11 @@ public class IncomingInvoiceMenu {
                 .getResult();
     }
 
-    public String validateFindInvoice(final String barcode, final String sellerNameOfReference, final BigDecimal grossAmount, final LocalDate invoiceDate){
-        if (barcode!=null && barcode.length()<3){
+    public String validateFindInvoice(final String barcode, final String sellerNameOfReference, final BigDecimal grossAmount, final LocalDate invoiceDate) {
+        if (barcode != null && barcode.length() < 3) {
             return "Give at least 3 characters for barcode (document name)";
         }
-        if (sellerNameOfReference!=null && sellerNameOfReference.length()<3){
+        if (sellerNameOfReference != null && sellerNameOfReference.length() < 3) {
             return "Give at least 3 characters for seller name or reference";
         }
         return null;
@@ -79,7 +79,7 @@ public class IncomingInvoiceMenu {
 
     static class IncomingInvoiceFinder {
 
-        public IncomingInvoiceFinder(InvoiceRepository invoiceRepository, IncomingInvoiceRepository incomingInvoiceRepository, PartyRepository partyRepository){
+        public IncomingInvoiceFinder(InvoiceRepository invoiceRepository, IncomingInvoiceRepository incomingInvoiceRepository, PartyRepository partyRepository) {
             this.result = new ArrayList<>();
             this.incomingInvoiceRepository = incomingInvoiceRepository;
             this.partyRepository = partyRepository;
@@ -95,11 +95,12 @@ public class IncomingInvoiceMenu {
 
         InvoiceRepository invoiceRepository;
 
-        IncomingInvoiceFinder filterOrFindByDocumentName(final String barcode){
-            if (barcode==null) return this;
+        IncomingInvoiceFinder filterOrFindByDocumentName(final String barcode) {
+            if (barcode == null)
+                return this;
 
             List<IncomingInvoice> resultsForBarcode = incomingInvoiceRepository.findIncomingInvoiceByDocumentName(barcode);
-            if (!this.result.isEmpty()){
+            if (!this.result.isEmpty()) {
                 filterByDocumentNameResults(resultsForBarcode);
             } else {
                 setResult(resultsForBarcode);
@@ -107,8 +108,9 @@ public class IncomingInvoiceMenu {
             return this;
         }
 
-        IncomingInvoiceFinder filterOrFindBySeller(final String sellerNameOrReference){
-            if (sellerNameOrReference==null || sellerNameOrReference.equals("")) return this;
+        IncomingInvoiceFinder filterOrFindBySeller(final String sellerNameOrReference) {
+            if (sellerNameOrReference == null || sellerNameOrReference.equals(""))
+                return this;
 
             List<Organisation> sellerCandidates =
                     partyRepository.findParties("*".concat(sellerNameOrReference).concat("*"))
@@ -126,13 +128,14 @@ public class IncomingInvoiceMenu {
             return this;
         }
 
-        IncomingInvoiceFinder filterOrFindByGrossAmount(final BigDecimal grossAmount){
-            if (grossAmount==null) return this;
+        IncomingInvoiceFinder filterOrFindByGrossAmount(final BigDecimal grossAmount) {
+            if (grossAmount == null)
+                return this;
 
             BigDecimal grossAmountMin;
             BigDecimal grossAmountMax;
 
-            if (grossAmount.equals(BigDecimal.ZERO)){
+            if (grossAmount.equals(BigDecimal.ZERO)) {
                 grossAmountMin = BigDecimal.ZERO;
                 grossAmountMax = BigDecimal.ZERO;
             } else {
@@ -140,7 +143,7 @@ public class IncomingInvoiceMenu {
                 grossAmountMax = addFivePercent(grossAmount);
             }
 
-            if (!this.result.isEmpty()){
+            if (!this.result.isEmpty()) {
                 filterByGrossAmount(grossAmountMin, grossAmountMax);
             } else {
                 createResultForGrossAmount(grossAmountMin, grossAmountMax);
@@ -149,19 +152,20 @@ public class IncomingInvoiceMenu {
             return this;
         }
 
-        BigDecimal subtractFivePercent(final BigDecimal amount){
+        BigDecimal subtractFivePercent(final BigDecimal amount) {
             return amount.subtract(amount.abs().divide(new BigDecimal("20"), MathContext.DECIMAL64).setScale(2, BigDecimal.ROUND_HALF_UP));
         }
 
-        BigDecimal addFivePercent(final BigDecimal amount){
+        BigDecimal addFivePercent(final BigDecimal amount) {
             return amount.add(amount.abs().divide(new BigDecimal("20"), MathContext.DECIMAL64).setScale(2, BigDecimal.ROUND_HALF_UP));
         }
 
-        IncomingInvoiceFinder filterOrFindByInvoiceDate(final LocalDate invoiceDate){
-            if (invoiceDate==null) return this;
+        IncomingInvoiceFinder filterOrFindByInvoiceDate(final LocalDate invoiceDate) {
+            if (invoiceDate == null)
+                return this;
             LocalDate invoiceDateStart = invoiceDate.minusDays(5);
             LocalDate invoiceDateEnd = invoiceDate.plusDays(5);
-            if (!this.result.isEmpty()){
+            if (!this.result.isEmpty()) {
                 filterByInvoiceDate(invoiceDateStart, invoiceDateEnd);
             } else {
                 createResultForInvoiceDate(invoiceDateStart, invoiceDateEnd);
@@ -169,28 +173,28 @@ public class IncomingInvoiceMenu {
             return this;
         }
 
-        void filterByDocumentNameResults(List<IncomingInvoice> resultsForBarcode){
+        void filterByDocumentNameResults(List<IncomingInvoice> resultsForBarcode) {
             setResult(
                     this.result
-                    .stream()
-                    .filter(x->resultsForBarcode.contains(x))
-                    .collect(Collectors.toList())
+                            .stream()
+                            .filter(x -> resultsForBarcode.contains(x))
+                            .collect(Collectors.toList())
             );
         }
 
-        void filterBySellerCandidates(final List<Organisation> sellerCandidates){
-            if (sellerCandidates.isEmpty()){
+        void filterBySellerCandidates(final List<Organisation> sellerCandidates) {
+            if (sellerCandidates.isEmpty()) {
                 // reset result
                 this.result = new ArrayList<>();
             } else {
                 // filter result
                 Predicate<IncomingInvoice> isInSellerCandidatesList =
-                        x->sellerCandidates.contains(x.getSeller());
+                        x -> sellerCandidates.contains(x.getSeller());
                 setResult(result.stream().filter(isInSellerCandidatesList).collect(Collectors.toList()));
             }
         }
 
-        void createResultForSellerCandidates(final List<Organisation> sellerCandidates){
+        void createResultForSellerCandidates(final List<Organisation> sellerCandidates) {
             for (Party candidate : sellerCandidates) {
                 this.result.addAll(
                         invoiceRepository.findBySeller(candidate)
@@ -202,55 +206,55 @@ public class IncomingInvoiceMenu {
             }
         }
 
-        void filterByGrossAmount(final BigDecimal grossAmountMin, final BigDecimal grossAmountMax){
-            Predicate<IncomingInvoice> hasGrossAmount = x->x.getGrossAmount()!=null;
-            Predicate<IncomingInvoice> equalOrGreaterThanMin = x->x.getGrossAmount().compareTo(grossAmountMin) >= 0;
-            Predicate<IncomingInvoice> equalOrSmallerThanMax = x->x.getGrossAmount().compareTo(grossAmountMax) <= 0;
+        void filterByGrossAmount(final BigDecimal grossAmountMin, final BigDecimal grossAmountMax) {
+            Predicate<IncomingInvoice> hasGrossAmount = x -> x.getGrossAmount() != null;
+            Predicate<IncomingInvoice> equalOrGreaterThanMin = x -> x.getGrossAmount().compareTo(grossAmountMin) >= 0;
+            Predicate<IncomingInvoice> equalOrSmallerThanMax = x -> x.getGrossAmount().compareTo(grossAmountMax) <= 0;
             setResult(
                     this.result
-                    .stream()
-                    .filter(hasGrossAmount)
-                    .filter(equalOrGreaterThanMin)
-                    .filter(equalOrSmallerThanMax)
-                    .collect(Collectors.toList())
+                            .stream()
+                            .filter(hasGrossAmount)
+                            .filter(equalOrGreaterThanMin)
+                            .filter(equalOrSmallerThanMax)
+                            .collect(Collectors.toList())
             );
         }
 
-        void createResultForGrossAmount(final BigDecimal grossAmountMin, final BigDecimal grossAmountMax){
-            Predicate<IncomingInvoice> hasGrossAmount = x->x.getGrossAmount()!=null;
-            Predicate<IncomingInvoice> equalOrGreaterThanMin = x->x.getGrossAmount().compareTo(grossAmountMin) >= 0;
-            Predicate<IncomingInvoice> equalOrSmallerThanMax = x->x.getGrossAmount().compareTo(grossAmountMax) <= 0;
+        void createResultForGrossAmount(final BigDecimal grossAmountMin, final BigDecimal grossAmountMax) {
+            Predicate<IncomingInvoice> hasGrossAmount = x -> x.getGrossAmount() != null;
+            Predicate<IncomingInvoice> equalOrGreaterThanMin = x -> x.getGrossAmount().compareTo(grossAmountMin) >= 0;
+            Predicate<IncomingInvoice> equalOrSmallerThanMax = x -> x.getGrossAmount().compareTo(grossAmountMax) <= 0;
             setResult(
                     incomingInvoiceRepository.listAll()
-                    .stream()
-                    .filter(hasGrossAmount)
-                    .filter(equalOrGreaterThanMin)
-                    .filter(equalOrSmallerThanMax)
-                    .collect(Collectors.toList())
+                            .stream()
+                            .filter(hasGrossAmount)
+                            .filter(equalOrGreaterThanMin)
+                            .filter(equalOrSmallerThanMax)
+                            .collect(Collectors.toList())
             );
         }
 
-        void filterByInvoiceDate(final LocalDate invoiceDateStart, final LocalDate invoiceDateEnd){
-            Predicate<IncomingInvoice> hasInvoiceDate = x->x.getInvoiceDate()!=null;
-            Predicate<IncomingInvoice> invoiceDateInInterval = x->new LocalDateInterval(invoiceDateStart, invoiceDateEnd).contains(x.getInvoiceDate());
+        void filterByInvoiceDate(final LocalDate invoiceDateStart, final LocalDate invoiceDateEnd) {
+            Predicate<IncomingInvoice> hasInvoiceDate = x -> x.getInvoiceDate() != null;
+            Predicate<IncomingInvoice> invoiceDateInInterval = x -> new LocalDateInterval(invoiceDateStart, invoiceDateEnd).contains(x.getInvoiceDate());
             setResult(
                     this.result
-                    .stream()
-                    .filter(hasInvoiceDate)
-                    .filter(invoiceDateInInterval)
-                    .collect(Collectors.toList())
+                            .stream()
+                            .filter(hasInvoiceDate)
+                            .filter(invoiceDateInInterval)
+                            .collect(Collectors.toList())
             );
         }
 
-        void createResultForInvoiceDate(final LocalDate invoiceDateStart, final LocalDate invoiceDateEnd){
-            Predicate<IncomingInvoice> hasInvoiceDate = x->x.getInvoiceDate()!=null;
-            Predicate<IncomingInvoice> invoiceDateInInterval = x->new LocalDateInterval(invoiceDateStart, invoiceDateEnd).contains(x.getInvoiceDate());
+        void createResultForInvoiceDate(final LocalDate invoiceDateStart, final LocalDate invoiceDateEnd) {
+            Predicate<IncomingInvoice> hasInvoiceDate = x -> x.getInvoiceDate() != null;
+            Predicate<IncomingInvoice> invoiceDateInInterval = x -> new LocalDateInterval(invoiceDateStart, invoiceDateEnd).contains(x.getInvoiceDate());
             setResult(
                     incomingInvoiceRepository.listAll()
-                    .stream()
-                    .filter(hasInvoiceDate)
-                    .filter(invoiceDateInInterval)
-                    .collect(Collectors.toList())
+                            .stream()
+                            .filter(hasInvoiceDate)
+                            .filter(invoiceDateInInterval)
+                            .collect(Collectors.toList())
             );
         }
 
@@ -284,9 +288,7 @@ public class IncomingInvoiceMenu {
         return clockService.now();
     }
 
-
     ///////////////////////////////////////////
-
 
     @Action(semantics = SemanticsOf.SAFE)
     public List<IncomingInvoice> findInvoicesByPropertyAndDateReceivedBetween(final Property property, final LocalDate fromDate, final LocalDate toDate) {
@@ -299,6 +301,15 @@ public class IncomingInvoiceMenu {
 
     public LocalDate default2FindInvoicesByPropertyAndDateReceivedBetween() {
         return clockService.now();
+    }
+
+    ///////////////////////////////////////////
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<IncomingInvoice> findInvoicesPayableByBankTransferWithDifferentHistoricalPaymentMethods(
+            final LocalDate fromDueDate,
+            final LocalDate toDueDate) {
+        return incomingInvoiceRepository.findInvoicesPayableByBankTransferWithDifferentHistoricalPaymentMethods(fromDueDate, toDueDate);
     }
 
     ///////////////////////////////////////////

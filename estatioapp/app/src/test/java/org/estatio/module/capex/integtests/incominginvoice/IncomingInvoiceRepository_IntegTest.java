@@ -1,5 +1,7 @@
 package org.estatio.module.capex.integtests.incominginvoice;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
@@ -25,8 +27,8 @@ import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
+import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -51,7 +53,6 @@ public class IncomingInvoiceRepository_IntegTest extends CapexModuleIntegTestAbs
         });
     }
 
-
     Party seller;
     Party buyer;
     String invoiceNumber;
@@ -61,6 +62,31 @@ public class IncomingInvoiceRepository_IntegTest extends CapexModuleIntegTestAbs
     PaymentMethod paymentMethod;
     InvoiceStatus invoiceStatus;
     Property property;
+
+    @Test
+    public void findInvoicesPayableByBankTransferWithDifferentHistoricalPaymentMethods_works() throws Exception {
+        // given
+        IncomingInvoice invoice1 = createIncomingInvoice();
+        invoice1.setInvoiceNumber("001");
+        invoice1.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
+        IncomingInvoice invoice2 = createIncomingInvoice();
+        invoice2.setApprovalState(IncomingInvoiceApprovalState.PAYABLE);
+
+        // when
+        List<IncomingInvoice> historicallyDifferentPaymentMethods = incomingInvoiceRepository.findInvoicesPayableByBankTransferWithDifferentHistoricalPaymentMethods(dueDate.minusDays(1), dueDate.plusDays(1));
+
+        // then
+        assertThat(historicallyDifferentPaymentMethods).containsExactly(invoice2);
+
+        // and given
+        invoice1.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
+
+        // when
+        historicallyDifferentPaymentMethods = incomingInvoiceRepository.findInvoicesPayableByBankTransferWithDifferentHistoricalPaymentMethods(dueDate.minusDays(1), dueDate.plusDays(1));
+
+        // then
+        assertThat(historicallyDifferentPaymentMethods).isEmpty();
+    }
 
     @Test
     public void findByInvoiceNumberAndSellerAndInvoiceDate_works() throws Exception {
@@ -98,7 +124,7 @@ public class IncomingInvoiceRepository_IntegTest extends CapexModuleIntegTestAbs
         LocalDate updatedDueDate = dueDate.minusWeeks(1);
         PaymentMethod updatedPaymentMethod = PaymentMethod.DIRECT_DEBIT;
         InvoiceStatus updatedStatus = InvoiceStatus.INVOICED;
-        LocalDate updatedDateReceived = new LocalDate(2017,1,2);
+        LocalDate updatedDateReceived = new LocalDate(2017, 1, 2);
         BankAccount updatedBankAccount = bankAccountRepository.allBankAccounts().get(0);
 
         Property property = existingInvoice.getProperty();
@@ -121,19 +147,19 @@ public class IncomingInvoiceRepository_IntegTest extends CapexModuleIntegTestAbs
 
     }
 
-    private IncomingInvoice createIncomingInvoice(){
+    private IncomingInvoice createIncomingInvoice() {
         seller = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
         buyer = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
         property = Property_enum.OxfGb.findUsing(serviceRegistry);
         invoiceNumber = "123";
-        invoiceDate = new LocalDate(2017,1,1);
+        invoiceDate = new LocalDate(2017, 1, 1);
         dueDate = invoiceDate.minusMonths(1);
         paymentMethod = PaymentMethod.BANK_TRANSFER;
         invoiceStatus = InvoiceStatus.NEW;
         atPath = "/GBR";
         approvalStateIfAny = IncomingInvoiceApprovalState.PAID;
 
-        return incomingInvoiceRepository.create(IncomingInvoiceType.CAPEX, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, null,null,
+        return incomingInvoiceRepository.create(IncomingInvoiceType.CAPEX, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, null, null,
                 approvalStateIfAny);
     }
 
