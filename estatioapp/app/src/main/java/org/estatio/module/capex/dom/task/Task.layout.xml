@@ -63,6 +63,12 @@
                                     <cpt:action id="approveIncomingInvoiceAsCorporateManager">
                                         <cpt:named>Approve as Corporate Manager</cpt:named>
                                     </cpt:action>
+                                    <cpt:action id="approveIncomingInvoiceAsCenterManager">
+                                        <cpt:named>Approve as Center Manager</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id=" approveIncomingInvoiceWhenApprovedByCenterManager">
+                                        <cpt:named>Approve when approved by Center Manager</cpt:named>
+                                    </cpt:action>
                                     <cpt:action id="checkPayment" />
                                     <cpt:action id="discardIncomingInvoice">
                                         <cpt:named>Discard</cpt:named>
