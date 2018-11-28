@@ -95,6 +95,11 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
         return Optional.ofNullable(firstMatch("findByInvoiceItem", "invoiceItem", invoiceItem));
     }
 
+    @Programmatic
+    public List<OrderItemInvoiceItemLink> findLinksByInvoiceItem(final IncomingInvoiceItem invoiceItem) {
+        return allMatches("findByInvoiceItem", "invoiceItem", invoiceItem);
+    }
+
 
     @Programmatic
     public Optional<OrderItem> findLinkedOrderItemsByInvoiceItem(final IncomingInvoiceItem invoiceItem) {

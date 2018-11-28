@@ -8,7 +8,6 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.services.dto.DtoMappingHelper;
 
 import org.estatio.canonical.invoice.v2.InvoiceDto;
 import org.estatio.module.asset.dom.FixedAsset;
@@ -22,7 +21,11 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
         nature = NatureOfService.DOMAIN,
         objectType = "lease.canonical.v2.InvoiceForLeaseDtoFactory"
 )
-public class InvoiceForLeaseDtoFactory extends DtoFactoryAbstract {
+public class InvoiceForLeaseDtoFactory extends DtoFactoryAbstract<InvoiceForLease, InvoiceDto> {
+
+    public InvoiceForLeaseDtoFactory() {
+        super(InvoiceForLease.class, InvoiceDto.class);
+    }
 
     @Programmatic
     public InvoiceDto newDto(final InvoiceForLease invoiceForLease) {
@@ -97,6 +100,4 @@ public class InvoiceForLeaseDtoFactory extends DtoFactoryAbstract {
     @Inject
     InvoiceItemForLeaseDtoFactory invoiceItemForLeaseDtoFactory;
 
-    @Inject
-    DtoMappingHelper mappingHelper;
 }

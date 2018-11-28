@@ -28,10 +28,14 @@ import org.estatio.module.tax.dom.TaxRate;
         nature = NatureOfService.DOMAIN,
         objectType = "lease.canonical.v2.InvoiceItemForLeaseDtoFactory"
 )
-public class InvoiceItemForLeaseDtoFactory extends DtoFactoryAbstract {
+public class InvoiceItemForLeaseDtoFactory extends DtoFactoryAbstract<InvoiceItem, InvoiceItemType> {
+
+    public InvoiceItemForLeaseDtoFactory() {
+        super(InvoiceItem.class, InvoiceItemType.class);
+    }
 
     @Programmatic
-    public InvoiceItemType newDto(final InvoiceItem item) {
+    protected InvoiceItemType newDto(final InvoiceItem item) {
         InvoiceItemType dto = new InvoiceItemType();
 
         dto.setSelf(mappingHelper.oidDtoFor(item));

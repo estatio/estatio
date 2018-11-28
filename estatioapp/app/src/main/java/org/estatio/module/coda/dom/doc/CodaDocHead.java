@@ -85,6 +85,11 @@ import lombok.Setter;
                         + "   && docCode == :docCode "
                         + "   && docNum  == :docNum "),
         @Query(
+                name = "findByIncomingInvoice", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
+                        + "WHERE incomingInvoice == :incomingInvoice "),
+        @Query(
                 name = "findByCodaPeriodQuarterAndHandling", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "

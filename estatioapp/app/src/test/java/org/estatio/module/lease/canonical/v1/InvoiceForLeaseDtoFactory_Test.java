@@ -25,24 +25,34 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class InvoiceForLeaseDtoFactory_Test {
 
-    private InvoiceForLease invoice;
-    private InvoiceForLeaseDtoFactory invoiceForLeaseDtoFactory;
-    private InvoiceItemForLeaseDtoFactory invoiceItemForLeaseDtoFactory;
-
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
+
+    private InvoiceForLeaseDtoFactory invoiceForLeaseDtoFactory;
+
+    private InvoiceItemForLeaseDtoFactory invoiceItemForLeaseDtoFactory;
 
     @Mock
     private DtoMappingHelper mockMappingHelper;
 
+    private InvoiceForLease invoice;
+
     @Before
     public void setUp() throws Exception {
-        invoiceForLeaseDtoFactory = new InvoiceForLeaseDtoFactory();
-        invoiceItemForLeaseDtoFactory = new InvoiceItemForLeaseDtoFactory();
+        invoiceForLeaseDtoFactory = new InvoiceForLeaseDtoFactory() {
+            InvoiceForLeaseDtoFactory withMappingHelper(DtoMappingHelper mappingHelper) {
+                super.mappingHelper = mappingHelper;
+                return this;
+            }
+        }.withMappingHelper(mockMappingHelper);
+        invoiceItemForLeaseDtoFactory = new InvoiceItemForLeaseDtoFactory() {
+            InvoiceItemForLeaseDtoFactory withMappingHelper(DtoMappingHelper mappingHelper) {
+                super.mappingHelper = mappingHelper;
+                return this;
+            }
+        }.withMappingHelper(mockMappingHelper);
 
         invoiceForLeaseDtoFactory.invoiceItemForLeaseDtoFactory = invoiceItemForLeaseDtoFactory;
-        invoiceForLeaseDtoFactory.mappingHelper = mockMappingHelper;
-        invoiceItemForLeaseDtoFactory.mappingHelper = mockMappingHelper;
 
         context.checking(new Expectations() {{
             ignoring(mockMappingHelper);

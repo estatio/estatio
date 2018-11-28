@@ -1,6 +1,5 @@
 package org.estatio.module.coda.dom.doc;
 
-import java.util.Collection;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -10,6 +9,8 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.title.TitleService;
+
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -92,7 +93,6 @@ public class CodaDocHeadRepository {
                             "codaPeriodQuarter", codaPeriodQuarter,
                             "handling", handling));
         }
-
     }
 
     private void delete(final CodaDocHead codaDocHead) {
@@ -102,17 +102,18 @@ public class CodaDocHeadRepository {
         repositoryService.removeAndFlush(codaDocHead);
     }
 
+    @Programmatic
+    public CodaDocHead findByIncomingInvoice(final IncomingInvoice incomingInvoice) {
+        return repositoryService.uniqueMatch(
+                new org.apache.isis.applib.query.QueryDefault<>(
+                        CodaDocHead.class,
+                        "findByIncomingInvoice",
+                        "incomingInvoice", incomingInvoice));
+    }
+
     @javax.inject.Inject
     RepositoryService repositoryService;
     @javax.inject.Inject
     TitleService titleService;
-
-    @Programmatic
-    public Collection<? extends CodaDocHead> findWithInvalidEl3(
-            final Handling handling,
-            final ValidationStatus accountCodeValidationStatus,
-            final String el3) {
-        return null;
-    }
 
 }

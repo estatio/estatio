@@ -7,7 +7,6 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.services.dto.DtoMappingHelper;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
@@ -21,7 +20,11 @@ import org.estatio.module.party.dom.Party;
         nature = NatureOfService.DOMAIN,
         objectType = "party.canonical.v2.PartyDtoFactory"
 )
-public class PartyDtoFactory extends DtoFactoryAbstract {
+public class PartyDtoFactory extends DtoFactoryAbstract<Party, PartyDto> {
+
+    public PartyDtoFactory(){
+        super(Party.class, PartyDto.class);
+    }
 
     @Programmatic
     public PartyDto newDto(final Party party) {
@@ -45,8 +48,6 @@ public class PartyDtoFactory extends DtoFactoryAbstract {
     }
 
     @Inject
-    DtoMappingHelper mappingHelper;
-
-    @Inject
     CommunicationChannelRepository communicationChannelRepository;
+
 }

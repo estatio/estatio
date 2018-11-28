@@ -19,109 +19,44 @@
 package org.estatio.module.application.spiimpl.contentmapping;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 import javax.ws.rs.core.MediaType;
-
-import com.google.common.base.Joiner;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.conmap.ContentMappingService;
 
-import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
-import org.incode.module.document.dom.impl.docs.Document;
-
-import org.estatio.canonical.bankmandate.v1.BankAccountsAndMandatesDto;
-import org.estatio.canonical.documents.v2.DocumentsDto;
-import org.estatio.canonical.party.v1.PartyDto;
-import org.estatio.module.application.canonical.v1.PostalAddressDtoFactory;
-import org.estatio.module.bankmandate.canonical.v1.BankMandateDtoFactory;
-import org.estatio.module.bankmandate.canonical.v1.PartyBankAccountsAndMandatesDtoFactory;
-import org.estatio.module.bankmandate.dom.BankMandate;
-import org.estatio.module.financial.canonical.v1.BankAccountDtoFactory;
-import org.estatio.module.financial.dom.BankAccount;
-import org.estatio.module.lease.canonical.v1.InvoiceForLeaseDtoFactory;
-import org.estatio.module.lease.contentmapping.DocumentsDtoFactory;
-import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
-import org.estatio.module.party.canonical.v1.PartyDtoFactory;
-import org.estatio.module.party.dom.Party;
+import org.estatio.module.base.platform.applib.DtoFactory;
 
 @DomainService(
         nature = NatureOfService.DOMAIN
 )
 public class EstatioContentMappingService implements ContentMappingService {
 
+    /**
+     * Implements chain of responsibility pattern.
+     *
+     * @param object
+     * @param acceptableMediaTypes
+     * @return
+     */
     @Programmatic
     @Override
     public Object map(
             final Object object,
             final List<MediaType> acceptableMediaTypes) {
 
-        final String domainType = determineDomainType(acceptableMediaTypes);
-
-        if(object instanceof Party) {
-            final Party party = (Party) object;
-            if(domainType.equals(PartyDto.class.getName())) {
-                return partyDtoFactory.newDto(party);
+        for (final DtoFactory dtoFactory : dtoFactories) {
+            if(dtoFactory.accepts(object, acceptableMediaTypes)) {
+                return dtoFactory.newDto(object, acceptableMediaTypes);
             }
-            if(domainType.equals(BankAccountsAndMandatesDto.class.getName())) {
-                return partyBankAccountsAndMandatesDtoFactory.newDto(party);
-            }
-        }
-
-        if(object instanceof BankAccount) {
-            return bankAccountDtoFactory.newDto((BankAccount)object);
-        }
-        if(object instanceof BankMandate) {
-            return bankMandateDtoFactory.newDto((BankMandate)object);
-        }
-        if(object instanceof InvoiceForLease) {
-            return invoiceForLeaseDtoFactory.newDto((InvoiceForLease)object);
-        }
-        if(object instanceof PostalAddress) {
-            return postalAddressDtoFactory.newDto((PostalAddress)object);
-        }
-        if(object instanceof List && Objects.equals(domainType, DocumentsDto.class.getName())) {
-            return documentsDtoFactory.newDto((List<Document>)object);
         }
 
         return null;
     }
 
-    static String determineDomainType(final List<MediaType> acceptableMediaTypes) {
-        for (MediaType acceptableMediaType : acceptableMediaTypes) {
-            final Map<String, String> parameters = acceptableMediaType.getParameters();
-            final String domainType = parameters.get("x-ro-domain-type");
-            if(domainType != null) {
-                return domainType;
-            }
-        }
-        throw new IllegalArgumentException(
-                "Could not locate x-ro-domain-type parameter in any of the provided media types; got: " + Joiner.on(", ").join(acceptableMediaTypes));
-    }
-
     @javax.inject.Inject
-    BankAccountDtoFactory bankAccountDtoFactory;
-
-    @javax.inject.Inject
-    DocumentsDtoFactory documentsDtoFactory;
-
-    @javax.inject.Inject
-    BankMandateDtoFactory bankMandateDtoFactory;
-
-    @javax.inject.Inject
-    PartyBankAccountsAndMandatesDtoFactory partyBankAccountsAndMandatesDtoFactory;
-
-    @javax.inject.Inject
-    PartyDtoFactory partyDtoFactory;
-
-    @javax.inject.Inject
-    InvoiceForLeaseDtoFactory invoiceForLeaseDtoFactory;
-
-    @javax.inject.Inject
-    PostalAddressDtoFactory postalAddressDtoFactory;
+    List<DtoFactory> dtoFactories;
 
 }

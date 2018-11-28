@@ -39,7 +39,11 @@ import org.estatio.module.party.dom.Party;
         nature = NatureOfService.DOMAIN,
         objectType = "bankmandate.canonical.v2.PartyBankAccountsAndMandatesDtoFactory"
 )
-public class PartyBankAccountsAndMandatesDtoFactory extends DtoFactoryAbstract {
+public class PartyBankAccountsAndMandatesDtoFactory extends DtoFactoryAbstract<Party, BankAccountsAndMandatesDto> {
+
+    public PartyBankAccountsAndMandatesDtoFactory() {
+        super(Party.class, BankAccountsAndMandatesDto.class);
+    }
 
     @Programmatic
     public BankAccountsAndMandatesDto newDto(final Party party) {

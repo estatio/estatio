@@ -1,11 +1,7 @@
 package org.estatio.module.application.canonical.v1;
 
-import javax.inject.Inject;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.services.dto.DtoMappingHelper;
 
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.incode.module.country.dom.impl.Country;
@@ -17,10 +13,13 @@ import org.estatio.module.base.platform.applib.DtoFactoryAbstract;
 @DomainService(
         nature = NatureOfService.DOMAIN
 )
-public class PostalAddressDtoFactory extends DtoFactoryAbstract {
+public class PostalAddressDtoFactory extends DtoFactoryAbstract<PostalAddress, PostalAddressDto> {
 
-    @Programmatic
-    public PostalAddressDto newDto(final PostalAddress postalAddress) {
+    public PostalAddressDtoFactory() {
+        super(PostalAddress.class, PostalAddressDto.class);
+    }
+
+    protected PostalAddressDto newDto(final PostalAddress postalAddress) {
         PostalAddressDto dto = new PostalAddressDto();
 
         dto.setSelf(mappingHelper.oidDtoFor(postalAddress));
@@ -46,8 +45,5 @@ public class PostalAddressDtoFactory extends DtoFactoryAbstract {
 
         return dto;
     }
-
-    @Inject
-    DtoMappingHelper mappingHelper;
 
 }

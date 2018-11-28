@@ -6,8 +6,6 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.services.dto.DtoMappingHelper;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
@@ -20,10 +18,14 @@ import org.estatio.module.party.dom.Party;
 @DomainService(
         nature = NatureOfService.DOMAIN
 )
-public class PartyDtoFactory extends DtoFactoryAbstract {
+public class PartyDtoFactory extends DtoFactoryAbstract<Party, PartyDto> {
 
-    @Programmatic
-    public PartyDto newDto(final Party party) {
+    public PartyDtoFactory(){
+        super(Party.class, PartyDto.class);
+    }
+
+    @Override
+    protected PartyDto newDto(final Party party) {
         PartyDto dto = new PartyDto();
         dto.setSelf(mappingHelper.oidDtoFor(party));
         dto.setAtPath(party.getAtPath());
@@ -44,8 +46,6 @@ public class PartyDtoFactory extends DtoFactoryAbstract {
     }
 
     @Inject
-    DtoMappingHelper mappingHelper;
-
-    @Inject
     CommunicationChannelRepository communicationChannelRepository;
+
 }
