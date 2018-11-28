@@ -115,7 +115,8 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         recoverableInvoice = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate("123456", seller, new LocalDate(2017,12,20));
         recoverableInvoice.setBankAccount(bankAccount);
 
-        invoiceForDirectDebit = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate("1234567", seller, new LocalDate(2017,12,20));
+        invoiceForDirectDebit = IncomingInvoiceNoDocument_enum.invoiceForItaDirectDebit.findUsing(serviceRegistry2);
+
         invoiceForDirectDebit.setBankAccount(bankAccount);
 
         assertThat(incomingInvoice).isNotNull();
@@ -635,11 +636,16 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
 
     }
 
+    @Inject
+    IncomingInvoiceApprovalStateTransitionType.SupportService supportService;
+
     @Test
     @Ignore  //TODO: find out why this test is not working
     public void invoice_having_payment_method_other_then_bank_transfer_are_automatically_approved() throws Exception {
 
         // given
+        final IncomingInvoiceApprovalState initialState = supportService.currentStateOf(invoiceForDirectDebit);
+
         // when
         // then
         List<IncomingInvoiceApprovalStateTransition> transitionsOfDirectDebitInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceForDirectDebit);

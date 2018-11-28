@@ -25,6 +25,8 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
+import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.dom.CurrencyRepository;
 import org.estatio.module.financial.dom.BankAccount;
@@ -222,6 +224,15 @@ public class IncomingInvoiceRepository {
         invoice.setCurrency(currency);
         serviceRegistry2.injectServicesInto(invoice);
         repositoryService.persistAndFlush(invoice);
+
+
+        // moved from ObjectPersistedEvent subscriber, because any changes made there on the invoice are not persisted.
+        final IncomingInvoiceApprovalState approvalStateAfterPersisting = invoice.getApprovalState();
+        if(approvalStateAfterPersisting == IncomingInvoiceApprovalStateTransitionType.INSTANTIATE.getToState()) {
+            stateTransitionService
+                    .trigger(invoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null, null);
+        }
+
         return invoice;
     }
 
@@ -353,6 +364,8 @@ public class IncomingInvoiceRepository {
         return result;
     }
 
+    @Inject
+    StateTransitionService stateTransitionService;
     @Inject
     IncomingDocumentRepository incomingDocumentRepository;
     @Inject
