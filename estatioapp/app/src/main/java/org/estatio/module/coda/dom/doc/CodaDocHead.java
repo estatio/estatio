@@ -109,6 +109,12 @@ import lombok.Setter;
                         + "WHERE codaPeriodQuarter == :codaPeriodQuarter "
                         + "   && handling          == :handling "
                         + "   && reasonInvalid     != null "
+        ),
+        @Query(
+                name = "findByIncomingInvoice", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
+                        + "WHERE incomingInvoice == :incomingInvoice "
         )
 })
 @Unique(name = "CodaDocHead_cmpCode_docCode_docNum_UNQ", members = { "cmpCode", "docCode", "docNum" })

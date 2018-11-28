@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.title.TitleService;
 
@@ -93,6 +94,16 @@ public class CodaDocHeadRepository {
                             "codaPeriodQuarter", codaPeriodQuarter,
                             "handling", handling));
         }
+    }
+
+    public CodaDocHead findByIncomingInvoice(final IncomingInvoice incomingInvoice) {
+        return repositoryService.uniqueMatch(
+                new QueryDefault<>(
+                        CodaDocHead.class,
+                        "findByIncomingInvoice",
+                        "incomingInvoice", incomingInvoice
+                )
+        );
     }
 
     private void delete(final CodaDocHead codaDocHead) {
