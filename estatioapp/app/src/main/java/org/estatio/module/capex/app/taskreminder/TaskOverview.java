@@ -2,6 +2,7 @@ package org.estatio.module.capex.app.taskreminder;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
@@ -15,7 +16,10 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 
+import org.isisaddons.module.security.app.user.MeService;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyEvaluator;
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
+import org.isisaddons.module.security.dom.user.ApplicationUser;
 
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.dom.task.TaskRepository;
@@ -44,9 +48,16 @@ public class TaskOverview implements HasAtPath {
     @Getter @Setter
     private Person person;
 
+    @Inject
+    ApplicationTenancyEvaluator evaluator;
+
+    @Inject
+    MeService meService;
+
     @Property
     public long getTasksOverdue() {
-        return taskRepository.findIncompleteByPersonAssignedTo(person).stream()
+        final Stream<Task> incompleteTasks = streamIncompleteTasksVisibleToMeAssignedTo(person);
+        return incompleteTasks
                 .map(Task::getCreatedOn)
                 .filter(ld -> ld.plusDays(5).isBefore(clockService.nowAsLocalDateTime()))
                 .count();
@@ -54,7 +65,25 @@ public class TaskOverview implements HasAtPath {
 
     @Property
     public long getTasksNotYetOverdue() {
-        return taskRepository.findIncompleteByPersonAssignedTo(person).size() - getTasksOverdue();
+        final Stream<Task> incompleteTasks = streamIncompleteTasksVisibleToMeAssignedTo(person);
+        return incompleteTasks.count() - getTasksOverdue();
+    }
+
+    private Stream<Task> streamIncompleteTasksVisibleToMeAssignedTo(final Person person) {
+        final List<Task> tasks = taskRepository.findIncompleteByPersonAssignedTo(person);
+        return tasks.stream()
+                .filter(this::visibleToMe); // since just counting
+    }
+
+    /**
+     * To filter out any tasks that this user doesn't have access to.
+     *
+     * We wouldn't need to do this if just rendering in a table, but it is necessary when
+     * just counting the tasks.
+     */
+    private boolean visibleToMe(final Task task) {
+        final ApplicationUser meAsApplicationUser = meService.me();
+        return evaluator.hides(task, meAsApplicationUser) == null;
     }
 
     @Collection
