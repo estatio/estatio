@@ -34,6 +34,7 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.security.app.user.MeService;

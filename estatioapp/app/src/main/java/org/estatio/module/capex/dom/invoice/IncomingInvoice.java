@@ -175,6 +175,15 @@ import lombok.Setter;
                         + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
                         + "WHERE bankAccount == :bankAccount "
                         + "ORDER BY invoiceDate DESC " // newest first
+        ),
+        @Query(
+                name = "findPayableByBankTransferAndDueDateBetween", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE dueDate >= :fromDueDate "
+                        + "   && dueDate <= :toDueDate "
+                        + "   && approvalState == 'PAYABLE' "
+                        + "   && paymentMethod == 'BANK_TRANSFER'"
         )
 })
 @FetchGroup(

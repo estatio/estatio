@@ -53,6 +53,7 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.incode.module.document.dom.impl.docs.Document;
@@ -81,7 +82,9 @@ import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceItem;
+import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
 
@@ -142,8 +145,8 @@ public class IncomingDocAsInvoiceViewModel
     }
 
     @Programmatic
-    public IncomingInvoiceApprovalState getApprovalState(){
-        return getDomainObject()!=null ? getDomainObject().getApprovalState() : null;
+    public IncomingInvoiceApprovalState getApprovalState() {
+        return getDomainObject() != null ? getDomainObject().getApprovalState() : null;
     }
 
     @Property(editing = Editing.DISABLED)
@@ -157,13 +160,13 @@ public class IncomingDocAsInvoiceViewModel
     @Property(editing = Editing.ENABLED)
     private BankAccount bankAccount;
 
-    public void modifyBankAccount(final BankAccount bankAccount){
+    public void modifyBankAccount(final BankAccount bankAccount) {
         setBankAccount(bankAccount);
         setSeller(bankAccount.getOwner());
     }
 
-    public List<BankAccount> autoCompleteBankAccount(@MinLength(3) final String searchString){
-        if (getSeller()!=null){
+    public List<BankAccount> autoCompleteBankAccount(@MinLength(3) final String searchString) {
+        if (getSeller() != null) {
             return bankAccountRepository.findBankAccountsByOwner(getSeller());
         } else {
             return bankAccountRepository.autoComplete(searchString);
@@ -180,8 +183,8 @@ public class IncomingDocAsInvoiceViewModel
     @Property(editing = Editing.ENABLED)
     private LocalDate dateReceived;
 
-    public LocalDate defaultDateReceived(){
-        return getDateReceived()==null ? dateReceivedDerivedFromDocument() : getDateReceived();
+    public LocalDate defaultDateReceived() {
+        return getDateReceived() == null ? dateReceivedDerivedFromDocument() : getDateReceived();
     }
 
     private LocalDate dateReceivedDerivedFromDocument() {
@@ -195,13 +198,13 @@ public class IncomingDocAsInvoiceViewModel
     @Property(editing = Editing.ENABLED)
     private LocalDate invoiceDate;
 
-    public void modifyInvoiceDate(LocalDate invoiceDate){
+    public void modifyInvoiceDate(LocalDate invoiceDate) {
         setInvoiceDate(invoiceDate);
         updateDueDate();
     }
 
-    private void updateDueDate(){
-        if (getInvoiceDate()!=null){
+    private void updateDueDate() {
+        if (getInvoiceDate() != null) {
             setDueDate(getInvoiceDate().plusMonths(1));
         }
     }
@@ -217,19 +220,17 @@ public class IncomingDocAsInvoiceViewModel
     @Property(editing = Editing.ENABLED)
     private PaymentMethod paymentMethod;
 
-    public PaymentMethod defaultPaymentMethod(){
+    public PaymentMethod defaultPaymentMethod() {
         return getPaymentMethod();
     }
 
-    public String validatePaymentMethod(final PaymentMethod paymentMethod){
+    public String validatePaymentMethod(final PaymentMethod paymentMethod) {
         return getDomainObject().validateChangePaymentMethod(paymentMethod);
     }
     //endregion
 
-
     @Property(editing = Editing.ENABLED)
     private Currency currency;
-
 
     @Property(editing = Editing.ENABLED)
     private Boolean notCorrect;
@@ -244,86 +245,87 @@ public class IncomingDocAsInvoiceViewModel
         autoFillIn();
     }
 
-    public List<OrderItem> choicesOrderItem(){
+    public List<OrderItem> choicesOrderItem() {
         final Party seller = getSeller();
         final org.estatio.module.asset.dom.Property property = getProperty();
         final List<OrderItem> orderItems;
-        if (property==null) {
+        if (property == null) {
             orderItems = orderItemRepository.findBySeller(seller);
         } else {
             orderItems = orderItemRepository.findBySellerAndProperty(seller, property);
         }
-        if(getOrderItem() != null && !orderItems.contains(getOrderItem())) {
+        if (getOrderItem() != null && !orderItems.contains(getOrderItem())) {
             orderItems.add(getOrderItem());
         }
         return orderItems
                 .stream()
-                .filter(x->x.getOrdr().getApprovalState()==null || x.getOrdr().getApprovalState()!= OrderApprovalState.DISCARDED)
+                .filter(x -> x.getOrdr().getApprovalState() == null || x.getOrdr().getApprovalState() != OrderApprovalState.DISCARDED)
                 .collect(Collectors.toList());
     }
 
-    private void autoFillIn(){
-        if (hasOrderItem()){
+    private void autoFillIn() {
+        if (hasOrderItem()) {
             Order order = orderRepository.findByOrderNumber(getOrderItem().getOrdr().getOrderNumber());
             OrderItem orderItem = orderItemRepository.findUnique(order, getOrderItem().getCharge(), 0);
-            if (!(hasNetAmount() && hasGrossAmount() && hasVatAmount())){
+            if (!(hasNetAmount() && hasGrossAmount() && hasVatAmount())) {
                 setNetAmount(orderItem.getNetAmount());
                 setVatAmount(orderItem.getVatAmount());
                 setGrossAmount(orderItem.getGrossAmount());
             }
-            if (!hasTax()){
+            if (!hasTax()) {
                 setTax(orderItem.getTax());
             }
-            if (!hasBuyer()){
+            if (!hasBuyer()) {
                 setBuyer(order.getBuyer());
             }
-            if (!hasSeller()){
+            if (!hasSeller()) {
                 setSeller(order.getSeller());
                 setBankAccount(bankAccountRepository.getFirstBankAccountOfPartyOrNull(order.getSeller()));
             }
-            if (!hasDescription()){
+            if (!hasDescription()) {
                 setDescription(orderItem.getDescription());
             }
-            if (orderItem.getCharge()!=null){
+            if (orderItem.getCharge() != null) {
                 setCharge(orderItem.getCharge());
             }
-            if (orderItem.getProject()!=null){
+            if (orderItem.getProject() != null) {
                 setProject(orderItem.getProject());
             }
-            if (orderItem.getProperty()!=null){
+            if (orderItem.getProperty() != null) {
                 setProperty(orderItem.getProperty());
             }
-            if (!hasBudgetItem()){
+            if (!hasBudgetItem()) {
                 setBudgetItem(orderItem.getBudgetItem());
             }
-            if (!hasPeriod()){
+            if (!hasPeriod()) {
                 setPeriod(orderItem.getPeriod());
             }
         }
     }
 
-    private boolean hasOrderItem(){
+    private boolean hasOrderItem() {
         return getOrderItem() != null;
     }
 
     //endregion
 
     @Override
-    protected void onCreateSeller(final Party seller){
+    protected void onCreateSeller(final Party seller) {
         onEditSeller(seller);
     }
 
     @Override
-    protected void onEditSeller(final Party seller){
+    protected void onEditSeller(final Party seller) {
         setBankAccount(bankAccountRepository.getFirstBankAccountOfPartyOrNull(seller));
     }
 
     /**
      * TODO: inline this mixin
      */
-    @Mixin(method="act")
+    @Mixin(method = "act")
     public static class changeInvoiceDetails {
         private final IncomingDocAsInvoiceViewModel viewModel;
+
         public changeInvoiceDetails(final IncomingDocAsInvoiceViewModel viewModel) {
             this.viewModel = viewModel;
         }
@@ -338,7 +340,7 @@ public class IncomingDocAsInvoiceViewModel
                 @Nullable final LocalDate dueDate,
                 @Nullable final Integer dueInNumberOfDaysFromNow,
                 @Nullable final PaymentMethod paymentMethod,
-                final Currency currency){
+                final Currency currency) {
             viewModel.setInvoiceNumber(invoiceNumber);
             viewModel.setBuyer(buyer);
             viewModel.setSeller(seller);
@@ -346,7 +348,7 @@ public class IncomingDocAsInvoiceViewModel
             viewModel.setDateReceived(dateReceived);
             viewModel.setInvoiceDate(invoiceDate);
             viewModel.setDueDate(dueDate);
-            if (dueInNumberOfDaysFromNow!=null){
+            if (dueInNumberOfDaysFromNow != null) {
                 viewModel.setDueDate(clockService.now().plusDays(dueInNumberOfDaysFromNow));
             }
             viewModel.setPaymentMethod(paymentMethod);
@@ -355,37 +357,38 @@ public class IncomingDocAsInvoiceViewModel
             return viewModel;
         }
 
-        public String default0Act(){
+        public String default0Act() {
             return viewModel.getInvoiceNumber();
         }
 
-        public Party default1Act(){
+        public Party default1Act() {
             return viewModel.getBuyer();
         }
 
-        public Party default2Act(){
+        public Party default2Act() {
             return viewModel.getSeller();
         }
 
-        public LocalDate default3Act(){
-            return viewModel.getDateReceived()==null ? viewModel.dateReceivedDerivedFromDocument() : viewModel.getDateReceived();
+        public LocalDate default3Act() {
+            return viewModel.getDateReceived() == null ? viewModel.dateReceivedDerivedFromDocument() : viewModel.getDateReceived();
         }
 
-        public LocalDate default4Act(){
+        public LocalDate default4Act() {
             return viewModel.getInvoiceDate();
         }
 
-        public LocalDate default5Act(){
+        public LocalDate default5Act() {
             return viewModel.getDueDate();
         }
 
-        public PaymentMethod default7Act(){
+        public PaymentMethod default7Act() {
             return viewModel.getPaymentMethod();
         }
 
         public Currency default8Act() {
             return viewModel.getCurrency();
         }
+
         public String disableAct() {
             return viewModel.reasonNotEditableIfAny();
         }
@@ -410,7 +413,7 @@ public class IncomingDocAsInvoiceViewModel
         setCurrency(incomingInvoice.getCurrency());
 
         final Optional<IncomingInvoiceItem> firstItemIfAny = getFirstItemIfAny();
-        if(firstItemIfAny.isPresent()) {
+        if (firstItemIfAny.isPresent()) {
             IncomingInvoiceItem invoiceItem = firstItemIfAny.get();
             setCharge(invoiceItem.getCharge());
             setDescription(invoiceItem.getDescription());
@@ -463,7 +466,7 @@ public class IncomingDocAsInvoiceViewModel
         incomingInvoice.setGrossAmount(getGrossAmount());
 
         // if changed the type, then we need to re-evaluate the state machine
-        if(previousType != getIncomingInvoiceType()) {
+        if (previousType != getIncomingInvoiceType()) {
             stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransition.class, null, null, null);
         }
 
@@ -472,7 +475,7 @@ public class IncomingDocAsInvoiceViewModel
         Optional<IncomingInvoiceItem> firstItemIfAny = getFirstItemIfAny();
         IncomingInvoiceItem firstItem;
 
-        if(firstItemIfAny.isPresent()) {
+        if (firstItemIfAny.isPresent()) {
             IncomingInvoiceItem item = firstItemIfAny.get();
             item.setIncomingInvoiceType(getIncomingInvoiceType());
             item.setCharge(getCharge());
@@ -510,7 +513,7 @@ public class IncomingDocAsInvoiceViewModel
         // link to orderItem if applicable
         // (if was changed, then will add to previous link, meaning that
         // 'switch view' will not be available subsequently because the Invoice/Item is "too complex")
-        if (getOrderItem()!=null){
+        if (getOrderItem() != null) {
             Order order = getOrderItem().getOrdr();
             Charge chargeFromWrapper = getOrderItem().getCharge();
             OrderItem orderItemToLink = orderItemRepository.findUnique(order, chargeFromWrapper, 0);
@@ -530,13 +533,11 @@ public class IncomingDocAsInvoiceViewModel
         return reasonNotEditableIfAny();
     }
 
-
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
     public IncomingInvoice cancel() {
         return getDomainObject();
     }
-
 
     @Override
     protected String reasonNotEditableIfAny() {
@@ -557,10 +558,8 @@ public class IncomingDocAsInvoiceViewModel
             return items.size() > 1 ? "Only simple invoices with 1 item can be maintained using this view" : null;
         });
 
-
         return buf.getReason();
     }
-
 
     private Optional<IncomingInvoiceItem> getFirstItemIfAny() {
         SortedSet<InvoiceItem> items = getDomainObject().getItems();
@@ -574,41 +573,46 @@ public class IncomingDocAsInvoiceViewModel
 
     @Property(editing = Editing.DISABLED)
     @PropertyLayout(multiLine = 5)
-    public String getNotification(){
+    public String getNotification() {
         final StringBuilder result = new StringBuilder();
 
         final String noBuyerBarcodeMatch = buyerBarcodeMatchValidation();
-        if (noBuyerBarcodeMatch!=null){
+        if (noBuyerBarcodeMatch != null) {
             result.append(noBuyerBarcodeMatch);
         }
 
         final String sameInvoiceNumberCheck = doubleInvoiceCheck();
-        if (sameInvoiceNumberCheck !=null){
+        if (sameInvoiceNumberCheck != null) {
             result.append(sameInvoiceNumberCheck);
         }
 
-        return result.length()>0 ? result.toString() : null;
+        final String multiplePaymentMethods = paymentMethodValidation();
+        if (multiplePaymentMethods != null) {
+            result.append(multiplePaymentMethods);
+        }
 
+        return result.length() > 0 ? result.toString() : null;
     }
 
-    public boolean hideNotification(){
+    public boolean hideNotification() {
         return getNotification() == null;
     }
 
-    private String doubleInvoiceCheck(){
+    @Programmatic
+    public String doubleInvoiceCheck() {
         final String doubleInvoiceCheck = possibleDoubleInvoice();
-        if (doubleInvoiceCheck !=null){
+        if (doubleInvoiceCheck != null) {
             return doubleInvoiceCheck;
         }
         final String sameNumberCheck = sameInvoiceNumber();
-        if (sameNumberCheck !=null){
+        if (sameNumberCheck != null) {
             return sameNumberCheck;
         }
         return null;
     }
 
-    private String possibleDoubleInvoice(){
-        if (getInvoiceNumber()==null || getSeller()==null || getInvoiceDate()==null){
+    private String possibleDoubleInvoice() {
+        if (getInvoiceNumber() == null || getSeller() == null || getInvoiceDate() == null) {
             return null;
         }
         if (getDomainObject() == null) {
@@ -622,21 +626,21 @@ public class IncomingDocAsInvoiceViewModel
         return "WARNING: There is already an invoice with the same number and invoice date for this seller. Please check.";
     }
 
-    private String sameInvoiceNumber(){
-        if (getInvoiceNumber()==null || getSeller()==null){
+    private String sameInvoiceNumber() {
+        if (getInvoiceNumber() == null || getSeller() == null) {
             return null;
         }
-        if (getDomainObject()!=null){
+        if (getDomainObject() != null) {
             List<IncomingInvoice> similarNumberedInvoices = new ArrayList<>();
             for (IncomingInvoice invoice : incomingInvoiceRepository.findByInvoiceNumberAndSeller(getInvoiceNumber(), getSeller())) {
                 if (!invoice.equals(getDomainObject())) {
                     similarNumberedInvoices.add(invoice);
                 }
             }
-            if (similarNumberedInvoices.size()>0){
+            if (similarNumberedInvoices.size() > 0) {
                 String message = "WARNING: Invoices with the same number of this seller are found ";
-                for (IncomingInvoice invoice : similarNumberedInvoices){
-                    if (invoice.getInvoiceDate()!=null) {
+                for (IncomingInvoice invoice : similarNumberedInvoices) {
+                    if (invoice.getInvoiceDate() != null) {
                         message = message.concat("on date ").concat(invoice.getInvoiceDate().toString()).concat("; ");
                     }
                 }
@@ -646,30 +650,52 @@ public class IncomingDocAsInvoiceViewModel
         return null;
     }
 
-    private String buyerBarcodeMatchValidation(){
-        if (getBuyer()!=null && getDomainObject()!=null){
-            if (buyerFinder.buyerDerivedFromDocumentName(getDomainObject())==null){
+    @Programmatic
+    public String buyerBarcodeMatchValidation() {
+        if (getBuyer() != null && getDomainObject() != null) {
+            if (buyerFinder.buyerDerivedFromDocumentName(getDomainObject()) == null) {
                 return null; // covers all cases where no buyer could be derived from document name
             }
-            if (!getBuyer().equals(buyerFinder.buyerDerivedFromDocumentName(getDomainObject()))){
+            if (!getBuyer().equals(buyerFinder.buyerDerivedFromDocumentName(getDomainObject()))) {
                 return "Buyer does not match barcode (document name); ";
             }
         }
         return null;
     }
 
+    private String paymentMethodValidation() {
+        if (getPaymentMethod() != null && getSeller() != null) {
+            List<PaymentMethod> historicalPaymentMethods = invoiceRepository.findBySeller(getSeller()).stream()
+                    .map(Invoice::getPaymentMethod)
+                    .filter(pm -> pm != PaymentMethod.BANK_TRANSFER && pm != PaymentMethod.REFUND_BY_SUPPLIER && pm != PaymentMethod.MANUAL_PROCESS)
+                    .distinct()
+                    .collect(Collectors.toList());
+
+            // Current payment method is bank transfer, but at least one different payment method has been used before
+            if (getPaymentMethod() == PaymentMethod.BANK_TRANSFER && !historicalPaymentMethods.isEmpty()) {
+                StringBuilder builder = new StringBuilder().append("WARNING: payment method is set to bank transfer, but previous invoices from this seller have used the following payment methods: ");
+                historicalPaymentMethods.forEach(pm -> {
+                    builder.append(pm.title());
+                    builder.append(", ");
+                });
+
+                builder.delete(builder.length() - 2, builder.length() - 1);
+
+                messageService.warnUser(builder.toString());
+                return builder.toString();
+            }
+        }
+
+        return null;
+    }
+
     public IncomingDocAsInvoiceViewModel changeDimensions(
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final Charge charge,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final org.estatio.module.asset.dom.Property property,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final Project project,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final BudgetItem budgetItem,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final String period
-    ){
+            @Parameter(optionality = Optionality.OPTIONAL) final Charge charge,
+            @Parameter(optionality = Optionality.OPTIONAL) final org.estatio.module.asset.dom.Property property,
+            @Parameter(optionality = Optionality.OPTIONAL) final Project project,
+            @Parameter(optionality = Optionality.OPTIONAL) final BudgetItem budgetItem,
+            @Parameter(optionality = Optionality.OPTIONAL) final String period
+    ) {
         setCharge(charge);
         setProperty(property);
         setProject(project);
@@ -680,23 +706,23 @@ public class IncomingDocAsInvoiceViewModel
         return this;
     }
 
-    public Charge default0ChangeDimensions(){
+    public Charge default0ChangeDimensions() {
         return getCharge();
     }
 
-    public org.estatio.module.asset.dom.Property default1ChangeDimensions(){
+    public org.estatio.module.asset.dom.Property default1ChangeDimensions() {
         return getProperty();
     }
 
-    public Project default2ChangeDimensions(){
+    public Project default2ChangeDimensions() {
         return getProject();
     }
 
-    public BudgetItem default3ChangeDimensions(){
+    public BudgetItem default3ChangeDimensions() {
         return getBudgetItem();
     }
 
-    public String default4ChangeDimensions(){
+    public String default4ChangeDimensions() {
         return getPeriod();
     }
 
@@ -723,17 +749,18 @@ public class IncomingDocAsInvoiceViewModel
             final BudgetItem budgetItem,
             final String period
     ) {
-        if (project!=null && getIncomingInvoiceType()!= IncomingInvoiceType.CAPEX){
+        if (project != null && getIncomingInvoiceType() != IncomingInvoiceType.CAPEX) {
             return "Project applies only to type CAPEX";
         }
-        if (project!=null && project.isParentProject()) return "Parent project is not allowed";
-        if (budgetItem!=null && getIncomingInvoiceType()!= IncomingInvoiceType.SERVICE_CHARGES){
+        if (project != null && project.isParentProject())
+            return "Parent project is not allowed";
+        if (budgetItem != null && getIncomingInvoiceType() != IncomingInvoiceType.SERVICE_CHARGES) {
             return "Budget item applies only to type SERVICE_CHARGES";
         }
-        if (getIncomingInvoiceType()==IncomingInvoiceType.SERVICE_CHARGES && charge!=null){
+        if (getIncomingInvoiceType() == IncomingInvoiceType.SERVICE_CHARGES && charge != null) {
             return "Charge will be derived from budget item";
         }
-        if (getIncomingInvoiceType()==IncomingInvoiceType.SERVICE_CHARGES && period!=null){
+        if (getIncomingInvoiceType() == IncomingInvoiceType.SERVICE_CHARGES && period != null) {
             return "Period will be derived from budget item";
         }
         return validatePeriod(period);
@@ -743,28 +770,33 @@ public class IncomingDocAsInvoiceViewModel
         return reasonNotEditableIfAny();
     }
 
-    public boolean hideProject(){
-        return getIncomingInvoiceType()!= IncomingInvoiceType.CAPEX;
+    public boolean hideProject() {
+        return getIncomingInvoiceType() != IncomingInvoiceType.CAPEX;
     }
 
-    public boolean hideBudgetItem(){
-        return getIncomingInvoiceType()!= IncomingInvoiceType.SERVICE_CHARGES;
+    public boolean hideBudgetItem() {
+        return getIncomingInvoiceType() != IncomingInvoiceType.SERVICE_CHARGES;
     }
 
-    public boolean hideCharge(){
-        return getIncomingInvoiceType()== IncomingInvoiceType.SERVICE_CHARGES;
+    public boolean hideCharge() {
+        return getIncomingInvoiceType() == IncomingInvoiceType.SERVICE_CHARGES;
     }
 
-    public boolean hidePeriod(){
-        return getIncomingInvoiceType()== IncomingInvoiceType.SERVICE_CHARGES;
+    public boolean hidePeriod() {
+        return getIncomingInvoiceType() == IncomingInvoiceType.SERVICE_CHARGES;
     }
-
 
     @Inject
     @XmlTransient
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    InvoiceRepository invoiceRepository;
 
     @Inject
     @XmlTransient
@@ -807,5 +839,11 @@ public class IncomingDocAsInvoiceViewModel
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     BuyerFinder buyerFinder;
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    MessageService messageService;
 
 }

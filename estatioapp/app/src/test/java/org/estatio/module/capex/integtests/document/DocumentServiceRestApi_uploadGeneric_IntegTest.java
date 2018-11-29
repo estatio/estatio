@@ -63,7 +63,6 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
 
         wrap(documentService).uploadGeneric(blob, "INCOMING", "/FRA");
-
         transactionService.nextTransaction();
 
         // then
@@ -112,7 +111,6 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
         assertThat(JDOHelper.getVersion(incomingDocumentsAfter.get(1))).isEqualTo(1L);
         assertThat(paperclipRepository.findByDocument(incomingDocumentsAfter.get(1)).size()).isEqualTo(0);
 
-
         final String belgianBarCode = "6010012345.pdf";
         final Blob belgianBlob = new Blob(belgianBarCode, "application/pdf", pdfBytes2);
         Document belgianDocument = wrap(documentService).uploadGeneric(belgianBlob, "INCOMING", "/FRA");
@@ -130,13 +128,11 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
         assertThat(incomingDocumentsBefore).isEmpty();
 
         // when
-
         final String fileName = "2010101234.pdf";
         final byte[] pdfBytes = Resources.toByteArray(
                 Resources.getResource(DocumentServiceRestApi_uploadGeneric_IntegTest.class, fileName));
         final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);
         wrap(documentService).uploadGeneric(blob, "INCOMING", "/ITA");
-
         transactionService.nextTransaction();
 
         // then
@@ -152,7 +148,6 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
         assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
         assertThat(JDOHelper.getVersion(document)).isEqualTo(1L);
         assertThat(document.getType()).isEqualTo(DocumentTypeData.INCOMING.findUsing(documentTypeRepository));
-
 
         // and then also
         assertThat(stateTransitionRepository.findByDomainObject(document)).hasSize(0);
@@ -183,6 +178,11 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
 
         assertThat(document.getAtPath()).isEqualTo("/ITA");
         assertThat(documentBlob.getName()).contains(blob.getName());
+
+        assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
+        assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
+        assertThat(JDOHelper.getVersion(document)).isEqualTo(1L);
+        assertThat(document.getType()).isEqualTo(DocumentTypeData.INCOMING.findUsing(documentTypeRepository));
     }
 
     @Test
@@ -197,7 +197,6 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
         final byte[] pdfBytes = Resources.toByteArray(
                 Resources.getResource(DocumentServiceRestApi_uploadGeneric_IntegTest.class, fileName));
         final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);
-
 
         wrap(documentService).uploadGeneric(blob, "TAX_REGISTER", "/ITA");
 

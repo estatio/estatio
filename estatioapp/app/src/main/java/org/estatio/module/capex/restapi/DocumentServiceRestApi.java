@@ -59,7 +59,8 @@ public class DocumentServiceRestApi extends UdoDomainService<DocumentServiceRest
 
         switch (documentTypeData) {
             case INCOMING:
-                return incomingDocumentRepository.upsertAndArchive(type, documentBarcodeService.deriveAtPathFromBarcode(name), name, blob);
+                final String overridden = documentBarcodeService.deriveAtPathFromBarcode(name);
+                return incomingDocumentRepository.upsertAndArchive(type, overridden != null ? overridden : atPath, name, blob);
 
             case TAX_REGISTER:
                 return incomingDocumentRepository.upsertAndArchive(type, atPath, name, blob);

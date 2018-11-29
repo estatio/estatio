@@ -2,6 +2,7 @@ package org.estatio.module.capex.dom.invoice;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -30,6 +31,7 @@ import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.dom.CurrencyRepository;
 import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
@@ -137,6 +139,25 @@ public class IncomingInvoiceRepository {
                         "findNotInAnyPaymentBatchByApprovalStateAndPaymentMethod",
                         "approvalState", approvalState,
                         "paymentMethod", paymentMethod));
+    }
+
+    @Programmatic
+    public List<IncomingInvoice> findInvoicesPayableByBankTransferWithDifferentHistoricalPaymentMethods(
+            final LocalDate fromDueDate,
+            final LocalDate toDueDate,
+            final String atPath) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoice.class,
+                        "findPayableByBankTransferAndDueDateBetween",
+                        "fromDueDate", fromDueDate,
+                        "toDueDate", toDueDate))
+                .stream()
+                .filter(incomingInvoice -> incomingInvoice.getAtPath().startsWith(atPath))
+                .filter(incomingInvoice -> invoiceRepository.findBySeller(incomingInvoice.getSeller())
+                        .stream()
+                        .anyMatch(invoice -> invoice.getPaymentMethod() != PaymentMethod.BANK_TRANSFER && invoice.getPaymentMethod() != PaymentMethod.REFUND_BY_SUPPLIER && invoice.getPaymentMethod() != PaymentMethod.MANUAL_PROCESS))
+                .collect(Collectors.toList());
     }
 
     @Programmatic
@@ -378,5 +399,7 @@ public class IncomingInvoiceRepository {
     ServiceRegistry2 serviceRegistry2;
     @Inject
     CurrencyRepository currencyRepository;
+    @Inject
+    InvoiceRepository invoiceRepository;
 
 }
