@@ -18,6 +18,7 @@
  */
 package org.estatio.module.coda.fixtures.costcentre.builders;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
@@ -43,6 +44,9 @@ public final class CostCentreBuilder
     @Getter @Setter
     private String extRef3Segment2;
 
+    @Getter @Setter @Nullable
+    private String propertyReferenceOverride;
+
     @Getter
     private CostCentre object;
 
@@ -52,7 +56,7 @@ public final class CostCentreBuilder
         checkParam("element3", executionContext, String.class);
         checkParam("extRef3Segment2", executionContext, String.class);
 
-        object = costCentreRepository.upsert(element3, extRef3Segment2);
+        object = costCentreRepository.upsert(element3, extRef3Segment2, propertyReferenceOverride);
 
         executionContext.addResult(this, object.getElement3(), object);
     }

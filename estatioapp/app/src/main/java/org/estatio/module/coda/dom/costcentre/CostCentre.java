@@ -1,6 +1,5 @@
 package org.estatio.module.coda.dom.costcentre;
 
-import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -18,10 +17,8 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Property;
 
-import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.dom.Property;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -58,7 +55,9 @@ public class CostCentre implements Comparable<CostCentre> {
     public static String GENERAL_EXTREF3_PART2 = "GEN";
 
     public CostCentre() {}
-    public CostCentre(final String element3, final String extRef3Segment2) {
+    public CostCentre(
+            final String element3,
+            final String extRef3Segment2) {
         this.element3 = element3;
         this.extRef3Segment2 = extRef3Segment2;
     }
@@ -68,23 +67,22 @@ public class CostCentre implements Comparable<CostCentre> {
     }
 
     @Column(allowsNull = "false", length = 36)
-    @Property()
+    @org.apache.isis.applib.annotation.Property()
     @Getter @Setter
     private String element3;
 
     @Column(allowsNull = "false", length = 3)
-    @Property()
+    @org.apache.isis.applib.annotation.Property()
     @Getter @Setter
     private String extRef3Segment2;
 
+    @javax.jdo.annotations.Column(name = "propertyId", allowsNull = "true")
+    @org.apache.isis.applib.annotation.Property()
+    @Getter @Setter
+    private Property property;
+
     public boolean isGeneral() {
         return GENERAL_EXTREF3_PART2.equals(getExtRef3Segment2());
-    }
-
-    public org.estatio.module.asset.dom.Property getProperty() {
-        return !isGeneral()
-                ? propertyRepository.findPropertyByReference(getExtRef3Segment2())
-                : null;
     }
 
 
@@ -105,9 +103,5 @@ public class CostCentre implements Comparable<CostCentre> {
     }
 
     //endregion
-
-    @Programmatic
-    @Inject @Setter
-    PropertyRepository propertyRepository;
 
 }

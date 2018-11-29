@@ -22,6 +22,8 @@ import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.coda.dom.costcentre.CostCentre;
 import org.estatio.module.coda.dom.costcentre.CostCentreRepository;
 import org.estatio.module.coda.fixtures.costcentre.builders.CostCentreBuilder;
@@ -37,17 +39,22 @@ public enum CostCentre_enum
         implements PersonaWithBuilderScript<CostCentre, CostCentreBuilder>,
         PersonaWithFinder<CostCentre> {
 
-    ITRRON1("ITRRON1","RON"),
+    ITRRON1("ITRRON1","RON", Property_enum.RonIt),
     ;
 
     private final String element3;
     private final String extRef3Segment2;
+    private final Property_enum property_d;
 
     @Override
     public CostCentreBuilder builder() {
         return new CostCentreBuilder()
                 .setElement3(element3)
-                .setExtRef3Segment2(extRef3Segment2);
+                .setExtRef3Segment2(extRef3Segment2)
+                .setPrereq((f, ec) -> {
+                    final Property property = f.objectFor(property_d, ec);
+                    f.setPropertyReferenceOverride(property.getReference());
+                });
     }
 
     @Override

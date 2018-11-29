@@ -7,6 +7,9 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
+
 @DomainService(
         nature = NatureOfService.DOMAIN,
         repositoryFor = CostCentre.class,
@@ -31,17 +34,27 @@ public class CostCentreRepository {
 
 
     @Programmatic
-    public CostCentre upsert(final String element3, final String extRef3Segment2) {
+    public CostCentre upsert(
+            final String element3,
+            final String extRef3Segment2,
+            final String propertyReferenceOverride) {
         CostCentre costCentre = findByElement3(element3);
         if (costCentre == null) {
             costCentre = repositoryService.persist(new CostCentre(element3, extRef3Segment2));
         } else {
             costCentre.setExtRef3Segment2(extRef3Segment2);
         }
+        if(!costCentre.isGeneral()) {
+            final String reference = propertyReferenceOverride != null ? propertyReferenceOverride : extRef3Segment2;
+            final Property property = propertyRepository.findPropertyByReference(reference);
+            costCentre.setProperty(property);
+        }
         return costCentre;
     }
 
     @javax.inject.Inject
     RepositoryService repositoryService;
+    @javax.inject.Inject
+    PropertyRepository propertyRepository;
 
 }
