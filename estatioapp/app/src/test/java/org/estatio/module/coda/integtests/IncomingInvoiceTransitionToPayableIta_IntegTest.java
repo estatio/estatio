@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -83,15 +82,12 @@ public class IncomingInvoiceTransitionToPayableIta_IntegTest extends CodaModuleI
     @Before
     public void setUp() {
         propertyForRon = Property_enum.RonIt.findUsing(serviceRegistry);
-
         buyer = Organisation_enum.HelloWorldIt.findUsing(serviceRegistry);
         seller = Organisation_enum.TopModelIt.findUsing(serviceRegistry);
-
-        italy = countryRepository.findCountry(Country_enum.ITA.getRef3());
-
+        italy = Country_enum.ITA.findUsing(serviceRegistry2);
         bankAccount = BankAccount_enum.TopModelIt.findUsing(serviceRegistry);
+        incomingInvoice =  IncomingInvoiceNoDocument_enum.invoiceForItaNoOrder.findUsing(serviceRegistry2);
 
-        incomingInvoice = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate("12345", seller, new LocalDate(2017,12,20));
         incomingInvoice.setBankAccount(bankAccount);
 
 
@@ -105,7 +101,6 @@ public class IncomingInvoiceTransitionToPayableIta_IntegTest extends CodaModuleI
     public TogglzRule togglzRule = TogglzRule.allDisabled(EstatioTogglzFeature.class);
 
     @Test
-    @Ignore
     public void approved_invoice_with_net_amount_equal_or_lower_then_100000_threshold_does_not_need_further_approval() throws Exception {
 
         List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice;
@@ -150,7 +145,7 @@ public class IncomingInvoiceTransitionToPayableIta_IntegTest extends CodaModuleI
         assertThat(transitionsOfInvoice).hasSize(4);
 
         final IncomingInvoiceApprovalStateTransition completedByAssetManager = transitionsOfInvoice.get(1);
-        assertTransition(completedByAssetManager, new ExpectedTransitionRestult(
+        assertTransition(completedByAssetManager, new ExpectedTransitionResult(
                 true,
                 "fgestore",
                 IncomingInvoiceApprovalState.COMPLETED,
@@ -166,7 +161,7 @@ public class IncomingInvoiceTransitionToPayableIta_IntegTest extends CodaModuleI
         ));
 
         final IncomingInvoiceApprovalStateTransition lastAutomatic = transitionsOfInvoice.get(0);
-        assertTransition(lastAutomatic, new ExpectedTransitionRestult(
+        assertTransition(lastAutomatic, new ExpectedTransitionResult(
                 true,
                 null,
                 IncomingInvoiceApprovalState.APPROVED,
@@ -180,10 +175,14 @@ public class IncomingInvoiceTransitionToPayableIta_IntegTest extends CodaModuleI
      * the opposite is tested {@link IncomingInvoiceApprovalState_IntegTest#payable_non_italian_invoice_can_be_rejected}
      */
     @Test
+    @Ignore // looks like this is WIP.
     public void payable_italian_invoice_cannot_be_rejected() throws Exception {
         //TODO: since at the moment we have no route to payable for Italian invoices yet
 
         // given
+
+        // TODO: rather than this, I think should use the GetDocumentResponseBuilder in CodaDocService_IntegTest
+        //  and start the scenario using CodaDocService.
         CodaDocHead docHead = new CodaDocHead();
         docHead.setIncomingInvoice(incomingInvoice);
         docHead.setLocation("books");
@@ -191,10 +190,9 @@ public class IncomingInvoiceTransitionToPayableIta_IntegTest extends CodaModuleI
         assertThat(codaDocHeadRepository.findByIncomingInvoice(incomingInvoice)).isSameAs(docHead);
 
 
-
     }
 
-    private void assertTransition(IncomingInvoiceApprovalStateTransition transition, ExpectedTransitionRestult result){
+    private void assertTransition(IncomingInvoiceApprovalStateTransition transition, ExpectedTransitionResult result){
         assertThat(transition.isCompleted()).isEqualTo(result.isCompleted());
         assertThat(transition.getCompletedBy()).isEqualTo(result.getCompletedBy());
         assertThat(transition.getFromState()).isEqualTo(result.getFromState());
@@ -205,7 +203,7 @@ public class IncomingInvoiceTransitionToPayableIta_IntegTest extends CodaModuleI
 
     @AllArgsConstructor
     @Getter
-    private class ExpectedTransitionRestult {
+    private class ExpectedTransitionResult {
         private boolean completed;
         private String completedBy;
         private IncomingInvoiceApprovalState fromState;

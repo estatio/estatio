@@ -96,6 +96,7 @@ public class CodaDocHeadRepository {
         }
     }
 
+    @Programmatic
     public CodaDocHead findByIncomingInvoice(final IncomingInvoice incomingInvoice) {
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
@@ -113,14 +114,6 @@ public class CodaDocHeadRepository {
         repositoryService.removeAndFlush(codaDocHead);
     }
 
-    @Programmatic
-    public CodaDocHead findByIncomingInvoice(final IncomingInvoice incomingInvoice) {
-        return repositoryService.uniqueMatch(
-                new org.apache.isis.applib.query.QueryDefault<>(
-                        CodaDocHead.class,
-                        "findByIncomingInvoice",
-                        "incomingInvoice", incomingInvoice));
-    }
 
     @javax.inject.Inject
     RepositoryService repositoryService;
