@@ -41,6 +41,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.metamodel.MetaModelService2;
@@ -920,6 +921,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     public boolean hideVatRegistrationDate() {
         return !this.getAtPath().startsWith("/ITA");
     }
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    @PropertyLayout(hidden = Where.EVERYWHERE)
+    private boolean postedToCodaBooks;
 
     // TODO: does not seem to be used, raised EST-1599 to look into removing it.
     @Getter @Setter
