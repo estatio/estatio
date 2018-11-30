@@ -586,8 +586,8 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         if (docLine == null) {
             return null;
         }
-        final CodaPaymentMethod codaPaymentMethod = docLine.getCodaPaymentMethod();
-        return codaPaymentMethod != null ? codaPaymentMethod.asPaymentMethod() : null;
+        final MediaCodePaymentMethod mediaCodePaymentMethod = docLine.getMediaCodePaymentMethod();
+        return mediaCodePaymentMethod != null ? mediaCodePaymentMethod.asPaymentMethod() : null;
     }
 
     @Programmatic

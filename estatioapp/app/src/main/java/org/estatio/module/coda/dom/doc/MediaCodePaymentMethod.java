@@ -7,7 +7,7 @@ import org.estatio.module.invoice.dom.PaymentMethod;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum CodaPaymentMethod {
+public enum MediaCodePaymentMethod {
     /**
      * All invoices that have this payment method must be approve
      */
@@ -25,15 +25,15 @@ public enum CodaPaymentMethod {
     final String mediaCode;
     final PaymentMethod paymentMethod;
 
-    public static CodaPaymentMethod parse(final String mediaCode) {
+    public static MediaCodePaymentMethod parse(final String mediaCode) {
         if(Strings.isNullOrEmpty(mediaCode)) {
             return null;
         }
         final String trimmedMediaCode = mediaCode.trim();
 
-        for (final CodaPaymentMethod codaPaymentMethod : values()) {
-            if(codaPaymentMethod.mediaCode.equalsIgnoreCase(trimmedMediaCode)) {
-                return codaPaymentMethod;
+        for (final MediaCodePaymentMethod mediaCodePaymentMethod : values()) {
+            if(mediaCodePaymentMethod.mediaCode.equalsIgnoreCase(trimmedMediaCode)) {
+                return mediaCodePaymentMethod;
             }
         }
         return null;

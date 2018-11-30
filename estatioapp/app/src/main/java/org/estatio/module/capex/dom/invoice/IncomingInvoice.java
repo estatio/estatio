@@ -1382,7 +1382,12 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 }
                 break;
 
+            case MANUAL_PROCESS:
+            case DIRECT_DEBIT:
+            case CREDIT_CARD:
+            case REFUND_BY_SUPPLIER:
             default:
+                break;
             }
 
             return this;

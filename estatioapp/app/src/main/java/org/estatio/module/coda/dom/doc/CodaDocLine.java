@@ -193,7 +193,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
         setExtRefWorkTypeChargeReference(null);
         setExtRefWorkTypeValidationStatus(ValidationStatus.NOT_CHECKED);
 
-        setCodaPaymentMethod(null);
+        setMediaCodePaymentMethod(null);
         setMediaCodeValidationStatus(ValidationStatus.NOT_CHECKED);
 
         setReasonInvalid(null);
@@ -516,7 +516,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @Column(allowsNull = "true", length = 12)
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
-    private CodaPaymentMethod codaPaymentMethod;
+    private MediaCodePaymentMethod mediaCodePaymentMethod;
 
     /**
      * Populated only for analysis lines.

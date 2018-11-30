@@ -178,7 +178,7 @@
                                 <bs3:col span="9">
                                     <cpt:fieldSet name="" id="payment">
                                         <cpt:property id="mediaCode"/>
-                                        <cpt:property id="codaPaymentMethod"/>
+                                        <cpt:property id="mediaCodePaymentMethod"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                                 <bs3:col span="3">
