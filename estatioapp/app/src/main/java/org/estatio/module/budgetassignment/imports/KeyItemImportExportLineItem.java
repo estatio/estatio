@@ -61,12 +61,12 @@ public class KeyItemImportExportLineItem
 
     public KeyItemImportExportLineItem(final KeyItem keyItem) {
         this.keyItem = keyItem;
-        this.propertyReference = keyItem.getKeyTable().getBudget().getProperty().getReference();
+        this.propertyReference = keyItem.getPartitioningTable().getBudget().getProperty().getReference();
         this.unitReference = keyItem.getUnit().getReference();
         this.sourceValue = keyItem.getSourceValue();
         this.keyValue = keyItem.getValue();
-        this.keyTableName = keyItem.getKeyTable().getName();
-        this.startDate = keyItem.getKeyTable().getBudget().getStartDate();
+        this.keyTableName = keyItem.getPartitioningTable().getName();
+        this.startDate = keyItem.getPartitioningTable().getBudget().getStartDate();
     }
 
     public KeyItemImportExportLineItem(final KeyItemImportExportLineItem item) {
@@ -121,7 +121,7 @@ public class KeyItemImportExportLineItem
 
             case ADDED:
                 KeyItem keyItem = new KeyItem();
-                keyItem.setKeyTable(getKeyTable());
+                keyItem.setPartitioningTable(getKeyTable());
                 keyItem.setUnit(getUnit());
                 keyItem.setValue(getKeyValue().setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP));
                 keyItem.setSourceValue(getSourceValue().setScale(2, BigDecimal.ROUND_HALF_UP));

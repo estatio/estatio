@@ -21,11 +21,11 @@ import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
-import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
 import org.estatio.module.budget.integtests.BudgetModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.estatio.module.budget.fixtures.budgets.enums.Budget_enum.OxfBudget2015;
 
 public class BudgetCalculationRepository_IntegTest extends BudgetModuleIntegTestAbstract {
 
@@ -76,8 +76,7 @@ public class BudgetCalculationRepository_IntegTest extends BudgetModuleIntegTest
 
             // given
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
-            Budget budget = budgetRepository.findByPropertyAndStartDate(property,
-                    Budget_enum.OxfBudget2015.getStartDate());
+            Budget budget = OxfBudget2015.findUsing(serviceRegistry);
             PartitionItem partitionItem = budget.getItems().first().getPartitionItems().get(0);
             budgetCalculationService.calculatePersistedCalculations(budget);
 
@@ -85,7 +84,7 @@ public class BudgetCalculationRepository_IntegTest extends BudgetModuleIntegTest
             List<BudgetCalculation> budgetCalculations = budgetCalculationRepository.findByBudgetAndUnitAndInvoiceChargeAndType(budget, property.getUnits().first(), partitionItem.getCharge(), BudgetCalculationType.BUDGETED);
 
             // then
-            assertThat(budgetCalculations.size()).isEqualTo(3);
+            assertThat(budgetCalculations.size()).isEqualTo(4);
 
         }
     }
@@ -98,8 +97,7 @@ public class BudgetCalculationRepository_IntegTest extends BudgetModuleIntegTest
 
             // given
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
-            Budget budget = budgetRepository.findByPropertyAndStartDate(property,
-                    Budget_enum.OxfBudget2015.getStartDate());
+            Budget budget = OxfBudget2015.findUsing(serviceRegistry);
             PartitionItem partitionItem = budget.getItems().first().getPartitionItems().get(0);
             budgetCalculationService.calculatePersistedCalculations(budget);
 
@@ -107,7 +105,7 @@ public class BudgetCalculationRepository_IntegTest extends BudgetModuleIntegTest
             List<BudgetCalculation> budgetCalculations = budgetCalculationRepository.findByBudgetAndUnitAndInvoiceChargeAndIncomingChargeAndType(budget, property.getUnits().first(), partitionItem.getCharge(), partitionItem.getBudgetItem().getCharge(), BudgetCalculationType.BUDGETED);
 
             // then
-            assertThat(budgetCalculations.size()).isEqualTo(1);
+            assertThat(budgetCalculations.size()).isEqualTo(2);
 
         }
     }

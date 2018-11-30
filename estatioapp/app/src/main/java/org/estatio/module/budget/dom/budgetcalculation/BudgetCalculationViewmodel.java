@@ -20,30 +20,21 @@ package org.estatio.module.budget.dom.budgetcalculation;
 
 import java.math.BigDecimal;
 
-import org.apache.isis.applib.annotation.Auditing;
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.Nature;
-
+import org.estatio.module.budget.dom.keyitem.PartitioningTableItem;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
-import org.estatio.module.budget.dom.keyitem.KeyItem;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@DomainObject(
-        nature = Nature.VIEW_MODEL,
-        objectType = "org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationViewmodel",
-        auditing = Auditing.DISABLED
-)
 public class BudgetCalculationViewmodel {
 
     public BudgetCalculationViewmodel(
             final PartitionItem partitionItem,
-            final KeyItem keyItem,
+            final PartitioningTableItem item,
             final BigDecimal value,
             final BudgetCalculationType calculationType) {
         this.partitionItem = partitionItem;
-        this.keyItem = keyItem;
+        this.item = item;
         this.value = value;
         this.calculationType = calculationType;
     }
@@ -55,7 +46,7 @@ public class BudgetCalculationViewmodel {
     private PartitionItem partitionItem;
 
     @Getter @Setter
-    private KeyItem keyItem;
+    private PartitioningTableItem item;
     
     @Getter @Setter
     private BudgetCalculationType calculationType;

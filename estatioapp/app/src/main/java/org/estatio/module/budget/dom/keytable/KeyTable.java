@@ -19,6 +19,7 @@
 package org.estatio.module.budget.dom.keytable;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
@@ -30,6 +31,8 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+
+import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -53,6 +56,7 @@ import org.estatio.module.budget.dom.Distributable;
 import org.estatio.module.budget.dom.DistributionService;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationViewmodel;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.keyitem.KeyItemRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
@@ -155,7 +159,7 @@ public class KeyTable extends PartitioningTable {
     }
 
     @CollectionLayout(render = RenderType.EAGERLY)
-    @Persistent(mappedBy = "keyTable", dependentElement = "true")
+    @Persistent(mappedBy = "partitioningTable", dependentElement = "true")
     @Getter @Setter
     private SortedSet<KeyItem> items = new TreeSet<>();
 
@@ -206,7 +210,7 @@ public class KeyTable extends PartitioningTable {
                 newItem.setSourceValue(sourceValue);
                 newItem.setValue(BigDecimal.ZERO);
                 newItem.setUnit(unit);
-                newItem.setKeyTable(this);
+                newItem.setPartitioningTable(this);
                 persistIfNotAlready(newItem);
                 input.add(newItem);
             }
@@ -344,7 +348,23 @@ public class KeyTable extends PartitioningTable {
         return null;
     }
 
-    // //////////////////////////////////////
+    @Programmatic
+    @Override
+    public List<BudgetCalculationViewmodel> calculateFor(final PartitionItem partitionItem, final BigDecimal partitionItemValue, final BudgetCalculationType type) {
+        BigDecimal divider = getKeyValueMethod().divider(this);
+        List<BudgetCalculationViewmodel> results = new ArrayList<>();
+        Lists.newArrayList(getItems()).stream().forEach(i->{
+            results.add(new BudgetCalculationViewmodel(
+                    partitionItem,
+                    i,
+                    partitionItemValue.multiply(i.getValue())
+                    .divide(divider, MathContext.DECIMAL64)
+                    .setScale(getPrecision(), BigDecimal.ROUND_HALF_UP),
+                    type
+            ));
+        });
+        return results;
+    }
 
     @Inject
     UnitRepository unitRepository;
@@ -357,5 +377,4 @@ public class KeyTable extends PartitioningTable {
 
     @Inject
     PartitionItemRepository partitionItemRepository;
-
 }

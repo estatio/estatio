@@ -24,13 +24,14 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.module.budget.dom.partioning.PartitionItem;
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemValue;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.KeyValueMethod;
+import org.estatio.module.budget.dom.partioning.PartitionItem;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -74,12 +75,14 @@ public class BudgetCalculationService_Test {
 
             keyItem1 = new KeyItem();
             keyItem1.setValue(new BigDecimal("1.00"));
-            keyItem1.setKeyTable(keyTable);
+            keyItem1.setPartitioningTable(keyTable);
+            keyItem1.setUnit(new Unit());
             keyTable.getItems().add(keyItem1);
 
             keyItem2 = new KeyItem();
             keyItem2.setValue(new BigDecimal("2.00"));
-            keyItem2.setKeyTable(keyTable);
+            keyItem2.setPartitioningTable(keyTable);
+            keyItem2.setUnit(new Unit());
             keyTable.getItems().add(keyItem2);
 
             partitionItem = new PartitionItem();
@@ -97,6 +100,7 @@ public class BudgetCalculationService_Test {
             budgetItemValue.setValue(new BigDecimal("1000.00"));
             budgetItemValue.setType(BudgetCalculationType.BUDGETED);
             partitionItem.setPercentage(new BigDecimal("100.00"));
+            assertThat(keyTable.getItems()).hasSize(2);
 
             // when
             List<BudgetCalculationViewmodel> results = service.getAllCalculations(budget);

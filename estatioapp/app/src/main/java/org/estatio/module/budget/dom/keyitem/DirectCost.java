@@ -21,10 +21,8 @@ package org.estatio.module.budget.dom.keyitem;
 import java.math.BigDecimal;
 
 import javax.jdo.annotations.Column;
-import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.Query;
-import javax.jdo.annotations.VersionStrategy;
+import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -40,8 +38,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.module.asset.dom.Unit;
-import org.estatio.module.base.dom.UdoDomainObject2;
-import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.budget.dom.keytable.DirectCostTable;
 
 import lombok.Getter;
@@ -51,34 +47,22 @@ import lombok.Setter;
         identityType = IdentityType.DATASTORE
         ,schema = "dbo" // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
-@javax.jdo.annotations.DatastoreIdentity(
-        strategy = IdGeneratorStrategy.NATIVE,
-        column = "id")
-@javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER,
-        column = "version")
-@javax.jdo.annotations.Queries({
-        @Query(
-                name = "findByDirectCostTableAndUnit", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.module.budget.dom.keyitem.DirectCost " +
-                        "WHERE directCostTable == :directCostTable && unit == :unit")
-})
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Discriminator("org.estatio.dom.budgeting.keyitem.DirectCost")
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "org.estatio.dom.budgeting.keyitem.DirectCost"
 )
-public class DirectCost extends UdoDomainObject2<DirectCost>
-        implements WithApplicationTenancyProperty {
+public class DirectCost extends PartitioningTableItem {
 
-    public DirectCost() {
-        super("directCostTable, unit, budgetedValue, auditedValue");
+    public DirectCost(){
+        super("partitioningTable, unit, budgetedValue, auditedValue");
     }
 
     public DirectCost(final DirectCostTable table, final Unit unit, final BigDecimal budgetedValue, final BigDecimal auditedValue){
         this();
-        this.directCostTable = table;
-        this.unit = unit;
+        this.setPartitioningTable(table);
+        this.setUnit(unit);
         this.budgetedValue = budgetedValue;
         this.auditedValue = auditedValue;
     }
@@ -86,23 +70,12 @@ public class DirectCost extends UdoDomainObject2<DirectCost>
     public String title() {
         return TitleBuilder
                 .start()
-                .withParent(getDirectCostTable())
+                .withParent(getPartitioningTable())
                 .withName(getUnit())
                 .toString();
     }
 
-    @Column(name="directCostTableId", allowsNull = "false")
-    @PropertyLayout(hidden = Where.PARENTED_TABLES )
-    @Getter @Setter
-    private DirectCostTable directCostTable;
 
-    // //////////////////////////////////////
-
-    @Column(name="unitId", allowsNull = "false")
-    @Getter @Setter
-    private Unit unit;
-
-    //region > auditedValue (property)
     @Column(allowsNull = "false", scale = 2)
     @Getter @Setter
     private BigDecimal budgetedValue;
@@ -120,16 +93,16 @@ public class DirectCost extends UdoDomainObject2<DirectCost>
             return BigDecimal.ZERO;
         }
     }
-
     public String validateChangeBudgetedValue(final BigDecimal budgetedValue) {
         if (budgetedValue.compareTo(BigDecimal.ZERO) < 0) {
             return "Value cannot be less than zero";
         }
         return null;
     }
-    //endregion
 
+    //endregion
     //region > auditedValue (property)
+
     @Column(allowsNull = "true", scale = 2)
     @Getter @Setter
     private BigDecimal auditedValue;
@@ -147,13 +120,13 @@ public class DirectCost extends UdoDomainObject2<DirectCost>
             return BigDecimal.ZERO;
         }
     }
-
     public String validateChangeAuditedValue(final BigDecimal auditedKeyValue) {
         if (auditedKeyValue.compareTo(BigDecimal.ZERO) < 0) {
             return "Value cannot be less than zero";
         }
         return null;
     }
+
     //endregion
 
     @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -164,6 +137,6 @@ public class DirectCost extends UdoDomainObject2<DirectCost>
     @Override
     @PropertyLayout(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
-        return getDirectCostTable().getApplicationTenancy();
+        return getPartitioningTable().getApplicationTenancy();
     }
 }

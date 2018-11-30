@@ -7,11 +7,11 @@ import java.util.List;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.asset.dom.Unit;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
-import org.estatio.module.budget.dom.keyitem.KeyItem;
+import org.estatio.module.budget.dom.keyitem.PartitioningTableItem;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.charge.dom.Charge;
 
@@ -24,19 +24,19 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
 
     public BudgetCalculation createBudgetCalculation(
             final PartitionItem partitionItem,
-            final KeyItem keyItem,
+            final PartitioningTableItem tableItem,
             final BigDecimal value,
             final BudgetCalculationType calculationType){
 
         BudgetCalculation budgetCalculation = newTransientInstance(BudgetCalculation.class);
         budgetCalculation.setPartitionItem(partitionItem);
-        budgetCalculation.setKeyItem(keyItem);
+        budgetCalculation.setTableItem(tableItem);
         budgetCalculation.setValue(value);
         budgetCalculation.setCalculationType(calculationType);
         budgetCalculation.setBudget(partitionItem.getBudget());
         budgetCalculation.setInvoiceCharge(partitionItem.getCharge());
         budgetCalculation.setIncomingCharge(partitionItem.getBudgetItem().getCharge());
-        budgetCalculation.setUnit(keyItem.getUnit());
+        budgetCalculation.setUnit(tableItem.getUnit());
 
         persist(budgetCalculation);
 
@@ -45,7 +45,7 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
 
     public BudgetCalculation findOrCreateBudgetCalculation(
             final PartitionItem partitionItem,
-            final KeyItem keyItem,
+            final PartitioningTableItem keyItem,
             final BigDecimal value,
             final BudgetCalculationType calculationType) {
         return findUnique(partitionItem, keyItem, calculationType)==null ?
@@ -55,13 +55,13 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
 
     public BudgetCalculation findUnique(
             final PartitionItem partitionItem,
-            final KeyItem keyItem,
+            final PartitioningTableItem tableItem,
             final BudgetCalculationType calculationType
             ){
         return uniqueMatch(
                 "findUnique",
                 "partitionItem", partitionItem,
-                "keyItem", keyItem,
+                "tableItem", tableItem,
                 "calculationType", calculationType);
     }
 

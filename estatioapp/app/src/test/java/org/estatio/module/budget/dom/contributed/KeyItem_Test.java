@@ -25,6 +25,7 @@ import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
+import org.estatio.module.budget.dom.keytable.PartitioningTable;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -37,7 +38,7 @@ public class KeyItem_Test {
         public void test() {
             final KeyItem pojo = new KeyItem();
             newPojoTester()
-                    .withFixture(pojos(KeyTable.class, KeyTable.class))
+                    .withFixture(pojos(PartitioningTable.class, KeyTable.class))
                     .withFixture(pojos(Unit.class, Unit.class))
                     .exercise(pojo);
         }
@@ -52,7 +53,7 @@ public class KeyItem_Test {
         table.setPrecision(3);
         KeyItem item = new KeyItem();
         item.setValue(new BigDecimal(2));
-        item.setKeyTable(table);
+        item.setPartitioningTable(table);
         assertTrue(item.getValue().equals(new BigDecimal(2)));
 
         //when
@@ -71,7 +72,7 @@ public class KeyItem_Test {
         table.setPrecision(3);
         KeyItem item = new KeyItem();
         item.setValue(new BigDecimal(2));
-        item.setKeyTable(table);
+        item.setPartitioningTable(table);
         assertTrue(item.getValue().equals(new BigDecimal(2)));
 
         //when, then
@@ -86,7 +87,7 @@ public class KeyItem_Test {
         table.setPrecision(3);
         KeyItem item = new KeyItem();
         item.setAuditedValue(new BigDecimal(2));
-        item.setKeyTable(table);
+        item.setPartitioningTable(table);
         assertTrue(item.getAuditedValue().equals(new BigDecimal(2)));
 
         //when
@@ -105,7 +106,7 @@ public class KeyItem_Test {
         table.setPrecision(3);
         KeyItem item = new KeyItem();
         item.setAuditedValue(new BigDecimal(2));
-        item.setKeyTable(table);
+        item.setPartitioningTable(table);
         assertTrue(item.getAuditedValue().equals(new BigDecimal(2)));
 
         //when, then
@@ -120,7 +121,7 @@ public class KeyItem_Test {
         table.setPrecision(3);
         KeyItem item = new KeyItem();
         item.setSourceValue(new BigDecimal(2));
-        item.setKeyTable(table);
+        item.setPartitioningTable(table);
         assertTrue(item.getSourceValue().equals(new BigDecimal(2)));
 
         //when
@@ -139,7 +140,7 @@ public class KeyItem_Test {
         table.setPrecision(3);
         KeyItem item = new KeyItem();
         item.setSourceValue(new BigDecimal(2));
-        item.setKeyTable(table);
+        item.setPartitioningTable(table);
         assertTrue(item.getSourceValue().equals(new BigDecimal(2)));
 
         //when, then

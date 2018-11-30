@@ -16,16 +16,19 @@
  */
 package org.estatio.module.budget.dom.keyitem;
 
+import java.math.BigDecimal;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.module.asset.dom.Unit;
-import org.estatio.module.budget.dom.keytable.KeyTable;
 
-import java.math.BigDecimal;
-import java.util.List;
+import org.estatio.module.asset.dom.Unit;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.budget.dom.keytable.KeyTable;
 
 @DomainService(repositoryFor = KeyItem.class, nature = NatureOfService.DOMAIN)
 @DomainServiceLayout()
@@ -43,7 +46,7 @@ public class KeyItemRepository extends UdoDomainRepositoryAndFactory<KeyItem> {
             final BigDecimal sourceValue,
             final BigDecimal keyValue) {
         KeyItem keyItem = newTransientInstance();
-        keyItem.setKeyTable(keyTable);
+        keyItem.setPartitioningTable(keyTable);
         keyItem.setUnit(unit);
         keyItem.setSourceValue(sourceValue);
         keyItem.setValue(keyValue);
@@ -77,7 +80,8 @@ public class KeyItemRepository extends UdoDomainRepositoryAndFactory<KeyItem> {
 
     @Programmatic
     public KeyItem findByKeyTableAndUnit(KeyTable keyTable, Unit unit){
-        return uniqueMatch("findByKeyTableAndUnit", "keyTable", keyTable, "unit", unit);
+        final PartitioningTableItem item = partitioningTableItemRepository.findByPartitioningTableAndUnit(keyTable, unit);
+        return item.getClass().isAssignableFrom(KeyItem.class) ? (KeyItem) item : null;
     }
 
 
@@ -87,4 +91,7 @@ public class KeyItemRepository extends UdoDomainRepositoryAndFactory<KeyItem> {
     public List<KeyItem> allBudgetKeyItems() {
         return allInstances();
     }
+
+    @Inject
+    PartitioningTableItemRepository partitioningTableItemRepository;
 }

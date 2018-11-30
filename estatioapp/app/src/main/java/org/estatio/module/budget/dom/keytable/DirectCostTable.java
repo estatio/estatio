@@ -30,6 +30,8 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import com.google.common.collect.Lists;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
@@ -49,6 +51,7 @@ import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationViewmodel;
 import org.estatio.module.budget.dom.keyitem.DirectCost;
 import org.estatio.module.budget.dom.keyitem.DirectCostRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
@@ -71,7 +74,7 @@ import lombok.Setter;
 public class DirectCostTable extends PartitioningTable {
 
     @CollectionLayout(render = RenderType.EAGERLY)
-    @Persistent(mappedBy = "directCostTable", dependentElement = "true")
+    @Persistent(mappedBy = "partitioningTable", dependentElement = "true")
     @Getter @Setter
     private SortedSet<DirectCost> items = new TreeSet<>();
 
@@ -210,6 +213,37 @@ public class DirectCostTable extends PartitioningTable {
             }
         }
         return null;
+    }
+
+    @Programmatic
+    @Override
+    public List<BudgetCalculationViewmodel> calculateFor(final PartitionItem partitionItem, final BigDecimal partitionItemValue, final BudgetCalculationType type) {
+        List<BudgetCalculationViewmodel> results = new ArrayList<>();
+        Lists.newArrayList(getItems()).stream().forEach(i->{
+            switch (type){
+            case BUDGETED:
+                if (i.getBudgetedValue()!=null){
+                    results.add(new BudgetCalculationViewmodel(
+                            partitionItem,
+                            i,
+                            i.getBudgetedValue(),
+                            type
+                    ));
+                }
+            case ACTUAL:
+                if (i.getAuditedValue()!=null){
+                    results.add(new BudgetCalculationViewmodel(
+                            partitionItem,
+                            i,
+                            i.getAuditedValue(),
+                            type
+                    ));
+                }
+
+            }
+
+        });
+        return results;
     }
 
     @Inject

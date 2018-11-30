@@ -30,6 +30,7 @@ import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
+import org.estatio.module.budget.dom.keyitem.PartitioningTableItem;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.charge.dom.Charge;
 
@@ -42,7 +43,7 @@ public class BudgetCalculation_Test {
             final BudgetCalculation pojo = new BudgetCalculation();
             newPojoTester()
                     .withFixture(pojos(PartitionItem.class, PartitionItem.class))
-                    .withFixture(pojos(KeyItem.class, KeyItem.class))
+                    .withFixture(pojos(PartitioningTableItem.class, KeyItem.class))
                     .withFixture(pojos(Charge.class, Charge.class))
                     .withFixture(pojos(Unit.class, Unit.class))
                     .withFixture(pojos(Budget.class, Budget.class))

@@ -36,6 +36,7 @@ import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
+import org.estatio.module.budget.dom.keyitem.PartitioningTableItem;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.charge.dom.Charge;
 
@@ -91,7 +92,7 @@ public class BudgetCalculationRepository_Test {
             assertThat(finderInteraction.getResultType()).isEqualTo(BudgetCalculation.class);
             assertThat(finderInteraction.getQueryName()).isEqualTo("findUnique");
             assertThat(finderInteraction.getArgumentsByParameterName().get("partitionItem")).isEqualTo((Object) partitionItem);
-            assertThat(finderInteraction.getArgumentsByParameterName().get("keyItem")).isEqualTo((Object) keyItem);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("tableItem")).isEqualTo((Object) keyItem);
             assertThat(finderInteraction.getArgumentsByParameterName().get("calculationType")).isEqualTo((Object) calculationType);
             assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(3);
         }
@@ -153,7 +154,7 @@ public class BudgetCalculationRepository_Test {
                 @Override
                 public BudgetCalculation findUnique(
                         final PartitionItem partitionItem,
-                        final KeyItem keyItem,
+                        final PartitioningTableItem keyItem,
                         final BudgetCalculationType calculationType
                 ) {
                     return null;
@@ -203,7 +204,7 @@ public class BudgetCalculationRepository_Test {
 
             //then
             assertThat(newBudgetCalculation.getPartitionItem()).isEqualTo(partitionItem);
-            assertThat(newBudgetCalculation.getKeyItem()).isEqualTo(keyItem);
+            assertThat(newBudgetCalculation.getTableItem()).isEqualTo(keyItem);
             assertThat(newBudgetCalculation.getValue()).isEqualTo(value);
         }
     }

@@ -1,7 +1,6 @@
 package org.estatio.module.budget.dom.budgetcalculation;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +11,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
-import org.estatio.module.budget.dom.keyitem.KeyItem;
-import org.estatio.module.budget.dom.keytable.KeyTable;
+import org.estatio.module.budget.dom.keytable.PartitioningTable;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 
 @DomainService(nature = NatureOfService.DOMAIN)
@@ -28,7 +26,7 @@ public class BudgetCalculationService {
             budgetCalculations.add(
                     budgetCalculationRepository.findOrCreateBudgetCalculation(
                     result.getPartitionItem(),
-                    result.getKeyItem(),
+                    result.getItem(),
                     result.getValue(),
                     result.getCalculationType())
             );
@@ -104,30 +102,34 @@ public class BudgetCalculationService {
         return results;
     }
 
-    private List<BudgetCalculationViewmodel> calculateForTotalAndType(final PartitionItem partitionItem, final BigDecimal total, final BudgetCalculationType calculationType) {
+    private List<BudgetCalculationViewmodel> calculateForTotalAndType(final PartitionItem partitionItem, final BigDecimal partitionItemValue, final BudgetCalculationType calculationType) {
 
         List<BudgetCalculationViewmodel> results = new ArrayList<>();
 
-        final KeyTable keyTable = (KeyTable) partitionItem.getPartitioningTable();
+        final PartitioningTable partitioningTable = partitionItem.getPartitioningTable();
+        results.addAll(partitioningTable.calculateFor(partitionItem, partitionItemValue, calculationType));
+
+        /*
         BigDecimal divider = keyTable.getKeyValueMethod().divider(keyTable);
 
-        for (KeyItem keyItem : keyTable.getItems()) {
+        for (KeyItem tableItem : keyTable.getItems()) {
 
             BudgetCalculationViewmodel calculationResult;
 
 
             calculationResult = new BudgetCalculationViewmodel(
                     partitionItem,
-                    keyItem,
-                    total.multiply(keyItem.getValue()).
+                    tableItem,
+                    total.multiply(tableItem.getValue()).
                             divide(divider, MathContext.DECIMAL64).
-                            setScale(keyItem.getKeyTable().getPrecision(), BigDecimal.ROUND_HALF_UP),
+                            setScale(tableItem.getKeyTable().getPrecision(), BigDecimal.ROUND_HALF_UP),
                     calculationType);
 
 
 
             results.add(calculationResult);
         }
+        */
 
         return results;
 

@@ -1,5 +1,8 @@
 package org.estatio.module.budget.dom.keytable;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
@@ -16,6 +19,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -25,6 +29,9 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationViewmodel;
+import org.estatio.module.budget.dom.partioning.PartitionItem;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -114,7 +121,11 @@ public abstract class PartitioningTable extends UdoDomainObject2<Budget> impleme
         return getName();
     }
 
+    @Programmatic
+    public abstract List<BudgetCalculationViewmodel> calculateFor(final PartitionItem partitionItem, final BigDecimal partitionItemValue, final BudgetCalculationType budgetCalculationType);
+
     @Inject
     PartitioningTableRepository partitioningTableRepository;
+
 
 }

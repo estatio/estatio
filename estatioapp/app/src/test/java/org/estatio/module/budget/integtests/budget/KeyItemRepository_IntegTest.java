@@ -70,8 +70,8 @@ public class KeyItemRepository_IntegTest extends BudgetModuleIntegTestAbstract {
 
             // then
             assertThat(item.getUnit()).isEqualTo(unit);
-            assertThat(item.getKeyTable()).isEqualTo(keyTable);
-            assertThat(item.getKeyTable().getBudget()).isEqualTo(budget);
+            assertThat(item.getPartitioningTable()).isEqualTo(keyTable);
+            assertThat(item.getPartitioningTable().getBudget()).isEqualTo(budget);
         }
 
     }

@@ -30,6 +30,7 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.partioning.Partitioning;
 import org.estatio.module.budget.dom.partioning.PartitioningRepository;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
+import org.estatio.module.budget.fixtures.keytables.enums.DirectCostTable_enum;
 import org.estatio.module.budget.fixtures.keytables.enums.KeyTable_enum;
 import org.estatio.module.budget.fixtures.partitioning.builders.PartitioningBuilder;
 import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
@@ -40,8 +41,15 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 import static org.estatio.module.budget.fixtures.budgets.enums.Budget_enum.BudBudget2015;
 import static org.estatio.module.budget.fixtures.budgets.enums.Budget_enum.OxfBudget2015;
-import static org.estatio.module.budget.fixtures.keytables.enums.KeyTable_enum.*;
-import static org.estatio.module.charge.fixtures.charges.enums.Charge_enum.*;
+import static org.estatio.module.budget.fixtures.budgets.enums.Budget_enum.OxfDirectCostBudget2015;
+import static org.estatio.module.budget.fixtures.keytables.enums.DirectCostTable_enum.Oxf2015Direct;
+import static org.estatio.module.budget.fixtures.keytables.enums.KeyTable_enum.Bud2015Area;
+import static org.estatio.module.budget.fixtures.keytables.enums.KeyTable_enum.Bud2015Count;
+import static org.estatio.module.budget.fixtures.keytables.enums.KeyTable_enum.Oxf2015Area;
+import static org.estatio.module.budget.fixtures.keytables.enums.KeyTable_enum.Oxf2015Count;
+import static org.estatio.module.charge.fixtures.charges.enums.Charge_enum.GbServiceCharge;
+import static org.estatio.module.charge.fixtures.charges.enums.Charge_enum.NlServiceCharge;
+import static org.estatio.module.charge.fixtures.charges.enums.Charge_enum.NlServiceCharge2;
 import static org.incode.module.base.integtests.VT.bd;
 
 //@AllArgsConstructor
@@ -54,18 +62,23 @@ public enum Partitioning_enum
     OxfPartitioning2015(
             OxfBudget2015, BudgetCalculationType.BUDGETED,
             new ItemSpec[]{
-                new ItemSpec(OxfBudget2015, GbServiceCharge, Oxf2015Area, 0, bd(100), null, null),
-                new ItemSpec(OxfBudget2015, GbServiceCharge, Oxf2015Area, 1, bd(80), null, null),
-                new ItemSpec(OxfBudget2015, GbServiceCharge, Oxf2015Count, 1, bd(20), null, null),
+                new ItemSpec(OxfBudget2015, GbServiceCharge, Oxf2015Area, 0, bd(100), null, null, Oxf2015Direct),
+                new ItemSpec(OxfBudget2015, GbServiceCharge, Oxf2015Area, 1, bd(80), null, null, null),
+                new ItemSpec(OxfBudget2015, GbServiceCharge, Oxf2015Count, 1, bd(20), null, null, null),
+            }),
+    OxfDirectPartitioning2015(
+            OxfDirectCostBudget2015, BudgetCalculationType.BUDGETED,
+            new ItemSpec[]{
+                    new ItemSpec(OxfDirectCostBudget2015, GbServiceCharge, null, 0, bd(100), null, null, Oxf2015Direct)
             }),
     BudPartitioning2015(
             BudBudget2015, BudgetCalculationType.BUDGETED,
             new ItemSpec[]{
-                new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Area, 0, bd(0), bd(10000.00), null),
-                new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Area, 1, bd(80), null, null),
-                new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Count, 1, bd(20), null, null),
-                new ItemSpec(BudBudget2015, NlServiceCharge2, Bud2015Area, 2, bd(90), null, null),
-                new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Count, 2, bd(10), null, null),
+                new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Area, 0, bd(0), bd(10000.00), null, null),
+                new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Area, 1, bd(80), null, null, null),
+                new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Count, 1, bd(20), null, null, null),
+                new ItemSpec(BudBudget2015, NlServiceCharge2, Bud2015Area, 2, bd(90), null, null, null),
+                new ItemSpec(BudBudget2015, NlServiceCharge, Bud2015Count, 2, bd(10), null, null, null),
             }),
     ;
 
@@ -83,6 +96,7 @@ public enum Partitioning_enum
         private final BigDecimal percentage;
         private final BigDecimal fixedBudgetedAmount;
         private final BigDecimal fixedAuditedAmount;
+        private final DirectCostTable_enum directCostTable_d;
 
         public Charge_enum getItemCharge_d() {
             return budget_d.getItemSpecs()[itemIndex].getCharge_d();
@@ -115,11 +129,14 @@ public enum Partitioning_enum
                 .setPrereq((f,ec) -> f.setItemSpec(
                         Arrays.stream(itemSpecs).map(x ->
                                 new PartitioningBuilder.ItemSpec(
-                                        f.objectFor(x.getItemCharge_d(), ec), f.objectFor(x.keyTable_d, ec),
+                                        f.objectFor(x.getItemCharge_d(), ec),
+                                        f.objectFor(x.keyTable_d, ec),
                                         f.objectFor(x.charge_d, ec),
                                         x.percentage,
                                         x.fixedBudgetedAmount,
-                                        x.fixedAuditedAmount)
+                                        x.fixedAuditedAmount,
+                                        f.objectFor(x.directCostTable_d, ec)
+                                )
                         ).collect(Collectors.toList())
                 ));
     }

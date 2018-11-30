@@ -21,10 +21,8 @@ package org.estatio.module.budget.dom.keyitem;
 import java.math.BigDecimal;
 
 import javax.jdo.annotations.Column;
-import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.Query;
-import javax.jdo.annotations.VersionStrategy;
+import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -39,9 +37,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
 
-import org.estatio.module.base.dom.UdoDomainObject2;
-import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.budget.dom.Distributable;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 
@@ -52,50 +47,26 @@ import lombok.Setter;
         identityType = IdentityType.DATASTORE
         ,schema = "dbo" // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
-@javax.jdo.annotations.DatastoreIdentity(
-        strategy = IdGeneratorStrategy.NATIVE,
-        column = "id")
-@javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER,
-        column = "version")
-@javax.jdo.annotations.Queries({
-        @Query(
-                name = "findByKeyTableAndUnit", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.module.budget.dom.keyitem.KeyItem " +
-                        "WHERE keyTable == :keyTable && unit == :unit")
-})
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Discriminator("org.estatio.dom.budgeting.keyitem.KeyItem")
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "org.estatio.dom.budgeting.keyitem.KeyItem"
 )
-public class KeyItem extends UdoDomainObject2<KeyItem>
-        implements WithApplicationTenancyProperty, Distributable {
-
-    public KeyItem() {
-        super("keyTable, unit, value, sourceValue");
-    }
+public class KeyItem extends PartitioningTableItem
+        implements Distributable {
 
     public String title() {
         return TitleBuilder
                 .start()
-                .withParent(getKeyTable())
+                .withParent(getPartitioningTable())
                 .withName(getUnit())
                 .toString();
     }
 
-    @Column(name="keyTableId", allowsNull = "false")
-    @PropertyLayout(hidden = Where.PARENTED_TABLES )
-    @Getter @Setter
-    private KeyTable keyTable;
-
-    // //////////////////////////////////////
-
-    @Column(name="unitId", allowsNull = "false")
-    @Getter @Setter
-    private Unit unit;
-
-    // //////////////////////////////////////
+    public KeyItem(){
+        super("partitioningTable, unit, sourceValue, value, auditedValue");
+    }
 
     @Column(allowsNull = "false", scale = 6)
     @Getter @Setter
@@ -126,12 +97,14 @@ public class KeyItem extends UdoDomainObject2<KeyItem>
 
     @ActionLayout(hidden = Where.EVERYWHERE)
     public KeyItem changeValue(final BigDecimal keyValue) {
-        setValue(keyValue.setScale(getKeyTable().getPrecision(), BigDecimal.ROUND_HALF_UP));
+        KeyTable keyTable = (KeyTable) getPartitioningTable();
+        setValue(keyValue.setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP));
         return this;
     }
 
     public BigDecimal default0ChangeValue(final BigDecimal targetValue) {
-        return getValue().setScale(getKeyTable().getPrecision(), BigDecimal.ROUND_HALF_UP);
+        KeyTable keyTable = (KeyTable) getPartitioningTable();
+        return getValue().setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP);
     }
 
     public String validateChangeValue(final BigDecimal keyValue) {
@@ -149,13 +122,15 @@ public class KeyItem extends UdoDomainObject2<KeyItem>
 
     @ActionLayout(hidden = Where.EVERYWHERE)
     public KeyItem changeAuditedValue(final BigDecimal auditedKeyValue) {
-        setAuditedValue(auditedKeyValue.setScale(getKeyTable().getPrecision(), BigDecimal.ROUND_HALF_UP));
+        KeyTable keyTable = (KeyTable) getPartitioningTable();
+        setAuditedValue(auditedKeyValue.setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP));
         return this;
     }
 
     public BigDecimal default0ChangeAuditedValue(final BigDecimal auditedKeyValue) {
         if (getAuditedValue()!=null) {
-        return getAuditedValue().setScale(getKeyTable().getPrecision(), BigDecimal.ROUND_HALF_UP);
+            KeyTable keyTable = (KeyTable) getPartitioningTable();
+        return getAuditedValue().setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP);
         } else {
             return BigDecimal.ZERO;
         }
@@ -177,6 +152,6 @@ public class KeyItem extends UdoDomainObject2<KeyItem>
     @Override
     @PropertyLayout(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
-        return getKeyTable().getApplicationTenancy();
+        return getPartitioningTable().getApplicationTenancy();
     }
 }

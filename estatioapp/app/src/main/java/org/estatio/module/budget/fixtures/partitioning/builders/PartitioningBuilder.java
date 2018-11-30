@@ -31,6 +31,7 @@ import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
+import org.estatio.module.budget.dom.keytable.DirectCostTable;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
@@ -72,6 +73,7 @@ public class PartitioningBuilder extends BuilderScriptAbstract<Partitioning,Part
         private final BigDecimal percentage;
         private final BigDecimal fixedBudgetedAmount;
         private final BigDecimal fixedAuditedAmount;
+        private final DirectCostTable directCostTable;
     }
 
     @Getter
@@ -95,9 +97,17 @@ public class PartitioningBuilder extends BuilderScriptAbstract<Partitioning,Part
             final Charge itemCharge = spec.itemCharge;
             final BudgetItem budgetItem = budget.findByCharge(itemCharge);
 
-            PartitionItem partitionItem =
-                    partitionItemRepository.newPartitionItem(
-                            partitioning, spec.charge, spec.keyTable, budgetItem, spec.percentage, spec.fixedBudgetedAmount, spec.fixedAuditedAmount);
+            PartitionItem partitionItem = null;
+            if (spec.keyTable!=null) {
+                partitionItem =
+                        partitionItemRepository.newPartitionItem(
+                                partitioning, spec.charge, spec.keyTable, budgetItem, spec.percentage, spec.fixedBudgetedAmount, spec.fixedAuditedAmount);
+            }
+            if (spec.directCostTable!=null){
+                partitionItem =
+                        partitionItemRepository.newPartitionItem(
+                                partitioning, spec.charge, spec.directCostTable, budgetItem, spec.percentage, spec.fixedBudgetedAmount, spec.fixedAuditedAmount);
+            }
 
             executionContext.addResult(this, partitionItem);
         }

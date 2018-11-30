@@ -50,7 +50,7 @@ public class KeyItem_occupancies {
     @CollectionLayout(render = RenderType.EAGERLY)
     public List<Occupancy> occupancies(final KeyItem keyItem) {
 
-        return occupancyRepository.occupanciesByUnitAndInterval(keyItem.getUnit(), keyItem.getKeyTable().getBudget().getInterval());
+        return occupancyRepository.occupanciesByUnitAndInterval(keyItem.getUnit(), keyItem.getPartitioningTable().getBudget().getInterval());
 
     }
 

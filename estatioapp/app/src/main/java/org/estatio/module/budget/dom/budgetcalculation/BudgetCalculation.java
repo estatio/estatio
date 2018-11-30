@@ -51,12 +51,12 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
 
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
-import org.estatio.module.budget.dom.keyitem.KeyItem;
+import org.estatio.module.budget.dom.keyitem.PartitioningTableItem;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.charge.dom.Charge;
 
@@ -79,7 +79,7 @@ import lombok.Setter;
                 value = "SELECT " +
                         "FROM org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation " +
                         "WHERE partitionItem == :partitionItem " +
-                        "&& keyItem == :keyItem " +
+                        "&& tableItem == :tableItem " +
                         "&& calculationType == :calculationType"),
         @Query(
                 name = "findByPartitionItemAndCalculationType", language = "JDOQL",
@@ -111,7 +111,7 @@ import lombok.Setter;
         @Index(name = "BudgetCalculation_budget_unit_invoiceCharge_incomingCharge_type_IDX",
                 members = { "budget", "unit", "invoiceCharge", "incomingCharge", "calculationType" })
 })
-@Unique(name = "BudgetCalculation_partitionItem_keyItem_calculationType_UNQ", members = {"partitionItem", "keyItem", "calculationType"})
+@Unique(name = "BudgetCalculation_partitionItem_tableItem_calculationType_UNQ", members = {"partitionItem", "tableItem", "calculationType"})
 @DomainObject(
         auditing = Auditing.DISABLED,
         publishing = Publishing.DISABLED,
@@ -121,7 +121,7 @@ public class BudgetCalculation extends UdoDomainObject2<BudgetCalculation>
         implements WithApplicationTenancyProperty, Timestampable {
 
     public BudgetCalculation() {
-        super("partitionItem, keyItem");
+        super("partitionItem, tableItem");
     }
 
     public String title(){
@@ -142,9 +142,9 @@ public class BudgetCalculation extends UdoDomainObject2<BudgetCalculation>
     private PartitionItem partitionItem;
 
     @Getter @Setter
-    @Column(allowsNull = "false", name="keyItemId")
+    @Column(allowsNull = "false", name="partitioningTableItemId")
     @PropertyLayout(hidden = Where.REFERENCES_PARENT)
-    private KeyItem keyItem;
+    private PartitioningTableItem tableItem;
 
     @Getter @Setter
     @Column(allowsNull = "false")
