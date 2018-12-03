@@ -15,7 +15,7 @@ public enum IncomingInvoiceApprovalState implements State<IncomingInvoiceApprova
     PAYABLE                      (false, false),
     AUTO_PAYABLE                 (false, false),
     PAID                         (false, true ),
-    PENDING_IN_CODA_BOOKS        (false, false),
+    PENDING_CODA_BOOKS_CHECK     (false, false),
     APPROVED_BY_CENTER_MANAGER   (true,  false);
 
     @Getter

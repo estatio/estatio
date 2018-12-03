@@ -60,7 +60,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK,
                     IncomingInvoiceApprovalState.PAYABLE,
                     IncomingInvoiceApprovalState.APPROVED_BY_CORPORATE_MANAGER,
-                    IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS,
+                    IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK,
                     IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER
             ),
             IncomingInvoiceApprovalState.NEW,
@@ -342,7 +342,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
     },
     CHECK_IN_CODA_BOOKS_WHEN_APPROVED(
             IncomingInvoiceApprovalState.APPROVED,
-            IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS,
+            IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.none(),
             AdvancePolicy.AUTOMATIC) {
@@ -359,7 +359,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
     },
     CHECK_IN_CODA_BOOKS(
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
-            IncomingInvoiceApprovalState.PENDING_IN_CODA_BOOKS,
+            IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.none(),
             AdvancePolicy.AUTOMATIC) {
@@ -381,7 +381,15 @@ public enum IncomingInvoiceApprovalStateTransitionType
             IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.none(),
-            AdvancePolicy.AUTOMATIC),
+            AdvancePolicy.AUTOMATIC){
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            // applies to NON-italian invoices only
+            return !isItalian(incomingInvoice);
+        }
+    },
     CONFIRM_BANK_ACCOUNT_VERIFIED(
             IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK,
             IncomingInvoiceApprovalState.PAYABLE,
@@ -400,6 +408,20 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     Arrays.asList(PaymentMethod.DIRECT_DEBIT, PaymentMethod.MANUAL_PROCESS, PaymentMethod.CREDIT_CARD, PaymentMethod.REFUND_BY_SUPPLIER).contains(incomingInvoice.getPaymentMethod());
         }
     },
+    CONFIRM_IN_CODA_BOOKS(
+            IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK,
+            IncomingInvoiceApprovalState.PAYABLE,
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.AUTOMATIC
+    ){
+        @Override
+        public boolean isGuardSatisfied(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            return incomingInvoice.isPostedToCodaBooks();
+        }
+    },
     PAY_BY_IBP(
             IncomingInvoiceApprovalState.PAYABLE,
             IncomingInvoiceApprovalState.PAID,
@@ -409,6 +431,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
         @Override public boolean isMatch(
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
+            if (isItalian(incomingInvoice)) return false;
             return incomingInvoice.getPaymentMethod() == PaymentMethod.BANK_TRANSFER;
         }
     },
@@ -418,9 +441,11 @@ public enum IncomingInvoiceApprovalStateTransitionType
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.none(),
             AdvancePolicy.AUTOMATIC) {
-        @Override public boolean isMatch(
+        @Override
+        public boolean isMatch(
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
+            if (isItalian(incomingInvoice)) return false;
             return incomingInvoice.getPaymentMethod() == PaymentMethod.MANUAL_PROCESS;
         }
     },
@@ -430,9 +455,11 @@ public enum IncomingInvoiceApprovalStateTransitionType
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL) {
-        @Override public boolean isMatch(
+        @Override
+        public boolean isMatch(
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
+            if (isItalian(incomingInvoice)) return false;
             return incomingInvoice.getPaymentMethod() == PaymentMethod.DIRECT_DEBIT;
         }
     },
@@ -442,10 +469,36 @@ public enum IncomingInvoiceApprovalStateTransitionType
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.to(PartyRoleTypeEnum.TREASURER),
             AdvancePolicy.MANUAL) {
-        @Override public boolean isMatch(
+        @Override
+        public boolean isMatch(
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
+            if (isItalian(incomingInvoice)) return false;
             return incomingInvoice.getPaymentMethod() == PaymentMethod.CREDIT_CARD || incomingInvoice.getPaymentMethod() == PaymentMethod.REFUND_BY_SUPPLIER;
+        }
+    },
+    PAID_IN_CODA(
+            Lists.newArrayList(
+                    IncomingInvoiceApprovalState.PAYABLE,
+                    IncomingInvoiceApprovalState.AUTO_PAYABLE
+            ),
+            IncomingInvoiceApprovalState.PAID,
+            NextTransitionSearchStrategy.none(),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.AUTOMATIC
+    ){
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            return isItalian(incomingInvoice);
+        }
+
+        @Override
+        public boolean isGuardSatisfied(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            return isPaidInCoda(incomingInvoice);
         }
     },
     DISCARD(
@@ -561,6 +614,10 @@ public enum IncomingInvoiceApprovalStateTransitionType
         @Inject
         IncomingInvoiceApprovalStateTransition.Repository repository;
 
+    }
+
+    static boolean isPaidInCoda(final IncomingInvoice incomingInvoice){
+        return false; // TODO: change when coda dochead / line is updated with pay status and/or date
     }
 
     static boolean isItalian(final IncomingInvoice incomingInvoice) {

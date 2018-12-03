@@ -171,7 +171,7 @@ public class IncomingInvoiceDtoFactory extends DtoFactoryAbstract<IncomingInvoic
         case APPROVED_BY_COUNTRY_DIRECTOR:
         case APPROVED_BY_CORPORATE_MANAGER:
         case APPROVED_BY_CENTER_MANAGER:
-        case PENDING_IN_CODA_BOOKS:
+        case PENDING_CODA_BOOKS_CHECK:
         case PENDING_BANK_ACCOUNT_CHECK:
         default:
             return IncomingInvoicePaymentStatus.NOT_PAYABLE;
