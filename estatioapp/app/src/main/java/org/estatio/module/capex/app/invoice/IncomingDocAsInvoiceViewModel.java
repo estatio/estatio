@@ -20,6 +20,7 @@ package org.estatio.module.capex.app.invoice;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedSet;
 import java.util.stream.Collectors;
@@ -667,7 +668,10 @@ public class IncomingDocAsInvoiceViewModel
         if (getPaymentMethod() != null && getSeller() != null) {
             List<PaymentMethod> historicalPaymentMethods = invoiceRepository.findBySeller(getSeller()).stream()
                     .map(Invoice::getPaymentMethod)
-                    .filter(pm -> pm != PaymentMethod.BANK_TRANSFER && pm != PaymentMethod.REFUND_BY_SUPPLIER && pm != PaymentMethod.MANUAL_PROCESS)
+                    .filter(Objects::nonNull)
+                    .filter(pm -> pm != PaymentMethod.BANK_TRANSFER)
+                    .filter(pm -> pm != PaymentMethod.REFUND_BY_SUPPLIER)
+                    .filter(pm -> pm != PaymentMethod.MANUAL_PROCESS)
                     .distinct()
                     .collect(Collectors.toList());
 
