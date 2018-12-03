@@ -114,6 +114,7 @@ public class DerivedObjectUpdater {
         final BigDecimal netAmount = Util.subtract(grossAmount, vatAmount);
         final String period = Util.asFinancialYear(docHead.getCodaPeriod());
         final Tax tax = null;
+        final boolean postedToCodaBooks = docHead.getLocation().equals("books");
 
         //
         // update the incoming invoice (we simply blindly follow Coda, since Coda always leads.
@@ -126,7 +127,7 @@ public class DerivedObjectUpdater {
                     incomingInvoice,
                     type, invoiceNumber, property, AT_PATH, buyer, seller,
                     invoiceDate, dueDate, vatRegistrationDate, paymentMethod,
-                    invoiceStatus, dateReceived, bankAccount);
+                    invoiceStatus, dateReceived, bankAccount, postedToCodaBooks);
 
             //
             // also update the existing item
@@ -164,6 +165,7 @@ public class DerivedObjectUpdater {
 
                 incomingInvoice.setGrossAmount(grossAmount);
                 incomingInvoice.setNetAmount(netAmount);
+                incomingInvoice.setPostedToCodaBooks(postedToCodaBooks);
 
                 incomingInvoice.addItem(
                         type, charge, description,

@@ -327,8 +327,10 @@ public class IncomingInvoiceRepository {
             final PaymentMethod paymentMethod,
             final InvoiceStatus invoiceStatus,
             final LocalDate dateReceived,
-            final BankAccount bankAccount) {
+            final BankAccount bankAccount,
+            final boolean postedToCodaBooks) {
         invoice.setVatRegistrationDate(vatRegistrationDate);
+        invoice.setPostedToCodaBooks(postedToCodaBooks);
         return updateInvoice(invoice, type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount);
     }
 
