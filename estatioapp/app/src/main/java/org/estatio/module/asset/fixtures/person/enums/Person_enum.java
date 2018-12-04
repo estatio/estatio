@@ -98,7 +98,7 @@ public enum Person_enum
     // center manager
     IlicCenterManagerIt("IRESPONSABILE", "Ilic", "Responsabile", null, true, MALE, It, It,
             null, null,
-            new IPartyRoleType[] {  },
+            new IPartyRoleType[] { PartyRoleTypeEnum.ADVISOR },
             new FixedAssetRoleSpec[] {
                     new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.CENTER_MANAGER, Property_enum.RonIt)
             }),
@@ -132,9 +132,16 @@ public enum Person_enum
             }),
 
     // preferred manager
-    FabrizioPreferredManagerIt("FDARESPONS", "Fabrizio", "Da Respons", null, true, FEMALE, It, It,
+    FabrizioPreferredManagerIt("FDARESPONS", "Fabrizio", "Da Respons", null, true, MALE, It, It,
             null, null,
             new IPartyRoleType[] { PartyRoleTypeEnum.PREFERRED_MANAGER },
+            new FixedAssetRoleSpec[] {
+            }),
+
+    // advisor
+    TechnizioAdvisorIt("TMULTICOMP", "Technizio", "Multi Compito", null, true, MALE, It, It,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.ADVISOR },
             new FixedAssetRoleSpec[] {
             }),
 

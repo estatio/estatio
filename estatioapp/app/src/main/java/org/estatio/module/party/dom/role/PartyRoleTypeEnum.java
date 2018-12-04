@@ -13,7 +13,8 @@ public enum PartyRoleTypeEnum implements IPartyRoleType {
     CORPORATE_MANAGER,
     ORDER_MANAGER,
     PREFERRED_MANAGER,
-    PREFERRED_DIRECTOR;
+    PREFERRED_DIRECTOR,
+    ADVISOR;
 
 
     @Override

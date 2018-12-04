@@ -61,7 +61,9 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalState.PAYABLE,
                     IncomingInvoiceApprovalState.APPROVED_BY_CORPORATE_MANAGER,
                     IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK,
-                    IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER
+                    IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER,
+                    IncomingInvoiceApprovalState.PENDING_ADVISE,
+                    IncomingInvoiceApprovalState.ADVISE_POSITIVE
             ),
             IncomingInvoiceApprovalState.NEW,
             NextTransitionSearchStrategy.firstMatching(),
@@ -145,7 +147,10 @@ public enum IncomingInvoiceApprovalStateTransitionType
 
     },
     APPROVE(
-            IncomingInvoiceApprovalState.COMPLETED,
+            Lists.newArrayList(
+                    IncomingInvoiceApprovalState.COMPLETED,
+                    IncomingInvoiceApprovalState.ADVISE_POSITIVE
+            ),
             IncomingInvoiceApprovalState.APPROVED,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             null, // task assignment strategy overridden below
@@ -243,7 +248,10 @@ public enum IncomingInvoiceApprovalStateTransitionType
 
     },
     APPROVE_AS_CENTER_MANAGER(
-            IncomingInvoiceApprovalState.COMPLETED,
+            Lists.newArrayList(
+                    IncomingInvoiceApprovalState.COMPLETED,
+                    IncomingInvoiceApprovalState.ADVISE_POSITIVE
+            ),
             IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.CENTER_MANAGER),
@@ -499,6 +507,48 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
             return isPaidInCoda(incomingInvoice);
+        }
+    },
+    ADVISE(
+            IncomingInvoiceApprovalState.COMPLETED,
+            IncomingInvoiceApprovalState.PENDING_ADVISE,
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.MANUAL
+    ){
+            @Override
+            public boolean isMatch(
+                    final IncomingInvoice incomingInvoice,
+                    final ServiceRegistry2 serviceRegistry2) {
+                return isItalian(incomingInvoice);
+            }
+    },
+    ADVISE_TO_APPROVE(
+            IncomingInvoiceApprovalState.PENDING_ADVISE,
+            IncomingInvoiceApprovalState.ADVISE_POSITIVE,
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
+            TaskAssignmentStrategy.to(PartyRoleTypeEnum.ADVISOR),
+            AdvancePolicy.MANUAL
+    ){
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            return isItalian(incomingInvoice);
+        }
+    },
+    NO_ADVISE(
+            IncomingInvoiceApprovalState.PENDING_ADVISE,
+            IncomingInvoiceApprovalState.COMPLETED,
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.MANUAL
+    ){
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            return isItalian(incomingInvoice);
         }
     },
     DISCARD(

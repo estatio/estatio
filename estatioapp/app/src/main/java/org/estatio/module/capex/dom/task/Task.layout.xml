@@ -54,6 +54,12 @@
                                     <cpt:action id="approveIncomingInvoice">
                                         <cpt:named>Approve</cpt:named>
                                     </cpt:action>
+                                    <cpt:action id="approveIncomingInvoiceAsCenterManager">
+                                        <cpt:named>Approve as Center Manager</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="advise"/>
+                                    <cpt:action id="adviseToApprove"/>
+                                    <cpt:action id="noAdvise"/>
                                     <cpt:action id="approveIncomingInvoiceAsCountryDirector">
                                         <cpt:named>Approve as Country Director</cpt:named>
                                     </cpt:action>
@@ -62,9 +68,6 @@
                                     </cpt:action>
                                     <cpt:action id="approveIncomingInvoiceAsCorporateManager">
                                         <cpt:named>Approve as Corporate Manager</cpt:named>
-                                    </cpt:action>
-                                    <cpt:action id="approveIncomingInvoiceAsCenterManager">
-                                        <cpt:named>Approve as Center Manager</cpt:named>
                                     </cpt:action>
                                     <cpt:action id=" approveIncomingInvoiceWhenApprovedByCenterManager">
                                         <cpt:named>Approve</cpt:named>
