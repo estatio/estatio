@@ -84,9 +84,6 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
             @Override
             protected void execute(final ExecutionContext ec) {
                 ec.executeChildren(this,
-                        IncomingInvoiceNoDocument_enum.invoiceForItaNoOrder,
-                        IncomingInvoiceNoDocument_enum.invoiceForItaRecoverable,
-                        IncomingInvoiceNoDocument_enum.invoiceForItaDirectDebit,
                         Person_enum.CarmenIncomingInvoiceManagerIt,
                         Person_enum.IlicCenterManagerIt,
                         Person_enum.FloellaAssetManagerIt,
@@ -95,7 +92,11 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
                         Person_enum.SergioPreferredCountryDirectorIt,
                         Person_enum.FabrizioPreferredManagerIt,
                         Person_enum.TechnizioAdvisorIt,
-                        Organisation_enum.IncomingBuyerIt
+                        Person_enum.LoredanaPropertyInvoiceMgrIt, // this fixture has to be set before the creation of the recoverable invoice because task assignment is determined by the role being setup here
+                        Organisation_enum.IncomingBuyerIt,
+                        IncomingInvoiceNoDocument_enum.invoiceForItaNoOrder,
+                        IncomingInvoiceNoDocument_enum.invoiceForItaRecoverable,
+                        IncomingInvoiceNoDocument_enum.invoiceForItaDirectDebit
                 );
             }
         });
@@ -106,6 +107,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
     @Before
     public void setUp() {
         propertyForRon = Property_enum.RonIt.findUsing(serviceRegistry);
+        assertThat(propertyForRon.getRoles()).hasSize(5);
 
         buyer = Organisation_enum.HelloWorldIt.findUsing(serviceRegistry);
         seller = Organisation_enum.TopModelIt.findUsing(serviceRegistry);
@@ -174,13 +176,13 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         assertTask(nextPendingTask, new ExpectedTaskResult(
                 false,
                 FixedAssetRoleTypeEnum.ASSET_MANAGER,
-                Person_enum.FloellaAssetManagerIt.findUsing(serviceRegistry2)
+                Person_enum.FlorisAssetManagerIt.findUsing(serviceRegistry2)
         ));
 
         // and when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(Person_enum.FloellaAssetManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act("SOME_ROLE_WHY??", null, null, false));
+        sudoService.sudo(Person_enum.FlorisAssetManagerIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act("SOME_ROLE", null, null, false));
 
         // then
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK);
@@ -190,7 +192,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         final IncomingInvoiceApprovalStateTransition completedByAssetManager = transitionsOfInvoice.get(2);
         assertTransition(completedByAssetManager, new ExpectedTransitionResult(
                 true,
-                "fgestore",
+                "fdigrande",
                 IncomingInvoiceApprovalState.COMPLETED,
                 IncomingInvoiceApprovalState.APPROVED,
                 IncomingInvoiceApprovalStateTransitionType.APPROVE
@@ -200,7 +202,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         assertTask(taskForAssetManager, new ExpectedTaskResult(
                 true,
                 partyRoleTypeRepository.findByKey(FixedAssetRoleTypeEnum.ASSET_MANAGER.getKey()),
-                Person_enum.FloellaAssetManagerIt.findUsing(serviceRegistry2)
+                Person_enum.FlorisAssetManagerIt.findUsing(serviceRegistry2)
         ));
 
         final IncomingInvoiceApprovalStateTransition lastAutomatic = transitionsOfInvoice.get(1);
@@ -239,8 +241,8 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
 
         // when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(Person_enum.FloellaAssetManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act("SOME_ROLE_WHY??", null, null, false));
+        sudoService.sudo(Person_enum.FlorisAssetManagerIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act("SOME_ROLE", null, null, false));
 
         // then
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED);
@@ -251,7 +253,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         final IncomingInvoiceApprovalStateTransition completedByAssetManager = transitionsOfInvoice.get(1);
         assertTransition(completedByAssetManager,
                 new ExpectedTransitionResult(true,
-                        "fgestore",
+                        "fdigrande",
                         IncomingInvoiceApprovalState.COMPLETED,
                         IncomingInvoiceApprovalState.APPROVED,
                         IncomingInvoiceApprovalStateTransitionType.APPROVE));
@@ -260,7 +262,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         assertTask(taskForAssetManager, new ExpectedTaskResult(
                 true,
                 FixedAssetRoleTypeEnum.ASSET_MANAGER,
-                Person_enum.FloellaAssetManagerIt.findUsing(serviceRegistry2)
+                Person_enum.FlorisAssetManagerIt.findUsing(serviceRegistry2)
         ));
 
         final IncomingInvoiceApprovalStateTransition nextPending = transitionsOfInvoice.get(0);
@@ -324,18 +326,32 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
     @Test
     public void recoverable_invoice_for_property_having_center_manager_needs_to_be_approved_by_center_manager_when_NOT_over_100000() throws Exception {
 
-        List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice;
-
         // given
+        List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice;
+        transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(recoverableInvoice);
+        assertThat(transitionsOfInvoice).hasSize(2);
+        assertThat(recoverableInvoice.getProperty()).isSameAs(propertyForRon);
+        assertThat(propertyForRon.getRoles()).hasSize(5);
+
+        IncomingInvoiceApprovalStateTransition pendingTransition = transitionsOfInvoice.get(0);
+        Task pendingTask = pendingTransition.getTask();
+        assertTask(pendingTask, new ExpectedTaskResult(
+                false,
+                FixedAssetRoleTypeEnum.PROPERTY_INV_MANAGER,
+                Person_enum.LoredanaPropertyInvoiceMgrIt.findUsing(serviceRegistry2)
+        ));
+
+
+        // and when completed
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_complete.class, recoverableInvoice)).act("INCOMING_INVOICE_MANAGER", null, null));
+        sudoService.sudo(Person_enum.LoredanaPropertyInvoiceMgrIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_complete.class, recoverableInvoice)).act("SOME_ROLE", null, null));
         assertThat(recoverableInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
         assertThat(recoverableInvoice.getNetAmount()).isEqualTo(new BigDecimal("100000.00"));
         transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(recoverableInvoice);
         assertThat(transitionsOfInvoice).hasSize(3);
 
-        final IncomingInvoiceApprovalStateTransition pendingTransition = transitionsOfInvoice.get(0);
+        pendingTransition = transitionsOfInvoice.get(0);
         assertTransition(pendingTransition, new ExpectedTransitionResult(
                 false,
                 null,
@@ -439,8 +455,8 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         item.addAmounts(new BigDecimal("0.01"), BigDecimal.ZERO, new BigDecimal("0.01"));
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_complete.class, recoverableInvoice)).act("INCOMING_INVOICE_MANAGER", null, null));
+        sudoService.sudo(Person_enum.LoredanaPropertyInvoiceMgrIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_complete.class, recoverableInvoice)).act("SOME_ROLE", null, null));
         assertThat(recoverableInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
 
         // when
@@ -693,7 +709,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         assertTask(pendingTask, new ExpectedTaskResult(
                 false,
                 FixedAssetRoleTypeEnum.ASSET_MANAGER,
-                Person_enum.FloellaAssetManagerIt.findUsing(serviceRegistry2)
+                Person_enum.FlorisAssetManagerIt.findUsing(serviceRegistry2)
         ));
 
 
@@ -746,12 +762,12 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         assertTask(nextPendingTask, new ExpectedTaskResult(
                 false,
                 FixedAssetRoleTypeEnum.ASSET_MANAGER,
-                Person_enum.FloellaAssetManagerIt.findUsing(serviceRegistry2)
+                Person_enum.FlorisAssetManagerIt.findUsing(serviceRegistry2)
         ));
 
         // when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(Person_enum.FloellaAssetManagerIt.getRef().toLowerCase(), (Runnable) () ->
+        sudoService.sudo(Person_enum.FlorisAssetManagerIt.getRef().toLowerCase(), (Runnable) () ->
                 wrap(mixin(IncomingInvoice_advise.class, incomingInvoice)).act("ADVISOR", Person_enum.TechnizioAdvisorIt.findUsing(serviceRegistry2), "Please advise me. Is this correct?",true));
 
         // then
@@ -761,7 +777,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         IncomingInvoiceApprovalStateTransition lastTransition = transitionsOfInvoice.get(1);
         assertTransition(lastTransition, new ExpectedTransitionResult(
             true,
-                "fgestore",
+                "fdigrande",
                 IncomingInvoiceApprovalState.COMPLETED,
                 IncomingInvoiceApprovalState.PENDING_ADVISE,
                 IncomingInvoiceApprovalStateTransitionType.ADVISE
@@ -819,7 +835,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         assertTask(nextPendingTask, new ExpectedTaskResult(
                 false,
                 FixedAssetRoleTypeEnum.ASSET_MANAGER,
-                Person_enum.FloellaAssetManagerIt.findUsing(serviceRegistry2)
+                Person_enum.FlorisAssetManagerIt.findUsing(serviceRegistry2)
         ));
     }
 
@@ -834,7 +850,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(Person_enum.FloellaAssetManagerIt.getRef().toLowerCase(), (Runnable) () ->
+        sudoService.sudo(Person_enum.FlorisAssetManagerIt.getRef().toLowerCase(), (Runnable) () ->
                 wrap(mixin(IncomingInvoice_advise.class, incomingInvoice)).act("ADVISOR", Person_enum.TechnizioAdvisorIt.findUsing(serviceRegistry2), "Please advise me. Is this correct?",true));
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PENDING_ADVISE);
 
@@ -872,7 +888,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         assertTask(nextPendingTask, new ExpectedTaskResult(
                 false,
                 FixedAssetRoleTypeEnum.ASSET_MANAGER,
-                Person_enum.FloellaAssetManagerIt.findUsing(serviceRegistry2)
+                Person_enum.FlorisAssetManagerIt.findUsing(serviceRegistry2)
         ));
 
         List<Task> uncompletedForTechnizio = taskRepository.findIncompleteByPersonAssignedTo(Person_enum.TechnizioAdvisorIt.findUsing(serviceRegistry2));
@@ -890,7 +906,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(Person_enum.FloellaAssetManagerIt.getRef().toLowerCase(), (Runnable) () ->
+        sudoService.sudo(Person_enum.FlorisAssetManagerIt.getRef().toLowerCase(), (Runnable) () ->
                 wrap(mixin(IncomingInvoice_advise.class, incomingInvoice)).act("ADVISOR", Person_enum.TechnizioAdvisorIt.findUsing(serviceRegistry2), "Please advise me. Is this correct?",true));
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PENDING_ADVISE);
 
@@ -928,7 +944,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         assertTask(nextPendingTask, new ExpectedTaskResult(
                 false,
                 PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER,
-                Person_enum.CarmenIncomingInvoiceManagerIt.findUsing(serviceRegistry2)
+                null
         ));
         assertThat(nextPendingTask.getDescription()).isEqualTo("Complete (Sorry, but this is not good at all)");
 
@@ -943,6 +959,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
     @Test
     public void payable_italian_invoice_cannot_be_rejected() throws Exception {
         //TODO: since at the moment we have no route to payable for Italian invoices yet
+
     }
 
     private void assertTransition(IncomingInvoiceApprovalStateTransition transition, ExpectedTransitionResult result){

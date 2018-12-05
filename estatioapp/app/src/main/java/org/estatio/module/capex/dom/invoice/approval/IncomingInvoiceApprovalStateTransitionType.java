@@ -105,7 +105,10 @@ public enum IncomingInvoiceApprovalStateTransitionType
                         IncomingInvoiceApprovalStateTransitionType,
                         IncomingInvoiceApprovalState>) (incomingInvoice, serviceRegistry2) -> {
 
-                if (isItalian(incomingInvoice)) return PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER;
+                if (isItalian(incomingInvoice)) {
+                    if (incomingInvoice.getProperty()!=null && hasPropertyInvoiceManager(incomingInvoice.getProperty())) return FixedAssetRoleTypeEnum.PROPERTY_INV_MANAGER;
+                    return PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER;
+                }
 
                 final boolean hasProperty = incomingInvoice.getProperty() != null;
                 if (hasProperty) {
@@ -679,6 +682,12 @@ public enum IncomingInvoiceApprovalStateTransitionType
     }
 
     static BigDecimal threshold = new BigDecimal("100000.00");
+
+    static boolean hasPropertyInvoiceManager(final Property property) {
+        return ! Lists.newArrayList(property.getRoles()).stream()
+                .filter(x->x.getType()==FixedAssetRoleTypeEnum.PROPERTY_INV_MANAGER)
+                .collect(Collectors.toList()).isEmpty();
+    }
 
     static boolean hasCenterManager(final Property property) {
         return ! Lists.newArrayList(property.getRoles()).stream()

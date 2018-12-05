@@ -95,6 +95,14 @@ public enum Person_enum
                     new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, Property_enum.MnsFr),
             }),
 
+    // property incoming invoice manager
+    LoredanaPropertyInvoiceMgrIt("LMONI", "Loredana", "MONI", null, true, FEMALE, It, It,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER },
+            new FixedAssetRoleSpec[] {
+                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.PROPERTY_INV_MANAGER, Property_enum.RonIt),
+            }),
+
     // center manager
     IlicCenterManagerIt("IRESPONSABILE", "Ilic", "Responsabile", null, true, MALE, It, It,
             null, null,
@@ -124,7 +132,7 @@ public enum Person_enum
             new FixedAssetRoleSpec[] {
                     new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.ASSET_MANAGER, Property_enum.RonIt)
             }),
-    FlorisAssetManagerIt("FDIGRANDE", "Floris", "di Grande Punto", null, true, FEMALE, It, It,
+    FlorisAssetManagerIt("FDIGRANDE", "Floris", "di Grande Punto", null, true, MALE, It, It,
             null, null,
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {
