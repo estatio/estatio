@@ -20,6 +20,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.xactn.TransactionService2;
 
+import org.isisaddons.module.security.app.user.MeService;
+
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
@@ -99,6 +101,7 @@ public class IncomingInvoice_recategorize {
     }
 
     public boolean hideAct() {
+        if (meService.me().getAtPath().startsWith("/ITA")) return true;
         return incomingInvoice.getApprovalState() == IncomingInvoiceApprovalState.PAID;
     }
 
@@ -124,6 +127,9 @@ public class IncomingInvoice_recategorize {
 
     @Inject
     PartyRoleTypeRepository partyRoleTypeRepository;
+
+    @Inject
+    private MeService meService;
 
     /////////////////////////////////////////////////////////////////
 
