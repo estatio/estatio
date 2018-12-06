@@ -924,6 +924,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Getter @Setter
     @Column(allowsNull = "true")
+    public LocalDate paidDate;
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
     @PropertyLayout(hidden = Where.EVERYWHERE)
     private boolean postedToCodaBooks;
 
