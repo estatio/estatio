@@ -415,6 +415,10 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     @Getter @Setter
     private LocalDate statPayPaidDate;
 
+    public boolean isPaid() {
+        return statPay != null && "paid".equals(statPay);
+    }
+
     public enum SynchronizationPolicy {
         /**
          * When revalidating a {@link CodaDocHead}, if the document ends up as {@link CodaDocHead#isValid() valid},
