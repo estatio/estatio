@@ -143,7 +143,8 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
             final LocalDate inputDate,
             final LocalDate docDate,
             final String codaPeriod,
-            final String location) {
+            final String location,
+            final String statPay) {
 
         this.cmpCode = cmpCode;
         this.docCode = docCode;
@@ -153,6 +154,7 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         this.docDate = docDate;
         this.codaPeriod = codaPeriod;
         this.location = location;
+        this.statPay = statPay;
 
         this.numberOfLines = 0;
 
@@ -379,11 +381,38 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
     /**
      * Indicates the location of this document.
+     *
+     * <p>
+     *     Corresponds to typeCtDocUsed, typeCtDocPost, typeCtPayPostDest and similar enums in Coda WSDL,
+     *     max length is 8 ("anywhere")
+     * </p>
      */
     @Column(allowsNull = "true", length = 12)
     @Property()
     @Getter @Setter
     private String location;
+
+    /**
+     * Indicates whether this document is paid.
+     *
+     * <p>
+     *     Corresponds to <code>typeCtStatPayDocLine</code> enum in Coda WSDL,
+     *     max length is 15 (&quot;draft_available&quot;)
+     * </p>
+     */
+    @Column(allowsNull = "true", length = 20)
+    @Property()
+    @Getter @Setter
+    private String statPay;
+
+    /**
+     * The date that the {@link #getStatPay()} is first changed to the value &quot;paid&quot;
+     */
+    @Column(allowsNull = "true")
+    @javax.jdo.annotations.Persistent
+    @Property()
+    @Getter @Setter
+    private LocalDate statPayPaidDate;
 
     public enum SynchronizationPolicy {
         /**
@@ -735,7 +764,11 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         if (other == null) {
             return false;
         }
-        return other == this || other.getCodaTimeStamp() == getCodaTimeStamp();
+        if (other == this) {
+            return true;
+        }
+        return getCodaTimeStamp() == other.getCodaTimeStamp() &&
+               Objects.equals(getStatPay(), other.getStatPay());
     }
 
     @Programmatic

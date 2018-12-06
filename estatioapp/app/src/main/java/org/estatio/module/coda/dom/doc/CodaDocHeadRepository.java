@@ -2,12 +2,15 @@ package org.estatio.module.coda.dom.doc;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.title.TitleService;
 
@@ -19,6 +22,8 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoice;
         objectType = "coda.CodaDocHeadRepository"
 )
 public class CodaDocHeadRepository {
+
+    static final String STAT_PAY_PAID = "paid";
 
     @Programmatic
     public java.util.List<CodaDocHead> listAll() {
@@ -58,12 +63,40 @@ public class CodaDocHeadRepository {
                     String.format("CodaDocHead '%s' is already persistent", titleService.titleOf(codaDocHead)));
         }
 
-        CodaDocHead existingCodaDocHead = findByCandidate(codaDocHead);
+        final CodaDocHead existingCodaDocHead = findByCandidate(codaDocHead);
+
+        deriveStatPayPaidDateIfRequired(codaDocHead, existingCodaDocHead);
+
         if (existingCodaDocHead != null) {
             delete(existingCodaDocHead);
         }
         return repositoryService.persist(codaDocHead);
     }
+
+    void deriveStatPayPaidDateIfRequired(final CodaDocHead codaDocHead, final CodaDocHead existingCodaDocHead) {
+        if (!STAT_PAY_PAID.equals(codaDocHead.getStatPay())) {
+            return;
+        }
+        if (isPaid(existingCodaDocHead)) {
+            codaDocHead.setStatPayPaidDate(existingCodaDocHead.getStatPayPaidDate());
+            return;
+        }
+        // else
+        codaDocHead.setStatPayPaidDate(clockService.now());
+    }
+
+    private static boolean isPaid(final CodaDocHead existingCodaDocHead) {
+        if (existingCodaDocHead == null) {
+            return false;
+        }
+        if (!STAT_PAY_PAID.equals(existingCodaDocHead.getStatPay())) {
+            return false;
+        }
+        return existingCodaDocHead.getStatPayPaidDate() != null;
+    }
+
+    @Inject
+    ClockService clockService;
 
     @Programmatic
     public List<CodaDocHead> findByCodaPeriodQuarterAndHandlingAndValidity(

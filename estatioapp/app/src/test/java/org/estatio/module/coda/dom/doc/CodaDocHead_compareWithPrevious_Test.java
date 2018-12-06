@@ -33,14 +33,14 @@ public class CodaDocHead_compareWithPrevious_Test {
     @Before
     public void setUp() throws Exception {
 
-        existing = new CodaDocHead("IT01", "FR-GEN", "1234", (short)1, null, null, null, null);
+        existing = new CodaDocHead("IT01", "FR-GEN", "1234", (short)1, null, null, null, null, "");
         existing.codaDocHeadRepository = mockCodaDocHeadRepository;
 
         existingSummaryDocLine = addLine(existing, 1, LineType.SUMMARY);
         existingAnalysisDocLine = addLine(existing, 2, LineType.ANALYSIS);
 
 
-        codaDocHead = new CodaDocHead("IT01", "FR-GEN", "1234", (short)2, null, null, null, null);
+        codaDocHead = new CodaDocHead("IT01", "FR-GEN", "1234", (short)2, null, null, null, null, "");
         codaDocHead.codaDocHeadRepository = mockCodaDocHeadRepository;
 
         summaryDocLine = addLine(codaDocHead, 1, LineType.SUMMARY);
