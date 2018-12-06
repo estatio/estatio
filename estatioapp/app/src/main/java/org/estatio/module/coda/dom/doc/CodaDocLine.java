@@ -287,7 +287,7 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     private String userRef1;
 
     /**
-     * Encodes whether this has been paid.
+     * Encodes the nature of the approval such that this Coda document is payable (Estatio uses 'X' or 'Z').
      */
     @Column(allowsNull = "true")
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)

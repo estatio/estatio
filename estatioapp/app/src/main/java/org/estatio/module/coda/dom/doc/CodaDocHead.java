@@ -779,10 +779,11 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
             return new Comparison(Type.DIFFERS_RETAIN_APPROVALS, null);
         }
 
-        public static Comparison noPrevious() {
+        public static Comparison noOther() {
             return new Comparison(Type.NO_PREVIOUS, null);
         }
     }
+
 
     @Programmatic
     public boolean isSameAs(final CodaDocHead other) {
@@ -797,40 +798,45 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     }
 
     @Programmatic
-    Comparison compareWithPrevious() {
-        CodaDocHead existing = codaDocHeadRepository.findByCandidate(this);
-        if (isSameAs(existing)) {
-            return new Comparison(Comparison.Type.SAME, null);
+    public Comparison compareWith(final CodaDocHead other) {
+        if (other == null) {
+            return Comparison.noOther();
         }
-        return compareWith(existing);
-    }
-
-    @Programmatic
-    public Comparison compareWith(final CodaDocHead existing) {
-        if (existing == null) {
-            return Comparison.noPrevious();
-        }
-        if (isSameAs(existing)) {
+        if (isSameAs(other)) {
             return Comparison.same();
         }
         CodaDocLine summaryDocLine = summaryDocLine(LineCache.DEFAULT);
-        CodaDocLine existingSummaryDocLine = existing.summaryDocLine(LineCache.DEFAULT);
-        if (summaryDocLine != null && existingSummaryDocLine == null) {
+        CodaDocLine otherDocLine = other.summaryDocLine(LineCache.DEFAULT);
+        if (summaryDocLine != null && otherDocLine == null) {
             return Comparison.invalidatesApprovals("Previous had no summary doc line");
         }
-        if (summaryDocLine == null && existingSummaryDocLine != null) {
+        if (summaryDocLine == null && otherDocLine != null) {
             return Comparison.invalidatesApprovals("Replacement has no summary doc line");
         }
-        if (summaryDocLine != null && existingSummaryDocLine != null) {
-            if (!Objects
-                    .equals(summaryDocLine.getSupplierBankAccount(), existingSummaryDocLine.getSupplierBankAccount())) {
+        if (summaryDocLine != null) {
+            if (!Objects.equals(summaryDocLine.getSupplierBankAccount(), otherDocLine.getSupplierBankAccount())) {
                 return Comparison.invalidatesApprovals("Supplier bank account has changed");
             }
-            if (!Objects.equals(summaryDocLine.getDocValue(), existingSummaryDocLine.getDocValue())) {
-                return Comparison.invalidatesApprovals("Gross amount has changed");
+            if (!Objects.equals(summaryDocLine.getDocValue(), otherDocLine.getDocValue())) {
+                return Comparison.invalidatesApprovals("Doc value (gross amount) has changed");
             }
-            if (!Objects.equals(summaryDocLine.getDocSumTax(), existingSummaryDocLine.getDocSumTax())) {
-                return Comparison.invalidatesApprovals("VAT amount has changed");
+            if (!Objects.equals(summaryDocLine.getDocSumTax(), otherDocLine.getDocSumTax())) {
+                return Comparison.invalidatesApprovals("Doc sum tax (VAT amount) has changed");
+            }
+            if (!Objects.equals(summaryDocLine.getMediaCode(), otherDocLine.getMediaCode())) {
+                return Comparison.invalidatesApprovals("Media code (payment method) has changed");
+            }
+            if (!Objects.equals(summaryDocLine.getDueDate(), otherDocLine.getDueDate())) {
+                return Comparison.invalidatesApprovals("Due date has changed");
+            }
+            if (!Objects.equals(summaryDocLine.getValueDate(), otherDocLine.getValueDate())) {
+                return Comparison.invalidatesApprovals("Value date has changed");
+            }
+            if (!Objects.equals(summaryDocLine.getUserRef1(), otherDocLine.getUserRef1())) {
+                return Comparison.invalidatesApprovals("User Ref 1 (bar code) has changed");
+            }
+            if (!Objects.equals(summaryDocLine.getDescription(), otherDocLine.getDescription())) {
+                return Comparison.invalidatesApprovals("Description has changed");
             }
         }
 

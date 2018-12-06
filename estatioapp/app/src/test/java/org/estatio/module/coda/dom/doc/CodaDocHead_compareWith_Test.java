@@ -2,8 +2,7 @@ package org.estatio.module.coda.dom.doc;
 
 import java.math.BigDecimal;
 
-import org.jmock.Expectations;
-import org.jmock.auto.Mock;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,13 +13,10 @@ import org.estatio.module.financial.dom.BankAccount;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CodaDocHead_compareWithPrevious_Test {
+public class CodaDocHead_compareWith_Test {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
-
-    @Mock
-    CodaDocHeadRepository mockCodaDocHeadRepository;
 
     CodaDocHead codaDocHead;
     CodaDocLine summaryDocLine;
@@ -34,14 +30,12 @@ public class CodaDocHead_compareWithPrevious_Test {
     public void setUp() throws Exception {
 
         existing = new CodaDocHead("IT01", "FR-GEN", "1234", (short)1, null, null, null, null, "");
-        existing.codaDocHeadRepository = mockCodaDocHeadRepository;
 
         existingSummaryDocLine = addLine(existing, 1, LineType.SUMMARY);
         existingAnalysisDocLine = addLine(existing, 2, LineType.ANALYSIS);
 
 
         codaDocHead = new CodaDocHead("IT01", "FR-GEN", "1234", (short)2, null, null, null, null, "");
-        codaDocHead.codaDocHeadRepository = mockCodaDocHeadRepository;
 
         summaryDocLine = addLine(codaDocHead, 1, LineType.SUMMARY);
         analysisDocLine = addLine(codaDocHead, 2, LineType.ANALYSIS);
@@ -55,14 +49,9 @@ public class CodaDocHead_compareWithPrevious_Test {
 
     @Test
     public void when_no_previous() throws Exception {
-        // expecting
-        context.checking(new Expectations() {{
-            allowing(mockCodaDocHeadRepository).findByCandidate(codaDocHead);
-            will(returnValue(null));
-        }});
 
         // when
-        CodaDocHead.Comparison comparison = codaDocHead.compareWithPrevious();
+        CodaDocHead.Comparison comparison = codaDocHead.compareWith(null);
 
         // then
         assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.NO_PREVIOUS);
@@ -70,14 +59,8 @@ public class CodaDocHead_compareWithPrevious_Test {
 
     @Test
     public void when_same() throws Exception {
-        // expecting
-        context.checking(new Expectations() {{
-            allowing(mockCodaDocHeadRepository).findByCandidate(codaDocHead);
-            will(returnValue(codaDocHead));
-        }});
-
         // when
-        CodaDocHead.Comparison comparison = codaDocHead.compareWithPrevious();
+        CodaDocHead.Comparison comparison = codaDocHead.compareWith(codaDocHead);
 
         // then
         assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.SAME);
@@ -88,14 +71,8 @@ public class CodaDocHead_compareWithPrevious_Test {
         // given
         existing.setCodaTimeStamp((short)2);
 
-        // expecting
-        context.checking(new Expectations() {{
-            allowing(mockCodaDocHeadRepository).findByCandidate(codaDocHead);
-            will(returnValue(existing));
-        }});
-
         // when
-        CodaDocHead.Comparison comparison = codaDocHead.compareWithPrevious();
+        CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
 
         // then
         assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.SAME);
@@ -107,14 +84,8 @@ public class CodaDocHead_compareWithPrevious_Test {
         // given
         codaDocHead.getLines().remove(summaryDocLine);
 
-        // expecting
-        context.checking(new Expectations() {{
-            allowing(mockCodaDocHeadRepository).findByCandidate(codaDocHead);
-            will(returnValue(existing));
-        }});
-
         // when
-        CodaDocHead.Comparison comparison = codaDocHead.compareWithPrevious();
+        CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
 
         // then
         assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_INVALIDATING_APPROVALS);
@@ -127,14 +98,8 @@ public class CodaDocHead_compareWithPrevious_Test {
         // given
         existing.getLines().remove(existingSummaryDocLine);
 
-        // expecting
-        context.checking(new Expectations() {{
-            allowing(mockCodaDocHeadRepository).findByCandidate(codaDocHead);
-            will(returnValue(existing));
-        }});
-
         // when
-        CodaDocHead.Comparison comparison = codaDocHead.compareWithPrevious();
+        CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
 
         // then
         assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_INVALIDATING_APPROVALS);
@@ -148,15 +113,8 @@ public class CodaDocHead_compareWithPrevious_Test {
         summaryDocLine.setSupplierBankAccount(new BankAccount());
         existingSummaryDocLine.setSupplierBankAccount(new BankAccount());
 
-
-        // expecting
-        context.checking(new Expectations() {{
-            allowing(mockCodaDocHeadRepository).findByCandidate(codaDocHead);
-            will(returnValue(existing));
-        }});
-
         // when
-        CodaDocHead.Comparison comparison = codaDocHead.compareWithPrevious();
+        CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
 
         // then
         assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_INVALIDATING_APPROVALS);
@@ -171,19 +129,12 @@ public class CodaDocHead_compareWithPrevious_Test {
         summaryDocLine.setDocSumTax(BigDecimal.ONE);
         existingSummaryDocLine.setDocSumTax(BigDecimal.TEN);
 
-
-        // expecting
-        context.checking(new Expectations() {{
-            allowing(mockCodaDocHeadRepository).findByCandidate(codaDocHead);
-            will(returnValue(existing));
-        }});
-
         // when
-        CodaDocHead.Comparison comparison = codaDocHead.compareWithPrevious();
+        CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
 
         // then
         assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_INVALIDATING_APPROVALS);
-        assertThat(comparison.getReason()).isEqualTo("VAT amount has changed");
+        assertThat(comparison.getReason()).isEqualTo("Doc sum tax (VAT amount) has changed");
     }
 
 
@@ -191,23 +142,95 @@ public class CodaDocHead_compareWithPrevious_Test {
     public void when_doc_value_differs() throws Exception {
 
         // given
-
         summaryDocLine.setDocValue(BigDecimal.ONE);
         existingSummaryDocLine.setDocValue(BigDecimal.TEN);
 
-
-        // expecting
-        context.checking(new Expectations() {{
-            allowing(mockCodaDocHeadRepository).findByCandidate(codaDocHead);
-            will(returnValue(existing));
-        }});
-
         // when
-        CodaDocHead.Comparison comparison = codaDocHead.compareWithPrevious();
+        CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
 
         // then
         assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_INVALIDATING_APPROVALS);
-        assertThat(comparison.getReason()).isEqualTo("Gross amount has changed");
+        assertThat(comparison.getReason()).isEqualTo("Doc value (gross amount) has changed");
+    }
+
+
+    @Test
+    public void when_media_code_differs() throws Exception {
+
+        // given
+        summaryDocLine.setMediaCode("X");
+        existingSummaryDocLine.setMediaCode("Y");
+
+        // when
+        CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
+
+        // then
+        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_INVALIDATING_APPROVALS);
+        assertThat(comparison.getReason()).isEqualTo("Media code (payment method) has changed");
+    }
+
+
+    @Test
+    public void when_due_date_differs() throws Exception {
+
+        // given
+        summaryDocLine.setDueDate(LocalDate.now());
+        existingSummaryDocLine.setDueDate(LocalDate.now().plusDays(-1));
+
+        // when
+        CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
+
+        // then
+        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_INVALIDATING_APPROVALS);
+        assertThat(comparison.getReason()).isEqualTo("Due date has changed");
+    }
+
+
+    @Test
+    public void when_value_date_differs() throws Exception {
+
+        // given
+        summaryDocLine.setValueDate(LocalDate.now());
+        existingSummaryDocLine.setValueDate(LocalDate.now().plusDays(-1));
+
+        // when
+        CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
+
+        // then
+        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_INVALIDATING_APPROVALS);
+        assertThat(comparison.getReason()).isEqualTo("Value date has changed");
+    }
+
+
+    @Test
+    public void when_user_ref_1_differs() throws Exception {
+
+        // given
+        summaryDocLine.setUserRef1("10010010");
+        existingSummaryDocLine.setUserRef1("20020020");
+
+        // when
+        CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
+
+        // then
+        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_INVALIDATING_APPROVALS);
+        assertThat(comparison.getReason()).isEqualTo("User Ref 1 (bar code) has changed");
+    }
+
+
+    @Test
+    public void when_description_differs() throws Exception {
+
+        // given
+        summaryDocLine.setDescription("some description");
+        existingSummaryDocLine.setDescription("some previous description");
+
+        // when
+        CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
+
+        // then
+        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_INVALIDATING_APPROVALS);
+        assertThat(comparison.getReason()).isEqualTo("Description has changed");
     }
 
 
@@ -217,14 +240,8 @@ public class CodaDocHead_compareWithPrevious_Test {
         // given
         assertThat(codaDocHead.getCodaTimeStamp()).isNotEqualTo(existing.getCodaTimeStamp());
 
-        // expecting
-        context.checking(new Expectations() {{
-            allowing(mockCodaDocHeadRepository).findByCandidate(codaDocHead);
-            will(returnValue(existing));
-        }});
-
         // when
-        CodaDocHead.Comparison comparison = codaDocHead.compareWithPrevious();
+        CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
 
         // then
         assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_RETAIN_APPROVALS);
