@@ -15,7 +15,7 @@ public enum Handling {
      *     not been sync'd.
      * </p>
      */
-    INCLUDED("Not sync'd"),
+    INCLUDED("Estatio invoice not yet created"),
     /**
      * The {@link CodaDocHead Coda document} was {@link CodaDocHead#isValid() valid} and an
      * {@link IncomingInvoice Estatio invoice} (and related objects) has been created for it.
@@ -24,7 +24,7 @@ public enum Handling {
      *     It is no longer possible to exclude a Coda document once it has sync'd.
      * </p>
      */
-    SYNCED("Sync'd"),
+    SYNCED("Estatio invoice created"),
     ;
 
     private final String title;

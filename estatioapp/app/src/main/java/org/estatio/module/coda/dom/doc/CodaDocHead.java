@@ -443,10 +443,10 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
-    public CodaDocHead synchronize() {
+    public CodaDocHead createEstatioInvoice() {
         return revalidateAndSync(SynchronizationPolicy.SYNC_IF_VALID);
     }
-    public boolean hideSynchronize() {
+    public boolean hideCreateEstatioInvoice() {
         final boolean displayingIncludedAndValid = getHandling() == Handling.INCLUDED && isValid();
         return !displayingIncludedAndValid;
     }
