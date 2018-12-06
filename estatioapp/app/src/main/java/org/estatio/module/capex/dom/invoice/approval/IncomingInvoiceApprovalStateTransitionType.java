@@ -18,6 +18,7 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationChecker;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.project.ProjectRoleTypeEnum;
@@ -52,6 +53,22 @@ public enum IncomingInvoiceApprovalStateTransitionType
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL),
+    INSTANTIATE_AS_AUTO_PAYABLE(
+            (IncomingInvoiceApprovalState)null,
+            IncomingInvoiceApprovalState.AUTO_PAYABLE,
+            NextTransitionSearchStrategy.firstMatching(),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.MANUAL){
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice, final ServiceRegistry2 serviceRegistry2) {
+            /** just to double check; this logic is also present in {@link IncomingInvoiceRepository#create} */
+            final boolean isPaid = incomingInvoice.getPaidDate() != null;
+            final boolean hasPaymentMethodOtherThanBankTransfer = incomingInvoice.getPaymentMethod() != null && incomingInvoice.getPaymentMethod() != PaymentMethod.BANK_TRANSFER;
+            if (isItalian(incomingInvoice) && (isPaid || hasPaymentMethodOtherThanBankTransfer)) return true;
+            return false;
+        }
+    },
     REJECT(
             Lists.newArrayList(
                     IncomingInvoiceApprovalState.COMPLETED,
@@ -75,20 +92,6 @@ public enum IncomingInvoiceApprovalStateTransitionType
             // exclude italian invoices that are in a state of payable
             if (incomingInvoice.getApprovalState() == IncomingInvoiceApprovalState.PAYABLE && isItalian(incomingInvoice)) return false;
             return true;
-        }
-    },
-    MARK_PAYABLE_WHEN_NOT_BANK_PAYMENT_FOR_ITA(
-            IncomingInvoiceApprovalState.NEW,
-            IncomingInvoiceApprovalState.AUTO_PAYABLE,
-            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
-            TaskAssignmentStrategy.none(),
-            AdvancePolicy.AUTOMATIC){
-        @Override
-        public boolean isMatch(
-                final IncomingInvoice incomingInvoice, final ServiceRegistry2 serviceRegistry2) {
-            // only italian invoices that are in a state of payable
-            if (isItalian(incomingInvoice) && incomingInvoice.getPaymentMethod()!=null && incomingInvoice.getPaymentMethod()!=PaymentMethod.BANK_TRANSFER) return true;
-            return false;
         }
     },
     COMPLETE(

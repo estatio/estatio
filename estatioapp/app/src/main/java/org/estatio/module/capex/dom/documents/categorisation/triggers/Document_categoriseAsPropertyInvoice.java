@@ -68,8 +68,8 @@ public class Document_categoriseAsPropertyInvoice
                 InvoiceStatus.NEW,
                 dateReceived,
                 null, // bankAccount
-                null  // approval state... will cause state transition to be created automatically by subscriber
-        );
+                null,  // approval state... will cause state transition to be created automatically by subscriber
+                null);
 
         paperclipRepository.attach(document, null, incomingInvoice);
 

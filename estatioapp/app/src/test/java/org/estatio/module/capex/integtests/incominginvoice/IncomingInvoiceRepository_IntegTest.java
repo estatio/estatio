@@ -160,7 +160,7 @@ public class IncomingInvoiceRepository_IntegTest extends CapexModuleIntegTestAbs
         approvalStateIfAny = IncomingInvoiceApprovalState.PAID;
 
         return incomingInvoiceRepository.create(IncomingInvoiceType.CAPEX, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, null, null,
-                approvalStateIfAny);
+                approvalStateIfAny, null);
     }
 
     @Inject

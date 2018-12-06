@@ -217,7 +217,7 @@ public class IncomingInvoiceRepository {
             final LocalDate dateReceived,
             final BankAccount bankAccount,
             final IncomingInvoiceApprovalState approvalState) {
-        final IncomingInvoice invoice = create(type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount, approvalState);
+        final IncomingInvoice invoice = create(type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount, approvalState, null);
         invoice.setVatRegistrationDate(vatRegistrationDate);
         
         return invoice;
@@ -237,11 +237,13 @@ public class IncomingInvoiceRepository {
             final InvoiceStatus invoiceStatus,
             final LocalDate dateReceived,
             final BankAccount bankAccount,
-            final IncomingInvoiceApprovalState approvalState) {
+            final IncomingInvoiceApprovalState approvalState,
+            final LocalDate paidDate) {
         final Currency currency = currencyRepository.findCurrency("EUR");
         final IncomingInvoice invoice =
                 new IncomingInvoice(type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate,
                         paymentMethod, invoiceStatus, dateReceived, bankAccount, approvalState);
+        invoice.setPaidDate(paidDate);
         invoice.setCurrency(currency);
         serviceRegistry2.injectServicesInto(invoice);
         repositoryService.persistAndFlush(invoice);
@@ -250,8 +252,17 @@ public class IncomingInvoiceRepository {
         // moved from ObjectPersistedEvent subscriber, because any changes made there on the invoice are not persisted.
         final IncomingInvoiceApprovalState approvalStateAfterPersisting = invoice.getApprovalState();
         if(approvalStateAfterPersisting == IncomingInvoiceApprovalStateTransitionType.INSTANTIATE.getToState()) {
-            stateTransitionService
-                    .trigger(invoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null, null);
+
+            final boolean isItalian = invoice.getAtPath().startsWith("/ITA");
+            final boolean isPaid = invoice.getPaidDate() != null;
+            final boolean hasPaymentMethodOtherThanBankTransfer = invoice.getPaymentMethod() != null && invoice.getPaymentMethod() != PaymentMethod.BANK_TRANSFER;
+
+            if (isItalian && (isPaid || hasPaymentMethodOtherThanBankTransfer)) {
+                stateTransitionService.trigger(invoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE_AS_AUTO_PAYABLE, null, null);
+            } else {
+                stateTransitionService
+                        .trigger(invoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null, null);
+            }
         }
 
         return invoice;
@@ -277,7 +288,7 @@ public class IncomingInvoiceRepository {
         IncomingInvoice invoice = findByInvoiceNumberAndSellerAndInvoiceDate(invoiceNumber, seller, invoiceDate);
         if (invoice == null) {
             invoice = create(type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount,
-                    approvalState);
+                    approvalState, null);
         } else {
             updateInvoice(invoice, property, atPath, buyer, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount);
         }

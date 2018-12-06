@@ -65,6 +65,8 @@ public class IncomingInvoiceNoDocumentBuilder extends BuilderScriptAbstract<Inco
     PaymentMethod paymentMethod;
     @Getter @Setter
     LocalDate invoiceDate;
+    @Getter @Setter
+    LocalDate paidDate;
 
     @Getter @Setter
     BigDecimal netAmount;
@@ -184,8 +186,8 @@ public class IncomingInvoiceNoDocumentBuilder extends BuilderScriptAbstract<Inco
                 InvoiceStatus.NEW,
                 dateReceived,
                 sellerBankAccount,
-                null
-        );
+                null,
+                paidDate);
         invoice.setDateReceived(dateReceived);
         invoice.setSeller(seller);
         invoice.setBankAccount(sellerBankAccount);

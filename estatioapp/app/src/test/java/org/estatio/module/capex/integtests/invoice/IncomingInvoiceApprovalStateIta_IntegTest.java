@@ -75,6 +75,8 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
 
     IncomingInvoice invoiceForDirectDebit;
 
+    IncomingInvoice invoiceWithPaidDate;
+
     BankAccount bankAccount;
 
     @Before
@@ -96,7 +98,8 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
                         Organisation_enum.IncomingBuyerIt,
                         IncomingInvoiceNoDocument_enum.invoiceForItaNoOrder,
                         IncomingInvoiceNoDocument_enum.invoiceForItaRecoverable,
-                        IncomingInvoiceNoDocument_enum.invoiceForItaDirectDebit
+                        IncomingInvoiceNoDocument_enum.invoiceForItaDirectDebit,
+                        IncomingInvoiceNoDocument_enum.invoiceForItaWithPaidDate
                 );
             }
         });
@@ -125,6 +128,8 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         invoiceForDirectDebit = IncomingInvoiceNoDocument_enum.invoiceForItaDirectDebit.findUsing(serviceRegistry2);
 
         invoiceForDirectDebit.setBankAccount(bankAccount);
+
+        invoiceWithPaidDate = IncomingInvoiceNoDocument_enum.invoiceForItaWithPaidDate.findUsing(serviceRegistry2);
 
         assertThat(incomingInvoice).isNotNull();
         assertThat(incomingInvoice.getApprovalState()).isNotNull();
@@ -722,22 +727,40 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         List<IncomingInvoiceApprovalStateTransition> transitionsOfDirectDebitInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceForDirectDebit);
 
         // when, then
-        assertThat(transitionsOfDirectDebitInvoice).hasSize(3);
+        assertThat(transitionsOfDirectDebitInvoice).hasSize(2);
 
         assertThat(invoiceForDirectDebit.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.AUTO_PAYABLE);
-        IncomingInvoiceApprovalStateTransition firstTransition = transitionsOfDirectDebitInvoice.get(2);
+        IncomingInvoiceApprovalStateTransition firstTransition = transitionsOfDirectDebitInvoice.get(1);
         assertTransition(firstTransition, new ExpectedTransitionResult(
-                true,"tester", null, IncomingInvoiceApprovalState.NEW, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE
+                true,"tester", null, IncomingInvoiceApprovalState.AUTO_PAYABLE, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE_AS_AUTO_PAYABLE
         ));
         assertThat(firstTransition.getTask()).isNull();
 
-        IncomingInvoiceApprovalStateTransition lastAutomatic = transitionsOfDirectDebitInvoice.get(1);
-        assertTransition(lastAutomatic, new ExpectedTransitionResult(
-                true,null, IncomingInvoiceApprovalState.NEW, IncomingInvoiceApprovalState.AUTO_PAYABLE, IncomingInvoiceApprovalStateTransitionType.MARK_PAYABLE_WHEN_NOT_BANK_PAYMENT_FOR_ITA
-        ));
-        assertThat(lastAutomatic.getTask()).isNull();
-
         IncomingInvoiceApprovalStateTransition nextPending = transitionsOfDirectDebitInvoice.get(0);
+        assertTransition(nextPending, new ExpectedTransitionResult(
+                false,null, IncomingInvoiceApprovalState.AUTO_PAYABLE, null, IncomingInvoiceApprovalStateTransitionType.PAID_IN_CODA
+        ));
+        assertThat(nextPending.getTask()).isNull();
+    }
+
+    @Test
+    public void invoice_created_when_having_paid_date_is_automatically_approved() throws Exception {
+
+        // given
+        List<IncomingInvoiceApprovalStateTransition> transitionsOfPaidInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceWithPaidDate);
+
+        // when, then
+        assertThat(transitionsOfPaidInvoice).hasSize(2);
+
+        assertThat(invoiceWithPaidDate.getPaidDate()).isNotNull();
+        assertThat(invoiceWithPaidDate.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.AUTO_PAYABLE);
+        IncomingInvoiceApprovalStateTransition firstTransition = transitionsOfPaidInvoice.get(1);
+        assertTransition(firstTransition, new ExpectedTransitionResult(
+                true,"tester", null, IncomingInvoiceApprovalState.AUTO_PAYABLE, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE_AS_AUTO_PAYABLE
+        ));
+        assertThat(firstTransition.getTask()).isNull();
+
+        IncomingInvoiceApprovalStateTransition nextPending = transitionsOfPaidInvoice.get(0);
         assertTransition(nextPending, new ExpectedTransitionResult(
                 false,null, IncomingInvoiceApprovalState.AUTO_PAYABLE, null, IncomingInvoiceApprovalStateTransitionType.PAID_IN_CODA
         ));

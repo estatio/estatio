@@ -95,7 +95,7 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends CapexModuleInteg
 
             final IncomingInvoice invoice = incomingInvoiceRepository.create(IncomingInvoiceType.CAPEX,
                     "TEST", property, "/", buyer, seller, new LocalDate(2016, 1, 1), new LocalDate(2016, 2, 1), PaymentMethod.BANK_TRANSFER, InvoiceStatus.NEW, null, null,
-                    null);
+                    null, null);
 
             // given (the normal setup would create 2 transitions (INSTANTIATE, COMPLETE...)
             incomingInvoiceStateTransitionRepository.deleteFor(invoice);

@@ -37,29 +37,13 @@ import static org.incode.module.base.integtests.VT.ld;
 @Accessors(chain = true)
 public enum IncomingInvoiceNoDocument_enum
         implements PersonaWithFinder<IncomingInvoice>, PersonaWithBuilderScript<IncomingInvoice, IncomingInvoiceNoDocumentBuilder> {
-
+    
     invoiceForItaNoOrder(
             ApplicationTenancy_enum.It,
             Organisation_enum.TopModelIt, BankAccount_enum.TopModelIt, Organisation_enum.HelloWorldIt,
             PropertyAndUnitsAndOwnerAndManager_enum.GraIt,
             ITA_MANAGEMENT_COSTS, "12345", PaymentMethod.BANK_TRANSFER,
-            ld(2018,01,01), ld(2018,02,10), ld (2017, 12, 20),
-            bd("100000.00"), bd("122000.00"), null,
-            ITA_MANAGEMENT_COSTS, null, "Some costs", bd("100000.00"), bd("22000.00"), bd("122000.00"), "F2018", null,
-            null, null, null, null, null, null, null,null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-    ),
-    invoiceForItaRonNoOrder(
-            ApplicationTenancy_enum.It,
-            Organisation_enum.TopModelIt, BankAccount_enum.TopModelIt, Organisation_enum.HelloWorldIt,
-            PropertyAndUnitsAndOwnerAndManager_enum.RonIt,
-            ITA_MANAGEMENT_COSTS, "12345", PaymentMethod.BANK_TRANSFER,
-            ld(2018,01,01), ld(2018,02,10), ld (2017, 12, 20),
+            ld(2018,01,01), ld(2018,02,10), ld (2017, 12, 20), null,
             bd("100000.00"), bd("122000.00"), null,
             ITA_MANAGEMENT_COSTS, null, "Some costs", bd("100000.00"), bd("22000.00"), bd("122000.00"), "F2018", null,
             null, null, null, null, null, null, null,null,
@@ -75,7 +59,7 @@ public enum IncomingInvoiceNoDocument_enum
             Organisation_enum.TopModelIt, BankAccount_enum.TopModelIt, Organisation_enum.HelloWorldIt,
             PropertyAndUnitsAndOwnerAndManager_enum.RonIt,
             ITA_RECOVERABLE, "123456", PaymentMethod.BANK_TRANSFER,
-            ld(2018,01,01), ld(2018,02,10), ld (2017, 12, 20),
+            ld(2018,01,01), ld(2018,02,10), ld (2017, 12, 20), null,
             bd("100000.00"), bd("122000.00"), null,
             ITA_RECOVERABLE, null, "Some recoverable costs", bd("100000.00"), bd("22000.00"), bd("122000.00"), "F2018", null,
             null, null, null, null, null, null, null,null,
@@ -91,7 +75,7 @@ public enum IncomingInvoiceNoDocument_enum
             Organisation_enum.TopModelIt, BankAccount_enum.TopModelIt, Organisation_enum.HelloWorldIt,
             PropertyAndUnitsAndOwnerAndManager_enum.RonIt,
             ITA_RECOVERABLE, "1234567", PaymentMethod.DIRECT_DEBIT,
-            ld(2018,01,01), ld(2018,02,10), ld (2017, 12, 20),
+            ld(2018,01,01), ld(2018,02,10), ld (2017, 12, 20), null,
             bd("100000.00"), bd("122000.00"), null,
             ITA_RECOVERABLE, null, "Some recoverable costs", bd("100000.00"), bd("22000.00"), bd("122000.00"), "F2018", null,
             null, null, null, null, null, null, null,null,
@@ -101,7 +85,23 @@ public enum IncomingInvoiceNoDocument_enum
             null,
             null,
             null
-    )
+    ),
+    invoiceForItaWithPaidDate(
+            ApplicationTenancy_enum.It,
+            Organisation_enum.TopModelIt, BankAccount_enum.TopModelIt, Organisation_enum.HelloWorldIt,
+            PropertyAndUnitsAndOwnerAndManager_enum.RonIt,
+            ITA_MANAGEMENT_COSTS, "12345678", PaymentMethod.BANK_TRANSFER,
+            ld(2018,01,01), ld(2018,02,10), ld (2017, 12, 20), ld(2018,02, 10),
+            bd("100000.00"), bd("122000.00"), null,
+            ITA_MANAGEMENT_COSTS, null, "Some recoverable costs", bd("100000.00"), bd("22000.00"), bd("122000.00"), "F2018", null,
+            null, null, null, null, null, null, null,null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+    ),
     ;
 
     private final ApplicationTenancy_enum applicationTenancy;
@@ -117,6 +117,7 @@ public enum IncomingInvoiceNoDocument_enum
     private final LocalDate dateReceived;
     private final LocalDate dueDate;
     private final LocalDate invoiceDate;
+    private final LocalDate paidDate;
 
     private final BigDecimal netAmount;
     private final BigDecimal grossAmount;
@@ -163,6 +164,7 @@ public enum IncomingInvoiceNoDocument_enum
                 .setDateReceived(dateReceived)
                 .setDueDate(dueDate)
                 .setInvoiceDate(invoiceDate)
+                .setPaidDate(paidDate)
                 .setNetAmount(netAmount)
                 .setGrossAmount(grossAmount)
 
