@@ -41,6 +41,7 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.background.BackgroundService;
 import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
@@ -470,12 +471,6 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         return this;
     }
 
-    private boolean isAutosync() {
-        ApplicationSetting autosyncSetting =
-                ApplicationSettingKey.autosync.find(applicationSettingsServiceRW);
-        return autosyncSetting != null && autosyncSetting.valueAsBoolean();
-    }
-
     void validateBuyer() {
 
         final String buyerRef = getCmpCode();
@@ -727,6 +722,32 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         return docLine != null ? docLine.getIncomingInvoiceType() : null;
     }
 
+
+    @Programmatic
+    public void autoSyncInBackgroundIfValid() {
+        if(!isAutosync()) {
+            return;
+        }
+        if(!isValid()) {
+            return;
+        }
+        backgroundService.execute(this).syncIfValid();
+    }
+
+    @Action(hidden = Where.EVERYWHERE) // just so can invoke through background service
+    public void syncIfValid() {
+        if(!isValid()) {
+            return; // belt-n-braces, in case has become invalid since background command was scheduled.
+        }
+        updateEstatioObjects(SynchronizationPolicy.SYNC_IF_VALID);
+    }
+
+    private boolean isAutosync() {
+        ApplicationSetting autosyncSetting =
+                ApplicationSettingKey.autosync.find(applicationSettingsServiceRW);
+        return autosyncSetting != null && autosyncSetting.valueAsBoolean();
+    }
+
     @Data
     public static class Comparison {
         public enum Type {
@@ -894,4 +915,8 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         }
 
     }
+
+    @Inject
+    BackgroundService backgroundService;
+
 }

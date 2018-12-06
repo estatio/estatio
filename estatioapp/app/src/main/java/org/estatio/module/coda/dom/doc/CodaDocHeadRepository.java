@@ -95,9 +95,6 @@ public class CodaDocHeadRepository {
         return existingCodaDocHead.getStatPayPaidDate() != null;
     }
 
-    @Inject
-    ClockService clockService;
-
     @Programmatic
     public List<CodaDocHead> findByCodaPeriodQuarterAndHandlingAndValidity(
             final String codaPeriodQuarter,
@@ -150,7 +147,11 @@ public class CodaDocHeadRepository {
 
     @javax.inject.Inject
     RepositoryService repositoryService;
+
     @javax.inject.Inject
     TitleService titleService;
+
+    @Inject
+    ClockService clockService;
 
 }
