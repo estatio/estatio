@@ -363,7 +363,7 @@ public class AdminDashboard {
     /**
      * Allows Camel to be restarted without having to restart the application.
      */
-    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE, restrictTo = RestrictTo.PROTOTYPING)
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     public void reinitPublisherService() {
 
         final ServiceInitializer serviceInitializer =
