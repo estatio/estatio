@@ -679,7 +679,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
     }
 
     static boolean isPaidInCoda(final IncomingInvoice incomingInvoice){
-        return false; // TODO: change when coda dochead / line is updated with pay status and/or date
+        return incomingInvoice.getPaidDate() != null;
     }
 
     static boolean isItalian(final IncomingInvoice incomingInvoice) {
