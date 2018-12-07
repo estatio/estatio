@@ -11,6 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.togglz.junit.TogglzRule;
 
+import org.apache.isis.applib.fixtures.FixtureClock;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
@@ -42,6 +43,7 @@ import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_ap
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_complete;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_noAdvise;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_reject;
+import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.dom.task.TaskRepository;
 import org.estatio.module.capex.fixtures.incominginvoice.enums.IncomingInvoiceNoDocument_enum;
@@ -60,7 +62,6 @@ import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 
 public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegTestAbstract {
 
@@ -143,6 +144,8 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
 
     @Rule
     public TogglzRule togglzRule = TogglzRule.allDisabled(EstatioTogglzFeature.class);
+
+    @Inject StateTransitionService stateTransitionService;
 
     @Test
     public void approved_invoice_with_net_amount_equal_or_lower_then_100000_threshold_does_not_need_further_approval() throws Exception {
@@ -230,17 +233,74 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         ));
         assertThat(lastPendingTransition.getTask()).isNull();
 
-        // TODO: continue through with upload with coda doc in books, then see it released through to payable
+        // and when in coda books - artifically setting postedToCodaBooks and triggering the transition
+        queryResultsCache.resetForNextTransaction(); // otherwise would be manager auto transitioning
+        incomingInvoice.setPostedToCodaBooks(true);
+        stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.CONFIRM_IN_CODA_BOOKS, null, null);
 
+        // then
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PAYABLE);
+        transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitionsOfInvoice).hasSize(6);
+        IncomingInvoiceApprovalStateTransition pendingTransition = transitionsOfInvoice.get(0);
+        assertTransition(pendingTransition, new ExpectedTransitionResult(
+                false,
+                null,
+                IncomingInvoiceApprovalState.PAYABLE,
+                null,
+                IncomingInvoiceApprovalStateTransitionType.PAID_IN_CODA
+        ));
+        assertThat(pendingTransition.getTask()).isNull();
 
-        // TODO: cannot take an invoice in payable, and cannot reject
+        final IncomingInvoiceApprovalStateTransition lastTransition = transitionsOfInvoice.get(1);
+        assertTransition(lastTransition, new ExpectedTransitionResult(
+                true,
+                "tester",
+                IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK,
+                IncomingInvoiceApprovalState.PAYABLE,
+                IncomingInvoiceApprovalStateTransitionType.CONFIRM_IN_CODA_BOOKS
+        ));
 
-        fail("TODO");
+        // then also - not pretty but this one saves us a separate integ test...
+        assertThat(mixin(IncomingInvoice_reject.class, incomingInvoice).hideAct()).isTrue();
+
+        // and when paid - artifically setting paid date here and triggering the transition
+        incomingInvoice.setPaidDate(FixtureClock.getTimeAsLocalDate());
+        stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.PAID_IN_CODA, null, null);
+
+        // then
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PAID);
+        transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitionsOfInvoice).hasSize(6);
+
+        final IncomingInvoiceApprovalStateTransition finalTransition = transitionsOfInvoice.get(0);
+        assertTransition(finalTransition, new ExpectedTransitionResult(
+                true,
+                "tester",
+                IncomingInvoiceApprovalState.PAYABLE,
+                IncomingInvoiceApprovalState.PAID,
+                IncomingInvoiceApprovalStateTransitionType.PAID_IN_CODA
+        ));
+
     }
 
     @Test
     public void slow_approval_means_hits_pending_coda_books_with_coda_doc_already_in_books_then_straight_through() throws Exception {
-        fail("TODO");
+
+        // given
+        incomingInvoice.setPostedToCodaBooks(true);
+
+        // when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("INCOMING_INVOICE_MANAGER", null, null));
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.FlorisAssetManagerIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act("SOME_ROLE", null, null, false));
+
+        // then
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PAYABLE);
+
     }
 
 
