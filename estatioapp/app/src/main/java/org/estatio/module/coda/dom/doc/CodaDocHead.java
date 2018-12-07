@@ -42,7 +42,9 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.background.BackgroundService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
+import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
@@ -735,6 +737,12 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         if(!isValid()) {
             return;
         }
+
+        // TODO: this really ought to be a responsibility of backgroundService, because
+        //       otherwise the target bookmark will be invalid
+        if(!repositoryService.isPersistent(this)) {
+            transactionService.flushTransaction();
+        }
         backgroundService.execute(this).syncIfValid();
     }
 
@@ -932,5 +940,11 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
     @Inject
     BackgroundService backgroundService;
+
+    @Inject
+    RepositoryService repositoryService;
+
+    @Inject
+    TransactionService transactionService;
 
 }
