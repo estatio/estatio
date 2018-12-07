@@ -335,7 +335,9 @@ public class IncomingInvoiceRepository {
         invoice.setDateReceived(dateReceived);
         invoice.setBankAccount(bankAccount);
         invoice.setPostedToCodaBooks(postedToCodaBooks);
-        invoice.setPaidDate(paidDate);
+        if(invoice.getPaidDate() == null) {
+            invoice.setPaidDate(paidDate);
+        }
 
     }
 
