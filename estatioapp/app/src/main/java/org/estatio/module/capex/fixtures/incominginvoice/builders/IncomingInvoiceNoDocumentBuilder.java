@@ -69,6 +69,8 @@ public class IncomingInvoiceNoDocumentBuilder extends BuilderScriptAbstract<Inco
     LocalDate paidDate;
     @Getter @Setter
     LocalDate vatRegistrationDate;
+    @Getter @Setter
+    Boolean postedToCodaBooks;
 
     @Getter @Setter
     BigDecimal netAmount;
@@ -177,6 +179,8 @@ public class IncomingInvoiceNoDocumentBuilder extends BuilderScriptAbstract<Inco
             checkParam("treasurer", ec, Person.class);
         }
 
+        defaultParam("postedToCodaBooks", ec, false);
+
         IncomingInvoice invoice = incomingInvoiceRepository.create(
                 invoiceType,
                 invoiceNumber,
@@ -192,6 +196,7 @@ public class IncomingInvoiceNoDocumentBuilder extends BuilderScriptAbstract<Inco
                 dateReceived,
                 sellerBankAccount,
                 null, // approval state
+                postedToCodaBooks,
                 paidDate);
         invoice.setDateReceived(dateReceived);
         invoice.setSeller(seller);

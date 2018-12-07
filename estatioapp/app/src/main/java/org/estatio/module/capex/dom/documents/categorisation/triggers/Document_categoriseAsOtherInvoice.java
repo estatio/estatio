@@ -67,13 +67,14 @@ public class Document_categoriseAsOtherInvoice
                 buyerFinder.buyerDerivedFromDocumentName(document), // buyer
                 null, // seller
                 null, // invoiceDate
-                null, // registrationDate
+                null, // vatRegistrationDate
                 dueDate,
                 null,
                 InvoiceStatus.NEW,
                 dateReceived,
                 null, // bankAccount
                 null,  // approval state... will cause state transition to be created automatically by subscriber
+                false, // postedToCodaBooks
                 null
         );
 

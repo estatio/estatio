@@ -312,12 +312,14 @@ public class OrderInvoiceLine {
                         buyer, supplier,
                         invoiceDate,
                         dueDate,
+                        null, // vatRegistrationDate (only for ITA)
                         PaymentMethod.BANK_TRANSFER, // assumed for Capex
                         InvoiceStatus.APPROVED,      // migrating historic data...
                         null, // date received
                         null, // bank account
                         IncomingInvoiceApprovalState.PAID, // migrating historic data
-                        null  // date paid (only for ITA, comes from Coda)
+                        false, // postedToCodaBooks (only for ITA, comes from Coda)
+                        null   // date paid (only for ITA, comes from Coda)
                 );
 
                 final IncomingInvoice invoiceObj = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate(line.getInvoiceNumber(), supplier, invoiceDate);

@@ -77,12 +77,15 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends CapexModuleInteg
             final Party buyer = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
             final Party seller = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
             final Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
+
             final LocalDate vatRegistrationDate = null;
+            final boolean postedToCodaBooks = false;
+            final LocalDate paidDate = null;
 
             final IncomingInvoice invoice = incomingInvoiceRepository.create(IncomingInvoiceType.CAPEX,
                     "TEST", property, "/", buyer, seller, new LocalDate(2016, 1, 1), new LocalDate(2016, 2, 1),
                     vatRegistrationDate, PaymentMethod.BANK_TRANSFER, InvoiceStatus.NEW, null, null,
-                    null, null);
+                    null, postedToCodaBooks, paidDate);
 
             // given (the normal setup would create 2 transitions (INSTANTIATE, COMPLETE...)
             incomingInvoiceStateTransitionRepository.deleteFor(invoice);

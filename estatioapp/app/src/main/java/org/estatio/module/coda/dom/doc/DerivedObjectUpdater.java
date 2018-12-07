@@ -131,6 +131,8 @@ public class DerivedObjectUpdater {
                     invoiceDate, dueDate, vatRegistrationDate, paymentMethod, invoiceStatus, dateReceived, bankAccount,
                     postedToCodaBooks, paidDate
             );
+            incomingInvoice.setGrossAmount(grossAmount);
+            incomingInvoice.setNetAmount(netAmount);
 
             //
             // also update the existing item
@@ -164,11 +166,10 @@ public class DerivedObjectUpdater {
                         incomingInvoiceRepository.create(
                                 type, invoiceNumber, property, AT_PATH, buyer, seller,
                                 invoiceDate, dueDate, vatRegistrationDate, paymentMethod,
-                                invoiceStatus, dateReceived, bankAccount, null, paidDate);
+                                invoiceStatus, dateReceived, bankAccount, null, postedToCodaBooks, paidDate);
 
                 incomingInvoice.setGrossAmount(grossAmount);
                 incomingInvoice.setNetAmount(netAmount);
-                incomingInvoice.setPostedToCodaBooks(postedToCodaBooks);
 
                 incomingInvoice.addItem(
                         type, charge, description,

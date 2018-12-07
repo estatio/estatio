@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.assetfinancial.fixtures.enums.BankAccountFaFa_enum;
@@ -26,7 +25,6 @@ import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
 
@@ -127,11 +125,17 @@ public class IncomingInvoiceRepository_IntegTest extends CapexModuleIntegTestAbs
         LocalDate updatedDateReceived = new LocalDate(2017, 1, 2);
         BankAccount updatedBankAccount = bankAccountRepository.allBankAccounts().get(0);
 
+        final LocalDate vatRegistrationDate = null;
+        final boolean postedToCodaBooks = false;
+        final LocalDate paidDate = null;
+        final IncomingInvoiceApprovalState approvalState = null;
+
         Property property = existingInvoice.getProperty();
 
         IncomingInvoice updatedInvoice = incomingInvoiceRepository.upsert(IncomingInvoiceType.CAPEX, invoiceNumber,
-                property, updatedAtPath, updatedBuyer, seller, invoiceDate, updatedDueDate, updatedPaymentMethod, updatedStatus, updatedDateReceived, updatedBankAccount,
-                null, null
+                property, updatedAtPath, updatedBuyer, seller, invoiceDate, updatedDueDate, vatRegistrationDate,
+                updatedPaymentMethod, updatedStatus, updatedDateReceived, updatedBankAccount,
+                approvalState, postedToCodaBooks, paidDate
         );
 
         // then
@@ -161,16 +165,15 @@ public class IncomingInvoiceRepository_IntegTest extends CapexModuleIntegTestAbs
         atPath = "/GBR";
         approvalStateIfAny = IncomingInvoiceApprovalState.PAID;
 
+        final LocalDate dateReceived = null;
+        final BankAccount bankAccount = null;
+        final boolean postedToCodaBooks = false;
+        final LocalDate paidDate = null;
+
         return incomingInvoiceRepository.create(IncomingInvoiceType.CAPEX, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate,
-                vatRegistrationDate, paymentMethod, invoiceStatus, null, null,
-                approvalStateIfAny, null);
+                vatRegistrationDate, paymentMethod, invoiceStatus, dateReceived, bankAccount,
+                approvalStateIfAny, postedToCodaBooks, paidDate);
     }
-
-    @Inject
-    PartyRepository partyRepository;
-
-    @Inject
-    PropertyRepository propertyRepository;
 
     @Inject
     BankAccountRepository bankAccountRepository;

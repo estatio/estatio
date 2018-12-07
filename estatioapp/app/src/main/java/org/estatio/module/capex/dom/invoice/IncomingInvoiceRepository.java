@@ -217,6 +217,7 @@ public class IncomingInvoiceRepository {
             final LocalDate dateReceived,
             final BankAccount bankAccount,
             final IncomingInvoiceApprovalState approvalState,
+            final boolean postedToCodaBooks,
             final LocalDate paidDate) {
 
         final Currency currency = currencyRepository.findCurrency("EUR");
@@ -225,6 +226,7 @@ public class IncomingInvoiceRepository {
                         paymentMethod, invoiceStatus, dateReceived, bankAccount, approvalState);
         invoice.setPaidDate(paidDate);
         invoice.setCurrency(currency);
+        invoice.setPostedToCodaBooks(postedToCodaBooks);
         invoice.setVatRegistrationDate(vatRegistrationDate);
 
         serviceRegistry2.injectServicesInto(invoice);
@@ -262,18 +264,22 @@ public class IncomingInvoiceRepository {
             final Party seller,
             final LocalDate invoiceDate,
             final LocalDate dueDate,
+            final LocalDate vatRegistrationDate,
             final PaymentMethod paymentMethod,
             final InvoiceStatus invoiceStatus,
             final LocalDate dateReceived,
             final BankAccount bankAccount,
             final IncomingInvoiceApprovalState approvalState,
+            final boolean postedToCodaBooks,
             final LocalDate paidDate) {
         IncomingInvoice invoice = findByInvoiceNumberAndSellerAndInvoiceDate(invoiceNumber, seller, invoiceDate);
         if (invoice == null) {
             invoice = create(type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate,
-                    null, // vatRegistrationDate
+                    vatRegistrationDate,
                     paymentMethod, invoiceStatus, dateReceived, bankAccount,
-                    approvalState, paidDate
+                    approvalState,
+                    postedToCodaBooks,
+                    paidDate
             );
         } else {
             updateInvoice(invoice,
@@ -285,12 +291,12 @@ public class IncomingInvoiceRepository {
                     invoice.getSeller(),
                     invoice.getInvoiceDate(),
                     dueDate,
-                    null, // vatRegistrationDate
+                    vatRegistrationDate,
                     paymentMethod,
                     invoiceStatus,
                     dateReceived,
                     bankAccount,
-                    false, // postedToCodaBooks
+                    postedToCodaBooks,
                     paidDate);
         }
         return invoice;
@@ -328,8 +334,8 @@ public class IncomingInvoiceRepository {
         invoice.setStatus(invoiceStatus);
         invoice.setDateReceived(dateReceived);
         invoice.setBankAccount(bankAccount);
-        invoice.setPaidDate(paidDate);
         invoice.setPostedToCodaBooks(postedToCodaBooks);
+        invoice.setPaidDate(paidDate);
 
     }
 

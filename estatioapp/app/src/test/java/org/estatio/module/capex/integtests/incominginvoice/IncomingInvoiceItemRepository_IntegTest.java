@@ -25,6 +25,7 @@ import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXl
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
+import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
@@ -109,10 +110,16 @@ public class IncomingInvoiceItemRepository_IntegTest extends CapexModuleIntegTes
         paymentMethod = PaymentMethod.BANK_TRANSFER;
         invoiceStatus = InvoiceStatus.NEW;
         atPath = "/GBR";
+        final LocalDate dateReceived = null;
+        final boolean postedToCodaBooks = false;
+        final LocalDate paidDate = null;
+        final BankAccount bankAccount = null;
 
         IncomingInvoice invoice = incomingInvoiceRepository.create(IncomingInvoiceType.CAPEX, invoiceNumber, property,
                 atPath,
-                buyer, seller, invoiceDate, dueDate, vatRegistrationDate, paymentMethod, invoiceStatus, null,null, IncomingInvoiceApprovalState.PAID, null);
+                buyer, seller, invoiceDate, dueDate, vatRegistrationDate, paymentMethod, invoiceStatus, dateReceived,
+                bankAccount, IncomingInvoiceApprovalState.PAID,
+                postedToCodaBooks, paidDate);
 
         charge = chargeRepository.findByReference("WORKS");
         description = "some description";
