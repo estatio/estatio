@@ -67,6 +67,8 @@ public class IncomingInvoiceNoDocumentBuilder extends BuilderScriptAbstract<Inco
     LocalDate invoiceDate;
     @Getter @Setter
     LocalDate paidDate;
+    @Getter @Setter
+    LocalDate vatRegistrationDate;
 
     @Getter @Setter
     BigDecimal netAmount;
@@ -142,6 +144,8 @@ public class IncomingInvoiceNoDocumentBuilder extends BuilderScriptAbstract<Inco
         checkParam("invoiceDate", ec, LocalDate.class);
         checkParam("dateReceived", ec, LocalDate.class);
 
+        //checkParam("vatRegistrationDate", ec, LocalDate.class);
+
         //checkParam("itemTax", ec, Tax.class); // optional for italy
 
         checkParam("item1InvoiceType", ec, IncomingInvoiceType.class);
@@ -182,12 +186,13 @@ public class IncomingInvoiceNoDocumentBuilder extends BuilderScriptAbstract<Inco
                 seller,
                 invoiceDate,
                 dueDate,
+                vatRegistrationDate,
                 paymentMethod,
                 InvoiceStatus.NEW,
                 dateReceived,
                 sellerBankAccount,
-                null,
-                paidDate, registrationDate);
+                null, // approval state
+                paidDate);
         invoice.setDateReceived(dateReceived);
         invoice.setSeller(seller);
         invoice.setBankAccount(sellerBankAccount);

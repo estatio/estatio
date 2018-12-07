@@ -155,13 +155,15 @@ public class IncomingInvoiceRepository_IntegTest extends CapexModuleIntegTestAbs
         invoiceNumber = "123";
         invoiceDate = new LocalDate(2017, 1, 1);
         dueDate = invoiceDate.minusMonths(1);
+        final LocalDate vatRegistrationDate = null;
         paymentMethod = PaymentMethod.BANK_TRANSFER;
         invoiceStatus = InvoiceStatus.NEW;
         atPath = "/GBR";
         approvalStateIfAny = IncomingInvoiceApprovalState.PAID;
 
-        return incomingInvoiceRepository.create(IncomingInvoiceType.CAPEX, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, null, null,
-                approvalStateIfAny, null, registrationDate);
+        return incomingInvoiceRepository.create(IncomingInvoiceType.CAPEX, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate,
+                vatRegistrationDate, paymentMethod, invoiceStatus, null, null,
+                approvalStateIfAny, null);
     }
 
     @Inject

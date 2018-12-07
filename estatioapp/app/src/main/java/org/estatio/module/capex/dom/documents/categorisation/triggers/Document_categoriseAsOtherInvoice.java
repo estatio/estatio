@@ -67,13 +67,15 @@ public class Document_categoriseAsOtherInvoice
                 buyerFinder.buyerDerivedFromDocumentName(document), // buyer
                 null, // seller
                 null, // invoiceDate
+                null, // registrationDate
                 dueDate,
                 null,
                 InvoiceStatus.NEW,
                 dateReceived,
                 null, // bankAccount
                 null,  // approval state... will cause state transition to be created automatically by subscriber
-                null, registrationDate);
+                null
+        );
 
         paperclipRepository.attach(document, null, incomingInvoice);
 

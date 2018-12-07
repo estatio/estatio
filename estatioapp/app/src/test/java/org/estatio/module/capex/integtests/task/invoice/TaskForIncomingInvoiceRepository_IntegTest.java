@@ -27,11 +27,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.util.Enums;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
@@ -44,7 +42,6 @@ import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
@@ -69,33 +66,23 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends CapexModuleInteg
         }
 
         @Inject
-        private IncomingInvoiceRepository incomingInvoiceRepository;
+        IncomingInvoiceRepository incomingInvoiceRepository;
 
         @Inject
-        private PartyRepository partyRepository;
-
-        @Inject
-        private PropertyRepository propertyRepository;
-
-        @Inject
-        private IncomingInvoiceApprovalStateTransition.Repository incomingInvoiceStateTransitionRepository;
-
-        @Before
-        public void setUp() throws Exception {
-
-        }
+        IncomingInvoiceApprovalStateTransition.Repository incomingInvoiceStateTransitionRepository;
 
         @Test
         public void happy_case() throws Exception {
 
             final Party buyer = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
             final Party seller = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
-            final Property property = propertyRepository.findPropertyByReference(
-                    Property_enum.OxfGb.getRef());
+            final Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
+            final LocalDate vatRegistrationDate = null;
 
             final IncomingInvoice invoice = incomingInvoiceRepository.create(IncomingInvoiceType.CAPEX,
-                    "TEST", property, "/", buyer, seller, new LocalDate(2016, 1, 1), new LocalDate(2016, 2, 1), PaymentMethod.BANK_TRANSFER, InvoiceStatus.NEW, null, null,
-                    null, null, registrationDate);
+                    "TEST", property, "/", buyer, seller, new LocalDate(2016, 1, 1), new LocalDate(2016, 2, 1),
+                    vatRegistrationDate, PaymentMethod.BANK_TRANSFER, InvoiceStatus.NEW, null, null,
+                    null, null);
 
             // given (the normal setup would create 2 transitions (INSTANTIATE, COMPLETE...)
             incomingInvoiceStateTransitionRepository.deleteFor(invoice);
@@ -114,10 +101,6 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends CapexModuleInteg
 
             assertThat(transitions.size()).isEqualTo(1);
         }
-
-        @Inject
-        RepositoryService repositoryService;
-
     }
 
 }
