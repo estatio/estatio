@@ -10,12 +10,12 @@ import org.apache.isis.applib.annotation.Programmatic;
 @DomainService(
         nature = NatureOfService.DOMAIN
 )
-public class CodaCmpCodeService {
+public class CodaDocCodeService {
 
     @Programmatic
     public List<String> listAll() {
         return Arrays.asList(
-                "IT01", "IT04", "IT05", "IT07", "IT08", "ITASSCAR", "ITASSFIO"
+                "FR-GEN", "RA-PROF"
         );
     }
 }

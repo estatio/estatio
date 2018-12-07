@@ -157,8 +157,8 @@ public class AdminDashboard {
     public List<String> choices0RetrieveCodaDoc() {
         return codaCmpCodeService.listAll();
     }
-    public String default1RetrieveCodaDoc() {
-        return "FR-GEN";
+    public List<String> default1RetrieveCodaDoc() {
+        return codaDocCodeService.listAll();
     }
 
 
@@ -356,10 +356,6 @@ public class AdminDashboard {
 
 
 
-    @Inject
-    CodaCmpCodeService codaCmpCodeService;
-
-
     /**
      * Allows Camel to be restarted without having to restart the application.
      */
@@ -373,6 +369,12 @@ public class AdminDashboard {
         serviceInitializer.preDestroy();
         serviceInitializer.postConstruct();
     }
+
+    @Inject
+    CodaCmpCodeService codaCmpCodeService;
+
+    @Inject
+    CodaDocCodeService codaDocCodeService;
 
     @Inject
     ClockService clockService;
