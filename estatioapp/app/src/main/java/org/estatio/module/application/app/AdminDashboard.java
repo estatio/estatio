@@ -157,7 +157,7 @@ public class AdminDashboard {
     public List<String> choices0RetrieveCodaDoc() {
         return codaCmpCodeService.listAll();
     }
-    public List<String> default1RetrieveCodaDoc() {
+    public List<String> choices1RetrieveCodaDoc() {
         return codaDocCodeService.listAll();
     }
 
