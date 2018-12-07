@@ -316,7 +316,8 @@ public class OrderInvoiceLine {
                         InvoiceStatus.APPROVED,      // migrating historic data...
                         null, // date received
                         null, // bank account
-                        IncomingInvoiceApprovalState.PAID // migrating historic data
+                        IncomingInvoiceApprovalState.PAID, // migrating historic data
+                        null  // date paid (only for ITA, comes from Coda)
                 );
 
                 final IncomingInvoice invoiceObj = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate(line.getInvoiceNumber(), supplier, invoiceDate);

@@ -131,7 +131,8 @@ public class IncomingInvoiceRepository_IntegTest extends CapexModuleIntegTestAbs
 
         IncomingInvoice updatedInvoice = incomingInvoiceRepository.upsert(IncomingInvoiceType.CAPEX, invoiceNumber,
                 property, updatedAtPath, updatedBuyer, seller, invoiceDate, updatedDueDate, updatedPaymentMethod, updatedStatus, updatedDateReceived, updatedBankAccount,
-                null);
+                null, null
+        );
 
         // then
         assertThat(updatedInvoice.getInvoiceNumber()).isEqualTo(invoiceNumber);

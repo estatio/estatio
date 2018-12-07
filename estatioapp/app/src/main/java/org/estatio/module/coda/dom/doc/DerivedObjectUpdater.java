@@ -99,6 +99,8 @@ public class DerivedObjectUpdater {
         final LocalDate invoiceDate= docHead.getDocDate();
         final LocalDate dueDate = docHead.getSummaryLineDueDate(LineCache.DEFAULT);
 
+        final LocalDate paidDate = docHead.getStatPayPaidDate();
+
         final InvoiceStatus invoiceStatus = InvoiceStatus.NEW; // we don't care, this is for outgoing invoices.
 
         // there will be just a single InvoiceItem, combining info from
@@ -126,8 +128,9 @@ public class DerivedObjectUpdater {
             incomingInvoiceRepository.updateInvoice(
                     incomingInvoice,
                     type, invoiceNumber, property, AT_PATH, buyer, seller,
-                    invoiceDate, dueDate, vatRegistrationDate, paymentMethod,
-                    invoiceStatus, dateReceived, bankAccount, postedToCodaBooks);
+                    invoiceDate, dueDate, vatRegistrationDate, paymentMethod, invoiceStatus, dateReceived, bankAccount,
+                    postedToCodaBooks, paidDate
+            );
 
             //
             // also update the existing item
@@ -161,7 +164,7 @@ public class DerivedObjectUpdater {
                         incomingInvoiceRepository.create(
                                 type, invoiceNumber, property, AT_PATH, buyer, seller,
                                 invoiceDate, dueDate, vatRegistrationDate, paymentMethod,
-                                invoiceStatus, dateReceived, bankAccount, null);
+                                invoiceStatus, dateReceived, bankAccount, null, paidDate);
 
                 incomingInvoice.setGrossAmount(grossAmount);
                 incomingInvoice.setNetAmount(netAmount);

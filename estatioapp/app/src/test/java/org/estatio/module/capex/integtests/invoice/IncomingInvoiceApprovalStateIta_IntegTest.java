@@ -60,6 +60,7 @@ import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegTestAbstract {
 
@@ -228,7 +229,20 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
                 IncomingInvoiceApprovalStateTransitionType.CONFIRM_IN_CODA_BOOKS
         ));
         assertThat(lastPendingTransition.getTask()).isNull();
+
+        // TODO: continue through with upload with coda doc in books, then see it released through to payable
+
+
+        // TODO: cannot take an invoice in payable, and cannot reject
+
+        fail("TODO");
     }
+
+    @Test
+    public void slow_approval_means_hits_pending_coda_books_with_coda_doc_already_in_books_then_straight_through() throws Exception {
+        fail("TODO");
+    }
+
 
     @Test
     public void approved_invoice_with_net_amount_higher_then_100000_threshold_needs_directors_approval() throws Exception {
@@ -976,14 +990,6 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
 
     }
 
-    /**
-     * the opposite is tested {@link IncomingInvoiceApprovalState_IntegTest#payable_non_italian_invoice_can_be_rejected}
-     */
-    @Test
-    public void payable_italian_invoice_cannot_be_rejected() throws Exception {
-        //TODO: since at the moment we have no route to payable for Italian invoices yet
-
-    }
 
     private void assertTransition(IncomingInvoiceApprovalStateTransition transition, ExpectedTransitionResult result){
         assertThat(transition.isCompleted()).isEqualTo(result.isCompleted());
