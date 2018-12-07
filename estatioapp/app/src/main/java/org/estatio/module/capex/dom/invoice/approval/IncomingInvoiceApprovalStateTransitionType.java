@@ -79,8 +79,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalState.APPROVED_BY_CORPORATE_MANAGER,
                     IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK,
                     IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER,
-                    IncomingInvoiceApprovalState.PENDING_ADVISE,
-                    IncomingInvoiceApprovalState.ADVISE_POSITIVE
+                    IncomingInvoiceApprovalState.PENDING_ADVISE
             ),
             IncomingInvoiceApprovalState.NEW,
             NextTransitionSearchStrategy.firstMatching(),
@@ -153,10 +152,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
 
     },
     APPROVE(
-            Lists.newArrayList(
-                    IncomingInvoiceApprovalState.COMPLETED,
-                    IncomingInvoiceApprovalState.ADVISE_POSITIVE
-            ),
+            IncomingInvoiceApprovalState.COMPLETED,
             IncomingInvoiceApprovalState.APPROVED,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             null, // task assignment strategy overridden below
@@ -254,10 +250,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
 
     },
     APPROVE_AS_CENTER_MANAGER(
-            Lists.newArrayList(
-                    IncomingInvoiceApprovalState.COMPLETED,
-                    IncomingInvoiceApprovalState.ADVISE_POSITIVE
-            ),
+            IncomingInvoiceApprovalState.COMPLETED,
             IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.CENTER_MANAGER),
@@ -535,6 +528,22 @@ public enum IncomingInvoiceApprovalStateTransitionType
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.to(PartyRoleTypeEnum.ADVISOR),
             AdvancePolicy.MANUAL
+    ){
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            return isItalian(incomingInvoice);
+        }
+    },
+    // the advice positive state is only there to capture the signature (when gathering 'signatures' the toState of transitions is inspected on isApproval())
+    // so once captured it can transition right away to completed and allow for even more advise ...
+    AUTO_TRANSITION_WHEN_ADVISED_TO_APPROVE(
+            IncomingInvoiceApprovalState.ADVISE_POSITIVE,
+            IncomingInvoiceApprovalState.COMPLETED,
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.AUTOMATIC
     ){
         @Override
         public boolean isMatch(

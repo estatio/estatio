@@ -841,11 +841,11 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
                 wrap(mixin(IncomingInvoice_adviseToApprove.class, incomingInvoice)).act("SOME_ROLE", null, "Looks good to me",true));
 
         // then
-        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.ADVISE_POSITIVE);
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
         transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
-        assertThat(transitionsOfInvoice).hasSize(5);
+        assertThat(transitionsOfInvoice).hasSize(6);
 
-        IncomingInvoiceApprovalStateTransition adviseToApproveTransision = transitionsOfInvoice.get(1);
+        IncomingInvoiceApprovalStateTransition adviseToApproveTransision = transitionsOfInvoice.get(2);
         assertTransition(adviseToApproveTransision, new ExpectedTransitionResult(
                 true,
                 "tmulticomp",
@@ -860,11 +860,21 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
                 Person_enum.TechnizioAdvisorIt.findUsing(serviceRegistry2)
         ));
 
+        IncomingInvoiceApprovalStateTransition autoTransition = transitionsOfInvoice.get(1);
+        assertTransition(autoTransition, new ExpectedTransitionResult(
+                true,
+                null,
+                IncomingInvoiceApprovalState.ADVISE_POSITIVE,
+                IncomingInvoiceApprovalState.COMPLETED,
+                IncomingInvoiceApprovalStateTransitionType.AUTO_TRANSITION_WHEN_ADVISED_TO_APPROVE
+        ));
+        assertThat(autoTransition.getTask()).isNull();
+
         nextPendingTransition = transitionsOfInvoice.get(0);
         assertTransition(nextPendingTransition, new ExpectedTransitionResult(
                 false,
                 null,
-                IncomingInvoiceApprovalState.ADVISE_POSITIVE,
+                IncomingInvoiceApprovalState.COMPLETED,
                 null,
                 IncomingInvoiceApprovalStateTransitionType.APPROVE
         ));
