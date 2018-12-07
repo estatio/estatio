@@ -111,7 +111,9 @@ public class CodaDocHead_compareWith_Test {
 
         // given
         summaryDocLine.setSupplierBankAccount(new BankAccount());
+        summaryDocLine.setSupplierBankAccountValidationStatus(ValidationStatus.VALID);
         existingSummaryDocLine.setSupplierBankAccount(new BankAccount());
+        existingSummaryDocLine.setSupplierBankAccountValidationStatus(ValidationStatus.VALID);
 
         // when
         CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
@@ -119,6 +121,23 @@ public class CodaDocHead_compareWith_Test {
         // then
         assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_INVALIDATING_APPROVALS);
         assertThat(comparison.getReason()).isEqualTo("Supplier bank account has changed");
+    }
+
+    @Test
+    public void when_supplier_bank_account_not_checked() throws Exception {
+
+        // given
+        summaryDocLine.setSupplierBankAccount(null);
+        summaryDocLine.setSupplierBankAccountValidationStatus(ValidationStatus.NOT_CHECKED);
+        existingSummaryDocLine.setSupplierBankAccount(new BankAccount());
+        existingSummaryDocLine.setSupplierBankAccountValidationStatus(ValidationStatus.VALID);
+
+        // when
+        CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
+
+        // then
+        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_RETAIN_APPROVALS);
+        assertThat(comparison.getReason()).isNull();
     }
 
     @Test
@@ -159,7 +178,9 @@ public class CodaDocHead_compareWith_Test {
 
         // given
         summaryDocLine.setMediaCode("X");
+        summaryDocLine.setMediaCodeValidationStatus(ValidationStatus.VALID);
         existingSummaryDocLine.setMediaCode("Y");
+        existingSummaryDocLine.setMediaCodeValidationStatus(ValidationStatus.VALID);
 
         // when
         CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
@@ -167,6 +188,24 @@ public class CodaDocHead_compareWith_Test {
         // then
         assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_INVALIDATING_APPROVALS);
         assertThat(comparison.getReason()).isEqualTo("Media code (payment method) has changed");
+    }
+
+
+    @Test
+    public void when_media_code_differs_not_checked() throws Exception {
+
+        // given
+        summaryDocLine.setMediaCode(null);
+        summaryDocLine.setMediaCodeValidationStatus(ValidationStatus.NOT_CHECKED);
+        existingSummaryDocLine.setMediaCode("Y");
+        existingSummaryDocLine.setMediaCodeValidationStatus(ValidationStatus.VALID);
+
+        // when
+        CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
+
+        // then
+        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_RETAIN_APPROVALS);
+        assertThat(comparison.getReason()).isNull();
     }
 
 

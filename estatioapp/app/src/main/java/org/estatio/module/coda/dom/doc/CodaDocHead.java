@@ -814,7 +814,9 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
             return Comparison.invalidatesApprovals("Replacement has no summary doc line");
         }
         if (summaryDocLine != null) {
-            if (!Objects.equals(summaryDocLine.getSupplierBankAccount(), otherDocLine.getSupplierBankAccount())) {
+            if ( summaryDocLine.getSupplierBankAccountValidationStatus() != ValidationStatus.NOT_CHECKED &&
+                 otherDocLine.getSupplierBankAccountValidationStatus() != ValidationStatus.NOT_CHECKED &&
+                !Objects.equals(summaryDocLine.getSupplierBankAccount(), otherDocLine.getSupplierBankAccount())) {
                 return Comparison.invalidatesApprovals("Supplier bank account has changed");
             }
             if (!Objects.equals(summaryDocLine.getDocValue(), otherDocLine.getDocValue())) {
@@ -823,7 +825,9 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
             if (!Objects.equals(summaryDocLine.getDocSumTax(), otherDocLine.getDocSumTax())) {
                 return Comparison.invalidatesApprovals("Doc sum tax (VAT amount) has changed");
             }
-            if (!Objects.equals(summaryDocLine.getMediaCode(), otherDocLine.getMediaCode())) {
+            if ( summaryDocLine.getMediaCodeValidationStatus() != ValidationStatus.NOT_CHECKED &&
+                 otherDocLine.getMediaCodeValidationStatus() != ValidationStatus.NOT_CHECKED &&
+                !Objects.equals(summaryDocLine.getMediaCode(), otherDocLine.getMediaCode())) {
                 return Comparison.invalidatesApprovals("Media code (payment method) has changed");
             }
             if (!Objects.equals(summaryDocLine.getDueDate(), otherDocLine.getDueDate())) {
