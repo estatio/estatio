@@ -240,7 +240,7 @@ public class IncomingInvoiceRepository {
             final boolean hasPaymentMethodOtherThanBankTransfer = invoice.getPaymentMethod() != null && invoice.getPaymentMethod() != PaymentMethod.BANK_TRANSFER;
 
             if (isItalian && (isPaid || hasPaymentMethodOtherThanBankTransfer)) {
-                stateTransitionService.trigger(invoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE_AS_AUTO_PAYABLE, null, null);
+                stateTransitionService.trigger(invoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE_BYPASSING_APPROVAL, null, null);
             } else {
                 stateTransitionService
                         .trigger(invoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null, null);

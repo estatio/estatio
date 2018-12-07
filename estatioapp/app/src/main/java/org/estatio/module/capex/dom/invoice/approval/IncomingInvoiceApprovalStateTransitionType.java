@@ -53,22 +53,6 @@ public enum IncomingInvoiceApprovalStateTransitionType
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL),
-    INSTANTIATE_AS_AUTO_PAYABLE(
-            (IncomingInvoiceApprovalState)null,
-            IncomingInvoiceApprovalState.AUTO_PAYABLE,
-            NextTransitionSearchStrategy.firstMatching(),
-            TaskAssignmentStrategy.none(),
-            AdvancePolicy.MANUAL){
-        @Override
-        public boolean isMatch(
-                final IncomingInvoice incomingInvoice, final ServiceRegistry2 serviceRegistry2) {
-            /** just to double check; this logic is also present in {@link IncomingInvoiceRepository#create} */
-            final boolean isPaid = incomingInvoice.getPaidDate() != null;
-            final boolean hasPaymentMethodOtherThanBankTransfer = incomingInvoice.getPaymentMethod() != null && incomingInvoice.getPaymentMethod() != PaymentMethod.BANK_TRANSFER;
-            if (isItalian(incomingInvoice) && (isPaid || hasPaymentMethodOtherThanBankTransfer)) return true;
-            return false;
-        }
-    },
     REJECT(
             Lists.newArrayList(
                     IncomingInvoiceApprovalState.COMPLETED,
@@ -91,6 +75,22 @@ public enum IncomingInvoiceApprovalStateTransitionType
             // exclude italian invoices that are in a state of payable
             if (incomingInvoice.getApprovalState() == IncomingInvoiceApprovalState.PAYABLE && isItalian(incomingInvoice)) return false;
             return true;
+        }
+    },
+    INSTANTIATE_BYPASSING_APPROVAL(
+            (IncomingInvoiceApprovalState)null,
+            IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK,
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.AUTOMATIC){
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice, final ServiceRegistry2 serviceRegistry2) {
+            /** just to double check; this logic is also present in {@link IncomingInvoiceRepository#create} */
+            final boolean isPaid = incomingInvoice.getPaidDate() != null;
+            final boolean hasPaymentMethodOtherThanBankTransfer = incomingInvoice.getPaymentMethod() != null && incomingInvoice.getPaymentMethod() != PaymentMethod.BANK_TRANSFER;
+            if (isItalian(incomingInvoice) && (isPaid || hasPaymentMethodOtherThanBankTransfer)) return true;
+            return false;
         }
     },
     COMPLETE(
@@ -485,10 +485,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
         }
     },
     PAID_IN_CODA(
-            Lists.newArrayList(
-                    IncomingInvoiceApprovalState.PAYABLE,
-                    IncomingInvoiceApprovalState.AUTO_PAYABLE
-            ),
+            IncomingInvoiceApprovalState.PAYABLE,
             IncomingInvoiceApprovalState.PAID,
             NextTransitionSearchStrategy.none(),
             TaskAssignmentStrategy.none(),
