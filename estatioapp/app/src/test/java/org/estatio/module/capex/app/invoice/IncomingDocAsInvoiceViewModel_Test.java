@@ -76,11 +76,13 @@ public class IncomingDocAsInvoiceViewModel_Test {
         incomingInvoice2.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
         IncomingInvoice incomingInvoice3 = new IncomingInvoice();
         incomingInvoice3.setPaymentMethod(PaymentMethod.CASH);
+        IncomingInvoice incomingInvoice4 = new IncomingInvoice();
+        incomingInvoice4.setPaymentMethod(null);
 
         // expecting
         context.checking(new Expectations() {{
             oneOf(mockInvoiceRepository).findBySeller(seller);
-            will(returnValue(Arrays.asList(incomingInvoice1, incomingInvoice2, incomingInvoice3)));
+            will(returnValue(Arrays.asList(incomingInvoice1, incomingInvoice2, incomingInvoice3, incomingInvoice4)));
             oneOf(mockMessageService).warnUser("WARNING: payment method is set to bank transfer, but previous invoices from this seller have used the following payment methods: Direct Debit, Cash ");
         }});
 
