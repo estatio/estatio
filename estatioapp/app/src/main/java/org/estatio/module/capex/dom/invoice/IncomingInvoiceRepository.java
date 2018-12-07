@@ -218,34 +218,15 @@ public class IncomingInvoiceRepository {
             final BankAccount bankAccount,
             final IncomingInvoiceApprovalState approvalState,
             final LocalDate paidDate) {
-        final IncomingInvoice invoice = create(type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount, approvalState, paidDate);
-        invoice.setVatRegistrationDate(vatRegistrationDate);
-        
-        return invoice;
-    }
 
-    @Programmatic
-    public IncomingInvoice create(
-            final IncomingInvoiceType type,
-            final String invoiceNumber,
-            final Property property,
-            final String atPath,
-            final Party buyer,
-            final Party seller,
-            final LocalDate invoiceDate,
-            final LocalDate dueDate,
-            final PaymentMethod paymentMethod,
-            final InvoiceStatus invoiceStatus,
-            final LocalDate dateReceived,
-            final BankAccount bankAccount,
-            final IncomingInvoiceApprovalState approvalState,
-            final LocalDate paidDate) {
         final Currency currency = currencyRepository.findCurrency("EUR");
         final IncomingInvoice invoice =
                 new IncomingInvoice(type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate,
                         paymentMethod, invoiceStatus, dateReceived, bankAccount, approvalState);
         invoice.setPaidDate(paidDate);
         invoice.setCurrency(currency);
+        invoice.setVatRegistrationDate(vatRegistrationDate);
+
         serviceRegistry2.injectServicesInto(invoice);
         repositoryService.persistAndFlush(invoice);
 
@@ -289,47 +270,34 @@ public class IncomingInvoiceRepository {
             final LocalDate paidDate) {
         IncomingInvoice invoice = findByInvoiceNumberAndSellerAndInvoiceDate(invoiceNumber, seller, invoiceDate);
         if (invoice == null) {
-            invoice = create(type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount,
-                    approvalState, paidDate);
+            invoice = create(type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate,
+                    null, // vatRegistrationDate
+                    paymentMethod, invoiceStatus, dateReceived, bankAccount,
+                    approvalState, paidDate
+            );
         } else {
-            updateInvoice(invoice, property, atPath, buyer, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount,
+            updateInvoice(invoice,
+                    invoice.getType(),
+                    invoice.getInvoiceNumber(),
+                    property,
+                    atPath,
+                    buyer,
+                    invoice.getSeller(),
+                    invoice.getInvoiceDate(),
+                    dueDate,
+                    null, // vatRegistrationDate
+                    paymentMethod,
+                    invoiceStatus,
+                    dateReceived,
+                    bankAccount,
+                    false, // postedToCodaBooks
                     paidDate);
         }
         return invoice;
     }
 
-    /**
-     * Doesn't allow the update of the {@link IncomingInvoice}'s {@link IncomingInvoice#getInvoiceNumber() invoice number}, {@link IncomingInvoice#getSeller() seller} or {@link IncomingInvoice#getInvoiceDate() invoice date} because these are used as effective primary keys to locate the invoice when performing an {@link #upsert(IncomingInvoiceType, String, Property, String, Party, Party, LocalDate, LocalDate, PaymentMethod, InvoiceStatus, LocalDate, BankAccount, IncomingInvoiceApprovalState, LocalDate)}.
-     */
-    private void updateInvoice(
-            final IncomingInvoice invoice,
-            final Property property,
-            final String atPath,
-            final Party buyer,
-            final LocalDate dueDate,
-            final PaymentMethod paymentMethod,
-            final InvoiceStatus invoiceStatus,
-            final LocalDate dateReceived,
-            final BankAccount bankAccount,
-            final LocalDate paidDate) {
-        updateInvoice(invoice,
-                invoice.getType(),
-                invoice.getInvoiceNumber(),
-                property,
-                atPath,
-                buyer,
-                invoice.getSeller(),
-                invoice.getInvoiceDate(),
-                dueDate,
-                paymentMethod,
-                invoiceStatus,
-                dateReceived,
-                bankAccount,
-                paidDate);
-    }
-
     @Programmatic
-    public IncomingInvoice updateInvoice(
+    public void updateInvoice(
             final IncomingInvoice invoice,
             final IncomingInvoiceType type,
             final String invoiceNumber,
@@ -346,27 +314,7 @@ public class IncomingInvoiceRepository {
             final BankAccount bankAccount,
             final boolean postedToCodaBooks,
             final LocalDate paidDate) {
-        invoice.setVatRegistrationDate(vatRegistrationDate);
-        invoice.setPostedToCodaBooks(postedToCodaBooks);
-        return updateInvoice(invoice, type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount,
-                paidDate);
-    }
 
-    private IncomingInvoice updateInvoice(
-            final IncomingInvoice invoice,
-            final IncomingInvoiceType type,
-            final String invoiceNumber,
-            final Property property,
-            final String atPath,
-            final Party buyer,
-            final Party seller,
-            final LocalDate invoiceDate,
-            final LocalDate dueDate,
-            final PaymentMethod paymentMethod,
-            final InvoiceStatus invoiceStatus,
-            final LocalDate dateReceived,
-            final BankAccount bankAccount,
-            final LocalDate paidDate) {
         invoice.setType(type);
         invoice.setInvoiceNumber(invoiceNumber);
         invoice.setProperty(property);
@@ -375,13 +323,14 @@ public class IncomingInvoiceRepository {
         invoice.setSeller(seller);
         invoice.setInvoiceDate(invoiceDate);
         invoice.setDueDate(dueDate);
+        invoice.setVatRegistrationDate(vatRegistrationDate);
         invoice.setPaymentMethod(paymentMethod);
         invoice.setStatus(invoiceStatus);
         invoice.setDateReceived(dateReceived);
         invoice.setBankAccount(bankAccount);
         invoice.setPaidDate(paidDate);
+        invoice.setPostedToCodaBooks(postedToCodaBooks);
 
-        return invoice;
     }
 
     @Programmatic

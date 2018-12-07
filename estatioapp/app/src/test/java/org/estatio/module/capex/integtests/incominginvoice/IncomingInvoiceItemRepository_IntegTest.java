@@ -111,7 +111,8 @@ public class IncomingInvoiceItemRepository_IntegTest extends CapexModuleIntegTes
 
         IncomingInvoice invoice = incomingInvoiceRepository.create(IncomingInvoiceType.CAPEX, invoiceNumber, property,
                 atPath,
-                buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, null,null, IncomingInvoiceApprovalState.PAID, null);
+                buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, null,null, IncomingInvoiceApprovalState.PAID, null,
+                registrationDate);
 
         charge = chargeRepository.findByReference("WORKS");
         description = "some description";

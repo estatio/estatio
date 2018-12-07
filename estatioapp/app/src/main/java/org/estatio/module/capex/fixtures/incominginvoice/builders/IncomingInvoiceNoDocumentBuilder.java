@@ -187,7 +187,7 @@ public class IncomingInvoiceNoDocumentBuilder extends BuilderScriptAbstract<Inco
                 dateReceived,
                 sellerBankAccount,
                 null,
-                paidDate);
+                paidDate, registrationDate);
         invoice.setDateReceived(dateReceived);
         invoice.setSeller(seller);
         invoice.setBankAccount(sellerBankAccount);

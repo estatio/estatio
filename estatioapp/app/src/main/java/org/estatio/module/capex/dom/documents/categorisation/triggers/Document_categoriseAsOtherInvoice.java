@@ -73,7 +73,7 @@ public class Document_categoriseAsOtherInvoice
                 dateReceived,
                 null, // bankAccount
                 null,  // approval state... will cause state transition to be created automatically by subscriber
-                null);
+                null, registrationDate);
 
         paperclipRepository.attach(document, null, incomingInvoice);
 
