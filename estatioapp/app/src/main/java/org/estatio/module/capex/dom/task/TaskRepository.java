@@ -244,16 +244,16 @@ public class TaskRepository {
 
 
     public List<Task> findIncompleteByPersonAssignedTo(final Person personAssignedTo) {
-        final List<Task> findIncompleteByPersonAssignedTo = queryResultsCache.execute(
+        final List<Task> tasks = queryResultsCache.execute(
                 () -> doFindIncompleteByPersonAssignedTo(personAssignedTo),
                 getClass(),
                 "findIncompleteByPersonAssignedTo", personAssignedTo);
 
         // we take a defensive copy to avoid the cached value become corrupted.
-        return Lists.newArrayList(findIncompleteByPersonAssignedTo);
+        return Lists.newArrayList(tasks);
     }
 
-    private List<Task> doFindIncompleteByPersonAssignedTo(final Person personAssignedTo) {
+    List<Task> doFindIncompleteByPersonAssignedTo(final Person personAssignedTo) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         Task.class,

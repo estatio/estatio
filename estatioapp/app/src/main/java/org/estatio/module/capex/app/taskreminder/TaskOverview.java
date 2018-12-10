@@ -6,6 +6,8 @@ import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDateTime;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.CollectionLayout;
@@ -57,9 +59,10 @@ public class TaskOverview implements HasAtPath {
     @Property
     public long getTasksOverdue() {
         final Stream<Task> incompleteTasks = streamIncompleteTasksVisibleToMeAssignedTo(person);
+        final LocalDateTime now = clockService.nowAsLocalDateTime();
         return incompleteTasks
                 .map(Task::getCreatedOn)
-                .filter(ld -> ld.plusDays(5).isBefore(clockService.nowAsLocalDateTime()))
+                .filter(ld -> ld.plusDays(5).isBefore(now))
                 .count();
     }
 
