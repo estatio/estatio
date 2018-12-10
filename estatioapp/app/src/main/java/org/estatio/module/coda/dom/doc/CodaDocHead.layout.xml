@@ -27,9 +27,6 @@
                                         </cpt:property>
                                         <cpt:property id="docCode"/>
                                         <cpt:property id="docNum"/>
-                                        <cpt:property id="statPay"/>
-                                        <cpt:property id="statPayPaidDate"/>
-                                        <cpt:property id="paid"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>
