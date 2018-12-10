@@ -68,6 +68,7 @@ import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 
 import static org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository.AT_PATHS_FRA_OFFICE;
+import static org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository.AT_PATHS_ITA_OFFICE;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
@@ -242,6 +243,51 @@ public class EstatioAppHomePage {
         return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalStateAndPaymentMethod(
                 AT_PATHS_FRA_OFFICE, IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.BANK_TRANSFER);
     }
+
+    ////////////////////////////////////////////////
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesItaNew() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+                AT_PATHS_ITA_OFFICE, IncomingInvoiceApprovalState.NEW);
+    }
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesItaCompleted() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.COMPLETED);
+    }
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesItaPendingAdvise() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PENDING_ADVISE);
+    }
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesItaApprovedByCenterManager() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER);
+    }
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesItaApproved() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.APPROVED);
+    }
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesItaPendingCodaBooks() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK);
+    }
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesItaPayable() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PAYABLE);
+    }
+
 
     ////////////////////////////////////////////////////////////
 
