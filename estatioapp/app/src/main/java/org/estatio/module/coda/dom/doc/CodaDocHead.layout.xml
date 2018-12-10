@@ -5,8 +5,8 @@
             <bs3:row>
                 <bs3:col span="12" unreferencedActions="true">
                     <cpt:domainObject/>
+                    <cpt:action id="refreshFromCoda"/>
                     <cpt:action id="revalidate"/>
-                    <cpt:action id="createEstatioInvoice"/>
                     <cpt:action id="impersonateUser"/>
                     <cpt:action id="stopImpersonating"/>
                 </bs3:col>
