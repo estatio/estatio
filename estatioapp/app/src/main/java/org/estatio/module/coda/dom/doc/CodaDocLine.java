@@ -83,6 +83,12 @@ import lombok.Setter;
                         + "   && docHead.handling          == :handling "
                         + "   && docHead.reasonInvalid     != null "),
         @Query(
+                name = "findByHandlingAndNotValid", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
+                        + "WHERE docHead.handling          == :handling "
+                        + "   && docHead.reasonInvalid     != null "),
+        @Query(
                 name = "findByCodaPeriodQuarterAndHandling", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "

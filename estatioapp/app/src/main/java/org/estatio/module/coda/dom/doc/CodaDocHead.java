@@ -115,6 +115,14 @@ import lombok.Setter;
                         + "   && reasonInvalid     != null "
         ),
         @Query(
+                name = "findByHandlingAndStatPayNotEqualToAndNotValid", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
+                        + "WHERE handling          == :handling "
+                        + "   && statPay           != :statPay "
+                        + "   && reasonInvalid     != null "
+        ),
+        @Query(
                 name = "findByIncomingInvoice", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "

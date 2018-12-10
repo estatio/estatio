@@ -31,6 +31,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Collection;
+import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Nature;
@@ -39,7 +40,6 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
-import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 
 import org.estatio.module.capex.app.DirectDebitsMenu;
@@ -59,6 +59,8 @@ import org.estatio.module.capex.dom.payment.PaymentLine;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.dom.task.TaskRepository;
 import org.estatio.module.capex.dom.task.Task_checkState;
+import org.estatio.module.coda.dom.doc.CodaDocHead;
+import org.estatio.module.coda.dom.doc.CodaDocHeadRepository;
 import org.estatio.module.event.dom.Event;
 import org.estatio.module.event.dom.EventRepository;
 import org.estatio.module.invoice.dom.PaymentMethod;
@@ -291,6 +293,15 @@ public class EstatioAppHomePage {
 
     ////////////////////////////////////////////////////////////
 
+
+    @Collection
+    @CollectionLayout(defaultView = "table")
+    public List<CodaDocHead> getInvalidAndUnpaidCodaDocumentsIta() {
+        return codaDocHeadRepository.findUnpaidAndInvalid();
+    }
+
+    ////////////////////////////////////////////////////////////
+
     @Collection(notPersisted = true)
     public List<Lease> getLeasesAboutToExpire() {
         final LocalDate now = clockService.now();
@@ -325,7 +336,9 @@ public class EstatioAppHomePage {
                 final Class<?> collectionType,
                 final List<String> propertyIds) {
             if (parent instanceof EstatioAppHomePage && IncomingInvoice.class.isAssignableFrom(collectionType)) {
-                return Lists.newArrayList("seller", "property", "grossAmount", "dateReceived", "number");
+                return collectionId.contains("Ita") ?
+                        Lists.newArrayList("seller", "property", "grossAmount", "dateReceived", "codaDocHead") :
+                        Lists.newArrayList("seller", "property", "grossAmount", "dateReceived", "number");
             }
             return null;
         }
@@ -381,12 +394,13 @@ public class EstatioAppHomePage {
     PersonRepository personRepository;
 
     @Inject
-    ServiceRegistry2 serviceRegistry2;
-
-    @Inject
     UpcomingPaymentFraService upcomingPaymentFraService;
 
     @Inject
     TaskReminderService taskReminderService;
+
+    @Inject
+    CodaDocHeadRepository codaDocHeadRepository;
+
 
 }

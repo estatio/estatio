@@ -95,6 +95,18 @@ public class CodaDocHeadRepository {
         return existingCodaDocHead.getStatPayPaidDate() != null;
     }
 
+
+    @Programmatic
+    public List<CodaDocHead> findUnpaidAndInvalid() {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        CodaDocHead.class,
+                        "findByHandlingAndStatPayNotEqualToAndNotValid",
+                        "statPay", STAT_PAY_PAID,
+                        "handling", Handling.INCLUDED
+                ));
+    }
+
     @Programmatic
     public List<CodaDocHead> findByCodaPeriodQuarterAndHandlingAndValidity(
             final String codaPeriodQuarter,

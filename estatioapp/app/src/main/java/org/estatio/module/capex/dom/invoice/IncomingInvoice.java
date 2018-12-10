@@ -1580,7 +1580,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Programmatic
     public boolean isItalian() {
         final String atPath = getApplicationTenancyPath();
-        return atPath == null && atPath.startsWith("/ITA");
+        return atPath != null && atPath.startsWith("/ITA");
     }
 
 

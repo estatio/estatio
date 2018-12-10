@@ -22,7 +22,7 @@
             <bs3:tabGroup unreferencedCollections="true">
                 <bs3:tab name="Tasks">
                     <bs3:row>
-                        <bs3:col span="9">
+                        <bs3:col span="12">
                             <cpt:collection id="tasksForMe" paged="15">
                                 <cpt:action id="assignTasksToMe"/>
                                 <cpt:action id="checkStateOfTasksForMe">
@@ -30,7 +30,9 @@
                                 </cpt:action>
                             </cpt:collection>
                         </bs3:col>
-                        <bs3:col span="3">
+                    </bs3:row>
+                    <bs3:row>
+                        <bs3:col span="4">
                             <cpt:collection id="assignedTasksPerPerson">
                                 <cpt:action id="sendReminder"/>
                             </cpt:collection>
@@ -45,7 +47,7 @@
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
-                <bs3:tab name="Incoming Invoices (FRA)">
+                <bs3:tab name="Incoming Invoice Approvals (FRA)">
                     <bs3:row>
                         <bs3:col span="4">
                             <cpt:collection id="incomingInvoicesFraNew" paged="15">
@@ -90,7 +92,7 @@
                             </cpt:collection>
                             <cpt:collection id="incomingInvoicesFraPayableByDirectDebit" paged="15">
                                 <cpt:named>Payable by Direct Debit</cpt:named>
-                                <cpt:action id="directDebitFraManager">
+                                <cpt:action id="openDirectDebitManagerFra">
                                     <cpt:named>Direct Debit Manager</cpt:named>
                                 </cpt:action>
                                 <cpt:action id="markAsPaidByDirectDebitFra">
@@ -111,7 +113,7 @@
                         <bs3:col span="4">
                             <cpt:collection id="incomingInvoicesFraInNewBatch" paged="15">
                                 <cpt:named>In (new) Payment Batch</cpt:named>
-                                <cpt:action id="preparePaymentBatchesFra">
+                                <cpt:action id="openPaymentBatchManagerFra">
                                     <cpt:named>Prepare Payment Batches</cpt:named>
                                 </cpt:action>
                             </cpt:collection>
@@ -121,7 +123,25 @@
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
-                <bs3:tab name="Incoming Invoices (ITA)">
+                <bs3:tab name="Payments (FRA)">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="upcomingPaymentsFra" paged="20">
+                                <cpt:named>Upcoming Payments</cpt:named>
+                            </cpt:collection>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Coda Documents (ITA)">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="invalidAndUnpaidCodaDocumentsIta" paged="25">
+                                <cpt:named>Not valid, not paid</cpt:named>
+                            </cpt:collection>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Incoming Invoice Approvals (ITA)">
                     <bs3:row>
                         <bs3:col span="4">
                             <cpt:collection id="incomingInvoicesItaNew" paged="15">
@@ -156,15 +176,6 @@
                         <bs3:col span="4">
                             <cpt:collection id="incomingInvoicesItaPayable" paged="15">
                                 <cpt:named>Payable</cpt:named>
-                            </cpt:collection>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Payments (FRA)">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:collection id="upcomingPaymentsFra" paged="20">
-                                <cpt:named>Upcoming Payments</cpt:named>
                             </cpt:collection>
                         </bs3:col>
                     </bs3:row>

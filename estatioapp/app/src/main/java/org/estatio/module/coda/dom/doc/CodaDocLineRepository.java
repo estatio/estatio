@@ -48,6 +48,16 @@ public class CodaDocLineRepository {
     }
 
     @Programmatic
+    public List<CodaDocLine> findInvalid() {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        CodaDocLine.class,
+                        "findByHandlingAndNotValid",
+                        "handling", Handling.INCLUDED
+                ));
+    }
+
+    @Programmatic
     public List<CodaDocLine> findWithInvalidEl3s(final Handling handling) {
         return findByHandlingAndAccountCodeValidationStatusAndAccountCodeEl3ValidationStatus(
                 handling, ValidationStatus.VALID, ValidationStatus.INVALID);
