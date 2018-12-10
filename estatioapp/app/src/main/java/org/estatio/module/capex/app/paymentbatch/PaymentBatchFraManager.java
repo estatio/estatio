@@ -57,13 +57,13 @@ import lombok.Setter;
         objectType = "org.estatio.capex.dom.payment.PaymentBatchManager"
         ,nature = Nature.VIEW_MODEL
 )
-public class PaymentBatchManager {
+public class PaymentBatchFraManager {
 
-    public PaymentBatchManager() {
+    public PaymentBatchFraManager() {
         this(null);
     }
 
-    public PaymentBatchManager(final Integer selectedBatchIdx) {
+    public PaymentBatchFraManager(final Integer selectedBatchIdx) {
         this.selectedBatchIdx = selectedBatchIdx;
     }
 
@@ -118,7 +118,8 @@ public class PaymentBatchManager {
 
 
     public List<IncomingInvoice> getPayableInvoicesNotInAnyBatch() {
-        return incomingInvoiceRepository.findNotInAnyPaymentBatchByApprovalStateAndPaymentMethod(
+        return incomingInvoiceRepository.findNotInAnyPaymentBatchByAtPathPrefixesAndApprovalStateAndPaymentMethod(
+                IncomingInvoiceRepository.AT_PATHS_FRA_OFFICE,
                 IncomingInvoiceApprovalState.PAYABLE,
                 PaymentMethod.BANK_TRANSFER);
     }
@@ -128,7 +129,7 @@ public class PaymentBatchManager {
             semantics = SemanticsOf.IDEMPOTENT,
             publishing = Publishing.DISABLED
     )
-    public PaymentBatchManager autoCreateBatches(
+    public PaymentBatchFraManager autoCreateBatches(
             @Nullable final List<IncomingInvoice> payableInvoices) {
 
         for (final IncomingInvoice payableInvoice : payableInvoices) {
@@ -145,7 +146,7 @@ public class PaymentBatchManager {
             removeNegativeTransfers(paymentBatch);
         }
 
-        return new PaymentBatchManager(newBatches.isEmpty()? null: 0);
+        return new PaymentBatchFraManager(newBatches.isEmpty()? null: 0);
     }
 
     /**
@@ -204,12 +205,12 @@ public class PaymentBatchManager {
 
 
     @MemberOrder(name = "newBatches", sequence = "1")
-    public PaymentBatchManager removeAll() {
+    public PaymentBatchFraManager removeAll() {
         for (PaymentBatch paymentBatch : getNewBatches()) {
             paymentBatch.clearLines();
             paymentBatch.remove();
         }
-        return new PaymentBatchManager();
+        return new PaymentBatchFraManager();
     }
 
 
@@ -219,13 +220,13 @@ public class PaymentBatchManager {
             semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE,
             publishing = Publishing.DISABLED
     )
-    public PaymentBatchManager reset() {
+    public PaymentBatchFraManager reset() {
 
         final List<PaymentBatch> newBatches = this.getNewBatches();
         for (PaymentBatch newBatch : newBatches) {
             newBatch.clearLines();
         }
-        return new PaymentBatchManager();
+        return new PaymentBatchFraManager();
     }
 
     public String disableReset() {
@@ -246,12 +247,12 @@ public class PaymentBatchManager {
             semantics = SemanticsOf.SAFE,
             publishing = Publishing.DISABLED
     )
-    public PaymentBatchManager nextBatch() {
+    public PaymentBatchFraManager nextBatch() {
         int selectedBatchIdx = this.getSelectedBatchIdx();
         if (selectedBatchIdx >= 0) {
             int nextBatchIdx = ++selectedBatchIdx;
             if (nextBatchIdx < this.getNewBatches().size()) {
-                return new PaymentBatchManager(nextBatchIdx);
+                return new PaymentBatchFraManager(nextBatchIdx);
             }
         }
         return this;
@@ -278,12 +279,12 @@ public class PaymentBatchManager {
             semantics = SemanticsOf.SAFE,
             publishing = Publishing.DISABLED
     )
-    public PaymentBatchManager previousBatch() {
+    public PaymentBatchFraManager previousBatch() {
         int selectedBatchIdx = this.getSelectedBatchIdx();
         if (selectedBatchIdx >= 0) {
             int previousBatchIdx = --selectedBatchIdx;
             if (previousBatchIdx >= 0) {
-                return new PaymentBatchManager(previousBatchIdx);
+                return new PaymentBatchFraManager(previousBatchIdx);
             }
         }
         return this;
@@ -313,9 +314,9 @@ public class PaymentBatchManager {
             semantics = SemanticsOf.SAFE,
             publishing = Publishing.DISABLED
     )
-    public PaymentBatchManager selectBatch(final PaymentBatch paymentBatch) {
+    public PaymentBatchFraManager selectBatch(final PaymentBatch paymentBatch) {
         final int selectedBatchIdx = getNewBatches().indexOf(paymentBatch);
-        return new PaymentBatchManager(selectedBatchIdx);
+        return new PaymentBatchFraManager(selectedBatchIdx);
     }
 
     public List<PaymentBatch> choices0SelectBatch() {
@@ -341,16 +342,16 @@ public class PaymentBatchManager {
             semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE,
             publishing = Publishing.DISABLED
     )
-    public PaymentBatchManager completeBatch(
+    public PaymentBatchFraManager completeBatch(
             final DateTime requestedExecutionDate,
             @Nullable final String comment) {
         // use the wrapper factory to generate events
         wrapperFactory.wrap(PaymentBatch_complete()).act(requestedExecutionDate, comment);
 
         // rather than return this manager, create a new one (force page reload)
-        final PaymentBatchManager paymentBatchManager = new PaymentBatchManager();
-        serviceRegistry2.injectServicesInto(paymentBatchManager);
-        return new PaymentBatchManager(paymentBatchManager.getSelectedBatchIdx());
+        final PaymentBatchFraManager paymentBatchFraManager = new PaymentBatchFraManager();
+        serviceRegistry2.injectServicesInto(paymentBatchFraManager);
+        return new PaymentBatchFraManager(paymentBatchFraManager.getSelectedBatchIdx());
 
     }
 
@@ -473,14 +474,14 @@ public class PaymentBatchManager {
             semantics = SemanticsOf.IDEMPOTENT,
             publishing = Publishing.DISABLED
     )
-    public PaymentBatchManager addInvoiceToPayByBankAccount(
+    public PaymentBatchFraManager addInvoiceToPayByBankAccount(
             final IncomingInvoice incomingInvoice,
             final BankAccount debtorBankAccount) {
 
         PaymentBatch paymentBatch = paymentBatchRepository.findOrCreateNewByDebtorBankAccount(debtorBankAccount);
         paymentBatch.addLineIfRequired(incomingInvoice);
 
-        return new PaymentBatchManager();
+        return new PaymentBatchFraManager();
     }
 
     public List<IncomingInvoice> choices0AddInvoiceToPayByBankAccount() {
@@ -520,14 +521,14 @@ public class PaymentBatchManager {
             semantics = SemanticsOf.IDEMPOTENT,
             publishing = Publishing.DISABLED
     )
-    public PaymentBatchManager removeInvoice(
+    public PaymentBatchFraManager removeInvoice(
             final List<IncomingInvoice> incomingInvoices,
             @ParameterLayout(describedAs = "Whether the removed invoices should also be rejected")
             final boolean rejectAlso,
             @ParameterLayout(describedAs = "If rejecting, then explain why so that the error can be fixed")
             @Nullable final String rejectionReason) {
         PaymentBatch_removeInvoice().act(incomingInvoices, rejectAlso, rejectionReason);
-        return new PaymentBatchManager();
+        return new PaymentBatchFraManager();
     }
 
     public String validateRemoveInvoice(

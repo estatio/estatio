@@ -13,8 +13,10 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.estatio.module.application.app.dashboard.EstatioAppHomePage;
+import org.estatio.module.capex.dom.bankaccount.verification.triggers.BankAccount_verify;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
-import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_approveAsCountryDirector;
+import org.estatio.module.capex.dom.invoice.approval.tasks.IncomingInvoice_checkApprovalState;
+import org.estatio.module.financial.dom.BankAccount;
 
 /**
  * For testing only
@@ -22,11 +24,11 @@ import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_ap
  * this could be inlined, but perhaps should not given that it is for testing/prototyping only?
  */
 @Mixin(method = "act")
-public class EstatioAppHomePage_approveInvoicesAsCountryDirector {
+public class EstatioAppHomePage_verifyBankAccountsFra {
 
     private final EstatioAppHomePage homePage;
 
-    public EstatioAppHomePage_approveInvoicesAsCountryDirector(EstatioAppHomePage homePage) {
+    public EstatioAppHomePage_verifyBankAccountsFra(EstatioAppHomePage homePage) {
         this.homePage = homePage;
     }
 
@@ -38,18 +40,21 @@ public class EstatioAppHomePage_approveInvoicesAsCountryDirector {
             final String comment) {
 
         for (IncomingInvoice invoice : invoices) {
-            factoryService.mixin(IncomingInvoice_approveAsCountryDirector.class, invoice).act(comment, false);
+            final BankAccount bankAccount = invoice.getBankAccount();
+            factoryService.mixin(BankAccount_verify.class, bankAccount).act(comment);
+            factoryService.mixin(IncomingInvoice_checkApprovalState.class, invoice).act();
         }
 
         return homePage;
     }
 
     public List<IncomingInvoice> choices0Act() {
-        return homePage.getIncomingInvoicesApproved();
+        return homePage.getIncomingInvoicesFraPendingBankAccountCheck();
     }
     public List<IncomingInvoice> default0Act() {
         return choices0Act();
     }
+
 
     @Inject
     FactoryService factoryService;

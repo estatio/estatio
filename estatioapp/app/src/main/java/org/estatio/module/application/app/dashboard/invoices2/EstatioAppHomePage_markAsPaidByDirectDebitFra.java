@@ -1,49 +1,55 @@
-package org.estatio.module.application.app.dashboard.invoices;
+package org.estatio.module.application.app.dashboard.invoices2;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.estatio.module.application.app.dashboard.EstatioAppHomePage;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
-import org.estatio.module.invoice.dom.PaymentMethod;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_markAsPaidByDirectDebit;
 
 /**
- * For testing only
- *
- * this could be inlined, but perhaps should not given that it is for testing/prototyping only?
+ * TODO: inline this mixin
  */
 @Mixin(method = "act")
-public class EstatioAppHomePage_updateAsPayableByTransfer {
+public class EstatioAppHomePage_markAsPaidByDirectDebitFra {
 
     private final EstatioAppHomePage homePage;
 
-    public EstatioAppHomePage_updateAsPayableByTransfer(EstatioAppHomePage homePage) {
+    public EstatioAppHomePage_markAsPaidByDirectDebitFra(EstatioAppHomePage homePage) {
         this.homePage = homePage;
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT, restrictTo = RestrictTo.PROTOTYPING)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(position = ActionLayout.Position.PANEL)
-    public EstatioAppHomePage act(final List<IncomingInvoice> invoices) {
+    public EstatioAppHomePage act(
+            final List<IncomingInvoice> invoices,
+            @Nullable
+            final String comment) {
 
         for (IncomingInvoice invoice : invoices) {
-            invoice.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
+            factoryService.mixin(IncomingInvoice_markAsPaidByDirectDebit.class, invoice).act(comment);
         }
 
         return homePage;
     }
+
     public List<IncomingInvoice> choices0Act() {
-        return homePage.getIncomingInvoicesPayableByManualProcess();
+        return homePage.getIncomingInvoicesFraPayableByDirectDebit();
     }
     public List<IncomingInvoice> default0Act() {
         return choices0Act();
+    }
+
+    public String disableAct() {
+        return choices0Act().isEmpty() ? "No invoices" : null;
     }
 
     @Inject

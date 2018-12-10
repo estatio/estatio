@@ -24,8 +24,11 @@ import org.isisaddons.module.excel.dom.WorksheetSpec;
 import org.estatio.module.capex.dom.coda.CodaMapping;
 import org.estatio.module.capex.dom.coda.CodaMappingRepository;
 
-@DomainObject(nature = Nature.VIEW_MODEL, objectType = "org.estatio.capex.dom.coda.CodaMappingManager")
-public class CodaMappingManager {
+@DomainObject(
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.capex.dom.coda.CodaMappingManager"
+)
+public class CodaMappingFraManager {
 
     public String title() {
         return "Coda Mapping Manager";
@@ -52,7 +55,7 @@ public class CodaMappingManager {
 
     @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
     @MemberOrder(name = "mappings", sequence = "2")
-    public CodaMappingManager upload(
+    public CodaMappingFraManager upload(
             @Parameter(fileAccept = ".xlsx")
             final Blob spreadsheet) {
         List<CodaMappingImport> lineItems =

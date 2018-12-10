@@ -11,7 +11,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.estatio.module.capex.app.paydd.DirectDebitsManager;
+import org.estatio.module.capex.app.paydd.DirectDebitsFraManager;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -29,10 +29,10 @@ public class DirectDebitsMenu {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "fa-check-square-o")
     @MemberOrder(sequence = "300.10")
-    public DirectDebitsManager directDebitManager() {
-        final DirectDebitsManager directDebitsManager = new DirectDebitsManager();
-        serviceRegistry2.injectServicesInto(directDebitsManager);
-        return directDebitsManager;
+    public DirectDebitsFraManager directDebitFraManager() {
+        final DirectDebitsFraManager directDebitsFraManager = new DirectDebitsFraManager();
+        serviceRegistry2.injectServicesInto(directDebitsFraManager);
+        return directDebitsFraManager;
     }
 
 

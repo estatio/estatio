@@ -109,11 +109,24 @@ import lombok.Setter;
                         + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
                         + "WHERE approvalState == :approvalState "),
         @Query(
+                name = "findByAtPathPrefixAndApprovalState", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE approvalState          == :approvalState "
+                        + "   && applicationTenancyPath.startsWith(:atPathPrefix) "),
+        @Query(
                 name = "findByApprovalStateAndPaymentMethod", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
                         + "WHERE approvalState == :approvalState "
                         + "   && paymentMethod == :paymentMethod "),
+        @Query(
+                name = "findByAtPathPrefixAndApprovalStateAndPaymentMethod", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE approvalState == :approvalState "
+                        + "   && paymentMethod == :paymentMethod "
+                        + "   && applicationTenancyPath.startsWith(:atPathPrefix) "),
         @Query(
                 name = "findByInvoiceNumber", language = "JDOQL",
                 value = "SELECT "
@@ -171,6 +184,17 @@ import lombok.Setter;
                         + "ORDER BY invoiceDate ASC " // oldest first
         ),
         @Query(
+                name = "findNotInAnyPaymentBatchByAtPathPrefixAndApprovalStateAndPaymentMethod", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE !(SELECT invoice "
+                        +         "  FROM org.estatio.module.capex.dom.payment.PaymentLine).contains(this) "
+                        + "   && approvalState == :approvalState "
+                        + "   && paymentMethod == :paymentMethod "
+                        + "   && applicationTenancyPath.startsWith(:atPathPrefix) "
+                        + "ORDER BY invoiceDate ASC " // oldest first
+        ),
+        @Query(
                 name = "findByBankAccount", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
@@ -196,7 +220,9 @@ import lombok.Setter;
                 @Persistent(name="bankAccount")
         })
 @Indices({
-        @Index(name = "IncomingInvoice_approvalState_IDX", members = { "approvalState" })
+        @Index(name = "IncomingInvoice_approvalState_IDX", members = { "approvalState" }),
+        @Index(name = "IncomingInvoice_atPath_approvalState_IDX", members = { "applicationTenancyPath", "approvalState" }),
+        @Index(name = "IncomingInvoice_approvalState_atPath_IDX", members = { "approvalState", "applicationTenancyPath" })
 })
 // unused, since rolled-up
 //@Unique(name = "IncomingInvoice_invoiceNumber_UNQ", members = { "invoiceNumber" })

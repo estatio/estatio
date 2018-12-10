@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 import org.datanucleus.query.typesafe.TypesafeQuery;
@@ -42,13 +43,18 @@ import org.estatio.module.party.dom.Party;
 )
 public class IncomingInvoiceRepository {
 
+    public static final List<String> AT_PATHS_FRA_OFFICE = ImmutableList.of("/FRA","/BEL");
+    public static final List<String> AT_PATHS_ITA_OFFICE = ImmutableList.of("/ITA");
+
     @Programmatic
     public java.util.List<IncomingInvoice> listAll() {
         return repositoryService.allInstances(IncomingInvoice.class);
     }
 
     @Programmatic
-    public List<IncomingInvoice> findByInvoiceDateBetween(final LocalDate fromDate, final LocalDate toDate) {
+    public List<IncomingInvoice> findByInvoiceDateBetween(
+                                    final LocalDate fromDate,
+                                    final LocalDate toDate) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         IncomingInvoice.class,
@@ -58,7 +64,9 @@ public class IncomingInvoiceRepository {
     }
 
     @Programmatic
-    public List<IncomingInvoice> findByDueDateBetween(final LocalDate fromDate, final LocalDate toDate) {
+    public List<IncomingInvoice> findByDueDateBetween(
+                                    final LocalDate fromDate,
+                                    final LocalDate toDate) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         IncomingInvoice.class,
@@ -68,7 +76,10 @@ public class IncomingInvoiceRepository {
     }
 
     @Programmatic
-    public List<IncomingInvoice> findByPropertyAndDateReceivedBetween(final Property property, final LocalDate fromDate, final LocalDate toDate) {
+    public List<IncomingInvoice> findByPropertyAndDateReceivedBetween(
+                                    final Property property,
+                                    final LocalDate fromDate,
+                                    final LocalDate toDate) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         IncomingInvoice.class,
@@ -78,8 +89,9 @@ public class IncomingInvoiceRepository {
                         "toDate", toDate));
     }
 
-    @Programmatic
-    public List<IncomingInvoice> findByApprovalState(final IncomingInvoiceApprovalState approvalState) {
+    ////////////////////////////////////////////////////////////////////
+
+    List<IncomingInvoice> findByApprovalState(final IncomingInvoiceApprovalState approvalState) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         IncomingInvoice.class,
@@ -88,7 +100,23 @@ public class IncomingInvoiceRepository {
     }
 
     @Programmatic
-    public List<IncomingInvoice> findByApprovalStateAndPaymentMethod(
+    public List<IncomingInvoice> findByAtPathPrefixesAndApprovalState(
+            final List<String> atPathPrefixes,
+            final IncomingInvoiceApprovalState approvalState) {
+        final List<IncomingInvoice> incomingInvoices = Lists.newArrayList();
+        for (final String atPathPrefix : atPathPrefixes) {
+            incomingInvoices.addAll(repositoryService.allMatches(
+                    new QueryDefault<>(
+                            IncomingInvoice.class,
+                            "findByAtPathPrefixAndApprovalState",
+                            "atPathPrefix", atPathPrefix,
+                            "approvalState", approvalState)));
+        }
+        return incomingInvoices;
+    }
+
+    @Programmatic
+    List<IncomingInvoice> findByApprovalStateAndPaymentMethod(
             final IncomingInvoiceApprovalState approvalState,
             final PaymentMethod paymentMethod) {
         return repositoryService.allMatches(
@@ -100,7 +128,26 @@ public class IncomingInvoiceRepository {
     }
 
     @Programmatic
-    public IncomingInvoice findByInvoiceNumberAndSellerAndInvoiceDate(final String invoiceNumber, final Party seller, final LocalDate invoiceDate) {
+    public List<IncomingInvoice> findByAtPathPrefixesAndApprovalStateAndPaymentMethod(
+            final List<String> atPathPrefixes,
+            final IncomingInvoiceApprovalState approvalState,
+            final PaymentMethod paymentMethod) {
+        final List<IncomingInvoice> incomingInvoices = Lists.newArrayList();
+        for (final String atPathPrefix : atPathPrefixes) {
+            incomingInvoices.addAll(repositoryService.allMatches(
+                    new QueryDefault<>(
+                            IncomingInvoice.class,
+                            "findByAtPathPrefixAndApprovalStateAndPaymentMethod",
+                            "atPathPrefix", atPathPrefix,
+                            "approvalState", approvalState,
+                            "paymentMethod", paymentMethod)));
+        }
+        return incomingInvoices;
+    }
+
+    @Programmatic
+    public IncomingInvoice findByInvoiceNumberAndSellerAndInvoiceDate(
+            final String invoiceNumber, final Party seller, final LocalDate invoiceDate) {
         return repositoryService.firstMatch(
                 new QueryDefault<>(
                         IncomingInvoice.class,
@@ -129,8 +176,7 @@ public class IncomingInvoiceRepository {
                         "bankAccount", bankAccount));
     }
 
-    @Programmatic
-    public List<IncomingInvoice> findNotInAnyPaymentBatchByApprovalStateAndPaymentMethod(
+    List<IncomingInvoice> findNotInAnyPaymentBatchByApprovalStateAndPaymentMethod(
             final IncomingInvoiceApprovalState approvalState,
             final PaymentMethod paymentMethod) {
         return repositoryService.allMatches(
@@ -139,6 +185,24 @@ public class IncomingInvoiceRepository {
                         "findNotInAnyPaymentBatchByApprovalStateAndPaymentMethod",
                         "approvalState", approvalState,
                         "paymentMethod", paymentMethod));
+    }
+
+    @Programmatic
+    public List<IncomingInvoice> findNotInAnyPaymentBatchByAtPathPrefixesAndApprovalStateAndPaymentMethod(
+            final List<String> atPathPrefixes,
+            final IncomingInvoiceApprovalState approvalState,
+            final PaymentMethod paymentMethod) {
+        final List<IncomingInvoice> incomingInvoices = Lists.newArrayList();
+        for (final String atPathPrefix : atPathPrefixes) {
+            incomingInvoices.addAll(repositoryService.allMatches(
+                    new QueryDefault<>(
+                            IncomingInvoice.class,
+                            "findNotInAnyPaymentBatchByAtPathPrefixAndApprovalStateAndPaymentMethod",
+                            "atPathPrefix", atPathPrefix,
+                            "approvalState", approvalState,
+                            "paymentMethod", paymentMethod)));
+        }
+        return incomingInvoices;
     }
 
     @Programmatic
@@ -239,14 +303,14 @@ public class IncomingInvoiceRepository {
 
             final boolean isItalian = invoice.getAtPath().startsWith("/ITA");
             final boolean isPaid = invoice.getPaidDate() != null;
-            final boolean hasPaymentMethodOtherThanBankTransfer = invoice.getPaymentMethod() != null && invoice.getPaymentMethod() != PaymentMethod.BANK_TRANSFER;
+            final boolean hasPaymentMethodOtherThanBankTransfer =
+                    invoice.getPaymentMethod() != null && invoice.getPaymentMethod() != PaymentMethod.BANK_TRANSFER;
 
-            if (isItalian && (isPaid || hasPaymentMethodOtherThanBankTransfer)) {
-                stateTransitionService.trigger(invoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE_BYPASSING_APPROVAL, null, null);
-            } else {
-                stateTransitionService
-                        .trigger(invoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null, null);
-            }
+            final IncomingInvoiceApprovalStateTransitionType transitionType =
+                    isItalian && (isPaid || hasPaymentMethodOtherThanBankTransfer) ?
+                            IncomingInvoiceApprovalStateTransitionType.INSTANTIATE_BYPASSING_APPROVAL :
+                            IncomingInvoiceApprovalStateTransitionType.INSTANTIATE;
+            stateTransitionService.trigger(invoice, transitionType, null, null);
         }
 
         return invoice;

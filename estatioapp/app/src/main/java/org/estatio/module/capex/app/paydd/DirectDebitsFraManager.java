@@ -27,6 +27,7 @@ import org.estatio.module.invoice.dom.PaymentMethod;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import static org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository.*;
 
 @DomainObject(
         // WORKAROUND: using fqcn as objectType because Isis' invalidation of cache in prototyping mode causing NPEs in some situations
@@ -38,12 +39,12 @@ import lombok.Setter;
         }
 )
 @XmlAccessorType(XmlAccessType.FIELD)
-public class DirectDebitsManager {
+public class DirectDebitsFraManager {
 
-    public DirectDebitsManager() { }
+    public DirectDebitsFraManager() { }
 
     public String title() {
-        return "Direct Debit Manager";
+        return "Direct Debit Manager (France)";
     }
 
 
@@ -52,14 +53,15 @@ public class DirectDebitsManager {
     public List<DirectDebitInvoiceViewModel> getIncomingInvoicesPayableByDirectDebit() {
         return queryResultsCache.execute(
                 this::doGetDirectDebitInvoiceViewModels
-                , DirectDebitsManager.class,
+                , DirectDebitsFraManager.class,
                 "getIncomingInvoicesPayableByDirectDebit"
         );
     }
 
     protected List<DirectDebitInvoiceViewModel> doGetDirectDebitInvoiceViewModels() {
         final List<IncomingInvoice> invoices = incomingInvoiceRepository
-                .findByApprovalStateAndPaymentMethod(IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.DIRECT_DEBIT);
+                .findByAtPathPrefixesAndApprovalStateAndPaymentMethod(
+                        AT_PATHS_FRA_OFFICE, IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.DIRECT_DEBIT);
         return invoices.stream()
                 .map(DirectDebitInvoiceViewModel::new)
                 .sorted()
@@ -68,7 +70,7 @@ public class DirectDebitsManager {
 
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
-    public DirectDebitsManager markAsPaid(
+    public DirectDebitsFraManager markAsPaid(
             @Nullable // workaround for a bug in framework, whereby select drop-down goes top-left on error
             final List<DirectDebitInvoiceViewModel> invoices,
             @Nullable

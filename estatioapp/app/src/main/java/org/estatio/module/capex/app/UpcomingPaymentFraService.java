@@ -13,22 +13,32 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.module.capex.app.invoice.UpcomingPaymentTotal;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
-import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.financial.dom.BankAccount;
-import org.estatio.module.invoice.dom.PaymentMethod;
+
+import static org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository.AT_PATHS_FRA_OFFICE;
+import static org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState.APPROVED;
+import static org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState.COMPLETED;
+import static org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK;
+import static org.estatio.module.invoice.dom.PaymentMethod.BANK_TRANSFER;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
         objectType = "org.estatio.module.capex.app.UpcomingPaymentService")
-public class UpcomingPaymentService {
+public class UpcomingPaymentFraService {
 
     @Programmatic
-    public List<UpcomingPaymentTotal> getUpcomingPayments(){
+    public List<UpcomingPaymentTotal> getUpcomingPaymentsFra(){
 
         List<IncomingInvoice> invoiceSelectionForUpcomingPayments = new ArrayList<>();
-        invoiceSelectionForUpcomingPayments.addAll(incomingInvoiceRepository.findByApprovalStateAndPaymentMethod(IncomingInvoiceApprovalState.COMPLETED, PaymentMethod.BANK_TRANSFER));
-        invoiceSelectionForUpcomingPayments.addAll(incomingInvoiceRepository.findByApprovalStateAndPaymentMethod(IncomingInvoiceApprovalState.APPROVED, PaymentMethod.BANK_TRANSFER));
-        invoiceSelectionForUpcomingPayments.addAll(incomingInvoiceRepository.findByApprovalStateAndPaymentMethod(IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK, PaymentMethod.BANK_TRANSFER));
+        invoiceSelectionForUpcomingPayments.addAll(
+                incomingInvoiceRepository.findByAtPathPrefixesAndApprovalStateAndPaymentMethod(
+                    AT_PATHS_FRA_OFFICE, COMPLETED, BANK_TRANSFER));
+        invoiceSelectionForUpcomingPayments.addAll(
+                incomingInvoiceRepository.findByAtPathPrefixesAndApprovalStateAndPaymentMethod(
+                        AT_PATHS_FRA_OFFICE, APPROVED, BANK_TRANSFER));
+        invoiceSelectionForUpcomingPayments.addAll(
+                incomingInvoiceRepository.findByAtPathPrefixesAndApprovalStateAndPaymentMethod(
+                        AT_PATHS_FRA_OFFICE, PENDING_BANK_ACCOUNT_CHECK, BANK_TRANSFER));
 
         List<UpcomingPaymentTotal> upcomingPayments = new ArrayList<>();
         for (IncomingInvoice invoice : invoiceSelectionForUpcomingPayments){

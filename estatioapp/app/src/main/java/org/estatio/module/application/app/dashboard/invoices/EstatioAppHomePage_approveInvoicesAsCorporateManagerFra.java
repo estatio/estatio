@@ -22,11 +22,11 @@ import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_ap
  * this could be inlined, but perhaps should not given that it is for testing/prototyping only?
  */
 @Mixin(method = "act")
-public class EstatioAppHomePage_approveInvoicesAsCorporateManager {
+public class EstatioAppHomePage_approveInvoicesAsCorporateManagerFra {
 
     private final EstatioAppHomePage homePage;
 
-    public EstatioAppHomePage_approveInvoicesAsCorporateManager(EstatioAppHomePage homePage) {
+    public EstatioAppHomePage_approveInvoicesAsCorporateManagerFra(EstatioAppHomePage homePage) {
         this.homePage = homePage;
     }
 
@@ -45,7 +45,7 @@ public class EstatioAppHomePage_approveInvoicesAsCorporateManager {
     }
 
     public List<IncomingInvoice> choices0Act() {
-        return homePage.getIncomingInvoicesCompleted();
+        return homePage.getIncomingInvoicesFraCompleted();
     }
     public List<IncomingInvoice> default0Act() {
         return choices0Act();
