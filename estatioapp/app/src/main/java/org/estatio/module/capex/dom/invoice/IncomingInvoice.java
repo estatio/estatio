@@ -950,6 +950,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Getter @Setter
     @Column(allowsNull = "true")
+    @PropertyLayout(hidden = Where.EVERYWHERE)
     public LocalDate paidDate;
 
     @Getter @Setter
