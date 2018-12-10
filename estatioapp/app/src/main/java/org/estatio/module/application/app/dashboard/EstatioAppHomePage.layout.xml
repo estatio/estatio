@@ -22,7 +22,7 @@
             <bs3:tabGroup unreferencedCollections="true">
                 <bs3:tab name="Tasks">
                     <bs3:row>
-                        <bs3:col span="12">
+                        <bs3:col span="9">
                             <cpt:collection id="tasksForMe" paged="15">
                                 <cpt:action id="assignTasksToMe"/>
                                 <cpt:action id="checkStateOfTasksForMe">
@@ -30,16 +30,22 @@
                                 </cpt:action>
                             </cpt:collection>
                         </bs3:col>
-                    </bs3:row>
-                    <bs3:row>
-                        <bs3:col span="4">
+                        <bs3:col span="3">
                             <cpt:collection id="assignedTasksPerPerson">
                                 <cpt:action id="sendReminder"/>
                             </cpt:collection>
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
-                <bs3:tab name="Incoming Invoices">
+                <bs3:tab name="Lease Management">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="leasesAboutToExpire"/>
+                            <cpt:collection id="upcomingEvents"/>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Incoming Invoices (FRA)">
                     <bs3:row>
                         <bs3:col span="4">
                             <cpt:collection id="incomingInvoicesNew" paged="15">
@@ -104,6 +110,13 @@
                             <cpt:collection id="incomingInvoicesInCompletedBatch" paged="15">
                                 <cpt:named>In (completed) Payment Batch</cpt:named>
                             </cpt:collection>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Payments (FRA)">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="upcomingPayments"/>
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
