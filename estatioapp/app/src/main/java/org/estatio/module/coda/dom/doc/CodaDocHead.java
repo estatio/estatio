@@ -730,11 +730,15 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
 
     @Programmatic
-    public void autoSyncInBackgroundIfValid() {
+    public void createEstatioObjectsInBackgroundIfNewlyValid() {
         if(!isAutosync()) {
             return;
         }
         if(!isValid()) {
+            return;
+        }
+        if(getIncomingInvoice() != null) {
+            // nothing to do, an invoice already exists.
             return;
         }
 
