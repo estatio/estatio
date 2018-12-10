@@ -1576,6 +1576,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return summary.toString();
     }
 
+    @Programmatic
+    public boolean isItalian() {
+        final String atPath = getApplicationTenancyPath();
+        return atPath == null && atPath.startsWith("/ITA");
+    }
 
 
     @Override
