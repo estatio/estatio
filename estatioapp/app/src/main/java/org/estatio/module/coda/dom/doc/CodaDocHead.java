@@ -43,6 +43,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.background.BackgroundService;
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.services.scratchpad.Scratchpad;
 import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 import org.apache.isis.applib.services.xactn.TransactionService;
 
@@ -556,6 +557,28 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         return !isValid();
     }
 
+    @NotPersistent
+    @Property(notPersisted = true)
+    @PropertyLayout(hidden = Where.OBJECT_FORMS)
+    public PaymentMethod getPaymentMethod() {
+        final LineCache lineCache = (LineCache) scratchpad.get(LineCache.class);
+        if(lineCache == null) {
+            return null;
+        }
+        return getSummaryLinePaymentMethod(LineCache.DEFAULT);
+    }
+
+    @NotPersistent
+    @Property(notPersisted = true)
+    @PropertyLayout(hidden = Where.OBJECT_FORMS)
+    public Character getUserStatus() {
+        final LineCache lineCache = (LineCache) scratchpad.get("lineCache");
+        if(lineCache == null) {
+            return null;
+        }
+        return getSummaryLineUserStatus(lineCache);
+    }
+
     @Programmatic
     public String getSummaryLineAccountCode(final LineCache lineCache) {
         final CodaDocLine docLine = summaryDocLine(lineCache);
@@ -608,6 +631,12 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
     public BankAccount getSummaryLineSupplierBankAccount(final LineCache lineCache) {
         final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getSupplierBankAccount() : null;
+    }
+
+    @Programmatic
+    public Character getSummaryLineUserStatus(final LineCache lineCache) {
+        final CodaDocLine docLine = summaryDocLine(lineCache);
+        return docLine != null ? docLine.getUserStatus() : null;
     }
 
     @Programmatic
@@ -941,6 +970,9 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
         }
 
     }
+
+    @Inject
+    Scratchpad scratchpad;
 
     @Inject
     BackgroundService backgroundService;
