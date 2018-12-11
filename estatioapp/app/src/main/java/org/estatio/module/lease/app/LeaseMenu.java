@@ -169,22 +169,15 @@ public class LeaseMenu {
 
         // for the selected property, both the landlord and the tenant must be for the same country
         // since we don't (currently) persist the country for Party, we use app tenancy instead.
+        final ApplicationTenancyLevel propertyAppTenancyLevel = ApplicationTenancyLevel.of(property.getApplicationTenancy());
+        final ApplicationTenancyLevel landlordAppTenancyLevel = landlord != null ? ApplicationTenancyLevel.of(landlord.getApplicationTenancy()) : null;
+        final ApplicationTenancyLevel tenantAppTenancyLevel = tenant != null ? ApplicationTenancyLevel.of(tenant.getApplicationTenancy()) : null;
 
-        final ApplicationTenancy applicationTenancyOfProperty = property.getApplicationTenancy();
-        if (!(ApplicationTenancyLevel.of(applicationTenancyOfProperty)
-                .equals(ApplicationTenancyLevel.of(landlord.getApplicationTenancy()))
-                ||
-                ApplicationTenancyLevel.of(landlord.getApplicationTenancy())
-                        .parentOf(ApplicationTenancyLevel.of(applicationTenancyOfProperty))
-        )) {
+        if (landlordAppTenancyLevel != null && !propertyAppTenancyLevel.equals(landlordAppTenancyLevel) && !landlordAppTenancyLevel.parentOf(propertyAppTenancyLevel)) {
             return "Landlord not valid. (wrong application tenancy)";
         }
-        if (!(ApplicationTenancyLevel.of(applicationTenancyOfProperty)
-                .equals(ApplicationTenancyLevel.of(tenant.getApplicationTenancy()))
-                ||
-                ApplicationTenancyLevel.of(tenant.getApplicationTenancy())
-                        .parentOf(ApplicationTenancyLevel.of(applicationTenancyOfProperty))
-        )) {
+
+        if (tenantAppTenancyLevel != null && !propertyAppTenancyLevel.equals(tenantAppTenancyLevel) && !tenantAppTenancyLevel.parentOf(propertyAppTenancyLevel)) {
             return "Tenant not valid. (wrong application tenancy)";
         }
 

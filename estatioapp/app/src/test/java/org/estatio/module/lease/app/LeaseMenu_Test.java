@@ -63,6 +63,24 @@ public class LeaseMenu_Test {
             assertThat(error).isNull();
 
             // and when
+            error = leaseMenu.validateNewLease(property, null, null, null, new LocalDate(2010, 01, 01), null, new LocalDate(2020, 01, 01), landLordIta, null);
+
+            // then
+            assertThat(error).isNull();
+
+            // and when
+            error = leaseMenu.validateNewLease(property, null, null, null, new LocalDate(2010, 01, 01), null, new LocalDate(2020, 01, 01), null, tenantFra);
+
+            // then
+            assertThat(error).isNull();
+
+            // and when
+            error = leaseMenu.validateNewLease(property, null, null, null, new LocalDate(2010, 01, 01), null, new LocalDate(2020, 01, 01), null, null);
+
+            // then
+            assertThat(error).isNull();
+
+            // and when
             landLordIta = new Party() {
                 @Override public ApplicationTenancy getApplicationTenancy() {
                     ApplicationTenancy applicationTenancyParty = new ApplicationTenancy();
