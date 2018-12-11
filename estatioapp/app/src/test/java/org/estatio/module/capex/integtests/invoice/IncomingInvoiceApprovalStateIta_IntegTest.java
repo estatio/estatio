@@ -43,10 +43,14 @@ import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_ap
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_complete;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_noAdvise;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_reject;
+import org.estatio.module.capex.dom.order.OrderItem;
+import org.estatio.module.capex.dom.orderinvoice.IncomingInvoiceItem_orderItem;
+import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.dom.task.TaskRepository;
 import org.estatio.module.capex.fixtures.incominginvoice.enums.IncomingInvoiceNoDocument_enum;
+import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
@@ -101,7 +105,8 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
                         IncomingInvoiceNoDocument_enum.invoiceForItaNoOrder,
                         IncomingInvoiceNoDocument_enum.invoiceForItaRecoverable,
                         IncomingInvoiceNoDocument_enum.invoiceForItaDirectDebit,
-                        IncomingInvoiceNoDocument_enum.invoiceForItaWithPaidDate
+                        IncomingInvoiceNoDocument_enum.invoiceForItaWithPaidDate,
+                        Project_enum.GraProject
                 );
             }
         });
@@ -1057,6 +1062,29 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
 
         List<Task> uncompletedForTechnizio = taskRepository.findIncompleteByPersonAssignedTo(Person_enum.TechnizioAdvisorIt.findUsing(serviceRegistry2));
         assertThat(uncompletedForTechnizio).isEmpty();
+
+    }
+
+    @Test
+    public void invoice_without_order_can_have_project() throws Exception {
+
+        // given
+        assertThat(incomingInvoice.getItems()).hasSize(1);
+        final OrderItem orderItem = mixin(IncomingInvoiceItem_orderItem.class, incomingInvoice.getItems().first()).prop();
+        assertThat(orderItem).isNull();
+
+        // when
+        Project project = Project_enum.GraProject.findUsing(serviceRegistry2);
+        IncomingInvoiceItem item = (IncomingInvoiceItem) incomingInvoice.getItems().first();
+        item.setProject(project);
+        item.setIncomingInvoiceType(IncomingInvoiceType.CAPEX); //TODO: disable French logic for Ita invoices
+
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("INCOMING_INVOICE_MANAGER", null, null));
+
+        // then
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
 
     }
 
