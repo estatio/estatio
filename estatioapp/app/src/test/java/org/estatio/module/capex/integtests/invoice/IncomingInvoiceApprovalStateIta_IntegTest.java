@@ -1077,7 +1077,6 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         Project project = Project_enum.GraProject.findUsing(serviceRegistry2);
         IncomingInvoiceItem item = (IncomingInvoiceItem) incomingInvoice.getItems().first();
         item.setProject(project);
-        item.setIncomingInvoiceType(IncomingInvoiceType.CAPEX); //TODO: disable French logic for Ita invoices
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->

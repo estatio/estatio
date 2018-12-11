@@ -855,6 +855,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
 
         Validator validateForIncomingInvoiceType(IncomingInvoiceItem incomingInvoiceItem){
             if (incomingInvoiceItem == null) return this;
+            if (incomingInvoiceItem.getIncomingInvoice().isItalian()) return this; // ECP-878: not applicable for italian invoices
             if (incomingInvoiceItem.getIncomingInvoiceType() == null) return this;
 
             String message;
