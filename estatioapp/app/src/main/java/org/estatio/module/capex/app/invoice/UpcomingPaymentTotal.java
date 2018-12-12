@@ -4,7 +4,11 @@ import java.math.BigDecimal;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
+import org.apache.isis.applib.annotation.Programmatic;
 
+import org.isisaddons.module.security.dom.tenancy.HasAtPath;
+
+import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.financial.dom.BankAccount;
 
@@ -14,8 +18,9 @@ import static org.estatio.module.capex.dom.util.FinancialAmountUtil.addHandlingN
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
-        objectType = "org.estatio.module.capex.app.invoice.UpcomingPaymentTotal")
-public class UpcomingPaymentTotal {
+        objectType = "org.estatio.module.capex.app.invoice.UpcomingPaymentTotal"
+)
+public class UpcomingPaymentTotal implements HasAtPath {
 
     public UpcomingPaymentTotal(){};
 
@@ -51,6 +56,14 @@ public class UpcomingPaymentTotal {
             break;
         }
         setTotalUpcomingAmount(addHandlingNulls(getTotalUpcomingAmount(), invoice.getGrossAmount()));
+    }
+
+    @Programmatic
+    @Override
+    public String getAtPath() {
+        return getDebtorBankAccount() != null
+                ? getDebtorBankAccount().getAtPath()
+                : ApplicationTenancyLevel.ROOT.getPath();
     }
 
 }
