@@ -47,6 +47,9 @@ import org.apache.isis.applib.services.scratchpad.Scratchpad;
 import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 import org.apache.isis.applib.services.xactn.TransactionService;
 
+import org.isisaddons.module.security.dom.tenancy.HasAtPath;
+
+import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
@@ -140,7 +143,7 @@ import lombok.Setter;
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
 )
-public class CodaDocHead implements Comparable<CodaDocHead> {
+public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
 
     static final CodaPeriodParser parser = new CodaPeriodParser();
 
@@ -428,6 +431,23 @@ public class CodaDocHead implements Comparable<CodaDocHead> {
 
     public boolean isPaid() {
         return statPay != null && "paid".equals(statPay);
+    }
+
+    @Override
+    public String getAtPath() {
+        final Organisation cmpCodeBuyer = getCmpCodeBuyer();
+        if (cmpCodeBuyer != null) {
+            return cmpCodeBuyer.getApplicationTenancyPath();
+        }
+        if (getCmpCode() != null) {
+            if (getCmpCode().startsWith("IT")) {
+                return ApplicationTenancyLevel.ITALY.getPath();
+            }
+            if (getCmpCode().startsWith("FR")) {
+                return ApplicationTenancyLevel.FRANCE.getPath();
+            }
+        }
+        return ApplicationTenancyLevel.ROOT.getPath();
     }
 
     public enum SynchronizationPolicy {

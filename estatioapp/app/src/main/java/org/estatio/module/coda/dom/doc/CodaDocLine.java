@@ -34,6 +34,9 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.PropertyDomainEvent;
 import org.apache.isis.applib.services.title.TitleService;
 
+import org.isisaddons.module.security.dom.tenancy.HasAtPath;
+
+import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.project.Project;
@@ -105,7 +108,7 @@ import lombok.Setter;
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
 )
-public class CodaDocLine implements Comparable<CodaDocLine> {
+public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
 
     /**
      * For properties that are only populated for summary lines.
@@ -218,6 +221,14 @@ public class CodaDocLine implements Comparable<CodaDocLine> {
     @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
     private CodaDocHead docHead;
+
+    @Override
+    public String getAtPath() {
+        final CodaDocHead hasAtPath = getDocHead();
+        return hasAtPath != null
+                ? hasAtPath.getAtPath()
+                : ApplicationTenancyLevel.ROOT.getPath();
+    }
 
     @Column(allowsNull = "false")
     @Property()

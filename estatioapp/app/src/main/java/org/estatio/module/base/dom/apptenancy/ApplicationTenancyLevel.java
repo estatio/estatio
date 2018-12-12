@@ -33,6 +33,14 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
  */
 public final class ApplicationTenancyLevel implements Comparable<ApplicationTenancyLevel> {
 
+    private static final String ROOT_PATH = "/";
+    private static final String PATH_SEPARATOR = "/";
+    private static final String OTHER_PART = "_";
+
+    public static ApplicationTenancyLevel ROOT = ApplicationTenancyLevel.of(ROOT_PATH);
+    public static final ApplicationTenancyLevel ITALY = ROOT.child("ITA");
+    public static final ApplicationTenancyLevel FRANCE = ROOT.child("FRA");
+
     public static ApplicationTenancyLevel of(final String path) {
         if (path == null) {
             return null;
@@ -102,21 +110,21 @@ public final class ApplicationTenancyLevel implements Comparable<ApplicationTena
 
     //region > parent
     public ApplicationTenancyLevel parent() {
-        if(path.equals("/")) {
+        if(path.equals(ROOT_PATH)) {
             return null;
         }
         final List<String> parts = getParts();
         final List<String> strings = parts.subList(0, parts.size() - 1);
-        final String join = Joiner.on("/").join(strings);
-        return new ApplicationTenancyLevel("/" + join);
+        final String join = Joiner.on(PATH_SEPARATOR).join(strings);
+        return new ApplicationTenancyLevel(ROOT_PATH + join);
     }
 
     public ApplicationTenancyLevel child(final String child) {
-        if(child.contains("/")) {
-            throw new IllegalArgumentException(String.format("Argument '%s' must not contain path separator '/'", child));
+        if(child.contains(PATH_SEPARATOR)) {
+            throw new IllegalArgumentException(String.format("Argument '%s' must not contain path separator '%s'", child, PATH_SEPARATOR));
         }
 
-        return ApplicationTenancyLevel.of(getPath()+(isRoot()?"":"/")+child);
+        return ApplicationTenancyLevel.of(getPath()+(isRoot()?"":ROOT_PATH)+child);
     }
 
     /**
@@ -132,12 +140,7 @@ public final class ApplicationTenancyLevel implements Comparable<ApplicationTena
      * </ul>
      */
     List<String> getParts() {
-        return Lists.newArrayList(Iterables.filter(Splitter.on('/').split(path), new Predicate<String>() {
-                    @Override
-                    public boolean apply(final String input) {
-                        return !Strings.isNullOrEmpty(input);
-                    }
-                }
+        return Lists.newArrayList(Iterables.filter(Splitter.on('/').split(path), input -> !Strings.isNullOrEmpty(input)
         ));
     }
     //endregion
@@ -145,11 +148,11 @@ public final class ApplicationTenancyLevel implements Comparable<ApplicationTena
     //region > is{Root|Country|Property|Local}{|Other}
 
     public boolean isRoot() {
-        return "/".equals(getPath());
+        return ROOT_PATH.equals(getPath());
     }
 
     public boolean isRootOther() {
-        return getParts().size() == 1 && "_".equals(getParts().get(0));
+        return getParts().size() == 1 && OTHER_PART.equals(getParts().get(0));
     }
 
     public boolean isCountry() {
@@ -159,7 +162,7 @@ public final class ApplicationTenancyLevel implements Comparable<ApplicationTena
 
     public boolean isCountryOther() {
         // /it/_
-        return getParts().size() == 2 && "_".equals(getParts().get(1));
+        return getParts().size() == 2 && OTHER_PART.equals(getParts().get(1));
     }
 
     public boolean isProperty() {
@@ -169,7 +172,7 @@ public final class ApplicationTenancyLevel implements Comparable<ApplicationTena
 
     public boolean isLocalDefault() {
         // /it/CAR/_
-        return isLocalNamed("_");
+        return isLocalNamed(OTHER_PART);
     }
 
     public boolean isLocalNamed(final String name) {
@@ -195,7 +198,7 @@ public final class ApplicationTenancyLevel implements Comparable<ApplicationTena
         if(isRootOther()) {
             throw new IllegalArgumentException("Tenancy level is 'root other'.");
         }
-        return "/" + getParts().get(0);
+        return ROOT_PATH + getParts().get(0);
     }
     //endregion
 
@@ -237,77 +240,41 @@ public final class ApplicationTenancyLevel implements Comparable<ApplicationTena
         private Predicates(){}
 
         public final static Predicate<ApplicationTenancy> childrenOf(final ApplicationTenancyLevel level) {
-            return new Predicate<ApplicationTenancy>() {
-                @Override
-                public boolean apply(final ApplicationTenancy input) {
-                    final ApplicationTenancyLevel candidate = of(input.getPath());
-                    return candidate.childOf(level);
-                }
+            return input -> {
+                final ApplicationTenancyLevel candidate = of(input.getPath());
+                return candidate.childOf(level);
             };
         }
 
         public final static Predicate<ApplicationTenancy> parentsOf(final ApplicationTenancyLevel level) {
-            return new Predicate<ApplicationTenancy>() {
-                @Override
-                public boolean apply(final ApplicationTenancy input) {
-                    final ApplicationTenancyLevel candidate = of(input.getPath());
-                    return candidate.parentOf(level);
-                }
+            return input -> {
+                final ApplicationTenancyLevel candidate = of(input.getPath());
+                return candidate.parentOf(level);
             };
         }
 
         public final static Predicate<ApplicationTenancy> isRoot() {
-            return new Predicate<ApplicationTenancy>() {
-                @Override
-                public boolean apply(final ApplicationTenancy input) {
-                    return ApplicationTenancyLevel.of(input).isRoot();
-                }
-            };
+            return input -> ApplicationTenancyLevel.of(input).isRoot();
         }
 
         public final static Predicate<ApplicationTenancy> isCountry() {
-            return new Predicate<ApplicationTenancy>() {
-                @Override
-                public boolean apply(final ApplicationTenancy input) {
-                    return ApplicationTenancyLevel.of(input).isCountry();
-                }
-            };
+            return input -> ApplicationTenancyLevel.of(input).isCountry();
         }
 
         public final static Predicate<ApplicationTenancy> isCountryOther() {
-            return new Predicate<ApplicationTenancy>() {
-                @Override
-                public boolean apply(final ApplicationTenancy input) {
-                    return ApplicationTenancyLevel.of(input).isCountryOther();
-                }
-            };
+            return input -> ApplicationTenancyLevel.of(input).isCountryOther();
         }
 
         public final static Predicate<ApplicationTenancy> isProperty() {
-            return new Predicate<ApplicationTenancy>() {
-                @Override
-                public boolean apply(final ApplicationTenancy input) {
-                    return ApplicationTenancyLevel.of(input).isProperty();
-                }
-            };
+            return input -> ApplicationTenancyLevel.of(input).isProperty();
         }
 
         public final static Predicate<ApplicationTenancy> isLocalDefault() {
-            return new Predicate<ApplicationTenancy>() {
-                @Override
-                public boolean apply(final ApplicationTenancy input) {
-                    return ApplicationTenancyLevel.of(input).isLocalDefault();
-                }
-            };
+            return input -> ApplicationTenancyLevel.of(input).isLocalDefault();
         }
 
         public final static Predicate<ApplicationTenancy> isLocal() {
-            return new Predicate<ApplicationTenancy>() {
-                @Override
-                public boolean apply(final ApplicationTenancy input) {
-                    return ApplicationTenancyLevel.of(input).isLocalNamed("ta");
-                }
-            };
+            return input -> ApplicationTenancyLevel.of(input).isLocalNamed("ta");
         }
 
     }
