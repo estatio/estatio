@@ -18,11 +18,9 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 
-import org.isisaddons.module.security.app.user.MeService;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyEvaluator;
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
-import org.isisaddons.module.security.dom.user.ApplicationUser;
 
+import org.estatio.module.base.dom.VisibilityEvaluator;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.dom.task.TaskRepository;
 import org.estatio.module.party.dom.Person;
@@ -50,12 +48,6 @@ public class TaskOverview implements HasAtPath {
     @Getter @Setter
     private Person person;
 
-    @Inject
-    ApplicationTenancyEvaluator evaluator;
-
-    @Inject
-    MeService meService;
-
     @Property
     public long getTasksOverdue() {
         final Stream<Task> incompleteTasks = streamIncompleteTasksVisibleToMeAssignedTo(person);
@@ -75,18 +67,7 @@ public class TaskOverview implements HasAtPath {
     private Stream<Task> streamIncompleteTasksVisibleToMeAssignedTo(final Person person) {
         final List<Task> tasks = taskRepository.findIncompleteByPersonAssignedTo(person);
         return tasks.stream()
-                .filter(this::visibleToMe); // since just counting
-    }
-
-    /**
-     * To filter out any tasks that this user doesn't have access to.
-     *
-     * We wouldn't need to do this if just rendering in a table, but it is necessary when
-     * just counting the tasks.
-     */
-    private boolean visibleToMe(final Task task) {
-        final ApplicationUser meAsApplicationUser = meService.me();
-        return evaluator.hides(task, meAsApplicationUser) == null;
+                .filter(visibilityEvaluator::visibleToMe); // since just counting
     }
 
     @Collection
@@ -122,12 +103,16 @@ public class TaskOverview implements HasAtPath {
     }
 
     @Inject
-    private ClockService clockService;
+    ClockService clockService;
 
     @Inject
-    private TaskReminderService taskReminderService;
+    TaskReminderService taskReminderService;
 
     @Inject
-    private TaskRepository taskRepository;
+    TaskRepository taskRepository;
+
+    @Inject
+    VisibilityEvaluator visibilityEvaluator;
+
 }
 

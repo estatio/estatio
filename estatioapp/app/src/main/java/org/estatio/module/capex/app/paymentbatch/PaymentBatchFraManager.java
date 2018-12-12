@@ -34,6 +34,7 @@ import org.apache.isis.applib.value.Clob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
+import org.estatio.module.base.dom.VisibilityEvaluator;
 import org.estatio.module.capex.app.DebtorBankAccountService;
 import org.estatio.module.capex.app.paymentline.PaymentLineForExcelExportV1;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
@@ -200,6 +201,7 @@ public class PaymentBatchFraManager {
     private List<IncomingInvoice> getPayableInvoicesNotInAnyBatchWithBankAccountAndBic() {
         return getPayableInvoicesNotInAnyBatch().stream()
                 .filter(pi -> pi.getBankAccount() != null && pi.getBankAccount().getBic() != null)
+                .filter(visibilityEvaluator::visibleToMe)
                 .collect(Collectors.toList());
     }
 
@@ -662,4 +664,7 @@ public class PaymentBatchFraManager {
     @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
     ExcelService excelService;
 
+    @Inject
+    @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
+    VisibilityEvaluator visibilityEvaluator;
 }
