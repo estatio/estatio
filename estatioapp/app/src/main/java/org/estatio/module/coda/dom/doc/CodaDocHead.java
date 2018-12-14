@@ -159,7 +159,8 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
             final LocalDate docDate,
             final String codaPeriod,
             final String location,
-            final String sha256, final String statPay) {
+            final String sha256,
+            final String statPay) {
 
         this.cmpCode = cmpCode;
         this.docCode = docCode;
@@ -169,6 +170,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         this.docDate = docDate;
         this.codaPeriod = codaPeriod;
         this.location = location;
+        this.sha256 = sha256;
         this.statPay = statPay;
 
         this.numberOfLines = 0;
