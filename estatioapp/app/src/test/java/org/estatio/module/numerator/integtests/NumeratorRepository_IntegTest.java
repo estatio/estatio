@@ -25,7 +25,6 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.setup.PersonaEnumPersistAll;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -55,21 +54,8 @@ public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstr
 
     @Before
     public void setUp() throws Exception {
-//        runFixtureScript(new FixtureScript() {
-//            @Override
-//            protected void execute(final ExecutionContext executionContext) {
-//                executionContext.executeChild(this, ApplicationTenancy_enum.NlKal);
-//                executionContext.executeChild(this, ApplicationTenancy_enum.GbOxf);
-//            }
-//        });
-
         runFixtureScript(new PersonaEnumPersistAll<>(NumeratorExampleObject_enum.class));
-        runFixtureScript(new FixtureScript() {
-            @Override
-            protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new ApplicationTenancy_enum.PersistAll());
-            }
-        });
+        runFixtureScript(new PersonaEnumPersistAll<>(ApplicationTenancy_enum.class));
 
         applicationTenancyKal = ApplicationTenancy_enum.NlKal.findUsing(serviceRegistry);
         applicationTenancyOxf = ApplicationTenancy_enum.GbOxf.findUsing(serviceRegistry);
