@@ -26,7 +26,7 @@ import org.estatio.module.application.app.CodaDocCodeService;
 public class CodaDocHeadMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
-    public CodaDocHead lookup(
+    public CodaDocHead lookupCodaDocument(
             final String cmpCode,
             final String docCode,
             final String docNum
@@ -40,11 +40,17 @@ public class CodaDocHeadMenu {
         }
         return docHead;
     }
-    public List<String> choices0Lookup() {
+    public List<String> choices0LookupCodaDocument() {
         return codaCmpCodeService.listAll();
     }
-    public List<String> choices1Lookup() {
+    public String default0LookupCodaDocument() {
+        return codaCmpCodeService.listAll().get(0);
+    }
+    public List<String> choices1LookupCodaDocument() {
         return codaDocCodeService.listAll();
+    }
+    public String default1LookupCodaDocument() {
+        return codaDocCodeService.listAll().get(0);
     }
 
 
