@@ -159,7 +159,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
             final LocalDate docDate,
             final String codaPeriod,
             final String location,
-            final String statPay) {
+            final String sha256, final String statPay) {
 
         this.cmpCode = cmpCode;
         this.docCode = docCode;
@@ -224,6 +224,11 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     @Property()
     @Getter @Setter
     private short codaTimeStamp;
+
+    @Column(allowsNull = "false", length = 64)
+    @Property()
+    @Getter @Setter
+    private String sha256;
 
     @Column(allowsNull = "true")
     @javax.jdo.annotations.Persistent
@@ -862,7 +867,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         if (other == this) {
             return true;
         }
-        return getCodaTimeStamp() == other.getCodaTimeStamp() &&
+        return Objects.equals(getSha256(), other.getSha256()) &&
                Objects.equals(getStatPay(), other.getStatPay());
     }
 

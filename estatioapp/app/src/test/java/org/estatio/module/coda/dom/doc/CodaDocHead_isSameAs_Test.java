@@ -12,12 +12,12 @@ public class CodaDocHead_isSameAs_Test {
     @Before
     public void setUp() throws Exception {
         codaDocHead = new CodaDocHead();
-        codaDocHead.setCodaTimeStamp((short)3);
+        codaDocHead.setSha256("SHA256");
         codaDocHead.setStatPay("");
 
         other = new CodaDocHead();
-        other.setCodaTimeStamp((short)3);
-        other.setStatPay("");
+        other.setSha256(codaDocHead.getSha256()); // start off as equal
+        other.setStatPay(codaDocHead.getStatPay());
     }
 
     @Test
@@ -41,7 +41,7 @@ public class CodaDocHead_isSameAs_Test {
     @Test
     public void when_equal() throws Exception {
         // given
-        Assertions.assertThat(codaDocHead.getCodaTimeStamp()).isEqualTo(other.getCodaTimeStamp());
+        Assertions.assertThat(codaDocHead.getSha256()).isEqualTo(other.getSha256());
         Assertions.assertThat(codaDocHead.getStatPay()).isEqualTo(other.getStatPay());
 
         // when
@@ -49,9 +49,9 @@ public class CodaDocHead_isSameAs_Test {
     }
 
     @Test
-    public void when_different_timestamp() throws Exception {
+    public void when_different_sha256() throws Exception {
         // given
-        other.setCodaTimeStamp((short) (codaDocHead.getCodaTimeStamp() + 1));
+        other.setSha256("DIFFERENT_SHA256");
         Assertions.assertThat(codaDocHead.getStatPay()).isEqualTo(other.getStatPay());
 
         // when
@@ -61,7 +61,7 @@ public class CodaDocHead_isSameAs_Test {
     @Test
     public void when_different_statPay() throws Exception {
         // given
-        Assertions.assertThat(codaDocHead.getCodaTimeStamp()).isEqualTo(other.getCodaTimeStamp());
+        Assertions.assertThat(codaDocHead.getSha256()).isEqualTo(other.getSha256());
         codaDocHead.setStatPay("");
         other.setStatPay("paid");
 

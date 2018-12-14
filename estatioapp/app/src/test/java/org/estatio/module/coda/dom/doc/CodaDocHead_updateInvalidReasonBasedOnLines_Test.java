@@ -15,7 +15,7 @@ public class CodaDocHead_updateInvalidReasonBasedOnLines_Test {
 
     @Before
     public void setUp() throws Exception {
-        codaDocHead = new CodaDocHead("IT01","FR-GEN","12345", (short)1, null, null, null, null, "");
+        codaDocHead = new CodaDocHead("IT01","FR-GEN","12345", (short)1, null, null, null, null, "SHA256", "");
         codaDocHead.setLines(Sets.newTreeSet());
 
         CodaDocHead codaDocHead = this.codaDocHead;

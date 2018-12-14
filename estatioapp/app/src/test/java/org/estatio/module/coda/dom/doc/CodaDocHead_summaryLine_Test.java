@@ -13,8 +13,7 @@ public class CodaDocHead_summaryLine_Test {
 
     @Before
     public void setUp() throws Exception {
-        codaDocHead = new CodaDocHead("IT01", "FR-GEN", "12345", (short)1, LocalDate.now(), LocalDate.now(), "2019/1", "books",
-                "");
+        codaDocHead = new CodaDocHead("IT01", "FR-GEN", "12345", (short)1, LocalDate.now(), LocalDate.now(), "2019/1", "books", "SHA256", "");
         codaDocHead.setLines(Sets.newTreeSet());
     }
 

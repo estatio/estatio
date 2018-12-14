@@ -46,8 +46,7 @@ public class CodaDocHeadRepository_replace_Test {
 
         sequence = context.sequence("sequence");
 
-        replacementDocHead = new CodaDocHead("IT01", "FR-GEN", "123", (short)1, LocalDate.now(), LocalDate.now(), "2019/1", "books",
-                "");
+        replacementDocHead = new CodaDocHead("IT01", "FR-GEN", "123", (short)1, LocalDate.now(), LocalDate.now(), "2019/1", "books", "SHA256", "");
 
         context.checking(new Expectations() {{
             allowing(mockTitleService).titleOf(replacementDocHead);
