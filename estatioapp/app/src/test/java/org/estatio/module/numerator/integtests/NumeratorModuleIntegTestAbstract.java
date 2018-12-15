@@ -28,7 +28,6 @@ import org.apache.isis.applib.Module;
 import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
 import org.apache.isis.core.runtime.headless.logging.LogConfig;
 
-import org.estatio.module.numerator.EstatioNumeratorModule;
 import org.estatio.module.numerator.integtests.dom.NumeratorModuleNumeratorDomSubmodule;
 
 /**
@@ -42,8 +41,8 @@ public abstract class NumeratorModuleIntegTestAbstract extends IntegrationTestAb
         );
     }
 
-    public static EstatioNumeratorModule module() {
-        return new EstatioNumeratorModule() {
+    public static NumeratorModuleNumeratorDomSubmodule module() {
+        return new NumeratorModuleNumeratorDomSubmodule() {
             @Override
             public Set<Module> getDependencies() {
                 return Sets.newHashSet(new NumeratorModuleNumeratorDomSubmodule());

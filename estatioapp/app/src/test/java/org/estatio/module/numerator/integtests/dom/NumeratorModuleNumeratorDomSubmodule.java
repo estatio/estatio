@@ -27,10 +27,10 @@ import com.google.common.collect.Sets;
 import org.apache.isis.applib.Module;
 import org.apache.isis.applib.ModuleAbstract;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
-import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
+import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
 
 import org.estatio.module.numerator.EstatioNumeratorModule;
+import org.estatio.module.numerator.dom.Numerator;
 
 @XmlRootElement(name = "module")
 public class NumeratorModuleNumeratorDomSubmodule extends ModuleAbstract {
@@ -42,10 +42,11 @@ public class NumeratorModuleNumeratorDomSubmodule extends ModuleAbstract {
 
     @Override
     public FixtureScript getTeardownFixture() {
-        return new TeardownFixtureAbstract() {
+        return new TeardownFixtureAbstract2() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
                 deleteFrom(NumeratorExampleObject.class);
+                deleteFrom(Numerator.class);
             }
         };
     }

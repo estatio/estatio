@@ -108,11 +108,11 @@ public class NumeratorRepository extends UdoDomainRepositoryAndFactory<Numerator
                 "applicationTenancyPath", applicationTenancy == null ? "/" : applicationTenancy.getPath());
     }
 
-    public Numerator findNumeratorScopedToObject(final Object scopedTo, final ApplicationTenancy applicationTenancy) {
+    public List<Numerator> findNumeratorsScopedToObject(final Object scopedTo, final ApplicationTenancy applicationTenancy) {
         final Bookmark bookmark = getBookmarkService().bookmarkFor(scopedTo);
         final String objectType = bookmark.getObjectType();
         final String objectIdentifier = bookmark.getIdentifier();
-        return firstMatch("findByObjectTypeAndObjectIdentifierAndApplicationTenancyPath",
+        return allMatches("findByObjectTypeAndObjectIdentifierAndApplicationTenancyPath",
                 "objectType", objectType,
                 "objectIdentifier", objectIdentifier,
                 "applicationTenancyPath", applicationTenancy == null ? "/" : applicationTenancy.getPath());
