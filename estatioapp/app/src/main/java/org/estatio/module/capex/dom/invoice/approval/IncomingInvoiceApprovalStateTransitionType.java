@@ -484,37 +484,6 @@ public enum IncomingInvoiceApprovalStateTransitionType
             return incomingInvoice.getPaymentMethod() == PaymentMethod.CREDIT_CARD || incomingInvoice.getPaymentMethod() == PaymentMethod.REFUND_BY_SUPPLIER;
         }
     },
-    PAID_IN_CODA(
-            Lists.newArrayList(
-                    IncomingInvoiceApprovalState.NEW,
-                    IncomingInvoiceApprovalState.COMPLETED,
-                    IncomingInvoiceApprovalState.PENDING_ADVISE,
-                    IncomingInvoiceApprovalState.ADVISE_POSITIVE,
-                    IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER,
-                    IncomingInvoiceApprovalState.APPROVED,
-                    IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
-                    IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK,
-                    IncomingInvoiceApprovalState.PAYABLE
-            ),
-            IncomingInvoiceApprovalState.PAID,
-            NextTransitionSearchStrategy.none(),
-            TaskAssignmentStrategy.none(),
-            AdvancePolicy.AUTOMATIC
-    ){
-        @Override
-        public boolean isMatch(
-                final IncomingInvoice incomingInvoice,
-                final ServiceRegistry2 serviceRegistry2) {
-            return isItalian(incomingInvoice);
-        }
-
-        @Override
-        public boolean isGuardSatisfied(
-                final IncomingInvoice incomingInvoice,
-                final ServiceRegistry2 serviceRegistry2) {
-            return isPaidInCoda(incomingInvoice);
-        }
-    },
     ADVISE(
             IncomingInvoiceApprovalState.COMPLETED,
             IncomingInvoiceApprovalState.PENDING_ADVISE,
@@ -571,6 +540,37 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
             return isItalian(incomingInvoice);
+        }
+    },
+    PAID_IN_CODA(
+            Lists.newArrayList(
+                    IncomingInvoiceApprovalState.NEW,
+                    IncomingInvoiceApprovalState.COMPLETED,
+                    IncomingInvoiceApprovalState.PENDING_ADVISE,
+                    IncomingInvoiceApprovalState.ADVISE_POSITIVE,
+                    IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER,
+                    IncomingInvoiceApprovalState.APPROVED,
+                    IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+                    IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK,
+                    IncomingInvoiceApprovalState.PAYABLE
+            ),
+            IncomingInvoiceApprovalState.PAID,
+            NextTransitionSearchStrategy.none(),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.AUTOMATIC
+    ){
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            return isItalian(incomingInvoice);
+        }
+
+        @Override
+        public boolean isGuardSatisfied(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            return isPaidInCoda(incomingInvoice);
         }
     },
     DISCARD(
