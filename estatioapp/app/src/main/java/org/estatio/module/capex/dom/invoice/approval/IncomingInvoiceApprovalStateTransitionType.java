@@ -485,7 +485,17 @@ public enum IncomingInvoiceApprovalStateTransitionType
         }
     },
     PAID_IN_CODA(
-            IncomingInvoiceApprovalState.PAYABLE,
+            Lists.newArrayList(
+                    IncomingInvoiceApprovalState.NEW,
+                    IncomingInvoiceApprovalState.COMPLETED,
+                    IncomingInvoiceApprovalState.PENDING_ADVISE,
+                    IncomingInvoiceApprovalState.ADVISE_POSITIVE,
+                    IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER,
+                    IncomingInvoiceApprovalState.APPROVED,
+                    IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+                    IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK,
+                    IncomingInvoiceApprovalState.PAYABLE
+            ),
             IncomingInvoiceApprovalState.PAID,
             NextTransitionSearchStrategy.none(),
             TaskAssignmentStrategy.none(),
