@@ -112,7 +112,7 @@ public class DerivedObjectUpdater {
         final BudgetItem budgetItem = null;
 
         final BigDecimal grossAmount = docHead.getSummaryLineDocValue(LineCache.DEFAULT);
-        final BigDecimal vatAmount = docHead.getSummaryLineDocSumTax(LineCache.DEFAULT);
+        final BigDecimal vatAmount = docHead.getSummaryLineDocSumTax(LineCache.DEFAULT)==null ? BigDecimal.ZERO : docHead.getSummaryLineDocSumTax(LineCache.DEFAULT);
         final BigDecimal netAmount = Util.subtract(grossAmount, vatAmount);
         final String period = Util.asFinancialYear(docHead.getCodaPeriod());
         final Tax tax = null;
