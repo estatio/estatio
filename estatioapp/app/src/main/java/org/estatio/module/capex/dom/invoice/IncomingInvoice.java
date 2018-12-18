@@ -1383,6 +1383,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         IncomingInvoice.Validator validateForIncomingInvoiceType(IncomingInvoice incomingInvoice){
             if (incomingInvoice == null) return this;
             if (incomingInvoice.getType() == null) return this;
+            if (incomingInvoice.isItalian()) return this; //ECP-896 Italian invoice of type CAPEX do not require a property
 
             String message;
             switch (incomingInvoice.getType()){
