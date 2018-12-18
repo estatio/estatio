@@ -74,7 +74,9 @@ public class OrderRepository {
     }
 
     static String withTrailingSlash(final String str) {
-        if(str == null) { return null; }
+        if (str == null) {
+            return null;
+        }
         final String trimmed = str.trim();
         return trimmed.endsWith("/") ? trimmed : trimmed + "/";
     }
@@ -129,7 +131,7 @@ public class OrderRepository {
                         "matchByOrderNumber",
                         "orderNumber", pattern));
     }
-    
+
     @Programmatic
     public Order create(
             final Property property,
@@ -144,7 +146,7 @@ public class OrderRepository {
             final String description,
             final IncomingInvoiceType type,
             final String atPath) {
-        final String orderNumber = generateNextOrderNumberForCountry(property, multiPropertyReference, project, charge, atPath);
+        final String orderNumber = generateNextOrderNumberForCountry(property, buyer, multiPropertyReference, project, charge, atPath);
         final Order order = create(property, orderNumber, null, clockService.now(), orderDate, supplier, buyer, type,
                 atPath, null);
         order.addItem(charge, description, netAmount, null, null, tax, orderDate == null ? null : String.valueOf(orderDate.getYear()), property, project, null);
@@ -167,7 +169,7 @@ public class OrderRepository {
         final Order order = new Order(
                 property,
                 orderType,
-                orderNumber == null ? generateNextOrderNumberForCountry(null, null, null, null, atPath) : orderNumber,
+                orderNumber == null ? generateNextOrderNumberForCountry(null, null,null, null, null, atPath) : orderNumber,
                 sellerOrderReference,
                 entryDate,
                 orderDate,
@@ -182,6 +184,7 @@ public class OrderRepository {
 
     private String generateNextOrderNumberForCountry(
             final Property property,
+            final Organisation buyer,
             final String multiPropertyReference,
             final Project project,
             final Charge charge,
@@ -190,7 +193,7 @@ public class OrderRepository {
         if (atPath.startsWith("/ITA")) {
             numerator = numeratorRepository.findOrCreateNumerator(
                     "Order number",
-                    null,
+                    buyer,
                     "%04d",
                     BigInteger.ZERO,
                     applicationTenancyRepository.findByPath(atPath));
@@ -338,7 +341,6 @@ public class OrderRepository {
         }
         return result;
     }
-
 
     @Inject
     IncomingDocumentRepository incomingDocumentRepository;

@@ -1,7 +1,6 @@
 package org.estatio.module.capex.app;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -22,16 +21,13 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
-import org.apache.isis.applib.services.user.UserService;
 
-import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.security.app.user.MeService;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
+import org.incode.module.alias.dom.spi.ApplicationTenancyRepository;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.Order;
@@ -39,7 +35,6 @@ import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
@@ -74,7 +69,7 @@ public class OrderMenu {
             @Nullable @Parameter(maxLength = 3) final String multiPropertyReference,
             final Project project,
             final Charge charge,
-            @Nullable final Organisation buyer,
+            final Organisation buyer,
             @Nullable final Organisation supplier,
             final LocalDate orderDate,
             @Nullable final BigDecimal netAmount,
@@ -100,6 +95,9 @@ public class OrderMenu {
 
         if (property != null && multiPropertyReference != null)
             return "Can not define both property and multi property reference";
+
+        if (numeratorRepository.findNumerator("Order number", buyer, buyer.getApplicationTenancy()) == null)
+            return "No order number numerator found for this buyer";
 
         return null;
     }
@@ -303,20 +301,6 @@ public class OrderMenu {
         return orderRepository.matchByOrderNumber(orderNumber);
     }
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT, restrictTo = RestrictTo.PROTOTYPING)
-    public Numerator createOrderNumberNumerator(final String format, final String atPath) {
-        return numeratorRepository.findOrCreateNumerator(
-                "Order number",
-                null,
-                format,
-                BigInteger.ZERO,
-                applicationTenancyRepository.findByPath(atPath));
-    }
-
-    public String validateCreateOrderNumberNumerator(final String format, final String atPath) {
-        return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser()) ? "You need administrator rights to create an order numerator" : null;
-    }
-
     @Inject
     OrderRepository orderRepository;
 
@@ -330,15 +314,11 @@ public class OrderMenu {
     NumeratorRepository numeratorRepository;
 
     @Inject
-    ApplicationTenancyRepository applicationTenancyRepository;
-
-    @Inject
-    UserService userService;
-
-    @Inject
     MeService meService;
 
-    @Inject ExcelService excelService;
+    @Inject
+    ChargeRepository chargeRepository;
 
-    @Inject ChargeRepository chargeRepository;
+    @Inject
+    ApplicationTenancyRepository applicationTenancyRepository;
 }

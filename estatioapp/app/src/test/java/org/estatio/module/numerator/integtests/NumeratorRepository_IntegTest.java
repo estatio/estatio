@@ -19,7 +19,6 @@
 package org.estatio.module.numerator.integtests;
 
 import java.math.BigInteger;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -160,23 +159,6 @@ public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstr
             assertThat(inNotToBeFound1).isNull();
             assertThat(inNotToBeFound2).isNull();
 
-        }
-
-        @Test
-        public void withoutNumeratorName() throws Exception {
-            // given
-            final Numerator numerator = numeratorRepository
-                    .createScopedNumerator("Invoice number", exampleObjectOxf, "ABC-%05d", new BigInteger("10"), applicationTenancyOxf);
-
-            // when
-            List<Numerator> numerators = numeratorRepository.findNumeratorsScopedToObject(exampleObjectOxf, applicationTenancyOxf);
-
-            // then
-            assertThat(numerators).isNotNull();
-            assertThat(numerators).hasSize(1);
-            assertThat(numerators.get(0).getName()).isEqualTo("Invoice number");
-            assertThat(numerators.get(0).getObjectType()).isEqualTo("simple.NumeratorExampleObject");
-            assertThat(numerators.get(0)).isEqualTo(numerator);
         }
 
     }
