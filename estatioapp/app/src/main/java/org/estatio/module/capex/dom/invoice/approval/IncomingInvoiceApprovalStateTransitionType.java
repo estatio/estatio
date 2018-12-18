@@ -93,6 +93,21 @@ public enum IncomingInvoiceApprovalStateTransitionType
             return false;
         }
     },
+    AUTO_TRANSITION_TO_PENDING_CODA_BOOKS(
+            IncomingInvoiceApprovalState.NEW,
+            IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK,
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.AUTOMATIC
+    ){
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice, final ServiceRegistry2 serviceRegistry2) {
+            final boolean hasPaymentMethodOtherThanBankTransfer = incomingInvoice.getPaymentMethod() != null && incomingInvoice.getPaymentMethod() != PaymentMethod.BANK_TRANSFER;
+            if (isItalian(incomingInvoice) && hasPaymentMethodOtherThanBankTransfer) return true;
+            return false;
+        }
+    },
     COMPLETE(
             IncomingInvoiceApprovalState.NEW,
             IncomingInvoiceApprovalState.COMPLETED,

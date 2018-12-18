@@ -800,7 +800,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
     }
     
     @Test
-    public void invoice_having_payment_method_other_then_bank_transfer_are_automatically_approved() throws Exception {
+    public void invoice_having_payment_method_other_then_bank_transfer_bypasses_all_approval() throws Exception {
 
         // given
         List<IncomingInvoiceApprovalStateTransition> transitionsOfDirectDebitInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceForDirectDebit);
@@ -820,6 +820,27 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
                 false,null, IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK, null, IncomingInvoiceApprovalStateTransitionType.CONFIRM_IN_CODA_BOOKS
         ));
         assertThat(nextPending.getTask()).isNull();
+
+        // and when rejected
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_reject.class, invoiceForDirectDebit)).act("INCOMING_INVOICE_MANAGER", null, "No good; but rejection is of no use since has payment method that does not require approval"));
+
+        // then will end up in pending coda books check again
+        transitionsOfDirectDebitInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceForDirectDebit);
+        assertThat(transitionsOfDirectDebitInvoice).hasSize(4);
+        IncomingInvoiceApprovalStateTransition lastAutomatic = transitionsOfDirectDebitInvoice.get(1);
+        assertTransition(lastAutomatic, new ExpectedTransitionResult(
+                true, null, IncomingInvoiceApprovalState.NEW, IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK, IncomingInvoiceApprovalStateTransitionType.AUTO_TRANSITION_TO_PENDING_CODA_BOOKS
+        ));
+        assertThat(lastAutomatic.getTask()).isNull();
+
+        nextPending = transitionsOfDirectDebitInvoice.get(0);
+        assertTransition(nextPending, new ExpectedTransitionResult(
+                false,null, IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK, null, IncomingInvoiceApprovalStateTransitionType.CONFIRM_IN_CODA_BOOKS
+        ));
+        assertThat(nextPending.getTask()).isNull();
+
     }
 
     @Test
