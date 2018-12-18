@@ -42,6 +42,7 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.background.BackgroundService;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
 import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
@@ -49,12 +50,21 @@ import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
+import org.incode.module.document.dom.impl.paperclips.Paperclip;
+
 import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_reject;
 import org.estatio.module.capex.dom.order.OrderItem;
+import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.capex.dom.state.StateTransitionService;
+import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.coda.dom.doc.appsettings.ApplicationSettingKey;
 import org.estatio.module.financial.dom.BankAccount;
@@ -476,27 +486,19 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         DONT_SYNC_EVEN_IF_VALID
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    @Programmatic
     public CodaDocHead revalidate() {
         return revalidateAndSync(SynchronizationPolicy.DONT_SYNC_EVEN_IF_VALID);
     }
-    public boolean hideRevalidate() {
-        final boolean displayingIncluded = getHandling() == Handling.INCLUDED;
-        return !displayingIncluded;
-    }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
-    public CodaDocHead createEstatioInvoice() {
+    @Programmatic
+    public CodaDocHead resync() {
         return revalidateAndSync(SynchronizationPolicy.SYNC_IF_VALID);
-    }
-    public boolean hideCreateEstatioInvoice() {
-        final boolean displayingIncludedAndValid = getHandling() == Handling.INCLUDED && isValid();
-        return !displayingIncludedAndValid;
     }
 
     CodaDocHead revalidateAndSync(final SynchronizationPolicy policy) {
         revalidateOnly();
-        updateEstatioObjects(policy);
+        resync(policy);
         return this;
     }
 
@@ -562,7 +564,8 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
                 });
     }
 
-    void updateEstatioObjects(final SynchronizationPolicy syncPolicy) {
+
+    void resync(final SynchronizationPolicy syncPolicy) {
 
         final ErrorSet errors = new ErrorSet();
         errors.addIfNotEmpty(getReasonInvalid());
@@ -581,6 +584,162 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
             setHandling(Handling.SYNCED);
         }
     }
+
+    @Programmatic
+    public void syncAndKickEstatioObjectsIfAny(
+            final ErrorSet errors,
+            final boolean syncIfNew) {
+
+        final IncomingInvoice existingInvoiceIfAny = derivedObjectLookup.invoiceIfAnyFrom(this);
+        final OrderItemInvoiceItemLink existingLinkIfAny = derivedObjectLookup.linkIfAnyFrom(this);
+        final String existingDocumentNameIfAny = derivedObjectLookup.documentNameIfAnyFrom(this);
+        final Paperclip existingPaperclipIfAny = derivedObjectLookup.paperclipIfAnyFrom(this);
+
+        syncAndKickEstatioObjectsIfAny(
+                existingInvoiceIfAny, existingLinkIfAny, existingDocumentNameIfAny, existingPaperclipIfAny, errors, syncIfNew);
+    }
+
+
+    @Programmatic
+    public void syncAndKickEstatioObjectsIfAny(
+            final IncomingInvoice existingInvoiceIfAny,
+            final OrderItemInvoiceItemLink existingLinkIfAny,
+            final String existingDocumentNameIfAny,
+            final Paperclip existingPaperclipIfAny,
+            final ErrorSet errors,
+            final boolean syncIfNew) {
+
+        //
+        // the various updates will only ever do an update of the derived objects, never create new stuff
+        //
+        final IncomingInvoice incomingInvoice =
+                derivedObjectUpdater.upsertIncomingInvoice(this, existingInvoiceIfAny, syncIfNew);
+
+        this.setIncomingInvoice(incomingInvoice);
+
+        derivedObjectUpdater.updateLinkToOrderItem(
+                this,
+                existingLinkIfAny,
+                syncIfNew, errors);
+
+        derivedObjectUpdater.updatePaperclip(
+                this,
+                existingPaperclipIfAny, existingDocumentNameIfAny,
+                syncIfNew, errors);
+
+        //
+        // do the transitions here so that we update the appropriate pending task at the end
+        //
+        tryPullBackApprovalsIfRequired(incomingInvoice, errors);
+        tryTransitionToPayableWhenInCodaBooks(incomingInvoice);
+        tryTransitionToPaidWhenPaidInCoda(incomingInvoice, this);
+
+        derivedObjectUpdater.updatePendingTask(
+                this,
+                syncIfNew, errors);
+    }
+
+    private void tryPullBackApprovalsIfRequired(final IncomingInvoice incomingInvoice, final ErrorSet errors) {
+        //
+        // reject if required (and possible)
+        //
+        if (errors.isNotEmpty() && incomingInvoice != null) {
+
+            final IncomingInvoiceApprovalState approvalState = incomingInvoice.getApprovalState();
+
+            // if has moved on from NEW ...
+            if (approvalState != IncomingInvoiceApprovalState.NEW) {
+
+                // ... and can reject (ie pull back to new), then do so.
+                //
+                // nb #1: we DON'T wrap the reject action, we want this always succeed.
+                //        Otherwise we start to have to set up PROJECT_MANAGER roles etc for the system.
+                //
+                // nb #2: there's an subscriber specific to /ITA that
+                // removes the ability to discard Italian IncomingInvoices
+                //
+                if (approvalState.isNotFinal()) {
+
+                    final IncomingInvoice_reject mixin =
+                            factoryService.mixin(IncomingInvoice_reject.class, incomingInvoice);
+                    try {
+                        // hmm, seems like anyone can reject (no special roles required).
+                        mixin.act(
+                                mixin.default0Act(), mixin.default1Act(), errors.getText());
+
+                    } catch (Exception ex) {
+                        // best effort... being the issues to someone's attention, at least...
+                        final IncomingInvoiceApprovalStateTransition pendingTransition =
+                                stateTransitionService.pendingTransitionOf(incomingInvoice,
+                                        IncomingInvoiceApprovalStateTransition.class);
+                        Task task = pendingTransition.getTask();
+                        if(task != null) {
+                            task.setDescription(errors.getText());
+                        }
+                    }
+                } else {
+                    // nothing we can do here; the invoice is in a final state, eg paid.
+                }
+            } else {
+                // no need to do anything, hasn't yet been completed.
+            }
+        }
+    }
+
+    private void tryTransitionToPayableWhenInCodaBooks(final IncomingInvoice incomingInvoice) {
+
+        if (incomingInvoice == null) {
+            return;
+        }
+
+        final IncomingInvoiceApprovalState incomingInvoiceApprovalState = incomingInvoice.getApprovalState();
+        switch (incomingInvoiceApprovalState) {
+
+        case PENDING_CODA_BOOKS_CHECK:
+            if (incomingInvoice.isPostedToCodaBooks()) {
+
+                stateTransitionService.trigger(incomingInvoice,
+                        IncomingInvoiceApprovalStateTransitionType.CONFIRM_IN_CODA_BOOKS,
+                        null, // currentTaskCommentIfAny
+                        null  // nextTaskDescriptionIfAny
+                );
+            }
+            break;
+        }
+    }
+
+    private void tryTransitionToPaidWhenPaidInCoda(final IncomingInvoice incomingInvoice, final CodaDocHead docHead) {
+
+        if ( incomingInvoice == null) {
+            return;
+        }
+
+        final IncomingInvoiceApprovalState incomingInvoiceApprovalState = incomingInvoice.getApprovalState();
+        switch (incomingInvoiceApprovalState) {
+
+        case NEW:
+        case COMPLETED:
+        case PENDING_ADVISE:
+        case ADVISE_POSITIVE:
+        case APPROVED_BY_CENTER_MANAGER:
+        case APPROVED:
+        case APPROVED_BY_COUNTRY_DIRECTOR:
+        case PENDING_CODA_BOOKS_CHECK:
+        case PAYABLE:
+            if (docHead.isPaid()) {
+
+                stateTransitionService.trigger(incomingInvoice,
+                        IncomingInvoiceApprovalStateTransitionType.PAID_IN_CODA,
+                        null, // currentTaskCommentIfAny
+                        null  // nextTaskDescriptionIfAny
+                );
+            }
+            break;
+        }
+    }
+
+
+
 
     @Programmatic
     public boolean isValid() {
@@ -819,7 +978,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         if(!isValid()) {
             return; // belt-n-braces, in case has become invalid since background command was scheduled.
         }
-        updateEstatioObjects(SynchronizationPolicy.SYNC_IF_VALID);
+        resync(SynchronizationPolicy.SYNC_IF_VALID);
     }
 
     private boolean isAutosync() {
@@ -962,11 +1121,40 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
 
     @NotPersistent
     @Inject
+    DerivedObjectLookup derivedObjectLookup;
+
+    @NotPersistent
+    @Inject
     DerivedObjectUpdater derivedObjectUpdater;
 
     @NotPersistent
     @Inject
     ApplicationSettingsServiceRW applicationSettingsServiceRW;
+
+    @NotPersistent
+    @Inject
+    Scratchpad scratchpad;
+
+    @NotPersistent
+    @Inject
+    BackgroundService backgroundService;
+
+    @NotPersistent
+    @Inject
+    RepositoryService repositoryService;
+
+    @NotPersistent
+    @Inject
+    TransactionService transactionService;
+
+    @NotPersistent
+    @Inject
+    StateTransitionService stateTransitionService;
+
+    @NotPersistent
+    @Inject
+    FactoryService factoryService;
+
 
     @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "100")
     public static class TableColumnService implements TableColumnOrderService {
@@ -1005,17 +1193,5 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         }
 
     }
-
-    @Inject
-    Scratchpad scratchpad;
-
-    @Inject
-    BackgroundService backgroundService;
-
-    @Inject
-    RepositoryService repositoryService;
-
-    @Inject
-    TransactionService transactionService;
 
 }
