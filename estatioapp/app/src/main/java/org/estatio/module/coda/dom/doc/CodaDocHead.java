@@ -568,25 +568,14 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     void resync(final SynchronizationPolicy syncPolicy) {
 
         final ErrorSet errors = new ErrorSet();
-        errors.addIfNotEmpty(getReasonInvalid());
 
         final boolean syncIfNew = isValid() && syncPolicy == SynchronizationPolicy.SYNC_IF_VALID;
 
-        final IncomingInvoice incomingInvoice = derivedObjectUpdater.upsertIncomingInvoice(this, syncIfNew);
+        syncAndKickEstatioObjectsIfAny(errors, syncIfNew);
 
-        setIncomingInvoice(incomingInvoice); // if any
-
-        derivedObjectUpdater.updateLinkToOrderItem(this, syncIfNew, errors);
-        derivedObjectUpdater.updatePaperclip(this, syncIfNew, errors);
-        derivedObjectUpdater.updatePendingTask(this, syncIfNew, errors);
-
-        if (syncIfNew) {
-            setHandling(Handling.SYNCED);
-        }
     }
 
-    @Programmatic
-    public void syncAndKickEstatioObjectsIfAny(
+    private void syncAndKickEstatioObjectsIfAny(
             final ErrorSet errors,
             final boolean syncIfNew) {
 
@@ -608,6 +597,10 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
             final Paperclip existingPaperclipIfAny,
             final ErrorSet errors,
             final boolean syncIfNew) {
+
+        // an invalid CodaDocHead are only soft errors (could just be book-keeping problems).
+        // see Comparison (above) for hard errors.
+        errors.addIfNotEmpty(this.getReasonInvalid());
 
         //
         // the various updates will only ever do an update of the derived objects, never create new stuff
@@ -637,6 +630,10 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         derivedObjectUpdater.updatePendingTask(
                 this,
                 syncIfNew, errors);
+
+        if (syncIfNew) {
+            setHandling(Handling.SYNCED);
+        }
     }
 
     private void tryPullBackApprovalsIfRequired(final IncomingInvoice incomingInvoice, final ErrorSet errors) {
