@@ -13,8 +13,7 @@ import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
-import org.estatio.module.budget.dom.keytable.KeyTable;
-import org.estatio.module.budget.dom.keytable.KeyTableRepository;
+import org.estatio.module.budget.dom.keytable.PartitioningTable;
 import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
@@ -34,9 +33,6 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
 
     @Inject
     BudgetRepository budgetRepository;
-
-    @Inject
-    KeyTableRepository keytablesRepository;
 
     @Inject
     PartitioningTableRepository partitioningTableRepository;
@@ -99,14 +95,14 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
             Budget budget = budgetRepository.findByPropertyAndStartDate(property,
                     Budget_enum.OxfBudget2015.getStartDate());
             BudgetItem budgetItem = budget.getItems().first();
-            KeyTable keyTable = (KeyTable) partitioningTableRepository.findByBudget(budget).get(0);
+            PartitioningTable partitioningTable = partitioningTableRepository.findByBudget(budget).get(0);
             Charge charge = Charge_enum.GbServiceCharge.findUsing(serviceRegistry);
             Partitioning partitioning = budget.getPartitionings().first();
             // when
-            final PartitionItem partitionItem = partitionItemRepository.findUnique(partitioning, charge, budgetItem, keyTable);
+            final PartitionItem partitionItem = partitionItemRepository.findUnique(partitioning, charge, budgetItem, partitioningTable);
             // then
             assertThat(partitionItem.getBudgetItem()).isEqualTo(budgetItem);
-            assertThat(partitionItem.getPartitioningTable()).isEqualTo(keyTable);
+            assertThat(partitionItem.getPartitioningTable()).isEqualTo(partitioningTable);
         }
 
     }
@@ -126,22 +122,22 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
             Budget budget = budgetRepository.findByPropertyAndStartDate(property,
                     Budget_enum.OxfBudget2015.getStartDate());
             BudgetItem budgetItem = budget.getItems().first();
-            KeyTable keyTable = (KeyTable) partitioningTableRepository.findByBudget(budget).get(0);
+            PartitioningTable partitioningTable = partitioningTableRepository.findByBudget(budget).get(0);
             Charge charge = Charge_enum.GbServiceCharge.findUsing(serviceRegistry);
             Partitioning partitioning = budget.getPartitionings().first();
 
             origPercentage = new BigDecimal("100").setScale(6, BigDecimal.ROUND_HALF_UP);
             newPercentage = new BigDecimal("90").setScale(6, BigDecimal.ROUND_HALF_UP);
 
-            partitionItem = partitionItemRepository.findUnique(partitioning, charge, budgetItem, keyTable);
+            partitionItem = partitionItemRepository.findUnique(partitioning, charge, budgetItem, partitioningTable);
             assertThat(partitionItem.getPercentage()).isEqualTo(origPercentage);
 
             // when
-            partitionItem = partitionItemRepository.updateOrCreatePartitionItem(budget.getPartitionings().first(), budgetItem, charge, keyTable, newPercentage, null, null);
+            partitionItem = partitionItemRepository.updateOrCreatePartitionItem(budget.getPartitionings().first(), budgetItem, charge, partitioningTable, newPercentage, null, null);
 
             // then
             assertThat(partitionItem.getBudgetItem()).isEqualTo(budgetItem);
-            assertThat(partitionItem.getPartitioningTable()).isEqualTo(keyTable);
+            assertThat(partitionItem.getPartitioningTable()).isEqualTo(partitioningTable);
             assertThat(partitionItem.getPercentage()).isEqualTo(newPercentage);
         }
 

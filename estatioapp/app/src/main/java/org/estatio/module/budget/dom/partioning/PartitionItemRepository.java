@@ -32,7 +32,6 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
-import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.PartitioningTable;
 import org.estatio.module.charge.dom.Charge;
 
@@ -100,21 +99,21 @@ public class PartitionItemRepository extends UdoDomainRepositoryAndFactory<Parti
     }
 
     @Programmatic
-    public PartitionItem findOrCreatePartitionItem(final Partitioning partitioning, final BudgetItem budgetItem, final Charge invoiceCharge, final KeyTable keyTable, final BigDecimal percentage, final BigDecimal fixedBudgetedAmount,
+    public PartitionItem findOrCreatePartitionItem(final Partitioning partitioning, final BudgetItem budgetItem, final Charge invoiceCharge, final PartitioningTable partitioningTable, final BigDecimal percentage, final BigDecimal fixedBudgetedAmount,
             final BigDecimal fixedAuditedAmount){
-        final PartitionItem partitionItem = findUnique(partitioning, invoiceCharge, budgetItem, keyTable);
+        final PartitionItem partitionItem = findUnique(partitioning, invoiceCharge, budgetItem, partitioningTable);
         if (partitionItem == null) {
-            return newPartitionItem(partitioning, invoiceCharge, keyTable, budgetItem, percentage, fixedBudgetedAmount, fixedAuditedAmount);
+            return newPartitionItem(partitioning, invoiceCharge, partitioningTable, budgetItem, percentage, fixedBudgetedAmount, fixedAuditedAmount);
         }
         return partitionItem;
     }
 
     @Programmatic
-    public PartitionItem updateOrCreatePartitionItem(final Partitioning partitioning, final BudgetItem budgetItem, final Charge invoiceCharge, final KeyTable keyTable, final BigDecimal percentage, final BigDecimal fixedBudgetedAmount,
+    public PartitionItem updateOrCreatePartitionItem(final Partitioning partitioning, final BudgetItem budgetItem, final Charge invoiceCharge, final PartitioningTable partitioningTable, final BigDecimal percentage, final BigDecimal fixedBudgetedAmount,
             final BigDecimal fixedAuditedAmount){
-        final PartitionItem partitionItem = findUnique(partitioning, invoiceCharge, budgetItem, keyTable);
+        final PartitionItem partitionItem = findUnique(partitioning, invoiceCharge, budgetItem, partitioningTable);
         if (partitionItem == null) {
-            return newPartitionItem(partitioning, invoiceCharge, keyTable, budgetItem, percentage, fixedBudgetedAmount, fixedAuditedAmount);
+            return newPartitionItem(partitioning, invoiceCharge, partitioningTable, budgetItem, percentage, fixedBudgetedAmount, fixedAuditedAmount);
         } else {
             partitionItem.setPercentage(percentage);
             partitionItem.setFixedBudgetedAmount(fixedBudgetedAmount);

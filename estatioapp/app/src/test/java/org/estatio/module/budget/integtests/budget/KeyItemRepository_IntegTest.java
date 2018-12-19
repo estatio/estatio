@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
@@ -18,7 +17,6 @@ import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.keyitem.KeyItemRepository;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyTable;
-import org.estatio.module.budget.dom.keytable.KeyTableRepository;
 import org.estatio.module.budget.dom.keytable.KeyValueMethod;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.integtests.BudgetModuleIntegTestAbstract;
@@ -31,13 +29,7 @@ public class KeyItemRepository_IntegTest extends BudgetModuleIntegTestAbstract {
     KeyItemRepository keyItemRepository;
 
     @Inject
-    PropertyRepository propertyRepository;
-
-    @Inject
     UnitRepository unitRepository;
-
-    @Inject
-    KeyTableRepository keyTableRepository;
 
     @Inject
     BudgetRepository budgetRepository;

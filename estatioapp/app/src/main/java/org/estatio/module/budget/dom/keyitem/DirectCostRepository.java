@@ -80,7 +80,7 @@ public class DirectCostRepository extends UdoDomainRepositoryAndFactory<DirectCo
     @Programmatic
     public DirectCost findByDirectCostTableAndUnit(DirectCostTable directCostTable, Unit unit){
         final PartitioningTableItem item = partitioningTableItemRepository.findByPartitioningTableAndUnit(directCostTable, unit);
-        return item.getClass().isAssignableFrom(DirectCost.class) ? (DirectCost) item : null;
+        return item!=null && item.getClass().isAssignableFrom(DirectCost.class) ? (DirectCost) item : null;
     }
 
     @Inject

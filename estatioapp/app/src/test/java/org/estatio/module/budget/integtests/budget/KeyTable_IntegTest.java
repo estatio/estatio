@@ -191,15 +191,16 @@ public class KeyTable_IntegTest extends BudgetModuleIntegTestAbstract {
             unitIncludedWithoutStartAndEndDate.setEndDate(null);
 
             wrap(keyTableByArea).generateItems();
+            transactionService.nextTransaction();
 
             //then
             assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitNotIncludedWithEndDateOnly)).isEqualTo(null);
             assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitNotIncluded)).isEqualTo(null);
             assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitNotIncludedWithStartDateOnly)).isEqualTo(null);
-            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitIncluded).getValue()).isEqualTo("12.539");
-            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitIncludedWithEndDateOnly).getValue()).isEqualTo("15.674");
-            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitIncludedWithStartDateOnly).getValue()).isEqualTo("18.808");
-            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitIncludedWithoutStartAndEndDate).getValue()).isEqualTo("21.944");
+            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitIncluded).getValue()).isEqualTo(new BigDecimal("12.539000"));
+            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitIncludedWithEndDateOnly).getValue()).isEqualTo(new BigDecimal("15.674000"));
+            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitIncludedWithStartDateOnly).getValue()).isEqualTo(new BigDecimal("18.808000"));
+            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitIncludedWithoutStartAndEndDate).getValue()).isEqualTo(new BigDecimal("21.944000"));
 
         }
 

@@ -81,7 +81,7 @@ public class KeyItemRepository extends UdoDomainRepositoryAndFactory<KeyItem> {
     @Programmatic
     public KeyItem findByKeyTableAndUnit(KeyTable keyTable, Unit unit){
         final PartitioningTableItem item = partitioningTableItemRepository.findByPartitioningTableAndUnit(keyTable, unit);
-        return item.getClass().isAssignableFrom(KeyItem.class) ? (KeyItem) item : null;
+        return item!=null && item.getClass().isAssignableFrom(KeyItem.class) ? (KeyItem) item : null;
     }
 
 

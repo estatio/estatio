@@ -43,15 +43,18 @@ public class DirectCostRepository_IntegTest extends BudgetModuleIntegTestAbstrac
         final Budget budget = Budget_enum.OxfBudget2015.findUsing(serviceRegistry);
         final String directTableName = "direct";
         DirectCostTable table = directCostTableRepository.findOrCreateDirectCostTable(budget, directTableName);
+        DirectCostTable tableWithOutItems = directCostTableRepository.findOrCreateDirectCostTable(budget, "empty");
 
         // when
         wrap(table).generateItems();
+        transactionService.nextTransaction();
+
         final DirectCost firstItem = table.getItems().first();
         Unit unitOnFirstItem = firstItem.getUnit();
 
         // then
         assertThat(directCostRepository.findByDirectCostTableAndUnit(table, unitOnFirstItem)).isSameAs(firstItem);
-
+        assertThat(directCostRepository.findByDirectCostTableAndUnit(tableWithOutItems, unitOnFirstItem)).isNull();
     }
 
 }
