@@ -23,6 +23,7 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
 
@@ -185,13 +186,12 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
 
         this.numberOfLines = 0;
 
+        this.handling = Handling.INCLUDED;
+
         resetValidationAndDerivations();
     }
 
     void resetValidationAndDerivations() {
-
-        // use setters so that DN is aware
-        setHandling(Handling.INCLUDED);
 
         setLineValidationStatus(ValidationStatus.NOT_CHECKED);
 
@@ -487,20 +487,26 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     }
 
     @Programmatic
-    public CodaDocHead revalidate() {
-        return revalidateAndSync(SynchronizationPolicy.DONT_SYNC_EVEN_IF_VALID);
+    public void revalidate() {
+
+        final ErrorSet errors = new ErrorSet();
+
+        final boolean syncIfValid = false;
+
+        revalidateAndKickEstatioObjectsIfAny(errors, syncIfValid);
+
     }
 
     @Programmatic
-    public CodaDocHead resync() {
-        return revalidateAndSync(SynchronizationPolicy.SYNC_IF_VALID);
+    public void kick() {
+
+        final ErrorSet errors = new ErrorSet();
+
+        final boolean syncIfValid = true;
+
+        revalidateAndKickEstatioObjectsIfAny(errors, syncIfValid);
     }
 
-    CodaDocHead revalidateAndSync(final SynchronizationPolicy policy) {
-        revalidateOnly();
-        resync(policy);
-        return this;
-    }
 
     @Programmatic
     public CodaDocHead revalidateOnly() {
@@ -564,39 +570,40 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
                 });
     }
 
-
-    void resync(final SynchronizationPolicy syncPolicy) {
-
-        final ErrorSet errors = new ErrorSet();
-
-        final boolean syncIfNew = isValid() && syncPolicy == SynchronizationPolicy.SYNC_IF_VALID;
-
-        syncAndKickEstatioObjectsIfAny(errors, syncIfNew);
-
-    }
-
-    private void syncAndKickEstatioObjectsIfAny(
+    private void revalidateAndKickEstatioObjectsIfAny(
             final ErrorSet errors,
-            final boolean syncIfNew) {
+            final boolean createIfValid) {
+
+        //
+        // (re)validate this DocHead
+        //
+        revalidateOnly();
 
         final IncomingInvoice existingInvoiceIfAny = derivedObjectLookup.invoiceIfAnyFrom(this);
-        final OrderItemInvoiceItemLink existingLinkIfAny = derivedObjectLookup.linkIfAnyFrom(this);
-        final String existingDocumentNameIfAny = derivedObjectLookup.documentNameIfAnyFrom(this);
-        final Paperclip existingPaperclipIfAny = derivedObjectLookup.paperclipIfAnyFrom(this);
 
-        syncAndKickEstatioObjectsIfAny(
-                existingInvoiceIfAny, existingLinkIfAny, existingDocumentNameIfAny, existingPaperclipIfAny, errors, syncIfNew);
+        final OrderItemInvoiceItemLink existingLinkIfAny = derivedObjectLookup.linkIfAnyFrom(this);
+        final Paperclip existingPaperclipIfAny = derivedObjectLookup.paperclipIfAnyFrom(this);
+        final String existingDocumentNameIfAny = derivedObjectLookup.documentNameIfAnyFrom(this);
+
+        kickEstatioObjectsIfAny(
+                existingInvoiceIfAny,
+                existingLinkIfAny, existingDocumentNameIfAny, existingPaperclipIfAny,
+                errors, createIfValid);
     }
 
-
+    /**
+     * Expects that the doc has been {@link #revalidateOnly() validated} previously.
+     */
     @Programmatic
-    public void syncAndKickEstatioObjectsIfAny(
+    public void kickEstatioObjectsIfAny(
             final IncomingInvoice existingInvoiceIfAny,
             final OrderItemInvoiceItemLink existingLinkIfAny,
             final String existingDocumentNameIfAny,
             final Paperclip existingPaperclipIfAny,
             final ErrorSet errors,
-            final boolean syncIfNew) {
+            final boolean createIfValid) {
+
+        final boolean createInvoice = createIfValid && isValid();
 
         // an invalid CodaDocHead are only soft errors (could just be book-keeping problems).
         // see Comparison (above) for hard errors.
@@ -606,19 +613,27 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         // the various updates will only ever do an update of the derived objects, never create new stuff
         //
         final IncomingInvoice incomingInvoice =
-                derivedObjectUpdater.upsertIncomingInvoice(this, existingInvoiceIfAny, syncIfNew);
+                derivedObjectUpdater.upsertIncomingInvoice(this, existingInvoiceIfAny, createInvoice);
 
         this.setIncomingInvoice(incomingInvoice);
+
+
+        //
+        // we'll create associated documents if an incoming invoice exists,
+        // even if the DocHead is now invalid
+        //
+        final boolean invoiceExists = incomingInvoice != null;
+        final boolean createIfDoesNotExist = invoiceExists;
 
         derivedObjectUpdater.updateLinkToOrderItem(
                 this,
                 existingLinkIfAny,
-                syncIfNew, errors);
+                createIfDoesNotExist, errors);
 
         derivedObjectUpdater.updatePaperclip(
                 this,
                 existingPaperclipIfAny, existingDocumentNameIfAny,
-                syncIfNew, errors);
+                createIfDoesNotExist, errors);
 
         //
         // do the transitions here so that we update the appropriate pending task at the end
@@ -629,9 +644,9 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
 
         derivedObjectUpdater.updatePendingTask(
                 this,
-                syncIfNew, errors);
+                errors);
 
-        if (syncIfNew) {
+        if (invoiceExists) {
             setHandling(Handling.SYNCED);
         }
     }
@@ -915,7 +930,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     @Programmatic
     public String getSummaryLineDocumentName(final LineCache lineCache) {
         final String ref1 = getSummaryLineUserRef1(lineCache);
-        return ref1 != null ? ref1 + ".pdf" : null;
+        return !Strings.isNullOrEmpty(ref1) ? ref1 + ".pdf" : null;
     }
 
     @Programmatic
@@ -950,7 +965,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
 
 
     @Programmatic
-    public void createEstatioObjectsInBackgroundIfNewlyValid() {
+    public void scheduleSyncInBackgroundIfNewAndValid() {
         if(!isAutosync()) {
             return;
         }
@@ -972,11 +987,9 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
 
     @Action(hidden = Where.EVERYWHERE) // just so can invoke through background service
     public void syncIfValid() {
-        if(!isValid()) {
-            return; // belt-n-braces, in case has become invalid since background command was scheduled.
-        }
-        resync(SynchronizationPolicy.SYNC_IF_VALID);
+        kick();
     }
+
 
     private boolean isAutosync() {
         ApplicationSetting autosyncSetting =
@@ -1037,41 +1050,43 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         if (isSameAs(other)) {
             return Comparison.same();
         }
-        CodaDocLine summaryDocLine = summaryDocLine(LineCache.DEFAULT);
-        CodaDocLine otherDocLine = other.summaryDocLine(LineCache.DEFAULT);
-        if (summaryDocLine != null && otherDocLine == null) {
+        CodaDocLine summaryLine = summaryDocLine(LineCache.DEFAULT);
+        CodaDocLine otherSummaryLine = other.summaryDocLine(LineCache.DEFAULT);
+        if (summaryLine != null && otherSummaryLine == null) {
             return Comparison.invalidatesApprovals("Previous had no summary doc line");
         }
-        if (summaryDocLine == null && otherDocLine != null) {
+        if (summaryLine == null && otherSummaryLine != null) {
             return Comparison.invalidatesApprovals("Replacement has no summary doc line");
         }
-        if (summaryDocLine != null) {
-            if ( summaryDocLine.getSupplierBankAccountValidationStatus() != ValidationStatus.NOT_CHECKED &&
-                 otherDocLine.getSupplierBankAccountValidationStatus() != ValidationStatus.NOT_CHECKED &&
-                !Objects.equals(summaryDocLine.getSupplierBankAccount(), otherDocLine.getSupplierBankAccount())) {
+        if (summaryLine != null) {
+            if ( summaryLine.getSupplierBankAccountValidationStatus() != ValidationStatus.NOT_CHECKED &&
+                 otherSummaryLine.getSupplierBankAccountValidationStatus() != ValidationStatus.NOT_CHECKED &&
+                !Objects.equals(summaryLine.getSupplierBankAccount(), otherSummaryLine.getSupplierBankAccount())) {
                 return Comparison.invalidatesApprovals("Supplier bank account has changed");
             }
-            if (!Objects.equals(summaryDocLine.getDocValue(), otherDocLine.getDocValue())) {
+            if (!Objects.equals(summaryLine.getDocValue(), otherSummaryLine.getDocValue())) {
                 return Comparison.invalidatesApprovals("Doc value (gross amount) has changed");
             }
-            if (!Objects.equals(summaryDocLine.getDocSumTax(), otherDocLine.getDocSumTax())) {
+            if (!Objects.equals(summaryLine.getDocSumTax(), otherSummaryLine.getDocSumTax())) {
                 return Comparison.invalidatesApprovals("Doc sum tax (VAT amount) has changed");
             }
-            if ( summaryDocLine.getMediaCodeValidationStatus() != ValidationStatus.NOT_CHECKED &&
-                 otherDocLine.getMediaCodeValidationStatus() != ValidationStatus.NOT_CHECKED &&
-                !Objects.equals(summaryDocLine.getMediaCode(), otherDocLine.getMediaCode())) {
+            if ( summaryLine.getMediaCodeValidationStatus() != ValidationStatus.NOT_CHECKED &&
+                 otherSummaryLine.getMediaCodeValidationStatus() != ValidationStatus.NOT_CHECKED &&
+                !Objects.equals(summaryLine.getMediaCode(), otherSummaryLine.getMediaCode())) {
                 return Comparison.invalidatesApprovals("Media code (payment method) has changed");
             }
-            if (!Objects.equals(summaryDocLine.getDueDate(), otherDocLine.getDueDate())) {
+            if (!Objects.equals(summaryLine.getDueDate(), otherSummaryLine.getDueDate())) {
                 return Comparison.invalidatesApprovals("Due date has changed");
             }
-            if (!Objects.equals(summaryDocLine.getValueDate(), otherDocLine.getValueDate())) {
+            if (!Objects.equals(summaryLine.getValueDate(), otherSummaryLine.getValueDate())) {
                 return Comparison.invalidatesApprovals("Value date has changed");
             }
-            if (!Objects.equals(summaryDocLine.getUserRef1(), otherDocLine.getUserRef1())) {
+            if (!Strings.isNullOrEmpty(otherSummaryLine.getUserRef1()) &&
+                !Objects.equals(summaryLine.getUserRef1(), otherSummaryLine.getUserRef1())) {
                 return Comparison.invalidatesApprovals("User Ref 1 (bar code) has changed");
             }
-            if (!Objects.equals(summaryDocLine.getDescription(), otherDocLine.getDescription())) {
+            if ( otherSummaryLine.getDescription() != null &&
+                !Objects.equals(summaryLine.getDescription(), otherSummaryLine.getDescription())) {
                 return Comparison.invalidatesApprovals("Description has changed");
             }
         }
