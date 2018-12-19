@@ -70,7 +70,7 @@ public class CodaDocHeadRepository {
         if (existingCodaDocHead != null) {
             delete(existingCodaDocHead);
         }
-        return repositoryService.persist(codaDocHead);
+        return repositoryService.persistAndFlush(codaDocHead);
     }
 
     void deriveStatPayPaidDateIfRequired(final CodaDocHead codaDocHead, final CodaDocHead existingCodaDocHead) {

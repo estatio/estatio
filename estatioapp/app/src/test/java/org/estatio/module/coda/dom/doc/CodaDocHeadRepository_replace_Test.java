@@ -70,7 +70,7 @@ public class CodaDocHeadRepository_replace_Test {
             inSequence(sequence);
             will(returnValue(null));
 
-            oneOf(mockRepositoryService).persist(with(replacementDocHead));
+            oneOf(mockRepositoryService).persistAndFlush(with(replacementDocHead));
             inSequence(sequence);
             will(JMockActions.returnArgument(0));
         }});
@@ -102,7 +102,7 @@ public class CodaDocHeadRepository_replace_Test {
             oneOf(mockRepositoryService).removeAndFlush(with(originalDocHead));
             inSequence(sequence);
 
-            oneOf(mockRepositoryService).persist(with(replacementDocHead));
+            oneOf(mockRepositoryService).persistAndFlush(with(replacementDocHead));
             inSequence(sequence);
             will(JMockActions.returnArgument(0));
         }});
