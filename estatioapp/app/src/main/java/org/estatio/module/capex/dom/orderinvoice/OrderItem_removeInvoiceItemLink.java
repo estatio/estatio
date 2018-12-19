@@ -35,6 +35,14 @@ public class OrderItem_removeInvoiceItemLink extends OrderItem_abstractMixinInvo
         return choices0Act().isEmpty()? "No invoice items" : null;
     }
 
+    /**
+     * unfortunately, needed so that we can use this via the wrapper.
+     */
+    public String validate0Act(final IncomingInvoiceItem incomingInvoiceItem) {
+        return choices0Act().contains(incomingInvoiceItem)
+                ? null
+                : "Cannot unlink this invoice item";
+    }
     public IncomingInvoiceItem default0Act() {
         final List<IncomingInvoiceItem> invoiceItems = choices0Act();
         return invoiceItems.size() == 1 ? invoiceItems.get(0): null;

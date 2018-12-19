@@ -65,7 +65,6 @@ import org.apache.isis.applib.services.linking.DeepLinkService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.title.TitleService;
-import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
@@ -85,7 +84,6 @@ import org.estatio.module.capex.app.paymentline.PaymentLineForExcelExportV1;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
-import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalStateTransition;
@@ -276,11 +274,6 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
 
     @Programmatic
-    public boolean contains(final IncomingInvoice invoice) {
-        return lineIfAnyFor(invoice) != null;
-    }
-
-    @Programmatic
     public void addLineIfRequired(final IncomingInvoice incomingInvoice) {
         if(!getApprovalState().isModifiable()) {
             // no-op if not modifiable.
@@ -324,9 +317,6 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                 .findFirst();
     }
 
-
-    @Inject
-    TransactionService transactionService;
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
@@ -793,9 +783,6 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
     @Inject
     LookupAttachedPdfService lookupAttachedPdfService;
-
-    @Inject
-    IncomingInvoiceApprovalStateTransition.Repository stateTransitionRepository;
 
     @Inject
     DeepLinkService deepLinkService;

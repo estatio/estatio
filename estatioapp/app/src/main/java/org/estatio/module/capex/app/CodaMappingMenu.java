@@ -7,7 +7,7 @@ import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.capex.imports.CodaMappingManager;
+import org.estatio.module.capex.imports.CodaMappingFraManager;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY, objectType = "org.estatio.capex.dom.coda.CodaMappingMenu")
 @DomainServiceLayout(
@@ -19,8 +19,8 @@ public class CodaMappingMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "map-o")
-    public CodaMappingManager allCodaMappings() {
-        return new CodaMappingManager();
+    public CodaMappingFraManager allCodaMappingsFra() {
+        return new CodaMappingFraManager();
     }
 
 }

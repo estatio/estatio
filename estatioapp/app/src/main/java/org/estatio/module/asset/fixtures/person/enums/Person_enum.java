@@ -67,7 +67,7 @@ public enum Person_enum
     // incoming invoice manager, property manager
     CarmenIncomingInvoiceManagerIt("CRIGATONI", "Carmen", "Rigatoni", null, true, FEMALE, It, It,
             null, null,
-            new IPartyRoleType[] { PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER },
+            new IPartyRoleType[] { PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER, PartyRoleTypeEnum.ORDER_MANAGER },
             new FixedAssetRoleSpec[] {}),
 
     JonathanIncomingInvoiceManagerGb("JRICE", "Jonathan", "Rice", null, true, MALE, Gb, Gb,
@@ -95,6 +95,22 @@ public enum Person_enum
                     new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, Property_enum.MnsFr),
             }),
 
+    // property incoming invoice manager
+    LoredanaPropertyInvoiceMgrIt("LMONI", "Loredana", "MONI", null, true, FEMALE, It, It,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER },
+            new FixedAssetRoleSpec[] {
+                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.PROPERTY_INV_MANAGER, Property_enum.RonIt),
+            }),
+
+    // center manager
+    IlicCenterManagerIt("IRESPONSABILE", "Ilic", "Responsabile", null, true, MALE, It, It,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.ADVISOR },
+            new FixedAssetRoleSpec[] {
+                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.CENTER_MANAGER, Property_enum.RonIt)
+            }),
+
     // asset manager
     FloellaAssetManagerGb("FBEAUTIFUL", "Floella", "Beautiful", null, true, FEMALE, Gb, Gb,
             null, null,
@@ -116,6 +132,26 @@ public enum Person_enum
             new FixedAssetRoleSpec[] {
                     new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.ASSET_MANAGER, Property_enum.RonIt)
             }),
+    FlorisAssetManagerIt("FDIGRANDE", "Floris", "di Grande Punto", null, true, MALE, It, It,
+            null, null,
+            new IPartyRoleType[] {  },
+            new FixedAssetRoleSpec[] {
+                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.ASSET_MANAGER, Property_enum.GraIt)
+            }),
+
+    // preferred manager
+    FabrizioPreferredManagerIt("FDARESPONS", "Fabrizio", "Da Respons", null, true, MALE, It, It,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.PREFERRED_MANAGER },
+            new FixedAssetRoleSpec[] {
+            }),
+
+    // advisor
+    TechnizioAdvisorIt("TMULTICOMP", "Technizio", "Multi Compito", null, true, MALE, It, It,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.ADVISOR },
+            new FixedAssetRoleSpec[] {
+            }),
 
     // country director
     GabrielCountryDirectorFr("GRESPONSABLE", "Gabriel", "Responsable", null, true, FEMALE, Fr, Fr,
@@ -127,6 +163,18 @@ public enum Person_enum
             null, null,
             new IPartyRoleType[] { PartyRoleTypeEnum.COUNTRY_DIRECTOR },
             new FixedAssetRoleSpec[] {}),
+
+    RobertCountryDirectorIt("RSTRACCIATELLA", "Roberto", "Stracciatella", null, true, MALE, It, It,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.COUNTRY_DIRECTOR },
+            new FixedAssetRoleSpec[] {}),
+
+    SergioPreferredCountryDirectorIt("SGALATI", "Sergio", "Galati", null, true, MALE, It, It,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.COUNTRY_DIRECTOR, PartyRoleTypeEnum.PREFERRED_DIRECTOR },
+            new FixedAssetRoleSpec[] {
+                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.INV_APPROVAL_DIRECTOR, Property_enum.RonIt)
+            }),
 
 
     // treasurer

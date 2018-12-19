@@ -10,6 +10,13 @@
                     <cpt:action id="previous" cssClassFa="step-backward"/>
                     <cpt:action id="next" cssClassFa="step-forward"/>
                     <cpt:action id="approve"/>
+                    <cpt:action id="approveAsCenterManager"/>
+                    <cpt:action id="advise"/>
+                    <cpt:action id="adviseToApprove"/>
+                    <cpt:action id="noAdvise"/>
+                    <cpt:action id=" approveWhenApprovedByCenterManager">
+                        <cpt:named>Approve</cpt:named>
+                    </cpt:action>
                     <cpt:action id="approveAsCountryDirector"/>
                     <cpt:action id="approveAsCorporateManager"/>
                     <cpt:action id="approveLocalAsCountryDirector"/>

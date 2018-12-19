@@ -558,7 +558,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
                 message = "either project or budget item - not both";
                 setResult(result == null ? message : result.concat(", ").concat(message));
             }
-            if (orderItem.getProject() != null && orderItem.getProperty() == null) {
+            if (!isItalian(orderItem) && orderItem.getProject() != null && orderItem.getProperty() == null) {
                 message = "when project filled in then property";
                 setResult(result == null ? message : result.concat(", ").concat(message));
             }
@@ -570,12 +570,16 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         }
 
         Validator checkGrossAmountForNonItaOnly(OrderItem orderItem){
-            if (!orderItem.getOrdr().getAtPath().startsWith("/ITA")){
+            if (!isItalian(orderItem)){
                 if (orderItem.getGrossAmount()==null) {
                     setResult(result == null ? "gross amount" : result.concat(", ").concat("gross amount"));
                 }
             }
             return this;
+        }
+
+        private boolean isItalian(final OrderItem orderItem) {
+            return orderItem.getOrdr().getAtPath().startsWith("/ITA");
         }
 
     }

@@ -34,6 +34,7 @@
                                         <cpt:property id="property">
                                             <cpt:action id="editProperty" promptStyle="INLINE" position="RIGHT"/>
                                         </cpt:property>
+                                        <cpt:property id="codaDocHead"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>
@@ -51,7 +52,7 @@
                         <bs3:tab name="Other">
                             <bs3:row>
                                 <bs3:col span="12">
-                                    <cpt:fieldSet name="Other" unreferencedProperties="true"></cpt:fieldSet>
+                                    <cpt:fieldSet name="Other" unreferencedProperties="true"/>
                                 </bs3:col>
                             </bs3:row>
                         </bs3:tab>
@@ -118,6 +119,7 @@
                                         <cpt:property id="dueDate">
                                             <cpt:action id="changeDueDate" hidden="EVERYWHERE"/>
                                         </cpt:property>
+                                        <cpt:property id="vatRegistrationDate"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>
@@ -136,7 +138,7 @@
             </bs3:row>
             <bs3:row>
                 <bs3:col span="12">
-                    <cpt:collection id="linkedOrderItems" defaultView="table"></cpt:collection>
+                    <cpt:collection id="linkedOrderItems" defaultView="table"/>
                 </bs3:col>
             </bs3:row>
             <bs3:row>
@@ -163,9 +165,16 @@
                                             <cpt:action id="checkPayment"/>
                                             <cpt:action id="complete"/>
                                             <cpt:action id="approve"/>
+                                            <cpt:action id="approveAsCenterManager"/>
                                             <cpt:action id="approveAsCountryDirector"/>
                                             <cpt:action id="approveAsCorporateManager"/>
                                             <cpt:action id="approveLocalAsCountryDirector"/>
+                                            <cpt:action id="advise"/>
+                                            <cpt:action id="adviseToApprove"/>
+                                            <cpt:action id="noAdvise"/>
+                                            <cpt:action id="approveWhenApprovedByCenterManager">
+                                                <cpt:named>Approve</cpt:named>
+                                            </cpt:action>
                                             <cpt:action id="markAsPaidByDirectDebit"/>
                                             <cpt:action id="markAsPaidByIbpManual">
                                                 <cpt:named>Mark as paid by IBP (manual process)</cpt:named>

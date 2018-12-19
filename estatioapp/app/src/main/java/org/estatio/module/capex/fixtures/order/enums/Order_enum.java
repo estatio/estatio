@@ -41,7 +41,8 @@ public enum Order_enum
 
     fakeOrder2Pdf(
             IncomingInvoiceType.CAPEX, Person_enum.DanielOfficeAdministratorFr,
-            IncomingPdf_enum.FakeOrder2, ApplicationTenancy_enum.Fr, new DateTime(2014, 3, 5, 10, 0), "estatio-user-fr",
+            IncomingPdf_enum.FakeOrder2, null,
+            ApplicationTenancy_enum.Fr, new DateTime(2014, 3, 5, 10, 0), "estatio-user-fr",
             Organisation_enum.TopModelFr, Organisation_enum.HelloWorldFr,
             Project_enum.VivProjectFr, PropertyAndUnitsAndOwnerAndManager_enum.VivFr,
             ld(2014, 3, 6),
@@ -51,12 +52,35 @@ public enum Order_enum
     ),
     fakeOrder3Pdf(
             IncomingInvoiceType.LOCAL_EXPENSES, Person_enum.DanielOfficeAdministratorFr,
-            IncomingPdf_enum.FakeOrder2, ApplicationTenancy_enum.Fr, new DateTime(2018, 1, 5, 10, 0), "estatio-user-fr",
+            IncomingPdf_enum.FakeOrder2, null,
+            ApplicationTenancy_enum.Fr, new DateTime(2018, 1, 5, 10, 0), "estatio-user-fr",
             Organisation_enum.TopModelFr, Organisation_enum.HelloWorldFr,
             null, null,
             ld(2018, 1, 5),
             Tax_enum.FR_VATSTD,
             IncomingCharge_enum.FrFurnitures, "order item", bd("1000.00"), bd("210.00"), bd("1210.00"), "F2018",
+            null, null, null, null, null, null
+    ),
+    italianOrder(
+            IncomingInvoiceType.CAPEX, Person_enum.CarmenIncomingInvoiceManagerIt,
+            null, "4111/RON/006/001",
+            ApplicationTenancy_enum.It, null, null,
+            Organisation_enum.TopModelIt, Organisation_enum.HelloWorldIt,
+            Project_enum.RonProjectIt, PropertyAndUnitsAndOwnerAndManager_enum.RonIt,
+            ld(2018, 1, 5),
+            null,
+            IncomingCharge_enum.ItExternalConsultantCosts, "italian order item", bd("2000.00"), bd("420.00"), bd("2420.00"), "F2018",
+            null, null, null, null, null, null
+    ),
+    italianOrder4112(
+            IncomingInvoiceType.CAPEX, Person_enum.CarmenIncomingInvoiceManagerIt,
+            null, "4112/RON/006/001",
+            ApplicationTenancy_enum.It, null, null,
+            Organisation_enum.TopModelIt, Organisation_enum.HelloWorldIt,
+            Project_enum.RonProjectIt, PropertyAndUnitsAndOwnerAndManager_enum.RonIt,
+            ld(2018, 4, 5),
+            null,
+            IncomingCharge_enum.ItExternalConsultantCosts, "italian order item #4112", bd("5000.00"), bd("500.00"), bd("5500.00"), "F2018",
             null, null, null, null, null, null
     );
 
@@ -65,6 +89,7 @@ public enum Order_enum
     private final Person_enum officerAdministrator_d;
 
     private final IncomingPdf_enum document_d;
+    private final String orderNumber;
     private final ApplicationTenancy_enum documentApplicationTenancy_d;
     private final DateTime documentCreatedAt;
     private final String documentScannedBy;
@@ -97,12 +122,15 @@ public enum Order_enum
         return new OrderBuilder()
                 .setPrereq((f,ec) -> f.setOfficeAdministrator(f.objectFor(officerAdministrator_d, ec)))
                 .setPrereq((f,ec) -> {
-                    final Document document =
-                            document_d.builder().setRunAs(documentScannedBy).build(f, ec).getObject();
-                    document.setCreatedAt(documentCreatedAt);
-                    document.setAtPath(documentApplicationTenancy_d.getPath());
-                    f.setDocument(document);
+                    if(document_d != null) {
+                        final Document document =
+                                document_d.builder().setRunAs(documentScannedBy).build(f, ec).getObject();
+                        document.setCreatedAt(documentCreatedAt);
+                        document.setAtPath(documentApplicationTenancy_d.getPath());
+                        f.setDocument(document);
+                    }
                 })
+                .setOrderNumber(orderNumber)
                 .setPrereq((f,ec) -> f.setSeller(f.objectFor(seller_d, ec)))
                 .setPrereq((f,ec) -> f.setBuyer(f.objectFor(buyer_d, ec)))
                 .setPrereq((f,ec) -> f.setProject(f.objectFor(project_d, ec)))
@@ -130,17 +158,21 @@ public enum Order_enum
 
     @Override
     public Order findUsing(final ServiceRegistry2 serviceRegistry) {
-        final String documentName = document_d.findUsing(serviceRegistry).getName();
         final OrderRepository orderRepository = serviceRegistry.lookupService(OrderRepository.class);
-        final List<Order> orders = orderRepository.findOrderByDocumentName(
-                documentName);
-        return orders.stream()
-                .filter(x -> Objects.equal(x.getSeller(), seller_d.findUsing(serviceRegistry)))
-                .filter(x -> Objects.equal(x.getBuyer(), buyer_d.findUsing(serviceRegistry)))
-                .filter(x -> Objects.equal(x.getProperty(), property_d!=null ? property_d.findUsing(serviceRegistry) : null))
-                .filter(x -> Objects.equal(x.getEntryDate(), entryDate))
-                .findFirst()
-                .get(); // fail fast
+        if(document_d != null) {
+            final String documentName = document_d.findUsing(serviceRegistry).getName();
+            final List<Order> orders = orderRepository.findOrderByDocumentName(
+                    documentName);
+            return orders.stream()
+                    .filter(x -> Objects.equal(x.getSeller(), seller_d.findUsing(serviceRegistry)))
+                    .filter(x -> Objects.equal(x.getBuyer(), buyer_d.findUsing(serviceRegistry)))
+                    .filter(x -> Objects.equal(x.getProperty(), property_d!=null ? property_d.findUsing(serviceRegistry) : null))
+                    .filter(x -> Objects.equal(x.getEntryDate(), entryDate))
+                    .findFirst()
+                    .get(); // fail fast
+        } else {
+            return orderRepository.findByOrderNumber(orderNumber);
+        }
     }
 
 }

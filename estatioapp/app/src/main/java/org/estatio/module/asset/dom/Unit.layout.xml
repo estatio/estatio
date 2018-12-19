@@ -17,6 +17,7 @@
                     <row>
                         <col span="12">
                             <ns2:fieldSet name="Asset" id="asset">
+                                <ns2:action id="changeAsset" position="PANEL"/>
                                 <ns2:property id="reference"/>
                                 <ns2:property id="name" promptStyle="INLINE"/>
                                 <ns2:property id="type"/>

@@ -19,7 +19,6 @@ import org.apache.isis.applib.value.Blob;
 import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
-import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.capex.app.DocumentMenu;
@@ -29,7 +28,6 @@ import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCat
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
-import org.estatio.module.invoice.dom.DocumentTypeData;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationState.NEW;
@@ -121,7 +119,6 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
 
     }
 
-
     static void assertTransition(
             final IncomingDocumentCategorisationStateTransition transition,
             final IncomingDocumentCategorisationState from,
@@ -129,172 +126,17 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
             final IncomingDocumentCategorisationState to) {
 
         assertThat(transition.getTransitionType()).isEqualTo(type);
-        if(from != null) {
+        if (from != null) {
             assertThat(transition.getFromState()).isEqualTo(from);
         } else {
             assertThat(transition.getFromState()).isNull();
         }
-        if(to != null) {
+        if (to != null) {
             assertThat(transition.getToState()).isEqualTo(to);
         } else {
             assertThat(transition.getToState()).isNull();
         }
     }
-
-    @Test
-    public void incoming_document_using_generic_upload() throws Exception {
-
-        // given
-        List<Document> incomingDocumentsBefore = repository.findIncomingDocuments();
-        assertThat(incomingDocumentsBefore).isEmpty();
-
-        // when
-        final String fileName = "3020100123.pdf";
-        final byte[] pdfBytes = Resources.toByteArray(
-                Resources.getResource(DocumentMenu_Upload_IntegTest.class, fileName));
-        final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);
-        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        documentMenu.uploadGeneric(blob, "INCOMING", true, null);
-        transactionService.nextTransaction();
-
-        // then
-        List<Document> incomingDocumentsAfter = repository.findAllIncomingDocuments();
-        assertThat(incomingDocumentsAfter).hasSize(1);
-
-        final Document document = incomingDocumentsAfter.get(0);
-        final Blob documentBlob = document.getBlob();
-
-        assertThat(document.getAtPath()).isEqualTo("/FRA");
-        assertThat(documentBlob.getName()).isEqualTo(blob.getName());
-        assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
-        assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
-        assertThat(JDOHelper.getVersion(document)).isEqualTo(1L);
-        assertThat(paperclipRepository.findByDocument(document).size()).isEqualTo(0);
-
-        // and then also
-        final List<IncomingDocumentCategorisationStateTransition> transitions =
-                stateTransitionRepository.findByDomainObject(document);
-
-        assertThat(transitions).hasSize(2);
-        assertTransition(transitions.get(0),
-                NEW, CATEGORISE, null);
-        assertTransition(transitions.get(1),
-                null, INSTANTIATE, NEW);
-
-        // and when
-        final String fileName2 = "3020100123-altered.pdf";
-        final byte[] pdfBytes2 = Resources.toByteArray(
-                Resources.getResource(DocumentMenu_Upload_IntegTest.class, fileName2));
-        final Blob similarNamedBlob = new Blob(fileName, "application/pdf", pdfBytes2);
-        documentMenu.uploadGeneric(similarNamedBlob, "INCOMING", true, null);
-        transactionService.nextTransaction();
-
-        // then
-        incomingDocumentsAfter = repository.findAllIncomingDocuments();
-        assertThat(incomingDocumentsAfter).hasSize(2);
-        assertThat(incomingDocumentsAfter.get(0).getName()).isEqualTo(fileName);
-        assertThat(incomingDocumentsAfter.get(0).getBlobBytes()).isEqualTo(similarNamedBlob.getBytes());
-        assertThat(JDOHelper.getVersion(incomingDocumentsAfter.get(0))).isEqualTo(2L);
-        assertThat(paperclipRepository.findByDocument(incomingDocumentsAfter.get(0)).size()).isEqualTo(1);
-        assertThat(incomingDocumentsAfter.get(1).getName()).contains(fileName); // has prefix arch-[date time indication]-
-        assertThat(incomingDocumentsAfter.get(1).getBlobBytes()).isEqualTo(documentBlob.getBytes());
-        assertThat(JDOHelper.getVersion(incomingDocumentsAfter.get(1))).isEqualTo(1L);
-        assertThat(paperclipRepository.findByDocument(incomingDocumentsAfter.get(1)).size()).isEqualTo(0);
-
-
-        final String belgianBarCode = "6010012345.pdf";
-        final Blob belgianBlob = new Blob(belgianBarCode, "application/pdf", pdfBytes2);
-        Document belgianDocument = documentMenu.uploadGeneric(belgianBlob, "INCOMING", true, null);
-
-        // then
-        assertThat(belgianDocument.getAtPath()).isEqualTo("/BEL");
-
-    }
-
-    @Test
-    public void italian_order_using_generic_upload() throws Exception {
-
-        // given
-        List<Document> incomingDocumentsBefore = repository.findIncomingDocuments();
-        assertThat(incomingDocumentsBefore).isEmpty();
-
-        // when
-        final String fileName = "some_order.pdf";
-        final byte[] pdfBytes = Resources.toByteArray(
-                Resources.getResource(DocumentMenu_Upload_IntegTest.class, fileName));
-        final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);
-        documentMenu.uploadGeneric(blob, "INCOMING_ORDER", false, "/ITA");
-        transactionService.nextTransaction();
-
-        // then
-        List<Document> incomingDocumentsAfter = repository.findAllIncomingDocuments();
-        assertThat(incomingDocumentsAfter).hasSize(1);
-
-        Document document = incomingDocumentsAfter.get(0);
-        Blob documentBlob = document.getBlob();
-
-        assertThat(document.getAtPath()).isEqualTo("/ITA");
-        assertThat(documentBlob.getName()).isEqualTo(blob.getName());
-        assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
-        assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
-        assertThat(JDOHelper.getVersion(document)).isEqualTo(1L);
-        assertThat(document.getType()).isEqualTo(DocumentTypeData.INCOMING_ORDER.findUsing(documentTypeRepository));
-
-        // and when again uploading doc with the same name (but different bytes)
-        final byte[] pdfBytes2 = Resources.toByteArray(
-                Resources.getResource(DocumentMenu_Upload_IntegTest.class, "3020100123-altered.pdf"));
-        final Blob similarNamedBlobWithDifferentBytes = new Blob(fileName, "application/pdf", pdfBytes2);
-        documentMenu.uploadGeneric(similarNamedBlobWithDifferentBytes, "INCOMING_ORDER", false, "/ITA");
-        transactionService.nextTransaction();
-
-        // then still
-        incomingDocumentsAfter = repository.findAllIncomingDocuments();
-        assertThat(incomingDocumentsAfter).hasSize(1);
-
-        document = incomingDocumentsAfter.get(0);
-        documentBlob = document.getBlob();
-
-        assertThat(document.getAtPath()).isEqualTo("/ITA");
-        assertThat(documentBlob.getName()).isEqualTo(blob.getName());
-        assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
-        assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
-        assertThat(JDOHelper.getVersion(document)).isEqualTo(1L);
-        assertThat(document.getType()).isEqualTo(DocumentTypeData.INCOMING_ORDER.findUsing(documentTypeRepository));
-
-    }
-
-    @Test
-    public void italian_tax_receipt_using_generic_upload() throws Exception {
-
-        // given
-        List<Document> incomingDocumentsBefore = repository.findIncomingDocuments();
-        assertThat(incomingDocumentsBefore).isEmpty();
-
-        // when
-        final String fileName = "some_tax_receipt.pdf";
-        final byte[] pdfBytes = Resources.toByteArray(
-                Resources.getResource(DocumentMenu_Upload_IntegTest.class, fileName));
-        final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);
-
-        documentMenu.uploadGeneric(blob, "TAX_REGISTER", false, "/ITA");
-        transactionService.nextTransaction();
-
-        // then
-        List<Document> incomingDocumentsAfter = repository.findAllIncomingDocuments();
-        assertThat(incomingDocumentsAfter).hasSize(1);
-
-        Document document = incomingDocumentsAfter.get(0);
-        Blob documentBlob = document.getBlob();
-
-        assertThat(document.getAtPath()).isEqualTo("/ITA");
-        assertThat(documentBlob.getName()).isEqualTo(blob.getName());
-        assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
-        assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
-        assertThat(JDOHelper.getVersion(document)).isEqualTo(1L);
-        assertThat(document.getType()).isEqualTo(DocumentTypeData.TAX_REGISTER.findUsing(documentTypeRepository));
-
-    }
-
 
     @Inject
     IncomingDocumentRepository repository;
@@ -316,7 +158,5 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
 
     @Inject
     SudoService sudoService;
-
-    @Inject DocumentTypeRepository documentTypeRepository;
 
 }

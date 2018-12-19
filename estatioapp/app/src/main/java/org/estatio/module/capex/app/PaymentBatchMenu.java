@@ -18,7 +18,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
-import org.estatio.module.capex.app.paymentbatch.PaymentBatchManager;
+import org.estatio.module.capex.app.paymentbatch.PaymentBatchFraManager;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.capex.dom.payment.PaymentBatch;
@@ -40,10 +40,10 @@ public class PaymentBatchMenu {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "fa-magic")
     @MemberOrder(sequence = "300.10")
-    public PaymentBatchManager preparePaymentBatches() {
-        final PaymentBatchManager paymentBatchManager = new PaymentBatchManager();
-        serviceRegistry2.injectServicesInto(paymentBatchManager);
-        return new PaymentBatchManager();
+    public PaymentBatchFraManager preparePaymentBatchesFra() {
+        final PaymentBatchFraManager paymentBatchFraManager = new PaymentBatchFraManager();
+        serviceRegistry2.injectServicesInto(paymentBatchFraManager);
+        return new PaymentBatchFraManager();
     }
 
     @Action(semantics = SemanticsOf.SAFE)

@@ -71,6 +71,10 @@ public class CodaHwm implements Comparable<CodaHwm> {
         this.lastRan = lastRan;
     }
 
+    public String title() {
+        return String.format("%s %s", feedName, cmpCode);
+    }
+
     @Column(allowsNull = "false", length = 36)
     @Property()
     @Getter @Setter

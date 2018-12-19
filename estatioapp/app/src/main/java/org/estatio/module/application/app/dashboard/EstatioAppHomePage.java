@@ -26,9 +26,12 @@ import javax.inject.Inject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Collection;
+import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Nature;
@@ -37,15 +40,14 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
-import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 
 import org.estatio.module.capex.app.DirectDebitsMenu;
 import org.estatio.module.capex.app.PaymentBatchMenu;
-import org.estatio.module.capex.app.UpcomingPaymentService;
+import org.estatio.module.capex.app.UpcomingPaymentFraService;
 import org.estatio.module.capex.app.invoice.UpcomingPaymentTotal;
-import org.estatio.module.capex.app.paydd.DirectDebitsManager;
-import org.estatio.module.capex.app.paymentbatch.PaymentBatchManager;
+import org.estatio.module.capex.app.paydd.DirectDebitsFraManager;
+import org.estatio.module.capex.app.paymentbatch.PaymentBatchFraManager;
 import org.estatio.module.capex.app.taskreminder.TaskOverview;
 import org.estatio.module.capex.app.taskreminder.TaskReminderService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
@@ -57,6 +59,8 @@ import org.estatio.module.capex.dom.payment.PaymentLine;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.dom.task.TaskRepository;
 import org.estatio.module.capex.dom.task.Task_checkState;
+import org.estatio.module.coda.dom.doc.CodaDocHead;
+import org.estatio.module.coda.dom.doc.CodaDocHeadRepository;
 import org.estatio.module.event.dom.Event;
 import org.estatio.module.event.dom.EventRepository;
 import org.estatio.module.invoice.dom.PaymentMethod;
@@ -65,6 +69,9 @@ import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 
+import static org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository.AT_PATHS_FRA_OFFICE;
+import static org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository.AT_PATHS_ITA_OFFICE;
+
 @DomainObject(
         nature = Nature.VIEW_MODEL,
         objectType = "org.estatio.app.services.dashboard.EstatioAppHomePage"
@@ -72,6 +79,7 @@ import org.estatio.module.party.dom.PersonRepository;
 public class EstatioAppHomePage {
 
     private static final int MONTHS = 3;
+
 
     public String title() {
         return "Home Page";
@@ -151,48 +159,55 @@ public class EstatioAppHomePage {
     ////////////////////////////////////////////////
 
     @Collection(notPersisted = true)
-    public List<IncomingInvoice> getIncomingInvoicesNew() {
-        return incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.NEW);
+    public List<IncomingInvoice> getIncomingInvoicesFraNew() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+                AT_PATHS_FRA_OFFICE,IncomingInvoiceApprovalState.NEW);
     }
 
     @Collection(notPersisted = true)
-    public List<IncomingInvoice> getIncomingInvoicesCompleted() {
-        return incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.COMPLETED);
+    public List<IncomingInvoice> getIncomingInvoicesFraCompleted() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+                AT_PATHS_FRA_OFFICE,IncomingInvoiceApprovalState.COMPLETED);
     }
 
     @Collection(notPersisted = true)
-    public List<IncomingInvoice> getIncomingInvoicesApproved() {
-        return incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.APPROVED);
+    public List<IncomingInvoice> getIncomingInvoicesFraApproved() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+                AT_PATHS_FRA_OFFICE, IncomingInvoiceApprovalState.APPROVED);
     }
 
-    public List<IncomingInvoice> getIncomingInvoicesPendingBankAccountCheck() {
-        return incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK);
-    }
-
-    @Collection(notPersisted = true)
-    public List<IncomingInvoice> getIncomingInvoicesPayableByTransferNotInBatch() {
-        return incomingInvoiceRepository.findNotInAnyPaymentBatchByApprovalStateAndPaymentMethod(
-                IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.BANK_TRANSFER);
+    public List<IncomingInvoice> getIncomingInvoicesFraPendingBankAccountCheck() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+                AT_PATHS_FRA_OFFICE, IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK);
     }
 
     @Collection(notPersisted = true)
-    public List<IncomingInvoice> getIncomingInvoicesPayableByDirectDebit() {
-        return incomingInvoiceRepository.findByApprovalStateAndPaymentMethod(IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.DIRECT_DEBIT);
+    public List<IncomingInvoice> getIncomingInvoicesFraPayableByTransferNotInBatch() {
+        return incomingInvoiceRepository.findNotInAnyPaymentBatchByAtPathPrefixesAndApprovalStateAndPaymentMethod(
+                AT_PATHS_FRA_OFFICE, IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.BANK_TRANSFER);
     }
 
     @Collection(notPersisted = true)
-    public List<IncomingInvoice> getIncomingInvoicesPayableByManualProcess() {
-        return incomingInvoiceRepository.findByApprovalStateAndPaymentMethod(IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.MANUAL_PROCESS);
+    public List<IncomingInvoice> getIncomingInvoicesFraPayableByDirectDebit() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalStateAndPaymentMethod(
+                AT_PATHS_FRA_OFFICE, IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.DIRECT_DEBIT);
     }
 
     @Collection(notPersisted = true)
-    public List<IncomingInvoice> getIncomingInvoicesPayableByOther() {
+    public List<IncomingInvoice> getIncomingInvoicesFraPayableByManualProcess() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalStateAndPaymentMethod(
+                AT_PATHS_FRA_OFFICE, IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.MANUAL_PROCESS);
+    }
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesFraPayableByOther() {
         final List<IncomingInvoice> invoices = Lists.newArrayList(
-                incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.PAYABLE));
+                incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+                        AT_PATHS_FRA_OFFICE, IncomingInvoiceApprovalState.PAYABLE));
 
-        final List<IncomingInvoice> byDirectDebit = getIncomingInvoicesPayableByDirectDebit();
-        final List<IncomingInvoice> byTransfer = getIncomingInvoicesPayableAndBankTransfer();
-        final List<IncomingInvoice> byManualProcess = getIncomingInvoicesPayableByManualProcess();
+        final List<IncomingInvoice> byDirectDebit = getIncomingInvoicesFraPayableByDirectDebit();
+        final List<IncomingInvoice> byTransfer = getIncomingInvoicesFraPayableAndBankTransfer();
+        final List<IncomingInvoice> byManualProcess = getIncomingInvoicesFraPayableByManualProcess();
 
         invoices.removeAll(byDirectDebit);
         invoices.removeAll(byTransfer);
@@ -202,13 +217,13 @@ public class EstatioAppHomePage {
     }
 
     @Collection(notPersisted = true)
-    public List<IncomingInvoice> getIncomingInvoicesInNewBatch() {
+    public List<IncomingInvoice> getIncomingInvoicesFraInNewBatch() {
         final List<PaymentBatch> newBatches = paymentBatchRepository.findNewBatches();
         return findIncomingInvoicesWithin(newBatches);
     }
 
     @Collection(notPersisted = true)
-    public List<IncomingInvoice> getIncomingInvoicesInCompletedBatch() {
+    public List<IncomingInvoice> getIncomingInvoicesFraInCompletedBatch() {
         final List<PaymentBatch> completedBatches = paymentBatchRepository.findCompletedBatches();
         return findIncomingInvoicesWithin(completedBatches);
     }
@@ -226,26 +241,82 @@ public class EstatioAppHomePage {
         return invoices;
     }
 
-    private List<IncomingInvoice> getIncomingInvoicesPayableAndBankTransfer() {
-        return incomingInvoiceRepository.findByApprovalStateAndPaymentMethod(
-                IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.BANK_TRANSFER);
+    private List<IncomingInvoice> getIncomingInvoicesFraPayableAndBankTransfer() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalStateAndPaymentMethod(
+                AT_PATHS_FRA_OFFICE, IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.BANK_TRANSFER);
+    }
+
+    ////////////////////////////////////////////////
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesItaNew() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+                AT_PATHS_ITA_OFFICE, IncomingInvoiceApprovalState.NEW);
+    }
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesItaCompleted() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.COMPLETED);
+    }
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesItaPendingAdvise() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PENDING_ADVISE);
+    }
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesItaApprovedByCenterManager() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER);
+    }
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesItaApproved() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.APPROVED);
+    }
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesItaPendingCodaBooks() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK);
+    }
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesItaPayable() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PAYABLE);
+    }
+
+
+    ////////////////////////////////////////////////////////////
+
+
+    @Collection
+    @CollectionLayout(defaultView = "table")
+    public List<CodaDocHead> getInvalidAndUnpaidCodaDocumentsIta() {
+        return codaDocHeadRepository.findUnpaidAndInvalid();
     }
 
     ////////////////////////////////////////////////////////////
 
     @Collection(notPersisted = true)
     public List<Lease> getLeasesAboutToExpire() {
-        return leaseRepository.findExpireInDateRange(clockService.now(), clockService.now().plusMonths(MONTHS));
+        final LocalDate now = clockService.now();
+        return leaseRepository.findExpireInDateRange(now, now.plusMonths(MONTHS));
     }
 
     @Collection(notPersisted = true)
     public List<Event> getUpcomingEvents() {
-        return eventRepository.findEventsInDateRange(clockService.now(), clockService.now().plusMonths(MONTHS));
+        final LocalDate now = clockService.now();
+        return eventRepository.findEventsInDateRange(now, now.plusMonths(MONTHS));
     }
 
     @Collection(notPersisted = true)
-    public List<UpcomingPaymentTotal> getUpcomingPayments() {
-        return upcomingPaymentService.getUpcomingPayments();
+    public List<UpcomingPaymentTotal> getUpcomingPaymentsFra() {
+        return upcomingPaymentFraService.getUpcomingPaymentsFra();
     }
 
     private EstatioAppHomePage checkStateOf(final List<Task> tasks) {
@@ -265,7 +336,9 @@ public class EstatioAppHomePage {
                 final Class<?> collectionType,
                 final List<String> propertyIds) {
             if (parent instanceof EstatioAppHomePage && IncomingInvoice.class.isAssignableFrom(collectionType)) {
-                return Lists.newArrayList("seller", "property", "grossAmount", "dateReceived", "number");
+                return collectionId.contains("Ita") ?
+                        Lists.newArrayList("seller", "property", "grossAmount", "dateReceived", "codaDocHead") :
+                        Lists.newArrayList("seller", "property", "grossAmount", "dateReceived", "number");
             }
             return null;
         }
@@ -278,8 +351,8 @@ public class EstatioAppHomePage {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "fa-magic")
-    public PaymentBatchManager preparePaymentBatches() {
-        return paymentBatchMenu.preparePaymentBatches();
+    public PaymentBatchFraManager openPaymentBatchManagerFra() {
+        return paymentBatchMenu.preparePaymentBatchesFra();
     }
 
     @Inject
@@ -287,8 +360,8 @@ public class EstatioAppHomePage {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "fa-check-square-o")
-    public DirectDebitsManager directDebitManager() {
-        return directDebitsMenu.directDebitManager();
+    public DirectDebitsFraManager openDirectDebitManagerFra() {
+        return directDebitsMenu.directDebitFraManager();
     }
 
     @Inject DirectDebitsMenu directDebitsMenu;
@@ -321,12 +394,13 @@ public class EstatioAppHomePage {
     PersonRepository personRepository;
 
     @Inject
-    ServiceRegistry2 serviceRegistry2;
+    UpcomingPaymentFraService upcomingPaymentFraService;
 
     @Inject
-    UpcomingPaymentService upcomingPaymentService;
+    TaskReminderService taskReminderService;
 
     @Inject
-    private TaskReminderService taskReminderService;
+    CodaDocHeadRepository codaDocHeadRepository;
+
 
 }

@@ -18,8 +18,10 @@ public enum IncomingInvoiceType {
     TANGIBLE_FIXED_ASSET,
     INTERCOMPANY,
     RE_INVOICING,
+
     ITA_ORDER_INVOICE,
-    ;
+    ITA_RECOVERABLE,
+    ITA_MANAGEMENT_COSTS;
 
     @Programmatic
     public String validateProperty(final Property property) {

@@ -41,6 +41,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.metamodel.MetaModelService2;
@@ -108,11 +109,24 @@ import lombok.Setter;
                         + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
                         + "WHERE approvalState == :approvalState "),
         @Query(
+                name = "findByAtPathPrefixAndApprovalState", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE approvalState          == :approvalState "
+                        + "   && applicationTenancyPath.startsWith(:atPathPrefix) "),
+        @Query(
                 name = "findByApprovalStateAndPaymentMethod", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
                         + "WHERE approvalState == :approvalState "
                         + "   && paymentMethod == :paymentMethod "),
+        @Query(
+                name = "findByAtPathPrefixAndApprovalStateAndPaymentMethod", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE approvalState == :approvalState "
+                        + "   && paymentMethod == :paymentMethod "
+                        + "   && applicationTenancyPath.startsWith(:atPathPrefix) "),
         @Query(
                 name = "findByInvoiceNumber", language = "JDOQL",
                 value = "SELECT "
@@ -170,11 +184,31 @@ import lombok.Setter;
                         + "ORDER BY invoiceDate ASC " // oldest first
         ),
         @Query(
+                name = "findNotInAnyPaymentBatchByAtPathPrefixAndApprovalStateAndPaymentMethod", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE !(SELECT invoice "
+                        +         "  FROM org.estatio.module.capex.dom.payment.PaymentLine).contains(this) "
+                        + "   && approvalState == :approvalState "
+                        + "   && paymentMethod == :paymentMethod "
+                        + "   && applicationTenancyPath.startsWith(:atPathPrefix) "
+                        + "ORDER BY invoiceDate ASC " // oldest first
+        ),
+        @Query(
                 name = "findByBankAccount", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
                         + "WHERE bankAccount == :bankAccount "
                         + "ORDER BY invoiceDate DESC " // newest first
+        ),
+        @Query(
+                name = "findPayableByBankTransferAndDueDateBetween", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE dueDate >= :fromDueDate "
+                        + "   && dueDate <= :toDueDate "
+                        + "   && approvalState == 'PAYABLE' "
+                        + "   && paymentMethod == 'BANK_TRANSFER'"
         )
 })
 @FetchGroup(
@@ -186,7 +220,9 @@ import lombok.Setter;
                 @Persistent(name="bankAccount")
         })
 @Indices({
-        @Index(name = "IncomingInvoice_approvalState_IDX", members = { "approvalState" })
+        @Index(name = "IncomingInvoice_approvalState_IDX", members = { "approvalState" }),
+        @Index(name = "IncomingInvoice_atPath_approvalState_IDX", members = { "applicationTenancyPath", "approvalState" }),
+        @Index(name = "IncomingInvoice_approvalState_atPath_IDX", members = { "approvalState", "applicationTenancyPath" })
 })
 // unused, since rolled-up
 //@Unique(name = "IncomingInvoice_invoiceNumber_UNQ", members = { "invoiceNumber" })
@@ -239,7 +275,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final InvoiceStatus invoiceStatus,
             final LocalDate dateReceived,
             final BankAccount bankAccount,
-            final IncomingInvoiceApprovalState approvalStateIfAny){
+            final IncomingInvoiceApprovalState approvalState){
         super("invoiceNumber");
         setType(typeIfAny);
         setInvoiceNumber(invoiceNumber);
@@ -253,7 +289,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         setStatus(invoiceStatus);
         setDateReceived(dateReceived);
         setBankAccount(bankAccount);
-        setApprovalState(approvalStateIfAny);
+        setApprovalState(approvalState);
     }
 
     public String title() {
@@ -904,6 +940,24 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         this.dateReceived = invalidateApprovalIfDiffer(this.dateReceived, dateReceived);
     }
 
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private LocalDate vatRegistrationDate;
+
+    public boolean hideVatRegistrationDate() {
+        return !this.getAtPath().startsWith("/ITA");
+    }
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    @PropertyLayout(hidden = Where.EVERYWHERE)
+    public LocalDate paidDate;
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    @PropertyLayout(hidden = Where.EVERYWHERE)
+    private boolean postedToCodaBooks;
+
     // TODO: does not seem to be used, raised EST-1599 to look into removing it.
     @Getter @Setter
     @Column(allowsNull = "true", name="invoiceId")
@@ -1065,9 +1119,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return buf.getReason();
     }
 
-    
-    
-    
+
+
+
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(named = "Edit Supplier")
     public IncomingInvoice editSeller(
@@ -1159,7 +1213,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Getter @Setter
     @javax.jdo.annotations.Column(allowsNull = "false")
     private IncomingInvoiceApprovalState approvalState;
-
 
     /**
      * that is, has passed final approval step.
@@ -1330,6 +1383,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         IncomingInvoice.Validator validateForIncomingInvoiceType(IncomingInvoice incomingInvoice){
             if (incomingInvoice == null) return this;
             if (incomingInvoice.getType() == null) return this;
+            if (incomingInvoice.isItalian()) return this; //ECP-896 Italian invoice of type CAPEX do not require a property
 
             String message;
             switch (incomingInvoice.getType()){
@@ -1366,7 +1420,12 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 }
                 break;
 
+            case MANUAL_PROCESS:
+            case DIRECT_DEBIT:
+            case CREDIT_CARD:
+            case REFUND_BY_SUPPLIER:
             default:
+                break;
             }
 
             return this;
@@ -1519,6 +1578,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return summary.toString();
     }
 
+    @Programmatic
+    public boolean isItalian() {
+        final String atPath = getApplicationTenancyPath();
+        return atPath != null && atPath.startsWith("/ITA");
+    }
 
 
     @Override

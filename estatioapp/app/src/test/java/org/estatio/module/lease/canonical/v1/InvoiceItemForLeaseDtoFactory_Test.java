@@ -71,8 +71,12 @@ public class InvoiceItemForLeaseDtoFactory_Test {
         invoiceItem.setCharge(charge);
         invoiceItem.setTax(tax);
 
-        invoiceItemForLeaseDtoFactory = new InvoiceItemForLeaseDtoFactory();
-        invoiceItemForLeaseDtoFactory.mappingHelper = mockMappingHelper;
+        invoiceItemForLeaseDtoFactory = new InvoiceItemForLeaseDtoFactory() {
+            InvoiceItemForLeaseDtoFactory withMappingHelper(DtoMappingHelper mappingHelper) {
+                super.mappingHelper = mappingHelper;
+                return this;
+            }
+        }.withMappingHelper(mockMappingHelper);
 
         context.checking(new Expectations() {{
             ignoring(mockMappingHelper);
@@ -168,7 +172,5 @@ public class InvoiceItemForLeaseDtoFactory_Test {
         }
 
     }
-
-
 
 }

@@ -20,14 +20,10 @@ package org.estatio.module.lease.contentmapping;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import com.google.common.io.BaseEncoding;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.services.dto.DtoMappingHelper;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
@@ -37,12 +33,20 @@ import org.estatio.canonical.documents.v2.DocumentsDto;
 import org.estatio.module.base.platform.applib.DtoFactoryAbstract;
 
 @DomainService(nature = NatureOfService.DOMAIN)
-public class DocumentsDtoFactory extends DtoFactoryAbstract {
+public class DocumentsDtoFactory extends DtoFactoryAbstract<List, DocumentsDto> {
 
-    @Programmatic
-    public DocumentsDto newDto(final List<Document> documents) {
+    public DocumentsDtoFactory() {
+        super(List.class, DocumentsDto.class);
+    }
+
+    @Override
+    protected DocumentsDto newDto(final List documents) {
+        return internalNewDto(documents);
+    }
+
+    DocumentsDto internalNewDto(final List<Document> documents) {
         final DocumentsDto documentsDto = new DocumentsDto();
-        documents.stream().forEach(document -> documentsDto.getDocuments().add(newDto(document)));
+        documents.forEach(document -> documentsDto.getDocuments().add(newDto(document)));
         return documentsDto;
     }
 
@@ -71,8 +75,5 @@ public class DocumentsDtoFactory extends DtoFactoryAbstract {
                 ? DocumentNature.BLOB
                 : DocumentNature.CLOB;
     }
-
-    @Inject
-    DtoMappingHelper mappingHelper;
 
 }

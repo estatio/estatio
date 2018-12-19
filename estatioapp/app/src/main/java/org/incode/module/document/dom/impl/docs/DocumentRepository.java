@@ -16,7 +16,6 @@ import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 
 @DomainService(
@@ -42,8 +41,19 @@ public class DocumentRepository {
         return document;
     }
 
-    @Inject
-    PaperclipRepository paperclipRepository;
+    @Programmatic
+    public List<Document> findByTypeAndNameAndAtPath(
+            final DocumentType type,
+            final String atPath,
+            final String name) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(Document.class,
+                        "findByTypeAndAtPathAndName",
+                        "type", type,
+                        "atPath", atPath,
+                        "name", name
+                        ));
+    }
 
     @Programmatic
     public List<Document> findWithNoPaperclips() {

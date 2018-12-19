@@ -145,7 +145,8 @@ public class IncomingDocumentRepository extends DocumentRepository {
     public Document upsertAndArchive(final DocumentType type, final String atPath, final String name, final Blob blob){
         synchronized (this) {
             Document document = null;
-            final List<Document> incomingDocumentsWithSameName = findAllIncomingDocumentsByName(name);
+
+           final List<Document> incomingDocumentsWithSameName = findAllIncomingDocumentsByName(name);
             if (incomingDocumentsWithSameName.size()>0){
                 document = incomingDocumentsWithSameName.get(0);
             }
@@ -167,6 +168,7 @@ public class IncomingDocumentRepository extends DocumentRepository {
             return document;
         }
     }
+
 
     @Programmatic
     public Document upsert(final DocumentType type, final String atPath, final String name, final Blob blob){

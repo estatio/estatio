@@ -64,11 +64,14 @@ public class Document_categoriseAsPropertyInvoice
                 null, // seller
                 null, // invoiceDate
                 dueDate,
+                null, // vatRegistrationDate (only for ITA)
                 null,
                 InvoiceStatus.NEW,
                 dateReceived,
                 null, // bankAccount
-                null  // approval state... will cause state transition to be created automatically by subscriber
+                null,  // approval state... will cause state transition to be created automatically by subscriber
+                false, // postedToCodaBooks (only for ITA, comes from Coda)
+                null   // paidDate (only for ITA, comes from Coda)
         );
 
         paperclipRepository.attach(document, null, incomingInvoice);

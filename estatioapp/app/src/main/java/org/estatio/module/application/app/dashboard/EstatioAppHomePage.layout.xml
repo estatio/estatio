@@ -39,70 +39,143 @@
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
-                <bs3:tab name="Incoming Invoices">
+                <bs3:tab name="Lease Management">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="leasesAboutToExpire"/>
+                            <cpt:collection id="upcomingEvents"/>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Incoming Invoice Approvals (FRA)">
                     <bs3:row>
                         <bs3:col span="4">
-                            <cpt:collection id="incomingInvoicesNew" paged="15">
+                            <cpt:collection id="incomingInvoicesFraNew" paged="15">
                                 <cpt:named>New</cpt:named>
                             </cpt:collection>
                         </bs3:col>
                         <bs3:col span="4">
-                            <cpt:collection id="incomingInvoicesCompleted" paged="15">
+                            <cpt:collection id="incomingInvoicesFraCompleted" paged="15">
                                 <cpt:named>Completed</cpt:named>
-                                <cpt:action id="approveInvoices">
+                                <cpt:action id="approveInvoicesFra">
                                     <cpt:named>Approve</cpt:named>
                                 </cpt:action>
-                                <cpt:action id="approveInvoicesAsCorporateManager">
+                                <cpt:action id="approveInvoicesAsCorporateManagerFra">
                                     <cpt:named>Approve Corporate</cpt:named>
                                 </cpt:action>
-                                <cpt:action id="approveLocalInvoicesAsCountryDirector">
+                                <cpt:action id="approveLocalInvoicesAsCountryDirectorFra">
                                     <cpt:named>Approve Local</cpt:named>
                                 </cpt:action>
                             </cpt:collection>
                         </bs3:col>
                         <bs3:col span="4">
-                            <cpt:collection id="incomingInvoicesApproved" paged="15">
+                            <cpt:collection id="incomingInvoicesFraApproved" paged="15">
                                 <cpt:named>Approved</cpt:named>
-                                <cpt:action id="approveInvoicesAsCountryDirector"/>
+                                <cpt:action id="approveInvoicesAsCountryDirectorFra">
+                                    <cpt:named>Approve Country</cpt:named>
+                                </cpt:action>
                             </cpt:collection>
                         </bs3:col>
                     </bs3:row>
                     <bs3:row>
                         <bs3:col span="4">
-                            <cpt:collection id="incomingInvoicesPendingBankAccountCheck" paged="15">
+                            <cpt:collection id="incomingInvoicesFraPendingBankAccountCheck" paged="15">
                                 <cpt:named>Pending Bank Account Check</cpt:named>
-                                <cpt:action id="verifyBankAccounts"/>
+                                <cpt:action id="verifyBankAccountsFra">
+                                    <cpt:named>Verify</cpt:named>
+                                </cpt:action>
                             </cpt:collection>
                         </bs3:col>
                         <bs3:col span="4">
-                            <cpt:collection id="incomingInvoicesPayableByTransferNotInBatch" paged="15">
+                            <cpt:collection id="incomingInvoicesFraPayableByTransferNotInBatch" paged="15">
                                 <cpt:named>Payable by Transfer (not in batch)</cpt:named>
                             </cpt:collection>
-                            <cpt:collection id="incomingInvoicesPayableByDirectDebit" paged="15">
+                            <cpt:collection id="incomingInvoicesFraPayableByDirectDebit" paged="15">
                                 <cpt:named>Payable by Direct Debit</cpt:named>
-                                <cpt:action id="directDebitManager"/>
-                                <cpt:action id="markAsPaidByDirectDebit">
+                                <cpt:action id="openDirectDebitManagerFra">
+                                    <cpt:named>Direct Debit Manager</cpt:named>
+                                </cpt:action>
+                                <cpt:action id="markAsPaidByDirectDebitFra">
                                     <cpt:named>Mark as paid by DD</cpt:named>
                                 </cpt:action>
                             </cpt:collection>
-                            <cpt:collection id="incomingInvoicesPayableByManualProcess" paged="15">
+                            <cpt:collection id="incomingInvoicesFraPayableByManualProcess" paged="15">
                                 <cpt:named>Payable by Manual Process</cpt:named>
-                                <cpt:action id="updateAsPayableByTransfer"/>
-                                <cpt:action id="markAsPaidByIbpManual">
+                                <cpt:action id="updateAsPayableByTransferFra"/>
+                                <cpt:action id="markAsPaidByIbpManualFra">
                                     <cpt:named>Mark as paid by IBP</cpt:named>
                                 </cpt:action>
                             </cpt:collection>
-                            <cpt:collection id="incomingInvoicesPayableByOther" paged="15">
+                            <cpt:collection id="incomingInvoicesFraPayableByOther" paged="15">
                                 <cpt:named>Payable by Other</cpt:named>
                             </cpt:collection>
                         </bs3:col>
                         <bs3:col span="4">
-                            <cpt:collection id="incomingInvoicesInNewBatch" paged="15">
+                            <cpt:collection id="incomingInvoicesFraInNewBatch" paged="15">
                                 <cpt:named>In (new) Payment Batch</cpt:named>
-                                <cpt:action id="preparePaymentBatches"/>
+                                <cpt:action id="openPaymentBatchManagerFra">
+                                    <cpt:named>Prepare Payment Batches</cpt:named>
+                                </cpt:action>
                             </cpt:collection>
-                            <cpt:collection id="incomingInvoicesInCompletedBatch" paged="15">
+                            <cpt:collection id="incomingInvoicesFraInCompletedBatch" paged="15">
                                 <cpt:named>In (completed) Payment Batch</cpt:named>
+                            </cpt:collection>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Payments (FRA)">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="upcomingPaymentsFra" paged="20">
+                                <cpt:named>Upcoming Payments</cpt:named>
+                            </cpt:collection>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Coda Documents (ITA)">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="invalidAndUnpaidCodaDocumentsIta" paged="25">
+                                <cpt:named>Not valid, not paid</cpt:named>
+                            </cpt:collection>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Incoming Invoice Approvals (ITA)">
+                    <bs3:row>
+                        <bs3:col span="4">
+                            <cpt:collection id="incomingInvoicesItaNew" paged="15">
+                                <cpt:named>New</cpt:named>
+                            </cpt:collection>
+                        </bs3:col>
+                        <bs3:col span="4">
+                            <cpt:collection id="incomingInvoicesItaCompleted" paged="15">
+                                <cpt:named>Completed</cpt:named>
+                            </cpt:collection>
+                        </bs3:col>
+                        <bs3:col span="4">
+                            <cpt:collection id="incomingInvoicesItaPendingAdvise" paged="15">
+                                <cpt:named>Pending Advice</cpt:named>
+                            </cpt:collection>
+                            <cpt:collection id="incomingInvoicesItaApprovedByCenterManager" paged="15">
+                                <cpt:named>Approved by Center Manager</cpt:named>
+                            </cpt:collection>
+                        </bs3:col>
+                    </bs3:row>
+                    <bs3:row>
+                        <bs3:col span="4">
+                            <cpt:collection id="incomingInvoicesItaApproved" paged="15">
+                                <cpt:named>Approved</cpt:named>
+                            </cpt:collection>
+                        </bs3:col>
+                        <bs3:col span="4">
+                            <cpt:collection id="incomingInvoicesItaPendingCodaBooks" paged="15">
+                                <cpt:named>Pending Coda Books</cpt:named>
+                            </cpt:collection>
+                        </bs3:col>
+                        <bs3:col span="4">
+                            <cpt:collection id="incomingInvoicesItaPayable" paged="15">
+                                <cpt:named>Payable</cpt:named>
                             </cpt:collection>
                         </bs3:col>
                     </bs3:row>

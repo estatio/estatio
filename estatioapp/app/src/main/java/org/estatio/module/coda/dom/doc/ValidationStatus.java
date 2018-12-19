@@ -14,12 +14,6 @@ import java.util.List;
 public enum ValidationStatus {
     /**
      * For {@link CodaDocHead}s, indicates that all elements of all {@link CodaDocLine}s are valid.
-     *
-     * <p>
-     *     By "elements" we mean {@link CodaDocLine#getExtRefOrderValidationStatus()},
-     *     {@link CodaDocLine#getExtRefPropertyValidationStatus()}, {@link CodaDocLine#getExtRefProjectValidationStatus()} and
-     *     {@link CodaDocLine#getExtRefWorkTypeValidationStatus()}.
-     * </p>
      */
     VALID,
     /**

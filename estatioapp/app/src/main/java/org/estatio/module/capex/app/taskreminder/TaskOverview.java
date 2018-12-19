@@ -2,8 +2,11 @@ package org.estatio.module.capex.app.taskreminder;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
+
+import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Collection;
@@ -17,6 +20,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
+import org.estatio.module.base.dom.VisibilityEvaluator;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.dom.task.TaskRepository;
 import org.estatio.module.party.dom.Person;
@@ -46,15 +50,24 @@ public class TaskOverview implements HasAtPath {
 
     @Property
     public long getTasksOverdue() {
-        return taskRepository.findIncompleteByPersonAssignedTo(person).stream()
+        final Stream<Task> incompleteTasks = streamIncompleteTasksVisibleToMeAssignedTo(person);
+        final LocalDateTime now = clockService.nowAsLocalDateTime();
+        return incompleteTasks
                 .map(Task::getCreatedOn)
-                .filter(ld -> ld.plusDays(5).isBefore(clockService.nowAsLocalDateTime()))
+                .filter(ld -> ld.plusDays(5).isBefore(now))
                 .count();
     }
 
     @Property
     public long getTasksNotYetOverdue() {
-        return taskRepository.findIncompleteByPersonAssignedTo(person).size() - getTasksOverdue();
+        final Stream<Task> incompleteTasks = streamIncompleteTasksVisibleToMeAssignedTo(person);
+        return incompleteTasks.count() - getTasksOverdue();
+    }
+
+    private Stream<Task> streamIncompleteTasksVisibleToMeAssignedTo(final Person person) {
+        final List<Task> tasks = taskRepository.findIncompleteByPersonAssignedTo(person);
+        return tasks.stream()
+                .filter(visibilityEvaluator::visibleToMe); // since just counting
     }
 
     @Collection
@@ -90,12 +103,16 @@ public class TaskOverview implements HasAtPath {
     }
 
     @Inject
-    private ClockService clockService;
+    ClockService clockService;
 
     @Inject
-    private TaskReminderService taskReminderService;
+    TaskReminderService taskReminderService;
 
     @Inject
-    private TaskRepository taskRepository;
+    TaskRepository taskRepository;
+
+    @Inject
+    VisibilityEvaluator visibilityEvaluator;
+
 }
 

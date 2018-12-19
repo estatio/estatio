@@ -1,11 +1,8 @@
 package org.estatio.module.bankmandate.canonical.v2;
 
-import javax.inject.Inject;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.services.dto.DtoMappingHelper;
 
 import org.estatio.canonical.bankmandate.v2.BankMandateDto;
 import org.estatio.canonical.bankmandate.v2.Status;
@@ -18,7 +15,11 @@ import org.estatio.module.base.platform.applib.DtoFactoryAbstract;
         nature = NatureOfService.DOMAIN,
         objectType = "bankmandate.canonical.v2.BankMandateDtoFactory"
 )
-public class BankMandateDtoFactory extends DtoFactoryAbstract {
+public class BankMandateDtoFactory extends DtoFactoryAbstract<BankMandate, BankMandateDto> {
+
+    public BankMandateDtoFactory(){
+        super(BankMandate.class, BankMandateDto.class);
+    }
 
     @Programmatic
     public BankMandateDto newDto(final BankMandate bankMandate) {
@@ -78,6 +79,4 @@ public class BankMandateDtoFactory extends DtoFactoryAbstract {
         return reference;
     }
 
-    @Inject
-    DtoMappingHelper mappingHelper;
 }

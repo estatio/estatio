@@ -144,6 +144,10 @@ public abstract class Party
     public Party() {
         super("name");
     }
+    public Party(final String reference) {
+        this();
+        setReference(reference);
+    }
 
     public String title() {
         return TitleBuilder.start()
@@ -271,12 +275,17 @@ public abstract class Party
 
     @Programmatic
     public boolean hasPartyRoleType(final PartyRoleType partyRoleType){
+        return getPartyRole(partyRoleType) != null;
+    }
+
+    @Programmatic
+    public PartyRole getPartyRole(final PartyRoleType partyRoleType){
         for (PartyRole role : getRoles()){
             if (role.getRoleType() == partyRoleType){
-                return true;
+                return role;
             }
         }
-        return false;
+        return null;
     }
 
     @Override

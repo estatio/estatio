@@ -31,7 +31,7 @@ public class PartyDtoFactory_Test {
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
 
     @Mock
-    private DtoMappingHelper mockDtoMappingHelper;
+    private DtoMappingHelper mockMappingHelper;
     @Mock
     private CommunicationChannelRepository mockCommunicationChannelRepository;
 
@@ -39,8 +39,12 @@ public class PartyDtoFactory_Test {
 
     @Before
     public void setUp() throws Exception {
-        partyDtoFactory = new PartyDtoFactory();
-        partyDtoFactory.mappingHelper = mockDtoMappingHelper;
+        partyDtoFactory = new PartyDtoFactory() {
+            PartyDtoFactory withMappingHelper(DtoMappingHelper mappingHelper) {
+                super.mappingHelper = mappingHelper;
+                return this;
+            }
+        }.withMappingHelper(mockMappingHelper);
         partyDtoFactory.communicationChannelRepository = mockCommunicationChannelRepository;
     }
 
@@ -60,7 +64,7 @@ public class PartyDtoFactory_Test {
         final OidDto partyOidDto = new OidDto();
 
         context.checking(new Expectations() {{
-            oneOf(mockDtoMappingHelper).oidDtoFor(p);
+            oneOf(mockMappingHelper).oidDtoFor(p);
             will(returnValue(partyOidDto));
 
             oneOf(mockCommunicationChannelRepository).findByOwnerAndType(p, CommunicationChannelType.POSTAL_ADDRESS);
@@ -78,6 +82,5 @@ public class PartyDtoFactory_Test {
         assertThat(partyDtoAfter.getName()).isEqualTo(p.getName());
         assertThat(partyDtoAfter.getReference()).isEqualTo(p.getReference());
     }
-
 
 }

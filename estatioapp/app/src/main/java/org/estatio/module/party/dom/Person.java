@@ -81,10 +81,14 @@ import lombok.Setter;
         editing = Editing.DISABLED,
         autoCompleteRepository = PersonRepository.class
 )
-@NoArgsConstructor
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class Person extends Party
         implements WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted {
+
+    public Person() {}
+    public Person(final String reference) {
+        super(reference);
+    }
 
     @Builder
     public Person(

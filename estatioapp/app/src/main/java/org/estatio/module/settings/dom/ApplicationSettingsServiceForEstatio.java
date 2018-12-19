@@ -28,6 +28,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
@@ -52,11 +53,16 @@ public class ApplicationSettingsServiceForEstatio extends UdoDomainRepositoryAnd
     @Programmatic
     @Override
     public ApplicationSetting find(final String key) {
-        return firstMatch(
-                new QueryDefault<>(ApplicationSettingForEstatio.class,
-                        "findByKey",
-                        "key", key));
+        return queryResultsCache.execute(
+                () -> firstMatch(
+                        new QueryDefault<>(ApplicationSettingForEstatio.class,
+                            "findByKey",
+                            "key", key)
+                ), getClass(), "find", key);
     }
+
+    @Inject
+    QueryResultsCache queryResultsCache;
 
     // //////////////////////////////////////
 

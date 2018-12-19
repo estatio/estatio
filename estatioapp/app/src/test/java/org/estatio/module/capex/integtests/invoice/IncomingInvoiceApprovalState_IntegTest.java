@@ -49,7 +49,7 @@ import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.invoice.dom.PaymentMethod;
@@ -86,7 +86,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
             @Override
             protected void execute(final FixtureScript.ExecutionContext ec) {
                 ec.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
-                ec.executeChild(this, new CapexChargeHierarchyXlsxFixture());
+                ec.executeChild(this, new IncomingChargesFraXlsxFixture());
                 ec.executeChildren(this,
                         IncomingInvoice_enum.fakeInvoice2Pdf,
                         BankAccount_enum.TopModelFr,
@@ -356,6 +356,33 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         Assertions.assertThat(transitionsOfInvoice.get(10).isCompleted()).isTrue();
         Assertions.assertThat(transitionsOfInvoice.get(10).getTask()).isNull();
         Assertions.assertThat(transitionsOfInvoice.get(10).getCompletedBy()).isEqualTo(Person_enum.DanielOfficeAdministratorFr.getRef().toLowerCase());
+
+    }
+
+    @Test
+    public void payable_non_italian_invoice_can_be_rejected() throws Exception {
+
+        // given
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.BertrandIncomingInvoiceManagerFr.getRef().toLowerCase(), (Runnable) () ->
+                wrap(incomingInvoice).changePaymentMethod(PaymentMethod.CREDIT_CARD));
+        sudoService.sudo(Person_enum.BertrandIncomingInvoiceManagerFr.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.PeterPanProjectManagerFr.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act("COUNTRY_DIRECTOR", null, null, false));
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.GabrielCountryDirectorFr.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_approveAsCountryDirector.class, incomingInvoice)).act(null, false));
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PAYABLE);
+
+        // when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.BrunoTreasurerFr.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_reject.class, incomingInvoice)).act( "SOME_ROLE_WHY?", null, "test"));
+
+        // then
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.NEW);
 
     }
 

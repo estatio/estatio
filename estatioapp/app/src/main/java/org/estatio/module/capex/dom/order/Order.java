@@ -47,7 +47,6 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.message.MessageService;
@@ -115,6 +114,11 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.order.Order "
                         + "WHERE orderNumber == :orderNumber "),
+        @Query(
+                name = "findByExtRefOrderGlobalNumerator", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.order.Order "
+                        + "WHERE orderNumber.startsWith(:extRefOrderGlobalNumeratorWithTrailingSlash) "),
         @Query(
                 name = "matchByOrderNumber", language = "JDOQL",
                 value = "SELECT "

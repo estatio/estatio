@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.asset.dom.FixedAsset;
@@ -36,7 +37,10 @@ public class PartyRoleMemberInferenceServiceForFixedAssetRoleAndIncomingInvoice
         }
 
         final List<FixedAssetRole> fixedAssetRoles =
-                fixedAssetRoleRepository.findByAssetAndType(fixedAsset, partyRoleType);
+                fixedAssetRoleRepository.findByAssetAndType(fixedAsset, partyRoleType)
+                .stream()
+                .filter(x->x.getEndDate()==null || x.getEndDate().isAfter(clockService.now()))
+                .collect(Collectors.toList());
 
         return currentPersonsFrom(fixedAssetRoles);
     }
@@ -60,5 +64,8 @@ public class PartyRoleMemberInferenceServiceForFixedAssetRoleAndIncomingInvoice
 
     @Inject
     FixedAssetRoleRepository fixedAssetRoleRepository;
+
+    @Inject
+    ClockService clockService;
 
 }

@@ -7,7 +7,6 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.canonical.bankmandate.v1.BankAccountsAndMandatesDto;
 import org.estatio.canonical.bankmandate.v1.BankMandateDto;
@@ -38,10 +37,14 @@ import org.estatio.module.party.dom.Party;
 @DomainService(
         nature = NatureOfService.DOMAIN
 )
-public class PartyBankAccountsAndMandatesDtoFactory extends DtoFactoryAbstract {
+public class PartyBankAccountsAndMandatesDtoFactory extends DtoFactoryAbstract<Party, BankAccountsAndMandatesDto> {
 
-    @Programmatic
-    public BankAccountsAndMandatesDto newDto(final Party party) {
+    public PartyBankAccountsAndMandatesDtoFactory() {
+        super(Party.class, BankAccountsAndMandatesDto.class);
+    }
+
+    @Override
+    protected BankAccountsAndMandatesDto newDto(final Party party) {
 
         final BankAccountsAndMandatesDto dto = new BankAccountsAndMandatesDto();
 

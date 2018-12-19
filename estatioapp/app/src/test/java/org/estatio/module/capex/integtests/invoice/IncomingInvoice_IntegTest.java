@@ -28,7 +28,7 @@ import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.incoming.builders.CapexChargeHierarchyXlsxFixture;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
 import org.estatio.module.charge.fixtures.incoming.enums.IncomingCharge_enum;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
@@ -60,7 +60,7 @@ public class IncomingInvoice_IntegTest extends CapexModuleIntegTestAbstract {
             protected void execute(final ExecutionContext ec) {
                 ec.executeChildren(this,
                         new DocumentTypesAndTemplatesForCapexFixture(),
-                        new CapexChargeHierarchyXlsxFixture());
+                        new IncomingChargesFraXlsxFixture());
 
                 ec.executeChildren(this,
                         IncomingInvoice_enum.fakeInvoice2Pdf,

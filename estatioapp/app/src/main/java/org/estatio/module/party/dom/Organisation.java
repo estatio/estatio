@@ -72,6 +72,11 @@ public class Organisation
         extends Party
         implements WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted {
 
+    public Organisation() {}
+    public Organisation(final String reference) {
+        super(reference);
+    }
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(length = FiscalCodeType.Meta.MAX_LEN)

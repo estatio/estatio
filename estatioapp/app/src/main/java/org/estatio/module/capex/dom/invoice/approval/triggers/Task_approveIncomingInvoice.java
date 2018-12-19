@@ -36,12 +36,12 @@ public class Task_approveIncomingInvoice
     )
     @ActionLayout(contributed = Contributed.AS_ACTION, cssClassFa = "fa-thumbs-o-up")
     public Object act(
-            final String role,
+            @Nullable final String roleToAssignNextTo, // ECP-855: this field serves as a hint to the user to which role the next task will be assigned
             @Nullable final Person personToAssignNextTo,
             @Nullable final String comment,
             final boolean goToNext) {
         final Object nextTaskIfAny = nextTaskOrWarnIfRequired(goToNext);
-        Object mixinResult = mixin().act(role, personToAssignNextTo, comment, goToNext);
+        Object mixinResult = mixin().act(roleToAssignNextTo, personToAssignNextTo, comment, goToNext);
         return coalesce(nextTaskIfAny, mixinResult);
     }
 

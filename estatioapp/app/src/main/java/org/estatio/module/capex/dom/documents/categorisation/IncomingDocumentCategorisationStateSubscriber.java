@@ -22,13 +22,13 @@ public class IncomingDocumentCategorisationStateSubscriber extends AbstractSubsc
         switch (ev.getEventPhase()) {
         case EXECUTED:
             final Document document = (Document) ev.getReturnValue();
-            stateTransitionService.trigger(
-                    document, IncomingDocumentCategorisationStateTransitionType.INSTANTIATE, null, null);
+            if (document.getAtPath().startsWith("/FRA") || document.getAtPath().startsWith("/BEL")) {
+                stateTransitionService.trigger(
+                        document, IncomingDocumentCategorisationStateTransitionType.INSTANTIATE, null, null);
+            }
             break;
         }
     }
-
-
 
     @Inject
     StateTransitionService stateTransitionService;

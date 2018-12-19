@@ -114,6 +114,11 @@ public class Project extends UdoDomainObject<Project> implements
         super("reference, name, startDate");
     }
 
+    public Project(String reference) {
+        this();
+        setReference(reference);
+    }
+
     public String title() {
         return TitleBuilder.start().withReference(getReference()).withName(getName()).toString();
     }

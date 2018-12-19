@@ -62,7 +62,23 @@
             </bs3:row>
         </bs3:col>
         <bs3:col span="6" unreferencedCollections="true">
-            <cpt:collection id="connections"/>
+            <bs3:row>
+                <bs3:col span="12">
+                    <cpt:collection id="connections"/>
+                </bs3:col>
+            </bs3:row>
+            <bs3:row>
+                <bs3:col span="12">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:action id="retrieveCodaSupplier"/>
+                            <cpt:action id="retrieveCodaDoc"/>
+                            <cpt:action id="reinitPublisherService"/>
+                        </bs3:col>
+                    </bs3:row>
+                    <cpt:collection id="codaHwms"/>
+                </bs3:col>
+            </bs3:row>
         </bs3:col>
     </bs3:row>
 </bs3:grid>

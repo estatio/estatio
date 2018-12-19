@@ -3,12 +3,9 @@ package org.estatio.module.lease.canonical.v1;
 import java.util.Optional;
 import java.util.SortedSet;
 
-import javax.inject.Inject;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.services.dto.DtoMappingHelper;
 
 import org.estatio.canonical.invoice.v1.InvoiceItemDto;
 import org.estatio.module.asset.dom.FixedAsset;
@@ -27,7 +24,11 @@ import org.estatio.module.tax.dom.TaxRate;
 @DomainService(
         nature = NatureOfService.DOMAIN
 )
-public class InvoiceItemForLeaseDtoFactory extends DtoFactoryAbstract {
+public class InvoiceItemForLeaseDtoFactory extends DtoFactoryAbstract<InvoiceItem, InvoiceItemDto> {
+
+    public InvoiceItemForLeaseDtoFactory() {
+        super(InvoiceItem.class, InvoiceItemDto.class);
+    }
 
     @Programmatic
     public InvoiceItemDto newDto(final InvoiceItem item) {
@@ -110,6 +111,4 @@ public class InvoiceItemForLeaseDtoFactory extends DtoFactoryAbstract {
         return dto;
     }
 
-    @Inject
-    DtoMappingHelper mappingHelper;
 }

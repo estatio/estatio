@@ -38,11 +38,11 @@ public class IncomingDocAsInvoiceViewModel_approve extends IncomingInvoice_appro
     )
     @ActionLayout(cssClassFa = "fa-thumbs-o-up")
     public Object act(
-            final String role,
+            @Nullable final String roleToAssignNextTo,
             @Nullable final Person personToAssignNextTo,
             @Nullable final String comment,
             final boolean goToNext) {
-        return super.act(role, personToAssignNextTo, comment, goToNext);
+        return super.act(roleToAssignNextTo, personToAssignNextTo, comment, goToNext);
     }
 
 
