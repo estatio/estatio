@@ -64,10 +64,12 @@ public class DirectCostTable_IntegTest extends BudgetModuleIntegTestAbstract {
 
         // when
         wrap(table).generateItems();
+        transactionService.nextTransaction();
+
         // then
         assertThat(table.getItems()).hasSize(25);
         Lists.newArrayList(table.getItems()).forEach(item->{
-            assertThat(item.getBudgetedValue()).isEqualTo(BigDecimal.ZERO);
+            assertThat(item.getBudgetedValue()).isEqualTo(new BigDecimal("0.00"));
             assertThat(item.getAuditedValue()).isNull();
         });
 
@@ -75,12 +77,13 @@ public class DirectCostTable_IntegTest extends BudgetModuleIntegTestAbstract {
         final DirectCost firstItem = table.getItems().first();
         firstItem.setBudgetedValue(new BigDecimal("1000.00"));
         wrap(table).generateItems();
+        transactionService.nextTransaction();
 
         // then
         assertThat(table.getItems().first()).isNotSameAs(firstItem);
         assertThat(table.getItems()).hasSize(25);
         Lists.newArrayList(table.getItems()).forEach(item->{
-            assertThat(item.getBudgetedValue()).isEqualTo(BigDecimal.ZERO);
+            assertThat(item.getBudgetedValue()).isEqualTo(new BigDecimal("0.00"));
             assertThat(item.getAuditedValue()).isNull();
         });
     }
@@ -91,7 +94,9 @@ public class DirectCostTable_IntegTest extends BudgetModuleIntegTestAbstract {
         final Budget budget2015 = Budget_enum.OxfBudget2015.findUsing(serviceRegistry);
         final String directTableName = "direct";
         DirectCostTable table = directCostTableRepository.findOrCreateDirectCostTable(budget2015, directTableName);
-        table.generateItems();
+        wrap(table).generateItems();
+        transactionService.nextTransaction();
+
         final BigDecimal budgetedValue = new BigDecimal("1234.56");
         table.getItems().first().setBudgetedValue(budgetedValue);
         table.getItems().first().setAuditedValue(new BigDecimal("1111.11"));
@@ -111,7 +116,5 @@ public class DirectCostTable_IntegTest extends BudgetModuleIntegTestAbstract {
         assertThat(items.first().getAuditedValue()).isNull();
 
     }
-
-
 
 }

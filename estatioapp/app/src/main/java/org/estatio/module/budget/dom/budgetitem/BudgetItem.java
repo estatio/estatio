@@ -61,6 +61,7 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetcalculation.Status;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.KeyTableRepository;
+import org.estatio.module.budget.dom.keytable.PartitioningTable;
 import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
@@ -201,21 +202,19 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public PartitionItem createPartitionItemForBudgeting(
             final Charge charge,
-            final KeyTable keyTable,
+            final PartitioningTable partitioningTable,
             final BigDecimal percentage,
             final BigDecimal fixedBudgetedValue) {
-        return partitionItemRepository.newPartitionItem(getBudget().getPartitioningForBudgeting(), charge, keyTable, this, percentage, fixedBudgetedValue, null);
+        return partitionItemRepository.newPartitionItem(getBudget().getPartitioningForBudgeting(), charge, partitioningTable, this, percentage, fixedBudgetedValue, null);
     }
 
     public List<Charge> choices0CreatePartitionItemForBudgeting() {
         return chargeRepository.allOutgoing();
     }
 
-    public List<KeyTable> choices1CreatePartitionItemForBudgeting() {
+    public List<PartitioningTable> choices1CreatePartitionItemForBudgeting() {
         return partitioningTableRepository.findByBudget(getBudget())
                 .stream()
-                .filter(KeyTable.class::isInstance)
-                .map (KeyTable.class::cast)
                 .collect(Collectors.toList());
     }
 
@@ -231,7 +230,7 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
             // only copies of budgeted items are made
             if (partitionItem.getPartitioning().getType()==BudgetCalculationType.BUDGETED) {
                 String keyTableName = partitionItem.getPartitioningTable().getName();
-                KeyTable correspondingTableOnbudget = (KeyTable) partitioningTableRepository.findByBudgetAndName(budget, keyTableName);
+                PartitioningTable correspondingTableOnbudget = partitioningTableRepository.findByBudgetAndName(budget, keyTableName);
                 newBudgetItemCopy.createPartitionItemForBudgeting(partitionItem.getCharge(), correspondingTableOnbudget, partitionItem.getPercentage(), partitionItem.getFixedBudgetedAmount());
             }
         }
