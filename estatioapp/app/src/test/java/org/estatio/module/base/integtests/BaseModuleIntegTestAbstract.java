@@ -20,17 +20,30 @@ package org.estatio.module.base.integtests;
 
 import org.slf4j.event.Level;
 
+import org.apache.isis.applib.ModuleAbstract;
 import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
+import org.apache.isis.core.metamodel.specloader.IntrospectionMode;
+import org.apache.isis.core.metamodel.specloader.SpecificationLoader;
 import org.apache.isis.core.runtime.headless.logging.LogConfig;
-
-import org.estatio.module.base.EstatioBaseModule;
 
 public abstract class BaseModuleIntegTestAbstract
         extends IntegrationTestAbstract3 {
 
-    public BaseModuleIntegTestAbstract() {
-        super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
-                new EstatioBaseModule()
+    protected BaseModuleIntegTestAbstract(
+                    final ModuleAbstract module) {
+
+        this(module, IntrospectionMode.FULL);
+    }
+
+    protected BaseModuleIntegTestAbstract(
+                    final ModuleAbstract module,
+                    final IntrospectionMode introspectionMode) {
+
+        super(new LogConfig(Level.INFO,
+                logPrintStream(Level.DEBUG)),
+                module.withConfigurationProperty(
+                    SpecificationLoader.CONFIG_PROPERTY_MODE.of(introspectionMode)
+                )
         );
     }
 
