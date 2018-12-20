@@ -14,34 +14,39 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.estatio.module.budget.integtests.budget;
+package org.estatio.module.budgetassignment.integtests.calc;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Lists;
+
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.incode.module.base.integtests.VT;
+
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.keyitem.DirectCost;
 import org.estatio.module.budget.dom.keytable.DirectCostTable;
 import org.estatio.module.budget.dom.keytable.DirectCostTableRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.keytables.enums.DirectCostTable_enum;
 import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
-import org.estatio.module.budget.integtests.BudgetModuleIntegTestAbstract;
 import org.estatio.module.budgetassignment.contributions.Budget_Calculate;
+import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DirectCostCalculation_IntegTest extends BudgetModuleIntegTestAbstract {
+public class DirectCostCalculation_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
 
     @Inject
     DirectCostTableRepository directCostTableRepository;
@@ -74,7 +79,6 @@ public class DirectCostCalculation_IntegTest extends BudgetModuleIntegTestAbstra
     }
 
     @Test
-    @Ignore
     public void direct_cost_calculation_test() throws Exception {
 
         // given
@@ -83,7 +87,20 @@ public class DirectCostCalculation_IntegTest extends BudgetModuleIntegTestAbstra
         wrap(mixin(Budget_Calculate.class, budget)).calculate(false);
         // then
         List<BudgetCalculation> calculations = budgetCalculationRepository.allBudgetCalculations();
+        assertThat(calculations).hasSize(24); // in fixture the budgeted value for unit OXF-011 is set to null
 
+        assertThat(calculations.get(0).getUnit().getReference()).isEqualTo("OXF-001");
+        assertThat(calculations.get(0).getValue()).isEqualTo(VT.bd("100.00"));
+        assertThat(calculations.get(1).getUnit().getReference()).isEqualTo("OXF-010");
+        assertThat(calculations.get(1).getValue()).isEqualTo(VT.bd("123.45"));
+        assertThat(calculations.get(2).getUnit().getReference()).isEqualTo("OXF-012");
+        assertThat(calculations.get(2).getValue()).isEqualTo(VT.bd("543.21"));
+
+        final DirectCost directCost = Lists.newArrayList(budget.getDirectCostTables().first().getItems()).get(2);
+        assertThat(directCost.getBudgetedValue()).isNull();
+
+        BudgetCalculation nonCalculated = budgetCalculationRepository.findUnique(budget.getItems().first().getPartitionItems().get(0), directCost, BudgetCalculationType.BUDGETED);
+        assertThat(nonCalculated).isNull();
     }
 
     @Inject BudgetCalculationRepository budgetCalculationRepository;

@@ -17,11 +17,16 @@
 
 package org.estatio.module.budget.fixtures.keytables.builders;
 
+import java.math.BigDecimal;
+import java.util.Iterator;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
 import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.keyitem.DirectCost;
 import org.estatio.module.budget.dom.keytable.DirectCostTable;
 import org.estatio.module.budget.dom.keytable.DirectCostTableRepository;
 
@@ -40,6 +45,8 @@ public class DirectCostTableBuilder extends BuilderScriptAbstract<DirectCostTabl
     Budget budget;
     @Getter @Setter
     String name;
+    @Getter @Setter
+    List<BigDecimal> values;
 
     @Getter
     DirectCostTable object;
@@ -49,11 +56,19 @@ public class DirectCostTableBuilder extends BuilderScriptAbstract<DirectCostTabl
 
         checkParam("budget", executionContext, Budget.class);
         checkParam("name", executionContext, String.class);
+        checkParam("values", executionContext, List.class);
+
 
         final DirectCostTable directCostTable =
                 directCostTableRepository.newDirectCostTable(
                         budget, name);
         directCostTable.generateItems();
+        transactionService.nextTransaction();
+        Iterator<DirectCost> i = directCostTable.getItems().iterator();
+        for (BigDecimal value : getValues()){
+            if (!i.hasNext()) break;
+            i.next().setBudgetedValue(value);
+        }
 
         executionContext.addResult(this, name, directCostTable);
 

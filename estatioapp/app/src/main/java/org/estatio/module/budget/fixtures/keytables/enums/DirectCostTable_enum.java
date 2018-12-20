@@ -17,6 +17,10 @@
 
 package org.estatio.module.budget.fixtures.keytables.enums;
 
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
@@ -32,6 +36,7 @@ import org.estatio.module.budget.fixtures.keytables.builders.DirectCostTableBuil
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import static org.incode.module.base.integtests.VT.bd;
 
 @AllArgsConstructor
 @Getter
@@ -39,12 +44,13 @@ import lombok.experimental.Accessors;
 public enum DirectCostTable_enum implements PersonaWithBuilderScript<DirectCostTable, DirectCostTableBuilder>, PersonaWithFinder<DirectCostTable> {
 
     Oxf2015Direct(
-            Budget_enum.OxfBudget2015, "Direct costs year 2015"
+            Budget_enum.OxfBudget2015, "Direct costs year 2015", Arrays.asList(bd("100.00"), bd("123.45"), null, bd("543.21"))
     ),
     ;
 
     private final Budget_enum budget_d;
     private final String name;
+    private final List<BigDecimal> values;
 
     public LocalDate getStartDate() {
         return budget_d.getStartDate();
@@ -55,6 +61,7 @@ public enum DirectCostTable_enum implements PersonaWithBuilderScript<DirectCostT
         return new DirectCostTableBuilder()
                 .setPrereq((f,ec) -> f.setBudget(f.objectFor(budget_d, ec)))
                 .setName(name)
+                .setValues(values)
                 ;
     }
 
