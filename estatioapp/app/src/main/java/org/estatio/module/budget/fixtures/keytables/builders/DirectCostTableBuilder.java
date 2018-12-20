@@ -67,7 +67,7 @@ public class DirectCostTableBuilder extends BuilderScriptAbstract<DirectCostTabl
         Iterator<DirectCost> i = directCostTable.getItems().iterator();
         for (BigDecimal value : getValues()){
             if (!i.hasNext()) break;
-            i.next().setBudgetedValue(value);
+            i.next().setBudgetedCost(value);
         }
 
         executionContext.addResult(this, name, directCostTable);

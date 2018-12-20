@@ -56,15 +56,15 @@ import lombok.Setter;
 public class DirectCost extends PartitioningTableItem {
 
     public DirectCost(){
-        super("partitioningTable, unit, budgetedValue, auditedValue");
+        super("partitioningTable, unit, budgetedCost, auditedCost");
     }
 
-    public DirectCost(final DirectCostTable table, final Unit unit, final BigDecimal budgetedValue, final BigDecimal auditedValue){
+    public DirectCost(final DirectCostTable table, final Unit unit, final BigDecimal budgetedCost, final BigDecimal auditedCost){
         this();
         this.setPartitioningTable(table);
         this.setUnit(unit);
-        this.budgetedValue = budgetedValue;
-        this.auditedValue = auditedValue;
+        this.budgetedCost = budgetedCost;
+        this.auditedCost = auditedCost;
     }
 
     public String title() {
@@ -78,17 +78,17 @@ public class DirectCost extends PartitioningTableItem {
 
     @Column(allowsNull = "false", scale = 2)
     @Getter @Setter
-    private BigDecimal budgetedValue;
+    private BigDecimal budgetedCost;
 
     @ActionLayout(hidden = Where.EVERYWHERE)
     public DirectCost changeBudgetedValue(final BigDecimal budgetedValue) {
-        setAuditedValue(budgetedValue);
+        setAuditedCost(budgetedValue);
         return this;
     }
 
     public BigDecimal default0ChangeBudgetedValue(final BigDecimal budgetedValue) {
-        if (getBudgetedValue()!=null) {
-            return getBudgetedValue();
+        if (getBudgetedCost()!=null) {
+            return getBudgetedCost();
         } else {
             return BigDecimal.ZERO;
         }
@@ -100,22 +100,19 @@ public class DirectCost extends PartitioningTableItem {
         return null;
     }
 
-    //endregion
-    //region > auditedValue (property)
-
     @Column(allowsNull = "true", scale = 2)
     @Getter @Setter
-    private BigDecimal auditedValue;
+    private BigDecimal auditedCost;
 
     @ActionLayout(hidden = Where.EVERYWHERE)
     public DirectCost changeAuditedValue(final BigDecimal auditedKeyValue) {
-        setAuditedValue(auditedKeyValue);
+        setAuditedCost(auditedKeyValue);
         return this;
     }
 
     public BigDecimal default0ChangeAuditedValue(final BigDecimal auditedKeyValue) {
-        if (getAuditedValue()!=null) {
-        return getAuditedValue();
+        if (getAuditedCost()!=null) {
+        return getAuditedCost();
         } else {
             return BigDecimal.ZERO;
         }

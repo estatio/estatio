@@ -78,7 +78,7 @@ import lombok.Setter;
 )
 public class KeyTable extends PartitioningTable {
 
-    @Column(name = "foundationValueTypeId", allowsNull = "false")
+    @Column(allowsNull = "false")
     @Getter @Setter
     private FoundationValueType foundationValueType;
 
@@ -104,7 +104,7 @@ public class KeyTable extends PartitioningTable {
         return isAssignedReason();
     }
 
-    @Column(name = "keyValueMethodId", allowsNull = "false")
+    @Column(allowsNull = "false")
     @Getter @Setter
     private KeyValueMethod keyValueMethod;
 

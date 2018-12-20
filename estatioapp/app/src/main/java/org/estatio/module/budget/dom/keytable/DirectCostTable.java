@@ -156,7 +156,7 @@ public class DirectCostTable extends PartitioningTable {
     public DirectCostTable createCopyFor(final Budget newBudget) {
         DirectCostTable newKeyTableCopy = newBudget.createDirectCostTable(getName());
         for (DirectCost item : getItems()){
-            newKeyTableCopy.newDirectCost(item.getUnit(), item.getBudgetedValue(), null);
+            newKeyTableCopy.newDirectCost(item.getUnit(), item.getBudgetedCost(), null);
         }
         return newKeyTableCopy;
     }
@@ -222,20 +222,20 @@ public class DirectCostTable extends PartitioningTable {
         Lists.newArrayList(getItems()).stream().forEach(i->{
             switch (type){
             case BUDGETED:
-                if (i.getBudgetedValue()!=null){
+                if (i.getBudgetedCost()!=null){
                     results.add(new BudgetCalculationViewmodel(
                             partitionItem,
                             i,
-                            i.getBudgetedValue(),
+                            i.getBudgetedCost(),
                             type
                     ));
                 }
             case ACTUAL:
-                if (i.getAuditedValue()!=null){
+                if (i.getAuditedCost()!=null){
                     results.add(new BudgetCalculationViewmodel(
                             partitionItem,
                             i,
-                            i.getAuditedValue(),
+                            i.getAuditedCost(),
                             type
                     ));
                 }

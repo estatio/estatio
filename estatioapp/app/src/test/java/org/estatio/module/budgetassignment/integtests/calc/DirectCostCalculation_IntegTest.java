@@ -97,7 +97,7 @@ public class DirectCostCalculation_IntegTest extends BudgetAssignmentModuleInteg
         assertThat(calculations.get(2).getValue()).isEqualTo(VT.bd("543.21"));
 
         final DirectCost directCost = Lists.newArrayList(budget.getDirectCostTables().first().getItems()).get(2);
-        assertThat(directCost.getBudgetedValue()).isNull();
+        assertThat(directCost.getBudgetedCost()).isNull();
 
         BudgetCalculation nonCalculated = budgetCalculationRepository.findUnique(budget.getItems().first().getPartitionItems().get(0), directCost, BudgetCalculationType.BUDGETED);
         assertThat(nonCalculated).isNull();

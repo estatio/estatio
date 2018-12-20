@@ -19,10 +19,10 @@
                 <ns2:property id="unit"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Values" id="values">
-                <ns2:property id="budgetedValue">
+                <ns2:property id="budgetedCost">
                     <ns2:action id="changeBudgetedValue" position="BELOW"/>
                 </ns2:property>
-                <ns2:property id="auditedValue">
+                <ns2:property id="auditedCost">
                     <ns2:action id="changeAuditedValue" position="BELOW"/>
                 </ns2:property>
             </ns2:fieldSet>

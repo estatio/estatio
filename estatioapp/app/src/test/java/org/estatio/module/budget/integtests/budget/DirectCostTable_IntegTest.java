@@ -69,13 +69,13 @@ public class DirectCostTable_IntegTest extends BudgetModuleIntegTestAbstract {
         // then
         assertThat(table.getItems()).hasSize(25);
         Lists.newArrayList(table.getItems()).forEach(item->{
-            assertThat(item.getBudgetedValue()).isEqualTo(new BigDecimal("0.00"));
-            assertThat(item.getAuditedValue()).isNull();
+            assertThat(item.getBudgetedCost()).isEqualTo(new BigDecimal("0.00"));
+            assertThat(item.getAuditedCost()).isNull();
         });
 
         // and when
         final DirectCost firstItem = table.getItems().first();
-        firstItem.setBudgetedValue(new BigDecimal("1000.00"));
+        firstItem.setBudgetedCost(new BigDecimal("1000.00"));
         wrap(table).generateItems();
         transactionService.nextTransaction();
 
@@ -83,8 +83,8 @@ public class DirectCostTable_IntegTest extends BudgetModuleIntegTestAbstract {
         assertThat(table.getItems().first()).isNotSameAs(firstItem);
         assertThat(table.getItems()).hasSize(25);
         Lists.newArrayList(table.getItems()).forEach(item->{
-            assertThat(item.getBudgetedValue()).isEqualTo(new BigDecimal("0.00"));
-            assertThat(item.getAuditedValue()).isNull();
+            assertThat(item.getBudgetedCost()).isEqualTo(new BigDecimal("0.00"));
+            assertThat(item.getAuditedCost()).isNull();
         });
     }
 
@@ -98,8 +98,8 @@ public class DirectCostTable_IntegTest extends BudgetModuleIntegTestAbstract {
         transactionService.nextTransaction();
 
         final BigDecimal budgetedValue = new BigDecimal("1234.56");
-        table.getItems().first().setBudgetedValue(budgetedValue);
-        table.getItems().first().setAuditedValue(new BigDecimal("1111.11"));
+        table.getItems().first().setBudgetedCost(budgetedValue);
+        table.getItems().first().setAuditedCost(new BigDecimal("1111.11"));
 
         // when
         final Budget budget2016 = Budget_enum.OxfBudget2016.findUsing(serviceRegistry);
@@ -112,8 +112,8 @@ public class DirectCostTable_IntegTest extends BudgetModuleIntegTestAbstract {
         assertThat(budget2016.getDirectCostTables()).hasSize(1);
         final SortedSet<DirectCost> items = budget2016.getDirectCostTables().first().getItems();
         assertThat(items).hasSize(25);
-        assertThat(items.first().getBudgetedValue()).isEqualTo(budgetedValue);
-        assertThat(items.first().getAuditedValue()).isNull();
+        assertThat(items.first().getBudgetedCost()).isEqualTo(budgetedValue);
+        assertThat(items.first().getAuditedCost()).isNull();
 
     }
 
