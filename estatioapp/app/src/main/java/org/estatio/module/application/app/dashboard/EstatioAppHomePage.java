@@ -18,6 +18,7 @@
  */
 package org.estatio.module.application.app.dashboard;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -297,7 +298,7 @@ public class EstatioAppHomePage {
     @Collection
     @CollectionLayout(defaultView = "table")
     public List<CodaDocHead> getInvalidAndUnpaidCodaDocumentsIta() {
-        return codaDocHeadRepository.findUnpaidAndInvalid();
+        return codaDocHeadRepository.findUnpaidAndInvalid().stream().sorted(Comparator.comparing(CodaDocHead::getInputDate).reversed()).collect(Collectors.toList());
     }
 
     ////////////////////////////////////////////////////////////
