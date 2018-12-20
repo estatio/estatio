@@ -26,18 +26,15 @@ import org.apache.isis.core.metamodel.specloader.IntrospectionMode;
 import org.apache.isis.core.metamodel.specloader.SpecificationLoader;
 import org.apache.isis.core.runtime.headless.logging.LogConfig;
 
-public abstract class BaseModuleIntegTestAbstract
-        extends IntegrationTestAbstract3 {
+public abstract class BaseModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
-    protected BaseModuleIntegTestAbstract(
-                    final ModuleAbstract module) {
-
-        this(module, IntrospectionMode.FULL);
+    protected BaseModuleIntegTestAbstract(final ModuleAbstract module) {
+        this(module, IntrospectionMode.LAZY);
     }
 
     protected BaseModuleIntegTestAbstract(
-                    final ModuleAbstract module,
-                    final IntrospectionMode introspectionMode) {
+                final ModuleAbstract module,
+                final IntrospectionMode introspectionMode) {
 
         super(new LogConfig(Level.INFO,
                 logPrintStream(Level.DEBUG)),

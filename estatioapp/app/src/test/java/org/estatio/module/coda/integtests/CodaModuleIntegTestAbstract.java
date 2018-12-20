@@ -18,17 +18,12 @@
  */
 package org.estatio.module.coda.integtests;
 
-import org.slf4j.event.Level;
-
-import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
-import org.apache.isis.core.runtime.headless.logging.LogConfig;
-
+import org.estatio.module.base.integtests.BaseModuleIntegTestAbstract;
 import org.estatio.module.coda.EstatioCodaModule;
 
-public abstract class CodaModuleIntegTestAbstract extends IntegrationTestAbstract3 {
+public abstract class CodaModuleIntegTestAbstract extends BaseModuleIntegTestAbstract {
 
     public CodaModuleIntegTestAbstract() {
-        super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
-                new EstatioCodaModule());
+        super(new EstatioCodaModule());
     }
 }

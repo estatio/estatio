@@ -18,21 +18,16 @@
  */
 package org.estatio.module.settings.integtests;
 
-import org.slf4j.event.Level;
-
-import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
-import org.apache.isis.core.runtime.headless.logging.LogConfig;
+import org.estatio.module.base.integtests.BaseModuleIntegTestAbstract;
 import org.estatio.module.settings.EstatioSettingsModule;
 
 /**
  * Base class for integration tests.
  */
-public abstract class SettingsModuleIntegTestAbstract
-        extends IntegrationTestAbstract3 {
+public abstract class SettingsModuleIntegTestAbstract extends BaseModuleIntegTestAbstract {
 
     public SettingsModuleIntegTestAbstract() {
-        super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
-                new EstatioSettingsModule());
+        super(new EstatioSettingsModule());
     }
 
 }

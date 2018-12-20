@@ -8,7 +8,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.ModuleAbstract;
-import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
 
 import org.isisaddons.module.fakedata.FakeDataModule;
 import org.isisaddons.module.fakedata.dom.FakeDataService;
@@ -16,7 +15,9 @@ import org.isisaddons.module.fakedata.dom.FakeDataService;
 import org.incode.platform.dom.alias.integtests.dom.alias.AliasModuleIntegrationSubmodule;
 import org.incode.platform.dom.alias.integtests.dom.alias.dom.AliasForDemoObject;
 
-public abstract class AliasModuleIntegTestAbstract extends IntegrationTestAbstract3 {
+import org.estatio.module.base.integtests.BaseModuleIntegTestAbstract;
+
+public abstract class AliasModuleIntegTestAbstract extends BaseModuleIntegTestAbstract {
 
     @XmlRootElement(name = "module")
     public static class MyModule extends AliasModuleIntegrationSubmodule {

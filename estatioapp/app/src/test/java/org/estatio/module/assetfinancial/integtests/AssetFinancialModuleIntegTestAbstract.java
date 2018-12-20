@@ -18,18 +18,13 @@
  */
 package org.estatio.module.assetfinancial.integtests;
 
-import org.slf4j.event.Level;
-
-import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
-import org.apache.isis.core.runtime.headless.logging.LogConfig;
-
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
+import org.estatio.module.base.integtests.BaseModuleIntegTestAbstract;
 
-public abstract class AssetFinancialModuleIntegTestAbstract extends IntegrationTestAbstract3 {
+public abstract class AssetFinancialModuleIntegTestAbstract extends BaseModuleIntegTestAbstract {
 
     public AssetFinancialModuleIntegTestAbstract() {
-        super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
-                new EstatioAssetFinancialModule());
+        super(new EstatioAssetFinancialModule());
     }
 
 }

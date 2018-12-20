@@ -18,17 +18,12 @@
  */
 package org.estatio.module.capex.integtests;
 
-import org.slf4j.event.Level;
-
-import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
-import org.apache.isis.core.runtime.headless.logging.LogConfig;
-
+import org.estatio.module.base.integtests.BaseModuleIntegTestAbstract;
 import org.estatio.module.capex.EstatioCapexModule;
 
-public abstract class CapexModuleIntegTestAbstract extends IntegrationTestAbstract3 {
+public abstract class CapexModuleIntegTestAbstract extends BaseModuleIntegTestAbstract {
 
     public CapexModuleIntegTestAbstract() {
-        super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
-                new EstatioCapexModule());
+        super(new EstatioCapexModule());
     }
 }

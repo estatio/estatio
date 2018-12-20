@@ -7,7 +7,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.ModuleAbstract;
-import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
 
 import org.isisaddons.module.command.CommandModule;
 import org.isisaddons.module.fakedata.FakeDataModule;
@@ -24,7 +23,9 @@ import org.incode.platform.dom.document.integtests.dom.document.DocumentModuleIn
 import org.incode.platform.dom.document.integtests.dom.document.dom.paperclips.demowithurl.PaperclipForDemoObjectWithUrl;
 import org.incode.platform.dom.document.integtests.dom.document.dom.paperclips.other.PaperclipForOtherObject;
 
-public abstract class DocumentModuleIntegTestAbstract extends IntegrationTestAbstract3 {
+import org.estatio.module.base.integtests.BaseModuleIntegTestAbstract;
+
+public abstract class DocumentModuleIntegTestAbstract extends BaseModuleIntegTestAbstract {
 
     @XmlRootElement(name = "module")
     public static class MyModule extends DocumentModuleIntegrationSubmodule {
