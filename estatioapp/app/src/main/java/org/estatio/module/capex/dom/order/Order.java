@@ -153,7 +153,20 @@ import lombok.Setter;
                 name = "findBySeller", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.order.Order "
-                        + "WHERE seller == :seller ")
+                        + "WHERE seller == :seller "),
+        @Query(
+                name = "findByProperty", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.order.Order "
+                        + "WHERE property == :property "
+                        + "ORDER BY entryDate"),
+        @Query(
+                name = "findByPropertyAndSeller", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.order.Order "
+                        + "WHERE property == :property "
+                        + "&& seller == :seller "
+                        + "ORDER BY entryDate")
 })
 @Indices({
         @Index(name = "Order_sellerOrderReference_IDX", members = { "sellerOrderReference" })
@@ -557,16 +570,16 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             @Nullable final BudgetItem budgetItem
     ) {
         orderItemRepository.upsert(
-                    this, charge, description, netAmount, vatAmount, grossAmount, tax, PeriodUtil.yearFromPeriod(period).startDate(), PeriodUtil.yearFromPeriod(period).endDate(), property, project, budgetItem, determineItemNumber(charge));
+                this, charge, description, netAmount, vatAmount, grossAmount, tax, PeriodUtil.yearFromPeriod(period).startDate(), PeriodUtil.yearFromPeriod(period).endDate(), property, project, budgetItem, determineItemNumber(charge));
 
         return this;
     }
 
-    private int determineItemNumber(final Charge chargeNewItem){
-        if (getAtPath().startsWith("/ITA")){
+    private int determineItemNumber(final Charge chargeNewItem) {
+        if (getAtPath().startsWith("/ITA")) {
             List<OrderItem> itemsWithSameCharge = Lists.newArrayList(getItems()).stream()
-                    .filter(x->x.getCharge()!=null)
-                    .filter(x->x.getCharge().equals(chargeNewItem))
+                    .filter(x -> x.getCharge() != null)
+                    .filter(x -> x.getCharge().equals(chargeNewItem))
                     .collect(Collectors.toList());
             return itemsWithSameCharge.size();
         } else {

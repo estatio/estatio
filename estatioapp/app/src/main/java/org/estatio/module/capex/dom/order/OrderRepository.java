@@ -169,7 +169,7 @@ public class OrderRepository {
         final Order order = new Order(
                 property,
                 orderType,
-                orderNumber == null ? generateNextOrderNumberForCountry(null, null,null, null, null, atPath) : orderNumber,
+                orderNumber == null ? generateNextOrderNumberForCountry(null, null, null, null, null, atPath) : orderNumber,
                 sellerOrderReference,
                 entryDate,
                 orderDate,
@@ -342,6 +342,26 @@ public class OrderRepository {
         return result;
     }
 
+    public List<Order> findByProperty(final Property center) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Order.class,
+                        "findByProperty",
+                        "property", center));
+    }
+
+    public List<Order> findByPropertyAndSeller(
+            final Property property,
+            final Organisation seller
+    ) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Order.class,
+                        "findByPropertyAndSeller",
+                        "property", property,
+                        "seller", seller));
+    }
+
     @Inject
     IncomingDocumentRepository incomingDocumentRepository;
 
@@ -365,5 +385,4 @@ public class OrderRepository {
 
     @Inject
     private ClockService clockService;
-
 }

@@ -146,6 +146,19 @@ public class OrderMenu {
         return null;
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<Order> findOrdersByCenter(final Property center) {
+        return orderRepository.findByProperty(center);
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<Order> findOrdersByCenterAndSupplier(
+            final Property center,
+            final Organisation supplier
+    ) {
+        return orderRepository.findByPropertyAndSeller(center, supplier);
+    }
+
     static class OrderFinder {
 
         public OrderFinder(OrderRepository orderRepository, PartyRepository partyRepository) {
