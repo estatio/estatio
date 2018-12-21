@@ -39,9 +39,6 @@ public class PaperclipRepository {
     //region > findByAttachedTo (programmatic)
     @Programmatic
     public List<Paperclip> findByAttachedTo(final Object attachedTo) {
-        if(attachedTo == null) {
-            return null;
-        }
         final Bookmark bookmark = bookmarkService.bookmarkFor(attachedTo);
         if(bookmark == null) {
             return null;
@@ -59,12 +56,6 @@ public class PaperclipRepository {
     public List<Paperclip> findByAttachedToAndRoleName(
             final Object attachedTo,
             final String roleName) {
-        if(attachedTo == null) {
-            return null;
-        }
-        if(roleName == null) {
-            return null;
-        }
         final Bookmark bookmark = bookmarkService.bookmarkFor(attachedTo);
         if(bookmark == null) {
             return null;
@@ -83,12 +74,6 @@ public class PaperclipRepository {
     public List<Paperclip> findByDocumentAndAttachedTo(
             final DocumentAbstract<?> document,
             final Object attachedTo) {
-        if(document == null) {
-            return null;
-        }
-        if(attachedTo == null) {
-            return null;
-        }
         final Bookmark bookmark = bookmarkService.bookmarkFor(attachedTo);
         if(bookmark == null) {
             return null;
@@ -108,15 +93,6 @@ public class PaperclipRepository {
             final DocumentAbstract<?> document,
             final Object attachedTo,
             final String roleName) {
-        if(document == null) {
-            return null;
-        }
-        if(attachedTo == null) {
-            return null;
-        }
-        if(roleName == null) {
-            return null;
-        }
         final Bookmark bookmark = bookmarkService.bookmarkFor(attachedTo);
         if(bookmark == null) {
             return null;
