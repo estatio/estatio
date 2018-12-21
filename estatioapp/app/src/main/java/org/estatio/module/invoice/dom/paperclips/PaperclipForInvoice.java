@@ -60,7 +60,7 @@ import lombok.Setter;
                 name = "findInvoicesByInvoiceDateBetweenWithSupportingDocuments", language = "JDOQL",
                 value = "SELECT DISTINCT invoice " +
                         "  FROM org.estatio.module.invoice.dom.paperclips.PaperclipForInvoice " +
-                        " WHERE (document.type.reference == 'SUPPLIER-RECEIPT' || document.type.reference == 'SUPPLIER-RECEIPT') " +
+                        " WHERE (document.type.reference == 'TAX-REGISTER' || document.type.reference == 'SUPPLIER-RECEIPT') " +
                         "    && invoice.invoiceDate >= :invoiceDateFrom " +
                         "    && invoice.invoiceDate <  :invoiceDateTo " +
                         " ORDER BY invoice.invoiceNumber"),
