@@ -124,21 +124,21 @@ public class OrderMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
     public List<Order> findOrder(
-            @Nullable final String barcode,
+            @Nullable final String barcodeOrOrderNumber,
             @Nullable final String sellerNameOrReference,
             @ParameterLayout(named = "Order Date (Approximately)")
             @Nullable final LocalDate orderDate
     ) {
         return new OrderMenu.OrderFinder(orderRepository, partyRepository)
-                .filterOrFindByDocumentName(barcode)
+                .filterOrFindByDocumentName(barcodeOrOrderNumber)
                 .filterOrFindBySeller(sellerNameOrReference)
                 .filterOrFindByOrderDate(orderDate)
                 .getResult();
     }
 
-    public String validateFindOrder(final String barcode, final String sellerNameOfReference, final LocalDate orderDate) {
-        if (barcode != null && barcode.length() < 3) {
-            return "Give at least 3 characters for barcode (document name)";
+    public String validateFindOrder(final String barcodeOrOrderNumber, final String sellerNameOfReference, final LocalDate orderDate) {
+        if (barcodeOrOrderNumber != null && barcodeOrOrderNumber.length() < 3) {
+            return "Give at least 3 characters for barcode/order number (document name)";
         }
         if (sellerNameOfReference != null && sellerNameOfReference.length() < 3) {
             return "Give at least 3 characters for seller name or reference";
