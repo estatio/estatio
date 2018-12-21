@@ -178,7 +178,8 @@ public class OrderMenu {
             if (barcode == null)
                 return this;
 
-            List<Order> resultsForBarcode = orderRepository.findOrderByDocumentName(barcode);
+            // the query itself already matches on substrings, so user wildcards act as a 'placebo' and are removed
+            List<Order> resultsForBarcode = orderRepository.findOrderByDocumentName(barcode.replace("*", ""));
             if (!this.result.isEmpty()) {
                 filterByDocumentNameResults(resultsForBarcode);
             } else {
