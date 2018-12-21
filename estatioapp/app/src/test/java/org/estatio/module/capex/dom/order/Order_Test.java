@@ -1,14 +1,11 @@
 package org.estatio.module.capex.dom.order;
 
 import java.math.BigDecimal;
-import java.util.Set;
-
-import com.google.common.base.Splitter;
-import com.google.common.collect.Sets;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -239,7 +236,7 @@ public class Order_Test {
 
         // expect
         int expectedNumber = 0;
-        context.checking(new Expectations(){{
+        context.checking(new Expectations() {{
             oneOf(mockOrderItemRepository).upsert(order, chargeForIta, null, null, null, null, null, null, null, null, null, null, expectedNumber);
         }});
 
@@ -247,7 +244,6 @@ public class Order_Test {
         order.addItem(chargeForIta, null, null, null, null, null, null, null, null, null);
 
     }
-
 
     @Test
     public void addItem_works_for_ita_when_item_with_same_charge() throws Exception {
@@ -262,10 +258,9 @@ public class Order_Test {
         existingItem.setCharge(chargeForIta);
         order.getItems().add(existingItem);
 
-
         // expect
         int expectedNumber = 1;
-        context.checking(new Expectations(){{
+        context.checking(new Expectations() {{
             oneOf(mockOrderItemRepository).upsert(order, chargeForIta, null, null, null, null, null, null, null, null, null, null, expectedNumber);
         }});
 
@@ -283,15 +278,13 @@ public class Order_Test {
         Charge chargeForIta = new Charge();
         Charge otherChargeForIta = new Charge();
 
-
         OrderItem existingItem = new OrderItem();
         existingItem.setCharge(otherChargeForIta);
         order.getItems().add(existingItem);
 
-
         // expect
         int expectedNumber = 0;
-        context.checking(new Expectations(){{
+        context.checking(new Expectations() {{
             oneOf(mockOrderItemRepository).upsert(order, chargeForIta, null, null, null, null, null, null, null, null, null, null, expectedNumber);
         }});
 
@@ -310,7 +303,7 @@ public class Order_Test {
 
         // expect
         int expectedNumber = 0;
-        context.checking(new Expectations(){{
+        context.checking(new Expectations() {{
             oneOf(mockOrderItemRepository).upsert(order, chargeForFra, null, null, null, null, null, null, null, null, null, null, expectedNumber);
         }});
 
@@ -332,10 +325,9 @@ public class Order_Test {
         existingItem.setCharge(chargeForFra);
         order.getItems().add(existingItem);
 
-
         // expect
         int expectedNumber = 0;
-        context.checking(new Expectations(){{
+        context.checking(new Expectations() {{
             oneOf(mockOrderItemRepository).upsert(order, chargeForFra, null, null, null, null, null, null, null, null, null, null, expectedNumber);
         }});
 
@@ -382,4 +374,36 @@ public class Order_Test {
         assertThat(validation).isEqualTo("First element of order number (0001) can not be changed");
     }
 
+    @Ignore("For ECP-866, when it is implemented")
+    @Test
+    public void orderNumberChanges_onEditProperty() throws Exception {
+        // given
+        final Project project = new Project();
+        project.setReference("001");
+
+        final Charge charge = new Charge();
+        charge.setReference("001");
+
+        final Property oldProperty = new Property();
+        oldProperty.setReference("CUR");
+        final Property newProperty = new Property();
+        newProperty.setReference("COL");
+
+        final Order order = new Order();
+        order.setAtPath("/ITA");
+        order.setOrderNumber("0001/CUR/001/001");
+
+        final OrderItem orderItem = new OrderItem();
+        orderItem.setCharge(charge);
+        orderItem.setProject(project);
+        orderItem.setProperty(oldProperty);
+
+        order.getItems().add(orderItem);
+
+        // when
+        order.editProperty(newProperty, true);
+
+        // then
+        assertThat(order.getOrderNumber()).isEqualTo("0001/COL/001/001");
+    }
 }

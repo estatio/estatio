@@ -269,6 +269,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
                     .map(OrderItem.class::cast)
                     .forEach(x -> x.setProperty(property));
         }
+
         return this;
     }
 
@@ -361,6 +362,14 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     public String disableEditOrderNumber() {
         return orderImmutableReason();
+    }
+
+    @Programmatic
+    private String getOrderIncrement() {
+        if (!getAtPath().startsWith("/ITA"))
+            return null;
+
+        return getOrderNumber().split("/")[0];
     }
 
     @Column(allowsNull = "true", length = 255)
