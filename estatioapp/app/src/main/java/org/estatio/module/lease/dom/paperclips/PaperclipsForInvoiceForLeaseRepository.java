@@ -23,9 +23,18 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import javax.inject.Inject;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
+
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
@@ -51,6 +60,36 @@ public class PaperclipsForInvoiceForLeaseRepository {
     static <T> Stream<T> asStream(final Optional<T> optional) {
         return optional.map(Stream::of).orElseGet(Stream::empty);
     }
+
+    /**
+     * It's necessary to use the low-level API because the candidate class ({@link PaperclipForInvoice}) and the
+     * result class ({@link InvoiceForLease}) are different.
+     */
+    @Programmatic
+    public List<InvoiceForLease> findInvoicesByYearWithSupportingDocuments(final int year) {
+
+        final PersistenceManager jdoPersistenceManager = isisJdoSupport.getJdoPersistenceManager();
+        final Query query = jdoPersistenceManager.newNamedQuery(
+                PaperclipForInvoice.class,
+                "findInvoicesByInvoiceDateBetweenWithSupportingDocuments");
+        query.setResultClass(InvoiceForLease.class);
+
+        try {
+            final LocalDate invoiceDateFrom = new LocalDate(year,1,1);
+            final LocalDate invoiceDateTo = invoiceDateFrom.plusYears(1);
+
+            final List results = (List) query.executeWithMap(ImmutableMap.of(
+                    "invoiceDateFrom", invoiceDateFrom,
+                    "invoiceDateTo", invoiceDateTo
+            ));
+            return Lists.newArrayList(results);
+        } finally {
+            query.closeAll();
+        }
+    }
+
+    @Inject
+    IsisJdoSupport isisJdoSupport;
 
     @Inject
     PaperclipRepository paperclipRepository;

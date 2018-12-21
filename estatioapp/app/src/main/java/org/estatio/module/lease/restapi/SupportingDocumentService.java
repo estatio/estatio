@@ -44,6 +44,11 @@ import org.estatio.module.lease.dom.paperclips.PaperclipsForInvoiceForLeaseRepos
 public class SupportingDocumentService {
 
     @Action(semantics = SemanticsOf.SAFE)
+    public List<InvoiceForLease> findInvoicesWithSupportingDocuments(final int year) {
+        return paperclipsForInvoiceForLeaseRepository.findInvoicesByYearWithSupportingDocuments(year);
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
     public List<Document> findSupportingDocuments(
             final String invoiceNumber,
             final int year) {

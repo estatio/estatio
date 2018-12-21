@@ -78,7 +78,7 @@ language governing permissions and limitations under the License.
          -->
         <incode-platform.version>1.16.2.20181013-1017-b9a0574e</incode-platform.version>
 
-        <estatio-canonical.version>2.0.0-M1.20181127-1604-66d21321</estatio-canonical.version>
+        <estatio-canonical.version>2.0.0-M1.20181220-1551-f2c1a736</estatio-canonical.version>
 
         <maven-checkstyle-plugin.configLocation>${project.basedir}/codequality/checkstyle.xml</maven-checkstyle-plugin.configLocation>
         <maven-pmd-plugin.ruleset>${project.basedir}/codequality/pmd.xml</maven-pmd-plugin.ruleset>
