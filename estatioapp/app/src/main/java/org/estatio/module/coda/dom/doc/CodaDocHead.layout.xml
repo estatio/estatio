@@ -78,6 +78,9 @@
                             <cpt:named>Reason(s) invalid</cpt:named>
                             <cpt:action id="revalidate"/>
                         </cpt:property>
+                        <cpt:property id="extRef3" hidden="OBJECT_FORMS"/>
+                        <cpt:property id="extRef4" hidden="OBJECT_FORMS"/>
+                        <cpt:property id="extRef5" hidden="OBJECT_FORMS"/>
                     </cpt:fieldSet>
                 </bs3:col>
             </bs3:row>

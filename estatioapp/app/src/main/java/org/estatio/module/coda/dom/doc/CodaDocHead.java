@@ -985,6 +985,23 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         backgroundService.execute(this).syncIfValid();
     }
 
+    @Property
+    public String getExtRef3() {
+        return getSummaryLineExtRef3Normalized(LineCache.DEFAULT);
+    }
+
+    @Property
+    public String getExtRef4() {
+        final CodaDocLine docLine = summaryDocLine(LineCache.DEFAULT);
+        return docLine != null ? docLine.getExtRef4() : null;
+    }
+
+    @Property
+    public String getExtRef5() {
+        final CodaDocLine docLine = summaryDocLine(LineCache.DEFAULT);
+        return docLine != null ? docLine.getExtRef5() : null;
+    }
+
     @Action(hidden = Where.EVERYWHERE) // just so can invoke through background service
     public void syncIfValid() {
         kick();
