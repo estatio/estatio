@@ -49,6 +49,7 @@ public enum Organisation_enum
     HelloWorldFr("HELLOWORLD_FR", "Hello World Properties (France)", Fr),
     HelloWorldGb("HELLOWORLD_GB", "Hello World Properties", Gb),
     HelloWorldIt("HW_IT", "Hello World Properties (Italy)", It),
+    HelloWorldIt01("IT01", "Hello World Properties IT01 (Italy)", It),
     HelloWorldNl("HELLOWORLD_NL", "Hello World Properties (NL)", Nl),
     HelloWorldSe("HELLOWORLD_SE", "Hello World Properties (Sweden)", Se),
     HyperNl("HYPER_NL", "Hypermarkt (NL)", Nl),

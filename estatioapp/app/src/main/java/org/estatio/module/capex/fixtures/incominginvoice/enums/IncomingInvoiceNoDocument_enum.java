@@ -54,9 +54,10 @@ public enum IncomingInvoiceNoDocument_enum
             null,
             null
     ),
+    // we have to use IT01 as the buyer because of hard-coded references in the incoming invoice state approval transition :-(
     invoiceForItaRecoverable(
             ApplicationTenancy_enum.It,
-            Organisation_enum.TopModelIt, BankAccount_enum.TopModelIt, Organisation_enum.HelloWorldIt,
+            Organisation_enum.TopModelIt, BankAccount_enum.TopModelIt, Organisation_enum.HelloWorldIt01,
             PropertyAndUnitsAndOwnerAndManager_enum.RonIt,
             ITA_RECOVERABLE, "123456", PaymentMethod.BANK_TRANSFER,
             ld(2018,01,01), ld(2018,02,10), ld (2017, 12, 20), null,

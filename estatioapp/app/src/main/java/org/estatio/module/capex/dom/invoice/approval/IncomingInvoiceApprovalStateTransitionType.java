@@ -123,7 +123,15 @@ public enum IncomingInvoiceApprovalStateTransitionType
                         IncomingInvoiceApprovalState>) (incomingInvoice, serviceRegistry2) -> {
 
                 if (isItalian(incomingInvoice)) {
-                    if (incomingInvoice.getProperty()!=null && hasPropertyInvoiceManager(incomingInvoice.getProperty())) return FixedAssetRoleTypeEnum.PROPERTY_INV_MANAGER;
+                    if ( incomingInvoice.getProperty()!=null &&
+                         hasPropertyInvoiceManager(incomingInvoice.getProperty()) &&          // ie Carasello, and also...
+                        (
+                            (incomingInvoice.getType()==IncomingInvoiceType.ITA_RECOVERABLE &&       // either IT01 service charges
+                             incomingInvoice.getBuyer().getReference().equals("IT01")         )  ||
+                            incomingInvoice.getBuyer().getReference().equals("IT04")               ) // or everything for IT04
+                        ) {
+                        return FixedAssetRoleTypeEnum.PROPERTY_INV_MANAGER;
+                    }
                     return PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER;
                 }
 
