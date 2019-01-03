@@ -63,9 +63,9 @@ public class InvoiceNumbersDtoFactory extends DtoFactoryAbstract<List, InvoiceNu
         return invoiceDto;
     }
 
-    private static int invoiceYearOf(final Invoice invoice) {
+    private static Integer invoiceYearOf(final Invoice invoice) {
         final LocalDate date = invoice.getInvoiceDate();
-        return date != null ? date.getYear() : 0;
+        return date != null ? date.getYear() : null;
     }
 
     private static String referenceOf(final Party seller) {
