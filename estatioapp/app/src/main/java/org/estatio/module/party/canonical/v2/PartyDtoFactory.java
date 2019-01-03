@@ -29,6 +29,9 @@ public class PartyDtoFactory extends DtoFactoryAbstract<Party, PartyDto> {
     @Programmatic
     public PartyDto newDto(final Party party) {
         PartyDto dto = new PartyDto();
+        dto.setMajorVersion("2");
+        dto.setMinorVersion("0");
+
         dto.setSelf(mappingHelper.oidDtoFor(party));
         dto.setAtPath(party.getAtPath());
 

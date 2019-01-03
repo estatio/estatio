@@ -43,6 +43,9 @@ public class InvoiceNumbersDtoFactory extends DtoFactoryAbstract<List, InvoiceNu
 
     InvoiceNumbersDto internalNewDto(final List<Invoice> invoices) {
         final InvoiceNumbersDto invoiceNumbers = new InvoiceNumbersDto();
+        invoiceNumbers.setMajorVersion("2");
+        invoiceNumbers.setMinorVersion("1");
+
         invoices.forEach(invoice -> invoiceNumbers.getInvoiceNumbers().add(newDto(invoice)));
         return invoiceNumbers;
     }

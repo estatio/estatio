@@ -20,6 +20,8 @@ public class CodaDocHeadDtoFactory extends DtoFactoryAbstract<CodaDocHead, CodaD
 
     protected CodaDocHeadDto newDto(final CodaDocHead codaDocHead) {
         final CodaDocHeadDto dto = new CodaDocHeadDto();
+        dto.setMajorVersion("2");
+        dto.setMinorVersion("0");
 
         dto.setSelf(mappingHelper.oidDtoFor(codaDocHead));
 

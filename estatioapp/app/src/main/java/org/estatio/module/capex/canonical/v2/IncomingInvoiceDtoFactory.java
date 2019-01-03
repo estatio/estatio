@@ -38,6 +38,8 @@ public class IncomingInvoiceDtoFactory extends DtoFactoryAbstract<IncomingInvoic
     protected IncomingInvoiceDto newDto(final IncomingInvoice incomingInvoice) {
 
         final IncomingInvoiceDto dto = new IncomingInvoiceDto();
+        dto.setMajorVersion("2");
+        dto.setMinorVersion("0");
 
         dto.setSelf(mappingHelper.oidDtoFor(incomingInvoice));
 

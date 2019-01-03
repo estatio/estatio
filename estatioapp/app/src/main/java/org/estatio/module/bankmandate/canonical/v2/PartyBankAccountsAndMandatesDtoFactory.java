@@ -49,6 +49,8 @@ public class PartyBankAccountsAndMandatesDtoFactory extends DtoFactoryAbstract<P
     public BankAccountsAndMandatesDto newDto(final Party party) {
 
         final BankAccountsAndMandatesDto dto = new BankAccountsAndMandatesDto();
+        dto.setMajorVersion("2");
+        dto.setMinorVersion("0");
 
         final List<FinancialAccount> bankAccounts = findBankAccountsFor(party);
         final List<BankAccountType> bankAccountDtos = asBankAccountDtos(bankAccounts);

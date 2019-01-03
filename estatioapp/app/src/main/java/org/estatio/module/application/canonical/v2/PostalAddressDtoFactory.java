@@ -24,6 +24,8 @@ public class PostalAddressDtoFactory extends DtoFactoryAbstract<PostalAddress, P
     @Programmatic
     public PostalAddressDto newDto(final PostalAddress postalAddress) {
         PostalAddressDto dto = new PostalAddressDto();
+        dto.setMajorVersion("2");
+        dto.setMinorVersion("0");
 
         dto.setSelf(mappingHelper.oidDtoFor(postalAddress));
         dto.setAtPath(postalAddress.getAtPath());

@@ -30,6 +30,8 @@ public class InvoiceForLeaseDtoFactory extends DtoFactoryAbstract<InvoiceForLeas
     @Programmatic
     public InvoiceDto newDto(final InvoiceForLease invoiceForLease) {
         InvoiceDto dto = new InvoiceDto();
+        dto.setMajorVersion("2");
+        dto.setMinorVersion("0");
 
         dto.setSelf(mappingHelper.oidDtoFor(invoiceForLease));
         dto.setAtPath(invoiceForLease.getApplicationTenancyPath());

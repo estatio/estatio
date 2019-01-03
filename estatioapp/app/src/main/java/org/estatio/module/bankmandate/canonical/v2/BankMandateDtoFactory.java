@@ -24,6 +24,8 @@ public class BankMandateDtoFactory extends DtoFactoryAbstract<BankMandate, BankM
     @Programmatic
     public BankMandateDto newDto(final BankMandate bankMandate) {
         final BankMandateDto dto = new BankMandateDto();
+        dto.setMajorVersion("2");
+        dto.setMinorVersion("0");
 
         dto.setSelf(mappingHelper.oidDtoFor(bankMandate));
         dto.setAtPath(bankMandate.getAtPath());
