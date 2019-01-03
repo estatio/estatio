@@ -19,6 +19,7 @@
 package org.estatio.module.lease.restapi;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,7 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.document.dom.impl.docs.Document;
@@ -36,6 +38,7 @@ import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.paperclips.PaperclipsForInvoiceForLeaseRepository;
+import org.estatio.module.party.dom.Party;
 
 @DomainService(
         nature = NatureOfService.VIEW_REST_ONLY,
@@ -51,21 +54,31 @@ public class SupportingDocumentService {
     @Action(semantics = SemanticsOf.SAFE)
     public List<Document> findSupportingDocuments(
             final String invoiceNumber,
-            final int year) {
+            final int year,
+            @ParameterLayout(describedAs = "in Coda, corresponds to cmpCode")
+            final String sellerReference,
+            @ParameterLayout(describedAs = "in Coda, corresponds to el6 of the summary line")
+            final String buyerReference) {
         final Optional<InvoiceForLease> invoiceIfAny =
-                invoiceForLeaseRepository.findInvoiceByInvoiceNumber(invoiceNumber, year);
+                invoiceForLeaseRepository.findInvoiceByInvoiceNumber(invoiceNumber, year)
+                .filter(invoiceForLease ->
+                            equalsRef(sellerReference, invoiceForLease.getSeller()) &&
+                            equalsRef(buyerReference, invoiceForLease.getBuyer()));
         return paperclipsForInvoiceForLeaseRepository.streamPaperclips(invoiceIfAny)
                 .map(Paperclip::getDocument)
                 .filter(Document.class::isInstance)
                 .map(Document.class::cast)
-                .filter(this::supportsInvoice)
+                .filter(SupportingDocumentService::supportsInvoice)
                 .collect(Collectors.toList());
     }
 
-    private boolean supportsInvoice(final Document document) {
+    static boolean equalsRef(final String ref, final Party party) {
+        return party != null && Objects.equals(ref, party.getReference());
+    }
+
+    private static boolean supportsInvoice(final Document document) {
         final DocumentTypeData documentTypeData = DocumentTypeData.docTypeDataFor(document);
-        final DocumentTypeData supports = documentTypeData.getSupports();
-        return supports == DocumentTypeData.INVOICE;
+        return documentTypeData.getSupports() == DocumentTypeData.INVOICE;
     }
 
     @Inject
