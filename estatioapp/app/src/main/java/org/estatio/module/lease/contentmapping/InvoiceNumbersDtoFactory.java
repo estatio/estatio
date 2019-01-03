@@ -20,6 +20,8 @@ package org.estatio.module.lease.contentmapping;
 
 import java.util.List;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
@@ -27,7 +29,7 @@ import org.estatio.canonical.invoicenumbers.v2.InvoiceNumberType;
 import org.estatio.canonical.invoicenumbers.v2.InvoiceNumbersDto;
 import org.estatio.module.base.platform.applib.DtoFactoryAbstract;
 import org.estatio.module.invoice.dom.Invoice;
-
+import org.estatio.module.party.dom.Party;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class InvoiceNumbersDtoFactory extends DtoFactoryAbstract<List, InvoiceNumbersDto> {
@@ -55,7 +57,19 @@ public class InvoiceNumbersDtoFactory extends DtoFactoryAbstract<List, InvoiceNu
         invoiceDto.setSelf(mappingHelper.oidDtoFor(invoice));
         invoiceDto.setInvoiceDate(asXMLGregorianCalendar(invoice.getInvoiceDate()));
         invoiceDto.setInvoiceNumber(invoice.getInvoiceNumber());
+        invoiceDto.setInvoiceYear(invoiceYearOf(invoice));
+        invoiceDto.setSellerReference(referenceOf(invoice.getSeller()));
+        invoiceDto.setBuyerReference(referenceOf(invoice.getBuyer()));
         return invoiceDto;
+    }
+
+    private static int invoiceYearOf(final Invoice invoice) {
+        final LocalDate date = invoice.getInvoiceDate();
+        return date != null ? date.getYear() : 0;
+    }
+
+    private static String referenceOf(final Party seller) {
+        return seller != null ? seller.getReference() : null;
     }
 
 }
