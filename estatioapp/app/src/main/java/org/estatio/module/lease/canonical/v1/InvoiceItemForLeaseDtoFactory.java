@@ -32,7 +32,7 @@ public class InvoiceItemForLeaseDtoFactory extends DtoFactoryAbstract<InvoiceIte
 
     @Programmatic
     public InvoiceItemDto newDto(final InvoiceItem item) {
-        InvoiceItemDto dto = new InvoiceItemDto();
+        final InvoiceItemDto dto = new InvoiceItemDto();
 
         dto.setSelf(mappingHelper.oidDtoFor(item));
 

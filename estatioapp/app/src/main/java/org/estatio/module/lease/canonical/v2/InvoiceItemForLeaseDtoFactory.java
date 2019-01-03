@@ -36,7 +36,7 @@ public class InvoiceItemForLeaseDtoFactory extends DtoFactoryAbstract<InvoiceIte
 
     @Programmatic
     protected InvoiceItemType newDto(final InvoiceItem item) {
-        InvoiceItemType dto = new InvoiceItemType();
+        final InvoiceItemType dto = new InvoiceItemType();
 
         dto.setSelf(mappingHelper.oidDtoFor(item));
 
