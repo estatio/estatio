@@ -61,6 +61,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.document.dom.api.DocumentService;
 import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
@@ -1104,7 +1105,12 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    public Order attachPdf(final Blob pdf) {
+    public Order attachPdf(
+            final Blob pdf,
+            final boolean replaceExistingPdf) {
+        if (replaceExistingPdf)
+            paperclipRepository.deleteIfAttachedTo(this, PaperclipRepository.Policy.PAPERCLIPS_AND_DOCUMENTS_IF_ORPHANED);
+
         return newDocument(pdf);
     }
 
@@ -1159,5 +1165,8 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Inject
     private MeService meService;
+
+    @Inject
+    PaperclipRepository paperclipRepository;
 
 }

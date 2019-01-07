@@ -22,9 +22,10 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 
+import org.isisaddons.module.excel.dom.ExcelService;
+import org.isisaddons.module.excel.dom.util.Mode;
 import org.isisaddons.module.security.app.user.MeService;
 
-import org.incode.module.alias.dom.spi.ApplicationTenancyRepository;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.asset.dom.Property;
@@ -33,6 +34,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.capex.imports.OrderProjectImportAdapter;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.numerator.dom.NumeratorRepository;
@@ -315,6 +317,23 @@ public class OrderMenu {
         return orderRepository.matchByOrderNumber(orderNumber);
     }
 
+    ///////////////////////////////////////////
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public List<Order> importOrdersItaly(final org.apache.isis.applib.value.Blob orderSheet) {
+        List<Order> result = new ArrayList<>();
+        for (OrderProjectImportAdapter adapter : excelService.fromExcel(orderSheet, OrderProjectImportAdapter.class, "ECP Juma", Mode.RELAXED)) {
+            adapter.handle(null);
+            if (adapter.deriveOrderNumber() != null) {
+                Order order = orderRepository.findByOrderNumber(adapter.deriveOrderNumber());
+                if (order != null && !result.contains(order)) {
+                    result.add(order);
+                }
+            }
+        }
+        return result;
+    }
+
     @Inject
     OrderRepository orderRepository;
 
@@ -334,5 +353,5 @@ public class OrderMenu {
     ChargeRepository chargeRepository;
 
     @Inject
-    ApplicationTenancyRepository applicationTenancyRepository;
+    ExcelService excelService;
 }
