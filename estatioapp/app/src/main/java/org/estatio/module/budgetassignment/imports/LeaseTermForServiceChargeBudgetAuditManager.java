@@ -37,6 +37,7 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
@@ -142,6 +143,7 @@ public class LeaseTermForServiceChargeBudgetAuditManager  {
             if (nextLeaseTerm != null && nextLeaseTerm == nextLeaseTermUploaded) {
                 nextLeaseTerm.setBudgetedValue(lineItem.getNextBudgetedValue());
             }
+            transactionService.flushTransaction();
         }
         return this;
     }
@@ -174,6 +176,9 @@ public class LeaseTermForServiceChargeBudgetAuditManager  {
 
     @Inject
     private LeaseRepository leaseRepository;
+
+    @Inject
+    private TransactionService transactionService;
     //endregion
 
 }
