@@ -198,7 +198,7 @@ public class PaperclipRepository {
     //region > delete, deleteIfAttachedTo
     @Programmatic
     public void delete(final Paperclip paperclip) {
-        repositoryService.removeAndFlush(paperclip);
+        repositoryService.remove(paperclip);
     }
 
     public enum Policy {
@@ -224,7 +224,7 @@ public class PaperclipRepository {
             final DocumentAbstract document = paperclip.getDocument();
             delete(paperclip);
             if (policy == Policy.PAPERCLIPS_AND_DOCUMENTS_IF_ORPHANED && orphaned(document, domainObject)) {
-                repositoryService.removeAndFlush(document);
+                repositoryService.remove(document);
             }
         }
     }
