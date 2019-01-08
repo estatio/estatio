@@ -797,8 +797,7 @@
                                                 </p>
 
                                                 <p>
-                                                    Ai sensi del DPR 445/00 SEZ III Art. 14, il documento dovrà essere stampato, archiviato ed avrà validità come originale.
-                                                    Alla presente NON farà seguito alcuna spedizione via posta tradizionale.
+                                                    Il presente documento non ha valore ai fini fiscali. La fattura valida ai fini fiscali vi è stata inviata tramite il sistema SDI cosi come previsto dall’articolo 1 comma 909 della legge 205/2017 avente effetto dal 01 gennaio 2019.
                                                     Eventuali richieste potranno essere segnalate a <a href="mailto:assistantlocativa@ecpnv.com">assistantlocativa@ecpnv.com</a> o telefonicamente al seguente numero 02/7607591.
                                                 </p>
 
@@ -821,11 +820,10 @@
                                                 </p>
 
                                                 <p>
-                                                    According to the Presidential Decree 445/00 SEZ III Art. 14, please print out the attached document, store it and consider it as the original.
+                                                    THIS DOCUMENT HAS NO FISCAL PURPOSES. The invoice valid for tax purposes has been sent to you via the SDI system as provided for by article 1 paragraph 909 of the law 205/2017 effective from 01 January 2019.
                                                 </p>
 
                                                 <p>
-                                                    You will not receive any printed document by traditional mail.
                                                     For queries please contact us by e-mail <a href="mailto:assistantlocativa@ecpnv.com">assistantlocativa@ecpnv.com</a> or by phone +39&nbsp;02&nbsp;7607591.
                                                 </p>
 

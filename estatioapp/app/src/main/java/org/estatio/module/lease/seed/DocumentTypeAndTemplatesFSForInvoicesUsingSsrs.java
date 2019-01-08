@@ -239,6 +239,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         );
 
         // (currently) this is identical to global
+        // TODO: this was, and certainly now is, not true any more. Is seeding the right way to go? I find it confusing because throught the UI you can upload a template and that one is overwritten by this seed ... - see ECP-906
         titleText = loadResource("InvoiceTitle-ITA.ftl");
         upsertTemplateForPdfWithApplicability(
                 docTypeForInvoice,
