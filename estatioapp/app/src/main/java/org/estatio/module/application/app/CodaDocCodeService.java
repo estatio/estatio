@@ -15,7 +15,7 @@ public class CodaDocCodeService {
     @Programmatic
     public List<String> listAll() {
         return Arrays.asList(
-                "FR-GEN", "RA-PROF", "MV-DIV"
+                "FR-GEN", "RA-PROF", "MV-DIV", "FR-ART17", "NCR-GEN", "NCR-ART17"
         );
     }
 }
