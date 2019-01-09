@@ -116,10 +116,11 @@ import lombok.Setter;
                         + "FROM org.estatio.module.capex.dom.order.Order "
                         + "WHERE orderNumber == :orderNumber "),
         @Query(
-                name = "findByExtRefOrderGlobalNumerator", language = "JDOQL",
+                name = "findByBuyerAndExtRefOrderGlobalNumerator", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.order.Order "
-                        + "WHERE orderNumber.startsWith(:extRefOrderGlobalNumeratorWithTrailingSlash) "),
+                        + "WHERE buyer == :buyer "
+                        + "   && orderNumber.startsWith(:extRefOrderGlobalNumeratorWithTrailingSlash) "),
         @Query(
                 name = "matchByOrderNumber", language = "JDOQL",
                 value = "SELECT "

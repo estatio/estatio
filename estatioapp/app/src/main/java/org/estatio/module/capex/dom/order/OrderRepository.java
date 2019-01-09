@@ -61,15 +61,18 @@ public class OrderRepository {
     }
 
     /**
-     * Although this should be unique, there is no guarantee because it is only one portion of the
+     * Although this should be unique (per company code), there is no guarantee because it is only one portion of the
      * {@link Order#getOrderNumber()}.
      */
     @Programmatic
-    public List<Order> findByExtRefOrderGlobalNumerator(final String extRefOrderGlobalNumerator) {
+    public List<Order> findByBuyerAndExtRefOrderGlobalNumerator(
+            final Organisation buyer,
+            final String extRefOrderGlobalNumerator) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         Order.class,
-                        "findByExtRefOrderGlobalNumerator",
+                        "findByBuyerAndExtRefOrderGlobalNumerator",
+                        "buyer", buyer,
                         "extRefOrderGlobalNumeratorWithTrailingSlash", withTrailingSlash(extRefOrderGlobalNumerator)));
     }
 
