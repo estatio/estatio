@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
@@ -47,8 +48,17 @@ import org.estatio.module.party.dom.Party;
 public class SupportingDocumentService {
 
     @Action(semantics = SemanticsOf.SAFE)
-    public List<InvoiceForLease> findInvoicesWithSupportingDocuments(final int year) {
-        return paperclipsForInvoiceForLeaseRepository.findInvoicesByYearWithSupportingDocuments(year);
+    public List<InvoiceForLease> findInvoicesWithSupportingDocuments(
+            final int year,
+            @Nullable
+            @ParameterLayout(describedAs = "in Coda, corresponds to cmpCode")
+            final String sellerReference
+    ) {
+        final List<InvoiceForLease> invoices = paperclipsForInvoiceForLeaseRepository
+                .findInvoicesByYearWithSupportingDocuments(year).stream()
+                .filter(invoice -> sellerReference == null || equalsRef(sellerReference, invoice.getSeller()))
+                .collect(Collectors.toList());
+        return invoices;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
@@ -73,7 +83,7 @@ public class SupportingDocumentService {
     }
 
     static boolean equalsRef(final String ref, final Party party) {
-        return party != null && Objects.equals(ref, party.getReference());
+        return ref != null && party != null && Objects.equals(ref, party.getReference());
     }
 
     private static boolean supportsInvoice(final Document document) {

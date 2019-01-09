@@ -26,9 +26,14 @@ public class SupportingDocumentService_equalsRef_Test {
     public void when_not_equal() throws Exception {
         assertThat(SupportingDocumentService.equalsRef("REF-2", party)).isFalse();
     }
-
     @Test
-    public void when_null() throws Exception {
+    public void when_null_party() throws Exception {
         assertThat(SupportingDocumentService.equalsRef("REF-1", null)).isFalse();
     }
+
+    @Test
+    public void when_null_ref() throws Exception {
+        assertThat(SupportingDocumentService.equalsRef(null, party)).isFalse();
+    }
+
 }
