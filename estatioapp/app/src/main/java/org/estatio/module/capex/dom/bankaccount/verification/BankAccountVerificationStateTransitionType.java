@@ -43,8 +43,22 @@ public enum BankAccountVerificationStateTransitionType
             BankAccountVerificationState.NOT_VERIFIED,
             BankAccountVerificationState.VERIFIED,
             NextTransitionSearchStrategy.none(),
-            TaskAssignmentStrategy.to(PartyRoleTypeEnum.TREASURER),
-            AdvancePolicy.MANUAL),
+            null,  // task assignment strategy overridden below
+            AdvancePolicy.MANUAL){
+        @Override
+        public TaskAssignmentStrategy getTaskAssignmentStrategy() {
+            return (TaskAssignmentStrategy<
+                    BankAccount,
+                    BankAccountVerificationStateTransition,
+                    BankAccountVerificationStateTransitionType,
+                    BankAccountVerificationState>) (bankAccount, serviceRegistry2) -> {
+                if (bankAccount.getAtPath().startsWith("/ITA")) {
+                    return null;
+                }
+                return PartyRoleTypeEnum.TREASURER;
+            };
+        }
+    },
     RESET(
             BankAccountVerificationState.VERIFIED,
             BankAccountVerificationState.NOT_VERIFIED,
