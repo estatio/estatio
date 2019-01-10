@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Lists;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -38,6 +40,7 @@ public class PaymentBatchItaUploadService {
         BankAccount buyerBankAccount = debtorBankAccountService.uniqueDebtorAccountToPay(ecpBuyerCompany);
         if (buyerBankAccount!=null) {
             PaymentBatch newBatch = paymentBatchRepository.findOrCreateNewByDebtorBankAccount(buyerBankAccount);
+            Lists.newArrayList(newBatch.getLines()).stream().forEach(l->l.remove());
             for (PaymentBatchItaImportLine line : lines){
                 final CodaDocHead docHeadIfAny = codaDocHeadRepository.findByCmpCodeAndDocCodeAndDocNum(ecpBuyerCompany.getReference(), line.getCodiceDocumento(), line.getNumeroDocumento());
                 if (docHeadIfAny!=null) {
