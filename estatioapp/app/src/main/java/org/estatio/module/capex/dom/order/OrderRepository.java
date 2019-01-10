@@ -192,26 +192,22 @@ public class OrderRepository {
             final Project project,
             final Charge charge,
             final String atPath) {
-        final Numerator numerator;
-        if (atPath.startsWith("/ITA")) {
-            numerator = numeratorRepository.findOrCreateNumerator(
-                    "Order number",
-                    buyer,
-                    "%04d",
-                    BigInteger.ZERO,
-                    applicationTenancyRepository.findByPath(atPath));
+        final String nextIncrement = generateNextOrderNumber(buyer, atPath);
+        return atPath.startsWith("/ITA") ?
+                toItaOrderNumber(nextIncrement, property, multiPropertyReference, project, charge) :
+                nextIncrement;
+    }
 
-            return toItaOrderNumber(numerator.nextIncrementStr(), property, multiPropertyReference, project, charge);
-        } else {
-            numerator = numeratorRepository.findOrCreateNumerator(
-                    "Order number",
-                    null,
-                    "%05d",
-                    BigInteger.ZERO,
-                    applicationTenancyRepository.findByPath(atPath));
-
-            return numerator.nextIncrementStr();
-        }
+    private String generateNextOrderNumber(final Organisation buyer, final String atPath) {
+        final String format = atPath.startsWith("/ITA") ? "%04d" : "%05d";
+        final Organisation buyerToUse = atPath.startsWith("/ITA") ? buyer : null;
+        final Numerator numerator = numeratorRepository.findOrCreateNumerator(
+                "Order number",
+                buyerToUse,
+                format,
+                BigInteger.ZERO,
+                applicationTenancyRepository.findByPath(atPath));
+        return numerator.nextIncrementStr();
     }
 
     public static String toItaOrderNumber(
