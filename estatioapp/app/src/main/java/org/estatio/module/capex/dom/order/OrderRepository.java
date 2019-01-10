@@ -76,6 +76,22 @@ public class OrderRepository {
                         "extRefOrderGlobalNumeratorWithTrailingSlash", withTrailingSlash(extRefOrderGlobalNumerator)));
     }
 
+    /**
+     * Although this should be unique (per company code), there is no guarantee because it is only one portion of the
+     * {@link Order#getOrderNumber()}.
+     */
+    @Programmatic
+    public List<Order> findByBuyerAndBuyerOrderNumber(
+            final Organisation buyer,
+            final BigInteger buyerOrderNumber) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Order.class,
+                        "findByBuyerAndBuyerOrderNumber",
+                        "buyer", buyer,
+                        "buyerOrderNumber", buyerOrderNumber));
+    }
+
     static String withTrailingSlash(final String str) {
         if (str == null) {
             return null;
@@ -149,9 +165,16 @@ public class OrderRepository {
             final String description,
             final IncomingInvoiceType type,
             final String atPath) {
-        final String orderNumber = generateNextOrderNumberForCountry(property, buyer, multiPropertyReference, project, charge, atPath);
-        final Order order = create(property, orderNumber, null, clockService.now(), orderDate, supplier, buyer, type,
+
+        final String nextOrderNumber = generateNextOrderNumber(buyer, atPath);
+        final String orderNumberToUse =
+                atPath.startsWith("/ITA")
+                        ? toItaOrderNumber(nextOrderNumber, property, multiPropertyReference, project, charge)
+                        : nextOrderNumber;
+
+        final Order order = create(property, orderNumberToUse, null, clockService.now(), orderDate, supplier, buyer, type,
                 atPath, null);
+        order.setBuyerOrderNumber(new BigInteger(nextOrderNumber));
         order.addItem(charge, description, netAmount, null, null, tax, orderDate == null ? null : String.valueOf(orderDate.getYear()), property, project, null);
 
         return order;
@@ -169,10 +192,21 @@ public class OrderRepository {
             final IncomingInvoiceType orderType,
             final String atPath,
             final OrderApprovalState approvalStateIfAny) {
+
+        final String orderNumberToUse;
+        if (orderNumber != null) {
+            orderNumberToUse = orderNumber;
+        } else {
+            if (atPath.startsWith("/ITA")) {
+                throw new IllegalArgumentException("Must specify an orderNumber explicitly if calling for /ITA");
+            }
+            orderNumberToUse = generateNextOrderNumber(null, atPath);
+        }
+
         final Order order = new Order(
                 property,
                 orderType,
-                orderNumber == null ? generateNextOrderNumberForCountry(null, null, null, null, null, atPath) : orderNumber,
+                orderNumberToUse,
                 sellerOrderReference,
                 entryDate,
                 orderDate,
@@ -185,18 +219,6 @@ public class OrderRepository {
         return order;
     }
 
-    private String generateNextOrderNumberForCountry(
-            final Property property,
-            final Organisation buyer,
-            final String multiPropertyReference,
-            final Project project,
-            final Charge charge,
-            final String atPath) {
-        final String nextIncrement = generateNextOrderNumber(buyer, atPath);
-        return atPath.startsWith("/ITA") ?
-                toItaOrderNumber(nextIncrement, property, multiPropertyReference, project, charge) :
-                nextIncrement;
-    }
 
     private String generateNextOrderNumber(final Organisation buyer, final String atPath) {
         final String format = atPath.startsWith("/ITA") ? "%04d" : "%05d";
@@ -225,7 +247,7 @@ public class OrderRepository {
     public Order findOrCreate(
             final Property property,
             final IncomingInvoiceType orderType,
-            final String number,
+            final String orderNumber,
             final String sellerOrderReference,
             final LocalDate entryDate,
             final LocalDate orderDate,
@@ -233,9 +255,9 @@ public class OrderRepository {
             final Party buyer,
             final String atPath,
             final OrderApprovalState approvalStateIfAny) {
-        Order order = findByOrderNumber(number);
+        Order order = findByOrderNumber(orderNumber);
         if (order == null) {
-            order = create(property, number, sellerOrderReference, entryDate, orderDate, seller, buyer, orderType,
+            order = create(property, orderNumber, sellerOrderReference, entryDate, orderDate, seller, buyer, orderType,
                     atPath, approvalStateIfAny);
         }
         return order;
@@ -245,7 +267,7 @@ public class OrderRepository {
     public Order upsert(
             final Property property,
             final IncomingInvoiceType orderType,
-            final String number,
+            final String orderNumber,
             final String sellerOrderReference,
             final LocalDate entryDate,
             final LocalDate orderDate,
@@ -253,9 +275,9 @@ public class OrderRepository {
             final Party buyer,
             final String atPath,
             final OrderApprovalState approvalStateIfAny) {
-        Order order = findByOrderNumber(number);
+        Order order = findByOrderNumber(orderNumber);
         if (order == null) {
-            order = create(property, number, sellerOrderReference, entryDate, orderDate, seller, buyer, orderType,
+            order = create(property, orderNumber, sellerOrderReference, entryDate, orderDate, seller, buyer, orderType,
                     atPath, approvalStateIfAny);
         } else {
             updateOrder(

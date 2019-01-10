@@ -1,7 +1,10 @@
 package org.estatio.module.capex.fixtures.order.builders;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -48,6 +51,11 @@ import lombok.experimental.Accessors;
 @ToString(of={"document", "seller", "buyer", "property", "entryDate"})
 @Accessors(chain = true)
 public class OrderBuilder extends BuilderScriptAbstract<Order, OrderBuilder> {
+
+    private final static Pattern PATTERN_EXT_REF3_LAX_WITH_SLASH =
+            Pattern.compile(
+                    "^\\s*(?<orderGlobalNumerator>[0-9]+)\\s*[/]"
+                            + "(?<anythingElse>.*)$");
 
     @Getter @Setter
     Person officeAdministrator;
@@ -191,8 +199,14 @@ public class OrderBuilder extends BuilderScriptAbstract<Order, OrderBuilder> {
                 final LocalDate orderDate = entryDate;
                 order = orderRepository.create(property, orderNumber, sellerOrderReference, entryDate, orderDate, seller, buyer, IncomingInvoiceType.ITA_ORDER_INVOICE, "/ITA", OrderApprovalState.NEW);
 
+                final Matcher matcher = PATTERN_EXT_REF3_LAX_WITH_SLASH.matcher(orderNumber);
+                if(matcher.matches()) {
+                    final BigInteger buyerOrderNumber = new BigInteger(matcher.group("orderGlobalNumerator"));
+                    order.setBuyerOrderNumber(buyerOrderNumber);
+                }
 
             }
+
 
 
             BudgetItem budgetItem = null;

@@ -1,6 +1,7 @@
 package org.estatio.module.coda.dom.doc;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -950,7 +951,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     }
 
     @Programmatic
-    public String getSummaryLineExtRefOrderGlobalNumerator(final LineCache lineCache) {
+    public BigInteger getSummaryLineExtRefOrderGlobalNumerator(final LineCache lineCache) {
         final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getExtRefOrderGlobalNumerator() : null;
     }

@@ -1,6 +1,7 @@
 package org.estatio.module.coda.dom.doc;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -462,7 +463,7 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
     @Column(allowsNull = "true", length = 8)
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
-    private String extRefOrderGlobalNumerator;
+    private BigInteger extRefOrderGlobalNumerator;
 
 
     @Column(allowsNull = "true", name = "extRefOrderItemId")

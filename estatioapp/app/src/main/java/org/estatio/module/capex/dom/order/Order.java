@@ -1,6 +1,7 @@
 package org.estatio.module.capex.dom.order;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -116,6 +117,12 @@ import lombok.Setter;
                         + "FROM org.estatio.module.capex.dom.order.Order "
                         + "WHERE orderNumber == :orderNumber "),
         @Query(
+                name = "findByBuyerAndBuyerOrderNumber", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.order.Order "
+                        + "WHERE buyer == :buyer "
+                        + "   && buyerOrderNumber == :buyerOrderNumber "),
+        @Query(
                 name = "findByBuyerAndExtRefOrderGlobalNumerator", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.order.Order "
@@ -171,7 +178,8 @@ import lombok.Setter;
                         + "ORDER BY entryDate")
 })
 @Indices({
-        @Index(name = "Order_sellerOrderReference_IDX", members = { "sellerOrderReference" })
+        @Index(name = "Order_sellerOrderReference_IDX", members = { "sellerOrderReference" }),
+        @Index(name = "Order_buyer_buyerOrderNumber_IDX", members = { "buyer", "buyerOrderNumber" })
 })
 @Unique(name = "Order_reference_UNQ", members = { "orderNumber" })
 @DomainObject(
@@ -560,6 +568,12 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     public String disableEditBuyer() {
         return orderImmutableReason();
     }
+
+
+    @Column(allowsNull = "true", scale = 0, length = 8)
+    @PropertyLayout(hidden = Where.ALL_TABLES)
+    @Getter @Setter
+    private BigInteger buyerOrderNumber;
 
     @Persistent(mappedBy = "ordr", dependentElement = "true")
     @Getter @Setter

@@ -26,6 +26,7 @@
                                         <cpt:property id="buyer">
                                             <cpt:action id="editBuyer" promptStyle="INLINE" position="RIGHT"/>
                                         </cpt:property>
+                                        <cpt:property id="buyerOrderNumber"/>
                                         <cpt:property id="seller">
                                             <cpt:action id="editSeller" promptStyle="INLINE" position="RIGHT"/>
                                             <cpt:action id="createSeller" promptStyle="INLINE" position="RIGHT"/>
