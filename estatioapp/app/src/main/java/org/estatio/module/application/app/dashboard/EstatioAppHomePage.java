@@ -85,6 +85,7 @@ import org.estatio.module.party.dom.PersonRepository;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import static org.apache.isis.applib.annotation.Projecting.PROJECTED;
 import static org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository.AT_PATHS_FRA_OFFICE;
 import static org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository.AT_PATHS_ITA_OFFICE;
 
@@ -396,6 +397,7 @@ public class EstatioAppHomePage {
             this.incomingInvoice = incomingInvoice;
         }
 
+        @org.apache.isis.applib.annotation.Property(projecting = PROJECTED)
         @org.apache.isis.applib.annotation.PropertyLayout(hidden = Where.EVERYWHERE)
         @Getter @Setter
         private IncomingInvoice incomingInvoice;
