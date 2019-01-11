@@ -992,7 +992,8 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
 
     @Property
     public String getExtRef3() {
-        return getSummaryLineExtRef3Normalized(LineCache.DEFAULT);
+        final CodaDocLine docLine = summaryDocLine(LineCache.DEFAULT);
+        return docLine != null ? docLine.getExtRef3() : null;
     }
 
     @Property
