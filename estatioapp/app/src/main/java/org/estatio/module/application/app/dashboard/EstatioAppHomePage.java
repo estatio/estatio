@@ -18,11 +18,19 @@
  */
 package org.estatio.module.application.app.dashboard;
 
+import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
@@ -38,11 +46,13 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.capex.app.DirectDebitsMenu;
 import org.estatio.module.capex.app.PaymentBatchMenu;
 import org.estatio.module.capex.app.UpcomingPaymentFraService;
@@ -60,6 +70,7 @@ import org.estatio.module.capex.dom.payment.PaymentLine;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.dom.task.TaskRepository;
 import org.estatio.module.capex.dom.task.Task_checkState;
+import org.estatio.module.coda.contributions.IncomingInvoice_codaDocHead;
 import org.estatio.module.coda.dom.doc.CodaDocHead;
 import org.estatio.module.coda.dom.doc.CodaDocHeadRepository;
 import org.estatio.module.event.dom.Event;
@@ -67,9 +78,13 @@ import org.estatio.module.event.dom.EventRepository;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import static org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository.AT_PATHS_FRA_OFFICE;
 import static org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository.AT_PATHS_ITA_OFFICE;
 
@@ -286,9 +301,37 @@ public class EstatioAppHomePage {
     }
 
     @Collection(notPersisted = true)
-    public List<IncomingInvoice> getIncomingInvoicesItaPayable() {
-        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
-                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PAYABLE);
+    public List<IncomingInvoiceWhenPayableBankTransfer> getIncomingInvoicesItaPayableBankTransfer() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalStateAndPaymentMethod(
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.BANK_TRANSFER).stream()
+                .map(incomingInvoice -> {
+                    final CodaDocHead codaDocHead = factoryService.mixin(
+                            IncomingInvoice_codaDocHead.class, incomingInvoice).prop();
+                    return new IncomingInvoiceWhenPayableBankTransfer(incomingInvoice, codaDocHead);
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesItaPayableDirectDebit() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalStateAndPaymentMethod(
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.DIRECT_DEBIT);
+    }
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesItaPayableManualProcess() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalStateAndPaymentMethod(
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.MANUAL_PROCESS);
+    }
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesItaPayableOther() {
+        List<PaymentMethod> paymentMethods = Lists.newArrayList(PaymentMethod.values());
+        paymentMethods.remove(PaymentMethod.BANK_TRANSFER);
+        paymentMethods.remove(PaymentMethod.DIRECT_DEBIT);
+        paymentMethods.remove(PaymentMethod.MANUAL_PROCESS);
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalStateAndPaymentMethods(
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PAYABLE, paymentMethods);
     }
 
 
@@ -325,6 +368,68 @@ public class EstatioAppHomePage {
             factoryService.mixin(Task_checkState.class, task).act();
         }
         return this;
+    }
+
+    @XmlRootElement(name = "homePage.IncomingInvoiceWhenPayableBankTransfer")
+    @XmlType(
+        propOrder = {
+                "incomingInvoice",
+                "lastApprovedBy",
+                "lastApprovedOn",
+                "codaDocHead",
+        }
+    )
+    @DomainObject(objectType = "homePage.IncomingInvoiceWhenPayableBankTransfer")
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @NoArgsConstructor
+    public static class IncomingInvoiceWhenPayableBankTransfer
+    {
+        public IncomingInvoiceWhenPayableBankTransfer(final IncomingInvoice incomingInvoice, final CodaDocHead codaDocHead) {
+            final List<IncomingInvoice.ApprovalString> approvals = incomingInvoice.getApprovals();
+            Collections.reverse(approvals);
+            if(!approvals.isEmpty()) {
+                final IncomingInvoice.ApprovalString approval = approvals.get(0);
+                this.lastApprovedOn = approval.getCompletedOn();
+                this.lastApprovedBy = approval.getCompletedBy();
+            }
+            this.codaDocHead = codaDocHead;
+            this.incomingInvoice = incomingInvoice;
+        }
+
+        @org.apache.isis.applib.annotation.PropertyLayout(hidden = Where.EVERYWHERE)
+        @Getter @Setter
+        private IncomingInvoice incomingInvoice;
+
+        @XmlTransient
+        @org.apache.isis.applib.annotation.PropertyLayout(named = "Supplier")
+        public Party getSeller() {
+            return getIncomingInvoice().getSeller();
+        }
+
+        @XmlTransient
+        public Property getProperty() {
+            return getIncomingInvoice().getProperty();
+        }
+
+        @XmlTransient
+        public BigDecimal getGrossAmount() {
+            return getIncomingInvoice().getGrossAmount();
+        }
+
+        @XmlTransient
+        public LocalDate getDateReceived() {
+            return getIncomingInvoice().getDateReceived();
+        }
+
+        @Getter @Setter @Nullable
+        private String lastApprovedOn;
+
+        @Getter @Setter @Nullable
+        private String lastApprovedBy;
+
+        @Getter @Setter @Nullable
+        private CodaDocHead codaDocHead;
+
     }
 
     @DomainService(nature = NatureOfService.DOMAIN)

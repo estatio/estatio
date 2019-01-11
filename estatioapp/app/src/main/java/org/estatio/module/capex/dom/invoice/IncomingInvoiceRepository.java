@@ -128,11 +128,31 @@ public class IncomingInvoiceRepository {
     }
 
     @Programmatic
+    public List<IncomingInvoice> findByAtPathPrefixesAndApprovalStateAndPaymentMethods(
+            final List<String> atPathPrefixes,
+            final IncomingInvoiceApprovalState approvalState,
+            final List<PaymentMethod> paymentMethods) {
+        final List<IncomingInvoice> incomingInvoices = Lists.newArrayList();
+        paymentMethods.forEach(paymentMethod ->
+                appendByAtPathPrefixesAndApprovalStateAndPaymentMethod(atPathPrefixes, approvalState, paymentMethod, incomingInvoices));
+        return incomingInvoices;
+    }
+
+    @Programmatic
     public List<IncomingInvoice> findByAtPathPrefixesAndApprovalStateAndPaymentMethod(
             final List<String> atPathPrefixes,
             final IncomingInvoiceApprovalState approvalState,
             final PaymentMethod paymentMethod) {
         final List<IncomingInvoice> incomingInvoices = Lists.newArrayList();
+        appendByAtPathPrefixesAndApprovalStateAndPaymentMethod(atPathPrefixes, approvalState, paymentMethod, incomingInvoices);
+        return incomingInvoices;
+    }
+
+    private void appendByAtPathPrefixesAndApprovalStateAndPaymentMethod(
+            final List<String> atPathPrefixes,
+            final IncomingInvoiceApprovalState approvalState,
+            final PaymentMethod paymentMethod,
+            final List<IncomingInvoice> incomingInvoices) {
         for (final String atPathPrefix : atPathPrefixes) {
             incomingInvoices.addAll(repositoryService.allMatches(
                     new QueryDefault<>(
@@ -142,7 +162,6 @@ public class IncomingInvoiceRepository {
                             "approvalState", approvalState,
                             "paymentMethod", paymentMethod)));
         }
-        return incomingInvoices;
     }
 
     @Programmatic
