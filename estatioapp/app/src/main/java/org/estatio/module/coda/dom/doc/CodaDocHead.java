@@ -738,6 +738,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         case APPROVED_BY_COUNTRY_DIRECTOR:
         case PENDING_CODA_BOOKS_CHECK:
         case PAYABLE:
+        case PAYABLE_BYPASSING_APPROVAL:
             if (docHead.isPaid()) {
 
                 stateTransitionService.trigger(incomingInvoice,

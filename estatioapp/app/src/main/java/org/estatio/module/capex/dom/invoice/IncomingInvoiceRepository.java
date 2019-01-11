@@ -303,13 +303,22 @@ public class IncomingInvoiceRepository {
 
             final boolean isItalian = invoice.getAtPath().startsWith("/ITA");
             final boolean isPaid = invoice.getPaidDate() != null;
-            final boolean hasPaymentMethodOtherThanBankTransfer =
-                    invoice.getPaymentMethod() != null && invoice.getPaymentMethod() != PaymentMethod.BANK_TRANSFER;
+            final boolean noApprovalNeededForPaymentMethod =
+                    invoice.getPaymentMethod() != null && invoice.getPaymentMethod().requiresNoApprovalInItaly();
 
-            final IncomingInvoiceApprovalStateTransitionType transitionType =
-                    isItalian && (isPaid || hasPaymentMethodOtherThanBankTransfer) ?
-                            IncomingInvoiceApprovalStateTransitionType.INSTANTIATE_BYPASSING_APPROVAL :
-                            IncomingInvoiceApprovalStateTransitionType.INSTANTIATE;
+            final IncomingInvoiceApprovalStateTransitionType transitionType;
+            // italian invoices that do not require approval
+            if (isItalian && noApprovalNeededForPaymentMethod) {
+                transitionType = IncomingInvoiceApprovalStateTransitionType.INSTANTIATE_TO_PAYABLE;
+            } else {
+                // italian invoices that are paid already
+                if (isItalian && isPaid) {
+                    transitionType = IncomingInvoiceApprovalStateTransitionType.INSTANTIATE_BYPASSING_APPROVAL;
+                } else {
+                    // normal case
+                    transitionType = IncomingInvoiceApprovalStateTransitionType.INSTANTIATE;
+                }
+            }
             stateTransitionService.trigger(invoice, transitionType, null, null);
         }
 

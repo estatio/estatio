@@ -808,16 +808,16 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         // when, then
         assertThat(transitionsOfDirectDebitInvoice).hasSize(2);
 
-        assertThat(invoiceForDirectDebit.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK);
+        assertThat(invoiceForDirectDebit.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PAYABLE_BYPASSING_APPROVAL);
         IncomingInvoiceApprovalStateTransition firstTransition = transitionsOfDirectDebitInvoice.get(1);
         assertTransition(firstTransition, new ExpectedTransitionResult(
-                true,"tester", null, IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE_BYPASSING_APPROVAL
+                true,"tester", null, IncomingInvoiceApprovalState.PAYABLE_BYPASSING_APPROVAL, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE_TO_PAYABLE
         ));
         assertThat(firstTransition.getTask()).isNull();
 
         IncomingInvoiceApprovalStateTransition nextPending = transitionsOfDirectDebitInvoice.get(0);
         assertTransition(nextPending, new ExpectedTransitionResult(
-                false,null, IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK, null, IncomingInvoiceApprovalStateTransitionType.CONFIRM_IN_CODA_BOOKS
+                false,null, IncomingInvoiceApprovalState.PAYABLE_BYPASSING_APPROVAL, null, IncomingInvoiceApprovalStateTransitionType.PAID_IN_CODA
         ));
         assertThat(nextPending.getTask()).isNull();
 
@@ -831,13 +831,13 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         assertThat(transitionsOfDirectDebitInvoice).hasSize(4);
         IncomingInvoiceApprovalStateTransition lastAutomatic = transitionsOfDirectDebitInvoice.get(1);
         assertTransition(lastAutomatic, new ExpectedTransitionResult(
-                true, null, IncomingInvoiceApprovalState.NEW, IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK, IncomingInvoiceApprovalStateTransitionType.AUTO_TRANSITION_TO_PENDING_CODA_BOOKS
+                true, null, IncomingInvoiceApprovalState.NEW, IncomingInvoiceApprovalState.PAYABLE_BYPASSING_APPROVAL, IncomingInvoiceApprovalStateTransitionType.AUTO_TRANSITION_TO_PENDING_CODA_BOOKS
         ));
         assertThat(lastAutomatic.getTask()).isNull();
 
         nextPending = transitionsOfDirectDebitInvoice.get(0);
         assertTransition(nextPending, new ExpectedTransitionResult(
-                false,null, IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK, null, IncomingInvoiceApprovalStateTransitionType.CONFIRM_IN_CODA_BOOKS
+                false,null, IncomingInvoiceApprovalState.PAYABLE_BYPASSING_APPROVAL, null, IncomingInvoiceApprovalStateTransitionType.PAID_IN_CODA
         ));
         assertThat(nextPending.getTask()).isNull();
 

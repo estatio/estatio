@@ -47,4 +47,8 @@ public enum PaymentMethod {
 
     }
 
+    public boolean requiresNoApprovalInItaly() {
+        return this == DIRECT_DEBIT || this == MANUAL_PROCESS;
+    }
+
 }
