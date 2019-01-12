@@ -60,6 +60,7 @@ import org.estatio.module.capex.dom.payment.PaymentLine;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.dom.task.TaskRepository;
 import org.estatio.module.capex.dom.task.Task_checkState;
+import org.estatio.module.coda.contributions.IncomingInvoice_codaDocHead;
 import org.estatio.module.coda.dom.doc.CodaDocHead;
 import org.estatio.module.coda.dom.doc.CodaDocHeadRepository;
 import org.estatio.module.event.dom.Event;
@@ -286,9 +287,37 @@ public class EstatioAppHomePage {
     }
 
     @Collection(notPersisted = true)
-    public List<IncomingInvoice> getIncomingInvoicesItaPayable() {
-        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
-                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PAYABLE);
+    public List<IncomingInvoiceWhenPayableBankTransfer> getIncomingInvoicesItaPayableBankTransfer() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalStateAndPaymentMethod(
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.BANK_TRANSFER).stream()
+                .map(incomingInvoice -> {
+                    final CodaDocHead codaDocHead = factoryService.mixin(
+                            IncomingInvoice_codaDocHead.class, incomingInvoice).prop();
+                    return new IncomingInvoiceWhenPayableBankTransfer(incomingInvoice, codaDocHead);
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesItaPayableDirectDebit() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalStateAndPaymentMethod(
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.DIRECT_DEBIT);
+    }
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesItaPayableManualProcess() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalStateAndPaymentMethod(
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.MANUAL_PROCESS);
+    }
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesItaPayableOther() {
+        List<PaymentMethod> paymentMethods = Lists.newArrayList(PaymentMethod.values());
+        paymentMethods.remove(PaymentMethod.BANK_TRANSFER);
+        paymentMethods.remove(PaymentMethod.DIRECT_DEBIT);
+        paymentMethods.remove(PaymentMethod.MANUAL_PROCESS);
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalStateAndPaymentMethods(
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PAYABLE, paymentMethods);
     }
 
 

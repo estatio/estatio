@@ -1,6 +1,8 @@
 package org.estatio.module.coda.dom.doc;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -38,7 +40,9 @@ import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
 import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
+import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.coda.dom.costcentre.CostCentre;
@@ -456,13 +460,36 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
      */
     @Column(allowsNull = "true", length = 30)
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @PropertyLayout(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private String extRef3Normalized;
 
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @PropertyLayout(hidden = Where.ALL_TABLES)
+    public Organisation getBuyer() {
+        return this.getDocHead().getCmpCodeBuyer();
+    }
+
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @PropertyLayout(hidden = Where.ALL_TABLES)
+    public Order getOrder() {
+        final BigInteger buyerOrderNumber = getExtRefOrderGlobalNumerator();
+        if(getBuyer() == null || buyerOrderNumber == null) {
+            return null;
+        }
+        final List<Order> orders =
+                orderRepository.findByBuyerAndBuyerOrderNumber(getBuyer(), buyerOrderNumber);
+        return orders.size() == 1 ? orders.get(0) : null;
+    }
+
+    @Inject
+    OrderRepository orderRepository;
+
     @Column(allowsNull = "true", length = 8)
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @PropertyLayout(named = "Buyer Order Number")
     @Getter @Setter
-    private String extRefOrderGlobalNumerator;
+    private BigInteger extRefOrderGlobalNumerator;
 
 
     @Column(allowsNull = "true", name = "extRefOrderItemId")
