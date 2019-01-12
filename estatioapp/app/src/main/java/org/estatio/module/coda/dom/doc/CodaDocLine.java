@@ -479,9 +479,9 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
         }
         final List<Order> orders =
                 orderRepository.findByBuyerAndBuyerOrderNumber(getBuyer(), buyerOrderNumber);
-        return orders.size() != 1 ? orders.get(0) : null;
+        return orders.size() == 1 ? orders.get(0) : null;
     }
-    
+
     @Inject
     OrderRepository orderRepository;
 
