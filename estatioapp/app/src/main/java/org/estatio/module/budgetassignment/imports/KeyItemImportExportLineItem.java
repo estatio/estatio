@@ -42,7 +42,6 @@ import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.keyitem.KeyItemRepository;
 import org.estatio.module.budget.dom.keytable.KeyTable;
-import org.estatio.module.budget.dom.keytable.KeyTableRepository;
 import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
 
 import lombok.Getter;
@@ -67,6 +66,7 @@ public class KeyItemImportExportLineItem
         this.keyValue = keyItem.getValue();
         this.keyTableName = keyItem.getPartitioningTable().getName();
         this.startDate = keyItem.getPartitioningTable().getBudget().getStartDate();
+        this.divSourceValue = keyItem.getDivCalculatedSourceValue();
     }
 
     public KeyItemImportExportLineItem(final KeyItemImportExportLineItem item) {
@@ -78,6 +78,7 @@ public class KeyItemImportExportLineItem
         this.keyValue = item.keyValue.setScale(6, BigDecimal.ROUND_HALF_UP);
         this.keyTableName = item.keyTableName;
         this.startDate = item.startDate;
+        this.divSourceValue = item.divSourceValue;
     }
 
     public String title() {
@@ -108,6 +109,9 @@ public class KeyItemImportExportLineItem
     @Getter @Setter
     private Status status;
 
+    @Column(scale = 6)
+    @Getter @Setter
+    private BigDecimal divSourceValue;
 
     //region > apply (action)
     @Action(
@@ -234,9 +238,6 @@ public class KeyItemImportExportLineItem
 
     @Inject
     DomainObjectContainer container;
-
-    @Inject
-    KeyTableRepository keyTableRepository;
 
     @Inject
     PartitioningTableRepository partitioningTableRepository;

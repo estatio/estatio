@@ -19,10 +19,12 @@
 package org.estatio.module.budget.dom.keyitem;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.validation.constraints.Digits;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -38,6 +40,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.module.budget.dom.Distributable;
+import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 
 import lombok.Getter;
@@ -153,5 +156,20 @@ public class KeyItem extends PartitioningTableItem
     @PropertyLayout(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return getPartitioningTable().getApplicationTenancy();
+    }
+
+    @Digits(integer = 13, fraction = 6)
+    @Action(semantics = SemanticsOf.SAFE)
+    public BigDecimal getDivCalculatedSourceValue(){
+        KeyTable keyTable = (KeyTable) getPartitioningTable();
+        if (keyTable.getFoundationValueType() == FoundationValueType.AREA) {
+            return getUnit().getArea().subtract(getSourceValue()).setScale(6, RoundingMode.HALF_UP);
+        }
+        return BigDecimal.ZERO;
+    }
+
+    public boolean hideDivCalculatedSourceValue(){
+        KeyTable keyTable = (KeyTable) getPartitioningTable();
+        return keyTable.getFoundationValueType()!= FoundationValueType.AREA;
     }
 }
