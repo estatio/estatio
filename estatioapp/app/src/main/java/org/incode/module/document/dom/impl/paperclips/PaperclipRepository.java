@@ -39,11 +39,8 @@ public class PaperclipRepository {
     //region > findByAttachedTo (programmatic)
     @Programmatic
     public List<Paperclip> findByAttachedTo(final Object attachedTo) {
-        if(attachedTo == null) {
-            return null;
-        }
         final Bookmark bookmark = bookmarkService.bookmarkFor(attachedTo);
-        if(bookmark == null) {
+        if (bookmark == null) {
             return null;
         }
         final String attachedToStr = bookmark.toString();
@@ -59,14 +56,8 @@ public class PaperclipRepository {
     public List<Paperclip> findByAttachedToAndRoleName(
             final Object attachedTo,
             final String roleName) {
-        if(attachedTo == null) {
-            return null;
-        }
-        if(roleName == null) {
-            return null;
-        }
         final Bookmark bookmark = bookmarkService.bookmarkFor(attachedTo);
-        if(bookmark == null) {
+        if (bookmark == null) {
             return null;
         }
         final String attachedToStr = bookmark.toString();
@@ -83,14 +74,8 @@ public class PaperclipRepository {
     public List<Paperclip> findByDocumentAndAttachedTo(
             final DocumentAbstract<?> document,
             final Object attachedTo) {
-        if(document == null) {
-            return null;
-        }
-        if(attachedTo == null) {
-            return null;
-        }
         final Bookmark bookmark = bookmarkService.bookmarkFor(attachedTo);
-        if(bookmark == null) {
+        if (bookmark == null) {
             return null;
         }
         final String attachedToStr = bookmark.toString();
@@ -108,17 +93,8 @@ public class PaperclipRepository {
             final DocumentAbstract<?> document,
             final Object attachedTo,
             final String roleName) {
-        if(document == null) {
-            return null;
-        }
-        if(attachedTo == null) {
-            return null;
-        }
-        if(roleName == null) {
-            return null;
-        }
         final Bookmark bookmark = bookmarkService.bookmarkFor(attachedTo);
-        if(bookmark == null) {
+        if (bookmark == null) {
             return null;
         }
         final String attachedToStr = bookmark.toString();
@@ -153,7 +129,7 @@ public class PaperclipRepository {
 
         Paperclip paperclip = findByDocumentAndAttachedToAndRoleName(
                 documentAbstract, attachTo, roleName);
-        if(paperclip != null) {
+        if (paperclip != null) {
             return paperclip;
         }
 
@@ -162,12 +138,12 @@ public class PaperclipRepository {
 
         paperclip.setDocument(documentAbstract);
         paperclip.setRoleName(roleName);
-        if(documentAbstract instanceof Document) {
+        if (documentAbstract instanceof Document) {
             final Document document = (Document) documentAbstract;
             paperclip.setDocumentCreatedAt(document.getCreatedAt());
         }
 
-        if(!repositoryService.isPersistent(attachTo)) {
+        if (!repositoryService.isPersistent(attachTo)) {
             transactionService.flushTransaction();
         }
 
@@ -194,7 +170,7 @@ public class PaperclipRepository {
         Class<?> domainClass = toAttachTo.getClass();
         for (SubtypeProvider subtypeProvider : subtypeProviders) {
             Class<? extends Paperclip> subtype = subtypeProvider.subtypeFor(domainClass);
-            if(subtype != null) {
+            if (subtype != null) {
                 return subtype;
             }
         }
@@ -210,7 +186,7 @@ public class PaperclipRepository {
         final List<Paperclip> paperclips = findByDocument(document);
         for (Paperclip paperclip : paperclips) {
             final Object attachedTo = paperclip.getAttachedTo();
-            if(typeAttachedTo.isAssignableFrom(attachedTo.getClass())) {
+            if (typeAttachedTo.isAssignableFrom(attachedTo.getClass())) {
                 return (T) attachedTo;
             }
         }
@@ -218,7 +194,6 @@ public class PaperclipRepository {
     }
 
     //endregion
-
 
     //region > delete, deleteIfAttachedTo
     @Programmatic
@@ -241,16 +216,15 @@ public class PaperclipRepository {
     public void deleteIfAttachedTo(final Object domainObject) {
         deleteIfAttachedTo(domainObject, Policy.PAPERCLIPS_ONLY);
     }
+
     @Programmatic
     public void deleteIfAttachedTo(final Object domainObject, final Policy policy) {
         final List<Paperclip> paperclips = findByAttachedTo(domainObject);
         for (Paperclip paperclip : paperclips) {
+            final DocumentAbstract document = paperclip.getDocument();
             delete(paperclip);
-            if(policy == Policy.PAPERCLIPS_AND_DOCUMENTS_IF_ORPHANED) {
-                final DocumentAbstract document = paperclip.getDocument();
-                if(orphaned(document, domainObject)) {
-                    repositoryService.remove(document);
-                }
+            if (policy == Policy.PAPERCLIPS_AND_DOCUMENTS_IF_ORPHANED && orphaned(document, domainObject)) {
+                repositoryService.remove(document);
             }
         }
     }
@@ -258,7 +232,7 @@ public class PaperclipRepository {
     private boolean orphaned(final DocumentAbstract document, final Object attachedTo) {
         final List<Paperclip> paperclips = findByDocument(document);
         for (Paperclip paperclip : paperclips) {
-            if(paperclip.getAttachedTo() != attachedTo) {
+            if (paperclip.getAttachedTo() != attachedTo) {
                 // found a paperclip for this document attached to some other object
                 return false;
             }
@@ -266,8 +240,6 @@ public class PaperclipRepository {
         return true;
     }
     //endregion
-
-
 
     //region > SubtypeProvider SPI
 
@@ -282,6 +254,7 @@ public class PaperclipRepository {
         @Programmatic
         Class<? extends Paperclip> subtypeFor(Class<?> domainObject);
     }
+
     /**
      * Convenience adapter to help implement the {@link SubtypeProvider} SPI; ignores the roleName passed into
      * {@link SubtypeProvider#subtypeFor(Class)}, simply returns the class pair passed into constructor.
@@ -316,6 +289,5 @@ public class PaperclipRepository {
     @Inject
     List<SubtypeProvider> subtypeProviders;
     //endregion
-
 
 }

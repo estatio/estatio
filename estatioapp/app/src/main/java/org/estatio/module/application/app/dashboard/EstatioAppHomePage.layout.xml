@@ -157,13 +157,13 @@
                             <cpt:collection id="incomingInvoicesItaPendingAdvise" paged="15">
                                 <cpt:named>Pending Advice</cpt:named>
                             </cpt:collection>
-                            <cpt:collection id="incomingInvoicesItaApprovedByCenterManager" paged="15">
-                                <cpt:named>Approved by Center Manager</cpt:named>
-                            </cpt:collection>
                         </bs3:col>
                     </bs3:row>
                     <bs3:row>
                         <bs3:col span="4">
+                            <cpt:collection id="incomingInvoicesItaApprovedByCenterManager" paged="15">
+                                <cpt:named>Approved by Center Manager</cpt:named>
+                            </cpt:collection>
                             <cpt:collection id="incomingInvoicesItaApproved" paged="15">
                                 <cpt:named>Approved</cpt:named>
                             </cpt:collection>
@@ -174,8 +174,21 @@
                             </cpt:collection>
                         </bs3:col>
                         <bs3:col span="4">
-                            <cpt:collection id="incomingInvoicesItaPayable" paged="15">
-                                <cpt:named>Payable</cpt:named>
+                            <cpt:collection id="incomingInvoicesItaPayableDirectDebit" paged="5">
+                                <cpt:named>Payable (P-RID)</cpt:named>
+                            </cpt:collection>
+                            <cpt:collection id="incomingInvoicesItaPayableManualProcess" paged="5">
+                                <cpt:named>Payable (P-RIBA)</cpt:named>
+                            </cpt:collection>
+                            <cpt:collection id="incomingInvoicesItaPayableOther" paged="5">
+                                <cpt:named>Payable (Other)</cpt:named>
+                            </cpt:collection>
+                        </bs3:col>
+                    </bs3:row>
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="incomingInvoicesItaPayableBankTransfer" paged="15">
+                                <cpt:named>Payable (P-BON)</cpt:named>
                             </cpt:collection>
                         </bs3:col>
                     </bs3:row>

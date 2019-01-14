@@ -18,19 +18,13 @@
  */
 package org.estatio.module.tax.integtests;
 
-import org.slf4j.event.Level;
-
-import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
-import org.apache.isis.core.runtime.headless.logging.LogConfig;
-
+import org.estatio.module.base.integtests.BaseModuleIntegTestAbstract;
 import org.estatio.module.tax.EstatioTaxModule;
 
-public abstract class TaxModuleIntegTestAbstract
-        extends IntegrationTestAbstract3 {
+public abstract class TaxModuleIntegTestAbstract extends BaseModuleIntegTestAbstract {
 
     public TaxModuleIntegTestAbstract() {
-        super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
-                new EstatioTaxModule());
+        super(new EstatioTaxModule());
     }
 
 }

@@ -25,19 +25,20 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.setup.PersonaEnumPersistAll;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
+
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
 import org.estatio.module.numerator.integtests.dom.NumeratorExampleObject;
 import org.estatio.module.numerator.integtests.dom.NumeratorExampleObject_enum;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstract {
 
@@ -46,8 +47,8 @@ public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstr
     @Inject
     ApplicationTenancyRepository applicationTenancyRepository;
 
-    NumeratorExampleObject propertyOxf;
-    NumeratorExampleObject propertyKal;
+    NumeratorExampleObject exampleObjectOxf;
+    NumeratorExampleObject exampleObjectKal;
 
     ApplicationTenancy applicationTenancyOxf;
     ApplicationTenancy applicationTenancyKal;
@@ -55,15 +56,20 @@ public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstr
     @Before
     public void setUp() throws Exception {
         runFixtureScript(new PersonaEnumPersistAll<>(NumeratorExampleObject_enum.class));
-
+        runFixtureScript(new FixtureScript() {
+            @Override
+            protected void execute(final ExecutionContext executionContext) {
+                executionContext.executeChild(this, ApplicationTenancy_enum.NlKal);
+                executionContext.executeChild(this, ApplicationTenancy_enum.GbOxf);
+            }
+        });
 
         applicationTenancyKal = ApplicationTenancy_enum.NlKal.findUsing(serviceRegistry);
         applicationTenancyOxf = ApplicationTenancy_enum.GbOxf.findUsing(serviceRegistry);
 
-        propertyKal = NumeratorExampleObject_enum.Kal.findUsing(serviceRegistry);
-        propertyOxf = NumeratorExampleObject_enum.Oxf.findUsing(serviceRegistry);
+        exampleObjectKal = NumeratorExampleObject_enum.Kal.findUsing(serviceRegistry);
+        exampleObjectOxf = NumeratorExampleObject_enum.Oxf.findUsing(serviceRegistry);
     }
-
 
     public static class AllNumerators extends NumeratorRepository_IntegTest {
 
@@ -71,12 +77,12 @@ public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstr
         public void whenExist() throws Exception {
 
             numeratorRepository
-                    .createScopedNumerator("Invoice number", propertyOxf, "ABC-%05d", new BigInteger("10"),  applicationTenancyOxf);
+                    .createScopedNumerator("Invoice number", exampleObjectOxf, "ABC-%05d", new BigInteger("10"), applicationTenancyOxf);
             numeratorRepository
-                    .createScopedNumerator("Invoice number", propertyKal, "DEF-%05d", new BigInteger("100"), applicationTenancyKal);
+                    .createScopedNumerator("Invoice number", exampleObjectKal, "DEF-%05d", new BigInteger("100"), applicationTenancyKal);
             numeratorRepository.createGlobalNumerator("Collection number", "ABC-%05d", new BigInteger("1000"), applicationTenancyOxf);
 
-            assertThat(numeratorRepository.allNumerators().size(), is(3));
+            assertThat(numeratorRepository.allNumerators()).hasSize(3);
         }
 
     }
@@ -88,9 +94,9 @@ public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstr
 
             // given
             numeratorRepository
-                    .createScopedNumerator("Invoice number", propertyOxf, "ABC-%05d", new BigInteger("10"),  applicationTenancyOxf);
+                    .createScopedNumerator("Invoice number", exampleObjectOxf, "ABC-%05d", new BigInteger("10"), applicationTenancyOxf);
             numeratorRepository
-                    .createScopedNumerator("Invoice number", propertyKal, "DEF-%05d", new BigInteger("100"), applicationTenancyKal);
+                    .createScopedNumerator("Invoice number", exampleObjectKal, "DEF-%05d", new BigInteger("100"), applicationTenancyKal);
             numeratorRepository.createGlobalNumerator("Collection number", "ABC-%05d", new BigInteger("1000"), applicationTenancyOxf);
 
             // when
@@ -98,7 +104,7 @@ public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstr
                     .findGlobalNumerator("Collection number", applicationTenancyOxf);
 
             // then
-            assertThat(in.getLastIncrement(), is(new BigInteger("1000")));
+            assertThat(in.getLastIncrement()).isEqualTo(new BigInteger("1000"));
         }
 
     }
@@ -110,17 +116,17 @@ public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstr
 
             // given
             numeratorRepository
-                    .createScopedNumerator("Invoice number", propertyOxf, "ABC-%05d", new BigInteger("10"),  applicationTenancyOxf);
+                    .createScopedNumerator("Invoice number", exampleObjectOxf, "ABC-%05d", new BigInteger("10"), applicationTenancyOxf);
             numeratorRepository
-                    .createScopedNumerator("Invoice number", propertyKal, "DEF-%05d", new BigInteger("100"), applicationTenancyKal);
+                    .createScopedNumerator("Invoice number", exampleObjectKal, "DEF-%05d", new BigInteger("100"), applicationTenancyKal);
             numeratorRepository.createGlobalNumerator("Collection number", "ABC-%05d", new BigInteger("1000"), applicationTenancyOxf);
 
             // when
             Numerator in = numeratorRepository
-                    .findScopedNumeratorIncludeWildCardMatching("Invoice number", propertyOxf, applicationTenancyOxf);
+                    .findScopedNumeratorIncludeWildCardMatching("Invoice number", exampleObjectOxf, applicationTenancyOxf);
 
             // then
-            assertThat(in.getLastIncrement(), is(new BigInteger("10")));
+            assertThat(in.getLastIncrement()).isEqualTo(new BigInteger("10"));
         }
 
         ApplicationTenancy wildCardAppTenancy;
@@ -134,7 +140,7 @@ public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstr
             // given
             wildCardAppTenancy = applicationTenancyRepository.newTenancy("France/wildcard/FR03", "/FRA/%/FR03", null);
             numeratorRepository
-                    .createScopedNumerator("Invoice number", propertyKal, "AAA-%05d", new BigInteger("100"), wildCardAppTenancy);
+                    .createScopedNumerator("Invoice number", exampleObjectKal, "AAA-%05d", new BigInteger("100"), wildCardAppTenancy);
 
             appTenToBefound = applicationTenancyRepository.newTenancy("France/property/FR03", "/FRA/ABC/FR03", null);
             appTenNotToBefound1 = applicationTenancyRepository.newTenancy("France/property/FR02", "/FRA/ABC/FR02", null);
@@ -142,16 +148,16 @@ public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstr
 
             // when
             Numerator inToBeFound = numeratorRepository
-                    .findScopedNumeratorIncludeWildCardMatching("Invoice number", propertyKal, appTenToBefound);
+                    .findScopedNumeratorIncludeWildCardMatching("Invoice number", exampleObjectKal, appTenToBefound);
             Numerator inNotToBeFound1 = numeratorRepository
-                    .findScopedNumeratorIncludeWildCardMatching("Invoice number", propertyKal, appTenNotToBefound1);
+                    .findScopedNumeratorIncludeWildCardMatching("Invoice number", exampleObjectKal, appTenNotToBefound1);
             Numerator inNotToBeFound2 = numeratorRepository
-                    .findScopedNumeratorIncludeWildCardMatching("Invoice number", propertyKal, appTenNotToBefound2);
+                    .findScopedNumeratorIncludeWildCardMatching("Invoice number", exampleObjectKal, appTenNotToBefound2);
 
             // then
-            assertThat(inToBeFound.getLastIncrement(), is(new BigInteger("100")));
-            assertNull(inNotToBeFound1);
-            assertNull(inNotToBeFound2);
+            assertThat(inToBeFound.getLastIncrement()).isEqualTo(new BigInteger("100"));
+            assertThat(inNotToBeFound1).isNull();
+            assertThat(inNotToBeFound2).isNull();
 
         }
 
@@ -168,12 +174,11 @@ public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstr
             super.setUp();
 
             scopedNumerator = numeratorRepository
-                    .createScopedNumerator("Invoice number", propertyOxf, "ABC-%05d", new BigInteger("10"),  applicationTenancyOxf);
+                    .createScopedNumerator("Invoice number", exampleObjectOxf, "ABC-%05d", new BigInteger("10"), applicationTenancyOxf);
             scopedNumerator2 = numeratorRepository
-                    .createScopedNumerator("Invoice number", propertyKal, "DEF-%05d", new BigInteger("100"), applicationTenancyKal);
+                    .createScopedNumerator("Invoice number", exampleObjectKal, "DEF-%05d", new BigInteger("100"), applicationTenancyKal);
             globalNumerator = numeratorRepository
                     .createGlobalNumerator("Collection number", "ABC-%05d", new BigInteger("1000"), applicationTenancyOxf);
-
 
         }
 
@@ -181,13 +186,13 @@ public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstr
         public void forScopedNumerator() throws Exception {
 
             // given
-            assertThat(scopedNumerator.getLastIncrement(), is(new BigInteger("10")));
+            assertThat(scopedNumerator.getLastIncrement()).isEqualTo(new BigInteger("10"));
 
             // when
-            assertThat(scopedNumerator.nextIncrementStr(), is("ABC-00011"));
+            assertThat(scopedNumerator.nextIncrementStr()).isEqualTo("ABC-00011");
 
             // then
-            assertThat(scopedNumerator.getLastIncrement(), is(new BigInteger("11")));
+            assertThat(scopedNumerator.getLastIncrement()).isEqualTo(new BigInteger("11"));
         }
 
         @Test
@@ -195,13 +200,13 @@ public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstr
 
             // givem
             //globalNumerator = numeratorRepository.findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME);
-            assertThat(globalNumerator.getLastIncrement(), is(new BigInteger("1000")));
+            assertThat(globalNumerator.getLastIncrement()).isEqualTo(new BigInteger("1000"));
 
             // when
-            assertThat(globalNumerator.nextIncrementStr(), is("ABC-01001"));
+            assertThat(globalNumerator.nextIncrementStr()).isEqualTo("ABC-01001");
 
             // then
-            assertThat(globalNumerator.getLastIncrement(), is(new BigInteger("1001")));
+            assertThat(globalNumerator.getLastIncrement()).isEqualTo(new BigInteger("1001"));
         }
 
     }

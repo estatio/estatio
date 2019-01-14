@@ -20,7 +20,7 @@ public class PostalAddressDtoFactory extends DtoFactoryAbstract<PostalAddress, P
     }
 
     protected PostalAddressDto newDto(final PostalAddress postalAddress) {
-        PostalAddressDto dto = new PostalAddressDto();
+        final PostalAddressDto dto = new PostalAddressDto();
 
         dto.setSelf(mappingHelper.oidDtoFor(postalAddress));
         dto.setAtPath(postalAddress.getAtPath());

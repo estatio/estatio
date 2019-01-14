@@ -95,6 +95,13 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.module.numerator.dom.Numerator "
                         + "WHERE name == :name"
+                        + "&& applicationTenancyPath == :applicationTenancyPath "),
+        @javax.jdo.annotations.Query(
+                name = "findByObjectTypeAndObjectIdentifierAndApplicationTenancyPath", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.numerator.dom.Numerator "
+                        + "WHERE objectIdentifier == :objectIdentifier "
+                        + "&& objectType == :objectType "
                         + "&& applicationTenancyPath == :applicationTenancyPath ")
 })
 @DomainObject(
@@ -250,39 +257,30 @@ public class Numerator
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent
-    private BigInteger lastIncrement;
-
     /**
      * The value used by the {@link Numerator} when {@link #nextIncrementStr() return a
      * value}.
      */
     @javax.jdo.annotations.Column(allowsNull = "false")
-    public BigInteger getLastIncrement() {
-        return lastIncrement;
-    }
+    @javax.jdo.annotations.Persistent
+    @Getter @Setter
+    private BigInteger lastIncrement;
 
-    public void setLastIncrement(final BigInteger lastIncrement) {
-        this.lastIncrement = lastIncrement;
-    }
 
     // //////////////////////////////////////
 
     @Programmatic
     public String nextIncrementStr() {
-        return format(incrementCounter());
+        return format(nextIncrement());
     }
-    
-    // //////////////////////////////////////
-    
+
     @Programmatic
     public String lastIncrementStr(){
         return format(getLastIncrement());
     }
     
-    // //////////////////////////////////////
 
-    private BigInteger incrementCounter() {
+    private BigInteger nextIncrement() {
         BigInteger last = getLastIncrement();
         if (last == null) {
             last = BigInteger.ZERO;

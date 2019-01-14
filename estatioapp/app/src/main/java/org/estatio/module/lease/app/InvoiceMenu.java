@@ -163,11 +163,6 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
         return invoiceForLeaseRepository.findInvoicesByInvoiceNumber(invoiceNumber, year);
     }
 
-    public Integer default1FindInvoicesByInvoiceNumber() {
-        return clockService.now().getYear();
-    }
-
-
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "20")
     public List<InvoiceSummaryForPropertyDueDateStatus> allNewInvoices() {

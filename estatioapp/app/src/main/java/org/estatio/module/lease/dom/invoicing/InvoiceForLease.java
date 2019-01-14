@@ -30,6 +30,7 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
@@ -54,6 +55,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.services.user.UserService;
+import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -182,6 +184,7 @@ import lombok.Setter;
         // objectType inferred from @Discriminator
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+@XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class InvoiceForLease
         extends Invoice<InvoiceForLease> {
 

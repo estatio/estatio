@@ -128,11 +128,31 @@ public class IncomingInvoiceRepository {
     }
 
     @Programmatic
+    public List<IncomingInvoice> findByAtPathPrefixesAndApprovalStateAndPaymentMethods(
+            final List<String> atPathPrefixes,
+            final IncomingInvoiceApprovalState approvalState,
+            final List<PaymentMethod> paymentMethods) {
+        final List<IncomingInvoice> incomingInvoices = Lists.newArrayList();
+        paymentMethods.forEach(paymentMethod ->
+                appendByAtPathPrefixesAndApprovalStateAndPaymentMethod(atPathPrefixes, approvalState, paymentMethod, incomingInvoices));
+        return incomingInvoices;
+    }
+
+    @Programmatic
     public List<IncomingInvoice> findByAtPathPrefixesAndApprovalStateAndPaymentMethod(
             final List<String> atPathPrefixes,
             final IncomingInvoiceApprovalState approvalState,
             final PaymentMethod paymentMethod) {
         final List<IncomingInvoice> incomingInvoices = Lists.newArrayList();
+        appendByAtPathPrefixesAndApprovalStateAndPaymentMethod(atPathPrefixes, approvalState, paymentMethod, incomingInvoices);
+        return incomingInvoices;
+    }
+
+    private void appendByAtPathPrefixesAndApprovalStateAndPaymentMethod(
+            final List<String> atPathPrefixes,
+            final IncomingInvoiceApprovalState approvalState,
+            final PaymentMethod paymentMethod,
+            final List<IncomingInvoice> incomingInvoices) {
         for (final String atPathPrefix : atPathPrefixes) {
             incomingInvoices.addAll(repositoryService.allMatches(
                     new QueryDefault<>(
@@ -142,7 +162,6 @@ public class IncomingInvoiceRepository {
                             "approvalState", approvalState,
                             "paymentMethod", paymentMethod)));
         }
-        return incomingInvoices;
     }
 
     @Programmatic
@@ -303,13 +322,22 @@ public class IncomingInvoiceRepository {
 
             final boolean isItalian = invoice.getAtPath().startsWith("/ITA");
             final boolean isPaid = invoice.getPaidDate() != null;
-            final boolean hasPaymentMethodOtherThanBankTransfer =
-                    invoice.getPaymentMethod() != null && invoice.getPaymentMethod() != PaymentMethod.BANK_TRANSFER;
+            final boolean noApprovalNeededForPaymentMethod =
+                    invoice.getPaymentMethod() != null && invoice.getPaymentMethod().requiresNoApprovalInItaly();
 
-            final IncomingInvoiceApprovalStateTransitionType transitionType =
-                    isItalian && (isPaid || hasPaymentMethodOtherThanBankTransfer) ?
-                            IncomingInvoiceApprovalStateTransitionType.INSTANTIATE_BYPASSING_APPROVAL :
-                            IncomingInvoiceApprovalStateTransitionType.INSTANTIATE;
+            final IncomingInvoiceApprovalStateTransitionType transitionType;
+            // italian invoices that do not require approval
+            if (isItalian && noApprovalNeededForPaymentMethod) {
+                transitionType = IncomingInvoiceApprovalStateTransitionType.INSTANTIATE_TO_PAYABLE;
+            } else {
+                // italian invoices that are paid already
+                if (isItalian && isPaid) {
+                    transitionType = IncomingInvoiceApprovalStateTransitionType.INSTANTIATE_BYPASSING_APPROVAL;
+                } else {
+                    // normal case
+                    transitionType = IncomingInvoiceApprovalStateTransitionType.INSTANTIATE;
+                }
+            }
             stateTransitionService.trigger(invoice, transitionType, null, null);
         }
 

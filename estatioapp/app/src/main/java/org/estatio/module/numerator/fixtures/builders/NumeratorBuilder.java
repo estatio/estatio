@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.incode.module.country.dom.impl.Country;
 
@@ -32,6 +33,9 @@ public final class NumeratorBuilder extends BuilderScriptAbstract<Numerator, Num
     @Getter @Setter
     String name;
 
+    @Getter @Setter
+    Object scopedTo;
+
     @Getter
     Numerator object;
 
@@ -42,8 +46,14 @@ public final class NumeratorBuilder extends BuilderScriptAbstract<Numerator, Num
         checkParam("format", executionContext, String.class);
         checkParam("name", executionContext, String.class);
 
-        Numerator numerator = numeratorRepository
-                .createGlobalNumerator(name, format, BigInteger.ZERO, estatioApplicationTenancyRepository.findOrCreateTenancyFor(country));
+        Numerator numerator;
+        if (scopedTo == null) {
+            numerator = numeratorRepository
+                    .createGlobalNumerator(name, format, BigInteger.ZERO, estatioApplicationTenancyRepository.findOrCreateTenancyFor(country));
+        } else {
+            numerator = numeratorRepository
+                    .createScopedNumerator(name, scopedTo, format, BigInteger.ZERO, estatioApplicationTenancyRepository.findOrCreateTenancyFor(country));
+        }
 
         executionContext.addResult(this, name, numerator);
 
@@ -55,5 +65,7 @@ public final class NumeratorBuilder extends BuilderScriptAbstract<Numerator, Num
 
     @Inject
     EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
+
+    @Inject ServiceRegistry2 serviceRegistry;
 
 }

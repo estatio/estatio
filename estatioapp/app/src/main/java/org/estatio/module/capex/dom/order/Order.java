@@ -1,6 +1,7 @@
 package org.estatio.module.capex.dom.order;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -61,6 +62,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.document.dom.api.DocumentService;
 import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
@@ -115,10 +117,17 @@ import lombok.Setter;
                         + "FROM org.estatio.module.capex.dom.order.Order "
                         + "WHERE orderNumber == :orderNumber "),
         @Query(
-                name = "findByExtRefOrderGlobalNumerator", language = "JDOQL",
+                name = "findByBuyerAndBuyerOrderNumber", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.order.Order "
-                        + "WHERE orderNumber.startsWith(:extRefOrderGlobalNumeratorWithTrailingSlash) "),
+                        + "WHERE buyer == :buyer "
+                        + "   && buyerOrderNumber == :buyerOrderNumber "),
+        @Query(
+                name = "findByBuyerAndExtRefOrderGlobalNumerator", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.order.Order "
+                        + "WHERE buyer == :buyer "
+                        + "   && orderNumber.startsWith(:extRefOrderGlobalNumeratorWithTrailingSlash) "),
         @Query(
                 name = "matchByOrderNumber", language = "JDOQL",
                 value = "SELECT "
@@ -153,10 +162,24 @@ import lombok.Setter;
                 name = "findBySeller", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.order.Order "
-                        + "WHERE seller == :seller ")
+                        + "WHERE seller == :seller "),
+        @Query(
+                name = "findByProperty", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.order.Order "
+                        + "WHERE property == :property "
+                        + "ORDER BY entryDate"),
+        @Query(
+                name = "findByPropertyAndSeller", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.order.Order "
+                        + "WHERE property == :property "
+                        + "&& seller == :seller "
+                        + "ORDER BY entryDate")
 })
 @Indices({
-        @Index(name = "Order_sellerOrderReference_IDX", members = { "sellerOrderReference" })
+        @Index(name = "Order_sellerOrderReference_IDX", members = { "sellerOrderReference" }),
+        @Index(name = "Order_buyer_buyerOrderNumber_IDX", members = { "buyer", "buyerOrderNumber" })
 })
 @Unique(name = "Order_reference_UNQ", members = { "orderNumber" })
 @DomainObject(
@@ -256,6 +279,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
                     .map(OrderItem.class::cast)
                     .forEach(x -> x.setProperty(property));
         }
+
         return this;
     }
 
@@ -348,6 +372,14 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     public String disableEditOrderNumber() {
         return orderImmutableReason();
+    }
+
+    @Programmatic
+    private String getOrderIncrement() {
+        if (!getAtPath().startsWith("/ITA"))
+            return null;
+
+        return getOrderNumber().split("/")[0];
     }
 
     @Column(allowsNull = "true", length = 255)
@@ -537,6 +569,12 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return orderImmutableReason();
     }
 
+
+    @Column(allowsNull = "true", scale = 0, length = 8)
+    @PropertyLayout(hidden = Where.ALL_TABLES)
+    @Getter @Setter
+    private BigInteger buyerOrderNumber;
+
     @Persistent(mappedBy = "ordr", dependentElement = "true")
     @Getter @Setter
     private SortedSet<OrderItem> items = new TreeSet<>();
@@ -557,16 +595,16 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             @Nullable final BudgetItem budgetItem
     ) {
         orderItemRepository.upsert(
-                    this, charge, description, netAmount, vatAmount, grossAmount, tax, PeriodUtil.yearFromPeriod(period).startDate(), PeriodUtil.yearFromPeriod(period).endDate(), property, project, budgetItem, determineItemNumber(charge));
+                this, charge, description, netAmount, vatAmount, grossAmount, tax, PeriodUtil.yearFromPeriod(period).startDate(), PeriodUtil.yearFromPeriod(period).endDate(), property, project, budgetItem, determineItemNumber(charge));
 
         return this;
     }
 
-    private int determineItemNumber(final Charge chargeNewItem){
-        if (getAtPath().startsWith("/ITA")){
+    private int determineItemNumber(final Charge chargeNewItem) {
+        if (getAtPath().startsWith("/ITA")) {
             List<OrderItem> itemsWithSameCharge = Lists.newArrayList(getItems()).stream()
-                    .filter(x->x.getCharge()!=null)
-                    .filter(x->x.getCharge().equals(chargeNewItem))
+                    .filter(x -> x.getCharge() != null)
+                    .filter(x -> x.getCharge().equals(chargeNewItem))
                     .collect(Collectors.toList());
             return itemsWithSameCharge.size();
         } else {
@@ -1082,7 +1120,12 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    public Order attachPdf(final Blob pdf) {
+    public Order attachPdf(
+            final Blob pdf,
+            final boolean replaceExistingPdf) {
+        if (replaceExistingPdf)
+            paperclipRepository.deleteIfAttachedTo(this, PaperclipRepository.Policy.PAPERCLIPS_AND_DOCUMENTS_IF_ORPHANED);
+
         return newDocument(pdf);
     }
 
@@ -1137,5 +1180,8 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Inject
     private MeService meService;
+
+    @Inject
+    PaperclipRepository paperclipRepository;
 
 }

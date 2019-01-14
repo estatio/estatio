@@ -63,7 +63,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalState.APPROVED_BY_CORPORATE_MANAGER,
                     IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK,
                     IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER,
-                    IncomingInvoiceApprovalState.PENDING_ADVISE
+                    IncomingInvoiceApprovalState.PENDING_ADVISE,
+                    IncomingInvoiceApprovalState.PAYABLE_BYPASSING_APPROVAL
             ),
             IncomingInvoiceApprovalState.NEW,
             NextTransitionSearchStrategy.firstMatching(),
@@ -88,14 +89,28 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 final IncomingInvoice incomingInvoice, final ServiceRegistry2 serviceRegistry2) {
             /** just to double check; this logic is also present in {@link IncomingInvoiceRepository#create} */
             final boolean isPaid = incomingInvoice.getPaidDate() != null;
-            final boolean hasPaymentMethodOtherThanBankTransfer = incomingInvoice.getPaymentMethod() != null && incomingInvoice.getPaymentMethod() != PaymentMethod.BANK_TRANSFER;
-            if (isItalian(incomingInvoice) && (isPaid || hasPaymentMethodOtherThanBankTransfer)) return true;
+            final boolean approvalNeededForPaymentMethodOrNoPaymentMethod = incomingInvoice.getPaymentMethod() == null || !incomingInvoice.getPaymentMethod().requiresNoApprovalInItaly();
+            if (isItalian(incomingInvoice) && isPaid && approvalNeededForPaymentMethodOrNoPaymentMethod) return true;
             return false;
         }
     },
+    INSTANTIATE_TO_PAYABLE((IncomingInvoiceApprovalState)null,
+            IncomingInvoiceApprovalState.PAYABLE_BYPASSING_APPROVAL,
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.AUTOMATIC){
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice, final ServiceRegistry2 serviceRegistry2) {
+            final boolean noApprovalNeededForPaymentMethod = incomingInvoice.getPaymentMethod() != null && incomingInvoice.getPaymentMethod().requiresNoApprovalInItaly();
+            if (isItalian(incomingInvoice) && noApprovalNeededForPaymentMethod) return true;
+            return false;
+        }
+
+    },
     AUTO_TRANSITION_TO_PENDING_CODA_BOOKS(
             IncomingInvoiceApprovalState.NEW,
-            IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK,
+            IncomingInvoiceApprovalState.PAYABLE_BYPASSING_APPROVAL,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.none(),
             AdvancePolicy.AUTOMATIC
@@ -103,8 +118,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
         @Override
         public boolean isMatch(
                 final IncomingInvoice incomingInvoice, final ServiceRegistry2 serviceRegistry2) {
-            final boolean hasPaymentMethodOtherThanBankTransfer = incomingInvoice.getPaymentMethod() != null && incomingInvoice.getPaymentMethod() != PaymentMethod.BANK_TRANSFER;
-            if (isItalian(incomingInvoice) && hasPaymentMethodOtherThanBankTransfer) return true;
+            final boolean noApprovalNeededForPaymentMethod = incomingInvoice.getPaymentMethod() != null && incomingInvoice.getPaymentMethod().requiresNoApprovalInItaly();
+            if (isItalian(incomingInvoice) && noApprovalNeededForPaymentMethod) return true;
             return false;
         }
     },
@@ -123,7 +138,15 @@ public enum IncomingInvoiceApprovalStateTransitionType
                         IncomingInvoiceApprovalState>) (incomingInvoice, serviceRegistry2) -> {
 
                 if (isItalian(incomingInvoice)) {
-                    if (incomingInvoice.getProperty()!=null && hasPropertyInvoiceManager(incomingInvoice.getProperty())) return FixedAssetRoleTypeEnum.PROPERTY_INV_MANAGER;
+                    if ( incomingInvoice.getProperty()!=null &&
+                         hasPropertyInvoiceManager(incomingInvoice.getProperty()) &&          // ie Carasello, and also...
+                        (
+                            (incomingInvoice.getType()==IncomingInvoiceType.ITA_RECOVERABLE &&       // either IT01 service charges
+                             incomingInvoice.getBuyer().getReference().equals("IT01")         )  ||
+                            incomingInvoice.getBuyer().getReference().equals("IT04")               ) // or everything for IT04
+                        ) {
+                        return FixedAssetRoleTypeEnum.PROPERTY_INV_MANAGER;
+                    }
                     return PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER;
                 }
 
@@ -567,7 +590,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalState.APPROVED,
                     IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
                     IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK,
-                    IncomingInvoiceApprovalState.PAYABLE
+                    IncomingInvoiceApprovalState.PAYABLE,
+                    IncomingInvoiceApprovalState.PAYABLE_BYPASSING_APPROVAL
             ),
             IncomingInvoiceApprovalState.PAID,
             NextTransitionSearchStrategy.none(),

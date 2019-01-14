@@ -8,7 +8,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.ModuleAbstract;
-import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
 
 import org.isisaddons.module.command.dom.CommandDomModule;
 import org.isisaddons.module.fakedata.FakeDataModule;
@@ -20,7 +19,9 @@ import org.incode.platform.dom.communications.integtests.app.services.fakesched.
 import org.incode.platform.dom.communications.integtests.dom.communications.CommunicationsModuleIntegrationSubmodule;
 import org.incode.platform.dom.communications.integtests.dom.document.ClassificationsModuleDocumentDomModule;
 
-public abstract class CommunicationsModuleIntegTestAbstract extends IntegrationTestAbstract3 {
+import org.estatio.module.base.integtests.BaseModuleIntegTestAbstract;
+
+public abstract class CommunicationsModuleIntegTestAbstract extends BaseModuleIntegTestAbstract {
 
     @XmlRootElement(name = "module")
     public static class MyModule extends CommunicationsModuleIntegrationSubmodule {

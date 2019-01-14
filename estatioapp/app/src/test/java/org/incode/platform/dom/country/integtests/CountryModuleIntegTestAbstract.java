@@ -1,10 +1,10 @@
 package org.incode.platform.dom.country.integtests;
 
-import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
-
 import org.incode.module.country.CountryModule;
 
-public abstract class CountryModuleIntegTestAbstract extends IntegrationTestAbstract3 {
+import org.estatio.module.base.integtests.BaseModuleIntegTestAbstract;
+
+public abstract class CountryModuleIntegTestAbstract extends BaseModuleIntegTestAbstract {
 
     protected CountryModuleIntegTestAbstract() {
         super(new CountryModule());

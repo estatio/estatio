@@ -33,6 +33,7 @@ import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
@@ -61,6 +62,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ObjectUpdatingEvent;
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -136,6 +138,7 @@ import lombok.Setter;
         //        updatingLifecycleEvent = Invoice.UpdatingEvent.class
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+@XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public abstract class Invoice<T extends Invoice<T>>
         extends UdoDomainObject2<T>
         implements WithApplicationTenancyAny, WithApplicationTenancyPathPersisted {

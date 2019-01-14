@@ -18,21 +18,16 @@
  */
 package org.estatio.module.lease.integtests;
 
-import org.slf4j.event.Level;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
-import org.apache.isis.core.runtime.headless.logging.LogConfig;
 
+import org.estatio.module.base.integtests.BaseModuleIntegTestAbstract;
 import org.estatio.module.lease.EstatioLeaseModule;
 import org.estatio.module.lease.fixtures.docfrag.enums.DocFragment_demo_enum;
 
-public abstract class LeaseModuleIntegTestAbstract extends IntegrationTestAbstract3 {
+public abstract class LeaseModuleIntegTestAbstract extends BaseModuleIntegTestAbstract {
 
     public LeaseModuleIntegTestAbstract() {
-        super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
-                new EstatioLeaseModule()
-        );
+        super(new EstatioLeaseModule());
     }
 
     @Override

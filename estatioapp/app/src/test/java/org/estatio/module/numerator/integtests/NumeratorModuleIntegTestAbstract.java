@@ -22,28 +22,22 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import org.slf4j.event.Level;
-
 import org.apache.isis.applib.Module;
-import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
-import org.apache.isis.core.runtime.headless.logging.LogConfig;
 
-import org.estatio.module.numerator.EstatioNumeratorModule;
+import org.estatio.module.base.integtests.BaseModuleIntegTestAbstract;
 import org.estatio.module.numerator.integtests.dom.NumeratorModuleNumeratorDomSubmodule;
 
 /**
  * Base class for integration tests.
  */
-public abstract class NumeratorModuleIntegTestAbstract extends IntegrationTestAbstract3 {
+public abstract class NumeratorModuleIntegTestAbstract extends BaseModuleIntegTestAbstract {
 
     public NumeratorModuleIntegTestAbstract() {
-        super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
-                module()
-        );
+        super(module());
     }
 
-    public static EstatioNumeratorModule module() {
-        return new EstatioNumeratorModule() {
+    public static NumeratorModuleNumeratorDomSubmodule module() {
+        return new NumeratorModuleNumeratorDomSubmodule() {
             @Override
             public Set<Module> getDependencies() {
                 return Sets.newHashSet(new NumeratorModuleNumeratorDomSubmodule());

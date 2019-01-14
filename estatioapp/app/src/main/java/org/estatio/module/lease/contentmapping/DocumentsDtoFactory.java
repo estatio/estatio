@@ -46,6 +46,9 @@ public class DocumentsDtoFactory extends DtoFactoryAbstract<List, DocumentsDto> 
 
     DocumentsDto internalNewDto(final List<Document> documents) {
         final DocumentsDto documentsDto = new DocumentsDto();
+        documentsDto.setMajorVersion("2");
+        documentsDto.setMinorVersion("0");
+
         documents.forEach(document -> documentsDto.getDocuments().add(newDto(document)));
         return documentsDto;
     }

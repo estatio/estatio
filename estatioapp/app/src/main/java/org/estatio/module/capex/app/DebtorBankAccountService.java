@@ -40,6 +40,18 @@ public class DebtorBankAccountService {
             bankAccountsForBuyer.retainAll(bankAccountsForProperty);
         }
 
+        return uniqueOrPreferredElseNull(bankAccountsForBuyer);
+    }
+
+    @Programmatic
+    public BankAccount uniqueDebtorAccountToPay(final Party buyer){
+
+        List<BankAccount> bankAccountsForBuyer = bankAccountRepository.findBankAccountsByOwner(buyer);
+
+        return uniqueOrPreferredElseNull(bankAccountsForBuyer);
+    }
+
+    private BankAccount uniqueOrPreferredElseNull(final List<BankAccount> bankAccountsForBuyer) {
         // original implementation ... see if we already have a unique bank account
         int numBankAccounts = bankAccountsForBuyer.size();
         switch (numBankAccounts) {
@@ -65,6 +77,8 @@ public class DebtorBankAccountService {
             return null;
         }
     }
+
+
 
     @Inject
     BankAccountRepository bankAccountRepository;

@@ -18,17 +18,12 @@
  */
 package org.estatio.module.bankmandate.integtests;
 
-import org.slf4j.event.Level;
-
-import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
-import org.apache.isis.core.runtime.headless.logging.LogConfig;
-
 import org.estatio.module.bankmandate.EstatioBankMandateModule;
+import org.estatio.module.base.integtests.BaseModuleIntegTestAbstract;
 
-public abstract class BankMandateModuleIntegTestAbstract extends IntegrationTestAbstract3 {
+public abstract class BankMandateModuleIntegTestAbstract extends BaseModuleIntegTestAbstract {
 
     public BankMandateModuleIntegTestAbstract() {
-        super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
-                new EstatioBankMandateModule());
+        super(new EstatioBankMandateModule());
     }
 }

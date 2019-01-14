@@ -18,22 +18,35 @@
  */
 package org.estatio.module.numerator.integtests.dom;
 
+import java.util.Set;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.google.common.collect.Sets;
+
+import org.apache.isis.applib.Module;
 import org.apache.isis.applib.ModuleAbstract;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
 
-import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
+import org.estatio.module.numerator.EstatioNumeratorModule;
+import org.estatio.module.numerator.dom.Numerator;
 
 @XmlRootElement(name = "module")
 public class NumeratorModuleNumeratorDomSubmodule extends ModuleAbstract {
 
     @Override
-    public FixtureScript getTeardownFixture(){
-        return new TeardownFixtureAbstract() {
+    public Set<Module> getDependencies() {
+        return Sets.newHashSet(new EstatioNumeratorModule());
+    }
+
+    @Override
+    public FixtureScript getTeardownFixture() {
+        return new TeardownFixtureAbstract2() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
                 deleteFrom(NumeratorExampleObject.class);
+                deleteFrom(Numerator.class);
             }
         };
     }

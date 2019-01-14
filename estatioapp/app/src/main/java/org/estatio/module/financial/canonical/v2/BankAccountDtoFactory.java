@@ -21,6 +21,8 @@ public class BankAccountDtoFactory extends DtoFactoryAbstract<BankAccount, BankA
     @Programmatic
     public BankAccountDto newDto(final BankAccount bankAccount) {
         final BankAccountDto dto = new BankAccountDto();
+        dto.setMajorVersion("2");
+        dto.setMinorVersion("0");
 
         dto.setSelf(mappingHelper.oidDtoFor(bankAccount));
         dto.setAtPath(bankAccount.getAtPath());

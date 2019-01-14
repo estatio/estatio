@@ -41,6 +41,7 @@ import org.estatio.module.budget.fixtures.keytables.enums.KeyTable_enum;
 import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
 import org.estatio.module.capex.fixtures.document.enums.IncomingPdf_enum;
 import org.estatio.module.capex.fixtures.incominginvoice.enums.IncomingInvoice_enum;
+import org.estatio.module.capex.fixtures.order.enums.NumeratorForOrder_enum;
 import org.estatio.module.capex.fixtures.order.enums.Order_enum;
 import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceImportForDemoXlsxFixture;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
@@ -68,6 +69,7 @@ import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRe
 import org.estatio.module.lease.seed.DocFragment_enum;
 import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
 import org.estatio.module.party.fixtures.numerator.enums.NumeratorForOrganisation_enum;
+import org.estatio.module.party.fixtures.roles.enums.PartyRole_enum;
 import org.estatio.module.tax.EstatioTaxModule;
 
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Global;
@@ -157,6 +159,12 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
         ec.executeChildren(this,
                 NumeratorForOrganisation_enum.Fra);
+
+        ec.executeChildren(this,
+                NumeratorForOrder_enum.ItaScopedToHelloWorldIt);
+
+        ec.executeChildren(this,
+                PartyRole_enum.HelloWorldIt_as_ECP);
 
         ec.executeChildren(this,
                 BankAccount_enum.AcmeNl,

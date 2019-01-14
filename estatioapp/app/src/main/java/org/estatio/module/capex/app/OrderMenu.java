@@ -1,7 +1,6 @@
 package org.estatio.module.capex.app;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -22,24 +21,22 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
-import org.apache.isis.applib.services.user.UserService;
 
 import org.isisaddons.module.excel.dom.ExcelService;
+import org.isisaddons.module.excel.dom.util.Mode;
 import org.isisaddons.module.security.app.user.MeService;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.capex.imports.OrderProjectImportAdapter;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
@@ -74,7 +71,7 @@ public class OrderMenu {
             @Nullable @Parameter(maxLength = 3) final String multiPropertyReference,
             final Project project,
             final Charge charge,
-            @Nullable final Organisation buyer,
+            final Organisation buyer,
             @Nullable final Organisation supplier,
             final LocalDate orderDate,
             @Nullable final BigDecimal netAmount,
@@ -101,6 +98,9 @@ public class OrderMenu {
         if (property != null && multiPropertyReference != null)
             return "Can not define both property and multi property reference";
 
+        if (numeratorRepository.findNumerator("Order number", buyer, buyer.getApplicationTenancy()) == null)
+            return "No order number numerator found for this buyer";
+
         return null;
     }
 
@@ -126,26 +126,39 @@ public class OrderMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
     public List<Order> findOrder(
-            @Nullable final String barcode,
+            @Nullable final String barcodeOrOrderNumber,
             @Nullable final String sellerNameOrReference,
             @ParameterLayout(named = "Order Date (Approximately)")
             @Nullable final LocalDate orderDate
     ) {
         return new OrderMenu.OrderFinder(orderRepository, partyRepository)
-                .filterOrFindByDocumentName(barcode)
+                .filterOrFindByDocumentName(barcodeOrOrderNumber)
                 .filterOrFindBySeller(sellerNameOrReference)
                 .filterOrFindByOrderDate(orderDate)
                 .getResult();
     }
 
-    public String validateFindOrder(final String barcode, final String sellerNameOfReference, final LocalDate orderDate) {
-        if (barcode != null && barcode.length() < 3) {
-            return "Give at least 3 characters for barcode (document name)";
+    public String validateFindOrder(final String barcodeOrOrderNumber, final String sellerNameOfReference, final LocalDate orderDate) {
+        if (barcodeOrOrderNumber != null && barcodeOrOrderNumber.length() < 3) {
+            return "Give at least 3 characters for barcode/order number (document name)";
         }
         if (sellerNameOfReference != null && sellerNameOfReference.length() < 3) {
             return "Give at least 3 characters for seller name or reference";
         }
         return null;
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<Order> findOrdersByCenter(final Property center) {
+        return orderRepository.findByProperty(center);
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<Order> findOrdersByCenterAndSupplier(
+            final Property center,
+            final Organisation supplier
+    ) {
+        return orderRepository.findByPropertyAndSeller(center, supplier);
     }
 
     static class OrderFinder {
@@ -167,7 +180,8 @@ public class OrderMenu {
             if (barcode == null)
                 return this;
 
-            List<Order> resultsForBarcode = orderRepository.findOrderByDocumentName(barcode);
+            // the query itself already matches on substrings, so user wildcards act as a 'placebo' and are removed
+            List<Order> resultsForBarcode = orderRepository.findOrderByDocumentName(barcode.replace("*", ""));
             if (!this.result.isEmpty()) {
                 filterByDocumentNameResults(resultsForBarcode);
             } else {
@@ -303,18 +317,21 @@ public class OrderMenu {
         return orderRepository.matchByOrderNumber(orderNumber);
     }
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT, restrictTo = RestrictTo.PROTOTYPING)
-    public Numerator createOrderNumberNumerator(final String format, final String atPath) {
-        return numeratorRepository.findOrCreateNumerator(
-                "Order number",
-                null,
-                format,
-                BigInteger.ZERO,
-                applicationTenancyRepository.findByPath(atPath));
-    }
+    ///////////////////////////////////////////
 
-    public String validateCreateOrderNumberNumerator(final String format, final String atPath) {
-        return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser()) ? "You need administrator rights to create an order numerator" : null;
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public List<Order> importOrdersItaly(final org.apache.isis.applib.value.Blob orderSheet) {
+        List<Order> result = new ArrayList<>();
+        for (OrderProjectImportAdapter adapter : excelService.fromExcel(orderSheet, OrderProjectImportAdapter.class, "ECP Juma", Mode.RELAXED)) {
+            adapter.handle(null);
+            if (adapter.deriveOrderNumber() != null) {
+                Order order = orderRepository.findByOrderNumber(adapter.deriveOrderNumber());
+                if (order != null && !result.contains(order)) {
+                    result.add(order);
+                }
+            }
+        }
+        return result;
     }
 
     @Inject
@@ -330,15 +347,11 @@ public class OrderMenu {
     NumeratorRepository numeratorRepository;
 
     @Inject
-    ApplicationTenancyRepository applicationTenancyRepository;
-
-    @Inject
-    UserService userService;
-
-    @Inject
     MeService meService;
 
-    @Inject ExcelService excelService;
+    @Inject
+    ChargeRepository chargeRepository;
 
-    @Inject ChargeRepository chargeRepository;
+    @Inject
+    ExcelService excelService;
 }

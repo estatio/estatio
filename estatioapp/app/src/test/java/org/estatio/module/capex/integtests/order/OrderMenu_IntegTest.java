@@ -25,11 +25,13 @@ import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.order.approval.transitions.Order_approvalTransitions;
 import org.estatio.module.capex.dom.order.approval.triggers.Order_completeWithApproval;
 import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.capex.fixtures.order.enums.NumeratorForOrder_enum;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesItaXlsxFixture;
 import org.estatio.module.charge.fixtures.incoming.enums.IncomingCharge_enum;
+import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
@@ -57,6 +59,7 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
                     executionContext.executeChild(this, Project_enum.RonProjectIt.builder());
                     executionContext.executeChild(this, Person_enum.CarmenIncomingInvoiceManagerIt.builder());
                     executionContext.executeChild(this, Person_enum.JonathanIncomingInvoiceManagerGb.builder());
+                    executionContext.executeChild(this, NumeratorForOrder_enum.ItaScopedToHelloWorldIt.builder());
                 }
             });
         }
@@ -67,13 +70,15 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
             final Property property = PropertyAndUnitsAndOwnerAndManager_enum.RonIt.getProperty_d().findUsing(serviceRegistry);
             final Project project = Project_enum.RonProjectIt.findUsing(serviceRegistry);
             final Charge charge = IncomingCharge_enum.ItAcquisition.findUsing(serviceRegistry);
+            final Organisation buyer = Organisation_enum.HelloWorldIt.findUsing(serviceRegistry);
+            final Numerator numerator = NumeratorForOrder_enum.ItaScopedToHelloWorldIt.findUsing(serviceRegistry);
 
             final Person incomingInvoiceManager = Person_enum.CarmenIncomingInvoiceManagerIt.findUsing(serviceRegistry);
 
             // when
             queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
             final Order order = sudoService.sudo(incomingInvoiceManager.getUsername(), () ->
-                    wrap(orderMenu).createOrder(property, null, project, charge, null, null, orderMenu.default6CreateOrder(), null, null, null));
+                    wrap(orderMenu).createOrder(property, null, project, charge, buyer, null, orderMenu.default6CreateOrder(), null, null, null));
 
             // then
             assertThat(order.getOrderNumber()).isEqualTo("0001/RON/001/001");
@@ -97,6 +102,7 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
             final Charge charge = IncomingCharge_enum.ItAcquisition.findUsing(serviceRegistry);
             final Organisation buyer = Organisation_enum.HelloWorldIt.findUsing(serviceRegistry);
             final Organisation supplier = Organisation_enum.TopModelIt.findUsing(serviceRegistry);
+            final Numerator numerator = NumeratorForOrder_enum.ItaScopedToHelloWorldIt.findUsing(serviceRegistry);
 
             final Person incomingInvoiceManager = Person_enum.CarmenIncomingInvoiceManagerIt.findUsing(serviceRegistry);
 
@@ -135,6 +141,7 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
             final Property property = PropertyAndUnitsAndOwnerAndManager_enum.RonIt.getProperty_d().findUsing(serviceRegistry);
             final Project project = Project_enum.RonProjectIt.findUsing(serviceRegistry);
             final Charge charge = IncomingCharge_enum.ItAcquisition.findUsing(serviceRegistry);
+            final Organisation buyer = Organisation_enum.HelloWorldIt.findUsing(serviceRegistry);
 
             final Person incomingInvoiceManager = Person_enum.JonathanIncomingInvoiceManagerGb.findUsing(serviceRegistry);
 
@@ -143,7 +150,7 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
 
             // when
             sudoService.sudo(incomingInvoiceManager.getUsername(), () ->
-                    wrap(orderMenu).createOrder(property, null, project, charge, null, null, orderMenu.default6CreateOrder(), null, null, null));
+                    wrap(orderMenu).createOrder(property, null, project, charge, buyer, null, orderMenu.default6CreateOrder(), null, null, null));
         }
 
         @Test
@@ -152,6 +159,7 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
             final Property property = PropertyAndUnitsAndOwnerAndManager_enum.RonIt.getProperty_d().findUsing(serviceRegistry);
             final Project project = Project_enum.RonProjectIt.findUsing(serviceRegistry);
             final Charge charge = IncomingCharge_enum.ItAcquisition.findUsing(serviceRegistry);
+            final Organisation buyer = Organisation_enum.HelloWorldIt.findUsing(serviceRegistry);
 
             final Person incomingInvoiceManager = Person_enum.CarmenIncomingInvoiceManagerIt.findUsing(serviceRegistry);
 
@@ -161,15 +169,16 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
 
             // when
             sudoService.sudo(incomingInvoiceManager.getUsername(), () ->
-                    wrap(orderMenu).createOrder(property, "GEN", project, charge, null, null, orderMenu.default6CreateOrder(), null, null, null));
+                    wrap(orderMenu).createOrder(property, "GEN", project, charge, buyer, null, orderMenu.default6CreateOrder(), null, null, null));
         }
 
         @Test
-        public void createOrderForItaly_sadCase_neither_property_and_ref() throws Exception {
+        public void createOrderForItaly_sadCase_neither_property_or_ref() throws Exception {
             // given
             final Property property = PropertyAndUnitsAndOwnerAndManager_enum.RonIt.getProperty_d().findUsing(serviceRegistry);
             final Project project = Project_enum.RonProjectIt.findUsing(serviceRegistry);
             final Charge charge = IncomingCharge_enum.ItAcquisition.findUsing(serviceRegistry);
+            final Organisation buyer = Organisation_enum.HelloWorldIt.findUsing(serviceRegistry);
 
             final Person incomingInvoiceManager = Person_enum.CarmenIncomingInvoiceManagerIt.findUsing(serviceRegistry);
 
@@ -179,8 +188,26 @@ public class OrderMenu_IntegTest extends CapexModuleIntegTestAbstract {
 
             // when
             sudoService.sudo(incomingInvoiceManager.getUsername(), () ->
-                    wrap(orderMenu).createOrder(null, null, project, charge, null, null, orderMenu.default6CreateOrder(), null, null, null));
+                    wrap(orderMenu).createOrder(null, null, project, charge, buyer, null, orderMenu.default6CreateOrder(), null, null, null));
         }
 
+        @Test
+        public void createOrderForItaly_sadCase_no_numerator() throws Exception {
+            // given
+            final Property property = PropertyAndUnitsAndOwnerAndManager_enum.RonIt.getProperty_d().findUsing(serviceRegistry);
+            final Project project = Project_enum.RonProjectIt.findUsing(serviceRegistry);
+            final Charge charge = IncomingCharge_enum.ItAcquisition.findUsing(serviceRegistry);
+            final Organisation buyer = Organisation_enum.TopModelIt.findUsing(serviceRegistry);
+
+            final Person incomingInvoiceManager = Person_enum.CarmenIncomingInvoiceManagerIt.findUsing(serviceRegistry);
+
+            // then
+            expectedExceptions.expect(InvalidException.class);
+            expectedExceptions.expectMessage("No order number numerator found for this buyer");
+
+            // when
+            final Order order = sudoService.sudo(incomingInvoiceManager.getUsername(), () ->
+                    wrap(orderMenu).createOrder(property, null, project, charge, buyer, null, orderMenu.default6CreateOrder(), null, null, null));
+        }
     }
 }

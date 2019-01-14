@@ -44,6 +44,27 @@ import lombok.Setter;
         ,schema = "dbo" // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+@javax.jdo.annotations.Queries({
+            /*
+            select distinct i.invoiceNumber, i.invoiceDate
+              from Invoice i
+              join PaperclipForInvoice PFI on i.id = PFI.invoiceId
+              join incodeDocuments.Paperclip p on PFI.id = p.id
+              join incodeDocuments.DocumentAbstract d on p.documentId = d.id
+              join incodeDocuments.DocumentType dt on d.typeId = dt.id
+             where 1=1
+               and dt.reference in ('SUPPLIER-RECEIPT','TAX-REGISTER')
+               and i.invoiceDate >= '1-Jan-2018' and i.invoiceDate < '1-Jan-2019'
+            */
+        @javax.jdo.annotations.Query(
+                name = "findInvoicesByInvoiceDateBetweenWithSupportingDocuments", language = "JDOQL",
+                value = "SELECT DISTINCT invoice " +
+                        "  FROM org.estatio.module.invoice.dom.paperclips.PaperclipForInvoice " +
+                        " WHERE (document.type.reference == 'TAX-REGISTER' || document.type.reference == 'SUPPLIER-RECEIPT') " +
+                        "    && invoice.invoiceDate >= :invoiceDateFrom " +
+                        "    && invoice.invoiceDate <  :invoiceDateTo " +
+                        " ORDER BY invoice.invoiceNumber"),
+})
 @DomainObject(
         objectType = "org.estatio.dom.invoice.paperclips.PaperclipForInvoice"
 )
