@@ -301,13 +301,13 @@ public class EstatioAppHomePage {
     @Collection(notPersisted = true)
     public List<IncomingInvoice> getIncomingInvoicesItaPayableDirectDebit() {
         return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalStateAndPaymentMethod(
-                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.DIRECT_DEBIT);
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PAYABLE_BYPASSING_APPROVAL, PaymentMethod.DIRECT_DEBIT);
     }
 
     @Collection(notPersisted = true)
     public List<IncomingInvoice> getIncomingInvoicesItaPayableManualProcess() {
         return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalStateAndPaymentMethod(
-                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.MANUAL_PROCESS);
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PAYABLE_BYPASSING_APPROVAL, PaymentMethod.MANUAL_PROCESS);
     }
 
     @Collection(notPersisted = true)
