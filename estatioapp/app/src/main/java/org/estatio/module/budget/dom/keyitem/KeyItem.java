@@ -163,7 +163,7 @@ public class KeyItem extends PartitioningTableItem
     public BigDecimal getDivCalculatedSourceValue(){
         KeyTable keyTable = (KeyTable) getPartitioningTable();
         if (keyTable.getFoundationValueType() == FoundationValueType.AREA) {
-            return getUnit().getArea().subtract(getSourceValue()).setScale(6, RoundingMode.HALF_UP);
+            return getUnit().getArea() != null ? getUnit().getArea().subtract(getSourceValue()).setScale(6, RoundingMode.HALF_UP) : BigDecimal.ZERO;
         }
         return BigDecimal.ZERO;
     }
