@@ -44,8 +44,11 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 
+import org.estatio.module.budget.dom.keyitem.DirectCost;
+import org.estatio.module.budget.dom.keytable.DirectCostTable;
 import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
 import org.estatio.module.budgetassignment.imports.BudgetOverrideImportExport;
+import org.estatio.module.budgetassignment.imports.DirectCostLine;
 import org.estatio.module.budgetassignment.imports.KeyItemImportExportLineItem;
 import org.estatio.module.budgetassignment.imports.KeyItemImportExportService;
 import org.estatio.module.budgetassignment.imports.Status;
@@ -127,6 +130,15 @@ public class BudgetImportExportManager {
         return result;
     }
 
+    public List<DirectCostLine> getDirectCostLines() {
+        List<DirectCostLine> result = new ArrayList<>();
+        if (getBudget()==null){return result;} // for import from menu where budget unknown
+        for (DirectCostTable directCostTable : this.getBudget().getDirectCostTables()){
+            result.addAll(keyItemImportExportService.directCosts(directCostTable.getItems()));
+        }
+        return result;
+    }
+
     public List<BudgetOverrideImportExport> getOverrides() {
         List<BudgetOverrideImportExport> result = new ArrayList<>();
         if (getBudget()==null){return result;} // for import from menu where budget unknown
@@ -150,10 +162,11 @@ public class BudgetImportExportManager {
 
         WorksheetSpec spec1 = new WorksheetSpec(BudgetImportExport.class, "budget");
         WorksheetSpec spec2 = new WorksheetSpec(KeyItemImportExportLineItem.class, "keyItems");
-        WorksheetSpec spec3 = new WorksheetSpec(BudgetOverrideImportExport.class, "overrides");
-        WorksheetSpec spec4 = new WorksheetSpec(ChargeImport.class, "charges");
+        WorksheetSpec spec3 = new WorksheetSpec(DirectCostLine.class, "directCosts");
+        WorksheetSpec spec4 = new WorksheetSpec(BudgetOverrideImportExport.class, "overrides");
+        WorksheetSpec spec5 = new WorksheetSpec(ChargeImport.class, "charges");
         List<List<?>> objects =
-                excelService.fromExcel(spreadsheet, Arrays.asList(spec1, spec2, spec3, spec4));
+                excelService.fromExcel(spreadsheet, Arrays.asList(spec1, spec2, spec3, spec4, spec5));
 
         // first upsert charges
         List<ChargeImport> chargeImportLines = (List<ChargeImport>) objects.get(3);
@@ -166,6 +179,9 @@ public class BudgetImportExportManager {
 
         // import keyTables
         importKeyTables(budgetItemLines, objects);
+
+        // import directCosts
+        importDirectCostTables(budgetItemLines, objects);
 
         // import overrides
         importOverrides(objects);
@@ -225,9 +241,61 @@ public class BudgetImportExportManager {
     private List<KeyTable> keyTablesToImport(final List<BudgetImportExport> lineItems){
         List<KeyTable> result = new ArrayList<>();
         for (BudgetImportExport lineItem :lineItems) {
-            KeyTable foundKeyTable = (KeyTable) partitioningTableRepository.findByBudgetAndName(getBudget(), lineItem.getKeyTableName());
-            if (foundKeyTable!=null && !result.contains(foundKeyTable)) {
-                result.add(foundKeyTable);
+            if (PartitioningTableType.valueOf(lineItem.getTableType()) == PartitioningTableType.KEY_TABLE) {
+                KeyTable foundKeyTable = (KeyTable) partitioningTableRepository.findByBudgetAndName(getBudget(), lineItem.getPartitioningTableName());
+                if (foundKeyTable != null && !result.contains(foundKeyTable)) {
+                    result.add(foundKeyTable);
+                }
+            }
+        }
+        return result;
+    }
+
+    private void importDirectCostTables(final List<BudgetImportExport> budgetItemLines, final List<List<?>> objects){
+
+        List<DirectCostTable> tablesToImport = directCostTablesToImport(budgetItemLines);
+        List<DirectCostLine> lines = (List<DirectCostLine>) objects.get(1);
+
+        // filter case where no key items are filled in
+        if (lines.size() == 0) {return;}
+
+        for (DirectCostTable table : tablesToImport){
+            List<DirectCostLine> itemsToImportForTable = new ArrayList<>();
+            for (DirectCostLine line : lines){
+                if (line.getDirectCostTableName().equals(table.getName())){
+                    itemsToImportForTable.add(new DirectCostLine(line));
+                }
+            }
+            for (DirectCost directCost : table.getItems()) {
+                Boolean itemFound = false;
+                for (DirectCostLine lineItem : itemsToImportForTable){
+                    if (lineItem.getUnitReference().equals(directCost.getUnit().getReference())){
+                        itemFound = true;
+                        break;
+                    }
+                }
+                if (!itemFound) {
+                    DirectCostLine deletedItem = new DirectCostLine(directCost);
+                    deletedItem.setStatus(Status.DELETED);
+                    itemsToImportForTable.add(deletedItem);
+                }
+            }
+            for (DirectCostLine item : itemsToImportForTable){
+                serviceRegistry2.injectServicesInto(item);
+                item.validate();
+                item.apply();
+            }
+        }
+    }
+
+    private List<DirectCostTable> directCostTablesToImport(final List<BudgetImportExport> lineItems){
+        List<DirectCostTable> result = new ArrayList<>();
+        for (BudgetImportExport lineItem :lineItems) {
+            if (PartitioningTableType.valueOf(lineItem.getTableType()) == PartitioningTableType.DIRECT_COST_TABLE) {
+                DirectCostTable foundTable = (DirectCostTable) partitioningTableRepository.findByBudgetAndName(getBudget(), lineItem.getPartitioningTableName());
+                if (foundTable != null && !result.contains(foundTable)) {
+                    result.add(foundTable);
+                }
             }
         }
         return result;
@@ -246,13 +314,15 @@ public class BudgetImportExportManager {
         final String fileName = withExtension(getFileName(), ".xlsx");
         WorksheetSpec spec1 = new WorksheetSpec(BudgetImportExport.class, "budget");
         WorksheetSpec spec2 = new WorksheetSpec(KeyItemImportExportLineItem.class, "keyItems");
-        WorksheetSpec spec3 = new WorksheetSpec(BudgetOverrideImportExport.class, "overrides");
-        WorksheetSpec spec4 = new WorksheetSpec(ChargeImport.class, "charges");
+        WorksheetSpec spec3 = new WorksheetSpec(DirectCostLine.class, "directCosts");
+        WorksheetSpec spec4 = new WorksheetSpec(BudgetOverrideImportExport.class, "overrides");
+        WorksheetSpec spec5 = new WorksheetSpec(ChargeImport.class, "charges");
         WorksheetContent worksheetContent = new WorksheetContent(getLines(), spec1);
         WorksheetContent keyItemsContent = new WorksheetContent(getKeyItemLines(), spec2);
-        WorksheetContent overridesContent = new WorksheetContent(getOverrides(), spec3);
-        WorksheetContent chargesContent = new WorksheetContent(getCharges(), spec4);
-        return excelService.toExcel(Arrays.asList(worksheetContent, keyItemsContent, overridesContent, chargesContent), fileName);
+        WorksheetContent directCostsContent = new WorksheetContent(getDirectCostLines(), spec3);
+        WorksheetContent overridesContent = new WorksheetContent(getOverrides(), spec4);
+        WorksheetContent chargesContent = new WorksheetContent(getCharges(), spec5);
+        return excelService.toExcel(Arrays.asList(worksheetContent, keyItemsContent, directCostsContent, overridesContent, chargesContent), fileName);
 
     }
 

@@ -28,6 +28,8 @@ import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemRepository;
+import org.estatio.module.budget.dom.keytable.DirectCostTable;
+import org.estatio.module.budget.dom.keytable.DirectCostTableRepository;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.KeyTableRepository;
@@ -63,21 +65,22 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
             final String incomingChargeReference,
             final BigDecimal budgetedValue,
             final BigDecimal auditedValue,
-            final String keyTableName,
+            final String partitioningTableName,
             final String foundationValueType,
             final String keyValueMethod,
             final String outgoingChargeReference,
             final BigDecimal percentage,
             final BigDecimal fixedBudgetedAmount,
             final BigDecimal fixedAuditedAmount,
-            final String calculationDescription){
+            final String calculationDescription,
+            final String tableType){
         this.propertyReference = propertyReference;
         this.budgetStartDate = budgetStartDate;
         this.budgetEndDate = budgetEndDate;
         this.incomingChargeReference = incomingChargeReference;
         this.budgetedValue = budgetedValue;
         this.auditedValue = auditedValue;
-        this.keyTableName = keyTableName;
+        this.partitioningTableName = partitioningTableName;
         this.foundationValueType = foundationValueType;
         this.keyValueMethod = keyValueMethod;
         this.outgoingChargeReference = outgoingChargeReference;
@@ -85,6 +88,7 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
         this.fixedBudgetedAmount = fixedBudgetedAmount;
         this.fixedAuditedAmount = fixedAuditedAmount;
         this.calculationDescription = calculationDescription;
+        this.tableType = tableType;
     }
 
     @Getter @Setter
@@ -107,7 +111,7 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
     private BigDecimal auditedValue;
     @Getter @Setter
     @MemberOrder(sequence = "9")
-    private String keyTableName;
+    private String partitioningTableName;
     @Getter @Setter
     @MemberOrder(sequence = "10")
     private String foundationValueType;
@@ -129,6 +133,9 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
     @Getter @Setter
     @MemberOrder(sequence = "8")
     private String calculationDescription;
+    @Getter @Setter
+    @MemberOrder(sequence = "15")
+    private String tableType;
 
 
     @Override
@@ -139,8 +146,11 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
         }
         Charge incomingCharge = fetchCharge(getIncomingChargeReference());
         BudgetItem budgetItem = findOrCreateBudgetAndBudgetItem(incomingCharge);
-        if (getOutgoingChargeReference()!=null && getKeyTableName()!=null && getFoundationValueType()!=null && getKeyValueMethod()!=null) {
-           findOrCreatePartitionItem(budgetItem);
+        if (getOutgoingChargeReference()!=null && getPartitioningTableName()!=null) {
+            final PartitioningTableType partitioningTableType = PartitioningTableType.valueOf(getTableType());
+            if (partitioningTableType == PartitioningTableType.KEY_TABLE && getKeyValueMethod()!=null && getFoundationValueType()!=null) {
+                findOrCreatePartitionItem(budgetItem, partitioningTableType);
+            }
         }
         return Lists.newArrayList(budgetItem.getBudget());
     }
@@ -171,10 +181,17 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
         return budgetItem;
     }
 
-    private PartitionItem findOrCreatePartitionItem(final BudgetItem budgetItem){
+    private PartitionItem findOrCreatePartitionItem(final BudgetItem budgetItem, final PartitioningTableType partitioningTableType) {
         Charge targetCharge = fetchCharge(getOutgoingChargeReference());
-        KeyTable keyTable = findOrCreateKeyTable(budgetItem.getBudget(), getKeyTableName(), getFoundationValueType(), getKeyValueMethod());
-        return budgetItem.updateOrCreatePartitionItem(targetCharge, keyTable, getPercentage()==null ? BigDecimal.ZERO : getPercentage(), getFixedBudgetedAmount()==null || getFixedBudgetedAmount().equals(BigDecimal.ZERO) ? null : getFixedBudgetedAmount(), getFixedAuditedAmount()==null || getFixedAuditedAmount().equals(BigDecimal.ZERO) ? null : getFixedAuditedAmount());
+        if (partitioningTableType == PartitioningTableType.KEY_TABLE) {
+            KeyTable keyTable = findOrCreateKeyTable(budgetItem.getBudget(), getPartitioningTableName(), getFoundationValueType(), getKeyValueMethod());
+            return budgetItem.updateOrCreatePartitionItem(targetCharge, keyTable, getPercentage() == null ? BigDecimal.ZERO : getPercentage(), getFixedBudgetedAmount() == null || getFixedBudgetedAmount().equals(BigDecimal.ZERO) ? null : getFixedBudgetedAmount(),
+                    getFixedAuditedAmount() == null || getFixedAuditedAmount().equals(BigDecimal.ZERO) ? null : getFixedAuditedAmount());
+        } else {
+            DirectCostTable directCostTable = findOrCreateDirectCostTable(budgetItem.getBudget(), getPartitioningTableName());
+            return budgetItem.updateOrCreatePartitionItem(targetCharge, directCostTable, getPercentage() == null ? BigDecimal.ZERO : getPercentage(), getFixedBudgetedAmount() == null || getFixedBudgetedAmount().equals(BigDecimal.ZERO) ? null : getFixedBudgetedAmount(),
+                    getFixedAuditedAmount() == null || getFixedAuditedAmount().equals(BigDecimal.ZERO) ? null : getFixedAuditedAmount());
+        }
     }
 
     private Charge fetchCharge(final String chargeReference) {
@@ -188,6 +205,10 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
 
     private KeyTable findOrCreateKeyTable(final Budget budget, final String keyTableName, final String foundationValueType, final String keyValueMethod){
        return keyTableRepository.findOrCreateBudgetKeyTable(budget, keyTableName, FoundationValueType.valueOf(foundationValueType), KeyValueMethod.valueOf(keyValueMethod), 6);
+    }
+
+    private DirectCostTable findOrCreateDirectCostTable(final Budget budget, final String directCostTableName){
+        return directCostTableRepository.findOrCreateDirectCostTable(budget, directCostTableName);
     }
 
     /**
@@ -233,5 +254,8 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
 
     @Inject
     private IncomingInvoiceItemRepository incomingInvoiceItemRepository;
+
+    @Inject
+    private DirectCostTableRepository directCostTableRepository;
 
 }

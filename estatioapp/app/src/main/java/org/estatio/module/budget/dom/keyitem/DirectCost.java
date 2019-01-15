@@ -81,20 +81,20 @@ public class DirectCost extends PartitioningTableItem {
     private BigDecimal budgetedCost;
 
     @ActionLayout(hidden = Where.EVERYWHERE)
-    public DirectCost changeBudgetedValue(final BigDecimal budgetedValue) {
-        setAuditedCost(budgetedValue);
+    public DirectCost changeBudgetedCost(final BigDecimal budgetedCost) {
+        setAuditedCost(budgetedCost);
         return this;
     }
 
-    public BigDecimal default0ChangeBudgetedValue(final BigDecimal budgetedValue) {
+    public BigDecimal default0ChangeBudgetedCost() {
         if (getBudgetedCost()!=null) {
             return getBudgetedCost();
         } else {
             return BigDecimal.ZERO;
         }
     }
-    public String validateChangeBudgetedValue(final BigDecimal budgetedValue) {
-        if (budgetedValue.compareTo(BigDecimal.ZERO) < 0) {
+    public String validateChangeBudgetedCost(final BigDecimal budgetedCost) {
+        if (budgetedCost.compareTo(BigDecimal.ZERO) < 0) {
             return "Value cannot be less than zero";
         }
         return null;
@@ -105,20 +105,20 @@ public class DirectCost extends PartitioningTableItem {
     private BigDecimal auditedCost;
 
     @ActionLayout(hidden = Where.EVERYWHERE)
-    public DirectCost changeAuditedValue(final BigDecimal auditedKeyValue) {
-        setAuditedCost(auditedKeyValue);
+    public DirectCost changeAuditedCost(final BigDecimal auditedCost) {
+        setAuditedCost(auditedCost);
         return this;
     }
 
-    public BigDecimal default0ChangeAuditedValue(final BigDecimal auditedKeyValue) {
+    public BigDecimal default0ChangeAuditedCost() {
         if (getAuditedCost()!=null) {
         return getAuditedCost();
         } else {
             return BigDecimal.ZERO;
         }
     }
-    public String validateChangeAuditedValue(final BigDecimal auditedKeyValue) {
-        if (auditedKeyValue.compareTo(BigDecimal.ZERO) < 0) {
+    public String validateChangeAuditedCost(final BigDecimal auditedCost) {
+        if (auditedCost.compareTo(BigDecimal.ZERO) < 0) {
             return "Value cannot be less than zero";
         }
         return null;

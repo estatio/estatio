@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
+import org.estatio.module.budget.dom.keyitem.DirectCost;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
 
 @DomainService(nature = NatureOfService.DOMAIN)
@@ -54,6 +55,15 @@ public class KeyItemImportExportService {
 
     private Function<KeyItem, KeyItemImportExportLineItem> toLineItem() {
         return keyItem -> new KeyItemImportExportLineItem(keyItem);
+    }
+
+    @Programmatic
+    public List<DirectCostLine> directCosts(SortedSet<DirectCost> directCosts) {
+        return Lists.transform(Lists.newArrayList(directCosts), toDirectCostLine());
+    }
+
+    private Function<DirectCost, DirectCostLine> toDirectCostLine() {
+        return directCost -> new DirectCostLine(directCost);
     }
 
     @javax.inject.Inject

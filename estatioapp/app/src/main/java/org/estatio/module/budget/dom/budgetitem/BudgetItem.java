@@ -59,7 +59,6 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetcalculation.Status;
-import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.KeyTableRepository;
 import org.estatio.module.budget.dom.keytable.PartitioningTable;
 import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
@@ -252,8 +251,8 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
     }
 
     @Programmatic
-    public PartitionItem updateOrCreatePartitionItem(final Charge charge, final KeyTable keyTable, final BigDecimal percentage, final BigDecimal fixedBudgetedAmount, final BigDecimal fixedAuditedAmount){
-        return partitionItemRepository.updateOrCreatePartitionItem(getBudget().getPartitioningForBudgeting(), this, charge, keyTable, percentage, fixedBudgetedAmount, fixedAuditedAmount);
+    public PartitionItem updateOrCreatePartitionItem(final Charge charge, final PartitioningTable partitioningTable, final BigDecimal percentage, final BigDecimal fixedBudgetedAmount, final BigDecimal fixedAuditedAmount){
+        return partitionItemRepository.updateOrCreatePartitionItem(getBudget().getPartitioningForBudgeting(), this, charge, partitioningTable, percentage, fixedBudgetedAmount, fixedAuditedAmount);
     }
 
     @Programmatic

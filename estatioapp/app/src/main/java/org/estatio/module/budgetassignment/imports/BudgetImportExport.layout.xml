@@ -16,7 +16,7 @@
                 <ns2:property id="auditedValue"/>
                 <ns2:property id="fixedAuditedAmount"/>
                 <ns2:property id="calculationDescription"/>
-                <ns2:property id="keyTableName"/>
+                <ns2:property id="partitioningTableName"/>
                 <ns2:property id="foundationValueType"/>
                 <ns2:property id="keyValueMethod"/>
                 <ns2:property id="outgoingChargeReference"/>

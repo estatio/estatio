@@ -3,7 +3,7 @@
     <row>
         <col span="12" unreferencedActions="true">
             <ns2:domainObject bookmarking="AS_ROOT">
-                <ns2:named>Bulk import/export budget key line item</ns2:named>
+                <ns2:named>Bulk import/export direct cost</ns2:named>
             </ns2:domainObject>
             <ns2:action id="recentChanges"/>
             <ns2:action id="downloadLayoutXml"/>
@@ -18,8 +18,8 @@
                 <ns2:property id="partitioningTableName"/>
                 <ns2:property id="startDate"/>
                 <ns2:property id="unitReference"/>
-                <ns2:property id="sourceValue"/>
-                <ns2:property id="keyValue"/>
+                <ns2:property id="budgetedCost"/>
+                <ns2:property id="auditedCost"/>
                 <ns2:property id="status"/>
             </ns2:fieldSet>
         </col>

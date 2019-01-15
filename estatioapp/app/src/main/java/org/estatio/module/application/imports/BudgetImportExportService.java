@@ -79,12 +79,19 @@ public class BudgetImportExportService {
 
         if (item.getPartitionItems().size()==0){
             // create 1 line
-            lines.add(new BudgetImportExport(propertyReference,budgetStartDate,budgetEndDate, budgetChargeReference,budgetedValue,auditedValue,null,null,null, null, null, null, null, null));
+            lines.add(new BudgetImportExport(propertyReference,budgetStartDate,budgetEndDate, budgetChargeReference,budgetedValue,auditedValue,null,null,null, null, null, null, null, null, null));
 
         } else {
             // create a line for each partion item
             for (PartitionItem partitionItem : item.getPartitionItems()) {
-                final KeyTable keyTable = (KeyTable) partitionItem.getPartitioningTable();
+                final PartitioningTableType type;
+                KeyTable keyTable = null;
+                if (partitionItem.getPartitioningTable().getClass().isAssignableFrom(KeyTable.class)) {
+                    keyTable = (KeyTable) partitionItem.getPartitioningTable();
+                    type = PartitioningTableType.KEY_TABLE;
+                } else {
+                    type = PartitioningTableType.DIRECT_COST_TABLE;
+                }
                 lines.add(
                         new BudgetImportExport(
                                 propertyReference,
@@ -93,15 +100,17 @@ public class BudgetImportExportService {
                                 budgetChargeReference,
                                 budgetedValue,
                                 auditedValue,
-                                keyTable.getName(),
-                                keyTable.getFoundationValueType().toString(),
-                                keyTable.getKeyValueMethod().toString(),
+                                partitionItem.getPartitioningTable().getName(),
+                                type == PartitioningTableType.KEY_TABLE ? keyTable.getFoundationValueType().toString() : null,
+                                type == PartitioningTableType.KEY_TABLE ? keyTable.getKeyValueMethod().toString() : null,
                                 partitionItem.getCharge().getReference(),
                                 partitionItem.getPercentage(),
                                 partitionItem.getFixedBudgetedAmount(),
                                 partitionItem.getFixedAuditedAmount(),
-                                item.getCalculationDescription())
+                                item.getCalculationDescription(),
+                                type.toString())
                 );
+
             }
 
         }
