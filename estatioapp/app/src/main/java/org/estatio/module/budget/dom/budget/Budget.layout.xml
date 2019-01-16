@@ -53,6 +53,9 @@
             <ns2:collection id="keyTables" defaultView="table">
                 <ns2:action id="createKeyTable"/>
             </ns2:collection>
+            <ns2:collection id="directCostTables" defaultView="table">
+                <ns2:action id="createDirectCostTable"/>
+            </ns2:collection>
             <ns2:collection id="BudgetCalculationRuns" defaultView="hide"/>
             <ns2:collection id="partitionings" defaultView="table"/>
         </col>
