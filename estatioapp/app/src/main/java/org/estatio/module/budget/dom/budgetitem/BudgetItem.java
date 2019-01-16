@@ -41,6 +41,8 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -203,6 +205,7 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
             final Charge charge,
             final PartitioningTable partitioningTable,
             final BigDecimal percentage,
+            @Parameter(optionality = Optionality.OPTIONAL)
             final BigDecimal fixedBudgetedValue) {
         return partitionItemRepository.newPartitionItem(getBudget().getPartitioningForBudgeting(), charge, partitioningTable, this, percentage, fixedBudgetedValue, null);
     }

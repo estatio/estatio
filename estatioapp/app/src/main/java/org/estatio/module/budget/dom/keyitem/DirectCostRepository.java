@@ -66,7 +66,7 @@ public class DirectCostRepository extends UdoDomainRepositoryAndFactory<DirectCo
             return "budgeted value cannot be zero or less than zero";
         }
 
-        if (auditedValue.compareTo(BigDecimal.ZERO) < 0) {
+        if (auditedValue!=null && auditedValue.compareTo(BigDecimal.ZERO) < 0) {
             return "audited value cannot be less than zero";
         }
 

@@ -37,6 +37,8 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
@@ -83,6 +85,7 @@ public class DirectCostTable extends PartitioningTable {
     public DirectCost newDirectCost(
             final Unit unit,
             final BigDecimal budgetedValue,
+            @Parameter(optionality = Optionality.OPTIONAL)
             final BigDecimal auditedValue) {
 
         return directCostRepository.newDirectCost(this, unit, budgetedValue, auditedValue);

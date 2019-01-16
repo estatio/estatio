@@ -111,14 +111,10 @@ public class DirectCost extends PartitioningTableItem {
     }
 
     public BigDecimal default0ChangeAuditedCost() {
-        if (getAuditedCost()!=null) {
         return getAuditedCost();
-        } else {
-            return BigDecimal.ZERO;
-        }
     }
     public String validateChangeAuditedCost(final BigDecimal auditedCost) {
-        if (auditedCost.compareTo(BigDecimal.ZERO) < 0) {
+        if (auditedCost!=null && auditedCost.compareTo(BigDecimal.ZERO) < 0) {
             return "Value cannot be less than zero";
         }
         return null;
