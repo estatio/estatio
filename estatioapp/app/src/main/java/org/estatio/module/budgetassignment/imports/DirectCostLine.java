@@ -67,7 +67,7 @@ public class DirectCostLine
         this.auditedCost = directCost.getAuditedCost();
         this.directCostTableName = directCost.getPartitioningTable().getName();
         this.startDate = directCost.getPartitioningTable().getBudget().getStartDate();
-        this.tenantOnBudgetStartDate = tenant.getName();
+        this.tenantOnBudgetStartDate = tenant!=null ? tenant.getName() : null;
     }
 
     public DirectCostLine(final DirectCostLine item) {
@@ -76,14 +76,14 @@ public class DirectCostLine
         this.unitReference = item.unitReference;
         this.status = item.status;
         this.budgetedCost = item.budgetedCost.setScale(2, BigDecimal.ROUND_HALF_UP);
-        this.auditedCost = item.auditedCost.setScale(2, BigDecimal.ROUND_HALF_UP);
+        this.auditedCost = item.auditedCost!= null ? item.auditedCost.setScale(2, BigDecimal.ROUND_HALF_UP) : null;
         this.directCostTableName = item.directCostTableName;
         this.startDate = item.startDate;
         this.tenantOnBudgetStartDate = item.tenantOnBudgetStartDate;
     }
 
     public String title() {
-        return "key item import / export";
+        return "direct cost import / export";
     }
     //endregion
 

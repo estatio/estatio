@@ -169,12 +169,12 @@ public class BudgetImportExportManager {
                 excelService.fromExcel(spreadsheet, Arrays.asList(spec1, spec2, spec3, spec4, spec5));
 
         // first upsert charges
-        List<ChargeImport> chargeImportLines = (List<ChargeImport>) objects.get(3);
+        List<ChargeImport> chargeImportLines = (List<ChargeImport>) objects.get(4);
         for (ChargeImport lineItem : chargeImportLines){
             lineItem.importData(null);
         }
 
-        // import budget en items
+        // import budget and items
         List<BudgetImportExport> budgetItemLines = importBudgetAndItems(objects);
 
         // import keyTables
@@ -254,7 +254,7 @@ public class BudgetImportExportManager {
     private void importDirectCostTables(final List<BudgetImportExport> budgetItemLines, final List<List<?>> objects){
 
         List<DirectCostTable> tablesToImport = directCostTablesToImport(budgetItemLines);
-        List<DirectCostLine> lines = (List<DirectCostLine>) objects.get(1);
+        List<DirectCostLine> lines = (List<DirectCostLine>) objects.get(2);
 
         // filter case where no key items are filled in
         if (lines.size() == 0) {return;}
@@ -302,7 +302,7 @@ public class BudgetImportExportManager {
     }
 
     private void importOverrides(final List<List<?>> objects) {
-        List<BudgetOverrideImportExport> overrides = (List<BudgetOverrideImportExport>) objects.get(2);
+        List<BudgetOverrideImportExport> overrides = (List<BudgetOverrideImportExport>) objects.get(3);
         for (BudgetOverrideImportExport override : overrides){
             override.importData(null);
         }

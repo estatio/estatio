@@ -68,7 +68,7 @@ public class KeyItemImportExportLineItem
         this.keyTableName = keyItem.getPartitioningTable().getName();
         this.startDate = keyItem.getPartitioningTable().getBudget().getStartDate();
         this.divSourceValue = keyItem.getDivCalculatedSourceValue();
-        this.tenantOnBudgetStartDate = tenant.getName();
+        this.tenantOnBudgetStartDate = tenant!=null ? tenant.getName() : null;
     }
 
     public KeyItemImportExportLineItem(final KeyItemImportExportLineItem item) {

@@ -148,7 +148,7 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
         BudgetItem budgetItem = findOrCreateBudgetAndBudgetItem(incomingCharge);
         if (getOutgoingChargeReference()!=null && getPartitioningTableName()!=null) {
             final PartitioningTableType partitioningTableType = PartitioningTableType.valueOf(getTableType());
-            if (partitioningTableType == PartitioningTableType.KEY_TABLE && getKeyValueMethod()!=null && getFoundationValueType()!=null) {
+            if (partitioningTableType == PartitioningTableType.DIRECT_COST_TABLE || (partitioningTableType == PartitioningTableType.KEY_TABLE && getKeyValueMethod()!=null && getFoundationValueType()!=null)) {
                 findOrCreatePartitionItem(budgetItem, partitioningTableType);
             }
         }
