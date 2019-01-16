@@ -225,7 +225,7 @@ public class BudgetImportExportManager {
                     }
                 }
                 if (!keyItemFound) {
-                    KeyItemImportExportLineItem deletedItem = new KeyItemImportExportLineItem(keyItem);
+                    KeyItemImportExportLineItem deletedItem = new KeyItemImportExportLineItem(keyItem, null);
                     deletedItem.setStatus(Status.DELETED);
                     itemsToImportForKeyTable.add(deletedItem);
                 }
@@ -275,7 +275,7 @@ public class BudgetImportExportManager {
                     }
                 }
                 if (!itemFound) {
-                    DirectCostLine deletedItem = new DirectCostLine(directCost);
+                    DirectCostLine deletedItem = new DirectCostLine(directCost, null);
                     deletedItem.setStatus(Status.DELETED);
                     itemsToImportForTable.add(deletedItem);
                 }

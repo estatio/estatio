@@ -43,6 +43,7 @@ import org.estatio.module.budget.dom.keyitem.DirectCost;
 import org.estatio.module.budget.dom.keyitem.DirectCostRepository;
 import org.estatio.module.budget.dom.keytable.DirectCostTable;
 import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
+import org.estatio.module.party.dom.Party;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -58,7 +59,7 @@ public class DirectCostLine
     public DirectCostLine() {
     }
 
-    public DirectCostLine(final DirectCost directCost) {
+    public DirectCostLine(final DirectCost directCost, final Party tenant) {
         this.directCost = directCost;
         this.propertyReference = directCost.getPartitioningTable().getBudget().getProperty().getReference();
         this.unitReference = directCost.getUnit().getReference();
@@ -66,6 +67,7 @@ public class DirectCostLine
         this.auditedCost = directCost.getAuditedCost();
         this.directCostTableName = directCost.getPartitioningTable().getName();
         this.startDate = directCost.getPartitioningTable().getBudget().getStartDate();
+        this.tenantOnBudgetStartDate = tenant.getName();
     }
 
     public DirectCostLine(final DirectCostLine item) {
@@ -77,6 +79,7 @@ public class DirectCostLine
         this.auditedCost = item.auditedCost.setScale(2, BigDecimal.ROUND_HALF_UP);
         this.directCostTableName = item.directCostTableName;
         this.startDate = item.startDate;
+        this.tenantOnBudgetStartDate = item.tenantOnBudgetStartDate;
     }
 
     public String title() {
@@ -106,6 +109,9 @@ public class DirectCostLine
 
     @Getter @Setter
     private Status status;
+
+    @Getter @Setter
+    private String tenantOnBudgetStartDate;
 
     //region > apply (action)
     @Action(

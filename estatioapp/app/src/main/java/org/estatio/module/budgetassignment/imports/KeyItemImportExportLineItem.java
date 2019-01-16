@@ -43,6 +43,7 @@ import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.keyitem.KeyItemRepository;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
+import org.estatio.module.party.dom.Party;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -58,7 +59,7 @@ public class KeyItemImportExportLineItem
     public KeyItemImportExportLineItem() {
     }
 
-    public KeyItemImportExportLineItem(final KeyItem keyItem) {
+    public KeyItemImportExportLineItem(final KeyItem keyItem, final Party tenant) {
         this.keyItem = keyItem;
         this.propertyReference = keyItem.getPartitioningTable().getBudget().getProperty().getReference();
         this.unitReference = keyItem.getUnit().getReference();
@@ -67,6 +68,7 @@ public class KeyItemImportExportLineItem
         this.keyTableName = keyItem.getPartitioningTable().getName();
         this.startDate = keyItem.getPartitioningTable().getBudget().getStartDate();
         this.divSourceValue = keyItem.getDivCalculatedSourceValue();
+        this.tenantOnBudgetStartDate = tenant.getName();
     }
 
     public KeyItemImportExportLineItem(final KeyItemImportExportLineItem item) {
@@ -79,6 +81,7 @@ public class KeyItemImportExportLineItem
         this.keyTableName = item.keyTableName;
         this.startDate = item.startDate;
         this.divSourceValue = item.divSourceValue;
+        this.tenantOnBudgetStartDate = item.tenantOnBudgetStartDate;
     }
 
     public String title() {
@@ -112,6 +115,9 @@ public class KeyItemImportExportLineItem
     @Column(scale = 6)
     @Getter @Setter
     private BigDecimal divSourceValue;
+
+    @Getter @Setter
+    private String tenantOnBudgetStartDate;
 
     //region > apply (action)
     @Action(

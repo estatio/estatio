@@ -15,12 +15,13 @@
         <col span="4">
             <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
                 <ns2:property id="propertyReference"/>
-                <ns2:property id="partitioningTableName"/>
+                <ns2:property id="directCostTableName"/>
                 <ns2:property id="startDate"/>
                 <ns2:property id="unitReference"/>
                 <ns2:property id="budgetedCost"/>
                 <ns2:property id="auditedCost"/>
                 <ns2:property id="status"/>
+                <ns2:property id="tenantOnBudgetStartDate"/>
             </ns2:fieldSet>
         </col>
         <col span="8" unreferencedCollections="true"/>

@@ -20,9 +20,12 @@ import java.util.List;
 import java.util.SortedSet;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -30,8 +33,14 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
 import org.estatio.module.budget.dom.keyitem.DirectCost;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
+import org.estatio.module.budget.dom.keyitem.PartitioningTableItem;
+import org.estatio.module.lease.dom.occupancy.Occupancy;
+import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
+import org.estatio.module.party.dom.Party;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class KeyItemImportExportService {
@@ -54,7 +63,7 @@ public class KeyItemImportExportService {
     }
 
     private Function<KeyItem, KeyItemImportExportLineItem> toLineItem() {
-        return keyItem -> new KeyItemImportExportLineItem(keyItem);
+        return keyItem -> new KeyItemImportExportLineItem(keyItem, tenandAtStartDateBudget(keyItem));
     }
 
     @Programmatic
@@ -63,10 +72,19 @@ public class KeyItemImportExportService {
     }
 
     private Function<DirectCost, DirectCostLine> toDirectCostLine() {
-        return directCost -> new DirectCostLine(directCost);
+        return directCost -> new DirectCostLine(directCost, tenandAtStartDateBudget(directCost));
+    }
+
+    private Party tenandAtStartDateBudget(final PartitioningTableItem item){
+        final LocalDate startAndEndDate = item.getPartitioningTable().getBudget().getStartDate();
+        final List<Occupancy> candidates = occupancyRepository.occupanciesByUnitAndInterval(item.getUnit(), LocalDateInterval.including(startAndEndDate, startAndEndDate));
+        return candidates.isEmpty() ? null :  candidates.get(0).getLease().getSecondaryParty();
     }
 
     @javax.inject.Inject
     private ExcelService excelService;
+
+    @Inject
+    private OccupancyRepository occupancyRepository;
 
 }

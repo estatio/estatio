@@ -148,7 +148,7 @@ public class KeyItemImportExportManager {
                 }
             }
             if (!keyItemFound) {
-                KeyItemImportExportLineItem deletedItem = new KeyItemImportExportLineItem(keyItem);
+                KeyItemImportExportLineItem deletedItem = new KeyItemImportExportLineItem(keyItem, null);
                 deletedItem.setStatus(Status.DELETED);
                 newItems.add(deletedItem);
             }
