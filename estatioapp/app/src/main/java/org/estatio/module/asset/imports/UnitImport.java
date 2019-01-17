@@ -17,22 +17,24 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.excel.dom.ExcelFixture;
+import org.isisaddons.module.excel.dom.ExcelFixture2;
 import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
+import org.isisaddons.module.excel.dom.FixtureAwareRowHandler;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.dom.impl.StateRepository;
 
-import org.estatio.module.base.dom.Importable;
-import org.estatio.module.asset.dom.role.FixedAssetRole;
-import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
-import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.asset.dom.UnitType;
+import org.estatio.module.asset.dom.role.FixedAssetRole;
+import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.base.dom.Importable;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 
@@ -43,7 +45,7 @@ import lombok.Setter;
         nature = Nature.VIEW_MODEL,
         objectType = "org.estatio.dom.viewmodels.UnitImport"
 )
-public class UnitImport implements ExcelFixtureRowHandler, Importable {
+public class UnitImport implements ExcelFixtureRowHandler, Importable, FixtureAwareRowHandler<UnitImport> {
 
     private static final Logger LOG = LoggerFactory.getLogger(Unit.class);
 
@@ -192,6 +194,22 @@ public class UnitImport implements ExcelFixtureRowHandler, Importable {
 
     @Inject
     private FixedAssetRoleRepository fixedAssetRoleRepository;
+
+    /**
+     * To allow for usage within fixture scripts also.
+     */
+    @Setter
+    private FixtureScript.ExecutionContext executionContext;
+
+    /**
+     * To allow for usage within fixture scripts also.
+     */
+    @Setter
+    private ExcelFixture2 excelFixture2;
+
+    @Override public void handleRow(final UnitImport previousRow) {
+        this.importData(previousRow);
+    }
 
     //endregion
 }
