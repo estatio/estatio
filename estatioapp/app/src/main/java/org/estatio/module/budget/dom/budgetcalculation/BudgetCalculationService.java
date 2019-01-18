@@ -109,28 +109,6 @@ public class BudgetCalculationService {
         final PartitioningTable partitioningTable = partitionItem.getPartitioningTable();
         results.addAll(partitioningTable.calculateFor(partitionItem, partitionItemValue, calculationType));
 
-        /*
-        BigDecimal divider = keyTable.getKeyValueMethod().divider(keyTable);
-
-        for (KeyItem tableItem : keyTable.getItems()) {
-
-            BudgetCalculationViewmodel calculationResult;
-
-
-            calculationResult = new BudgetCalculationViewmodel(
-                    partitionItem,
-                    tableItem,
-                    total.multiply(tableItem.getValue()).
-                            divide(divider, MathContext.DECIMAL64).
-                            setScale(tableItem.getKeyTable().getPrecision(), BigDecimal.ROUND_HALF_UP),
-                    calculationType);
-
-
-
-            results.add(calculationResult);
-        }
-        */
-
         return results;
 
     }
