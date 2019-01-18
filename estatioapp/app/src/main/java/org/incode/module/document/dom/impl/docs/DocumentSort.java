@@ -16,6 +16,9 @@ import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
+import org.incode.module.document.dom.impl.docs.minio.Document_downloadExternalUrlAsBlob;
+import org.incode.module.document.dom.impl.docs.minio.Document_downloadExternalUrlAsClob;
+
 public enum DocumentSort {
     /**
      * Stored as a BLOB
@@ -82,7 +85,7 @@ public enum DocumentSort {
         @Override
         public byte[] asBytes(final DocumentAbstract<?> document) {
             final FactoryService factoryService = document.factoryService;
-            final Blob blob = factoryService.mixin(Document_downloadExternalUrlAsBlob.class, document).$$();
+            final Blob blob = factoryService.mixin(Document_downloadExternalUrlAsBlob.class, document).act();
             return blob != null ? blob.getBytes() : null;
         }
     },
@@ -100,7 +103,7 @@ public enum DocumentSort {
         @Override
         public String asChars(final DocumentAbstract<?> document) {
             final FactoryService factoryService = document.factoryService;
-            final Clob clob = factoryService.mixin(Document_downloadExternalUrlAsClob.class, document).$$();
+            final Clob clob = factoryService.mixin(Document_downloadExternalUrlAsClob.class, document).act();
             final CharSequence chars = clob.getChars();
             return chars instanceof String ? (String) chars : chars.toString();
         }

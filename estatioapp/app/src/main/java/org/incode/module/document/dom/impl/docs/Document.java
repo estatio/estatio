@@ -73,7 +73,16 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.incode.module.document.dom.impl.docs.Document "
                         + "WHERE sort      == :sort "
-                        + "   && createdAt <= :before "
+                        + "   && createdAt <= :createdAtBefore "
+                        + "ORDER BY createdAt ASC "
+                        + "RANGE 0,10"),
+        @Query(
+                name = "findOldestWithPurgeableBlobsAndCreatedAtBefore", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.incode.module.document.dom.impl.docs.Document "
+                        + "WHERE sort == 'EXTERNAL_BLOB' "
+                        + "   && blob != null "
+                        + "   && createdAt <= :createdAtBefore "
                         + "ORDER BY createdAt ASC "
                         + "RANGE 0,10"),
         @Query(

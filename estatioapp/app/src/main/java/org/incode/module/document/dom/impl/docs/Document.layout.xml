@@ -111,7 +111,12 @@
             </cpt:fieldSet>
             <cpt:fieldSet name="Document Details">
                 <cpt:property id="sort" hidden="ALL_TABLES">
-                    <cpt:action id="movedToExternalUrl"/>
+                    <cpt:action id="archive"/>
+                    <cpt:action id="archived" promptStyle="INLINE"/>
+                    <cpt:action id="purgeBlob"/>
+                    <cpt:action id="restoreBlob"/>
+                    <cpt:action id="downloadExternalUrlAsClob"/>
+                    <cpt:action id="downloadExternalUrlAsBlob"/>
                 </cpt:property>
                 <cpt:property id="blob" hidden="ALL_TABLES">
                 </cpt:property>
@@ -121,8 +126,6 @@
                     <cpt:action id="downloadTextAsClob"/>
                 </cpt:property>
                 <cpt:property id="externalUrl" hidden="ALL_TABLES">
-                    <cpt:action id="downloadExternalUrlAsClob"/>
-                    <cpt:action id="downloadExternalUrlAsBlob"/>
                 </cpt:property>
             </cpt:fieldSet>
 

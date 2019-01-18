@@ -8,7 +8,9 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-public class Document_movedToExternalUrl_Test {
+import org.incode.module.document.dom.impl.docs.minio.Document_archived;
+
+public class Document_archived_Test {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
@@ -16,15 +18,15 @@ public class Document_movedToExternalUrl_Test {
     @Mock
     private Document mockDocument;
 
-    Document_movedToExternalUrl mixin;
+    Document_archived mixin;
 
     @Before
     public void setUp() throws Exception {
         // when
-        mixin = new Document_movedToExternalUrl(mockDocument);
+        mixin = new Document_archived(mockDocument);
     }
 
-    public static class ActionInvocation_Test extends Document_movedToExternalUrl_Test {
+    public static class ActionInvocation_Test extends Document_archived_Test {
 
         @Ignore
         @Test
