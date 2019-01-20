@@ -176,8 +176,16 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
             editing = Editing.DISABLED
     )
     public Blob getBlob() {
+
         // TODO: guard shouldn't be necessary, but otherwise get exception (same as getClob()).
-        return hideBlob() ? null : new Blob(getName(), getMimeType(), asBytes());
+        if (hideBlob()) {
+            return null;
+        }
+
+        // even though stored externally, may also be cached, in which case use
+        final byte[] bytes = getBlobBytes() != null ? getBlobBytes() : asBytes();
+
+        return new Blob(getName(), getMimeType(), bytes);
     }
     @Programmatic
     public void modifyBlob(Blob blob) {
@@ -231,7 +239,13 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
         org.apache.isis.viewer.wicket.ui.panels.PromptFormAbstract#onOkSubmittedOf(PromptFormAbstract.java:229)
          */
         // TODO: guard shouldn't be necessary, but otherwise get above exception
-        return hideClob() ? null : new Clob(getName(), getMimeType(), asChars());
+        if (hideClob()) {
+            return null;
+        }
+
+        // even though stored externally, may also be cached, in which case use
+        final String chars = getClobChars() != null ? getClobChars() : asChars();
+        return new Clob(getName(), getMimeType(), chars);
     }
     @Programmatic
     public void modifyClob(Clob clob) {

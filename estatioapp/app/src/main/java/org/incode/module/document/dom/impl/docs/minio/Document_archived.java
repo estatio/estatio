@@ -1,6 +1,6 @@
 package org.incode.module.document.dom.impl.docs.minio;
 
-import java.util.Objects;
+import java.util.Arrays;
 
 import javax.inject.Inject;
 
@@ -58,18 +58,18 @@ public class Document_archived {
     ) {
 
         // check that the blob was indeed correctly archived.
-        final Blob archived = externalUrlDownloadService.downloadAsBlob(document);
+        final Blob archived = externalUrlDownloadService.downloadAsBlob(document.getName(), externalUrl);
         if(archived == null) {
             // service will have raised message
             return document;
         }
+        final byte[] archivedBytes = archived.getBytes();
 
-        final Blob current = document.getBlob();
-        if (!Objects.equals(archived, current)) {
+        final byte[] currentBytes = document.getBlobBytes();
+        if (!Arrays.equals(archivedBytes, currentBytes)) {
             messageService.warnUser(String.format(
-                    "Archived blob differs, current: '%s' vs archived: '%s'", current, archived));
+                    "Archived blob differs, current: %d vs archived: %d", currentBytes.length, archivedBytes.length));
         } else {
-            document.setBlobBytes(null);
             document.setExternalUrl(externalUrl);
 
             final DocumentSort sort = document.getSort();

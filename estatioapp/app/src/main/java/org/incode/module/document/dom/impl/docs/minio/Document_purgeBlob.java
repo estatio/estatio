@@ -1,6 +1,6 @@
 package org.incode.module.document.dom.impl.docs.minio;
 
-import java.util.Objects;
+import java.util.Arrays;
 
 import javax.inject.Inject;
 
@@ -12,6 +12,7 @@ import org.apache.isis.applib.value.Blob;
 
 import org.incode.module.document.DocumentModule;
 import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.DocumentSort;
 import org.incode.module.document.spi.minio.DocumentBlobPurgeService;
 import org.incode.module.document.spi.minio.ExternalUrlDownloadService;
 
@@ -38,16 +39,23 @@ public class Document_purgeBlob {
     )
     public Document act() {
 
+        // check that the blob was indeed correctly archived.
         final Blob archived = externalUrlDownloadService.downloadAsBlob(document);
         if(archived == null) {
             // service will have raised message
+
+            // and salvage the situation
+            document.setSort(DocumentSort.BLOB);
+            document.setExternalUrl(null);
+
             return document;
         }
+        final byte[] archivedBytes = archived.getBytes();
 
-        final Blob current = document.getBlob();
-        if (!Objects.equals(archived, current)) {
+        final byte[] currentBytes = document.getBlobBytes();
+        if (!Arrays.equals(archivedBytes, currentBytes)) {
             messageService.warnUser(String.format(
-                    "Archived blob differs, current: '%s' vs archived: '%s'", current, archived));
+                    "Archived blob differs, current: %d vs archived: %d", currentBytes.length, archivedBytes.length));
         } else {
             document.setBlobBytes(null);
         }
@@ -59,7 +67,7 @@ public class Document_purgeBlob {
         return !document.getSort().isExternal();
     }
     public String disableAct() {
-        if (document.getBlob() == null) {
+        if (document.getBlobBytes() == null) {
             return "Blob has already been purged";
         }
 

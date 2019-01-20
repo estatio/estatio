@@ -80,8 +80,8 @@ import lombok.Setter;
                 name = "findOldestWithPurgeableBlobsAndCreatedAtBefore", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.incode.module.document.dom.impl.docs.Document "
-                        + "WHERE sort == 'EXTERNAL_BLOB' "
-                        + "   && blob != null "
+                        + "WHERE sort      == 'EXTERNAL_BLOB' "
+                        + "   && blobBytes != null "
                         + "   && createdAt <= :createdAtBefore "
                         + "ORDER BY createdAt ASC "
                         + "RANGE 0,10"),

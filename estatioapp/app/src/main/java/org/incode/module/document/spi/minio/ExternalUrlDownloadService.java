@@ -26,6 +26,11 @@ public class ExternalUrlDownloadService {
     public Blob downloadAsBlob(final Document document) {
         final String externalUrl = document.getExternalUrl();
         final String documentName = document.getName();
+        return downloadAsBlob(documentName, externalUrl);
+    }
+
+    @Programmatic
+    public Blob downloadAsBlob(final String documentName, final String externalUrl) {
         try {
             return blobClobDownloadService.downloadBlob(documentName, externalUrl);
 
@@ -44,8 +49,13 @@ public class ExternalUrlDownloadService {
 
     @Programmatic
     public Clob downloadAsClob(final Document document) {
-        final String documentName = document.getName();
         final String externalUrl = document.getExternalUrl();
+        final String documentName = document.getName();
+        return downloadAsClob(documentName, externalUrl);
+    }
+
+    @Programmatic
+    public Clob downloadAsClob(final String documentName, final String externalUrl) {
         try {
             return blobClobDownloadService.downloadClob(documentName, externalUrl);
         } catch (ApplicationException ex) {

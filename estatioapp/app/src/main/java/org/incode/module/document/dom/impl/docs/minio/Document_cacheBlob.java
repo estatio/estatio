@@ -13,15 +13,15 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.spi.minio.ExternalUrlDownloadService;
 
 @Mixin(method = "act")
-public class Document_restoreBlob {
+public class Document_cacheBlob {
 
     private final Document document;
-    public Document_restoreBlob(final Document document) {
+    public Document_cacheBlob(final Document document) {
         this.document = document;
     }
 
 
-    public static class ActionDomainEvent extends DocumentModule.ActionDomainEvent<Document_restoreBlob> { }
+    public static class ActionDomainEvent extends DocumentModule.ActionDomainEvent<Document_cacheBlob> { }
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
             domainEvent = ActionDomainEvent.class
@@ -42,7 +42,7 @@ public class Document_restoreBlob {
         return !document.getSort().isExternal();
     }
     public String disableAct() {
-        return document.getBlob() != null ? "Not purged" : null;
+        return document.getBlobBytes() != null ? "Not purged" : null;
     }
 
     @Inject

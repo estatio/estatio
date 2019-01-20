@@ -114,7 +114,7 @@
                     <cpt:action id="archive"/>
                     <cpt:action id="archived" promptStyle="INLINE"/>
                     <cpt:action id="purgeBlob"/>
-                    <cpt:action id="restoreBlob"/>
+                    <cpt:action id="cacheBlob"/>
                     <cpt:action id="downloadExternalUrlAsClob"/>
                     <cpt:action id="downloadExternalUrlAsBlob"/>
                 </cpt:property>
