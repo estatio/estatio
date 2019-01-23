@@ -69,6 +69,14 @@ import lombok.Setter;
                         + "   && name   == :name "
                         + "ORDER BY createdAt DESC "),
         @Query(
+                /*
+                returns a maximum of 10, for archiving to minio (as controlled by Camel).
+                We don't want to return more than that in order to avoid using too much memory
+                or network bandwidth in any one call.
+
+                Testing suggests that can archive about 80 a minute, ie this will be called
+                8 times a minute by Camel.
+                 */
                 name = "findOldestBySortAndCreatedAtBefore", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.incode.module.document.dom.impl.docs.Document "
@@ -77,6 +85,16 @@ import lombok.Setter;
                         + "ORDER BY createdAt ASC "
                         + "RANGE 0,10"),
         @Query(
+                /*
+                returns a maximum of 100, designed to be called once a minute (from Quartz).
+                This will keep up with the rate of archiving determined by the above query.
+
+                As for the above query for finding docs to be archived, again we don't
+                want to return too many.  However, we can cope with a larger number because
+                for these documents they are not going to be transferred across the network.
+                There does need to be some limit though, in order to minimize the size of the
+                db transaction log entry).
+                */
                 name = "findOldestWithPurgeableBlobsAndCreatedAtBefore", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.incode.module.document.dom.impl.docs.Document "
@@ -84,7 +102,7 @@ import lombok.Setter;
                         + "   && blobBytes != null "
                         + "   && createdAt <= :createdAtBefore "
                         + "ORDER BY createdAt ASC "
-                        + "RANGE 0,10"),
+                        + "RANGE 0,100"),
         @Query(
                 // uses NOT IN
                 name = "findWithNoPaperclips", language = "JDOQL",
