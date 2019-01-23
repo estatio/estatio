@@ -1,14 +1,14 @@
 package org.estatio.module.budgetassignment.dom.calculationresult;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Index;
+import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
@@ -19,10 +19,8 @@ import org.apache.isis.applib.annotation.Auditing;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -30,12 +28,12 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
-import org.estatio.module.budgetassignment.dom.override.BudgetOverride;
-import org.estatio.module.budgetassignment.dom.override.BudgetOverrideRepository;
-import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValue;
+import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 
 import lombok.Getter;
@@ -51,14 +49,36 @@ import lombok.Setter;
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
-@Unique(name = "BudgetCalculationResult_budgetCalculationRun_invoiceCharge_UNQ", members = { "budgetCalculationRun", "invoiceCharge" })
+@Unique(name = "BudgetCalculationResult_budget_occupancy_invoiceCharge_type_UNQ", members = { "budget", "occupancy", "invoiceCharge", "type"})
+@Indices({
+        @Index(name = "BudgetCalculationResul_leaseTerm_IDX", members = { "leaseTerm" })
+})
 @javax.jdo.annotations.Queries({
         @Query(
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult " +
-                        "WHERE budgetCalculationRun == :budgetCalculationRun && "
-                        + "invoiceCharge == :invoiceCharge")
+                        "WHERE budget == :budget && "
+                        + "occupancy == :occupancy && "
+                        + "invoiceCharge == :invoiceCharge && "
+                        + "type == :type"),
+        @Query(
+                name = "findByLeaseTerm", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult " +
+                        "WHERE leaseTerm == :leaseTerm "),
+        @Query(
+                name = "findByBudget", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult " +
+                        "WHERE budget == :budget "),
+        @Query(
+                name = "findByLeaseTermAndBudgetAndType", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult " +
+                        "WHERE leaseTerm == :leaseTerm && "
+                        + "budget == :budget && "
+                        + "type == :type")
 })
 
 @DomainObject(
@@ -69,128 +89,55 @@ import lombok.Setter;
 public class BudgetCalculationResult extends UdoDomainObject2<BudgetCalculationResult> {
 
     public BudgetCalculationResult() {
-        super("budgetCalculationRun, invoiceCharge");
+        super("budget, occupancy, invoiceCharge, type");
+    }
+
+    public BudgetCalculationResult(final Budget budget, final Occupancy occupancy, final Charge invoiceCharge, final BudgetCalculationType type, final BigDecimal value){
+        this();
+        this.budget = budget;
+        this.occupancy = occupancy;
+        this.invoiceCharge = invoiceCharge;
+        this.type = type;
+        this.value = value;
     }
 
     public String title(){
         return TitleBuilder.start()
-                .withParent(getBudgetCalculationRun())
-                .withName(" ")
+                .withParent(getBudget())
                 .withName(getInvoiceCharge())
+                .withName(" ")
+                .withName(getOccupancy().title())
                 .toString();
     }
 
     @Getter @Setter
-    @Column(name = "budgetCalculationRunId", allowsNull = "false")
-    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
-    private BudgetCalculationRun budgetCalculationRun;
+    @Column(name = "budgetId", allowsNull = "false")
+    private Budget budget;
+
+    @Getter @Setter
+    @Column(name = "occupancyId", allowsNull = "false")
+    private Occupancy occupancy;
 
     @Getter @Setter
     @Column(name = "chargeId", allowsNull = "false")
     private Charge invoiceCharge;
 
     @Getter @Setter
-    @Column(allowsNull = "true", scale = 2)
+    @Column(allowsNull = "false")
+    private BudgetCalculationType type;
+
+    @Getter @Setter
+    @Column(allowsNull = "false", scale = 2)
     private BigDecimal value;
 
     @Getter @Setter
-    @Column(allowsNull = "true", scale = 2)
-    private BigDecimal shortfall;
-
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<BudgetOverrideValue> getOverrideValues(){
-        List<BudgetOverrideValue> results = new ArrayList<>();
-        for (BudgetOverride override : budgetOverrideRepository
-                .findByLeaseAndInvoiceCharge(
-                        getBudgetCalculationRun().getLease(),
-                        getInvoiceCharge())){
-            for (BudgetOverrideValue value : override.getValues()){
-                if (value.getType() == getBudgetCalculationRun().getType()) {
-                    results.add(value);
-                }
-            }
-        }
-        return results;
-    }
+    @Column(name = "leaseTermId", allowsNull = "true")
+    private LeaseTermForServiceCharge leaseTerm;
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<BudgetCalculation> getBudgetCalculations(){
-        List<BudgetCalculation> results = new ArrayList<>();
-        for (Occupancy occupancy : getBudgetCalculationRun().getLease().getOccupancies()) {
-            results.addAll(budgetCalculationRepository.findByBudgetAndUnitAndInvoiceChargeAndType(getBudgetCalculationRun().getBudget(), occupancy.getUnit(), getInvoiceCharge(), getBudgetCalculationRun().getType()));
-        }
-        return results;
-    }
-
-    @Programmatic
-    public void calculate() throws IllegalArgumentException {
-
-        validateOverrides();
-
-        BigDecimal valueCalculatedByBudget = valueAsCalculatedByBudget();
-        BigDecimal annualOverrideValue = BigDecimal.ZERO;
-        List<Charge> incomingChargesOnOverrides = new ArrayList<>();
-
-        if (overrideValueForInvoiceCharge()!=null){
-            // SCENARIO: one override for all
-            annualOverrideValue = annualOverrideValue.add(overrideValueForInvoiceCharge().getValue());
-        } else {
-            // SCENARIO: overrides on incoming charge level
-            BigDecimal valueToSubtract = BigDecimal.ZERO;
-            for (BudgetOverrideValue value : getOverrideValues()) {
-                incomingChargesOnOverrides.add(value.getBudgetOverride().getIncomingCharge());
-                annualOverrideValue = annualOverrideValue.add(value.getValue());
-            }
-            for (Charge charge : incomingChargesOnOverrides){
-                for (BudgetCalculation calculation : getBudgetCalculations().stream().filter(x->x.getIncomingCharge().equals(charge)).collect(Collectors.toList())){
-                    valueToSubtract = valueToSubtract.add(calculation.getValue());
-                }
-            }
-            annualOverrideValue = annualOverrideValue.add(valueCalculatedByBudget).subtract(valueToSubtract);
-        }
-        BigDecimal overrideValue = annualOverrideValue.multiply(getFractionOfYear());
-        setValue(overrideValue.setScale(2, BigDecimal.ROUND_HALF_UP));
-        setShortfall(valueCalculatedByBudget.subtract(overrideValue).setScale(2, BigDecimal.ROUND_HALF_UP));
-    }
-
-    void validateOverrides() throws IllegalArgumentException {
-        budgetOverrideRepository.validateBudgetOverridesForLease(getBudgetCalculationRun().getLease(), getInvoiceCharge());
-    }
-
-    @Programmatic
-    public BudgetOverrideValue overrideValueForInvoiceCharge(){
-        return (getOverrideValues().size()==1 && getOverrideValues().get(0).getBudgetOverride().getIncomingCharge()==null)
-                ?
-                getOverrideValues().get(0)
-                :
-                null;
-    }
-
-
-    @Programmatic
-    BigDecimal getFractionOfYear(){
-        return getBudgetCalculationRun().getBudget().getPartitioningForBudgeting().getFractionOfYear();
-    }
-
-    @Programmatic
-    public BigDecimal valueAsCalculatedByBudget(){
-        BigDecimal valueCalculatedByBudget = BigDecimal.ZERO;
-        for (BudgetCalculation calculation : getBudgetCalculations()){
-            valueCalculatedByBudget = valueCalculatedByBudget.add(calculation.getEffectiveValue());
-        }
-        return valueCalculatedByBudget;
-    }
-
-    @Programmatic
-    public void finalizeCalculationResult() {
-        for (BudgetCalculation calculation : getBudgetCalculations()){
-            calculation.finalizeCalculation();
-        }
-        for (BudgetOverrideValue overrideValue : getOverrideValues()){
-            overrideValue.finalizeOverrideValue();
-        }
+        return budgetCalculationRepository.findByBudgetAndUnitAndInvoiceChargeAndType(getBudget(), getOccupancy().getUnit(), getInvoiceCharge(), getType());
     }
 
     @Programmatic
@@ -200,18 +147,14 @@ public class BudgetCalculationResult extends UdoDomainObject2<BudgetCalculationR
 
     @Override
     public ApplicationTenancy getApplicationTenancy() {
-        return getBudgetCalculationRun().getApplicationTenancy();
+        return getOccupancy().getApplicationTenancy();
     }
-
-    @Inject
-    private BudgetOverrideRepository budgetOverrideRepository;
 
     @Inject
     private BudgetCalculationRepository budgetCalculationRepository;
 
     @Inject
     private RepositoryService repositoryService;
-
 
 }
 

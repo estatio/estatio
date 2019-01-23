@@ -33,15 +33,8 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
-import org.estatio.module.budgetassignment.dom.override.BudgetOverride;
-import org.estatio.module.budgetassignment.dom.override.BudgetOverrideForFixed;
-import org.estatio.module.budgetassignment.dom.override.BudgetOverrideForFlatRate;
-import org.estatio.module.budgetassignment.dom.override.BudgetOverrideForMax;
-import org.estatio.module.budgetassignment.dom.override.BudgetOverrideRepository;
-import org.estatio.module.budgetassignment.imports.BudgetOverrideImportExport;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.imports.ChargeImport;
-import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 
 // TODO: need to untangle this and push back down to budget module
@@ -118,74 +111,6 @@ public class BudgetImportExportService {
         return lines;
     }
 
-    public List<BudgetOverrideImportExport> overrides(BudgetImportExportManager manager) {
-
-        List<BudgetOverrideImportExport> result = new ArrayList<BudgetOverrideImportExport>();
-        if (manager.getBudget()==null){return result;}
-
-        for (Lease lease : leaseRepository.findByAssetAndActiveOnDate(manager.getBudget().getProperty(), manager.getBudget().getStartDate())) {
-            for (BudgetOverride override : budgetOverrideRepository.findByLease(lease)) {
-                result.addAll(createOverrides(override, manager));
-            }
-        }
-
-        return result;
-    }
-
-    private List<BudgetOverrideImportExport> createOverrides(final BudgetOverride override, final BudgetImportExportManager manager){
-        List<BudgetOverrideImportExport> result = new ArrayList<>();
-
-        String incomingChargeRef;
-        if (override.getIncomingCharge()==null){
-            incomingChargeRef=null;
-        } else {
-            incomingChargeRef = override.getIncomingCharge().getReference();
-        }
-
-        String typeName;
-        if (override.getType()==null){
-            typeName=null;
-        } else {
-            typeName=override.getType().name();
-        }
-
-        BigDecimal maxValue = BigDecimal.ZERO;
-        if (override.getClass()== BudgetOverrideForMax.class){
-            BudgetOverrideForMax o = (BudgetOverrideForMax) override;
-            maxValue = maxValue.add(o.getMaxValue());
-        }
-
-        BigDecimal fixedValue = BigDecimal.ZERO;
-        if (override.getClass()== BudgetOverrideForFixed.class){
-            BudgetOverrideForFixed o = (BudgetOverrideForFixed) override;
-            fixedValue = fixedValue.add(o.getFixedValue());
-        }
-
-        BigDecimal valuePerM2 = BigDecimal.ZERO;
-        BigDecimal weightedArea = BigDecimal.ZERO;
-        if (override.getClass()== BudgetOverrideForFlatRate.class){
-            BudgetOverrideForFlatRate o = (BudgetOverrideForFlatRate) override;
-            valuePerM2 = valuePerM2.add(o.getValuePerM2());
-            weightedArea = weightedArea.add(o.getWeightedArea());
-        }
-
-        result.add(new BudgetOverrideImportExport(
-                override.getLease().getReference(),
-                override.getStartDate(),
-                override.getEndDate(),
-                override.getInvoiceCharge().getReference(),
-                incomingChargeRef,
-                typeName,
-                override.getReason(),
-                override.getClass().getSimpleName(),
-                maxValue,
-                fixedValue,
-                valuePerM2,
-                weightedArea
-        ));
-        return result;
-    }
-
     public List<ChargeImport> charges(BudgetImportExportManager manager) {
 
         List<ChargeImport> result = new ArrayList<ChargeImport>();
@@ -227,9 +152,6 @@ public class BudgetImportExportService {
                 charge.getParent()!=null ? charge.getParent().getReference() : null
         );
     }
-
-    @Inject
-    private BudgetOverrideRepository budgetOverrideRepository;
 
     @Inject
     private LeaseRepository leaseRepository;

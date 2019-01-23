@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Lists;
+
+import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
@@ -12,21 +15,33 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.services.sudo.SudoService;
+import org.apache.isis.applib.services.wrapper.DisabledException;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
+import org.estatio.module.base.dom.EstatioRole;
+import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyTable;
+import org.estatio.module.budget.dom.keytable.PartitioningTable;
+import org.estatio.module.budget.dom.partioning.PartitionItem;
+import org.estatio.module.budget.dom.partioning.Partitioning;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
-import org.estatio.module.budgetassignment.fixtures.override.enums.BudgetOverrideForFlatRate_enum;
-import org.estatio.module.budgetassignment.fixtures.override.enums.BudgetOverrideForMax_enum;
+import org.estatio.module.budgetassignment.contributions.Budget_Calculate;
+import org.estatio.module.budgetassignment.contributions.Budget_Remove;
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
+import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -52,9 +67,6 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
                     executionContext.executeChildT(this, Lease_enum.BudNlBank004Nl.builder());
                     executionContext.executeChildT(this, Lease_enum.BudHyper005Nl.builder());
                     executionContext.executeChildT(this, Lease_enum.BudHello006Nl.builder());
-                    executionContext.executeChildT(this, BudgetOverrideForFlatRate_enum.BudMiracle002Nl_2015.builder());
-                    executionContext.executeChildT(this, BudgetOverrideForMax_enum.BudPoison001Nl_2015.builder());
-
                 }
             });
         }
@@ -135,8 +147,6 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
                     executionContext.executeChildT(this, Lease_enum.BudNlBank004Nl.builder());
                     executionContext.executeChildT(this, Lease_enum.BudHyper005Nl.builder());
                     executionContext.executeChildT(this, Lease_enum.BudHello006Nl.builder());
-                    executionContext.executeChildT(this, BudgetOverrideForFlatRate_enum.BudMiracle002Nl_2015.builder());
-                    executionContext.executeChildT(this, BudgetOverrideForMax_enum.BudPoison001Nl_2015.builder());
 
                 }
             });
@@ -171,8 +181,6 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
                     executionContext.executeChildT(this, Lease_enum.BudNlBank004Nl.builder());
                     executionContext.executeChildT(this, Lease_enum.BudHyper005Nl.builder());
                     executionContext.executeChildT(this, Lease_enum.BudHello006Nl.builder());
-                    executionContext.executeChildT(this, BudgetOverrideForFlatRate_enum.BudMiracle002Nl_2015.builder());
-                    executionContext.executeChildT(this, BudgetOverrideForMax_enum.BudPoison001Nl_2015.builder());
 
                     executionContext.executeChild(this, Budget_enum.OxfBudget2016.builder());
                 }
@@ -191,6 +199,96 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
             // when
             wrap(budget2015).createNextBudget();
         }
+
+    }
+
+    public static class remove_budget extends Budget_IntegTest {
+
+
+        LeaseTermForServiceCharge lastServiceChargeTerm;
+        Budget topmodelBudget2015;
+        LocalDate startDate;
+
+        @Before
+        public void setUp() throws Exception {
+
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
+                    executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfTopModel001Gb.builder());
+                    executionContext.executeChild(this, Partitioning_enum.OxfPartitioning2015.builder());
+
+                }
+            });
+
+        }
+
+        @Test
+        public void remove_works_when_not_assigned() {
+
+            // given
+            topmodelBudget2015 = Budget_enum.OxfBudget2015.findUsing(serviceRegistry);
+            Assertions.assertThat(topmodelBudget2015).isNotNull();
+
+            wrap(mixin(Budget_Calculate.class, topmodelBudget2015)).calculate(false);
+
+            assertThat(budgetCalculationRepository.allBudgetCalculations()).isNotEmpty();
+            assertThat(repositoryService.allInstances(PartitioningTable.class)).isNotEmpty();
+            assertThat(repositoryService.allInstances(PartitionItem.class)).isNotEmpty();
+            assertThat(repositoryService.allInstances(Partitioning.class)).isNotEmpty();
+            assertThat(repositoryService.allInstances(BudgetItem.class)).isNotEmpty();
+            assertThat(repositoryService.allInstances(Budget.class)).isNotEmpty();
+
+
+            // when
+            sudoService.sudo(EstatioAdmin.USER_NAME, Lists.newArrayList(EstatioRole.ADMINISTRATOR.getRoleName()),
+                    new Runnable() {
+                        @Override public void run() {
+                            wrap(mixin(Budget_Remove.class, topmodelBudget2015)).removeBudget(true);
+                        }
+                    });
+
+            // then
+            assertThat(budgetCalculationRepository.allBudgetCalculations()).isEmpty();
+            assertThat(repositoryService.allInstances(PartitioningTable.class)).isEmpty();
+            assertThat(repositoryService.allInstances(PartitionItem.class)).isEmpty();
+            assertThat(repositoryService.allInstances(Partitioning.class)).isEmpty();
+            assertThat(repositoryService.allInstances(BudgetItem.class)).isEmpty();
+            assertThat(repositoryService.allInstances(Budget.class)).isEmpty();
+
+        }
+
+        @Test
+        public void remove_disabled_when_assigned() {
+
+            // given
+            topmodelBudget2015 = Budget_enum.OxfBudget2015.findUsing(serviceRegistry);
+            Assertions.assertThat(topmodelBudget2015).isNotNull();
+
+            wrap(mixin(Budget_Calculate.class, topmodelBudget2015)).calculate(true);
+
+            // expect
+            expectedExceptions.expect(DisabledException.class);
+            expectedExceptions.expectMessage("This budget is assigned already");
+
+            // when
+            sudoService.sudo(EstatioAdmin.USER_NAME, Lists.newArrayList(EstatioRole.ADMINISTRATOR.getRoleName()),
+                    new Runnable() {
+                        @Override public void run() {
+                            wrap(mixin(Budget_Remove.class, topmodelBudget2015)).removeBudget(true);
+                        }
+                    });
+
+        }
+
+        @Inject BudgetCalculationRepository budgetCalculationRepository;
+
+        @Inject SudoService sudoService;
+
+        @Inject RepositoryService repositoryService;
+
 
     }
 

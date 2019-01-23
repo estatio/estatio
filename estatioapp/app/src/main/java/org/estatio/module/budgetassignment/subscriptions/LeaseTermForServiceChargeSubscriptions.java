@@ -25,7 +25,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLinkRepository;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 
 @DomainService(nature = NatureOfService.DOMAIN)
@@ -48,7 +48,7 @@ public class LeaseTermForServiceChargeSubscriptions extends UdoDomainRepositoryA
 
         switch (ev.getEventPhase()) {
         case DISABLE:
-            if (!budgetCalculationResultLinkRepository.findByLeaseTerm(sourceTerm).isEmpty()){
+            if (!budgetCalculationResultRepository.findByLeaseTerm(sourceTerm).isEmpty()){
                 ev.disable("This term is controlled by a budget");
             }
             break;
@@ -57,6 +57,6 @@ public class LeaseTermForServiceChargeSubscriptions extends UdoDomainRepositoryA
     }
 
     @Inject
-    BudgetCalculationResultLinkRepository budgetCalculationResultLinkRepository;
+    BudgetCalculationResultRepository budgetCalculationResultRepository;
 
 }

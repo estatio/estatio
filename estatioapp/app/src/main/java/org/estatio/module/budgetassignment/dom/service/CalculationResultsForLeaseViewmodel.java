@@ -20,19 +20,17 @@ import lombok.Setter;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
-        objectType = "org.estatio.dom.budgetassignment.viewmodels.DetailedCalculationResultViewmodel",
+        objectType = "org.estatio.dom.budgetassignment.viewmodels.CalculationResultsForLeaseViewmodel",
         auditing = Auditing.DISABLED
 )
-public class DetailedCalculationResultViewmodel {
+public class CalculationResultsForLeaseViewmodel {
 
-    public DetailedCalculationResultViewmodel(){}
+    public CalculationResultsForLeaseViewmodel(){}
 
-    public DetailedCalculationResultViewmodel(
+    public CalculationResultsForLeaseViewmodel(
             final Unit unit,
             final String incomingCharge,
             final BigDecimal valueForLease,
-            final BigDecimal effectiveValueForLease,
-            final BigDecimal shortfall,
             final BigDecimal totalValueInBudget,
             final Charge invoiceCharge
     ){
@@ -40,8 +38,6 @@ public class DetailedCalculationResultViewmodel {
         this.incomingCharge = incomingCharge;
         this.valueForLease = valueForLease;
         this.totalValueInBudget = totalValueInBudget;
-        this.effectiveValueForLease = effectiveValueForLease;
-        this.shortfall = shortfall;
         this.invoiceCharge = invoiceCharge.getReference();
     }
 
@@ -59,16 +55,6 @@ public class DetailedCalculationResultViewmodel {
     @MemberOrder(sequence = "3")
     @PivotValue(order = 2)
     private BigDecimal valueForLease;
-
-    @Getter @Setter
-    @MemberOrder(sequence = "4")
-    @PivotValue(order = 3)
-    private BigDecimal effectiveValueForLease;
-
-    @Getter @Setter
-    @MemberOrder(sequence = "5")
-    @PivotValue(order = 4)
-    private BigDecimal shortfall;
 
     @Getter @Setter
     @MemberOrder(sequence = "6")

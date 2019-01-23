@@ -10,28 +10,27 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
-import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 
 /**
- * This cannot be inlined because Lease doesn't know about BudgetCalculationResultLinkRepository.
+ * This cannot be inlined (needs to be a mixin) because Budget doesn't know about BudgetCalculationResultLinkRepository
  */
 @Mixin
-public class LeaseTerm_BudgetCalculationResults {
+public class Budget_CalculationResults {
 
-    private final LeaseTermForServiceCharge term;
-    public LeaseTerm_BudgetCalculationResults(LeaseTermForServiceCharge term){
-        this.term = term;
+    private final Budget budget;
+    public Budget_CalculationResults(Budget budget){
+        this.budget = budget;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<BudgetCalculationResult> budgetCalculationResults() {
-        return budgetCalculationResultRepository.findByLeaseTerm(term);
+    public List<BudgetCalculationResult> calculationResults() {
+        return budgetCalculationResultRepository.findByBudget(budget);
     }
 
-    @Inject
-    private BudgetCalculationResultRepository budgetCalculationResultRepository;
+    @Inject private BudgetCalculationResultRepository budgetCalculationResultRepository;
 
 }

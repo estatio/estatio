@@ -12,12 +12,12 @@
                     <row>
                         <col span="12">
                             <ns2:fieldSet name="BudgetCalculationResult" id="budgetCalculationResult" unreferencedProperties="true">
-                                <ns2:property id="budgetCalculationRun"/>
+                                <ns2:property id="budget"/>
+                                <ns2:property id="occupancy"/>
                                 <ns2:property id="invoiceCharge"/>
                             </ns2:fieldSet>
-                            <ns2:fieldSet name="Values" id="values">
+                            <ns2:fieldSet name="Value" id="value">
                                 <ns2:property id="value"/>
-                                <ns2:property id="shortfall"/>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="applicationTenancy" id="applicationTenancy">
                                 <ns2:property id="applicationTenancy"/>
@@ -44,7 +44,6 @@
         </col>
         <col span="8" unreferencedCollections="true">
             <ns2:collection id="budgetCalculations" defaultView="table"/>
-            <ns2:collection id="overrideValues" defaultView="table"/>
         </col>
     </row>
 </grid>

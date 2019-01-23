@@ -45,6 +45,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.incode.module.unittestsupport.dom.bean.PojoTester;
 
@@ -1260,7 +1261,7 @@ public class Lease_Test {
     public static class Finders extends Lease_Test {
 
         @Test
-        public void findFirstActiveItemOfTypeAndChargeOnDate_works() throws Exception {
+        public void findFirstActiveItemOfTypeAndChargeInInterval_works() throws Exception {
 
             // given
             Lease lease = new Lease();
@@ -1288,7 +1289,7 @@ public class Lease_Test {
             assertThat(lease.getItems().size()).isEqualTo(3);
 
             // when
-            LeaseItem itemFound = lease.findFirstActiveItemOfTypeAndChargeOnDate(leaseItemType, charge, date);
+            LeaseItem itemFound = lease.findFirstActiveItemOfTypeAndChargeInInterval(leaseItemType, charge, LocalDateInterval.including(date, null));
 
             // then
             assertThat(itemFound).isEqualTo(activeItem);

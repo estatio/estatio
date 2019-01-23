@@ -1,5 +1,7 @@
 package org.estatio.module.budgetassignment.contributions;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
@@ -9,10 +11,11 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.budgetassignment.dom.service.BudgetAssignmentService;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
+import org.estatio.module.budgetassignment.dom.service.BudgetAssignmentService;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Budget doesn't know about BudgetAssignmentService.
@@ -32,9 +35,9 @@ public class Budget_Calculate {
             final boolean finalCalculation
     ) {
         budgetCalculationService.calculatePersistedCalculations(budget);
-        budgetAssignmentService.calculateResultsForLeases(budget, BudgetCalculationType.BUDGETED);
         if (finalCalculation){
-            budgetAssignmentService.assign(budget);
+            List<BudgetCalculationResult> results = budgetAssignmentService.calculateResults(budget, BudgetCalculationType.BUDGETED);
+            budgetAssignmentService.assignCalculationResultsToLeases(results);
         }
         return budget;
     }

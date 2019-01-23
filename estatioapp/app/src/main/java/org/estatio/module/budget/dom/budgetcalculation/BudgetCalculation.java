@@ -88,6 +88,13 @@ import lombok.Setter;
                         "WHERE partitionItem == :partitionItem " +
                         "&& calculationType == :calculationType"),
         @Query(
+                name = "findByBudgetAndUnitAndType", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation " +
+                        "WHERE budget == :budget && "
+                        + "unit == :unit && "
+                        + "calculationType == :type"),
+        @Query(
                 name = "findByBudgetAndUnitAndInvoiceChargeAndType", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation " +
@@ -103,7 +110,14 @@ import lombok.Setter;
                         + "unit == :unit && "
                         + "invoiceCharge == :invoiceCharge && "
                         + "incomingCharge == :incomingCharge && "
-                        + "calculationType == :type")
+                        + "calculationType == :type"),
+        @Query(
+                name = "findByBudgetAndTypeAndStatus", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation " +
+                        "WHERE budget == :budget && "
+                        + "calculationType == :type && "
+                        + "status == :status"),
 })
 @Indices({
         @Index(name = "BudgetCalculation_budget_unit_invoiceCharge_type_IDX",

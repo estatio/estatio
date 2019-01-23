@@ -20,8 +20,6 @@ import org.estatio.module.application.imports.BudgetImportExportManager;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
-import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValue;
-import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValueRepository;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 
@@ -74,12 +72,6 @@ public class BudgetMenu {
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @CollectionLayout(render = RenderType.EAGERLY)
-    public List<BudgetOverrideValue> allBudgetOverrideValues(){
-        return budgetOverrideValueRepository.allBudgetOverrideValues();
-    }
-
-    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
-    @CollectionLayout(render = RenderType.EAGERLY)
     public List<BudgetCalculationResult> allBudgetCalculationResults(){
         return budgetCalculationResultRepository.allBudgetCalculationResults();
     }
@@ -92,9 +84,6 @@ public class BudgetMenu {
 
     @Inject
     BudgetRepository budgetRepository;
-
-    @Inject
-    BudgetOverrideValueRepository budgetOverrideValueRepository;
 
     @Inject BudgetCalculationResultRepository budgetCalculationResultRepository;
 

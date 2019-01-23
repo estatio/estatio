@@ -99,6 +99,14 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
         return result;
     }
 
+    public List<BudgetCalculation> findByBudgetAndTypeAndStatus(final Budget budget, final BudgetCalculationType type, final Status status){
+        return allMatches("findByBudgetAndTypeAndStatus", "budget", budget, "type", type, "status", status);
+    }
+
+    public List<BudgetCalculation> findByBudgetAndUnitAndType(final Budget budget, final Unit unit, final BudgetCalculationType type) {
+        return allMatches("findByBudgetAndUnitAndType", "budget", budget, "unit", unit, "type", type);
+    }
+
     public List<BudgetCalculation> findByBudgetAndUnitAndInvoiceChargeAndType(final Budget budget, final Unit unit, final Charge invoiceCharge, final BudgetCalculationType type) {
         return allMatches("findByBudgetAndUnitAndInvoiceChargeAndType", "budget", budget, "unit", unit, "invoiceCharge", invoiceCharge, "type", type);
     }

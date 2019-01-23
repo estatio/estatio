@@ -672,10 +672,10 @@ public class Lease
     }
 
     @Programmatic
-    public LeaseItem findFirstActiveItemOfTypeAndChargeOnDate(final LeaseItemType leaseItemType, final Charge charge, final LocalDate date){
+    public LeaseItem findFirstActiveItemOfTypeAndChargeInInterval(final LeaseItemType leaseItemType, final Charge charge, final LocalDateInterval interval){
         List<LeaseItem> itemsOfType = findItemsOfType(leaseItemType);
         for (LeaseItem item : itemsOfType){
-            if (item.getCharge().equals(charge) && item.getInterval().contains(date)){
+            if (item.getCharge().equals(charge) && item.getInterval().overlaps(interval)){
                 return item;
             }
         }
