@@ -719,6 +719,9 @@ public class IncomingInvoice_Test {
             assertThat(invoice.validateChangeAmounts(new BigDecimal("10.00"), new BigDecimal("9.99"))).isEqualTo("Gross amount cannot be lower than net amount");
             assertThat(invoice.validateChangeAmounts(new BigDecimal("10.00"), new BigDecimal("10.00"))).isNull();
 
+            // given, when, then
+            assertThat(invoice.validateChangeAmounts(new BigDecimal("-10.00"), new BigDecimal("-9.99"))).isEqualTo("Gross amount cannot be lower than net amount");
+            assertThat(invoice.validateChangeAmounts(new BigDecimal("-10.00"), new BigDecimal("-10.00"))).isNull();
         }
 
     }

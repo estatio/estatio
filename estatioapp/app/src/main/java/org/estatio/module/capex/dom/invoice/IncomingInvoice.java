@@ -1057,7 +1057,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String validateChangeAmounts(final BigDecimal netAmount, final BigDecimal grossAmount){
-        if (grossAmount.compareTo(netAmount) < 0){
+        if ((grossAmount.signum() >= 0 && grossAmount.compareTo(netAmount) < 0) ||
+            (grossAmount.signum() < 0 && grossAmount.compareTo(netAmount) > 0)) {
             return "Gross amount cannot be lower than net amount";
         }
         return null;
