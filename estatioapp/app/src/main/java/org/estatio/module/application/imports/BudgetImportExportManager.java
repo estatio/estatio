@@ -171,7 +171,7 @@ public class BudgetImportExportManager {
         Budget budgetToRemove = getBudgetUsingFirstLine(lineItems);
         String errorMessage = null;
         try {
-            if (this.getBudget()!=null) {
+            if (budgetToRemove!=null) {
                 wrapperFactory.wrap(factoryService.mixin(Budget_Remove.class, budgetToRemove)).removeBudget(true);
             }
         } catch (Exception e) {
