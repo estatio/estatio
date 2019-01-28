@@ -22,6 +22,7 @@ import org.estatio.module.capex.dom.payment.PaymentBatchRepository;
 import org.estatio.module.coda.dom.doc.CodaDocHead;
 import org.estatio.module.coda.dom.doc.CodaDocHeadRepository;
 import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(
@@ -45,7 +46,13 @@ public class PaymentBatchItaUploadService {
                 final CodaDocHead docHeadIfAny = codaDocHeadRepository.findByCmpCodeAndDocCodeAndDocNum(ecpBuyerCompany.getReference(), line.getCodiceDocumento(), line.getNumeroDocumento());
                 if (docHeadIfAny!=null) {
                     final IncomingInvoice invoiceFromLine = docHeadIfAny.getIncomingInvoice();
-                    if (invoiceFromLine != null) newBatch.addLineIfRequired(invoiceFromLine);
+                    if (invoiceFromLine != null) {
+                        if (invoiceFromLine.getPaymentMethod()!=null && invoiceFromLine.getPaymentMethod()!=PaymentMethod.BANK_TRANSFER) {
+                            messageService.warnUser(String.format("Invoice number %s of %s has payment method %s and should not be in this payment batch.", invoiceFromLine.getInvoiceNumber(), invoiceFromLine.getSeller().getName(), invoiceFromLine.getPaymentMethod().title()));
+                        } else {
+                            newBatch.addLineIfRequired(invoiceFromLine);
+                        }
+                    }
                 }
             }
             return newBatch;
