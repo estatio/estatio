@@ -271,7 +271,7 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
 
             // expect
             expectedExceptions.expect(DisabledException.class);
-            expectedExceptions.expectMessage("This budget is assigned already");
+            expectedExceptions.expectMessage("This budget is not in a state of new");
 
             // when
             sudoService.sudo(EstatioAdmin.USER_NAME, Lists.newArrayList(EstatioRole.ADMINISTRATOR.getRoleName()),
