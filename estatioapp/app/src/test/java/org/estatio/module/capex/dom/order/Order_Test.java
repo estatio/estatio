@@ -1,11 +1,11 @@
 package org.estatio.module.capex.dom.order;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -335,36 +335,45 @@ public class Order_Test {
         order.addItem(chargeForFra, null, null, null, null, null, null, null, null, null);
     }
 
-    @Ignore("For ECP-866, when it is implemented")
     @Test
-    public void orderNumberChanges_onEditProperty() throws Exception {
+    public void updateOrderNumber_works() throws Exception {
         // given
-        final Project project = new Project();
-        project.setReference("001");
-
-        final Charge charge = new Charge();
-        charge.setReference("001");
-
-        final Property oldProperty = new Property();
-        oldProperty.setReference("CUR");
-        final Property newProperty = new Property();
-        newProperty.setReference("COL");
-
-        final Order order = new Order();
-        order.setAtPath("/ITA");
-        order.setOrderNumber("0001/CUR/001/001");
-
-        final OrderItem orderItem = new OrderItem();
-        orderItem.setCharge(charge);
-        orderItem.setProject(project);
-        orderItem.setProperty(oldProperty);
-
-        order.getItems().add(orderItem);
+        Order order = new Order();
+        order.setOrderNumber("1234/OXF/123/005");
+        OrderRepository repository = new OrderRepository();
+        order.orderRepository = repository;
+        OrderItem firstItem = new OrderItem();
+        order.getItems().add(firstItem);
 
         // when
-        order.editProperty(newProperty, true);
+        order.setBuyerOrderNumber(BigInteger.valueOf(1234));
+        order.updateOrderNumber();
 
         // then
-        assertThat(order.getOrderNumber()).isEqualTo("0001/COL/001/001");
+        assertThat(order.getOrderNumber()).isEqualTo("1234/OXF//");
+
+        // and when
+        Property property = new Property();
+        property.setReference("LON");
+        order.setProperty(property);
+        order.updateOrderNumber();
+        // then
+        assertThat(order.getOrderNumber()).isEqualTo("1234/LON//");
+
+        // and when
+        Project project = new Project();
+        project.setReference("GBPR321");
+        firstItem.setProject(project);
+        order.updateOrderNumber();
+        // then
+        assertThat(order.getOrderNumber()).isEqualTo("1234/LON/321/");
+
+        // and when
+        Charge charge = new Charge();
+        charge.setReference("GBWT006");
+        firstItem.setCharge(charge);
+        order.updateOrderNumber();
+        // then
+        assertThat(order.getOrderNumber()).isEqualTo("1234/LON/321/006");
     }
 }
