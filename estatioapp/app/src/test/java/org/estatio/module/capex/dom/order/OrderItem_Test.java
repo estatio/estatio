@@ -324,5 +324,5 @@ public class OrderItem_Test {
         assertThat(orderItem.choices0EditProject()).isNotNull();
 
     }
-    
+
 }

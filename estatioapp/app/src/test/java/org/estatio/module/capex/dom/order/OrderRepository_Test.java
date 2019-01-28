@@ -82,4 +82,32 @@ public class OrderRepository_Test {
         assertThat(orderNumber).isEqualTo("0005/RON/001/002");
     }
 
+    @Test
+    public void to_ita_ordernumber_works(){
+
+
+        // given
+        OrderRepository orderRepository = new OrderRepository();
+        String nextIncrement = "1234";
+
+        // when
+        Property property = new Property();
+        property.setReference("OXF");
+        Project project = new Project();
+        project.setReference("PR123");
+        Charge charge = new Charge();
+        charge.setReference("N005");
+
+        // then
+        assertThat(orderRepository.toItaOrderNumber(nextIncrement, property, null, project, charge)).isEqualTo("1234/OXF/123/005");
+        assertThat(orderRepository.toItaOrderNumber(nextIncrement, property, null, null, charge)).isEqualTo("1234/OXF//005");
+        assertThat(orderRepository.toItaOrderNumber(nextIncrement, property, null, project, null)).isEqualTo("1234/OXF/123/");
+        assertThat(orderRepository.toItaOrderNumber(nextIncrement, property, null, null, null)).isEqualTo("1234/OXF//");
+
+        // when
+        String multiPropertyRef = "GEN";
+        assertThat(orderRepository.toItaOrderNumber(nextIncrement, null, multiPropertyRef, project, charge)).isEqualTo("1234/GEN/123/005");
+
+    }
+
 }

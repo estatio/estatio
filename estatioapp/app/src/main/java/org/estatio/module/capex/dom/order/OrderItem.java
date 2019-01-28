@@ -236,6 +236,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     @ActionLayout(promptStyle = PromptStyle.INLINE)
     public OrderItem editCharge(@Nullable final Charge charge) {
         setCharge(charge);
+        getOrdr().updateOrderNumber();
         return this;
     }
 
@@ -397,6 +398,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     public OrderItem editProject(
             @Nullable final Project project) {
         setProject(project);
+        getOrdr().updateOrderNumber();
         return this;
     }
 

@@ -238,8 +238,8 @@ public class OrderRepository {
             final String multiPropertyReference,
             final Project project,
             final Charge charge) {
-        final String projectNumber = project.getReference().replaceAll("[^0-9.]", "");
-        final String chargeNumber = charge.getReference().replaceAll("[^0-9.]", "");
+        final String projectNumber = project!=null ? project.getReference().replaceAll("[^0-9.]", "") : "";
+        final String chargeNumber = charge!=null ? charge.getReference().replaceAll("[^0-9.]", "") : "";
         return String.format("%s/%s/%s/%s", nextIncrement, property != null ? property.getReference() : multiPropertyReference, projectNumber, chargeNumber);
     }
 

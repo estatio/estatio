@@ -32,7 +32,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.google.common.collect.Lists;
 
-import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -197,16 +196,16 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     public static class ObjectPersistedEvent
             extends org.apache.isis.applib.services.eventbus.ObjectPersistedEvent<Order> {
-    }
 
+    }
     public static class ObjectPersistingEvent
             extends org.apache.isis.applib.services.eventbus.ObjectPersistingEvent<Order> {
-    }
 
+    }
     public static class ObjectRemovingEvent
             extends org.apache.isis.applib.services.eventbus.ObjectRemovingEvent<Order> {
-    }
 
+    }
     public Order() {
         // TODO: may need to revise this when we know more...
         super("seller, orderDate, orderNumber, id");
@@ -279,6 +278,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
                     .map(OrderItem.class::cast)
                     .forEach(x -> x.setProperty(property));
         }
+        updateOrderNumber();
 
         return this;
     }
@@ -353,33 +353,23 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return this;
     }
 
-    public String validateEditOrderNumber(final String orderNumber) {
-        if (StringUtils.countMatches(orderNumber, "/") != 3)
-            return "Order number format incorrect; should be aaaa/bbb/ccc/ddd";
-
-        final String currentNumeratorValue = getOrderNumber().split("/")[0];
-        final String newNumeratorValue = orderNumber.split("/")[0];
-
-        if (!currentNumeratorValue.equals(newNumeratorValue))
-            return String.format("First element of order number (%s) can not be changed", currentNumeratorValue);
-
-        return null;
-    }
-
     public String default0EditOrderNumber() {
         return getOrderNumber();
     }
 
     public String disableEditOrderNumber() {
+        if (getAtPath().startsWith("/ITA")) return "Order number is generated automatically for Italian order"; // May be redundant since is hidden for italian user; but just to be explicit for other users ...
         return orderImmutableReason();
     }
 
-    @Programmatic
-    private String getOrderIncrement() {
-        if (!getAtPath().startsWith("/ITA"))
-            return null;
+    public boolean hideEditOrderNumber(){
+        return meService.me().getAtPath().startsWith("/ITA");
+    }
 
-        return getOrderNumber().split("/")[0];
+    public void updateOrderNumber() {
+        String possibleMultiPropertyReference = orderNumber.split("/").length > 1 ? orderNumber.split("/")[1] : "";
+        String orderNumber = orderRepository.toItaOrderNumber(getSellerOrderReference(), getProperty(), possibleMultiPropertyReference, getItems().first().getProject(), getItems().first().getCharge());
+        setOrderNumber(orderNumber);
     }
 
     @Column(allowsNull = "true", length = 255)
@@ -1183,5 +1173,8 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Inject
     PaperclipRepository paperclipRepository;
+
+    @Inject
+    OrderRepository orderRepository;
 
 }

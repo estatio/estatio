@@ -335,45 +335,6 @@ public class Order_Test {
         order.addItem(chargeForFra, null, null, null, null, null, null, null, null, null);
     }
 
-    @Test
-    public void editOrderNumber_happyCase() throws Exception {
-        // given
-        final Order order = new Order();
-        order.setOrderNumber("0001/CUR/001/001");
-
-        // when
-        final String validation = order.validateEditOrderNumber("0001/GEN/002/002");
-
-        // then
-        assertThat(validation).isNull();
-    }
-
-    @Test
-    public void editOrderNumber_sadCase_incorrect_amount_separators() throws Exception {
-        // given
-        final Order order = new Order();
-        order.setOrderNumber("0001/CUR/001/001");
-
-        // when
-        final String validation = order.validateEditOrderNumber("0001/GEN/002.002");
-
-        // then
-        assertThat(validation).isEqualTo("Order number format incorrect; should be aaaa/bbb/ccc/ddd");
-    }
-
-    @Test
-    public void editOrderNumber_sadCase_numerator_value_changed() throws Exception {
-        // given
-        final Order order = new Order();
-        order.setOrderNumber("0001/CUR/001/001");
-
-        // when
-        final String validation = order.validateEditOrderNumber("0002/CUR/001/001");
-
-        // then
-        assertThat(validation).isEqualTo("First element of order number (0001) can not be changed");
-    }
-
     @Ignore("For ECP-866, when it is implemented")
     @Test
     public void orderNumberChanges_onEditProperty() throws Exception {
