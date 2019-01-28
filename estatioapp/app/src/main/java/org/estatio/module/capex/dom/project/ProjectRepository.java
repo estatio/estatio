@@ -121,6 +121,18 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
         return result;
     }
 
+    public List<Project> findWithoutFixedAsset(){
+        List<Project> result = new ArrayList<>();
+        for (Project project : allUnarchivedProjects()){
+            List<ProjectItem> itemsFound = project.getItems().stream().filter(x->x.getFixedAsset()==null).collect(Collectors.toList());
+            if (itemsFound.size()>0){
+                result.add(project);
+                continue;
+            }
+        }
+        return result;
+    }
+
     @Programmatic
     public List<Project> findUsingAtPath(final String atPath) {
         if (atPath==null) return Lists.emptyList();

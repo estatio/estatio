@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Rule;
@@ -18,6 +19,7 @@ import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStat
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.charge.dom.Charge;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -299,5 +301,28 @@ public class OrderItem_Test {
         assertThat(orderItem.reasonIncomplete()).isNull();
     }
 
+    @Mock ProjectRepository mockProjectRepository;
 
+    @Test
+    public void choices_edit_project_when_having_no_project_works() throws Exception {
+
+        // given
+        Order order = new Order();
+        OrderItem orderItem = new OrderItem();
+        orderItem.setOrdr(order);
+        orderItem.projectRepository = mockProjectRepository;
+
+        assertThat(orderItem.getFixedAsset()).isNull();
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockProjectRepository).findWithoutFixedAsset();
+            will(returnValue(Arrays.asList(new Project())));
+        }});
+
+        // when, then
+        assertThat(orderItem.choices0EditProject()).isNotNull();
+
+    }
+    
 }

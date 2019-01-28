@@ -411,7 +411,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
                         .filter(x -> !x.isParentProject())
                         .filter(x -> x.getEndDate() == null || !x.getEndDate().isBefore(getEndDate() != null ? getEndDate() : LocalDate.now()))
                         .collect(Collectors.toList())
-                : null;
+                : projectRepository.findWithoutFixedAsset();
     }
 
     public String disableEditProject() {
@@ -634,7 +634,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     private ChargeRepository chargeRepository;
 
     @Inject
-    private ProjectRepository projectRepository;
+    ProjectRepository projectRepository;
 
     @Inject
     private BudgetItemChooser budgetItemChooser;
