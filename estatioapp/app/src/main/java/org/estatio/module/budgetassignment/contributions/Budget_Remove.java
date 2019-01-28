@@ -10,7 +10,6 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.user.UserService;
 
-import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.Status;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
@@ -49,7 +48,7 @@ public class Budget_Remove {
 
     public String disableRemoveBudget(){
         if (budget.getStatus()!=Status.NEW) return "This budget is not in a state of new";
-        return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser()) ? "You need administrator rights to remove a budget" : null;
+        return null;
     }
 
     public String validateRemoveBudget(final boolean areYouSure){

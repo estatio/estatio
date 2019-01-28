@@ -168,11 +168,11 @@ public class BudgetImportExportManager {
 
         // try to remove budget if exists
         List<BudgetImportExport> lineItems = (List<BudgetImportExport>) objects.get(0);
-        setBudgetUsingFirstLine(lineItems);
+        Budget budgetToRemove = getBudgetUsingFirstLine(lineItems);
         String errorMessage = null;
         try {
             if (this.getBudget()!=null) {
-                wrapperFactory.wrap(factoryService.mixin(Budget_Remove.class, getBudget())).removeBudget(true);
+                wrapperFactory.wrap(factoryService.mixin(Budget_Remove.class, budgetToRemove)).removeBudget(true);
             }
         } catch (Exception e) {
             errorMessage = "Import cannot be performed. Error: " + e.getMessage();
@@ -199,13 +199,10 @@ public class BudgetImportExportManager {
         return getBudget();
     }
 
-    private void setBudgetUsingFirstLine(List<BudgetImportExport> lineItems){
+    private Budget getBudgetUsingFirstLine(List<BudgetImportExport> lineItems){
         BudgetImportExport firstLine = lineItems.get(0);
         Property property = propertyRepository.findPropertyByReference(firstLine.getPropertyReference());
-        Budget budgetFound = budgetRepository.findByPropertyAndStartDate(property, firstLine.getBudgetStartDate());
-        if (budgetFound!=null){
-            this.setBudget(budgetFound);
-        }
+        return budgetRepository.findByPropertyAndStartDate(property, firstLine.getBudgetStartDate());
     }
 
     private List<BudgetImportExport> importBudgetAndItems(final List<List<?>> objects){
