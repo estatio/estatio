@@ -18,6 +18,7 @@
  */
 package org.estatio.module.capex.dom.project;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,10 +33,15 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+
 import org.incode.module.base.dom.utils.StringUtils;
 
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.numerator.dom.Numerator;
+import org.estatio.module.numerator.dom.NumeratorRepository;
+
 
 @DomainService(repositoryFor = Project.class, nature = NatureOfService.DOMAIN)
 public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
@@ -141,6 +147,20 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
                 .collect(Collectors.toList());
     }
 
+    public String generateNextProjectNumber(final String atPath) {
+        final Numerator numerator = numeratorRepository.findOrCreateNumerator(
+                "Project number",
+                null,
+                "ITPR%03d",
+                BigInteger.ZERO,
+                applicationTenancyRepository.findByPath(atPath));
+        return numerator.nextIncrementStr();
+    }
+
     @Inject
     RepositoryService repositoryService;
+
+    @Inject NumeratorRepository numeratorRepository;
+
+    @Inject ApplicationTenancyRepository applicationTenancyRepository;
 }

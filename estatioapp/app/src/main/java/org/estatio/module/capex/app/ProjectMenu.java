@@ -104,6 +104,27 @@ public class ProjectMenu {
         return projectRepository.listAll().stream().filter(x->x.getItems().isEmpty()).collect(Collectors.toList());
     }
 
+    public boolean hideNewProject() {
+        return !hideNewProjectItaly();
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @MemberOrder(sequence = "2")
+    public Project newProjectItaly(
+            final String name,
+            final @Nullable LocalDate startDate,
+            final @Nullable LocalDate endDate) {
+        String atPath = "/ITA";
+        String reference = projectRepository.generateNextProjectNumber(atPath);
+        return projectRepository.create(reference, name, startDate, endDate, atPath, null);
+    }
+
+    public boolean hideNewProjectItaly() {
+        if (meService.me().getAtPath().startsWith("/ITA")) return false;
+        return true;
+    }
+
+
     @Action(semantics = SemanticsOf.SAFE)
     public ProjectImportManager importProjects(final Country country){
         return new ProjectImportManager(country);
