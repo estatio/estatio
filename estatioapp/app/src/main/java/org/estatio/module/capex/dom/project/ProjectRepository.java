@@ -147,11 +147,13 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
                 .collect(Collectors.toList());
     }
 
+    @Programmatic
     public String generateNextProjectNumber(final String atPath) {
+        final String format = atPath.startsWith("/ITA") ? "ITPR%03d" : "%04d";
         final Numerator numerator = numeratorRepository.findOrCreateNumerator(
                 "Project number",
                 null,
-                "ITPR%03d",
+                format,
                 BigInteger.ZERO,
                 applicationTenancyRepository.findByPath(atPath));
         return numerator.nextIncrementStr();
