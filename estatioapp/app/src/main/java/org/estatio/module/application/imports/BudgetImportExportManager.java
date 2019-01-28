@@ -37,19 +37,26 @@ import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.ViewModelLayout;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
+import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.keyitem.DirectCost;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.keytable.DirectCostTable;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
+import org.estatio.module.budgetassignment.contributions.Budget_Remove;
 import org.estatio.module.budgetassignment.imports.DirectCostLine;
 import org.estatio.module.budgetassignment.imports.KeyItemImportExportLineItem;
 import org.estatio.module.budgetassignment.imports.KeyItemImportExportService;
@@ -159,22 +166,46 @@ public class BudgetImportExportManager {
         List<List<?>> objects =
                 excelService.fromExcel(spreadsheet, Arrays.asList(spec1, spec2, spec3, spec4));
 
-        // first upsert charges
-        List<ChargeImport> chargeImportLines = (List<ChargeImport>) objects.get(3);
-        for (ChargeImport lineItem : chargeImportLines){
-            lineItem.importData(null);
+        // try to remove budget if exists
+        List<BudgetImportExport> lineItems = (List<BudgetImportExport>) objects.get(0);
+        setBudgetUsingFirstLine(lineItems);
+        String errorMessage = null;
+        try {
+            if (this.getBudget()!=null) {
+                wrapperFactory.wrap(factoryService.mixin(Budget_Remove.class, getBudget())).removeBudget(true);
+            }
+        } catch (Exception e) {
+            errorMessage = "Import cannot be performed. Error: " + e.getMessage();
+            messageService.warnUser(errorMessage);
         }
 
-        // import budget and items
-        List<BudgetImportExport> budgetItemLines = importBudgetAndItems(objects);
+        if (errorMessage==null) {
+            // first upsert charges
+            List<ChargeImport> chargeImportLines = (List<ChargeImport>) objects.get(3);
+            for (ChargeImport lineItem : chargeImportLines) {
+                lineItem.importData(null);
+            }
 
-        // import keyTables
-        importKeyTables(budgetItemLines, objects);
+            // import budget and items
+            List<BudgetImportExport> budgetItemLines = importBudgetAndItems(objects);
 
-        // import directCosts
-        importDirectCostTables(budgetItemLines, objects);
+            // import keyTables
+            importKeyTables(budgetItemLines, objects);
+
+            // import directCosts
+            importDirectCostTables(budgetItemLines, objects);
+        }
 
         return getBudget();
+    }
+
+    private void setBudgetUsingFirstLine(List<BudgetImportExport> lineItems){
+        BudgetImportExport firstLine = lineItems.get(0);
+        Property property = propertyRepository.findPropertyByReference(firstLine.getPropertyReference());
+        Budget budgetFound = budgetRepository.findByPropertyAndStartDate(property, firstLine.getBudgetStartDate());
+        if (budgetFound!=null){
+            this.setBudget(budgetFound);
+        }
     }
 
     private List<BudgetImportExport> importBudgetAndItems(final List<List<?>> objects){
@@ -327,5 +358,17 @@ public class BudgetImportExportManager {
 
     @Inject
     private ServiceRegistry2 serviceRegistry2;
+
+    @Inject
+    private BudgetRepository budgetRepository;
+
+    @Inject
+    PropertyRepository propertyRepository;
+
+    @Inject FactoryService factoryService;
+
+    @Inject WrapperFactory wrapperFactory;
+
+    @Inject MessageService messageService;
 
 }
