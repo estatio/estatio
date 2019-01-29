@@ -42,6 +42,7 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -49,7 +50,6 @@ import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.PartitioningTable;
@@ -163,17 +163,6 @@ public class PartitionItem extends UdoDomainObject2<PartitionItem> implements Wi
     @Getter @Setter
     private SortedSet<BudgetCalculation> calculations = new TreeSet<>();
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public Budget remove() {
-        removeIfNotAlready(this);
-        return this.getBudgetItem().getBudget();
-    }
-
-    public String disableRemove(){
-        BudgetCalculationType type = getPartitioning().getType();
-        return getBudgetItem().isAssignedForTypeReason(type);
-    }
-
     @Action(semantics = SemanticsOf.SAFE, hidden = Where.ALL_TABLES)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public Budget getBudget(){
@@ -184,6 +173,11 @@ public class PartitionItem extends UdoDomainObject2<PartitionItem> implements Wi
     @PropertyLayout(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return getBudgetItem().getBudget().getApplicationTenancy();
+    }
+
+    @Programmatic
+    public void remove() {
+        repositoryService.removeAndFlush(this);
     }
 
     @Programmatic
@@ -204,7 +198,6 @@ public class PartitionItem extends UdoDomainObject2<PartitionItem> implements Wi
     }
 
     @Inject
-    private BudgetCalculationRepository budgetCalculationRepository;
-
+    private RepositoryService repositoryService;
 
 }

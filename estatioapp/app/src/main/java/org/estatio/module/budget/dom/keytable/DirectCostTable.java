@@ -168,10 +168,9 @@ public class DirectCostTable extends PartitioningTable {
 
     @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public DirectCostTable deleteItems() {
-        for (DirectCost keyItem : getItems()) {
-            removeIfNotAlready(keyItem);
+        for (DirectCost directCost : getItems()) {
+            repositoryService.removeAndFlush(directCost);
         }
-
         return this;
     }
 

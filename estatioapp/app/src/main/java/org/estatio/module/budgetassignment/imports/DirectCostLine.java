@@ -75,7 +75,7 @@ public class DirectCostLine
         this.propertyReference = item.propertyReference;
         this.unitReference = item.unitReference;
         this.status = item.status;
-        this.budgetedCost = item.budgetedCost.setScale(2, BigDecimal.ROUND_HALF_UP);
+        this.budgetedCost = item.budgetedCost!= null ? item.budgetedCost.setScale(2, BigDecimal.ROUND_HALF_UP) : BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
         this.auditedCost = item.auditedCost!= null ? item.auditedCost.setScale(2, BigDecimal.ROUND_HALF_UP) : null;
         this.directCostTableName = item.directCostTableName;
         this.startDate = item.startDate;

@@ -74,18 +74,7 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
     }
 
     public List<BudgetCalculation> findByBudget(final Budget budget) {
-        List<BudgetCalculation> result = new ArrayList<>();
-        result.addAll(findByBudgetAndCalculationType(budget, BudgetCalculationType.ACTUAL));
-        result.addAll(findByBudgetAndCalculationType(budget, BudgetCalculationType.BUDGETED));
-        return result;
-    }
-
-    public List<BudgetCalculation> findByBudgetAndCalculationType(final Budget budget, final BudgetCalculationType calculationType){
-        List<BudgetCalculation> result = new ArrayList<>();
-        for (BudgetItem item : budget.getItems()){
-            result.addAll(findByBudgetItemAndCalculationType(item, calculationType));
-        }
-        return result;
+        return allMatches("findByBudget", "budget", budget);
     }
 
     public List<BudgetCalculation> findByBudgetItemAndCalculationType(final BudgetItem budgetItem, final BudgetCalculationType calculationType) {

@@ -118,6 +118,11 @@ import lombok.Setter;
                         "WHERE budget == :budget && "
                         + "calculationType == :type && "
                         + "status == :status"),
+        @Query(
+                name = "findByBudget", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation " +
+                        "WHERE budget == :budget "),
 })
 @Indices({
         @Index(name = "BudgetCalculation_budget_unit_invoiceCharge_type_IDX",

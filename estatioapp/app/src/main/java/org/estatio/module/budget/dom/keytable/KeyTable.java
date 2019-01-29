@@ -299,7 +299,7 @@ public class KeyTable extends PartitioningTable {
     @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public KeyTable deleteItems() {
         for (KeyItem keyItem : getItems()) {
-            removeIfNotAlready(keyItem);
+            repositoryService.removeAndFlush(keyItem);
         }
 
         return this;
@@ -377,4 +377,5 @@ public class KeyTable extends PartitioningTable {
 
     @Inject
     PartitionItemRepository partitionItemRepository;
+
 }

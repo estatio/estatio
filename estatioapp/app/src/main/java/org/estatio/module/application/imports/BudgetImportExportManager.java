@@ -40,27 +40,23 @@ import org.apache.isis.applib.annotation.ViewModelLayout;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
-import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 
-import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
-import org.estatio.module.budget.dom.keyitem.DirectCost;
-import org.estatio.module.budget.dom.keyitem.KeyItem;
+import org.estatio.module.budget.dom.budget.Status;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budget.dom.keytable.DirectCostTable;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
-import org.estatio.module.budgetassignment.contributions.Budget_Remove;
 import org.estatio.module.budgetassignment.imports.DirectCostLine;
 import org.estatio.module.budgetassignment.imports.KeyItemImportExportLineItem;
 import org.estatio.module.budgetassignment.imports.KeyItemImportExportService;
-import org.estatio.module.budgetassignment.imports.Status;
 import org.estatio.module.charge.imports.ChargeImport;
 
 import lombok.Getter;
@@ -158,163 +154,12 @@ public class BudgetImportExportManager {
             @Parameter(fileAccept = ".xlsx")
             @ParameterLayout(named = "Excel spreadsheet")
             final Blob spreadsheet) {
-
-        WorksheetSpec spec1 = new WorksheetSpec(BudgetImportExport.class, "budget");
-        WorksheetSpec spec2 = new WorksheetSpec(KeyItemImportExportLineItem.class, "keyItems");
-        WorksheetSpec spec3 = new WorksheetSpec(DirectCostLine.class, "directCosts");
-        WorksheetSpec spec4 = new WorksheetSpec(ChargeImport.class, "charges");
-        List<List<?>> objects =
-                excelService.fromExcel(spreadsheet, Arrays.asList(spec1, spec2, spec3, spec4));
-
-        // try to remove budget if exists
-        List<BudgetImportExport> lineItems = (List<BudgetImportExport>) objects.get(0);
-        Budget budgetToRemove = getBudgetUsingFirstLine(lineItems);
-        String errorMessage = null;
-        try {
-            if (budgetToRemove!=null) {
-                wrapperFactory.wrap(factoryService.mixin(Budget_Remove.class, budgetToRemove)).removeBudget(true);
-            }
-        } catch (Exception e) {
-            errorMessage = "Import cannot be performed. Error: " + e.getMessage();
-            messageService.warnUser(errorMessage);
-        }
-
-        if (errorMessage==null) {
-            // first upsert charges
-            List<ChargeImport> chargeImportLines = (List<ChargeImport>) objects.get(3);
-            for (ChargeImport lineItem : chargeImportLines) {
-                lineItem.importData(null);
-            }
-
-            // import budget and items
-            List<BudgetImportExport> budgetItemLines = importBudgetAndItems(objects);
-
-            // import keyTables
-            importKeyTables(budgetItemLines, objects);
-
-            // import directCosts
-            importDirectCostTables(budgetItemLines, objects);
-        }
-
-        return getBudget();
+        return budgetImportExportService.importBudget(getBudget(), spreadsheet);
     }
 
-    private Budget getBudgetUsingFirstLine(List<BudgetImportExport> lineItems){
-        BudgetImportExport firstLine = lineItems.get(0);
-        Property property = propertyRepository.findPropertyByReference(firstLine.getPropertyReference());
-        return budgetRepository.findByPropertyAndStartDate(property, firstLine.getBudgetStartDate());
-    }
-
-    private List<BudgetImportExport> importBudgetAndItems(final List<List<?>> objects){
-        Budget importedBudget = new Budget();
-        List<BudgetImportExport> lineItems = (List<BudgetImportExport>) objects.get(0);
-        BudgetImportExport previousRow = null;
-        for (BudgetImportExport lineItem :lineItems){
-            importedBudget = (Budget) lineItem.importData(previousRow).get(0);
-            previousRow = lineItem;
-        }
-        setBudget(importedBudget);
-        return lineItems;
-    }
-
-    private void importKeyTables(final List<BudgetImportExport> budgetItemLines, final List<List<?>> objects){
-
-        List<KeyTable> keyTablesToImport = keyTablesToImport(budgetItemLines);
-        List<KeyItemImportExportLineItem> keyItemLines = (List<KeyItemImportExportLineItem>) objects.get(1);
-
-        // filter case where no key items are filled in
-        if (keyItemLines.size() == 0) {return;}
-
-        for (KeyTable keyTable : keyTablesToImport){
-            List<KeyItemImportExportLineItem> itemsToImportForKeyTable = new ArrayList<>();
-            for (KeyItemImportExportLineItem keyItemLine : keyItemLines){
-                if (keyItemLine.getKeyTableName().equals(keyTable.getName())){
-                    itemsToImportForKeyTable.add(new KeyItemImportExportLineItem(keyItemLine));
-                }
-            }
-            for (KeyItem keyItem : keyTable.getItems()) {
-                Boolean keyItemFound = false;
-                for (KeyItemImportExportLineItem lineItem : itemsToImportForKeyTable){
-                    if (lineItem.getUnitReference().equals(keyItem.getUnit().getReference())){
-                        keyItemFound = true;
-                        break;
-                    }
-                }
-                if (!keyItemFound) {
-                    KeyItemImportExportLineItem deletedItem = new KeyItemImportExportLineItem(keyItem, null);
-                    deletedItem.setStatus(Status.DELETED);
-                    itemsToImportForKeyTable.add(deletedItem);
-                }
-            }
-            for (KeyItemImportExportLineItem item : itemsToImportForKeyTable){
-                serviceRegistry2.injectServicesInto(item);
-                item.validate();
-                item.apply();
-            }
-        }
-    }
-
-    private List<KeyTable> keyTablesToImport(final List<BudgetImportExport> lineItems){
-        List<KeyTable> result = new ArrayList<>();
-        for (BudgetImportExport lineItem :lineItems) {
-            if (PartitioningTableType.valueOf(lineItem.getTableType()) == PartitioningTableType.KEY_TABLE) {
-                KeyTable foundKeyTable = (KeyTable) partitioningTableRepository.findByBudgetAndName(getBudget(), lineItem.getPartitioningTableName());
-                if (foundKeyTable != null && !result.contains(foundKeyTable)) {
-                    result.add(foundKeyTable);
-                }
-            }
-        }
-        return result;
-    }
-
-    private void importDirectCostTables(final List<BudgetImportExport> budgetItemLines, final List<List<?>> objects){
-
-        List<DirectCostTable> tablesToImport = directCostTablesToImport(budgetItemLines);
-        List<DirectCostLine> lines = (List<DirectCostLine>) objects.get(2);
-
-        // filter case where no key items are filled in
-        if (lines.size() == 0) {return;}
-
-        for (DirectCostTable table : tablesToImport){
-            List<DirectCostLine> itemsToImportForTable = new ArrayList<>();
-            for (DirectCostLine line : lines){
-                if (line.getDirectCostTableName().equals(table.getName())){
-                    itemsToImportForTable.add(new DirectCostLine(line));
-                }
-            }
-            for (DirectCost directCost : table.getItems()) {
-                Boolean itemFound = false;
-                for (DirectCostLine lineItem : itemsToImportForTable){
-                    if (lineItem.getUnitReference().equals(directCost.getUnit().getReference())){
-                        itemFound = true;
-                        break;
-                    }
-                }
-                if (!itemFound) {
-                    DirectCostLine deletedItem = new DirectCostLine(directCost, null);
-                    deletedItem.setStatus(Status.DELETED);
-                    itemsToImportForTable.add(deletedItem);
-                }
-            }
-            for (DirectCostLine item : itemsToImportForTable){
-                serviceRegistry2.injectServicesInto(item);
-                item.validate();
-                item.apply();
-            }
-        }
-    }
-
-    private List<DirectCostTable> directCostTablesToImport(final List<BudgetImportExport> lineItems){
-        List<DirectCostTable> result = new ArrayList<>();
-        for (BudgetImportExport lineItem :lineItems) {
-            if (PartitioningTableType.valueOf(lineItem.getTableType()) == PartitioningTableType.DIRECT_COST_TABLE) {
-                DirectCostTable foundTable = (DirectCostTable) partitioningTableRepository.findByBudgetAndName(getBudget(), lineItem.getPartitioningTableName());
-                if (foundTable != null && !result.contains(foundTable)) {
-                    result.add(foundTable);
-                }
-            }
-        }
-        return result;
+    public String disableImportBudget(){
+        if (getBudget()==null || getBudget().getStatus()!=Status.NEW) return "This budget is assigned already";
+        return null;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
@@ -364,8 +209,8 @@ public class BudgetImportExportManager {
 
     @Inject FactoryService factoryService;
 
-    @Inject WrapperFactory wrapperFactory;
-
     @Inject MessageService messageService;
+
+    @Inject BudgetCalculationRepository budgetCalculationRepository;
 
 }

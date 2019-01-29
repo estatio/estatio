@@ -234,6 +234,7 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
 
             wrap(mixin(Budget_Calculate.class, topmodelBudget2015)).calculate(false);
 
+            assertThat(budgetCalculationRepository.findByBudget(topmodelBudget2015)).isNotEmpty();
             assertThat(budgetCalculationRepository.allBudgetCalculations()).isNotEmpty();
             assertThat(repositoryService.allInstances(PartitioningTable.class)).isNotEmpty();
             assertThat(repositoryService.allInstances(PartitionItem.class)).isNotEmpty();
@@ -251,6 +252,7 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
                     });
 
             // then
+            assertThat(budgetCalculationRepository.findByBudget(topmodelBudget2015)).isEmpty();
             assertThat(budgetCalculationRepository.allBudgetCalculations()).isEmpty();
             assertThat(repositoryService.allInstances(PartitioningTable.class)).isEmpty();
             assertThat(repositoryService.allInstances(PartitionItem.class)).isEmpty();
@@ -274,12 +276,7 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
             expectedExceptions.expectMessage("This budget is not in a state of new");
 
             // when
-            sudoService.sudo(EstatioAdmin.USER_NAME, Lists.newArrayList(EstatioRole.ADMINISTRATOR.getRoleName()),
-                    new Runnable() {
-                        @Override public void run() {
-                            wrap(mixin(Budget_Remove.class, topmodelBudget2015)).removeBudget(true);
-                        }
-                    });
+            wrap(mixin(Budget_Remove.class, topmodelBudget2015)).removeBudget(true);
 
         }
 

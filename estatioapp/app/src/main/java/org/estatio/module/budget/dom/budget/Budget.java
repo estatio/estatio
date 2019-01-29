@@ -46,9 +46,9 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -339,25 +339,35 @@ public class Budget extends UdoDomainObject2<Budget>
         remove(this);
     }
 
-    @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    @ActionLayout()
+    @Programmatic
     public Budget removeAllBudgetItems() {
         for (BudgetItem budgetItem : this.getItems()) {
             for (PartitionItem pItem : budgetItem.getPartitionItems()){
                 pItem.remove();
             }
-            getContainer().remove(budgetItem);
-            getContainer().flush();
+            repositoryService.removeAndFlush(budgetItem);
         }
 
         return this;
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
-    @ActionLayout()
+    @Programmatic
     public Budget removeNewCalculations(){
         for (BudgetCalculation calculation : budgetCalculationRepository.findByBudget(this)) {
             calculation.removeWithStatusNew();
+        }
+        return this;
+    }
+
+    @Programmatic
+    public Budget removeAllPartitioningTables(){
+        for (KeyTable keyTable : getKeyTables()){
+            keyTable.deleteItems();
+            keyTable.remove();
+        }
+        for (DirectCostTable directCostTable : getDirectCostTables()){
+            directCostTable.deleteItems();
+            directCostTable.remove();
         }
         return this;
     }
@@ -414,5 +424,8 @@ public class Budget extends UdoDomainObject2<Budget>
 
     @Inject
     private DirectCostTableRepository directCostTableRepository;
+
+    @Inject
+    private RepositoryService repositoryService;
 
 }
