@@ -24,22 +24,23 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.budget.dom.keytable.KeyTable;
-import org.estatio.module.budgetassignment.imports.KeyItemImportExportManager;
+import org.estatio.module.budget.dom.keytable.DirectCostTable;
+import org.estatio.module.budgetassignment.imports.DirectCostImportExportManager;
 
 @DomainService(
         nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
 )
-public class KeyTable_importExportItems {
+public class DirectCostTable_importExportItems {
 
     @Action(
             semantics = SemanticsOf.NON_IDEMPOTENT
     )
     @ActionLayout(contributed = Contributed.AS_ACTION)
     @MemberOrder(name = "items", sequence = "5")
-    public KeyItemImportExportManager importExportItems(KeyTable keyTable) {
+    public DirectCostImportExportManager importExportItems(DirectCostTable directCostTable) {
 
-        return new KeyItemImportExportManager(keyTable);
+        return new DirectCostImportExportManager(directCostTable);
 
     }
+
 }

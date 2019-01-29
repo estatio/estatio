@@ -67,6 +67,11 @@ public class KeyItemImportExportService {
     }
 
     @Programmatic
+    public List<DirectCostLine> items(DirectCostImportExportManager manager) {
+        return Lists.transform(Lists.newArrayList(manager.getDirectCostTable().getItems()), toDirectCostLine());
+    }
+
+    @Programmatic
     public List<DirectCostLine> directCosts(SortedSet<DirectCost> directCosts) {
         return Lists.transform(Lists.newArrayList(directCosts), toDirectCostLine());
     }

@@ -24,7 +24,6 @@ import javax.jdo.annotations.Column;
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.InvokeOn;
@@ -32,6 +31,8 @@ import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
@@ -135,7 +136,7 @@ public class KeyItemImportExportLineItem
                 keyItem.setUnit(getUnit());
                 keyItem.setValue(getKeyValue().setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP));
                 keyItem.setSourceValue(getSourceValue().setScale(2, BigDecimal.ROUND_HALF_UP));
-                container.persistIfNotAlready(keyItem);
+                repositoryService.persistAndFlush(keyItem);
                 break;
 
             case UPDATED:
@@ -146,11 +147,11 @@ public class KeyItemImportExportLineItem
             case DELETED:
                 String message = "KeyItem for unit " + getKeyItem().getUnit().getReference() + " deleted";
                 getKeyItem().deleteBudgetKeyItem();
-                container.informUser(message);
+                messageService.informUser(message);
                 return null;
 
             case NOT_FOUND:
-                container.informUser("KeyItem not found");
+                messageService.informUser("KeyItem not found");
                 return null;
 
             default:
@@ -227,23 +228,20 @@ public class KeyItemImportExportLineItem
         return property;
     }
 
-    //region > compareTo
+
     @Override
     public int compareTo(final KeyItemImportExportLineItem other) {
         return this.keyItem.compareTo(other.keyItem);
     }
-    //endregion
 
 
-    //region > injected services
     @Inject
     KeyItemRepository keyItemRepository;
 
     @Inject
     UnitRepository unitRepository;
 
-    @Inject
-    DomainObjectContainer container;
+    @Inject MessageService messageService;
 
     @Inject
     PartitioningTableRepository partitioningTableRepository;
@@ -253,6 +251,9 @@ public class KeyItemImportExportLineItem
 
     @Inject
     BudgetRepository budgetRepository;
-    //endregion
+
+    @Inject
+    RepositoryService repositoryService;
+
 
 }

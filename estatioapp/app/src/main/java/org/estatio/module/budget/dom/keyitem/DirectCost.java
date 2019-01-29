@@ -82,7 +82,7 @@ public class DirectCost extends PartitioningTableItem {
 
     @ActionLayout(hidden = Where.EVERYWHERE)
     public DirectCost changeBudgetedCost(final BigDecimal budgetedCost) {
-        setAuditedCost(budgetedCost);
+        setBudgetedCost(budgetedCost);
         return this;
     }
 

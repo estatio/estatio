@@ -24,7 +24,6 @@ import javax.jdo.annotations.Column;
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.InvokeOn;
@@ -32,6 +31,8 @@ import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
@@ -47,6 +48,8 @@ import org.estatio.module.party.dom.Party;
 
 import lombok.Getter;
 import lombok.Setter;
+import static org.estatio.module.budget.dom.budget.Status.NEW;
+import static org.estatio.module.budget.dom.budget.Status.RECONCILED;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
@@ -129,22 +132,28 @@ public class DirectCostLine
                 directCost.setUnit(getUnit());
                 directCost.setBudgetedCost(getBudgetedCost());
                 directCost.setAuditedCost(getAuditedCost());
-                container.persistIfNotAlready(directCost);
+                repositoryService.persistAndFlush(directCost);
                 break;
 
             case UPDATED:
-                getDirectCost().changeBudgetedCost(this.getBudgetedCost());
-                getDirectCost().changeAuditedCost(this.getAuditedCost());
+                DirectCost dc = getDirectCost();
+                org.estatio.module.budget.dom.budget.Status budgetStatus = dc.getPartitioningTable().getBudget().getStatus();
+                if (budgetStatus==NEW) dc.changeBudgetedCost(this.getBudgetedCost());
+                if (budgetStatus!=RECONCILED) dc.changeAuditedCost(this.getAuditedCost()); // redundant, but just to be sure
                 break;
 
             case DELETED:
-                String message = "DirectCost for unit " + getDirectCost().getUnit().getReference() + " deleted";
-                getDirectCost().delete();
-                container.informUser(message);
+                dc = getDirectCost();
+                budgetStatus = dc.getPartitioningTable().getBudget().getStatus();
+                if (budgetStatus==NEW) {
+                    String message = "DirectCost for unit " + dc.getUnit().getReference() + " deleted";
+                    dc.delete();
+                    messageService.informUser(message);
+                }
                 return null;
 
             case NOT_FOUND:
-                container.informUser("DirectCost not found");
+                messageService.informUser("DirectCost not found");
                 return null;
 
             default:
@@ -154,8 +163,6 @@ public class DirectCostLine
 
         return getDirectCost();
     }
-    //endregion
-
 
     @Programmatic
     public void validate() {
@@ -228,7 +235,6 @@ public class DirectCostLine
     //endregion
 
 
-    //region > injected services
     @Inject
     DirectCostRepository directCostRepository;
 
@@ -236,7 +242,7 @@ public class DirectCostLine
     UnitRepository unitRepository;
 
     @Inject
-    DomainObjectContainer container;
+    MessageService messageService;
 
     @Inject
     PartitioningTableRepository partitioningTableRepository;
@@ -246,6 +252,8 @@ public class DirectCostLine
 
     @Inject
     BudgetRepository budgetRepository;
-    //endregion
+
+    @Inject
+    RepositoryService repositoryService;
 
 }
