@@ -82,4 +82,8 @@ public class IncomingDocumentRepository_IntegTest extends CapexModuleIntegTestAb
             assertThat(matchedDocuments).isEmpty();
         }
     }
+
+    public static class UpsertAndArrchive extends IncomingDocumentRepository_IntegTest {
+
+    }
 }

@@ -144,46 +144,44 @@ public class IncomingDocumentRepository extends DocumentRepository {
     @Programmatic
     public Document upsertAndArchive(final DocumentType type, final String atPath, final String name, final Blob blob){
         synchronized (this) {
-            Document document = null;
 
-           final List<Document> incomingDocumentsWithSameName = findAllIncomingDocumentsByName(name);
-            if (incomingDocumentsWithSameName.size()>0){
-                document = incomingDocumentsWithSameName.get(0);
+            Document existingDocument = findExistingDocumentIfAny(name);
+            if (existingDocument!=null && Arrays.equals(existingDocument.getBlobBytes(), blob.getBytes())) {
+                return existingDocument;
             }
-            if (document!=null){
-                if(Arrays.equals(document.getBlobBytes(), blob.getBytes())) {
-                    return document;
+
+            // come what may, we will create a new document
+            final Document newDocument = documentService.createForBlob(type, atPath, name, blob);
+
+
+            // if there was an existing document, then
+            if (existingDocument!=null){
+
+                // ... move any existing paperclips to the existing document to point instead to the replacement
+                final List<Paperclip> impactedPaperclips = paperclipRepository.findByDocument(existingDocument);
+                for (final Paperclip impactedPaperclip : impactedPaperclips) {
+                    impactedPaperclip.setDocument(newDocument);
                 }
-                // else...
-                String prefix = "arch-".concat(clockService.nowAsLocalDateTime().toString("yyyy-MM-dd-HH-mm-ss")).concat("-");
-                String archivedName = prefix.concat(document.getName());
-                Document archivedDocument = documentService.createForBlob(document.getType(), document.getAtPath(), archivedName, document.getBlob());
-                // update blobbytes of document
-                document.setBlobBytes(blob.getBytes());
-                // attach document to archived document
-                paperclipRepository.attach(document, "", archivedDocument);
-            } else {
-                document = documentService.createForBlob(type, atPath, name, blob);
+
+                // ... and attach the new with the old via a further paperclip
+                String archivedName = String.format("arch-%s-%s",
+                                            clockService.nowAsLocalDateTime().toString("yyyy-MM-dd-HH-mm-ss"),
+                                            name);
+                existingDocument.setName(archivedName);
+                paperclipRepository.attach(existingDocument, "replaces", newDocument);
             }
-            return document;
+
+            return newDocument;
         }
     }
 
-
-    @Programmatic
-    public Document upsert(final DocumentType type, final String atPath, final String name, final Blob blob){
-        synchronized (this) {
-            Document document = null;
-            final List<Document> incomingDocumentsWithSameName = findAllIncomingDocumentsByName(name);
-            if (incomingDocumentsWithSameName.size()>0){
-                document = incomingDocumentsWithSameName.get(0);
-            }
-            if (document==null) {
-                document = documentService.createForBlob(type, atPath, name, blob);
-            }
-            return document;
-        }
+    private Document findExistingDocumentIfAny(final String name) {
+        final List<Document> existingDocuments = findAllIncomingDocumentsByName(name);
+        return existingDocuments.size() > 0
+                    ? existingDocuments.get(0)
+                    : null;
     }
+
 
     @Inject
     QueryResultsCache queryResultsCache;

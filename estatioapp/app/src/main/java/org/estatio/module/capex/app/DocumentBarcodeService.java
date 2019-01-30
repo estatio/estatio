@@ -31,6 +31,12 @@ public class DocumentBarcodeService {
     }
 
     @Programmatic
+    public String deriveAtPathFromBarcode(final String documentName, final String fallbackAtPath) {
+        final String derived = deriveAtPathFromBarcode(documentName);
+        return derived != null ? derived : fallbackAtPath;
+    }
+
+    @Programmatic
     public String deriveAtPathFromBarcode(final String documentName) {
         String countryPrefix = countryPrefixFromBarcode(documentName);
         if (countryPrefix == null) return null;
@@ -46,6 +52,7 @@ public class DocumentBarcodeService {
         }
     }
 
+
     String overrideUserAtPathUsingDocumentName(
             final String atPath,
             final String documentName){
@@ -54,15 +61,12 @@ public class DocumentBarcodeService {
             return atPath; // country prefix can be derived from barcodes only
         }
 
-        final String derived = deriveAtPathFromBarcode(documentName);
-        return derived != null ? derived : atPath;
+        return deriveAtPathFromBarcode(documentName, atPath);
     }
 
-    
 
     boolean isBarcode(final String documentName) {
         return documentName.replace(".pdf", "").matches("\\d+");
     }
-
 
 }

@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.jdo.JDOHelper;
-import javax.ws.rs.HEAD;
 
 import com.google.common.io.Resources;
 
@@ -121,7 +120,7 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
     }
 
     @Test
-    public void when_italian_document() throws Exception {
+    public void when_incoming_italian_document() throws Exception {
 
         // given
         List<Document> incomingDocumentsBefore = repository.findIncomingDocuments();

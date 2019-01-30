@@ -241,6 +241,13 @@ public class PaperclipRepository {
     }
     //endregion
 
+    //region > listAll - for testing only (programmatic)
+    @Programmatic
+    public List<Paperclip> listAll() {
+        return repositoryService.allInstances(Paperclip.class);
+    }
+    //endregion
+
     //region > SubtypeProvider SPI
 
     /**

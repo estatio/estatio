@@ -57,16 +57,25 @@ public class DocumentServiceRestApi extends UdoDomainService<DocumentServiceRest
         final DocumentType type = documentTypeData.findUsing(documentTypeRepository);
         final String name = blob.getName();
 
+        final String atPathToUse = determineAtPath(documentTypeData, name, atPath);
+
+        return incomingDocumentRepository.upsertAndArchive(type, atPathToUse, name, blob);
+    }
+
+    private String determineAtPath(
+            final DocumentTypeData documentTypeData,
+            final String documentName,
+            final String atPath) {
+
         switch (documentTypeData) {
             case INCOMING:
-                final String overridden = documentBarcodeService.deriveAtPathFromBarcode(name);
-                return incomingDocumentRepository.upsertAndArchive(type, overridden != null ? overridden : atPath, name, blob);
+                return documentBarcodeService.deriveAtPathFromBarcode(documentName, atPath);
 
             case TAX_REGISTER:
-                return incomingDocumentRepository.upsertAndArchive(type, atPath, name, blob);
+                return atPath;
 
             default:
-                throw new IllegalArgumentException(String.format("DocumentType %s is not supported", documentType));
+                throw new IllegalArgumentException(String.format("DocumentType %s is not supported", documentTypeData.name()));
         }
     }
 
