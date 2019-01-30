@@ -161,13 +161,8 @@ public class Budget extends UdoDomainObject2<Budget>
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public Status getStatus(){
-        final List<BudgetCalculation> calculationsForBudget = budgetCalculationRepository.findByBudget(this);
-        for (BudgetCalculation calculation : calculationsForBudget){
-            if (calculation.getStatus()== org.estatio.module.budget.dom.budgetcalculation.Status.ASSIGNED){
-                if (calculation.getCalculationType()==BudgetCalculationType.ACTUAL) return Status.RECONCILED;
-                if (calculation.getCalculationType()==BudgetCalculationType.BUDGETED) return Status.ASSIGNED;
-            }
-        }
+        if (!budgetCalculationRepository.findByBudgetAndTypeAndStatus(this, BudgetCalculationType.ACTUAL, org.estatio.module.budget.dom.budgetcalculation.Status.ASSIGNED).isEmpty()) return Status.RECONCILED;
+        if (!budgetCalculationRepository.findByBudgetAndTypeAndStatus(this, BudgetCalculationType.BUDGETED, org.estatio.module.budget.dom.budgetcalculation.Status.ASSIGNED).isEmpty()) return Status.ASSIGNED;
         return Status.NEW;
     }
 
