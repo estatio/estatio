@@ -758,7 +758,7 @@ public class IncomingDocAsInvoiceViewModel
         }
         if (project != null && project.isParentProject())
             return "Parent project is not allowed";
-        if (budgetItem != null && getIncomingInvoiceType() != IncomingInvoiceType.SERVICE_CHARGES) {
+        if (budgetItem != null && getIncomingInvoiceType() != IncomingInvoiceType.SERVICE_CHARGES && getIncomingInvoiceType() != IncomingInvoiceType.ITA_RECOVERABLE) {
             return "Budget item applies only to type SERVICE_CHARGES";
         }
         if (getIncomingInvoiceType() == IncomingInvoiceType.SERVICE_CHARGES && charge != null) {
@@ -779,7 +779,7 @@ public class IncomingDocAsInvoiceViewModel
     }
 
     public boolean hideBudgetItem() {
-        return getIncomingInvoiceType() != IncomingInvoiceType.SERVICE_CHARGES;
+        return getIncomingInvoiceType() != IncomingInvoiceType.SERVICE_CHARGES && getIncomingInvoiceType() != IncomingInvoiceType.ITA_RECOVERABLE;
     }
 
     public boolean hideCharge() {

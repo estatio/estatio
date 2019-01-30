@@ -740,6 +740,24 @@ public class IncomingInvoiceItem_Test {
         }
 
         @Test
+        public void is_linked_to_order_item_for_italy() throws Exception {
+
+            // expect
+            expectOrderItemInvoiceItemLinkRepository_returns(new OrderItemInvoiceItemLink());
+
+            // when
+            item.setInvoice(new IncomingInvoice() {
+                @Override public IncomingInvoiceType getType() {
+                    return IncomingInvoiceType.ITA_RECOVERABLE;
+                }
+            });
+            final String s = item.budgetItemIsImmutableReason();
+
+            assertThat(s).isNull();
+        }
+
+
+        @Test
         public void is_a_reversal() throws Exception {
 
             // given

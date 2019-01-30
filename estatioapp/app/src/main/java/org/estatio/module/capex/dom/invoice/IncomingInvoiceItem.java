@@ -695,10 +695,12 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
 
         appendReasonIfReversalOrReported(buf);
 
+        boolean condition = !hasType(IncomingInvoiceType.SERVICE_CHARGES) && !hasType(IncomingInvoiceType.ITA_RECOVERABLE);
+
         buf.append(
-                !hasType(IncomingInvoiceType.SERVICE_CHARGES),
+                condition,
                 "parent invoice is not for service charges");
-        appendReasonIfLinkedToAnOrder(buf);
+        if (!hasType(IncomingInvoiceType.ITA_RECOVERABLE)) appendReasonIfLinkedToAnOrder(buf);
 
         return buf.getReason();
     }
