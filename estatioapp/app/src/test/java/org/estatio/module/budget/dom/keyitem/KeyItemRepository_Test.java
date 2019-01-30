@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package org.estatio.module.budget.dom.contributed;
+package org.estatio.module.budget.dom.keyitem;
 
 import java.math.BigDecimal;
 
@@ -23,7 +23,6 @@ import org.junit.Test;
 
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.budget.dom.keytable.KeyTable;
-import org.estatio.module.budget.dom.keyitem.KeyItemRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -32,6 +32,7 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
@@ -51,7 +52,6 @@ import lombok.Setter;
 )
 public class KeyItemImportExportManager {
 
-    //region > constructors, title
     public KeyItemImportExportManager() {
     }
 
@@ -68,9 +68,6 @@ public class KeyItemImportExportManager {
     public String title() {
         return "Import export key items";
     }
-
-    //endregion
-
 
     @Getter @Setter
     private KeyTable keyTable;
@@ -91,13 +88,10 @@ public class KeyItemImportExportManager {
         return getFileName();
     }
 
-    //endregion
-
-
     @SuppressWarnings("unchecked")
     @Collection
     public List<KeyItemImportExportLineItem> getKeyItems() {
-        return keyItemImportExportService.items(this);
+        return partitioningTableItemImportExportService.items(this);
     }
 
     //region > export (action)
@@ -118,26 +112,23 @@ public class KeyItemImportExportManager {
     private static String withExtension(final String fileName, final String fileExtension) {
         return fileName.endsWith(fileExtension) ? fileName : fileName + fileExtension;
     }
-    //endregion
-
-    //region > import (action)
 
     @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(named = "Import", cssClassFa = "fa-upload")
     @MemberOrder(name = "keyItems", sequence = "2")
-    public List<KeyItemImportExportLineItem> importBlob(
+    public KeyTable importBlob(
             @Parameter(fileAccept = ".xlsx")
             @ParameterLayout(named = "Excel spreadsheet")
             final Blob spreadsheet) {
         WorksheetSpec spec = new WorksheetSpec(KeyItemImportExportLineItem.class, "keyItems");
         List<KeyItemImportExportLineItem> lineItems =
                 excelService.fromExcel(spreadsheet, spec);
-        messageService.informUser(lineItems.size() + " items imported");
 
         List<KeyItemImportExportLineItem> newItems = new ArrayList<>();
         for (KeyItemImportExportLineItem item : lineItems) {
+            serviceRegistry2.injectServicesInto(item);
             item.validate();
-            newItems.add(new KeyItemImportExportLineItem(item));
+            newItems.add(item);
         }
         for (KeyItem keyItem : keyTable.getItems()) {
             Boolean keyItemFound = false;
@@ -149,22 +140,19 @@ public class KeyItemImportExportManager {
             }
             if (!keyItemFound) {
                 KeyItemImportExportLineItem deletedItem = new KeyItemImportExportLineItem(keyItem, null);
+                serviceRegistry2.injectServicesInto(deletedItem);
                 deletedItem.setStatus(Status.DELETED);
                 newItems.add(deletedItem);
             }
         }
-        return newItems;
+        newItems.forEach(i->i.apply());
+        return getKeyTable();
     }
 
     public String disableImportBlob(){
         if (getKeyTable().getBudget().getStatus()!= org.estatio.module.budget.dom.budget.Status.NEW) return "The budget is assigned already";
         return null;
     }
-
-    //endregion
-
-    //region > injected services
-
 
     @javax.inject.Inject
     private MessageService messageService;
@@ -173,11 +161,12 @@ public class KeyItemImportExportManager {
     private ExcelService excelService;
 
     @javax.inject.Inject
-    private KeyItemImportExportService keyItemImportExportService;
+    private PartitioningTableItemImportExportService partitioningTableItemImportExportService;
 
     @Inject
     private KeyTableRepository keyTableRepository;
 
-    //endregion
+    @Inject
+    private ServiceRegistry2 serviceRegistry2;
 
 }

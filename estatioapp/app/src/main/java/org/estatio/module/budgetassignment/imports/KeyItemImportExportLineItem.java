@@ -56,7 +56,6 @@ import lombok.Setter;
 public class KeyItemImportExportLineItem
         implements Comparable<KeyItemImportExportLineItem> {
 
-    //region > constructors, title
     public KeyItemImportExportLineItem() {
     }
 
@@ -86,9 +85,8 @@ public class KeyItemImportExportLineItem
     }
 
     public String title() {
-        return "key item import / export";
+        return "key item line";
     }
-    //endregion
 
     @Getter @Setter
     private String propertyReference;
@@ -241,7 +239,8 @@ public class KeyItemImportExportLineItem
     @Inject
     UnitRepository unitRepository;
 
-    @Inject MessageService messageService;
+    @Inject
+    MessageService messageService;
 
     @Inject
     PartitioningTableRepository partitioningTableRepository;

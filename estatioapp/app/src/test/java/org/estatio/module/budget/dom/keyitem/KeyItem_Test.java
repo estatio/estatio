@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package org.estatio.module.budget.dom.contributed;
+package org.estatio.module.budget.dom.keyitem;
 
 import java.math.BigDecimal;
 
@@ -24,7 +24,6 @@ import org.junit.Test;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.budget.dom.keytable.KeyTable;
-import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.keytable.PartitioningTable;
 
 import static org.junit.Assert.assertEquals;

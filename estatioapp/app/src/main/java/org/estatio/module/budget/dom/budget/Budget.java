@@ -63,7 +63,6 @@ import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.budget.dom.api.BudgetItemCreator;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemRepository;
@@ -74,7 +73,6 @@ import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.KeyTableRepository;
 import org.estatio.module.budget.dom.keytable.KeyValueMethod;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
-import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
 import org.estatio.module.budget.dom.partioning.Partitioning;
 import org.estatio.module.budget.dom.partioning.PartitioningRepository;
 import org.estatio.module.charge.dom.Charge;
@@ -397,9 +395,6 @@ public class Budget extends UdoDomainObject2<Budget>
     private PartitioningRepository partitioningRepository;
 
     @Inject
-    private PartitionItemRepository partitionItemRepository;
-
-    @Inject
     private BudgetItemRepository budgetItemRepository;
 
     @Inject
@@ -410,9 +405,6 @@ public class Budget extends UdoDomainObject2<Budget>
 
     @Inject
     private KeyTableRepository keyTableRepository;
-
-    @Inject
-    private BudgetCalculationService budgetCalculationService;
 
     @Inject
     private ChargeRepository chargeRepository;

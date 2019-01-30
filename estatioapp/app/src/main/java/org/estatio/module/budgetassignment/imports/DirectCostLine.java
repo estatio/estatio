@@ -86,7 +86,7 @@ public class DirectCostLine
     }
 
     public String title() {
-        return "direct cost import / export";
+        return "direct cost line";
     }
     //endregion
 
@@ -227,13 +227,11 @@ public class DirectCostLine
         return property;
     }
 
-    //region > compareTo
+
     @Override
     public int compareTo(final DirectCostLine other) {
         return this.directCost.compareTo(other.directCost);
     }
-    //endregion
-
 
     @Inject
     DirectCostRepository directCostRepository;

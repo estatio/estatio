@@ -43,7 +43,7 @@ import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(nature = NatureOfService.DOMAIN)
-public class KeyItemImportExportService {
+public class PartitioningTableItemImportExportService {
 
     @PostConstruct
     public void init() {

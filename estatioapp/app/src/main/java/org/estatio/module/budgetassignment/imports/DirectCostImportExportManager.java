@@ -32,6 +32,7 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
@@ -92,7 +93,7 @@ public class DirectCostImportExportManager {
     @SuppressWarnings("unchecked")
     @Collection
     public List<DirectCostLine> getDirectCosts() {
-        return keyItemImportExportService.items(this);
+        return partitioningTableItemImportExportService.items(this);
     }
 
     //region > export (action)
@@ -120,20 +121,20 @@ public class DirectCostImportExportManager {
     @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(named = "Import", cssClassFa = "fa-upload")
     @MemberOrder(name = "directCosts", sequence = "2")
-    public List<DirectCostLine> importBlob(
+    public DirectCostTable importBlob(
             @Parameter(fileAccept = ".xlsx")
             @ParameterLayout(named = "Excel spreadsheet")
             final Blob spreadsheet) {
         WorksheetSpec spec = new WorksheetSpec(DirectCostLine.class, "directCosts");
         List<DirectCostLine> lineItems =
                 excelService.fromExcel(spreadsheet, spec);
-        messageService.informUser(lineItems.size() + " items imported");
 
         if (getDirectCostTable().getBudget().getStatus()== org.estatio.module.budget.dom.budget.Status.NEW) {
             List<DirectCostLine> importedLines = new ArrayList<>();
             for (DirectCostLine item : lineItems) {
+                serviceRegistry2.injectServicesInto(item);
                 item.validate();
-                importedLines.add(new DirectCostLine(item));
+                importedLines.add(item);
             }
             for (DirectCost directCost : directCostTable.getItems()) {
                 Boolean directCostFound = false;
@@ -144,12 +145,14 @@ public class DirectCostImportExportManager {
                     }
                 }
                 if (!directCostFound) {
-                    DirectCostLine deletedItem = new DirectCostLine(directCost, null);
-                    deletedItem.setStatus(Status.DELETED);
-                    importedLines.add(deletedItem);
+                    DirectCostLine deletedItemLine = new DirectCostLine(directCost, null);
+                    serviceRegistry2.injectServicesInto(deletedItemLine);
+                    deletedItemLine.setStatus(Status.DELETED);
+                    importedLines.add(deletedItemLine);
                 }
             }
-            return importedLines;
+
+            importedLines.forEach(l->l.apply());
 
         } else {
 
@@ -160,15 +163,17 @@ public class DirectCostImportExportManager {
                 for (DirectCostLine item : lineItems) {
                     item.validate();
                     if (item.getStatus()==Status.UPDATED) {
-                        updatedLines.add(new DirectCostLine(item));
+                        updatedLines.add(item);
                     }
                 }
-                return updatedLines;
+
+                updatedLines.forEach(l->l.apply());
+
             }
 
         }
 
-        return null;
+        return getDirectCostTable();
 
     }
 
@@ -184,6 +189,9 @@ public class DirectCostImportExportManager {
     private ExcelService excelService;
 
     @Inject
-    private KeyItemImportExportService keyItemImportExportService;
+    private PartitioningTableItemImportExportService partitioningTableItemImportExportService;
+
+    @Inject
+    private ServiceRegistry2 serviceRegistry2;
 
 }

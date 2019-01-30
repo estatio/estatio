@@ -56,7 +56,7 @@ import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
 import org.estatio.module.budgetassignment.imports.DirectCostLine;
 import org.estatio.module.budgetassignment.imports.KeyItemImportExportLineItem;
-import org.estatio.module.budgetassignment.imports.KeyItemImportExportService;
+import org.estatio.module.budgetassignment.imports.PartitioningTableItemImportExportService;
 import org.estatio.module.charge.imports.ChargeImport;
 
 import lombok.Getter;
@@ -126,7 +126,7 @@ public class BudgetImportExportManager {
         List<KeyItemImportExportLineItem> result = new ArrayList<>();
         if (getBudget()==null){return result;} // for import from menu where budget unknown
         for (KeyTable keyTable : this.getBudget().getKeyTables()){
-            result.addAll(keyItemImportExportService.items(keyTable.getItems()));
+            result.addAll(partitioningTableItemImportExportService.items(keyTable.getItems()));
         }
         return result;
     }
@@ -135,7 +135,7 @@ public class BudgetImportExportManager {
         List<DirectCostLine> result = new ArrayList<>();
         if (getBudget()==null){return result;} // for import from menu where budget unknown
         for (DirectCostTable directCostTable : this.getBudget().getDirectCostTables()){
-            result.addAll(keyItemImportExportService.directCosts(directCostTable.getItems()));
+            result.addAll(partitioningTableItemImportExportService.directCosts(directCostTable.getItems()));
         }
         return result;
     }
@@ -193,7 +193,7 @@ public class BudgetImportExportManager {
     private BudgetImportExportService budgetImportExportService;
 
     @Inject
-    private KeyItemImportExportService keyItemImportExportService;
+    private PartitioningTableItemImportExportService partitioningTableItemImportExportService;
     
     @Inject
     PartitioningTableRepository partitioningTableRepository;
