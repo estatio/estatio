@@ -40,46 +40,50 @@ public class BudgetAssignmentService {
     @Programmatic
     public List<BudgetCalculationResult> calculateResults(final Budget budget, final BudgetCalculationType type){
 
-        // create calculation results
-
         List<BudgetCalculationResult> results = new ArrayList<>();
         for (Unit unit : unitRepository.findByProperty(budget.getProperty())) {
+            results.addAll(calculatResultsForUnit(budget, type, unit));
+        }
+        return results;
+    }
 
-            final List<Occupancy> occupanciesForUnitDuringBudgetInterval = occupancyRepository.occupanciesByUnitAndInterval(unit, budget.getInterval());
+    @Programmatic
+    public List<BudgetCalculationResult> calculatResultsForUnit(final Budget budget, final BudgetCalculationType type, final Unit unit) {
 
-            if (!occupanciesForUnitDuringBudgetInterval.isEmpty()) {
+        List<BudgetCalculationResult> results = new ArrayList<>();
+        final List<Occupancy> occupanciesForUnitDuringBudgetInterval = occupancyRepository.occupanciesByUnitAndInterval(unit, budget.getInterval());
 
-                if (overlappingOccupanciesFoundIn(occupanciesForUnitDuringBudgetInterval)) {
-                    String message = String.format("Overlapping occupancies found for unit %s", unit.getReference());
-                    message.concat(". No calculation results made for this unit.");
-                    messageService.warnUser(message);
-                } else {
+        if (!occupanciesForUnitDuringBudgetInterval.isEmpty()) {
 
-                    List<BudgetCalculation> calculationsForUnitAndType = budgetCalculationRepository.findByBudgetAndUnitAndType(budget, unit, type);
-                    List<Charge> invoiceChargesUsed = calculationsForUnitAndType.stream().map(c -> c.getInvoiceCharge()).distinct().collect(Collectors.toList());
+            if (overlappingOccupanciesFoundIn(occupanciesForUnitDuringBudgetInterval)) {
+                String message = String.format("Overlapping occupancies found for unit %s", unit.getReference());
+                message.concat(". No calculation results made for this unit.");
+                messageService.warnUser(message);
+            } else {
 
-                    for (Occupancy occupancy : occupanciesForUnitDuringBudgetInterval) {
+                List<BudgetCalculation> calculationsForUnitAndType = budgetCalculationRepository.findByBudgetAndUnitAndType(budget, unit, type);
+                List<Charge> invoiceChargesUsed = calculationsForUnitAndType.stream().map(c -> c.getInvoiceCharge()).distinct().collect(Collectors.toList());
 
-                        for (Charge charge : invoiceChargesUsed) {
-                            BigDecimal value = BigDecimal.ZERO;
-                            List<BudgetCalculation> calculationsForCharge = calculationsForUnitAndType.stream().filter(c -> c.getInvoiceCharge().equals(charge)).collect(Collectors.toList());
-                            for (BudgetCalculation calc : calculationsForCharge) {
-                                if (calc.getStatus() != Status.ASSIGNED) {
-                                    value = value.add(calc.getValue());
-                                }
+                for (Occupancy occupancy : occupanciesForUnitDuringBudgetInterval) {
+
+                    for (Charge charge : invoiceChargesUsed) {
+                        BigDecimal value = BigDecimal.ZERO;
+                        List<BudgetCalculation> calculationsForCharge = calculationsForUnitAndType.stream().filter(c -> c.getInvoiceCharge().equals(charge)).collect(Collectors.toList());
+                        for (BudgetCalculation calc : calculationsForCharge) {
+                            if (calc.getStatus() != Status.ASSIGNED) {
+                                value = value.add(calc.getValue());
                             }
-                            BudgetCalculationResult calcResult = budgetCalculationResultRepository.upsertBudgetCalculationResult(budget, occupancy, charge, type, value);
-                            results.add(calcResult);
                         }
-
+                        BudgetCalculationResult calcResult = budgetCalculationResultRepository.upsertBudgetCalculationResult(budget, occupancy, charge, type, value);
+                        results.add(calcResult);
                     }
 
-                    // finalize calculations
-                    calculationsForUnitAndType.stream().forEach(c -> c.setStatus(Status.ASSIGNED));
-
                 }
-            }
 
+                // finalize calculations
+                calculationsForUnitAndType.stream().forEach(c -> c.setStatus(Status.ASSIGNED));
+
+            }
         }
 
         return results;
