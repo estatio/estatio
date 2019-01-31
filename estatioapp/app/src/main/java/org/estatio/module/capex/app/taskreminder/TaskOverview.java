@@ -63,24 +63,27 @@ public class TaskOverview implements HasAtPath {
     @Collection
     @CollectionLayout(named = "Tasks Not Yet Overdue")
     public List<Task> getListOfTasksNotYetOverdue() {
-        return visibleTasksForPersonAndMatching(this.person, lessThanFiveDaysOld());
+        return visibleNonOrderTasksForPersonAndMatching(this.person, lessThanFiveDaysOld());
     }
 
     @Collection
     @CollectionLayout(named = "Tasks Overdue")
     public List<Task> getListOfTasksOverdue() {
-        return visibleTasksForPersonAndMatching(this.person, moreThanFiveDaysOld());
+        return visibleNonOrderTasksForPersonAndMatching(this.person, moreThanFiveDaysOld());
     }
 
-    private List<Task> visibleTasksForPersonAndMatching(final Person person, final Predicate<Task> predicate) {
+    private List<Task> visibleNonOrderTasksForPersonAndMatching(final Person person, final Predicate<Task> predicate) {
         return streamIncompleteTasksVisibleToMeAssignedTo(person)
-                .filter(task -> {
-                    StateTransition stateTransition = stateTransitionService.findFor(task);
-                    return stateTransition != null && stateTransition.getDomainObject() != null && !(stateTransition
-                            .getDomainObject() instanceof Order);
-                })
+                .filter(notForAnOrder())
                 .filter(predicate)
                 .collect(Collectors.toList());
+    }
+
+    private Predicate<Task> notForAnOrder() {
+        return task -> {
+            StateTransition stateTransition = stateTransitionService.findFor(task);
+            return stateTransition != null && stateTransition.getDomainObject() != null && !(stateTransition.getDomainObject() instanceof Order);
+        };
     }
 
     private Predicate<Task> lessThanFiveDaysOld() {
