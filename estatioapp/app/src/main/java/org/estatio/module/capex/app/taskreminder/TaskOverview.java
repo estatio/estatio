@@ -1,12 +1,11 @@
 package org.estatio.module.capex.app.taskreminder;
 
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.inject.Inject;
-
-import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Collection;
@@ -21,6 +20,9 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
 import org.estatio.module.base.dom.VisibilityEvaluator;
+import org.estatio.module.capex.dom.order.Order;
+import org.estatio.module.capex.dom.state.StateTransition;
+import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.dom.task.TaskRepository;
 import org.estatio.module.party.dom.Person;
@@ -50,40 +52,46 @@ public class TaskOverview implements HasAtPath {
 
     @Property
     public long getTasksOverdue() {
-        final Stream<Task> incompleteTasks = streamIncompleteTasksVisibleToMeAssignedTo(person);
-        final LocalDateTime now = clockService.nowAsLocalDateTime();
-        return incompleteTasks
-                .map(Task::getCreatedOn)
-                .filter(ld -> ld.plusDays(5).isBefore(now))
-                .count();
+        return getListOfTasksOverdue().size();
     }
 
     @Property
     public long getTasksNotYetOverdue() {
-        final Stream<Task> incompleteTasks = streamIncompleteTasksVisibleToMeAssignedTo(person);
-        return incompleteTasks.count() - getTasksOverdue();
-    }
-
-    private Stream<Task> streamIncompleteTasksVisibleToMeAssignedTo(final Person person) {
-        final List<Task> tasks = taskRepository.findIncompleteByPersonAssignedTo(person);
-        return tasks.stream()
-                .filter(visibilityEvaluator::visibleToMe); // since just counting
+        return getListOfTasksNotYetOverdue().size();
     }
 
     @Collection
     @CollectionLayout(named = "Tasks Not Yet Overdue")
     public List<Task> getListOfTasksNotYetOverdue() {
-        return taskRepository.findIncompleteByPersonAssignedTo(person).stream()
-                .filter(t -> t.getCreatedOn().plusDays(5).isAfter(clockService.nowAsLocalDateTime()))
-                .collect(Collectors.toList());
+        return visibleNonOrderTasksForPersonAndMatching(this.person, lessThanFiveDaysOld());
     }
 
     @Collection
     @CollectionLayout(named = "Tasks Overdue")
     public List<Task> getListOfTasksOverdue() {
-        return taskRepository.findIncompleteByPersonAssignedTo(person).stream()
-                .filter(t -> t.getCreatedOn().plusDays(5).isBefore(clockService.nowAsLocalDateTime()))
+        return visibleNonOrderTasksForPersonAndMatching(this.person, moreThanFiveDaysOld());
+    }
+
+    private List<Task> visibleNonOrderTasksForPersonAndMatching(final Person person, final Predicate<Task> predicate) {
+        return streamIncompleteTasksVisibleToMeAssignedTo(person)
+                .filter(notForAnOrder())
+                .filter(predicate)
                 .collect(Collectors.toList());
+    }
+
+    private Predicate<Task> notForAnOrder() {
+        return task -> {
+            StateTransition stateTransition = stateTransitionService.findFor(task);
+            return stateTransition != null && stateTransition.getDomainObject() != null && !(stateTransition.getDomainObject() instanceof Order);
+        };
+    }
+
+    private Predicate<Task> lessThanFiveDaysOld() {
+        return moreThanFiveDaysOld().negate();
+    }
+
+    private Predicate<Task> moreThanFiveDaysOld() {
+        return t -> t.getCreatedOn().plusDays(5).isBefore(clockService.nowAsLocalDateTime());
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -94,6 +102,12 @@ public class TaskOverview implements HasAtPath {
 
     public String disableSendReminder() {
         return taskReminderService.disableSendReminder(person, getListOfTasksOverdue());
+    }
+
+    private Stream<Task> streamIncompleteTasksVisibleToMeAssignedTo(final Person person) {
+        final List<Task> tasks = taskRepository.findIncompleteByPersonAssignedTo(person);
+        return tasks.stream()
+                .filter(visibilityEvaluator::visibleToMe); // since just counting
     }
 
     @Override
@@ -113,6 +127,8 @@ public class TaskOverview implements HasAtPath {
 
     @Inject
     VisibilityEvaluator visibilityEvaluator;
+
+    @Inject StateTransitionService stateTransitionService;
 
 }
 

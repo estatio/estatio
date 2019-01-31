@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.apache.isis.applib.fixtures.TickingFixtureClock;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.sudo.SudoService;
 import org.apache.isis.applib.services.wrapper.DisabledException;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
@@ -64,14 +65,20 @@ public class TaskOverview_IntegTest extends CapexModuleIntegTestAbstract {
             assertThat(unassigned).hasSize(2);
 
             // when
+
             unassigned.forEach(task -> task.setPersonAssignedTo(person));
             TickingFixtureClock.replaceExisting().addDate(0, 0, 20);
             final TaskOverview overview = serviceRegistry.injectServicesInto(new TaskOverview(person));
 
             // then
-            assertThat(overview.getListOfTasksOverdue()).hasSize(2);
+            sudoService.sudo(person.getUsername(), () -> {
+                assertThat(overview.getListOfTasksOverdue()).hasSize(1); // order excluded
+            });
         }
+        @Inject
+        SudoService sudoService;
     }
+
 
     public static class SendReminder extends TaskOverview_IntegTest {
 
