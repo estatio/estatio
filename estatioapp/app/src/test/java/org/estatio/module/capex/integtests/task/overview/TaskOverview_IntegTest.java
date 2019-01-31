@@ -75,10 +75,7 @@ public class TaskOverview_IntegTest extends CapexModuleIntegTestAbstract {
                 assertThat(overview.getListOfTasksOverdue()).hasSize(1); // order excluded
             });
         }
-        @Inject
-        SudoService sudoService;
     }
-
 
     public static class SendReminder extends TaskOverview_IntegTest {
 
@@ -106,7 +103,10 @@ public class TaskOverview_IntegTest extends CapexModuleIntegTestAbstract {
             unassigned.forEach(task -> task.setPersonAssignedTo(person));
             TickingFixtureClock.replaceExisting().addDate(0, 0, 20);
             final TaskOverview overview = serviceRegistry.injectServicesInto(new TaskOverview(person));
-            assertThat(overview.getListOfTasksOverdue()).hasSize(2);
+
+            sudoService.sudo(person.getUsername(), () -> {
+                assertThat(overview.getListOfTasksOverdue()).hasSize(1); // order excluded
+            });
 
             // then
             expectedExceptions.expect(DisabledException.class);
@@ -135,6 +135,9 @@ public class TaskOverview_IntegTest extends CapexModuleIntegTestAbstract {
         CommunicationChannelRepository communicationChannelRepository;
 
     }
+
+    @Inject
+    SudoService sudoService;
 
     @Inject
     TaskRepository taskRepository;
