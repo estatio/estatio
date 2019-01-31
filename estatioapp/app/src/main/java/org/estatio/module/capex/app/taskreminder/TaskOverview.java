@@ -63,9 +63,13 @@ public class TaskOverview implements HasAtPath {
     @Collection
     @CollectionLayout(named = "Tasks Not Yet Overdue")
     public List<Task> getListOfTasksNotYetOverdue() {
-        final Predicate<Task> predicate = lessThanFiveDaysOld();
-        final Person person = this.person;
-        return visibleTasksForPersonAndMatching(person, predicate);
+        return visibleTasksForPersonAndMatching(this.person, lessThanFiveDaysOld());
+    }
+
+    @Collection
+    @CollectionLayout(named = "Tasks Overdue")
+    public List<Task> getListOfTasksOverdue() {
+        return visibleTasksForPersonAndMatching(this.person, moreThanFiveDaysOld());
     }
 
     private List<Task> visibleTasksForPersonAndMatching(final Person person, final Predicate<Task> predicate) {
@@ -77,14 +81,6 @@ public class TaskOverview implements HasAtPath {
                 })
                 .filter(predicate)
                 .collect(Collectors.toList());
-    }
-
-    @Collection
-    @CollectionLayout(named = "Tasks Overdue")
-    public List<Task> getListOfTasksOverdue() {
-        final Predicate<Task> predicate = moreThanFiveDaysOld();
-        final Person person = this.person;
-        return visibleTasksForPersonAndMatching(person, predicate);
     }
 
     private Predicate<Task> lessThanFiveDaysOld() {
