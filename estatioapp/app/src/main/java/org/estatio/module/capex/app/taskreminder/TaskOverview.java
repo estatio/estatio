@@ -63,25 +63,28 @@ public class TaskOverview implements HasAtPath {
     @Collection
     @CollectionLayout(named = "Tasks Not Yet Overdue")
     public List<Task> getListOfTasksNotYetOverdue() {
+        final Predicate<Task> predicate = lessThanFiveDaysOld();
+        final Person person = this.person;
+        return visibleTasksForPersonAndMatching(person, predicate);
+    }
+
+    private List<Task> visibleTasksForPersonAndMatching(final Person person, final Predicate<Task> predicate) {
         return streamIncompleteTasksVisibleToMeAssignedTo(person)
                 .filter(task -> {
                     StateTransition stateTransition = stateTransitionService.findFor(task);
-                    return stateTransition != null && stateTransition.getDomainObject() != null && !(stateTransition.getDomainObject() instanceof Order);
+                    return stateTransition != null && stateTransition.getDomainObject() != null && !(stateTransition
+                            .getDomainObject() instanceof Order);
                 })
-                .filter(lessThanFiveDaysOld())
+                .filter(predicate)
                 .collect(Collectors.toList());
     }
 
     @Collection
     @CollectionLayout(named = "Tasks Overdue")
     public List<Task> getListOfTasksOverdue() {
-        return streamIncompleteTasksVisibleToMeAssignedTo(person)
-                .filter(task -> {
-                    StateTransition stateTransition = stateTransitionService.findFor(task);
-                    return stateTransition != null && stateTransition.getDomainObject() != null && !(stateTransition.getDomainObject() instanceof Order);
-                })
-                .filter(moreThanFiveDaysOld())
-                .collect(Collectors.toList());
+        final Predicate<Task> predicate = moreThanFiveDaysOld();
+        final Person person = this.person;
+        return visibleTasksForPersonAndMatching(person, predicate);
     }
 
     private Predicate<Task> lessThanFiveDaysOld() {
