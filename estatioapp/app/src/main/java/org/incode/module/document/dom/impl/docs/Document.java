@@ -1,5 +1,7 @@
 package org.incode.module.document.dom.impl.docs;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
@@ -12,6 +14,7 @@ import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Uniques;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -25,18 +28,22 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.i18n.TranslatableString;
+import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.incode.module.document.DocumentModule;
+import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.types.DocumentType;
+import org.incode.module.document.dom.mixins.T_documents;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -361,6 +368,53 @@ public class Document extends DocumentAbstract<Document> {
         }
 
     }
+    //endregion
+
+    //region > mixins
+
+    @Mixin
+    public static class Document_attachments extends T_documents<Document> {
+        public Document_attachments(final Document document) {
+            super(document);
+        }
+
+        @DomainService(
+                nature = NatureOfService.DOMAIN,
+                menuOrder = "98" // needs to be < implementations provided by document module.
+        )
+        public static class TableColumnOrderServiceForPaperclipsAttachedToDocument implements
+                TableColumnOrderService {
+
+            @Override
+            public List<String> orderParented(
+                    final Object domainObject,
+                    final String collectionId,
+                    final Class<?> collectionType,
+                    final List<String> propertyIds) {
+                if (!Paperclip.class.isAssignableFrom(collectionType)) {
+                    return null;
+                }
+
+                if (!(domainObject instanceof Document)) {
+                    return null;
+                }
+
+                if("attachments".equals(collectionId)) {
+                    final List<String> trimmedPropertyIds = Lists.newArrayList(propertyIds);
+                    trimmedPropertyIds.remove("attachedTo");
+                    return trimmedPropertyIds;
+                }
+
+                return null;
+            }
+
+            @Override
+            public List<String> orderStandalone(final Class<?> collectionType, final List<String> propertyIds) {
+                return null;
+            }
+        }
+    }
+
     //endregion
 
 }

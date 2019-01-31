@@ -158,6 +158,9 @@
                             <cpt:collection id="attachedTo">
                                 <cpt:describedAs>Objects that this document attaches to</cpt:describedAs>
                             </cpt:collection>
+                            <cpt:collection id="attachments">
+                                <cpt:describedAs>Documents that are attached to this document</cpt:describedAs>
+                            </cpt:collection>
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
