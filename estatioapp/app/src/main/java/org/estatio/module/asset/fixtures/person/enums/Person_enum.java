@@ -205,7 +205,7 @@ public enum Person_enum
             new IPartyRoleType[] {},
             new FixedAssetRoleSpec[] {}),
 
-    FleuretteRenaudFr("FRENAUD", "Fleurette", "Renaud", null, false, FEMALE, Fr, Fr,
+    FleuretteRenaudFr("FRENAUD", "Fleurette", "Renaud", null, true, FEMALE, Fr, Fr,
             null, null,
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),

@@ -37,7 +37,8 @@ public class VisibilityEvaluator {
     @Programmatic
     public boolean visibleToMe(final Object domainObject) {
         final ApplicationUser meAsApplicationUser = meService.me();
-        return evaluator.hides(domainObject, meAsApplicationUser) == null;
+        final boolean hidden = evaluator.hides(domainObject, meAsApplicationUser) == null;
+        return hidden;
     }
 
     @Inject

@@ -69,7 +69,7 @@ public class TaskOverview_IntegTest extends CapexModuleIntegTestAbstract {
             final TaskOverview overview = serviceRegistry.injectServicesInto(new TaskOverview(person));
 
             // then
-            assertThat(overview.getListOfTasksOverdue()).hasSize(2);
+            assertThat(overview.getListOfTasksOverdue()).hasSize(1); // order excluded
         }
     }
 
