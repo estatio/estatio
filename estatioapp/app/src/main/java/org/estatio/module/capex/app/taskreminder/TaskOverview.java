@@ -85,7 +85,7 @@ public class TaskOverview implements HasAtPath {
     }
 
     private Predicate<Task> lessThanFiveDaysOld() {
-        return t -> t.getCreatedOn().plusDays(5).isAfter(clockService.nowAsLocalDateTime());
+        return moreThanFiveDaysOld().negate();
     }
 
     private Predicate<Task> moreThanFiveDaysOld() {
