@@ -198,14 +198,17 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             extends org.apache.isis.applib.services.eventbus.ObjectPersistedEvent<Order> {
 
     }
+
     public static class ObjectPersistingEvent
             extends org.apache.isis.applib.services.eventbus.ObjectPersistingEvent<Order> {
 
     }
+
     public static class ObjectRemovingEvent
             extends org.apache.isis.applib.services.eventbus.ObjectRemovingEvent<Order> {
 
     }
+
     public Order() {
         // TODO: may need to revise this when we know more...
         super("seller, orderDate, orderNumber, id");
@@ -358,11 +361,12 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public String disableEditOrderNumber() {
-        if (getAtPath().startsWith("/ITA")) return "Order number is generated automatically for Italian order"; // May be redundant since is hidden for italian user; but just to be explicit for other users ...
+        if (getAtPath().startsWith("/ITA"))
+            return "Order number is generated automatically for Italian order"; // May be redundant since is hidden for italian user; but just to be explicit for other users ...
         return orderImmutableReason();
     }
 
-    public boolean hideEditOrderNumber(){
+    public boolean hideEditOrderNumber() {
         return meService.me().getAtPath().startsWith("/ITA");
     }
 
@@ -559,7 +563,6 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return orderImmutableReason();
     }
 
-
     @Column(allowsNull = "true", scale = 0, length = 8)
     @PropertyLayout(hidden = Where.ALL_TABLES)
     @Getter @Setter
@@ -676,8 +679,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final OrderItem itemToSplit,
             final String newItemDescription,
             @Digits(integer = 13, fraction = 2) final BigDecimal newItemNetAmount,
-            @Nullable
-            @Digits(integer = 13, fraction = 2) final BigDecimal newItemVatAmount,
+            @Nullable @Digits(integer = 13, fraction = 2) final BigDecimal newItemVatAmount,
             @Nullable final Tax newItemtax,
             @Digits(integer = 13, fraction = 2) final BigDecimal newItemGrossAmount,
             final Charge newItemCharge,
@@ -736,26 +738,16 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return getItems().stream().map(OrderItem.class::cast).collect(Collectors.toList());
     }
 
-    public List<Charge> choices6SplitItem(
-            final OrderItem itemToSplit,
-            final String newItemDescription,
-            final BigDecimal newItemNetAmount,
-            final BigDecimal newItemVatAmount,
-            final Tax newItemtax,
-            final BigDecimal newItemGrossAmount,
-            final Charge newItemCharge,
-            final org.estatio.module.asset.dom.Property newItemProperty,
-            final Project newItemProject,
-            final BudgetItem newItemBudgetItem,
-            final String newItemPeriod
-    ) {
-        List<Charge> result = chargeRepository.allIncoming();
-        for (OrderItem item : getItems()) {
-            if (item.getCharge() != null && result.contains(item.getCharge())) {
-                result.remove(item.getCharge());
-            }
-        }
-        return result;
+    public List<Charge> choices6SplitItem() {
+        List<Charge> chargesOnItems = getItems().stream()
+                .map(OrderItem::getCharge)
+                .collect(Collectors.toList());
+
+        return getType() == IncomingInvoiceType.CAPEX ?
+                chargeRepository.allIncoming().stream()
+                        .filter(charge -> !chargesOnItems.contains(charge))
+                        .collect(Collectors.toList()) :
+                chargeRepository.allIncoming();
     }
 
     public List<BudgetItem> choices9SplitItem(

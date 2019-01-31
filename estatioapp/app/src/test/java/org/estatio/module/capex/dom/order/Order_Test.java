@@ -2,6 +2,9 @@ package org.estatio.module.capex.dom.order;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
+
+import com.google.common.collect.Lists;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -17,6 +20,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.tax.dom.Tax;
 
@@ -202,6 +206,67 @@ public class Order_Test {
         // when
         order.splitItem(itemToSplit, description, newItemNetAmount, newItemVatAmount, tax, newItemGrossAmount, charge, property, project, budgetItem, period);
 
+    }
+
+    @Mock
+    ChargeRepository mockChargeRepository;
+
+    @Test
+    public void splitItem_charge_choices_type_capex() throws Exception {
+        // given
+        Charge charge1 = new Charge();
+        charge1.setReference("FOO");
+        Charge charge2 = new Charge();
+        charge1.setReference("BAR");
+
+        OrderItem orderItemToSplit = new OrderItem();
+        orderItemToSplit.setCharge(charge1);
+
+        Order order = new Order();
+        order.setType(IncomingInvoiceType.CAPEX);
+        order.chargeRepository = mockChargeRepository;
+        order.getItems().add(orderItemToSplit);
+
+        // expect
+        context.checking(new Expectations() {{
+            oneOf(mockChargeRepository).allIncoming();
+            will(returnValue(Lists.newArrayList(charge1, charge2)));
+        }});
+
+        // when
+        final List<Charge> chargeChoices = order.choices6SplitItem();
+
+        // then
+        assertThat(chargeChoices).containsExactly(charge2);
+    }
+
+    @Test
+    public void splitItem_charge_choices_type_property_expenses() throws Exception {
+        // given
+        Charge charge1 = new Charge();
+        charge1.setReference("FOO");
+        Charge charge2 = new Charge();
+        charge1.setReference("BAR");
+
+        OrderItem orderItemToSplit = new OrderItem();
+        orderItemToSplit.setCharge(charge1);
+
+        Order order = new Order();
+        order.setType(IncomingInvoiceType.PROPERTY_EXPENSES);
+        order.chargeRepository = mockChargeRepository;
+        order.getItems().add(orderItemToSplit);
+
+        // expect
+        context.checking(new Expectations() {{
+            oneOf(mockChargeRepository).allIncoming();
+            will(returnValue(Lists.newArrayList(charge1, charge2)));
+        }});
+
+        // when
+        final List<Charge> chargeChoices = order.choices6SplitItem();
+
+        // then
+        assertThat(chargeChoices).containsExactly(charge1, charge2);
     }
 
     @Test

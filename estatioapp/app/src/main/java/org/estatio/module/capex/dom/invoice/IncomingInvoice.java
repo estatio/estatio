@@ -587,7 +587,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     public String disableSplitItem() {
 
-        ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot spli items because");
+        ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot split items because");
         reasonDisabledDueToApprovalStateIfAny(this, buf);
         buf.append(() -> choices0SplitItem().isEmpty(), "there are no items");
         return buf.getReason();
