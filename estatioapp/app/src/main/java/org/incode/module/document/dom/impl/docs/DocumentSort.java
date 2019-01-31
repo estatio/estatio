@@ -1,18 +1,23 @@
 package org.incode.module.document.dom.impl.docs;
 
-import org.apache.commons.io.output.NullOutputStream;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.services.factory.FactoryService;
-import org.apache.isis.applib.value.Blob;
-import org.apache.isis.applib.value.Clob;
-
-import javax.activation.DataSource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+
+import javax.activation.DataSource;
+
+import org.apache.commons.io.output.NullOutputStream;
+
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.value.Blob;
+import org.apache.isis.applib.value.Clob;
+
+import org.incode.module.document.dom.impl.docs.minio.Document_downloadExternalUrlAsBlob;
+import org.incode.module.document.dom.impl.docs.minio.Document_downloadExternalUrlAsClob;
 
 public enum DocumentSort {
     /**
@@ -80,8 +85,8 @@ public enum DocumentSort {
         @Override
         public byte[] asBytes(final DocumentAbstract<?> document) {
             final FactoryService factoryService = document.factoryService;
-            final Blob blob = factoryService.mixin(Document_downloadExternalUrlAsBlob.class, document).$$();
-            return blob.getBytes();
+            final Blob blob = factoryService.mixin(Document_downloadExternalUrlAsBlob.class, document).act();
+            return blob != null ? blob.getBytes() : null;
         }
     },
     /**
@@ -98,7 +103,7 @@ public enum DocumentSort {
         @Override
         public String asChars(final DocumentAbstract<?> document) {
             final FactoryService factoryService = document.factoryService;
-            final Clob clob = factoryService.mixin(Document_downloadExternalUrlAsClob.class, document).$$();
+            final Clob clob = factoryService.mixin(Document_downloadExternalUrlAsClob.class, document).act();
             final CharSequence chars = clob.getChars();
             return chars instanceof String ? (String) chars : chars.toString();
         }

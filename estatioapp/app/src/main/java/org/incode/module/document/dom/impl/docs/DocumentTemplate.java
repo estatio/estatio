@@ -689,16 +689,6 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     //endregion
 
 
-    //region > asChars, asBytes (programmatic)
-    @Programmatic
-    public String asChars() {
-        return getSort().asChars(this);
-    }
-    @Programmatic
-    public byte[] asBytes() {
-        return getSort().asBytes(this);
-    }
-    //endregion
 
 
     //region > preview (programmatic)

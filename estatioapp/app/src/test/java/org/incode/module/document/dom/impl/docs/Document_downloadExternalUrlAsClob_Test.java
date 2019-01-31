@@ -8,6 +8,8 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
+import org.incode.module.document.dom.impl.docs.minio.Document_downloadExternalUrlAsClob;
+
 public class Document_downloadExternalUrlAsClob_Test {
 
     @Rule

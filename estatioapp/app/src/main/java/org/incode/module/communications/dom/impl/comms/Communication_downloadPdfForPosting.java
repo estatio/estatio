@@ -21,7 +21,7 @@ import org.isisaddons.module.pdfbox.dom.service.PdfBoxService;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.incode.module.communications.dom.mixins.DocumentConstants;
 import org.incode.module.document.dom.impl.docs.Document;
-import org.incode.module.document.dom.impl.docs.Document_downloadExternalUrlAsBlob;
+import org.incode.module.document.dom.impl.docs.minio.Document_downloadExternalUrlAsBlob;
 
 @Mixin(method = "act")
 public class Communication_downloadPdfForPosting {
@@ -94,7 +94,7 @@ public class Communication_downloadPdfForPosting {
             final Blob blob = document.getBlob();
             return blob;
         case EXTERNAL_BLOB:
-            return factoryService.mixin(Document_downloadExternalUrlAsBlob.class, document).$$();
+            return factoryService.mixin(Document_downloadExternalUrlAsBlob.class, document).act();
         }
         return null;
     }

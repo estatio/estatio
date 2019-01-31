@@ -1,4 +1,4 @@
-package org.incode.module.document.dom.impl.docs;
+package org.incode.module.document.dom.impl.docs.minio;
 
 import javax.inject.Inject;
 
@@ -9,18 +9,18 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.document.DocumentModule;
-import org.incode.module.document.dom.spi.UrlDownloadService;
+import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.DocumentSort;
+import org.incode.module.document.spi.minio.ExternalUrlDownloadService;
 
-@Mixin
+@Mixin(method="act")
 public class Document_downloadExternalUrlAsClob {
 
-    //region > constructor
     private final Document document;
 
     public Document_downloadExternalUrlAsClob(final Document document) {
         this.document = document;
     }
-    //endregion
 
 
     public static class ActionDomainEvent extends DocumentModule.ActionDomainEvent<Document_downloadExternalUrlAsClob> { }
@@ -29,15 +29,15 @@ public class Document_downloadExternalUrlAsClob {
             domainEvent = ActionDomainEvent.class
     )
     @ActionLayout(named = "Download")
-    public Clob $$() {
-        return urlDownloadService.downloadAsClob(document);
+    public Clob act() {
+        return externalUrlDownloadService.downloadAsClob(document);
     }
 
-    public boolean hide$$() {
+    public boolean hideAct() {
         return document.getSort() != DocumentSort.EXTERNAL_CLOB;
     }
 
     @Inject
-    UrlDownloadService urlDownloadService;
+    ExternalUrlDownloadService externalUrlDownloadService;
 
 }

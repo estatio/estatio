@@ -18,6 +18,7 @@ import org.apache.isis.applib.value.Blob;
 
 import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
@@ -60,24 +61,26 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
                 Resources.getResource(DocumentMenu_Upload_IntegTest.class, fileName));
         final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(Person_enum.DanielOfficeAdministratorFr.getRef().toLowerCase(), (Runnable) () ->
-                wrap(documentMenu).upload(blob));
+        final Document uploadedDocument1 = sudoService
+                .sudo(Person_enum.DanielOfficeAdministratorFr.getRef().toLowerCase(), () ->
+                        wrap(documentMenu).upload(blob));
         transactionService.nextTransaction();
 
         // then
         List<Document> incomingDocumentsAfter = repository.findAllIncomingDocuments();
         assertThat(incomingDocumentsAfter).hasSize(1);
-
         final Document document = incomingDocumentsAfter.get(0);
-        final Blob documentBlob = document.getBlob();
+        assertThat(document).isSameAs(uploadedDocument1);
+
+        final Blob documentBlob = uploadedDocument1.getBlob();
 
         assertThat(ApplicationTenancy_enum.FrBe.getPath()).isEqualTo("/FRA;/BEL");
-        assertThat(document.getAtPath()).isEqualTo("/FRA");
+        assertThat(uploadedDocument1.getAtPath()).isEqualTo("/FRA");
         assertThat(documentBlob.getName()).isEqualTo(blob.getName());
         assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
         assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
-        assertThat(JDOHelper.getVersion(document)).isEqualTo(1L);
-        assertThat(paperclipRepository.findByDocument(document).size()).isEqualTo(0);
+        assertThat(JDOHelper.getVersion(uploadedDocument1)).isEqualTo(1L);
+        assertThat(paperclipRepository.findByDocument(uploadedDocument1).size()).isEqualTo(0);
 
         // and then also
         final List<IncomingDocumentCategorisationStateTransition> transitions =
@@ -94,20 +97,32 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
         final byte[] pdfBytes2 = Resources.toByteArray(
                 Resources.getResource(DocumentMenu_Upload_IntegTest.class, fileName2));
         final Blob similarNamedBlob = new Blob(fileName, "application/pdf", pdfBytes2);
-        wrap(documentMenu).upload(similarNamedBlob);
+        final Document uploadedDocument2 = wrap(documentMenu).upload(similarNamedBlob);
         transactionService.nextTransaction();
 
+
         // then
+        assertThat(uploadedDocument1).isNotSameAs(uploadedDocument2);
+
         incomingDocumentsAfter = repository.findAllIncomingDocuments();
         assertThat(incomingDocumentsAfter).hasSize(2);
-        assertThat(incomingDocumentsAfter.get(0).getName()).isEqualTo(fileName);
-        assertThat(incomingDocumentsAfter.get(0).getBlobBytes()).isEqualTo(similarNamedBlob.getBytes());
-        assertThat(JDOHelper.getVersion(incomingDocumentsAfter.get(0))).isEqualTo(2L);
-        assertThat(paperclipRepository.findByDocument(incomingDocumentsAfter.get(0)).size()).isEqualTo(1);
-        assertThat(incomingDocumentsAfter.get(1).getName()).contains(fileName); // has prefix arch-[date time indication]-
-        assertThat(incomingDocumentsAfter.get(1).getBlobBytes()).isEqualTo(documentBlob.getBytes());
-        assertThat(JDOHelper.getVersion(incomingDocumentsAfter.get(1))).isEqualTo(1L);
-        assertThat(paperclipRepository.findByDocument(incomingDocumentsAfter.get(1)).size()).isEqualTo(0);
+        assertThat(incomingDocumentsAfter).contains(uploadedDocument1, uploadedDocument2);
+
+        assertThat(JDOHelper.getVersion(uploadedDocument2)).isEqualTo(1L);
+        assertThat(uploadedDocument2.getName()).isEqualTo(fileName);
+        assertThat(uploadedDocument2.getBlobBytes()).isEqualTo(similarNamedBlob.getBytes());
+
+        final List<Paperclip> paperclipByAttachedTo = paperclipRepository.findByAttachedTo(uploadedDocument2);
+        assertThat(paperclipByAttachedTo.size()).isEqualTo(1);
+        final List<Paperclip> paperclipByDocument = paperclipRepository.findByDocument(uploadedDocument1);
+        assertThat(paperclipByDocument.size()).isEqualTo(1);
+        assertThat(paperclipByDocument.get(0)).isSameAs(paperclipByAttachedTo.get(0));
+        assertThat(paperclipRepository.findByAttachedTo(uploadedDocument1)).isEmpty();
+
+        assertThat(JDOHelper.getVersion(uploadedDocument1)).isEqualTo(2L);
+        assertThat(uploadedDocument1.getName()).startsWith("arch");
+        assertThat(uploadedDocument1.getName()).endsWith(fileName);
+        assertThat(uploadedDocument1.getBlobBytes()).isEqualTo(documentBlob.getBytes());
 
         // and when since ECP-676 atPath derived from filename for France and Belgium
         final String belgianBarCode = "6010012345.pdf";

@@ -58,6 +58,12 @@
                             </cpt:action>
                         </cpt:property>
                     </cpt:fieldSet>
+                    <cpt:fieldSet name="Doc Blob Archival" id="archival"  unreferencedProperties="true">
+                        <cpt:property id="docBlobServerCaller">
+                            <cpt:named>Enable for caller</cpt:named>
+                            <cpt:describedAs>Which callers (if any) are allowed to archive Document Blobs (to Minio)</cpt:describedAs>
+                        </cpt:property>
+                    </cpt:fieldSet>
                 </bs3:col>
             </bs3:row>
         </bs3:col>

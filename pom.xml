@@ -22,7 +22,7 @@ language governing permissions and limitations under the License.
         <groupId>org.incode</groupId>
         <artifactId>incode-parent</artifactId>
         <!-- NB: also update incode-platform.version property below. -->
-        <version>1.17.0</version>
+        <version>1.17.0.20190120-1926-ffd0e98b</version>
         <relativePath/>
     </parent>
 
@@ -69,14 +69,13 @@ language governing permissions and limitations under the License.
         <!-- DO NOT CHANGE: versioning is specified externally in CI using -Drevision=... -->
         <revision>1.0.0-SNAPSHOT</revision>
 
-        <!--<isis.version>1.16.2.20181101-1332-fd691464</isis.version>-->
         <isis.version>${revision}</isis.version>
 
         <!--
         Also specify the incode-platform.version by changing the parent's version, above.
         And, update the pom.xml for estatio-ecp similarly
          -->
-        <incode-platform.version>1.17.0</incode-platform.version>
+        <incode-platform.version>1.17.0.20190120-1926-ffd0e98b</incode-platform.version>
 
         <estatio-canonical.version>2.1.1.20190128-1946-8ea7bc3e</estatio-canonical.version>
 
@@ -479,6 +478,19 @@ language governing permissions and limitations under the License.
             <dependency>
                 <groupId>org.incode.module.jaxrsclient</groupId>
                 <artifactId>incode-module-jaxrsclient-dom</artifactId>
+                <version>${incode-platform.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.incode.module.minio</groupId>
+                <artifactId>incode-module-minio-dopserver</artifactId>
+                <version>${incode-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.incode.module.minio</groupId>
+                <artifactId>incode-module-minio-dopserver</artifactId>
                 <version>${incode-platform.version}</version>
                 <type>test-jar</type>
                 <scope>test</scope>

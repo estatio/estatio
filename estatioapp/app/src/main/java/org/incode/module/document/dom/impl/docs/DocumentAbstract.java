@@ -176,10 +176,16 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
             editing = Editing.DISABLED
     )
     public Blob getBlob() {
-        return getSort().equals(DocumentSort.BLOB) ?
-                new Blob(getName(), getMimeType(), getBlobBytes()) :
-                null;
 
+        // TODO: guard shouldn't be necessary, but otherwise get exception (same as getClob()).
+        if (hideBlob()) {
+            return null;
+        }
+
+        // even though stored externally, may also be cached, in which case use
+        final byte[] bytes = getBlobBytes() != null ? getBlobBytes() : asBytes();
+
+        return new Blob(getName(), getMimeType(), bytes);
     }
     @Programmatic
     public void modifyBlob(Blob blob) {
@@ -189,7 +195,7 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
         setSort(DocumentSort.BLOB);
     }
     public boolean hideBlob() {
-        return getSort() != DocumentSort.BLOB;
+        return !getSort().isBytes();
     }
     //endregion
 
@@ -213,9 +219,33 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
             editing = Editing.DISABLED
     )
     public Clob getClob() {
-        return getSort().equals(DocumentSort.CLOB) ?
-                new Clob(getName(), getMimeType(), getClobChars()) :
-                null;
+        /*
+        java.lang.IllegalArgumentException
+        Cannot convert to characters
+        org.incode.module.document.dom.impl.docs.DocumentSort#asChars(DocumentSort.java:120)
+        org.incode.module.document.dom.impl.docs.DocumentAbstract#asChars(DocumentAbstract.java:255)
+        org.incode.module.document.dom.impl.docs.DocumentAbstract#getClob(DocumentAbstract.java:208)
+        sun.reflect.NativeMethodAccessorImpl#invoke0(NativeMethodAccessorImpl.java:-2)
+        sun.reflect.NativeMethodAccessorImpl#invoke(NativeMethodAccessorImpl.java:62)
+        sun.reflect.DelegatingMethodAccessorImpl#invoke(DelegatingMethodAccessorImpl.java:43)
+        java.lang.reflect.Method#invoke(Method.java:498)
+        org.apache.isis.core.commons.lang.MethodExtensions#invoke(MethodExtensions.java:53)
+        org.apache.isis.core.commons.lang.MethodExtensions#invoke(MethodExtensions.java:47)
+        org.apache.isis.core.metamodel.adapter.ObjectAdapter$InvokeUtils#invoke(ObjectAdapter.java:373)
+        org.apache.isis.core.metamodel.facets.properties.accessor.PropertyAccessorFacetViaAccessor#getProperty(PropertyAccessorFacetViaAccessor.java:76)
+        org.apache.isis.core.metamodel.specloader.specimpl.OneToOneAssociationDefault#get(OneToOneAssociationDefault.java:146)
+        org.apache.isis.viewer.wicket.model.models.EntityModel#resetPropertyModels(EntityModel.java:406)
+        org.apache.isis.viewer.wicket.ui.panels.FormExecutorDefault#executeAndProcessResults(FormExecutorDefault.java:157)
+        org.apache.isis.viewer.wicket.ui.panels.PromptFormAbstract#onOkSubmittedOf(PromptFormAbstract.java:229)
+         */
+        // TODO: guard shouldn't be necessary, but otherwise get above exception
+        if (hideClob()) {
+            return null;
+        }
+
+        // even though stored externally, may also be cached, in which case use
+        final String chars = getClobChars() != null ? getClobChars() : asChars();
+        return new Clob(getName(), getMimeType(), chars);
     }
     @Programmatic
     public void modifyClob(Clob clob) {
@@ -226,7 +256,7 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
     }
 
     public boolean hideClob() {
-        return getSort() != DocumentSort.CLOB;
+        return !getSort().isCharacters();
     }
     //endregion
 
@@ -254,12 +284,21 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
     //endregion
 
 
-    //region > asDataSource
+    //region > asDataSource, asChars, asBytes (programmatic)
     @Programmatic
     public DataSource asDataSource() {
         return getSort().asDataSource(this);
     }
+    @Programmatic
+    public String asChars() {
+        return getSort().asChars(this);
+    }
+    @Programmatic
+    public byte[] asBytes() {
+        return getSort().asBytes(this);
+    }
     //endregion
+
 
     //region > id (programmatic, for comparison)
     @Programmatic

@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.jdo.JDOHelper;
-import javax.ws.rs.HEAD;
 
 import com.google.common.io.Resources;
 
@@ -102,12 +101,14 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
         // then
         incomingDocumentsAfter = repository.findAllIncomingDocuments();
         assertThat(incomingDocumentsAfter).hasSize(2);
-        assertThat(incomingDocumentsAfter.get(0).getName()).isEqualTo(fileName);
-        assertThat(incomingDocumentsAfter.get(0).getBlobBytes()).isEqualTo(similarNamedBlob.getBytes());
+        assertThat(incomingDocumentsAfter.get(0).getName()).startsWith("arch");
+        assertThat(incomingDocumentsAfter.get(0).getName()).endsWith(fileName);
+        assertThat(incomingDocumentsAfter.get(0).getBlobBytes()).isEqualTo(documentBlob.getBytes());
+
         assertThat(JDOHelper.getVersion(incomingDocumentsAfter.get(0))).isEqualTo(2L);
         assertThat(paperclipRepository.findByDocument(incomingDocumentsAfter.get(0)).size()).isEqualTo(1);
-        assertThat(incomingDocumentsAfter.get(1).getName()).contains(fileName); // has prefix arch-[date time indication]-
-        assertThat(incomingDocumentsAfter.get(1).getBlobBytes()).isEqualTo(documentBlob.getBytes());
+        assertThat(incomingDocumentsAfter.get(1).getName()).isEqualTo(fileName);
+        assertThat(incomingDocumentsAfter.get(1).getBlobBytes()).isEqualTo(similarNamedBlob.getBytes());
         assertThat(JDOHelper.getVersion(incomingDocumentsAfter.get(1))).isEqualTo(1L);
         assertThat(paperclipRepository.findByDocument(incomingDocumentsAfter.get(1)).size()).isEqualTo(0);
 
@@ -121,7 +122,7 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
     }
 
     @Test
-    public void when_italian_document() throws Exception {
+    public void when_incoming_italian_document() throws Exception {
 
         // given
         List<Document> incomingDocumentsBefore = repository.findIncomingDocuments();
@@ -132,57 +133,61 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
         final byte[] pdfBytes = Resources.toByteArray(
                 Resources.getResource(DocumentServiceRestApi_uploadGeneric_IntegTest.class, fileName));
         final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);
-        wrap(documentService).uploadGeneric(blob, "INCOMING", "/ITA");
+        final Document document1 = wrap(documentService).uploadGeneric(blob, "INCOMING", "/ITA");
         transactionService.nextTransaction();
 
         // then
         List<Document> incomingDocumentsAfter = repository.findAllIncomingDocuments();
         assertThat(incomingDocumentsAfter).hasSize(1);
 
-        Document document = incomingDocumentsAfter.get(0);
-        Blob documentBlob = document.getBlob();
+        final Document document = incomingDocumentsAfter.get(0);
+        assertThat(document1).isSameAs(document);
 
-        assertThat(document.getAtPath()).isEqualTo("/ITA");
+        final Blob documentBlob = document1.getBlob();
+
+        assertThat(document1.getAtPath()).isEqualTo("/ITA");
         assertThat(documentBlob.getName()).isEqualTo(blob.getName());
         assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
         assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
-        assertThat(JDOHelper.getVersion(document)).isEqualTo(1L);
-        assertThat(document.getType()).isEqualTo(DocumentTypeData.INCOMING.findUsing(documentTypeRepository));
+        assertThat(JDOHelper.getVersion(document1)).isEqualTo(1L);
+        assertThat(document1.getType()).isEqualTo(DocumentTypeData.INCOMING.findUsing(documentTypeRepository));
 
         // and then also
-        assertThat(stateTransitionRepository.findByDomainObject(document)).hasSize(0);
+        assertThat(stateTransitionRepository.findByDomainObject(document1)).hasSize(0);
         // TODO: when implemented assert link between doc and inc inv
 
         // and when again uploading doc with the same name (but different bytes)
         final byte[] pdfBytes2 = Resources.toByteArray(
                 Resources.getResource(DocumentServiceRestApi_uploadGeneric_IntegTest.class, "2010101234-altered.pdf"));
         final Blob similarNamedBlobWithDifferentBytes = new Blob(fileName, "application/pdf", pdfBytes2);
-        wrap(documentService).uploadGeneric(similarNamedBlobWithDifferentBytes, "INCOMING", "/ITA");
+
+        final Document document2 = wrap(documentService)
+                .uploadGeneric(similarNamedBlobWithDifferentBytes, "INCOMING", "/ITA");
         transactionService.nextTransaction();
 
         // then
         incomingDocumentsAfter = repository.findAllIncomingDocuments();
         assertThat(incomingDocumentsAfter).hasSize(2);
+        assertThat(incomingDocumentsAfter).contains(document1, document2);
 
-        document = incomingDocumentsAfter.get(0);
-        documentBlob = document.getBlob();
+        final Blob document2Blob = document2.getBlob();
 
-        assertThat(document.getAtPath()).isEqualTo("/ITA");
+        assertThat(document2.getAtPath()).isEqualTo("/ITA");
 
-        assertThat(documentBlob.getName()).isEqualTo(similarNamedBlobWithDifferentBytes.getName());
-        assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(similarNamedBlobWithDifferentBytes.getMimeType().getBaseType());
-        assertThat(documentBlob.getBytes()).isEqualTo(similarNamedBlobWithDifferentBytes.getBytes());
+        assertThat(document2Blob.getName()).isEqualTo(fileName);
+        assertThat(document2Blob.getMimeType().getBaseType()).isEqualTo(similarNamedBlobWithDifferentBytes.getMimeType().getBaseType());
+        assertThat(document2Blob.getBytes()).isEqualTo(similarNamedBlobWithDifferentBytes.getBytes());
 
-        document = incomingDocumentsAfter.get(1);
-        documentBlob = document.getBlob();
+        final Blob document1Blob = document1.getBlob();
 
-        assertThat(document.getAtPath()).isEqualTo("/ITA");
-        assertThat(documentBlob.getName()).contains(blob.getName());
+        assertThat(document1.getAtPath()).isEqualTo("/ITA");
+        assertThat(document1Blob.getName()).startsWith("arch");
+        assertThat(document1Blob.getName()).endsWith(fileName);
 
-        assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
-        assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
-        assertThat(JDOHelper.getVersion(document)).isEqualTo(1L);
-        assertThat(document.getType()).isEqualTo(DocumentTypeData.INCOMING.findUsing(documentTypeRepository));
+        assertThat(document1Blob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
+        assertThat(document1Blob.getBytes()).isEqualTo(blob.getBytes());
+        assertThat(JDOHelper.getVersion(document1)).isEqualTo(2L);
+        assertThat(document1.getType()).isEqualTo(DocumentTypeData.INCOMING.findUsing(documentTypeRepository));
     }
 
     @Test
