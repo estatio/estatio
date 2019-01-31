@@ -1,6 +1,7 @@
 package org.estatio.module.capex.app.taskreminder;
 
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -67,7 +68,7 @@ public class TaskOverview implements HasAtPath {
                     StateTransition stateTransition = stateTransitionService.findFor(task);
                     return stateTransition != null && stateTransition.getDomainObject() != null && !(stateTransition.getDomainObject() instanceof Order);
                 })
-                .filter(t -> t.getCreatedOn().plusDays(5).isAfter(clockService.nowAsLocalDateTime()))
+                .filter(lessThanFiveDaysOld())
                 .collect(Collectors.toList());
     }
 
@@ -79,8 +80,16 @@ public class TaskOverview implements HasAtPath {
                     StateTransition stateTransition = stateTransitionService.findFor(task);
                     return stateTransition != null && stateTransition.getDomainObject() != null && !(stateTransition.getDomainObject() instanceof Order);
                 })
-                .filter(t -> t.getCreatedOn().plusDays(5).isBefore(clockService.nowAsLocalDateTime()))
+                .filter(moreThanFiveDaysOld())
                 .collect(Collectors.toList());
+    }
+
+    private Predicate<Task> lessThanFiveDaysOld() {
+        return t -> t.getCreatedOn().plusDays(5).isAfter(clockService.nowAsLocalDateTime());
+    }
+
+    private Predicate<Task> moreThanFiveDaysOld() {
+        return t -> t.getCreatedOn().plusDays(5).isBefore(clockService.nowAsLocalDateTime());
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
