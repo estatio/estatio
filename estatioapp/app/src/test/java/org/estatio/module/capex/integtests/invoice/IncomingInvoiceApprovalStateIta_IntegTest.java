@@ -153,7 +153,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
     @Inject StateTransitionService stateTransitionService;
 
     @Test
-    public void approved_invoice_with_net_amount_equal_or_lower_then_100000_threshold_does_not_need_further_approval() throws Exception {
+    public void approved_invoice_with_gross_amount_equal_or_lower_then_100000_threshold_does_not_need_further_approval() throws Exception {
 
         List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice;
 
@@ -180,7 +180,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
                     wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("INCOMING_INVOICE_MANAGER", null, null));
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
-        assertThat(incomingInvoice.getNetAmount()).isEqualTo(new BigDecimal("100000.00"));
+        assertThat(incomingInvoice.getGrossAmount()).isEqualTo(new BigDecimal("100000.00"));
 
         // then
         transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
@@ -310,12 +310,12 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
 
 
     @Test
-    public void approved_invoice_with_net_amount_higher_then_100000_threshold_needs_directors_approval() throws Exception {
+    public void approved_invoice_with_gross_amount_higher_then_100000_threshold_needs_directors_approval() throws Exception {
 
         List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice;
 
         // given
-        incomingInvoice.changeAmounts(new BigDecimal("100000.01"), new BigDecimal("122000.01"));
+        incomingInvoice.changeAmounts(new BigDecimal("81967.22"), new BigDecimal("100000.01"));
         IncomingInvoiceItem item = (IncomingInvoiceItem) incomingInvoice.getItems().first();
         item.addAmounts(new BigDecimal("0.01"), BigDecimal.ZERO, new BigDecimal("0.01"));
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
@@ -431,7 +431,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         sudoService.sudo(Person_enum.LoredanaPropertyInvoiceMgrIt.getRef().toLowerCase(), (Runnable) () ->
                 wrap(mixin(IncomingInvoice_complete.class, recoverableInvoice)).act("SOME_ROLE", null, null));
         assertThat(recoverableInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
-        assertThat(recoverableInvoice.getNetAmount()).isEqualTo(new BigDecimal("100000.00"));
+        assertThat(recoverableInvoice.getGrossAmount()).isEqualTo(new BigDecimal("100000.00"));
         transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(recoverableInvoice);
         assertThat(transitionsOfInvoice).hasSize(3);
 
@@ -534,7 +534,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice;
 
         // given
-        recoverableInvoice.changeAmounts(new BigDecimal("100000.01"), new BigDecimal("122000.01"));
+        recoverableInvoice.changeAmounts(new BigDecimal("81967.22"), new BigDecimal("100000.01"));
         IncomingInvoiceItem item = (IncomingInvoiceItem) recoverableInvoice.getItems().first();
         item.addAmounts(new BigDecimal("0.01"), BigDecimal.ZERO, new BigDecimal("0.01"));
 
@@ -637,7 +637,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         assertThat(preferredDirector.hasPartyRoleType(preferredDirectorRoleType));
 
         // sets net amount above threshold so to approvals will be needed
-        incomingInvoice.changeAmounts(new BigDecimal("100000.01"), new BigDecimal("122000.01"));
+        incomingInvoice.changeAmounts(new BigDecimal("81967.22"), new BigDecimal("100000.01"));
         IncomingInvoiceItem item = (IncomingInvoiceItem) incomingInvoice.getItems().first();
         item.addAmounts(new BigDecimal("0.01"), BigDecimal.ZERO, new BigDecimal("0.01"));
 

@@ -331,7 +331,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 final ServiceRegistry2 serviceRegistry2) {
             if (!isItalian(incomingInvoice)) return false; // superfluous but just to be explicit
             // applies to invoices under threshold only
-            if (hasNetAmountAboveThreshold(incomingInvoice)) {
+            if (hasGrossAmountAboveThreshold(incomingInvoice)) {
                 return false;
             }
             return true;
@@ -374,7 +374,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
         public boolean isMatch(
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
-            if (isItalian(incomingInvoice) && !hasNetAmountAboveThreshold(incomingInvoice)) {
+            if (isItalian(incomingInvoice) && !hasGrossAmountAboveThreshold(incomingInvoice)) {
                 return false;
             }
             return true;
@@ -398,7 +398,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 final ServiceRegistry2 serviceRegistry2) {
             // applies to italian invoices only with net amount under threshold
             if (!isItalian(incomingInvoice)) return false;
-            if (hasNetAmountAboveThreshold(incomingInvoice)) return false;
+            if (hasGrossAmountAboveThreshold(incomingInvoice)) return false;
             return true;
         }
     },
@@ -735,8 +735,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
         return incomingInvoice.getAtPath() !=null && incomingInvoice.getAtPath().startsWith("/ITA");
     }
 
-    static boolean hasNetAmountAboveThreshold(final IncomingInvoice incomingInvoice) {
-        return incomingInvoice.getNetAmount()!=null && incomingInvoice.getNetAmount().compareTo(threshold) > 0;
+    static boolean hasGrossAmountAboveThreshold(final IncomingInvoice incomingInvoice) {
+        return incomingInvoice.getGrossAmount()!=null && incomingInvoice.getGrossAmount().compareTo(threshold) > 0;
     }
 
     static BigDecimal threshold = new BigDecimal("100000.00");
