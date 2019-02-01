@@ -17,6 +17,7 @@ import org.isisaddons.module.excel.dom.util.Mode;
 
 import org.estatio.module.capex.app.DebtorBankAccountService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.payment.PaymentBatch;
 import org.estatio.module.capex.dom.payment.PaymentBatchRepository;
 import org.estatio.module.coda.dom.doc.CodaDocHead;
@@ -50,6 +51,8 @@ public class PaymentBatchItaUploadService {
                         if (invoiceFromLine.getPaymentMethod()!=null && invoiceFromLine.getPaymentMethod()!=PaymentMethod.BANK_TRANSFER) {
                             messageService.warnUser(String.format("Invoice number %s of %s has payment method %s and should not be in this payment batch.", invoiceFromLine.getInvoiceNumber(), invoiceFromLine.getSeller().getName(), invoiceFromLine.getPaymentMethod().title()));
                         } else {
+                            if (invoiceFromLine.getApprovalState()==IncomingInvoiceApprovalState.PAID) messageService.warnUser(String.format("NOTE: Invoice number %s of %s is marked PAID in Estatio!", invoiceFromLine.getInvoiceNumber(), invoiceFromLine.getSeller().getName()));
+                            if (invoiceFromLine.getApprovalState()!=IncomingInvoiceApprovalState.PAYABLE) messageService.warnUser(String.format("NOTE: Invoice number %s of %s is NOT in a state of PAYABLE", invoiceFromLine.getInvoiceNumber(), invoiceFromLine.getSeller().getName()));
                             newBatch.addLineIfRequired(invoiceFromLine);
                         }
                     }
