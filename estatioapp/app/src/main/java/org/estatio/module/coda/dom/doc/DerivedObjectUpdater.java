@@ -88,7 +88,7 @@ public class DerivedObjectUpdater {
         final String invoiceNumber = docHead.getSummaryLineExtRef2(LineCache.DEFAULT);
         final Property property = docHead.getSummaryLineAccountEl3Property(LineCache.DEFAULT);
 
-        final BankAccount bankAccount= docHead.getSummaryLineSupplierBankAccount(LineCache.DEFAULT);
+        final BankAccount bankAccount = docHead.getSummaryLineSupplierBankAccount(LineCache.DEFAULT);
 
         final PaymentMethod paymentMethod = docHead.getSummaryLinePaymentMethod(LineCache.DEFAULT);
 
@@ -96,7 +96,7 @@ public class DerivedObjectUpdater {
 
         final LocalDate dateReceived = docHead.getInputDate();
 
-        final LocalDate invoiceDate= docHead.getDocDate();
+        final LocalDate invoiceDate = docHead.getDocDate();
         final LocalDate dueDate = docHead.getSummaryLineDueDate(LineCache.DEFAULT);
 
         final LocalDate paidDate = docHead.getStatPayPaidDate();
@@ -112,7 +112,7 @@ public class DerivedObjectUpdater {
         final BudgetItem budgetItem = null;
 
         final BigDecimal grossAmount = docHead.getSummaryLineDocValue(LineCache.DEFAULT);
-        final BigDecimal vatAmount = docHead.getSummaryLineDocSumTax(LineCache.DEFAULT)==null ? BigDecimal.ZERO : docHead.getSummaryLineDocSumTax(LineCache.DEFAULT);
+        final BigDecimal vatAmount = docHead.getSummaryLineDocSumTax(LineCache.DEFAULT) == null ? BigDecimal.ZERO : docHead.getSummaryLineDocSumTax(LineCache.DEFAULT);
         final BigDecimal netAmount = Util.subtract(grossAmount, vatAmount);
         final String period = Util.asFinancialYear(docHead.getCodaPeriod());
         final Tax tax = null;
@@ -158,7 +158,7 @@ public class DerivedObjectUpdater {
 
         } else {
             // if the DocHead is valid, and sync has been requested, then we create new Estatio objects
-            if(createIfDoesNotExist) {
+            if (createIfDoesNotExist) {
 
                 // as a side-effect, the approvalState will be set to NEW
                 // (subscriber on ObjectPersist)
@@ -208,7 +208,7 @@ public class DerivedObjectUpdater {
         final BigDecimal netAmount = Util.subtract(grossAmount, vatAmount);
 
         final OrderItem orderItem = docHead.getSummaryLineExtRefOrderItem(LineCache.DEFAULT);
-        if(existingLinkIfAny != null) {
+        if (existingLinkIfAny != null) {
 
             if (orderItem == null || invoiceItem == null) {
 
@@ -238,7 +238,7 @@ public class DerivedObjectUpdater {
         } else {
 
             // if the DocHead is valid, and sync has been requested, then we create new Estatio objects
-            if(createIfDoesNotExist) {
+            if (createIfDoesNotExist) {
 
                 //
                 // create the link, if we can
@@ -281,9 +281,7 @@ public class DerivedObjectUpdater {
 
         if (orderItem != null && invoiceItem != null) {
             try {
-                wrapperFactory.wrap(
-                        factoryService.mixin(IncomingInvoiceItem_createOrderItemLink.class, invoiceItem))
-                        .act(orderItem, invoiceItem.getNetAmount());
+                factoryService.mixin(IncomingInvoiceItem_createOrderItemLink.class, invoiceItem).act(orderItem, invoiceItem.getNetAmount());
             } catch (HiddenException ex) {
                 softErrors.add(
                         "Failed to create a link between '%s' and '%s'",
@@ -328,7 +326,7 @@ public class DerivedObjectUpdater {
         if (existingPaperclipIfAny != null) {
 
             final String documentName = docHead.getSummaryLineDocumentName(LineCache.DEFAULT);
-            if(documentName == null) {
+            if (documentName == null) {
 
                 // userRef1 removed, so delete the existing paperclip.
                 paperclipRepository.delete(existingPaperclipIfAny);
@@ -370,7 +368,7 @@ public class DerivedObjectUpdater {
         } else {
 
             // if the DocHead is valid, and its handling is set to sync, then we create new Estatio objects
-            if(createIfDoesNotExist) {
+            if (createIfDoesNotExist) {
 
                 final String documentName = docHead.getSummaryLineDocumentName(LineCache.DEFAULT);
 
