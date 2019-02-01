@@ -541,6 +541,9 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
             Applicability applicability = existingApplicability(domainClassName);
             if(applicability == null) {
                 applicability = applicabilityRepository.create(documentTemplate, domainClassName, renderModelFactoryClassName, attachmentAdvisorClassName);
+            } else {
+                applicability.setRendererModelFactoryClassName(renderModelFactoryClassName);
+                applicability.setAttachmentAdvisorClassName(attachmentAdvisorClassName);
             }
             return applicability;
         }

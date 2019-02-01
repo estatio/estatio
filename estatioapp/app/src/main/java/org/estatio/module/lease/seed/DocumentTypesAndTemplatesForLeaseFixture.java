@@ -38,10 +38,10 @@ public class DocumentTypesAndTemplatesForLeaseFixture extends DiscoverableFixtur
     }
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void execute(ExecutionContext ec) {
 
-        executionContext.executeChild(this, new RenderingStrategies());
-        executionContext.executeChild(this, new DocumentTypeAndTemplatesFSForInvoicesUsingSsrs(getTemplateDateIfAny()));
+        ec.executeChild(this, new RenderingStrategies());
+        ec.executeChild(this, new DocumentTypeAndTemplatesFSForInvoicesUsingSsrs(getTemplateDateIfAny()));
 
     }
 
