@@ -182,10 +182,7 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
             return null;
         }
 
-        // even though stored externally, may also be cached, in which case use
-        final byte[] bytes = getBlobBytes() != null ? getBlobBytes() : asBytes();
-
-        return new Blob(getName(), getMimeType(), bytes);
+        return new Blob(getName(), getMimeType(), asBytes());
     }
     @Programmatic
     public void modifyBlob(Blob blob) {
@@ -243,9 +240,7 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
             return null;
         }
 
-        // even though stored externally, may also be cached, in which case use
-        final String chars = getClobChars() != null ? getClobChars() : asChars();
-        return new Clob(getName(), getMimeType(), chars);
+        return new Clob(getName(), getMimeType(), asChars());
     }
     @Programmatic
     public void modifyClob(Clob clob) {
@@ -291,11 +286,11 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
     }
     @Programmatic
     public String asChars() {
-        return getSort().asChars(this);
+        return getClobChars() != null ? getClobChars() : getSort().asChars(this);
     }
     @Programmatic
     public byte[] asBytes() {
-        return getSort().asBytes(this);
+        return getBlobBytes() != null ? getBlobBytes() : getSort().asBytes(this);
     }
     //endregion
 
