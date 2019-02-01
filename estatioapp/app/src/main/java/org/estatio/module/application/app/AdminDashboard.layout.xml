@@ -12,6 +12,7 @@
             <cpt:action id="patchDatabase"/>
 
             <cpt:action id="raiseRuntimeException"/>
+            <cpt:action id="testMessageService"/>
 
             <cpt:action id="recentAuditEntries" hidden="EVERYWHERE"/>
             <cpt:action id="findChangesByDate" hidden="EVERYWHERE"/>

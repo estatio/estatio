@@ -283,6 +283,38 @@ public class AdminDashboard {
         throw new RuntimeException();
     }
 
+    public enum Level {
+        INFO {
+            @Override
+            public void raise(final MessageService messageService, final String message) {
+                messageService.informUser(message);
+            }
+        },
+        WARN {
+            @Override
+            public void raise(final MessageService messageService, final String message) {
+                messageService.warnUser(message);
+            }
+        },
+        ERROR {
+            @Override
+            public void raise(final MessageService messageService, final String message) {
+                messageService.raiseError(message);
+            }
+        };
+
+        public abstract void raise(final MessageService messageService, final String message);
+    }
+
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
+    @MemberOrder(sequence = "3.5")
+    public AdminDashboard testMessageService(final Level level, final String message) {
+        level.raise(messageService, message);
+        return this;
+    }
+    public Level default0TestMessageService() { return Level.INFO; }
+    public String default1TestMessageService() { return "test message"; }
+
 
 
     @Collection
