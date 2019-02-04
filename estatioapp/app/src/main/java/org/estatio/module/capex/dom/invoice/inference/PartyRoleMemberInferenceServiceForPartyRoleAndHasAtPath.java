@@ -30,12 +30,14 @@ public class PartyRoleMemberInferenceServiceForPartyRoleAndHasAtPath
 
         // infer the country / "org unit" from the document
         String atPath = hasAtPath.getAtPath();
+        List<Person> personsWithRoleType = doInferMembersOf(partyRoleType);
 
         return personRepository.findWithUsername()
                 .stream()
                 .map(person -> applicationUserRepository.findByUsername(person.getUsername()))
                 .filter(applicationUser -> applicationUser.getAtPath().contains(atPath))
                 .map(applicationUser -> personRepository.findByUsername(applicationUser.getUsername()))
+                .filter(personsWithRoleType::contains)
                 .collect(Collectors.toList());
     }
 
