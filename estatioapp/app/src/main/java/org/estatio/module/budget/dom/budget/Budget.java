@@ -139,7 +139,7 @@ public class Budget extends UdoDomainObject2<Budget>
     @PropertyLayout(hidden = Where.EVERYWHERE)
     private LocalDate endDate;
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", length = Status.Meta.MAX_LEN)
     @Getter @Setter
     private Status status;
 
