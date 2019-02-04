@@ -70,9 +70,7 @@ public class BudgetAssignmentService {
                         BigDecimal value = BigDecimal.ZERO;
                         List<BudgetCalculation> calculationsForCharge = calculationsForUnitAndType.stream().filter(c -> c.getInvoiceCharge().equals(charge)).collect(Collectors.toList());
                         for (BudgetCalculation calc : calculationsForCharge) {
-                            if (calc.getStatus() != Status.ASSIGNED) {
-                                value = value.add(calc.getValue());
-                            }
+                            value = value.add(calc.getValue());
                         }
                         BudgetCalculationResult calcResult = budgetCalculationResultRepository.upsertBudgetCalculationResult(budget, occupancy, charge, type, value);
                         results.add(calcResult);
