@@ -371,9 +371,11 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public void updateOrderNumber() {
-        String possibleMultiPropertyReference = orderNumber.split("/").length > 1 ? orderNumber.split("/")[1] : "";
-        String orderNumber = orderRepository.toItaOrderNumber(getBuyerOrderNumber().toString(), getProperty(), possibleMultiPropertyReference, getItems().first().getProject(), getItems().first().getCharge());
-        setOrderNumber(orderNumber);
+        if (getAtPath().startsWith("/ITA")) {
+            String possibleMultiPropertyReference = orderNumber.split("/").length > 1 ? orderNumber.split("/")[1] : "";
+            String orderNumber = orderRepository.toItaOrderNumber(getBuyerOrderNumber().toString(), getProperty(), possibleMultiPropertyReference, getItems().first().getProject(), getItems().first().getCharge());
+            setOrderNumber(orderNumber);
+        }
     }
 
     @Column(allowsNull = "true", length = 255)

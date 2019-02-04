@@ -404,6 +404,7 @@ public class Order_Test {
     public void updateOrderNumber_works() throws Exception {
         // given
         Order order = new Order();
+        order.setAtPath("/ITA");
         order.setOrderNumber("1234/OXF/123/005");
         OrderRepository repository = new OrderRepository();
         order.orderRepository = repository;
@@ -420,8 +421,8 @@ public class Order_Test {
         // and when
         Property property = new Property();
         property.setReference("LON");
-        order.setProperty(property);
-        order.updateOrderNumber();
+        order.editProperty(property, true);
+
         // then
         assertThat(order.getOrderNumber()).isEqualTo("1234/LON//");
 
@@ -440,5 +441,26 @@ public class Order_Test {
         order.updateOrderNumber();
         // then
         assertThat(order.getOrderNumber()).isEqualTo("1234/LON/321/006");
+    }
+
+    @Test
+    public void editProperty_french_order_does_not_update_order_number() {
+        // given
+        Order order = new Order();
+        order.setAtPath("/FRA");
+        order.setOrderNumber("1234");
+
+        Property property = new Property();
+        property.setReference("PAR");
+        order.setProperty(property);
+
+        // when
+        Property newProperty = new Property();
+        newProperty.setReference("CAN");
+        order.editProperty(newProperty, true);
+
+        // then
+        assertThat(order.getOrderNumber()).isEqualTo("1234");
+        assertThat(order.getProperty()).isEqualTo(newProperty);
     }
 }
