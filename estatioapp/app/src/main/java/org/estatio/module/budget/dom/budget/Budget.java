@@ -139,6 +139,10 @@ public class Budget extends UdoDomainObject2<Budget>
     @PropertyLayout(hidden = Where.EVERYWHERE)
     private LocalDate endDate;
 
+    @Column(allowsNull = "false")
+    @Getter @Setter
+    private Status status;
+
     @Persistent(mappedBy = "budget", dependentElement = "true")
     @Getter @Setter
     private SortedSet<BudgetItem> items = new TreeSet<>();
@@ -155,14 +159,6 @@ public class Budget extends UdoDomainObject2<Budget>
     @Persistent(mappedBy = "budget", dependentElement = "true")
     @Getter @Setter
     private SortedSet<KeyTable> keyTables = new TreeSet<>();
-
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public Status getStatus(){
-        if (!budgetCalculationRepository.findByBudgetAndTypeAndStatus(this, BudgetCalculationType.ACTUAL, org.estatio.module.budget.dom.budgetcalculation.Status.ASSIGNED).isEmpty()) return Status.RECONCILED;
-        if (!budgetCalculationRepository.findByBudgetAndTypeAndStatus(this, BudgetCalculationType.BUDGETED, org.estatio.module.budget.dom.budgetcalculation.Status.ASSIGNED).isEmpty()) return Status.ASSIGNED;
-        return Status.NEW;
-    }
 
     @Persistent(mappedBy = "budget", dependentElement = "true")
     @Getter @Setter
@@ -363,16 +359,6 @@ public class Budget extends UdoDomainObject2<Budget>
             directCostTable.remove();
         }
         return this;
-    }
-
-    @Programmatic
-    public String noUnassignedItemsForTypeReason(final BudgetCalculationType type){
-        for (BudgetItem item : getItems()){
-            if (!item.isAssignedForType(type)){
-                return null;
-            }
-        }
-        return type==BudgetCalculationType.BUDGETED ? "All items are calculated and assigned already" : "All items are reconciled and assigned already";
     }
 
     @Programmatic

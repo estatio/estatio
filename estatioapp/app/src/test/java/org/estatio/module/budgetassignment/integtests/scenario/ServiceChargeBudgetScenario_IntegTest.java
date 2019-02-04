@@ -12,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.wrapper.DisabledException;
 
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
@@ -112,7 +111,6 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
         calculate_budgeted();
         when_not_final_and_calculating_again();
         finalCalculation_budgeted();
-        when_trying_to_calculate_again();
 //            assignBudgetWhenUpdated();
 //            assignBudgetWhenAudited();
 //            assignBudgetWhenAuditedAndUpdated();
@@ -242,17 +240,6 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
         final LeaseTermForServiceCharge term2 = (LeaseTermForServiceCharge) secondScItem.getTerms().first();
         assertThat(term2.getBudgetedValue()).isEqualTo(U4_BVAL_2.add(U7_BVAL_2));
         assertThat(budgetCalculationResultRepository.findByLeaseTerm(term2)).hasSize(2);
-
-    }
-
-    public void when_trying_to_calculate_again() throws Exception {
-
-        // expect
-        expectedExceptions.expect(DisabledException.class);
-        expectedExceptions.expectMessage("All items are calculated and assigned already");
-
-        // when
-        wrap(mixin(Budget_Calculate.class, budget)).calculate(false);
 
     }
 

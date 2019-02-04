@@ -8,7 +8,7 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.budget.dom.budget.Budget;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budget.Status;
 
 /**
  * This currently could be inlined into Budget, however it is incomplete and my suspicion is that eventually it
@@ -28,11 +28,12 @@ public class Budget_Reconcile {
             @ParameterLayout(describedAs = "Final calculation will make the calculations permanent and impact the leases")
             final boolean finalCalculation) {
         // TODO: implement
+            budget.setStatus(Status.RECONCILED);
         return budget;
     }
 
     public String disableReconcile(){
-        return budget.noUnassignedItemsForTypeReason(BudgetCalculationType.ACTUAL);
+        return budget.getStatus()==Status.NEW ? "A budget with status new cannot be reconciled" : null;
     }
 
 }

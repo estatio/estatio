@@ -17,22 +17,12 @@
 
 package org.estatio.module.budget.dom.budget;
 
-import java.util.Arrays;
-
-import org.jmock.Expectations;
-import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
-import org.junit.Rule;
 import org.junit.Test;
-
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -75,75 +65,6 @@ public class Budget_Test {
                             + " [" + property.getReference() + "]"
                             + " > " + budget.getBudgetYear());
         }
-    }
-
-    @Rule
-    public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
-
-    public static class StatusTest extends Budget_Test {
-
-        @Mock BudgetCalculationRepository mockBudgetCalculationRepository;
-
-        @Test
-        public void status_new_when_no_assigned_calculations() throws Exception {
-
-            // given
-            Budget budget = new Budget();
-            budget.budgetCalculationRepository = mockBudgetCalculationRepository;
-
-            // expect
-            context.checking(new Expectations(){{
-                oneOf(mockBudgetCalculationRepository).findByBudgetAndTypeAndStatus(budget, BudgetCalculationType.ACTUAL, org.estatio.module.budget.dom.budgetcalculation.Status.ASSIGNED);
-                will(returnValue(Arrays.asList()));
-                oneOf(mockBudgetCalculationRepository).findByBudgetAndTypeAndStatus(budget, BudgetCalculationType.BUDGETED, org.estatio.module.budget.dom.budgetcalculation.Status.ASSIGNED);
-                will(returnValue(Arrays.asList()));
-            }});
-
-            // when, then
-            assertThat(budget.getStatus()).isEqualTo(Status.NEW);
-
-        }
-
-        @Test
-        public void status_assigned_when_assigned_budgeted_calculations() throws Exception {
-
-            // given
-            Budget budget = new Budget();
-            budget.budgetCalculationRepository = mockBudgetCalculationRepository;
-            BudgetCalculation budgetedCalculation = new BudgetCalculation();
-
-            // expect
-            context.checking(new Expectations(){{
-                oneOf(mockBudgetCalculationRepository).findByBudgetAndTypeAndStatus(budget, BudgetCalculationType.ACTUAL, org.estatio.module.budget.dom.budgetcalculation.Status.ASSIGNED);
-                will(returnValue(Arrays.asList()));
-                oneOf(mockBudgetCalculationRepository).findByBudgetAndTypeAndStatus(budget, BudgetCalculationType.BUDGETED, org.estatio.module.budget.dom.budgetcalculation.Status.ASSIGNED);
-                will(returnValue(Arrays.asList(budgetedCalculation)));
-            }});
-
-            // when, then
-            assertThat(budget.getStatus()).isEqualTo(Status.ASSIGNED);
-
-        }
-
-        @Test
-        public void status_reconciled_when_assigned_audited_calculations() throws Exception {
-
-            // given
-            Budget budget = new Budget();
-            budget.budgetCalculationRepository = mockBudgetCalculationRepository;
-            BudgetCalculation auditedCalculation = new BudgetCalculation();
-
-            // expect
-            context.checking(new Expectations(){{
-                oneOf(mockBudgetCalculationRepository).findByBudgetAndTypeAndStatus(budget, BudgetCalculationType.ACTUAL, org.estatio.module.budget.dom.budgetcalculation.Status.ASSIGNED);
-                will(returnValue(Arrays.asList(auditedCalculation)));
-            }});
-
-            // when, then
-            assertThat(budget.getStatus()).isEqualTo(Status.RECONCILED);
-
-        }
-
     }
 
 }

@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budget.Status;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
@@ -38,12 +39,13 @@ public class Budget_Calculate {
         if (finalCalculation){
             List<BudgetCalculationResult> results = budgetAssignmentService.calculateResults(budget, BudgetCalculationType.BUDGETED);
             budgetAssignmentService.assignCalculationResultsToLeases(results);
+            budget.setStatus(Status.ASSIGNED);
         }
         return budget;
     }
 
     public String disableCalculate(){
-        return budget.noUnassignedItemsForTypeReason(BudgetCalculationType.BUDGETED);
+        return budget.getStatus()==Status.RECONCILED ? "A budget with status reconciled cannot be calculated" : null;
     }
 
     @Inject
