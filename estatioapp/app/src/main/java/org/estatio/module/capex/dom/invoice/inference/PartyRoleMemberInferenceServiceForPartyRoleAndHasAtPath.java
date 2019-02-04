@@ -1,6 +1,7 @@
 package org.estatio.module.capex.dom.invoice.inference;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -8,11 +9,12 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
+import org.isisaddons.module.security.dom.user.ApplicationUserRepository;
 
-import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.party.dom.role.PartyRoleMemberInferenceServiceAbstract;
+import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class PartyRoleMemberInferenceServiceForPartyRoleAndHasAtPath
@@ -29,7 +31,12 @@ public class PartyRoleMemberInferenceServiceForPartyRoleAndHasAtPath
         // infer the country / "org unit" from the document
         String atPath = hasAtPath.getAtPath();
 
-        return personRepository.findByRoleTypeAndAtPath(partyRoleType, atPath);
+        return personRepository.findWithUsername()
+                .stream()
+                .map(person -> applicationUserRepository.findByUsername(person.getUsername()))
+                .filter(applicationUser -> applicationUser.getAtPath().contains(atPath))
+                .map(applicationUser -> personRepository.findByUsername(applicationUser.getUsername()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -39,5 +46,7 @@ public class PartyRoleMemberInferenceServiceForPartyRoleAndHasAtPath
 
     @Inject
     PersonRepository personRepository;
+
+    @Inject ApplicationUserRepository applicationUserRepository;
 
 }
