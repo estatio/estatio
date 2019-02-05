@@ -20,9 +20,15 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
+import org.estatio.module.capex.dom.documents.categorisation.Document_categorisationState;
+import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
+import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
+import org.estatio.module.capex.dom.documents.categorisation.triggers.Document_categoriseAsOtherInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.fixtures.incominginvoice.enums.IncomingInvoiceNoDocument_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
+import org.estatio.module.capex.restapi.DocumentServiceRestApi;
 import org.estatio.module.capex.seed.DocumentTypeFSForIncoming;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 
@@ -178,32 +184,45 @@ public class IncomingDocumentRepository_UpsertAndArchive_IntegTest extends Capex
         assertThat(paperclipsAfter).hasSize(1);
     }
 
+    @Inject IncomingDocumentCategorisationStateTransition.Repository repository;
+
+    @Inject DocumentServiceRestApi api;
+
     @Test
     public void when_updated_document_already_attached() throws IOException {
 
         // given
-        final Document documentOrig = incomingDocumentRepository
-                .upsertAndArchive(documentType, "/ITA", blob.getName(), blob);
+        final Document documentOrig = wrap(api).uploadGeneric(blob, "INCOMING", "/FRA");
         transactionService.nextTransaction();
 
-        paperclipRepository.attach(documentOrig, null, incomingInvoice);
+        List<IncomingDocumentCategorisationStateTransition> transitionsForOrigDoc = repository.findByDomainObject(documentOrig);
+        assertThat(transitionsForOrigDoc).hasSize(2);
+        assertThat(transitionsForOrigDoc.get(0).isCompleted()).isFalse();
+
+        wrap(mixin(Document_categoriseAsOtherInvoice.class, documentOrig)).act(IncomingInvoiceType.CORPORATE_EXPENSES, null);
+        assertThat(transitionsForOrigDoc.get(0).isCompleted()).isTrue();
+        assertThat(transitionsForOrigDoc.get(0).getTask().isCompleted()).isTrue();
+        assertThat(mixin(Document_categorisationState.class, documentOrig).prop()).isEqualTo(IncomingDocumentCategorisationState.CATEGORISED);
 
         final List<Paperclip> paperclipsBefore = paperclipRepository.listAll();
         assertThat(paperclipsBefore).hasSize(1);
         final Paperclip paperclipForInvoiceBefore = paperclipsBefore.get(0);
+        incomingInvoice = (IncomingInvoice) paperclipForInvoiceBefore.getAttachedTo();
 
-        assertThat(paperclipForInvoiceBefore.getAttachedTo()).isSameAs(incomingInvoice);
         assertThat(paperclipForInvoiceBefore.getRoleName()).isNull();
         assertThat(paperclipForInvoiceBefore.getDocument()).isSameAs(documentOrig);
 
-
         // when
-        final Document documentReplacement = incomingDocumentRepository
-                .upsertAndArchive(documentType, "/ITA", blob.getName(), blobDifferentContent);
+        final Document documentReplacement = wrap(api).uploadGeneric(blobDifferentContent, "INCOMING", "/FRA");
         transactionService.nextTransaction();
 
         // then there are two documents
         assertThat(documentOrig).isNotSameAs(documentReplacement);
+        assertThat(documentOrig.getType()).isEqualTo(documentReplacement.getType());
+        assertThat(documentReplacement.getType().getName()).isEqualTo("Incoming Invoice");
+
+        assertThat(repository.findByDomainObject(documentReplacement)).isEmpty();
+        assertThat(mixin(Document_categorisationState.class, documentReplacement).prop()).isNull();
 
         // ... and the new one links to the old
         final List<Document> allIncomingDocumentsAfter = incomingDocumentRepository.findAllIncomingDocuments();
@@ -235,8 +254,7 @@ public class IncomingDocumentRepository_UpsertAndArchive_IntegTest extends Capex
 
 
         // and when we update but with the same content
-        final Document documentReplacement2 = incomingDocumentRepository
-                .upsertAndArchive(documentType, "/ITA", blob.getName(), blobDifferentContent);
+        final Document documentReplacement2 = wrap(api).uploadGeneric(blobDifferentContent, "INCOMING", "/FRA");
         transactionService.nextTransaction();
 
         // then there is no change
@@ -247,13 +265,14 @@ public class IncomingDocumentRepository_UpsertAndArchive_IntegTest extends Capex
 
 
         // and when we update one further time but with different content
-        final Document documentReplacement3 = incomingDocumentRepository
-                .upsertAndArchive(documentType, "/ITA", blob.getName(), blobDifferentContentAgain);
+        final Document documentReplacement3 = wrap(api).uploadGeneric(blobDifferentContentAgain, "INCOMING", "/FRA");
         transactionService.nextTransaction();
 
         // then this time there is a change
         assertThat(documentReplacement3).isNotSameAs(documentReplacement);
-
+        assertThat(documentReplacement3.getType().getName()).isEqualTo("Incoming Invoice");
+        assertThat(mixin(Document_categorisationState.class, documentReplacement3).prop()).isNull();
+        
         // ... the second replacement replaces the first
         final List<Paperclip> paperclipsForReplacement3 = paperclipRepository.findByAttachedTo(documentReplacement3);
         assertThat(paperclipsForReplacement3).hasSize(1);

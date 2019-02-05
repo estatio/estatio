@@ -169,6 +169,7 @@ public class IncomingDocumentRepository extends DocumentRepository {
                                             name);
                 existingDocument.setName(archivedName);
                 paperclipRepository.attach(existingDocument, "replaces", newDocument);
+                newDocument.setType(existingDocument.getType());
             }
 
             return newDocument;
