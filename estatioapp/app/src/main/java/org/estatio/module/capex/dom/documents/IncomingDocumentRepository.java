@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.repository.RepositoryService;
@@ -42,9 +43,13 @@ import org.incode.module.document.dom.impl.docs.QDocument;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
+import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.capex.dom.documents.categorisation.Document_categorisationState;
+import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
+import org.estatio.module.capex.dom.documents.categorisation.triggers.Document_discard;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 
 @DomainService(
@@ -170,6 +175,11 @@ public class IncomingDocumentRepository extends DocumentRepository {
                 existingDocument.setName(archivedName);
                 paperclipRepository.attach(existingDocument, "replaces", newDocument);
                 newDocument.setType(existingDocument.getType());
+                if (existingDocument.getType()==DocumentTypeData.INCOMING.findUsing(documentTypeRepository)){
+                    if (factoryService.mixin(Document_categorisationState.class, existingDocument).prop()==IncomingDocumentCategorisationState.NEW) {
+                        factoryService.mixin(Document_discard.class, existingDocument).act("replaced");
+                    }
+                }
             }
 
             return newDocument;
@@ -204,5 +214,10 @@ public class IncomingDocumentRepository extends DocumentRepository {
 
     @Inject
     IsisJdoSupport isisJdoSupport;
+
+    @Inject
+    DocumentTypeRepository documentTypeRepository;
+
+    @Inject FactoryService factoryService;
 
 }

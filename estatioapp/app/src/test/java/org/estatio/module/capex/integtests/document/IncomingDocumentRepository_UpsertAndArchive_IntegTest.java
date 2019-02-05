@@ -63,6 +63,8 @@ public class IncomingDocumentRepository_UpsertAndArchive_IntegTest extends Capex
     Blob blobDifferentContent;
     Blob blobDifferentContentAgain;
     Blob otherBlob;
+    Blob itaBlob;
+    Blob itaBlobDifferentContent;
 
     DocumentType documentType;
     IncomingInvoice incomingInvoice;
@@ -78,6 +80,8 @@ public class IncomingDocumentRepository_UpsertAndArchive_IntegTest extends Capex
         this.blobDifferentContent      = load("3020100123.pdf", "3020100123-altered.pdf");       // use the same name
         this.blobDifferentContentAgain = load("3020100123.pdf", "3020100123-altered-again.pdf"); // use the same name
         this.otherBlob = load("3020100124.pdf");
+        this.itaBlob = load("itaDoc.pdf", "3020100123.pdf"); // different name, so atPath will not be derived
+        this.itaBlobDifferentContent = load("itaDoc.pdf", "3020100123-altered.pdf");
     }
 
     @Test
@@ -154,17 +158,67 @@ public class IncomingDocumentRepository_UpsertAndArchive_IntegTest extends Capex
         assertThat(allIncomingDocuments).isEmpty();
 
         // when
-        final Document documentOrig = incomingDocumentRepository
-                .upsertAndArchive(documentType, "/ITA", blob.getName(), blob);
+        final Document documentOrig = wrap(api).uploadGeneric(blob, "INCOMING", "/FRA");
         transactionService.nextTransaction();
+        assertThat(documentOrig.getType().getName()).isEqualTo("Incoming");
+        assertThat(mixin(Document_categorisationState.class, documentOrig).prop()).isEqualTo(IncomingDocumentCategorisationState.NEW);
 
         // and when
-        final Document documentReplacement = incomingDocumentRepository
-                .upsertAndArchive(documentType, "/ITA", blob.getName(), blobDifferentContent);
+        final Document documentReplacement = wrap(api).uploadGeneric(blobDifferentContent, "INCOMING", "/FRA");
         transactionService.nextTransaction();
 
         // then there are two documents
         assertThat(documentOrig).isNotSameAs(documentReplacement);
+        assertThat(documentOrig.getType()).isEqualTo(documentReplacement.getType());
+        assertThat(documentReplacement.getType().getName()).isEqualTo("Incoming");
+        assertThat(mixin(Document_categorisationState.class, documentOrig).prop()).isEqualTo(IncomingDocumentCategorisationState.DISCARDED);
+        assertThat(mixin(Document_categorisationState.class, documentReplacement).prop()).isEqualTo(IncomingDocumentCategorisationState.NEW);
+
+        final List<Document> allIncomingDocumentsAfter = incomingDocumentRepository.findAllIncomingDocuments();
+        assertThat(allIncomingDocumentsAfter).hasSize(2);
+
+        // ... and the new one links to the old.
+        final List<Paperclip> paperclipsForReplacement = paperclipRepository.findByAttachedTo(documentReplacement);
+        assertThat(paperclipsForReplacement).hasSize(1);
+
+        final Paperclip paperclip = paperclipsForReplacement.get(0);
+
+        assertThat(paperclip.getAttachedTo()).isSameAs(documentReplacement);
+        assertThat(paperclip.getRoleName()).isEqualTo("replaces");
+        assertThat(paperclip.getDocument()).isSameAs(documentOrig);
+
+        // and there is just once paperclip in all
+        final List<Paperclip> paperclipsAfter = paperclipRepository.listAll();
+        assertThat(paperclipsAfter).hasSize(1);
+    }
+
+    @Test
+    public void when_updated_document_not_attached_for_Ita() throws IOException {
+
+        // given
+        final List<Paperclip> paperclips = paperclipRepository.listAll();
+        assertThat(paperclips).isEmpty();
+        final List<Document> allIncomingDocuments = incomingDocumentRepository.findAllIncomingDocuments();
+        assertThat(allIncomingDocuments).isEmpty();
+
+        // when
+        final Document documentOrig = wrap(api).uploadGeneric(itaBlob, "INCOMING", "/ITA");
+        transactionService.nextTransaction();
+        assertThat(documentOrig.getType().getName()).isEqualTo("Incoming");
+        assertThat(mixin(Document_categorisationState.class, documentOrig).prop()).isNull(); // specific for non /FRA /BEL docs
+
+        // and when
+        final Document documentReplacement = wrap(api).uploadGeneric(itaBlobDifferentContent, "INCOMING", "/ITA");
+        transactionService.nextTransaction();
+
+        // then there are two documents
+        assertThat(documentOrig).isNotSameAs(documentReplacement);
+        assertThat(documentOrig.getType()).isEqualTo(documentReplacement.getType());
+        assertThat(documentReplacement.getType().getName()).isEqualTo("Incoming");
+        assertThat(mixin(Document_categorisationState.class, documentOrig).prop()).isNull(); // specific for non /FRA /BEL docs
+        assertThat(mixin(Document_categorisationState.class, documentReplacement).prop()).isNull(); // specific for non /FRA /BEL docs
+
+        // from here may be regarded as redundant ....
 
         final List<Document> allIncomingDocumentsAfter = incomingDocumentRepository.findAllIncomingDocuments();
         assertThat(allIncomingDocumentsAfter).hasSize(2);
