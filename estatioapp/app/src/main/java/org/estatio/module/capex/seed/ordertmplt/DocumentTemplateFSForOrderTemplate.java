@@ -90,20 +90,22 @@ public class DocumentTemplateFSForOrderTemplate extends DocumentTemplateFSAbstra
             final ExecutionContext ec) {
 
         final RenderingStrategy xdpRenderingStrategy =
-                renderingStrategyRepository.findByReference(RenderingStrategies.REF_XDP);
+                renderingStrategyRepository.findByReference(RenderingStrategies.REF_XDD);
         final RenderingStrategy fmkRenderingStrategy =
                 renderingStrategyRepository.findByReference(RenderingStrategies.REF_FMK);
-
 
         final DocumentType documentType = upsertType(DocumentTypeData.ORDER_TEMPLATE, ec);
         final byte[] contentBytes = loadBytesForOrderTemplateItaDocx();
         final String nameChars = loadCharsForOrderTemplateTitleItaFtl();
 
         final Blob contentBlob =
-                new Blob("order.docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", contentBytes);
+                new Blob(nameChars + ".docx",
+                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        contentBytes);
         final DocumentTemplate documentTemplate = upsertDocumentBlobTemplate(
                 documentType, templateDate, It.getPath(),
-                ".docx", false,
+                ".docx",
+                false,
                 contentBlob, xdpRenderingStrategy,
                 nameChars, fmkRenderingStrategy,
                 ec);

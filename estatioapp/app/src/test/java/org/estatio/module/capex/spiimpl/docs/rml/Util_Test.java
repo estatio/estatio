@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RendererModelFactoryForOrder_SupplierModel_Test {
+public class Util_Test {
 
     @Test
     public void capitalizeSentence() throws Exception {

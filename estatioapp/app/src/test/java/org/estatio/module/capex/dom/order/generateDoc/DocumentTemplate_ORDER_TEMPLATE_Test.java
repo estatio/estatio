@@ -104,12 +104,12 @@ public class DocumentTemplate_ORDER_TEMPLATE_Test {
 
         final SortedSet<OrderItem> items = Sets.newTreeSet();
         order.setItems(items);
-        items.add(newOrderItem(
-                0, "Ristrutturazione appartamento Via San Quirico 165 in n. 3 appartamenti", "34848.00"));
-        items.add(newOrderItem(
-                1, "Ristrutturazione appartamento Via San Quirico 165 in n. 3 appartamenti - Integrazione n. 1", "2175.00"));
-        items.add(newOrderItem(
-                2, "Ristrutturazione appartamento Via San Quirico 165 in n. 3 appartamenti - Integrazione n. 2", "2321.00"));
+        items.add(newOrderItem(order, 0,
+                "Ristrutturazione appartamento Via San Quirico 165 in n. 3 appartamenti", "34848.00"));
+        items.add(newOrderItem(order, 1,
+                "Ristrutturazione appartamento Via San Quirico 165 in n. 3 appartamenti - Integrazione n. 1", "2175.00"));
+        items.add(newOrderItem(order, 2,
+                "Ristrutturazione appartamento Via San Quirico 165 in n. 3 appartamenti - Integrazione n. 2", "2321.00"));
 
         final RendererModelFactoryForOrder modelFactory = new RendererModelFactoryForOrder() {
             @Override protected ClockService getClockService() { return mockClockService; }
@@ -119,8 +119,17 @@ public class DocumentTemplate_ORDER_TEMPLATE_Test {
                 modelFactory.newRendererModel(mockDocumentTemplate, order);
     }
 
-    private static OrderItem newOrderItem(final int number, final String description, final String netAmountStr) {
-        final OrderItem orderItem = new OrderItem();
+    private static OrderItem newOrderItem(
+            final Order order,
+            final int number,
+            final String description,
+            final String netAmountStr) {
+        final OrderItem orderItem = new OrderItem() {
+            @Override public String getAtPath() {
+                return order.getAtPath();
+            }
+        };
+        orderItem.setOrdr(order);
         orderItem.setNumber(number);
         orderItem.setDescription(description);
         orderItem.setNetAmount(new BigDecimal(netAmountStr));
@@ -139,15 +148,6 @@ public class DocumentTemplate_ORDER_TEMPLATE_Test {
     }
     @Test
     public void content_renders_ok() throws Exception {
-
-        // given
-//        Project project = Project.builder().name("XDocReport").build();
-//
-//        List<Developer> developers = new ArrayList<>();
-//        developers.add(Developer.builder().name("ZERR").lastName("Angelo").mail("angelo.zerr@gmail.com").build());
-//        developers.add(Developer.builder().name("Leclercq").lastName("Pascal").mail("pascal.leclercq@gmail.com").build());
-//        final ProjectDevelopersModel dataModel = new ProjectDevelopersModel(project, developers);
-
 
         // when
         final byte[] renderedBytes = xDocReportService.render(contentTemplate, orderModel, OutputType.DOCX);

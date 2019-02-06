@@ -1,8 +1,5 @@
 package org.estatio.module.capex.spiimpl.docs.rml;
 
-import java.math.RoundingMode;
-import java.text.NumberFormat;
-import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -69,16 +66,10 @@ public class RendererModelFactoryForOrder extends RendererModelFactoryAbstract<O
         private final String atPath;
 
         public String getCurrentDateLocalized() {
-            if(atPath != null) {
-                if(atPath.startsWith("/ITA")) {
-                    return currentDate.toString("d MMMMM yyyy", Locale.ITALIAN);
-                }
-                if(atPath.startsWith("/FRA")) {
-                    return currentDate.toString("d MMMMM yyyy", Locale.FRENCH);
-                }
-            }
-            return currentDate.toString("d MMMMM yyyy", Locale.ENGLISH);
+            Locale locale = Util.deriveLocale(atPath);
+            return currentDate.toString("d MMMMM yyyy", locale);
         }
+
     }
 
     @Data(staticConstructor = "of")
@@ -90,7 +81,7 @@ public class RendererModelFactoryForOrder extends RendererModelFactoryAbstract<O
         public String getOrderNumber() { return getOrder().getOrderNumber(); }
 
         public String getNetAmount() {
-            return order.getNetAmount().setScale(2, RoundingMode.DOWN).toString();
+            return Util.formattedAmount(order.getNetAmount(), order.getAtPath());
         }
 
     }
@@ -105,12 +96,7 @@ public class RendererModelFactoryForOrder extends RendererModelFactoryAbstract<O
             return orderItem.getDescription();
         }
         public String getNetAmount() {
-            final Locale locale = Locale.ITALIAN;
-            NumberFormat format = NumberFormat.getNumberInstance(locale);
-            format.setMinimumFractionDigits(2);
-            format.setMaximumFractionDigits(2);
-            format.setCurrency(Currency.getInstance(locale));
-            return format.format(orderItem.getNetAmount());
+            return Util.formattedAmount(orderItem.getNetAmount(), orderItem.getAtPath());
         }
 
     }
@@ -122,7 +108,11 @@ public class RendererModelFactoryForOrder extends RendererModelFactoryAbstract<O
         private final Property property;
 
         public String getFullName() {
-            return property != null ? property.getFullName() : "???";
+            return property != null
+                    ? property.getFullName() != null
+                        ? property.getFullName()
+                        : property.getName()
+                    : "???";
         }
 
     }
