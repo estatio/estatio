@@ -23,12 +23,12 @@ import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 
 import org.estatio.module.invoice.dom.DocumentTypeData;
 
-public class DocumentTypeFSForOrderTemplate extends DocumentTemplateFSAbstract {
+public class DocumentTypeFSForOrderConfirm extends DocumentTemplateFSAbstract {
 
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
-        upsertType(DocumentTypeData.ORDER_TEMPLATE, executionContext);
+        upsertType(DocumentTypeData.ORDER_CONFIRM, executionContext);
     }
 
 

@@ -11,29 +11,22 @@ import org.junit.Test;
 import org.togglz.junit.TogglzRule;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.clock.ClockService;
-import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
-import org.apache.isis.applib.services.sudo.SudoService;
 import org.apache.isis.applib.value.Blob;
 
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
-import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.module.capex.contributions.Order_generateDocument;
-import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.dom.order.Order;
-import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.fixtures.order.enums.Order_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
 import org.estatio.module.invoice.dom.DocumentTypeData;
-import org.estatio.module.party.dom.PersonRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.incode.module.base.integtests.VT.ld;
@@ -64,7 +57,7 @@ public class Order_generateDocument_IntegTest extends CapexModuleIntegTestAbstra
         });
 
         order = Order_enum.fakeOrder2Pdf.findUsing(serviceRegistry);
-        orderTemplateDocumentType = DocumentTypeData.ORDER_TEMPLATE.findUsing(documentTypeRepository);
+        orderTemplateDocumentType = DocumentTypeData.ORDER_CONFIRM.findUsing(documentTypeRepository);
     }
 
     DocumentType orderTemplateDocumentType;
@@ -77,46 +70,23 @@ public class Order_generateDocument_IntegTest extends CapexModuleIntegTestAbstra
         // given
         final Order_generateDocument mixin = mixin(Order_generateDocument.class, order);
 
-        final List<DocumentTemplate> documentTemplates = mixin.choices0Act();
+        final List<DocumentTemplate> documentTemplates = mixin.choices0$$();
         assertThat(documentTemplates).hasSize(1);
 
         final DocumentTemplate documentTemplate = documentTemplates.get(0);
         assertThat(documentTemplate.getType()).isEqualTo(orderTemplateDocumentType);
 
         // when
-        final Document document = mixin.act(documentTemplate);
+        final Document document = (Document) mixin.$$(documentTemplate);
 
         // then
         final Blob blob = document.getBlob();
 
         assertThat(blob).isNotNull();
-
     }
 
 
     @Inject
     DocumentTypeRepository documentTypeRepository;
-
-    @Inject
-    QueryResultsCache queryResultsCache;
-
-    @Inject
-    SudoService sudoService;
-
-    @Inject
-    ClockService clockService;
-
-    @Inject
-    OrderRepository orderRepository;
-
-    @Inject
-    PaperclipRepository paperclipRepository;
-
-    @Inject
-    PersonRepository personRepository;
-
-    @Inject
-    IncomingDocumentRepository incomingDocumentRepository;
-
 
 }

@@ -279,6 +279,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
         ec.executeChildren(this,
                 Order_enum.fakeOrder2Pdf,
+                Order_enum.italianOrder,
+                Order_enum.italianOrder4112,
                 IncomingInvoice_enum.fakeInvoice2Pdf,
                 IncomingInvoice_enum.fakeInvoice3Pdf);
 

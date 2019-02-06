@@ -67,7 +67,7 @@ public enum DocumentTypeData {
     INCOMING_CORPORATE_INVOICE("INCOMING_CORPORATE_INVOICE", "Incoming Corporate Invoice", "Merged Incoming Corporate Invoices.pdf", null, null, Nature.INCOMING),
     INCOMING_ORDER("INCOMING_ORDER", "Incoming Order", "Merged Incoming Orders.pdf", null, null, Nature.INCOMING),
 
-    ORDER_TEMPLATE("ORDER-TEMPLATE", "Order template (for Italy)", null, null, null, Nature.OUTGOING),
+    ORDER_CONFIRM("ORDER_CONFIRM", "Confirm order with Supplier (for Italy)", null, null, null, Nature.OUTGOING),
     IBAN_PROOF("IBAN_PROOF", "Iban verification proof")
     ;
 

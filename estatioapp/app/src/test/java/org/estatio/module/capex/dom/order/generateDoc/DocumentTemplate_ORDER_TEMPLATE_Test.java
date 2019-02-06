@@ -29,7 +29,7 @@ import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
-import org.estatio.module.capex.seed.ordertmplt.DocumentTemplateFSForOrderTemplate;
+import org.estatio.module.capex.seed.ordertmplt.DocumentTemplateFSForOrderConfirm;
 import org.estatio.module.capex.spiimpl.docs.rml.RendererModelFactoryForOrder;
 import org.estatio.module.party.dom.Organisation;
 
@@ -84,9 +84,9 @@ public class DocumentTemplate_ORDER_TEMPLATE_Test {
         xDocReportService.init();
 
 
-        final DocumentTemplateFSForOrderTemplate fs = new DocumentTemplateFSForOrderTemplate(null);
-        contentTemplate = fs.loadBytesForOrderTemplateItaDocx();
-        nameTemplate = fs.loadCharsForOrderTemplateTitleItaFtl();
+        final DocumentTemplateFSForOrderConfirm fs = new DocumentTemplateFSForOrderConfirm(null);
+        contentTemplate = fs.loadBytesForOrderConfirmTemplateItaDocx();
+        nameTemplate = fs.loadCharsForOrderConfirmTemplateTitleItaFtl();
 
         order = new Order();
         order.setOrderNumber("3775/CUR/212/005");

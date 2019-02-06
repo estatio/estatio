@@ -8,6 +8,7 @@
                     <cpt:domainObject/>
                     <cpt:action id="completeOrder"/>
                     <cpt:action id="completeOrderItem"/>
+                    <cpt:action id="generateDocument"/>
                 </bs3:col>
             </bs3:row>
             <bs3:row>

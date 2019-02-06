@@ -46,15 +46,15 @@ import org.estatio.module.lease.seed.RenderingStrategies;
 
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.It;
 
-public class DocumentTemplateFSForOrderTemplate extends DocumentTemplateFSAbstract {
+public class DocumentTemplateFSForOrderConfirm extends DocumentTemplateFSAbstract {
 
     private LocalDate templateDateIfAny;
 
-    public DocumentTemplateFSForOrderTemplate() {
+    public DocumentTemplateFSForOrderConfirm() {
         this(null);
     }
 
-    public DocumentTemplateFSForOrderTemplate(
+    public DocumentTemplateFSForOrderConfirm(
             final LocalDate templateDateIfAny) {
         this.templateDateIfAny = templateDateIfAny;
     }
@@ -94,9 +94,9 @@ public class DocumentTemplateFSForOrderTemplate extends DocumentTemplateFSAbstra
         final RenderingStrategy fmkRenderingStrategy =
                 renderingStrategyRepository.findByReference(RenderingStrategies.REF_FMK);
 
-        final DocumentType documentType = upsertType(DocumentTypeData.ORDER_TEMPLATE, ec);
-        final byte[] contentBytes = loadBytesForOrderTemplateItaDocx();
-        final String nameChars = loadCharsForOrderTemplateTitleItaFtl();
+        final DocumentType documentType = upsertType(DocumentTypeData.ORDER_CONFIRM, ec);
+        final byte[] contentBytes = loadBytesForOrderConfirmTemplateItaDocx();
+        final String nameChars = loadCharsForOrderConfirmTemplateTitleItaFtl();
 
         final Blob contentBlob =
                 new Blob(nameChars + ".docx",
@@ -115,12 +115,12 @@ public class DocumentTemplateFSForOrderTemplate extends DocumentTemplateFSAbstra
 
     }
 
-    public String loadCharsForOrderTemplateTitleItaFtl() {
-        return loadCharsFromResource("OrderTemplate-title-ITA.ftl");
+    public String loadCharsForOrderConfirmTemplateTitleItaFtl() {
+        return loadCharsFromResource("OrderConfirmTemplate-title-ITA.ftl");
     }
 
-    public byte[] loadBytesForOrderTemplateItaDocx() {
-        return loadBytesFromResource("OrderTemplate-ITA.docx");
+    public byte[] loadBytesForOrderConfirmTemplateItaDocx() {
+        return loadBytesFromResource("OrderConfirmTemplate-ITA.docx");
     }
 
     private byte[] loadBytesFromResource(final String resourceName) {

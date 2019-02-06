@@ -22,8 +22,8 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
-import org.estatio.module.capex.seed.ordertmplt.DocumentTemplateFSForOrderTemplate;
-import org.estatio.module.capex.seed.ordertmplt.DocumentTypeFSForOrderTemplate;
+import org.estatio.module.capex.seed.ordertmplt.DocumentTemplateFSForOrderConfirm;
+import org.estatio.module.capex.seed.ordertmplt.DocumentTypeFSForOrderConfirm;
 
 @DomainObject(
         objectType = "org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture"
@@ -46,8 +46,8 @@ public class DocumentTypesAndTemplatesForCapexFixture extends DiscoverableFixtur
         ec.executeChild(this, new DocumentTypeFSForIncoming());
         ec.executeChild(this, new DocumentTypeFSForIbanProof());
 
-        ec.executeChild(this, new DocumentTypeFSForOrderTemplate());
-        ec.executeChild(this, new DocumentTemplateFSForOrderTemplate());
+        ec.executeChild(this, new DocumentTypeFSForOrderConfirm());
+        ec.executeChild(this, new DocumentTemplateFSForOrderConfirm());
 
     }
 

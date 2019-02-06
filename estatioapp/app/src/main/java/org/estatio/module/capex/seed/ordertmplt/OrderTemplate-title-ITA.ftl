@@ -1,1 +1,0 @@
-Order ${orderNumber} ${orderDate?string["dd-MM-yyyy"]}
