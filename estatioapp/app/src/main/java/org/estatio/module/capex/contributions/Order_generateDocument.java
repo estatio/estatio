@@ -29,7 +29,7 @@ public class Order_generateDocument {
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     public Document act(final DocumentTemplate documentTemplate) {
-        return documentTemplate.create(order);
+        return documentTemplate.createAndRender(order);
     }
 
     public List<DocumentTemplate> choices0Act(){

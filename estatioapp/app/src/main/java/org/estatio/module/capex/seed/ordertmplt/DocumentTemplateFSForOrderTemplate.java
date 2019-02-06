@@ -38,8 +38,9 @@ import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 
+import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.spiimpl.docs.aa.AttachToSameForOrder;
-import org.estatio.module.capex.spiimpl.docs.rml.XDocReportModelOfOrder;
+import org.estatio.module.capex.spiimpl.docs.rml.RendererModelFactoryForOrder;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.lease.seed.RenderingStrategies;
 
@@ -95,8 +96,8 @@ public class DocumentTemplateFSForOrderTemplate extends DocumentTemplateFSAbstra
 
 
         final DocumentType documentType = upsertType(DocumentTypeData.ORDER_TEMPLATE, ec);
-        final byte[] contentBytes = loadBytesFromResource("OrderTemplate-ITA.docx");
-        final String nameChars = loadCharsFromResource("OrderTemplate-title-ITA.ftl");
+        final byte[] contentBytes = loadBytesForOrderTemplateItaDocx();
+        final String nameChars = loadCharsForOrderTemplateTitleItaFtl();
 
         final Blob contentBlob =
                 new Blob("order.docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", contentBytes);
@@ -108,12 +109,19 @@ public class DocumentTemplateFSForOrderTemplate extends DocumentTemplateFSAbstra
                 ec);
 
         mixin(DocumentTemplate._applicable.class, documentTemplate).applicable(
-                DocumentTemplateFSForOrderTemplate.class, XDocReportModelOfOrder.class, AttachToSameForOrder.class);
+                Order.class, RendererModelFactoryForOrder.class, AttachToSameForOrder.class);
 
     }
 
+    public String loadCharsForOrderTemplateTitleItaFtl() {
+        return loadCharsFromResource("OrderTemplate-title-ITA.ftl");
+    }
 
-    byte[] loadBytesFromResource(final String resourceName) {
+    public byte[] loadBytesForOrderTemplateItaDocx() {
+        return loadBytesFromResource("OrderTemplate-ITA.docx");
+    }
+
+    private byte[] loadBytesFromResource(final String resourceName) {
         final URL templateUrl = Resources.getResource(getClass(), resourceName);
         try {
             return Resources.toByteArray(templateUrl);
@@ -122,7 +130,7 @@ public class DocumentTemplateFSForOrderTemplate extends DocumentTemplateFSAbstra
         }
     }
 
-    String loadCharsFromResource(final String resourceName) {
+    private String loadCharsFromResource(final String resourceName) {
         final URL templateUrl = Resources.getResource(getClass(), resourceName);
         try {
             return Resources.toString(templateUrl, Charsets.UTF_8);

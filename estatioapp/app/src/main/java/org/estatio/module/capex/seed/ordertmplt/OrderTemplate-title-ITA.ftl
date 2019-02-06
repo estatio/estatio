@@ -1,1 +1,1 @@
-Order ${this.orderNumber} ${this.dueDate}
+Order ${orderNumber} ${orderDate?string["dd-MM-yyyy"]}
