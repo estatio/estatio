@@ -54,10 +54,9 @@
 
         <col span="8">
             <tabGroup>
-                <tab name="orders and invoices">
+                <tab name="collections">
                     <row>
                         <col span="12">
-                            <ns2:collection id="invoices" defaultView="table" />
                         </col>
                     </row>
                 </tab>
