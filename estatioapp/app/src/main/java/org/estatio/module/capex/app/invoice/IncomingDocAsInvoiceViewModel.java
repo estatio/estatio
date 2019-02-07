@@ -453,6 +453,7 @@ public class IncomingDocAsInvoiceViewModel
 
         IncomingInvoiceType previousType = incomingInvoice.getType();
         incomingInvoice.setType(getIncomingInvoiceType());
+        incomingInvoice.setProperty(getProperty());
         incomingInvoice.setInvoiceNumber(getInvoiceNumber());
         incomingInvoice.setBuyer(getBuyer());
         incomingInvoice.setSeller(getSeller());
