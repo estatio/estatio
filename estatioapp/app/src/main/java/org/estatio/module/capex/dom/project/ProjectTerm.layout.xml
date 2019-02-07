@@ -19,7 +19,6 @@
                                 <ns2:action id="amendBudgetedAmount" position="PANEL"/>
                                 <ns2:property id="budgetedAmount"/>
                                 <ns2:property id="percentageOfTotalBudget"/>
-                                <ns2:property id="orderedAmount"/>
                                 <ns2:property id="paidAmount"/>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Dates" id="dates">
@@ -58,7 +57,6 @@
                 <tab name="orders and invoices">
                     <row>
                         <col span="12">
-                            <ns2:collection id="orders" defaultView="table" />
                             <ns2:collection id="invoices" defaultView="table" />
                         </col>
                     </row>

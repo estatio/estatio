@@ -21,7 +21,6 @@ package org.estatio.module.capex.dom.project;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.util.List;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
@@ -33,15 +32,11 @@ import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
-import javax.validation.constraints.Digits;
 
-import org.assertj.core.util.Lists;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
@@ -60,7 +55,6 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.base.dom.UdoDomainObject;
-import org.estatio.module.capex.dom.order.Order;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -123,34 +117,6 @@ public class ProjectTerm extends UdoDomainObject<ProjectTerm> {
     @Getter @Setter
     @Column(allowsNull = "false")
     private LocalDate endDate;
-
-    @Property()
-    @Digits(integer = 13, fraction = 2)
-    public BigDecimal getOrderedAmount(){
-        // TODO: implement
-        return BigDecimal.ZERO;
-    }
-
-    @Property()
-    @Digits(integer = 13, fraction = 2)
-    public BigDecimal getPaidAmount(){
-        // TODO: implement
-        return BigDecimal.ZERO;
-    }
-
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<Order> getOrders(){
-        // TODO: implement
-        return Lists.emptyList();
-    }
-
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<Order> getInvoices(){
-        // TODO: implement
-        return Lists.emptyList();
-    }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     public ProjectTerm amendBudgetedAmount(
