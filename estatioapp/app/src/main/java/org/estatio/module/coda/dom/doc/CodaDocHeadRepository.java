@@ -108,13 +108,12 @@ public class CodaDocHeadRepository {
     }
 
     @Programmatic
-    public List<CodaDocHead> findNotYetPayableInCoda(final String cmpCode) {
+    public List<CodaDocHead> findByCmpCodeAndIncomingInvoiceApprovalStateIsNotFinal(final String cmpCode) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         CodaDocHead.class,
-                        "findByHandlingAndCmpCodeAndSummaryLineUserStatusIsNull",
-                        "cmpCode", cmpCode,
-                        "handling", Handling.INCLUDED
+                        "findByCmpCodeAndIncomingInvoiceApprovalStateIsNotFinal",
+                        "cmpCode", cmpCode
                 ));
     }
 

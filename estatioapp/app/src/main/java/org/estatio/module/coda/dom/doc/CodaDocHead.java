@@ -140,16 +140,12 @@ import lombok.Setter;
                         + "   && reasonInvalid     != null "
         ),
         @Query(
-                name = "findByHandlingAndCmpCodeAndSummaryLineUserStatusIsNull", language = "JDOQL",
+                name = "findByCmpCodeAndIncomingInvoiceApprovalStateIsNotFinal", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
                         + "WHERE cmpCode    == :cmpCode "
-                        + "   && handling   == :handling "
-                        + "   && (lines.contains(cdl) && "
-                        + "       cdl.lineType == 'SUMMARY' && "
-                        + "       cdl.userStatus == null "
-                        + "       ) "
-                        + "VARIABLES org.estatio.module.coda.dom.doc.CodaDocLine cdl"
+                        + "   && (incomingInvoice.approvalState == 'PAID' || "
+                        + "       incomingInvoice.approvalState == 'DISCARDED') "
         ),
         @Query(
                 name = "findByIncomingInvoice", language = "JDOQL",
