@@ -4,6 +4,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.canonical.coda.v2.CodaDocHeadDto;
+import org.estatio.canonical.coda.v2.CodaDocHeadType;
 import org.estatio.canonical.common.v2.CodaDocKey;
 import org.estatio.module.base.platform.applib.DtoFactoryAbstract;
 import org.estatio.module.coda.dom.doc.CodaDocHead;
@@ -23,6 +24,18 @@ public class CodaDocHeadDtoFactory extends DtoFactoryAbstract<CodaDocHead, CodaD
         dto.setMajorVersion("2");
         dto.setMinorVersion("0");
 
+        copyOver(codaDocHead, dto);
+
+        return dto;
+    }
+
+    CodaDocHeadType newType(final CodaDocHead codaDocHead) {
+        final CodaDocHeadType dto = new CodaDocHeadType();
+        copyOver(codaDocHead, dto);
+        return dto;
+    }
+
+    private void copyOver(final CodaDocHead codaDocHead, final CodaDocHeadType dto) {
         dto.setSelf(mappingHelper.oidDtoFor(codaDocHead));
 
         final CodaDocKey docKey = new CodaDocKey();
@@ -34,8 +47,7 @@ public class CodaDocHeadDtoFactory extends DtoFactoryAbstract<CodaDocHead, CodaD
         dto.setCodaPeriod(codaDocHead.getCodaPeriod());
 
         dto.setIncomingInvoice(mappingHelper.oidDtoFor(codaDocHead.getIncomingInvoice()));
-
-        return dto;
     }
+
 
 }

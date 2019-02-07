@@ -108,6 +108,17 @@ public class CodaDocHeadRepository {
     }
 
     @Programmatic
+    public List<CodaDocHead> findNotYetPayableInCoda(final String cmpCode) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        CodaDocHead.class,
+                        "findByHandlingAndCmpCodeAndSummaryLineUserStatusIsNull",
+                        "cmpCode", cmpCode,
+                        "handling", Handling.INCLUDED
+                ));
+    }
+
+    @Programmatic
     public List<CodaDocHead> findByCodaPeriodQuarterAndHandlingAndValidity(
             final String codaPeriodQuarter,
             final Handling handling,
