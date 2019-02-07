@@ -108,6 +108,16 @@ public class CodaDocHeadRepository {
     }
 
     @Programmatic
+    public List<CodaDocHead> findByCmpCodeAndIncomingInvoiceApprovalStateIsNotFinal(final String cmpCode) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        CodaDocHead.class,
+                        "findByCmpCodeAndIncomingInvoiceApprovalStateIsNotFinal",
+                        "cmpCode", cmpCode
+                ));
+    }
+
+    @Programmatic
     public List<CodaDocHead> findByCodaPeriodQuarterAndHandlingAndValidity(
             final String codaPeriodQuarter,
             final Handling handling,

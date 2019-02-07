@@ -140,6 +140,14 @@ import lombok.Setter;
                         + "   && reasonInvalid     != null "
         ),
         @Query(
+                name = "findByCmpCodeAndIncomingInvoiceApprovalStateIsNotFinal", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
+                        + "WHERE cmpCode    == :cmpCode "
+                        + "   && (incomingInvoice.approvalState != 'PAID' && "
+                        + "       incomingInvoice.approvalState != 'DISCARDED') "
+        ),
+        @Query(
                 name = "findByIncomingInvoice", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
