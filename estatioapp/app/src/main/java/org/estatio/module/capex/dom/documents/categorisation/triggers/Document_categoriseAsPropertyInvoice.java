@@ -1,5 +1,8 @@
 package org.estatio.module.capex.dom.documents.categorisation.triggers;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
@@ -14,12 +17,17 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.role.FixedAssetRole;
+import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.capex.dom.documents.BuyerFinder;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
-import org.estatio.module.asset.dom.Property;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.invoice.dom.InvoiceStatus;
+import org.estatio.module.party.dom.Party;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Document is part of the incode platform and
@@ -37,7 +45,8 @@ public class Document_categoriseAsPropertyInvoice
     }
 
     public static class ActionDomainEvent
-            extends Document_triggerAbstract.ActionDomainEvent<Document_categoriseAsPropertyInvoice> {}
+            extends Document_triggerAbstract.ActionDomainEvent<Document_categoriseAsPropertyInvoice> {
+    }
 
     @Action(
             domainEvent = ActionDomainEvent.class,
@@ -81,9 +90,8 @@ public class Document_categoriseAsPropertyInvoice
         return incomingInvoice;
     }
 
-
     public boolean hideAct() {
-        if(cannotTransition()) {
+        if (cannotTransition()) {
             return true;
         }
         final Document document = getDomainObject();
@@ -94,6 +102,15 @@ public class Document_categoriseAsPropertyInvoice
         return reasonGuardNotSatisified();
     }
 
+    public List<Property> choices0Act() {
+        Party buyerFromBarcode = buyerFinder.buyerDerivedFromDocumentName(getDomainObject());
+        return fixedAssetRoleRepository.findByPartyAndType(buyerFromBarcode, FixedAssetRoleTypeEnum.PROPERTY_OWNER)
+                .stream()
+                .map(FixedAssetRole::getAsset)
+                .filter(fixedAsset -> fixedAsset instanceof Property)
+                .map(Property.class::cast)
+                .collect(Collectors.toList());
+    }
 
     @Inject
     DocumentTypeRepository documentTypeRepository;
@@ -103,5 +120,11 @@ public class Document_categoriseAsPropertyInvoice
 
     @Inject
     IncomingInvoiceRepository incomingInvoiceRepository;
+
+    @Inject
+    BuyerFinder buyerFinder;
+
+    @Inject
+    FixedAssetRoleRepository fixedAssetRoleRepository;
 
 }

@@ -178,7 +178,7 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
                         + "WHERE !(SELECT invoice "
-                        +         "  FROM org.estatio.module.capex.dom.payment.PaymentLine).contains(this) "
+                        + "  FROM org.estatio.module.capex.dom.payment.PaymentLine).contains(this) "
                         + "   && approvalState == :approvalState "
                         + "   && paymentMethod == :paymentMethod "
                         + "ORDER BY invoiceDate ASC " // oldest first
@@ -188,7 +188,7 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
                         + "WHERE !(SELECT invoice "
-                        +         "  FROM org.estatio.module.capex.dom.payment.PaymentLine).contains(this) "
+                        + "  FROM org.estatio.module.capex.dom.payment.PaymentLine).contains(this) "
                         + "   && approvalState == :approvalState "
                         + "   && paymentMethod == :paymentMethod "
                         + "   && applicationTenancyPath.startsWith(:atPathPrefix) "
@@ -212,12 +212,12 @@ import lombok.Setter;
         )
 })
 @FetchGroup(
-        name="seller_buyer_property_bankAccount",
-        members={
-                @Persistent(name="seller"),
-                @Persistent(name="buyer"),
-                @Persistent(name="property"),
-                @Persistent(name="bankAccount")
+        name = "seller_buyer_property_bankAccount",
+        members = {
+                @Persistent(name = "seller"),
+                @Persistent(name = "buyer"),
+                @Persistent(name = "property"),
+                @Persistent(name = "bankAccount")
         })
 @Indices({
         @Index(name = "IncomingInvoice_approvalState_IDX", members = { "approvalState" }),
@@ -243,19 +243,22 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         public ApprovalInvalidatedEvent(final Object source) {
             super(source);
         }
-        public IncomingInvoice getIncomingInvoice(){
+
+        public IncomingInvoice getIncomingInvoice() {
             return (IncomingInvoice) getSource();
         }
     }
 
     public static class ObjectPersistingEvent
-            extends org.apache.isis.applib.services.eventbus.ObjectPersistingEvent <IncomingInvoice> {
+            extends org.apache.isis.applib.services.eventbus.ObjectPersistingEvent<IncomingInvoice> {
     }
+
     public static class ObjectPersistedEvent
-            extends org.apache.isis.applib.services.eventbus.ObjectPersistedEvent <IncomingInvoice> {
+            extends org.apache.isis.applib.services.eventbus.ObjectPersistedEvent<IncomingInvoice> {
     }
+
     public static class ObjectRemovingEvent
-            extends org.apache.isis.applib.services.eventbus.ObjectRemovingEvent <IncomingInvoice> {
+            extends org.apache.isis.applib.services.eventbus.ObjectRemovingEvent<IncomingInvoice> {
     }
 
     public IncomingInvoice() {
@@ -275,7 +278,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final InvoiceStatus invoiceStatus,
             final LocalDate dateReceived,
             final BankAccount bankAccount,
-            final IncomingInvoiceApprovalState approvalState){
+            final IncomingInvoiceApprovalState approvalState) {
         super("invoiceNumber");
         setType(typeIfAny);
         setInvoiceNumber(invoiceNumber);
@@ -299,31 +302,27 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         document.ifPresent(d -> buf.append(d.getName()));
 
         final Party seller = getSeller();
-        if(seller != null) {
+        if (seller != null) {
             buf.append(": ", seller);
         }
 
         final String invoiceNumber = getInvoiceNumber();
-        if(invoiceNumber != null) {
+        if (invoiceNumber != null) {
             buf.append(", ", invoiceNumber);
         }
 
         return buf.toString();
     }
 
-
-    @MemberOrder(name="items", sequence = "1")
+    @MemberOrder(name = "items", sequence = "1")
     public IncomingInvoice addItem(
             final IncomingInvoiceType type,
             final Charge charge,
             final String description,
-            @Digits(integer=13, fraction = 2)
-            final BigDecimal netAmount,
+            @Digits(integer = 13, fraction = 2) final BigDecimal netAmount,
             @Nullable
-            @Digits(integer=13, fraction = 2)
-            final BigDecimal vatAmount,
-            @Digits(integer=13, fraction = 2)
-            final BigDecimal grossAmount,
+            @Digits(integer = 13, fraction = 2) final BigDecimal vatAmount,
+            @Digits(integer = 13, fraction = 2) final BigDecimal grossAmount,
             @Nullable final Tax tax,
             @Nullable final LocalDate dueDate,
             @Nullable final String period,
@@ -356,7 +355,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String default8AddItem() {
-        return ofFirstItem(IncomingInvoiceItem::getStartDate)!=null ? PeriodUtil.periodFromInterval(new LocalDateInterval(ofFirstItem(IncomingInvoiceItem::getStartDate), ofFirstItem(IncomingInvoiceItem::getEndDate))) : null;
+        return ofFirstItem(IncomingInvoiceItem::getStartDate) != null ? PeriodUtil.periodFromInterval(new LocalDateInterval(ofFirstItem(IncomingInvoiceItem::getStartDate), ofFirstItem(IncomingInvoiceItem::getEndDate))) : null;
     }
 
     public Property default9AddItem() {
@@ -367,7 +366,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return ofFirstItem(IncomingInvoiceItem::getProject);
     }
 
-    public List<Charge> choices1AddItem(){
+    public List<Charge> choices1AddItem() {
         return chargeRepository.allIncoming();
     }
 
@@ -400,15 +399,16 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final String period,
             final Property property,
             final Project project,
-            final BudgetItem budgetItem){
-        if (period==null) return null; // period is optional
+            final BudgetItem budgetItem) {
+        if (period == null)
+            return null; // period is optional
         return PeriodUtil.reasonInvalidPeriod(period);
     }
 
-    boolean amountsCoveredByAmountsItems(){
-        if ((getNetAmount()!=null && getTotalNetAmount().compareTo(getNetAmount()) >= 0)
-                || (getGrossAmount() !=null && getTotalGrossAmount().compareTo(getGrossAmount()) >= 0)
-                ){
+    boolean amountsCoveredByAmountsItems() {
+        if ((getNetAmount() != null && getTotalNetAmount().compareTo(getNetAmount()) >= 0)
+                || (getGrossAmount() != null && getTotalGrossAmount().compareTo(getGrossAmount()) >= 0)
+        ) {
             return true;
         }
 
@@ -416,9 +416,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     }
 
-
     @Action
-    @MemberOrder(name="items", sequence = "4")
+    @MemberOrder(name = "items", sequence = "4")
     public IncomingInvoice reverseItem(final IncomingInvoiceItem itemToReverse) {
 
         final IncomingInvoiceItem reversal = copyWithLinks(itemToReverse, Sort.REVERSAL);
@@ -429,32 +428,32 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Programmatic
     public void reverseReportedItemsNoCorrection() {
-       for (IncomingInvoiceItem itemToReverse : itemsToReverse()){
-           copyWithLinks(itemToReverse, Sort.REVERSAL);
-       }
+        for (IncomingInvoiceItem itemToReverse : itemsToReverse()) {
+            copyWithLinks(itemToReverse, Sort.REVERSAL);
+        }
     }
 
     @Programmatic
-    public List<IncomingInvoiceItem> itemsToReverse(){
+    public List<IncomingInvoiceItem> itemsToReverse() {
         return reportedItemsIgnoringReversals();
     }
 
     @Programmatic
-    public List<IncomingInvoiceItem> reportedItemsIgnoringReversals(){
+    public List<IncomingInvoiceItem> reportedItemsIgnoringReversals() {
         return Lists.newArrayList(getItems()).stream().
                 filter(IncomingInvoiceItem.class::isInstance)
                 .map(IncomingInvoiceItem.class::cast)
                 .filter(x -> x.isReported())
                 .filter(x -> !x.isReversal())
-                .filter(x->!reversedItems().contains(x)) // also ignore reported items that are already reversed
+                .filter(x -> !reversedItems().contains(x)) // also ignore reported items that are already reversed
                 .collect(Collectors.toList());
     }
 
-    List<IncomingInvoiceItem> reversedItems(){
-        return reversals().stream().map(x->x.getReversalOf()).collect(Collectors.toList());
+    List<IncomingInvoiceItem> reversedItems() {
+        return reversals().stream().map(x -> x.getReversalOf()).collect(Collectors.toList());
     }
 
-    List<IncomingInvoiceItem> reversals(){
+    List<IncomingInvoiceItem> reversals() {
         return Lists.newArrayList(getItems()).stream().
                 filter(IncomingInvoiceItem.class::isInstance)
                 .map(IncomingInvoiceItem.class::cast)
@@ -463,7 +462,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     @Programmatic
-    public List<IncomingInvoiceItem> unreportedItemsIgnoringReversals(){
+    public List<IncomingInvoiceItem> unreportedItemsIgnoringReversals() {
         return Lists.newArrayList(getItems()).stream().
                 filter(IncomingInvoiceItem.class::isInstance)
                 .map(IncomingInvoiceItem.class::cast)
@@ -474,7 +473,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     enum Sort {
         REVERSAL {
-            @Override BigDecimal adjust(final BigDecimal amount) {
+            @Override
+            BigDecimal adjust(final BigDecimal amount) {
                 return Sort.negate(amount);
             }
         },
@@ -487,7 +487,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
         String prefixTo(String description) {
             return name() + " of " + description;
-        };
+        }
+
+        ;
+
         abstract BigDecimal adjust(BigDecimal amount);
 
         private static BigDecimal negate(@Nullable final BigDecimal amount) {
@@ -523,7 +526,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 tax, dueDate,
                 period, fixedAsset, project, budgetItem);
 
-        if(sort == Sort.REVERSAL) {
+        if (sort == Sort.REVERSAL) {
             copyItem.setReversalOf(itemToReverse);
         }
 
@@ -548,10 +551,12 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
         return buf.getReason();
     }
+
     public IncomingInvoiceItem default0ReverseItem() {
         final List<IncomingInvoiceItem> choices = choices0ReverseItem();
         return choices.size() == 1 ? choices.get(0) : null;
     }
+
     public List<IncomingInvoiceItem> choices0ReverseItem() {
         return itemsToReverse();
     }
@@ -560,22 +565,15 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     public IncomingInvoice splitItem(
             final IncomingInvoiceItem itemToSplit,
             final String newItemDescription,
-            @Digits(integer = 13, fraction = 2)
-            final BigDecimal newItemNetAmount,
+            @Digits(integer = 13, fraction = 2) final BigDecimal newItemNetAmount,
             @Nullable
-            @Digits(integer = 13, fraction = 2)
-            final BigDecimal newItemVatAmount,
-            @Nullable
-            final Tax newItemtax,
-            @Digits(integer = 13, fraction = 2)
-            final BigDecimal newItemGrossAmount,
+            @Digits(integer = 13, fraction = 2) final BigDecimal newItemVatAmount,
+            @Nullable final Tax newItemtax,
+            @Digits(integer = 13, fraction = 2) final BigDecimal newItemGrossAmount,
             final Charge newItemCharge,
-            @Nullable
-            final Property newItemProperty,
-            @Nullable
-            final Project newItemProject,
-            @Nullable
-            final BudgetItem newItemBudgetItem,
+            @Nullable final Property newItemProperty,
+            @Nullable final Project newItemProject,
+            @Nullable final BudgetItem newItemBudgetItem,
             final String newItemPeriod
     ) {
         itemToSplit.subtractAmounts(newItemNetAmount, newItemVatAmount, newItemGrossAmount);
@@ -633,7 +631,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .collect(Collectors.toList());
     }
 
-    public List<Charge> choices6SplitItem(){
+    public List<Charge> choices6SplitItem() {
         return chargeRepository.allIncoming();
     }
 
@@ -664,12 +662,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final Property newItemProperty,
             final Project newItemProject,
             final BudgetItem newItemBudgetItem,
-            final String newItemPeriod){
+            final String newItemPeriod) {
         return PeriodUtil.reasonInvalidPeriod(newItemPeriod);
     }
-
-
-
 
     @Programmatic
     public <T> T ofFirstItem(final Function<IncomingInvoiceItem, T> f) {
@@ -679,18 +674,16 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Programmatic
     public Optional<IncomingInvoiceItem> firstItemIfAny() {
-        return  Lists.newArrayList(getItems()).stream()
+        return Lists.newArrayList(getItems()).stream()
                 .filter(IncomingInvoiceItem.class::isInstance)
                 .map(IncomingInvoiceItem.class::cast)
                 .findFirst();
     }
 
-
-
     @MemberOrder(name = "items", sequence = "3")
     public IncomingInvoice mergeItems(
             final IncomingInvoiceItem item,
-            final IncomingInvoiceItem mergeInto){
+            final IncomingInvoiceItem mergeInto) {
         incomingInvoiceItemRepository.mergeItems(item, mergeInto);
         return this;
     }
@@ -706,11 +699,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public IncomingInvoiceItem default0MergeItems() {
-        return firstItemIfAny()!=null ? (IncomingInvoiceItem) getItems().last() : null;
+        return firstItemIfAny() != null ? (IncomingInvoiceItem) getItems().last() : null;
     }
 
     public IncomingInvoiceItem default1MergeItems() {
-        return firstItemIfAny()!=null ? (IncomingInvoiceItem) getItems().first() : null;
+        return firstItemIfAny() != null ? (IncomingInvoiceItem) getItems().first() : null;
     }
 
     public List<IncomingInvoiceItem> choices0MergeItems() {
@@ -724,11 +717,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return Lists.newArrayList(getItems()).stream()
                 .map(IncomingInvoiceItem.class::cast)
                 .filter(IncomingInvoiceItem::neitherReversalNorReported)
-                .filter(x->!x.equals(item))
+                .filter(x -> !x.equals(item))
                 .collect(Collectors.toList());
     }
-
-
 
     private IncomingInvoiceItem addItemToThis(
             final IncomingInvoiceType type,
@@ -759,14 +750,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 budgetItem);
     }
 
-
-
-
     /**
      * TODO: inline this mixin.
      */
-    @Mixin(method="act")
-    public static class changeBankAccount  {
+    @Mixin(method = "act")
+    public static class changeBankAccount {
 
         private final IncomingInvoice incomingInvoice;
 
@@ -775,17 +763,17 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         }
 
         @Action(semantics = SemanticsOf.IDEMPOTENT)
-        @ActionLayout(contributed= Contributed.AS_ACTION)
-        public IncomingInvoice act(final BankAccount bankAccount){
+        @ActionLayout(contributed = Contributed.AS_ACTION)
+        public IncomingInvoice act(final BankAccount bankAccount) {
             incomingInvoice.setBankAccount(bankAccount);
-            return  incomingInvoice;
+            return incomingInvoice;
         }
 
-        public String disableAct(){
+        public String disableAct() {
 
             final Object viewContext = incomingInvoice;
             final String reasonIfAny = incomingInvoice.reasonDisabledFinanceDetailsDueToState(viewContext);
-            if(reasonIfAny != null) {
+            if (reasonIfAny != null) {
                 return reasonIfAny;
             }
 
@@ -802,10 +790,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             return null;
         }
 
-        public List<BankAccount> choices0Act(){
+        public List<BankAccount> choices0Act() {
             return bankAccountRepository.findBankAccountsByOwner(incomingInvoice.getSeller());
         }
-        public BankAccount default0Act(){
+
+        public BankAccount default0Act() {
             return incomingInvoice.getBankAccount();
         }
 
@@ -813,9 +802,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
          * An alternative design would be to filter out all non-verified bank accounts in the choicesXxx, but that
          * could be confusing to the end-user (wondering why some bank accounts of the seller aren't listed).
          */
-        public String validate0Act(final BankAccount bankAccount){
+        public String validate0Act(final BankAccount bankAccount) {
             // a mutable invoice does not need a verified bankaccount
-            if (!incomingInvoice.isImmutableDueToState()) return null;
+            if (!incomingInvoice.isImmutableDueToState())
+                return null;
 
             final BankAccountVerificationState state = stateTransitionService
                     .currentStateOf(bankAccount, BankAccountVerificationStateTransition.class);
@@ -834,13 +824,14 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
      * Default type, used for routing.
      *
      * <p>
-     *     This can be overridden for each invoice item.
+     * This can be overridden for each invoice item.
      * </p>
      */
 
     @Getter @Setter
     @Column(allowsNull = "true")
     private IncomingInvoiceType type;
+
     public void setType(final IncomingInvoiceType type) {
         this.type = invalidateApprovalIfDiffer(this.type, type);
     }
@@ -848,9 +839,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public IncomingInvoice editType(
             final IncomingInvoiceType type,
-            final boolean changeOnItemsAsWell){
-        if (changeOnItemsAsWell){
-            if (isReported()){
+            final boolean changeOnItemsAsWell) {
+        if (changeOnItemsAsWell) {
+            if (isReported()) {
                 reverseReportedItems();
             }
             setTypeOnUnreportedItems(type);
@@ -859,27 +850,27 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return this;
     }
 
-    void reverseReportedItems(){
-            for (IncomingInvoiceItem item : itemsToReverse()){
-                    reverseItem(item);
-            }
+    void reverseReportedItems() {
+        for (IncomingInvoiceItem item : itemsToReverse()) {
+            reverseItem(item);
+        }
     }
 
-    void setTypeOnUnreportedItems(final IncomingInvoiceType type){
-        for (IncomingInvoiceItem item : unreportedItemsIgnoringReversals()){
+    void setTypeOnUnreportedItems(final IncomingInvoiceType type) {
+        for (IncomingInvoiceItem item : unreportedItemsIgnoringReversals()) {
             item.setIncomingInvoiceType(type);
         }
     }
 
-    public IncomingInvoiceType default0EditType(){
+    public IncomingInvoiceType default0EditType() {
         return getType();
     }
 
-    public boolean default1EditType(){
+    public boolean default1EditType() {
         return true;
     }
 
-    public String disableEditType(){
+    public String disableEditType() {
         return reasonDisabledDueToStateStrict();
     }
 
@@ -888,39 +879,43 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
      * or could potentially relate to individual units within the property.
      *
      * <p>
-     *     Note that InvoiceForLease also has a reference to FixedAsset.  It's not possible to move this
-     *     up to the Invoice superclass because invoicing module does not "know" about fixed assets.
+     * Note that InvoiceForLease also has a reference to FixedAsset.  It's not possible to move this
+     * up to the Invoice superclass because invoicing module does not "know" about fixed assets.
      * </p>
      */
     @javax.jdo.annotations.Column(name = "propertyId", allowsNull = "true")
     @org.apache.isis.applib.annotation.Property(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
     private Property property;
+
     public void setProperty(final Property property) {
         this.property = invalidateApprovalIfDiffer(this.property, property);
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public IncomingInvoice editProperty(
-            @Nullable
-            final Property property,
-            final boolean changeOnItemsAsWell){
+            @Nullable final Property property,
+            final boolean changeOnItemsAsWell) {
         setProperty(property);
-        if (changeOnItemsAsWell){
+        if (changeOnItemsAsWell) {
             Lists.newArrayList(getItems())  // eagerly load (DN 4.x collections do not support streaming)
                     .stream()
                     .map(IncomingInvoiceItem.class::cast)
-                    .forEach(x->x.setFixedAsset(property));
+                    .forEach(x -> x.setFixedAsset(property));
         }
         return this;
     }
 
-    public Property default0EditProperty(){
+    public Property default0EditProperty() {
         return getProperty();
     }
 
-    public boolean default1EditProperty(){
+    public boolean default1EditProperty() {
         return true;
+    }
+
+    public String disableEditProperty() {
+        return isItalian() ? "Editing is disabled" : "Property can only be edited by recategorising invoice";
     }
 
     /**
@@ -960,7 +955,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     // TODO: does not seem to be used, raised EST-1599 to look into removing it.
     @Getter @Setter
-    @Column(allowsNull = "true", name="invoiceId")
+    @Column(allowsNull = "true", name = "invoiceId")
     private IncomingInvoice relatesTo;
 
     // TODO: need to remove this from superclass, ie push down to InvoiceForLease subclass so not in this subtype
@@ -1012,11 +1007,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         super.setPaymentMethod(invalidateApprovalIfDiffer(getPaymentMethod(), paymentMethod));
     }
 
-
     @org.apache.isis.applib.annotation.Property(hidden = Where.ALL_TABLES)
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Getter @Setter
     private BigDecimal netAmount;
+
     public void setNetAmount(final BigDecimal netAmount) {
         this.netAmount = invalidateApprovalIfDiffer(this.netAmount, netAmount);
     }
@@ -1032,6 +1027,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Getter @Setter
     private BigDecimal grossAmount;
+
     public void setGrossAmount(final BigDecimal grossAmount) {
         this.grossAmount = invalidateApprovalIfDiffer(this.grossAmount, grossAmount);
     }
@@ -1042,23 +1038,23 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public IncomingInvoice changeAmounts(final BigDecimal netAmount, final BigDecimal grossAmount){
+    public IncomingInvoice changeAmounts(final BigDecimal netAmount, final BigDecimal grossAmount) {
         setNetAmount(netAmount);
         setGrossAmount(grossAmount);
         return this;
     }
 
-    public BigDecimal default0ChangeAmounts(){
+    public BigDecimal default0ChangeAmounts() {
         return getNetAmount();
     }
 
-    public BigDecimal default1ChangeAmounts(){
+    public BigDecimal default1ChangeAmounts() {
         return getGrossAmount();
     }
 
-    public String validateChangeAmounts(final BigDecimal netAmount, final BigDecimal grossAmount){
+    public String validateChangeAmounts(final BigDecimal netAmount, final BigDecimal grossAmount) {
         if ((grossAmount.signum() >= 0 && grossAmount.compareTo(netAmount) < 0) ||
-            (grossAmount.signum() < 0 && grossAmount.compareTo(netAmount) > 0)) {
+                (grossAmount.signum() < 0 && grossAmount.compareTo(netAmount) > 0)) {
             return "Gross amount cannot be lower than net amount";
         }
         return null;
@@ -1068,22 +1064,21 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Override
     public boolean isImmutableDueToState() {
         final Object viewContext = this;
-        return reasonDisabledDueToState(viewContext)!=null;
+        return reasonDisabledDueToState(viewContext) != null;
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public IncomingInvoice editInvoiceNumber(
-            @Nullable
-            final String invoiceNumber){
+            @Nullable final String invoiceNumber) {
         setInvoiceNumber(invoiceNumber);
         return this;
     }
 
-    public String default0EditInvoiceNumber(){
+    public String default0EditInvoiceNumber() {
         return getInvoiceNumber();
     }
 
-    public String disableEditInvoiceNumber(){
+    public String disableEditInvoiceNumber() {
 
         final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot edit invoice number because");
 
@@ -1093,67 +1088,62 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return buf.getReason();
     }
 
-
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(named = "Edit ECP (as buyer)")
     public IncomingInvoice editBuyer(
-            @Nullable
-            final Party buyer){
+            @Nullable final Party buyer) {
         setBuyer(buyer);
         return this;
     }
-    public List<Party> autoComplete0EditBuyer(@MinLength(3) final String searchPhrase){
+
+    public List<Party> autoComplete0EditBuyer(@MinLength(3) final String searchPhrase) {
         return partyRepository.autoCompleteWithRole(searchPhrase, IncomingInvoiceRoleTypeEnum.ECP);
     }
-    public String validate0EditBuyer(final Party party){
+
+    public String validate0EditBuyer(final Party party) {
         return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.ECP);
     }
-    public Party default0EditBuyer(){
+
+    public Party default0EditBuyer() {
         return getBuyer();
     }
-    public String disableEditBuyer(){
-        final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot edit buyer because");
 
-        final Object viewContext = this;
-        reasonDisabledDueToApprovalStateIfAny(viewContext, buf);
-
-        return buf.getReason();
+    public String disableEditBuyer() {
+        return isItalian() ? "Editing is disabled" : "Buyer is not editable; discard invoice rescan document with appropriate barcode instead";
     }
-
-
-
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(named = "Edit Supplier")
     public IncomingInvoice editSeller(
-            @Nullable
-            final Party supplier,
-            final boolean createRoleIfRequired){
+            @Nullable final Party supplier,
+            final boolean createRoleIfRequired) {
         setSeller(supplier);
         setBankAccount(bankAccountRepository.getFirstBankAccountOfPartyOrNull(supplier));
-        if(supplier != null && createRoleIfRequired) {
+        if (supplier != null && createRoleIfRequired) {
             partyRoleRepository.findOrCreate(supplier, IncomingInvoiceRoleTypeEnum.SUPPLIER);
         }
         return this;
     }
+
     public String validateEditSeller(
             final Party supplier,
-            final boolean createRoleIfRequired){
-        if(supplier != null && !createRoleIfRequired) {
+            final boolean createRoleIfRequired) {
+        if (supplier != null && !createRoleIfRequired) {
             // requires that the supplier already has this role
             return partyRoleRepository.validateThat(supplier, IncomingInvoiceRoleTypeEnum.SUPPLIER);
         }
         return null;
     }
-    public Party default0EditSeller(){
+
+    public Party default0EditSeller() {
         return getSeller();
     }
 
-    public List<Party> autoComplete0EditSeller(final String search){
+    public List<Party> autoComplete0EditSeller(final String search) {
         return partyRepository.autoCompleteSupplier(search, getAtPath());
     }
 
-    public String disableEditSeller(){
+    public String disableEditSeller() {
 
         final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot edit seller because");
 
@@ -1164,12 +1154,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return buf.getReason();
     }
 
-
-
-    private String sellerIsImmutableReason(){
-        for (InvoiceItem item : getItems()){
+    private String sellerIsImmutableReason() {
+        for (InvoiceItem item : getItems()) {
             IncomingInvoiceItem ii = (IncomingInvoiceItem) item;
-            if (ii.isLinkedToOrderItem()){
+            if (ii.isLinkedToOrderItem()) {
                 return "an item is linked to an order";
             }
         }
@@ -1177,32 +1165,29 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public IncomingInvoice changeDates(
-            @Nullable
-            final LocalDate dateReceived,
-            @Nullable
-            final LocalDate invoiceDate,
-            @Nullable
-            final LocalDate dueDate
-    ){
+            @Nullable final LocalDate dateReceived,
+            @Nullable final LocalDate invoiceDate,
+            @Nullable final LocalDate dueDate
+    ) {
         setDateReceived(dateReceived);
         setInvoiceDate(invoiceDate);
         setDueDate(dueDate);
         return this;
     }
 
-    public LocalDate default0ChangeDates(){
+    public LocalDate default0ChangeDates() {
         return getDateReceived();
     }
 
-    public LocalDate default1ChangeDates(){
+    public LocalDate default1ChangeDates() {
         return getInvoiceDate();
     }
 
-    public LocalDate default2ChangeDates(){
+    public LocalDate default2ChangeDates() {
         return getDueDate();
     }
 
-    public String disableChangeDates(){
+    public String disableChangeDates() {
         final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot change dates because");
 
         final Object viewContext = this;
@@ -1217,7 +1202,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     /**
      * that is, has passed final approval step.
-     *
+     * <p>
      * Like {@link #getApprovalState()}, this field is populated as the result of transitioning.
      * It can be reset back if any property changes such as to invalidate the approval, as per {@link #invalidateApprovalIfDiffer(Object, Object)}.
      */
@@ -1225,16 +1210,15 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Column(allowsNull = "false")
     private boolean approvedFully;
 
-
     @Override
     public <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-    > S getStateOf(
+            > S getStateOf(
             final Class<ST> stateTransitionClass) {
-        if(stateTransitionClass == IncomingInvoiceApprovalStateTransition.class) {
+        if (stateTransitionClass == IncomingInvoiceApprovalStateTransition.class) {
             return (S) approvalState;
         }
         return null;
@@ -1246,10 +1230,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-    > void setStateOf(
+            > void setStateOf(
             final Class<ST> stateTransitionClass, final S newState) {
-        if(stateTransitionClass == IncomingInvoiceApprovalStateTransition.class) {
-            setApprovalState( (IncomingInvoiceApprovalState) newState );
+        if (stateTransitionClass == IncomingInvoiceApprovalStateTransition.class) {
+            setApprovalState((IncomingInvoiceApprovalState) newState);
         }
     }
 
@@ -1258,14 +1242,14 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     public String reasonDisabledDueToStateStrict() {
         final IncomingInvoiceApprovalState approvalState = getApprovalState();
         // guard for historic invoices (and invoice items)
-        if (approvalState==null){
+        if (approvalState == null) {
             return "Cannot modify (invoice was migrated from spreadsheets)";
         }
         switch (approvalState) {
-        case NEW:
-            return null;
-        default:
-            return "Cannot modify because invoice is in state of " + getApprovalState();
+            case NEW:
+                return null;
+            default:
+                return "Cannot modify because invoice is in state of " + getApprovalState();
         }
     }
 
@@ -1273,20 +1257,20 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Programmatic
     public String reasonDisabledFinanceDetailsDueToState(final Object viewContext) {
         final IncomingInvoiceApprovalState approvalState = getApprovalState();
-        if (approvalState==null){
+        if (approvalState == null) {
             return "Cannot modify (invoice was migrated from spreadsheets)";
         }
         switch (approvalState) {
-        case DISCARDED:
-            return "Invoice has been DISCARDED";
-        case PAYABLE:
-            final List<PaymentLine> paymentLines = paymentLineRepository.findByInvoice(this);
-            if(!paymentLines.isEmpty()) {
-                return "Invoice already in a payment batch";
-            }
-            break;
-        case PAID:
-            return "Invoice has been PAID";
+            case DISCARDED:
+                return "Invoice has been DISCARDED";
+            case PAYABLE:
+                final List<PaymentLine> paymentLines = paymentLineRepository.findByInvoice(this);
+                if (!paymentLines.isEmpty()) {
+                    return "Invoice already in a payment batch";
+                }
+                break;
+            case PAID:
+                return "Invoice has been PAID";
         }
         return null;
     }
@@ -1295,7 +1279,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Programmatic
     public String reasonDisabledDueToState(final Object viewContext) {
         final String reasonDisabledDueToApprovalStateIfAny = reasonDisabledDueToApprovalStateIfAny(viewContext);
-        if(reasonDisabledDueToApprovalStateIfAny != null) {
+        if (reasonDisabledDueToApprovalStateIfAny != null) {
             return reasonDisabledDueToApprovalStateIfAny;
         }
 
@@ -1314,25 +1298,25 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         final IncomingInvoiceApprovalState approvalState = getApprovalState();
 
         buf.append(
-                approvalState==null,
-            "invoice state is unknown (was migrated so assumed to be approved)");
+                approvalState == null,
+                "invoice state is unknown (was migrated so assumed to be approved)");
 
         buf.append(
                 approvalState == IncomingInvoiceApprovalState.COMPLETED &&
-                metaModelService3.sortOf(viewContext.getClass()) == MetaModelService2.Sort.VIEW_MODEL,
-            "modification through view not allowed once invoice is " + approvalState);
+                        metaModelService3.sortOf(viewContext.getClass()) == MetaModelService2.Sort.VIEW_MODEL,
+                "modification through view not allowed once invoice is " + approvalState);
 
         buf.append(
                 approvalState != IncomingInvoiceApprovalState.NEW &&
-                approvalState != IncomingInvoiceApprovalState.COMPLETED,
-            "invoice is in state of " + getApprovalState());
+                        approvalState != IncomingInvoiceApprovalState.COMPLETED,
+                "invoice is in state of " + getApprovalState());
     }
 
     @Programmatic
-    public String reasonIncomplete(){
+    public String reasonIncomplete() {
 
         String invoiceValidatorResult = new Validator()
-                .checkNotNull(getType(),"incoming invoice type")
+                .checkNotNull(getType(), "incoming invoice type")
                 .checkNotNull(getInvoiceNumber(), "invoice number")
                 .checkNotNull(getBuyer(), "buyer")
                 .checkNotNull(getSeller(), "seller")
@@ -1351,9 +1335,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     }
 
-    private String mergeReasonItemsIncomplete(final String validatorResult){
-        if (reasonItemsIncomplete()!=null) {
-            return validatorResult!=null ?
+    private String mergeReasonItemsIncomplete(final String validatorResult) {
+        if (reasonItemsIncomplete() != null) {
+            return validatorResult != null ?
                     validatorResult.replace(" required", ", ").concat(reasonItemsIncomplete())
                     : reasonItemsIncomplete();
         } else {
@@ -1381,81 +1365,86 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             return this;
         }
 
-        IncomingInvoice.Validator validateForIncomingInvoiceType(IncomingInvoice incomingInvoice){
-            if (incomingInvoice == null) return this;
-            if (incomingInvoice.getType() == null) return this;
-            if (incomingInvoice.isItalian()) return this; //ECP-896 Italian invoice of type CAPEX do not require a property
+        IncomingInvoice.Validator validateForIncomingInvoiceType(IncomingInvoice incomingInvoice) {
+            if (incomingInvoice == null)
+                return this;
+            if (incomingInvoice.getType() == null)
+                return this;
+            if (incomingInvoice.isItalian())
+                return this; //ECP-896 Italian invoice of type CAPEX do not require a property
 
             String message;
-            switch (incomingInvoice.getType()){
+            switch (incomingInvoice.getType()) {
 
-            case CAPEX:
-            case SERVICE_CHARGES:
-            case PROPERTY_EXPENSES:
-                message = "property";
-                if (incomingInvoice.getProperty()==null){
-                    setResult(result==null ? message : result.concat(", ").concat(message));
-                }
-                break;
+                case CAPEX:
+                case SERVICE_CHARGES:
+                case PROPERTY_EXPENSES:
+                    message = "property";
+                    if (incomingInvoice.getProperty() == null) {
+                        setResult(result == null ? message : result.concat(", ").concat(message));
+                    }
+                    break;
 
-            default:
+                default:
             }
 
             return this;
         }
 
-        IncomingInvoice.Validator validateForPaymentMethod(IncomingInvoice incomingInvoice){
-            if (incomingInvoice == null) return this;
-            if (incomingInvoice.getPaymentMethod() == null) return this;
+        IncomingInvoice.Validator validateForPaymentMethod(IncomingInvoice incomingInvoice) {
+            if (incomingInvoice == null)
+                return this;
+            if (incomingInvoice.getPaymentMethod() == null)
+                return this;
 
             String message;
-            switch (incomingInvoice.getPaymentMethod()){
+            switch (incomingInvoice.getPaymentMethod()) {
 
-            case BILLING_ACCOUNT:
-            case BANK_TRANSFER:
-            case CASH:
-            case CHEQUE:
-                message = "bank account";
-                if (incomingInvoice.getBankAccount()==null){
-                    setResult(result==null ? message : result.concat(", ").concat(message));
-                }
-                break;
+                case BILLING_ACCOUNT:
+                case BANK_TRANSFER:
+                case CASH:
+                case CHEQUE:
+                    message = "bank account";
+                    if (incomingInvoice.getBankAccount() == null) {
+                        setResult(result == null ? message : result.concat(", ").concat(message));
+                    }
+                    break;
 
-            case MANUAL_PROCESS:
-            case DIRECT_DEBIT:
-            case CREDIT_CARD:
-            case REFUND_BY_SUPPLIER:
-            default:
-                break;
+                case MANUAL_PROCESS:
+                case DIRECT_DEBIT:
+                case CREDIT_CARD:
+                case REFUND_BY_SUPPLIER:
+                default:
+                    break;
             }
 
             return this;
         }
 
-        IncomingInvoice.Validator validateForAmounts(IncomingInvoice incomingInvoice){
-            if (incomingInvoice.getNetAmount()==null || incomingInvoice.getGrossAmount()==null){
+        IncomingInvoice.Validator validateForAmounts(IncomingInvoice incomingInvoice) {
+            if (incomingInvoice.getNetAmount() == null || incomingInvoice.getGrossAmount() == null) {
                 // only validate when amounts are set on the invoice
                 return this;
             }
             String message;
             if (!incomingInvoice.getTotalNetAmount().setScale(2).equals(incomingInvoice.getNetAmount().setScale(2))
                     || !incomingInvoice.getTotalGrossAmount().setScale(2).equals(incomingInvoice.getGrossAmount().setScale(2))
-                    || !incomingInvoice.getTotalVatAmount().setScale(2).equals(incomingInvoice.getVatAmount().setScale(2))){
+                    || !incomingInvoice.getTotalVatAmount().setScale(2).equals(incomingInvoice.getVatAmount().setScale(2))) {
                 message = "total amount on items equal to amount on the invoice";
-                setResult(result==null ? message : result.concat(", ").concat(message));
+                setResult(result == null ? message : result.concat(", ").concat(message));
             }
             return this;
         }
 
-        IncomingInvoice.Validator validateForBankAccountOwner(IncomingInvoice incomingInvoice){
-            if (incomingInvoice.getBankAccount()==null || incomingInvoice.getSeller()==null){
+        IncomingInvoice.Validator validateForBankAccountOwner(IncomingInvoice incomingInvoice) {
+            if (incomingInvoice.getBankAccount() == null || incomingInvoice.getSeller() == null) {
                 // only validate when bankaccount and seller are set on the invoice
                 return this;
             }
             String message;
-            if (!incomingInvoice.getBankAccount().getOwner().equals(incomingInvoice.getSeller())){
+            if (!incomingInvoice.getBankAccount().getOwner().equals(incomingInvoice.getSeller())) {
                 message = "match of owner bankaccount and seller";
-                setResult(result==null ? message : result.concat(", ").concat(message));
+                setResult(result == null ? message : result.concat(", ").concat(message));
             }
             return this;
         }
@@ -1463,11 +1452,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     @Programmatic
-    public String reasonItemsIncomplete(){
+    public String reasonItemsIncomplete() {
         StringBuffer buffer = new StringBuffer();
-        for (InvoiceItem item : getItems()){
+        for (InvoiceItem item : getItems()) {
             IncomingInvoiceItem incomingInvoiceItem = (IncomingInvoiceItem) item;
-            if (incomingInvoiceItem.reasonIncomplete()!=null) {
+            if (incomingInvoiceItem.reasonIncomplete() != null) {
                 buffer.append("(on item ");
                 buffer.append(incomingInvoiceItem.getSequence().toString());
                 buffer.append(") ");
@@ -1479,9 +1468,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Programmatic
     public boolean isReported() {
-        for (InvoiceItem item : getItems()){
+        for (InvoiceItem item : getItems()) {
             IncomingInvoiceItem incomingInvoiceItem = (IncomingInvoiceItem) item;
-            if (((IncomingInvoiceItem) item).getReportedDate()!=null){
+            if (((IncomingInvoiceItem) item).getReportedDate() != null) {
                 return true;
             }
         }
@@ -1503,14 +1492,14 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     @Programmatic
-    public List<ApprovalString> getApprovals(){
+    public List<ApprovalString> getApprovals() {
         // TODO: as of EST-1824 temporarily we will inspect the transition instead of the task on the transition
         return stateTransitionRepository.findByDomainObject(this)
                 .stream()
-                .filter(x-> x.getToState()!=null && x.getToState().isApproval())
-                .filter(x->x.getCompletedBy()!=null)
+                .filter(x -> x.getToState() != null && x.getToState().isApproval())
+                .filter(x -> x.getCompletedBy() != null)
                 .sorted(Comparator.comparing(IncomingInvoiceApprovalStateTransition::getCompletedOn)) // should always be set when completedBy is set
-                .map(x-> new ApprovalString(x.getCompletedBy(), x.getCompletedOn().toString("dd-MMM-yyyy HH:mm"), x.getCompletedOn().toLocalDate()))
+                .map(x -> new ApprovalString(x.getCompletedBy(), x.getCompletedOn().toString("dd-MMM-yyyy HH:mm"), x.getCompletedOn().toLocalDate()))
                 .collect(Collectors.toList());
     }
 
@@ -1518,21 +1507,21 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Getter @Setter
     public class ApprovalString {
 
-            private String completedBy;
+        private String completedBy;
 
-            private String completedOn;
+        private String completedOn;
 
-            private LocalDate completedOnAsDate;
+        private LocalDate completedOnAsDate;
 
     }
 
     @Programmatic
-    public String getDescriptionSummary(){
+    public String getDescriptionSummary() {
         StringBuffer summary = new StringBuffer();
         boolean first = true;
-        for (InvoiceItem item : getItems()){
+        for (InvoiceItem item : getItems()) {
             IncomingInvoiceItem iitem = (IncomingInvoiceItem) item;
-            if (!iitem.isReversal() && !reversedItems().contains(iitem) && item.getDescription()!=null && item.getDescription()!="") {
+            if (!iitem.isReversal() && !reversedItems().contains(iitem) && item.getDescription() != null && item.getDescription() != "") {
                 if (!first) {
                     summary.append(" | ");
                 }
@@ -1544,17 +1533,17 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     @Programmatic
-    public String getProjectSummary(){
+    public String getProjectSummary() {
         List<Project> distinctProjects = new ArrayList<>();
-        for (InvoiceItem item : getItems()){
+        for (InvoiceItem item : getItems()) {
             IncomingInvoiceItem iitem = (IncomingInvoiceItem) item;
-            if (!iitem.isReversal() && !reversedItems().contains(iitem) && iitem.getProject()!=null && !distinctProjects.contains(iitem.getProject())){
+            if (!iitem.isReversal() && !reversedItems().contains(iitem) && iitem.getProject() != null && !distinctProjects.contains(iitem.getProject())) {
                 distinctProjects.add(iitem.getProject());
             }
         }
         StringBuffer summary = new StringBuffer();
-        for (Project project : distinctProjects){
-            if (summary.length()>0){
+        for (Project project : distinctProjects) {
+            if (summary.length() > 0) {
                 summary.append(" | ");
             }
             summary.append(project.getName());
@@ -1563,17 +1552,17 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     @Programmatic
-    public String getPropertySummary(){
+    public String getPropertySummary() {
         List<Property> distinctProperties = new ArrayList<>();
-        for (InvoiceItem item : getItems()){
+        for (InvoiceItem item : getItems()) {
             IncomingInvoiceItem iitem = (IncomingInvoiceItem) item;
-            if (!iitem.isReversal() && !reversedItems().contains(iitem) && iitem.getFixedAsset()!=null && !distinctProperties.contains(iitem.getFixedAsset())){
+            if (!iitem.isReversal() && !reversedItems().contains(iitem) && iitem.getFixedAsset() != null && !distinctProperties.contains(iitem.getFixedAsset())) {
                 distinctProperties.add((Property) iitem.getFixedAsset());
             }
         }
         StringBuffer summary = new StringBuffer();
-        for (Property property : distinctProperties){
-            if (summary.length()>0){
+        for (Property property : distinctProperties) {
+            if (summary.length() > 0) {
                 summary.append(" | ");
             }
             summary.append(property.getName());
@@ -1586,7 +1575,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         final String atPath = getApplicationTenancyPath();
         return atPath != null && atPath.startsWith("/ITA");
     }
-
 
     @Override
     public int compareTo(final IncomingInvoice other) {

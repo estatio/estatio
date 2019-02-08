@@ -38,7 +38,7 @@ public class BuyerFinder {
     private Party buyerDerivedFrom(final Optional<Document> document) {
         final StringBuffer buffer = new StringBuffer();
         document.ifPresent(d->buffer.append(d.getName()));
-        String barcodeSerie = buffer.length()>3 ? buffer.substring(0,3).toString() : null;
+        String barcodeSerie = buffer.length()>3 ? buffer.substring(0,3) : null;
         return partyDerivedFromBarcodeSerie(barcodeSerie);
     }
 
