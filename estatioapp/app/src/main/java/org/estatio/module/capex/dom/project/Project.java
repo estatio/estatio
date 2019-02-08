@@ -143,6 +143,16 @@ public class Project extends UdoDomainObject<Project> implements
     @Getter @Setter
     private LocalDate endDate;
 
+    @Column(allowsNull = "true")
+    @Getter @Setter
+    private LocalDate reviewDate;
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Project nextReviewOn(final LocalDate nextReviewDate){
+        setReviewDate(nextReviewDate);
+        return this;
+    }
+
     @Column(allowsNull = "false", length = AtPathType.Meta.MAX_LEN)
     @Getter @Setter
     @Property(hidden = Where.EVERYWHERE)

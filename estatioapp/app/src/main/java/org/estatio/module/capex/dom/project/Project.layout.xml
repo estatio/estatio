@@ -23,6 +23,9 @@
                                 <ns2:action id="changeDates" position="PANEL"/>
                                 <ns2:property id="startDate"/>
                                 <ns2:property id="endDate"/>
+                                <ns2:property id="reviewDate">
+                                    <ns2:action id="nextReviewOn" position="BELOW"/>
+                                </ns2:property>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Amounts" id="amounts">
                                 <ns2:property id="budgetedAmount"/>
