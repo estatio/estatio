@@ -1,4 +1,84 @@
+/*
+ *  Copyright 2012-2015 Eurocommercial Properties NV
+ *
+ *
+ *  Licensed under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+
+
+
+.org-isisaddons-module-publishmq-dom-jdo-status-StatusMessage .negative {
+    color: red;
+}
+
+.entityPage.org-estatio-dom-classification-ClassificationForOccupancy .classified-as-col {
+    padding-top: 41px;
+}
+
+/* TODO: can probably remove, fixed in 1.13.2.20170130-1613 */
+.select2-container-multi.input-sm {
+    height: inherit;
+}
+
+.entityCollection .org-estatio-module-capex-app-invoice-UpcomingPaymentTotal .title-column,
 .entityCollection .org-estatio-dom-lease-invoicing-viewmodel-dnc-DocAndCommForPrelimLetter .title-column,
 .entityCollection .org-estatio-dom-lease-invoicing-viewmodel-dnc-DocAndCommForInvoiceDoc .title-column {
     display: none;
+}
+
+.entityCollection .org-estatio-capex-dom-paydd-manager-DirectDebitInvoiceViewModel .title-column {
+    display: none;
+}
+
+
+.selected {
+    font-style: italic;
+    font-weight: bolder;
+}
+
+
+.PaymentBatchManager-selectedBatch a.PaymentBatchManager-selectBatch {
+    margin-left: 35px;
+}
+
+.isis-org-estatio-capex-dom-documents-categorisation-invoice-IncomingDocAsInvoiceViewModel-notification textarea,
+.isis-org-estatio-capex-dom-documents-categorisation-invoice-IncomingDocAsInvoiceViewModel-notification textarea.form-control[readonly],
+.isis-org-estatio-capex-dom-documents-categorisation-invoice-IncomingDocAsInvoiceViewModel-notification textarea.form-control[disabled],
+.isis-org-estatio-capex-dom-documents-categorisation-order-IncomingDocAsOrderViewModel-notification textarea,
+.isis-org-estatio-capex-dom-documents-categorisation-order-IncomingDocAsOrderViewModel-notification textarea.form-control[readonly],
+.isis-org-estatio-capex-dom-documents-categorisation-order-IncomingDocAsOrderViewModel-notification textarea.form-control[disabled],
+.IncomingDocAsOrderViewModel-notification textarea,
+.IncomingDocAsOrderViewModel-notification textarea.form-control[readonly],
+.IncomingDocAsOrderViewModel-notification textarea.form-control[disabled],
+.IncomingDocAsInvoiceViewModel-notification textarea,
+.IncomingDocAsInvoiceViewModel-notification textarea.form-control[readonly],
+.IncomingDocAsInvoiceViewModel-notification textarea.form-control[disabled] {
+    color: black;
+	background-color: pink;
+	font-size: 1.5em;
+}
+
+.entityPage.org-estatio-capex-dom-order-OrderItem .entityCollection .invoiceItemLinks tr.reported,
+.entityPage.org-estatio-capex-dom-invoice-IncomingInvoice .entityCollection .org-estatio-dom-invoice-InvoiceItem tr.reported {
+    font-style: italic;
+}
+.entityPage.org-estatio-capex-dom-order-OrderItem .entityCollection .invoiceItemLinks tr.reversal,
+.entityPage.org-estatio-capex-dom-invoice-IncomingInvoice .entityCollection .org-estatio-dom-invoice-InvoiceItem tr.reversal {
+    font-weight: bold;
+}
+.entityPage.org-estatio-capex-dom-order-OrderItem .entityCollection .invoiceItemLinks tr.reported-reversal,
+.entityPage.org-estatio-capex-dom-invoice-IncomingInvoice .entityCollection .org-estatio-dom-invoice-InvoiceItem tr.reported-reversal {
+    font-style: italic;
+    font-weight: bold;
 }

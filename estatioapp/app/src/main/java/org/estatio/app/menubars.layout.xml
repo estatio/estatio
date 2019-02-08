@@ -1,0 +1,909 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mb3:menuBars xsi:schemaLocation="http://isis.apache.org/applib/layout/menubars/bootstrap3 http://isis.apache.org/applib/layout/menubars/bootstrap3/menubars.xsd http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/links http://isis.apache.org/applib/layout/links/links.xsd" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:lnk="http://isis.apache.org/applib/layout/links" xmlns:mb3="http://isis.apache.org/applib/layout/menubars/bootstrap3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <mb3:primary>
+        <mb3:menu>
+            <mb3:named>Assets</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.asset.PropertyMenu" id="findProperties">
+                    <cpt:named>Find Properties</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.asset.PropertyMenu" id="newProperty">
+                    <cpt:named>New Property</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.asset.PropertyMenu" id="allProperties">
+                    <cpt:named>All Properties</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.asset.UnitMenu" id="findUnits">
+                    <cpt:named>Find Units</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.asset.UnitMenu" id="allUnits">
+                    <cpt:named>All Units</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.assetregistration.FixedAssetRegistrationMenu" id="allRegistrations">
+                    <cpt:named>All Registrations</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
+        <mb3:menu>
+            <mb3:named>Parties</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.party.PartyMenu" id="findParties">
+                    <cpt:named>Find Parties</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.party.PartyMenu" id="allParties">
+                    <cpt:named>All Parties</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.party.OrganisationMenu" id="newOrganisation">
+                    <cpt:named>New Organisation</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.party.OrganisationMenu" id="allOrganisations">
+                    <cpt:named>All Organisations</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.party.PersonMenu" id="newPerson">
+                    <cpt:named>New Person</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.party.PersonMenu" id="findPerson">
+                    <cpt:named>Find Person</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.party.PersonMenu" id="allPersons">
+                    <cpt:named>All Persons</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.party.PartyRelationshipMenuAndContributions" id="newRelationship">
+                    <cpt:named>New Relationship</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.party.PartyRelationshipMenuAndContributions" id="newRelatedPerson">
+                    <cpt:named>New Related Person</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.party.PartyRelationshipMenuAndContributions" id="allRelationships">
+                    <cpt:named>All Relationships</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
+        <mb3:menu>
+            <mb3:named>Finance</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.financial.BankAccountMenu" id="newBankAccount">
+                    <cpt:named>New Bank Account</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.financial.BankAccountMenu" id="allBankAccounts">
+                    <cpt:named>All Bank Accounts</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.financial.FinancialAccountMenu" id="findAccountByReference">
+                    <cpt:named>Find Account By Reference</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.financial.FinancialAccountMenu" id="allAccounts">
+                    <cpt:named>All Accounts</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.bankmandate.BankMandateMenu" id="findBankMandates">
+                    <cpt:named>Find Bank Mandates</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.bankmandate.BankMandateMenu" id="allBankMandates">
+                    <cpt:named>All Bank Mandates</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.financial.FinancialAccountTransactionMenu" id="allTransactions">
+                    <cpt:named>All Transactions</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.guarantee.GuaranteeMenu" id="newGuarantee">
+                    <cpt:named>New Guarantee</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.guarantee.GuaranteeMenu" id="findGuarantees">
+                    <cpt:named>Find Guarantees</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.guarantee.GuaranteeMenu" id="allGuarantees">
+                    <cpt:named>All Guarantees</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
+        <mb3:menu>
+            <mb3:named>Leases</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.lease.LeaseMenu" id="newLease">
+                    <cpt:named>New Lease</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.lease.LeaseMenu" id="findLeases">
+                    <cpt:named>Find Leases</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.lease.LeaseMenu" id="findLeasesByBrand">
+                    <cpt:named>Find Leases By Brand</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.lease.LeaseMenu" id="findLeasesByTenantName">
+                    <cpt:named>Find Leases By Tenant Name</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.lease.LeaseMenu" id="verifyLeasesUntil">
+                    <cpt:named>Verify Leases Until</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.lease.LeaseMenu" id="findLeasesActiveOnDate">
+                    <cpt:named>Find Leases Active On Date</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.lease.LeaseMenu" id="findLeasesByExternalReference"/>
+                <mb3:serviceAction objectType="org.estatio.app.menus.lease.LeaseMenu" id="verifyAllLeases">
+                    <cpt:named>Verify All Leases</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.lease.LeaseMenu" id="allLeases">
+                    <cpt:named>All Leases</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.dom.lease.LeaseTermRepository" id="allLeaseTermsToBeApproved">
+                    <cpt:named>All Lease Terms To Be Approved</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.dom.lease.LeaseTermRepository" id="findTermsWithInvalidInterval">
+                    <cpt:named>Find Terms With Invalid Interval</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.dom.lease.LeaseTermRepository" id="findByLeaseItemAndSequence">
+                    <cpt:named>Find By Lease Item And Sequence</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.dom.lease.LeaseTermRepository" id="findByPropertyAndTypeAndStartDate">
+                    <cpt:named>Find By Property And Type And Start Date</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.dom.lease.LeaseTermRepository" id="findStartDatesByPropertyAndType">
+                    <cpt:named>Find Start Dates By Property And Type</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.dom.lease.LeaseTermRepository" id="newLeaseTerm">
+                    <cpt:named>New Lease Term</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.dom.lease.LeaseTermRepository" id="allLeaseTerms">
+                    <cpt:named>All Lease Terms</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.module.fastnet.app.FastnetImportMenu" id="applyFastnetDataImport"/>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.services.leaseexport.LeaseExportMenu" id="exportLeases">
+                    <cpt:named>Export Leases</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.module.fastnet.dom.ImportMenu" id="importFastNetDataSheet">
+                    <cpt:named>Import Fastnet Data Sheet</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.module.fastnet.app.FastnetImportMenu" id="applyFastnetDataImport">
+                    <cpt:named>Apply Fastnet Data Import</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.module.fastnet.app.FastnetImportMenu" id="fastnetImportLog">
+                    <cpt:named>Fastnet Import Log</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
+        <mb3:menu>
+            <mb3:named>Turnovers</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="TurnoverImportMenu" id="turnoverImportManager">
+                    <cpt:named>Turnover Import Manager</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
+        <mb3:menu>
+            <mb3:named>Invoices Out</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.invoice.InvoiceMenu" id="allInvoiceRuns">
+                    <cpt:named>All Invoice Runs</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.invoice.InvoiceMenu" id="newInvoiceForLease">
+                    <cpt:named>New Invoice For Lease</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.invoice.InvoiceMenu" id="findInvoices">
+                    <cpt:named>Find Invoices</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.invoice.InvoiceMenu" id="findInvoicesByInvoiceNumber">
+                    <cpt:named>Find Invoices By Invoice Number</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.invoice.InvoiceMenu" id="allNewInvoices">
+                    <cpt:named>All New Invoices</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.invoice.InvoiceMenu" id="allApprovedInvoices">
+                    <cpt:named>All Approved Invoices</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.invoice.InvoiceMenu" id="allRecentlyInvoiced">
+                    <cpt:named>All Recently Invoiced</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.invoice.InvoiceMenu" id="allInvoices">
+                    <cpt:named>All Invoices</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.invoice.InvoiceMenu" id="republish">
+                    <cpt:named>Sync to Coda again</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.invoice.InvoiceServiceMenu" id="calculateInvoicesForProperty">
+                    <cpt:named>Calculate Invoices For Property</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.invoice.InvoiceServiceMenu" id="calculateRetroInvoices">
+                    <cpt:named>Calculate Retro Invoices</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.invoice.InvoiceServiceMenu" id="calculate">
+                    <cpt:named>Calculate</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.invoice.InvoiceServiceMenu" id="calculateLegacy">
+                    <cpt:named>Calculate</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.services.invoice.InvoiceImportMenu" id="importInvoicesForLease">
+                    <cpt:named>Import Invoices For Lease</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
+        <mb3:menu>
+            <mb3:named>Projects</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.capex.dom.project.ProjectMenu" id="newProject">
+                    <cpt:named>New Project</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.capex.dom.project.ProjectMenu" id="newProjectItaly">
+                    <cpt:named>New Project</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.capex.dom.project.ProjectMenu" id="allProjects">
+                    <cpt:named>All Projects</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.capex.dom.project.ProjectMenu" id="findProject">
+                    <cpt:named>Find Project</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.capex.dom.project.ProjectMenu" id="importProjects">
+                    <cpt:named>Import Projects</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="orders.OrderInvoiceImportMenu" id="importOrdersAndInvoices">
+                    <cpt:named>Import Orders And Invoices</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="orders.OrderInvoiceImportMenu" id="importOrdersAndInvoicesTestSheet">
+                    <cpt:named>Import Orders And Invoices Test Sheet</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="orders.OrderInvoiceImportMenu" id="reportImportResults">
+                    <cpt:named>Report Import Results</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="orders.OrderInvoiceImportMenu" id="importSuppliers">
+                    <cpt:named>Import Suppliers</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
+        <mb3:menu>
+            <mb3:named>Service Charges</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.budget.BudgetMenu" id="uploadBudget">
+                    <cpt:named>Upload Budget</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.budget.BudgetMenu" id="findBudget">
+                    <cpt:named>Find Budget</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.budget.BudgetMenu" id="newBudget">
+                    <cpt:named>New Budget</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.budget.BudgetMenu" id="allBudgetCalculationResults">
+                    <cpt:named>All Budget Calculation Results</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.budget.BudgetMenu" id="allBudgets">
+                    <cpt:named>All Budgets</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
+        <mb3:menu>
+            <mb3:named>Invoices In</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="orders.OrderMenu" id="findOrder">
+                    <cpt:named>Find Order</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="orders.OrderMenu" id="findOrderByOrderNumber">
+                    <cpt:named>Find Order By Order Number</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="orders.OrderMenu" id="findOrdersByEntryDate">
+                    <cpt:named>Find Orders By Entry Date</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="orders.OrderMenu" id="findOrdersByOrderDate">
+                    <cpt:named>Find Orders By Order Date</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="orders.OrderMenu" id="findOrdersByCenter">
+                    <cpt:named>Find Orders By Center</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="orders.OrderMenu" id="findOrdersByCenterAndSupplier">
+                    <cpt:named>Find Orders By Center And Supplier</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="orders.OrderMenu" id="allOrders">
+                    <cpt:named>All Orders</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="orders.OrderMenu" id="createOrder">
+                    <cpt:named>Create Order</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="incomingInvoice.IncomingInvoiceMenu" id="findInvoice">
+                    <cpt:named>Find Invoice</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="incomingInvoice.IncomingInvoiceMenu" id="findInvoicesByDueDateBetween">
+                    <cpt:named>Find Invoices By Due Date Between</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="incomingInvoice.IncomingInvoiceMenu" id="findInvoicesByInvoiceDateBetween">
+                    <cpt:named>Find Invoices By Invoice Date Between</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="incomingInvoice.IncomingInvoiceMenu" id="findInvoicesByPropertyAndDateReceivedBetween">
+                    <cpt:named>Find Invoices By Property And Date Received Between</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="incomingInvoice.IncomingInvoiceMenu" id="findInvoicesPayableByBankTransferWithDifferentHistoricalPaymentMethods">
+                    <cpt:named>Find Invoices Payable By Bank Transfer With Different Historical Payment Methods</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="incomingInvoice.IncomingInvoiceMenu" id="allInvoices">
+                    <cpt:named>All Invoices</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="incomingInvoice.IncomingInvoiceManagerMenu" id="downloadInvoices">
+                    <cpt:named>Download Invoices</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="coda.CodaDocHeadMenu" id="lookupCodaDocument">
+                    <cpt:named>Lookup Coda Document</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="codaDoc.CodaDocAnalyzerMenu" id="analyzeInvalidCodaDocuments">
+                    <cpt:named>Analyze Invalid Coda Documents</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
+        <mb3:menu>
+            <mb3:named>Payments</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="payments.PaymentBatchMenu" id="preparePaymentBatchesFra">
+                    <cpt:named>Prepare Payment Batches (France)</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="payments.PaymentBatchMenu" id="findCurrentPaymentBatches">
+                    <cpt:named>Find Current Payment Batches</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="payments.PaymentBatchMenu" id="findRecentPaymentBatches">
+                    <cpt:named>Find Recent Payment Batches</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="payments.PaymentBatchMenu" id="allPaymentBatches">
+                    <cpt:named>All Payment Batches</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="payments.PayDirectDebitMenu" id="directDebitFraManager">
+                    <cpt:named>Direct Debit Manager (France)</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.capex.dom.coda.CodaMappingMenu" id="allCodaMappingsFra">
+                    <cpt:named>All Coda Mappings (France)</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="payments.export.InvoicesInMenu" id="downloadPaymentsFra">
+                    <cpt:named>Download Payments (France)</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="payments.PaymentBatchItaMenu" id="importPaymentBatch">
+                    <cpt:named>Import PaymentBatch (Italy)</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
+        <mb3:menu>
+            <mb3:named>Tasks &amp; Docs</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="incodeDocuments.DocumentMenu" id="findDocuments">
+                    <cpt:named>Find Documents</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="incodeDocuments.DocumentMenu" id="matchIncomingDocumentsByName">
+                    <cpt:named>Match Incoming Documents By Name</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="incodeDocuments.DocumentMenu" id="upload">
+                    <cpt:named>Upload</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="task.TaskMenu" id="myTasks">
+                    <cpt:named>My Tasks</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="task.TaskMenu" id="findTasksForPerson">
+                    <cpt:named>Find Tasks For Person</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="task.TaskMenu" id="findTasksForRole">
+                    <cpt:named>Find Tasks For Role</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="task.TaskMenu" id="findTasksUnassignedToPerson">
+                    <cpt:named>Find Tasks Unassigned To Person</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="task.TaskMenu" id="allTasks">
+                    <cpt:named>All Tasks</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
+        <mb3:menu unreferencedActions="true">
+            <mb3:named>Other</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.numerator.NumeratorMenu" id="allNumerators">
+                    <cpt:named>All Numerators</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.classification.ClassificationMenu" id="allClassifications">
+                    <cpt:named>All Classifications</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.services.indexmaint.IndexValuesMaintenanceMenu" id="downloadIndexValues">
+                    <cpt:named>Download Index Values</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.services.indexmaint.IndexValuesMaintenanceMenu" id="uploadIndexValues">
+                    <cpt:named>Upload Index Values</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.lease.LeaseTypeMenu" id="newLeaseType">
+                    <cpt:named>New Lease Type</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.lease.LeaseTypeMenu" id="allLeaseTypes">
+                    <cpt:named>All Lease Types</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.charge.ChargeGroupMenu" id="newChargeGroup">
+                    <cpt:named>New Charge Group</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.charge.ChargeGroupMenu" id="allChargeGroups">
+                    <cpt:named>All Charge Groups</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.index.IndexMenu" id="newIndex">
+                    <cpt:named>New Index</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.index.IndexMenu" id="allIndices">
+                    <cpt:named>All Indices</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.charge.ChargeMenu" id="newCharge">
+                    <cpt:named>New Charge</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.charge.ChargeMenu" id="findCharge">
+                    <cpt:named>Find Charge</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.charge.ChargeMenu" id="allCharges">
+                    <cpt:named>All Charges</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.charge.ChargeMenu" id="allCountryTenancies">
+                    <cpt:named>All Country Tenancies</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.charge.ChargeMenu" id="uploadCharges">
+                    <cpt:named>Upload Charges</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.currency.CurrencyMenu" id="newCurrency">
+                    <cpt:named>New Currency</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.currency.CurrencyMenu" id="allCurrencies">
+                    <cpt:named>All Currencies</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.geography.CountryMenu" id="newCountry">
+                    <cpt:named>New Country</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.geography.CountryMenu" id="allCountries">
+                    <cpt:named>All Countries</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.tax.TaxMenu" id="newTax">
+                    <cpt:named>New Tax</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.tax.TaxMenu" id="allTaxes">
+                    <cpt:named>All Taxes</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.tax.TaxRateMenu" id="allTaxRates">
+                    <cpt:named>All Tax Rates</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.brand.BrandMenu" id="newBrand">
+                    <cpt:named>New Brand</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.brand.BrandMenu" id="findBrand">
+                    <cpt:named>Find Brand</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.brand.BrandMenu" id="allBrands">
+                    <cpt:named>All Brands</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.brand.UnitSizeMenu" id="newUnitSize">
+                    <cpt:named>New Unit Size</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.brand.UnitSizeMenu" id="allUnitSizes">
+                    <cpt:named>All Unit Sizes</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="incodeDocuments.DocumentTypeMenu" id="newDocumentType">
+                    <cpt:named>New Document Type</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="incodeDocuments.DocumentTypeMenu" id="allDocumentTypes">
+                    <cpt:named>All Document Types</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.documents.RenderingStrategyMenu" id="newRenderingStrategy">
+                    <cpt:named>New Rendering Strategy</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.documents.RenderingStrategyMenu" id="allRenderingStrategies">
+                    <cpt:named>All Rendering Strategies</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.documents.DocumentTemplateMenu" id="newTextTemplate">
+                    <cpt:named>New Text Template</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.documents.DocumentTemplateMenu" id="newClobTemplate">
+                    <cpt:named>New Clob Template</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.documents.DocumentTemplateMenu" id="newBlobTemplate">
+                    <cpt:named>New Blob Template</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.documents.DocumentTemplateMenu" id="allDocumentTemplates">
+                    <cpt:named>All Document Templates</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.numerator.NumeratorForCollectionMenu" id="findCollectionNumberNumerator">
+                    <cpt:named>Find Collection Number Numerator</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.numerator.NumeratorForCollectionMenu" id="createCollectionNumberNumerator">
+                    <cpt:named>Create Collection Number Numerator</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.numerator.NumeratorForCollectionMenu" id="findInvoiceNumberNumerator">
+                    <cpt:named>Find Invoice Number Numerator</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.numerator.NumeratorForCollectionMenu" id="createInvoiceNumberNumerator">
+                    <cpt:named>Create Invoice Number Numerator</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.numerator.NumeratorForOrganisationMenu" id="findOrganisationReferenceNumerator">
+                    <cpt:named>Find Organisation Reference Numerator</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.numerator.NumeratorForOrganisationMenu" id="createOrganisationReferenceNumerator">
+                    <cpt:named>Create Organisation Reference Numerator</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.link.LinkMenu" id="allLinks">
+                    <cpt:named>All Links</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.link.LinkMenu" id="newLink">
+                    <cpt:named>New Link</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.docfragments.DocFragmentMenu" id="newDocFragment">
+                    <cpt:named>New Doc Fragment</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.docfragments.DocFragmentMenu" id="allDocFragments">
+                    <cpt:named>All Doc Fragments</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.dom.lease.LeaseTermRepository" id="findByPropertyAndType">
+                    <cpt:named>Find By Property And Type</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="orders.NumeratorMenu" id="createOrderNumberNumerator">
+                    <cpt:named>Create Order Number Numerator</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="coda.CostCentreMenu" id="allCostCentres">
+                    <cpt:named>All Coda (Element3) Cost Centres</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
+        <mb3:menu>
+            <mb3:named>Invoices</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.invoice.InvoiceServiceMenu" id="calculateInvoicesForPropertyLegacy">
+                    <cpt:named>Calculate Invoices For Property</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.invoice.InvoiceServiceMenu" id="calculateRetroInvoicesLegacy">
+                    <cpt:named>Calculate Retro Invoices</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
+    </mb3:primary>
+    <mb3:secondary>
+        <mb3:menu>
+            <mb3:named>Activity</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="isissessionlogger.SessionLoggingServiceMenu" id="activeSessions">
+                    <cpt:named>Active Sessions</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isissessionlogger.SessionLoggingServiceMenu" id="findSessions">
+                    <cpt:named>Find Sessions</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="isiscommand.CommandServiceMenu" id="activeCommands">
+                    <cpt:named>Active Commands</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isiscommand.CommandServiceMenu" id="findCommands">
+                    <cpt:named>Find Commands</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isiscommand.CommandServiceMenu" id="findCommandById">
+                    <cpt:named>Find Command By Id</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="isiscommand.CommandReplayOnMasterService" id="findCommandsOnMasterSince"/>
+                <mb3:serviceAction objectType="isiscommand.CommandReplayOnMasterService" id="downloadCommandsOnMasterSince"/>
+                <mb3:serviceAction objectType="isiscommand.CommandReplayOnMasterService" id="downloadCommandById"/>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="isiscommand.CommandReplayOnSlaveService" id="findReplayHwmOnSlave"/>
+                <mb3:serviceAction objectType="isiscommand.CommandReplayOnSlaveService" id="uploadCommandsToSlave"/>
+                <mb3:serviceAction objectType="commandreplay.ReplayCommandExecutionControllerUsingSettings" id="replayControl"/>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="isisaudit.AuditingServiceMenu" id="findAuditEntries">
+                    <cpt:named>Find Audit Entries</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.isisaddons.module.publishmq.dom.jdo.events.PublishingServiceMenu" id="findPublishedEventsByTransactionId">
+                    <cpt:named>Find Published Events By Transaction Id</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.isisaddons.module.publishmq.dom.jdo.events.PublishingServiceMenu" id="findPublishedEvents">
+                    <cpt:named>Find Published Events</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
+        <mb3:menu>
+            <mb3:named>Prototyping</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.fixturescripts.EstatioFixtureScripts" id="createRetroInvoicesForProperty">
+                    <cpt:named>Create Retro Invoices For Property</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.fixturescripts.EstatioFixtureScripts" id="createRetroInvoicesForLease">
+                    <cpt:named>Create Retro Invoices For Lease</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.fixture.security.EstatioSecurityModuleFixturesMenu" id="installFixturesAndReturnFirstRole">
+                    <cpt:named>Install Fixtures And Return First Role</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.fixture.security.EstatioSecurityModuleFixturesMenu" id="runFixtureScript">
+                    <cpt:named>Run Security Fixture Script</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="isisApplib.FixtureScriptsDefault" id="runFixtureScript">
+                    <cpt:named>Run Fixture Script</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isisApplib.FixtureScriptsDefault" id="runFixtureScriptWithAutoComplete">
+                    <cpt:named>Run Fixture Script</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isisApplib.FixtureScriptsDefault" id="recreateObjectsAndReturnFirst">
+                    <cpt:named>Recreate Objects And Return First</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="isisApplib.LayoutServiceMenu" id="downloadLayouts">
+                    <cpt:named>Download Object Layouts (ZIP)</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isisApplib.LayoutServiceMenu" id="downloadMenuBarsLayout">
+                    <cpt:named>Download Menu Bars Layout (XML)</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="isisApplib.MetaModelServicesMenu" id="downloadMetaModel">
+                    <cpt:named>Download Meta Model (CSV)</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="isisApplib.SwaggerServiceMenu" id="openSwaggerUi">
+                    <cpt:named>Open Swagger Ui</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isisApplib.SwaggerServiceMenu" id="openRestApi">
+                    <cpt:named>Open Rest Api</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isisApplib.SwaggerServiceMenu" id="downloadSwaggerSchemaDefinition">
+                    <cpt:named>Download Swagger Schema Definition</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="isisApplib.TranslationServicePoMenu" id="downloadTranslations">
+                    <cpt:named>Download Translations</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isisApplib.TranslationServicePoMenu" id="resetTranslationCache">
+                    <cpt:named>Clear translation cache</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isisApplib.TranslationServicePoMenu" id="switchToReadingTranslations">
+                    <cpt:named>Switch To Reading Translations</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isisApplib.TranslationServicePoMenu" id="switchToWritingTranslations">
+                    <cpt:named>Switch To Writing Translations</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="isisApplib.HsqlDbManagerMenu" id="hsqlDbManager">
+                    <cpt:named>HSQL DB Manager</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.services.metamodel.BadCommandTargets" id="findBadCommandTargets">
+                    <cpt:named>Find Bad Command Targets</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="prototyping.StateTransitionServiceMenu" id="fixUpTransitionsForAllIncomingInvoices">
+                    <cpt:named>Fix Up Transitions For All Incoming Invoices</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
+        <mb3:menu>
+            <mb3:named>Security</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="isissecurity.ApplicationUserMenu" id="findUsers">
+                    <cpt:named>Find Users</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isissecurity.ApplicationUserMenu" id="newDelegateUser">
+                    <cpt:named>New Delegate User</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isissecurity.ApplicationUserMenu" id="newLocalUser">
+                    <cpt:named>New Local User</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isissecurity.ApplicationUserMenu" id="allUsers">
+                    <cpt:named>All Users</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="isissecurity.ApplicationRoleMenu" id="findRoles">
+                    <cpt:named>Find Roles</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isissecurity.ApplicationRoleMenu" id="newRole">
+                    <cpt:named>New Role</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isissecurity.ApplicationRoleMenu" id="allRoles">
+                    <cpt:named>All Roles</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="isissecurity.ApplicationTenancyMenu" id="findTenancies">
+                    <cpt:named>Find Tenancies</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isissecurity.ApplicationTenancyMenu" id="newTenancy">
+                    <cpt:named>New Tenancy</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isissecurity.ApplicationTenancyMenu" id="allTenancies">
+                    <cpt:named>All Tenancies</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="isissecurity.ApplicationFeatureViewModels" id="allPackages">
+                    <cpt:named>All Packages</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isissecurity.ApplicationFeatureViewModels" id="allClasses">
+                    <cpt:named>All Classes</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isissecurity.ApplicationFeatureViewModels" id="allActions">
+                    <cpt:named>All Actions</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isissecurity.ApplicationFeatureViewModels" id="allProperties">
+                    <cpt:named>All Properties</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isissecurity.ApplicationFeatureViewModels" id="allCollections">
+                    <cpt:named>All Collections</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="isissecurity.ApplicationPermissionMenu" id="findOrphanedPermissions">
+                    <cpt:named>Find Orphaned Permissions</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="isissecurity.ApplicationPermissionMenu" id="allPermissions">
+                    <cpt:named>All Permissions</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
+    </mb3:secondary>
+    <mb3:tertiary>
+        <mb3:menu>
+            <mb3:named>Administration Menu</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.app.menus.admin.AdministrationMenu" id="openAdminDashboard">
+                    <cpt:named>Open Admin Dashboard</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.module.ecpfix.app.AdministrationMenu" id="fixComms">
+                    <cpt:named>Fix Comms</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.module.ecpfix.app.AdministrationMenu" id="fixPartyRoles">
+                    <cpt:named>Fix Party Roles</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.module.ecpfix.app.AdministrationMenu" id="createPrereqsItalianImport">
+                    <cpt:named>Prereqs Italian Import</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.module.ecpfix.app.AdministrationMenu" id="importElement3CostCentres"/>
+                <mb3:serviceAction objectType="org.estatio.module.ecpfix.app.AdministrationMenu" id="matchItaIncomingDocsToOrder">
+                    <cpt:named>Match Ita IncomingDocs To Order</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
+        <mb3:menu>
+            <mb3:named>Impersonate Menu</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="userimpersonate.ImpersonateMenu" id="impersonate">
+                    <cpt:named>Impersonate</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="userimpersonate.ImpersonateMenu" id="stopImpersonating">
+                    <cpt:named>Stop Impersonating</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
+        <mb3:menu>
+            <mb3:named>Security</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="isissecurity.MeService" id="me">
+                    <cpt:named>Me</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
+        <mb3:menu>
+            <mb3:named>Configuration Service Menu</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="isisApplib.ConfigurationServiceMenu" id="configuration">
+                    <cpt:named>Configuration</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
+        <mb3:menu>
+            <mb3:named>Feature Toggle Console Accessor</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="isistogglz.FeatureToggleConsoleAccessor" id="featureToggles">
+                    <cpt:named>Feature Toggles</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
+        <mb3:menu>
+            <mb3:named>Estatio Import Service</mb3:named>
+            <mb3:section>
+                <mb3:serviceAction objectType="org.estatio.module.ecpimport.dom.EstatioImportService" id="importJdbc">
+                    <cpt:named>Import Jdbc</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.module.ecpimport.dom.EstatioImportService" id="importSpreadsheet">
+                    <cpt:named>Import Spreadsheet</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.module.ecpimport.dom.woluwe.WoluweImportMenu" id="importWoluweData">
+                    <cpt:named>Import WoluweData</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.module.ecpfix.app.AdministrationMenu" id="createPrereqsItalianImport">
+                    <cpt:named>Create Prereqs Italian Import</cpt:named>
+                </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.module.ecpfix.app.AdministrationMenu" id="matchItaIncomingDocsToOrder">
+                    <cpt:named>Match Italian Incoming Documents to Order</cpt:named>
+                </mb3:serviceAction>
+            </mb3:section>
+        </mb3:menu>
+    </mb3:tertiary>
+</mb3:menuBars>
