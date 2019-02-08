@@ -109,7 +109,7 @@ public class PaymentBatchFraManager {
 
 
     public List<PaymentBatch> getNewBatches() {
-        return paymentBatchRepository.findNewBatches();
+        return paymentBatchRepository.findNewBatches().stream().filter(pb->!pb.getAtPath().startsWith("/ITA")).collect(Collectors.toList());
     }
 
 
