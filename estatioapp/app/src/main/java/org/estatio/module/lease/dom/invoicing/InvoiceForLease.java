@@ -635,10 +635,24 @@ public class InvoiceForLease
     }
     //endregion
 
-    @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
-    public String getComment() {
-        return attributeValueFor(InvoiceAttributeName.INVOICE_COMMENT);
+    //region > _comment (derived property)
+    @Mixin(method="prop")
+    public static class _comment {
+        private final InvoiceForLease invoiceForLease;
+        public _comment(final InvoiceForLease invoiceForLease) {
+            this.invoiceForLease = invoiceForLease;
+        }
+        @Action(semantics = SemanticsOf.SAFE)
+        @ActionLayout(contributed=Contributed.AS_ASSOCIATION)
+        @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
+        public String prop() {
+            return invoiceForLease.attributeValueFor(InvoiceAttributeName.INVOICE_COMMENT);
+        }
+        public boolean hideProp() {
+            return false;
+        }
     }
+    //endregion
 
     /**
      * It's the responsibility of the invoice to be able to determine which seller's bank account is to be paid into by the buyer.
