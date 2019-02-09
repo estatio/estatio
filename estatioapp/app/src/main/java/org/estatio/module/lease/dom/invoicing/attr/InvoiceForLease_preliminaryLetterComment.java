@@ -1,36 +1,15 @@
 package org.estatio.module.lease.dom.invoicing.attr;
 
-import javax.inject.Inject;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.attr.InvoiceAttributeName;
-import org.estatio.module.invoice.dom.attr.InvoiceAttributeRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 
 @Mixin(method="prop")
-public class InvoiceForLease_preliminaryLetterComment {
-    private final InvoiceForLease invoiceForLease;
+public class InvoiceForLease_preliminaryLetterComment
+        extends InvoiceForLease_attributeValueAbstract {
+
     public InvoiceForLease_preliminaryLetterComment(final InvoiceForLease invoiceForLease) {
-        this.invoiceForLease = invoiceForLease;
+        super(invoiceForLease, InvoiceAttributeName.PRELIMINARY_LETTER_COMMENT);
     }
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed= Contributed.AS_ASSOCIATION)
-    @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
-    public String prop() {
-        return invoiceAttributeRepository.findValueByInvoiceAndName(InvoiceAttributeName.PRELIMINARY_LETTER_COMMENT, invoiceForLease);
-    }
-    public boolean hideProp() {
-        return false;
-    }
-
-    @Inject protected
-    InvoiceAttributeRepository invoiceAttributeRepository;
-
 }
