@@ -298,7 +298,7 @@ public class Invoice_Test {
                 return attributeValue;
             }
 
-            @Override protected boolean attributeOverriddenFor(final InvoiceAttributeName invoiceAttributeName) {
+            @Override public boolean attributeOverriddenFor(final InvoiceAttributeName invoiceAttributeName) {
                 return attributeOverridden;
             }
 
