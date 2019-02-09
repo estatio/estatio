@@ -31,10 +31,12 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.module.base.platform.docfragment.FragmentRenderService;
+import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.attr.InvoiceAttribute;
 import org.estatio.module.invoice.dom.attr.InvoiceAttributeName;
 import org.estatio.module.invoice.dom.attr.InvoiceAttributeRepository;
-import org.estatio.module.invoice.dom.InvoiceStatus;
+import org.estatio.module.lease.dom.invoicing.attr.InvoiceForLease_description;
+import org.estatio.module.lease.dom.invoicing.attr.InvoiceForLease_preliminaryLetterDescription;
 import org.estatio.module.lease.dom.invoicing.ssrs.InvoiceAttributesVM;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -86,7 +88,7 @@ public class Invoice_Test {
             this.mixin.act("Overridden PL desc");
 
             // then
-            assertThat(new InvoiceForLease._preliminaryLetterDescription(invoice).prop()).isEqualTo("Overridden PL desc");
+            assertThat(new InvoiceForLease_preliminaryLetterDescription(invoice).prop()).isEqualTo("Overridden PL desc");
         }
 
         private InvoiceAttribute invoiceAttributeWith(final String value) {
@@ -131,7 +133,7 @@ public class Invoice_Test {
         public void can_reset() throws Exception {
 
             // then
-            assertThat(new InvoiceForLease._preliminaryLetterDescription(invoice).prop()).isEqualTo("Approved PL desc");
+            assertThat(new InvoiceForLease_preliminaryLetterDescription(invoice).prop()).isEqualTo("Approved PL desc");
             assertThat(mixin.hideAct()).isFalse();
             assertThat(mixin.disableAct()).isNull();
 
@@ -207,7 +209,7 @@ public class Invoice_Test {
             mixin.act("Overridden PL desc");
 
             // then
-            assertThat(new InvoiceForLease._description(invoice).prop()).isEqualTo("Overridden PL desc");
+            assertThat(new InvoiceForLease_description(invoice).prop()).isEqualTo("Overridden PL desc");
         }
 
         @Test
@@ -257,7 +259,7 @@ public class Invoice_Test {
             mixin.act();
 
             // then
-            assertThat(new InvoiceForLease._description(invoice).prop()).isEqualTo("Some PL desc");
+            assertThat(new InvoiceForLease_description(invoice).prop()).isEqualTo("Some PL desc");
             assertThat(mixin.hideAct()).isFalse();
         }
 
@@ -292,7 +294,7 @@ public class Invoice_Test {
             {
                 this.invoiceAttributeRepository = mockInvoiceAttributeRepository;
             }
-            @Override protected String attributeValueFor(final InvoiceAttributeName invoiceAttributeName) {
+            @Override public String attributeValueFor(final InvoiceAttributeName invoiceAttributeName) {
                 return attributeValue;
             }
 
