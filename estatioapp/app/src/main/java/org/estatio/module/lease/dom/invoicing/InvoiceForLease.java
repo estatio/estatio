@@ -69,10 +69,10 @@ import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.invoice.dom.Invoice;
-import org.estatio.module.invoice.dom.attr.InvoiceAttributeName;
 import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;
+import org.estatio.module.invoice.dom.attr.InvoiceAttributeName;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.invoicing.ssrs.InvoiceAttributesVM;
 import org.estatio.module.lease.dom.invoicing.ssrs.InvoiceItemAttributesVM;
@@ -596,10 +596,26 @@ public class InvoiceForLease
         return attributeValueFor(InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION);
     }
 
-    @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
-    public String getPreliminaryLetterComment() {
-        return attributeValueFor(InvoiceAttributeName.PRELIMINARY_LETTER_COMMENT);
+    //region > _preliminaryLetterComment (derived property)
+    @Mixin(method="prop")
+    public static class _preliminaryLetterComment {
+        private final InvoiceForLease invoiceForLease;
+        public _preliminaryLetterComment(final InvoiceForLease invoiceForLease) {
+            this.invoiceForLease = invoiceForLease;
+        }
+        @Action(semantics = SemanticsOf.SAFE)
+        @ActionLayout(contributed=Contributed.AS_ASSOCIATION)
+        @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
+        public String prop() {
+            invoiceForLease.attributeValueFor(InvoiceAttributeName.PRELIMINARY_LETTER_COMMENT);
+            return null;
+        }
+        public boolean hideProp() {
+            return false;
+        }
     }
+    //endregion
+
 
     @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
     public String getDescription() {
