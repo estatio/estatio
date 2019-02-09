@@ -66,13 +66,32 @@ public class RendererModelFactoryForOrder extends RendererModelFactoryAbstract<O
                 ))
                 .orderModel(OrderModel.of(order))
                 .propertyModel(PropertyModel.of(order.getProperty()))
-                .supplierModel(SupplierModel.of(order.getSeller()))
+                .supplierModel(SupplierModel.of(order.getSeller(), addressOf(order.getSeller())))
                 .orderItemModels(
                         Lists.newArrayList(order.getItems()).stream()
                                 .map(OrderItemModel::of)
                                 .collect(Collectors.toList()))
                 .build();
     }
+
+    // TODO: need to clean this up...
+    private String addressOf(final Party party) {
+        if(party == null) {
+            return "???";
+        }
+        final SortedSet<CommunicationChannel> channels =
+                communicationChannelRepository.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS);
+
+        return channels.stream()
+                .filter(x -> x.getPurpose() == CommunicationChannelPurposeType.INVOICING)
+                .findFirst()
+                .map(CommunicationChannel::getDescription)
+                .orElse("???");
+    }
+
+    @Getter(AccessLevel.PROTECTED)
+    @Inject
+    CommunicationChannelRepository communicationChannelRepository;
 
     @Getter(AccessLevel.PROTECTED)
     @Inject
@@ -87,27 +106,20 @@ public class RendererModelFactoryForOrder extends RendererModelFactoryAbstract<O
 
         @Getter(AccessLevel.PACKAGE)
         private final LocalDate currentDate;
-        @Getter(AccessLevel.PACKAGE)
-        private final String atPath;
-        @Getter(AccessLevel.PACKAGE)
-        private final String subject;
-        @Getter(AccessLevel.PACKAGE)
-        private final String introduction;
-        @Getter(AccessLevel.PACKAGE)
-        private final String orderDescription;
-        @Getter(AccessLevel.PACKAGE)
-        private final String totalWorkCost;
-        @Getter(AccessLevel.PACKAGE)
-        private final String workSchedule;
-        @Getter(AccessLevel.PACKAGE)
-        private final String priceAndPayments;
-        @Getter(AccessLevel.PACKAGE)
-        private final String signature;
 
         public String getCurrentDateLocalized() {
             Locale locale = Util.deriveLocale(atPath);
             return currentDate.toString("d MMMMM yyyy", locale);
         }
+
+        private final String atPath;
+        private final String subject;
+        private final String introduction;
+        private final String orderDescription;
+        private final String totalWorkCost;
+        private final String workSchedule;
+        private final String priceAndPayments;
+        private final String signature;
     }
 
     @Data(staticConstructor = "of")
@@ -176,20 +188,8 @@ public class RendererModelFactoryForOrder extends RendererModelFactoryAbstract<O
             return party != null ? party.getReference() : "???";
         }
 
-        // TODO: need to clean this up...
-        public String getAddress() {
-            final SortedSet<CommunicationChannel> channels =
-                    communicationChannelRepository.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS);
+        private final String address;
 
-            return channels.stream()
-                    .filter(x -> x.getPurpose() == CommunicationChannelPurposeType.INVOICING)
-                    .findFirst()
-                    .map(CommunicationChannel::getDescription)
-                    .orElse("???");
-        }
-
-        @Inject
-        CommunicationChannelRepository communicationChannelRepository;
     }
 
     @Data

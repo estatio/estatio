@@ -40,6 +40,7 @@ import org.estatio.module.order.dom.attr.act.Order_changeIntroduction;
 import org.estatio.module.order.dom.attr.act.Order_changeOrderDescription;
 import org.estatio.module.order.dom.attr.act.Order_changePriceAndPayments;
 import org.estatio.module.order.dom.attr.act.Order_changeSignature;
+import org.estatio.module.order.dom.attr.act.Order_changeSubject;
 import org.estatio.module.order.dom.attr.act.Order_changeTotalWorkCost;
 import org.estatio.module.order.dom.attr.act.Order_changeWorkSchedule;
 import org.estatio.module.party.dom.Organisation;
@@ -225,6 +226,7 @@ public class OrderRepository {
         repositoryService.persistAndFlush(order);
 
         if(atPath.startsWith("/ITA")) {
+           factoryService.mixin(Order_changeSubject.class, order).act("XXX");
            factoryService.mixin(Order_changeIntroduction.class, order).act("Con la presente e in riferimento alla Vostra nuova offerta del DD MMM YYYY, Vi confermiamo l’ordine come di seguito precisato.");
            factoryService.mixin(Order_changeOrderDescription.class, order).act("Le prestazioni in oggetto si riferiscono alle seguenti attività:");
            factoryService.mixin(Order_changeTotalWorkCost.class, order).act("€ X.XXX,00 + IVA");

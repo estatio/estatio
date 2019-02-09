@@ -213,7 +213,7 @@
                                                 <cpt:named>Change</cpt:named>
                                             </cpt:action>
                                         </cpt:property>
-                                        <cpt:property id="priceAndPayment" hidden="ALL_TABLES">
+                                        <cpt:property id="priceAndPayments" hidden="ALL_TABLES">
                                             <cpt:action id="changePriceAndPayments" promptStyle="INLINE_AS_IF_EDIT">
                                                 <cpt:named>Change</cpt:named>
                                             </cpt:action>
