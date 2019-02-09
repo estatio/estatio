@@ -32,13 +32,13 @@ import lombok.Setter;
                 name = "findByOrder", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.order.dom.attr.OrderAttribute "
-                        + "WHERE order == :order"),
+                        + "WHERE ordr == :order"),
         @Query(
                 name = "findByOrderAndName", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.order.dom.attr.OrderAttribute "
-                        + "WHERE order == :order "
-                        + "   && name  == :name")
+                        + "WHERE ordr == :order "
+                        + "   && name == :name")
 })
 @DomainObject(
         objectType = "org.estatio.module.order.dom.attr.OrderAttribute"
@@ -50,13 +50,13 @@ public class OrderAttribute extends UdoDomainObject2<OrderAttribute> {
     }
 
     @Override public ApplicationTenancy getApplicationTenancy() {
-        return order.getApplicationTenancy();
+        return ordr.getApplicationTenancy();
     }
 
     @Column(name = "orderId", allowsNull = "false")
     @Getter @Setter
     @Property(hidden = Where.PARENTED_TABLES)
-    private Order order;
+    private Order ordr;
 
     @Column(allowsNull = "false")
     @Getter @Setter
