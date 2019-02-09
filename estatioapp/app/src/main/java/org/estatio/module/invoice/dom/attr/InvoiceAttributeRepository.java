@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.invoice.dom;
+package org.estatio.module.invoice.dom.attr;
 
 import java.util.List;
 
@@ -25,6 +25,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.invoice.dom.Invoice;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = InvoiceAttribute.class)
 public class InvoiceAttributeRepository extends UdoDomainRepositoryAndFactory<InvoiceAttribute> {
@@ -46,6 +47,18 @@ public class InvoiceAttributeRepository extends UdoDomainRepositoryAndFactory<In
             final InvoiceAttributeName name) {
         return uniqueMatch("findByInvoiceAndName",
                 "invoice", invoice, "name", name);
+    }
+
+    @Programmatic
+    public String findValueByInvoiceAndName(final InvoiceAttributeName invoiceAttributeName, final Invoice invoice) {
+        final InvoiceAttribute invoiceAttribute = findByInvoiceAndName(invoice, invoiceAttributeName);
+        return invoiceAttribute == null ? null : invoiceAttribute.getValue();
+    }
+
+    @Programmatic
+    public boolean findIsOverriddenByInvoiceAndName(final InvoiceAttributeName invoiceAttributeName, final Invoice invoice) {
+        final InvoiceAttribute invoiceAttribute = findByInvoiceAndName(invoice, invoiceAttributeName);
+        return invoiceAttribute != null && invoiceAttribute.isOverridden();
     }
 
     @Programmatic

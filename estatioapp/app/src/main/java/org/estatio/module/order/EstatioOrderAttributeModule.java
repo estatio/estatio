@@ -43,7 +43,7 @@ import org.estatio.module.event.EstatioEventModule;
 import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.invoice.EstatioInvoiceModule;
 import org.estatio.module.invoice.dom.Invoice;
-import org.estatio.module.invoice.dom.InvoiceAttribute;
+import org.estatio.module.invoice.dom.attr.InvoiceAttribute;
 import org.estatio.module.invoice.dom.paperclips.PaperclipForInvoice;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;

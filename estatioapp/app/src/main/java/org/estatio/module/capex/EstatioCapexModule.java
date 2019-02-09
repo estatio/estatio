@@ -38,7 +38,7 @@ import org.estatio.module.capex.dom.project.ProjectRole;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.invoice.EstatioInvoiceModule;
 import org.estatio.module.invoice.dom.Invoice;
-import org.estatio.module.invoice.dom.InvoiceAttribute;
+import org.estatio.module.invoice.dom.attr.InvoiceAttribute;
 import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.invoice.dom.paperclips.PaperclipForInvoice;
 

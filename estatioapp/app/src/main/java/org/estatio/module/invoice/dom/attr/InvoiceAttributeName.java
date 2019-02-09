@@ -1,4 +1,4 @@
-package org.estatio.module.invoice.dom;
+package org.estatio.module.invoice.dom.attr;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

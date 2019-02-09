@@ -79,6 +79,9 @@ import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPathPersiste
 import org.estatio.module.base.platform.docfragment.FragmentRenderService;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.currency.dom.Currency;
+import org.estatio.module.invoice.dom.attr.InvoiceAttribute;
+import org.estatio.module.invoice.dom.attr.InvoiceAttributeName;
+import org.estatio.module.invoice.dom.attr.InvoiceAttributeRepository;
 import org.estatio.module.party.dom.Party;
 
 import lombok.AllArgsConstructor;
@@ -144,13 +147,11 @@ public abstract class Invoice<T extends Invoice<T>>
         implements WithApplicationTenancyAny, WithApplicationTenancyPathPersisted {
 
     protected String attributeValueFor(final InvoiceAttributeName invoiceAttributeName) {
-        final InvoiceAttribute invoiceAttribute = invoiceAttributeRepository.findByInvoiceAndName(this, invoiceAttributeName);
-        return invoiceAttribute == null ? null : invoiceAttribute.getValue();
+        return invoiceAttributeRepository.findValueByInvoiceAndName(invoiceAttributeName, this);
     }
 
     protected boolean attributeOverriddenFor(final InvoiceAttributeName invoiceAttributeName) {
-        final InvoiceAttribute invoiceAttribute = invoiceAttributeRepository.findByInvoiceAndName(this, invoiceAttributeName);
-        return invoiceAttribute == null ? false : invoiceAttribute.isOverridden();
+        return invoiceAttributeRepository.findIsOverriddenByInvoiceAndName(invoiceAttributeName, this);
     }
 
     public static class UpdatingEvent extends ObjectUpdatingEvent<Invoice> {

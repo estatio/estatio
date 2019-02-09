@@ -1,4 +1,4 @@
-package org.estatio.module.invoice.dom;
+package org.estatio.module.invoice.dom.attr;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
@@ -19,6 +19,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.types.NotesType;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
+import org.estatio.module.invoice.dom.Invoice;
 
 import lombok.Getter;
 import lombok.Setter;
