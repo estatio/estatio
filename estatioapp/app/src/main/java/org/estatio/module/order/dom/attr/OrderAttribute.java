@@ -66,8 +66,8 @@ public class OrderAttribute extends UdoDomainObject2<OrderAttribute> {
     @Getter @Setter
     private String value;
 
-    @Getter @Setter
-    private boolean overridden;
+//    @Getter @Setter
+//    private boolean overridden;
 
 
 
