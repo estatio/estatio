@@ -35,12 +35,12 @@ import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.attr.InvoiceAttribute;
 import org.estatio.module.invoice.dom.attr.InvoiceAttributeName;
 import org.estatio.module.invoice.dom.attr.InvoiceAttributeRepository;
-import org.estatio.module.lease.dom.invoicing.attr.InvoiceForLease_description;
-import org.estatio.module.lease.dom.invoicing.attr.InvoiceForLease_overrideInvoiceDescription;
-import org.estatio.module.lease.dom.invoicing.attr.InvoiceForLease_overridePreliminaryLetterDescription;
-import org.estatio.module.lease.dom.invoicing.attr.InvoiceForLease_preliminaryLetterDescription;
-import org.estatio.module.lease.dom.invoicing.attr.InvoiceForLease_resetInvoiceDescription;
-import org.estatio.module.lease.dom.invoicing.attr.InvoiceForLease_resetPreliminaryLetterDescription;
+import org.estatio.module.lease.dom.invoicing.attr.prop.InvoiceForLease_description;
+import org.estatio.module.lease.dom.invoicing.attr.act.InvoiceForLease_overrideInvoiceDescription;
+import org.estatio.module.lease.dom.invoicing.attr.act.InvoiceForLease_overridePreliminaryLetterDescription;
+import org.estatio.module.lease.dom.invoicing.attr.prop.InvoiceForLease_preliminaryLetterDescription;
+import org.estatio.module.lease.dom.invoicing.attr.act.InvoiceForLease_resetInvoiceDescription;
+import org.estatio.module.lease.dom.invoicing.attr.act.InvoiceForLease_resetPreliminaryLetterDescription;
 import org.estatio.module.lease.dom.invoicing.ssrs.InvoiceAttributesVM;
 
 import static org.assertj.core.api.Assertions.assertThat;

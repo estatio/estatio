@@ -1,4 +1,4 @@
-package org.estatio.module.lease.dom.invoicing.attr;
+package org.estatio.module.lease.dom.invoicing.attr.prop;
 
 import javax.inject.Inject;
 
