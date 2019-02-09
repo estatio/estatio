@@ -207,7 +207,7 @@ public class Invoice_Test {
             mixin.act("Overridden PL desc");
 
             // then
-            assertThat(invoice.getDescription()).isEqualTo("Overridden PL desc");
+            assertThat(new InvoiceForLease._description(invoice).prop()).isEqualTo("Overridden PL desc");
         }
 
         @Test
@@ -257,7 +257,7 @@ public class Invoice_Test {
             mixin.act();
 
             // then
-            assertThat(invoice.getDescription()).isEqualTo("Some PL desc");
+            assertThat(new InvoiceForLease._description(invoice).prop()).isEqualTo("Some PL desc");
             assertThat(mixin.hideAct()).isFalse();
         }
 

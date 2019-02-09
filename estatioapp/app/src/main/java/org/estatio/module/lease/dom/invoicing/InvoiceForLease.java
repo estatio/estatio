@@ -616,11 +616,24 @@ public class InvoiceForLease
     }
     //endregion
 
-
-    @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
-    public String getDescription() {
-        return attributeValueFor(InvoiceAttributeName.INVOICE_DESCRIPTION);
+    //region > _description (derived property)
+    @Mixin(method="prop")
+    public static class _description {
+        private final InvoiceForLease invoiceForLease;
+        public _description(final InvoiceForLease invoiceForLease) {
+            this.invoiceForLease = invoiceForLease;
+        }
+        @Action(semantics = SemanticsOf.SAFE)
+        @ActionLayout(contributed=Contributed.AS_ASSOCIATION)
+        @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
+        public String prop() {
+            return invoiceForLease.attributeValueFor(InvoiceAttributeName.INVOICE_DESCRIPTION);
+        }
+        public boolean hideProp() {
+            return false;
+        }
     }
+    //endregion
 
     @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
     public String getComment() {
