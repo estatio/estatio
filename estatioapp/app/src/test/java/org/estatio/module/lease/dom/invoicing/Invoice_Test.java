@@ -36,7 +36,11 @@ import org.estatio.module.invoice.dom.attr.InvoiceAttribute;
 import org.estatio.module.invoice.dom.attr.InvoiceAttributeName;
 import org.estatio.module.invoice.dom.attr.InvoiceAttributeRepository;
 import org.estatio.module.lease.dom.invoicing.attr.InvoiceForLease_description;
+import org.estatio.module.lease.dom.invoicing.attr.InvoiceForLease_overrideInvoiceDescription;
+import org.estatio.module.lease.dom.invoicing.attr.InvoiceForLease_overridePreliminaryLetterDescription;
 import org.estatio.module.lease.dom.invoicing.attr.InvoiceForLease_preliminaryLetterDescription;
+import org.estatio.module.lease.dom.invoicing.attr.InvoiceForLease_resetInvoiceDescription;
+import org.estatio.module.lease.dom.invoicing.attr.InvoiceForLease_resetPreliminaryLetterDescription;
 import org.estatio.module.lease.dom.invoicing.ssrs.InvoiceAttributesVM;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -56,12 +60,12 @@ public class Invoice_Test {
 
     public static class OverridePreliminaryLetterDescription_Test extends Invoice_Test {
 
-        InvoiceForLease._overridePreliminaryLetterDescription mixin;
+        InvoiceForLease_overridePreliminaryLetterDescription mixin;
 
         @Before
         public void setUp() throws Exception {
             invoice = getInvoiceForLease(InvoiceStatus.APPROVED, "Some PL desc", false, mockInvoiceAttributeRepository);
-            mixin = new InvoiceForLease._overridePreliminaryLetterDescription(invoice);
+            mixin = new InvoiceForLease_overridePreliminaryLetterDescription(invoice);
 
         }
 
@@ -112,7 +116,7 @@ public class Invoice_Test {
 
     public static class UnoverridePreliminaryLetterDescription_Test extends Invoice_Test {
 
-        InvoiceForLease._resetPreliminaryLetterDescription mixin;
+        InvoiceForLease_resetPreliminaryLetterDescription mixin;
 
         @Before
         public void setUp() throws Exception {
@@ -121,7 +125,7 @@ public class Invoice_Test {
             invoice = getInvoiceForLease(InvoiceStatus.APPROVED, "Approved PL desc", true,
                     mockInvoiceAttributeRepository);
 
-            mixin = new InvoiceForLease._resetPreliminaryLetterDescription(invoice) {
+            mixin = new InvoiceForLease_resetPreliminaryLetterDescription(invoice) {
                 {
                     this.fragmentRenderService = mockFragmentRenderService;
                 }
@@ -186,7 +190,7 @@ public class Invoice_Test {
 
     public static class OverrideDescription_Test extends Invoice_Test {
 
-        InvoiceForLease._overrideInvoiceDescription mixin;
+        InvoiceForLease_overrideInvoiceDescription mixin;
 
         @Before
         public void setUp() throws Exception {
@@ -194,7 +198,7 @@ public class Invoice_Test {
             // given
             invoice = getInvoiceForLease(InvoiceStatus.APPROVED, "Some PL desc", false, mockInvoiceAttributeRepository);
 
-            mixin = new InvoiceForLease._overrideInvoiceDescription(invoice);
+            mixin = new InvoiceForLease_overrideInvoiceDescription(invoice);
         }
 
         @Test
@@ -225,7 +229,7 @@ public class Invoice_Test {
 
     public static class UnoverrideDescription_Test extends Invoice_Test {
 
-        InvoiceForLease._resetInvoiceDescription mixin;
+        InvoiceForLease_resetInvoiceDescription mixin;
 
         @Before
         public void setUp() throws Exception {
@@ -234,7 +238,7 @@ public class Invoice_Test {
                     mockInvoiceAttributeRepository);
             invoice.setStatus(InvoiceStatus.APPROVED);
 
-            mixin = new InvoiceForLease._resetInvoiceDescription(invoice) {
+            mixin = new InvoiceForLease_resetInvoiceDescription(invoice) {
                 {
                     this.fragmentRenderService = mockFragmentRenderService;
                 }

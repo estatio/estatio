@@ -73,8 +73,6 @@ import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.attr.InvoiceAttributeName;
-import org.estatio.module.invoice.dom.attr.Invoice_overrideAttributeAbstract;
-import org.estatio.module.invoice.dom.attr.Invoice_resetAttributeAbstract;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.invoicing.ssrs.InvoiceAttributesVM;
 import org.estatio.module.lease.dom.invoicing.ssrs.InvoiceItemAttributesVM;
@@ -630,77 +628,6 @@ public class InvoiceForLease
             if(value != null) return value;
         }
         return null;
-    }
-
-    /**
-     * TODO: inline this mixin
-     */
-    @Mixin(method = "act")
-    public static class _overridePreliminaryLetterDescription extends Invoice_overrideAttributeAbstract {
-        public _overridePreliminaryLetterDescription(final InvoiceForLease invoice) {
-            super(invoice, InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION);
-        }
-    }
-
-    /**
-     * TODO: inline this mixin
-     */
-    @Mixin(method = "act")
-    public static class _resetPreliminaryLetterDescription extends Invoice_resetAttributeAbstract {
-
-        public _resetPreliminaryLetterDescription(final InvoiceForLease invoice) {
-            super(invoice, InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION);
-        }
-
-        @Override protected Object viewModelFor(final Invoice invoice) {
-            return new InvoiceAttributesVM((InvoiceForLease) invoice);
-        }
-    }
-
-    /**
-     * TODO: inline this mixin
-     */
-    @Mixin(method = "act")
-    public static class _overrideInvoiceDescription extends Invoice_overrideAttributeAbstract {
-        public _overrideInvoiceDescription(final InvoiceForLease invoice) {
-            super(invoice, InvoiceAttributeName.INVOICE_DESCRIPTION);
-        }
-    }
-
-    /**
-     * TODO: inline this mixin
-     */
-    @Mixin(method = "act")
-    public static class _resetInvoiceDescription extends Invoice_resetAttributeAbstract {
-
-        public _resetInvoiceDescription(final InvoiceForLease invoice) {
-            super(invoice, InvoiceAttributeName.INVOICE_DESCRIPTION);
-        }
-
-        @Override
-        protected Object viewModelFor(final Invoice invoice) {
-            return new InvoiceAttributesVM((InvoiceForLease) invoice);
-        }
-    }
-
-    /**
-     * TODO: inline this mixin
-     */
-    @Mixin(method = "act")
-    public static class _changePreliminaryLetterComment extends Invoice_overrideAttributeAbstract {
-        public _changePreliminaryLetterComment(final InvoiceForLease invoice) {
-            super(invoice, InvoiceAttributeName.PRELIMINARY_LETTER_COMMENT);
-        }
-    }
-
-    /**
-     * TODO: inline this mixin
-     */
-    @Mixin(method = "act")
-    public static class _changeInvoiceComment extends Invoice_overrideAttributeAbstract {
-        public _changeInvoiceComment(final InvoiceForLease invoice) {
-            super(invoice, InvoiceAttributeName.INVOICE_COMMENT);
-        }
     }
 
     @Programmatic
