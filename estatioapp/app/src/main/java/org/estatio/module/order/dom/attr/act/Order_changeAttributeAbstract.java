@@ -1,4 +1,4 @@
-package org.estatio.module.order.dom.attr;
+package org.estatio.module.order.dom.attr.act;
 
 import javax.inject.Inject;
 
@@ -13,6 +13,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.incode.module.base.dom.types.NotesType;
 
 import org.estatio.module.capex.dom.order.Order;
+import org.estatio.module.order.dom.attr.OrderAttributeName;
+import org.estatio.module.order.dom.attr.OrderAttributeRepository;
 
 public abstract class Order_changeAttributeAbstract {
 
