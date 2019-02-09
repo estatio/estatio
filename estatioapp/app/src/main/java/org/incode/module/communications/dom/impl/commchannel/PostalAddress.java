@@ -14,6 +14,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.util.TitleBuffer;
@@ -55,6 +56,29 @@ public class PostalAddress extends CommunicationChannel {
 
             public static final int MAX_LEN = 100;
         }
+    }
+
+    @Programmatic
+    public String asAddressLabel() {
+        final StringBuffer buf = new StringBuffer();
+        append(buf, getAddress1());
+        append(buf, getAddress2());
+        append(buf, getAddress3());
+        append(buf, getCity());
+        append(buf, getPostalCode());
+        append(buf, getState() != null ? getState().getName() : null);
+        append(buf, getCountry() != null ? getCountry().getName() : null);
+        return buf.toString();
+    }
+
+    private void append(final StringBuffer buf, final String str) {
+        if (str == null) {
+            return;
+        }
+        if(buf.length() > 0) {
+            buf.append("\n");
+        }
+        buf.append(str);
     }
 
     public String title() {

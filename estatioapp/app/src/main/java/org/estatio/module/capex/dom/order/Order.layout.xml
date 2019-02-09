@@ -183,10 +183,10 @@
                                 </bs3:col>
                             </bs3:row>
                         </bs3:tab>
-                        <bs3:tab name="Document Text">
+                        <bs3:tab name="Confirmation Document Placeholders">
                             <bs3:row>
                                 <bs3:col span="12">
-                                    <cpt:fieldSet name="Document Text" id="documentText">
+                                    <cpt:fieldSet name="Placeholders" id="documentText">
                                         <cpt:action id="generateDocument"/>
                                         <cpt:property id="subject" hidden="ALL_TABLES">
                                             <cpt:action id="changeSubject" promptStyle="INLINE_AS_IF_EDIT">

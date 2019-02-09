@@ -22,6 +22,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelPurposeType;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
+import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.incode.module.document.dom.impl.applicability.RendererModelFactoryAbstract;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
@@ -74,7 +75,6 @@ public class RendererModelFactoryForOrder extends RendererModelFactoryAbstract<O
                 .build();
     }
 
-    // TODO: need to clean this up...
     private String addressOf(final Party party) {
         if(party == null) {
             return "???";
@@ -83,9 +83,11 @@ public class RendererModelFactoryForOrder extends RendererModelFactoryAbstract<O
                 communicationChannelRepository.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS);
 
         return channels.stream()
+                .filter(PostalAddress.class::isInstance)
+                .map(PostalAddress.class::cast)
                 .filter(x -> x.getPurpose() == CommunicationChannelPurposeType.INVOICING)
                 .findFirst()
-                .map(CommunicationChannel::getDescription)
+                .map(PostalAddress::asAddressLabel)
                 .orElse("???");
     }
 
