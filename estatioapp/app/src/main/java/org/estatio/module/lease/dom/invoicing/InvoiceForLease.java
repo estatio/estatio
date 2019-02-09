@@ -591,10 +591,25 @@ public class InvoiceForLease
         return vm;
     }
 
-    @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
-    public String getPreliminaryLetterDescription() {
-        return attributeValueFor(InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION);
+    //region > _preliminaryLetterDescription (derived property)
+    @Mixin(method="prop")
+    public static class _preliminaryLetterDescription {
+        private final InvoiceForLease invoiceForLease;
+        public _preliminaryLetterDescription(final InvoiceForLease invoiceForLease) {
+            this.invoiceForLease = invoiceForLease;
+        }
+        @Action(semantics = SemanticsOf.SAFE)
+        @ActionLayout(contributed=Contributed.AS_ASSOCIATION)
+        @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
+        public String prop() {
+            invoiceForLease.attributeValueFor(InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION);
+            return null;
+        }
+        public boolean hideProp() {
+            return false;
+        }
     }
+    //endregion
 
     //region > _preliminaryLetterComment (derived property)
     @Mixin(method="prop")

@@ -86,7 +86,7 @@ public class Invoice_Test {
             this.mixin.act("Overridden PL desc");
 
             // then
-            assertThat(invoice.getPreliminaryLetterDescription()).isEqualTo("Overridden PL desc");
+            assertThat(new InvoiceForLease._preliminaryLetterDescription(invoice).prop()).isEqualTo("Overridden PL desc");
         }
 
         private InvoiceAttribute invoiceAttributeWith(final String value) {
@@ -131,7 +131,7 @@ public class Invoice_Test {
         public void can_reset() throws Exception {
 
             // then
-            assertThat(invoice.getPreliminaryLetterDescription()).isEqualTo("Approved PL desc");
+            assertThat(new InvoiceForLease._preliminaryLetterDescription(invoice).prop()).isEqualTo("Approved PL desc");
             assertThat(mixin.hideAct()).isFalse();
             assertThat(mixin.disableAct()).isNull();
 
