@@ -24,6 +24,7 @@ import org.incode.module.docrendering.freemarker.fixture.RenderingStrategyFSForF
 import org.incode.module.docrendering.stringinterpolator.fixture.RenderingStrategyFSForStringInterpolator;
 import org.incode.module.docrendering.stringinterpolator.fixture.RenderingStrategyFSForStringInterpolatorCaptureUrl;
 import org.incode.module.docrendering.stringinterpolator.fixture.RenderingStrategyFSForStringInterpolatorPreviewAndCaptureUrl;
+import org.incode.module.docrendering.xdocgoten.fixture.RenderingStrategyFSForXDocGotenToPdf;
 import org.incode.module.docrendering.xdocreport.fixture.RenderingStrategyFSForXDocReportToDocx;
 import org.incode.module.docrendering.xdocreport.fixture.RenderingStrategyFSForXDocReportToPdf;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
@@ -37,6 +38,7 @@ public class RenderingStrategies extends DocumentTemplateFSAbstract {
     public static final String REF_FMK = RenderingStrategyFSForFreemarker.REF;
     public static final String REF_XDP = RenderingStrategyFSForXDocReportToPdf.REF;
     public static final String REF_XDD = RenderingStrategyFSForXDocReportToDocx.REF;
+    public static final String REF_XGP = RenderingStrategyFSForXDocGotenToPdf.REF;
 
 
     @Override
@@ -51,6 +53,7 @@ public class RenderingStrategies extends DocumentTemplateFSAbstract {
 
         executionContext.executeChild(this, new RenderingStrategyFSForXDocReportToPdf());
         executionContext.executeChild(this, new RenderingStrategyFSForXDocReportToDocx());
+        executionContext.executeChild(this, new RenderingStrategyFSForXDocGotenToPdf());
     }
 
 }
