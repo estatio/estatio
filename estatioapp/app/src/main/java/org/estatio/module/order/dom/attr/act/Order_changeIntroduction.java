@@ -6,10 +6,11 @@ import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.order.dom.attr.OrderAttributeName;
 
 @Mixin(method = "act")
-public class Order_changeAdhoc1
+public class Order_changeIntroduction
                 extends Order_changeAttributeAbstract {
 
-    public Order_changeAdhoc1(final Order order) {
-        super(order, OrderAttributeName.ORDER_CONFIRM_ADHOC_1);
+    public Order_changeIntroduction(final Order order) {
+        super(order, OrderAttributeName.CONFIRMATION_INTRODUCTION);
     }
+
 }

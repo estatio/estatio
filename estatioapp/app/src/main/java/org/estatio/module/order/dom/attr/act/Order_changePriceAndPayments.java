@@ -6,11 +6,10 @@ import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.order.dom.attr.OrderAttributeName;
 
 @Mixin(method = "act")
-public class Order_changeSignature
+public class Order_changePriceAndPayments
                 extends Order_changeAttributeAbstract {
 
-    public Order_changeSignature(final Order order) {
-        super(order, OrderAttributeName.CONFIRMATION_SIGNATURE);
+    public Order_changePriceAndPayments(final Order order) {
+        super(order, OrderAttributeName.CONFIRMATION_PRICE_AND_PAYMENTS);
     }
-
 }

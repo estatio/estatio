@@ -6,11 +6,11 @@ import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.order.dom.attr.OrderAttributeName;
 
 @Mixin(method="prop")
-public class Order_adhoc3
+public class Order_introduction
         extends Order_attributeValueAbstract {
 
-    public Order_adhoc3(final Order order) {
-        super(order, OrderAttributeName.ORDER_CONFIRM_ADHOC_3);
+    public Order_introduction(final Order order) {
+        super(order, OrderAttributeName.CONFIRMATION_INTRODUCTION);
     }
 
 }

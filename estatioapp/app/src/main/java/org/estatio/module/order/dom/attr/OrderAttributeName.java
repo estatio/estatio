@@ -5,10 +5,13 @@ import lombok.Getter;
 
 @AllArgsConstructor
 public enum OrderAttributeName {
-    ORDER_CONFIRM_ADHOC_1("orderConfirmAdhoc1"),
-    ORDER_CONFIRM_ADHOC_2("orderConfirmAdhoc2"),
-    ORDER_CONFIRM_ADHOC_3("orderConfirmAdhoc3"),
-    ORDER_CONFIRM_SIGNATURE("orderConfirmSignature"),
+    CONFIRMATION_SUBJECT("orderConfirmSubject"),
+    CONFIRMATION_INTRODUCTION("confirmationIntroduction"),
+    CONFIRMATION_ORDER_DESCRIPTION("confirmationOrderDescription"),
+    CONFIRMATION_TOTAL_WORK_COST("confirmationTotalWorkCost"),
+    CONFIRMATION_WORK_SCHEDULE("confirmationWorkSchedule"),
+    CONFIRMATION_PRICE_AND_PAYMENTS("confirmationPriceAndPayments"),
+    CONFIRMATION_SIGNATURE("confirmationSignature"),
     ;
 
     @Getter

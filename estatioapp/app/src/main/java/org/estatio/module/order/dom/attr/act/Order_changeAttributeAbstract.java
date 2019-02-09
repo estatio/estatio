@@ -30,8 +30,9 @@ public abstract class Order_changeAttributeAbstract {
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public Order act(
             @Parameter(maxLength = NotesType.Meta.MAX_LEN, optionality = Optionality.OPTIONAL)
-            @ParameterLayout(multiLine = Order.DescriptionType.Meta.MULTI_LINE) final String overrideWith) {
-        order.updateAttribute(this.orderAttributeName, overrideWith);
+            @ParameterLayout(multiLine = Order.AttributeDescriptionType.Meta.MULTI_LINE)
+            final String text) {
+        order.updateAttribute(this.orderAttributeName, text);
         return order;
     }
 

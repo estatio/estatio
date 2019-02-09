@@ -6,11 +6,11 @@ import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.order.dom.attr.OrderAttributeName;
 
 @Mixin(method="prop")
-public class Order_signature
+public class Order_subject
         extends Order_attributeValueAbstract {
 
-    public Order_signature(final Order order) {
-        super(order, OrderAttributeName.CONFIRMATION_SIGNATURE);
+    public Order_subject(final Order order) {
+        super(order, OrderAttributeName.CONFIRMATION_SUBJECT);
     }
 
 }

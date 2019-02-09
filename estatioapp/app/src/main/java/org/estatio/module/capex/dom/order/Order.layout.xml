@@ -170,18 +170,93 @@
             </bs3:row>
         </bs3:col>
         <bs3:col span="6">
-            <bs3:tabGroup>
-                <bs3:tab name="Document">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Content" id="content">
-                                <cpt:property id="pdf" hidden="ALL_TABLES">
-                                </cpt:property>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-            </bs3:tabGroup>
+            <bs3:row>
+                <bs3:col span="12">
+                    <bs3:tabGroup>
+                        <bs3:tab name="Document">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Content" id="content">
+                                        <cpt:property id="pdf" hidden="ALL_TABLES">
+                                        </cpt:property>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Document Text">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Document Text" id="documentText">
+                                        <cpt:action id="generateDocument"/>
+                                        <cpt:property id="subject" hidden="ALL_TABLES">
+                                            <cpt:action id="changeSubject" promptStyle="INLINE_AS_IF_EDIT">
+                                                <cpt:named>Change</cpt:named>
+                                            </cpt:action>
+                                        </cpt:property>
+                                        <cpt:property id="introduction" hidden="ALL_TABLES">
+                                            <cpt:action id="changeIntroduction" promptStyle="INLINE_AS_IF_EDIT">
+                                                <cpt:named>Change</cpt:named>
+                                            </cpt:action>
+                                        </cpt:property>
+                                        <cpt:property id="orderDescription" hidden="ALL_TABLES">
+                                            <cpt:action id="changeOrderDescription" promptStyle="INLINE_AS_IF_EDIT">
+                                                <cpt:named>Change</cpt:named>
+                                            </cpt:action>
+                                        </cpt:property>
+                                        <cpt:property id="totalWorkCost" hidden="ALL_TABLES">
+                                            <cpt:action id="changeTotalWorkCost" promptStyle="INLINE_AS_IF_EDIT">
+                                                <cpt:named>Change</cpt:named>
+                                            </cpt:action>
+                                        </cpt:property>
+                                        <cpt:property id="workSchedule" hidden="ALL_TABLES">
+                                            <cpt:action id="changeWorkSchedule" promptStyle="INLINE_AS_IF_EDIT">
+                                                <cpt:named>Change</cpt:named>
+                                            </cpt:action>
+                                        </cpt:property>
+                                        <cpt:property id="priceAndPayment" hidden="ALL_TABLES">
+                                            <cpt:action id="changePriceAndPayments" promptStyle="INLINE_AS_IF_EDIT">
+                                                <cpt:named>Change</cpt:named>
+                                            </cpt:action>
+                                        </cpt:property>
+                                        <cpt:property id="signature" hidden="ALL_TABLES">
+                                            <cpt:action id="changeSignature" promptStyle="INLINE_AS_IF_EDIT">
+                                                <cpt:named>Change</cpt:named>
+                                            </cpt:action>
+                                        </cpt:property>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                    </bs3:tabGroup>
+                </bs3:col>
+            </bs3:row>
+            <bs3:row>
+                <bs3:col span="12">
+                    <bs3:tabGroup unreferencedCollections="false">
+                        <bs3:tab name="Documents">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:collection id="documents" defaultView="table">
+                                        <cpt:action id="attachPdf"/>
+                                    </cpt:collection>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Attributes">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:collection id="attributes">
+                                        <cpt:action id="updateAttribute">
+                                            <cpt:named>Update</cpt:named>
+                                        </cpt:action>
+                                    </cpt:collection>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                    </bs3:tabGroup>
+                </bs3:col>
+
+            </bs3:row>
         </bs3:col>
     </bs3:row>
     <bs3:row>
