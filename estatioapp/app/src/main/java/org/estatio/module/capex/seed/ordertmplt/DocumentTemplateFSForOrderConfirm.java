@@ -89,8 +89,8 @@ public class DocumentTemplateFSForOrderConfirm extends DocumentTemplateFSAbstrac
             final LocalDate templateDate,
             final ExecutionContext ec) {
 
-        final RenderingStrategy xdpRenderingStrategy =
-                renderingStrategyRepository.findByReference(RenderingStrategies.REF_XDD);
+        final RenderingStrategy xgpRenderingStrategy =
+                renderingStrategyRepository.findByReference(RenderingStrategies.REF_XGP);
         final RenderingStrategy fmkRenderingStrategy =
                 renderingStrategyRepository.findByReference(RenderingStrategies.REF_FMK);
 
@@ -99,14 +99,14 @@ public class DocumentTemplateFSForOrderConfirm extends DocumentTemplateFSAbstrac
         final String nameChars = loadCharsForOrderConfirmTemplateTitleItaFtl();
 
         final Blob contentBlob =
-                new Blob(nameChars + ".docx",
-                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                new Blob(nameChars + ".pdf",
+                        "application/pdf",
                         contentBytes);
         final DocumentTemplate documentTemplate = upsertDocumentBlobTemplate(
                 documentType, templateDate, It.getPath(),
-                ".docx",
+                ".pdf",
                 false,
-                contentBlob, xdpRenderingStrategy,
+                contentBlob, xgpRenderingStrategy,
                 nameChars, fmkRenderingStrategy,
                 ec);
 

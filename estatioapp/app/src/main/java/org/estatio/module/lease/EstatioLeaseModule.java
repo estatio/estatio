@@ -34,6 +34,7 @@ import org.incode.module.classification.dom.ClassificationModule;
 import org.incode.module.communications.CommunicationsModule;
 import org.incode.module.docfragment.DocFragmentModule;
 import org.incode.module.docrendering.freemarker.FreemarkerDocRenderingModule;
+import org.incode.module.docrendering.gotenberg.dom.impl.GotenbergRenderingModule;
 import org.incode.module.docrendering.stringinterpolator.StringInterpolatorDocRenderingModule;
 import org.incode.module.docrendering.xdocreport.XDocReportDocRenderingModule;
 
@@ -79,6 +80,7 @@ public final class EstatioLeaseModule extends ModuleAbstract {
                 new CommunicationsModule(),
                 new FreemarkerDocRenderingModule(),
                 new StringInterpolatorDocRenderingModule(),
+                new GotenbergRenderingModule(),
                 new XDocReportDocRenderingModule(),
                 new DocFragmentModule(),
                 new ClassificationModule()
