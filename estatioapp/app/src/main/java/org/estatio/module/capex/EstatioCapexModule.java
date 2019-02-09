@@ -35,12 +35,14 @@ import org.estatio.module.capex.dom.project.ProjectItemTerm;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectItem;
 import org.estatio.module.capex.dom.project.ProjectRole;
+import org.estatio.module.capex.dom.project.ProjectTerm;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.invoice.EstatioInvoiceModule;
 import org.estatio.module.invoice.dom.Invoice;
-import org.estatio.module.invoice.dom.attr.InvoiceAttribute;
 import org.estatio.module.invoice.dom.InvoiceItem;
+import org.estatio.module.invoice.dom.attr.InvoiceAttribute;
 import org.estatio.module.invoice.dom.paperclips.PaperclipForInvoice;
+import org.estatio.module.order.EstatioOrderAttributeModule;
 
 @XmlRootElement(name = "module")
 public class EstatioCapexModule extends ModuleAbstract {
@@ -55,7 +57,8 @@ public class EstatioCapexModule extends ModuleAbstract {
                 new EstatioBudgetModule(),
 
                 new DocumentModule(),
-                new EstatioCanonicalModule()
+                new EstatioCanonicalModule(),
+                new EstatioOrderAttributeModule()
         );
     }
 
