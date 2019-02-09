@@ -33,7 +33,9 @@ public abstract class Invoice_resetAttributeAbstract<T extends Invoice<?>> {
     protected abstract Object viewModelFor(T invoice);
 
     public boolean hideAct() {
-        return !invoice.attributeOverriddenFor(invoiceAttributeName);
+        final boolean isOverridden = invoiceAttributeRepository.findIsOverriddenByInvoiceAndName(invoiceAttributeName, invoice);
+
+        return !isOverridden;
     }
 
     public String disableAct() {
@@ -45,5 +47,8 @@ public abstract class Invoice_resetAttributeAbstract<T extends Invoice<?>> {
 
     @Inject protected
     FragmentRenderService fragmentRenderService;
+
+    @Inject protected
+    InvoiceAttributeRepository invoiceAttributeRepository;
 
 }

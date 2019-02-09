@@ -145,15 +145,6 @@ public abstract class Invoice<T extends Invoice<T>>
         extends UdoDomainObject2<T>
         implements WithApplicationTenancyAny, WithApplicationTenancyPathPersisted {
 
-    @Programmatic
-    public String attributeValueFor(final InvoiceAttributeName invoiceAttributeName) {
-        return invoiceAttributeRepository.findValueByInvoiceAndName(invoiceAttributeName, this);
-    }
-
-    @Programmatic
-    public boolean attributeOverriddenFor(final InvoiceAttributeName invoiceAttributeName) {
-        return invoiceAttributeRepository.findIsOverriddenByInvoiceAndName(invoiceAttributeName, this);
-    }
 
     public static class UpdatingEvent extends ObjectUpdatingEvent<Invoice> {
     }

@@ -64,7 +64,7 @@ public class Invoice_Test {
 
         @Before
         public void setUp() throws Exception {
-            invoice = getInvoiceForLease(InvoiceStatus.APPROVED, "Some PL desc", false, mockInvoiceAttributeRepository);
+            invoice = getInvoiceForLeaseWith(InvoiceStatus.APPROVED);
             mixin = new InvoiceForLease_overridePreliminaryLetterDescription(invoice);
 
         }
@@ -122,8 +122,8 @@ public class Invoice_Test {
         public void setUp() throws Exception {
 
             // given
-            invoice = getInvoiceForLease(InvoiceStatus.APPROVED, "Approved PL desc", true,
-                    mockInvoiceAttributeRepository);
+            invoice = getInvoiceForLeaseWith(InvoiceStatus.APPROVED
+            );
 
             mixin = new InvoiceForLease_resetPreliminaryLetterDescription(invoice) {
                 {
@@ -171,7 +171,7 @@ public class Invoice_Test {
         @Ignore
         public void hidden_if_not_overridden() throws Exception {
             // given
-            invoice = getInvoiceForLease(InvoiceStatus.APPROVED, "Some PL desc", false, mockInvoiceAttributeRepository);
+            invoice = getInvoiceForLeaseWith(InvoiceStatus.APPROVED);
 
             // then
             assertThat(mixin.hideAct()).isTrue();
@@ -196,7 +196,7 @@ public class Invoice_Test {
         public void setUp() throws Exception {
 
             // given
-            invoice = getInvoiceForLease(InvoiceStatus.APPROVED, "Some PL desc", false, mockInvoiceAttributeRepository);
+            invoice = getInvoiceForLeaseWith(InvoiceStatus.APPROVED);
 
             mixin = new InvoiceForLease_overrideInvoiceDescription(invoice);
         }
@@ -234,8 +234,8 @@ public class Invoice_Test {
         @Before
         public void setUp() throws Exception {
             // given
-            invoice = getInvoiceForLease(InvoiceStatus.APPROVED, "Overridden PL desc", true,
-                    mockInvoiceAttributeRepository);
+            invoice = getInvoiceForLeaseWith(InvoiceStatus.APPROVED
+            );
             invoice.setStatus(InvoiceStatus.APPROVED);
 
             mixin = new InvoiceForLease_resetInvoiceDescription(invoice) {
@@ -271,7 +271,7 @@ public class Invoice_Test {
         @Ignore
         public void hidden_if_not_overridden() throws Exception {
             // given
-            invoice = getInvoiceForLease(InvoiceStatus.APPROVED, "Some PL desc", false, mockInvoiceAttributeRepository);
+            invoice = getInvoiceForLeaseWith(InvoiceStatus.APPROVED);
 
             // then
             assertThat(mixin.hideAct()).isTrue();
@@ -288,25 +288,9 @@ public class Invoice_Test {
         }
     }
 
-    private static InvoiceForLease getInvoiceForLease(
-            final InvoiceStatus status,
-            final String attributeValue,
-            final boolean attributeOverridden,
-            final InvoiceAttributeRepository mockInvoiceAttributeRepository) {
+    private static InvoiceForLease getInvoiceForLeaseWith(final InvoiceStatus status) {
 
-        final InvoiceForLease invoiceForLease = new InvoiceForLease() {
-            {
-                this.invoiceAttributeRepository = mockInvoiceAttributeRepository;
-            }
-            @Override public String attributeValueFor(final InvoiceAttributeName invoiceAttributeName) {
-                return attributeValue;
-            }
-
-            @Override public boolean attributeOverriddenFor(final InvoiceAttributeName invoiceAttributeName) {
-                return attributeOverridden;
-            }
-
-        };
+        final InvoiceForLease invoiceForLease = new InvoiceForLease();
         invoiceForLease.setStatus(status);
         return invoiceForLease;
     }

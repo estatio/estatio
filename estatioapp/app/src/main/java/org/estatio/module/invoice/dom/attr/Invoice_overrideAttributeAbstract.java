@@ -1,5 +1,7 @@
 package org.estatio.module.invoice.dom.attr;
 
+import javax.inject.Inject;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
@@ -38,7 +40,10 @@ public abstract class Invoice_overrideAttributeAbstract {
     }
 
     public String default0Act() {
-        return invoice.attributeValueFor(invoiceAttributeName);
+        return invoiceAttributeRepository.findValueByInvoiceAndName(invoiceAttributeName, invoice);
     }
+
+    @Inject protected
+    InvoiceAttributeRepository invoiceAttributeRepository;
 
 }
