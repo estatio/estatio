@@ -70,14 +70,14 @@ public class Order_generateDocument_IntegTest extends CapexModuleIntegTestAbstra
         // given
         final Order_generateDocument mixin = mixin(Order_generateDocument.class, order);
 
-        final List<DocumentTemplate> documentTemplates = mixin.choices0$$();
+        final List<DocumentTemplate> documentTemplates = mixin.choices0Act();
         assertThat(documentTemplates).hasSize(1);
 
         final DocumentTemplate documentTemplate = documentTemplates.get(0);
         assertThat(documentTemplate.getType()).isEqualTo(orderTemplateDocumentType);
 
         // when
-        final Document document = (Document) mixin.$$(documentTemplate);
+        final Document document = (Document) mixin.act(documentTemplate);
 
         // then
         final Blob blob = document.getBlob();

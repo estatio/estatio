@@ -6,7 +6,7 @@ import org.incode.module.document.dom.mixins.T_createAndAttachDocumentAndRender;
 
 import org.estatio.module.capex.dom.order.Order;
 
-@Mixin()
+@Mixin(method = "act")
 public class Order_generateDocument extends T_createAndAttachDocumentAndRender<Order> {
 
     public Order_generateDocument(final Order order) {

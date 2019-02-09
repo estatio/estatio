@@ -124,7 +124,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
                 DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
 
                 // when
-                wrap(mixin(InvoiceForLease_prepare.class, invoice)).$$(prelimLetterTemplate);
+                wrap(mixin(InvoiceForLease_prepare.class, invoice)).act(prelimLetterTemplate);
                 Document document = prelimLetterOf(invoice);
 
                 // then
@@ -146,7 +146,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
                 approveAndInvoice(invoice);
 
                 // when
-                wrap(mixin(InvoiceForLease_prepare.class, invoice)).$$(invoiceDocTemplate);
+                wrap(mixin(InvoiceForLease_prepare.class, invoice)).act(invoiceDocTemplate);
                 Document document = invoiceDocOf(invoice);
 
                 // then
@@ -167,7 +167,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
                 // when
                 final List<DocumentTemplate> documentTemplates =
-                        mixin(InvoiceForLease_prepare.class, invoice).choices0$$();
+                        mixin(InvoiceForLease_prepare.class, invoice).choices0Act();
 
                 // then
                 assertThat(documentTemplates).doesNotContain(invoiceDocTemplate);
@@ -286,7 +286,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             // when
             DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
-            wrap(mixin(InvoiceForLease_prepare.class, invoice)).$$(prelimLetterTemplate);
+            wrap(mixin(InvoiceForLease_prepare.class, invoice)).act(prelimLetterTemplate);
             Document document = prelimLetterOf(invoice);
 
             // (clearing queryResultsCache)
@@ -376,7 +376,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             // when
             DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.INVOICE, invoice);
-            wrap(mixin(InvoiceForLease_prepare.class, invoice)).$$(prelimLetterTemplate);
+            wrap(mixin(InvoiceForLease_prepare.class, invoice)).act(prelimLetterTemplate);
             Document document = invoiceDocOf(invoice);
 
             invoice = findInvoice(InvoiceStatus.INVOICED);
@@ -471,7 +471,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             // when
             DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
-            wrap(mixin(InvoiceForLease_prepare.class, invoice)).$$(prelimLetterTemplate);
+            wrap(mixin(InvoiceForLease_prepare.class, invoice)).act(prelimLetterTemplate);
             Document document = prelimLetterOf(invoice);
 
             // (clearing queryResultsCache)
@@ -550,7 +550,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             // when
             DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.INVOICE, invoice);
-            wrap(mixin(InvoiceForLease_prepare.class, invoice)).$$(prelimLetterTemplate);
+            wrap(mixin(InvoiceForLease_prepare.class, invoice)).act(prelimLetterTemplate);
             Document document = invoiceDocOf(invoice);
 
             invoice = findInvoice(InvoiceStatus.INVOICED);
@@ -626,7 +626,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             // and given have a PL doc
             DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
-            wrap(mixin(InvoiceForLease_prepare.class, invoice)).$$(prelimLetterTemplate);
+            wrap(mixin(InvoiceForLease_prepare.class, invoice)).act(prelimLetterTemplate);
             Document document = prelimLetterOf(invoice);
             assertThat(document).isNotNull();
 
@@ -664,7 +664,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             // and given have a PL doc
             DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
-            wrap(mixin(InvoiceForLease_prepare.class, invoice)).$$(prelimLetterTemplate);
+            wrap(mixin(InvoiceForLease_prepare.class, invoice)).act(prelimLetterTemplate);
             Document document = prelimLetterOf(invoice);
             assertThat(document).isNotNull();
 
@@ -731,7 +731,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             // and given have a PL doc
             DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
-            wrap(mixin(InvoiceForLease_prepare.class, invoice)).$$(prelimLetterTemplate);
+            wrap(mixin(InvoiceForLease_prepare.class, invoice)).act(prelimLetterTemplate);
             Document document = prelimLetterOf(invoice);
 
             assertThat(document).isNotNull();
@@ -763,7 +763,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             // and given have a PL doc
             DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
-            wrap(mixin(InvoiceForLease_prepare.class, invoice)).$$(prelimLetterTemplate);
+            wrap(mixin(InvoiceForLease_prepare.class, invoice)).act(prelimLetterTemplate);
             Document document = prelimLetterOf(invoice);
 
             // and given document sent
@@ -793,7 +793,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
             DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
 
             // and given
-            wrap(mixin(InvoiceForLease_prepare.class, invoice)).$$(prelimLetterTemplate);
+            wrap(mixin(InvoiceForLease_prepare.class, invoice)).act(prelimLetterTemplate);
             Document document = prelimLetterOf(invoice);
             assertThat(document).isNotNull();
 

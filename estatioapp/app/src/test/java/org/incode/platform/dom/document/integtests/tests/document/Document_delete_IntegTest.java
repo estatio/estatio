@@ -47,8 +47,8 @@ public class Document_delete_IntegTest extends DocumentModuleIntegTestAbstract {
         otherObject = otherObjectsFixture.getOtherObjects().get(0);
 
         // some docs
-        fmkDocument = (Document)_createAndAttachDocumentAndRender(demoObject).$$(templateFixture.getFmkTemplate());
-        xddDocument = (Document)_createAndAttachDocumentAndRender(demoObject).$$(templateFixture.getXddTemplate());
+        fmkDocument = (Document)_createAndAttachDocumentAndRender(demoObject).act(templateFixture.getFmkTemplate());
+        xddDocument = (Document)_createAndAttachDocumentAndRender(demoObject).act(templateFixture.getXddTemplate());
 
         transactionService.flushTransaction();
     }

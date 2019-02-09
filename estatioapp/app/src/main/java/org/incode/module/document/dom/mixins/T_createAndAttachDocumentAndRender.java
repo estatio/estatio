@@ -21,6 +21,10 @@ import org.incode.module.document.dom.services.DocumentCreatorService;
 
 /**
  * Create a {@link Document} and attach using a {@link Paperclip}, then render in the foreground.
+ *
+ * <p>
+ *     Subclasses must be annotated with <code>@Mixin(method="act")</code>
+ * </p>
  */
 public abstract class T_createAndAttachDocumentAndRender<T>  {
 
@@ -42,7 +46,7 @@ public abstract class T_createAndAttachDocumentAndRender<T>  {
             contributed = Contributed.AS_ACTION
     )
     @MemberOrder(name = "documents", sequence = "3.1")
-    public Object $$(final DocumentTemplate template) throws IOException {
+    public Object act(final DocumentTemplate template) throws IOException {
 
         final Document document =
                 documentCreatorService.createDocumentAndAttachPaperclips(domainObject, template);
@@ -52,18 +56,18 @@ public abstract class T_createAndAttachDocumentAndRender<T>  {
         return document;
     }
 
-    public boolean hide$$() {
-        return choices0$$().isEmpty();
+    public boolean hideAct() {
+        return choices0Act().isEmpty();
     }
 
     /**
      * So can be overridden...  seems to be required for integration tests (wrapper factory).
      */
-    public TranslatableString disable$$() { return null; }
+    public TranslatableString disableAct() { return null; }
 
 
-    public DocumentTemplate default0$$() {
-        final List<DocumentTemplate> documentTemplates = choices0$$();
+    public DocumentTemplate default0Act() {
+        final List<DocumentTemplate> documentTemplates = choices0Act();
         return documentTemplates.size() == 1 ? documentTemplates.get(0): null;
     }
 
@@ -71,7 +75,7 @@ public abstract class T_createAndAttachDocumentAndRender<T>  {
      * All templates which are applicable to the domain object's atPath, and which can be created and attached to at
      * least one domain object.
      */
-    public List<DocumentTemplate> choices0$$() {
+    public List<DocumentTemplate> choices0Act() {
         return queryResultsCache.execute(
                 () -> documentTemplateService.documentTemplatesForCreateAndAttach(domainObject),
                 getClass(), "$$", domainObject);

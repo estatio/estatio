@@ -78,7 +78,7 @@ public class T_createAndAttachDocumentAndRender_IntegTest extends DocumentModule
             assertThat(wrap(_documents(demoObject)).$$()).isEmpty();
 
             // when
-            final List<DocumentTemplate> templates = _createAndAttachDocumentAndRender(demoObject).choices0$$();
+            final List<DocumentTemplate> templates = _createAndAttachDocumentAndRender(demoObject).choices0Act();
 
             transactionService.nextTransaction();
 
@@ -89,7 +89,7 @@ public class T_createAndAttachDocumentAndRender_IntegTest extends DocumentModule
             Set<Document> documents = Sets.newHashSet();
             for (DocumentTemplate template : templates) {
 
-                final Object documentAsObj = _createAndAttachDocumentAndRender(demoObject).$$(template);
+                final Object documentAsObj = _createAndAttachDocumentAndRender(demoObject).act(template);
 
                 // then
                 assertThat(documentAsObj).isInstanceOf(Document.class);
@@ -164,7 +164,7 @@ public class T_createAndAttachDocumentAndRender_IntegTest extends DocumentModule
         public void if_no_applicable_templates() throws Exception {
 
             // when
-            final List<DocumentTemplate> templates = _createAndAttachDocumentAndRender(otherObject).choices0$$();
+            final List<DocumentTemplate> templates = _createAndAttachDocumentAndRender(otherObject).choices0Act();
 
             // then
             assertThat(templates).isEmpty();
@@ -174,7 +174,7 @@ public class T_createAndAttachDocumentAndRender_IntegTest extends DocumentModule
 
             // when
             final DocumentTemplate anyTemplate = templateFixture.getFmkTemplate();
-            wrap(_createAndAttachDocumentAndRender(otherObject)).$$(anyTemplate);
+            wrap(_createAndAttachDocumentAndRender(otherObject)).act(anyTemplate);
         }
 
 

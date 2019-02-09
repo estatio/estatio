@@ -25,7 +25,7 @@ import org.incode.module.document.dom.mixins.T_createAndAttachDocumentAndRender;
 
 import org.estatio.module.asset.dom.Property;
 
-@Mixin
+@Mixin(method = "act")
 public class Property_createAndAttachDocument extends T_createAndAttachDocumentAndRender<Property> {
 
     public Property_createAndAttachDocument(final Property domainObject) {
