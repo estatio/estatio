@@ -31,12 +31,12 @@ import lombok.Setter;
         @Query(
                 name = "findByInvoice", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.invoice.dom.InvoiceAttribute "
+                        + "FROM org.estatio.module.invoice.dom.attr.InvoiceAttribute "
                         + "WHERE invoice == :invoice"),
         @Query(
                 name = "findByInvoiceAndName", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.invoice.dom.InvoiceAttribute "
+                        + "FROM org.estatio.module.invoice.dom.attr.InvoiceAttribute "
                         + "WHERE invoice == :invoice && "
                         + "name == :name")
 })
