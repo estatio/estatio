@@ -46,7 +46,7 @@ import lombok.Setter;
 public class OrderAttribute extends UdoDomainObject2<OrderAttribute> {
 
     public OrderAttribute() {
-        super("order,name");
+        super("ordr,name");
     }
 
     @Override public ApplicationTenancy getApplicationTenancy() {
