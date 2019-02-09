@@ -51,6 +51,18 @@ public class OrderAttributeRepository extends UdoDomainRepositoryAndFactory<Orde
     }
 
     @Programmatic
+    public String findValueByOrderAndName(final OrderAttributeName orderAttributeName, final Order order) {
+        final OrderAttribute orderAttribute = findByOrderAndName(order, orderAttributeName);
+        return orderAttribute == null ? null : orderAttribute.getValue();
+    }
+
+    @Programmatic
+    public boolean findIsOverriddenByOrderAndName(final OrderAttributeName orderAttributeName, final Order order) {
+        final OrderAttribute orderAttribute = findByOrderAndName(order, orderAttributeName);
+        return orderAttribute != null && orderAttribute.isOverridden();
+    }
+
+    @Programmatic
     public OrderAttribute newAttribute(
             final Order order,
             final OrderAttributeName name,
