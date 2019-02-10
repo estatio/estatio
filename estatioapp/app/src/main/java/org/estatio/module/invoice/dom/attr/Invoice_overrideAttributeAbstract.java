@@ -14,6 +14,9 @@ import org.incode.module.base.dom.types.NotesType;
 
 import org.estatio.module.invoice.dom.Invoice;
 
+/**
+ * Subclasses should be annotated with <code>@Mixin(method="act")</code>
+ */
 public abstract class Invoice_overrideAttributeAbstract {
     private final Invoice invoice;
     private final InvoiceAttributeName invoiceAttributeName;

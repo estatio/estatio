@@ -43,6 +43,7 @@ import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.invoice.dom.attr.InvoiceAttribute;
 import org.estatio.module.invoice.dom.paperclips.PaperclipForInvoice;
 import org.estatio.module.order.EstatioOrderAttributeModule;
+import org.estatio.module.order.dom.attr.OrderAttribute;
 
 @XmlRootElement(name = "module")
 public class EstatioCapexModule extends ModuleAbstract {
@@ -70,9 +71,7 @@ public class EstatioCapexModule extends ModuleAbstract {
             @Override
             protected void execute(final FixtureScript.ExecutionContext executionContext) {
 
-                String schema;
                 String sql;
-                String table;
 
                 deleteFrom(PaymentBatchApprovalStateTransition.class);
                 deleteFrom(IncomingInvoiceApprovalStateTransition.class);
@@ -85,27 +84,38 @@ public class EstatioCapexModule extends ModuleAbstract {
                 deleteFrom(CodaElement.class);
 
                 // OrderItemInvoiceItemLink
-                schema = schemaOf(OrderItemInvoiceItemLink.class);
-                table = tableOf(OrderItemInvoiceItemLink.class);
                 sql = String.format(
                         "DELETE FROM \"%s\".\"%s\" "
                                 + "WHERE \"%s\" IN "
                                 + "(SELECT \"id\" FROM \"%s\".\"%s\" WHERE \"%s\" = '%s') ",
-                        schema, table, "invoiceItemId",
+                        schemaOf(OrderItemInvoiceItemLink.class), tableOf(OrderItemInvoiceItemLink.class),
+                        "invoiceItemId",
                         schemaOf(InvoiceItem.class), tableOf(InvoiceItem.class), // supertype of IncomingInvoiceItem
                         discriminatorColumnOf(InvoiceItem.class),
                         discriminatorValueOf(IncomingInvoiceItem.class)
                 );
                 this.isisJdoSupport.executeUpdate(sql);
 
+
+                // OrderAttribute
+                sql = String.format(
+                        "DELETE FROM \"%s\".\"%s\" "
+                                + "WHERE \"%s\" IN "
+                                + "(SELECT \"id\" FROM \"%s\".\"%s\") ",
+                        schemaOf(OrderAttribute.class), tableOf(OrderAttribute.class),
+                        "orderId",
+                        schemaOf(Order.class), tableOf(Order.class)
+                );
+                this.isisJdoSupport.executeUpdate(sql);
+
+
                 // InvoiceAttribute
-                schema = schemaOf(InvoiceAttribute.class);
-                table = tableOf(InvoiceAttribute.class);
                 sql = String.format(
                         "DELETE FROM \"%s\".\"%s\" "
                                 + "WHERE \"%s\" IN "
                                 + "(SELECT \"id\" FROM \"%s\".\"%s\" WHERE \"%s\" = '%s') ",
-                        schema, table, "invoiceId",
+                        schemaOf(InvoiceAttribute.class), tableOf(InvoiceAttribute.class),
+                        "invoiceId",
                         schemaOf(Invoice.class), tableOf(Invoice.class), // supertype of IncomingInvoice
                         discriminatorColumnOf(Invoice.class),
                         discriminatorValueOf(IncomingInvoice.class)
@@ -113,13 +123,12 @@ public class EstatioCapexModule extends ModuleAbstract {
                 this.isisJdoSupport.executeUpdate(sql);
 
                 // PaperclipForInvoice
-                schema = schemaOf(PaperclipForInvoice.class);
-                table = tableOf(PaperclipForInvoice.class);
                 sql = String.format(
                         "DELETE FROM \"%s\".\"%s\" "
                                 + "WHERE \"%s\" IN "
                                 + "(SELECT \"id\" FROM \"%s\".\"%s\" WHERE \"%s\" = '%s') ",
-                        schema, table, "invoiceId",
+                        schemaOf(PaperclipForInvoice.class), tableOf(PaperclipForInvoice.class),
+                        "invoiceId",
                         schemaOf(Invoice.class), tableOf(Invoice.class), // supertype of IncomingInvoice
                         discriminatorColumnOf(Invoice.class),
                         discriminatorValueOf(IncomingInvoice.class)

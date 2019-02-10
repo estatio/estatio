@@ -5,7 +5,6 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -13,7 +12,9 @@ import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.order.dom.attr.OrderAttributeName;
 import org.estatio.module.order.dom.attr.OrderAttributeRepository;
 
-@Mixin(method="prop")
+/**
+ * Subclasses should be annotated with <code>@Mixin(method="prop")</code>
+ */
 public class Order_attributeValueAbstract {
     private final Order order;
     private final OrderAttributeName attributeName;
