@@ -56,26 +56,45 @@ public class RendererModelFactoryForOrder extends RendererModelFactoryAbstract<O
         // don't expose entities directly to XDocReportService because it takes forever to traverse the object graph.
         // instead, we expose only view models.
         return DataModel.builder()
-                .letterModel(LetterModel.of(getClockService().now(), order.getAtPath(),
-                        factoryService.mixin(Order_subject.class, order).prop(),
-                        factoryService.mixin(Order_introduction.class, order).prop(),
-                        factoryService.mixin(Order_orderDescription.class, order).prop(),
-                        factoryService.mixin(Order_totalWorkCost.class, order).prop(),
-                        factoryService.mixin(Order_workSchedule.class, order).prop(),
-                        factoryService.mixin(Order_priceAndPayments.class, order).prop(),
-                        factoryService.mixin(Order_signature.class, order).prop()
-                ))
-                .orderModel(OrderModel.of(order))
-                .propertyModel(PropertyModel.of(order.getProperty()))
-                .supplierModel(SupplierModel.of(order.getSeller(), addressOf(order.getSeller())))
-                .orderItemModels(
-                        Lists.newArrayList(order.getItems()).stream()
-                                .map(OrderItemModel::of)
-                                .collect(Collectors.toList()))
+                .letterModel(newLetterModel(order))
+                .orderModel(newOrderModel(order))
+                .propertyModel(newPropertyModel(order))
+                .supplierModel(newSupplierModel(order))
+                .orderItemModels(newOrderITemModels(order))
                 .build();
     }
 
-    private String addressOf(final Party party) {
+    protected LetterModel newLetterModel(final Order order) {
+        return LetterModel.of(getClockService().now(), order.getAtPath(),
+                factoryService.mixin(Order_subject.class, order).prop(),
+                factoryService.mixin(Order_introduction.class, order).prop(),
+                factoryService.mixin(Order_orderDescription.class, order).prop(),
+                factoryService.mixin(Order_totalWorkCost.class, order).prop(),
+                factoryService.mixin(Order_workSchedule.class, order).prop(),
+                factoryService.mixin(Order_priceAndPayments.class, order).prop(),
+                factoryService.mixin(Order_signature.class, order).prop()
+        );
+    }
+
+    protected OrderModel newOrderModel(final Order order) {
+        return OrderModel.of(order);
+    }
+
+    protected PropertyModel newPropertyModel(final Order order) {
+        return PropertyModel.of(order.getProperty());
+    }
+
+    protected SupplierModel newSupplierModel(final Order order) {
+        return SupplierModel.of(order.getSeller(), addressOf(order.getSeller()));
+    }
+
+    protected List<OrderItemModel> newOrderITemModels(final Order order) {
+        return Lists.newArrayList(order.getItems()).stream()
+                .map(OrderItemModel::of)
+                .collect(Collectors.toList());
+    }
+
+    protected String addressOf(final Party party) {
         if(party == null) {
             return "???";
         }

@@ -18,6 +18,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.config.ConfigurationService;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.isisaddons.module.freemarker.dom.service.FreeMarkerService;
@@ -32,11 +33,12 @@ import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.seed.ordertmplt.DocumentTemplateFSForOrderConfirm;
 import org.estatio.module.capex.spiimpl.docs.rml.RendererModelFactoryForOrder;
 import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.Party;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DocumentTemplate_ORDER_TEMPLATE_Test {
+public class DocumentTemplate_ORDER_CONFIRM_Test {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
@@ -47,6 +49,8 @@ public class DocumentTemplate_ORDER_TEMPLATE_Test {
     ConfigurationService mockConfigurationService;
     @Mock
     ClockService mockClockService;
+    @Mock
+    FactoryService mockFactoryService;
 
     private FreeMarkerService freeMarkerService;
     private XDocReportService xDocReportService;
@@ -113,6 +117,21 @@ public class DocumentTemplate_ORDER_TEMPLATE_Test {
 
         final RendererModelFactoryForOrder modelFactory = new RendererModelFactoryForOrder() {
             @Override protected ClockService getClockService() { return mockClockService; }
+
+            @Override protected LetterModel newLetterModel(final Order order) {
+                return LetterModel.of(mockClockService.now(), order.getAtPath(),
+                        "some subject",
+                        "some introduction",
+                        "some order description",
+                        "some total work cost",
+                        "some work schedule",
+                        "some price and payments",
+                        "some signature");
+            }
+
+            @Override protected String addressOf(final Party party) {
+                return "some address line 1\nsome address line 2\nsome town\nsome postcode";
+            }
         };
 
         orderModel = (RendererModelFactoryForOrder.DataModel)
