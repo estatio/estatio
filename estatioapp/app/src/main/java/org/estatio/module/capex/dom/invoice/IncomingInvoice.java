@@ -67,17 +67,20 @@ import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStat
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
+import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.payment.PaymentLine;
 import org.estatio.module.capex.dom.payment.PaymentLineRepository;
 import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.capex.dom.state.State;
 import org.estatio.module.capex.dom.state.StateTransition;
 import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.state.StateTransitionType;
 import org.estatio.module.capex.dom.state.Stateful;
 import org.estatio.module.capex.dom.util.PeriodUtil;
+import org.estatio.module.charge.dom.Applicability;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.currency.dom.Currency;
@@ -431,6 +434,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return getCurrency();
     }
 
+    @Programmatic
     private LocalDate dateReceivedDerivedFromDocument() {
         Optional<Document> documentIfAny = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(this);
         return documentIfAny.get().getCreatedAt().toLocalDate(); // guaranteed to return, hidden if none
@@ -451,6 +455,61 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return completeInvoiceItem(orderItem, description, netAmount, vatAmount, tax, grossAmount, charge, null, budgetItem, period);
     }
 
+    public OrderItem default0CompleteInvoiceItemWithBudgetItem() {
+        return defaultOrderItemCompleteInvoiceItem();
+    }
+
+    public List<OrderItem> choices0CompleteInvoiceItemWithBudgetItem() {
+        return choicesOrderItemCompleteInvoiceItem(getSeller());
+    }
+
+    public String default1CompleteInvoiceItemWithBudgetItem() {
+        return defaultDescriptionCompleteInvoiceItem();
+    }
+
+    public BigDecimal default2CompleteInvoiceItemWithBudgetItem() {
+        return defaultNetAmountCompleteInvoiceItem();
+    }
+
+    public BigDecimal default3CompleteInvoiceItemWithBudgetItem() {
+        return defaultVatAmountCompleteInvoiceItem();
+    }
+
+    public Tax default4CompleteInvoiceItemWithBudgetItem() {
+        return defaultTaxCompleteInvoiceItem();
+    }
+
+    public BigDecimal default5CompleteInvoiceItemWithBudgetItem() {
+        return defaultGrossAmountCompleteInvoiceItem();
+    }
+
+    public Charge default6CompleteInvoiceItemWithBudgetItem() {
+        return defaultChargeCompleteInvoiceItem();
+    }
+
+    public List<Charge> autoComplete6CompleteInvoiceItemWithBudgetItem(@MinLength(value = 3) String search) {
+        return autoCompleteChargeCompleteInvoiceItem(search);
+    }
+
+    public BudgetItem default7CompleteInvoiceItemWithBudgetItem() {
+        return defaultOrderItemCompleteInvoiceItem() == null ? null : defaultOrderItemCompleteInvoiceItem().getBudgetItem();
+    }
+
+    public List<BudgetItem> choices7CompleteInvoiceItemWithBudgetItem(
+            final OrderItem orderItem,
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final Tax tax,
+            final BigDecimal grossAmount,
+            final Charge charge) {
+        return budgetItemChooser.choicesBudgetItemFor(getProperty(), charge);
+    }
+
+    public String default8CompleteInvoiceItemWithBudgetItem() {
+        return defaultPeriodCompleteInvoiceItem();
+    }
+
     public boolean hideCompleteInvoiceItemWithBudgetItem() {
         switch (getType()) {
             case SERVICE_CHARGES:
@@ -459,6 +518,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             default:
                 return true;
         }
+    }
+
+    public String disableCompleteInvoiceItemWithBudgetItem() {
+        return disableCompleteInvoiceItem();
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -476,6 +539,69 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return completeInvoiceItem(orderItem, description, netAmount, vatAmount, tax, grossAmount, charge, project, null, period);
     }
 
+    public OrderItem default0CompleteInvoiceItemWithProject() {
+        return defaultOrderItemCompleteInvoiceItem();
+    }
+
+    public List<OrderItem> choices0CompleteInvoiceItemWithProject() {
+        return choicesOrderItemCompleteInvoiceItem(getSeller());
+    }
+
+    public String default1CompleteInvoiceItemWithProject() {
+        return defaultDescriptionCompleteInvoiceItem();
+    }
+
+    public BigDecimal default2CompleteInvoiceItemWithProject() {
+        return defaultNetAmountCompleteInvoiceItem();
+    }
+
+    public BigDecimal default3CompleteInvoiceItemWithProject() {
+        return defaultVatAmountCompleteInvoiceItem();
+    }
+
+    public Tax default4CompleteInvoiceItemWithProject() {
+        return defaultTaxCompleteInvoiceItem();
+    }
+
+    public BigDecimal default5CompleteInvoiceItemWithProject() {
+        return defaultGrossAmountCompleteInvoiceItem();
+    }
+
+    public Charge default6CompleteInvoiceItemWithProject() {
+        return defaultChargeCompleteInvoiceItem();
+    }
+
+    public List<Charge> autoComplete6CompleteInvoiceItemWithProject(@MinLength(value = 3) String search) {
+        return autoCompleteChargeCompleteInvoiceItem(search);
+    }
+
+    public Project default7CompleteInvoiceItemWithProject() {
+        return defaultOrderItemCompleteInvoiceItem() == null ? null : defaultOrderItemCompleteInvoiceItem().getProject();
+    }
+
+    public List<Project> choices7CompleteInvoiceItemWithProject(
+            final OrderItem orderItem,
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final Tax tax,
+            final BigDecimal grossAmount,
+            final Charge charge,
+            final Project project,
+            final String period) {
+        return getProperty() == null ?
+                projectRepository.listAll()
+                : projectRepository.findByFixedAsset(getProperty())
+                .stream()
+                .filter(x -> !x.isParentProject())
+                .filter(x -> x.getEndDate() == null || !x.getEndDate().isBefore(endDateFromPeriod(period) != null ? endDateFromPeriod(period) : LocalDate.now()))
+                .collect(Collectors.toList());
+    }
+
+    public String default8CompleteInvoiceItemWithProject() {
+        return defaultPeriodCompleteInvoiceItem();
+    }
+
     public boolean hideCompleteInvoiceItemWithProject() {
         switch (getType()) {
             case CAPEX:
@@ -485,6 +611,12 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         }
     }
 
+    public String disableCompleteInvoiceItemWithProject() {
+        return disableCompleteInvoiceItem();
+    }
+
+    // TODO: in switched view amounts are determined based on tax/other amounts. How to achieve this in a single action?
+    @Programmatic
     private IncomingInvoice completeInvoiceItem(
             final OrderItem orderItem,
             final String description,
@@ -539,6 +671,91 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return this;
     }
 
+    @Programmatic
+    private String disableCompleteInvoiceItem() {
+        final List<IncomingInvoiceItem> items = getItems().stream()
+                .filter(IncomingInvoiceItem.class::isInstance)
+                .map(IncomingInvoiceItem.class::cast)
+                .collect(Collectors.toList());
+
+        switch (items.size()) {
+            case 0:
+            case 1:
+                return null;
+            default:
+                return "Can only complete invoice item for invoices with a single item";
+        }
+    }
+
+    @Programmatic
+    private OrderItem defaultOrderItemCompleteInvoiceItem() {
+        final List<OrderItemInvoiceItemLink> linksForInvoice = orderItemInvoiceItemLinkRepository.findByInvoice(this);
+        return linksForInvoice.isEmpty() ? null : linksForInvoice.get(0).getOrderItem();
+    }
+
+    @Programmatic
+    private List<OrderItem> choicesOrderItemCompleteInvoiceItem(final Party seller) {
+        final org.estatio.module.asset.dom.Property property = getProperty();
+        final List<OrderItem> orderItems;
+        if (property == null) {
+            orderItems = orderItemRepository.findBySeller(seller);
+        } else {
+            orderItems = orderItemRepository.findBySellerAndProperty(seller, property);
+        }
+
+        orderItemInvoiceItemLinkRepository.findByInvoice(this)
+                .stream()
+                .map(OrderItemInvoiceItemLink::getOrderItem)
+                .filter(oi -> !orderItems.contains(oi))
+                .forEach(orderItems::add);
+
+        return orderItems
+                .stream()
+                .filter(x -> x.getOrdr().getApprovalState() == null || x.getOrdr().getApprovalState() != OrderApprovalState.DISCARDED)
+                .collect(Collectors.toList());
+    }
+
+    @Programmatic
+    private String defaultDescriptionCompleteInvoiceItem() {
+        return defaultOrderItemCompleteInvoiceItem() == null ? null : defaultOrderItemCompleteInvoiceItem().getDescription();
+    }
+
+    @Programmatic
+    private BigDecimal defaultNetAmountCompleteInvoiceItem() {
+        return defaultOrderItemCompleteInvoiceItem() == null ? null : defaultOrderItemCompleteInvoiceItem().getNetAmount();
+    }
+
+    @Programmatic
+    private BigDecimal defaultVatAmountCompleteInvoiceItem() {
+        return defaultOrderItemCompleteInvoiceItem() == null ? null : defaultOrderItemCompleteInvoiceItem().getVatAmount();
+    }
+
+    @Programmatic
+    private Tax defaultTaxCompleteInvoiceItem() {
+        return defaultOrderItemCompleteInvoiceItem() == null ? null : defaultOrderItemCompleteInvoiceItem().getTax();
+    }
+
+    @Programmatic
+    private BigDecimal defaultGrossAmountCompleteInvoiceItem() {
+        return defaultOrderItemCompleteInvoiceItem() == null ? null : defaultOrderItemCompleteInvoiceItem().getGrossAmount();
+    }
+
+    @Programmatic
+    private Charge defaultChargeCompleteInvoiceItem() {
+        return defaultOrderItemCompleteInvoiceItem() == null ? null : defaultOrderItemCompleteInvoiceItem().getCharge();
+    }
+
+    @Programmatic
+    private List<Charge> autoCompleteChargeCompleteInvoiceItem(final String search) {
+        return chargeRepository.findByApplicabilityAndMatchOnReferenceOrName(search, Applicability.INCOMING);
+    }
+
+    @Programmatic
+    private String defaultPeriodCompleteInvoiceItem() {
+        return defaultOrderItemCompleteInvoiceItem() == null ? null : defaultOrderItemCompleteInvoiceItem().getPeriod();
+    }
+
+    @Programmatic
     private Optional<IncomingInvoiceItem> getFirstItemIfAny() {
         SortedSet<InvoiceItem> items = getItems();
         return Lists.newArrayList(items).stream()
@@ -547,16 +764,19 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .findFirst();
     }
 
+    @Programmatic
     private static LocalDate startDateFromPeriod(final String period) {
         LocalDateInterval localDateInterval = fromPeriod(period);
         return localDateInterval != null ? localDateInterval.startDate() : null;
     }
 
+    @Programmatic
     private static LocalDate endDateFromPeriod(final String period) {
         LocalDateInterval localDateInterval = fromPeriod(period);
         return localDateInterval != null ? localDateInterval.endDate() : null;
     }
 
+    @Programmatic
     private static LocalDateInterval fromPeriod(final String period) {
         return period != null
                 ? PeriodUtil.yearFromPeriod(period)
@@ -1870,6 +2090,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Inject
     @NotPersistent
     PartyRepository partyRepository;
+
+    @Inject
+    @NotPersistent
+    ProjectRepository projectRepository;
 
     @Inject
     @NotPersistent
