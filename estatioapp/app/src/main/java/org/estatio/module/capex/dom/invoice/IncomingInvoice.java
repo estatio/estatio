@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.SortedSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -41,6 +42,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -62,6 +64,9 @@ import org.estatio.module.capex.dom.documents.BudgetItemChooser;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.module.capex.dom.order.Order;
+import org.estatio.module.capex.dom.order.OrderItem;
+import org.estatio.module.capex.dom.order.OrderItemRepository;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.payment.PaymentLine;
@@ -313,6 +318,252 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
         return buf.toString();
     }
+
+    // ////////////////////////////////////////
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(promptStyle = PromptStyle.DIALOG_SIDEBAR)
+    public IncomingInvoice completeInvoice(
+            final IncomingInvoiceType incomingInvoiceType,
+            final Party seller,
+            final Boolean createRoleIfRequired,
+            final BankAccount bankAccount,
+            final String invoiceNumber,
+            final LocalDate dateReceived,
+            final LocalDate invoiceDate,
+            final LocalDate dueDate,
+            final PaymentMethod paymentMethod,
+            final Currency currency) {
+        IncomingInvoiceType previousType = getType();
+        setType(incomingInvoiceType);
+        setInvoiceNumber(invoiceNumber);
+        setSeller(seller);
+
+        if (createRoleIfRequired) {
+            partyRoleRepository.findOrCreate(seller, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+        }
+
+        setInvoiceDate(invoiceDate);
+        setDueDate(dueDate);
+        setPaymentMethod(paymentMethod);
+        setCurrency(currency);
+        setDateReceived(dateReceived);
+        setBankAccount(bankAccount);
+
+        // if changed the type, then we need to re-evaluate the state machine
+        if (previousType != incomingInvoiceType) {
+            stateTransitionService.trigger(this, IncomingInvoiceApprovalStateTransition.class, null, null, null);
+        }
+
+        return this;
+    }
+
+    public String validateCompleteInvoice(
+            final IncomingInvoiceType incomingInvoiceType,
+            final Party seller,
+            final Boolean createRoleIfRequired,
+            final BankAccount bankAccount,
+            final String invoiceNumber,
+            final LocalDate dateReceived,
+            final LocalDate invoiceDate,
+            final LocalDate dueDate,
+            final PaymentMethod paymentMethod,
+            final Currency currency) {
+        // validate seller
+        final String sellerValidation = partyRoleRepository.validateThat(seller, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+        if ((createRoleIfRequired == null || !createRoleIfRequired) && sellerValidation != null) {
+            return sellerValidation;
+        }
+
+        return validateChangePaymentMethod(paymentMethod);
+    }
+
+    public boolean hideCompleteInvoice() {
+        Optional<Document> documentIfAny = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(this);
+        return !documentIfAny.isPresent();
+    }
+
+    public IncomingInvoiceType default0CompleteInvoice() {
+        return getType();
+    }
+
+    public Party default1CompleteInvoice() {
+        return getSeller();
+    }
+
+    public List<Party> autoComplete1CompleteInvoice(final String search) {
+        return partyRepository.autoCompleteSupplier(search, getAtPath());
+    }
+
+    public BankAccount default3CompleteInvoice(
+            final IncomingInvoiceType incomingInvoiceType,
+            final Party seller) {
+        return bankAccountRepository.getFirstBankAccountOfPartyOrNull(seller);
+    }
+
+    public List<BankAccount> choices3CompleteInvoice(
+            final IncomingInvoiceType incomingInvoiceType,
+            final Party seller) {
+        return bankAccountRepository.findBankAccountsByOwner(seller);
+    }
+
+    public String default4CompleteInvoice() {
+        return getInvoiceNumber();
+    }
+
+    public LocalDate default5CompleteInvoice() {
+        return getDateReceived() == null ? dateReceivedDerivedFromDocument() : getDateReceived();
+    }
+
+    public LocalDate default6CompleteInvoice() {
+        return getInvoiceDate();
+    }
+
+    public LocalDate default7CompleteInvoice() {
+        return getDueDate() == null && getInvoiceDate() != null ? getInvoiceDate().plusMonths(1) : getDueDate();
+    }
+
+    public PaymentMethod default8CompleteInvoice() {
+        return getPaymentMethod();
+    }
+
+    public Currency default9CompleteInvoice() {
+        return getCurrency();
+    }
+
+    private LocalDate dateReceivedDerivedFromDocument() {
+        Optional<Document> documentIfAny = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(this);
+        return documentIfAny.get().getCreatedAt().toLocalDate(); // guaranteed to return, hidden if none
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(named = "Complete Invoice Item", promptStyle = PromptStyle.DIALOG_SIDEBAR)
+    public IncomingInvoice completeInvoiceItemWithBudgetItem(
+            final OrderItem orderItem,
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final Tax tax,
+            final BigDecimal grossAmount,
+            final Charge charge,
+            final BudgetItem budgetItem,
+            final String period) {
+        return completeInvoiceItem(orderItem, description, netAmount, vatAmount, tax, grossAmount, charge, null, budgetItem, period);
+    }
+
+    public boolean hideCompleteInvoiceItemWithBudgetItem() {
+        switch (getType()) {
+            case SERVICE_CHARGES:
+            case ITA_RECOVERABLE:
+                return false;
+            default:
+                return true;
+        }
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(named = "Complete Invoice Item", promptStyle = PromptStyle.DIALOG_SIDEBAR)
+    public IncomingInvoice completeInvoiceItemWithProject(
+            final OrderItem orderItem,
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final Tax tax,
+            final BigDecimal grossAmount,
+            final Charge charge,
+            final Project project,
+            final String period) {
+        return completeInvoiceItem(orderItem, description, netAmount, vatAmount, tax, grossAmount, charge, project, null, period);
+    }
+
+    public boolean hideCompleteInvoiceItemWithProject() {
+        switch (getType()) {
+            case CAPEX:
+                return false;
+            default:
+                return true;
+        }
+    }
+
+    private IncomingInvoice completeInvoiceItem(
+            final OrderItem orderItem,
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final Tax tax,
+            final BigDecimal grossAmount,
+            final Charge charge,
+            final Project project,
+            final BudgetItem budgetItem,
+            final String period) {
+        // upsert invoice item
+        // this will also update the parent header's property with that from the first item
+        Optional<IncomingInvoiceItem> firstItemIfAny = getFirstItemIfAny();
+        IncomingInvoiceItem firstItem;
+
+        if (firstItemIfAny.isPresent()) {
+            IncomingInvoiceItem item = firstItemIfAny.get();
+            item.setIncomingInvoiceType(getType());
+            item.setCharge(charge);
+            item.setDescription(description);
+            item.setNetAmount(netAmount);
+            item.setVatAmount(vatAmount);
+            item.setGrossAmount(grossAmount);
+            item.setTax(tax);
+            item.setStartDate(startDateFromPeriod(period));
+            item.setEndDate(endDateFromPeriod(period));
+            item.setFixedAsset(getProperty());
+            item.setProject(project);
+            item.setBudgetItem(budgetItem);
+
+            firstItem = item;
+        } else {
+            firstItem = addItemToThis(getType(), charge, description, netAmount, vatAmount, grossAmount, tax, getDueDate(), period, getProperty(), project, budgetItem);
+        }
+
+        if (orderItem != null) {
+            Order order = orderItem.getOrdr();
+            Charge chargeFromWrapper = orderItem.getCharge();
+            OrderItem orderItemToLink = orderItemRepository.findUnique(order, chargeFromWrapper, 0);
+            orderItemInvoiceItemLinkRepository.findOrCreateLink(orderItemToLink, firstItem, firstItem.getNetAmount());
+        } else {
+            // remove all (or the one and only) link.
+            final Optional<OrderItemInvoiceItemLink> links = orderItemInvoiceItemLinkRepository.findByInvoiceItem(firstItem);
+            links.ifPresent(OrderItemInvoiceItemLink::remove);
+        }
+
+        // also set amounts on invoice
+        this.setNetAmount(netAmount);
+        this.setGrossAmount(grossAmount);
+
+        return this;
+    }
+
+    private Optional<IncomingInvoiceItem> getFirstItemIfAny() {
+        SortedSet<InvoiceItem> items = getItems();
+        return Lists.newArrayList(items).stream()
+                .filter(IncomingInvoiceItem.class::isInstance)
+                .map(IncomingInvoiceItem.class::cast)
+                .findFirst();
+    }
+
+    private static LocalDate startDateFromPeriod(final String period) {
+        LocalDateInterval localDateInterval = fromPeriod(period);
+        return localDateInterval != null ? localDateInterval.startDate() : null;
+    }
+
+    private static LocalDate endDateFromPeriod(final String period) {
+        LocalDateInterval localDateInterval = fromPeriod(period);
+        return localDateInterval != null ? localDateInterval.endDate() : null;
+    }
+
+    private static LocalDateInterval fromPeriod(final String period) {
+        return period != null
+                ? PeriodUtil.yearFromPeriod(period)
+                : null;
+    }
+
+    // ////////////////////////////////////////
 
     @MemberOrder(name = "items", sequence = "1")
     public IncomingInvoice addItem(
@@ -1109,7 +1360,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String disableEditBuyer() {
-        return isItalian() ? "Editing is disabled" : "Buyer is not editable; discard invoice rescan document with appropriate barcode instead";
+        return isItalian() ? "Editing is disabled" : "Buyer is not editable; discard invoice and rescan document with appropriate barcode instead";
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -1606,6 +1857,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Inject
     @NotPersistent
+    OrderItemRepository orderItemRepository;
+
+    @Inject
+    @NotPersistent
     OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
     @Inject
@@ -1627,5 +1882,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Inject
     @NotPersistent
     ChargeRepository chargeRepository;
+
+    @Inject
+    @NotPersistent
+    StateTransitionService stateTransitionService;
 
 }

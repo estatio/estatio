@@ -6,6 +6,9 @@
             <bs3:row>
                 <bs3:col span="12" unreferencedActions="true">
                     <cpt:domainObject/>
+                    <cpt:action id="completeInvoice"/>
+                    <cpt:action id="completeInvoiceItemWithBudgetItem"/>
+                    <cpt:action id="completeInvoiceItemWithProject"/>
                     <cpt:action id="verify" hidden="EVERYWHERE"/>
                     <cpt:action id="links" hidden="EVERYWHERE"/>
                 </bs3:col>
