@@ -1,4 +1,4 @@
-package org.incode.module.docrendering.gotenberg;
+package org.incode.module.docrendering.gotenberg.fixture.fake;
 
 import java.util.Set;
 
@@ -12,7 +12,7 @@ import org.apache.isis.applib.ModuleAbstract;
 import org.incode.module.document.DocumentModule;
 
 @XmlRootElement(name = "module")
-public class GotenbergRenderingModule extends ModuleAbstract {
+public class GotenbergRenderingFixtureModule extends ModuleAbstract {
 
     @Override
     public Set<Module> getDependencies() {

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/links http://isis.apache.org/applib/layout/links/links.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:lnk="http://isis.apache.org/applib/layout/links" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bs3:row>
+        <bs3:col span="6">
+            <bs3:row>
+                <bs3:col span="12" unreferencedActions="true">
+                    <cpt:domainObject/>
+                    <cpt:action id="impersonateUser"/>
+                    <cpt:action id="stopImpersonating"/>
+                </bs3:col>
+            </bs3:row>
+            <bs3:tabGroup>
+                <bs3:tab name="Identifier">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Identifier">
+                                <cpt:property id="order"/>
+                                <cpt:property id="type"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Application Level">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Application Level">
+                                <cpt:property id="atPath" hidden="ALL_TABLES"/>
+                                <!-- assuming a mixin is present to look this up -->
+                                <cpt:property id="applicationTenancy" hidden="ALL_TABLES"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Metadata">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Metadata" id="metadata">
+                                <cpt:action id="rebuildMetamodel" position="PANEL"/>
+                                <cpt:action id="clearHints" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="openRestApi" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="recentCommands" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <cpt:property id="name"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Other">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Other" unreferencedProperties="true">
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+            <bs3:tabGroup>
+                <bs3:tab name="Details">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Details">
+                                <cpt:property id="mimeType" hidden="ALL_TABLES"/>
+                                <cpt:property id="sort" hidden="ALL_TABLES"/>
+                                <cpt:property id="blob" hidden="ALL_TABLES"/>
+                                <cpt:property id="clob" hidden="ALL_TABLES"/>
+                                <cpt:property id="text" hidden="ALL_TABLES" multiLine="14"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+            <cpt:fieldSet name="Document Details">
+            </cpt:fieldSet>
+        </bs3:col>
+        <bs3:col span="6">
+            <bs3:tabGroup>
+                <bs3:tab name="Document">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet id="content">
+                                <cpt:property id="pdf" hidden="ALL_TABLES"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12" unreferencedCollections="true"/>
+    </bs3:row>
+</bs3:grid>

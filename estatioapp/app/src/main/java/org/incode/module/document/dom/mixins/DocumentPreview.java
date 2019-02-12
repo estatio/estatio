@@ -9,12 +9,14 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.document.dom.impl.docs.DocumentLike;
 import org.incode.module.document.dom.impl.docs.DocumentSort;
+import org.incode.module.document.dom.impl.types.DocumentType;
 
 import org.estatio.module.capex.dom.order.Order;
 
@@ -38,6 +40,10 @@ public class DocumentPreview implements DocumentLike {
     @Getter @Setter
     private DocumentSort sort;
 
+    @Getter @Setter
+    private DocumentType type;
+
+    @Title
     @Getter @Setter
     private String name;
 

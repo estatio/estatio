@@ -817,15 +817,16 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     public void renderContent(
             final DocumentLike document,
             final Object contentDataModel) {
-
+        final String documentName = determineDocumentName(contentDataModel);
+        document.setName(documentName);
+        final RenderingStrategy renderingStrategy = getContentRenderingStrategy();
         final String variant = "content";
-        final String documentName = document.getName();
         try {
 
-            final DocumentNature inputNature = getContentRenderingStrategy().getInputNature();
-            final DocumentNature outputNature = getContentRenderingStrategy().getOutputNature();
+            final DocumentNature inputNature = renderingStrategy.getInputNature();
+            final DocumentNature outputNature = renderingStrategy.getOutputNature();
 
-            final Renderer renderer = getContentRenderingStrategy().newRenderer();
+            final Renderer renderer = renderingStrategy.newRenderer();
 
             switch (inputNature){
                 case BYTES:

@@ -40,6 +40,7 @@ public abstract class T_preview<T> {
         final Object rendererModel = template.newRendererModel(domainObject);
         final DocumentPreview preview = serviceRegistry.injectServicesInto(new DocumentPreview());
         template.renderContent(preview, rendererModel);
+        preview.setType(template.getType());
         return preview;
     }
 
