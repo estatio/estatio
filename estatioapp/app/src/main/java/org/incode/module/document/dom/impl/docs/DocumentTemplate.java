@@ -3,6 +3,7 @@ package org.incode.module.document.dom.impl.docs;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -19,7 +20,6 @@ import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Uniques;
 
-import com.google.common.collect.FluentIterable;
 import com.google.common.eventbus.Subscribe;
 
 import org.apache.commons.lang3.StringUtils;
@@ -633,8 +633,8 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     @Programmatic
     public RendererModelFactory newRendererModelFactory(final Object domainObject) {
         final Class<?> domainObjectClass = domainObject.getClass();
-        final com.google.common.base.Optional<Applicability> applicabilityIfAny = FluentIterable.from(getAppliesTo())
-                .filter(applicability -> applies(applicability, domainObjectClass)).first();
+        final Optional<Applicability> applicabilityIfAny = getAppliesTo().stream()
+                .filter(applicability -> applies(applicability, domainObjectClass)).findFirst();
         if (!applicabilityIfAny.isPresent()) {
             return null;
         }
@@ -646,8 +646,9 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     @Programmatic
     public AttachmentAdvisor newAttachmentAdvisor(final Object domainObject) {
         final Class<?> domainObjectClass = domainObject.getClass();
-        final com.google.common.base.Optional<Applicability> applicabilityIfAny = FluentIterable.from(getAppliesTo())
-                .filter(applicability -> applies(applicability, domainObjectClass)).first();
+        final Optional<Applicability> applicabilityIfAny = getAppliesTo().stream()
+                        .filter(applicability -> applies(applicability, domainObjectClass))
+                        .findFirst();
         if (!applicabilityIfAny.isPresent()) {
             return null;
         }
@@ -694,11 +695,11 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
 
 
 
-    //region > preview (programmatic)
+    //region > preview, previewUrl (programmatic)
 
 
     @Programmatic
-    public URL preview(final Object rendererModel) throws IOException {
+    public URL previewUrl(final Object rendererModel) throws IOException {
 
         serviceRegistry2.injectServicesInto(rendererModel);
 
@@ -808,6 +809,13 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     @Programmatic
     public void renderContent(
             final Document document,
+            final Object contentDataModel) {
+        renderContent((DocumentLike)document, contentDataModel);
+    }
+
+    @Programmatic
+    public void renderContent(
+            final DocumentLike document,
             final Object contentDataModel) {
 
         final String variant = "content";

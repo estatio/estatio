@@ -1,7 +1,6 @@
 package org.incode.module.document.dom.mixins;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -9,16 +8,16 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
+import org.apache.isis.applib.services.registry.ServiceRegistry;
 
 import org.incode.module.document.DocumentModule;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
-import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
-import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
-import org.incode.module.document.dom.services.ClassService;
 
+/**
+ * Subclasses should be annotated with <code>@Mixin(method='act')</code>
+ */
 public abstract class T_preview<T> {
 
     protected final T domainObject;
@@ -37,48 +36,39 @@ public abstract class T_preview<T> {
     @ActionLayout(
             contributed = Contributed.AS_ACTION
     )
-    @MemberOrder(name = "documents", sequence = "2")
-    public URL $$(final DocumentTemplate template) throws IOException {
+    public DocumentPreview act(final DocumentTemplate template) throws IOException {
         final Object rendererModel = template.newRendererModel(domainObject);
-        return template.preview(rendererModel);
+        final DocumentPreview preview = serviceRegistry.injectServicesInto(new DocumentPreview());
+        template.renderContent(preview, rendererModel);
+        return preview;
     }
 
-    public boolean hide$$() {
-        return choices0$$().isEmpty();
+    public boolean hideAct() {
+        return choices0Act().isEmpty();
     }
 
-    public DocumentTemplate default0$$() {
-        final List<DocumentTemplate> documentTemplates = choices0$$();
+    public DocumentTemplate default0Act() {
+        final List<DocumentTemplate> documentTemplates = choices0Act();
         return documentTemplates.size() == 1 ? documentTemplates.get(0): null;
     }
 
     /**
      * All templates which are applicable to the domain object's atPath, and which can be previewed.
      */
-    public List<DocumentTemplate> choices0$$() {
+    public List<DocumentTemplate> choices0Act() {
         return queryResultsCache.execute(
-                () -> documentTemplateService.documentTemplatesForPreview(domainObject),
-                getClass(), "$$", domainObject);
+                () -> documentTemplateService.documentTemplatesForCreateAndAttach(domainObject),
+                getClass(), "act", domainObject);
     }
 
-
-    //region > injected services
 
     @Inject
     DocumentTemplateForAtPathService documentTemplateService;
 
     @Inject
-    PaperclipRepository paperclipRepository;
-
-    @Inject
-    DocumentTypeRepository documentTypeRepository;
-
-    @Inject
-    ClassService classService;
-
-    @Inject
     QueryResultsCache queryResultsCache;
 
-    //endregion
+    @Inject
+    ServiceRegistry serviceRegistry;
 
 }

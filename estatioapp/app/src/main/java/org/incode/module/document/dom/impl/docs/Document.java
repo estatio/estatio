@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
@@ -144,7 +145,9 @@ import lombok.Setter;
         bookmarking = BookmarkPolicy.AS_ROOT
 )
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
-public class Document extends DocumentAbstract<Document> {
+public class Document
+                extends DocumentAbstract<Document>
+                implements DocumentLike {
 
     //region > ui event classes
     public static class TitleUiEvent extends DocumentModule.TitleUiEvent<Document> {}
@@ -285,8 +288,9 @@ public class Document extends DocumentAbstract<Document> {
         setRenderedAt(clockService.nowAsDateTime());
     }
 
+    @Programmatic
     @Override
-    void setTextData(String name, String mimeType, String text) {
+    public void setTextData(String name, String mimeType, String text) {
         super.setTextData(name, mimeType, text);
         setState(DocumentState.RENDERED);
         setRenderedAt(clockService.nowAsDateTime());

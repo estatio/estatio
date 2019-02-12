@@ -187,6 +187,7 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Placeholders" id="documentText">
+                                        <cpt:action id="previewDocument"/>
                                         <cpt:action id="generateDocument"/>
                                         <cpt:property id="subject" hidden="ALL_TABLES">
                                             <cpt:action id="changeSubject" promptStyle="INLINE_AS_IF_EDIT">
