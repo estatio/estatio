@@ -35,7 +35,7 @@ public class PartyRoleMemberInferenceServiceForPartyRoleAndHasAtPath
         return personRepository.findWithUsername()
                 .stream()
                 .map(person -> applicationUserRepository.findByUsername(person.getUsername()))
-                .filter(applicationUser -> applicationUser.getAtPath().contains(atPath))
+                .filter(applicationUser -> applicationUser.getAtPath() != null && applicationUser.getAtPath().contains(atPath)) // if atPath is null on applicationUser, then the user won't show up in suggestions (which is intended because they should have one)
                 .map(applicationUser -> personRepository.findByUsername(applicationUser.getUsername()))
                 .filter(personsWithRoleType::contains)
                 .collect(Collectors.toList());
