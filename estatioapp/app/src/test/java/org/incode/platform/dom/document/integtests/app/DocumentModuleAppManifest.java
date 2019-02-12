@@ -10,7 +10,7 @@ import org.isisaddons.module.xdocreport.dom.XDocReportModule;
 
 import org.incode.module.docrendering.freemarker.FreemarkerDocRenderingModule;
 import org.incode.module.docrendering.stringinterpolator.StringInterpolatorDocRenderingModule;
-import org.incode.module.docrendering.gotenberg.dom.impl.GotenbergRenderingModule;
+import org.incode.module.docrendering.gotenberg.GotenbergRenderingModule;
 import org.incode.module.docrendering.xdocreport.XDocReportDocRenderingModule;
 import org.incode.module.document.DocumentModule;
 import org.incode.platform.dom.document.integtests.dom.document.DocumentModuleIntegrationSubmodule;

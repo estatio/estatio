@@ -1,4 +1,4 @@
-package org.incode.module.docrendering.gotenberg.dom.impl;
+package org.incode.module.docrendering.gotenberg;
 
 import java.util.Set;
 
