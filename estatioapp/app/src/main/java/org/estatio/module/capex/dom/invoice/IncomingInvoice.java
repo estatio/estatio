@@ -329,7 +329,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     public IncomingInvoice completeInvoice(
             final IncomingInvoiceType incomingInvoiceType,
             final Party seller,
-            final Boolean createRoleIfRequired,
+            final @Nullable Boolean createRoleIfRequired,
             final BankAccount bankAccount,
             final String invoiceNumber,
             final LocalDate dateReceived,
@@ -342,7 +342,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         setInvoiceNumber(invoiceNumber);
         setSeller(seller);
 
-        if (createRoleIfRequired) {
+        if (createRoleIfRequired != null && createRoleIfRequired) {
             partyRoleRepository.findOrCreate(seller, IncomingInvoiceRoleTypeEnum.SUPPLIER);
         }
 
@@ -511,17 +511,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public boolean hideCompleteInvoiceItemWithBudgetItem() {
-        switch (getType()) {
-            case SERVICE_CHARGES:
-            case ITA_RECOVERABLE:
-                return false;
-            default:
-                return true;
-        }
+        return getType() != IncomingInvoiceType.SERVICE_CHARGES && getType() != IncomingInvoiceType.ITA_RECOVERABLE;
     }
 
     public String disableCompleteInvoiceItemWithBudgetItem() {
-        return disableCompleteInvoiceItem();
+        return disableCompleteInvoiceItemProgrammatic();
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -603,16 +597,73 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public boolean hideCompleteInvoiceItemWithProject() {
-        switch (getType()) {
-            case CAPEX:
-                return false;
-            default:
-                return true;
-        }
+        return getType() != IncomingInvoiceType.CAPEX;
     }
 
     public String disableCompleteInvoiceItemWithProject() {
-        return disableCompleteInvoiceItem();
+        return disableCompleteInvoiceItemProgrammatic();
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(named = "Complete Invoice Item", promptStyle = PromptStyle.DIALOG_SIDEBAR)
+    public IncomingInvoice completeInvoiceItem(
+            final OrderItem orderItem,
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final Tax tax,
+            final BigDecimal grossAmount,
+            final Charge charge,
+            final String period) {
+        return completeInvoiceItem(orderItem, description, netAmount, vatAmount, tax, grossAmount, charge, null, null, period);
+    }
+
+    public OrderItem default0CompleteInvoiceItem() {
+        return defaultOrderItemCompleteInvoiceItem();
+    }
+
+    public List<OrderItem> choices0CompleteInvoiceItem() {
+        return choicesOrderItemCompleteInvoiceItem(getSeller());
+    }
+
+    public String default1CompleteInvoiceItem() {
+        return defaultDescriptionCompleteInvoiceItem();
+    }
+
+    public BigDecimal default2CompleteInvoiceItem() {
+        return defaultNetAmountCompleteInvoiceItem();
+    }
+
+    public BigDecimal default3CompleteInvoiceItem() {
+        return defaultVatAmountCompleteInvoiceItem();
+    }
+
+    public Tax default4CompleteInvoiceItem() {
+        return defaultTaxCompleteInvoiceItem();
+    }
+
+    public BigDecimal default5CompleteInvoiceItem() {
+        return defaultGrossAmountCompleteInvoiceItem();
+    }
+
+    public Charge default6CompleteInvoiceItem() {
+        return defaultChargeCompleteInvoiceItem();
+    }
+
+    public List<Charge> autoComplete6CompleteInvoiceItem(@MinLength(value = 3) String search) {
+        return autoCompleteChargeCompleteInvoiceItem(search);
+    }
+
+    public String default7CompleteInvoiceItem() {
+        return defaultPeriodCompleteInvoiceItem();
+    }
+
+    public boolean hideCompleteInvoiceItem() {
+        return getType() == IncomingInvoiceType.SERVICE_CHARGES || getType() == IncomingInvoiceType.ITA_RECOVERABLE || getType() == IncomingInvoiceType.CAPEX;
+    }
+
+    public String disableCompleteInvoiceItem() {
+        return disableCompleteInvoiceItemProgrammatic();
     }
 
     // TODO: in switched view amounts are determined based on tax/other amounts. How to achieve this in a single action?
@@ -672,7 +723,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     @Programmatic
-    private String disableCompleteInvoiceItem() {
+    private String disableCompleteInvoiceItemProgrammatic() {
         final List<IncomingInvoiceItem> items = getItems().stream()
                 .filter(IncomingInvoiceItem.class::isInstance)
                 .map(IncomingInvoiceItem.class::cast)
