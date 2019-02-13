@@ -79,7 +79,10 @@ public enum DocumentSort {
     EXTERNAL_BLOB(DocumentNature.BYTES, DocumentStorage.EXTERNAL) {
         @Override
         public DataSource asDataSource(final DocumentAbstract<?> document) {
-            return new ByteDataSource(document, asBytes(document));
+            return new ByteDataSource(document,
+                    // TODO: could probably instead just call Document#asBytes();
+                    //   being conversative for now to minimize retesting effort as this is a prod fix
+                    document.getBlobBytes() != null ? document.getBlobBytes() : asBytes(document));
         }
 
         @Override
@@ -97,7 +100,10 @@ public enum DocumentSort {
     EXTERNAL_CLOB(DocumentNature.BYTES, DocumentStorage.EXTERNAL) {
         @Override
         public DataSource asDataSource(final DocumentAbstract<?> document) {
-            return new CharDataSource(document, asChars(document));
+            return new CharDataSource(document,
+                    // TODO: could probably instead just call Document#asChars();
+                    //   being conversative for now to minimize retesting effort as this is a prod fix
+                    document.getClobChars() != null ? document.getClobChars() : asChars(document));
         }
 
         @Override
