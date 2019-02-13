@@ -162,7 +162,7 @@ public class DocumentTemplate_ORDER_CONFIRM_Test {
         final String renderedName = freeMarkerService.render("abc", nameTemplate, orderModel);
 
         // then
-        assertThat(renderedName).isEqualTo("Order 3775/CUR/212/005 2018-06-02-06");
+        assertThat(renderedName).isEqualTo("Order 3775/CUR/212/005 2018-06-02");
 
     }
     @Test
