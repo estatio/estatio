@@ -20,6 +20,7 @@ import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Uniques;
 
+import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 
 import org.apache.commons.lang3.StringUtils;
@@ -633,7 +634,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     @Programmatic
     public RendererModelFactory newRendererModelFactory(final Object domainObject) {
         final Class<?> domainObjectClass = domainObject.getClass();
-        final Optional<Applicability> applicabilityIfAny = getAppliesTo().stream()
+        final Optional<Applicability> applicabilityIfAny = Lists.newArrayList(getAppliesTo()).stream()
                 .filter(applicability -> applies(applicability, domainObjectClass)).findFirst();
         if (!applicabilityIfAny.isPresent()) {
             return null;
@@ -646,7 +647,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     @Programmatic
     public AttachmentAdvisor newAttachmentAdvisor(final Object domainObject) {
         final Class<?> domainObjectClass = domainObject.getClass();
-        final Optional<Applicability> applicabilityIfAny = getAppliesTo().stream()
+        final Optional<Applicability> applicabilityIfAny = Lists.newArrayList(getAppliesTo()).stream()
                         .filter(applicability -> applies(applicability, domainObjectClass))
                         .findFirst();
         if (!applicabilityIfAny.isPresent()) {
