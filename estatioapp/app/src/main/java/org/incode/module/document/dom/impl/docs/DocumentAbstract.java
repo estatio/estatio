@@ -266,7 +266,8 @@ public abstract class DocumentAbstract<T extends DocumentAbstract> implements Co
     )
     private String text;
 
-    void setTextData(String name, String mimeType, String text) {
+    @Programmatic
+    public void setTextData(String name, String mimeType, String text) {
         setName(name);
         setMimeType(mimeType);
         setText(text);

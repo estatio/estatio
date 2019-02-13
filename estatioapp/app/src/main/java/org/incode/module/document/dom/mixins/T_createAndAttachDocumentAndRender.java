@@ -9,6 +9,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Redirect;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
@@ -43,7 +44,8 @@ public abstract class T_createAndAttachDocumentAndRender<T>  {
             semantics = SemanticsOf.NON_IDEMPOTENT
     )
     @ActionLayout(
-            contributed = Contributed.AS_ACTION
+            contributed = Contributed.AS_ACTION,
+            redirectPolicy = Redirect.EVEN_IF_SAME
     )
     @MemberOrder(name = "documents", sequence = "3.1")
     public Object act(final DocumentTemplate template) throws IOException {

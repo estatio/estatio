@@ -19,52 +19,45 @@ import org.isisaddons.wicket.pdfjs.cpt.applib.PdfJsViewer;
 import org.incode.module.communications.dom.mixins.DocumentConstants;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
+import org.incode.module.document.dom.impl.docs.DocumentLike;
 import org.incode.module.document.dom.impl.docs.DocumentState;
 
 /**
  * In effect replaces the {@link Document}'s own {@link Document#getBlob() blob} property with a derived
- * {@link _pdf#prop() pdf} property, correctly annotated with the {@link PdfJsViewer} annotation.
+ * {@link DocumentLike_pdf#prop() pdf} property, correctly annotated with the {@link PdfJsViewer} annotation.
  *
  * <p>
  *     This is only done for {@link Document}s that contain a PDF.  A replacement `Document.layout.xml` positions this
  *     new derived property in the correct place.
  * </p>
  */
-public class DocumentPdfJsViewerSupport {
+@Mixin(method="prop")
+public class DocumentLike_pdf {
 
-    private DocumentPdfJsViewerSupport(){}
-
-    //region > _pdf (derived property)
-
-    /**
-     * TODO: move to a top-level mixin
-     */
-    @Mixin(method="prop")
-    public static class _pdf {
-        private final Document document;
-        public _pdf(final Document  document) {
-            this. document =  document;
-        }
-
-        public static class DomainEvent extends ActionDomainEvent<Document> {
-        }
-
-        @PdfJsViewer(initialPageNum = 1, initialScale = Scale.PAGE_WIDTH, initialHeight = 1500)
-        @Action(
-                semantics = SemanticsOf.SAFE,
-                domainEvent = DomainEvent.class
-        )
-        @ActionLayout(contributed= Contributed.AS_ASSOCIATION)
-        public Blob prop() {
-            return document.getBlob();
-        }
-        public boolean hideProp() {
-            return document.getState() != DocumentState.RENDERED || !holdsPdf(this.document);
-        }
-
+    private final DocumentLike documentLike;
+    public DocumentLike_pdf(final DocumentLike documentLike) {
+        this.documentLike = documentLike;
     }
 
-    //endregion
+    static boolean holdsPdf(final DocumentLike document) {
+        return DocumentConstants.MIME_TYPE_APPLICATION_PDF.equals(document.getMimeType());
+    }
+
+    public static class DomainEvent extends ActionDomainEvent<Document> {
+    }
+
+    @PdfJsViewer(initialPageNum = 1, initialScale = Scale.PAGE_WIDTH, initialHeight = 1500)
+    @Action(
+            semantics = SemanticsOf.SAFE,
+            domainEvent = DomainEvent.class
+    )
+    @ActionLayout(contributed= Contributed.AS_ASSOCIATION)
+    public Blob prop() {
+        return documentLike.getBlob();
+    }
+    public boolean hideProp() {
+        return documentLike.getState() != DocumentState.RENDERED || !holdsPdf(this.documentLike);
+    }
 
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class DocumentBlobHideIfPdf extends AbstractSubscriber {
@@ -77,18 +70,11 @@ public class DocumentPdfJsViewerSupport {
 
             case HIDE:
                 final DocumentAbstract document = ev.getSource();
-                if(document instanceof Document && holdsPdf(document)){
+                if(document instanceof DocumentLike && holdsPdf((DocumentLike)document)){
                     ev.hide();
                 }
                 break;
             }
         }
     }
-
-    private static boolean holdsPdf(final DocumentAbstract document) {
-        return DocumentConstants.MIME_TYPE_APPLICATION_PDF.equals(document.getMimeType());
-    }
-
 }
-
-

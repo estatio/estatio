@@ -15,13 +15,10 @@ import javax.jdo.annotations.Uniques;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.google.common.collect.Lists;
-import com.google.common.eventbus.Subscribe;
 
-import org.axonframework.eventhandling.annotation.EventHandler;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 
-import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
@@ -41,7 +38,6 @@ import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
-import org.incode.module.document.DocumentModule;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.mixins.T_documents;
@@ -139,113 +135,28 @@ import lombok.Setter;
         editing = Editing.DISABLED
 )
 @DomainObjectLayout(
-        titleUiEvent = Document.TitleUiEvent.class,
-        iconUiEvent = Document.IconUiEvent.class,
-        cssClassUiEvent = Document.CssClassUiEvent.class,
+        iconUiEvent = DocumentLike.IconUiEvent.class,
         bookmarking = BookmarkPolicy.AS_ROOT
 )
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
-public class Document
-                extends DocumentAbstract<Document>
-                implements DocumentLike {
+public class Document extends DocumentAbstract<Document> implements DocumentLike {
 
-    //region > ui event classes
-    public static class TitleUiEvent extends DocumentModule.TitleUiEvent<Document> {}
-    public static class IconUiEvent extends DocumentModule.IconUiEvent<Document>{}
-    public static class CssClassUiEvent extends DocumentModule.CssClassUiEvent<Document>{}
-    //endregion
-
-    //region > title, icon, cssClass
-    /**
-     * Implemented as a subscriber so can be overridden by consuming application if required.
-     */
-    @DomainService(nature = NatureOfService.DOMAIN)
-    public static class TitleSubscriber extends AbstractSubscriber {
-
-        public String getId() {
-            return "incodeDocuments.Document$TitleSubscriber";
-        }
-
-        @EventHandler
-        @Subscribe
-        public void on(Document.TitleUiEvent ev) {
-            if(ev.getTitle() != null) {
-                return;
-            }
-            ev.setTranslatableTitle(titleOf(ev.getSource()));
-        }
-        private TranslatableString titleOf(final Document document) {
-            return TranslatableString.tr("[{type}] {name} {createdAt}",
-                    "name", document.getName(),
-                    "type", document.getType().getReference(),
-                    "createdAt", document.getCreatedAt().toString("(dd-MM-YYYY hh:mm)"));
-        }
+    public TranslatableString title() {
+        return titleOf(this);
     }
-
-    /**
-     * Implemented as a subscriber so can be overridden by consuming application if required.
-     */
-    @DomainService(nature = NatureOfService.DOMAIN)
-    public static class IconSubscriber extends AbstractSubscriber {
-
-        public String getId() {
-            return "incodeDocuments.Document$IconSubscriber";
-        }
-
-        @EventHandler
-        @Subscribe
-        public void on(Document.IconUiEvent ev) {
-            if(ev.getIconName() != null) {
-                return;
-            }
-            final Document document = ev.getSource();
-            final String documentName = document.getName();
-            String iconName = "";
-            if(documentName.endsWith(".xls") || documentName.endsWith(".xlsx")) {
-                iconName = "xlsx";
-            }
-            if(documentName.endsWith(".doc") || documentName.endsWith(".docx")) {
-                iconName = "docx";
-            }
-            if(documentName.endsWith(".ppt") || documentName.endsWith(".pptx")) {
-                iconName = "pptx";
-            }
-            if(documentName.endsWith(".pdf")) {
-                iconName = "pdf";
-            }
-            if(documentName.endsWith(".html")) {
-                iconName = "html";
-            }
-            ev.setIconName(iconName);
-        }
+    private TranslatableString titleOf(final Document document) {
+        return TranslatableString.tr("[{type}] {name} {createdAt}",
+                "name", document.getName(),
+                "type", document.getType().getReference(),
+                "createdAt", document.getCreatedAt().toString("(dd-MM-YYYY hh:mm)"));
     }
-
-    /**
-     * Implemented as a subscriber so can be overridden by consuming application if required.
-     */
-    @DomainService(nature = NatureOfService.DOMAIN)
-    public static class CssClassSubscriber extends AbstractSubscriber {
-
-        public String getId() {
-            return "incodeDocuments.Document$CssClassSubscriber";
-        }
-
-        @EventHandler
-        @Subscribe
-        public void on(Document.CssClassUiEvent ev) {
-            if(ev.getCssClass() != null) {
-                return;
-            }
-            ev.setCssClass("");
-        }
-    }
-    //endregion
 
 
     //region > constructor
     Document() {
         // for unit testing only
     }
+
     public Document(
             final DocumentType type,
             final String atPath,

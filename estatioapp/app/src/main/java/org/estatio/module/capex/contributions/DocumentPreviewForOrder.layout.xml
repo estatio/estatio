@@ -14,7 +14,7 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="Identifier">
-                                <cpt:property id="order"/>
+                                <cpt:property id="domainObject"/>
                                 <cpt:property id="type"/>
                             </cpt:fieldSet>
                         </bs3:col>
@@ -60,6 +60,7 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="Details">
+                                <cpt:property id="state" hidden="EVERYWHERE"/>
                                 <cpt:property id="mimeType" hidden="ALL_TABLES"/>
                                 <cpt:property id="sort" hidden="ALL_TABLES"/>
                                 <cpt:property id="blob" hidden="ALL_TABLES"/>

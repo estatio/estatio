@@ -13,12 +13,13 @@ import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.registry.ServiceRegistry;
 
 import org.incode.module.document.DocumentModule;
+import org.incode.module.document.dom.impl.docs.DocumentState;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
 /**
  * Subclasses should be annotated with <code>@Mixin(method='act')</code>
  */
-public abstract class T_preview<T> {
+public abstract class T_preview<T,P extends DocumentPreview<T>> {
 
     protected final T domainObject;
 
@@ -36,13 +37,17 @@ public abstract class T_preview<T> {
     @ActionLayout(
             contributed = Contributed.AS_ACTION
     )
-    public DocumentPreview act(final DocumentTemplate template) throws IOException {
+    public P act(final DocumentTemplate template) throws IOException {
         final Object rendererModel = template.newRendererModel(domainObject);
-        final DocumentPreview preview = serviceRegistry.injectServicesInto(new DocumentPreview());
-        template.renderContent(preview, rendererModel);
+        final P preview = serviceRegistry.injectServicesInto(newPreview());
+        preview.setDomainObject(domainObject);
         preview.setType(template.getType());
+        template.renderContent(preview, rendererModel);
+        preview.setState(DocumentState.RENDERED);
         return preview;
     }
+
+    protected abstract P newPreview();
 
     public boolean hideAct() {
         return choices0Act().isEmpty();

@@ -2,10 +2,10 @@ package org.incode.module.document.dom.mixins;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
@@ -16,9 +16,8 @@ import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.document.dom.impl.docs.DocumentLike;
 import org.incode.module.document.dom.impl.docs.DocumentSort;
+import org.incode.module.document.dom.impl.docs.DocumentState;
 import org.incode.module.document.dom.impl.types.DocumentType;
-
-import org.estatio.module.capex.dom.order.Order;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,20 +27,21 @@ import lombok.Setter;
         objectType = "org.incode.module.document.dom.mixins.DocumentPreview",
         editing = Editing.DISABLED
 )
-@XmlRootElement(name = "documentPreview")
-@XmlType(
-        propOrder = {
-        }
+@DomainObjectLayout(
+        iconUiEvent = DocumentLike.IconUiEvent.class
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @NoArgsConstructor
-public class DocumentPreview implements DocumentLike {
+public abstract class DocumentPreview<T> implements DocumentLike {
 
     @Getter @Setter
     private DocumentSort sort;
 
     @Getter @Setter
     private DocumentType type;
+
+    @Getter @Setter
+    private DocumentState state;
 
     @Title
     @Getter @Setter
@@ -57,8 +57,9 @@ public class DocumentPreview implements DocumentLike {
     )
     private byte[] blobBytes;
 
-    @Getter @Setter
-    private Order order;
+    @XmlTransient
+    public abstract T getDomainObject();
+    public abstract void setDomainObject(final T domainObject);
 
     //region > blob (derived property)
     @Property(notPersisted = true)
