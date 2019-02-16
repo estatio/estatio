@@ -112,6 +112,10 @@ public class DocumentTemplateFSForOrderConfirm extends DocumentTemplateFSAbstrac
                 nameChars, fmkRenderingStrategy,
                 ec);
 
+        // necessary because the mimeType is used as the mimeType of the rendered document.
+        // REVIEW: this really should be determined from the renderingStrategy in use.
+        documentTemplate.setMimeType("application/pdf");
+
         mixin(DocumentTemplate._applicable.class, documentTemplate).applicable(
                 Order.class, RendererModelFactoryForOrder.class, AttachToSameForOrder.class);
 

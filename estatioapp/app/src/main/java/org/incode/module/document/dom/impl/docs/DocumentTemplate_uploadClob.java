@@ -32,7 +32,6 @@ public class DocumentTemplate_uploadClob {
             @ParameterLayout(named = "File")
             final Clob clob
     ) {
-        documentTemplate.setMimeType(clob.getMimeType().toString());
         documentTemplate.setClobChars(clob.getChars().toString());
         return documentTemplate;
     }
