@@ -96,15 +96,17 @@ public class DocumentTemplateFSForOrderConfirm extends DocumentTemplateFSAbstrac
 
         final DocumentType documentType = upsertType(DocumentTypeData.ORDER_CONFIRM, ec);
         final byte[] contentBytes = loadBytesForOrderConfirmTemplateItaDocx();
+
+        final String name = buildTemplateName(documentType, "(Italy)");
         final String nameChars = loadCharsForOrderConfirmTemplateTitleItaFtl();
 
         final Blob contentBlob =
-                new Blob(nameChars + ".pdf",
-                        "application/pdf",
+                new Blob(name + ".docx",
+                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                         contentBytes);
         final DocumentTemplate documentTemplate = upsertDocumentBlobTemplate(
                 documentType, templateDate, It.getPath(),
-                ".pdf",
+                ".docx",
                 false,
                 contentBlob, xgpRenderingStrategy,
                 nameChars, fmkRenderingStrategy,

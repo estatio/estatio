@@ -183,10 +183,14 @@
                                 </bs3:col>
                             </bs3:row>
                         </bs3:tab>
-                        <bs3:tab name="Confirmation Document Placeholders">
+                        <bs3:tab name="Confirmation Document">
                             <bs3:row>
                                 <bs3:col span="12">
+                                    <cpt:fieldSet name="Template" id="confirmTemplate">
+                                        <cpt:property id="confirmationTemplate" hidden="ALL_TABLES"/>
+                                    </cpt:fieldSet>
                                     <cpt:fieldSet name="Placeholders" id="documentText">
+                                        <cpt:action id="initializePlaceholders"/>
                                         <cpt:action id="previewDocument"/>
                                         <cpt:action id="generateDocument"/>
                                         <cpt:property id="subject" hidden="ALL_TABLES">

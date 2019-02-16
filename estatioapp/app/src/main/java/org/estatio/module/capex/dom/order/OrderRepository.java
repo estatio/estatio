@@ -16,8 +16,6 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.clock.ClockService;
-import org.apache.isis.applib.services.factory.FactoryService;
-import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
@@ -36,13 +34,7 @@ import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
-import org.estatio.module.order.dom.attr.act.Order_changeIntroduction;
-import org.estatio.module.order.dom.attr.act.Order_changeOrderDescription;
-import org.estatio.module.order.dom.attr.act.Order_changePriceAndPayments;
-import org.estatio.module.order.dom.attr.act.Order_changeSignature;
-import org.estatio.module.order.dom.attr.act.Order_changeSubject;
-import org.estatio.module.order.dom.attr.act.Order_changeTotalWorkCost;
-import org.estatio.module.order.dom.attr.act.Order_changeWorkSchedule;
+import org.estatio.module.order.dom.attr.OrderAttributeRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -226,19 +218,11 @@ public class OrderRepository {
         repositoryService.persistAndFlush(order);
 
         if(atPath.startsWith("/ITA")) {
-           factoryService.mixin(Order_changeSubject.class, order).act("XXX");
-           factoryService.mixin(Order_changeIntroduction.class, order).act("Con la presente e in riferimento alla Vostra nuova offerta del DD MMM YYYY, Vi confermiamo l’ordine come di seguito precisato.");
-           factoryService.mixin(Order_changeOrderDescription.class, order).act("Le prestazioni in oggetto si riferiscono alle seguenti attività:");
-           factoryService.mixin(Order_changeTotalWorkCost.class, order).act("€ X.XXX,00 + IVA");
-           factoryService.mixin(Order_changeWorkSchedule.class, order).act("I lavori dovranno essere effettuati entro il DD MMM YYYY.");
-           factoryService.mixin(Order_changePriceAndPayments.class, order).act("L’importo dell’incarico a Voi affidato ammonta a € X.XXX,00 (XXXX/00) oltre IVA secondo aliquota di legge e oneri di legge.");
-           factoryService.mixin(Order_changeSignature.class, order).act("Luca Cagnani");
+            orderAttributeRepository.initializeAttributes(order);
         }
         return order;
     }
 
-    @Inject
-    FactoryService factoryService;
 
     private String generateNextOrderNumber(final Organisation buyer, final String atPath) {
         final String format = atPath.startsWith("/ITA") ? "%04d" : "%05d";
@@ -413,9 +397,6 @@ public class OrderRepository {
     RepositoryService repositoryService;
 
     @Inject
-    IsisJdoSupport isisJdoSupport;
-
-    @Inject
     ServiceRegistry2 serviceRegistry2;
 
     @Inject NumeratorRepository numeratorRepository;
@@ -425,5 +406,8 @@ public class OrderRepository {
     @Inject PartyRepository partyRepository;
 
     @Inject
-    private ClockService clockService;
+    OrderAttributeRepository orderAttributeRepository;
+
+    @Inject
+    ClockService clockService;
 }

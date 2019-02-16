@@ -1,6 +1,8 @@
 package org.incode.module.document.dom.mixins;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -9,6 +11,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.linking.DeepLinkService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.registry.ServiceRegistry;
 
@@ -37,14 +40,15 @@ public abstract class T_preview<T,P extends DocumentPreview<T>> {
     @ActionLayout(
             contributed = Contributed.AS_ACTION
     )
-    public P act(final DocumentTemplate template) throws IOException {
+    public URL act(final DocumentTemplate template) throws IOException {
         final Object rendererModel = template.newRendererModel(domainObject);
         final P preview = serviceRegistry.injectServicesInto(newPreview());
         preview.setDomainObject(domainObject);
         preview.setType(template.getType());
         template.renderContent(preview, rendererModel);
         preview.setState(DocumentState.RENDERED);
-        return preview;
+        final URI uri = deepLinkService.deepLinkFor(preview);
+        return uri.toURL();
     }
 
     protected abstract P newPreview();
@@ -76,5 +80,8 @@ public abstract class T_preview<T,P extends DocumentPreview<T>> {
 
     @Inject
     ServiceRegistry serviceRegistry;
+
+    @Inject
+    DeepLinkService deepLinkService;
 
 }

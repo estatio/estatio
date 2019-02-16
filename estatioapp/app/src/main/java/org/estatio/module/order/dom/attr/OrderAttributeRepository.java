@@ -20,12 +20,22 @@ package org.estatio.module.order.dom.attr;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.capex.dom.order.Order;
+import org.estatio.module.order.dom.attr.act.Order_changeIntroduction;
+import org.estatio.module.order.dom.attr.act.Order_changeOrderDescription;
+import org.estatio.module.order.dom.attr.act.Order_changePriceAndPayments;
+import org.estatio.module.order.dom.attr.act.Order_changeSignature;
+import org.estatio.module.order.dom.attr.act.Order_changeSubject;
+import org.estatio.module.order.dom.attr.act.Order_changeTotalWorkCost;
+import org.estatio.module.order.dom.attr.act.Order_changeWorkSchedule;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = OrderAttribute.class)
 public class OrderAttributeRepository extends UdoDomainRepositoryAndFactory<OrderAttribute> {
@@ -78,4 +88,17 @@ public class OrderAttributeRepository extends UdoDomainRepositoryAndFactory<Orde
         return orderAttribute;
     }
 
+    @Programmatic
+    public void initializeAttributes(final Order order) {
+        factoryService.mixin(Order_changeSubject.class, order).act("XXX");
+        factoryService.mixin(Order_changeIntroduction.class, order).act("Con la presente e in riferimento alla Vostra nuova offerta del DD MMM YYYY, Vi confermiamo l’ordine come di seguito precisato.");
+        factoryService.mixin(Order_changeOrderDescription.class, order).act("Le prestazioni in oggetto si riferiscono alle seguenti attività:");
+        factoryService.mixin(Order_changeTotalWorkCost.class, order).act("€ X.XXX,00 + IVA");
+        factoryService.mixin(Order_changeWorkSchedule.class, order).act("I lavori dovranno essere effettuati entro il DD MMM YYYY.");
+        factoryService.mixin(Order_changePriceAndPayments.class, order).act("L’importo dell’incarico a Voi affidato ammonta a € X.XXX,00 (XXXX/00) oltre IVA secondo aliquota di legge e oneri di legge.");
+        factoryService.mixin(Order_changeSignature.class, order).act("Luca Cagnani");
+    }
+
+    @Inject
+    FactoryService factoryService;
 }

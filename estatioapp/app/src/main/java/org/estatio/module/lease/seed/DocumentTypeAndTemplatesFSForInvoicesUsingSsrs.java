@@ -400,24 +400,6 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         executionContext.addResult(this, documentTemplate);
     }
 
-    private static String buildTemplateName(
-            final DocumentType docType,
-            final String templateNameSuffixIfAny) {
-        return buildTemplateName(docType, templateNameSuffixIfAny, null);
-    }
-
-    private static String buildTemplateName(
-            final DocumentType docType,
-            final String templateNameSuffixIfAny,
-            final String extension) {
-        final String name = docType.getName() + (templateNameSuffixIfAny != null ? templateNameSuffixIfAny : "");
-        return extension != null
-                ? name.endsWith(extension)
-                    ? name
-                    : name + extension
-                : name;
-    }
-
 
     static String loadResource(final String resourceName) {
         final URL templateUrl = Resources

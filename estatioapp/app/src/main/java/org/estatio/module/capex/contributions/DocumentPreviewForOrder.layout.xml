@@ -14,7 +14,9 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="Identifier">
-                                <cpt:property id="domainObject"/>
+                                <cpt:property id="domainObject">
+                                    <cpt:named>Order</cpt:named>
+                                </cpt:property>
                                 <cpt:property id="type"/>
                             </cpt:fieldSet>
                         </bs3:col>
