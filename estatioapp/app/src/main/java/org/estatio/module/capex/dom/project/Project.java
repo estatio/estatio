@@ -98,7 +98,13 @@ import lombok.Setter;
                 + "WHERE reference.matches(:matcher) || name.matches(:matcher) "),
         @Query(name = "findByParent", language = "JDOQL", value = "SELECT "
                 + "FROM org.estatio.module.capex.dom.project.Project "
-                + "WHERE parent == :parent ")
+                + "WHERE parent == :parent "),
+        @Query(name = "findReviewDateInInterval", language = "JDOQL",
+                value = "SELECT "
+                + "FROM org.estatio.module.capex.dom.project.Project "
+                + "WHERE "
+                + "reviewDate != null && (reviewDate >= :intervalStartDate && reviewDate <= :intervalEndDate) "
+                + "ORDER BY reviewDate")
 })
 @DomainObject(
         editing = Editing.DISABLED,

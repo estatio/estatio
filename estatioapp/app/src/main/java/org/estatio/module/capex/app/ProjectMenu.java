@@ -34,8 +34,10 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.app.user.MeService;
@@ -43,6 +45,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.base.dom.types.ReferenceType;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.capex.dom.project.Project;
@@ -61,7 +64,7 @@ import org.estatio.module.countryapptenancy.dom.CountryServiceForCurrentUser;
 )
 public class ProjectMenu {
 
-    @Action(semantics = SemanticsOf.SAFE)
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     public List<Project> allProjects() {
         return projectRepository.listAll();
     }
@@ -124,6 +127,12 @@ public class ProjectMenu {
         return true;
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @MemberOrder(sequence = "3")
+    public List<Project> projectsToBeReviewed(){
+        return projectRepository.findReviewDateInInterval(LocalDateInterval.including(clockService.now().minusYears(1), clockService.now().plusMonths(1)));
+    }
+
 
     @Action(semantics = SemanticsOf.SAFE)
     public ProjectImportManager importProjects(final Country country){
@@ -149,4 +158,5 @@ public class ProjectMenu {
     MeService meService;
     @Inject
     CountryServiceForCurrentUser countryServiceForCurrentUser;
+    @Inject ClockService clockService;
 }

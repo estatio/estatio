@@ -36,6 +36,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.base.dom.utils.StringUtils;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
@@ -157,6 +158,10 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
                 BigInteger.ZERO,
                 applicationTenancyRepository.findByPath(atPath));
         return numerator.nextIncrementStr();
+    }
+
+    public List<Project> findReviewDateInInterval(final LocalDateInterval range){
+        return allMatches("findReviewDateInInterval", "intervalStartDate", range.startDate(), "intervalEndDate", range.endDate());
     }
 
     @Inject
