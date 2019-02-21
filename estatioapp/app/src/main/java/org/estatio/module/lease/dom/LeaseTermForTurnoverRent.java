@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -127,11 +128,24 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     @Getter @Setter
     private BigDecimal totalBudgetedRent;
 
-    // //////////////////////////////////////
+    @Column(scale = 2, allowsNull = "true")
+    @Property(optionality = Optionality.OPTIONAL)
+    @Getter @Setter
+    private BigDecimal manualTurnoverRent;
+
+    public LeaseTermForTurnoverRent changeManualTurnoverRent(@Parameter(optionality = Optionality.OPTIONAL) final BigDecimal manualTurnoverRent){
+        setManualTurnoverRent(manualTurnoverRent);
+        return this;
+    }
+
+    public BigDecimal default0ChangeManualTurnoverRent(){
+        return getManualTurnoverRent();
+    }
 
     @Override
     public BigDecimal valueForDate(LocalDate dueDate) {
         return ObjectUtils.firstNonNull(
+                getManualTurnoverRent(),
                 getAuditedTurnoverRent(),
                 getBudgetedTurnoverRent(),
                 BigDecimal.ZERO);
@@ -144,7 +158,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     @Override
     public LeaseTermValueType valueType() {
-        return getAuditedTurnoverRent() != null ? LeaseTermValueType.FIXED : LeaseTermValueType.ANNUAL;
+        return getAuditedTurnoverRent() != null || getManualTurnoverRent() != null ? LeaseTermValueType.FIXED : LeaseTermValueType.ANNUAL;
     }
 
     // //////////////////////////////////////

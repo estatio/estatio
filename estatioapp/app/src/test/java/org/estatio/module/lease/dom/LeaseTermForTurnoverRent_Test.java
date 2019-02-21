@@ -21,6 +21,7 @@ package org.estatio.module.lease.dom;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
+import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -205,6 +206,35 @@ public class LeaseTermForTurnoverRent_Test {
         public void incorrect_NaN()  {
             Assert.assertNotNull(term.validateTurnoverRentRule("Se7en"));
         }
+    }
+
+    public static class ManualTurnoverRent extends LeaseTermForTurnoverRent_Test {
+
+        @Test
+        public void manual_turnover_rent_overrides_other_values() throws Exception {
+            // given
+            final BigDecimal manualTurnoverRent = new BigDecimal("123.45");
+            final BigDecimal auditedTurnoverRent = new BigDecimal("234.56");
+
+            // when
+            term.setManualTurnoverRent(null);
+            term.setAuditedTurnoverRent(auditedTurnoverRent);
+            // then
+            Assertions.assertThat(term.getEffectiveValue()).isEqualTo(auditedTurnoverRent);
+
+            // and when
+            term.setManualTurnoverRent(manualTurnoverRent);
+            // then
+            Assertions.assertThat(term.getEffectiveValue()).isEqualTo(manualTurnoverRent);
+
+            // and when
+            term.setManualTurnoverRent(BigDecimal.ZERO);
+            // then
+            Assertions.assertThat(term.getEffectiveValue()).isEqualTo(BigDecimal.ZERO);
+
+        }
+
+
     }
 
     public static class BeanProperties extends AbstractBeanPropertiesTest {

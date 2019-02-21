@@ -57,6 +57,9 @@
             <ns2:fieldSet name="Values" id="values">
                 <ns2:property id="budgetedTurnoverRent"/>
                 <ns2:property id="auditedTurnoverRent"/>
+                <ns2:property id="manualTurnoverRent">
+                    <ns2:action id="changeManualTurnoverRent" position="BELOW"/>
+                </ns2:property>
                 <ns2:property id="effectiveValue"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Related" id="related">
