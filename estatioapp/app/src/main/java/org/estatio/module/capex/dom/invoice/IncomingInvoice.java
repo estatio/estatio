@@ -61,6 +61,7 @@ import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.capex.dom.documents.BudgetItemChooser;
+import org.estatio.module.capex.dom.documents.BuyerFinder;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
@@ -88,6 +89,7 @@ import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceItem;
+import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
@@ -2106,6 +2108,131 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .result();
     }
 
+    //region > notification
+
+    @org.apache.isis.applib.annotation.Property(editing = Editing.DISABLED)
+    @PropertyLayout(multiLine = 5, hidden = Where.ALL_TABLES)
+    public String getNotification() {
+        final StringBuilder result = new StringBuilder();
+
+        final String noBuyerBarcodeMatch = buyerBarcodeMatchValidation();
+        if (noBuyerBarcodeMatch != null) {
+            result.append(noBuyerBarcodeMatch);
+        }
+
+        final String sameInvoiceNumberCheck = doubleInvoiceCheck();
+        if (sameInvoiceNumberCheck != null) {
+            result.append(sameInvoiceNumberCheck);
+        }
+
+        final String multiplePaymentMethods = paymentMethodValidation();
+        if (multiplePaymentMethods != null) {
+            result.append(multiplePaymentMethods);
+        }
+
+        return result.length() > 0 ? result.toString() : null;
+    }
+
+    public boolean hideNotification() {
+        return getNotification() == null;
+    }
+
+    @Programmatic
+    private String doubleInvoiceCheck() {
+        final String doubleInvoiceCheck = possibleDoubleInvoice();
+        if (doubleInvoiceCheck != null) {
+            return doubleInvoiceCheck;
+        }
+        final String sameNumberCheck = sameInvoiceNumber();
+        if (sameNumberCheck != null) {
+            return sameNumberCheck;
+        }
+        return null;
+    }
+
+    @Programmatic
+    private String possibleDoubleInvoice() {
+        if (getInvoiceNumber() == null || getSeller() == null || getInvoiceDate() == null) {
+            return null;
+        }
+
+        IncomingInvoice possibleDouble = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate(getInvoiceNumber(), getSeller(), getInvoiceDate());
+        if (possibleDouble == null || possibleDouble.equals(this)) {
+            return null;
+        }
+
+        return "WARNING: There is already an invoice with the same number and invoice date for this seller. Please check.";
+    }
+
+    @Programmatic
+    private String sameInvoiceNumber() {
+        if (getInvoiceNumber() == null || getSeller() == null) {
+            return null;
+        }
+
+
+        List<IncomingInvoice> similarNumberedInvoices = incomingInvoiceRepository.findByInvoiceNumberAndSeller(getInvoiceNumber(), getSeller())
+                .stream()
+                .filter(invoice -> !invoice.equals(this))
+                .collect(Collectors.toList());
+
+        if (similarNumberedInvoices.size() > 0) {
+            String message = "WARNING: Invoices with the same number of this seller are found ";
+            for (IncomingInvoice invoice : similarNumberedInvoices) {
+                if (invoice.getInvoiceDate() != null) {
+                    message = message.concat("on date ").concat(invoice.getInvoiceDate().toString()).concat("; ");
+                }
+            }
+            return message;
+        }
+
+        return null;
+    }
+
+    @Programmatic
+    private String buyerBarcodeMatchValidation() {
+        if (getBuyer() != null) {
+            if (buyerFinder.buyerDerivedFromDocumentName(this) == null) {
+                return null; // covers all cases where no buyer could be derived from document name
+            }
+            if (!getBuyer().equals(buyerFinder.buyerDerivedFromDocumentName(this))) {
+                return "Buyer does not match barcode (document name); ";
+            }
+        }
+        return null;
+    }
+
+    @Programmatic
+    private String paymentMethodValidation() {
+        if (getPaymentMethod() != null && getSeller() != null) {
+            List<PaymentMethod> historicalPaymentMethods = invoiceRepository.findBySeller(getSeller()).stream()
+                    .map(Invoice::getPaymentMethod)
+                    .filter(Objects::nonNull)
+                    .filter(pm -> pm != PaymentMethod.BANK_TRANSFER)
+                    .filter(pm -> pm != PaymentMethod.REFUND_BY_SUPPLIER)
+                    .filter(pm -> pm != PaymentMethod.MANUAL_PROCESS)
+                    .distinct()
+                    .collect(Collectors.toList());
+
+            // Current payment method is bank transfer, but at least one different payment method has been used before
+            if (getPaymentMethod() == PaymentMethod.BANK_TRANSFER && !historicalPaymentMethods.isEmpty()) {
+                StringBuilder builder = new StringBuilder().append("WARNING: payment method is set to bank transfer, but previous invoices from this seller have used the following payment methods: ");
+                historicalPaymentMethods.forEach(pm -> {
+                    builder.append(pm.title());
+                    builder.append(", ");
+                });
+
+                builder.delete(builder.length() - 2, builder.length() - 1);
+
+                return builder.toString();
+            }
+        }
+
+        return null;
+    }
+
+    //endregion
+
     @Inject
     @NotPersistent
     public IncomingInvoiceApprovalStateTransition.Repository stateTransitionRepository;
@@ -2156,10 +2283,22 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Inject
     @NotPersistent
+    IncomingInvoiceRepository incomingInvoiceRepository;
+
+    @Inject
+    @NotPersistent
+    InvoiceRepository invoiceRepository;
+
+    @Inject
+    @NotPersistent
     ChargeRepository chargeRepository;
 
     @Inject
     @NotPersistent
     StateTransitionService stateTransitionService;
+
+    @Inject
+    @NotPersistent
+    BuyerFinder buyerFinder;
 
 }

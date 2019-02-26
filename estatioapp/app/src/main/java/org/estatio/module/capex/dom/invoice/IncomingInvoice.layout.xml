@@ -39,6 +39,7 @@
                                             <cpt:action id="editProperty" promptStyle="INLINE" position="RIGHT"/>
                                         </cpt:property>
                                         <cpt:property id="codaDocHead"/>
+                                        <cpt:property id="notification" labelPosition="NONE" hidden="ALL_TABLES"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>

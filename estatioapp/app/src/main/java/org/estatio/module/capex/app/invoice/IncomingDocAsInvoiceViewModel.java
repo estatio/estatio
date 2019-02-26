@@ -613,6 +613,7 @@ public class IncomingDocAsInvoiceViewModel
         return null;
     }
 
+    @Programmatic
     private String possibleDoubleInvoice() {
         if (getInvoiceNumber() == null || getSeller() == null || getInvoiceDate() == null) {
             return null;
@@ -628,6 +629,7 @@ public class IncomingDocAsInvoiceViewModel
         return "WARNING: There is already an invoice with the same number and invoice date for this seller. Please check.";
     }
 
+    @Programmatic
     private String sameInvoiceNumber() {
         if (getInvoiceNumber() == null || getSeller() == null) {
             return null;
@@ -665,6 +667,7 @@ public class IncomingDocAsInvoiceViewModel
         return null;
     }
 
+    @Programmatic
     private String paymentMethodValidation() {
         if (getPaymentMethod() != null && getSeller() != null) {
             List<PaymentMethod> historicalPaymentMethods = invoiceRepository.findBySeller(getSeller()).stream()
