@@ -401,7 +401,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     public BankAccount default3CompleteInvoice(
             final IncomingInvoiceType incomingInvoiceType,
             final Party seller) {
-        return bankAccountRepository.getFirstBankAccountOfPartyOrNull(seller);
+        return getBankAccount() != null ? getBankAccount() : bankAccountRepository.getFirstBankAccountOfPartyOrNull(seller);
     }
 
     public List<BankAccount> choices3CompleteInvoice(
