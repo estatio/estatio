@@ -93,9 +93,11 @@ public class IncomingInvoice_recategorize {
                     meAsPerson.hasPartyRoleType(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR.findUsing(partyRoleTypeRepository))
                     ||
                     meAsPerson.hasPartyRoleType(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.findUsing(partyRoleTypeRepository))
+                    ||
+                    meAsPerson.hasPartyRoleType(PartyRoleTypeEnum.CORPORATE_ADMINISTRATOR.findUsing(partyRoleTypeRepository))
                 )
                 ){
-            return String.format("You need role %s, %s or %s to recategorize", FixedAssetRoleTypeEnum.PROPERTY_MANAGER.getKey(), PartyRoleTypeEnum.OFFICE_ADMINISTRATOR, PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER);
+            return String.format("You need role %s, %s, %s or %s to recategorize", FixedAssetRoleTypeEnum.PROPERTY_MANAGER.getKey(), PartyRoleTypeEnum.OFFICE_ADMINISTRATOR, PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER, PartyRoleTypeEnum.CORPORATE_ADMINISTRATOR);
         }
         return null;
     }
