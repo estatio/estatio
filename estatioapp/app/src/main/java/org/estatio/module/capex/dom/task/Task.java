@@ -26,6 +26,8 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.InvokeOn;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -42,12 +44,12 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancy;
 import org.estatio.module.capex.app.taskreminder.TaskOverview;
 import org.estatio.module.capex.dom.state.State;
 import org.estatio.module.capex.dom.state.StateTransition;
 import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.state.StateTransitionType;
-import org.estatio.module.base.dom.apptenancy.WithApplicationTenancy;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.party.dom.role.PartyRoleType;
@@ -172,7 +174,7 @@ public class Task implements Comparable<Task>, WithApplicationTenancy {
         appendTitleOfObject(buf);
         final Person personAssignedTo = getPersonAssignedTo();
         buf.append(" - ");
-        if(personAssignedTo != null) {
+        if (personAssignedTo != null) {
             buf.append(personAssignedTo.getUsername());
         } else {
             buf.append(getAssignedTo().getKey());
@@ -205,7 +207,7 @@ public class Task implements Comparable<Task>, WithApplicationTenancy {
      * this {@link Task}.
      *
      * <p>
-     *     The value held is the {@link MetaModelService3#toObjectType(Class) object type} of the corresponding {@link StateTransition}.
+     * The value held is the {@link MetaModelService3#toObjectType(Class) object type} of the corresponding {@link StateTransition}.
      * </p>
      */
     @Property(hidden = Where.EVERYWHERE)
@@ -250,7 +252,17 @@ public class Task implements Comparable<Task>, WithApplicationTenancy {
     @Getter @Setter
     private String comment;
 
+    @Column(allowsNull = "true")
+    @Getter @Setter
+    @Property(maxLength = DescriptionType.Meta.MAX_LEN)
+    @PropertyLayout(multiLine = 3)
+    private String note;
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Task editNote(final @Parameter(maxLength = DescriptionType.Meta.MAX_LEN, optionality = Optionality.OPTIONAL) String note) {
+        setNote(note);
+        return this;
+    }
 
     @Property(hidden = Where.ALL_TABLES)
     @PropertyLayout(
@@ -268,15 +280,12 @@ public class Task implements Comparable<Task>, WithApplicationTenancy {
     @Override
     public String getAtPath() {
         final Object domainObject = getObject();
-        if(domainObject instanceof HasAtPath) {
+        if (domainObject instanceof HasAtPath) {
             final HasAtPath hasAtPath = (HasAtPath) domainObject;
             return hasAtPath.getAtPath();
         }
         return null;
     }
-
-
-
 
     /**
      * Convenience method to (naively) convert a list of {@link StateTransition}s to their corresponding {@link Task}.
@@ -286,7 +295,7 @@ public class Task implements Comparable<Task>, WithApplicationTenancy {
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-    > Task from(final ST transition) {
+            > Task from(final ST transition) {
         return transition != null ? transition.getTask() : null;
     }
 
@@ -298,7 +307,7 @@ public class Task implements Comparable<Task>, WithApplicationTenancy {
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-    > List<Task> from(final List<ST> transitions) {
+            > List<Task> from(final List<ST> transitions) {
         return Lists.newArrayList(
                 transitions.stream()
                         .map(StateTransition::getTask)
@@ -306,9 +315,6 @@ public class Task implements Comparable<Task>, WithApplicationTenancy {
                         .collect(Collectors.toList())
         );
     }
-
-
-
 
     private Object getObject() {
         final StateTransition stateTransition = stateTransitionService.findFor(this);
@@ -325,12 +331,12 @@ public class Task implements Comparable<Task>, WithApplicationTenancy {
         return isCompleted() ? "Task has already been completed" : null;
     }
 
-    public String validateAssignTasksToMe(){
+    public String validateAssignTasksToMe() {
         final Person meAsPerson = personRepository.me();
-        if (meAsPerson ==null){
+        if (meAsPerson == null) {
             return "Your login is not linked to a person in Estatio";
         }
-        if (!meAsPerson.hasPartyRoleType(getAssignedTo())){
+        if (!meAsPerson.hasPartyRoleType(getAssignedTo())) {
             return "You do not have a role with of role type found on the task";
         }
         return null;

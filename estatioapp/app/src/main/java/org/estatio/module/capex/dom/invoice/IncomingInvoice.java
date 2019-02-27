@@ -384,6 +384,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public boolean hideCompleteInvoice() {
+        if (isItalian())
+            return true;
+
         Optional<Document> documentIfAny = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(this);
         return !documentIfAny.isPresent();
     }
@@ -513,6 +516,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public boolean hideCompleteInvoiceItemWithBudgetItem() {
+        if (isItalian())
+            return true;
+
         return getType() != IncomingInvoiceType.SERVICE_CHARGES && getType() != IncomingInvoiceType.ITA_RECOVERABLE;
     }
 
@@ -599,6 +605,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public boolean hideCompleteInvoiceItemWithProject() {
+        if (isItalian())
+            return true;
+
         return getType() != IncomingInvoiceType.CAPEX;
     }
 
@@ -661,6 +670,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public boolean hideCompleteInvoiceItem() {
+        if (isItalian())
+            return true;
+
         return getType() == IncomingInvoiceType.SERVICE_CHARGES || getType() == IncomingInvoiceType.ITA_RECOVERABLE || getType() == IncomingInvoiceType.CAPEX;
     }
 
@@ -2169,7 +2181,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         if (getInvoiceNumber() == null || getSeller() == null) {
             return null;
         }
-
 
         List<IncomingInvoice> similarNumberedInvoices = incomingInvoiceRepository.findByInvoiceNumberAndSeller(getInvoiceNumber(), getSeller())
                 .stream()
