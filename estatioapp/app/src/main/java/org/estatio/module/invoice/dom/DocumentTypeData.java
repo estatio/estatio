@@ -65,16 +65,17 @@ public enum DocumentTypeData {
             Nature.OUTGOING, null,
             null, // supports, always null if OUTGOING
             null, // corresponding cover note
-            Document.class, FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
-            AttachToNone.class,
-            ApplicationTenancy_enum.It.getPath(),
+
+            ApplicationTenancy_enum.It.getPath(), " (Italy)",
+            ".html", "text/html",
             DocumentSort.CLOB,
-            ".html", "text/html", " (Italy)",
             loadResource("PrelimLetterEmailCoverNote-ITA.html.ftl"),
             RenderingStrategyData.FMK,
             loadResource("PrelimLetterEmailCoverNoteSubjectLine-ITA.ftl"),
             RenderingStrategyData.FMK,
-            false
+            false,
+            Document.class, FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
+            AttachToNone.class
 
             // upsertDocumentTemplateForTextHtmlWithApplicability
 
@@ -84,14 +85,17 @@ public enum DocumentTypeData {
             Nature.OUTGOING, null,
             null, // supports, always null if OUTGOING
             null, // corresponding cover note
-            Document.class, FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
-            AttachToNone.class,
-            ApplicationTenancy_enum.It.getPath(),
-            DocumentSort.CLOB, ".html", "text/html", " (Italy)", loadResource("InvoiceEmailCoverNote-ITA.html.ftl"),
+
+            ApplicationTenancy_enum.It.getPath(), " (Italy)",
+            ".html", "text/html",
+            DocumentSort.CLOB,
+            loadResource("InvoiceEmailCoverNote-ITA.html.ftl"),
             RenderingStrategyData.FMK,
             loadResource("InvoiceEmailCoverNoteSubjectLine-ITA.ftl"),
             RenderingStrategyData.FMK,
-            false
+            false,
+            Document.class, FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
+            AttachToNone.class
 
             // upsertDocumentTemplateForTextHtmlWithApplicability
     ),
@@ -102,15 +106,17 @@ public enum DocumentTypeData {
             Nature.OUTGOING, "Merged Preliminary Letters.pdf",
             null, // supports, always null if OUTGOING
             COVER_NOTE_PRELIM_LETTER,
-            Invoice.class, StringInterpolatorToSsrsUrlOfInvoice.class,
-            ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class,
-            ApplicationTenancy_enum.It.getPath(),
-            DocumentSort.TEXT, ".pdf", "application/pdf", " (Italy)",
+            ApplicationTenancy_enum.It.getPath(), " (Italy)",
+            ".pdf", "application/pdf",
+            DocumentSort.TEXT,
+
             "${reportServerBaseUrl}PreliminaryLetterV2&id=${this.id}&rs:Command=Render&rs:Format=PDF",
             RenderingStrategyData.SIPC,
             loadResource("PrelimLetterTitle-ITA.ftl"),
             RenderingStrategyData.SI,
-            false
+            false,
+            Invoice.class, StringInterpolatorToSsrsUrlOfInvoice.class,
+            ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class
 
             // upsertTemplateForPdfWithApplicability
     ),
@@ -119,15 +125,17 @@ public enum DocumentTypeData {
             Nature.OUTGOING, "Merged Invoices.pdf",
             null, // supports, always null if OUTGOING
             COVER_NOTE_INVOICE,
-            Invoice.class, StringInterpolatorToSsrsUrlOfInvoice.class,
-            ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class,
-            ApplicationTenancy_enum.It.getPath(),
-            DocumentSort.TEXT, ".pdf", "application/pdf", "( Italy)",
+            ApplicationTenancy_enum.It.getPath(), "( Italy)",
+            ".pdf", "application/pdf",
+            DocumentSort.TEXT,
+
             "${reportServerBaseUrl}InvoiceItaly&id=${this.id}&rs:Command=Render&rs:Format=PDF",
             RenderingStrategyData.SIPC,
             loadResource("InvoiceTitle-ITA.ftl"),
             RenderingStrategyData.SI,
-            false
+            false,
+            Invoice.class, StringInterpolatorToSsrsUrlOfInvoice.class,
+            ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class
 
             // upsertTemplateForPdfWithApplicability
     ),
@@ -138,8 +146,9 @@ public enum DocumentTypeData {
             Nature.NOT_SPECIFIED, null,
             INVOICE, // supports
             null, // corresponding cover note, always null if not OUTGOING
-            null, null, null, // renderModel, attachments etc; always null if INCOMING or supports
-            null, null, null, null, null, null, null, null, null, false       // no templates
+
+            // no templates , renderModel, attachments etc; always null if INCOMING or supports
+            null, null, null, null, null, null, null, null, null, false, null, null, null
     ),
     TAX_REGISTER(
             "TAX-REGISTER", "Tax Register (for Invoice)",
@@ -147,24 +156,27 @@ public enum DocumentTypeData {
             Nature.INCOMING, null,
             INVOICE, // supports
             null, // corresponding cover note, always null if not OUTGOING
-            null, null, null, // renderModel, attachments etc; always null if INCOMING or supports
-            null, null, null, null, null, null, null, null, null, false       // no templates
+
+            // no templates , renderModel, attachments etc; always null if INCOMING or supports
+            null, null, null, null, null, null, null, null, null, false, null, null, null
     ),
     CALCULATION(
             "CALCULATION", "Calculation (for Preliminary Letter)",
             Nature.NOT_SPECIFIED, null,
             PRELIM_LETTER, //supports
             null, // corresponding cover note, always null if not OUTGOING
-            null, null, null, // renderModel, attachments etc; always null if INCOMING or supports
-            null, null, null, null, null, null, null, null, null, false       // no templates
+
+            // no templates , renderModel, attachments etc; always null if INCOMING or supports
+            null, null, null, null, null, null, null, null, null, false, null, null, null
     ),
     SPECIAL_COMMUNICATION(
             "SPECIAL-COMMUNICATION", "Special Communication (for Preliminary Letter)",
             Nature.NOT_SPECIFIED, null,
             PRELIM_LETTER, // supports
             null, // corresponding cover note, always null if not OUTGOING
-            null, null, null, // renderModel, attachments etc; always null if INCOMING or supports
-            null, null, null, null, null, null, null, null, null, false       // no templates
+
+            // no templates , renderModel, attachments etc; always null if INCOMING or supports
+            null, null, null, null, null, null, null, null, null, false, null, null, null
     ),
 
     // preview only
@@ -173,33 +185,34 @@ public enum DocumentTypeData {
             Nature.NOT_SPECIFIED, null,
             null,
             null, // corresponding cover note, always null if not OUTGOING
-            InvoiceSummaryForPropertyDueDateStatus.class, StringInterpolatorToSsrsUrlOfInvoiceSummary.class,
-            AttachToNone.class, // since preview only
-            ApplicationTenancy_enum.Global.getPath(),
-            DocumentSort.TEXT, ".pdf", "application/pdf", null,
+            ApplicationTenancy_enum.Global.getPath(), null,
+            ".pdf", "application/pdf",
+            DocumentSort.TEXT,
             "${reportServerBaseUrl}Invoices&dueDate=${this.dueDate}&${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF",
             RenderingStrategyData.SIPC,
             "Invoices overview",
             RenderingStrategyData.SI,
-            true
+            true,
+            InvoiceSummaryForPropertyDueDateStatus.class, StringInterpolatorToSsrsUrlOfInvoiceSummary.class,
+            AttachToNone.class // since preview only
 
             // upsertTemplateForPdfWithApplicability
-
     ),
     INVOICES_PRELIM(
             "INVOICES-PRELIM", "Preliminary letter for Invoices",
             Nature.NOT_SPECIFIED, null,
             null,
             null, // corresponding cover note, always null if not OUTGOING
-            InvoiceSummaryForPropertyDueDateStatus.class, StringInterpolatorToSsrsUrlOfInvoiceSummary.class,
-            AttachToNone.class, // since preview only
-            ApplicationTenancy_enum.Global.getPath(),
-            DocumentSort.TEXT, ".pdf", "application/pdf", null,
+            ApplicationTenancy_enum.Global.getPath(), null,
+            ".pdf", "application/pdf",
+            DocumentSort.TEXT,
             "${reportServerBaseUrl}PreliminaryLetterV2&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF",
             RenderingStrategyData.SIPC,
             "Preliminary letter for Invoices",
             RenderingStrategyData.SI,
-            true
+            true,
+            InvoiceSummaryForPropertyDueDateStatus.class, StringInterpolatorToSsrsUrlOfInvoiceSummary.class,
+            AttachToNone.class // since preview only
 
             // upsertTemplateForPdfWithApplicability
     ),
@@ -208,15 +221,15 @@ public enum DocumentTypeData {
             Nature.NOT_SPECIFIED, null,
             null,
             null, // corresponding cover note, always null if not OUTGOING
-            InvoiceSummaryForPropertyDueDateStatus.class, StringInterpolatorToSsrsUrlOfInvoiceSummary.class,
-            AttachToNone.class, // since preview only
-            ApplicationTenancy_enum.Global.getPath(),
-            DocumentSort.TEXT, ".pdf", "application/pdf", null,
+            ApplicationTenancy_enum.Global.getPath(), null,
+            ".pdf", "application/pdf",
+            DocumentSort.TEXT,
             "${reportServerBaseUrl}PreliminaryLetterV2&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF",
             RenderingStrategyData.SIPC,
-            "Preliminary Invoice for Seller",
-            RenderingStrategyData.SI,
-            true
+            "Preliminary Invoice for Seller", RenderingStrategyData.SI,
+            true,
+            InvoiceSummaryForPropertyDueDateStatus.class, StringInterpolatorToSsrsUrlOfInvoiceSummary.class,
+            AttachToNone.class // since preview only
 
             // upsertTemplateForPdfWithApplicability
     ),
@@ -226,15 +239,17 @@ public enum DocumentTypeData {
             Nature.INCOMING, "Merged Incoming.pdf",
             null, // supports
             null, // corresponding cover note
-            null, null, null, // renderModel, attachments etc; always null if INCOMING or supports
-            null, null, null, null, null, null, null, null, null, false       // no templates
+
+            // no templates , renderModel, attachments etc; always null if INCOMING or supports
+            null, null, null, null, null, null, null, null, null, false, null, null, null
     ),
     INCOMING_INVOICE(
             "INCOMING_INVOICE", "Incoming Invoice",
             Nature.INCOMING, "Merged Incoming Invoices.pdf",
             null, null, // corresponding cover note, always null if not outgoing
-            null, null, null, // renderModel, attachments etc; always null if INCOMING or supports
-            null, null, null, null, null, null, null, null, null, false       // no templates
+
+            // no templates , renderModel, attachments etc; always null if INCOMING or supports
+            null, null, null, null, null, null, null, null, null, false, null, null, null
     ),
     /*
     not in DB, so unused.
@@ -267,8 +282,9 @@ public enum DocumentTypeData {
             Nature.INCOMING, "Merged Incoming Orders.pdf",
             null,
             null,
-            null, null, null, // renderModel, attachments etc; always null if INCOMING or supports
-            null, null, null, null, null, null, null, null, null, false       // no templates
+
+            // no templates , renderModel, attachments etc; always null if INCOMING or supports
+            null, null, null, null, null, null, null, null, null, false, null, null, null
     ),
 
     ORDER_CONFIRM(
@@ -276,12 +292,17 @@ public enum DocumentTypeData {
             Nature.OUTGOING, null,
             null,
             null,
+
+            ApplicationTenancy_enum.It.getPath(), "(Italy)",
+            ".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            DocumentSort.BLOB,
+            loadBytesForOrderConfirmTemplateItaDocx(),
+            RenderingStrategyData.XGP,
+            loadCharsForOrderConfirmTemplateTitleItaFtl(),
+            RenderingStrategyData.SI,
+            false,
             Order.class, RendererModelFactoryForOrder.class,
-            AttachToSameForOrder.class,
-            ApplicationTenancy_enum.It.getPath(),
-            DocumentSort.BLOB, ".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            "(Italy)", loadBytesForOrderConfirmTemplateItaDocx(), RenderingStrategyData.XGP,
-            loadCharsForOrderConfirmTemplateTitleItaFtl(), RenderingStrategyData.SI, false
+            AttachToSameForOrder.class
 
             // DocumentTemplateFSForOrderConfirm
     ),
@@ -290,8 +311,9 @@ public enum DocumentTypeData {
             Nature.NOT_SPECIFIED, null,
             null,
             null,
-            null, null, null, // renderModel, attachments etc; always null if (not generated)
-            null, null, null, null, null, null, null, null, null, false       // no templates
+
+            // no templates , renderModel, attachments etc; always null if INCOMING or supports
+            null, null, null, null, null, null, null, null, null, false, null, null, null
     );
 
     private final String ref;
@@ -300,19 +322,19 @@ public enum DocumentTypeData {
     private final DocumentTypeData coverNote;
     private final DocumentTypeData supports;
     private final Nature nature;
-    private final Class<? extends AttachmentAdvisor> attachmentAdvisorClass;
-    private final Class<?> domainClass;
-    private final Class<? extends RendererModelFactory> rendererModelFactoryClass;
     private final String atPath;
-    private final DocumentSort documentSort;
     private final String extension;
     private final String mimeTypeBase;
-    private final boolean previewOnly;
     private final String nameSuffixIfAny;
+    private final DocumentSort contentSort;
     private final Object content;
     private final RenderingStrategyData contentRenderingStrategy;
     private final String nameText;
     private final RenderingStrategyData nameRenderingStrategy;
+    private final boolean previewOnly;
+    private final Class<? extends AttachmentAdvisor> attachmentAdvisorClass;
+    private final Class<?> domainClass;
+    private final Class<? extends RendererModelFactory> rendererModelFactoryClass;
 
     public boolean isIncoming() {
         return nature == Nature.INCOMING;
@@ -331,17 +353,19 @@ public enum DocumentTypeData {
             final String mergedFileName,
             final DocumentTypeData supports,
             final DocumentTypeData coverNote,
-            final Class<?> domainClass,
-            final Class<? extends RendererModelFactory> rendererModelFactoryClass,
-            final Class<? extends AttachmentAdvisor> attachmentAdvisorClass,
             final String atPath,
-            final DocumentSort documentSort,
+            final String nameSuffixIfAny,
             final String extension,
             final String mimeTypeBase,
-            final String nameSuffixIfAny,
-            final Object content, final RenderingStrategyData contentRenderingStrategy,
-            final String nameText, final RenderingStrategyData nameRenderingStrategy,
-            final boolean previewOnly
+            final DocumentSort contentSort,
+            final Object content,
+            final RenderingStrategyData contentRenderingStrategy,
+            final String nameText,
+            final RenderingStrategyData nameRenderingStrategy,
+            final boolean previewOnly,
+            final Class<?> domainClass,
+            final Class<? extends RendererModelFactory> rendererModelFactoryClass,
+            final Class<? extends AttachmentAdvisor> attachmentAdvisorClass
     ) {
         this.ref = ref;
         this.name = name;
@@ -353,15 +377,15 @@ public enum DocumentTypeData {
         this.domainClass = domainClass;
         this.rendererModelFactoryClass = rendererModelFactoryClass;
         this.atPath = atPath;
-        this.documentSort = documentSort;
+        this.nameSuffixIfAny = nameSuffixIfAny;
+        this.contentSort = contentSort;
         this.extension = extension;
         this.mimeTypeBase = mimeTypeBase;
-        this.nameSuffixIfAny = nameSuffixIfAny;
         this.content = content;
+        this.previewOnly = previewOnly;
         this.contentRenderingStrategy = contentRenderingStrategy;
         this.nameText = nameText;
         this.nameRenderingStrategy = nameRenderingStrategy;
-        this.previewOnly = previewOnly;
     }
 
     /**
