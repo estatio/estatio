@@ -21,6 +21,7 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.user.UserService;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.util.Mode;
@@ -29,6 +30,7 @@ import org.isisaddons.module.security.app.user.MeService;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.Order;
@@ -121,7 +123,8 @@ public class OrderMenu {
     }
 
     public boolean hideCreateOrder() {
-        return !meService.me().getAtPath().startsWith("/ITA");
+        final boolean userIsAdmin = EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
+        return !meService.me().getAtPath().startsWith("/ITA") && !userIsAdmin;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
@@ -354,4 +357,6 @@ public class OrderMenu {
 
     @Inject
     ExcelService excelService;
+
+    @Inject UserService userService;
 }
