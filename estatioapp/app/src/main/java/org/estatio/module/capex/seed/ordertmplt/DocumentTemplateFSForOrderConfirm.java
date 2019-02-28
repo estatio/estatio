@@ -121,16 +121,16 @@ public class DocumentTemplateFSForOrderConfirm extends DocumentTemplateFSAbstrac
 
     }
 
-    public String loadCharsForOrderConfirmTemplateTitleItaFtl() {
+    public static String loadCharsForOrderConfirmTemplateTitleItaFtl() {
         return loadCharsFromResource("OrderConfirmTemplate-title-ITA.ftl");
     }
 
-    public byte[] loadBytesForOrderConfirmTemplateItaDocx() {
+    public static byte[] loadBytesForOrderConfirmTemplateItaDocx() {
         return loadBytesFromResource("OrderConfirmTemplate-ITA.docx");
     }
 
-    private byte[] loadBytesFromResource(final String resourceName) {
-        final URL templateUrl = Resources.getResource(getClass(), resourceName);
+    private static byte[] loadBytesFromResource(final String resourceName) {
+        final URL templateUrl = Resources.getResource(DocumentTemplateFSForOrderConfirm.class, resourceName);
         try {
             return Resources.toByteArray(templateUrl);
         } catch (IOException e) {
@@ -138,8 +138,8 @@ public class DocumentTemplateFSForOrderConfirm extends DocumentTemplateFSAbstrac
         }
     }
 
-    private String loadCharsFromResource(final String resourceName) {
-        final URL templateUrl = Resources.getResource(getClass(), resourceName);
+    private static String loadCharsFromResource(final String resourceName) {
+        final URL templateUrl = Resources.getResource(DocumentTemplateFSForOrderConfirm.class, resourceName);
         try {
             return Resources.toString(templateUrl, Charsets.UTF_8);
         } catch (IOException e) {

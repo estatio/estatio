@@ -401,7 +401,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
     }
 
 
-    static String loadResource(final String resourceName) {
+    public static String loadResource(final String resourceName) {
         final URL templateUrl = Resources
                 .getResource(DocumentTypeAndTemplatesFSForInvoicesUsingSsrs.class, resourceName);
         try {
