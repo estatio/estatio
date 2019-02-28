@@ -56,140 +56,145 @@ public enum DocumentTypeData {
     // cover notes
     COVER_NOTE_PRELIM_LETTER(
             "COVER-NOTE-PRELIM-LETTER", "Email Cover Note for Preliminary Letter",
-            null, null, null, Nature.NOT_SPECIFIED,
-            AttachToNone.class,
-            Document.class,
-            FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class),
+            Nature.OUTGOING, null,
+            null, // supports, always null if OUTGOING
+            null, // corresponding cover note
+            Document.class, FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
+            AttachToNone.class
+    ),
     COVER_NOTE_INVOICE(
             "COVER-NOTE-INVOICE", "Email Cover Note for Invoice",
-            null, null, null, Nature.NOT_SPECIFIED,
-            AttachToNone.class,
-            Document.class,
-            FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class),
+            Nature.OUTGOING, null,
+            null, // supports, always null if OUTGOING
+            null, // corresponding cover note
+            Document.class, FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class, AttachToNone.class
+    ),
 
     // primary docs
     PRELIM_LETTER(
             "PRELIM-LETTER", "Preliminary letter for Invoice",
-            "Merged Preliminary Letters.pdf",
+            Nature.OUTGOING, "Merged Preliminary Letters.pdf",
+            null, // supports, always null if OUTGOING
             COVER_NOTE_PRELIM_LETTER,
-            null,
-            Nature.OUTGOING,
-            ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class,
-            Invoice.class,
-            StringInterpolatorToSsrsUrlOfInvoice.class),
+            Invoice.class, StringInterpolatorToSsrsUrlOfInvoice.class,
+            ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class
+    ),
     INVOICE(
             "INVOICE", "Invoice",
-            "Merged Invoices.pdf",
+            Nature.OUTGOING, "Merged Invoices.pdf",
+            null, // supports, always null if OUTGOING
             COVER_NOTE_INVOICE,
-            null,
-            Nature.OUTGOING,
-            ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class,
-            Invoice.class,
-            StringInterpolatorToSsrsUrlOfInvoice.class),
+            Invoice.class, StringInterpolatorToSsrsUrlOfInvoice.class,
+            ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class
+    ),
 
     // supporting docs
     SUPPLIER_RECEIPT(
             "SUPPLIER-RECEIPT", "Supplier Receipt (for Invoice)",
-            null,
-            null,
-            INVOICE,
-            null,
-            null,
-            null, null),
+            Nature.NOT_SPECIFIED, null,
+            INVOICE, // supports
+            null, // corresponding cover note, always null if not OUTGOING
+            null, null, null // renderModel, attachments etc; always null if INCOMING or supports
+    ),
     TAX_REGISTER(
             "TAX-REGISTER", "Tax Register (for Invoice)",
-            null,
-            null,
-            INVOICE,
-            Nature.INCOMING,
-            null,
-            null, null),
+            // TODO: REVIEW - think this should probably be NOT_SPECIFIED (see calls to #hasIncomingType)
+            Nature.INCOMING, null,
+            INVOICE, // supports
+            null, // corresponding cover note, always null if not OUTGOING
+            null, null, null // renderModel, attachments etc; always null if INCOMING or supports
+    ),
     CALCULATION(
             "CALCULATION", "Calculation (for Preliminary Letter)",
-            null,
-            null,
-            PRELIM_LETTER,
-            null,
-            null,
-            null, null),
+            Nature.NOT_SPECIFIED, null,
+            PRELIM_LETTER, //supports
+            null, // corresponding cover note, always null if not OUTGOING
+            null, null, null // renderModel, attachments etc; always null if INCOMING or supports
+    ),
     SPECIAL_COMMUNICATION(
             "SPECIAL-COMMUNICATION", "Special Communication (for Preliminary Letter)",
-            null,
-            null,
-            PRELIM_LETTER,
-            null,
-            null,
-            null, null),
+            Nature.NOT_SPECIFIED, null,
+            PRELIM_LETTER, // supports
+            null, // corresponding cover note, always null if not OUTGOING
+            null, null, null // renderModel, attachments etc; always null if INCOMING or supports
+    ),
 
     // preview only
     INVOICES(
             "INVOICES", "Invoices overview",
-            null, null, null, Nature.NOT_SPECIFIED,
-            AttachToNone.class,
-            InvoiceSummaryForPropertyDueDateStatus.class,
-            StringInterpolatorToSsrsUrlOfInvoiceSummary.class),
+            Nature.NOT_SPECIFIED, null,
+            null,
+            null, // corresponding cover note, always null if not OUTGOING
+            InvoiceSummaryForPropertyDueDateStatus.class, StringInterpolatorToSsrsUrlOfInvoiceSummary.class,
+            AttachToNone.class
+    ),
     INVOICES_PRELIM(
             "INVOICES-PRELIM", "Preliminary letter for Invoices",
-            null, null, null, Nature.NOT_SPECIFIED,
-            AttachToNone.class,
-            InvoiceSummaryForPropertyDueDateStatus.class,
-            StringInterpolatorToSsrsUrlOfInvoiceSummary.class),
+            Nature.NOT_SPECIFIED, null,
+            null,
+            null, // corresponding cover note, always null if not OUTGOING
+            InvoiceSummaryForPropertyDueDateStatus.class, StringInterpolatorToSsrsUrlOfInvoiceSummary.class,
+            AttachToNone.class
+    ),
     INVOICES_FOR_SELLER(
             "INVOICES-FOR-SELLER", "Preliminary Invoice for Seller",
-            null, null, null, Nature.NOT_SPECIFIED,
-            AttachToNone.class,
-            InvoiceSummaryForPropertyDueDateStatus.class,
-            StringInterpolatorToSsrsUrlOfInvoiceSummary.class),
+            Nature.NOT_SPECIFIED, null,
+            null,
+            null, // corresponding cover note, always null if not OUTGOING
+            InvoiceSummaryForPropertyDueDateStatus.class, StringInterpolatorToSsrsUrlOfInvoiceSummary.class,
+            AttachToNone.class
+    ),
 
     INCOMING(
             "INCOMING", "Incoming",
-            "Merged Incoming.pdf",
-            null,
-            null,
-            Nature.INCOMING,
-            null,
-            null, null),
+            Nature.INCOMING, "Merged Incoming.pdf",
+            null, // supports
+            null, // corresponding cover note
+            null, null, null // renderModel, attachments etc; always null if INCOMING or supports
+    ),
     INCOMING_INVOICE(
             "INCOMING_INVOICE", "Incoming Invoice",
-            "Merged Incoming Invoices.pdf",
-            null,
-            null,
-            Nature.INCOMING,
-            AttachToNone.class,
-            null, null),
+            Nature.INCOMING, "Merged Incoming Invoices.pdf",
+            null, null, // corresponding cover note, always null if not outgoing
+            null, null,
+            null
+    ),
     INCOMING_LOCAL_INVOICE(
             "INCOMING_LOCAL_INVOICE", "Incoming Local Invoice",
-            "Merged Incoming Local Invoices.pdf",
+            Nature.INCOMING, "Merged Incoming Local Invoices.pdf",
             null,
-            null,
-            Nature.INCOMING,
-            null,
-            null, null),
+            null, // corresponding cover note, always null if not OUTGOING
+            null, null, null // renderModel, attachments etc; always null if INCOMING or supports
+    ),
     INCOMING_CORPORATE_INVOICE(
             "INCOMING_CORPORATE_INVOICE", "Incoming Corporate Invoice",
-            "Merged Incoming Corporate Invoices.pdf",
+            Nature.INCOMING, "Merged Incoming Corporate Invoices.pdf",
             null,
-            null,
-            Nature.INCOMING,
-            null,
-            null, null),
+            null, // corresponding cover note, always null if not OUTGOING
+            null, null, null // renderModel, attachments etc; always null if INCOMING or supports
+    ),
     INCOMING_ORDER(
             "INCOMING_ORDER", "Incoming Order",
-            "Merged Incoming Orders.pdf",
-            null, null, Nature.INCOMING,
+            Nature.INCOMING, "Merged Incoming Orders.pdf",
             null,
-            null, null),
+            null,
+            null, null, null // renderModel, attachments etc; always null if INCOMING or supports
+    ),
 
     ORDER_CONFIRM(
             "ORDER_CONFIRM", "Confirm order with Supplier",
-            null, null, null, Nature.OUTGOING,
-            AttachToSameForOrder.class,
-            org.estatio.module.capex.dom.order.Order.class,
-            RendererModelFactoryForOrder.class),
+            Nature.OUTGOING, null,
+            null,
+            null,
+            org.estatio.module.capex.dom.order.Order.class, RendererModelFactoryForOrder.class, AttachToSameForOrder.class
+    ),
     IBAN_PROOF(
             "IBAN_PROOF", "Iban verification proof",
-            null, null, null, Nature.NOT_SPECIFIED,
-            null, null, null)
+            Nature.NOT_SPECIFIED, null,
+            null,
+            null,
+            null, null, null // renderModel, attachments etc; always null if (not generated)
+    )
     ;
 
     private final String ref;
@@ -215,13 +220,13 @@ public enum DocumentTypeData {
     DocumentTypeData(
             final String ref,
             final String name,
-            final String mergedFileName,
-            final DocumentTypeData coverNote,
-            final DocumentTypeData supports,
             final Nature nature,
-            final Class<? extends AttachmentAdvisor> attachmentAdvisorClass,
+            final String mergedFileName,
+            final DocumentTypeData supports,
+            final DocumentTypeData coverNote,
             final Class<?> domainClass,
-            final Class<? extends RendererModelFactory> rendererModelFactoryClass) {
+            final Class<? extends RendererModelFactory> rendererModelFactoryClass,
+            final Class<? extends AttachmentAdvisor> attachmentAdvisorClass) {
         this.ref = ref;
         this.name = name;
         this.mergedFileName = mergedFileName;
