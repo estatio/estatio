@@ -28,11 +28,16 @@ import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
+import org.incode.module.document.dom.impl.applicability.AttachmentAdvisor;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
+
+import org.estatio.module.capex.spiimpl.docs.aa.AttachToSameForOrder;
+import org.estatio.module.lease.spiimpl.document.binders.AttachToNone;
+import org.estatio.module.lease.spiimpl.document.binders.ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments;
 
 import lombok.Getter;
 
@@ -43,32 +48,134 @@ import lombok.Getter;
 public enum DocumentTypeData {
 
     // cover notes
-    COVER_NOTE_PRELIM_LETTER("COVER-NOTE-PRELIM-LETTER", "Email Cover Note for Preliminary Letter"),
-    COVER_NOTE_INVOICE("COVER-NOTE-INVOICE", "Email Cover Note for Invoice"),
+    COVER_NOTE_PRELIM_LETTER(
+            "COVER-NOTE-PRELIM-LETTER", "Email Cover Note for Preliminary Letter",
+            null, null, null, Nature.NOT_SPECIFIED,
+            AttachToNone.class
+    ),
+    COVER_NOTE_INVOICE(
+            "COVER-NOTE-INVOICE", "Email Cover Note for Invoice",
+            null, null, null, Nature.NOT_SPECIFIED,
+            AttachToNone.class
+    ),
 
     // primary docs
-    PRELIM_LETTER("PRELIM-LETTER", "Preliminary letter for Invoice", "Merged Preliminary Letters.pdf", COVER_NOTE_PRELIM_LETTER, null, Nature.OUTGOING),
-    INVOICE("INVOICE", "Invoice", "Merged Invoices.pdf", COVER_NOTE_INVOICE, null, Nature.OUTGOING),
+    PRELIM_LETTER(
+            "PRELIM-LETTER", "Preliminary letter for Invoice",
+            "Merged Preliminary Letters.pdf",
+            COVER_NOTE_PRELIM_LETTER,
+            null,
+            Nature.OUTGOING,
+            ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class
+    ),
+    INVOICE(
+            "INVOICE", "Invoice",
+            "Merged Invoices.pdf",
+            COVER_NOTE_INVOICE,
+            null,
+            Nature.OUTGOING,
+            ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class
+    ),
 
     // supporting docs
-    SUPPLIER_RECEIPT("SUPPLIER-RECEIPT", "Supplier Receipt (for Invoice)", null, null, INVOICE, null),
-    TAX_REGISTER("TAX-REGISTER", "Tax Register (for Invoice)", null, null, INVOICE, Nature.INCOMING),
-    CALCULATION("CALCULATION", "Calculation (for Preliminary Letter)", null, null, PRELIM_LETTER, null),
-    SPECIAL_COMMUNICATION("SPECIAL-COMMUNICATION", "Special Communication (for Preliminary Letter)", null, null, PRELIM_LETTER, null),
+    SUPPLIER_RECEIPT(
+            "SUPPLIER-RECEIPT", "Supplier Receipt (for Invoice)",
+            null,
+            null,
+            INVOICE,
+            null,
+            AttachToNone.class
+    ),
+    TAX_REGISTER(
+            "TAX-REGISTER", "Tax Register (for Invoice)",
+            null,
+            null,
+            INVOICE,
+            Nature.INCOMING,
+            AttachToNone.class
+    ),
+    CALCULATION(
+            "CALCULATION", "Calculation (for Preliminary Letter)",
+            null,
+            null,
+            PRELIM_LETTER,
+            null,
+            AttachToNone.class
+    ),
+    SPECIAL_COMMUNICATION(
+            "SPECIAL-COMMUNICATION", "Special Communication (for Preliminary Letter)",
+            null,
+            null,
+            PRELIM_LETTER,
+            null,
+            AttachToNone.class
+    ),
 
     // preview only, applicable to InvoiceSummaryForPropertyDueDateStatus.class
-    INVOICES("INVOICES", "Invoices overview"),
-    INVOICES_PRELIM("INVOICES-PRELIM", "Preliminary letter for Invoices"),
-    INVOICES_FOR_SELLER("INVOICES-FOR-SELLER", "Preliminary Invoice for Seller"),
+    INVOICES(
+            "INVOICES", "Invoices overview",
+            null, null, null, Nature.NOT_SPECIFIED,
+            AttachToNone.class
+    ),
+    INVOICES_PRELIM(
+            "INVOICES-PRELIM", "Preliminary letter for Invoices",
+            null, null, null, Nature.NOT_SPECIFIED,
+            AttachToNone.class
+    ),
+    INVOICES_FOR_SELLER(
+            "INVOICES-FOR-SELLER", "Preliminary Invoice for Seller",
+            null, null, null, Nature.NOT_SPECIFIED,
+            AttachToNone.class
+    ),
 
-    INCOMING("INCOMING", "Incoming", "Merged Incoming.pdf", null, null, Nature.INCOMING),
-    INCOMING_INVOICE("INCOMING_INVOICE", "Incoming Invoice", "Merged Incoming Invoices.pdf", null, null, Nature.INCOMING),
-    INCOMING_LOCAL_INVOICE("INCOMING_LOCAL_INVOICE", "Incoming Local Invoice", "Merged Incoming Local Invoices.pdf", null, null, Nature.INCOMING),
-    INCOMING_CORPORATE_INVOICE("INCOMING_CORPORATE_INVOICE", "Incoming Corporate Invoice", "Merged Incoming Corporate Invoices.pdf", null, null, Nature.INCOMING),
-    INCOMING_ORDER("INCOMING_ORDER", "Incoming Order", "Merged Incoming Orders.pdf", null, null, Nature.INCOMING),
+    INCOMING(
+            "INCOMING", "Incoming",
+            "Merged Incoming.pdf",
+            null,
+            null,
+            Nature.INCOMING,
+            AttachToNone.class
+    ),
+    INCOMING_INVOICE(
+            "INCOMING_INVOICE", "Incoming Invoice",
+            "Merged Incoming Invoices.pdf",
+            null,
+            null,
+            Nature.INCOMING,
+            AttachToNone.class
+    ),
+    INCOMING_LOCAL_INVOICE(
+            "INCOMING_LOCAL_INVOICE", "Incoming Local Invoice",
+            "Merged Incoming Local Invoices.pdf",
+            null,
+            null,
+            Nature.INCOMING,
+            AttachToNone.class
+    ),
+    INCOMING_CORPORATE_INVOICE(
+            "INCOMING_CORPORATE_INVOICE", "Incoming Corporate Invoice",
+            "Merged Incoming Corporate Invoices.pdf",
+            null,
+            null,
+            Nature.INCOMING,
+            AttachToNone.class
+    ),
+    INCOMING_ORDER(
+            "INCOMING_ORDER", "Incoming Order",
+            "Merged Incoming Orders.pdf",
+            null, null, Nature.INCOMING,
+            AttachToNone.class
+    ),
 
-    ORDER_CONFIRM("ORDER_CONFIRM", "Confirm order with Supplier", null, null, null, Nature.OUTGOING),
-    IBAN_PROOF("IBAN_PROOF", "Iban verification proof")
+    ORDER_CONFIRM(
+            "ORDER_CONFIRM", "Confirm order with Supplier",
+            null, null, null, Nature.OUTGOING,
+            AttachToSameForOrder.class
+    ),
+    IBAN_PROOF(
+            "IBAN_PROOF", "Iban verification proof",
+            null, null, null, Nature.NOT_SPECIFIED,
+            AttachToNone.class)
     ;
 
     private final String ref;
@@ -77,6 +184,7 @@ public enum DocumentTypeData {
     private final DocumentTypeData coverNote;
     private final DocumentTypeData supports;
     private final Nature nature;
+    private final Class<? extends AttachmentAdvisor> attachmentAdvisorClass;
 
     public boolean isIncoming() {
         return nature == Nature.INCOMING;
@@ -88,23 +196,21 @@ public enum DocumentTypeData {
         NOT_SPECIFIED
     }
 
-    DocumentTypeData(final String ref, final String name) {
-        this(ref, name, null, null, null, Nature.NOT_SPECIFIED);
-    }
-
     DocumentTypeData(
             final String ref,
             final String name,
             final String mergedFileName,
             final DocumentTypeData coverNote,
             final DocumentTypeData supports,
-            final Nature nature) {
+            final Nature nature,
+            final Class<? extends AttachmentAdvisor> attachmentAdvisorClass) {
         this.ref = ref;
         this.name = name;
         this.mergedFileName = mergedFileName;
         this.coverNote = coverNote;
         this.supports = supports;
         this.nature = nature;
+        this.attachmentAdvisorClass = attachmentAdvisorClass;
     }
 
     /**
