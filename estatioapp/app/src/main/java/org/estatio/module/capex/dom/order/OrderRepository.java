@@ -177,6 +177,10 @@ public class OrderRepository {
         order.setBuyerOrderNumber(new BigInteger(nextOrderNumber));
         order.addItem(charge, description, netAmount, null, null, tax, orderDate == null ? null : String.valueOf(orderDate.getYear()), property, project, null);
 
+        if(atPath.startsWith("/ITA")) {
+            orderAttributeRepository.initializeAttributes(order);
+        }
+
         return order;
     }
 
@@ -217,9 +221,6 @@ public class OrderRepository {
         serviceRegistry2.injectServicesInto(order);
         repositoryService.persistAndFlush(order);
 
-        if(atPath.startsWith("/ITA")) {
-            orderAttributeRepository.initializeAttributes(order);
-        }
         return order;
     }
 

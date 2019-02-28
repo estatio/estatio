@@ -1,9 +1,6 @@
 package org.estatio.module.capex.spiimpl.docs.rml;
 
-import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 import lombok.experimental.UtilityClass;
@@ -36,32 +33,4 @@ public class Util {
         return Character.toUpperCase(str.charAt(0)) + str.substring(1);
     }
 
-    static Locale deriveLocale(final String atPath) {
-        if(atPath != null) {
-            if(atPath.startsWith("/ITA")) {
-                return Locale.ITALIAN;
-            }
-            if(atPath.startsWith("/FRA")) {
-                return Locale.FRENCH;
-            }
-            if(atPath.startsWith("/BEL")) {
-                return Locale.FRENCH;
-            }
-            if(atPath.startsWith("/SWE")) {
-                return Locale.forLanguageTag("SWE");
-            }
-        }
-        return Locale.ENGLISH;
-    }
-
-    static String formattedAmount(
-            final BigDecimal currencyAmount,
-            final String atPath) {
-        final Locale locale = deriveLocale(atPath);
-        NumberFormat format = NumberFormat.getNumberInstance(locale);
-        format.setMinimumFractionDigits(2);
-        format.setMaximumFractionDigits(2);
-        //format.setCurrency(Currency.getInstance(locale));
-        return format.format(currencyAmount);
-    }
 }

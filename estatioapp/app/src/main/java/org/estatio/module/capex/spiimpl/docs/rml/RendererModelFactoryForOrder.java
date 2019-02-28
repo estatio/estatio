@@ -27,6 +27,8 @@ import org.incode.module.document.dom.impl.applicability.RendererModelFactoryAbs
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.base.dom.CurrencyUtil;
+import org.estatio.module.base.dom.LocaleUtil;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.order.dom.attr.prop.Order_introduction;
@@ -129,7 +131,7 @@ public class RendererModelFactoryForOrder extends RendererModelFactoryAbstract<O
         private final LocalDate currentDate;
 
         public String getCurrentDateLocalized() {
-            Locale locale = Util.deriveLocale(atPath);
+            Locale locale = LocaleUtil.deriveLocale(atPath);
             return currentDate.toString("d MMMMM yyyy", locale);
         }
 
@@ -152,7 +154,7 @@ public class RendererModelFactoryForOrder extends RendererModelFactoryAbstract<O
         public String getOrderNumber() { return getOrder().getOrderNumber(); }
 
         public String getNetAmount() {
-            return Util.formattedAmount(order.getNetAmount(), order.getAtPath());
+            return CurrencyUtil.formattedAmount(order.getNetAmount(), order.getAtPath());
         }
 
     }
@@ -167,7 +169,7 @@ public class RendererModelFactoryForOrder extends RendererModelFactoryAbstract<O
             return orderItem.getDescription();
         }
         public String getNetAmount() {
-            return Util.formattedAmount(orderItem.getNetAmount(), orderItem.getAtPath());
+            return CurrencyUtil.formattedAmount(orderItem.getNetAmount(), orderItem.getAtPath());
         }
 
     }
