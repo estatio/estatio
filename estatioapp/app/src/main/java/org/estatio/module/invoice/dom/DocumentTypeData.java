@@ -42,6 +42,7 @@ import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyD
 import org.estatio.module.lease.spiimpl.document.binders.AttachToNone;
 import org.estatio.module.lease.spiimpl.document.binders.ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments;
 import org.estatio.module.lease.spiimpl.document.binders.FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover;
+import org.estatio.module.lease.spiimpl.document.binders.StringInterpolatorToSsrsUrlOfInvoice;
 import org.estatio.module.lease.spiimpl.document.binders.StringInterpolatorToSsrsUrlOfInvoiceSummary;
 
 import lombok.Getter;
@@ -75,7 +76,7 @@ public enum DocumentTypeData {
             Nature.OUTGOING,
             ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class,
             Invoice.class,
-            org.estatio.module.lease.spiimpl.document.binders.StringInterpolatorToSsrsUrlOfInvoice.class),
+            StringInterpolatorToSsrsUrlOfInvoice.class),
     INVOICE(
             "INVOICE", "Invoice",
             "Merged Invoices.pdf",
@@ -84,7 +85,7 @@ public enum DocumentTypeData {
             Nature.OUTGOING,
             ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class,
             Invoice.class,
-            org.estatio.module.lease.spiimpl.document.binders.StringInterpolatorToSsrsUrlOfInvoice.class),
+            StringInterpolatorToSsrsUrlOfInvoice.class),
 
     // supporting docs
     SUPPLIER_RECEIPT(
@@ -93,7 +94,7 @@ public enum DocumentTypeData {
             null,
             INVOICE,
             null,
-            AttachToNone.class,
+            null,
             null, null),
     TAX_REGISTER(
             "TAX-REGISTER", "Tax Register (for Invoice)",
@@ -101,7 +102,7 @@ public enum DocumentTypeData {
             null,
             INVOICE,
             Nature.INCOMING,
-            AttachToNone.class,
+            null,
             null, null),
     CALCULATION(
             "CALCULATION", "Calculation (for Preliminary Letter)",
@@ -109,7 +110,7 @@ public enum DocumentTypeData {
             null,
             PRELIM_LETTER,
             null,
-            AttachToNone.class,
+            null,
             null, null),
     SPECIAL_COMMUNICATION(
             "SPECIAL-COMMUNICATION", "Special Communication (for Preliminary Letter)",
@@ -117,10 +118,10 @@ public enum DocumentTypeData {
             null,
             PRELIM_LETTER,
             null,
-            AttachToNone.class,
+            null,
             null, null),
 
-    // preview only, applicable to InvoiceSummaryForPropertyDueDateStatus.class
+    // preview only
     INVOICES(
             "INVOICES", "Invoices overview",
             null, null, null, Nature.NOT_SPECIFIED,
@@ -146,7 +147,7 @@ public enum DocumentTypeData {
             null,
             null,
             Nature.INCOMING,
-            AttachToNone.class,
+            null,
             null, null),
     INCOMING_INVOICE(
             "INCOMING_INVOICE", "Incoming Invoice",
@@ -162,7 +163,7 @@ public enum DocumentTypeData {
             null,
             null,
             Nature.INCOMING,
-            AttachToNone.class,
+            null,
             null, null),
     INCOMING_CORPORATE_INVOICE(
             "INCOMING_CORPORATE_INVOICE", "Incoming Corporate Invoice",
@@ -170,13 +171,13 @@ public enum DocumentTypeData {
             null,
             null,
             Nature.INCOMING,
-            AttachToNone.class,
+            null,
             null, null),
     INCOMING_ORDER(
             "INCOMING_ORDER", "Incoming Order",
             "Merged Incoming Orders.pdf",
             null, null, Nature.INCOMING,
-            AttachToNone.class,
+            null,
             null, null),
 
     ORDER_CONFIRM(
@@ -188,7 +189,7 @@ public enum DocumentTypeData {
     IBAN_PROOF(
             "IBAN_PROOF", "Iban verification proof",
             null, null, null, Nature.NOT_SPECIFIED,
-            AttachToNone.class, null, null)
+            null, null, null)
     ;
 
     private final String ref;
