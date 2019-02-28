@@ -398,14 +398,6 @@ public enum DocumentTypeData {
         );
     }
 
-    public static List<DocumentTypeData> incomingTypes() {
-        return natureOf(Nature.INCOMING);
-    }
-
-    public static List<DocumentTypeData> outgoingTypes() {
-        return natureOf(Nature.OUTGOING);
-    }
-
     public static boolean hasIncomingType(final DocumentAbstract<?> document) {
         return hasNatureOf(document, Nature.INCOMING);
     }
