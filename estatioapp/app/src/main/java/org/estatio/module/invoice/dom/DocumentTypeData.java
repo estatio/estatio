@@ -29,6 +29,7 @@ import com.google.common.collect.Lists;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
 import org.incode.module.document.dom.impl.applicability.AttachmentAdvisor;
+import org.incode.module.document.dom.impl.applicability.RendererModelFactory;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
@@ -36,9 +37,12 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.module.capex.spiimpl.docs.aa.AttachToSameForOrder;
+import org.estatio.module.capex.spiimpl.docs.rml.RendererModelFactoryForOrder;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.module.lease.spiimpl.document.binders.AttachToNone;
 import org.estatio.module.lease.spiimpl.document.binders.ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments;
+import org.estatio.module.lease.spiimpl.document.binders.FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover;
+import org.estatio.module.lease.spiimpl.document.binders.StringInterpolatorToSsrsUrlOfInvoiceSummary;
 
 import lombok.Getter;
 
@@ -53,12 +57,14 @@ public enum DocumentTypeData {
             "COVER-NOTE-PRELIM-LETTER", "Email Cover Note for Preliminary Letter",
             null, null, null, Nature.NOT_SPECIFIED,
             AttachToNone.class,
-            Document.class),
+            Document.class,
+            FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class),
     COVER_NOTE_INVOICE(
             "COVER-NOTE-INVOICE", "Email Cover Note for Invoice",
             null, null, null, Nature.NOT_SPECIFIED,
             AttachToNone.class,
-            Document.class),
+            Document.class,
+            FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class),
 
     // primary docs
     PRELIM_LETTER(
@@ -68,7 +74,8 @@ public enum DocumentTypeData {
             null,
             Nature.OUTGOING,
             ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class,
-            Invoice.class),
+            Invoice.class,
+            org.estatio.module.lease.spiimpl.document.binders.StringInterpolatorToSsrsUrlOfInvoice.class),
     INVOICE(
             "INVOICE", "Invoice",
             "Merged Invoices.pdf",
@@ -76,7 +83,8 @@ public enum DocumentTypeData {
             null,
             Nature.OUTGOING,
             ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class,
-            Invoice.class),
+            Invoice.class,
+            org.estatio.module.lease.spiimpl.document.binders.StringInterpolatorToSsrsUrlOfInvoice.class),
 
     // supporting docs
     SUPPLIER_RECEIPT(
@@ -86,7 +94,7 @@ public enum DocumentTypeData {
             INVOICE,
             null,
             AttachToNone.class,
-            null),
+            null, null),
     TAX_REGISTER(
             "TAX-REGISTER", "Tax Register (for Invoice)",
             null,
@@ -94,7 +102,7 @@ public enum DocumentTypeData {
             INVOICE,
             Nature.INCOMING,
             AttachToNone.class,
-            null),
+            null, null),
     CALCULATION(
             "CALCULATION", "Calculation (for Preliminary Letter)",
             null,
@@ -102,7 +110,7 @@ public enum DocumentTypeData {
             PRELIM_LETTER,
             null,
             AttachToNone.class,
-            null),
+            null, null),
     SPECIAL_COMMUNICATION(
             "SPECIAL-COMMUNICATION", "Special Communication (for Preliminary Letter)",
             null,
@@ -110,24 +118,27 @@ public enum DocumentTypeData {
             PRELIM_LETTER,
             null,
             AttachToNone.class,
-            null),
+            null, null),
 
     // preview only, applicable to InvoiceSummaryForPropertyDueDateStatus.class
     INVOICES(
             "INVOICES", "Invoices overview",
             null, null, null, Nature.NOT_SPECIFIED,
             AttachToNone.class,
-            InvoiceSummaryForPropertyDueDateStatus.class),
+            InvoiceSummaryForPropertyDueDateStatus.class,
+            StringInterpolatorToSsrsUrlOfInvoiceSummary.class),
     INVOICES_PRELIM(
             "INVOICES-PRELIM", "Preliminary letter for Invoices",
             null, null, null, Nature.NOT_SPECIFIED,
             AttachToNone.class,
-            InvoiceSummaryForPropertyDueDateStatus.class),
+            InvoiceSummaryForPropertyDueDateStatus.class,
+            StringInterpolatorToSsrsUrlOfInvoiceSummary.class),
     INVOICES_FOR_SELLER(
             "INVOICES-FOR-SELLER", "Preliminary Invoice for Seller",
             null, null, null, Nature.NOT_SPECIFIED,
             AttachToNone.class,
-            InvoiceSummaryForPropertyDueDateStatus.class),
+            InvoiceSummaryForPropertyDueDateStatus.class,
+            StringInterpolatorToSsrsUrlOfInvoiceSummary.class),
 
     INCOMING(
             "INCOMING", "Incoming",
@@ -136,7 +147,7 @@ public enum DocumentTypeData {
             null,
             Nature.INCOMING,
             AttachToNone.class,
-            null),
+            null, null),
     INCOMING_INVOICE(
             "INCOMING_INVOICE", "Incoming Invoice",
             "Merged Incoming Invoices.pdf",
@@ -144,7 +155,7 @@ public enum DocumentTypeData {
             null,
             Nature.INCOMING,
             AttachToNone.class,
-            null),
+            null, null),
     INCOMING_LOCAL_INVOICE(
             "INCOMING_LOCAL_INVOICE", "Incoming Local Invoice",
             "Merged Incoming Local Invoices.pdf",
@@ -152,7 +163,7 @@ public enum DocumentTypeData {
             null,
             Nature.INCOMING,
             AttachToNone.class,
-            null),
+            null, null),
     INCOMING_CORPORATE_INVOICE(
             "INCOMING_CORPORATE_INVOICE", "Incoming Corporate Invoice",
             "Merged Incoming Corporate Invoices.pdf",
@@ -160,23 +171,24 @@ public enum DocumentTypeData {
             null,
             Nature.INCOMING,
             AttachToNone.class,
-            null),
+            null, null),
     INCOMING_ORDER(
             "INCOMING_ORDER", "Incoming Order",
             "Merged Incoming Orders.pdf",
             null, null, Nature.INCOMING,
             AttachToNone.class,
-            null),
+            null, null),
 
     ORDER_CONFIRM(
             "ORDER_CONFIRM", "Confirm order with Supplier",
             null, null, null, Nature.OUTGOING,
             AttachToSameForOrder.class,
-            org.estatio.module.capex.dom.order.Order.class),
+            org.estatio.module.capex.dom.order.Order.class,
+            RendererModelFactoryForOrder.class),
     IBAN_PROOF(
             "IBAN_PROOF", "Iban verification proof",
             null, null, null, Nature.NOT_SPECIFIED,
-            AttachToNone.class, null)
+            AttachToNone.class, null, null)
     ;
 
     private final String ref;
@@ -187,6 +199,7 @@ public enum DocumentTypeData {
     private final Nature nature;
     private final Class<? extends AttachmentAdvisor> attachmentAdvisorClass;
     private final Class<?> domainClass;
+    private final Class<? extends RendererModelFactory> rendererModelFactoryClass;
 
     public boolean isIncoming() {
         return nature == Nature.INCOMING;
@@ -206,7 +219,8 @@ public enum DocumentTypeData {
             final DocumentTypeData supports,
             final Nature nature,
             final Class<? extends AttachmentAdvisor> attachmentAdvisorClass,
-            final Class<?> domainClass) {
+            final Class<?> domainClass,
+            final Class<? extends RendererModelFactory> rendererModelFactoryClass) {
         this.ref = ref;
         this.name = name;
         this.mergedFileName = mergedFileName;
@@ -215,6 +229,7 @@ public enum DocumentTypeData {
         this.nature = nature;
         this.attachmentAdvisorClass = attachmentAdvisorClass;
         this.domainClass = domainClass;
+        this.rendererModelFactoryClass = rendererModelFactoryClass;
     }
 
     /**
