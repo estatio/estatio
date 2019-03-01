@@ -391,6 +391,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return !documentIfAny.isPresent();
     }
 
+    public String disableCompleteInvoice() {
+        return reasonDisabledDueToState(this);
+    }
+
     public IncomingInvoiceType default0CompleteInvoice() {
         return getType();
     }
@@ -596,7 +600,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 : projectRepository.findByFixedAsset(getProperty())
                 .stream()
                 .filter(x -> !x.isParentProject())
-                .filter(x -> x.getEndDate() == null || !x.getEndDate().isBefore(endDateFromPeriod(period) != null ? endDateFromPeriod(period) : LocalDate.now()))
+                .filter(x -> x.getEndDate() == null || !x.getEndDate().isBefore(PeriodUtil.endDateFromPeriod(period) != null ? PeriodUtil.endDateFromPeriod(period) : LocalDate.now()))
                 .collect(Collectors.toList());
     }
 
@@ -707,8 +711,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             item.setVatAmount(vatAmount);
             item.setGrossAmount(grossAmount);
             item.setTax(tax);
-            item.setStartDate(startDateFromPeriod(period));
-            item.setEndDate(endDateFromPeriod(period));
+            item.setStartDate(PeriodUtil.startDateFromPeriod(period));
+            item.setEndDate(PeriodUtil.endDateFromPeriod(period));
             item.setFixedAsset(getProperty());
             item.setProject(project);
             item.setBudgetItem(budgetItem);
@@ -827,25 +831,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .filter(IncomingInvoiceItem.class::isInstance)
                 .map(IncomingInvoiceItem.class::cast)
                 .findFirst();
-    }
-
-    @Programmatic
-    private static LocalDate startDateFromPeriod(final String period) {
-        LocalDateInterval localDateInterval = fromPeriod(period);
-        return localDateInterval != null ? localDateInterval.startDate() : null;
-    }
-
-    @Programmatic
-    private static LocalDate endDateFromPeriod(final String period) {
-        LocalDateInterval localDateInterval = fromPeriod(period);
-        return localDateInterval != null ? localDateInterval.endDate() : null;
-    }
-
-    @Programmatic
-    private static LocalDateInterval fromPeriod(final String period) {
-        return period != null
-                ? PeriodUtil.yearFromPeriod(period)
-                : null;
     }
 
     // ////////////////////////////////////////

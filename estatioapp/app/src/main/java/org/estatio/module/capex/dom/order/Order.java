@@ -65,6 +65,10 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
+import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.dom.role.FixedAssetRole;
+import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.capex.dom.documents.BudgetItemChooser;
@@ -257,6 +261,133 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
         return buf.toString();
     }
+
+    public Order completeOrder(
+            final IncomingInvoiceType orderType,
+            final org.estatio.module.asset.dom.Property property,
+            final String orderNumber,
+            final Party supplier,
+            final @Nullable Boolean createRoleIfRequired,
+            final @ParameterLayout(named = "Supplier order ref.") String supplierOrderReference,
+            final LocalDate orderDate) {
+        setType(orderType);
+        setOrderNumber(orderNumber);
+        setSellerOrderReference(supplierOrderReference);
+        setOrderDate(orderDate);
+        setSeller(supplier);
+        setProperty(property);
+
+        return this;
+    }
+
+    public IncomingInvoiceType default0CompleteOrder() {
+        return getType();
+    }
+
+    public org.estatio.module.asset.dom.Property default1CompleteOrder() {
+        return getProperty();
+    }
+
+    public List<org.estatio.module.asset.dom.Property> choices1CompleteOrder() {
+        List<org.estatio.module.asset.dom.Property> result = new ArrayList<>();
+        if (getBuyer() != null) {
+            for (FixedAssetRole role : fixedAssetRoleRepository.findByPartyAndType(getBuyer(), FixedAssetRoleTypeEnum.PROPERTY_OWNER)) {
+                if (role.getAsset().getClass().isAssignableFrom(org.estatio.module.asset.dom.Property.class)) {
+                    result.add((org.estatio.module.asset.dom.Property) role.getAsset());
+                }
+            }
+        }
+        return result.size() > 0 ? result : propertyRepository.allProperties();
+    }
+
+    public String default2CompleteOrder() {
+        return getOrderNumber();
+    }
+
+    public Party default3CompleteOrder() {
+        return getSeller();
+    }
+
+    public List<Party> autoComplete3CompleteOrder(final @MinLength(3) String search) {
+        return partyRepository.autoCompleteSupplier(search, getAtPath());
+    }
+
+    public String default5CompleteOrder() {
+        return getSellerOrderReference();
+    }
+
+    public LocalDate default6CompleteOrder() {
+        return getOrderDate();
+    }
+
+    public String validateCompleteOrder(
+            final IncomingInvoiceType orderType,
+            final org.estatio.module.asset.dom.Property property,
+            final String orderNumber,
+            final Party supplier,
+            final Boolean createRoleIfRequired,
+            final String supplierOrderReference,
+            final LocalDate orderDate) {
+        // validate seller
+        final String sellerValidation = partyRoleRepository.validateThat(supplier, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+        if ((createRoleIfRequired == null || !createRoleIfRequired) && sellerValidation != null) {
+            return sellerValidation;
+        }
+
+        return null;
+    }
+
+    public String disableCompleteOrder() {
+        return reasonDisabledDueToState();
+    }
+
+    public Order completeOrderItem(
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final Tax tax,
+            final BigDecimal grossAmount,
+            final Charge charge,
+            final Project project,
+            final BudgetItem budgetItem,
+            final String period) {
+        Optional<OrderItem> firstItemIfAny = getItems().stream().findFirst();
+        if (firstItemIfAny.isPresent()) {
+            OrderItem orderItem = firstItemIfAny.get();
+            orderItem.setCharge(charge);
+            orderItem.setDescription(description);
+            orderItem.setNetAmount(netAmount);
+            orderItem.setVatAmount(vatAmount);
+            orderItem.setGrossAmount(grossAmount);
+            orderItem.setTax(tax);
+            orderItem.setStartDate(PeriodUtil.startDateFromPeriod(period));
+            orderItem.setEndDate(PeriodUtil.endDateFromPeriod(period));
+            orderItem.setProperty(getProperty());
+            orderItem.setProject(project);
+            orderItem.setBudgetItem(budgetItem);
+        } else {
+            addItem(
+                    charge,
+                    description,
+                    netAmount,
+                    vatAmount,
+                    grossAmount,
+                    tax,
+                    period,
+                    getProperty(),
+                    project,
+                    budgetItem
+            );
+        }
+
+        return this;
+    }
+
+    public String default0CompleteOrderItem() {
+        return getDescriptionSummary();
+    }
+
+    public
 
     /**
      * This relates to the owning property, while the child items may either also relate to the property,
@@ -1126,7 +1257,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     @Inject
     LookupAttachedPdfService lookupAttachedPdfService;
 
-    @Inject public
+    @Inject
     OrderItemRepository orderItemRepository;
 
     @Inject
@@ -1151,6 +1282,9 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     PartyRepository partyRepository;
 
     @Inject
+    PropertyRepository propertyRepository;
+
+    @Inject
     ChamberOfCommerceCodeLookUpService chamberOfCommerceCodeLookUpService;
 
     @Inject
@@ -1161,6 +1295,9 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Inject
     MessageService messageService;
+
+    @Inject
+    FixedAssetRoleRepository fixedAssetRoleRepository;
 
     @Inject
     private MeService meService;
