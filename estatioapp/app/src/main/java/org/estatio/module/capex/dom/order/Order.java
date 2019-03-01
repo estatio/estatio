@@ -1260,7 +1260,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     LookupAttachedPdfService lookupAttachedPdfService;
 
     @Inject
-    OrderItemRepository orderItemRepository;
+    public OrderItemRepository orderItemRepository;
 
     @Inject
     BudgetItemChooser budgetItemChooser;
