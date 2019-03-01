@@ -387,7 +387,9 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return getDescriptionSummary();
     }
 
-    public
+    public BigDecimal default1CompleteOrderItem() {
+        return getNetAmount();
+    }
 
     /**
      * This relates to the owning property, while the child items may either also relate to the property,
