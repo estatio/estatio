@@ -10,11 +10,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
@@ -45,7 +47,7 @@ public class IncomingInvoiceWhenPayableBankTransfer {
         Collections.reverse(approvals);
         if(!approvals.isEmpty()) {
             final IncomingInvoice.ApprovalString approval = approvals.get(0);
-            this.lastApprovedOn = approval.getCompletedOn();
+            this.lastApprovedOn = approval.getCompletedOnAsDate();
             this.lastApprovedBy = approval.getCompletedBy();
         }
         this.codaDocHead = codaDocHead;
@@ -79,7 +81,8 @@ public class IncomingInvoiceWhenPayableBankTransfer {
     }
 
     @Getter @Setter @Nullable
-    private String lastApprovedOn;
+    @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
+    private LocalDate lastApprovedOn;
 
     @Getter @Setter @Nullable
     private String lastApprovedBy;

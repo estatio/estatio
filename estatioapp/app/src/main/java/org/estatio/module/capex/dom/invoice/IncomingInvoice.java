@@ -1510,7 +1510,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .filter(x-> x.getToState()!=null && x.getToState().isApproval())
                 .filter(x->x.getCompletedBy()!=null)
                 .sorted(Comparator.comparing(IncomingInvoiceApprovalStateTransition::getCompletedOn)) // should always be set when completedBy is set
-                .map(x-> new ApprovalString(x.getCompletedBy(), x.getCompletedOn().toString("dd-MMM-yyyy HH:mm")))
+                .map(x-> new ApprovalString(x.getCompletedBy(), x.getCompletedOn().toString("dd-MMM-yyyy HH:mm"), x.getCompletedOn().toLocalDate()))
                 .collect(Collectors.toList());
     }
 
@@ -1521,6 +1521,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             private String completedBy;
 
             private String completedOn;
+
+            private LocalDate completedOnAsDate;
 
     }
 
