@@ -21,6 +21,7 @@
                                 <ns2:property id="budgetedAmount"/>
                                 <ns2:property id="orderedAmount"/>
                                 <ns2:property id="invoicedAmount"/>
+                                <ns2:property id="paidAmount"/>
                                 <ns2:property id="tax"/>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Dimensions" id="dimensions">

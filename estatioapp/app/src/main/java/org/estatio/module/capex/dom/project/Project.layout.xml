@@ -33,6 +33,7 @@
                                 <ns2:property id="orderedAmountNotOnProjectItems"/>
                                 <ns2:property id="invoicedAmount"/>
                                 <ns2:property id="invoicedAmountNotOnProjectItems"/>
+                                <ns2:property id="paidAmount"/>
                             </ns2:fieldSet>
                         </col>
                     </row>
