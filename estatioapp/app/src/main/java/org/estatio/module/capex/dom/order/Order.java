@@ -1314,12 +1314,12 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
                 .stream()
                 .filter(order -> !order.equals(this))
                 .forEach(order -> {
+                    if (builder.indexOf("WARNING: Orders with the same seller order reference of this seller are found ") == -1)
+                        builder.append("WARNING: Orders with the same seller order reference of this seller are found ");
+
                     if (order.getOrderDate() != null)
                         builder.append(String.format("on date %s; ", order.getOrderDate().toString()));
                 });
-
-        if (builder.length() != 0)
-            builder.insert(0, "WARNING: Orders with the same seller order reference of this seller are found ");
 
         return builder.length() != 0 ? builder.toString() : null;
     }
