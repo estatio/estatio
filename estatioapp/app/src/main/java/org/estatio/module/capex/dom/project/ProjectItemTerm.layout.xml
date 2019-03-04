@@ -9,11 +9,11 @@
     <row>
         <col span="4">
             <tabGroup>
-                <tab name="Project term">
+                <tab name="Project item term">
                     <row>
                         <col span="12">
                             <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
-                                <ns2:property id="project"/>
+                                <ns2:property id="projectItem"/>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Amounts" id="amounts">
                                 <ns2:action id="amendBudgetedAmount" position="PANEL"/>

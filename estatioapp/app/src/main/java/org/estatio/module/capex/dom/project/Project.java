@@ -370,16 +370,6 @@ public class Project extends UdoDomainObject<Project> implements
         return result;
     }
 
-    public List<ProjectTerm> getProjectTerms(){
-        return projectTermRepository.findProject(this);
-    }
-
-    @Action(associateWith="projectTerms", associateWithSequence="1")
-    public Project newProjectTerm(final BigDecimal amount, final LocalDate startDate, final LocalDate endDate){
-        projectTermRepository.findOrCreate(this, amount, startDate, endDate);
-        return this;
-    }
-
     @Programmatic
     public boolean isParentProject() {
         return getChildren().isEmpty() ? false : true;
@@ -434,9 +424,5 @@ public class Project extends UdoDomainObject<Project> implements
 
 	@Inject
     FactoryService factoryService;
-
-	@Inject
-    ProjectTermRepository projectTermRepository;
-
 
 }

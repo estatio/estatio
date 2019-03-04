@@ -28,15 +28,16 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.capex.dom.project.ProjectTerm;
-import org.estatio.module.capex.dom.project.ProjectTermRepository;
+import org.estatio.module.capex.dom.project.ProjectItem;
+import org.estatio.module.capex.dom.project.ProjectItemTerm;
+import org.estatio.module.capex.dom.project.ProjectItemTermRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
-public class ProjectTermRepository_IntegTest extends CapexModuleIntegTestAbstract {
+public class ProjectItemTermRepository_IntegTest extends CapexModuleIntegTestAbstract {
 
     @Before
     public void setupData() {
@@ -53,49 +54,50 @@ public class ProjectTermRepository_IntegTest extends CapexModuleIntegTestAbstrac
 
         // given
         Project projectForKal = Project_enum.KalProject1.findUsing(serviceRegistry);
-        assertThat(projectForKal.getProjectTerms()).isEmpty();
+        final ProjectItem firstItem = projectForKal.getItems().first();
+        assertThat(firstItem.getProjectItemTerms()).isEmpty();
 
         // when
         final BigDecimal amount = new BigDecimal("10000.00");
         final LocalDate startDate = new LocalDate(2018, 1, 1);
         final LocalDate endDate = new LocalDate(2018, 3, 31);
-        projectForKal.newProjectTerm(amount, startDate, endDate);
+        firstItem.newProjectItemTerm(amount, startDate, endDate);
 
         // then
         assertThat(projectTermRepository.listAll()).hasSize(1);
-        assertThat(projectForKal.getProjectTerms()).hasSize(1);
-        ProjectTerm budget = projectForKal.getProjectTerms().get(0);
-        assertThat(budget.getProject()).isEqualTo(projectForKal);
-        assertThat(budget.getBudgetedAmount()).isEqualTo(amount);
-        assertThat(budget.getStartDate()).isEqualTo(startDate);
-        assertThat(budget.getEndDate()).isEqualTo(endDate);
+        assertThat(firstItem.getProjectItemTerms()).hasSize(1);
+        ProjectItemTerm projectItemTerm = firstItem.getProjectItemTerms().get(0);
+        assertThat(projectItemTerm.getProjectItem()).isEqualTo(firstItem);
+        assertThat(projectItemTerm.getBudgetedAmount()).isEqualTo(amount);
+        assertThat(projectItemTerm.getStartDate()).isEqualTo(startDate);
+        assertThat(projectItemTerm.getEndDate()).isEqualTo(endDate);
 
         // and when
         final BigDecimal otherAmount = new BigDecimal("12345.00");
-        projectForKal.newProjectTerm(otherAmount, startDate, endDate);
+        firstItem.newProjectItemTerm(otherAmount, startDate, endDate);
 
         // then still
-        assertThat(projectForKal.getProjectTerms()).hasSize(1);
-        assertThat(projectForKal.getProjectTerms().get(0).getBudgetedAmount()).isEqualTo(amount);
+        assertThat(firstItem.getProjectItemTerms()).hasSize(1);
+        assertThat(firstItem.getProjectItemTerms().get(0).getBudgetedAmount()).isEqualTo(amount);
 
         // and when
         final BigDecimal amount2 = new BigDecimal("20000.00");
         final LocalDate startDate2 = new LocalDate(2018, 4, 1);
         final LocalDate endDate2 = new LocalDate(2018, 6, 30);
-        projectForKal.newProjectTerm(amount2, startDate2, endDate2);
+        firstItem.newProjectItemTerm(amount2, startDate2, endDate2);
 
         // then sorted by date asc
-        assertThat(projectForKal.getProjectTerms()).hasSize(2);
-        assertThat(projectForKal.getProjectTerms().get(0).getStartDate()).isEqualTo(startDate);
-        assertThat(projectForKal.getProjectTerms().get(0).getEndDate()).isEqualTo(endDate);
-        assertThat(projectForKal.getProjectTerms().get(0).getBudgetedAmount()).isEqualTo(amount);
-        assertThat(projectForKal.getProjectTerms().get(1).getStartDate()).isEqualTo(startDate2);
-        assertThat(projectForKal.getProjectTerms().get(1).getEndDate()).isEqualTo(endDate2);
-        assertThat(projectForKal.getProjectTerms().get(1).getBudgetedAmount()).isEqualTo(amount2);
+        assertThat(firstItem.getProjectItemTerms()).hasSize(2);
+        assertThat(firstItem.getProjectItemTerms().get(0).getStartDate()).isEqualTo(startDate);
+        assertThat(firstItem.getProjectItemTerms().get(0).getEndDate()).isEqualTo(endDate);
+        assertThat(firstItem.getProjectItemTerms().get(0).getBudgetedAmount()).isEqualTo(amount);
+        assertThat(firstItem.getProjectItemTerms().get(1).getStartDate()).isEqualTo(startDate2);
+        assertThat(firstItem.getProjectItemTerms().get(1).getEndDate()).isEqualTo(endDate2);
+        assertThat(firstItem.getProjectItemTerms().get(1).getBudgetedAmount()).isEqualTo(amount2);
 
     }
 
     @Inject
-    ProjectTermRepository projectTermRepository;
+    ProjectItemTermRepository projectTermRepository;
 
 }

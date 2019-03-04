@@ -7,17 +7,15 @@
         </col>
     </row>
     <row>
-        <col span="12">
+        <col span="4">
             <tabGroup>
                 <tab name="Project item">
                     <row>
-                        <col span="4">
+                        <col span="12">
                             <ns2:fieldSet name="Project item" id="projectItem">
                                 <ns2:property id="project"/>
                                 <ns2:property id="description"/>
                             </ns2:fieldSet>
-                        </col>
-                        <col span="4">
                             <ns2:fieldSet name="Amount" id="amount">
                                 <ns2:action id="amendAmount" position="PANEL"/>
                                 <ns2:property id="budgetedAmount"/>
@@ -25,8 +23,6 @@
                                 <ns2:property id="invoicedAmount"/>
                                 <ns2:property id="tax"/>
                             </ns2:fieldSet>
-                        </col>
-                        <col span="4">
                             <ns2:fieldSet name="Dimensions" id="dimensions">
                                 <ns2:property id="charge"/>
                                 <ns2:property id="property"/>
@@ -51,6 +47,17 @@
                                 <ns2:property id="datanucleusVersionTimestamp"/>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Other" unreferencedProperties="true"></ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
+        </col>
+        <col span="8">
+            <tabGroup>
+                <tab name="Items">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="projectItemTerms" defaultView="table" />
                         </col>
                     </row>
                 </tab>

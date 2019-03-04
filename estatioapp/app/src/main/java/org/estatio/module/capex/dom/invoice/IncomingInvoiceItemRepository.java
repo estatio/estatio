@@ -23,6 +23,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.capex.dom.project.ProjectItem;
 import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
@@ -221,6 +222,11 @@ public class IncomingInvoiceItemRepository {
                         "project", project,
                         "charge", charge
                 ));
+    }
+
+    @Programmatic
+    public List<IncomingInvoiceItem> findByProjectItem(final ProjectItem projectItem) {
+        return findByProjectAndCharge(projectItem.getProject(), projectItem.getCharge());
     }
 
     @Programmatic

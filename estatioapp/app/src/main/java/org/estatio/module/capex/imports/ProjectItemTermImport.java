@@ -21,19 +21,26 @@ import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
 
 import org.estatio.module.base.dom.Importable;
 import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.capex.dom.project.ProjectItem;
+import org.estatio.module.capex.dom.project.ProjectItemRepository;
 import org.estatio.module.capex.dom.project.ProjectRepository;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeRepository;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
-        objectType = "org.estatio.module.capex.imports.ProjectTermImport"
+        objectType = "org.estatio.module.capex.imports.ProjectItemTermImport"
 )
-public class ProjectTermImport implements Importable, ExcelFixtureRowHandler {
+public class ProjectItemTermImport implements Importable, ExcelFixtureRowHandler {
 
     @Getter @Setter
     private String projectReference;
+
+    @Getter @Setter
+    private String itemWorkTypeReference;
 
     @Getter @Setter
     private BigDecimal budgetedAmount;
@@ -55,10 +62,18 @@ public class ProjectTermImport implements Importable, ExcelFixtureRowHandler {
 
         Project project = projectRepository.findByReference(getProjectReference());
         if (project == null) {
-            throw new ApplicationException(String.format("Project with reference %s not found.", getProjectReference()));
+            throw new ApplicationException(String.format("Project with reference %s not found when importing term.", getProjectReference()));
+        }
+        Charge charge = chargeRepository.findByReference(getItemWorkTypeReference());
+        if (charge == null) {
+            throw new ApplicationException(String.format("Worktype with reference %s not found when importing term.", getItemWorkTypeReference()));
+        }
+        ProjectItem projectItem = projectItemRepository.findByProjectAndCharge(project, charge);
+        if (projectItem == null) {
+            throw new ApplicationException(String.format("ProjectItem of project %s with worktype %s not found when importing term.", getProjectReference(), getItemWorkTypeReference()));
         }
 
-        wrapperFactory.wrap(project).newProjectTerm(getBudgetedAmount(), getStartDate(), getEndDate());
+        wrapperFactory.wrap(projectItem).newProjectItemTerm(getBudgetedAmount(), getStartDate(), getEndDate());
         return Lists.newArrayList(project);
 
     }
@@ -69,6 +84,10 @@ public class ProjectTermImport implements Importable, ExcelFixtureRowHandler {
     }
 
     @Inject ProjectRepository projectRepository;
+
+    @Inject ProjectItemRepository projectItemRepository;
+
+    @Inject ChargeRepository chargeRepository;
 
     @Inject WrapperFactory wrapperFactory;
 }

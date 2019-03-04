@@ -14,27 +14,27 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;
-import org.estatio.module.capex.dom.project.ProjectTerm;
+import org.estatio.module.capex.dom.project.ProjectItemTerm;
 
 /**
  * TODO: although this could currently be inlined, we expect to factor out project from incoming invoice, in which case this will be a typical contribution across modules.
  */
 @Mixin
-public class ProjectTerm_Invoices {
+public class ProjectItemTerm_Invoices {
 
-    private final ProjectTerm projectTerm;
-    public ProjectTerm_Invoices(ProjectTerm projectTerm){
-        this.projectTerm = projectTerm;
+    private final ProjectItemTerm projectItemTerm;
+    public ProjectItemTerm_Invoices(ProjectItemTerm projectItemTerm){
+        this.projectItemTerm = projectItemTerm;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<IncomingInvoice> invoices() {
-        return incomingInvoiceItemRepository.findByProject(projectTerm.getProject()).stream()
+        return incomingInvoiceItemRepository.findByProjectItem(projectItemTerm.getProjectItem()).stream()
                 .filter(ii->ii.getClass().isAssignableFrom(IncomingInvoiceItem.class))
                 .map(ii->(IncomingInvoice) ii.getInvoice())
                 .filter(i->i.getPaidDate()!=null)
-                .filter(i->projectTerm.getInterval().contains(i.getPaidDate()))
+                .filter(i-> projectItemTerm.getInterval().contains(i.getPaidDate()))
                 .collect(Collectors.toList());
     }
 

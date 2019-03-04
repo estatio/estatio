@@ -59,38 +59,39 @@ public enum Project_enum implements PersonaWithBuilderScript<Project, ProjectBui
     OxfProject  ("OXF-02", "New extension", ld(2016, 1, 1), ld(2019, 7, 1), Gb,
             new ItemSpec[]{
                 new ItemSpec(IncomingCharge_enum.FrWorks, "works", bd("40000.00"), null, null, OxfGb, null)
-            },
-            new TermSpec[]{}
+            }
     ),
     GraProject  ("PR3", "Place commercial signs", ld(1999, 1, 1), ld(1999, 7, 1), Nl,
-            new ItemSpec[]{},
-            new TermSpec[]{}
+            new ItemSpec[]{}
     ),
     KalProject1 ("PR1", "Augment parkingplace", ld(1999, 1, 1), ld(1999, 7, 1), Nl,
-            new ItemSpec[]{},
-            new TermSpec[]{}
+            new ItemSpec[]{}
     ),
     KalProject2 ("PR2", "Broaden entrance", ld(1999, 4, 1), ld(1999, 5, 1), Nl,
-            new ItemSpec[]{},
-            new TermSpec[]{}
+            new ItemSpec[]{}
     ),
     VivProjectFr  ("VIV-01", "New extension", ld(2016, 1, 1), ld(2019, 7, 1), Fr,
             new ItemSpec[]{
                     new ItemSpec(IncomingCharge_enum.FrWorks, "works", bd("40000.00"), null, null, VivFr, null)
-            },
-            new TermSpec[]{}
+            }
     ),
     RonProjectIt    ("ITPR001", "New extension", ld(2018, 1, 1), ld(2021, 7, 1), It,
             new ItemSpec[]{
-                    new ItemSpec(IncomingCharge_enum.ItConstruction, "construction (costruzione)", bd("90000.00"), null, null, RonIt, null),
-                    new ItemSpec(IncomingCharge_enum.ItAcquisition, "purchase (acquisto)", bd("3000000.00"), null, null, RonIt, null),
+                    new ItemSpec(IncomingCharge_enum.ItConstruction, "construction (costruzione)", bd("90000.00"), null, null, RonIt, null
+//                            new TermSpec[]{
+//                                    new TermSpec(bd("450000.00"), new LocalDate(2018,1,1), new LocalDate(2018,3,31)),
+//                                    new TermSpec(bd("450000.00"), new LocalDate(2018,4,1), new LocalDate(2018,6,30)),
+//                            }
+                    ),
+                    new ItemSpec(IncomingCharge_enum.ItAcquisition, "purchase (acquisto)", bd("3000000.00"), null, null, RonIt, null
+//                            new TermSpec[]{
+//                                    new TermSpec(bd("50000.00"), new LocalDate(2018,1,1), new LocalDate(2018,3,31)),
+//                                    new TermSpec(bd("100000.00"), new LocalDate(2018,4,1), new LocalDate(2018,6,30)),
+//                                    new TermSpec(bd("100000.00"), new LocalDate(2018,7,1), new LocalDate(2018,9,30)),
+//                                    new TermSpec(bd("50000.00"), new LocalDate(2018,10,1), new LocalDate(2018,12,31))
+//                            }
+                            ),
 
-            },
-            new TermSpec[]{
-                    new TermSpec(bd("50000.00"), new LocalDate(2018,1,1), new LocalDate(2018,3,31)),
-                    new TermSpec(bd("100000.00"), new LocalDate(2018,4,1), new LocalDate(2018,6,30)),
-                    new TermSpec(bd("200000.00"), new LocalDate(2018,7,1), new LocalDate(2018,9,30)),
-                    new TermSpec(bd("500000.00"), new LocalDate(2018,10,1), new LocalDate(2018,12,31))
             }
     ),
     ;
@@ -119,7 +120,6 @@ public enum Project_enum implements PersonaWithBuilderScript<Project, ProjectBui
     private final LocalDate endDate;
     private final ApplicationTenancy_enum applicationTenancy;
     private final ItemSpec[] itemSpecs;
-    private final TermSpec[] termSpecs;
 
     @Override
     public ProjectBuilder builder() {
@@ -139,13 +139,6 @@ public enum Project_enum implements PersonaWithBuilderScript<Project, ProjectBui
                                 x.endDate,
                                 f.objectFor(x.property_d, ec),
                                 f.objectFor(x.tax_d, ec)))
-                        .collect(Collectors.toList())))
-                .setPrereq((f,ec) -> f.setTermSpecs(Arrays.stream(termSpecs)
-                        .map(x -> new ProjectBuilder.TermSpec(
-                                x.budgetedAmount,
-                                x.startDate,
-                                x.endDate
-                        ))
                         .collect(Collectors.toList())))
                 ;
     }

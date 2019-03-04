@@ -40,8 +40,9 @@ import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.capex.app.ProjectMenu;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectItem;
+import org.estatio.module.capex.dom.project.ProjectItemTerm;
 import org.estatio.module.capex.dom.project.ProjectRepository;
-import org.estatio.module.capex.dom.project.ProjectTermRepository;
+import org.estatio.module.capex.dom.project.ProjectItemTermRepository;
 import org.estatio.module.capex.imports.ProjectImportManager;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.charge.EstatioChargeModule;
@@ -142,10 +143,13 @@ public class ProjectImport_IntegTest extends CapexModuleIntegTestAbstract {
         assertThat(project2item1.getProperty()).isEqualTo(oxf);
         assertThat(project2item1.getTax()).isNull();
 
-        assertThat(project1.getProjectTerms()).hasSize(3);
-        assertThat(project1.getProjectTerms().get(0).getBudgetedAmount()).isEqualTo(new BigDecimal("40000.0"));
-        assertThat(project1.getProjectTerms().get(0).getStartDate()).isEqualTo(new LocalDate(2018,1,1));
-        assertThat(project1.getProjectTerms().get(0).getEndDate()).isEqualTo(new LocalDate(2018,3,31));
+        assertThat(projectItemTermRepository.listAll()).hasSize(4);
+        assertThat(project1item1.getProjectItemTerms()).hasSize(2);
+        final ProjectItemTerm projectItemTerm = project1item1.getProjectItemTerms().get(0);
+        assertThat(projectItemTerm.getProjectItem()).isEqualTo(project1item1);
+        assertThat(projectItemTerm.getBudgetedAmount()).isEqualTo(new BigDecimal("40000.0"));
+        assertThat(projectItemTerm.getStartDate()).isEqualTo(new LocalDate(2018,1,1));
+        assertThat(projectItemTerm.getEndDate()).isEqualTo(new LocalDate(2018,3,31));
 
     }
 
@@ -154,7 +158,7 @@ public class ProjectImport_IntegTest extends CapexModuleIntegTestAbstract {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                projectTermRepository.listAll().forEach(t->repositoryService.remove(t));
+                projectItemTermRepository.listAll().forEach(t->repositoryService.remove(t));
                 projectRepository.listAll().forEach(p->p.delete());
                 transactionService.flushTransaction();
                 executionContext.executeChild(this, new EstatioChargeModule().getRefDataTeardown());
@@ -166,7 +170,7 @@ public class ProjectImport_IntegTest extends CapexModuleIntegTestAbstract {
 
     @Inject ProjectRepository projectRepository;
 
-    @Inject ProjectTermRepository projectTermRepository;
+    @Inject ProjectItemTermRepository projectItemTermRepository;
 
     @Inject RepositoryService repositoryService;
 

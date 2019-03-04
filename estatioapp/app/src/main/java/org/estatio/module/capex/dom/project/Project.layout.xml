@@ -71,7 +71,6 @@
                     <row>
                         <col span="12">
                             <ns2:collection id="items" defaultView="table" />
-                            <ns2:collection id="projectTerms" defaultView="table" />
                             <ns2:collection id="roles" defaultView="table" />
                         </col>
                     </row>

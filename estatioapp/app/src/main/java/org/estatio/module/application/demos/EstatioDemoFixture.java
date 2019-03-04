@@ -44,6 +44,7 @@ import org.estatio.module.capex.fixtures.incominginvoice.enums.IncomingInvoice_e
 import org.estatio.module.capex.fixtures.order.enums.NumeratorForOrder_enum;
 import org.estatio.module.capex.fixtures.order.enums.Order_enum;
 import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceImportForDemoXlsxFixture;
+import org.estatio.module.capex.fixtures.project.enums.ProjectItemTerm_enum;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.EstatioChargeModule;
@@ -258,6 +259,15 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 Project_enum.GraProject,
                 Project_enum.VivProjectFr,
                 Project_enum.RonProjectIt);
+
+        ec.executeChildren(this,
+                ProjectItemTerm_enum.RonProjectItem1Term1,
+                ProjectItemTerm_enum.RonProjectItem1Term2,
+                ProjectItemTerm_enum.RonProjectItem2Term1,
+                ProjectItemTerm_enum.RonProjectItem2Term2,
+                ProjectItemTerm_enum.RonProjectItem2Term3,
+                ProjectItemTerm_enum.RonProjectItem2Term4
+                );
 
         ec.executeChildren(this,
                 new DocumentTypesAndTemplatesForCapexFixture(),

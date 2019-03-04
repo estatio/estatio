@@ -33,59 +33,60 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
-@DomainService(repositoryFor = ProjectTerm.class, nature = NatureOfService.DOMAIN)
-public class ProjectTermRepository extends UdoDomainRepositoryAndFactory<ProjectTerm> {
+@DomainService(repositoryFor = ProjectItemTerm.class, nature = NatureOfService.DOMAIN)
+public class ProjectItemTermRepository extends UdoDomainRepositoryAndFactory<ProjectItemTerm> {
 
-    public ProjectTermRepository() {
-        super(ProjectTermRepository.class, ProjectTerm.class);
+    public ProjectItemTermRepository() {
+        super(ProjectItemTermRepository.class, ProjectItemTerm.class);
     }
 
     @Programmatic
-    public List<ProjectTerm> listAll() {
+    public List<ProjectItemTerm> listAll() {
         return allInstances();
     }
 
     @Programmatic
-    public List<ProjectTerm> findProject(final Project project) {
-        return allMatches("findByProject", "project", project).stream().sorted().collect(Collectors.toList());
+    public List<ProjectItemTerm> findByProjectItem(final ProjectItem projectItem) {
+        return allMatches("findByProjectItem", "projectItem", projectItem).stream().sorted().collect(Collectors.toList());
     }
 
     @Programmatic
-    public ProjectTerm findUnique(final Project project, final LocalDate startDate) {
-        return uniqueMatch("findByProjectAndStartDate", "project", project, "startDate", startDate);
+    public ProjectItemTerm findUnique(final ProjectItem projectItem, final LocalDate startDate) {
+        return uniqueMatch("findByProjectItemAndStartDate", "projectItem", projectItem, "startDate", startDate);
     }
 
     @Programmatic
-    public ProjectTerm create(
-            final Project project,
+    public ProjectItemTerm create(
+            final ProjectItem projectItem,
             final BigDecimal amount,
             final LocalDate startDate,
             final LocalDate endDate) {
 
-        ProjectTerm budget = repositoryService.instantiate(ProjectTerm.class);
-        budget.setProject(project);
-        budget.setBudgetedAmount(amount);
-        budget.setStartDate(startDate);
-        budget.setEndDate(endDate);
+        ProjectItemTerm projectItemTerm = repositoryService.instantiate(ProjectItemTerm.class);
+        projectItemTerm.setProjectItem(projectItem);
+        projectItemTerm.setBudgetedAmount(amount);
+        projectItemTerm.setStartDate(startDate);
+        projectItemTerm.setEndDate(endDate);
 
-        repositoryService.persist(budget);
+        repositoryService.persist(projectItemTerm);
 
-        return budget;
+        return projectItemTerm;
     }
 
     @Programmatic
-    public ProjectTerm findOrCreate(
-            final Project project,
+    public ProjectItemTerm findOrCreate(
+            final ProjectItem projectItem,
             final BigDecimal amount,
             final LocalDate startDate,
             final LocalDate endDate) {
-        ProjectTerm budget = findUnique(project, startDate);
-        if(budget == null) {
-            budget = create(project, amount, startDate, endDate);
+        ProjectItemTerm projectItemTerm = findUnique(projectItem, startDate);
+        if(projectItemTerm == null) {
+            projectItemTerm = create(projectItem, amount, startDate, endDate);
         }
-        return budget;
+        return projectItemTerm;
     }
 
     @Inject
     RepositoryService repositoryService;
+
 }

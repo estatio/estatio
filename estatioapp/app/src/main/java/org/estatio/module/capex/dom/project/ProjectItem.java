@@ -19,6 +19,7 @@
 package org.estatio.module.capex.dom.project;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -157,6 +158,16 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> implements Financi
 		return true;
 	}
 
+	public List<ProjectItemTerm> getProjectItemTerms(){
+		return projectTermRepository.findByProjectItem(this);
+	}
+
+	@Action(associateWith="projectItemTerms", associateWithSequence="1")
+	public ProjectItem newProjectItemTerm(final BigDecimal amount, final LocalDate startDate, final LocalDate endDate){
+		projectTermRepository.findOrCreate(this, amount, startDate, endDate);
+		return this;
+	}
+
 	@Override
 	@Programmatic
 	public ApplicationTenancy getApplicationTenancy() {
@@ -186,4 +197,7 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> implements Financi
 
 	@Inject
 	FactoryService factoryService;
+
+	@Inject
+	ProjectItemTermRepository projectTermRepository;
 }

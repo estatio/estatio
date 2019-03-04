@@ -5,23 +5,17 @@ import java.math.BigDecimal;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
-public class ProjectTerm_Test {
+public class ProjectItemTerm_Test {
 
     @Test
     public void getPercentageOfTotalBudget() {
 
         // given
-        Project project = new Project(){
-            @Override
-            public BigDecimal getBudgetedAmount() {
-                return new BigDecimal("12345.56");
-            }
-        };
+        ProjectItem projectItem = new ProjectItem();
+        projectItem.setBudgetedAmount(new BigDecimal("12345.56"));
 
-        ProjectTerm term = new ProjectTerm();
-        term.setProject(project);
+        ProjectItemTerm term = new ProjectItemTerm();
+        term.setProjectItem(projectItem);
 
         // when
         term.setBudgetedAmount(new BigDecimal("1000.12"));
@@ -44,15 +38,11 @@ public class ProjectTerm_Test {
     public void getPercentageOfTotalBudget_when_budgeted_amount_equals_zero() {
 
         // given
-        Project project = new Project(){
-            @Override
-            public BigDecimal getBudgetedAmount() {
-                return new BigDecimal("0.00");
-            }
-        };
+        ProjectItem projectItem = new ProjectItem();
+        projectItem.setBudgetedAmount(new BigDecimal("0.00"));
 
-        ProjectTerm term = new ProjectTerm();
-        term.setProject(project);
+        ProjectItemTerm term = new ProjectItemTerm();
+        term.setProjectItem(projectItem);
 
         // when
         term.setBudgetedAmount(new BigDecimal("1000.12"));
@@ -66,15 +56,11 @@ public class ProjectTerm_Test {
     public void getPercentageOfTotalBudget_when_no_budgeted_amount() {
 
         // given
-        Project project = new Project(){
-            @Override
-            public BigDecimal getBudgetedAmount() {
-                return null;
-            }
-        };
+        ProjectItem projectItem = new ProjectItem();
+        projectItem.setBudgetedAmount(null);
 
-        ProjectTerm term = new ProjectTerm();
-        term.setProject(project);
+        ProjectItemTerm term = new ProjectItemTerm();
+        term.setProjectItem(projectItem);
 
         // when
         term.setBudgetedAmount(new BigDecimal("1000.12"));

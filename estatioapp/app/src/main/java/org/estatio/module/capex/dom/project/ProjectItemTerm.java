@@ -65,38 +65,38 @@ import lombok.Setter;
 )
 @DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
-@Unique(name = "ProjectTerm_project_startDate_UNQ", members = { "project", "startDate" })
+@Unique(name = "ProjectItemTerm_projectItem_startDate_UNQ", members = { "projectItem", "startDate" })
 @Queries({
-        @Query(name = "findByProject", language = "JDOQL", value = "SELECT "
-                + "FROM org.estatio.module.capex.dom.project.ProjectTerm "
-                + "WHERE project == :project "),
-        @Query(name = "findByProjectAndStartDate", language = "JDOQL", value = "SELECT "
-                + "FROM org.estatio.module.capex.dom.project.ProjectTerm "
-                + "WHERE project == :project && "
+        @Query(name = "findByProjectItem", language = "JDOQL", value = "SELECT "
+                + "FROM org.estatio.module.capex.dom.project.ProjectItemTerm "
+                + "WHERE projectItem == :projectItem "),
+        @Query(name = "findByProjectItemAndStartDate", language = "JDOQL", value = "SELECT "
+                + "FROM org.estatio.module.capex.dom.project.ProjectItemTerm "
+                + "WHERE projectItem == :projectItem && "
                 + "startDate == :startDate ")
 })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.capex.dom.project.ProjectTerm"
+        objectType = "org.estatio.capex.dom.project.ProjectItemTerm"
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
-public class ProjectTerm extends UdoDomainObject<ProjectTerm> {
+public class ProjectItemTerm extends UdoDomainObject<ProjectItemTerm> {
 
-    public ProjectTerm() {
-        super("project, startDate");
+    public ProjectItemTerm() {
+        super("projectItem, startDate");
     }
 
     public String title() {
         return TitleBuilder.start()
-                .withParent(getProject())
+                .withParent(getProjectItem())
                 .withName(getInterval() + " ")
                 .withName(getBudgetedAmount())
                 .toString();
     }
 
     @Getter @Setter
-    @Column(allowsNull = "false", name = "projectId")
-    private Project project;
+    @Column(allowsNull = "false", name = "projectItemId")
+    private ProjectItem projectItem;
 
     @Getter @Setter
     @Column(allowsNull = "false", scale = MoneyType.Meta.SCALE)
@@ -104,8 +104,8 @@ public class ProjectTerm extends UdoDomainObject<ProjectTerm> {
 
     @Property()
     public Integer getPercentageOfTotalBudget(){
-        if (getProject().getBudgetedAmount()==null || getProject().getBudgetedAmount().compareTo(BigDecimal.ZERO) == 0) return 0;
-        BigDecimal fraction = getBudgetedAmount().divide(getProject().getBudgetedAmount(), MathContext.DECIMAL64);
+        if (getProjectItem().getBudgetedAmount()==null || getProjectItem().getBudgetedAmount().compareTo(BigDecimal.ZERO) == 0) return 0;
+        BigDecimal fraction = getBudgetedAmount().divide(getProjectItem().getBudgetedAmount(), MathContext.DECIMAL64);
         BigDecimal percentageAsBd = fraction.multiply(new BigDecimal("100")).setScale(0, RoundingMode.HALF_UP);
         return percentageAsBd.intValueExact();
     }
@@ -119,7 +119,7 @@ public class ProjectTerm extends UdoDomainObject<ProjectTerm> {
     private LocalDate endDate;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
-    public ProjectTerm amendBudgetedAmount(
+    public ProjectItemTerm amendBudgetedAmount(
             @Parameter(optionality = Optionality.OPTIONAL)
             final BigDecimal add,
             @Parameter(optionality = Optionality.OPTIONAL)
@@ -138,7 +138,7 @@ public class ProjectTerm extends UdoDomainObject<ProjectTerm> {
     @PropertyLayout(hidden = Where.EVERYWHERE)
     @Override
     public ApplicationTenancy getApplicationTenancy() {
-        return getProject().getApplicationTenancy();
+        return getProjectItem().getApplicationTenancy();
     }
 
     @PropertyLayout(hidden = Where.EVERYWHERE)

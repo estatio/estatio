@@ -30,7 +30,7 @@ import org.estatio.module.capex.dom.order.paperclips.PaperclipForOrder;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.module.capex.dom.payment.PaymentBatch;
 import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalStateTransition;
-import org.estatio.module.capex.dom.project.ProjectTerm;
+import org.estatio.module.capex.dom.project.ProjectItemTerm;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectItem;
 import org.estatio.module.capex.dom.project.ProjectRole;
@@ -131,7 +131,7 @@ public class EstatioCapexModule extends ModuleAbstract {
                 deleteFrom(OrderItem.class);
                 deleteFrom(Order.class);
 
-                deleteFrom(ProjectTerm.class);
+                deleteFrom(ProjectItemTerm.class);
                 deleteFrom(ProjectRole.class);
                 deleteFrom(ProjectItem.class);
                 deleteFrom(Project.class);
