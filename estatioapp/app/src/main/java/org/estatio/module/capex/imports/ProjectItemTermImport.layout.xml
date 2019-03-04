@@ -8,6 +8,7 @@
         <col span="12">
             <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
                 <ns2:property id="projectReference" />
+                <ns2:property id="itemWorkTypeReference" />
                 <ns2:property id="budgetedAmount" />
                 <ns2:property id="startDate" />
                 <ns2:property id="endDate" />
