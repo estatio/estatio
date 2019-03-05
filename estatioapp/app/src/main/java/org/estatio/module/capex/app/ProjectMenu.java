@@ -123,8 +123,9 @@ public class ProjectMenu {
     }
 
     public boolean hideNewProjectItaly() {
-        if (meService.me().getAtPath().startsWith("/ITA")) return false;
-        return true;
+        final String atPath = meService.me().getAtPath();
+        final boolean italianUser = atPath != null && atPath.startsWith("/ITA");
+        return !italianUser;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
