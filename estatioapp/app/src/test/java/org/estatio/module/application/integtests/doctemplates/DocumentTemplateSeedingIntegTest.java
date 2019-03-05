@@ -30,7 +30,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.incode.module.document.dom.impl.applicability.Applicability;
-import org.incode.module.document.dom.impl.applicability.ApplicabilityRepository;
 import org.incode.module.document.dom.impl.applicability.AttachmentAdvisor;
 import org.incode.module.document.dom.impl.applicability.RendererModelFactory;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
@@ -42,6 +41,7 @@ import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.module.application.integtests.ApplicationModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
+import org.estatio.module.invoice.dom.DocumentTemplateData;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.invoice.dom.RenderingStrategyData;
 import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
@@ -104,59 +104,61 @@ public class DocumentTemplateSeedingIntegTest extends ApplicationModuleIntegTest
             assertThat(dtd).isNotNull();
             assertThat(dtd.getRef()).isEqualTo(dt.getReference());
 
-            final String templateAtPath = dtd.getAtPath();
-            System.out.println(dt.getReference());
-            if(templateAtPath != null) {
-                // should have exactly one DocTemplate for the specified atPath
+            final DocumentTemplateData dtmd = dtd.getDocumentTemplateData();
+            if(dtmd != null) {
+                final String templateAtPath = dtmd.getAtPath();
+                System.out.println(dt.getReference());
+                if(templateAtPath != null) {
+                    // should have exactly one DocTemplate for the specified atPath
 
-                final List<DocumentTemplate> templates = documentTemplateRepository.findByType(dt);
-                final List<DocumentTemplate> templatesWithAtPath = templates.stream()
-                    .filter(documentTemplate -> Objects.equals(documentTemplate.getAtPath(), templateAtPath))
-                    .collect(Collectors.toList());
-                assertThat(templatesWithAtPath).hasSize(1);
-                final DocumentTemplate documentTemplate = templatesWithAtPath.get(0);
+                    final List<DocumentTemplate> templates = documentTemplateRepository.findByType(dt);
+                    final List<DocumentTemplate> templatesWithAtPath = templates.stream()
+                            .filter(documentTemplate -> Objects.equals(documentTemplate.getAtPath(), templateAtPath))
+                            .collect(Collectors.toList());
+                    assertThat(templatesWithAtPath).hasSize(1);
+                    final DocumentTemplate documentTemplate = templatesWithAtPath.get(0);
 
-                final RenderingStrategyData crsd = dtd.getContentRenderingStrategy();
-                final RenderingStrategy crs = documentTemplate.getContentRenderingStrategy();
-                assertThat(crsd.findUsing(renderingStrategyRepository)).isSameAs(crs);
+                    final RenderingStrategyData crsd = dtmd.getContentRenderingStrategy();
+                    final RenderingStrategy crs = documentTemplate.getContentRenderingStrategy();
+                    assertThat(crsd.findUsing(renderingStrategyRepository)).isSameAs(crs);
 
-                final RenderingStrategyData nrsd = dtd.getNameRenderingStrategy();
-                final RenderingStrategy nrs = documentTemplate.getNameRenderingStrategy();
-                assertThat(nrsd.findUsing(renderingStrategyRepository)).isSameAs(nrs);
+                    final RenderingStrategyData nrsd = dtmd.getNameRenderingStrategy();
+                    final RenderingStrategy nrs = documentTemplate.getNameRenderingStrategy();
+                    assertThat(nrsd.findUsing(renderingStrategyRepository)).isSameAs(nrs);
 
-                assertThat(dtd.getNameText()).isEqualTo(documentTemplate.getNameText());
+                    assertThat(dtmd.getNameText()).isEqualTo(documentTemplate.getNameText());
 
-                assertThat(dtd.isPreviewOnly()).isEqualTo(documentTemplate.isPreviewOnly());
-                assertThat(dtd.getExtension()).isEqualTo(documentTemplate.getFileSuffix());
-                assertThat(dtd.getContentSort()).isSameAs(documentTemplate.getSort());
-                assertThat(dtd.getMimeTypeBase()).isEqualTo(documentTemplate.getMimeType());
+                    assertThat(dtmd.isPreviewOnly()).isEqualTo(documentTemplate.isPreviewOnly());
+                    assertThat(dtmd.getExtension()).isEqualTo(documentTemplate.getFileSuffix());
+                    assertThat(dtmd.getContentSort()).isSameAs(documentTemplate.getSort());
+                    assertThat(dtmd.getMimeTypeBase()).isEqualTo(documentTemplate.getMimeType());
 
-                // documentTemplate.getName() =~ dtd.getName() + dtd.getNameSuffixIfAny() + "." + dtd.getExtension()
-                assertThat(documentTemplate.getName()).startsWith(dtd.getName());
-                if(dtd.getNameSuffixIfAny() != null) {
-                    assertThat(documentTemplate.getName()).contains(dtd.getNameSuffixIfAny());
-                }
+                    // documentTemplate.getName() =~ dtd.getName() + dtd.getNameSuffixIfAny() + "." + dtd.getExtension()
+                    assertThat(documentTemplate.getName()).startsWith(dtd.getName());
+                    if(dtmd.getNameSuffixIfAny() != null) {
+                        assertThat(documentTemplate.getName()).contains(dtmd.getNameSuffixIfAny());
+                    }
 
-                final Class<? extends AttachmentAdvisor> dtdAttachmentAdvisorClass =
-                        dtd.getAttachmentAdvisorClass();
-                final Class<? extends RendererModelFactory> dtdRendererModelFactoryClass =
-                        dtd.getRendererModelFactoryClass();
+                    final Class<? extends AttachmentAdvisor> dtdAttachmentAdvisorClass =
+                            dtmd.getAttachmentAdvisorClass();
+                    final Class<? extends RendererModelFactory> dtdRendererModelFactoryClass =
+                            dtmd.getRendererModelFactoryClass();
 
-                final Class<?> domainClass = dtd.getDomainClass();
+                    final Class<?> domainClass = dtmd.getDomainClass();
 
-                final Optional<Applicability> applicabilityIfAny = documentTemplate.applicableTo(domainClass);
-                if(applicabilityIfAny.isPresent()) {
-                    final Applicability applicability = applicabilityIfAny.get();
-                    assertThat(applicability.getAttachmentAdvisorClassName())
+                    final Optional<Applicability> applicabilityIfAny = documentTemplate.applicableTo(domainClass);
+                    if(applicabilityIfAny.isPresent()) {
+                        final Applicability applicability = applicabilityIfAny.get();
+                        assertThat(applicability.getAttachmentAdvisorClassName())
                                 .isEqualTo(dtdAttachmentAdvisorClass.getName());
-                    assertThat(applicability.getRendererModelFactoryClassName())
+                        assertThat(applicability.getRendererModelFactoryClassName())
                                 .isEqualTo(dtdRendererModelFactoryClass.getName());
 
-                } else {
-                    assertThat(dtdAttachmentAdvisorClass).isNull();
-                    assertThat(dtdRendererModelFactoryClass).isNull();
+                    } else {
+                        assertThat(dtdAttachmentAdvisorClass).isNull();
+                        assertThat(dtdRendererModelFactoryClass).isNull();
+                    }
                 }
-
             }
         }
     }
