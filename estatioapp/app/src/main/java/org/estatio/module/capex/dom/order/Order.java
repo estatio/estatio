@@ -45,6 +45,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -266,6 +267,8 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return buf.toString();
     }
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(promptStyle = PromptStyle.DIALOG_SIDEBAR)
     public Order completeOrder(
             final IncomingInvoiceType orderType,
             final org.estatio.module.asset.dom.Property property,
@@ -345,6 +348,12 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return reasonDisabledDueToState();
     }
 
+    public boolean hideCompleteOrder() {
+        return getAtPath().startsWith("/ITA");
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(promptStyle = PromptStyle.DIALOG_SIDEBAR)
     public Order completeOrderItem(
             final String description,
             final BigDecimal netAmount,
@@ -478,6 +487,10 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             return "Parent project is not allowed";
 
         return period != null ? PeriodUtil.reasonInvalidPeriod(period) : null;
+    }
+
+    public boolean hideCompleteOrderItem() {
+        return getAtPath().startsWith("/ITA");
     }
 
     private Optional<OrderItem> getFirstItemIfAny() {
