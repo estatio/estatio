@@ -54,6 +54,11 @@ public class ClassService {
     @Programmatic
     public Object instantiate(final String fqcn) {
         final Class<?> cls = load(fqcn);
+        return instantiate(cls);
+    }
+
+    @Programmatic
+    public Object instantiate(final Class<?> cls) {
         try {
             return cls.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {

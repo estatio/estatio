@@ -80,6 +80,13 @@ import org.incode.module.document.dom.spi.RendererModelFactoryClassNameService;
 import org.incode.module.document.dom.types.AtPathType;
 import org.incode.module.document.dom.types.FqcnType;
 
+import org.estatio.module.invoice.dom.DocumentTemplateApi;
+import org.estatio.module.invoice.dom.DocumentTemplateData;
+import org.estatio.module.invoice.dom.DocumentTypeApi;
+import org.estatio.module.invoice.dom.DocumentTypeData;
+import org.estatio.module.invoice.dom.RenderingStrategyApi;
+import org.estatio.module.invoice.dom.RenderingStrategyData;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -171,7 +178,9 @@ import lombok.Setter;
         cssClassUiEvent = DocumentTemplate.CssClassUiEvent.class,
         bookmarking = BookmarkPolicy.AS_ROOT
 )
-public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
+public class DocumentTemplate
+        extends DocumentAbstract<DocumentTemplate>
+        implements DocumentTemplateApi {
 
 
     //region > ui event classes
@@ -359,6 +368,60 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     private String atPathCopy;
     //endregion
 
+    private DocumentTemplateData templateData;
+    @Programmatic
+    public DocumentTemplateData getTemplateData() {
+        return  templateData != null
+                ? templateData
+                : (templateData = getTypeData().lookup(getAtPathCopy()));
+    }
+
+    @Programmatic
+    public DocumentTemplateApi getTemplateApi() {
+        // TODO: introduce feature flag to allow revert if necessary
+        return getTemplateData();
+    }
+
+    private DocumentTypeData typeData;
+    @Programmatic
+    public DocumentTypeData getTypeData() {
+        return typeData != null
+                ? typeData
+                : (typeData = DocumentTypeData.reverseLookup(getTypeCopy()));
+    }
+
+    @Programmatic
+    public DocumentTypeApi getTypeApi() {
+        // TODO: introduce feature flag to allow revert if necessary
+        return getTypeData();
+    }
+
+    @Programmatic
+    private RenderingStrategyData contentRenderingStrategyData;
+    public RenderingStrategyData getContentRenderingStrategyData() {
+        return contentRenderingStrategyData != null
+                ? contentRenderingStrategyData
+                : (contentRenderingStrategyData = RenderingStrategyData.reverseLookup(getContentRenderingStrategy()));
+    }
+
+    public RenderingStrategyApi getContentRenderingStrategyApi() {
+        // TODO: introduce feature flag to allow revert if necessary
+        return getContentRenderingStrategyData();
+    }
+
+    @Programmatic
+    private RenderingStrategyData nameRenderingStrategyData;
+    public RenderingStrategyData getNameRenderingStrategyData() {
+        return nameRenderingStrategyData != null
+                ? nameRenderingStrategyData
+                : (nameRenderingStrategyData = RenderingStrategyData.reverseLookup(getNameRenderingStrategy()));
+    }
+
+    public RenderingStrategyApi getNameRenderingStrategyApi() {
+        // TODO: introduce feature flag to allow revert if necessary
+        return getNameRenderingStrategyData();
+    }
+
     //region > date (property)
     public static class DateDomainEvent extends DocumentTemplate.PropertyDomainEvent<LocalDate> { }
     @Getter @Setter
@@ -380,6 +443,10 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
             editing = Editing.DISABLED
     )
     private RenderingStrategy contentRenderingStrategy;
+
+    public RenderingStrategy getContentRenderingStrategy() {
+        return contentRenderingStrategy;
+    }
     //endregion
 
     //region > fileSuffix (property)
@@ -419,6 +486,10 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
             editing = Editing.DISABLED
     )
     private RenderingStrategy nameRenderingStrategy;
+
+    public RenderingStrategy getNameRenderingStrategy() {
+        return nameRenderingStrategy;
+    }
     //endregion
 
     //region > PreviewOnly (property)
@@ -452,6 +523,10 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     //endregion
 
     //region > applicable (action)
+
+    /**
+     * TODO: remove once moved over to using DocumentTypeData and DocumentTemplateData
+     */
     @Mixin
     public static class _applicable {
         private final DocumentTemplate documentTemplate;
@@ -575,6 +650,9 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     //endregion
 
     //region > notApplicable (action)
+    /**
+     * TODO: remove once moved over to using DocumentTypeData and DocumentTemplateData
+     */
     @Mixin
     public static class _notApplicable {
 
@@ -624,44 +702,61 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
     //region > appliesTo, newRendererModelFactory + newRendererModel, newAttachmentAdvisor + newAttachmentAdvice
 
     /**
-     * Whether this template applies to this domain object (that is, {@link #newRendererModel(Object)} and {@link #newAttachmentAdvice(Document, Object)} will both return non-null values).
+     * TODO: only called by DocumentTemplateEquivalenceIntegTest, so eventually should be able to delete (along with Applicable etc).
      */
-    @Programmatic
-    public boolean appliesTo(final Object domainObject) {
-        return applicableTo(domainObject).isPresent();
-    }
-
-    @Programmatic
-    public Optional<Applicability> applicableTo(final Object domainObject) {
-        return applicableTo(domainObject.getClass());
-    }
-
     @Programmatic
     public Optional<Applicability> applicableTo(final Class<?> domainObjectClass) {
         return Lists.newArrayList(getAppliesTo()).stream()
                 .filter(applicability -> applies(applicability, domainObjectClass)).findFirst();
     }
 
-    @Programmatic
-    public RendererModelFactory newRendererModelFactory(final Object domainObject) {
-        final Optional<Applicability> applicabilityIfAny = applicableTo(domainObject);
-        if (!applicabilityIfAny.isPresent()) {
-            return null;
-        }
-        final RendererModelFactory rendererModelFactory = (RendererModelFactory) classService.instantiate(applicabilityIfAny.get().getRendererModelFactoryClassName());
-        serviceRegistry2.injectServicesInto(rendererModelFactory);
-        return rendererModelFactory;
+    /**
+     * TODO: only called indirectly by {@link #applicableTo(Class)}, itself called only by test code, so should be able to delete.
+     */
+    private boolean applies(
+            final Applicability applicability,
+            final Class<?> domainObjectClass) {
+        final Class<?> load = classService.load(applicability.getDomainClassName());
+        return load.isAssignableFrom(domainObjectClass);
+    }
+
+    private RendererModelFactory newRendererModelFactory(final Object domainObject) {
+        final Class<?> domainClass = domainObject.getClass();
+        return getTemplateApi().newRenderModelFactory(domainClass, classService, serviceRegistry2);
+    }
+
+    @Override
+    public RendererModelFactory newRenderModelFactory(
+            final Class<?> domainClass,
+            final ClassService classService,
+            final ServiceRegistry2 serviceRegistry2) {
+
+        final Optional<Applicability> applicability = applicableTo(domainClass);
+        return applicability.map(Applicability::getRendererModelFactoryClassName)
+                .map(classService::instantiate)
+                .map(RendererModelFactory.class::cast)
+                .map(serviceRegistry2::injectServicesInto)
+                .orElse(null);
     }
 
     @Programmatic
     public AttachmentAdvisor newAttachmentAdvisor(final Object domainObject) {
-        final Optional<Applicability> applicabilityIfAny = applicableTo(domainObject);
-        if (!applicabilityIfAny.isPresent()) {
-            return null;
-        }
-        final AttachmentAdvisor attachmentAdvisor = (AttachmentAdvisor) classService.instantiate(applicabilityIfAny.get().getAttachmentAdvisorClassName());
-        serviceRegistry2.injectServicesInto(attachmentAdvisor);
-        return attachmentAdvisor;
+        final Class<?> domainClass = domainObject.getClass();
+        return getTemplateApi().newAttachmentAdvisor(domainClass, classService, serviceRegistry2);
+    }
+
+    @Programmatic
+    public AttachmentAdvisor newAttachmentAdvisor(
+            final Class<?> domainClass,
+            final ClassService classService,
+            final ServiceRegistry2 serviceRegistry2) {
+
+        final Optional<Applicability> applicability = applicableTo(domainClass);
+        return applicability.map(Applicability::getAttachmentAdvisorClassName)
+                .map(classService::instantiate)
+                .map(AttachmentAdvisor.class::cast)
+                .map(serviceRegistry2::injectServicesInto)
+                .orElse(null);
     }
 
     @Programmatic
@@ -690,13 +785,6 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
         return paperclipSpecs;
     }
 
-    private boolean applies(
-            final Applicability applicability,
-            final Class<?> domainObjectClass) {
-        final Class<?> load = classService.load(applicability.getDomainClassName());
-        return load.isAssignableFrom(domainObjectClass);
-    }
-
     //endregion
 
 
@@ -710,15 +798,16 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
 
         serviceRegistry2.injectServicesInto(rendererModel);
 
-        if(!getContentRenderingStrategy().isPreviewsToUrl()) {
+        if(!getTemplateData().getContentRenderingStrategy().isPreviewsToUrl()) {
             throw new IllegalStateException(String.format("RenderingStrategy '%s' does not support previewing to URL",
-                    getContentRenderingStrategy().getReference()));
+                    getTemplateData().getContentRenderingStrategy().getReference()));
         }
 
-        final DocumentNature inputNature = getContentRenderingStrategy().getInputNature();
-        final DocumentNature outputNature = getContentRenderingStrategy().getOutputNature();
+        final DocumentNature inputNature = getTemplateData().getContentRenderingStrategy().getInputNature();
+        final DocumentNature outputNature = getTemplateData().getContentRenderingStrategy().getOutputNature();
 
-        final Renderer renderer = getContentRenderingStrategy().newRenderer();
+        final Renderer renderer = getContentRenderingStrategyApi().newRenderer(
+                classService, serviceRegistry2);
         switch (inputNature){
         case BYTES:
             switch (outputNature) {
@@ -795,7 +884,8 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
 
         // subject
         final RendererFromCharsToChars nameRenderer =
-                (RendererFromCharsToChars) getNameRenderingStrategy().newRenderer();
+                (RendererFromCharsToChars) getNameRenderingStrategyApi().newRenderer(
+                        classService, serviceRegistry2);
         String renderedDocumentName;
         try {
             renderedDocumentName = nameRenderer.renderCharsToChars(
@@ -826,14 +916,14 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
             final Object contentDataModel) {
         final String documentName = determineDocumentName(contentDataModel);
         document.setName(documentName);
-        final RenderingStrategy renderingStrategy = getContentRenderingStrategy();
+        final RenderingStrategyApi renderingStrategy = getContentRenderingStrategyApi();
         final String variant = "content";
         try {
 
             final DocumentNature inputNature = renderingStrategy.getInputNature();
             final DocumentNature outputNature = renderingStrategy.getOutputNature();
 
-            final Renderer renderer = renderingStrategy.newRenderer();
+            final Renderer renderer = renderingStrategy.newRenderer(classService, serviceRegistry2);
 
             switch (inputNature){
                 case BYTES:

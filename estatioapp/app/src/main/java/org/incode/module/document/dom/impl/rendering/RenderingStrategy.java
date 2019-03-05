@@ -45,6 +45,8 @@ import org.incode.module.document.dom.services.ClassService;
 import org.incode.module.document.dom.types.FqcnType;
 import org.incode.module.document.dom.types.NameType;
 
+import org.estatio.module.invoice.dom.RenderingStrategyApi;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -82,7 +84,7 @@ import lombok.Setter;
         cssClassUiEvent = RenderingStrategy.CssClassUiEvent.class,
         bookmarking = BookmarkPolicy.AS_ROOT
 )
-public class RenderingStrategy implements Comparable<RenderingStrategy> {
+public class RenderingStrategy implements Comparable<RenderingStrategy>, RenderingStrategyApi {
 
 
     //region > ui event classes
@@ -256,6 +258,8 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
     private boolean previewsToUrl;
     //endregion
 
+
+
     //region > rendererClassName (property)
     public static class RendererClassNameDomainEvent extends PropertyDomainEvent<String> { }
 
@@ -271,7 +275,7 @@ public class RenderingStrategy implements Comparable<RenderingStrategy> {
 
     //region > newRenderer (programmatic)
     @Programmatic
-    public Renderer newRenderer() {
+    public Renderer newRenderer(final ClassService classService, final ServiceRegistry2 serviceRegistry2) {
         final Renderer renderer = (Renderer) classService.instantiate(getRendererClassName());
         serviceRegistry2.injectServicesInto(renderer);
         return renderer;

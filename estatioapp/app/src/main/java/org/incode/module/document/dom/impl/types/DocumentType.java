@@ -37,6 +37,8 @@ import org.incode.module.document.DocumentModule;
 import org.incode.module.document.dom.impl.docs.DocumentTemplateRepository;
 import org.incode.module.document.dom.types.NameType;
 
+import org.estatio.module.invoice.dom.DocumentTypeApi;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -78,7 +80,7 @@ import lombok.Setter;
         bookmarking = BookmarkPolicy.AS_ROOT
 )
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
-public class DocumentType implements Comparable<DocumentType> {
+public class DocumentType implements Comparable<DocumentType>, DocumentTypeApi {
 
     //region > ui event classes
     public static class TitleUiEvent extends DocumentModule.TitleUiEvent<DocumentType>{}

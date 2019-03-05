@@ -16,12 +16,16 @@
  */
 package org.estatio.module.invoice.dom;
 
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
+
 import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.incode.module.document.dom.impl.applicability.AttachmentAdvisor;
 import org.incode.module.document.dom.impl.applicability.RendererModelFactory;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentSort;
 import org.incode.module.document.dom.impl.types.DocumentType;
+import org.incode.module.document.dom.services.ClassService;
 
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.spiimpl.docs.aa.AttachToSameForOrder;
@@ -40,8 +44,7 @@ import static org.estatio.module.lease.seed.DocumentTypeAndTemplatesFSForInvoice
 /**
  * maximum length is 24 ({@link DocumentType.ReferenceType.Meta#MAX_LEN}).
  */
-@Getter
-public enum DocumentTemplateData {
+public enum DocumentTemplateData implements DocumentTemplateApi {
 
     // cover notes
     COVER_NOTE_PRELIM_LETTER_GLOBAL (
@@ -243,20 +246,63 @@ public enum DocumentTemplateData {
             // DocumentTemplateFSForOrderConfirm
     );
 
+    @Getter
     private final String atPath;
+    @Getter
     private final String extension;
+    @Getter
     private final String mimeTypeBase;
+    @Getter
     private final String inputMimeTypeBase;
+    @Getter
     private final String nameSuffixIfAny;
+    @Getter
     private final DocumentSort contentSort;
+
     //private final Object content;
+    @Getter
     private final RenderingStrategyData contentRenderingStrategy;
+    @Getter
     private final String nameText;
+    @Getter
     private final RenderingStrategyData nameRenderingStrategy;
+    @Getter
     private final boolean previewOnly;
-    private final Class<? extends AttachmentAdvisor> attachmentAdvisorClass;
+
     private final Class<?> domainClass;
+    private final Class<? extends AttachmentAdvisor> attachmentAdvisorClass;
     private final Class<? extends RendererModelFactory> rendererModelFactoryClass;
+
+    @Override
+    public RendererModelFactory newRenderModelFactory(
+            final Class<?> domainClass,
+            final ClassService classService,
+            final ServiceRegistry2 serviceRegistry2) {
+
+        final Class<? extends RendererModelFactory> rendererModelFactoryClass =
+                rendererModelFactoryClassFor(domainClass);
+        if(rendererModelFactoryClass == null) {
+            return null;
+        }
+
+        final RendererModelFactory rendererModelFactory = (RendererModelFactory) classService.instantiate(rendererModelFactoryClass);
+        serviceRegistry2.injectServicesInto(rendererModelFactory);
+        return rendererModelFactory;
+    }
+
+    @Override public AttachmentAdvisor newAttachmentAdvisor(
+            final Class<?> domainClass, final ClassService classService, final ServiceRegistry2 serviceRegistry2) {
+
+        final Class<? extends AttachmentAdvisor> attachmentAdvisorClass =
+                attachmentAdvisorClassFor(domainClass);
+        if (attachmentAdvisorClass == null) {
+            return null;
+        }
+        final AttachmentAdvisor attachmentAdvisor = (AttachmentAdvisor) classService.instantiate(attachmentAdvisorClass);
+        serviceRegistry2.injectServicesInto(attachmentAdvisor);
+        return attachmentAdvisor;
+
+    }
 
     public enum Nature {
         INCOMING,
@@ -295,5 +341,17 @@ public enum DocumentTemplateData {
         this.nameText = nameText;
         this.nameRenderingStrategy = nameRenderingStrategy;
     }
+
+    @Programmatic
+    public Class<? extends AttachmentAdvisor> attachmentAdvisorClassFor(final Class<?> domainClass) {
+        return this.domainClass.isAssignableFrom(domainClass) ? attachmentAdvisorClass : null;
+    }
+
+    @Programmatic
+    public Class<? extends RendererModelFactory> rendererModelFactoryClassFor(final Class<?> domainClass) {
+        return this.domainClass.isAssignableFrom(domainClass) ? rendererModelFactoryClass : null;
+    }
+
+
 
 }
