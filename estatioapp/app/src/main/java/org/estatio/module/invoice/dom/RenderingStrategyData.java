@@ -16,6 +16,8 @@
  */
 package org.estatio.module.invoice.dom;
 
+import java.util.Objects;
+
 import org.incode.module.docrendering.freemarker.dom.impl.RendererForFreemarker;
 import org.incode.module.docrendering.stringinterpolator.dom.impl.RendererForStringInterpolator;
 import org.incode.module.docrendering.stringinterpolator.dom.impl.RendererForStringInterpolatorCaptureUrl;
@@ -25,6 +27,8 @@ import org.incode.module.docrendering.xdocreport.dom.impl.RendererForXDocReportT
 import org.incode.module.docrendering.xdocreport.dom.impl.RendererForXDocReportToPdf;
 import org.incode.module.document.dom.impl.docs.DocumentNature;
 import org.incode.module.document.dom.impl.renderers.Renderer;
+import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
+import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository;
 
 import lombok.Getter;
 
@@ -90,5 +94,18 @@ public enum RenderingStrategyData {
         this.inputNature = inputNature;
         this.outputNature = outputNature;
         this.rendererClass = rendererClass;
+    }
+
+    public static RenderingStrategyData reverseLookup(final RenderingStrategy rs) {
+        for (final RenderingStrategyData renderingStrategyData : RenderingStrategyData.values()) {
+            if(Objects.equals(renderingStrategyData.getReference(), rs.getReference())) {
+                return renderingStrategyData;
+            }
+        }
+        return null;
+    }
+
+    public RenderingStrategy findUsing(final RenderingStrategyRepository repository) {
+        return repository.findByReference(getReference());
     }
 }

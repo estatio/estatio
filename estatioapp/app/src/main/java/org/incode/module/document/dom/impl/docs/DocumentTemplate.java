@@ -628,14 +628,23 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
      */
     @Programmatic
     public boolean appliesTo(final Object domainObject) {
-        return newRendererModelFactory(domainObject) != null;
+        return applicableTo(domainObject).isPresent();
+    }
+
+    @Programmatic
+    public Optional<Applicability> applicableTo(final Object domainObject) {
+        return applicableTo(domainObject.getClass());
+    }
+
+    @Programmatic
+    public Optional<Applicability> applicableTo(final Class<?> domainObjectClass) {
+        return Lists.newArrayList(getAppliesTo()).stream()
+                .filter(applicability -> applies(applicability, domainObjectClass)).findFirst();
     }
 
     @Programmatic
     public RendererModelFactory newRendererModelFactory(final Object domainObject) {
-        final Class<?> domainObjectClass = domainObject.getClass();
-        final Optional<Applicability> applicabilityIfAny = Lists.newArrayList(getAppliesTo()).stream()
-                .filter(applicability -> applies(applicability, domainObjectClass)).findFirst();
+        final Optional<Applicability> applicabilityIfAny = applicableTo(domainObject);
         if (!applicabilityIfAny.isPresent()) {
             return null;
         }
@@ -646,10 +655,7 @@ public class DocumentTemplate extends DocumentAbstract<DocumentTemplate> {
 
     @Programmatic
     public AttachmentAdvisor newAttachmentAdvisor(final Object domainObject) {
-        final Class<?> domainObjectClass = domainObject.getClass();
-        final Optional<Applicability> applicabilityIfAny = Lists.newArrayList(getAppliesTo()).stream()
-                        .filter(applicability -> applies(applicability, domainObjectClass))
-                        .findFirst();
+        final Optional<Applicability> applicabilityIfAny = applicableTo(domainObject);
         if (!applicabilityIfAny.isPresent()) {
             return null;
         }

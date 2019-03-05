@@ -67,7 +67,7 @@ public enum DocumentTypeData {
             null, // corresponding cover note
 
             ApplicationTenancy_enum.It.getPath(), " (Italy)",
-            ".html", "text/html",
+            "html", "text/html", "text/html",
             DocumentSort.CLOB,
             loadResource("PrelimLetterEmailCoverNote-ITA.html.ftl"),
             RenderingStrategyData.FMK,
@@ -87,7 +87,7 @@ public enum DocumentTypeData {
             null, // corresponding cover note
 
             ApplicationTenancy_enum.It.getPath(), " (Italy)",
-            ".html", "text/html",
+            "html", "text/html", "text/html",
             DocumentSort.CLOB,
             loadResource("InvoiceEmailCoverNote-ITA.html.ftl"),
             RenderingStrategyData.FMK,
@@ -107,7 +107,7 @@ public enum DocumentTypeData {
             null, // supports, always null if OUTGOING
             COVER_NOTE_PRELIM_LETTER,
             ApplicationTenancy_enum.It.getPath(), " (Italy)",
-            ".pdf", "application/pdf",
+            "pdf", "application/pdf", null,
             DocumentSort.TEXT,
 
             "${reportServerBaseUrl}PreliminaryLetterV2&id=${this.id}&rs:Command=Render&rs:Format=PDF",
@@ -126,7 +126,7 @@ public enum DocumentTypeData {
             null, // supports, always null if OUTGOING
             COVER_NOTE_INVOICE,
             ApplicationTenancy_enum.It.getPath(), "( Italy)",
-            ".pdf", "application/pdf",
+            "pdf", "application/pdf", null,
             DocumentSort.TEXT,
 
             "${reportServerBaseUrl}InvoiceItaly&id=${this.id}&rs:Command=Render&rs:Format=PDF",
@@ -148,7 +148,7 @@ public enum DocumentTypeData {
             null, // corresponding cover note, always null if not OUTGOING
 
             // no templates , renderModel, attachments etc; always null if INCOMING or supports
-            null, null, null, null, null, null, null, null, null, false, null, null, null
+            null, null, null, null, null, null, null, null, null, null, false, null, null, null
     ),
     TAX_REGISTER(
             "TAX-REGISTER", "Tax Register (for Invoice)",
@@ -158,7 +158,7 @@ public enum DocumentTypeData {
             null, // corresponding cover note, always null if not OUTGOING
 
             // no templates , renderModel, attachments etc; always null if INCOMING or supports
-            null, null, null, null, null, null, null, null, null, false, null, null, null
+            null, null, null, null, null, null, null, null, null, null, false, null, null, null
     ),
     CALCULATION(
             "CALCULATION", "Calculation (for Preliminary Letter)",
@@ -167,7 +167,7 @@ public enum DocumentTypeData {
             null, // corresponding cover note, always null if not OUTGOING
 
             // no templates , renderModel, attachments etc; always null if INCOMING or supports
-            null, null, null, null, null, null, null, null, null, false, null, null, null
+            null, null, null, null, null, null, null, null, null, null, false, null, null, null
     ),
     SPECIAL_COMMUNICATION(
             "SPECIAL-COMMUNICATION", "Special Communication (for Preliminary Letter)",
@@ -176,7 +176,7 @@ public enum DocumentTypeData {
             null, // corresponding cover note, always null if not OUTGOING
 
             // no templates , renderModel, attachments etc; always null if INCOMING or supports
-            null, null, null, null, null, null, null, null, null, false, null, null, null
+            null, null, null, null, null, null, null, null, null, null, false, null, null, null
     ),
 
     // preview only
@@ -186,7 +186,8 @@ public enum DocumentTypeData {
             null,
             null, // corresponding cover note, always null if not OUTGOING
             ApplicationTenancy_enum.Global.getPath(), null,
-            ".pdf", "application/pdf",
+
+            "pdf", "application/pdf", null,
             DocumentSort.TEXT,
             "${reportServerBaseUrl}Invoices&dueDate=${this.dueDate}&${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF",
             RenderingStrategyData.SIPC,
@@ -203,8 +204,9 @@ public enum DocumentTypeData {
             Nature.NOT_SPECIFIED, null,
             null,
             null, // corresponding cover note, always null if not OUTGOING
+
             ApplicationTenancy_enum.Global.getPath(), null,
-            ".pdf", "application/pdf",
+            "pdf", "application/pdf", null,
             DocumentSort.TEXT,
             "${reportServerBaseUrl}PreliminaryLetterV2&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF",
             RenderingStrategyData.SIPC,
@@ -221,8 +223,9 @@ public enum DocumentTypeData {
             Nature.NOT_SPECIFIED, null,
             null,
             null, // corresponding cover note, always null if not OUTGOING
+
             ApplicationTenancy_enum.Global.getPath(), null,
-            ".pdf", "application/pdf",
+            "pdf", "application/pdf", null,
             DocumentSort.TEXT,
             "${reportServerBaseUrl}PreliminaryLetterV2&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF",
             RenderingStrategyData.SIPC,
@@ -241,7 +244,7 @@ public enum DocumentTypeData {
             null, // corresponding cover note
 
             // no templates , renderModel, attachments etc; always null if INCOMING or supports
-            null, null, null, null, null, null, null, null, null, false, null, null, null
+            null, null, null, null, null, null, null, null, null, null, false, null, null, null
     ),
     INCOMING_INVOICE(
             "INCOMING_INVOICE", "Incoming Invoice",
@@ -249,7 +252,7 @@ public enum DocumentTypeData {
             null, null, // corresponding cover note, always null if not outgoing
 
             // no templates , renderModel, attachments etc; always null if INCOMING or supports
-            null, null, null, null, null, null, null, null, null, false, null, null, null
+            null, null, null, null, null, null, null, null, null, null, false, null, null, null
     ),
     /*
     not in DB, so unused.
@@ -284,7 +287,7 @@ public enum DocumentTypeData {
             null,
 
             // no templates , renderModel, attachments etc; always null if INCOMING or supports
-            null, null, null, null, null, null, null, null, null, false, null, null, null
+            null, null, null, null, null, null, null, null, null, null, false, null, null, null
     ),
 
     ORDER_CONFIRM(
@@ -294,12 +297,12 @@ public enum DocumentTypeData {
             null,
 
             ApplicationTenancy_enum.It.getPath(), "(Italy)",
-            ".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "docx", "application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             DocumentSort.BLOB,
             loadBytesForOrderConfirmTemplateItaDocx(),
             RenderingStrategyData.XGP,
             loadCharsForOrderConfirmTemplateTitleItaFtl(),
-            RenderingStrategyData.SI,
+            RenderingStrategyData.FMK,
             false,
             Order.class, RendererModelFactoryForOrder.class,
             AttachToSameForOrder.class
@@ -313,7 +316,7 @@ public enum DocumentTypeData {
             null,
 
             // no templates , renderModel, attachments etc; always null if INCOMING or supports
-            null, null, null, null, null, null, null, null, null, false, null, null, null
+            null, null, null, null, null, null, null, null, null, null, false, null, null, null
     );
 
     private final String ref;
@@ -325,6 +328,7 @@ public enum DocumentTypeData {
     private final String atPath;
     private final String extension;
     private final String mimeTypeBase;
+    private final String inputMimeTypeBase;
     private final String nameSuffixIfAny;
     private final DocumentSort contentSort;
     private final Object content;
@@ -357,6 +361,7 @@ public enum DocumentTypeData {
             final String nameSuffixIfAny,
             final String extension,
             final String mimeTypeBase,
+            final String inputMimeTypeBase,
             final DocumentSort contentSort,
             final Object content,
             final RenderingStrategyData contentRenderingStrategy,
@@ -381,6 +386,7 @@ public enum DocumentTypeData {
         this.contentSort = contentSort;
         this.extension = extension;
         this.mimeTypeBase = mimeTypeBase;
+        this.inputMimeTypeBase = inputMimeTypeBase;
         this.content = content;
         this.previewOnly = previewOnly;
         this.contentRenderingStrategy = contentRenderingStrategy;
@@ -507,7 +513,7 @@ public enum DocumentTypeData {
      * Returns the {@link DocumentTypeData} whose {@link DocumentTypeData#getRef()} corresponds to
      * {@link DocumentType#getReference() that} of the supplied {@link DocumentType}.
      */
-    private static DocumentTypeData reverseLookup(final DocumentType documentType) {
+    public static DocumentTypeData reverseLookup(final DocumentType documentType) {
         DocumentTypeData[] values = values();
         for (DocumentTypeData value : values) {
             if(value.isDocTypeFor(documentType)) {
