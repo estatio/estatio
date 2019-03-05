@@ -29,6 +29,8 @@ public class ExternalUrlDownloadService {
         minioDownloadClient = new MinioDownloadClient();
         minioDownloadClient.setUrl(read(properties, "estatio.minio.url"));
         minioDownloadClient.setAccessKey(read(properties, "estatio.minio.accessKey"));
+//        minioDownloadClient.setBackoffNumAttempts(readInt(properties, "estatio.minio.backoffNumAttempts", 5));
+//        minioDownloadClient.setBackoffSleepMillis(readInt(properties, "estatio.minio.backoffSleepMillis", 200));
     }
 
     private static String read(final Map<String, String> properties, final String key) {
@@ -37,6 +39,12 @@ public class ExternalUrlDownloadService {
             return value;
         }
         throw new IllegalStateException("Could not locate property '" + key + "' in isis.properties");
+    }
+
+    private static int readInt(
+            final Map<String, String> properties, final String key, final int fallback) {
+        final String value = properties.get(key);
+        return value != null ? Integer.parseInt(value) : fallback;
     }
 
     @Programmatic
