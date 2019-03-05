@@ -39,7 +39,7 @@ public class IncomingInvoice_complete extends IncomingInvoice_triggerAbstract {
             final String role,
             @Nullable final Person personToAssignNextTo,
             @Nullable final String comment) {
-        trigger(personToAssignNextTo, comment, null);
+        trigger(personToAssignNextTo, comment, comment);
         return getDomainObject();
     }
 

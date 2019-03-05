@@ -34,7 +34,7 @@ public class IncomingInvoice_markAsPaidByDirectDebit extends IncomingInvoice_tri
     @ActionLayout(cssClassFa = "fa-check")
     public Object act(
             @Nullable final String comment) {
-        trigger(comment, null);
+        trigger(comment, comment);
         return objectToReturn();
     }
 
