@@ -10,6 +10,8 @@ import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import lombok.Data;
 
 /**
+ * TODO: once have moved to DocumentTypeData, DocumentTemplateData and RenderingStrategyData, ought to be able to collapse this responsibility into DocumentTemplateData
+ *
  * Implementation is responsible for providing a set of {@link AttachmentAdvisor.PaperclipSpec}s which describe how to
  * attach a (newly created) {@link Document} to existing domain objects.
  *

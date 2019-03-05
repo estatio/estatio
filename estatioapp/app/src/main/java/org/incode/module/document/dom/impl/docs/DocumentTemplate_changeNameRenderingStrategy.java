@@ -12,6 +12,9 @@ import org.incode.module.document.DocumentModule;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository;
 
+/**
+ * TODO: remove this once move to RenderingStrategyData
+ */
 @Mixin
 public class DocumentTemplate_changeNameRenderingStrategy {
 
