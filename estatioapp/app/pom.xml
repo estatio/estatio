@@ -163,6 +163,10 @@ language governing permissions and limitations under the License.
             <artifactId>incode-module-minio-dopserver</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.incode.module.minio</groupId>
+            <artifactId>incode-module-minio-miniodownloader</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.isisaddons.module.stringinterpolator</groupId>
             <artifactId>isis-module-stringinterpolator-dom</artifactId>
         </dependency>
