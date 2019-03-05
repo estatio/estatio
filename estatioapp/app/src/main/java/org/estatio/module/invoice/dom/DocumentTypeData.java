@@ -52,6 +52,7 @@ public enum DocumentTypeData {
             null, // supports, always null if OUTGOING
             null, // corresponding cover note
             new DocumentTemplateData[] {
+                    DocumentTemplateData.COVER_NOTE_PRELIM_LETTER_GLOBAL,
                     DocumentTemplateData.COVER_NOTE_PRELIM_LETTER_ITA
             }
     ),
@@ -61,6 +62,7 @@ public enum DocumentTypeData {
             null, // supports, always null if OUTGOING
             null, // corresponding cover note
             new DocumentTemplateData[] {
+                    DocumentTemplateData.COVER_NOTE_INVOICE_GLOBAL,
                     DocumentTemplateData.COVER_NOTE_INVOICE_ITA
             }
     ),
@@ -72,6 +74,7 @@ public enum DocumentTypeData {
             null, // supports, always null if OUTGOING
             COVER_NOTE_PRELIM_LETTER,
             new DocumentTemplateData[] {
+                    DocumentTemplateData.PRELIM_LETTER_GLOBAL,
                     DocumentTemplateData.PRELIM_LETTER_ITA
             }
     ),
@@ -81,6 +84,7 @@ public enum DocumentTypeData {
             null, // supports, always null if OUTGOING
             COVER_NOTE_INVOICE,
             new DocumentTemplateData[] {
+                    DocumentTemplateData.INVOICE_GLOBAL,
                     DocumentTemplateData.INVOICE_ITA
             }
     ),
@@ -218,6 +222,14 @@ public enum DocumentTypeData {
 
     public boolean isIncoming() {
         return nature == Nature.INCOMING;
+    }
+
+    public DocumentTemplateData lookup(final String atPath) {
+        return documentTemplateDataByPath.get(atPath);
+    }
+
+    public Iterable<Map.Entry<String, DocumentTemplateData>> templateIterable() {
+        return documentTemplateDataByPath.entrySet();
     }
 
     public enum Nature {

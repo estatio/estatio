@@ -44,12 +44,28 @@ import static org.estatio.module.lease.seed.DocumentTypeAndTemplatesFSForInvoice
 public enum DocumentTemplateData {
 
     // cover notes
+    COVER_NOTE_PRELIM_LETTER_GLOBAL (
+
+            ApplicationTenancy_enum.Global.getPath(), null,
+            "html", "text/html", "text/html",
+            DocumentSort.CLOB,
+            //loadResource("PrelimLetterEmailCoverNote.html.ftl") ... see DocumentTemplate entity
+            RenderingStrategyData.FMK,
+            loadResource("PrelimLetterEmailCoverNoteSubjectLine.ftl"),
+            RenderingStrategyData.FMK,
+            false,
+            Document.class, FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
+            AttachToNone.class
+
+            // upsertDocumentTemplateForTextHtmlWithApplicability
+
+    ),
     COVER_NOTE_PRELIM_LETTER_ITA(
 
             ApplicationTenancy_enum.It.getPath(), " (Italy)",
             "html", "text/html", "text/html",
             DocumentSort.CLOB,
-            //loadResource("PrelimLetterEmailCoverNote-ITA.html.ftl"),
+            //loadResource("PrelimLetterEmailCoverNote-ITA.html.ftl") ... see DocumentTemplate entity
             RenderingStrategyData.FMK,
             loadResource("PrelimLetterEmailCoverNoteSubjectLine-ITA.ftl"),
             RenderingStrategyData.FMK,
@@ -60,15 +76,34 @@ public enum DocumentTemplateData {
             // upsertDocumentTemplateForTextHtmlWithApplicability
 
     ),
+    COVER_NOTE_INVOICE_GLOBAL(
+
+            ApplicationTenancy_enum.Global.getPath(), null,
+            "html", "text/html", "text/html",
+            DocumentSort.CLOB,
+
+            //loadResource("InvoiceEmailCoverNote.html.ftl") ... see DocumentTemplate entity
+            RenderingStrategyData.FMK,
+            loadResource("InvoiceEmailCoverNoteSubjectLine.ftl"),
+            RenderingStrategyData.FMK,
+
+            false,
+            Document.class, FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
+            AttachToNone.class
+
+            // upsertDocumentTemplateForTextHtmlWithApplicability
+    ),
     COVER_NOTE_INVOICE_ITA(
 
             ApplicationTenancy_enum.It.getPath(), " (Italy)",
             "html", "text/html", "text/html",
             DocumentSort.CLOB,
-            //loadResource("InvoiceEmailCoverNote-ITA.html.ftl"),
+
+            //loadResource("InvoiceEmailCoverNote-ITA.html.ftl") ... see DocumentTemplate entity
             RenderingStrategyData.FMK,
             loadResource("InvoiceEmailCoverNoteSubjectLine-ITA.ftl"),
             RenderingStrategyData.FMK,
+
             false,
             Document.class, FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
             AttachToNone.class
@@ -77,15 +112,47 @@ public enum DocumentTemplateData {
     ),
 
     // primary docs
+    PRELIM_LETTER_GLOBAL(
+
+            ApplicationTenancy_enum.Global.getPath(), null,
+            "pdf", "application/pdf", null,
+            DocumentSort.TEXT,
+
+            //"${reportServerBaseUrl}PreliminaryLetterV2&id=${this.id}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate
+            RenderingStrategyData.SIPC,
+            loadResource("PrelimLetterTitle.ftl"),
+            RenderingStrategyData.SI,
+            false,
+            Invoice.class, StringInterpolatorToSsrsUrlOfInvoice.class,
+            ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class
+
+            // upsertTemplateForPdfWithApplicability
+    ),
     PRELIM_LETTER_ITA(
 
             ApplicationTenancy_enum.It.getPath(), " (Italy)",
             "pdf", "application/pdf", null,
             DocumentSort.TEXT,
 
-            //"${reportServerBaseUrl}PreliminaryLetterV2&id=${this.id}&rs:Command=Render&rs:Format=PDF",
+            //"${reportServerBaseUrl}PreliminaryLetterV2&id=${this.id}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate
             RenderingStrategyData.SIPC,
             loadResource("PrelimLetterTitle-ITA.ftl"),
+            RenderingStrategyData.SI,
+            false,
+            Invoice.class, StringInterpolatorToSsrsUrlOfInvoice.class,
+            ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class
+
+            // upsertTemplateForPdfWithApplicability
+    ),
+    INVOICE_GLOBAL(
+
+            ApplicationTenancy_enum.Global.getPath(), null,
+            "pdf", "application/pdf", null,
+            DocumentSort.TEXT,
+
+            //"${reportServerBaseUrl}InvoiceItaly&id=${this.id}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate entity
+            RenderingStrategyData.SIPC,
+            loadResource("InvoiceTitle.ftl"),
             RenderingStrategyData.SI,
             false,
             Invoice.class, StringInterpolatorToSsrsUrlOfInvoice.class,
@@ -99,7 +166,7 @@ public enum DocumentTemplateData {
             "pdf", "application/pdf", null,
             DocumentSort.TEXT,
 
-            //"${reportServerBaseUrl}InvoiceItaly&id=${this.id}&rs:Command=Render&rs:Format=PDF",
+            //"${reportServerBaseUrl}InvoiceItaly&id=${this.id}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate entity
             RenderingStrategyData.SIPC,
             loadResource("InvoiceTitle-ITA.ftl"),
             RenderingStrategyData.SI,
@@ -116,7 +183,8 @@ public enum DocumentTemplateData {
             ApplicationTenancy_enum.Global.getPath(), null,
             "pdf", "application/pdf", null,
             DocumentSort.TEXT,
-            //"${reportServerBaseUrl}Invoices&dueDate=${this.dueDate}&${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF",
+
+            //"${reportServerBaseUrl}Invoices&dueDate=${this.dueDate}&${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate entity
             RenderingStrategyData.SIPC,
             "Invoices overview",
             RenderingStrategyData.SI,
@@ -131,7 +199,8 @@ public enum DocumentTemplateData {
             ApplicationTenancy_enum.Global.getPath(), null,
             "pdf", "application/pdf", null,
             DocumentSort.TEXT,
-            //"${reportServerBaseUrl}PreliminaryLetterV2&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF",
+
+            //"${reportServerBaseUrl}PreliminaryLetterV2&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate entity
             RenderingStrategyData.SIPC,
             "Preliminary letter for Invoices",
             RenderingStrategyData.SI,
@@ -146,7 +215,8 @@ public enum DocumentTemplateData {
             ApplicationTenancy_enum.Global.getPath(), null,
             "pdf", "application/pdf", null,
             DocumentSort.TEXT,
-            //"${reportServerBaseUrl}PreliminaryLetterV2&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF",
+
+            //"${reportServerBaseUrl}PreliminaryLetterV2&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate entity
             RenderingStrategyData.SIPC,
             "Preliminary Invoice for Seller", RenderingStrategyData.SI,
             true,
@@ -161,7 +231,8 @@ public enum DocumentTemplateData {
             ApplicationTenancy_enum.It.getPath(), "(Italy)",
             "docx", "application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             DocumentSort.BLOB,
-            //loadBytesForOrderConfirmTemplateItaDocx(),
+
+            //loadBytesForOrderConfirmTemplateItaDocx() ... see DocumentTemplate entity
             RenderingStrategyData.XGP,
             loadCharsForOrderConfirmTemplateTitleItaFtl(),
             RenderingStrategyData.FMK,
