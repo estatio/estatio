@@ -86,7 +86,7 @@ public class ProjectImport_IntegTest extends CapexModuleIntegTestAbstract {
         assertThat(projectRepository.listAll()).isEmpty();
 
         // when
-        ProjectImportManager manager = wrap(projectMenu).importProjects(oxf.getCountry());
+        ProjectImportManager manager = wrap(projectMenu).importProjects(oxf.getCountry(), null);
         wrap(manager).upload(spreadSheet);
 
         // then

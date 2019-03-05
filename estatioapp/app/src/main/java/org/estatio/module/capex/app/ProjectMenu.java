@@ -135,8 +135,8 @@ public class ProjectMenu {
 
 
     @Action(semantics = SemanticsOf.SAFE)
-    public ProjectImportManager importProjects(final Country country){
-        return new ProjectImportManager(country);
+    public ProjectImportManager importProjects(final Country country, @Nullable final Project project){
+        return new ProjectImportManager(country, project);
     }
 
     public Country default0ImportProjects(){
@@ -147,6 +147,13 @@ public class ProjectMenu {
         return countryServiceForCurrentUser.countriesForCurrentUser();
     }
 
+    public List<Project> choices1ImportProjects(final Country country, @Nullable final Project project){
+        return projectRepository.findUsingAtPath(deriveAtPathFromCountry(country));
+    }
+
+    private String deriveAtPathFromCountry(final Country country){
+        return "/" + country.getReference();
+    }
 
     @Inject
     ProjectRepository projectRepository;

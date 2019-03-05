@@ -23,8 +23,8 @@ import org.isisaddons.module.excel.dom.util.Mode;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.capex.dom.project.Project;
-import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.capex.dom.project.ProjectItemTermRepository;
+import org.estatio.module.capex.dom.project.ProjectRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -38,8 +38,9 @@ public class ProjectImportManager {
     public ProjectImportManager() {
     }
 
-    public ProjectImportManager(final Country country) {
+    public ProjectImportManager(final Country country, final Project project) {
         this.country = country;
+        this.project = project;
     }
 
     public String title(){
@@ -49,10 +50,13 @@ public class ProjectImportManager {
     @Getter @Setter
     public Country country;
 
+    @Getter @Setter
+    public Project project;
+
     public List<ProjectImport> getProjectLines(){
         List<ProjectImport> result = new ArrayList<>();
-        List<Project> projectsForCountry = projectForCountry();
-        projectsForCountry.forEach(p->{
+        List<Project> projects = selectProjects();
+        projects.forEach(p->{
             if (p.getItems().isEmpty()){
                 result.add(whenHavingNoProjectItems(p));
             } else {
@@ -98,7 +102,7 @@ public class ProjectImportManager {
 
     public List<ProjectItemTermImport> getProjectTermLines() {
         List<ProjectItemTermImport> result = new ArrayList<>();
-        projectForCountry().forEach(p->{
+        selectProjects().forEach(p->{
             Lists.newArrayList(p.getItems()).forEach(pi -> {
                 projectItemTermRepository.findByProjectItem(pi).forEach(term->{
                     ProjectItemTermImport imp = new ProjectItemTermImport();
@@ -115,8 +119,10 @@ public class ProjectImportManager {
         return result;
     }
 
-    List<Project> projectForCountry() {
-        return projectRepository.findUsingAtPath(deriveAtPathFromCountry());
+    List<Project> selectProjects() {
+        if (this.project!=null) return Arrays.asList(project);
+        if (this.country!=null) return projectRepository.findUsingAtPath(deriveAtPathFromCountry());
+        return Arrays.asList();
     }
 
     @Action(semantics = SemanticsOf.SAFE)
@@ -136,7 +142,7 @@ public class ProjectImportManager {
     public ProjectImportManager upload(final Blob spreadSheet){
         excelService.fromExcel(spreadSheet, ProjectImport.class, "projects", Mode.RELAXED).forEach(imp->imp.importData(null));
         excelService.fromExcel(spreadSheet, ProjectItemTermImport.class, "terms", Mode.RELAXED).forEach(imp->imp.importData(null));
-        return new ProjectImportManager(getCountry());
+        return new ProjectImportManager(getCountry(), getProject());
     }
 
     private String deriveAtPathFromCountry(){
