@@ -16,10 +16,13 @@
  */
 package org.estatio.module.invoice.dom;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
@@ -48,14 +51,18 @@ public enum DocumentTypeData {
             Nature.OUTGOING, null,
             null, // supports, always null if OUTGOING
             null, // corresponding cover note
-            DocumentTemplateData.COVER_NOTE_PRELIM_LETTER_ITA
+            new DocumentTemplateData[] {
+                    DocumentTemplateData.COVER_NOTE_PRELIM_LETTER_ITA
+            }
     ),
     COVER_NOTE_INVOICE(
             "COVER-NOTE-INVOICE", "Email Cover Note for Invoice",
             Nature.OUTGOING, null,
             null, // supports, always null if OUTGOING
             null, // corresponding cover note
-            DocumentTemplateData.COVER_NOTE_INVOICE_ITA
+            new DocumentTemplateData[] {
+                    DocumentTemplateData.COVER_NOTE_INVOICE_ITA
+            }
     ),
 
     // primary docs
@@ -64,16 +71,18 @@ public enum DocumentTypeData {
             Nature.OUTGOING, "Merged Preliminary Letters.pdf",
             null, // supports, always null if OUTGOING
             COVER_NOTE_PRELIM_LETTER,
-
-            DocumentTemplateData.PRELIM_LETTER_ITA
+            new DocumentTemplateData[] {
+                    DocumentTemplateData.PRELIM_LETTER_ITA
+            }
     ),
     INVOICE(
             "INVOICE", "Invoice",
             Nature.OUTGOING, "Merged Invoices.pdf",
             null, // supports, always null if OUTGOING
             COVER_NOTE_INVOICE,
-
-            DocumentTemplateData.INVOICE_ITA
+            new DocumentTemplateData[] {
+                    DocumentTemplateData.INVOICE_ITA
+            }
     ),
 
     // supporting docs
@@ -82,7 +91,7 @@ public enum DocumentTypeData {
             Nature.NOT_SPECIFIED, null,
             INVOICE, // supports
             null, // corresponding cover note, always null if not OUTGOING
-            null
+            new DocumentTemplateData[]{}
     ),
     TAX_REGISTER(
             "TAX-REGISTER", "Tax Register (for Invoice)",
@@ -90,21 +99,21 @@ public enum DocumentTypeData {
             Nature.INCOMING, null,
             INVOICE, // supports
             null, // corresponding cover note, always null if not OUTGOING
-            null
+            new DocumentTemplateData[]{}
     ),
     CALCULATION(
             "CALCULATION", "Calculation (for Preliminary Letter)",
             Nature.NOT_SPECIFIED, null,
             PRELIM_LETTER, //supports
             null, // corresponding cover note, always null if not OUTGOING
-            null
+            new DocumentTemplateData[]{}
     ),
     SPECIAL_COMMUNICATION(
             "SPECIAL-COMMUNICATION", "Special Communication (for Preliminary Letter)",
             Nature.NOT_SPECIFIED, null,
             PRELIM_LETTER, // supports
             null, // corresponding cover note, always null if not OUTGOING
-            null
+            new DocumentTemplateData[]{}
     ),
 
     // preview only
@@ -113,21 +122,27 @@ public enum DocumentTypeData {
             Nature.NOT_SPECIFIED, null,
             null,
             null, // corresponding cover note, always null if not OUTGOING
-            DocumentTemplateData.INVOICES
+            new DocumentTemplateData[]{
+                    DocumentTemplateData.INVOICES
+            }
     ),
     INVOICES_PRELIM(
             "INVOICES-PRELIM", "Preliminary letter for Invoices",
             Nature.NOT_SPECIFIED, null,
             null,
             null, // corresponding cover note, always null if not OUTGOING
-            DocumentTemplateData.INVOICES_PRELIM
+            new DocumentTemplateData[] {
+                    DocumentTemplateData.INVOICES_PRELIM
+            }
     ),
     INVOICES_FOR_SELLER(
             "INVOICES-FOR-SELLER", "Preliminary Invoice for Seller",
             Nature.NOT_SPECIFIED, null,
             null,
             null, // corresponding cover note, always null if not OUTGOING
-            DocumentTemplateData.INVOICES_FOR_SELLER
+            new DocumentTemplateData[] {
+                    DocumentTemplateData.INVOICES_FOR_SELLER
+            }
     ),
 
     INCOMING(
@@ -135,13 +150,13 @@ public enum DocumentTypeData {
             Nature.INCOMING, "Merged Incoming.pdf",
             null, // supports
             null, // corresponding cover note
-            null
+            new DocumentTemplateData[]{}
     ),
     INCOMING_INVOICE(
             "INCOMING_INVOICE", "Incoming Invoice",
             Nature.INCOMING, "Merged Incoming Invoices.pdf",
             null, null, // corresponding cover note, always null if not outgoing
-            null
+            new DocumentTemplateData[]{}
     ),
     /*
     not in DB, so unused.
@@ -173,7 +188,7 @@ public enum DocumentTypeData {
             Nature.INCOMING, "Merged Incoming Orders.pdf",
             null,
             null,
-            null
+            new DocumentTemplateData[]{}
     ),
 
     ORDER_CONFIRM(
@@ -181,14 +196,16 @@ public enum DocumentTypeData {
             Nature.OUTGOING, null,
             null,
             null,
-            DocumentTemplateData.ORDER_CONFIRM_ITA
+            new DocumentTemplateData[]{
+                    DocumentTemplateData.ORDER_CONFIRM_ITA
+            }
     ),
     IBAN_PROOF(
             "IBAN_PROOF", "Iban verification proof",
             Nature.NOT_SPECIFIED, null,
             null,
             null,
-            null
+            new DocumentTemplateData[]{}
     );
 
     private final String ref;
@@ -197,7 +214,7 @@ public enum DocumentTypeData {
     private final DocumentTypeData coverNote;
     private final DocumentTypeData supports;
     private final Nature nature;
-    private final DocumentTemplateData documentTemplateData;
+    private final Map<String,DocumentTemplateData> documentTemplateDataByPath;
 
     public boolean isIncoming() {
         return nature == Nature.INCOMING;
@@ -216,7 +233,7 @@ public enum DocumentTypeData {
             final String mergedFileName,
             final DocumentTypeData supports,
             final DocumentTypeData coverNote,
-            final DocumentTemplateData documentTemplateData
+            final DocumentTemplateData[] documentTemplateData
     ) {
         this.ref = ref;
         this.name = name;
@@ -224,7 +241,8 @@ public enum DocumentTypeData {
         this.coverNote = coverNote;
         this.supports = supports;
         this.nature = nature;
-        this.documentTemplateData = documentTemplateData;
+        documentTemplateDataByPath = Arrays.stream(documentTemplateData)
+                                           .collect(Collectors.toMap(DocumentTemplateData::getAtPath, dtd -> dtd));
     }
 
     /**
