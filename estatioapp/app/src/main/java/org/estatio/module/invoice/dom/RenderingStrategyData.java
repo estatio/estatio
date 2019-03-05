@@ -26,6 +26,7 @@ import org.incode.module.docrendering.xdocgoten.dom.impl.RendererForXDocReportTo
 import org.incode.module.docrendering.xdocreport.dom.impl.RendererForXDocReportToDocx;
 import org.incode.module.docrendering.xdocreport.dom.impl.RendererForXDocReportToPdf;
 import org.incode.module.document.dom.impl.docs.DocumentNature;
+import org.incode.module.document.dom.impl.renderers.PreviewToUrl;
 import org.incode.module.document.dom.impl.renderers.Renderer;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository;
@@ -83,6 +84,7 @@ public enum RenderingStrategyData {
     private final DocumentNature inputNature;
     private final DocumentNature outputNature;
     private final Class<? extends Renderer> rendererClass;
+    private final boolean previewsToUrl;
 
     RenderingStrategyData(
             final String name,
@@ -94,6 +96,7 @@ public enum RenderingStrategyData {
         this.inputNature = inputNature;
         this.outputNature = outputNature;
         this.rendererClass = rendererClass;
+        this.previewsToUrl =  PreviewToUrl.class.isAssignableFrom(rendererClass);
     }
 
     public static RenderingStrategyData reverseLookup(final RenderingStrategy rs) {
