@@ -65,7 +65,7 @@ public class IncomingInvoice_recategorize {
                 IncomingDocumentCategorisationStateTransition.class,
                 IncomingDocumentCategorisationStateTransitionType.RESET,
                 comment,
-                null);
+                comment);
 
         // use events to cascade delete, eg paperclips and state transitions/tasks
         incomingInvoiceRepository.delete(incomingInvoice);

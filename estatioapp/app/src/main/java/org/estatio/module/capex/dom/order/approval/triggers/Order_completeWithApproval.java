@@ -43,7 +43,7 @@ public class Order_completeWithApproval extends
             @Nullable final String comment) {
         order.setApprovedBy(approvedBy.getReference());
         order.setApprovedOn(approvedOn);
-        trigger(comment, null);
+        trigger(comment, comment);
         return getDomainObject();
     }
 

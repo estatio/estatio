@@ -61,7 +61,7 @@ public class Order_recategorize {
                 IncomingDocumentCategorisationStateTransition.class,
                 IncomingDocumentCategorisationStateTransitionType.RESET,
                 comment,
-                null);
+                comment);
 
         // use events to cascade delete, eg paperclips and state transitions/tasks
         orderRepository.delete(order);
