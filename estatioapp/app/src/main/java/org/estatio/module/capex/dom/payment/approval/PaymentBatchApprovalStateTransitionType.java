@@ -42,8 +42,20 @@ public enum PaymentBatchApprovalStateTransitionType
             PaymentBatchApprovalState.NEW,
             PaymentBatchApprovalState.COMPLETED,
             NextTransitionSearchStrategy.none(),
-            TaskAssignmentStrategy.to(PartyRoleTypeEnum.TREASURER),
-            AdvancePolicy.MANUAL),
+            null, // task assignment strategy overridden below
+            AdvancePolicy.MANUAL){
+            @Override
+            public TaskAssignmentStrategy getTaskAssignmentStrategy() {
+                return (TaskAssignmentStrategy<
+                        PaymentBatch,
+                        PaymentBatchApprovalStateTransition,
+                        PaymentBatchApprovalStateTransitionType,
+                        PaymentBatchApprovalState>) (paymentBatch, serviceRegistry2) -> {
+                    if (paymentBatch.getAtPath().startsWith("/ITA")) return null;
+                    return PartyRoleTypeEnum.TREASURER;
+                };
+            }
+        },
     CONFIRM_AUTHORISATION(
             PaymentBatchApprovalState.COMPLETED,
             PaymentBatchApprovalState.PAID,
