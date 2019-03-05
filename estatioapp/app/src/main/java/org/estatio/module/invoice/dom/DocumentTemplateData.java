@@ -34,7 +34,6 @@ import org.estatio.module.lease.spiimpl.document.binders.StringInterpolatorToSsr
 import org.estatio.module.lease.spiimpl.document.binders.StringInterpolatorToSsrsUrlOfInvoiceSummary;
 
 import lombok.Getter;
-import static org.estatio.module.capex.seed.ordertmplt.DocumentTemplateFSForOrderConfirm.loadBytesForOrderConfirmTemplateItaDocx;
 import static org.estatio.module.capex.seed.ordertmplt.DocumentTemplateFSForOrderConfirm.loadCharsForOrderConfirmTemplateTitleItaFtl;
 import static org.estatio.module.lease.seed.DocumentTypeAndTemplatesFSForInvoicesUsingSsrs.loadResource;
 
@@ -50,7 +49,7 @@ public enum DocumentTemplateData {
             ApplicationTenancy_enum.It.getPath(), " (Italy)",
             "html", "text/html", "text/html",
             DocumentSort.CLOB,
-            loadResource("PrelimLetterEmailCoverNote-ITA.html.ftl"),
+            //loadResource("PrelimLetterEmailCoverNote-ITA.html.ftl"),
             RenderingStrategyData.FMK,
             loadResource("PrelimLetterEmailCoverNoteSubjectLine-ITA.ftl"),
             RenderingStrategyData.FMK,
@@ -66,7 +65,7 @@ public enum DocumentTemplateData {
             ApplicationTenancy_enum.It.getPath(), " (Italy)",
             "html", "text/html", "text/html",
             DocumentSort.CLOB,
-            loadResource("InvoiceEmailCoverNote-ITA.html.ftl"),
+            //loadResource("InvoiceEmailCoverNote-ITA.html.ftl"),
             RenderingStrategyData.FMK,
             loadResource("InvoiceEmailCoverNoteSubjectLine-ITA.ftl"),
             RenderingStrategyData.FMK,
@@ -84,7 +83,7 @@ public enum DocumentTemplateData {
             "pdf", "application/pdf", null,
             DocumentSort.TEXT,
 
-            "${reportServerBaseUrl}PreliminaryLetterV2&id=${this.id}&rs:Command=Render&rs:Format=PDF",
+            //"${reportServerBaseUrl}PreliminaryLetterV2&id=${this.id}&rs:Command=Render&rs:Format=PDF",
             RenderingStrategyData.SIPC,
             loadResource("PrelimLetterTitle-ITA.ftl"),
             RenderingStrategyData.SI,
@@ -100,7 +99,7 @@ public enum DocumentTemplateData {
             "pdf", "application/pdf", null,
             DocumentSort.TEXT,
 
-            "${reportServerBaseUrl}InvoiceItaly&id=${this.id}&rs:Command=Render&rs:Format=PDF",
+            //"${reportServerBaseUrl}InvoiceItaly&id=${this.id}&rs:Command=Render&rs:Format=PDF",
             RenderingStrategyData.SIPC,
             loadResource("InvoiceTitle-ITA.ftl"),
             RenderingStrategyData.SI,
@@ -117,7 +116,7 @@ public enum DocumentTemplateData {
             ApplicationTenancy_enum.Global.getPath(), null,
             "pdf", "application/pdf", null,
             DocumentSort.TEXT,
-            "${reportServerBaseUrl}Invoices&dueDate=${this.dueDate}&${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF",
+            //"${reportServerBaseUrl}Invoices&dueDate=${this.dueDate}&${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF",
             RenderingStrategyData.SIPC,
             "Invoices overview",
             RenderingStrategyData.SI,
@@ -132,7 +131,7 @@ public enum DocumentTemplateData {
             ApplicationTenancy_enum.Global.getPath(), null,
             "pdf", "application/pdf", null,
             DocumentSort.TEXT,
-            "${reportServerBaseUrl}PreliminaryLetterV2&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF",
+            //"${reportServerBaseUrl}PreliminaryLetterV2&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF",
             RenderingStrategyData.SIPC,
             "Preliminary letter for Invoices",
             RenderingStrategyData.SI,
@@ -147,7 +146,7 @@ public enum DocumentTemplateData {
             ApplicationTenancy_enum.Global.getPath(), null,
             "pdf", "application/pdf", null,
             DocumentSort.TEXT,
-            "${reportServerBaseUrl}PreliminaryLetterV2&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF",
+            //"${reportServerBaseUrl}PreliminaryLetterV2&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF",
             RenderingStrategyData.SIPC,
             "Preliminary Invoice for Seller", RenderingStrategyData.SI,
             true,
@@ -162,7 +161,7 @@ public enum DocumentTemplateData {
             ApplicationTenancy_enum.It.getPath(), "(Italy)",
             "docx", "application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             DocumentSort.BLOB,
-            loadBytesForOrderConfirmTemplateItaDocx(),
+            //loadBytesForOrderConfirmTemplateItaDocx(),
             RenderingStrategyData.XGP,
             loadCharsForOrderConfirmTemplateTitleItaFtl(),
             RenderingStrategyData.FMK,
@@ -179,7 +178,7 @@ public enum DocumentTemplateData {
     private final String inputMimeTypeBase;
     private final String nameSuffixIfAny;
     private final DocumentSort contentSort;
-    private final Object content;
+    //private final Object content;
     private final RenderingStrategyData contentRenderingStrategy;
     private final String nameText;
     private final RenderingStrategyData nameRenderingStrategy;
@@ -201,7 +200,7 @@ public enum DocumentTemplateData {
             final String mimeTypeBase,
             final String inputMimeTypeBase,
             final DocumentSort contentSort,
-            final Object content,
+            //final Object content,
             final RenderingStrategyData contentRenderingStrategy,
             final String nameText,
             final RenderingStrategyData nameRenderingStrategy,
@@ -219,7 +218,7 @@ public enum DocumentTemplateData {
         this.extension = extension;
         this.mimeTypeBase = mimeTypeBase;
         this.inputMimeTypeBase = inputMimeTypeBase;
-        this.content = content;
+        //this.content = content;
         this.previewOnly = previewOnly;
         this.contentRenderingStrategy = contentRenderingStrategy;
         this.nameText = nameText;
