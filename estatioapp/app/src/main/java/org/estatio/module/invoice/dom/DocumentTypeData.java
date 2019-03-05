@@ -42,8 +42,6 @@ import lombok.Getter;
 /**
  * maximum length is 24 ({@link DocumentType.ReferenceType.Meta#MAX_LEN}).
  */
-@Getter
-public enum DocumentTypeData {
 
     // cover notes
     COVER_NOTE_PRELIM_LETTER(
@@ -212,12 +210,19 @@ public enum DocumentTypeData {
             new DocumentTemplateData[]{}
     );
 
+    @Getter
     private final String ref;
+    @Getter
     private final String name;
+    @Getter
     private final String mergedFileName;
+    @Getter
     private final DocumentTypeData coverNote;
+    @Getter
     private final DocumentTypeData supports;
+    @Getter
     private final Nature nature;
+
     private final Map<String,DocumentTemplateData> documentTemplateDataByPath;
 
     public boolean isIncoming() {
