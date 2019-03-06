@@ -28,6 +28,7 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -287,6 +288,15 @@ public class Task implements Comparable<Task>, WithApplicationTenancy {
         return null;
     }
 
+    @Programmatic
+    public void setToHighestPriority() {
+        taskRepository.findIncompleteByPersonAssignedTo(getPersonAssignedTo())
+                .stream()
+                .map(Task::getCreatedOn)
+                .min(LocalDateTime::compareTo)
+                .ifPresent(highestPriority -> setCreatedOn(highestPriority.minusDays(1)));
+    }
+
     /**
      * Convenience method to (naively) convert a list of {@link StateTransition}s to their corresponding {@link Task}.
      */
@@ -361,4 +371,7 @@ public class Task implements Comparable<Task>, WithApplicationTenancy {
 
     @Inject
     private ApplicationTenancyRepository securityApplicationTenancyRepository;
+
+    @Inject
+    TaskRepository taskRepository;
 }

@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.title.TitleService;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.capex.dom.payment.PaymentBatch;
 import org.estatio.module.capex.dom.payment.PaymentLine;
@@ -54,7 +55,9 @@ public class IncomingInvoice_reject extends IncomingInvoice_triggerAbstract {
             paymentBatch.removeLineFor(incomingInvoice);
         }
 
-        trigger(personToAssignNextTo, reason, reason);
+        final IncomingInvoiceApprovalStateTransition transition = trigger(personToAssignNextTo, reason, reason);
+        transition.getTask().setToHighestPriority();
+
         return objectToReturn();
     }
 
