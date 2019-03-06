@@ -88,6 +88,12 @@ public class DocumentTemplateEquivalenceIntegTest extends ApplicationModuleInteg
         assertThat(rsd.getName()).isEqualTo(rs.getName());
         assertThat(rsd.getRendererClass().getName()).isEqualTo(rs.getRendererClassName());
         assertThat(rsd.isPreviewsToUrl()).isEqualTo(rs.isPreviewsToUrl());
+
+        final RenderingStrategy rsFind = rsd.findUsing(renderingStrategyRepository);
+        assertThat(rsFind).isSameAs(rs);
+
+        final RenderingStrategyData rsdLookup = RenderingStrategyData.reverseLookup(rs);
+        assertThat(rsdLookup).isSameAs(rsd);
     }
 
     @Test
@@ -130,7 +136,10 @@ public class DocumentTemplateEquivalenceIntegTest extends ApplicationModuleInteg
                 assertThat(templatesWithAtPath).hasSize(1);
                 final DocumentTemplate dtm = templatesWithAtPath.get(0);
 
-                assertEquivalent(dtd, dtmd, dtm);
+                assertEquivalent(dtmd, dtm);
+
+                // documentTemplate.getName() =~ dtd.getName() + dtd.getNameSuffixIfAny() + "." + dtd.getExtension()
+                assertThat(dtm.getName()).startsWith(dtd.getName());
             }
         }
 
@@ -142,23 +151,24 @@ public class DocumentTemplateEquivalenceIntegTest extends ApplicationModuleInteg
             final DocumentTypeData dtd = DocumentTypeData.reverseLookup(dt);
             assertThat(dtd).isNotNull();
 
-            assertEquivalent(dtd, dtmd, dtm);
+            assertEquivalent(dtmd, dtm);
+
+            // documentTemplate.getName() =~ dtd.getName() + dtd.getNameSuffixIfAny() + "." + dtd.getExtension()
+            assertThat(dtm.getName()).startsWith(dtd.getName());
         }
     }
 
     private void assertEquivalent(
-            final DocumentTypeData dtd,
             final DocumentTemplateData dtmd,
             final DocumentTemplate dtm) throws ClassNotFoundException {
 
         final RenderingStrategyData crsd = dtmd.getContentRenderingStrategy();
         final RenderingStrategy crs = dtm.getContentRenderingStrategy();
-
-        assertThat(crsd.findUsing(renderingStrategyRepository)).isSameAs(crs);
+        assertEquivalent(crsd, crs);
 
         final RenderingStrategyData nrsd = dtmd.getNameRenderingStrategy();
         final RenderingStrategy nrs = dtm.getNameRenderingStrategy();
-        assertThat(nrsd.findUsing(renderingStrategyRepository)).isSameAs(nrs);
+        assertEquivalent(nrsd, nrs);
 
         assertThat(dtmd.getNameText()).isEqualTo(dtm.getNameText());
 
@@ -167,18 +177,9 @@ public class DocumentTemplateEquivalenceIntegTest extends ApplicationModuleInteg
         assertThat(dtmd.getContentSort()).isSameAs(dtm.getSort());
         assertThat(dtmd.getMimeTypeBase()).isEqualTo(dtm.getMimeType());
 
-        // documentTemplate.getName() =~ dtd.getName() + dtd.getNameSuffixIfAny() + "." + dtd.getExtension()
-        assertThat(dtm.getName()).startsWith(dtd.getName());
         if(dtmd.getNameSuffixIfAny() != null) {
             assertThat(dtm.getName()).contains(dtmd.getNameSuffixIfAny());
         }
-
-//        final Class<? extends AttachmentAdvisor> dtdAttachmentAdvisorClass =
-//                dtmd.getAttachmentAdvisorClass();
-//        final Class<? extends RendererModelFactory> dtdRendererModelFactoryClass =
-//                dtmd.getRendererModelFactoryClass();
-//
-//        final Class<?> domainClass = dtmd.getDomainClass();
 
         for (final Applicability applicability : dtm.getAppliesTo()) {
             final String dtmDomainClassName = applicability.getDomainClassName();
@@ -195,7 +196,7 @@ public class DocumentTemplateEquivalenceIntegTest extends ApplicationModuleInteg
             final Class<? extends RendererModelFactory> dtmdRendererModelFactoryClass = dtmd.rendererModelFactoryClassFor(domainClass);
             assertThat(applicability.getRendererModelFactoryClassName()).isEqualTo(dtmdRendererModelFactoryClass.getName());
 
-            // check it isn't harded, by passing in some other type
+            // check it isn't hard coded, by passing in some other type
             assertThat(dtmd.attachmentAdvisorClassFor(String.class)).isNull();
             assertThat(dtmd.rendererModelFactoryClassFor(String.class)).isNull();
         }
