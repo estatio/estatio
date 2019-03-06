@@ -353,6 +353,11 @@ public class DocumentTemplate
             hidden = Where.EVERYWHERE
     )
     private DocumentType typeCopy;
+
+    public DocumentType getTypeCopy() {
+        return typeCopy;
+    }
+
     //endregion
 
     //region > atPathCopy (derived property, persisted)
@@ -397,11 +402,8 @@ public class DocumentTemplate
     }
 
     @Programmatic
-    private RenderingStrategyData contentRenderingStrategyData;
     public RenderingStrategyData getContentRenderingStrategyData() {
-        return contentRenderingStrategyData != null
-                ? contentRenderingStrategyData
-                : (contentRenderingStrategyData = RenderingStrategyData.reverseLookup(getContentRenderingStrategy()));
+        return getTemplateData().getContentRenderingStrategy();
     }
 
     public RenderingStrategyApi getContentRenderingStrategyApi() {
@@ -410,11 +412,8 @@ public class DocumentTemplate
     }
 
     @Programmatic
-    private RenderingStrategyData nameRenderingStrategyData;
     public RenderingStrategyData getNameRenderingStrategyData() {
-        return nameRenderingStrategyData != null
-                ? nameRenderingStrategyData
-                : (nameRenderingStrategyData = RenderingStrategyData.reverseLookup(getNameRenderingStrategy()));
+        return getTemplateData().getNameRenderingStrategy();
     }
 
     public RenderingStrategyApi getNameRenderingStrategyApi() {
@@ -1017,12 +1016,6 @@ public class DocumentTemplate
     //endregion
 
     //region > injected services
-    @Inject
-    RendererModelFactoryClassNameService rendererModelFactoryClassNameService;
-    @Inject
-    AttachmentAdvisorClassNameService attachmentAdvisorClassNameService;
-    @Inject
-    ApplicabilityRepository applicabilityRepository;
     @Inject
     ClassService classService;
     @Inject
