@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedSet;
+import java.util.StringJoiner;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -2127,11 +2128,38 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             result.append(multiplePaymentMethods);
         }
 
+        final String mismatchedTypes = mismatchedTypesOnLinkedItemsCheck();
+        if (mismatchedTypes != null) {
+            result.append(mismatchedTypes);
+        }
+
         return result.length() > 0 ? result.toString() : null;
     }
 
     public boolean hideNotification() {
         return getNotification() == null;
+    }
+
+    @Programmatic
+    private String mismatchedTypesOnLinkedItemsCheck() {
+        StringJoiner sj = new StringJoiner("; ");
+        getItems().stream()
+                .filter(IncomingInvoiceItem.class::isInstance)
+                .map(IncomingInvoiceItem.class::cast)
+                .map(item -> orderItemInvoiceItemLinkRepository.findByInvoiceItem(item))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .filter(orderItemInvoiceItemLink -> {
+                    IncomingInvoiceType orderItemType = orderItemInvoiceItemLink.getOrderItem().getOrdr().getType();
+                    IncomingInvoiceType invoiceItemType = orderItemInvoiceItemLink.getInvoiceItem().getIncomingInvoiceType();
+                    return !orderItemType.equals(invoiceItemType);
+                })
+                .forEach(link -> sj.add(String.format("an invoice item of type %s is linked to an order item %s",
+                        link.getInvoiceItem().getIncomingInvoiceType().toString(),
+                        link.getOrderItem().getOrdr().getType().toString()))
+                );
+
+        return sj.length() != 0 ? new StringJoiner("").add("WARNING: mismatched types between linked items: ").merge(sj).toString() : null;
     }
 
     @Programmatic

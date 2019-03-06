@@ -3,9 +3,13 @@ package org.estatio.module.capex.dom.invoice;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import com.google.common.collect.Sets;
 
 import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
@@ -31,6 +35,7 @@ import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStat
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
+import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.state.StateTransitionService;
@@ -1123,6 +1128,9 @@ public class IncomingInvoice_Test {
         @Mock
         InvoiceRepository mockInvoiceRepository;
 
+        @Mock
+        OrderItemInvoiceItemLinkRepository mockOrderItemInvoiceItemLinkRepository;
+
         @Test
         public void historicalPaymentMethod_works() throws Exception {
             String notification;
@@ -1220,6 +1228,57 @@ public class IncomingInvoice_Test {
 
             // then
             assertThat(notification).isNull();
+        }
+
+        @Test
+        public void mismatchedItemTypes_works() {
+
+            String notification;
+
+            // given
+            IncomingInvoice incomingInvoice = new IncomingInvoice() {
+                public String doubleInvoiceCheck() {
+                    return null;
+                }
+
+                public String buyerBarcodeMatchValidation() {
+                    return null;
+                }
+
+                public String paymentMethodValidation() {
+                    return null;
+                }
+
+                protected void invalidateApproval() {
+                }
+            };
+
+            IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem();
+            invoiceItem.setInvoice(incomingInvoice);
+            invoiceItem.setIncomingInvoiceType(IncomingInvoiceType.PROPERTY_EXPENSES);
+            incomingInvoice.setItems(Sets.newTreeSet(Collections.singletonList(invoiceItem)));
+            incomingInvoice.orderItemInvoiceItemLinkRepository = mockOrderItemInvoiceItemLinkRepository;
+
+            OrderItem orderItem = new OrderItem();
+            Order order = new Order();
+            order.setType(IncomingInvoiceType.CAPEX);
+            orderItem.setOrdr(order);
+            OrderItemInvoiceItemLink link = new OrderItemInvoiceItemLink();
+            link.setOrderItem(orderItem);
+            link.setInvoiceItem(invoiceItem);
+            Optional<OrderItemInvoiceItemLink> optional = Optional.of(link);
+
+            // expecting
+            context.checking(new Expectations() {{
+                oneOf(mockOrderItemInvoiceItemLinkRepository).findByInvoiceItem(invoiceItem);
+                will(returnValue(optional));
+            }});
+
+            // when
+            notification = incomingInvoice.getNotification();
+
+            // then
+            assertThat(notification).isEqualTo("WARNING: mismatched types between linked items: an invoice item of type CAPEX is linked to an order item of type PROPERTY_EXPENSES");
         }
 
     }
