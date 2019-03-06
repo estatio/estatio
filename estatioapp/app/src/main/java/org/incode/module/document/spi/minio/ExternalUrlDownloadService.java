@@ -27,19 +27,16 @@ public class ExternalUrlDownloadService {
     @PostConstruct
     public void init(final Map<String,String> properties) {
         minioDownloadClient = new MinioDownloadClient();
-        minioDownloadClient.setUrl(read(properties, "estatio.minio.url"));
-        minioDownloadClient.setAccessKey(read(properties, "estatio.minio.accessKey"));
-        minioDownloadClient.setSecretKey(read(properties, "estatio.minio.secretKey"));
+        minioDownloadClient.setUrl(read(properties, "estatio.minio.url", "http://minio.int.ecpnv.com:9000"));
+        minioDownloadClient.setAccessKey(read(properties, "estatio.minio.accessKey", "minio"));
+        minioDownloadClient.setSecretKey(read(properties, "estatio.minio.secretKey", "minio123"));
         minioDownloadClient.setBackoffNumAttempts(readInt(properties, "estatio.minio.backoffNumAttempts", 5));
         minioDownloadClient.setBackoffSleepMillis(readInt(properties, "estatio.minio.backoffSleepMillis", 200));
     }
 
-    private static String read(final Map<String, String> properties, final String key) {
+    private static String read(final Map<String, String> properties, final String key, final String fallback) {
         final String value = properties.get(key);
-        if(value != null) {
-            return value;
-        }
-        throw new IllegalStateException("Could not locate property '" + key + "' in isis.properties");
+        return value != null ? value : fallback;
     }
 
     private static int readInt(

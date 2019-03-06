@@ -41,9 +41,6 @@ public abstract class BaseModuleIntegTestAbstract extends IntegrationTestAbstrac
                 module.withConfigurationProperty(
                     SpecificationLoader.CONFIG_PROPERTY_MODE.of(introspectionMode)
                 )
-                .withConfigurationProperty("estatio.minio.url", "http://minio.int.ecpnv.com:9000")
-                .withConfigurationProperty("estatio.minio.accessKey", "minio")
-                .withConfigurationProperty("estatio.minio.secretKey", "minio123")
         );
     }
 
