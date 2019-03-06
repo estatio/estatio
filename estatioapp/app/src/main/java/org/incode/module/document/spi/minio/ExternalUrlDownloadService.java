@@ -32,6 +32,8 @@ public class ExternalUrlDownloadService {
         minioDownloadClient.setSecretKey(read(properties, "estatio.minio.secretKey", "minio123"));
         minioDownloadClient.setBackoffNumAttempts(readInt(properties, "estatio.minio.backoffNumAttempts", 5));
         minioDownloadClient.setBackoffSleepMillis(readInt(properties, "estatio.minio.backoffSleepMillis", 200));
+
+        minioDownloadClient.init();
     }
 
     private static String read(final Map<String, String> properties, final String key, final String fallback) {
