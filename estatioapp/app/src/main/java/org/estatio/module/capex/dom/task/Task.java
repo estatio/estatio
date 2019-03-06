@@ -1,5 +1,6 @@
 package org.estatio.module.capex.dom.task;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -290,11 +291,19 @@ public class Task implements Comparable<Task>, WithApplicationTenancy {
 
     @Programmatic
     public void setToHighestPriority() {
-        taskRepository.findIncompleteByPersonAssignedTo(getPersonAssignedTo())
-                .stream()
-                .map(Task::getCreatedOn)
-                .min(LocalDateTime::compareTo)
-                .ifPresent(highestPriority -> setCreatedOn(highestPriority.minusDays(1)));
+        if (getPersonAssignedTo() != null) {
+            taskRepository.findIncompleteByPersonAssignedTo(getPersonAssignedTo())
+                    .stream()
+                    .map(Task::getCreatedOn)
+                    .min(LocalDateTime::compareTo)
+                    .ifPresent(highestPriority -> setCreatedOn(highestPriority.minusDays(1)));
+        } else {
+            taskRepository.findIncompleteByUnassignedForRoles(Collections.singletonList(getAssignedTo()))
+                    .stream()
+                    .map(Task::getCreatedOn)
+                    .min(LocalDateTime::compareTo)
+                    .ifPresent(highestPriority -> setCreatedOn(highestPriority.minusDays(1)));
+        }
     }
 
     /**
