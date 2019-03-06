@@ -63,7 +63,13 @@
 .IncomingDocAsOrderViewModel-notification textarea.form-control[disabled],
 .IncomingDocAsInvoiceViewModel-notification textarea,
 .IncomingDocAsInvoiceViewModel-notification textarea.form-control[readonly],
-.IncomingDocAsInvoiceViewModel-notification textarea.form-control[disabled] {
+.IncomingDocAsInvoiceViewModel-notification textarea.form-control[disabled],
+.isis-incomingInvoice-IncomingInvoice-notification textarea,
+.isis-incomingInvoice-IncomingInvoice-notification textarea.form-control[readonly],
+.isis-incomingInvoice-IncomingInvoice-notification textarea.form-control[disabled],
+.isis-order-Order-notification textarea,
+.isis-order-Order-notification textarea.form-control[readonly],
+.isis-order-Order-notification textarea.form-control[disabled]{
     color: black;
 	background-color: pink;
 	font-size: 1.5em;

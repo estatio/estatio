@@ -1,5 +1,7 @@
 package org.estatio.module.capex.app.contributions.categorise;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import org.apache.isis.applib.annotation.Action;
@@ -8,11 +10,11 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.capex.app.document.IncomingDocViewModel;
 import org.estatio.module.capex.dom.documents.categorisation.triggers.Document_categoriseAsPropertyInvoice;
 import org.estatio.module.capex.dom.documents.categorisation.triggers.Task_mixinDocumentAbstract;
 import org.estatio.module.capex.dom.task.Task;
-import org.estatio.module.asset.dom.Property;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Task does not know about the domain object it refers to.
@@ -63,6 +65,10 @@ public class Task_categoriseDocumentAsPropertyInvoice
             return null;
         }
         return mixin().disableAct();
+    }
+
+    public List<Property> choices0Act() {
+        return mixin().choices0Act();
     }
 
 }

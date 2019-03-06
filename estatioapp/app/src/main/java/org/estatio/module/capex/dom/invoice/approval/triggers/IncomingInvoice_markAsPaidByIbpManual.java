@@ -34,7 +34,7 @@ public class IncomingInvoice_markAsPaidByIbpManual extends IncomingInvoice_trigg
     @ActionLayout(cssClassFa = "fa-check")
     public Object act(
             @Nullable final String comment) {
-        trigger(comment, null);
+        trigger(comment, comment);
         return objectToReturn();
     }
 

@@ -2,10 +2,12 @@ package org.estatio.module.capex.dom.order;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -462,5 +464,52 @@ public class Order_Test {
         // then
         assertThat(order.getOrderNumber()).isEqualTo("1234");
         assertThat(order.getProperty()).isEqualTo(newProperty);
+    }
+
+    @Mock
+    OrderRepository mockOrderRepository;
+
+    @Test
+    public void double_order_check_works() throws Exception {
+
+        // given
+        Order newOrder = new Order();
+        newOrder.orderRepository = mockOrderRepository;
+
+        String sellerOrderReference = "123-456-7";
+        Organisation seller = new Organisation();
+        LocalDate orderDate = new LocalDate(2017,01,01);
+
+        Order existingOrder = new Order();
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockOrderRepository).findBySellerOrderReferenceAndSellerAndOrderDate(sellerOrderReference, seller, orderDate);
+            will(returnValue(newOrder));
+            oneOf(mockOrderRepository).findBySellerOrderReferenceAndSeller(sellerOrderReference, seller);
+            will(returnValue(Arrays.asList(newOrder, existingOrder)));
+        }});
+
+        // when
+        newOrder.setSellerOrderReference(sellerOrderReference);
+        newOrder.setSeller(seller);
+        newOrder.setOrderDate(orderDate);
+        String message = newOrder.doubleOrderCheck();
+
+        // then
+        Assertions.assertThat(message).contains("WARNING: Orders with the same seller order reference of this seller are found");
+
+        // and expect
+        context.checking(new Expectations(){{
+            oneOf(mockOrderRepository).findBySellerOrderReferenceAndSellerAndOrderDate(sellerOrderReference, seller, orderDate);
+            will(returnValue(existingOrder));
+        }});
+
+        // when
+        message = newOrder.doubleOrderCheck();
+
+        // then
+        Assertions.assertThat(message).isEqualTo("WARNING: There is already an order with the same seller order reference and order date for this seller. Please check.");
+
     }
 }

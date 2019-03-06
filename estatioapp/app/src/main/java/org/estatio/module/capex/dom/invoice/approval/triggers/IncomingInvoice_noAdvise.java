@@ -43,7 +43,7 @@ public class IncomingInvoice_noAdvise extends IncomingInvoice_triggerAbstract {
             final String comment,       // there should be a reason why
             final boolean goToNext) {
         final IncomingInvoice next = nextAfterPendingIfRequested(goToNext);
-        trigger(personToAssignNextTo, comment, null);
+        trigger(personToAssignNextTo, comment, comment);
         return objectToReturn(next);
     }
 

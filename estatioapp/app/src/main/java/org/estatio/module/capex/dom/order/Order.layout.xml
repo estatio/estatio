@@ -6,6 +6,8 @@
             <bs3:row>
                 <bs3:col span="12" unreferencedActions="true">
                     <cpt:domainObject/>
+                    <cpt:action id="completeOrder"/>
+                    <cpt:action id="completeOrderItem"/>
                 </bs3:col>
             </bs3:row>
             <bs3:row>
@@ -41,6 +43,7 @@
                                         <cpt:property id="property">
                                             <cpt:action id="editProperty" promptStyle="INLINE" position="RIGHT"/>
                                         </cpt:property>
+                                        <cpt:property id="notification" labelPosition="NONE" hidden="ALL_TABLES"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>

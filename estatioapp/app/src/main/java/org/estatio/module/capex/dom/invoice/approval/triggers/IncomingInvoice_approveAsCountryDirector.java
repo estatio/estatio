@@ -36,7 +36,7 @@ public class IncomingInvoice_approveAsCountryDirector extends IncomingInvoice_tr
             @Nullable final String comment,
             final boolean goToNext) {
         final IncomingInvoice next = nextAfterPendingIfRequested(goToNext);
-        trigger(comment, null);
+        trigger(comment, comment);
         return objectToReturn(next);
     }
 

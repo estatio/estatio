@@ -45,10 +45,12 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.util.TitleBuffer;
 import org.apache.isis.applib.value.Blob;
@@ -65,9 +67,14 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
+import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.dom.role.FixedAssetRole;
+import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.capex.dom.documents.BudgetItemChooser;
+import org.estatio.module.capex.dom.documents.BuyerFinder;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
@@ -76,11 +83,13 @@ import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalStateTransition;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.capex.dom.state.State;
 import org.estatio.module.capex.dom.state.StateTransition;
 import org.estatio.module.capex.dom.state.StateTransitionType;
 import org.estatio.module.capex.dom.state.Stateful;
 import org.estatio.module.capex.dom.util.PeriodUtil;
+import org.estatio.module.charge.dom.Applicability;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.financial.dom.BankAccountRepository;
@@ -256,6 +265,236 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         }
 
         return buf.toString();
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(promptStyle = PromptStyle.DIALOG_SIDEBAR)
+    public Order completeOrder(
+            final IncomingInvoiceType orderType,
+            final org.estatio.module.asset.dom.Property property,
+            final String orderNumber,
+            final Party supplier,
+            final @Nullable Boolean createRoleIfRequired,
+            final @ParameterLayout(named = "Supplier order ref.") String supplierOrderReference,
+            final LocalDate orderDate) {
+        setType(orderType);
+        setOrderNumber(orderNumber);
+        setSellerOrderReference(supplierOrderReference);
+        setOrderDate(orderDate);
+        setSeller(supplier);
+        setProperty(property);
+
+        return this;
+    }
+
+    public IncomingInvoiceType default0CompleteOrder() {
+        return getType();
+    }
+
+    public org.estatio.module.asset.dom.Property default1CompleteOrder() {
+        return getProperty();
+    }
+
+    public List<org.estatio.module.asset.dom.Property> choices1CompleteOrder() {
+        List<org.estatio.module.asset.dom.Property> result = new ArrayList<>();
+        if (getBuyer() != null) {
+            for (FixedAssetRole role : fixedAssetRoleRepository.findByPartyAndType(getBuyer(), FixedAssetRoleTypeEnum.PROPERTY_OWNER)) {
+                if (role.getAsset().getClass().isAssignableFrom(org.estatio.module.asset.dom.Property.class)) {
+                    result.add((org.estatio.module.asset.dom.Property) role.getAsset());
+                }
+            }
+        }
+        return result.size() > 0 ? result : propertyRepository.allProperties();
+    }
+
+    public String default2CompleteOrder() {
+        return getOrderNumber();
+    }
+
+    public Party default3CompleteOrder() {
+        return getSeller();
+    }
+
+    public List<Party> autoComplete3CompleteOrder(final @MinLength(3) String search) {
+        return partyRepository.autoCompleteSupplier(search, getAtPath());
+    }
+
+    public String default5CompleteOrder() {
+        return getSellerOrderReference();
+    }
+
+    public LocalDate default6CompleteOrder() {
+        return getOrderDate();
+    }
+
+    public String validateCompleteOrder(
+            final IncomingInvoiceType orderType,
+            final org.estatio.module.asset.dom.Property property,
+            final String orderNumber,
+            final Party supplier,
+            final Boolean createRoleIfRequired,
+            final String supplierOrderReference,
+            final LocalDate orderDate) {
+        // validate seller
+        final String sellerValidation = partyRoleRepository.validateThat(supplier, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+        if ((createRoleIfRequired == null || !createRoleIfRequired) && sellerValidation != null) {
+            return sellerValidation;
+        }
+
+        return null;
+    }
+
+    public String disableCompleteOrder() {
+        return reasonDisabledDueToState();
+    }
+
+    public boolean hideCompleteOrder() {
+        return getAtPath().startsWith("/ITA");
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(promptStyle = PromptStyle.DIALOG_SIDEBAR)
+    public Order completeOrderItem(
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final Tax tax,
+            final BigDecimal grossAmount,
+            final Charge charge,
+            final Project project,
+            final BudgetItem budgetItem,
+            final String period) {
+        Optional<OrderItem> firstItemIfAny = getItems().stream().findFirst();
+        if (firstItemIfAny.isPresent()) {
+            OrderItem orderItem = firstItemIfAny.get();
+            orderItem.setCharge(charge);
+            orderItem.setDescription(description);
+            orderItem.setNetAmount(netAmount);
+            orderItem.setVatAmount(vatAmount);
+            orderItem.setGrossAmount(grossAmount);
+            orderItem.setTax(tax);
+            orderItem.setStartDate(PeriodUtil.startDateFromPeriod(period));
+            orderItem.setEndDate(PeriodUtil.endDateFromPeriod(period));
+            orderItem.setProperty(getProperty());
+            orderItem.setProject(project);
+            orderItem.setBudgetItem(budgetItem);
+        } else {
+            addItem(
+                    charge,
+                    description,
+                    netAmount,
+                    vatAmount,
+                    grossAmount,
+                    tax,
+                    period,
+                    getProperty(),
+                    project,
+                    budgetItem
+            );
+        }
+
+        return this;
+    }
+
+    public String default0CompleteOrderItem() {
+        return getDescriptionSummary();
+    }
+
+    public BigDecimal default1CompleteOrderItem() {
+        final Optional<OrderItem> firstItemIfAny = getFirstItemIfAny();
+        return firstItemIfAny.map(OrderItem::getNetAmount).orElse(null);
+    }
+
+    public BigDecimal default2CompleteOrderItem() {
+        final Optional<OrderItem> firstItemIfAny = getFirstItemIfAny();
+        return firstItemIfAny.map(OrderItem::getVatAmount).orElse(null);
+    }
+
+    public Tax default3CompleteOrderItem() {
+        final Optional<OrderItem> firstItemIfAny = getFirstItemIfAny();
+        return firstItemIfAny.map(OrderItem::getTax).orElse(null);
+    }
+
+    public BigDecimal default4CompleteOrderItem() {
+        final Optional<OrderItem> firstItemIfAny = getFirstItemIfAny();
+        return firstItemIfAny.map(OrderItem::getGrossAmount).orElse(null);
+    }
+
+    public Charge default5CompleteOrderItem() {
+        final Optional<OrderItem> firstItemIfAny = getFirstItemIfAny();
+        return firstItemIfAny.map(OrderItem::getCharge).orElse(null);
+    }
+
+    public List<Charge> autoComplete5CompleteOrderItem(@MinLength(3) String search) {
+        return chargeRepository.findByApplicabilityAndMatchOnReferenceOrName(search, Applicability.INCOMING);
+    }
+
+    public Project default6CompleteOrderItem() {
+        final Optional<OrderItem> firstItemIfAny = getFirstItemIfAny();
+        return firstItemIfAny.map(OrderItem::getProject).orElse(null);
+    }
+
+    public List<Project> choices6CompleteOrderItem() {
+        return getProperty() == null ?
+                projectRepository.listAll()
+                : projectRepository.findByFixedAsset(getProperty())
+                .stream()
+                .filter(x -> !x.isParentProject())
+                .filter(x -> {
+                    LocalDate endDateFromPeriod = PeriodUtil.endDateFromPeriod(default8CompleteOrderItem());
+                    LocalDate dateToUse = endDateFromPeriod != null ? endDateFromPeriod : clockService.now();
+                    return x.getEndDate() == null || !x.getEndDate().isBefore(dateToUse);
+                })
+                .collect(Collectors.toList());
+    }
+
+    public BudgetItem default7CompleteOrderItem() {
+        final Optional<OrderItem> firstItemIfAny = getFirstItemIfAny();
+        return firstItemIfAny.map(OrderItem::getBudgetItem).orElse(null);
+    }
+
+    public List<BudgetItem> choices7CompleteOrderItem(
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final Tax tax,
+            final BigDecimal grossAmount,
+            final Charge charge,
+            final Project project) {
+        return budgetItemChooser.choicesBudgetItemFor(getProperty(), charge);
+    }
+
+    public String default8CompleteOrderItem() {
+        final Optional<OrderItem> firstItemIfAny = getFirstItemIfAny();
+        return firstItemIfAny.map(OrderItem::getPeriod).orElse(null);
+    }
+
+    public String disableCompleteOrderItem() {
+        return reasonDisabledDueToState();
+    }
+
+    public String validateCompleteOrderItem(
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final Tax tax,
+            final BigDecimal grossAmount,
+            final Charge charge,
+            final Project project,
+            final BudgetItem budgetItem,
+            final String period) {
+        if (project != null && project.isParentProject())
+            return "Parent project is not allowed";
+
+        return period != null ? PeriodUtil.reasonInvalidPeriod(period) : null;
+    }
+
+    public boolean hideCompleteOrderItem() {
+        return getAtPath().startsWith("/ITA");
+    }
+
+    private Optional<OrderItem> getFirstItemIfAny() {
+        return getItems().stream().findFirst();
     }
 
     /**
@@ -1028,6 +1267,90 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         }
     }
 
+    //region > notification
+
+    @Property(editing = Editing.DISABLED)
+    @PropertyLayout(multiLine = 5)
+    public String getNotification() {
+        final StringBuilder result = new StringBuilder();
+
+        final String noBuyerBarcodeMatch = buyerBarcodeMatchValidation();
+        if (noBuyerBarcodeMatch != null) {
+            result.append(noBuyerBarcodeMatch);
+        }
+
+        final String sameOrderNumberCheck = doubleOrderCheck();
+        if (sameOrderNumberCheck != null) {
+            result.append(sameOrderNumberCheck);
+        }
+
+        return result.length() > 0 ? result.toString() : null;
+
+    }
+
+    public boolean hideNotification() {
+        return getNotification() == null;
+    }
+
+    String doubleOrderCheck() {
+        final String doubleOrderCheck = possibleDoubleOrder();
+        if (doubleOrderCheck != null) {
+            return doubleOrderCheck;
+        }
+        final String sameNumberCheck = sameSellerOrderReference();
+        if (sameNumberCheck != null) {
+            return sameNumberCheck;
+        }
+        return null;
+    }
+
+    private String possibleDoubleOrder() {
+        if (getSellerOrderReference() == null || getSeller() == null || getOrderDate() == null) {
+            return null;
+        }
+
+        Order possibleDouble = orderRepository.findBySellerOrderReferenceAndSellerAndOrderDate(getSellerOrderReference(), getSeller(), getOrderDate());
+        if (possibleDouble == null || possibleDouble.equals(this)) {
+            return null;
+        }
+
+        return "WARNING: There is already an order with the same seller order reference and order date for this seller. Please check.";
+    }
+
+    private String sameSellerOrderReference() {
+        if (getSellerOrderReference() == null || getSeller() == null) {
+            return null;
+        }
+
+        StringBuilder builder = new StringBuilder();
+        orderRepository.findBySellerOrderReferenceAndSeller(getSellerOrderReference(), getSeller())
+                .stream()
+                .filter(order -> !order.equals(this))
+                .forEach(order -> {
+                    if (builder.indexOf("WARNING: Orders with the same seller order reference of this seller are found ") == -1)
+                        builder.append("WARNING: Orders with the same seller order reference of this seller are found ");
+
+                    if (order.getOrderDate() != null)
+                        builder.append(String.format("on date %s; ", order.getOrderDate().toString()));
+                });
+
+        return builder.length() != 0 ? builder.toString() : null;
+    }
+
+    private String buyerBarcodeMatchValidation() {
+        if (getBuyer() != null) {
+            if (buyerFinder.buyerDerivedFromDocumentName(this) == null) {
+                return null; // covers all cases where no buyer could be derived from document name
+            }
+            if (!getBuyer().equals(buyerFinder.buyerDerivedFromDocumentName(this))) {
+                return "Buyer does not match barcode (document name); ";
+            }
+        }
+        return null;
+    }
+
+    //endregion
+
     static class Validator {
 
         public Validator() {
@@ -1126,8 +1449,8 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     @Inject
     LookupAttachedPdfService lookupAttachedPdfService;
 
-    @Inject public
-    OrderItemRepository orderItemRepository;
+    @Inject
+    public OrderItemRepository orderItemRepository;
 
     @Inject
     BudgetItemChooser budgetItemChooser;
@@ -1151,6 +1474,9 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     PartyRepository partyRepository;
 
     @Inject
+    PropertyRepository propertyRepository;
+
+    @Inject
     ChamberOfCommerceCodeLookUpService chamberOfCommerceCodeLookUpService;
 
     @Inject
@@ -1163,6 +1489,9 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     MessageService messageService;
 
     @Inject
+    FixedAssetRoleRepository fixedAssetRoleRepository;
+
+    @Inject
     private MeService meService;
 
     @Inject
@@ -1170,5 +1499,14 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Inject
     OrderRepository orderRepository;
+
+    @Inject
+    ProjectRepository projectRepository;
+
+    @Inject
+    ClockService clockService;
+
+    @Inject
+    BuyerFinder buyerFinder;
 
 }

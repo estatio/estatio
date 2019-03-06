@@ -48,9 +48,9 @@ public class IncomingInvoice_discard extends IncomingInvoice_triggerAbstract {
                         IncomingDocumentCategorisationStateTransition.class,
                         IncomingDocumentCategorisationStateTransitionType.DISCARD_ASSOCIATED,
                         comment,
-                        null));
+                        comment));
         incomingInvoice.reverseReportedItemsNoCorrection();
-        trigger(comment, null);
+        trigger(comment, comment);
         return getDomainObject();
     }
 

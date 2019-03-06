@@ -3,9 +3,13 @@ package org.estatio.module.capex.dom.invoice;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import com.google.common.collect.Sets;
 
 import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
@@ -25,13 +29,24 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
+import org.estatio.module.capex.dom.documents.BuyerFinder;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.module.capex.dom.order.Order;
+import org.estatio.module.capex.dom.order.OrderItem;
+import org.estatio.module.capex.dom.order.OrderItemRepository;
+import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
+import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.role.PartyRoleRepository;
 import org.estatio.module.tax.dom.Tax;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -63,7 +78,7 @@ public class IncomingInvoice_Test {
             }
 
             @Override
-            public String getAtPath(){
+            public String getAtPath() {
                 return "/FRA";
             }
         };
@@ -474,7 +489,8 @@ public class IncomingInvoice_Test {
         @Before
         public void setUp() throws Exception {
             incomingInvoice = new IncomingInvoice() {
-                @Override public IncomingInvoiceApprovalState getApprovalState() {
+                @Override
+                public IncomingInvoiceApprovalState getApprovalState() {
                     return state;
                 }
             };
@@ -888,7 +904,6 @@ public class IncomingInvoice_Test {
             unreportedItem.setSequence(BigInteger.valueOf(3));
             invoice.getItems().addAll(Arrays.asList(reportedItem, reversal, unreportedItem));
 
-
             // when
             List<IncomingInvoiceItem> result = invoice.unreportedItemsIgnoringReversals();
 
@@ -912,9 +927,10 @@ public class IncomingInvoice_Test {
             IncomingInvoiceItem reversal = new IncomingInvoiceItem();
             reversal.setSequence(BigInteger.valueOf(2));
             reversal.setReversalOf(new IncomingInvoiceItem());
-            IncomingInvoiceItem itemToBeModified = new IncomingInvoiceItem(){
+            IncomingInvoiceItem itemToBeModified = new IncomingInvoiceItem() {
                 @Override
-                void invalidateApproval() {}
+                void invalidateApproval() {
+                }
             };
             itemToBeModified.setSequence(BigInteger.valueOf(3));
             invoice.getItems().addAll(Arrays.asList(reportedItem, reversal, itemToBeModified));
@@ -954,7 +970,6 @@ public class IncomingInvoice_Test {
 
     }
 
-
     @Mock
     IncomingInvoiceApprovalStateTransition.Repository mockStateTransitionRepository;
 
@@ -977,7 +992,7 @@ public class IncomingInvoice_Test {
             tr3.setToState(IncomingInvoiceApprovalState.APPROVED);
             tr3.setCompletedBy("Manager1");
             tr3.setCompletedOn(DateTimeFormat.forPattern("yyyy-MM-dd")
-                            .parseLocalDateTime("2017-01-01"));
+                    .parseLocalDateTime("2017-01-01"));
 
             IncomingInvoiceApprovalStateTransition tr4 = new IncomingInvoiceApprovalStateTransition();
             tr4.setToState(IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR);
@@ -994,7 +1009,7 @@ public class IncomingInvoice_Test {
             IncomingInvoiceApprovalStateTransition tr6 = new IncomingInvoiceApprovalStateTransition();
 
             // expect
-            context.checking(new Expectations(){{
+            context.checking(new Expectations() {{
                 oneOf(mockStateTransitionRepository).findByDomainObject(invoice);
                 will(returnValue(Arrays.asList(tr1, tr2, tr3, tr4, tr5, tr6)));
             }});
@@ -1023,7 +1038,7 @@ public class IncomingInvoice_Test {
         IncomingInvoiceItem regularItem2;
 
         @Before
-        public void setup(){
+        public void setup() {
 
             reversedItem = new IncomingInvoiceItem();
             reversedItem.setSequence(BigInteger.valueOf(1));
@@ -1104,6 +1119,274 @@ public class IncomingInvoice_Test {
             // then
             assertThat(invoice.getPropertySummary()).isEqualTo("Prop2 | Prop1");
 
+        }
+
+    }
+
+    public static class Notification_Test extends IncomingInvoice_Test {
+
+        @Mock
+        InvoiceRepository mockInvoiceRepository;
+
+        @Mock
+        OrderItemInvoiceItemLinkRepository mockOrderItemInvoiceItemLinkRepository;
+
+        @Test
+        public void historicalPaymentMethod_works() throws Exception {
+            String notification;
+
+            // given
+            IncomingInvoice incomingInvoice = new IncomingInvoice() {
+                public String doubleInvoiceCheck() {
+                    return null;
+                }
+
+                public String buyerBarcodeMatchValidation() {
+                    return null;
+                }
+            };
+            Party seller = new Organisation();
+            incomingInvoice.setSeller(seller);
+            incomingInvoice.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
+            incomingInvoice.invoiceRepository = mockInvoiceRepository;
+
+            IncomingInvoice incomingInvoice1 = new IncomingInvoice();
+            incomingInvoice1.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
+            IncomingInvoice incomingInvoice2 = new IncomingInvoice();
+            incomingInvoice2.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
+            IncomingInvoice incomingInvoice3 = new IncomingInvoice();
+            incomingInvoice3.setPaymentMethod(PaymentMethod.CASH);
+            IncomingInvoice incomingInvoice4 = new IncomingInvoice();
+            incomingInvoice4.setPaymentMethod(null);
+
+            // expecting
+            context.checking(new Expectations() {{
+                oneOf(mockInvoiceRepository).findBySeller(seller);
+                will(returnValue(Arrays.asList(incomingInvoice1, incomingInvoice2, incomingInvoice3, incomingInvoice4)));
+            }});
+
+            // when
+            notification = incomingInvoice.getNotification();
+
+            // then
+            assertThat(notification).isEqualTo("WARNING: payment method is set to bank transfer, but previous invoices from this seller have used the following payment methods: Direct Debit, Cash ");
+
+            // and expecting
+            context.checking(new Expectations() {{
+                oneOf(mockInvoiceRepository).findBySeller(seller);
+                will(returnValue(Arrays.asList(incomingInvoice2))); // All historical invoices use payment method BANK_TRANSFER...
+            }});
+
+            // when
+            notification = incomingInvoice.getNotification();
+
+            // then
+            assertThat(notification).isNull(); // ... so no warning
+        }
+
+        @Test
+        public void buyerBarcodeMatchValidation_works() {
+
+            String notification;
+
+            // given
+            IncomingInvoice incomingInvoice = new IncomingInvoice();
+            Party buyerDerived = new Organisation();
+            Party buyerOnInvoice = new Organisation();
+            incomingInvoice.buyerFinder = new BuyerFinder() {
+                @Override
+                public Party buyerDerivedFromDocumentName(final IncomingInvoice incomingInvoice) {
+                    return buyerDerived;
+                }
+            };
+
+            incomingInvoice.setBuyer(buyerOnInvoice);
+
+            // when
+            notification = incomingInvoice.getNotification();
+
+            // then
+            assertThat(notification).isEqualTo("Buyer does not match barcode (document name); ");
+
+            // and given (buyers matching)
+            incomingInvoice.setBuyer(buyerDerived);
+            // when
+            notification = incomingInvoice.getNotification();
+            // then
+            assertThat(notification).isNull();
+
+            // and given (no buyer derived)
+            incomingInvoice.buyerFinder = new BuyerFinder() {
+                @Override
+                public Party buyerDerivedFromDocumentName(final IncomingInvoice incomingInvoice) {
+                    return null;
+                }
+            };
+
+            // when
+            notification = incomingInvoice.getNotification();
+
+            // then
+            assertThat(notification).isNull();
+        }
+
+        @Test
+        public void mismatchedItemTypes_works() {
+
+            String notification;
+
+            // given
+            IncomingInvoice incomingInvoice = new IncomingInvoice() {
+                public String doubleInvoiceCheck() {
+                    return null;
+                }
+
+                public String buyerBarcodeMatchValidation() {
+                    return null;
+                }
+
+                public String paymentMethodValidation() {
+                    return null;
+                }
+
+                protected void invalidateApproval() {
+                }
+            };
+
+            IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem();
+            invoiceItem.setInvoice(incomingInvoice);
+            invoiceItem.setIncomingInvoiceType(IncomingInvoiceType.PROPERTY_EXPENSES);
+            incomingInvoice.setItems(Sets.newTreeSet(Collections.singletonList(invoiceItem)));
+            incomingInvoice.orderItemInvoiceItemLinkRepository = mockOrderItemInvoiceItemLinkRepository;
+
+            OrderItem orderItem = new OrderItem();
+            Order order = new Order();
+            order.setType(IncomingInvoiceType.CAPEX);
+            orderItem.setOrdr(order);
+            OrderItemInvoiceItemLink link = new OrderItemInvoiceItemLink();
+            link.setOrderItem(orderItem);
+            link.setInvoiceItem(invoiceItem);
+            Optional<OrderItemInvoiceItemLink> optional = Optional.of(link);
+
+            // expecting
+            context.checking(new Expectations() {{
+                oneOf(mockOrderItemInvoiceItemLinkRepository).findByInvoiceItem(invoiceItem);
+                will(returnValue(optional));
+            }});
+
+            // when
+            notification = incomingInvoice.getNotification();
+
+            // then
+            assertThat(notification).isEqualTo("WARNING: mismatched types between linked items: an invoice item of type PROPERTY_EXPENSES is linked to an order item of type CAPEX");
+        }
+
+    }
+
+    public static class CompleteInvoiceAndItem_Test extends IncomingInvoice_Test {
+
+        @Mock
+        StateTransitionService mockStateTransitionService;
+
+        @Mock
+        OrderItemRepository mockOrderItemRepository;
+
+        @Mock
+        PartyRoleRepository mockPartyRoleRepository;
+
+        @Mock
+        OrderItemInvoiceItemLinkRepository mockOrderItemInvoiceItemLinkRepository;
+
+        @Test
+        public void completeInvoice_and_completeInvoiceItem_works() {
+            // given
+            IncomingInvoice incomingInvoice = new IncomingInvoice();
+            IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem();
+            invoiceItem.setInvoice(incomingInvoice);
+            invoiceItem.setIncomingInvoiceType(IncomingInvoiceType.CAPEX);
+            incomingInvoice.getItems().add(invoiceItem);
+
+            incomingInvoice.stateTransitionService = mockStateTransitionService;
+            incomingInvoice.orderItemRepository = mockOrderItemRepository;
+            incomingInvoice.orderItemInvoiceItemLinkRepository = mockOrderItemInvoiceItemLinkRepository;
+            incomingInvoice.partyRoleRepository = mockPartyRoleRepository;
+
+            IncomingInvoiceType newIncomingInvoiceType = IncomingInvoiceType.CAPEX;
+            Organisation newSeller = new Organisation();
+            BankAccount newBankAccount = new BankAccount();
+            String newInvoiceNumber = "1234";
+            LocalDate newDateReceived = new LocalDate();
+            LocalDate newInvoiceDate = new LocalDate();
+            LocalDate newDueDate = new LocalDate();
+            PaymentMethod newPaymentMethod = PaymentMethod.DIRECT_DEBIT;
+            Currency newCurrency = new Currency();
+            Order order = new Order();
+            OrderItem newOrderItem = new OrderItem();
+            newOrderItem.setOrdr(order);
+            String newDescription = "Description";
+            BigDecimal newNetAmount = BigDecimal.ONE;
+            BigDecimal newVatAmount = BigDecimal.ONE;
+            Tax newTax = new Tax();
+            BigDecimal newGrossAmount = BigDecimal.ONE;
+            Charge newCharge = new Charge();
+            newOrderItem.setCharge(newCharge);
+            String newPeriod = "F2019";
+
+            // expecting
+            context.checking(new Expectations() {{
+                oneOf(mockPartyRoleRepository).findOrCreate(newSeller, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+                oneOf(mockStateTransitionService).trigger(incomingInvoice, IncomingInvoiceApprovalStateTransition.class, null, null, null);
+            }});
+
+            // when
+            incomingInvoice.completeInvoice(
+                    newIncomingInvoiceType,
+                    newSeller,
+                    Boolean.TRUE,
+                    newBankAccount,
+                    newInvoiceNumber,
+                    newDateReceived,
+                    newInvoiceDate,
+                    newDueDate,
+                    newPaymentMethod,
+                    newCurrency);
+
+            // then
+            assertThat(incomingInvoice.getType()).isEqualTo(newIncomingInvoiceType);
+            assertThat(incomingInvoice.getSeller()).isEqualTo(newSeller);
+            assertThat(incomingInvoice.getBankAccount()).isEqualTo(newBankAccount);
+            assertThat(incomingInvoice.getInvoiceNumber()).isEqualTo(newInvoiceNumber);
+            assertThat(incomingInvoice.getDateReceived()).isEqualTo(newDateReceived);
+            assertThat(incomingInvoice.getInvoiceDate()).isEqualTo(newInvoiceDate);
+            assertThat(incomingInvoice.getDueDate()).isEqualTo(newDueDate);
+            assertThat(incomingInvoice.getPaymentMethod()).isEqualTo(newPaymentMethod);
+            assertThat(incomingInvoice.getCurrency()).isEqualTo(newCurrency);
+
+            // expecting
+            context.checking(new Expectations() {{
+                oneOf(mockOrderItemRepository).findUnique(order, newCharge, 0);
+                will(returnValue(newOrderItem));
+                oneOf(mockOrderItemInvoiceItemLinkRepository).findOrCreateLink(newOrderItem, invoiceItem, BigDecimal.ONE);
+            }});
+
+            //when
+            incomingInvoice.completeInvoiceItem(
+                    newOrderItem,
+                    newDescription,
+                    newNetAmount,
+                    newVatAmount,
+                    newTax,
+                    newGrossAmount,
+                    newCharge,
+                    newPeriod);
+
+            assertThat(incomingInvoice.getDescriptionSummary()).isEqualTo(newDescription);
+            assertThat(incomingInvoice.getItems().first().getDescription()).isEqualTo(newDescription);
+            assertThat(incomingInvoice.getItems().first().getNetAmount()).isEqualTo(newNetAmount);
+            assertThat(incomingInvoice.getItems().first().getVatAmount()).isEqualTo(newVatAmount);
+            assertThat(incomingInvoice.getItems().first().getTax()).isEqualTo(newTax);
+            assertThat(incomingInvoice.getItems().first().getGrossAmount()).isEqualTo(newGrossAmount);
+            assertThat(incomingInvoice.getItems().first().getCharge()).isEqualTo(newCharge);
         }
 
     }
