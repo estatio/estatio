@@ -1278,7 +1278,7 @@ public class IncomingInvoice_Test {
             notification = incomingInvoice.getNotification();
 
             // then
-            assertThat(notification).isEqualTo("WARNING: mismatched types between linked items: an invoice item of type CAPEX is linked to an order item of type PROPERTY_EXPENSES");
+            assertThat(notification).isEqualTo("WARNING: mismatched types between linked items: an invoice item of type PROPERTY_EXPENSES is linked to an order item of type CAPEX");
         }
 
     }
