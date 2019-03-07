@@ -320,6 +320,12 @@ public class EstatioAppHomePage {
                 AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PAYABLE, paymentMethods);
     }
 
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesItaSuspended() {
+        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.SUSPENDED);
+    }
+
 
     ////////////////////////////////////////////////////////////
 

@@ -169,6 +169,9 @@
                             </cpt:collection>
                         </bs3:col>
                         <bs3:col span="4">
+                            <cpt:collection id="incomingInvoicesItaSuspended" paged="15">
+                                <cpt:named>Suspended</cpt:named>
+                            </cpt:collection>
                             <cpt:collection id="incomingInvoicesItaPendingCodaBooks" paged="15">
                                 <cpt:named>Pending Coda Books</cpt:named>
                             </cpt:collection>

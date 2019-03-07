@@ -42,6 +42,7 @@ import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_ap
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_approveWhenApprovedByCenterManager;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_complete;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_noAdvise;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_suspend;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_reject;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.orderinvoice.IncomingInvoiceItem_orderItem;
@@ -1105,6 +1106,66 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
 
         // then
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
+
+    }
+
+    @Test
+    public void suspending_an_invoice_works() throws Exception {
+
+        // given
+        List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice;
+        transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitionsOfInvoice).hasSize(2);
+        assertTransition(transitionsOfInvoice.get(0), new ExpectedTransitionResult(
+                false,
+                null,
+                IncomingInvoiceApprovalState.NEW,
+                null,
+                IncomingInvoiceApprovalStateTransitionType.COMPLETE
+        ));
+        assertThat(transitionsOfInvoice.get(0).getTask()).isNotNull();
+
+        // when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_suspend.class, incomingInvoice)).act("Do not pay for a while"));
+
+        // then
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.SUSPENDED);
+        transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitionsOfInvoice).hasSize(2); // still, no pending transition is created
+        assertTransition(transitionsOfInvoice.get(0), new ExpectedTransitionResult(
+                true,
+                "crigatoni",
+                IncomingInvoiceApprovalState.NEW,
+                IncomingInvoiceApprovalState.SUSPENDED,
+                IncomingInvoiceApprovalStateTransitionType.SUSPEND
+        ));
+
+        // and when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("INCOMING_INVOICE_MANAGER", null, "Time to pay now"));
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
+        transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitionsOfInvoice).hasSize(4);
+        IncomingInvoiceApprovalStateTransition completedTransition = transitionsOfInvoice.get(1);
+        assertTransition(completedTransition, new ExpectedTransitionResult(
+                true,
+                "crigatoni",
+                IncomingInvoiceApprovalState.SUSPENDED,
+                IncomingInvoiceApprovalState.COMPLETED,
+                IncomingInvoiceApprovalStateTransitionType.COMPLETE
+        ));
+        IncomingInvoiceApprovalStateTransition pendingTransition = transitionsOfInvoice.get(0);
+        assertTransition(pendingTransition, new ExpectedTransitionResult(
+                false,
+                null,
+                IncomingInvoiceApprovalState.COMPLETED,
+                null,
+                IncomingInvoiceApprovalStateTransitionType.APPROVE
+        ));
+        assertThat(pendingTransition.getTask()).isNotNull();
 
     }
 

@@ -18,7 +18,8 @@ public enum IncomingInvoiceApprovalState implements State<IncomingInvoiceApprova
     PENDING_CODA_BOOKS_CHECK     (false, false),
     APPROVED_BY_CENTER_MANAGER   (true,  false),
     PENDING_ADVISE               (false, false),
-    ADVISE_POSITIVE              (false,  false)   ;
+    ADVISE_POSITIVE              (false,  false),
+    SUSPENDED                    (false,  false) ;
 
     @Getter
     private final boolean approval;

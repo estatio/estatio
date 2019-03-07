@@ -124,7 +124,10 @@ public enum IncomingInvoiceApprovalStateTransitionType
         }
     },
     COMPLETE(
-            IncomingInvoiceApprovalState.NEW,
+            Lists.newArrayList(
+                    IncomingInvoiceApprovalState.NEW,
+                    IncomingInvoiceApprovalState.SUSPENDED
+            ),
             IncomingInvoiceApprovalState.COMPLETED,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             null, // task assignment strategy overridden below
@@ -188,6 +191,19 @@ public enum IncomingInvoiceApprovalStateTransitionType
             return incomingInvoice.reasonIncomplete();
         }
 
+    },
+    SUSPEND(
+            IncomingInvoiceApprovalState.NEW,
+            IncomingInvoiceApprovalState.SUSPENDED,
+            NextTransitionSearchStrategy.none(),
+            null,
+            AdvancePolicy.MANUAL
+    ){
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+            return  isItalian(domainObject);
+        }
     },
     APPROVE(
             IncomingInvoiceApprovalState.COMPLETED,
