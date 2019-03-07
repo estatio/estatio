@@ -35,7 +35,8 @@ public class IncomingInvoice_reject extends IncomingInvoice_triggerAbstract {
     }
 
     public static class ActionDomainEvent
-            extends IncomingInvoice_triggerAbstract.ActionDomainEvent<IncomingInvoice_reject> {}
+            extends IncomingInvoice_triggerAbstract.ActionDomainEvent<IncomingInvoice_reject> {
+    }
 
     @Action(
             domainEvent = IncomingInvoice_next.ActionDomainEvent.class,
@@ -56,7 +57,8 @@ public class IncomingInvoice_reject extends IncomingInvoice_triggerAbstract {
         }
 
         final IncomingInvoiceApprovalStateTransition transition = trigger(personToAssignNextTo, reason, reason);
-        transition.getTask().setToHighestPriority();
+        if (transition.getTask() != null)
+            transition.getTask().setToHighestPriority();
 
         return objectToReturn();
     }
@@ -76,7 +78,7 @@ public class IncomingInvoice_reject extends IncomingInvoice_triggerAbstract {
         for (PaymentLine paymentLine : paymentLines) {
             final PaymentBatch paymentBatch = paymentLine.getBatch();
             final PaymentBatchApprovalState state = paymentBatch.getApprovalState();
-            if(state != PaymentBatchApprovalState.NEW && state != PaymentBatchApprovalState.DISCARDED) {
+            if (state != PaymentBatchApprovalState.NEW && state != PaymentBatchApprovalState.DISCARDED) {
                 return String.format("Invoice is in batch %s", titleService.titleOf(paymentBatch));
             }
         }
