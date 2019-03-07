@@ -38,21 +38,16 @@ import lombok.Setter;
         @Query(
                 name = "findBySupplier", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.supplier.CodaAddress"
+                        + "FROM org.estatio.module.coda.dom.supplier.CodaAddress "
                         + "WHERE supplier == :supplier "),
         @Query(
                 name = "findBySupplierAndTag", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.supplier.CodaAddress "
                         + "WHERE supplier == :supplier "
-                        + "   && iban     == :tag "),
-        @Query(
-                name = "findByIban", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.supplier.CodaBankAccount "
-                        + "WHERE iban == :iban ")
+                        + "   && tag      == :tag ")
 })
-@Unique(name = "CodaAddress_supplier_iban_UNQ", members = { "supplier", "tag" })
+@Unique(name = "CodaAddress_supplier_tag_UNQ", members = { "supplier", "tag" })
 @DomainObject(
         objectType = "coda.CodaAddress",
         editing = Editing.DISABLED

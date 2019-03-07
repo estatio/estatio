@@ -26,6 +26,33 @@ public class PhoneOrFaxNumberRepository {
     // //////////////////////////////////////
 
     @Programmatic
+    public PhoneOrFaxNumber findPhoneNumberByOwnerAndExternalReference(
+            final CommunicationChannelOwner owner,
+            final String externalReference) {
+
+        final CommunicationChannelType communicationChannelType = CommunicationChannelType.PHONE_NUMBER;
+        return findByOwnerAndExternalReference(communicationChannelType, owner, externalReference);
+    }
+
+    @Programmatic
+    public PhoneOrFaxNumber findFaxNumberByOwnerAndExternalReference(
+            final CommunicationChannelOwner owner,
+            final String externalReference) {
+
+        final CommunicationChannelType communicationChannelType = CommunicationChannelType.FAX_NUMBER;
+        return findByOwnerAndExternalReference(communicationChannelType, owner, externalReference);
+    }
+
+    @Programmatic
+    public PhoneOrFaxNumber findByOwnerAndExternalReference(
+            final CommunicationChannelType communicationChannelType,
+            final CommunicationChannelOwner owner, final String externalReference) {
+        return communicationChannelOwnerLinkRepository.findByOwnerAndCommunicationChannelTypeAndExternalReference(
+                owner, communicationChannelType, PhoneOrFaxNumber.class, externalReference);
+    }
+
+
+    @Programmatic
     public PhoneOrFaxNumber findByPhoneOrFaxNumber(
             final CommunicationChannelOwner owner,
             final String phoneNumber) {
@@ -39,7 +66,8 @@ public class PhoneOrFaxNumberRepository {
         return faxNumberIfFound.orNull();
     }
 
-    private Optional<PhoneOrFaxNumber> findByPhoneOrFaxNumber(final CommunicationChannelOwner owner, final String phoneNumber, final CommunicationChannelType communicationChannelType) {
+    private Optional<PhoneOrFaxNumber> findByPhoneOrFaxNumber(
+            final CommunicationChannelOwner owner, final String phoneNumber, final CommunicationChannelType communicationChannelType) {
         final List<CommunicationChannelOwnerLink> links =
                 communicationChannelOwnerLinkRepository.findByOwnerAndCommunicationChannelType(owner, communicationChannelType);
         final Iterable<PhoneOrFaxNumber> phoneOrFaxNumbers =
@@ -53,6 +81,5 @@ public class PhoneOrFaxNumberRepository {
 
     @Inject
     CommunicationChannelOwnerLinkRepository communicationChannelOwnerLinkRepository;
-
 
 }

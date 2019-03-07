@@ -70,6 +70,10 @@ public class CodaSupplierRepository {
         CodaSupplier codaSupplier = findByReference(reference);
         if (codaSupplier == null) {
             codaSupplier = create(reference, name, shortName, supplier);
+        } else {
+            codaSupplier.setName(name);
+            codaSupplier.setShortName(shortName);
+            codaSupplier.setOrganisation(supplier);
         }
         return codaSupplier;
     }

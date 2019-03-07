@@ -2,10 +2,11 @@ package org.incode.module.communications.dom.impl.commchannel;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.base.dom.TitledEnum;
 import org.incode.module.base.dom.utils.StringUtils;
@@ -17,10 +18,10 @@ public enum CommunicationChannelType implements TitledEnum {
     PHONE_NUMBER(PhoneOrFaxNumber.class), 
     FAX_NUMBER(PhoneOrFaxNumber.class);
 
-    private Class<? extends CommunicationChannel> cls;
+    private Class<? extends CommunicationChannel> implementationClass;
 
-    private CommunicationChannelType(final Class<? extends CommunicationChannel> cls) {
-        this.cls = cls;
+    private CommunicationChannelType(final Class<? extends CommunicationChannel> implementationClass) {
+        this.implementationClass = implementationClass;
     }
 
     public String title() {
@@ -28,12 +29,18 @@ public enum CommunicationChannelType implements TitledEnum {
     }
     
     public static List<CommunicationChannelType> matching(final Class<? extends CommunicationChannel> cls) {
-        return Lists.newArrayList(Iterables.filter(Arrays.asList(values()), new Predicate<CommunicationChannelType>(){
-
-            @Override
-            public boolean apply(final CommunicationChannelType input) {
-                return input.cls == cls;
-            }}));
+        return Lists.newArrayList(
+                Arrays.stream(values())
+                        .filter(input -> input.implementationClass == cls)
+                        .collect(Collectors.toList())
+                );
+    }
+    @Programmatic
+    public void ensureCompatible(final Class<? extends CommunicationChannel> cls) {
+        if(cls != this.implementationClass) {
+            throw new IllegalArgumentException(
+                    String.format("Class '%s' is not compatible with type of '%s'", cls.getSimpleName(), this.name()));
+        }
     }
 
 
