@@ -169,6 +169,7 @@
                                             <cpt:named>Current task</cpt:named>
                                             <cpt:action id="checkPayment"/>
                                             <cpt:action id="complete"/>
+                                            <cpt:action id="suspend"/>
                                             <cpt:action id="approve"/>
                                             <cpt:action id="approveAsCenterManager"/>
                                             <cpt:action id="approveAsCountryDirector"/>

@@ -51,6 +51,7 @@
                                     <cpt:action id="completeIncomingInvoice">
                                         <cpt:named>Complete</cpt:named>
                                     </cpt:action>
+                                    <cpt:action id="suspend"/>
                                     <cpt:action id="approveIncomingInvoice">
                                         <cpt:named>Approve</cpt:named>
                                     </cpt:action>
