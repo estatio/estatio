@@ -381,6 +381,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             return sellerValidation;
         }
 
+        if (!bankAccount.getOwner().equals(seller))
+            return "Bank account needs to be updated when supplier changes"; // default returns current bank account, if supplier is updated without bank account then block
+
         return validateChangePaymentMethod(paymentMethod);
     }
 
