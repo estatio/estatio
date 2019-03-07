@@ -47,6 +47,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseItem_autoSplit;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermForIndexable;
@@ -339,6 +340,39 @@ public class LeaseItem_IntegTest extends LeaseModuleIntegTestAbstract {
             assertThat(leaseTopModelRentItem.findTerm(VT.ld(2012, 7, 15))).isNotNull();
             assertThat(leaseTopModelServiceChargeItem.findTerm(VT.ld(2012, 7, 15))).isNull();
         }
+    }
+
+    public static class AutoSplit extends LeaseModuleIntegTestAbstract {
+
+        private LeaseItem leaseTopModelServiceChargeItem;
+        private LeaseItem leaseTopModelRentItem;
+
+        @Before
+        public void setUp() throws Exception {
+
+            runFixtureScript(LeaseItemForTurnoverRent_enum.OxfTopModel001GbSplit.builder());
+
+        }
+
+        @Test
+        public void auto_split_works() throws Exception {
+
+            // given
+
+            final LeaseItem leaseItem = LeaseItemForTurnoverRent_enum.OxfTopModel001GbSplit.findUsing(serviceRegistry);
+            assertThat(leaseItem.getTerms()).hasSize(2);
+            // when
+
+            wrap(mixin(LeaseItem_autoSplit.class, leaseItem)).autoSplit();
+
+
+            transactionService.nextTransaction();
+
+            // then
+            assertThat(leaseItem.getTerms()).hasSize(5);
+
+        }
+
     }
 
 }

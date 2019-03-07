@@ -57,6 +57,25 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
     }
 
     @Programmatic
+    public Organisation findOrCreateOrganisation(
+            final String reference,
+            final boolean useNumeratorForReference,
+            final String name,
+            final ApplicationTenancy applicationTenancy) {
+
+        final Party party = partyRepository.findPartyByReference(reference);
+        if (party != null){
+            if (party instanceof Organisation){
+                return (Organisation) party;
+            } else {
+                new IllegalArgumentException("This should never happen");
+            }
+
+        }
+        return newOrganisation(reference, useNumeratorForReference, name, applicationTenancy);
+    }
+
+    @Programmatic
     public Organisation newOrganisation(
             final String reference,
             final boolean useNumeratorForReference,
@@ -104,7 +123,6 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
     private NumeratorRepository numeratorRepository;
 
     @Inject
-    PartyRepository partyRepository;
-
+    private PartyRepository partyRepository;
 
 }

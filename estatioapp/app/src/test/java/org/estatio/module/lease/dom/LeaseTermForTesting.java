@@ -25,6 +25,8 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+import lombok.Getter;
+import lombok.Setter;
 
 @Programmatic
 public class LeaseTermForTesting extends LeaseTerm {
@@ -62,6 +64,12 @@ public class LeaseTermForTesting extends LeaseTerm {
         return value;
     }
 
+    @Override public void copyValuesTo(final LeaseTerm target) {
+        if (target instanceof LeaseTermForTesting) {
+            ((LeaseTermForTesting) target).setValue(this.getEffectiveValue());
+        }
+    }
+
     @Override
     public LeaseTermValueType valueType(){
         return leaseTermValueType == null ? LeaseTermValueType.ANNUAL : leaseTermValueType;
@@ -75,15 +83,10 @@ public class LeaseTermForTesting extends LeaseTerm {
 
     private LeaseTermValueType leaseTermValueType;
 
+    @Getter @Setter
     private BigDecimal value;
 
-    public void setValue(final BigDecimal value) {
-        this.value = value;
-    }
-
+    @Getter @Setter
     private BigDecimal adjustedValue;
     
-    public void setAdjustedValue(final BigDecimal adjustedValue) {
-        this.adjustedValue = adjustedValue;
-    }
 }

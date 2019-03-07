@@ -168,6 +168,81 @@ public class LeaseTerm_Test {
 
     }
 
+    public static class Split extends LeaseTerm_Test {
+
+        @Test
+        public void split_ok() {
+
+            LeaseTermRepository ltr = new LeaseTermRepository() {
+                @Override public LeaseTerm newLeaseTerm(final LeaseItem leaseItem, final LeaseTerm previous, final LocalDate startDate, final LocalDate endDate) {
+                    final LeaseTermForTesting leaseTermForTesting = new LeaseTermForTesting(leaseItem, startDate, endDate, null);
+                    previous.setNext(leaseTermForTesting);
+                    leaseTermForTesting.setPrevious(previous);
+                    return leaseTermForTesting;
+                }
+            };
+
+            final LeaseItem leaseItem = new LeaseItem();
+
+            final LocalDate termStartDate = new LocalDate(2018, 1, 1);
+            final LocalDate termEndDate = new LocalDate(2019, 12, 31);
+
+            final LocalDate splitStartDate = new LocalDate(2019, 1, 1);
+
+            //given
+            term = new LeaseTermForTesting(
+                    leaseItem,
+                    new LocalDateInterval(termStartDate, termEndDate, IntervalEnding.INCLUDING_END_DATE),
+                    new BigDecimal(100));
+
+            LeaseTerm nextTerm = new LeaseTermForTesting();
+
+            term.setNext(nextTerm);
+
+            term.leaseTermRepository = ltr;
+
+            //when
+            final LeaseTerm newTerm = term.split(splitStartDate);
+
+            //then
+            assertThat(term.getEndDate()).isEqualTo(LocalDateInterval.endDateFromStartDate(splitStartDate));
+            assertThat(newTerm.getStartDate()).isEqualTo(splitStartDate);
+            assertThat(newTerm.getEndDate()).isEqualTo(termEndDate);
+            assertThat(newTerm.getPrevious()).isEqualTo(term);
+            assertThat(newTerm.getNext()).isEqualTo(nextTerm);
+            assertThat(term.getNext()).isEqualTo(newTerm);
+            assertThat(term.getEffectiveValue()).isEqualTo(newTerm.getEffectiveValue());
+
+        }
+
+        @Test
+        public void validate_when_date_equal_or_before_start_date() {
+            //given
+
+            term = new LeaseTermForTesting(
+                    new LeaseItem(),
+                    new LocalDateInterval(new LocalDate(2018, 1, 1),
+                            new LocalDate(2019, 12, 31), IntervalEnding.INCLUDING_END_DATE),
+                    new BigDecimal(100));
+
+            //when
+            //then
+            assertThat(term.validateSplit(new LocalDate(2018, 1, 2))).isNull();
+            assertThat(term.validateSplit(new LocalDate(2019, 1, 1))).isNull();
+            assertThat(term.validateSplit(new LocalDate(2019, 12, 30))).isNull();
+
+            assertThat(term.validateSplit(new LocalDate(2017, 1, 1))).isNotNull();
+            assertThat(term.validateSplit(new LocalDate(2018, 1, 1))).isNotNull();
+            assertThat(term.validateSplit(new LocalDate(2019, 12, 31))).isNotNull();
+            assertThat(term.validateSplit(new LocalDate(2020, 1, 1))).isNotNull();
+
+        }
+
+
+    }
+
+
+
     public static class Update extends LeaseTerm_Test {
 
         // TODO: the call to update is actually commented out ???

@@ -66,7 +66,7 @@ public final class OrganisationBuilder
 
         ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
 
-        this.object = organisationRepository.newOrganisation(reference, useNumeratorForReference, name, applicationTenancy);
+        this.object = organisationRepository.findOrCreateOrganisation(reference, useNumeratorForReference, name, applicationTenancy);
 
         executionContext.addResult(this, object.getReference(), object);
     }

@@ -35,7 +35,6 @@ import org.estatio.module.lease.dom.LeaseTermFrequency;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.builders.LeaseItemForTurnoverRentBuilder;
 import org.estatio.module.lease.fixtures.leaseitems.builders.LeaseTermForTurnoverRentBuilder;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -64,6 +63,11 @@ public enum LeaseItemForTurnoverRent_enum implements PersonaWithFinder<LeaseItem
         new TermSpec[]{
             new TermSpec(Lease_enum.OxfTopModel001Gb.getStartDate().withDayOfYear(1).plusYears(1), null, null, "7")
         }),
+    OxfTopModel001GbSplit(Lease_enum.OxfTopModel001Gb, bi(1), LeaseItemForRent_enum.OxfTopModel001Gb,
+            new TermSpec[]{
+                    new TermSpec(Lease_enum.OxfTopModel001Gb.getStartDate().withDayOfYear(1).plusYears(1), null, null, "5"),
+                    new TermSpec(Lease_enum.OxfTopModel001Gb.getStartDate().withDayOfYear(1).plusYears(3), Lease_enum.OxfTopModel001Gb.getStartDate().withDayOfYear(1).plusYears(5), null, "6")
+            }),
     ;
 
     private final Lease_enum lease_d;

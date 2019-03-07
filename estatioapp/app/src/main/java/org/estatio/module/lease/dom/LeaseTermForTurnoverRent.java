@@ -48,7 +48,6 @@ import lombok.Setter;
 @javax.jdo.annotations.Discriminator("org.estatio.dom.lease.LeaseTermForTurnoverRent")
 public class LeaseTermForTurnoverRent extends LeaseTerm {
 
-
     @javax.jdo.annotations.Column(allowsNull = "true", length = RentRuleType.Meta.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL, editing = Editing.DISABLED)
     @Getter @Setter

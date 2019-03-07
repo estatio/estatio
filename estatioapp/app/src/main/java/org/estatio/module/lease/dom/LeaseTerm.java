@@ -63,13 +63,13 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.base.dom.with.WithSequence;
 
+import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.module.invoice.dom.InvoiceSource;
 import org.estatio.module.lease.dom.invoicing.InvoiceCalculationService;
 import org.estatio.module.lease.dom.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
-import org.estatio.module.base.dom.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -441,6 +441,48 @@ public abstract class LeaseTerm
         return nextStartDate;
     }
 
+
+    // //////////////////////////////////////
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public LeaseTerm split(
+            final LocalDate splitDate) {
+
+        final LeaseTerm currentPrevous = this.getPrevious();
+        final LeaseTerm currentNext = this.getNext();
+
+        //decouple current next
+        this.setNext(null);
+
+        //create a new term
+        final LocalDate endDate = this.getEndDate();
+        final LeaseTerm newTerm = leaseTermRepository.newLeaseTerm(getLeaseItem(), this, splitDate, endDate);
+        newTerm.setNext(currentNext);
+        this.copyValuesTo(newTerm);
+        newTerm.setStartDate(splitDate); // copy values overwrites these so need to set them again
+        newTerm.setEndDate(endDate); // copy values overwrites these so need to set them again
+
+        //fixup current
+        this.setEndDate(LocalDateInterval.endDateFromStartDate(splitDate));
+
+        return newTerm;
+    }
+
+    public LocalDate default0Split(){
+        return this.nextStartDate();
+    }
+
+    public String validateSplit(
+            final LocalDate startDate) {
+        if (!startDate.isAfter(this.getStartDate())){
+            return "Start date must be after term start date";
+        }
+        if (this.getEndDate() != null && !startDate.isBefore(this.getEndDate())){
+            return "Start date must be before term end date";
+        }
+        return null;
+
+    }
     // //////////////////////////////////////
 
     public LeaseTerm createNext(
