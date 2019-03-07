@@ -2155,7 +2155,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .filter(orderItemInvoiceItemLink -> {
                     IncomingInvoiceType orderItemType = orderItemInvoiceItemLink.getOrderItem().getOrdr().getType();
                     IncomingInvoiceType invoiceItemType = orderItemInvoiceItemLink.getInvoiceItem().getIncomingInvoiceType();
-                    return !orderItemType.equals(invoiceItemType);
+                    return (orderItemType != null && invoiceItemType != null) && !orderItemType.equals(invoiceItemType);
                 })
                 .forEach(link -> sj.add(String.format("an invoice item of type %s is linked to an order item of type %s",
                         link.getInvoiceItem().getIncomingInvoiceType().toString(),
