@@ -383,7 +383,8 @@ public class DocumentTemplate
 
     @Programmatic
     public DocumentTemplateApi getTemplateApi() {
-        // TODO: introduce feature flag to allow revert if necessary
+        // TODO: if there are issues, then revert
+        // return this;
         return getTemplateData();
     }
 
@@ -397,7 +398,8 @@ public class DocumentTemplate
 
     @Programmatic
     public DocumentTypeApi getTypeApi() {
-        // TODO: introduce feature flag to allow revert if necessary
+        // TODO: if there are issues, then revert
+        //return getType();
         return getTypeData();
     }
 
@@ -408,6 +410,7 @@ public class DocumentTemplate
 
     public RenderingStrategyApi getContentRenderingStrategyApi() {
         // TODO: introduce feature flag to allow revert if necessary
+        //return getContentRenderingStrategy();
         return getContentRenderingStrategyData();
     }
 
@@ -418,6 +421,7 @@ public class DocumentTemplate
 
     public RenderingStrategyApi getNameRenderingStrategyApi() {
         // TODO: introduce feature flag to allow revert if necessary
+        //return getNameRenderingStrategy();
         return getNameRenderingStrategyData();
     }
 

@@ -59,7 +59,8 @@ public enum RenderingStrategyData implements RenderingStrategyApi {
     ),
     FMK(
             "RendererForFreemarker Rendering Strategy",
-            DocumentNature.CHARACTERS, DocumentNature.CHARACTERS,
+            DocumentNature.CHARACTERS,
+            DocumentNature.CHARACTERS,
             RendererForFreemarker.class
     ),
     XDP(
