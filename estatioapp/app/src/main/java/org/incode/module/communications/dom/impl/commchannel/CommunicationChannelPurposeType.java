@@ -13,9 +13,9 @@ import lombok.Getter;
 
 public enum CommunicationChannelPurposeType implements TitledEnum, HasManagedIn {
 
-    ACCOUNTING     ("Accounting",      ManagedIn.ESTATIO),
-    INVOICING      ("Invoicing",       ManagedIn.ESTATIO),
-    MANAGED_IN_CODA("Managed In Coda", ManagedIn.CODA);
+    ACCOUNTING ("Accounting", ManagedIn.ESTATIO),
+    INVOICING  ("Invoicing",  ManagedIn.ESTATIO),
+    SUPPLIER   ("Supplier",   ManagedIn.CODA);
 
     private String title;
     @Getter

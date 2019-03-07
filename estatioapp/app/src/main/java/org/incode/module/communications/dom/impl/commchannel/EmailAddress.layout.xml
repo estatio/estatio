@@ -4,7 +4,6 @@
         <col span="12" unreferencedActions="true">
             <cpt:domainObject/>
             <cpt:action id="links"/>
-            <cpt:action id="remove"/>
         </col>
     </row>
     <row>
@@ -14,12 +13,15 @@
                     <row>
                         <col span="12">
                             <cpt:fieldSet name="General" id="general">
+                                <!-- TODO: should rename the action -->
+                                <cpt:action id="remove" cssClassFa="trash" cssClass="btn-danger">
+                                    <cpt:named>Delete</cpt:named>
+                                </cpt:action>
+                                <cpt:action id="change" position="PANEL"/>
                                 <cpt:property id="owner"/>
                                 <cpt:property id="description"/>
                                 <cpt:property id="legal"/>
-                                <cpt:property id="purpose">
-                                    <cpt:action id="change" position="BELOW"/>
-                                </cpt:property>
+                                <cpt:property id="purpose"/>
                                 <cpt:property id="type"/>
                                 <cpt:property id="reference"/>
                                 <cpt:property id="name"/>
@@ -27,11 +29,14 @@
                         </col>
                     </row>
                 </tab>
-                <tab name="Application Level">
+                <tab name="Management">
                     <row>
                         <col span="12">
-                            <cpt:fieldSet name="Application Level" id="applicationLevel">
+                            <cpt:fieldSet name="Management" id="management">
                                 <cpt:property id="atPath"/>
+                                <cpt:property id="managedIn" hidden="ALL_TABLES"/>
+                                <cpt:property id="managedInExternalReference" hidden="ALL_TABLES"/>
+                                <cpt:property id="externalReference" hidden="EVERYWHERE"/>
                             </cpt:fieldSet>
                         </col>
                     </row>
@@ -62,11 +67,19 @@
             </tabGroup>
         </col>
         <col span="6">
-            <cpt:fieldSet name="Email" id="email">
-                <cpt:property id="emailAddress">
-                    <cpt:action id="changeEmailAddress" position="BELOW"/>
-                </cpt:property>
-            </cpt:fieldSet>
+            <tabGroup collapseIfOne="false">
+                <tab name="Details">
+                    <row>
+                        <col span="12">
+                            <cpt:fieldSet name="Email" id="email">
+                                <cpt:property id="emailAddress">
+                                    <cpt:action id="changeEmailAddress" position="BELOW"/>
+                                </cpt:property>
+                            </cpt:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
         </col>
     </row>
     <row>

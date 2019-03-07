@@ -15,27 +15,21 @@
                 <cpt:property id="legal"/>
                 <cpt:property id="owner"/>
                 <cpt:property id="atPath"/>
+                <cpt:property id="managedIn" hidden="ALL_TABLES"/>
+                <cpt:property id="managedInExternalReference" hidden="ALL_TABLES"/>
+                <cpt:property id="externalReference" hidden="EVERYWHERE"/>
             </cpt:fieldSet>
         </col>
     </row>
     <row>
         <col span="12">
-            <tabGroup  unreferencedCollections="true">
+            <tabGroup  unreferencedCollections="true" collapseIfOne="false">
                 <tab name="Communications">
                     <row>
                         <col span="12">
                             <cpt:collection id="recentCommunications">
                                 <cpt:action id="findCommunications"/>
                             </cpt:collection>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="dummyTabToForceFirstTabToAppear2">
-                    <row>
-                        <col span="12">
-                            <cpt:fieldSet name="dummy2">
-                                <cpt:property id="dummy2"/>
-                            </cpt:fieldSet>
                         </col>
                     </row>
                 </tab>
