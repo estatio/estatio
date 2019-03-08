@@ -63,6 +63,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
+import org.estatio.module.capex.dom.invoice.approval.tasks.IncomingInvoice_checkApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_reject;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
@@ -156,7 +157,7 @@ import lombok.Setter;
 })
 @Unique(name = "CodaDocHead_cmpCode_docCode_docNum_UNQ", members = { "cmpCode", "docCode", "docNum" })
 @Indices({
-    @Index(name = "CodaDocHead_codaPeriodQuarter_handling_IDX", members = { "codaPeriodQuarter","handling" })
+        @Index(name = "CodaDocHead_codaPeriodQuarter_handling_IDX", members = { "codaPeriodQuarter", "handling" })
 })
 @DomainObject(
         objectType = "coda.CodaDocHead",
@@ -358,6 +359,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     private SortedSet<CodaDocLine> linesFor() {
         return linesFor(LineCache.DEFAULT);
     }
+
     private SortedSet<CodaDocLine> linesFor(final LineCache lineCache) {
         return lineCache.linesFor(this);
     }
@@ -414,12 +416,12 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     public List<Handling> choices0HandleAs() {
         Handling currentHandling = getHandling();
         switch (currentHandling) {
-        case SYNCED:
-            return Collections.singletonList(Handling.SYNCED);
-        case EXCLUDED:
-        case INCLUDED:
-        default:
-            return Arrays.asList(Handling.INCLUDED, Handling.EXCLUDED);
+            case SYNCED:
+                return Collections.singletonList(Handling.SYNCED);
+            case EXCLUDED:
+            case INCLUDED:
+            default:
+                return Arrays.asList(Handling.INCLUDED, Handling.EXCLUDED);
         }
     }
 
@@ -427,8 +429,8 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
      * Indicates the location of this document.
      *
      * <p>
-     *     Corresponds to typeCtDocUsed, typeCtDocPost, typeCtPayPostDest and similar enums in Coda WSDL,
-     *     max length is 8 ("anywhere")
+     * Corresponds to typeCtDocUsed, typeCtDocPost, typeCtPayPostDest and similar enums in Coda WSDL,
+     * max length is 8 ("anywhere")
      * </p>
      */
     @Column(allowsNull = "true", length = 12)
@@ -440,8 +442,8 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
      * Indicates whether this document is paid.
      *
      * <p>
-     *     Corresponds to <code>typeCtStatPayDocLine</code> enum in Coda WSDL,
-     *     max length is 15 (&quot;draft_available&quot;)
+     * Corresponds to <code>typeCtStatPayDocLine</code> enum in Coda WSDL,
+     * max length is 15 (&quot;draft_available&quot;)
      * </p>
      */
     @Column(allowsNull = "true", length = 20)
@@ -518,7 +520,6 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
 
         revalidateAndKickEstatioObjectsIfAny(errors, syncIfValid);
     }
-
 
     @Programmatic
     public CodaDocHead revalidateOnly() {
@@ -629,7 +630,6 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
 
         this.setIncomingInvoice(incomingInvoice);
 
-
         //
         // we'll create associated documents if an incoming invoice exists,
         // even if the DocHead is now invalid
@@ -697,7 +697,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
                                 stateTransitionService.pendingTransitionOf(incomingInvoice,
                                         IncomingInvoiceApprovalStateTransition.class);
                         Task task = pendingTransition.getTask();
-                        if(task != null) {
+                        if (task != null) {
                             task.setDescription(errors.getText());
                         }
                     }
@@ -705,6 +705,12 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
                     // nothing we can do here; the invoice is in a final state, eg paid.
                 }
             } else {
+                if (incomingInvoice.getPaymentMethod() != PaymentMethod.BANK_TRANSFER) {
+                    final IncomingInvoice_checkApprovalState mixin =
+                            factoryService.mixin(IncomingInvoice_checkApprovalState.class, incomingInvoice);
+
+                    mixin.act();
+                }
                 // no need to do anything, hasn't yet been completed.
             }
         }
@@ -719,52 +725,49 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         final IncomingInvoiceApprovalState incomingInvoiceApprovalState = incomingInvoice.getApprovalState();
         switch (incomingInvoiceApprovalState) {
 
-        case PENDING_CODA_BOOKS_CHECK:
-            if (incomingInvoice.isPostedToCodaBooks()) {
+            case PENDING_CODA_BOOKS_CHECK:
+                if (incomingInvoice.isPostedToCodaBooks()) {
 
-                stateTransitionService.trigger(incomingInvoice,
-                        IncomingInvoiceApprovalStateTransitionType.CONFIRM_IN_CODA_BOOKS,
-                        null, // currentTaskCommentIfAny
-                        null  // nextTaskDescriptionIfAny
-                );
-            }
-            break;
+                    stateTransitionService.trigger(incomingInvoice,
+                            IncomingInvoiceApprovalStateTransitionType.CONFIRM_IN_CODA_BOOKS,
+                            null, // currentTaskCommentIfAny
+                            null  // nextTaskDescriptionIfAny
+                    );
+                }
+                break;
         }
     }
 
     private void tryTransitionToPaidWhenPaidInCoda(final IncomingInvoice incomingInvoice, final CodaDocHead docHead) {
 
-        if ( incomingInvoice == null) {
+        if (incomingInvoice == null) {
             return;
         }
 
         final IncomingInvoiceApprovalState incomingInvoiceApprovalState = incomingInvoice.getApprovalState();
         switch (incomingInvoiceApprovalState) {
 
-        case NEW:
-        case COMPLETED:
-        case PENDING_ADVISE:
-        case ADVISE_POSITIVE:
-        case APPROVED_BY_CENTER_MANAGER:
-        case APPROVED:
-        case APPROVED_BY_COUNTRY_DIRECTOR:
-        case PENDING_CODA_BOOKS_CHECK:
-        case PAYABLE:
-        case PAYABLE_BYPASSING_APPROVAL:
-            if (docHead.isPaid()) {
+            case NEW:
+            case COMPLETED:
+            case PENDING_ADVISE:
+            case ADVISE_POSITIVE:
+            case APPROVED_BY_CENTER_MANAGER:
+            case APPROVED:
+            case APPROVED_BY_COUNTRY_DIRECTOR:
+            case PENDING_CODA_BOOKS_CHECK:
+            case PAYABLE:
+            case PAYABLE_BYPASSING_APPROVAL:
+                if (docHead.isPaid()) {
 
-                stateTransitionService.trigger(incomingInvoice,
-                        IncomingInvoiceApprovalStateTransitionType.PAID_IN_CODA,
-                        null, // currentTaskCommentIfAny
-                        null  // nextTaskDescriptionIfAny
-                );
-            }
-            break;
+                    stateTransitionService.trigger(incomingInvoice,
+                            IncomingInvoiceApprovalStateTransitionType.PAID_IN_CODA,
+                            null, // currentTaskCommentIfAny
+                            null  // nextTaskDescriptionIfAny
+                    );
+                }
+                break;
         }
     }
-
-
-
 
     @Programmatic
     public boolean isValid() {
@@ -781,7 +784,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     @PropertyLayout(hidden = Where.OBJECT_FORMS)
     public PaymentMethod getPaymentMethod() {
         final LineCache lineCache = (LineCache) scratchpad.get(LineCache.class);
-        if(lineCache == null) {
+        if (lineCache == null) {
             return null;
         }
         return getSummaryLinePaymentMethod(LineCache.DEFAULT);
@@ -792,7 +795,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     @PropertyLayout(hidden = Where.OBJECT_FORMS)
     public Character getUserStatus() {
         final LineCache lineCache = (LineCache) scratchpad.get("lineCache");
-        if(lineCache == null) {
+        if (lineCache == null) {
             return null;
         }
         return getSummaryLineUserStatus(lineCache);
@@ -976,23 +979,22 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         return docLine != null ? docLine.getIncomingInvoiceType() : null;
     }
 
-
     @Programmatic
     public void scheduleSyncInBackgroundIfNewAndValid() {
-        if(!isAutosync()) {
+        if (!isAutosync()) {
             return;
         }
-        if(!isValid()) {
+        if (!isValid()) {
             return;
         }
-        if(getIncomingInvoice() != null) {
+        if (getIncomingInvoice() != null) {
             // nothing to do, an invoice already exists.
             return;
         }
 
         // TODO: this really ought to be a responsibility of backgroundService, because
         //       otherwise the target bookmark will be invalid
-        if(!repositoryService.isPersistent(this)) {
+        if (!repositoryService.isPersistent(this)) {
             transactionService.flushTransaction();
         }
         backgroundService.execute(this).syncIfValid();
@@ -1020,7 +1022,6 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     public void syncIfValid() {
         kick();
     }
-
 
     private boolean isAutosync() {
         ApplicationSetting autosyncSetting =
@@ -1060,7 +1061,6 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         }
     }
 
-
     @Programmatic
     public boolean isSameAs(final CodaDocHead other) {
         if (other == null) {
@@ -1070,7 +1070,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
             return true;
         }
         return Objects.equals(getSha256(), other.getSha256()) &&
-               Objects.equals(getStatPay(), other.getStatPay());
+                Objects.equals(getStatPay(), other.getStatPay());
     }
 
     @Programmatic
@@ -1090,9 +1090,9 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
             return Comparison.invalidatesApprovals("Replacement has no summary doc line");
         }
         if (summaryLine != null) {
-            if ( summaryLine.getSupplierBankAccountValidationStatus() != ValidationStatus.NOT_CHECKED &&
-                 otherSummaryLine.getSupplierBankAccountValidationStatus() != ValidationStatus.NOT_CHECKED &&
-                !Objects.equals(summaryLine.getSupplierBankAccount(), otherSummaryLine.getSupplierBankAccount())) {
+            if (summaryLine.getSupplierBankAccountValidationStatus() != ValidationStatus.NOT_CHECKED &&
+                    otherSummaryLine.getSupplierBankAccountValidationStatus() != ValidationStatus.NOT_CHECKED &&
+                    !Objects.equals(summaryLine.getSupplierBankAccount(), otherSummaryLine.getSupplierBankAccount())) {
                 return Comparison.invalidatesApprovals("Supplier bank account has changed");
             }
             if (!Objects.equals(summaryLine.getDocValue(), otherSummaryLine.getDocValue())) {
@@ -1101,9 +1101,9 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
             if (!Objects.equals(summaryLine.getDocSumTax(), otherSummaryLine.getDocSumTax())) {
                 return Comparison.invalidatesApprovals("Doc sum tax (VAT amount) has changed");
             }
-            if ( summaryLine.getMediaCodeValidationStatus() != ValidationStatus.NOT_CHECKED &&
-                 otherSummaryLine.getMediaCodeValidationStatus() != ValidationStatus.NOT_CHECKED &&
-                !Objects.equals(summaryLine.getMediaCode(), otherSummaryLine.getMediaCode())) {
+            if (summaryLine.getMediaCodeValidationStatus() != ValidationStatus.NOT_CHECKED &&
+                    otherSummaryLine.getMediaCodeValidationStatus() != ValidationStatus.NOT_CHECKED &&
+                    !Objects.equals(summaryLine.getMediaCode(), otherSummaryLine.getMediaCode())) {
                 return Comparison.invalidatesApprovals("Media code (payment method) has changed");
             }
             if (!Objects.equals(summaryLine.getDueDate(), otherSummaryLine.getDueDate())) {
@@ -1113,11 +1113,11 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
                 return Comparison.invalidatesApprovals("Value date has changed");
             }
             if (!Strings.isNullOrEmpty(otherSummaryLine.getUserRef1()) &&
-                !Objects.equals(summaryLine.getUserRef1(), otherSummaryLine.getUserRef1())) {
+                    !Objects.equals(summaryLine.getUserRef1(), otherSummaryLine.getUserRef1())) {
                 return Comparison.invalidatesApprovals("User Ref 1 (bar code) has changed");
             }
-            if ( otherSummaryLine.getDescription() != null &&
-                !Objects.equals(summaryLine.getDescription(), otherSummaryLine.getDescription())) {
+            if (otherSummaryLine.getDescription() != null &&
+                    !Objects.equals(summaryLine.getDescription(), otherSummaryLine.getDescription())) {
                 return Comparison.invalidatesApprovals("Description has changed");
             }
         }
@@ -1197,7 +1197,6 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     @NotPersistent
     @Inject
     FactoryService factoryService;
-
 
     @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "100")
     public static class TableColumnService implements TableColumnOrderService {
