@@ -363,8 +363,7 @@ public class LeaseItem_IntegTest extends LeaseModuleIntegTestAbstract {
             assertThat(leaseItem.getTerms()).hasSize(2);
             // when
 
-            wrap(mixin(LeaseItem_autoSplit.class, leaseItem)).autoSplit();
-
+            mixin(LeaseItem_autoSplit.class, leaseItem).autoSplit();
 
             transactionService.nextTransaction();
 
