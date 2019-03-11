@@ -63,6 +63,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.document.dom.api.DocumentService;
 import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
@@ -251,8 +252,8 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
         final TitleBuffer buf = new TitleBuffer();
 
-        final Optional<Document> document = lookupAttachedPdfService.lookupOrderPdfFrom(this);
-        document.ifPresent(d -> buf.append(d.getName()));
+        if (getBarcode() != null)
+            buf.append(getBarcode());
 
         final Party seller = getSeller();
         if (seller != null) {
@@ -1265,6 +1266,12 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         } else {
             return validatorResult;
         }
+    }
+
+    @PropertyLayout(hidden = Where.OBJECT_FORMS)
+    public String getBarcode() {
+        final Optional<Document> document = lookupAttachedPdfService.lookupOrderPdfFrom(this);
+        return document.map(DocumentAbstract::getName).orElse(null);
     }
 
     //region > notification
