@@ -252,8 +252,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
         final TitleBuffer buf = new TitleBuffer();
 
-        if (getBarcode() != null)
-            buf.append(getBarcode());
+        buf.append(getBarcode());
 
         final Party seller = getSeller();
         if (seller != null) {

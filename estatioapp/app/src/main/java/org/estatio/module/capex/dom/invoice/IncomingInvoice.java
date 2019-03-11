@@ -54,6 +54,7 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
@@ -309,8 +310,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     public String title() {
         final TitleBuffer buf = new TitleBuffer();
 
-        final Optional<Document> document = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(this);
-        document.ifPresent(d -> buf.append(d.getName()));
+        buf.append(getBarcode());
 
         final Party seller = getSeller();
         if (seller != null) {
@@ -1532,7 +1532,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         super.setPaymentMethod(invalidateApprovalIfDiffer(getPaymentMethod(), paymentMethod));
     }
 
-    @org.apache.isis.applib.annotation.Property(hidden = Where.ALL_TABLES)
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Getter @Setter
     private BigDecimal netAmount;
@@ -2040,7 +2039,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     }
 
-    @Programmatic
+    @PropertyLayout(hidden = Where.OBJECT_FORMS)
     public String getDescriptionSummary() {
         StringBuffer summary = new StringBuffer();
         boolean first = true;
@@ -2107,6 +2106,12 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .compare(getSeller(), other.getSeller())
                 .compare(getInvoiceNumber(), other.getInvoiceNumber())
                 .result();
+    }
+
+    @PropertyLayout(hidden = Where.OBJECT_FORMS)
+    public String getBarcode() {
+        final Optional<Document> document = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(this);
+        return document.map(DocumentAbstract::getName).orElse(null);
     }
 
     //region > notification

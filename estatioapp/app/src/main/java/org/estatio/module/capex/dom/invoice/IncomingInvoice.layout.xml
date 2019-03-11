@@ -22,9 +22,10 @@
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="General" id="general">
                                         <cpt:action id="verifySupplier" position="PANEL"/>
-                                        <cpt:property id="invoiceNumber">
+                                        <cpt:property id="number">
                                             <cpt:action id="editInvoiceNumber" promptStyle="INLINE" position="RIGHT"/>
                                         </cpt:property>
+                                        <cpt:property id="barcode"/>
                                         <cpt:property id="buyer">
                                             <cpt:action id="editBuyer" promptStyle="INLINE" position="RIGHT"/>
                                         </cpt:property>
@@ -48,8 +49,9 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Application Tenancy">
-                                        <cpt:property id="applicationTenancy"/>
-                                        <cpt:property id="atPath"/>
+                                        <cpt:property id="applicationTenancy" hidden="ALL_TABLES"/>
+                                        <cpt:property id="applicationTenancyPath" hidden="EVERYWHERE"/>
+                                        <cpt:property id="atPath" hidden="ALL_TABLES"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>
