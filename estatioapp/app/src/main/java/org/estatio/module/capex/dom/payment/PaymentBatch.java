@@ -289,24 +289,24 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         return wrapperFactory.wrap(mixin).act(requestedExecutionDate, comment);
     }
 
-    public List<IncomingInvoice> choices0CreateUrgentPaymentBatch() {
+    public List<IncomingInvoice> choices0CreateAndCompleteUrgentPaymentBatch() {
         return getLines()
                 .stream()
                 .map(PaymentLine::getInvoice)
                 .collect(Collectors.toList());
     }
 
-    public DateTime default1CreateUrgentPaymentBatch() {
+    public DateTime default1CreateAndCompleteUrgentPaymentBatch() {
         final PaymentBatch_complete mixin = factoryService.mixin(PaymentBatch_complete.class, this);
         return mixin.default0Act();
     }
 
-    public boolean hideCreateUrgentPaymentBatch() {
+    public boolean hideCreateAndCompleteUrgentPaymentBatch() {
         final PaymentBatch_complete mixin = factoryService.mixin(PaymentBatch_complete.class, this);
         return mixin.hideAct();
     }
 
-    public String disableCreateUrgentPaymentBatch() {
+    public String disableCreateAndCompleteUrgentPaymentBatch() {
         final PaymentBatch_complete mixin = factoryService.mixin(PaymentBatch_complete.class, this);
         return mixin.disableAct();
     }
