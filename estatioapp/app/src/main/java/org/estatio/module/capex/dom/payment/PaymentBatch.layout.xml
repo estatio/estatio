@@ -4,6 +4,7 @@
     <bs3:row>
         <bs3:col span="12" unreferencedActions="true">
             <cpt:domainObject/>
+            <cpt:action id="createAndCompleteUrgentPaymentBatch"/>
             <cpt:action id="downloadPaymentFile"/>
             <cpt:action id="downloadReviewPdf"/>
         </bs3:col>

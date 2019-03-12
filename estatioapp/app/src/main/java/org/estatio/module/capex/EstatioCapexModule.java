@@ -29,6 +29,7 @@ import org.estatio.module.capex.dom.order.approval.OrderApprovalStateTransition;
 import org.estatio.module.capex.dom.order.paperclips.PaperclipForOrder;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.module.capex.dom.payment.PaymentBatch;
+import org.estatio.module.capex.dom.payment.PaymentLine;
 import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalStateTransition;
 import org.estatio.module.capex.dom.project.ProjectItemTerm;
 import org.estatio.module.capex.dom.project.Project;
@@ -121,6 +122,9 @@ public class EstatioCapexModule extends ModuleAbstract {
                         discriminatorValueOf(IncomingInvoice.class)
                 );
                 this.isisJdoSupport.executeUpdate(sql);
+
+                deleteFrom(PaymentLine.class);
+                deleteFrom(PaymentBatch.class);
 
                 deleteFrom(IncomingInvoiceItem.class);
                 deleteFrom(IncomingInvoice.class);
