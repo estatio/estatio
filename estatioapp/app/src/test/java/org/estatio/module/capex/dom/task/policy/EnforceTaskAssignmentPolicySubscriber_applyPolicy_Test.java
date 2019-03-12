@@ -26,6 +26,7 @@ import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.party.dom.role.PartyRole;
 import org.estatio.module.party.dom.role.PartyRoleType;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
+import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,6 +47,8 @@ public class EnforceTaskAssignmentPolicySubscriber_applyPolicy_Test {
     StateTransitionService mockStateTransitionService;
     @Mock
     PersonRepository mockPersonRepository;
+    @Mock
+    PartyRoleTypeRepository mockPartyRoleTypeRepository;
 
     EnforceTaskAssignmentPolicySubscriber subscriber;
 
@@ -57,6 +60,7 @@ public class EnforceTaskAssignmentPolicySubscriber_applyPolicy_Test {
     Task pendingTask;
     Person personTaskAssignedTo;
     PartyRoleType roleTaskAssignedTo;
+    PartyRoleType previousRoleTaskAssignedTo;
 
     Person personForMe;
 
@@ -66,6 +70,7 @@ public class EnforceTaskAssignmentPolicySubscriber_applyPolicy_Test {
         subscriber.stateTransitionService = mockStateTransitionService;
         subscriber.personRepository = mockPersonRepository;
         subscriber.metaModelService3 = mockMetaModelService3;
+        subscriber.partyRoleTypeRepository = mockPartyRoleTypeRepository;
 
         domainObject = new BankAccount();
         stateTransitionClass = BankAccountVerificationStateTransition.class;
@@ -74,6 +79,8 @@ public class EnforceTaskAssignmentPolicySubscriber_applyPolicy_Test {
         personTaskAssignedTo.setReference("JBLOGGS");
         roleTaskAssignedTo = new PartyRoleType();
         roleTaskAssignedTo.setKey("Treasurer");
+        previousRoleTaskAssignedTo = new PartyRoleType();
+        previousRoleTaskAssignedTo.setKey("INCOMING_INVOICE_MANAGER");
 
         pendingTask = new Task(
                 roleTaskAssignedTo, personTaskAssignedTo,
@@ -161,6 +168,7 @@ public class EnforceTaskAssignmentPolicySubscriber_applyPolicy_Test {
         // expecting
         expecting_stateTransitionService_pendingTransitionOf_toReturn(this.pendingTransition);
         expecting_personRepository_me_toReturn(this.personForMe);
+//        expecting_partyRoleRepository_findByKey_toReturn(previousRoleTaskAssignedTo);
 
         // when
         final Optional<String> reasonIfAny = subscriber.applyPolicy(stateTransitionClass, domainObject);
@@ -233,6 +241,13 @@ public class EnforceTaskAssignmentPolicySubscriber_applyPolicy_Test {
         context.checking(new Expectations() {{
             oneOf(mockStateTransitionService).pendingTransitionOf(domainObject, stateTransitionClass);
             will(returnValue(pendingTransition));
+        }});
+    }
+
+    private void expecting_partyRoleRepository_findByKey_toReturn(final PartyRoleType partyRoleType) {
+        context.checking(new Expectations() {{
+            oneOf(mockPartyRoleTypeRepository).findByKey("INCOMING_INVOICE_MANAGER");
+            will(returnValue(partyRoleType));
         }});
     }
 
