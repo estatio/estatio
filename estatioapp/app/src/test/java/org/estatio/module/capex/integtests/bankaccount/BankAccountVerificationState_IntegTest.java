@@ -27,6 +27,8 @@ import org.estatio.module.capex.dom.bankaccount.verification.triggers.BankAccoun
 import org.estatio.module.capex.dom.bankaccount.verification.triggers.BankAccount_rejectProof;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_complete;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.capex.dom.task.TaskRepository;
@@ -93,10 +95,10 @@ public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTest
 
         bankAccount = BankAccount_enum.TopModelFr.findUsing(serviceRegistry);
 
-        incomingInvoice = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate("65432", seller, new LocalDate(2014,5,13));
+        incomingInvoice = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate("65432", seller, new LocalDate(2014, 5, 13));
         incomingInvoice.setBankAccount(bankAccount);
 
-        assertState(bankAccount, NOT_VERIFIED);
+        assertBankAccountState(bankAccount, NOT_VERIFIED);
 
     }
 
@@ -108,9 +110,14 @@ public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTest
 
         // given
         Person personBrunoTreasurer = Person_enum.BrunoTreasurerFr.findUsing(serviceRegistry);
+        Person personBertrandIncomingInvoiceManager = Person_enum.BertrandIncomingInvoiceManagerFr.findUsing(serviceRegistry);
         PartyRoleType typeForTreasurer = partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.TREASURER.getKey());
         PartyRoleType typeForIncInvoiceManager = partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.getKey());
         assertThat(taskRepository.findIncompleteByRole(typeForIncInvoiceManager).size()).isEqualTo(2);
+
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(personBertrandIncomingInvoiceManager.getUsername(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
 
         // when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
@@ -118,30 +125,31 @@ public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTest
                 wrap(mixin(BankAccount_rejectProof.class, bankAccount)).act("PROPERTY_MANAGER", null, "NO GOOD"));
 
         // then
-        assertState(bankAccount, BankAccountVerificationState.AWAITING_PROOF);
+        assertBankAccountState(bankAccount, BankAccountVerificationState.AWAITING_PROOF);
         assertThat(taskRepository.findIncompleteByRole(typeForTreasurer).size()).isEqualTo(0);
-        assertThat(taskRepository.findIncompleteByRole(typeForIncInvoiceManager).size()).isEqualTo(3);
-
-        // and given
-        Person bertrandPropManager = Person_enum.BertrandIncomingInvoiceManagerFr.findUsing(serviceRegistry);
+        assertThat(taskRepository.findIncompleteByRole(typeForIncInvoiceManager).size()).isEqualTo(2);
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
 
         // and when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(bertrandPropManager.getUsername(), (Runnable) () ->
+        sudoService.sudo(personBertrandIncomingInvoiceManager.getUsername(), (Runnable) () ->
                 wrap(mixin(BankAccount_discard.class, bankAccount)).act("DISCARDING"));
 
+        transactionService.nextTransaction();
+
         // then
-        assertState(bankAccount, BankAccountVerificationState.DISCARDED);
+        assertBankAccountState(bankAccount, BankAccountVerificationState.DISCARDED);
         assertThat(taskRepository.findIncompleteByRole(typeForTreasurer).size()).isEqualTo(0);
         assertThat(taskRepository.findIncompleteByRole(typeForIncInvoiceManager).size()).isEqualTo(2);
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.NEW);
 
         // and when 'resurrecting'
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(bertrandPropManager.getUsername(), (Runnable) () ->
+        sudoService.sudo(personBertrandIncomingInvoiceManager.getUsername(), (Runnable) () ->
                 wrap(mixin(BankAccount_proofUpdated.class, bankAccount)).act("TREASURER", null, null));
 
         // then
-        assertState(bankAccount, BankAccountVerificationState.NOT_VERIFIED);
+        assertBankAccountState(bankAccount, BankAccountVerificationState.NOT_VERIFIED);
         assertThat(taskRepository.findIncompleteByRole(typeForTreasurer).size()).isEqualTo(1);
         assertThat(taskRepository.findIncompleteByRole(typeForIncInvoiceManager).size()).isEqualTo(2);
 
@@ -150,12 +158,12 @@ public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTest
         sudoService.sudo(personBrunoTreasurer.getUsername(), (Runnable) () ->
                 wrap(mixin(BankAccount_discard.class, bankAccount)).act("DISCARDING"));
 
-        assertState(bankAccount, BankAccountVerificationState.DISCARDED);
+        assertBankAccountState(bankAccount, BankAccountVerificationState.DISCARDED);
         assertThat(taskRepository.findIncompleteByRole(typeForTreasurer).size()).isEqualTo(0);
 
     }
 
-    void assertState(final BankAccount bankAccount, final BankAccountVerificationState expected) {
+    void assertBankAccountState(final BankAccount bankAccount, final BankAccountVerificationState expected) {
         assertThat(wrap(mixin(BankAccount_verificationState.class, bankAccount)).prop()).isEqualTo(
                 expected);
     }
