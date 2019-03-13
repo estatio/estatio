@@ -334,7 +334,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final IncomingInvoiceType incomingInvoiceType,
             final Party seller,
             final @Nullable Boolean createRoleIfRequired,
-            final BankAccount bankAccount,
+            final @Nullable BankAccount bankAccount,
             final String invoiceNumber,
             final LocalDate dateReceived,
             final LocalDate invoiceDate,
@@ -382,8 +382,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             return sellerValidation;
         }
 
-        if (!bankAccount.getOwner().equals(seller))
+        if (bankAccount != null && !bankAccount.getOwner().equals(seller))
             return "Bank account needs to be updated when supplier changes"; // default returns current bank account, if supplier is updated without bank account then block
+
+        if (paymentMethod == PaymentMethod.BANK_TRANSFER && bankAccount == null)
+            return "Bank account is mandatory if payment method is set to bank transfer";
 
         return validateChangePaymentMethod(paymentMethod);
     }
@@ -457,7 +460,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(named = "Complete Invoice Item", promptStyle = PromptStyle.DIALOG_SIDEBAR)
     public IncomingInvoice completeInvoiceItemWithBudgetItem(
-            final OrderItem orderItem,
+            final @Nullable OrderItem orderItem,
             final String description,
             final BigDecimal netAmount,
             final BigDecimal vatAmount,
@@ -538,7 +541,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(named = "Complete Invoice Item", promptStyle = PromptStyle.DIALOG_SIDEBAR)
     public IncomingInvoice completeInvoiceItemWithProject(
-            final OrderItem orderItem,
+            final @Nullable OrderItem orderItem,
             final String description,
             final BigDecimal netAmount,
             final BigDecimal vatAmount,
@@ -627,7 +630,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(named = "Complete Invoice Item", promptStyle = PromptStyle.DIALOG_SIDEBAR)
     public IncomingInvoice completeInvoiceItem(
-            final OrderItem orderItem,
+            final @Nullable OrderItem orderItem,
             final String description,
             final BigDecimal netAmount,
             final BigDecimal vatAmount,
