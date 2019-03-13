@@ -33,6 +33,9 @@ import org.estatio.module.capex.EstatioCapexModule;
 import org.estatio.module.coda.dom.costcentre.CostCentre;
 import org.estatio.module.coda.dom.doc.CodaDocHead;
 import org.estatio.module.coda.dom.doc.CodaDocLine;
+import org.estatio.module.coda.dom.supplier.CodaAddress;
+import org.estatio.module.coda.dom.supplier.CodaBankAccount;
+import org.estatio.module.coda.dom.supplier.CodaSupplier;
 import org.estatio.module.lease.EstatioLeaseModule;
 import org.estatio.module.settings.EstatioSettingsModule;
 
@@ -66,6 +69,10 @@ public final class EstatioCodaModule extends ModuleAbstract {
                 deleteFrom(CodaDocLine.class);
                 deleteFrom(CodaDocHead.class);
                 deleteFrom(CostCentre.class);
+
+                deleteFrom(CodaAddress.class);
+                deleteFrom(CodaBankAccount.class);
+                deleteFrom(CodaSupplier.class);
             }
 
         };

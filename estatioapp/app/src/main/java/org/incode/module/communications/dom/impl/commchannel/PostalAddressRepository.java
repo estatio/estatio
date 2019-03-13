@@ -31,6 +31,15 @@ public class PostalAddressRepository {
     // //////////////////////////////////////
 
     @Programmatic
+    public PostalAddress findByOwnerAndExternalReference(
+            final CommunicationChannelOwner owner,
+            final String externalReference) {
+
+        return communicationChannelOwnerLinkRepository.findByOwnerAndCommunicationChannelTypeAndExternalReference(
+                owner, CommunicationChannelType.POSTAL_ADDRESS, PostalAddress.class, externalReference );
+    }
+
+    @Programmatic
     public PostalAddress findByAddress(
             final CommunicationChannelOwner owner, 
             final String address1, 
@@ -38,6 +47,7 @@ public class PostalAddressRepository {
             final String city, 
             final Country country) {
 
+        // TODO: rewrite to use JDK8 streams
         final List<CommunicationChannelOwnerLink> links =
                 communicationChannelOwnerLinkRepository.findByOwnerAndCommunicationChannelType(owner, CommunicationChannelType.POSTAL_ADDRESS);
         final Iterable<PostalAddress> postalAddresses =
@@ -75,6 +85,5 @@ public class PostalAddressRepository {
 
     @Inject
     CommunicationChannelOwnerLinkRepository communicationChannelOwnerLinkRepository;
-
 
 }

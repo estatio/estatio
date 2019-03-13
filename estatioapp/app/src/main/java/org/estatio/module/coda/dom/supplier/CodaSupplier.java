@@ -104,6 +104,33 @@ public class CodaSupplier implements Comparable<CodaSupplier> {
         return codaBankAccountRepository.upsert(this, iban, bic);
     }
 
+    @javax.jdo.annotations.Persistent(mappedBy = "supplier", defaultFetchGroup = "false")
+    @CollectionLayout(defaultView = "table", paged = 999)
+    @Getter @Setter
+    private SortedSet<CodaAddress> addresses = new TreeSet<>();
+
+    @Programmatic
+    public CodaAddress upsertAddress(
+            final short tag,
+            final String name,
+            boolean defaultAddress,
+            String address1,
+            String address2,
+            String address3,
+            String address4,
+            String address5,
+            String address6,
+            String postCode,
+            String tel,
+            String fax,
+            String country,
+            String language,
+            String category,
+            String eMail) {
+        return codaAddressRepository.upsert(this, tag, name, defaultAddress, address1, address2, address3, address4, address5, address6, postCode, tel, fax, country, language, category, eMail);
+    }
+
+
     //region > compareTo, toString
     @Override
     public int compareTo(final CodaSupplier other) {
@@ -123,4 +150,6 @@ public class CodaSupplier implements Comparable<CodaSupplier> {
 
     @Inject
     CodaBankAccountRepository codaBankAccountRepository;
+    @Inject
+    CodaAddressRepository codaAddressRepository;
 }

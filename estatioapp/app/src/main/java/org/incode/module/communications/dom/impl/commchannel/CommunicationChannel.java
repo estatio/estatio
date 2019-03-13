@@ -1,5 +1,6 @@
 package org.incode.module.communications.dom.impl.commchannel;
 
+import java.util.List;
 import java.util.SortedSet;
 
 import javax.inject.Inject;
@@ -31,6 +32,8 @@ import org.apache.isis.applib.util.ObjectContracts;
 
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
+import org.incode.module.base.dom.managed.HasManagedInAndExternalReference;
+import org.incode.module.base.dom.managed.ManagedIn;
 import org.incode.module.base.dom.types.DescriptionType;
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.base.dom.with.WithCodeGetter;
@@ -76,7 +79,7 @@ import lombok.Setter;
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public abstract class CommunicationChannel
         implements Comparable<CommunicationChannel>,
-        HasAtPath,
+        HasAtPath, HasManagedInAndExternalReference,
         WithNameGetter, WithReferenceGetter {
 
     // //////////////////////////////////////
@@ -199,6 +202,22 @@ public abstract class CommunicationChannel
     }
 
 
+    /**
+     * Inferred from {@link #getPurpose()}.
+     */
+    @Override
+    public ManagedIn getManagedIn() {
+        return getPurpose() != null ? getPurpose().getManagedIn() : null;
+    }
+
+    /**
+     * Inferred from {@link #getExternalReference()}, but only if {@link #getManagedIn()} is also known.
+     */
+    @Override
+    public String getManagedInExternalReference() {
+        return getManagedIn() != null ? getExternalReference() : null;
+    }
+
     // //////////////////////////////////////
 
     @Property(hidden = Where.OBJECT_FORMS)
@@ -253,6 +272,21 @@ public abstract class CommunicationChannel
     @Getter @Setter
     private String reference;
 
+    /**
+     * To keep track of CommunicationChannels that are managed by external systems.
+     *
+     * <p>
+     * The meaning of this id is opaque to Estatio.
+     * In the case of CODA-managed communication channels, this field holds the "tag",
+     * and is unique only within a ({@link #getOwner() owner}, {@link #getType() type}) pair.
+     * </p>
+     */
+    @javax.jdo.annotations.Column(allowsNull = "true", length = 18)
+    @Property
+    @Getter @Setter
+    private String externalReference;
+
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(length = DescriptionType.Meta.MAX_LEN)
@@ -271,6 +305,7 @@ public abstract class CommunicationChannel
     @Column(allowsNull = "true", length = CommunicationChannelPurposeType.Meta.MAX_LEN)
     @Getter @Setter
     private CommunicationChannelPurposeType purpose;
+
 
     // //////////////////////////////////////
 
@@ -298,6 +333,9 @@ public abstract class CommunicationChannel
 
     public CommunicationChannelPurposeType default2Change() {
         return getPurpose();
+    }
+    public List<CommunicationChannelPurposeType> choices2Change() {
+        return CommunicationChannelPurposeType.managedIn(ManagedIn.ESTATIO);
     }
 
 

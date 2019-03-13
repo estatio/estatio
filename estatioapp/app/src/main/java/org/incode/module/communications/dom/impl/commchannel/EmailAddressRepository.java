@@ -26,6 +26,15 @@ public class EmailAddressRepository {
     // //////////////////////////////////////
 
     @Programmatic
+    public EmailAddress findByOwnerAndExternalReference(
+            final CommunicationChannelOwner owner,
+            final String externalReference) {
+
+        return communicationChannelOwnerLinkRepository.findByOwnerAndCommunicationChannelTypeAndExternalReference(
+                owner, CommunicationChannelType.EMAIL_ADDRESS, EmailAddress.class, externalReference );
+    }
+
+    @Programmatic
     public EmailAddress findByEmailAddress(
             final CommunicationChannelOwner owner, 
             final String emailAddress) {

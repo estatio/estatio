@@ -1,6 +1,7 @@
 package org.incode.module.communications.dom.impl.commchannel;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.PostConstruct;
 
@@ -90,6 +91,25 @@ public class CommunicationChannelOwnerLinkRepository {
                         "ownerObjectType", bookmark.getObjectType(),
                         "ownerIdentifier", bookmark.getIdentifier(),
                         "communicationChannelType", communicationChannelType));
+    }
+
+    @Programmatic
+    public <T extends CommunicationChannel> T findByOwnerAndCommunicationChannelTypeAndExternalReference(
+            final CommunicationChannelOwner owner,
+            final CommunicationChannelType communicationChannelType,
+            final Class<T> communicationChannelClass,
+            final String externalReference) {
+
+        communicationChannelType.ensureCompatible(communicationChannelClass);
+
+        return findByOwnerAndCommunicationChannelType(
+                owner, communicationChannelType)
+                .stream()
+                .map(CommunicationChannelOwnerLink::getCommunicationChannel)
+                .filter(cc -> Objects.equals(cc.getExternalReference(), externalReference))
+                .map(communicationChannelClass::cast)
+                .findFirst()
+                .orElse(null);
     }
     //endregion
 
