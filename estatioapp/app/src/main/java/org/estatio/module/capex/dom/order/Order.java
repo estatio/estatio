@@ -107,6 +107,7 @@ import org.estatio.module.tax.dom.Tax;
 
 import lombok.Getter;
 import lombok.Setter;
+import static org.estatio.module.capex.dom.util.CountryUtil.isItalian;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
@@ -1295,7 +1296,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public boolean hideNotification() {
-        return getNotification() == null;
+        return isItalian(this) || getNotification() == null;
     }
 
     String doubleOrderCheck() {

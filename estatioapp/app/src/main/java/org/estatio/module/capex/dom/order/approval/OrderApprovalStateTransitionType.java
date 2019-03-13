@@ -22,6 +22,7 @@ import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 
 import lombok.Getter;
+import static org.estatio.module.capex.dom.util.CountryUtil.isItalian;
 
 @Getter
 public enum OrderApprovalStateTransitionType
@@ -203,10 +204,6 @@ public enum OrderApprovalStateTransitionType
         @Inject
         OrderApprovalStateTransition.Repository repository;
 
-    }
-
-    static boolean isItalian(final Order order) {
-        return order.getAtPath() !=null && order.getAtPath().startsWith("/ITA");
     }
 
 }

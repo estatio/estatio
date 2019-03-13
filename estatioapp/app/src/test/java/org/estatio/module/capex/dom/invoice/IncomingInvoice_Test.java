@@ -180,7 +180,6 @@ public class IncomingInvoice_Test {
 
             // given
             validator = new IncomingInvoice.Validator();
-            invoice = new IncomingInvoice();
             // when
             invoice.setType(IncomingInvoiceType.CAPEX);
             result = validator.validateForIncomingInvoiceType(invoice).getResult();
@@ -189,7 +188,7 @@ public class IncomingInvoice_Test {
 
             // given
             validator = new IncomingInvoice.Validator();
-            invoice = new IncomingInvoice();
+
             // when
             invoice.setType(IncomingInvoiceType.PROPERTY_EXPENSES);
             result = validator.validateForIncomingInvoiceType(invoice).getResult();
@@ -198,7 +197,7 @@ public class IncomingInvoice_Test {
 
             // given
             validator = new IncomingInvoice.Validator();
-            invoice = new IncomingInvoice();
+
             // when
             invoice.setType(IncomingInvoiceType.SERVICE_CHARGES);
             result = validator.validateForIncomingInvoiceType(invoice).getResult();
@@ -207,7 +206,7 @@ public class IncomingInvoice_Test {
 
             // given
             validator = new IncomingInvoice.Validator();
-            invoice = new IncomingInvoice();
+
             // and when all conditions satisfied
             invoice.setType(IncomingInvoiceType.LOCAL_EXPENSES);
             result = validator.validateForIncomingInvoiceType(invoice).getResult();
@@ -248,7 +247,7 @@ public class IncomingInvoice_Test {
 
             // given
             validator = new IncomingInvoice.Validator();
-            invoice = new IncomingInvoice();
+
             // when
             invoice.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
             result = validator.validateForPaymentMethod(invoice).getResult();
@@ -310,7 +309,6 @@ public class IncomingInvoice_Test {
 
             // given
             validator = new IncomingInvoice.Validator();
-            invoice = new IncomingInvoice();
             invoice.setNetAmount(new BigDecimal("100.00"));
             invoice.setGrossAmount(new BigDecimal("100.00"));
 
@@ -357,7 +355,6 @@ public class IncomingInvoice_Test {
 
             // given
             validator = new IncomingInvoice.Validator();
-            invoice = new IncomingInvoice();
             Organisation seller = new Organisation();
             invoice.setSeller(seller);
             Organisation bankAccountOwner = new Organisation();

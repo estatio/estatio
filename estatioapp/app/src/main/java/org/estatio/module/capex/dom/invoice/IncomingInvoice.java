@@ -82,6 +82,7 @@ import org.estatio.module.capex.dom.state.StateTransition;
 import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.state.StateTransitionType;
 import org.estatio.module.capex.dom.state.Stateful;
+import org.estatio.module.capex.dom.util.CountryUtil;
 import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.charge.dom.Applicability;
 import org.estatio.module.charge.dom.Charge;
@@ -388,7 +389,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public boolean hideCompleteInvoice() {
-        if (isItalian())
+        if (CountryUtil.isItalian(this))
             return true;
 
         Optional<Document> documentIfAny = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(this);
@@ -524,7 +525,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public boolean hideCompleteInvoiceItemWithBudgetItem() {
-        if (isItalian())
+        if (CountryUtil.isItalian(this))
             return true;
 
         return getType() != IncomingInvoiceType.SERVICE_CHARGES && getType() != IncomingInvoiceType.ITA_RECOVERABLE;
@@ -613,7 +614,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public boolean hideCompleteInvoiceItemWithProject() {
-        if (isItalian())
+        if (CountryUtil.isItalian(this))
             return true;
 
         return getType() != IncomingInvoiceType.CAPEX;
@@ -678,7 +679,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public boolean hideCompleteInvoiceItem() {
-        if (isItalian())
+        if (CountryUtil.isItalian(this))
             return true;
 
         return getType() == IncomingInvoiceType.SERVICE_CHARGES || getType() == IncomingInvoiceType.ITA_RECOVERABLE || getType() == IncomingInvoiceType.CAPEX;
@@ -1440,7 +1441,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String disableEditProperty() {
-        return isItalian() ? "Editing is disabled" : "Property can only be edited by recategorising invoice";
+        return CountryUtil.isItalian(this) ? "Editing is disabled" : "Property can only be edited by recategorising invoice";
     }
 
     /**
@@ -1633,7 +1634,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String disableEditBuyer() {
-        return isItalian() ? "Editing is disabled" : "Buyer is not editable; discard invoice and rescan document with appropriate barcode instead";
+        return CountryUtil.isItalian(this) ? "Editing is disabled" : "Buyer is not editable; discard invoice and rescan document with appropriate barcode instead";
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -1894,7 +1895,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 return this;
             if (incomingInvoice.getType() == null)
                 return this;
-            if (incomingInvoice.isItalian())
+            if (CountryUtil.isItalian(incomingInvoice))
                 return this; //ECP-896 Italian invoice of type CAPEX do not require a property
 
             String message;
@@ -2094,12 +2095,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return summary.toString();
     }
 
-    @Programmatic
-    public boolean isItalian() {
-        final String atPath = getApplicationTenancyPath();
-        return atPath != null && atPath.startsWith("/ITA");
-    }
-
     @Override
     public int compareTo(final IncomingInvoice other) {
         return ComparisonChain.start()
@@ -2145,7 +2140,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public boolean hideNotification() {
-        return getNotification() == null;
+        return CountryUtil.isItalian(this) || getNotification() == null;
     }
 
     @Programmatic

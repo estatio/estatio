@@ -29,6 +29,7 @@ import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.capex.dom.state.StateTransitionService;
+import org.estatio.module.capex.dom.util.CountryUtil;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.dom.CurrencyRepository;
 import org.estatio.module.financial.dom.BankAccount;
@@ -320,18 +321,17 @@ public class IncomingInvoiceRepository {
         final IncomingInvoiceApprovalState approvalStateAfterPersisting = invoice.getApprovalState();
         if(approvalStateAfterPersisting == IncomingInvoiceApprovalStateTransitionType.INSTANTIATE.getToState()) {
 
-            final boolean isItalian = invoice.getAtPath().startsWith("/ITA");
             final boolean isPaid = invoice.getPaidDate() != null;
             final boolean noApprovalNeededForPaymentMethod =
                     invoice.getPaymentMethod() != null && invoice.getPaymentMethod().requiresNoApprovalInItaly();
 
             final IncomingInvoiceApprovalStateTransitionType transitionType;
             // italian invoices that do not require approval
-            if (isItalian && noApprovalNeededForPaymentMethod) {
+            if (CountryUtil.isItalian(invoice) && noApprovalNeededForPaymentMethod) {
                 transitionType = IncomingInvoiceApprovalStateTransitionType.INSTANTIATE_TO_PAYABLE;
             } else {
                 // italian invoices that are paid already
-                if (isItalian && isPaid) {
+                if (CountryUtil.isItalian(invoice) && isPaid) {
                     transitionType = IncomingInvoiceApprovalStateTransitionType.INSTANTIATE_BYPASSING_APPROVAL;
                 } else {
                     // normal case

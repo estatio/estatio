@@ -37,6 +37,7 @@ import org.estatio.module.party.dom.role.PartyRole;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 
 import lombok.Getter;
+import static org.estatio.module.capex.dom.util.CountryUtil.isItalian;
 
 @Getter
 public enum IncomingInvoiceApprovalStateTransitionType
@@ -745,10 +746,6 @@ public enum IncomingInvoiceApprovalStateTransitionType
 
     static boolean isPaidInCoda(final IncomingInvoice incomingInvoice){
         return incomingInvoice.getPaidDate() != null;
-    }
-
-    static boolean isItalian(final IncomingInvoice incomingInvoice) {
-        return incomingInvoice.getAtPath() !=null && incomingInvoice.getAtPath().startsWith("/ITA");
     }
 
     static boolean hasGrossAmountAboveThreshold(final IncomingInvoice incomingInvoice) {

@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.util.CountryUtil;
 import org.estatio.module.coda.dom.doc.CodaDocHead;
 import org.estatio.module.coda.dom.doc.CodaDocHeadRepository;
 
@@ -29,7 +30,7 @@ public class IncomingInvoice_codaDocHead {
         return codaDocHeadRepository.findByIncomingInvoice(incomingInvoice);
     }
     public boolean hideProp() {
-        return !incomingInvoice.isItalian();
+        return !CountryUtil.isItalian(incomingInvoice);
     }
 
     @Inject

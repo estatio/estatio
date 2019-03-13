@@ -49,6 +49,7 @@ import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
+import org.estatio.module.capex.dom.util.CountryUtil;
 import org.estatio.module.capex.dom.util.FinancialAmountUtil;
 import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.charge.dom.Applicability;
@@ -857,7 +858,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
 
         Validator validateForIncomingInvoiceType(IncomingInvoiceItem incomingInvoiceItem){
             if (incomingInvoiceItem == null) return this;
-            if (incomingInvoiceItem.getIncomingInvoice().isItalian()) return this; // ECP-878: not applicable for italian invoices
+            if (CountryUtil.isItalian(incomingInvoiceItem.getIncomingInvoice())) return this; // ECP-878: not applicable for italian invoices
             if (incomingInvoiceItem.getIncomingInvoiceType() == null) return this;
 
             String message;

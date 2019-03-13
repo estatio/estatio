@@ -65,6 +65,7 @@ import org.estatio.module.tax.dom.Tax;
 
 import lombok.Getter;
 import lombok.Setter;
+import static org.estatio.module.capex.dom.util.CountryUtil.isItalian;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
@@ -560,7 +561,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
                 message = "either project or budget item - not both";
                 setResult(result == null ? message : result.concat(", ").concat(message));
             }
-            if (!isItalian(orderItem) && orderItem.getProject() != null && orderItem.getProperty() == null) {
+            if (!isItalian(orderItem.getOrdr()) && orderItem.getProject() != null && orderItem.getProperty() == null) {
                 message = "when project filled in then property";
                 setResult(result == null ? message : result.concat(", ").concat(message));
             }
@@ -571,17 +572,13 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
             return this;
         }
 
-        Validator checkGrossAmountForNonItaOnly(OrderItem orderItem){
-            if (!isItalian(orderItem)){
-                if (orderItem.getGrossAmount()==null) {
+        Validator checkGrossAmountForNonItaOnly(OrderItem orderItem) {
+            if (!isItalian(orderItem.getOrdr())) {
+                if (orderItem.getGrossAmount() == null) {
                     setResult(result == null ? "gross amount" : result.concat(", ").concat("gross amount"));
                 }
             }
             return this;
-        }
-
-        private boolean isItalian(final OrderItem orderItem) {
-            return orderItem.getOrdr().getAtPath().startsWith("/ITA");
         }
 
     }

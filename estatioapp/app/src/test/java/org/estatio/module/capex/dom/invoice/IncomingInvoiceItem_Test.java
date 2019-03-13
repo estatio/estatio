@@ -255,7 +255,12 @@ public class IncomingInvoiceItem_Test {
             // given
             validator = new IncomingInvoiceItem.Validator();
             item = new IncomingInvoiceItem();
-            item.setInvoice(new IncomingInvoice());
+            item.setInvoice(new IncomingInvoice(){
+                @Override
+                public String getAtPath() {
+                    return "/FRA";
+                }
+            });
             item.setBudgetItem(new BudgetItem());
 
             // when
@@ -303,7 +308,12 @@ public class IncomingInvoiceItem_Test {
             // and given
             validator = new IncomingInvoiceItem.Validator();
             item = new IncomingInvoiceItem();
-            item.setInvoice(new IncomingInvoice());
+            item.setInvoice(new IncomingInvoice(){
+                @Override
+                public String getAtPath() {
+                    return "/FRA";
+                }
+            });
             item.setProject(new Project());
             // when
             item.setIncomingInvoiceType(IncomingInvoiceType.SERVICE_CHARGES);
@@ -352,7 +362,12 @@ public class IncomingInvoiceItem_Test {
             // and given
             validator = new IncomingInvoiceItem.Validator();
             item = new IncomingInvoiceItem();
-            item.setInvoice(new IncomingInvoice());
+            item.setInvoice(new IncomingInvoice(){
+                @Override
+                public String getAtPath() {
+                    return "/FRA";
+                }
+            });
             item.setProject(new Project());
             item.setBudgetItem(new BudgetItem());
             // when
@@ -389,7 +404,12 @@ public class IncomingInvoiceItem_Test {
             // and given
             validator = new IncomingInvoiceItem.Validator();
             item = new IncomingInvoiceItem();
-            item.setInvoice(new IncomingInvoice());
+            item.setInvoice(new IncomingInvoice(){
+                @Override
+                public String getAtPath() {
+                    return "/FRA";
+                }
+            });
             item.setProject(new Project());
             item.setBudgetItem(new BudgetItem());
             // when
