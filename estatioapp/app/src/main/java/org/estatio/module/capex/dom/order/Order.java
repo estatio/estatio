@@ -487,6 +487,9 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         if (project != null && project.isParentProject())
             return "Parent project is not allowed";
 
+        if (project != null && getType() != IncomingInvoiceType.CAPEX)
+            return "Project can only be added to orders of type CAPEX";
+
         return period != null ? PeriodUtil.reasonInvalidPeriod(period) : null;
     }
 
