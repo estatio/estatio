@@ -62,7 +62,7 @@ public class RendererModelFactoryForOrder extends RendererModelFactoryAbstract<O
                 .orderModel(newOrderModel(order))
                 .propertyModel(newPropertyModel(order))
                 .supplierModel(newSupplierModel(order))
-                .orderItemModels(newOrderITemModels(order))
+                .orderItemModels(newOrderItemModels(order))
                 .build();
     }
 
@@ -90,7 +90,7 @@ public class RendererModelFactoryForOrder extends RendererModelFactoryAbstract<O
         return SupplierModel.of(order.getSeller(), addressOf(order.getSeller()));
     }
 
-    protected List<OrderItemModel> newOrderITemModels(final Order order) {
+    protected List<OrderItemModel> newOrderItemModels(final Order order) {
         return Lists.newArrayList(order.getItems()).stream()
                 .map(OrderItemModel::of)
                 .collect(Collectors.toList());
@@ -106,10 +106,10 @@ public class RendererModelFactoryForOrder extends RendererModelFactoryAbstract<O
         return channels.stream()
                 .filter(PostalAddress.class::isInstance)
                 .map(PostalAddress.class::cast)
-                .filter(x -> x.getPurpose() == CommunicationChannelPurposeType.INVOICING)
+                .filter(x -> x.getPurpose() == CommunicationChannelPurposeType.SUPPLIER)
                 .findFirst()
                 .map(PostalAddress::asAddressLabel)
-                .orElse("???");
+                .orElse("??????????????");
     }
 
     @Getter(AccessLevel.PROTECTED)

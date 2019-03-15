@@ -12,7 +12,7 @@ import org.apache.isis.applib.ModuleAbstract;
 import org.incode.module.document.DocumentModule;
 
 @XmlRootElement(name = "module")
-public class GotenbergRenderingFixtureModule extends ModuleAbstract {
+public class GotenbergRenderingFakeModule extends ModuleAbstract {
 
     @Override
     public Set<Module> getDependencies() {

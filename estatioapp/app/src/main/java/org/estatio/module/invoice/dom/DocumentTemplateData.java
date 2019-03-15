@@ -304,6 +304,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
 
     }
 
+
     public enum Nature {
         INCOMING,
         OUTGOING,

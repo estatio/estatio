@@ -35,7 +35,6 @@ import org.estatio.module.capex.dom.project.ProjectItemTerm;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectItem;
 import org.estatio.module.capex.dom.project.ProjectRole;
-import org.estatio.module.capex.dom.project.ProjectTerm;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.invoice.EstatioInvoiceModule;
 import org.estatio.module.invoice.dom.Invoice;
