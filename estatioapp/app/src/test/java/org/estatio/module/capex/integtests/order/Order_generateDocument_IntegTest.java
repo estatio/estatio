@@ -28,6 +28,7 @@ import org.estatio.module.capex.app.DocumentMenu;
 import org.estatio.module.capex.contributions.Order_generateDocument;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.fixtures.order.enums.Order_enum;
+import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
 import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesItaXlsxFixture;
@@ -36,7 +37,7 @@ import org.estatio.module.invoice.dom.DocumentTypeData;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.incode.module.base.integtests.VT.ld;
 
-public class Order_generateDocument_IntegTest extends CapexModuleWithFakeGotenbergBootstrapIntegTest {
+public class Order_generateDocument_IntegTest extends CapexModuleIntegTestAbstract {
 
     @Rule
     public TogglzRule togglzRule = TogglzRule.allDisabled(EstatioTogglzFeature.class);
