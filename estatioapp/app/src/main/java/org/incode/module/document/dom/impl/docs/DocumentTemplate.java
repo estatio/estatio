@@ -182,6 +182,52 @@ public class DocumentTemplate
         extends DocumentAbstract<DocumentTemplate>
         implements DocumentTemplateApi {
 
+    enum Toggle {
+        ENTITIES {
+            @Override public DocumentTemplateApi getTemplateApi(final DocumentTemplate documentTemplate) {
+                return documentTemplate;
+            }
+
+            @Override public DocumentTypeApi getTypeApi(final DocumentTemplate documentTemplate) {
+                return documentTemplate.getType();
+            }
+
+            @Override public RenderingStrategyApi getContentRenderingStrategyApi(final DocumentTemplate documentTemplate) {
+                return documentTemplate.getContentRenderingStrategy();
+            }
+
+            @Override public RenderingStrategyApi getNameRenderingStrategyApi(final DocumentTemplate documentTemplate) {
+                return documentTemplate.getNameRenderingStrategy();
+            }
+        },
+        DATA {
+            @Override public DocumentTemplateApi getTemplateApi(final DocumentTemplate documentTemplate) {
+                return documentTemplate.getTemplateData();
+            }
+
+            @Override public DocumentTypeApi getTypeApi(final DocumentTemplate documentTemplate) {
+                return documentTemplate.getTypeData();
+            }
+
+            @Override public RenderingStrategyApi getContentRenderingStrategyApi(final DocumentTemplate documentTemplate) {
+                return documentTemplate.getContentRenderingStrategyData();
+            }
+
+            @Override public RenderingStrategyApi getNameRenderingStrategyApi(final DocumentTemplate documentTemplate) {
+                return documentTemplate.getNameRenderingStrategyData();
+            }
+        };
+
+        public abstract DocumentTemplateApi getTemplateApi(final DocumentTemplate documentTemplate);
+
+        public abstract DocumentTypeApi getTypeApi(final DocumentTemplate documentTemplate);
+
+        public abstract RenderingStrategyApi getContentRenderingStrategyApi(final DocumentTemplate documentTemplate);
+
+        public abstract RenderingStrategyApi getNameRenderingStrategyApi(final DocumentTemplate documentTemplate);
+    }
+
+    static Toggle toggle = Toggle.DATA;
 
     //region > ui event classes
     public static class TitleUiEvent extends DocumentModule.TitleUiEvent<DocumentTemplate>{}
@@ -383,9 +429,7 @@ public class DocumentTemplate
 
     @Programmatic
     public DocumentTemplateApi getTemplateApi() {
-        // TODO: if there are issues, then revert
-        // return this;
-        return getTemplateData();
+        return toggle.getTemplateApi(this);
     }
 
     private DocumentTypeData typeData;
@@ -398,9 +442,7 @@ public class DocumentTemplate
 
     @Programmatic
     public DocumentTypeApi getTypeApi() {
-        // TODO: if there are issues, then revert
-        //return getType();
-        return getTypeData();
+        return toggle.getTypeApi(this);
     }
 
     @Programmatic
@@ -409,9 +451,7 @@ public class DocumentTemplate
     }
 
     public RenderingStrategyApi getContentRenderingStrategyApi() {
-        // TODO: introduce feature flag to allow revert if necessary
-        //return getContentRenderingStrategy();
-        return getContentRenderingStrategyData();
+        return toggle.getContentRenderingStrategyApi(this);
     }
 
     @Programmatic
@@ -420,9 +460,7 @@ public class DocumentTemplate
     }
 
     public RenderingStrategyApi getNameRenderingStrategyApi() {
-        // TODO: introduce feature flag to allow revert if necessary
-        //return getNameRenderingStrategy();
-        return getNameRenderingStrategyData();
+        return toggle.getNameRenderingStrategyApi(this);
     }
 
     //region > date (property)
