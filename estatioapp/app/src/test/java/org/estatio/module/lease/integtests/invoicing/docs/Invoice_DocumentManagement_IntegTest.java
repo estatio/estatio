@@ -108,16 +108,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Before
-    public void setupData() {
+    public void setupData() throws InterruptedException {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new DocumentTypesAndTemplatesForLeaseFixture());
 
                 executionContext.executeChildren(this, InvoiceForLease_enum.OxfPoison003Gb);
-
             }
         });
+
+        List<CommandJdo> commandsBefore = backgroundCommandRepository.findBackgroundCommandsNotYetStarted();
+        if(commandsBefore.size()>0) {
+            fakeScheduler.runBackgroundCommands(5000);
+        }
+        commandsBefore = backgroundCommandRepository.findBackgroundCommandsNotYetStarted();
+        assertThat(commandsBefore).isEmpty();
+        fakeEmailService.removeSentEmails();
+
     }
 
 
@@ -258,22 +266,6 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
     }
 
-    public static class Invoice_delete_document_IntegTest extends Invoice_DocumentManagement_IntegTest {
-
-        @Ignore // TODO
-        @Test
-        public void can_delete_documents_if_not_sent() throws Exception {
-
-        }
-
-        @Ignore // TODO
-        @Test
-        public void cannot_delete_documents_if_have_been_sent() throws Exception {
-
-        }
-
-    }
-
     public static class Invoice_sendByEmail_IntegTest extends Invoice_DocumentManagement_IntegTest {
 
         @Inject
@@ -359,12 +351,12 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
             // and PL doc now also attached to comm, invoice.buyer and invoice.seller (as well as invoice)
             paperclips = paperclipRepository.findByDocument(prelimLetterDoc);
             assertThat(paperclips).hasSize(4);
-            assertThat(paperclips).extracting(x -> x.getAttachedTo()).contains(invoice, invoice.getBuyer(), invoice.getSeller(), prelimLetterComm);
+            assertThat(paperclips).extracting(Paperclip::getAttachedTo).contains(invoice, invoice.getBuyer(), invoice.getSeller(), prelimLetterComm);
 
             // and comm attached to PL and also to a new covernote
             paperclips = paperclipRepository.findByAttachedTo(prelimLetterComm);
             assertThat(paperclips).hasSize(2);
-            assertThat(paperclips).extracting(x -> x.getDocument()).contains(prelimLetterDoc);
+            assertThat(paperclips).extracting(Paperclip::getDocument).contains(prelimLetterDoc);
 
         }
 
@@ -463,7 +455,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             // and there is a command to send the email
             List<CommandJdo> commands = backgroundCommandRepository.findBackgroundCommandsNotYetStarted();
-            assertThat(commands.size()).isEqualTo(1);
+            assertThat(commands).hasSize(1);
 
             // but no email yet sent
             List<EmailMessage> emailMessages = fakeEmailService.listSentEmails();
@@ -540,12 +532,8 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
     }
 
 
-    @Inject
-    BackgroundCommandServiceJdoRepository backgroundCommandRepository;
-
     public static class Invoice_sendByPost_IntegTest extends Invoice_DocumentManagement_IntegTest {
 
-        @Ignore // EST-1154
         @Test
         public void when_prelim_letter_any_invoice_receipts_attached_are_ignored() throws IOException {
 
@@ -607,22 +595,21 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             // then the comm is automatically sent
             assertThat(prelimLetterComm.getState()).isEqualTo(CommunicationState.SENT);
-            assertThat(prelimLetterComm.getCreatedAt()).isNull();
+            assertThat(prelimLetterComm.getCreatedAt()).isNotNull();
             assertThat(prelimLetterComm.getSentAt()).isNotNull();
-            assertThat(prelimLetterComm.getSubject()).startsWith("Preliminary letter for Invoice Temp *000");
+            assertThat(prelimLetterComm.getSubject()).isEqualTo("Prelim letter 2012-01-01, OXF-POISON-003 Poison Perfumeries.pdf");
 
             // and PL doc now also attached to comm, invoice.buyer and invoice.seller (as well as invoice)
             paperclips = paperclipRepository.findByDocument(prelimLetterDoc);
             assertThat(paperclips).hasSize(4);
-            assertThat(paperclips).extracting(x -> x.getAttachedTo()).contains(invoice, invoice.getBuyer(), invoice.getSeller(), prelimLetterComm);
+            assertThat(paperclips).extracting(Paperclip::getAttachedTo).contains(invoice, invoice.getBuyer(), invoice.getSeller(), prelimLetterComm);
 
             // and comm attached to PL
             paperclips = paperclipRepository.findByAttachedTo(prelimLetterComm);
             assertThat(paperclips).hasSize(1);
-            assertThat(paperclips).extracting(x -> x.getDocument()).contains(prelimLetterDoc);
+            assertThat(paperclips).extracting(Paperclip::getDocument).contains(prelimLetterDoc);
         }
 
-        @Ignore // EST-1154
         @Test
         public void when_invoice_doc_then_any_receipts_attached_are_included() throws IOException {
 
@@ -657,15 +644,15 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             assertThat(mixin(DocAndCommForInvoiceDoc_communication.class, invoiceDocViewModel).$$()).isNull();
 
-            // is attached to invoice and also the receipt
+            // is attached to invoice (though not the receipt)
             paperclips = paperclipRepository.findByDocument(invoiceDoc);
-            assertThat(paperclips).hasSize(2);
-            assertThat(paperclips).extracting(x -> x.getAttachedTo()).contains(invoice, attachedReceipt);
+            assertThat(paperclips).hasSize(1);
+            assertThat(paperclips).extracting(Paperclip::getAttachedTo).contains(invoice);
 
             // while the invoice itself also has two attachments (the original receipt and the newly created doc)
             paperclips = paperclipRepository.findByAttachedTo(invoice);
             assertThat(paperclips).hasSize(2);
-            assertThat(paperclips).extracting(x -> x.getDocument()).contains(attachedReceipt, invoiceDoc);
+            assertThat(paperclips).extracting(Paperclip::getDocument).contains(attachedReceipt, invoiceDoc);
 
 
             // and when
@@ -689,19 +676,19 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             // then the comm is automatically sent
             assertThat(invoiceDocComm.getState()).isEqualTo(CommunicationState.SENT);
-            assertThat(invoiceDocComm.getCreatedAt()).isNull();
+            assertThat(invoiceDocComm.getCreatedAt()).isNotNull();
             assertThat(invoiceDocComm.getSentAt()).isNotNull();
-            assertThat(invoiceDocComm.getSubject()).isEqualTo("Invoice for OXF-000001.pdf");
+            assertThat(invoiceDocComm.getSubject()).isEqualTo("Invoice OXF-000001 2012-01-01, OXF-POISON-003 Poison Perfumeries.pdf");
 
-            // and InvNote doc now also attached to comm, invoice.buyer and invoice.seller (as well as invoice and receipt)
+            // and InvNote doc now also attached to comm, invoice.buyer and invoice.seller (as well as invoice, but not the receipt)
             paperclips = paperclipRepository.findByDocument(invoiceDoc);
-            assertThat(paperclips).hasSize(5);
-            assertThat(paperclips).extracting(x -> x.getAttachedTo()).contains(invoice, invoice.getBuyer(), invoice.getSeller(), invoiceDocComm, attachedReceipt);
+            assertThat(paperclips).hasSize(4);
+            assertThat(paperclips).extracting(Paperclip::getAttachedTo).contains(invoice, invoice.getBuyer(), invoice.getSeller(), invoiceDocComm);
 
             // and comm attached to PL, also to a new covernote, AND ALSO to the original attached receipt
             paperclips = paperclipRepository.findByAttachedTo(invoiceDocComm);
             assertThat(paperclips).hasSize(2);
-            assertThat(paperclips).extracting(x -> x.getDocument()).contains(invoiceDoc, attachedReceipt);
+            assertThat(paperclips).extracting(Paperclip::getDocument).contains(invoiceDoc, attachedReceipt);
 
         }
 
@@ -1052,6 +1039,9 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
         return communicationChannelClass.cast(communicationChannel);
     }
 
+
+    @Inject
+    BackgroundCommandServiceJdoRepository backgroundCommandRepository;
 
     @Inject
     BookmarkService2 bookmarkService;
