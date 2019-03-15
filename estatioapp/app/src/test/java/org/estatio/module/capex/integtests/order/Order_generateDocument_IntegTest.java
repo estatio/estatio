@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.togglz.junit.TogglzRule;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.wrapper.HiddenException;
 import org.apache.isis.applib.value.Blob;
 
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
@@ -91,7 +92,17 @@ public class Order_generateDocument_IntegTest extends CapexModuleWithFakeGotenbe
 
         // then
         assertThat(documentTemplates).isEmpty();
+
+        // expect
+        expectedExceptions.expect(HiddenException.class);
+
+        // when
+        final DocumentTemplate anyTemplate =
+                repositoryService.allInstances(DocumentTemplate.class).stream().findFirst().orElse(null);
+        mixin.act(anyTemplate);
+
     }
+
 
     @Test
     public void when_italian_order() throws Exception {

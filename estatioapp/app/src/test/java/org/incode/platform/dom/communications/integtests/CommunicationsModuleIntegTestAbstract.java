@@ -14,7 +14,7 @@ import org.isisaddons.module.fakedata.FakeDataModule;
 import org.isisaddons.module.freemarker.dom.FreeMarkerModule;
 import org.isisaddons.module.pdfbox.dom.PdfBoxModule;
 
-import org.incode.platform.dom.communications.integtests.app.services.DemoAppApplicationModuleServicesSubmodule;
+import org.incode.platform.dom.communications.integtests.app.services.FakeCommsServiceModule;
 import org.incode.platform.dom.communications.integtests.app.services.fakesched.FakeScheduler;
 import org.incode.platform.dom.communications.integtests.dom.communications.CommunicationsModuleIntegrationSubmodule;
 import org.incode.platform.dom.communications.integtests.dom.document.ClassificationsModuleDocumentDomModule;
@@ -29,7 +29,7 @@ public abstract class CommunicationsModuleIntegTestAbstract extends BaseModuleIn
         public Set<org.apache.isis.applib.Module> getDependencies() {
             final Set<org.apache.isis.applib.Module> dependencies = super.getDependencies();
             dependencies.addAll(Sets.newHashSet(
-                    new DemoAppApplicationModuleServicesSubmodule(),
+                    new FakeCommsServiceModule(),
                     new ClassificationsModuleDocumentDomModule(),
                     new PdfBoxModule(),
                     new CommandDomModule(),

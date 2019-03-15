@@ -18,13 +18,24 @@
  */
 package org.estatio.module.base.integtests;
 
+import java.util.Arrays;
+import java.util.Set;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.google.common.collect.Sets;
+
 import org.slf4j.event.Level;
 
+import org.apache.isis.applib.Module;
 import org.apache.isis.applib.ModuleAbstract;
 import org.apache.isis.core.integtestsupport.IntegrationTestAbstract3;
 import org.apache.isis.core.metamodel.specloader.IntrospectionMode;
 import org.apache.isis.core.metamodel.specloader.SpecificationLoader;
 import org.apache.isis.core.runtime.headless.logging.LogConfig;
+
+import org.incode.module.docrendering.gotenberg.fixture.fake.GotenbergRenderingFakeModule;
+import org.incode.platform.dom.communications.integtests.app.services.FakeCommsServiceModule;
 
 public abstract class BaseModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
@@ -38,10 +49,34 @@ public abstract class BaseModuleIntegTestAbstract extends IntegrationTestAbstrac
 
         super(new LogConfig(Level.INFO,
                 logPrintStream(Level.DEBUG)),
-                module.withConfigurationProperty(
+
+                new ModuleForTesting(
+                        module,
+                        new GotenbergRenderingFakeModule(),
+                        new FakeCommsServiceModule()
+                ).withConfigurationProperty(
                     SpecificationLoader.CONFIG_PROPERTY_MODE.of(introspectionMode)
                 )
         );
+    }
+
+    // TODO: it ought to be possible write instead :
+    //   module.withAdditionalDependency(new GotenbergRenderingFakeModule()) etc, but
+    //  there's a bug in the framework that prevents this
+    //  as a workaround, register services directly.
+    @XmlRootElement(name = "module")
+    public static class ModuleForTesting extends ModuleAbstract {
+
+        private final Set<Module> dependencies;
+
+        public ModuleForTesting(final Module... dependencies) {
+            this.dependencies = Sets.newHashSet(Arrays.asList(dependencies));
+        }
+
+        @Override
+        public Set<Module> getDependencies() {
+            return this.dependencies;
+        }
     }
 
 }
