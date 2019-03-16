@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
@@ -24,7 +23,6 @@ import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
-import org.estatio.module.capex.app.DocumentMenu;
 import org.estatio.module.capex.contributions.Order_generateDocument;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.fixtures.order.enums.Order_enum;
@@ -42,8 +40,14 @@ public class Order_generateDocument_IntegTest extends CapexModuleIntegTestAbstra
     @Rule
     public TogglzRule togglzRule = TogglzRule.allDisabled(EstatioTogglzFeature.class);
 
-    @Inject
-    DocumentMenu documentMenu;
+//    @Inject
+//    DocumentMenu documentMenu;
+//
+//    @Inject
+//    List<GotenbergClientService> clientServices;
+//
+//    @Inject
+//    MetaModelService6 metaModelService6;
 
     DocumentType orderTemplateDocumentType;
     Order order;
@@ -52,8 +56,13 @@ public class Order_generateDocument_IntegTest extends CapexModuleIntegTestAbstra
     @Before
     public void setupData() {
 
-        // check bootstrapping...
-        Assertions.assertThat(documentMenu).isNotNull();
+//        // check bootstrapping...
+//        final Module module = metaModelService6.getAppManifest2().getModule();
+//        Assertions.assertThat(module).isInstanceOf(ModuleForTesting.class);
+//
+//        Assertions.assertThat(documentMenu).isNotNull();
+//        Assertions.assertThat(clientServices).isNotNull();
+//        Assertions.assertThat(clientServices).hasSize(2);
 
         runFixtureScript(new FixtureScript() {
             @Override
@@ -100,7 +109,7 @@ public class Order_generateDocument_IntegTest extends CapexModuleIntegTestAbstra
         // when
         final DocumentTemplate anyTemplate =
                 repositoryService.allInstances(DocumentTemplate.class).stream().findFirst().orElse(null);
-        mixin.act(anyTemplate);
+        wrap(mixin).act(anyTemplate);
 
     }
 

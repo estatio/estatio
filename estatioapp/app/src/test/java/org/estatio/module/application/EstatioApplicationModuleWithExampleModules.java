@@ -9,9 +9,11 @@ import com.google.common.collect.Sets;
 import org.apache.isis.applib.Module;
 import org.apache.isis.applib.ModuleAbstract;
 
+import org.incode.module.docrendering.gotenberg.fixture.fake.GotenbergRenderingFakeModule;
 import org.incode.platform.dom.alias.integtests.AliasModuleIntegTestAbstract;
 import org.incode.platform.dom.classification.integtests.ClassificationModuleIntegTestAbstract;
 import org.incode.platform.dom.communications.integtests.CommunicationsModuleIntegTestAbstract;
+import org.incode.platform.dom.communications.integtests.app.services.FakeCommsServiceModule;
 import org.incode.platform.dom.docfragment.integtests.DocFragmentModuleIntegTestAbstract;
 import org.incode.platform.dom.document.integtests.DocumentModuleIntegTestAbstract;
 
@@ -31,7 +33,10 @@ public class EstatioApplicationModuleWithExampleModules extends ModuleAbstract {
                 ClassificationModuleIntegTestAbstract.module(),
                 CommunicationsModuleIntegTestAbstract.module(),
                 DocFragmentModuleIntegTestAbstract.module(),
-                DocumentModuleIntegTestAbstract.module()
+                DocumentModuleIntegTestAbstract.module(),
+
+                new FakeCommsServiceModule(),
+                new GotenbergRenderingFakeModule()
         );
     }
 }
