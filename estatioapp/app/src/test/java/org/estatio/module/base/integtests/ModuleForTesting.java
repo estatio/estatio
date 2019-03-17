@@ -22,6 +22,9 @@ public class ModuleForTesting extends ModuleAbstract {
     @Getter
     private final Set<Module> dependencies;
 
+    public ModuleForTesting() {
+        this(new Module[]{});
+    }
     public ModuleForTesting(final Module... dependencies) {
         this.dependencies = Sets.newLinkedHashSet(Arrays.asList(dependencies));
     }
