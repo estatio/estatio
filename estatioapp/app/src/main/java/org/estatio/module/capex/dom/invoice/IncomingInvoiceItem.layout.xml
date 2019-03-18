@@ -74,6 +74,8 @@
                                 <cpt:property id="budgetItem">
                                     <cpt:action id="editBudgetItem" promptStyle="INLINE" position="RIGHT"/>
                                 </cpt:property>
+                                <cpt:property id="chargeStartDate"/>
+                                <cpt:property id="chargeEndDate"/>
                                 <cpt:property id="startDate">
                                     <cpt:action id="editPeriod" promptStyle="INLINE" position="RIGHT"/>
                                 </cpt:property>

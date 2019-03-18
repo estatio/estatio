@@ -280,6 +280,14 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
         this.budgetItem = invalidateApprovalIfDiffer(this.budgetItem, budgetItem);
     }
 
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private LocalDate chargeStartDate;
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private LocalDate chargeEndDate;
+
     @Override
     public void setCharge(final Charge charge) {
         super.setCharge(invalidateApprovalIfDiffer(getCharge(), charge));
@@ -578,16 +586,35 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
     @ActionLayout(promptStyle = PromptStyle.INLINE)
     public IncomingInvoiceItem editBudgetItem(
             @Nullable
-            final BudgetItem budgetItem){
+            final BudgetItem budgetItem,
+            @Nullable
+            final LocalDate chargeStartDate,
+            @Nullable
+            final LocalDate chargeEndDate){
         setBudgetItem(budgetItem);
         if (budgetItem!=null) setCharge(budgetItem.getCharge());
         if (budgetItem!=null) setFixedAsset(budgetItem.getBudget().getProperty());
         if (budgetItem!=null) editPeriod(String.valueOf(getBudgetItem().getBudget().getBudgetYear()));
+        if (budgetItem!=null) {
+            setChargeStartDate(chargeStartDate);
+            setChargeEndDate(chargeEndDate);
+        } else {
+            setChargeStartDate(null);
+            setChargeEndDate(null);
+        }
         return this;
     }
 
     public BudgetItem default0EditBudgetItem(){
         return getBudgetItem();
+    }
+
+    public LocalDate default1EditBudgetItem(){
+        return getChargeStartDate();
+    }
+
+    public LocalDate default2EditBudgetItem(){
+        return getChargeEndDate();
     }
 
     public List<BudgetItem> choices0EditBudgetItem() {
@@ -598,7 +625,13 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
         return budgetItemIsImmutableReason();
     }
 
-
+    public String validateEditBudgetItem(final BudgetItem budgetItem, final LocalDate chargeStartDate, final LocalDate chargeEndDate) {
+        if (budgetItem!=null){
+            if (chargeStartDate==null && chargeEndDate!=null) return "Please fill in charge start date as well";
+            if (chargeStartDate!=null && chargeEndDate!=null && chargeEndDate.isBefore(chargeStartDate)) return "The charge end date cannot be before the start date";
+        }
+        return null;
+    }
 
 
 
