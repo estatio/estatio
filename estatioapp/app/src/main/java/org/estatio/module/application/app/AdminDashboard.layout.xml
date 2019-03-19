@@ -80,6 +80,7 @@
                         <bs3:col span="12">
                             <cpt:action id="retrieveCodaSupplier"/>
                             <cpt:action id="retrieveCodaDoc"/>
+                            <cpt:action id="syncAllCurrentCodaDocs"/>
                             <cpt:action id="reinitPublisherService"/>
                         </bs3:col>
                     </bs3:row>

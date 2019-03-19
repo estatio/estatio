@@ -217,6 +217,10 @@ public class AdminDashboard {
         return codaDocCodeService.listAll();
     }
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public AdminDashboard syncAllCurrentCodaDocs() {
+        return this;
+    }
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3.1")
