@@ -18,6 +18,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Blob;
 
+import org.incode.module.base.dom.MimeTypes;
 import org.incode.module.document.DocumentModule;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
@@ -46,7 +47,7 @@ public class Document_attachSupportingPdf {
     )
     public Document exec(
             final DocumentType documentType,
-            @Parameter(fileAccept = "application/pdf")
+            @Parameter(fileAccept = MimeTypes.APPLICATION_PDF)
             final Blob document,
             @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "File name")
             final String fileName,

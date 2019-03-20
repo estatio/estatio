@@ -37,6 +37,7 @@ import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.pdfbox.dom.service.PdfBoxService;
 
+import org.incode.module.base.dom.MimeTypes;
 import org.incode.module.communications.dom.mixins.DocumentPredicates;
 import org.incode.module.communications.dom.mixins.Document_communicationAttachments;
 import org.incode.module.document.dom.impl.docs.Document;
@@ -44,8 +45,6 @@ import org.incode.module.document.dom.impl.docs.DocumentSort;
 import org.incode.module.document.dom.impl.docs.DocumentState;
 
 import org.estatio.module.invoice.dom.DocumentTypeData;
-
-import static org.incode.module.communications.dom.mixins.DocumentConstants.MIME_TYPE_APPLICATION_PDF;
 
 /**
  * It doesn't seem to be possible to combine this with {@link DocAndCommAbstract_download};
@@ -89,7 +88,7 @@ public abstract class DocAndCommAbstract_downloadSelected<T extends DocAndCommAb
             }
 
             final byte[] mergedBytes = pdfBoxService.merge(pdfBytes.toArray(new byte[][] {}));
-            return new Blob(fileName, MIME_TYPE_APPLICATION_PDF, mergedBytes);
+            return new Blob(fileName, MimeTypes.APPLICATION_PDF, mergedBytes);
         }
 
         return null;

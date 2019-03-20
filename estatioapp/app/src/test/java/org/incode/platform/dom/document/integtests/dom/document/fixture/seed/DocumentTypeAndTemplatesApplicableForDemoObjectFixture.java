@@ -14,6 +14,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
+import org.incode.module.base.dom.MimeTypes;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository;
@@ -116,7 +117,7 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
                 ".pdf",
                 false,
                 docTypeForStringInterpolatorUrl.getName(),
-                "application/pdf",
+                MimeTypes.APPLICATION_PDF,
                 "${demoObject.url}", sipcRenderingStrategy,
                 "pdf-of-url-held-in-${demoObject.name}", siRenderingStrategy,
                 executionContext);

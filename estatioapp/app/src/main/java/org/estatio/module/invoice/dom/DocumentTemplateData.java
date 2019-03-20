@@ -20,6 +20,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
+import org.incode.module.base.dom.MimeTypes;
 import org.incode.module.document.dom.impl.applicability.AttachmentAdvisor;
 import org.incode.module.document.dom.impl.applicability.RendererModelFactory;
 import org.incode.module.document.dom.impl.docs.Document;
@@ -116,7 +117,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     PRELIM_LETTER_GLOBAL(
 
             ApplicationTenancy_enum.Global.getPath(), null,
-            "pdf", "application/pdf", null,
+            "pdf", MimeTypes.APPLICATION_PDF, null,
             DocumentSort.TEXT,
 
             //"${reportServerBaseUrl}PreliminaryLetterV2&id=${this.id}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate
@@ -132,7 +133,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     PRELIM_LETTER_ITA(
 
             ApplicationTenancy_enum.It.getPath(), " (Italy)",
-            "pdf", "application/pdf", null,
+            "pdf", MimeTypes.APPLICATION_PDF, null,
             DocumentSort.TEXT,
 
             //"${reportServerBaseUrl}PreliminaryLetterV2&id=${this.id}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate
@@ -148,7 +149,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     INVOICE_GLOBAL(
 
             ApplicationTenancy_enum.Global.getPath(), null,
-            "pdf", "application/pdf", null,
+            "pdf", MimeTypes.APPLICATION_PDF, null,
             DocumentSort.TEXT,
 
             //"${reportServerBaseUrl}InvoiceItaly&id=${this.id}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate entity
@@ -164,7 +165,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     INVOICE_ITA(
 
             ApplicationTenancy_enum.It.getPath(), "( Italy)",
-            "pdf", "application/pdf", null,
+            "pdf", MimeTypes.APPLICATION_PDF, null,
             DocumentSort.TEXT,
 
             //"${reportServerBaseUrl}InvoiceItaly&id=${this.id}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate entity
@@ -182,7 +183,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     // preview only
     INVOICES(
             ApplicationTenancy_enum.Global.getPath(), null,
-            "pdf", "application/pdf", null,
+            "pdf", MimeTypes.APPLICATION_PDF, null,
             DocumentSort.TEXT,
 
             //"${reportServerBaseUrl}Invoices&dueDate=${this.dueDate}&${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate entity
@@ -198,7 +199,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     INVOICES_PRELIM(
 
             ApplicationTenancy_enum.Global.getPath(), null,
-            "pdf", "application/pdf", null,
+            "pdf", MimeTypes.APPLICATION_PDF, null,
             DocumentSort.TEXT,
 
             //"${reportServerBaseUrl}PreliminaryLetterV2&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate entity
@@ -214,7 +215,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     INVOICES_FOR_SELLER(
 
             ApplicationTenancy_enum.Global.getPath(), null,
-            "pdf", "application/pdf", null,
+            "pdf", MimeTypes.APPLICATION_PDF, null,
             DocumentSort.TEXT,
 
             //"${reportServerBaseUrl}PreliminaryLetterV2&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate entity

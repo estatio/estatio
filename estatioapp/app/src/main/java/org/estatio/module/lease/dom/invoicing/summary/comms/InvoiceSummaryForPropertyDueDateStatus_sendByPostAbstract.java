@@ -36,9 +36,9 @@ import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.pdfbox.dom.service.PdfBoxService;
 
+import org.incode.module.base.dom.MimeTypes;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
-import org.incode.module.communications.dom.mixins.DocumentConstants;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.module.invoice.dom.DocumentTypeData;
@@ -77,7 +77,7 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByPostAbstract 
 
         final byte[] mergedBytes = pdfBoxService.merge(pdfBytes.toArray(new byte[][] {}));
 
-        return new Blob(fileName, DocumentConstants.MIME_TYPE_APPLICATION_PDF, mergedBytes);
+        return new Blob(fileName, MimeTypes.APPLICATION_PDF, mergedBytes);
     }
 
 

@@ -15,6 +15,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
+import org.incode.module.base.dom.MimeTypes;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
@@ -119,7 +120,7 @@ public class LookupAttachedPdfService {
                     }
                     return false;
                 })
-                .filter(document -> Objects.equals(document.getMimeType(), "application/pdf"))
+                .filter(document -> Objects.equals(document.getMimeType(), MimeTypes.APPLICATION_PDF))
                 .collect(Collectors.toList());
     }
 

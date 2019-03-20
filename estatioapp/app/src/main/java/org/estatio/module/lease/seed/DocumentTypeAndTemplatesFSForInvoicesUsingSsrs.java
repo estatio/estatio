@@ -32,6 +32,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
+import org.incode.module.base.dom.MimeTypes;
 import org.incode.module.document.dom.impl.applicability.AttachmentAdvisor;
 import org.incode.module.document.dom.impl.applicability.RendererModelFactory;
 import org.incode.module.document.dom.impl.docs.Document;
@@ -366,7 +367,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 ".pdf",
                 previewOnly,
                 buildTemplateName(docType, templateNameSuffixIfAny),
-                "application/pdf",
+                MimeTypes.APPLICATION_PDF,
                 contentText, contentRenderingStrategy,
                 nameText, nameRenderingStrategy,
                 executionContext);

@@ -31,6 +31,7 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.clock.ClockService;
 
+import org.incode.module.base.dom.MimeTypes;
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.communications.dom.impl.comms.Communication;
 import org.incode.module.communications.dom.impl.comms.CommunicationState;
@@ -141,7 +142,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_invoiceDocs_IntegTest extend
             assertThat(invoiceDoc.getState()).isEqualTo(DocumentState.NOT_RENDERED);
             assertThat(invoiceDoc.getRenderedAt()).isNull();
             assertThat(invoiceDoc.getSort()).isEqualTo(DocumentSort.EMPTY);
-            assertThat(invoiceDoc.getMimeType()).isEqualTo("application/pdf");
+            assertThat(invoiceDoc.getMimeType()).isEqualTo(MimeTypes.APPLICATION_PDF);
 
             // and also attached to only invoice
             List<Paperclip> paperclips = paperclipRepository.findByDocument(invoiceDoc);

@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.value.Blob;
 
+import org.incode.module.base.dom.MimeTypes;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
@@ -432,7 +433,7 @@ public class IncomingDocumentRepository_UpsertAndArchive_IntegTest extends Capex
     }
     private Blob load(final String name, final String fileName) throws IOException {
         final byte[] pdfBytes = Resources.toByteArray(Resources.getResource(getClass(), fileName));
-        return new Blob(name, "application/pdf", pdfBytes);
+        return new Blob(name, MimeTypes.APPLICATION_PDF, pdfBytes);
     }
 
 

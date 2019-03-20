@@ -39,6 +39,7 @@ import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.value.Blob;
 
+import org.incode.module.base.dom.MimeTypes;
 import org.incode.module.base.spi.DeriveBlobFromDummyPdfArg1;
 import org.incode.module.communications.dom.impl.comms.Communication;
 import org.incode.module.document.dom.api.DocumentService;
@@ -75,7 +76,7 @@ public class InvoiceForLease_attachSupportingDocument {
     @ActionLayout(contributed = Contributed.AS_ACTION, cssClassFa = "paperclip")
     public Invoice $$(
             final DocumentType supportingDocumentType,
-            @Parameter(fileAccept = "application/pdf")
+            @Parameter(fileAccept = MimeTypes.APPLICATION_PDF)
             @ParameterLayout(named = "Receipt (PDF)")
             final Blob blob,
             @Parameter(optionality = Optionality.OPTIONAL)

@@ -16,6 +16,8 @@ import org.apache.isis.schema.cmd.v1.ParamDto;
 import org.apache.isis.schema.common.v1.ValueType;
 import org.apache.isis.schema.utils.CommonDtoUtils;
 
+import org.incode.module.base.dom.MimeTypes;
+
 public abstract class DeriveBlobFromDummyPdfAbstract
         extends CommandDtoProcessorForActionAbstract {
 
@@ -24,7 +26,7 @@ public abstract class DeriveBlobFromDummyPdfAbstract
         final byte[] bytes;
         try {
             bytes = Resources.toByteArray(resource);
-            blob = new Blob("dummy.pdf", "application/pdf", bytes);
+            blob = new Blob("dummy.pdf", MimeTypes.APPLICATION_PDF, bytes);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

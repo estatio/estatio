@@ -3,6 +3,7 @@ package org.incode.module.communications.dom.mixins;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
+import org.incode.module.base.dom.MimeTypes;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentSort;
 
@@ -15,7 +16,7 @@ public class DocumentPredicates {
     }
 
     public static Predicate<Document> isPdf() {
-        return document -> DocumentConstants.MIME_TYPE_APPLICATION_PDF.equals(document.getMimeType());
+        return document -> MimeTypes.APPLICATION_PDF.equals(document.getMimeType());
     }
 
     public static Predicate<Document> isBlobSort() {
