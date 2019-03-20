@@ -12,11 +12,7 @@ public class DocumentPredicates {
     }
 
     public static Predicate<Document> isPdfAndBlob() {
-        return Predicates.and(isPdf(), isBlobSort());
-    }
-
-    public static Predicate<Document> isPdf() {
-        return document -> MimeTypeData.APPLICATION_PDF.matches(document);
+        return Predicates.and(MimeTypeData.APPLICATION_PDF::matches, isBlobSort());
     }
 
     public static Predicate<Document> isBlobSort() {
