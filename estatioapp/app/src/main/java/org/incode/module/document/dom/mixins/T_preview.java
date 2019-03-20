@@ -8,8 +8,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.linking.DeepLinkService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
@@ -37,18 +36,21 @@ public abstract class T_preview<T,P extends DocumentPreview<T>> {
             domainEvent = ActionDomainEvent.class,
             semantics = SemanticsOf.SAFE
     )
-    @ActionLayout(
-            contributed = Contributed.AS_ACTION
-    )
     public URL act(final DocumentTemplate template) throws IOException {
+        final P preview = createPreview(template);
+        final URI uri = deepLinkService.deepLinkFor(preview);
+        return uri.toURL();
+    }
+
+    @Programmatic
+    public P createPreview(final DocumentTemplate template) {
         final Object rendererModel = template.newRendererModel(domainObject);
         final P preview = serviceRegistry.injectServicesInto(newPreview());
         preview.setDomainObject(domainObject);
         preview.setType(template.getType());
         template.renderContent(preview, rendererModel);
         preview.setState(DocumentState.RENDERED);
-        final URI uri = deepLinkService.deepLinkFor(preview);
-        return uri.toURL();
+        return preview;
     }
 
     protected abstract P newPreview();

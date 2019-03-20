@@ -251,8 +251,9 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     private final String atPath;
     @Getter
     private final String extension;
+    public String getMimeTypeBase() { return mimeType != null ? mimeType.asStr() : null; }
     @Getter
-    private final String mimeTypeBase;
+    private final MimeTypeData mimeType;
     @Getter
     private final String nameSuffixIfAny;
     @Getter
@@ -322,7 +323,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             final String atPath,
             final String nameSuffixIfAny,
             final String extension,
-            final MimeTypeData mimeTypeBase,
+            final MimeTypeData mimeType,
             final DocumentSort contentSort,
             //final Object content,
             final RenderingStrategyData contentRenderingStrategy,
@@ -340,7 +341,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
         this.nameSuffixIfAny = nameSuffixIfAny;
         this.contentSort = contentSort;
         this.extension = extension;
-        this.mimeTypeBase = mimeTypeBase != null ? mimeTypeBase.asStr() : null;
+        this.mimeType = mimeType;
         //this.content = content;
         this.previewPolicy = previewPolicy;
 

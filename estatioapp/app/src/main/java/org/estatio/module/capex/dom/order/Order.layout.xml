@@ -190,8 +190,10 @@
                                     </cpt:fieldSet>
                                     <cpt:fieldSet name="Placeholders" id="documentText">
                                         <cpt:action id="initializePlaceholders"/>
-                                        <cpt:action id="previewDocument"/>
-                                        <cpt:action id="generateDocument"/>
+                                        <cpt:action id="downloadDraft"/>
+                                        <cpt:action id="uploadFinal"/>
+                                        <cpt:action id="previewDocument" hidden="EVERYWHERE"/>
+                                        <cpt:action id="generateDocument" hidden="EVERYWHERE"/>
                                         <cpt:property id="subject" hidden="ALL_TABLES">
                                             <cpt:action id="changeSubject" promptStyle="INLINE_AS_IF_EDIT">
                                                 <cpt:named>Change</cpt:named>

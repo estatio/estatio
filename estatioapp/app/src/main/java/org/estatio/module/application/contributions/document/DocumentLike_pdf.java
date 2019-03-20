@@ -30,8 +30,9 @@ import org.incode.module.document.dom.impl.docs.DocumentState;
  * {@link DocumentLike_pdf#prop() pdf} property, correctly annotated with the {@link PdfJsViewer} annotation.
  *
  * <p>
- *     This is only done for {@link Document}s that contain a PDF.  A replacement `Document.layout.xml` positions this
- *     new derived property in the correct place.
+ *     This is only done for {@link Document}s that contain a PDF or a DOCX (with the latter being converted on-the-fly
+ *     to PDF for presentation purposes).
+ *     A replacement `Document.layout.xml` positions this new derived property in the correct place.
  * </p>
  */
 @Mixin(method="prop")
@@ -60,7 +61,7 @@ public class DocumentLike_pdf {
         if (MimeTypeData.APPLICATION_DOCX.matches(this.documentLike)) {
             // on-the-fly convert to PDF for preview purposes.
             final byte[] bytes = gotenbergClientService.convertToPdf(blob.getBytes());
-            return new Blob(blob.getName(), MimeTypeData.APPLICATION_PDF.asStr(), bytes);
+            return MimeTypeData.APPLICATION_PDF.newBlob(blob.getName(), bytes);
         }
         // shouldn't happen, due to guard in hideProp()
         return null;
