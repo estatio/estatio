@@ -230,14 +230,16 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     ORDER_CONFIRM_ITA(
 
             ApplicationTenancy_enum.It.getPath(), "(Italy)",
-            "docx", "application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "docx",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // inputMimeType
             DocumentSort.BLOB,
 
             //loadBytesForOrderConfirmTemplateItaDocx() ... see DocumentTemplate entity
-            RenderingStrategyData.XGP,
+            RenderingStrategyData.XDD,
             loadCharsForOrderConfirmTemplateTitleItaFtl(),
             RenderingStrategyData.FMK,
-            false,
+            PreviewPolicy.NOT_PREVIEW_ONLY,
             Order.class, RendererModelFactoryForOrder.class,
             AttachToSameForOrder.class
 
