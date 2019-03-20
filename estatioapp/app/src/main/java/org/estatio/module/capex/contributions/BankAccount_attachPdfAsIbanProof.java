@@ -42,7 +42,7 @@ public class BankAccount_attachPdfAsIbanProof {
             commandDtoProcessor = DeriveBlobFromDummyPdfArg0.class
     )
     public BankAccount act(
-            @Parameter(fileAccept = MimeTypes.APPLICATION_PDF)
+            @Parameter(fileAccept = MimeTypes.APPLICATION_PDF.asStr())
             final Blob document) {
 
         final DocumentType ibanProofDocType = DocumentTypeData.IBAN_PROOF.findUsing(documentTypeRepository);

@@ -68,7 +68,7 @@ public class Document_Test {
             final byte[] b = new byte[20];
             new Random().nextBytes(b);
             document.setBlobBytes(b);
-            document.setMimeType(MimeTypes.APPLICATION_PDF);
+            document.setMimeType(MimeTypes.APPLICATION_PDF.asStr());
             document.setName("Foo doc");
             document.setSort(DocumentSort.BLOB);
 
@@ -83,7 +83,7 @@ public class Document_Test {
         public void get_when_not_sort_blob() throws Exception {
             // given
             final Document document = new Document();
-            document.setMimeType(MimeTypes.APPLICATION_PDF);
+            document.setMimeType(MimeTypes.APPLICATION_PDF.asStr());
             document.setName("Foo doc");
             document.setSort(DocumentSort.CLOB);
 
@@ -108,7 +108,7 @@ public class Document_Test {
             // given
             final Document document = new Document();
             document.setClobChars("CLOBCHARS");
-            document.setMimeType(MimeTypes.APPLICATION_PDF);
+            document.setMimeType(MimeTypes.APPLICATION_PDF.asStr());
             document.setName("Foo doc");
             document.setSort(DocumentSort.CLOB);
 
@@ -123,7 +123,7 @@ public class Document_Test {
         public void get_when_not_sort_clob() throws Exception {
             // given
             final Document document = new Document();
-            document.setMimeType(MimeTypes.APPLICATION_PDF);
+            document.setMimeType(MimeTypes.APPLICATION_PDF.asStr());
             document.setName("Foo doc");
             document.setSort(DocumentSort.BLOB);
 

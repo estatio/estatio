@@ -30,7 +30,7 @@ public class CodaMappingFraManager_IntegTest extends CapexModuleIntegTestAbstrac
 
         final byte[] pdfBytes = Resources.toByteArray(
                 Resources.getResource(CodaMappingFraManager_IntegTest.class, fileName));
-        final Blob blob = new Blob(fileName, MimeTypes.APPLICATION_PDF, pdfBytes);
+        final Blob blob = new Blob(fileName, MimeTypes.APPLICATION_PDF.asStr(), pdfBytes);
 
 
         // When

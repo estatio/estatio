@@ -367,7 +367,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 ".pdf",
                 previewOnly,
                 buildTemplateName(docType, templateNameSuffixIfAny),
-                MimeTypes.APPLICATION_PDF,
+                MimeTypes.APPLICATION_PDF.asStr(),
                 contentText, contentRenderingStrategy,
                 nameText, nameRenderingStrategy,
                 executionContext);
@@ -387,7 +387,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
             final Class<? extends AttachmentAdvisor> attachmentAdvisorClass,
             final ExecutionContext executionContext) {
 
-        final Clob clob = new Clob(buildTemplateName(docType, nameSuffixIfAny, ".html"), MimeTypes.TEXT_HTML, contentText);
+        final Clob clob = new Clob(buildTemplateName(docType, nameSuffixIfAny, ".html"), MimeTypes.TEXT_HTML.asStr(), contentText);
         final DocumentTemplate documentTemplate = upsertDocumentClobTemplate(
                 docType, templateDate, atPath,
                 ".html",

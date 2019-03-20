@@ -47,7 +47,7 @@ public class Document_attachSupportingPdf {
     )
     public Document exec(
             final DocumentType documentType,
-            @Parameter(fileAccept = MimeTypes.APPLICATION_PDF)
+            @Parameter(fileAccept = MimeTypes.APPLICATION_PDF.asStr())
             final Blob document,
             @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "File name")
             final String fileName,

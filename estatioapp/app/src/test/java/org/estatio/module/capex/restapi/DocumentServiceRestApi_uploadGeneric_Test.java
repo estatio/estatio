@@ -47,7 +47,7 @@ public class DocumentServiceRestApi_uploadGeneric_Test {
     public void when_using_unsupported_doc_type_data() throws Exception {
 
         // given
-        final Blob blob = new Blob("Foo", MimeTypes.APPLICATION_PDF, new byte[20]);
+        final Blob blob = new Blob("Foo", MimeTypes.APPLICATION_PDF.asStr(), new byte[20]);
 
         // expect
         context.checking(new Expectations() {{

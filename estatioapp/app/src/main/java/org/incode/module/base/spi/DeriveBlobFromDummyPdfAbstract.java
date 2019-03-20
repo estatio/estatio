@@ -26,7 +26,7 @@ public abstract class DeriveBlobFromDummyPdfAbstract
         final byte[] bytes;
         try {
             bytes = Resources.toByteArray(resource);
-            blob = new Blob("dummy.pdf", MimeTypes.APPLICATION_PDF, bytes);
+            blob = new Blob("dummy.pdf", MimeTypes.APPLICATION_PDF.asStr(), bytes);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

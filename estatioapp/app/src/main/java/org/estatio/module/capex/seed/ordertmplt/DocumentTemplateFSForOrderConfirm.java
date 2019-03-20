@@ -103,7 +103,7 @@ public class DocumentTemplateFSForOrderConfirm extends DocumentTemplateFSAbstrac
 
         final Blob contentBlob =
                 new Blob(name + ".docx",
-                        MimeTypes.APPLICATION_DOCX,
+                        MimeTypes.APPLICATION_PDF.asStr(),
                         contentBytes);
         final DocumentTemplate documentTemplate = upsertDocumentBlobTemplate(
                 documentType, templateDate, It.getPath(),
@@ -115,7 +115,7 @@ public class DocumentTemplateFSForOrderConfirm extends DocumentTemplateFSAbstrac
 
         // necessary because the mimeType is used as the mimeType of the rendered document.
         // REVIEW: this really should be determined from the renderingStrategy in use.
-        documentTemplate.setMimeType(MimeTypes.APPLICATION_PDF);
+        documentTemplate.setMimeType(MimeTypes.APPLICATION_PDF.asStr());
 
         mixin(DocumentTemplate._applicable.class, documentTemplate).applicable(
                 Order.class, RendererModelFactoryForOrder.class, AttachToSameForOrder.class);

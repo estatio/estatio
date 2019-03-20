@@ -76,7 +76,7 @@ public class InvoiceForLease_attachSupportingDocument {
     @ActionLayout(contributed = Contributed.AS_ACTION, cssClassFa = "paperclip")
     public Invoice $$(
             final DocumentType supportingDocumentType,
-            @Parameter(fileAccept = MimeTypes.APPLICATION_PDF)
+            @Parameter(fileAccept = MimeTypes.APPLICATION_PDF.asStr())
             @ParameterLayout(named = "Receipt (PDF)")
             final Blob blob,
             @Parameter(optionality = Optionality.OPTIONAL)

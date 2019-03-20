@@ -67,7 +67,7 @@ public abstract class InvoiceForLease_sendByPostPrelimLetterOrInvoiceDocAbstract
         final byte[] mergedBytes = mergePdfBytes(document);
 
         final String fileName = document.getName();
-        return new Blob(fileName, MimeTypes.APPLICATION_PDF, mergedBytes);
+        return new Blob(fileName, MimeTypes.APPLICATION_PDF.asStr(), mergedBytes);
     }
 
     public String disable$$() {

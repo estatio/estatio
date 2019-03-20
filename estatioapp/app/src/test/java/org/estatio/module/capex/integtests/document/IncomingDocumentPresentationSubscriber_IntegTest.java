@@ -45,7 +45,7 @@ public class IncomingDocumentPresentationSubscriber_IntegTest extends CapexModul
         final String fileName = "3020100123.pdf";
         final byte[] pdfBytes = Resources.toByteArray(
                 Resources.getResource(IncomingDocumentPresentationSubscriber_IntegTest.class, fileName));
-        final Blob blob = new Blob(fileName, MimeTypes.APPLICATION_PDF, pdfBytes);
+        final Blob blob = new Blob(fileName, MimeTypes.APPLICATION_PDF.asStr(), pdfBytes);
         wrap(documentMenu).upload(blob);
         transactionService.nextTransaction();
 

@@ -51,7 +51,7 @@ public class TaskIncomingDocumentPdfService {
             if(document == null) {
                 return null;
             }
-            if (!Objects.equals(document.getMimeType(), MimeTypes.APPLICATION_PDF)) {
+            if (!Objects.equals(document.getMimeType(), MimeTypes.APPLICATION_PDF.asStr())) {
                 return null;
             }
             return document.getBlob();

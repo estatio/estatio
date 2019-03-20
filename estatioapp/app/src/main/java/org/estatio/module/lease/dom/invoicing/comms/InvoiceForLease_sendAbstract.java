@@ -127,7 +127,7 @@ public abstract class InvoiceForLease_sendAbstract {
             return;
         }
         final String mimeType = docAttachedToDocument.getMimeType();
-        if (!MimeTypes.APPLICATION_PDF.equals(mimeType)) {
+        if (!MimeTypes.APPLICATION_PDF.asStr().equals(mimeType)) {
             return;
         }
         final byte[] attachedDocBytes = attachedDocSort.asBytes(docAttachedToDocument);

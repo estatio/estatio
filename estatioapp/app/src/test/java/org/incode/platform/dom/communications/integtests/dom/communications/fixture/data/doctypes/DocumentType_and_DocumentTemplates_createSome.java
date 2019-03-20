@@ -70,7 +70,7 @@ public class DocumentType_and_DocumentTemplates_createSome extends DocumentTempl
         //
         final LocalDate now = clockService.now();
 
-        final Clob clob = new Clob(docTypeForFreemarkerHtml.getName(), MimeTypes.TEXT_HTML,
+        final Clob clob = new Clob(docTypeForFreemarkerHtml.getName(), MimeTypes.TEXT_HTML.asStr(),
                 loadResource("FreemarkerHtmlCoverNote.html"));
         fmkTemplate = upsertDocumentClobTemplate(
                 docTypeForFreemarkerHtml, now, atPath,

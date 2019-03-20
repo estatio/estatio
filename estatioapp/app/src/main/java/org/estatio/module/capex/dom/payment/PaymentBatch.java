@@ -693,7 +693,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
         pdfFiles.stream().forEach(this::cleanup);
 
-        return new Blob(documentName, MimeTypes.APPLICATION_PDF, pdfMergedBytes);
+        return new Blob(documentName, MimeTypes.APPLICATION_PDF.asStr(), pdfMergedBytes);
     }
 
     void cleanup(File tempFile) {

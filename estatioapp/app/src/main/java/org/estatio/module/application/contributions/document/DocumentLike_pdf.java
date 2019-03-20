@@ -40,10 +40,10 @@ public class DocumentLike_pdf {
     }
 
     static boolean holdsPdf(final DocumentLike document) {
-        return MimeTypes.APPLICATION_PDF.equals(document.getMimeType());
+        return MimeTypes.APPLICATION_PDF.asStr().equals(document.getMimeType());
     }
     static boolean holdsDocx(final DocumentLike document) {
-        return MimeTypes.APPLICATION_PDF.equals(document.getMimeType());
+        return MimeTypes.APPLICATION_PDF.asStr().equals(document.getMimeType());
     }
 
     public static class DomainEvent extends ActionDomainEvent<Document> {

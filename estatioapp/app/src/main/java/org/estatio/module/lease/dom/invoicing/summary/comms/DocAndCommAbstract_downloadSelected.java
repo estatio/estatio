@@ -88,7 +88,7 @@ public abstract class DocAndCommAbstract_downloadSelected<T extends DocAndCommAb
             }
 
             final byte[] mergedBytes = pdfBoxService.merge(pdfBytes.toArray(new byte[][] {}));
-            return new Blob(fileName, MimeTypes.APPLICATION_PDF, mergedBytes);
+            return new Blob(fileName, MimeTypes.APPLICATION_PDF.asStr(), mergedBytes);
         }
 
         return null;

@@ -380,7 +380,7 @@ public class IncomingInvoiceDownloadManager {
 
         preparers.forEach(DocumentPreparer::cleanup);
 
-        return new Blob(fileName, MimeTypes.APPLICATION_PDF, singlePdf);
+        return new Blob(fileName, MimeTypes.APPLICATION_PDF.asStr(), singlePdf);
     }
 
     public String disableDownloadToPdfSingle() {

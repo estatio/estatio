@@ -107,7 +107,7 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
     }
 
     public String default3NewTextTemplate() {
-        return MimeTypes.TEXT_HTML;
+        return MimeTypes.TEXT_HTML.asStr();
     }
     public String default4NewTextTemplate() {
         return "html";

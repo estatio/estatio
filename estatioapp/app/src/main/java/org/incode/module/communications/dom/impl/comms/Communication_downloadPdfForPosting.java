@@ -61,7 +61,7 @@ public class Communication_downloadPdfForPosting {
 
         final byte[] mergedBytes = pdfBoxService.merge(pdfBytes.toArray(new byte[][] {}));
 
-        return new Blob(fileName, MimeTypes.APPLICATION_PDF, mergedBytes);
+        return new Blob(fileName, MimeTypes.APPLICATION_PDF.asStr(), mergedBytes);
     }
 
     public boolean hideAct() {
@@ -86,7 +86,7 @@ public class Communication_downloadPdfForPosting {
     private List<Document> findAttachedPdfDocuments() {
         return communication.findDocuments(
                 DocumentConstants.PAPERCLIP_ROLE_ATTACHMENT,
-                MimeTypes.APPLICATION_PDF);
+                MimeTypes.APPLICATION_PDF.asStr());
     }
 
     private Blob asBlob(final Document document) {

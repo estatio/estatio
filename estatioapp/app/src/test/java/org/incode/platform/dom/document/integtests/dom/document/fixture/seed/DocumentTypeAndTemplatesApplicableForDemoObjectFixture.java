@@ -87,7 +87,7 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
         //
         final LocalDate now = clockService.now();
 
-        final Clob clob = new Clob(docTypeForFreemarkerHtml.getName(), MimeTypes.TEXT_HTML,
+        final Clob clob = new Clob(docTypeForFreemarkerHtml.getName(), MimeTypes.TEXT_HTML.asStr(),
                 loadResource("FreemarkerHtmlCoverNote.html"));
         fmkTemplate = upsertDocumentClobTemplate(
                 docTypeForFreemarkerHtml, now, atPath,
@@ -117,7 +117,7 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
                 ".pdf",
                 false,
                 docTypeForStringInterpolatorUrl.getName(),
-                MimeTypes.APPLICATION_PDF,
+                MimeTypes.APPLICATION_PDF.asStr(),
                 "${demoObject.url}", sipcRenderingStrategy,
                 "pdf-of-url-held-in-${demoObject.name}", siRenderingStrategy,
                 executionContext);
@@ -141,7 +141,7 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
                 false,
                 new Blob(
                         docTypeForXDocReportPdf.getName() + ".docx",
-                        MimeTypes.APPLICATION_DOCX,
+                        MimeTypes.APPLICATION_PDF.asStr(),
                         loadResourceBytes("demoObject-template.docx")
                 ), xdpRenderingStrategy,
                 "${demoObject.name}", fmkRenderingStrategy,
@@ -166,7 +166,7 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
                 false,
                 new Blob(
                         docTypeForXDocReportDocx.getName() + ".docx",
-                        MimeTypes.APPLICATION_DOCX,
+                        MimeTypes.APPLICATION_PDF.asStr(),
                         loadResourceBytes("demoObject-template.docx")
                 ), xddRenderingStrategy,
                 "${demoObject.name}", fmkRenderingStrategy,

@@ -433,7 +433,7 @@ public class IncomingDocumentRepository_UpsertAndArchive_IntegTest extends Capex
     }
     private Blob load(final String name, final String fileName) throws IOException {
         final byte[] pdfBytes = Resources.toByteArray(Resources.getResource(getClass(), fileName));
-        return new Blob(name, MimeTypes.APPLICATION_PDF, pdfBytes);
+        return new Blob(name, MimeTypes.APPLICATION_PDF.asStr(), pdfBytes);
     }
 
 

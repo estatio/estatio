@@ -57,7 +57,7 @@ public final class IncomingPdfBuilder
             throw new RuntimeException(e);
         }
 
-        final Blob blob = new Blob(resourceName, MimeTypes.APPLICATION_PDF, bytes);
+        final Blob blob = new Blob(resourceName, MimeTypes.APPLICATION_PDF.asStr(), bytes);
         object = runAs != null
                         ? sudoService.sudo(runAs, () -> upload(blob))
                         : upload(blob);

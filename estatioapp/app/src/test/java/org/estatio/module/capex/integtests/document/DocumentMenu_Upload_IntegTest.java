@@ -60,7 +60,7 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
         final String fileName = "3020100123.pdf";
         final byte[] pdfBytes = Resources.toByteArray(
                 Resources.getResource(DocumentMenu_Upload_IntegTest.class, fileName));
-        final Blob blob = new Blob(fileName, MimeTypes.APPLICATION_PDF, pdfBytes);
+        final Blob blob = new Blob(fileName, MimeTypes.APPLICATION_PDF.asStr(), pdfBytes);
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         final Document uploadedDocument1 = sudoService
                 .sudo(Person_enum.DanielOfficeAdministratorFr.getRef().toLowerCase(), () ->
@@ -97,7 +97,7 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
         final String fileName2 = "3020100123-altered.pdf";
         final byte[] pdfBytes2 = Resources.toByteArray(
                 Resources.getResource(DocumentMenu_Upload_IntegTest.class, fileName2));
-        final Blob similarNamedBlob = new Blob(fileName, MimeTypes.APPLICATION_PDF, pdfBytes2);
+        final Blob similarNamedBlob = new Blob(fileName, MimeTypes.APPLICATION_PDF.asStr(), pdfBytes2);
         final Document uploadedDocument2 = wrap(documentMenu).upload(similarNamedBlob);
         transactionService.nextTransaction();
 
@@ -127,7 +127,7 @@ public class DocumentMenu_Upload_IntegTest extends CapexModuleIntegTestAbstract 
 
         // and when since ECP-676 atPath derived from filename for France and Belgium
         final String belgianBarCode = "6010012345.pdf";
-        final Blob belgianBlob = new Blob(belgianBarCode, MimeTypes.APPLICATION_PDF, pdfBytes2);
+        final Blob belgianBlob = new Blob(belgianBarCode, MimeTypes.APPLICATION_PDF.asStr(), pdfBytes2);
         Document belgianDocument = wrap(documentMenu).upload(belgianBlob);
 
         // then

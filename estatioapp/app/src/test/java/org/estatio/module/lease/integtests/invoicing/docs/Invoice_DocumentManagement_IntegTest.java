@@ -243,7 +243,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             assertThat(documentAbs.getId()).isNotNull();
             assertThat(documentAbs.getSort()).isEqualTo(DocumentSort.BLOB);
-            assertThat(documentAbs.getMimeType()).isEqualTo(MimeTypes.APPLICATION_PDF);
+            assertThat(documentAbs.getMimeType()).isEqualTo(MimeTypes.APPLICATION_PDF.asStr());
             assertThat(documentAbs.getName()).isEqualTo(fileName);
             assertThat(documentAbs.getAtPath()).isEqualTo(invoice.getApplicationTenancyPath());
             assertThat(documentAbs.getBlobBytes()).isEqualTo(blob.getBytes());
@@ -944,7 +944,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
     static Blob asBlob(final String fileName) throws IOException {
         final URL url = Resources.getResource(Invoice_DocumentManagement_IntegTest.class, fileName);
         final byte[] bytes = Resources.toByteArray(url);
-        return new Blob(fileName, MimeTypes.APPLICATION_PDF, bytes);
+        return new Blob(fileName, MimeTypes.APPLICATION_PDF.asStr(), bytes);
     }
 
     void approveAndInvoice(final Invoice invoice) {

@@ -16,7 +16,7 @@ public class DocumentPredicates {
     }
 
     public static Predicate<Document> isPdf() {
-        return document -> MimeTypes.APPLICATION_PDF.equals(document.getMimeType());
+        return document -> MimeTypes.APPLICATION_PDF.asStr().equals(document.getMimeType());
     }
 
     public static Predicate<Document> isBlobSort() {

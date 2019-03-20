@@ -120,7 +120,7 @@ public class LookupAttachedPdfService {
                     }
                     return false;
                 })
-                .filter(document -> Objects.equals(document.getMimeType(), MimeTypes.APPLICATION_PDF))
+                .filter(document -> Objects.equals(document.getMimeType(), MimeTypes.APPLICATION_PDF.asStr()))
                 .collect(Collectors.toList());
     }
 

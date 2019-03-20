@@ -97,7 +97,7 @@ public class DemoObjectWithNote_and_DemoInvoice_create3 extends FixtureScript {
 
     private static Blob loadPdf(final String resourceName) {
         final byte[] bytes = loadResourceBytes(resourceName);
-        return new Blob(resourceName, MimeTypes.APPLICATION_PDF, bytes);
+        return new Blob(resourceName, MimeTypes.APPLICATION_PDF.asStr(), bytes);
     }
 
     private static byte[] loadResourceBytes(final String resourceName) {
