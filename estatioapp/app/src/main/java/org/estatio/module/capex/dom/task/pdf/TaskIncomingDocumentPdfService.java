@@ -1,6 +1,5 @@
 package org.estatio.module.capex.dom.task.pdf;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import javax.inject.Inject;
@@ -11,7 +10,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.value.Blob;
 
-import org.incode.module.base.dom.MimeTypes;
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 
@@ -51,7 +50,7 @@ public class TaskIncomingDocumentPdfService {
             if(document == null) {
                 return null;
             }
-            if (!Objects.equals(document.getMimeType(), MimeTypes.APPLICATION_PDF.asStr())) {
+            if (! MimeTypeData.APPLICATION_PDF.matches(document)) {
                 return null;
             }
             return document.getBlob();

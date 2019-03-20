@@ -16,7 +16,7 @@ import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.wicket.pdfjs.cpt.applib.PdfJsViewer;
 
-import org.incode.module.base.dom.MimeTypes;
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.docs.DocumentLike;
@@ -40,10 +40,10 @@ public class DocumentLike_pdf {
     }
 
     static boolean holdsPdf(final DocumentLike document) {
-        return MimeTypes.APPLICATION_PDF.asStr().equals(document.getMimeType());
+        return MimeTypeData.APPLICATION_PDF.matches(document);
     }
     static boolean holdsDocx(final DocumentLike document) {
-        return MimeTypes.APPLICATION_PDF.asStr().equals(document.getMimeType());
+        return MimeTypeData.APPLICATION_DOCX.matches(document);
     }
 
     public static class DomainEvent extends ActionDomainEvent<Document> {

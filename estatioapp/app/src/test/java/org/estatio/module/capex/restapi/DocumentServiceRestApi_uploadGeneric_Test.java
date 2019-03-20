@@ -10,7 +10,7 @@ import org.junit.rules.ExpectedException;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.incode.module.base.dom.MimeTypes;
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 public class DocumentServiceRestApi_uploadGeneric_Test {
@@ -47,7 +47,7 @@ public class DocumentServiceRestApi_uploadGeneric_Test {
     public void when_using_unsupported_doc_type_data() throws Exception {
 
         // given
-        final Blob blob = new Blob("Foo", MimeTypes.APPLICATION_PDF.asStr(), new byte[20]);
+        final Blob blob = new Blob("Foo", MimeTypeData.APPLICATION_PDF.asStr(), new byte[20]);
 
         // expect
         context.checking(new Expectations() {{

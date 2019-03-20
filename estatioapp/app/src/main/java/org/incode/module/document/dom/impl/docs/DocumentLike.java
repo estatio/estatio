@@ -10,9 +10,10 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
+import org.incode.module.base.dom.HasMimeType;
 import org.incode.module.document.DocumentModule;
 
-public interface DocumentLike {
+public interface DocumentLike extends HasMimeType {
 
     void setName(String documentName);
     void modifyBlob(Blob blob);

@@ -35,7 +35,7 @@ import org.apache.isis.applib.services.sudo.SudoService;
 import org.apache.isis.applib.services.wrapper.HiddenException;
 import org.apache.isis.applib.value.Blob;
 
-import org.incode.module.base.dom.MimeTypes;
+import org.incode.module.base.dom.MimeTypeData;
 
 import org.estatio.module.application.integtests.ApplicationModuleIntegTestAbstract;
 import org.estatio.module.base.dom.EstatioRole;
@@ -204,7 +204,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
             final String fileName = "3020100123.pdf";
             final byte[] pdfBytes = Resources.toByteArray(
                     Resources.getResource(IncomingDocumentPresentationSubscriber_IntegTest.class, fileName));
-            final Blob blob = new Blob(fileName, MimeTypes.APPLICATION_PDF.asStr(), pdfBytes);
+            final Blob blob = new Blob(fileName, MimeTypeData.APPLICATION_PDF.asStr(), pdfBytes);
 
             wrap(mixin(BankAccount_attachPdfAsIbanProof.class, bankAccount)).act(blob);
 

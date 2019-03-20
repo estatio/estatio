@@ -18,7 +18,7 @@ import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.pdfbox.dom.service.PdfBoxService;
 
-import org.incode.module.base.dom.MimeTypes;
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.incode.module.communications.dom.mixins.DocumentConstants;
 import org.incode.module.document.dom.impl.docs.Document;
@@ -61,7 +61,7 @@ public class Communication_downloadPdfForPosting {
 
         final byte[] mergedBytes = pdfBoxService.merge(pdfBytes.toArray(new byte[][] {}));
 
-        return new Blob(fileName, MimeTypes.APPLICATION_PDF.asStr(), mergedBytes);
+        return new Blob(fileName, MimeTypeData.APPLICATION_PDF.asStr(), mergedBytes);
     }
 
     public boolean hideAct() {
@@ -86,7 +86,7 @@ public class Communication_downloadPdfForPosting {
     private List<Document> findAttachedPdfDocuments() {
         return communication.findDocuments(
                 DocumentConstants.PAPERCLIP_ROLE_ATTACHMENT,
-                MimeTypes.APPLICATION_PDF.asStr());
+                MimeTypeData.APPLICATION_PDF.asStr());
     }
 
     private Blob asBlob(final Document document) {

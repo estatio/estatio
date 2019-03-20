@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.apache.isis.applib.value.Blob;
 
-import org.incode.module.base.dom.MimeTypes;
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.incode.module.document.dom.impl.docs.Document;
 
@@ -67,7 +67,7 @@ public abstract class InvoiceForLease_sendByPostPrelimLetterOrInvoiceDocAbstract
         final byte[] mergedBytes = mergePdfBytes(document);
 
         final String fileName = document.getName();
-        return new Blob(fileName, MimeTypes.APPLICATION_PDF.asStr(), mergedBytes);
+        return new Blob(fileName, MimeTypeData.APPLICATION_PDF.asStr(), mergedBytes);
     }
 
     public String disable$$() {

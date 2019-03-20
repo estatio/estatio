@@ -2,7 +2,6 @@ package org.estatio.module.capex.dom.documents;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -15,7 +14,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
-import org.incode.module.base.dom.MimeTypes;
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
@@ -120,7 +119,7 @@ public class LookupAttachedPdfService {
                     }
                     return false;
                 })
-                .filter(document -> Objects.equals(document.getMimeType(), MimeTypes.APPLICATION_PDF.asStr()))
+                .filter(document -> MimeTypeData.APPLICATION_PDF.matches(document))
                 .collect(Collectors.toList());
     }
 

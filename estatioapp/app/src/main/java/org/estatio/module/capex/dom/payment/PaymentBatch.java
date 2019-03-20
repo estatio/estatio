@@ -77,7 +77,7 @@ import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
-import org.incode.module.base.dom.MimeTypes;
+import org.incode.module.base.dom.MimeTypeData;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.capex.app.credittransfer.CreditTransferExportLine;
@@ -693,7 +693,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
         pdfFiles.stream().forEach(this::cleanup);
 
-        return new Blob(documentName, MimeTypes.APPLICATION_PDF.asStr(), pdfMergedBytes);
+        return new Blob(documentName, MimeTypeData.APPLICATION_PDF.asStr(), pdfMergedBytes);
     }
 
     void cleanup(File tempFile) {

@@ -41,7 +41,7 @@ import org.apache.isis.applib.value.Clob;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.MimeTypes;
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.DocumentModule;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.docs.DocumentSort;
@@ -107,7 +107,7 @@ public class DocumentTemplateMenu extends UdoDomainService<DocumentTemplateMenu>
     }
 
     public String default3NewTextTemplate() {
-        return MimeTypes.TEXT_HTML.asStr();
+        return MimeTypeData.TEXT_HTML.asStr();
     }
     public String default4NewTextTemplate() {
         return "html";

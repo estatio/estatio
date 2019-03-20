@@ -36,7 +36,7 @@ import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.fakedata.dom.FakeDataService;
 
-import org.incode.module.base.dom.MimeTypes;
+import org.incode.module.base.dom.MimeTypeData;
 
 import org.estatio.module.bankmandate.dom.Scheme;
 import org.estatio.module.bankmandate.dom.SequenceType;
@@ -63,7 +63,7 @@ public class InvoiceAllAndPrepareInvoiceDoc extends DiscoverableFixtureScript {
         final List<Blob> blobs = Stream.of("PR20180109UK.pdf", "PR20180305UK.pdf", "PR20182109UK.pdf").map(resourceName -> {
             final URL url = Resources.getResource(getClass(), resourceName);
             try {
-                return new Blob(resourceName, MimeTypes.APPLICATION_PDF.asStr(), Resources.toByteArray(url));
+                return new Blob(resourceName, MimeTypeData.APPLICATION_PDF.asStr(), Resources.toByteArray(url));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

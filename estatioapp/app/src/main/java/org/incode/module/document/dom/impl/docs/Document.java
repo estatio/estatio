@@ -38,6 +38,7 @@ import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.mixins.T_documents;
@@ -168,6 +169,14 @@ public class Document extends DocumentAbstract<Document> implements DocumentLike
         setMimeType(mimeType);
         this.createdAt = createdAt;
         this.state = DocumentState.NOT_RENDERED;
+    }
+    public Document(
+            final DocumentType type,
+            final String atPath,
+            final String documentName,
+            final MimeTypeData mimeType,
+            final DateTime createdAt) {
+        this(type, atPath, documentName, mimeType.asStr(), createdAt);
     }
     //endregion
 

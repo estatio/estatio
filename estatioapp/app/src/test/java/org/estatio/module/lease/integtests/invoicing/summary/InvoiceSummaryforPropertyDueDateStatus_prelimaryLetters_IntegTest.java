@@ -30,7 +30,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.incode.module.base.dom.MimeTypes;
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.communications.dom.impl.comms.Communication;
 import org.incode.module.communications.dom.impl.comms.CommunicationState;
@@ -124,7 +124,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_prelimaryLetters_IntegTest e
             assertThat(prelimLetterDoc.getState()).isEqualTo(DocumentState.NOT_RENDERED);
             assertThat(prelimLetterDoc.getRenderedAt()).isNull();
             assertThat(prelimLetterDoc.getSort()).isEqualTo(DocumentSort.EMPTY);
-            assertThat(prelimLetterDoc.getMimeType()).isEqualTo(MimeTypes.APPLICATION_PDF.asStr());
+            assertThat(prelimLetterDoc.getMimeType()).isEqualTo(MimeTypeData.APPLICATION_PDF.asStr());
 
             // and also attached to only invoice
             List<Paperclip> paperclips = paperclipRepository.findByDocument(prelimLetterDoc);
@@ -186,7 +186,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_prelimaryLetters_IntegTest e
             assertThat(coverNote.getState()).isEqualTo(DocumentState.RENDERED);
             assertThat(coverNote.getRenderedAt()).isNotNull();
             assertThat(coverNote.getSort()).isEqualTo(DocumentSort.CLOB);
-            assertThat(coverNote.getMimeType()).isEqualTo(MimeTypes.TEXT_HTML.asStr());
+            assertThat(coverNote.getMimeType()).isEqualTo(MimeTypeData.TEXT_HTML.asStr());
 
             // and when comm sent
             runBackgroundCommandsService.runBackgroundCommands();

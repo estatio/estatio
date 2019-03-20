@@ -15,7 +15,7 @@ import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.applib.value.Blob;
 
-import org.incode.module.base.dom.MimeTypes;
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
@@ -59,7 +59,7 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
         final String fileName = "3020100123.pdf";
         final byte[] pdfBytes = Resources.toByteArray(
                 Resources.getResource(DocumentServiceRestApi_uploadGeneric_IntegTest.class, fileName));
-        final Blob blob = new Blob(fileName, MimeTypes.APPLICATION_PDF.asStr(), pdfBytes);
+        final Blob blob = new Blob(fileName, MimeTypeData.APPLICATION_PDF.asStr(), pdfBytes);
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
 
         wrap(documentService).uploadGeneric(blob, "INCOMING", "/FRA");
@@ -93,7 +93,7 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
         final String fileName2 = "3020100123-altered.pdf";
         final byte[] pdfBytes2 = Resources.toByteArray(
                 Resources.getResource(DocumentServiceRestApi_uploadGeneric_IntegTest.class, fileName2));
-        final Blob similarNamedBlob = new Blob(fileName, MimeTypes.APPLICATION_PDF.asStr(), pdfBytes2);
+        final Blob similarNamedBlob = new Blob(fileName, MimeTypeData.APPLICATION_PDF.asStr(), pdfBytes2);
 
         wrap(documentService).uploadGeneric(similarNamedBlob, "INCOMING", "/FRA");
 
@@ -114,7 +114,7 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
         assertThat(paperclipRepository.findByDocument(incomingDocumentsAfter.get(1)).size()).isEqualTo(0);
 
         final String belgianBarCode = "6010012345.pdf";
-        final Blob belgianBlob = new Blob(belgianBarCode, MimeTypes.APPLICATION_PDF.asStr(), pdfBytes2);
+        final Blob belgianBlob = new Blob(belgianBarCode, MimeTypeData.APPLICATION_PDF.asStr(), pdfBytes2);
         Document belgianDocument = wrap(documentService).uploadGeneric(belgianBlob, "INCOMING", "/FRA");
 
         // then
@@ -133,7 +133,7 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
         final String fileName = "2010101234.pdf";
         final byte[] pdfBytes = Resources.toByteArray(
                 Resources.getResource(DocumentServiceRestApi_uploadGeneric_IntegTest.class, fileName));
-        final Blob blob = new Blob(fileName, MimeTypes.APPLICATION_PDF.asStr(), pdfBytes);
+        final Blob blob = new Blob(fileName, MimeTypeData.APPLICATION_PDF.asStr(), pdfBytes);
         final Document document1 = wrap(documentService).uploadGeneric(blob, "INCOMING", "/ITA");
         transactionService.nextTransaction();
 
@@ -160,7 +160,7 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
         // and when again uploading doc with the same name (but different bytes)
         final byte[] pdfBytes2 = Resources.toByteArray(
                 Resources.getResource(DocumentServiceRestApi_uploadGeneric_IntegTest.class, "2010101234-altered.pdf"));
-        final Blob similarNamedBlobWithDifferentBytes = new Blob(fileName, MimeTypes.APPLICATION_PDF.asStr(), pdfBytes2);
+        final Blob similarNamedBlobWithDifferentBytes = new Blob(fileName, MimeTypeData.APPLICATION_PDF.asStr(), pdfBytes2);
 
         final Document document2 = wrap(documentService)
                 .uploadGeneric(similarNamedBlobWithDifferentBytes, "INCOMING", "/ITA");
@@ -202,7 +202,7 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
         final String fileName = "some_tax_receipt.pdf";
         final byte[] pdfBytes = Resources.toByteArray(
                 Resources.getResource(DocumentServiceRestApi_uploadGeneric_IntegTest.class, fileName));
-        final Blob blob = new Blob(fileName, MimeTypes.APPLICATION_PDF.asStr(), pdfBytes);
+        final Blob blob = new Blob(fileName, MimeTypeData.APPLICATION_PDF.asStr(), pdfBytes);
 
         wrap(documentService).uploadGeneric(blob, "TAX_REGISTER", "/ITA");
 

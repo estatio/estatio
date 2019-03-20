@@ -11,7 +11,7 @@ import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 import org.apache.isis.applib.services.sudo.SudoService;
 import org.apache.isis.applib.value.Blob;
 
-import org.incode.module.base.dom.MimeTypes;
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.module.capex.app.DocumentMenu;
@@ -57,7 +57,7 @@ public final class IncomingPdfBuilder
             throw new RuntimeException(e);
         }
 
-        final Blob blob = new Blob(resourceName, MimeTypes.APPLICATION_PDF.asStr(), bytes);
+        final Blob blob = new Blob(resourceName, MimeTypeData.APPLICATION_PDF.asStr(), bytes);
         object = runAs != null
                         ? sudoService.sudo(runAs, () -> upload(blob))
                         : upload(blob);

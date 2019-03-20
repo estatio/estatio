@@ -32,7 +32,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
-import org.incode.module.base.dom.MimeTypes;
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.dom.impl.applicability.AttachmentAdvisor;
 import org.incode.module.document.dom.impl.applicability.RendererModelFactory;
 import org.incode.module.document.dom.impl.docs.Document;
@@ -367,7 +367,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 ".pdf",
                 previewOnly,
                 buildTemplateName(docType, templateNameSuffixIfAny),
-                MimeTypes.APPLICATION_PDF.asStr(),
+                MimeTypeData.APPLICATION_PDF.asStr(),
                 contentText, contentRenderingStrategy,
                 nameText, nameRenderingStrategy,
                 executionContext);
@@ -387,7 +387,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
             final Class<? extends AttachmentAdvisor> attachmentAdvisorClass,
             final ExecutionContext executionContext) {
 
-        final Clob clob = new Clob(buildTemplateName(docType, nameSuffixIfAny, ".html"), MimeTypes.TEXT_HTML.asStr(), contentText);
+        final Clob clob = new Clob(buildTemplateName(docType, nameSuffixIfAny, ".html"), MimeTypeData.TEXT_HTML.asStr(), contentText);
         final DocumentTemplate documentTemplate = upsertDocumentClobTemplate(
                 docType, templateDate, atPath,
                 ".html",

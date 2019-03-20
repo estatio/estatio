@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.clock.ClockService;
 
-import org.incode.module.base.dom.MimeTypes;
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.communications.dom.impl.comms.Communication;
 import org.incode.module.communications.dom.impl.comms.CommunicationState;
@@ -142,7 +142,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_invoiceDocs_IntegTest extend
             assertThat(invoiceDoc.getState()).isEqualTo(DocumentState.NOT_RENDERED);
             assertThat(invoiceDoc.getRenderedAt()).isNull();
             assertThat(invoiceDoc.getSort()).isEqualTo(DocumentSort.EMPTY);
-            assertThat(invoiceDoc.getMimeType()).isEqualTo(MimeTypes.APPLICATION_PDF.asStr());
+            assertThat(invoiceDoc.getMimeType()).isEqualTo(MimeTypeData.APPLICATION_PDF.asStr());
 
             // and also attached to only invoice
             List<Paperclip> paperclips = paperclipRepository.findByDocument(invoiceDoc);
@@ -203,7 +203,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_invoiceDocs_IntegTest extend
             assertThat(coverNote.getState()).isEqualTo(DocumentState.RENDERED);
             assertThat(coverNote.getRenderedAt()).isNotNull();
             assertThat(coverNote.getSort()).isEqualTo(DocumentSort.CLOB);
-            assertThat(coverNote.getMimeType()).isEqualTo(MimeTypes.TEXT_HTML.asStr());
+            assertThat(coverNote.getMimeType()).isEqualTo(MimeTypeData.TEXT_HTML.asStr());
 
             // and when comm sent
             runBackgroundCommandsService.runBackgroundCommands();

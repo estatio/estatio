@@ -14,7 +14,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.applib.value.Blob;
 
-import org.incode.module.base.dom.MimeTypes;
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.Document_delete;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
@@ -45,7 +45,7 @@ public class IncomingDocumentPresentationSubscriber_IntegTest extends CapexModul
         final String fileName = "3020100123.pdf";
         final byte[] pdfBytes = Resources.toByteArray(
                 Resources.getResource(IncomingDocumentPresentationSubscriber_IntegTest.class, fileName));
-        final Blob blob = new Blob(fileName, MimeTypes.APPLICATION_PDF.asStr(), pdfBytes);
+        final Blob blob = new Blob(fileName, MimeTypeData.APPLICATION_PDF.asStr(), pdfBytes);
         wrap(documentMenu).upload(blob);
         transactionService.nextTransaction();
 

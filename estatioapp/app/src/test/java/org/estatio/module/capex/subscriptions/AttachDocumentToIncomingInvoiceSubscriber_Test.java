@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.incode.module.base.dom.MimeTypes;
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
@@ -66,7 +66,7 @@ public class AttachDocumentToIncomingInvoiceSubscriber_Test {
         public void on_document_upload_single_matching_invoice() {
             // given
             Document document = new Document(incomingType, "/ITA", "2010101234.pdf",
-                    MimeTypes.APPLICATION_PDF.asStr(), new DateTime());
+                    MimeTypeData.APPLICATION_PDF, new DateTime());
 
             CodaDocLine codaDocLine = new CodaDocLine();
             CodaDocHead codaDocHead = new CodaDocHead();
@@ -98,7 +98,7 @@ public class AttachDocumentToIncomingInvoiceSubscriber_Test {
         public void on_document_upload_multiple_matching_invoices() {
             // given
             Document document = new Document(incomingType, "/ITA", "2010101234.pdf",
-                    MimeTypes.APPLICATION_PDF.asStr(), new DateTime());
+                    MimeTypeData.APPLICATION_PDF, new DateTime());
 
             CodaDocLine codaDocLine1 = new CodaDocLine();
             CodaDocHead codaDocHead1 = new CodaDocHead();
@@ -136,7 +136,7 @@ public class AttachDocumentToIncomingInvoiceSubscriber_Test {
         public void on_document_upload_no_matching_invoice() {
             // given
             Document document = new Document(incomingType, "/ITA", "2010101234.pdf",
-                    MimeTypes.APPLICATION_PDF.asStr(), new DateTime());
+                    MimeTypeData.APPLICATION_PDF, new DateTime());
 
             IncomingDocumentRepository.UploadDomainEvent ev = new IncomingDocumentRepository.UploadDomainEvent();
             ev.setReturnValue(document);
@@ -177,7 +177,7 @@ public class AttachDocumentToIncomingInvoiceSubscriber_Test {
             // given
             IncomingInvoice incomingInvoice = new IncomingInvoice();
             Document document = new Document(incomingType, "/ITA", "2010101234.pdf",
-                    MimeTypes.APPLICATION_PDF.asStr(), new DateTime());
+                    MimeTypeData.APPLICATION_PDF, new DateTime());
             CodaDocLine codaDocLine = new CodaDocLine();
             codaDocLine.setUserRef1("2010101234");
 
@@ -208,9 +208,9 @@ public class AttachDocumentToIncomingInvoiceSubscriber_Test {
             IncomingInvoice incomingInvoice = new IncomingInvoice();
 
             Document document1 = new Document(incomingType, "/ITA", "2010101234.pdf",
-                    MimeTypes.APPLICATION_PDF.asStr(), new DateTime());
+                    MimeTypeData.APPLICATION_PDF, new DateTime());
             Document document2 = new Document(incomingType, "/ITA", "2010101234.pdf",
-                    MimeTypes.APPLICATION_PDF.asStr(), new DateTime());
+                    MimeTypeData.APPLICATION_PDF, new DateTime());
             CodaDocLine codaDocLine1 = new CodaDocLine();
             codaDocLine1.setUserRef1("2010101234");
 

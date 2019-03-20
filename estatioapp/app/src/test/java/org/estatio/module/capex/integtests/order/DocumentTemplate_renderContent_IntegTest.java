@@ -99,7 +99,7 @@ public class DocumentTemplate_renderContent_IntegTest extends CapexModuleIntegTe
         assertThat(supplierModel.getAddress()).isEqualTo("??????????????");
 
         // and given
-        final Document document = serviceRegistry.injectServicesInto(new Document(null, null, null, null, null));
+        final Document document = serviceRegistry.injectServicesInto(new Document(null, null, null, (String)null, null));
 
         assertThat(document.getBlobBytes()).isNull();
         assertThat(document.getName()).isNull();

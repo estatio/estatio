@@ -32,7 +32,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Blob;
 
 import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
-import org.incode.module.base.dom.MimeTypes;
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository;
@@ -103,7 +103,7 @@ public class DocumentTemplateFSForOrderConfirm extends DocumentTemplateFSAbstrac
 
         final Blob contentBlob =
                 new Blob(name + ".docx",
-                        MimeTypes.APPLICATION_PDF.asStr(),
+                        MimeTypeData.APPLICATION_PDF.asStr(),
                         contentBytes);
         final DocumentTemplate documentTemplate = upsertDocumentBlobTemplate(
                 documentType, templateDate, It.getPath(),
@@ -115,7 +115,7 @@ public class DocumentTemplateFSForOrderConfirm extends DocumentTemplateFSAbstrac
 
         // necessary because the mimeType is used as the mimeType of the rendered document.
         // REVIEW: this really should be determined from the renderingStrategy in use.
-        documentTemplate.setMimeType(MimeTypes.APPLICATION_PDF.asStr());
+        documentTemplate.setMimeType(MimeTypeData.APPLICATION_PDF.asStr());
 
         mixin(DocumentTemplate._applicable.class, documentTemplate).applicable(
                 Order.class, RendererModelFactoryForOrder.class, AttachToSameForOrder.class);

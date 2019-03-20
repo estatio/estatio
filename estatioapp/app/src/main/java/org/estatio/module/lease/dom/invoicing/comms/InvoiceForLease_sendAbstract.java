@@ -31,7 +31,7 @@ import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.isisaddons.module.pdfbox.dom.service.PdfBoxService;
 
-import org.incode.module.base.dom.MimeTypes;
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.incode.module.communications.dom.impl.comms.Communication;
@@ -126,8 +126,7 @@ public abstract class InvoiceForLease_sendAbstract {
         if (!attachedDocSort.isBytes()) {
             return;
         }
-        final String mimeType = docAttachedToDocument.getMimeType();
-        if (!MimeTypes.APPLICATION_PDF.asStr().equals(mimeType)) {
+        if (!MimeTypeData.APPLICATION_PDF.matches(docAttachedToDocument)) {
             return;
         }
         final byte[] attachedDocBytes = attachedDocSort.asBytes(docAttachedToDocument);

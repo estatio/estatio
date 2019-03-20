@@ -16,7 +16,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Blob;
 
-import org.incode.module.base.dom.MimeTypes;
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentRepository;
 import org.incode.module.document.dom.impl.docs.DocumentSort;
@@ -55,7 +55,7 @@ public class DemoInvoice_simulateRenderAsDoc {
             sequence = "1"
     )
     public Document $$(
-            @Parameter(fileAccept = MimeTypes.APPLICATION_PDF.asStr())
+            @Parameter(fileAccept = MimeTypeData.Str.APPLICATION_PDF)
             final Blob document,
             @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "File name")
             final String fileName
