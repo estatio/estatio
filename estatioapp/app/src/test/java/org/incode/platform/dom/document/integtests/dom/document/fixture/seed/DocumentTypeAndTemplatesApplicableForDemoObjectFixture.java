@@ -141,7 +141,7 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
                 false,
                 new Blob(
                         docTypeForXDocReportPdf.getName() + ".docx",
-                        MimeTypes.DOCX,
+                        MimeTypes.APPLICATION_DOCX,
                         loadResourceBytes("demoObject-template.docx")
                 ), xdpRenderingStrategy,
                 "${demoObject.name}", fmkRenderingStrategy,
@@ -166,7 +166,7 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
                 false,
                 new Blob(
                         docTypeForXDocReportDocx.getName() + ".docx",
-                        MimeTypes.DOCX,
+                        MimeTypes.APPLICATION_DOCX,
                         loadResourceBytes("demoObject-template.docx")
                 ), xddRenderingStrategy,
                 "${demoObject.name}", fmkRenderingStrategy,
