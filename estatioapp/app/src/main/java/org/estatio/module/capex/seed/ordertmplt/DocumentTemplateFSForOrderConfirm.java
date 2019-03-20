@@ -103,7 +103,7 @@ public class DocumentTemplateFSForOrderConfirm extends DocumentTemplateFSAbstrac
 
         final Blob contentBlob =
                 new Blob(name + ".docx",
-                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        MimeTypes.DOCX,
                         contentBytes);
         final DocumentTemplate documentTemplate = upsertDocumentBlobTemplate(
                 documentType, templateDate, It.getPath(),
