@@ -56,7 +56,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             RenderingStrategyData.FMK,
             loadResource("PrelimLetterEmailCoverNoteSubjectLine.ftl"),
             RenderingStrategyData.FMK,
-            PreviewPolicy.NOT_PREVIEW_ONLY, false,
+            PreviewPolicy.NOT_PREVIEW_ONLY,
             Document.class, FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
             AttachToNone.class
 
@@ -72,7 +72,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             RenderingStrategyData.FMK,
             loadResource("PrelimLetterEmailCoverNoteSubjectLine-ITA.ftl"),
             RenderingStrategyData.FMK,
-            PreviewPolicy.NOT_PREVIEW_ONLY, false,
+            PreviewPolicy.NOT_PREVIEW_ONLY,
             Document.class, FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
             AttachToNone.class
 
@@ -89,7 +89,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             RenderingStrategyData.FMK,
             loadResource("InvoiceEmailCoverNoteSubjectLine.ftl"),
             RenderingStrategyData.FMK,
-            PreviewPolicy.NOT_PREVIEW_ONLY, false,
+            PreviewPolicy.NOT_PREVIEW_ONLY,
             Document.class, FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
             AttachToNone.class
 
@@ -105,7 +105,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             RenderingStrategyData.FMK,
             loadResource("InvoiceEmailCoverNoteSubjectLine-ITA.ftl"),
             RenderingStrategyData.FMK,
-            PreviewPolicy.NOT_PREVIEW_ONLY, false,
+            PreviewPolicy.NOT_PREVIEW_ONLY,
             Document.class, FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
             AttachToNone.class
 
@@ -123,7 +123,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             RenderingStrategyData.SIPC,
             loadResource("PrelimLetterTitle.ftl"),
             RenderingStrategyData.SI,
-            PreviewPolicy.NOT_PREVIEW_ONLY, false,
+            PreviewPolicy.NOT_PREVIEW_ONLY,
             Invoice.class, StringInterpolatorToSsrsUrlOfInvoice.class,
             ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class
 
@@ -139,7 +139,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             RenderingStrategyData.SIPC,
             loadResource("PrelimLetterTitle-ITA.ftl"),
             RenderingStrategyData.SI,
-            PreviewPolicy.NOT_PREVIEW_ONLY, false,
+            PreviewPolicy.NOT_PREVIEW_ONLY,
             Invoice.class, StringInterpolatorToSsrsUrlOfInvoice.class,
             ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class
 
@@ -155,7 +155,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             RenderingStrategyData.SIPC,
             loadResource("InvoiceTitle.ftl"),
             RenderingStrategyData.SI,
-            PreviewPolicy.NOT_PREVIEW_ONLY, false,
+            PreviewPolicy.NOT_PREVIEW_ONLY,
             Invoice.class, StringInterpolatorToSsrsUrlOfInvoice.class,
             ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class
 
@@ -171,7 +171,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             RenderingStrategyData.SIPC,
             loadResource("InvoiceTitle-ITA.ftl"),
             RenderingStrategyData.SI,
-            PreviewPolicy.NOT_PREVIEW_ONLY, false,
+            PreviewPolicy.NOT_PREVIEW_ONLY,
             Invoice.class, StringInterpolatorToSsrsUrlOfInvoice.class,
             ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class
 
@@ -189,7 +189,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             RenderingStrategyData.SIPC,
             "Invoices overview",
             RenderingStrategyData.SI,
-            PreviewPolicy.PREVIEW_ONLY, true,
+            PreviewPolicy.PREVIEW_ONLY,
             InvoiceSummaryForPropertyDueDateStatus.class, StringInterpolatorToSsrsUrlOfInvoiceSummary.class,
             AttachToNone.class // since preview only
 
@@ -205,7 +205,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             RenderingStrategyData.SIPC,
             "Preliminary letter for Invoices",
             RenderingStrategyData.SI,
-            PreviewPolicy.PREVIEW_ONLY, true,
+            PreviewPolicy.PREVIEW_ONLY,
             InvoiceSummaryForPropertyDueDateStatus.class, StringInterpolatorToSsrsUrlOfInvoiceSummary.class,
             AttachToNone.class // since preview only
 
@@ -220,7 +220,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             //"${reportServerBaseUrl}PreliminaryLetterV2&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate entity
             RenderingStrategyData.SIPC,
             "Preliminary Invoice for Seller", RenderingStrategyData.SI,
-            PreviewPolicy.PREVIEW_ONLY, true,
+            PreviewPolicy.PREVIEW_ONLY,
             InvoiceSummaryForPropertyDueDateStatus.class, StringInterpolatorToSsrsUrlOfInvoiceSummary.class,
             AttachToNone.class // since preview only
 
@@ -329,7 +329,6 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             final String nameText,
             final RenderingStrategyData nameRenderingStrategy,
             final PreviewPolicy previewPolicy,
-            final boolean previewOnly,
             final Class<?> domainClass,
             final Class<? extends RendererModelFactory> rendererModelFactoryClass,
             final Class<? extends AttachmentAdvisor> attachmentAdvisorClass
@@ -345,14 +344,6 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
         this.inputMimeTypeBase = inputMimeTypeBase;
         //this.content = content;
         this.previewPolicy = previewPolicy;
-
-        if(isPreviewOnly() && !previewOnly) {
-            throw new IllegalStateException("incompatible previewOnly");
-        }
-        if(!isPreviewOnly() && previewOnly) {
-            throw new IllegalStateException("incompatible !previewOnly");
-        }
-
 
         this.contentRenderingStrategy = contentRenderingStrategy;
         this.nameText = nameText;
