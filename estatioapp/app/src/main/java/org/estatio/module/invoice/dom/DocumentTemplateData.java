@@ -232,8 +232,8 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
 
             ApplicationTenancy_enum.It.getPath(), "(Italy)",
             "docx",
-            MimeTypeData.APPLICATION_PDF,
-            MimeTypeData.APPLICATION_PDF, // inputMimeType
+            MimeTypeData.APPLICATION_DOCX,
+            MimeTypeData.APPLICATION_DOCX, // inputMimeType
             DocumentSort.BLOB,
 
             //loadBytesForOrderConfirmTemplateItaDocx() ... see DocumentTemplate entity
