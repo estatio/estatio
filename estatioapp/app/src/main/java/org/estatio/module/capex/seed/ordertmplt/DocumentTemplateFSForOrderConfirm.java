@@ -90,8 +90,8 @@ public class DocumentTemplateFSForOrderConfirm extends DocumentTemplateFSAbstrac
             final LocalDate templateDate,
             final ExecutionContext ec) {
 
-        final RenderingStrategy xgpRenderingStrategy =
-                renderingStrategyRepository.findByReference(RenderingStrategies.REF_XGP);
+        final RenderingStrategy xddRenderingStrategy =
+                renderingStrategyRepository.findByReference(RenderingStrategies.REF_XDD);
         final RenderingStrategy fmkRenderingStrategy =
                 renderingStrategyRepository.findByReference(RenderingStrategies.REF_FMK);
 
@@ -103,19 +103,15 @@ public class DocumentTemplateFSForOrderConfirm extends DocumentTemplateFSAbstrac
 
         final Blob contentBlob =
                 new Blob(name + ".docx",
-                        MimeTypeData.APPLICATION_PDF.asStr(),
+                        MimeTypeData.APPLICATION_DOCX.asStr(),
                         contentBytes);
         final DocumentTemplate documentTemplate = upsertDocumentBlobTemplate(
                 documentType, templateDate, It.getPath(),
                 ".docx",
                 false,
-                contentBlob, xgpRenderingStrategy,
+                contentBlob, xddRenderingStrategy,
                 nameChars, fmkRenderingStrategy,
                 ec);
-
-        // necessary because the mimeType is used as the mimeType of the rendered document.
-        // REVIEW: this really should be determined from the renderingStrategy in use.
-        documentTemplate.setMimeType(MimeTypeData.APPLICATION_PDF.asStr());
 
         mixin(DocumentTemplate._applicable.class, documentTemplate).applicable(
                 Order.class, RendererModelFactoryForOrder.class, AttachToSameForOrder.class);

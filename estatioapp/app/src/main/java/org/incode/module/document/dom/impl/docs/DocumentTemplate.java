@@ -450,6 +450,7 @@ public class DocumentTemplate
         return getTemplateData().getContentRenderingStrategy();
     }
 
+    @Programmatic
     public RenderingStrategyApi getContentRenderingStrategyApi() {
         return toggle.getContentRenderingStrategyApi(this);
     }
@@ -459,6 +460,7 @@ public class DocumentTemplate
         return getTemplateData().getNameRenderingStrategy();
     }
 
+    @Programmatic
     public RenderingStrategyApi getNameRenderingStrategyApi() {
         return toggle.getNameRenderingStrategyApi(this);
     }

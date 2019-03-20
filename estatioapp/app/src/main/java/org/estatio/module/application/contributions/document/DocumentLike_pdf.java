@@ -1,5 +1,7 @@
 package org.estatio.module.application.contributions.document;
 
+import javax.inject.Inject;
+
 import org.wicketstuff.pdfjs.Scale;
 
 import org.apache.isis.applib.AbstractSubscriber;
@@ -17,6 +19,7 @@ import org.apache.isis.applib.value.Blob;
 import org.isisaddons.wicket.pdfjs.cpt.applib.PdfJsViewer;
 
 import org.incode.module.base.dom.MimeTypeData;
+import org.incode.module.docrendering.gotenberg.dom.impl.GotenbergClientService;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.docs.DocumentLike;
@@ -39,13 +42,6 @@ public class DocumentLike_pdf {
         this.documentLike = documentLike;
     }
 
-    static boolean holdsPdf(final DocumentLike document) {
-        return MimeTypeData.APPLICATION_PDF.matches(document);
-    }
-    static boolean holdsDocx(final DocumentLike document) {
-        return MimeTypeData.APPLICATION_DOCX.matches(document);
-    }
-
     public static class DomainEvent extends ActionDomainEvent<Document> {
     }
 
@@ -56,10 +52,32 @@ public class DocumentLike_pdf {
     )
     @ActionLayout(contributed= Contributed.AS_ASSOCIATION)
     public Blob prop() {
-        return documentLike.getBlob();
+
+        final Blob blob = documentLike.getBlob();
+        if (MimeTypeData.APPLICATION_PDF.matches(this.documentLike)) {
+            return blob;
+        }
+        if (MimeTypeData.APPLICATION_DOCX.matches(this.documentLike)) {
+            // on-the-fly convert to PDF for preview purposes.
+            final byte[] bytes = gotenbergClientService.convertToPdf(blob.getBytes());
+            return new Blob(blob.getName(), MimeTypeData.APPLICATION_PDF.asStr(), bytes);
+        }
+        // shouldn't happen, due to guard in hideProp()
+        return null;
     }
+
     public boolean hideProp() {
-        return documentLike.getState() != DocumentState.RENDERED || !holdsPdf(this.documentLike);
+        if (documentLike.getState() != DocumentState.RENDERED) {
+            return true;
+        }
+
+        if (MimeTypeData.APPLICATION_PDF.matches(this.documentLike)) {
+            return false;
+        }
+        if (MimeTypeData.APPLICATION_DOCX.matches(this.documentLike)) {
+            return false;
+        }
+        return true;
     }
 
     @DomainService(nature = NatureOfService.DOMAIN)
@@ -73,11 +91,14 @@ public class DocumentLike_pdf {
 
             case HIDE:
                 final DocumentAbstract document = ev.getSource();
-                if(document instanceof DocumentLike && holdsPdf((DocumentLike)document)){
+                if(document instanceof DocumentLike && MimeTypeData.APPLICATION_PDF.matches((DocumentLike) document)){
                     ev.hide();
                 }
                 break;
             }
         }
     }
+
+    @Inject
+    GotenbergClientService gotenbergClientService;
 }
