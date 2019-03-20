@@ -101,6 +101,30 @@ public class IncomingInvoiceRepository_IntegTest extends CapexModuleIntegTestAbs
     }
 
     @Test
+    public void findUniquePaymentMethodsForSeller_works() throws Exception {
+        // given
+        IncomingInvoice invoice1 = createIncomingInvoice();
+
+        // when
+        List<PaymentMethod> paymentMethods = incomingInvoiceRepository.findUniquePaymentMethodsForSeller(invoice1.getSeller());
+
+        // then
+        assertThat(paymentMethods).hasSize(1);
+        assertThat(paymentMethods).containsExactly(PaymentMethod.BANK_TRANSFER);
+
+        // and given
+        IncomingInvoice invoice2 = createIncomingInvoice();
+        invoice2.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
+
+        // and when
+        paymentMethods = incomingInvoiceRepository.findUniquePaymentMethodsForSeller(invoice2.getSeller());
+
+        // and then
+        assertThat(paymentMethods).hasSize(2);
+        assertThat(paymentMethods).containsExactlyInAnyOrder(PaymentMethod.BANK_TRANSFER, PaymentMethod.DIRECT_DEBIT);
+    }
+
+    @Test
     public void upsert_works() throws Exception {
 
         // given

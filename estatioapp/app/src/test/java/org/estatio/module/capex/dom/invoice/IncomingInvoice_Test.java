@@ -42,7 +42,6 @@ import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.financial.dom.BankAccount;
-import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
@@ -1123,7 +1122,7 @@ public class IncomingInvoice_Test {
     public static class Notification_Test extends IncomingInvoice_Test {
 
         @Mock
-        InvoiceRepository mockInvoiceRepository;
+        IncomingInvoiceRepository mockIncomingInvoiceRepository;
 
         @Mock
         OrderItemInvoiceItemLinkRepository mockOrderItemInvoiceItemLinkRepository;
@@ -1145,33 +1144,24 @@ public class IncomingInvoice_Test {
             Party seller = new Organisation();
             incomingInvoice.setSeller(seller);
             incomingInvoice.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
-            incomingInvoice.invoiceRepository = mockInvoiceRepository;
-
-            IncomingInvoice incomingInvoice1 = new IncomingInvoice();
-            incomingInvoice1.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
-            IncomingInvoice incomingInvoice2 = new IncomingInvoice();
-            incomingInvoice2.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
-            IncomingInvoice incomingInvoice3 = new IncomingInvoice();
-            incomingInvoice3.setPaymentMethod(PaymentMethod.CASH);
-            IncomingInvoice incomingInvoice4 = new IncomingInvoice();
-            incomingInvoice4.setPaymentMethod(null);
+            incomingInvoice.incomingInvoiceRepository = mockIncomingInvoiceRepository;
 
             // expecting
             context.checking(new Expectations() {{
-                oneOf(mockInvoiceRepository).findBySeller(seller);
-                will(returnValue(Arrays.asList(incomingInvoice1, incomingInvoice2, incomingInvoice3, incomingInvoice4)));
+                oneOf(mockIncomingInvoiceRepository).findUniquePaymentMethodsForSeller(seller);
+                will(returnValue(Arrays.asList(PaymentMethod.DIRECT_DEBIT, PaymentMethod.BANK_TRANSFER, PaymentMethod.CASH)));
             }});
 
             // when
             notification = incomingInvoice.getNotification();
 
             // then
-            assertThat(notification).isEqualTo("WARNING: payment method is set to bank transfer, but previous invoices from this seller have used the following payment methods: Direct Debit, Cash ");
+            assertThat(notification).isEqualTo("WARNING: payment method is set to bank transfer, but previous invoices from this seller have used the following payment methods: Direct Debit, Bank Transfer, Cash ");
 
             // and expecting
             context.checking(new Expectations() {{
-                oneOf(mockInvoiceRepository).findBySeller(seller);
-                will(returnValue(Arrays.asList(incomingInvoice2))); // All historical invoices use payment method BANK_TRANSFER...
+                oneOf(mockIncomingInvoiceRepository).findUniquePaymentMethodsForSeller(seller);
+                will(returnValue(Arrays.asList(PaymentMethod.BANK_TRANSFER))); // All historical invoices use payment method BANK_TRANSFER...
             }});
 
             // when

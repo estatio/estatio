@@ -285,6 +285,18 @@ public class IncomingInvoiceRepository {
 
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @Programmatic
+    public List<PaymentMethod> findUniquePaymentMethodsForSeller(final Party seller) {
+        List paymentMethods = repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoice.class,
+                        "findUniquePaymentMethodsForSeller",
+                        "seller", seller));
+
+        return paymentMethods;
+    }
+
     @Programmatic
     public IncomingInvoice create(
             final IncomingInvoiceType type,
