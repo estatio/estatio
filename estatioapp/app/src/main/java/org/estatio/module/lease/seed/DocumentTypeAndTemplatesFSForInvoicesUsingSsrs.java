@@ -387,7 +387,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
             final Class<? extends AttachmentAdvisor> attachmentAdvisorClass,
             final ExecutionContext executionContext) {
 
-        final Clob clob = new Clob(buildTemplateName(docType, nameSuffixIfAny, ".html"), "text/html", contentText);
+        final Clob clob = new Clob(buildTemplateName(docType, nameSuffixIfAny, ".html"), MimeTypes.TEXT_HTML, contentText);
         final DocumentTemplate documentTemplate = upsertDocumentClobTemplate(
                 docType, templateDate, atPath,
                 ".html",

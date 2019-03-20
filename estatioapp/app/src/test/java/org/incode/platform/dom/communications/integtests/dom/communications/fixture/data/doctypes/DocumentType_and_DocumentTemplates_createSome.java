@@ -13,6 +13,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Clob;
 
+import org.incode.module.base.dom.MimeTypes;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
@@ -69,7 +70,7 @@ public class DocumentType_and_DocumentTemplates_createSome extends DocumentTempl
         //
         final LocalDate now = clockService.now();
 
-        final Clob clob = new Clob(docTypeForFreemarkerHtml.getName(), "text/html",
+        final Clob clob = new Clob(docTypeForFreemarkerHtml.getName(), MimeTypes.TEXT_HTML,
                 loadResource("FreemarkerHtmlCoverNote.html"));
         fmkTemplate = upsertDocumentClobTemplate(
                 docTypeForFreemarkerHtml, now, atPath,

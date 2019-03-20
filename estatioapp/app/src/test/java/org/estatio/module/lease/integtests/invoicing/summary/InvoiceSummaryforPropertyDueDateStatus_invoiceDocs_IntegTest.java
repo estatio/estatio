@@ -203,7 +203,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_invoiceDocs_IntegTest extend
             assertThat(coverNote.getState()).isEqualTo(DocumentState.RENDERED);
             assertThat(coverNote.getRenderedAt()).isNotNull();
             assertThat(coverNote.getSort()).isEqualTo(DocumentSort.CLOB);
-            assertThat(coverNote.getMimeType()).isEqualTo("text/html");
+            assertThat(coverNote.getMimeType()).isEqualTo(MimeTypes.TEXT_HTML);
 
             // and when comm sent
             runBackgroundCommandsService.runBackgroundCommands();

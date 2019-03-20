@@ -87,7 +87,7 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
         //
         final LocalDate now = clockService.now();
 
-        final Clob clob = new Clob(docTypeForFreemarkerHtml.getName(), "text/html",
+        final Clob clob = new Clob(docTypeForFreemarkerHtml.getName(), MimeTypes.TEXT_HTML,
                 loadResource("FreemarkerHtmlCoverNote.html"));
         fmkTemplate = upsertDocumentClobTemplate(
                 docTypeForFreemarkerHtml, now, atPath,
