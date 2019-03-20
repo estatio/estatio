@@ -15,6 +15,7 @@ import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Unique;
@@ -419,6 +420,7 @@ public class DocumentTemplate
     private String atPathCopy;
     //endregion
 
+    @NotPersistent
     private DocumentTemplateData templateData;
     @Programmatic
     public DocumentTemplateData getTemplateData() {
@@ -432,6 +434,7 @@ public class DocumentTemplate
         return toggle.getTemplateApi(this);
     }
 
+    @NotPersistent
     private DocumentTypeData typeData;
     @Programmatic
     public DocumentTypeData getTypeData() {
