@@ -56,7 +56,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             RenderingStrategyData.FMK,
             loadResource("PrelimLetterEmailCoverNoteSubjectLine.ftl"),
             RenderingStrategyData.FMK,
-            false,
+            PreviewPolicy.NOT_PREVIEW_ONLY, false,
             Document.class, FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
             AttachToNone.class
 
@@ -72,7 +72,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             RenderingStrategyData.FMK,
             loadResource("PrelimLetterEmailCoverNoteSubjectLine-ITA.ftl"),
             RenderingStrategyData.FMK,
-            false,
+            PreviewPolicy.NOT_PREVIEW_ONLY, false,
             Document.class, FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
             AttachToNone.class
 
@@ -89,8 +89,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             RenderingStrategyData.FMK,
             loadResource("InvoiceEmailCoverNoteSubjectLine.ftl"),
             RenderingStrategyData.FMK,
-
-            false,
+            PreviewPolicy.NOT_PREVIEW_ONLY, false,
             Document.class, FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
             AttachToNone.class
 
@@ -106,8 +105,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             RenderingStrategyData.FMK,
             loadResource("InvoiceEmailCoverNoteSubjectLine-ITA.ftl"),
             RenderingStrategyData.FMK,
-
-            false,
+            PreviewPolicy.NOT_PREVIEW_ONLY, false,
             Document.class, FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
             AttachToNone.class
 
@@ -125,7 +123,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             RenderingStrategyData.SIPC,
             loadResource("PrelimLetterTitle.ftl"),
             RenderingStrategyData.SI,
-            false,
+            PreviewPolicy.NOT_PREVIEW_ONLY, false,
             Invoice.class, StringInterpolatorToSsrsUrlOfInvoice.class,
             ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class
 
@@ -141,7 +139,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             RenderingStrategyData.SIPC,
             loadResource("PrelimLetterTitle-ITA.ftl"),
             RenderingStrategyData.SI,
-            false,
+            PreviewPolicy.NOT_PREVIEW_ONLY, false,
             Invoice.class, StringInterpolatorToSsrsUrlOfInvoice.class,
             ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class
 
@@ -157,7 +155,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             RenderingStrategyData.SIPC,
             loadResource("InvoiceTitle.ftl"),
             RenderingStrategyData.SI,
-            false,
+            PreviewPolicy.NOT_PREVIEW_ONLY, false,
             Invoice.class, StringInterpolatorToSsrsUrlOfInvoice.class,
             ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class
 
@@ -173,7 +171,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             RenderingStrategyData.SIPC,
             loadResource("InvoiceTitle-ITA.ftl"),
             RenderingStrategyData.SI,
-            false,
+            PreviewPolicy.NOT_PREVIEW_ONLY, false,
             Invoice.class, StringInterpolatorToSsrsUrlOfInvoice.class,
             ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class
 
@@ -191,7 +189,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             RenderingStrategyData.SIPC,
             "Invoices overview",
             RenderingStrategyData.SI,
-            true,
+            PreviewPolicy.PREVIEW_ONLY, true,
             InvoiceSummaryForPropertyDueDateStatus.class, StringInterpolatorToSsrsUrlOfInvoiceSummary.class,
             AttachToNone.class // since preview only
 
@@ -207,7 +205,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             RenderingStrategyData.SIPC,
             "Preliminary letter for Invoices",
             RenderingStrategyData.SI,
-            true,
+            PreviewPolicy.PREVIEW_ONLY, true,
             InvoiceSummaryForPropertyDueDateStatus.class, StringInterpolatorToSsrsUrlOfInvoiceSummary.class,
             AttachToNone.class // since preview only
 
@@ -222,7 +220,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             //"${reportServerBaseUrl}PreliminaryLetterV2&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate entity
             RenderingStrategyData.SIPC,
             "Preliminary Invoice for Seller", RenderingStrategyData.SI,
-            true,
+            PreviewPolicy.PREVIEW_ONLY, true,
             InvoiceSummaryForPropertyDueDateStatus.class, StringInterpolatorToSsrsUrlOfInvoiceSummary.class,
             AttachToNone.class // since preview only
 
@@ -267,7 +265,9 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     @Getter
     private final RenderingStrategyData nameRenderingStrategy;
     @Getter
-    private final boolean previewOnly;
+    private final PreviewPolicy previewPolicy;
+
+    public boolean isPreviewOnly() { return previewPolicy == PreviewPolicy.PREVIEW_ONLY; }
 
     private final Class<?> domainClass;
     private final Class<? extends AttachmentAdvisor> attachmentAdvisorClass;
@@ -290,7 +290,8 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
         return rendererModelFactory;
     }
 
-    @Override public AttachmentAdvisor newAttachmentAdvisor(
+    @Override
+    public AttachmentAdvisor newAttachmentAdvisor(
             final Class<?> domainClass, final ClassService classService, final ServiceRegistry2 serviceRegistry2) {
 
         final Class<? extends AttachmentAdvisor> attachmentAdvisorClass =
@@ -311,6 +312,11 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
         NOT_SPECIFIED
     }
 
+    public enum PreviewPolicy {
+        PREVIEW_ONLY,
+        NOT_PREVIEW_ONLY
+    }
+
     DocumentTemplateData(
             final String atPath,
             final String nameSuffixIfAny,
@@ -322,6 +328,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             final RenderingStrategyData contentRenderingStrategy,
             final String nameText,
             final RenderingStrategyData nameRenderingStrategy,
+            final PreviewPolicy previewPolicy,
             final boolean previewOnly,
             final Class<?> domainClass,
             final Class<? extends RendererModelFactory> rendererModelFactoryClass,
@@ -337,7 +344,16 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
         this.mimeTypeBase = mimeTypeBase;
         this.inputMimeTypeBase = inputMimeTypeBase;
         //this.content = content;
-        this.previewOnly = previewOnly;
+        this.previewPolicy = previewPolicy;
+
+        if(isPreviewOnly() && !previewOnly) {
+            throw new IllegalStateException("incompatible previewOnly");
+        }
+        if(!isPreviewOnly() && previewOnly) {
+            throw new IllegalStateException("incompatible !previewOnly");
+        }
+
+
         this.contentRenderingStrategy = contentRenderingStrategy;
         this.nameText = nameText;
         this.nameRenderingStrategy = nameRenderingStrategy;
