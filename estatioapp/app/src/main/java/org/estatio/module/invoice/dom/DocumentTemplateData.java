@@ -51,7 +51,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     COVER_NOTE_PRELIM_LETTER_GLOBAL (
 
             ApplicationTenancy_enum.Global.getPath(), null,
-            "html", "text/html", "text/html",
+            "html", MimeTypes.TEXT_HTML, MimeTypes.TEXT_HTML,
             DocumentSort.CLOB,
             //loadResource("PrelimLetterEmailCoverNote.html.ftl") ... see DocumentTemplate entity
             RenderingStrategyData.FMK,
@@ -67,7 +67,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     COVER_NOTE_PRELIM_LETTER_ITA(
 
             ApplicationTenancy_enum.It.getPath(), " (Italy)",
-            "html", "text/html", "text/html",
+            "html", MimeTypes.TEXT_HTML, MimeTypes.TEXT_HTML,
             DocumentSort.CLOB,
             //loadResource("PrelimLetterEmailCoverNote-ITA.html.ftl") ... see DocumentTemplate entity
             RenderingStrategyData.FMK,
@@ -83,7 +83,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     COVER_NOTE_INVOICE_GLOBAL(
 
             ApplicationTenancy_enum.Global.getPath(), null,
-            "html", "text/html", "text/html",
+            "html", MimeTypes.TEXT_HTML, MimeTypes.TEXT_HTML,
             DocumentSort.CLOB,
 
             //loadResource("InvoiceEmailCoverNote.html.ftl") ... see DocumentTemplate entity
@@ -99,7 +99,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     COVER_NOTE_INVOICE_ITA(
 
             ApplicationTenancy_enum.It.getPath(), " (Italy)",
-            "html", "text/html", "text/html",
+            "html", MimeTypes.TEXT_HTML, MimeTypes.TEXT_HTML,
             DocumentSort.CLOB,
 
             //loadResource("InvoiceEmailCoverNote-ITA.html.ftl") ... see DocumentTemplate entity
