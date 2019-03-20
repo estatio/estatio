@@ -6,7 +6,7 @@ public enum MimeTypeData {
     APPLICATION_DOCX(Str.APPLICATION_DOCX),
     TEXT_HTML (Str.TEXT_HTML);
 
-    public final String str;
+    private final String str;
 
     MimeTypeData(final String s){
         str = s;

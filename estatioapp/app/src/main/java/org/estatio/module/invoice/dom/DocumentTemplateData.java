@@ -51,7 +51,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     COVER_NOTE_PRELIM_LETTER_GLOBAL (
 
             ApplicationTenancy_enum.Global.getPath(), null,
-            "html", MimeTypeData.TEXT_HTML.asStr(), MimeTypeData.TEXT_HTML.asStr(),
+            "html", MimeTypeData.TEXT_HTML, MimeTypeData.TEXT_HTML,
             DocumentSort.CLOB,
             //loadResource("PrelimLetterEmailCoverNote.html.ftl") ... see DocumentTemplate entity
             RenderingStrategyData.FMK,
@@ -67,7 +67,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     COVER_NOTE_PRELIM_LETTER_ITA(
 
             ApplicationTenancy_enum.It.getPath(), " (Italy)",
-            "html", MimeTypeData.TEXT_HTML.asStr(), MimeTypeData.TEXT_HTML.asStr(),
+            "html", MimeTypeData.TEXT_HTML, MimeTypeData.TEXT_HTML,
             DocumentSort.CLOB,
             //loadResource("PrelimLetterEmailCoverNote-ITA.html.ftl") ... see DocumentTemplate entity
             RenderingStrategyData.FMK,
@@ -83,7 +83,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     COVER_NOTE_INVOICE_GLOBAL(
 
             ApplicationTenancy_enum.Global.getPath(), null,
-            "html", MimeTypeData.TEXT_HTML.asStr(), MimeTypeData.TEXT_HTML.asStr(),
+            "html", MimeTypeData.TEXT_HTML, MimeTypeData.TEXT_HTML,
             DocumentSort.CLOB,
 
             //loadResource("InvoiceEmailCoverNote.html.ftl") ... see DocumentTemplate entity
@@ -99,7 +99,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     COVER_NOTE_INVOICE_ITA(
 
             ApplicationTenancy_enum.It.getPath(), " (Italy)",
-            "html", MimeTypeData.TEXT_HTML.asStr(), MimeTypeData.TEXT_HTML.asStr(),
+            "html", MimeTypeData.TEXT_HTML, MimeTypeData.TEXT_HTML,
             DocumentSort.CLOB,
 
             //loadResource("InvoiceEmailCoverNote-ITA.html.ftl") ... see DocumentTemplate entity
@@ -117,7 +117,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     PRELIM_LETTER_GLOBAL(
 
             ApplicationTenancy_enum.Global.getPath(), null,
-            "pdf", MimeTypeData.APPLICATION_PDF.asStr(), null,
+            "pdf", MimeTypeData.APPLICATION_PDF, null,
             DocumentSort.TEXT,
 
             //"${reportServerBaseUrl}PreliminaryLetterV2&id=${this.id}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate
@@ -133,7 +133,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     PRELIM_LETTER_ITA(
 
             ApplicationTenancy_enum.It.getPath(), " (Italy)",
-            "pdf", MimeTypeData.APPLICATION_PDF.asStr(), null,
+            "pdf", MimeTypeData.APPLICATION_PDF, null,
             DocumentSort.TEXT,
 
             //"${reportServerBaseUrl}PreliminaryLetterV2&id=${this.id}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate
@@ -149,7 +149,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     INVOICE_GLOBAL(
 
             ApplicationTenancy_enum.Global.getPath(), null,
-            "pdf", MimeTypeData.APPLICATION_PDF.asStr(), null,
+            "pdf", MimeTypeData.APPLICATION_PDF, null,
             DocumentSort.TEXT,
 
             //"${reportServerBaseUrl}InvoiceItaly&id=${this.id}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate entity
@@ -165,7 +165,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     INVOICE_ITA(
 
             ApplicationTenancy_enum.It.getPath(), "( Italy)",
-            "pdf", MimeTypeData.APPLICATION_PDF.asStr(), null,
+            "pdf", MimeTypeData.APPLICATION_PDF, null,
             DocumentSort.TEXT,
 
             //"${reportServerBaseUrl}InvoiceItaly&id=${this.id}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate entity
@@ -183,7 +183,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     // preview only
     INVOICES(
             ApplicationTenancy_enum.Global.getPath(), null,
-            "pdf", MimeTypeData.APPLICATION_PDF.asStr(), null,
+            "pdf", MimeTypeData.APPLICATION_PDF, null,
             DocumentSort.TEXT,
 
             //"${reportServerBaseUrl}Invoices&dueDate=${this.dueDate}&${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate entity
@@ -199,7 +199,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     INVOICES_PRELIM(
 
             ApplicationTenancy_enum.Global.getPath(), null,
-            "pdf", MimeTypeData.APPLICATION_PDF.asStr(), null,
+            "pdf", MimeTypeData.APPLICATION_PDF, null,
             DocumentSort.TEXT,
 
             //"${reportServerBaseUrl}PreliminaryLetterV2&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate entity
@@ -215,7 +215,7 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     INVOICES_FOR_SELLER(
 
             ApplicationTenancy_enum.Global.getPath(), null,
-            "pdf", MimeTypeData.APPLICATION_PDF.asStr(), null,
+            "pdf", MimeTypeData.APPLICATION_PDF, null,
             DocumentSort.TEXT,
 
             //"${reportServerBaseUrl}PreliminaryLetterV2&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}&rs:Command=Render&rs:Format=PDF" ... see DocumentTemplate entity
@@ -232,8 +232,8 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
 
             ApplicationTenancy_enum.It.getPath(), "(Italy)",
             "docx",
-            MimeTypeData.APPLICATION_PDF.asStr(),
-            MimeTypeData.APPLICATION_PDF.asStr(), // inputMimeType
+            MimeTypeData.APPLICATION_PDF,
+            MimeTypeData.APPLICATION_PDF, // inputMimeType
             DocumentSort.BLOB,
 
             //loadBytesForOrderConfirmTemplateItaDocx() ... see DocumentTemplate entity
@@ -324,8 +324,8 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
             final String atPath,
             final String nameSuffixIfAny,
             final String extension,
-            final String mimeTypeBase,
-            final String inputMimeTypeBase,
+            final MimeTypeData mimeTypeBase,
+            final MimeTypeData inputMimeTypeBase,
             final DocumentSort contentSort,
             //final Object content,
             final RenderingStrategyData contentRenderingStrategy,
@@ -343,8 +343,8 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
         this.nameSuffixIfAny = nameSuffixIfAny;
         this.contentSort = contentSort;
         this.extension = extension;
-        this.mimeTypeBase = mimeTypeBase;
-        this.inputMimeTypeBase = inputMimeTypeBase;
+        this.mimeTypeBase = mimeTypeBase != null ? mimeTypeBase.asStr() : null;
+        this.inputMimeTypeBase = inputMimeTypeBase != null ? inputMimeTypeBase.asStr() : null;
         //this.content = content;
         this.previewPolicy = previewPolicy;
 
