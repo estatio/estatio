@@ -36,13 +36,6 @@ public abstract class Order_changeAttributeAbstract {
         return order;
     }
 
-    public String disableAct() {
-//        if (order.isImmutableDueToState()) {
-//            return "Order can't be changed";
-//        }
-        return null;
-    }
-
     public String default0Act() {
         return orderAttributeRepository.findValueByOrderAndName(orderAttributeName, order);
     }
