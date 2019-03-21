@@ -79,7 +79,7 @@ public class DocumentTemplateForAtPathService {
     }
 
     private boolean canPreview(final DocumentTemplate template) {
-        return template.getContentRenderingStrategy().isPreviewsToUrl();
+        return template.getContentRenderingStrategyApi().isPreviewsToUrl();
     }
 
     private boolean canCreate(final DocumentTemplate template, final List<AttachmentAdvisor.PaperclipSpec> paperclipSpecs) {

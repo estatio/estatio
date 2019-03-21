@@ -51,7 +51,7 @@ public class FakeScheduler {
 
         commands = backgroundCommandRepository.findBackgroundCommandsNotYetStarted();
         if(!commands.isEmpty()) {
-            throw new IllegalStateException("There are still " + commands.size() + " not yet started");
+            throw new IllegalStateException(String.format("There are still %d not yet started", commands.size()));
         }
     }
 

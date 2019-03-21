@@ -21,13 +21,16 @@ package org.estatio.module.lease.integtests.invoicing.docs;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
 
-import org.assertj.core.api.Assertions;
 import org.assertj.core.data.Percentage;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -37,16 +40,24 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService2;
-import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.email.EmailService;
 import org.apache.isis.applib.services.wrapper.HiddenException;
 import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.applib.value.Blob;
 
+import org.isisaddons.module.command.dom.BackgroundCommandServiceJdoRepository;
+import org.isisaddons.module.command.dom.CommandJdo;
+
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerLinkRepository;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
+import org.incode.module.communications.dom.impl.comms.CommChannelRole;
 import org.incode.module.communications.dom.impl.comms.Communication;
 import org.incode.module.communications.dom.impl.comms.CommunicationState;
+import org.incode.module.communications.dom.mixins.Document_sendByEmail;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.docs.DocumentSort;
@@ -59,14 +70,15 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.paperclips.Paperclip_changeRole;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
+import org.incode.platform.dom.communications.integtests.app.services.fakeemail.EmailMessage;
+import org.incode.platform.dom.communications.integtests.app.services.fakeemail.FakeEmailService;
+import org.incode.platform.dom.communications.integtests.app.services.fakesched.FakeScheduler;
 
 import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.invoice.dom.Invoice;
-import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease_overrideSendTo;
@@ -91,23 +103,30 @@ import org.estatio.module.lease.fixtures.invoice.enums.InvoiceForLease_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Before
-    public void setupData() {
+    public void setupData() throws InterruptedException {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new DocumentTypesAndTemplatesForLeaseFixture());
 
                 executionContext.executeChildren(this, InvoiceForLease_enum.OxfPoison003Gb);
-
             }
         });
+
+        List<CommandJdo> commandsBefore = backgroundCommandRepository.findBackgroundCommandsNotYetStarted();
+        if(commandsBefore.size()>0) {
+            fakeScheduler.runBackgroundCommands(5000);
+        }
+        commandsBefore = backgroundCommandRepository.findBackgroundCommandsNotYetStarted();
+        assertThat(commandsBefore).isEmpty();
+        fakeEmailService.removeSentEmails();
+
     }
 
 
@@ -124,7 +143,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
                 DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
 
                 // when
-                wrap(mixin(InvoiceForLease_prepare.class, invoice)).$$(prelimLetterTemplate);
+                wrap(mixin(InvoiceForLease_prepare.class, invoice)).act(prelimLetterTemplate);
                 Document document = prelimLetterOf(invoice);
 
                 // then
@@ -132,7 +151,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
                 List<Paperclip> paperclips = paperclipRepository.findByDocument(document);
                 assertThat(paperclips).hasSize(1);
 
-                assertThat(paperclips).extracting(x -> x.getAttachedTo()).contains(invoice);
+                assertThat(paperclips).extracting(Paperclip::getAttachedTo).contains(invoice);
             }
 
             @Test
@@ -146,7 +165,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
                 approveAndInvoice(invoice);
 
                 // when
-                wrap(mixin(InvoiceForLease_prepare.class, invoice)).$$(invoiceDocTemplate);
+                wrap(mixin(InvoiceForLease_prepare.class, invoice)).act(invoiceDocTemplate);
                 Document document = invoiceDocOf(invoice);
 
                 // then
@@ -154,7 +173,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
                 List<Paperclip> paperclips = paperclipRepository.findByDocument(document);
                 assertThat(paperclips).hasSize(1);
 
-                assertThat(paperclips).extracting(x -> x.getAttachedTo()).contains(invoice);
+                assertThat(paperclips).extracting(Paperclip::getAttachedTo).contains(invoice);
             }
 
             @Test
@@ -167,7 +186,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
                 // when
                 final List<DocumentTemplate> documentTemplates =
-                        mixin(InvoiceForLease_prepare.class, invoice).choices0$$();
+                        mixin(InvoiceForLease_prepare.class, invoice).choices0Act();
 
                 // then
                 assertThat(documentTemplates).doesNotContain(invoiceDocTemplate);
@@ -224,7 +243,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             assertThat(documentAbs.getId()).isNotNull();
             assertThat(documentAbs.getSort()).isEqualTo(DocumentSort.BLOB);
-            assertThat(documentAbs.getMimeType()).isEqualTo("application/pdf");
+            assertThat(documentAbs.getMimeType()).isEqualTo(MimeTypeData.APPLICATION_PDF.asStr());
             assertThat(documentAbs.getName()).isEqualTo(fileName);
             assertThat(documentAbs.getAtPath()).isEqualTo(invoice.getApplicationTenancyPath());
             assertThat(documentAbs.getBlobBytes()).isEqualTo(blob.getBytes());
@@ -248,27 +267,15 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
     }
 
-    public static class Invoice_delete_document_IntegTest extends Invoice_DocumentManagement_IntegTest {
-
-        @Ignore // TODO
-        @Test
-        public void can_delete_documents_if_not_sent() throws Exception {
-
-        }
-
-        @Ignore // TODO
-        @Test
-        public void cannot_delete_documents_if_have_been_sent() throws Exception {
-
-        }
-
-    }
-
     public static class Invoice_sendByEmail_IntegTest extends Invoice_DocumentManagement_IntegTest {
 
-        @Ignore // EST-1154
+        @Inject
+        List<EmailService> emailServices;
+
         @Test
         public void when_prelim_letter_any_invoice_receipts_attached_are_ignored() throws IOException {
+
+            assertThat(emailServices).isNotEmpty();
 
             // given
             Invoice invoice = findInvoice(InvoiceStatus.NEW);
@@ -286,7 +293,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             // when
             DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
-            wrap(mixin(InvoiceForLease_prepare.class, invoice)).$$(prelimLetterTemplate);
+            wrap(mixin(InvoiceForLease_prepare.class, invoice)).act(prelimLetterTemplate);
             Document document = prelimLetterOf(invoice);
 
             // (clearing queryResultsCache)
@@ -298,7 +305,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
             assertThat(prelimLetterDoc).isSameAs(document);
             assertThat(document.getState()).isEqualTo(DocumentState.RENDERED);
 
-            Assertions.assertThat(mixin(DocAndCommForPrelimLetter_communication.class, prelimLetterViewModel).$$()).isNull();
+            assertThat(mixin(DocAndCommForPrelimLetter_communication.class, prelimLetterViewModel).$$()).isNull();
 
             // is attached to only invoice
             paperclips = paperclipRepository.findByDocument(prelimLetterDoc);
@@ -340,23 +347,23 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
             assertThat(communication.getState()).isEqualTo(CommunicationState.PENDING);
             assertThat(prelimLetterComm.getCreatedAt()).isNotNull();
             assertThat(prelimLetterComm.getSentAt()).isNull();
-            assertThat(prelimLetterComm.getSubject()).isEqualTo("OXF Poison Perfumeries Unit 3 Poison Preliminary Letter 01-01-2012.html");
+            assertThat(prelimLetterComm.getSubject()).isEqualTo("Preliminary Letter 2012-01-01, OXF Unit 3 Poison Perfumeries Poison");
 
             // and PL doc now also attached to comm, invoice.buyer and invoice.seller (as well as invoice)
             paperclips = paperclipRepository.findByDocument(prelimLetterDoc);
             assertThat(paperclips).hasSize(4);
-            assertThat(paperclips).extracting(x -> x.getAttachedTo()).contains(invoice, invoice.getBuyer(), invoice.getSeller(), prelimLetterComm);
+            assertThat(paperclips).extracting(Paperclip::getAttachedTo).contains(invoice, invoice.getBuyer(), invoice.getSeller(), prelimLetterComm);
 
             // and comm attached to PL and also to a new covernote
             paperclips = paperclipRepository.findByAttachedTo(prelimLetterComm);
             assertThat(paperclips).hasSize(2);
-            assertThat(paperclips).extracting(x -> x.getDocument()).contains(prelimLetterDoc);
+            assertThat(paperclips).extracting(Paperclip::getDocument).contains(prelimLetterDoc);
 
         }
 
-        @Ignore // EST-1154
         @Test
-        public void when_invoice_doc_then_any_receipts_attached_are_included() throws IOException {
+        public void when_invoice_doc_then_any_receipts_attached_are_included() throws IOException,
+                InterruptedException {
 
             // given an 'invoiced' invoice (so can create invoice notes for it)
             Invoice invoice = findInvoice(InvoiceStatus.NEW);
@@ -376,7 +383,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             // when
             DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.INVOICE, invoice);
-            wrap(mixin(InvoiceForLease_prepare.class, invoice)).$$(prelimLetterTemplate);
+            wrap(mixin(InvoiceForLease_prepare.class, invoice)).act(prelimLetterTemplate);
             Document document = invoiceDocOf(invoice);
 
             invoice = findInvoice(InvoiceStatus.INVOICED);
@@ -387,17 +394,17 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
             assertThat(invoiceDoc).isSameAs(document);
             assertThat(document.getState()).isEqualTo(DocumentState.RENDERED);
 
-            Assertions.assertThat(mixin(DocAndCommForInvoiceDoc_communication.class, invoiceDocViewModel).$$()).isNull();
+            assertThat(mixin(DocAndCommForInvoiceDoc_communication.class, invoiceDocViewModel).$$()).isNull();
 
-            // is attached to invoice and also the receipt
+            // is attached only to the invoice
             paperclips = paperclipRepository.findByDocument(invoiceDoc);
-            assertThat(paperclips).hasSize(2);
-            assertThat(paperclips).extracting(x -> x.getAttachedTo()).contains(invoice, attachedReceipt);
+            assertThat(paperclips).hasSize(1);
+            assertThat(paperclips).extracting(Paperclip::getAttachedTo).contains(invoice);
 
             // while the invoice itself also has two attachments (the original receipt and the newly created doc)
             paperclips = paperclipRepository.findByAttachedTo(invoice);
             assertThat(paperclips).hasSize(2);
-            assertThat(paperclips).extracting(x -> x.getDocument()).contains(attachedReceipt, invoiceDoc);
+            assertThat(paperclips).extracting(Paperclip::getDocument).contains(attachedReceipt, invoiceDoc);
 
             // and given there is another receipt attached to the invoice
             receiptAttachedToInvoice(invoice, "receipt-2.pdf");
@@ -408,8 +415,10 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
             paperclips = paperclipRepository.findByAttachedTo(invoice);
             assertThat(paperclips).hasSize(3);
 
+            // but the original invoiceDoc is untouched (the receipts are not attached to it)
             paperclips = paperclipRepository.findByDocument(invoiceDoc);
-            assertThat(paperclips).hasSize(3);
+            assertThat(paperclips).hasSize(1);
+            assertThat(paperclips).extracting(Paperclip::getAttachedTo).contains(invoice);
 
             // and given
             final EmailAddress sendToEmailAddress = sendToFor(invoice, EmailAddress.class);
@@ -429,29 +438,103 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
             assertThat(communication.getState()).isEqualTo(CommunicationState.PENDING);
             assertThat(communication.getCreatedAt()).isNotNull();
             assertThat(communication.getSentAt()).isNull();
-            assertThat(communication.getSubject()).isEqualTo("OXF Poison Perfumeries Unit 3 Poison Invoice 01-01-2012.html");
+            assertThat(communication.getSubject()).isEqualTo("Invoice 2012-01-01, OXF Unit 3 Poison Perfumeries Poison");
 
-            // and InvNote doc now also attached to comm, invoice.buyer and invoice.seller (as well as invoice two receipts)
+            // and InvNote doc now also attached to comm, invoice.buyer, invoice.seller and the invoice
             paperclips = paperclipRepository.findByDocument(invoiceDoc);
-            assertThat(paperclips).hasSize(6);
-            assertThat(paperclips).extracting(x -> x.getAttachedTo()).contains(invoice, invoice.getBuyer(), invoice.getSeller());
+            assertThat(paperclips).hasSize(4);
+            assertThat(paperclips).extracting(Paperclip::getAttachedTo).contains(invoice, invoice.getBuyer(), invoice.getSeller(), communication);
 
             // and comm attached to PL, also to a new covernote, AND ALSO to both of the receipts
             paperclips = paperclipRepository.findByAttachedTo(invoiceDocComm);
             assertThat(paperclips).hasSize(4);
             assertThat(paperclips)
                     .extracting(Paperclip::getDocument)
-                    .filteredOn(x -> DocumentTypeData.SUPPLIER_RECEIPT.isDocTypeFor(document))
+                    .filteredOn(DocumentTypeData.SUPPLIER_RECEIPT::isDocTypeFor)
                     .hasSize(2);
 
-        }
 
+            // and there is a command to send the email
+            List<CommandJdo> commands = backgroundCommandRepository.findBackgroundCommandsNotYetStarted();
+            assertThat(commands).hasSize(1);
+
+            // but no email yet sent
+            List<EmailMessage> emailMessages = fakeEmailService.listSentEmails();
+            assertThat(emailMessages).isEmpty();
+
+            // and so when
+            fakeScheduler.runBackgroundCommands(5000);
+
+            // then the email is sent
+            assertThat(communication.getState()).isEqualTo(CommunicationState.SENT);
+            assertThat(communication.getSentAt()).isNotNull();
+
+            emailMessages = fakeEmailService.listSentEmails();
+            assertThat(emailMessages).hasSize(1);
+
+            assertThat(emailMessages.get(0).getAttachments()).hasSize(3);
+
+
+            //
+            // and we can also send the comm explicitly ...
+            //
+
+            // given
+            final Document_sendByEmail documentEmail = mixin(Document_sendByEmail.class, document);
+            final Set<EmailAddress> emailAddresses = documentEmail.choices0Act();
+
+            final EmailAddress buyerEmail = (EmailAddress) linkRepository
+                    .findByOwnerAndCommunicationChannelType(invoice.getBuyer(), CommunicationChannelType.EMAIL_ADDRESS)
+                    .get(0)
+                    .getCommunicationChannel();
+
+            // and so
+            assertThat(emailAddresses).contains(buyerEmail);
+
+
+            // REVIEW: should be wrapped, however the DocumentCommunicationSupportForDocumentsAttachedToInvoiceForLease
+            // vetoes this, and there is current no way to exclude classes that are not part of the "effective" module
+            //final Communication comm = wrap(documentEmail).act(fredEmail, null, null, null, null, null);
+
+            final Communication newComm = documentEmail.act(buyerEmail, null, null, null, null, null);
+
+            // then
+            assertThat(newComm).isNotNull();
+
+            assertThat(newComm.getState()).isEqualTo(CommunicationState.PENDING);
+            assertThat(newComm.getCreatedAt()).isNotNull();
+            assertThat(newComm.getType()).isEqualTo(CommunicationChannelType.EMAIL_ADDRESS);
+            assertThat(newComm.getSubject()).isNotNull();
+            assertThat(newComm.getSentAt()).isNull();
+
+            final List<CommunicationChannel> correspondentChannels =
+                    Lists.newArrayList(newComm.getCorrespondents()).stream()
+                            .map(CommChannelRole::getChannel)
+                            .filter(Objects::nonNull)
+                            .collect(Collectors.toList());
+            assertThat(correspondentChannels).contains(buyerEmail);
+
+            commands = backgroundCommandRepository.findBackgroundCommandsNotYetStarted();
+            assertThat(commands.size()).isEqualTo(1);
+
+            // when
+            fakeScheduler.runBackgroundCommands(5000);
+
+            // then
+            assertThat(newComm.getState()).isEqualTo(CommunicationState.SENT);
+            assertThat(newComm.getSentAt()).isNotNull();
+
+            emailMessages = fakeEmailService.listSentEmails();
+            assertThat(emailMessages).hasSize(2);
+
+            assertThat(emailMessages.get(1).getAttachments()).hasSize(3);
+
+        }
     }
 
 
     public static class Invoice_sendByPost_IntegTest extends Invoice_DocumentManagement_IntegTest {
 
-        @Ignore // EST-1154
         @Test
         public void when_prelim_letter_any_invoice_receipts_attached_are_ignored() throws IOException {
 
@@ -471,7 +554,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             // when
             DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
-            wrap(mixin(InvoiceForLease_prepare.class, invoice)).$$(prelimLetterTemplate);
+            wrap(mixin(InvoiceForLease_prepare.class, invoice)).act(prelimLetterTemplate);
             Document document = prelimLetterOf(invoice);
 
             // (clearing queryResultsCache)
@@ -483,7 +566,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
             assertThat(prelimLetterDoc).isSameAs(document);
             assertThat(document.getState()).isEqualTo(DocumentState.RENDERED);
 
-            Assertions.assertThat(mixin(DocAndCommForPrelimLetter_communication.class, prelimLetterViewModel).$$()).isNull();
+            assertThat(mixin(DocAndCommForPrelimLetter_communication.class, prelimLetterViewModel).$$()).isNull();
 
             // is attached to only invoice
             paperclips = paperclipRepository.findByDocument(prelimLetterDoc);
@@ -513,22 +596,21 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             // then the comm is automatically sent
             assertThat(prelimLetterComm.getState()).isEqualTo(CommunicationState.SENT);
-            assertThat(prelimLetterComm.getCreatedAt()).isNull();
+            assertThat(prelimLetterComm.getCreatedAt()).isNotNull();
             assertThat(prelimLetterComm.getSentAt()).isNotNull();
-            assertThat(prelimLetterComm.getSubject()).startsWith("Preliminary letter for Invoice Temp *000");
+            assertThat(prelimLetterComm.getSubject()).isEqualTo("Prelim letter 2012-01-01, OXF-POISON-003 Poison Perfumeries.pdf");
 
             // and PL doc now also attached to comm, invoice.buyer and invoice.seller (as well as invoice)
             paperclips = paperclipRepository.findByDocument(prelimLetterDoc);
             assertThat(paperclips).hasSize(4);
-            assertThat(paperclips).extracting(x -> x.getAttachedTo()).contains(invoice, invoice.getBuyer(), invoice.getSeller(), prelimLetterComm);
+            assertThat(paperclips).extracting(Paperclip::getAttachedTo).contains(invoice, invoice.getBuyer(), invoice.getSeller(), prelimLetterComm);
 
             // and comm attached to PL
             paperclips = paperclipRepository.findByAttachedTo(prelimLetterComm);
             assertThat(paperclips).hasSize(1);
-            assertThat(paperclips).extracting(x -> x.getDocument()).contains(prelimLetterDoc);
+            assertThat(paperclips).extracting(Paperclip::getDocument).contains(prelimLetterDoc);
         }
 
-        @Ignore // EST-1154
         @Test
         public void when_invoice_doc_then_any_receipts_attached_are_included() throws IOException {
 
@@ -550,7 +632,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             // when
             DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.INVOICE, invoice);
-            wrap(mixin(InvoiceForLease_prepare.class, invoice)).$$(prelimLetterTemplate);
+            wrap(mixin(InvoiceForLease_prepare.class, invoice)).act(prelimLetterTemplate);
             Document document = invoiceDocOf(invoice);
 
             invoice = findInvoice(InvoiceStatus.INVOICED);
@@ -561,17 +643,17 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
             assertThat(invoiceDoc).isSameAs(document);
             assertThat(document.getState()).isEqualTo(DocumentState.RENDERED);
 
-            Assertions.assertThat(mixin(DocAndCommForInvoiceDoc_communication.class, invoiceDocViewModel).$$()).isNull();
+            assertThat(mixin(DocAndCommForInvoiceDoc_communication.class, invoiceDocViewModel).$$()).isNull();
 
-            // is attached to invoice and also the receipt
+            // is attached to invoice (though not the receipt)
             paperclips = paperclipRepository.findByDocument(invoiceDoc);
-            assertThat(paperclips).hasSize(2);
-            assertThat(paperclips).extracting(x -> x.getAttachedTo()).contains(invoice, attachedReceipt);
+            assertThat(paperclips).hasSize(1);
+            assertThat(paperclips).extracting(Paperclip::getAttachedTo).contains(invoice);
 
             // while the invoice itself also has two attachments (the original receipt and the newly created doc)
             paperclips = paperclipRepository.findByAttachedTo(invoice);
             assertThat(paperclips).hasSize(2);
-            assertThat(paperclips).extracting(x -> x.getDocument()).contains(attachedReceipt, invoiceDoc);
+            assertThat(paperclips).extracting(Paperclip::getDocument).contains(attachedReceipt, invoiceDoc);
 
 
             // and when
@@ -595,19 +677,19 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             // then the comm is automatically sent
             assertThat(invoiceDocComm.getState()).isEqualTo(CommunicationState.SENT);
-            assertThat(invoiceDocComm.getCreatedAt()).isNull();
+            assertThat(invoiceDocComm.getCreatedAt()).isNotNull();
             assertThat(invoiceDocComm.getSentAt()).isNotNull();
-            assertThat(invoiceDocComm.getSubject()).isEqualTo("Invoice for OXF-000001.pdf");
+            assertThat(invoiceDocComm.getSubject()).isEqualTo("Invoice OXF-000001 2012-01-01, OXF-POISON-003 Poison Perfumeries.pdf");
 
-            // and InvNote doc now also attached to comm, invoice.buyer and invoice.seller (as well as invoice and receipt)
+            // and InvNote doc now also attached to comm, invoice.buyer and invoice.seller (as well as invoice, but not the receipt)
             paperclips = paperclipRepository.findByDocument(invoiceDoc);
-            assertThat(paperclips).hasSize(5);
-            assertThat(paperclips).extracting(x -> x.getAttachedTo()).contains(invoice, invoice.getBuyer(), invoice.getSeller(), invoiceDocComm, attachedReceipt);
+            assertThat(paperclips).hasSize(4);
+            assertThat(paperclips).extracting(Paperclip::getAttachedTo).contains(invoice, invoice.getBuyer(), invoice.getSeller(), invoiceDocComm);
 
             // and comm attached to PL, also to a new covernote, AND ALSO to the original attached receipt
             paperclips = paperclipRepository.findByAttachedTo(invoiceDocComm);
             assertThat(paperclips).hasSize(2);
-            assertThat(paperclips).extracting(x -> x.getDocument()).contains(invoiceDoc, attachedReceipt);
+            assertThat(paperclips).extracting(Paperclip::getDocument).contains(invoiceDoc, attachedReceipt);
 
         }
 
@@ -626,7 +708,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             // and given have a PL doc
             DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
-            wrap(mixin(InvoiceForLease_prepare.class, invoice)).$$(prelimLetterTemplate);
+            wrap(mixin(InvoiceForLease_prepare.class, invoice)).act(prelimLetterTemplate);
             Document document = prelimLetterOf(invoice);
             assertThat(document).isNotNull();
 
@@ -664,7 +746,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             // and given have a PL doc
             DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
-            wrap(mixin(InvoiceForLease_prepare.class, invoice)).$$(prelimLetterTemplate);
+            wrap(mixin(InvoiceForLease_prepare.class, invoice)).act(prelimLetterTemplate);
             Document document = prelimLetterOf(invoice);
             assertThat(document).isNotNull();
 
@@ -731,7 +813,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             // and given have a PL doc
             DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
-            wrap(mixin(InvoiceForLease_prepare.class, invoice)).$$(prelimLetterTemplate);
+            wrap(mixin(InvoiceForLease_prepare.class, invoice)).act(prelimLetterTemplate);
             Document document = prelimLetterOf(invoice);
 
             assertThat(document).isNotNull();
@@ -763,7 +845,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
 
             // and given have a PL doc
             DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
-            wrap(mixin(InvoiceForLease_prepare.class, invoice)).$$(prelimLetterTemplate);
+            wrap(mixin(InvoiceForLease_prepare.class, invoice)).act(prelimLetterTemplate);
             Document document = prelimLetterOf(invoice);
 
             // and given document sent
@@ -793,7 +875,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
             DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
 
             // and given
-            wrap(mixin(InvoiceForLease_prepare.class, invoice)).$$(prelimLetterTemplate);
+            wrap(mixin(InvoiceForLease_prepare.class, invoice)).act(prelimLetterTemplate);
             Document document = prelimLetterOf(invoice);
             assertThat(document).isNotNull();
 
@@ -862,7 +944,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
     static Blob asBlob(final String fileName) throws IOException {
         final URL url = Resources.getResource(Invoice_DocumentManagement_IntegTest.class, fileName);
         final byte[] bytes = Resources.toByteArray(url);
-        return new Blob(fileName, "application/pdf", bytes);
+        return new Blob(fileName, MimeTypeData.APPLICATION_PDF.asStr(), bytes);
     }
 
     void approveAndInvoice(final Invoice invoice) {
@@ -893,8 +975,10 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
         final InvoiceForLease_attachSupportingDocument invoice_attachSupportingDocument = mixin(InvoiceForLease_attachSupportingDocument.class, invoice);
 
         final List<DocumentType> documentTypes = invoice_attachSupportingDocument.choices0$$();
-        assertThat(documentTypes).hasSize(2);
-        final DocumentType documentType = documentTypes.get(0);
+        assertThat(documentTypes).hasSize(4);
+        final DocumentType documentType = documentTypes.stream().filter(x -> Objects
+                .equals(x.getReference(), DocumentTypeData.SUPPLIER_RECEIPT.getRef()))
+                .findFirst().orElse(null);
         final List<String> roleNames = invoice_attachSupportingDocument.choices3$$();
         assertThat(roleNames).hasSize(1);
         final String roleName = roleNames.get(0);
@@ -910,13 +994,13 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
     }
 
     void assertNoCommunicationFor(final DocAndCommForPrelimLetter prelimLetterViewModel) {
-        Assertions.assertThat(mixin(DocAndCommForPrelimLetter_communication.class, prelimLetterViewModel).$$()).isNull();
-        Assertions.assertThat(mixin(DocAndCommForPrelimLetter_communicationState.class, prelimLetterViewModel).$$()).isNull();
+        assertThat(mixin(DocAndCommForPrelimLetter_communication.class, prelimLetterViewModel).$$()).isNull();
+        assertThat(mixin(DocAndCommForPrelimLetter_communicationState.class, prelimLetterViewModel).$$()).isNull();
     }
 
     void assertNoDocumentFor(final DocAndCommForPrelimLetter prelimLetterViewModel) {
-        Assertions.assertThat(mixin(DocAndCommForPrelimLetter_document.class, prelimLetterViewModel).$$()).isNull();
-        Assertions.assertThat(mixin(DocAndCommForPrelimLetter_documentState.class, prelimLetterViewModel).$$()).isNull();
+        assertThat(mixin(DocAndCommForPrelimLetter_document.class, prelimLetterViewModel).$$()).isNull();
+        assertThat(mixin(DocAndCommForPrelimLetter_documentState.class, prelimLetterViewModel).$$()).isNull();
     }
 
     void assertNoDocumentOrCommunicationsFor(final DocAndCommForInvoiceDoc invoiceDocViewModel) {
@@ -925,13 +1009,13 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
     }
 
     void assertNoCommunicationFor(final DocAndCommForInvoiceDoc invoiceDocViewModel) {
-        Assertions.assertThat(mixin(DocAndCommForInvoiceDoc_communication.class, invoiceDocViewModel).$$()).isNull();
-        Assertions.assertThat(mixin(DocAndCommForInvoiceDoc_communicationState.class, invoiceDocViewModel).$$()).isNull();
+        assertThat(mixin(DocAndCommForInvoiceDoc_communication.class, invoiceDocViewModel).$$()).isNull();
+        assertThat(mixin(DocAndCommForInvoiceDoc_communicationState.class, invoiceDocViewModel).$$()).isNull();
     }
 
     void assertNoDocumentFor(final DocAndCommForInvoiceDoc invoiceDocViewModel) {
-        Assertions.assertThat(mixin(DocAndCommForInvoiceDoc_document.class, invoiceDocViewModel).$$()).isNull();
-        Assertions.assertThat(mixin(DocAndCommForInvoiceDoc_documentState.class, invoiceDocViewModel).$$()).isNull();
+        assertThat(mixin(DocAndCommForInvoiceDoc_document.class, invoiceDocViewModel).$$()).isNull();
+        assertThat(mixin(DocAndCommForInvoiceDoc_documentState.class, invoiceDocViewModel).$$()).isNull();
     }
 
     <T extends CommunicationChannel> T sendToFor(final Invoice invoice, final Class<T> communicationChannelClass)  {
@@ -957,21 +1041,18 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
     }
 
 
-    //endregion
-
-    //region > injected services
+    @Inject
+    BackgroundCommandServiceJdoRepository backgroundCommandRepository;
 
     @Inject
     BookmarkService2 bookmarkService;
+    @Inject
+    FakeEmailService fakeEmailService;
+    @Inject
+    FakeScheduler fakeScheduler;
 
     @Inject
-    InvoiceRepository invoiceRepository;
-    @Inject
     InvoiceForLeaseRepository invoiceForLeaseRepository;
-    @Inject
-    PartyRepository partyRepository;
-    @Inject
-    LeaseRepository leaseRepository;
 
     @Inject
     DocumentTemplateRepository documentTemplateRepository;
@@ -984,7 +1065,6 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
     TransactionService transactionService;
 
     @Inject
-    ClockService clockService;
-    //endregion
+    CommunicationChannelOwnerLinkRepository linkRepository;
 
 }

@@ -246,16 +246,10 @@ public abstract class Party
     }
 
     @Persistent(mappedBy = "party", dependentElement = "true")
+    @MemberOrder(sequence = "1")
+    @Getter @Setter
     private SortedSet<PartyRole> roles = new TreeSet<PartyRole>();
 
-    @MemberOrder(sequence = "1")
-    public SortedSet<PartyRole> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(final SortedSet<PartyRole> roles) {
-        this.roles = roles;
-    }
 
     @MemberOrder(name = "roles", sequence = "1")
     public Party addRole(final PartyRoleType roleType){
@@ -276,6 +270,13 @@ public abstract class Party
     @Programmatic
     public boolean hasPartyRoleType(final PartyRoleType partyRoleType){
         return getPartyRole(partyRoleType) != null;
+    }
+
+    @Programmatic
+    public boolean hasPartyRoleType(final IPartyRoleType partyRoleType){
+        final PartyRoleType roleType =
+                partyRoleType.findUsing(partyRoleTypeRepository);
+        return hasPartyRoleType(roleType);
     }
 
     @Programmatic

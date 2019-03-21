@@ -26,4 +26,5 @@ public abstract class CapexModuleIntegTestAbstract extends BaseModuleIntegTestAb
     public CapexModuleIntegTestAbstract() {
         super(new EstatioCapexModule());
     }
+
 }

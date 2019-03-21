@@ -222,6 +222,11 @@ public class AdminDashboard {
         return this;
     }
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public AdminDashboard syncAllSuppliers() {
+        return this;
+    }
+
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3.1")
     public AdminDashboard testEmail(

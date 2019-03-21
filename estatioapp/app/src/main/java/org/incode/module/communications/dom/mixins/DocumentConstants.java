@@ -9,8 +9,6 @@ public final class DocumentConstants {
 
     private DocumentConstants(){}
 
-    public static final String MIME_TYPE_APPLICATION_PDF = "application/pdf";
-
     /**
      * for "primary" {@link Document}s attached to {@link CommunicationChannelType#EMAIL_ADDRESS email} {@link Communication}s.
      *

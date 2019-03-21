@@ -9,6 +9,9 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
+/**
+ * TODO: remove this once move to DocumentTypeData, DocumentTemplateData and RenderingStrategyData
+ */
 @DomainService(
         nature = NatureOfService.DOMAIN,
         repositoryFor = Applicability.class

@@ -10,6 +10,7 @@ import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeForTesting;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
@@ -67,7 +68,7 @@ public class Document_Test {
             final byte[] b = new byte[20];
             new Random().nextBytes(b);
             document.setBlobBytes(b);
-            document.setMimeType("application/pdf");
+            document.setMimeType(MimeTypeData.APPLICATION_PDF.asStr());
             document.setName("Foo doc");
             document.setSort(DocumentSort.BLOB);
 
@@ -82,7 +83,7 @@ public class Document_Test {
         public void get_when_not_sort_blob() throws Exception {
             // given
             final Document document = new Document();
-            document.setMimeType("application/pdf");
+            document.setMimeType(MimeTypeData.APPLICATION_PDF.asStr());
             document.setName("Foo doc");
             document.setSort(DocumentSort.CLOB);
 
@@ -107,7 +108,7 @@ public class Document_Test {
             // given
             final Document document = new Document();
             document.setClobChars("CLOBCHARS");
-            document.setMimeType("application/pdf");
+            document.setMimeType(MimeTypeData.APPLICATION_PDF.asStr());
             document.setName("Foo doc");
             document.setSort(DocumentSort.CLOB);
 
@@ -122,7 +123,7 @@ public class Document_Test {
         public void get_when_not_sort_clob() throws Exception {
             // given
             final Document document = new Document();
-            document.setMimeType("application/pdf");
+            document.setMimeType(MimeTypeData.APPLICATION_PDF.asStr());
             document.setName("Foo doc");
             document.setSort(DocumentSort.BLOB);
 

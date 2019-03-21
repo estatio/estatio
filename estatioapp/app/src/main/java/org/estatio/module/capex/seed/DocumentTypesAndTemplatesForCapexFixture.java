@@ -22,11 +22,17 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
+import org.estatio.module.capex.seed.ordertmplt.DocumentTemplateFSForOrderConfirm;
+import org.estatio.module.capex.seed.ordertmplt.DocumentTypeFSForOrderConfirm;
+
+import lombok.Getter;
+
 @DomainObject(
         objectType = "org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture"
 )
 public class DocumentTypesAndTemplatesForCapexFixture extends DiscoverableFixtureScript {
 
+    @Getter
     private final LocalDate templateDateIfAny;
 
     public DocumentTypesAndTemplatesForCapexFixture() {
@@ -38,14 +44,12 @@ public class DocumentTypesAndTemplatesForCapexFixture extends DiscoverableFixtur
     }
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void execute(ExecutionContext ec) {
 
-        executionContext.executeChild(this, new DocumentTypeFSForIncoming());
-        executionContext.executeChild(this, new DocumentTypeFSForIbanProof());
+        ec.executeChild(this, new DocumentTypeFSForIncoming());
+        ec.executeChild(this, new DocumentTypeFSForIbanProof());
 
-    }
-
-    LocalDate getTemplateDateIfAny() {
-        return templateDateIfAny;
+        ec.executeChild(this, new DocumentTypeFSForOrderConfirm());
+        ec.executeChild(this, new DocumentTemplateFSForOrderConfirm(templateDateIfAny));
     }
 }

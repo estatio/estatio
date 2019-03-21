@@ -26,6 +26,9 @@ import org.apache.isis.core.metamodel.specloader.IntrospectionMode;
 import org.apache.isis.core.metamodel.specloader.SpecificationLoader;
 import org.apache.isis.core.runtime.headless.logging.LogConfig;
 
+import org.incode.module.docrendering.gotenberg.fixture.fake.GotenbergRenderingFakeModule;
+import org.incode.platform.dom.communications.integtests.app.services.FakeCommsServiceModule;
+
 public abstract class BaseModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
     protected BaseModuleIntegTestAbstract(final ModuleAbstract module) {
@@ -38,7 +41,12 @@ public abstract class BaseModuleIntegTestAbstract extends IntegrationTestAbstrac
 
         super(new LogConfig(Level.INFO,
                 logPrintStream(Level.DEBUG)),
-                module.withConfigurationProperty(
+
+                new ModuleForTesting(
+                        module,
+                        new GotenbergRenderingFakeModule(),
+                        new FakeCommsServiceModule()
+                ).withConfigurationProperty(
                     SpecificationLoader.CONFIG_PROPERTY_MODE.of(introspectionMode)
                 )
         );

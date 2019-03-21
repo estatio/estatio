@@ -14,6 +14,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository;
@@ -86,7 +87,7 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
         //
         final LocalDate now = clockService.now();
 
-        final Clob clob = new Clob(docTypeForFreemarkerHtml.getName(), "text/html",
+        final Clob clob = new Clob(docTypeForFreemarkerHtml.getName(), MimeTypeData.TEXT_HTML.asStr(),
                 loadResource("FreemarkerHtmlCoverNote.html"));
         fmkTemplate = upsertDocumentClobTemplate(
                 docTypeForFreemarkerHtml, now, atPath,
@@ -116,7 +117,7 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
                 ".pdf",
                 false,
                 docTypeForStringInterpolatorUrl.getName(),
-                "application/pdf",
+                MimeTypeData.APPLICATION_PDF.asStr(),
                 "${demoObject.url}", sipcRenderingStrategy,
                 "pdf-of-url-held-in-${demoObject.name}", siRenderingStrategy,
                 executionContext);
@@ -140,7 +141,7 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
                 false,
                 new Blob(
                         docTypeForXDocReportPdf.getName() + ".docx",
-                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        MimeTypeData.APPLICATION_PDF.asStr(),
                         loadResourceBytes("demoObject-template.docx")
                 ), xdpRenderingStrategy,
                 "${demoObject.name}", fmkRenderingStrategy,
@@ -165,7 +166,7 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
                 false,
                 new Blob(
                         docTypeForXDocReportDocx.getName() + ".docx",
-                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        MimeTypeData.APPLICATION_PDF.asStr(),
                         loadResourceBytes("demoObject-template.docx")
                 ), xddRenderingStrategy,
                 "${demoObject.name}", fmkRenderingStrategy,

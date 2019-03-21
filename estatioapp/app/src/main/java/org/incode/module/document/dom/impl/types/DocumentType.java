@@ -14,6 +14,7 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Uniques;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -30,10 +31,13 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.util.ObjectContracts;
+import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.incode.module.document.DocumentModule;
 import org.incode.module.document.dom.impl.docs.DocumentTemplateRepository;
 import org.incode.module.document.dom.types.NameType;
+
+import org.estatio.module.invoice.dom.DocumentTypeApi;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -75,7 +79,8 @@ import lombok.Setter;
         cssClassUiEvent = DocumentType.CssClassUiEvent.class,
         bookmarking = BookmarkPolicy.AS_ROOT
 )
-public class DocumentType implements Comparable<DocumentType> {
+@XmlJavaTypeAdapter(PersistentEntityAdapter.class)
+public class DocumentType implements Comparable<DocumentType>, DocumentTypeApi {
 
     //region > ui event classes
     public static class TitleUiEvent extends DocumentModule.TitleUiEvent<DocumentType>{}

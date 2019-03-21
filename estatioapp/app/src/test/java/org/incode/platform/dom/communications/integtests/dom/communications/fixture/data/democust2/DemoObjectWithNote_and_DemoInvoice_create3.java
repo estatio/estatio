@@ -10,6 +10,7 @@ import com.google.common.io.Resources;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.value.Blob;
 
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.incode.module.country.dom.impl.Country;
@@ -96,7 +97,7 @@ public class DemoObjectWithNote_and_DemoInvoice_create3 extends FixtureScript {
 
     private static Blob loadPdf(final String resourceName) {
         final byte[] bytes = loadResourceBytes(resourceName);
-        return new Blob(resourceName, "application/pdf", bytes);
+        return new Blob(resourceName, MimeTypeData.APPLICATION_PDF.asStr(), bytes);
     }
 
     private static byte[] loadResourceBytes(final String resourceName) {

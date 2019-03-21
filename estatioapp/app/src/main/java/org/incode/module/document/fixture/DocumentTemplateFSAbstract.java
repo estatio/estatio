@@ -144,6 +144,25 @@ public abstract class DocumentTemplateFSAbstract extends FixtureScript {
         return executionContext.addResult(this, documentTemplate);
     }
 
+    protected static String buildTemplateName(
+            final DocumentType docType,
+            final String templateNameSuffixIfAny) {
+        return buildTemplateName(docType, templateNameSuffixIfAny, null);
+    }
+
+    protected static String buildTemplateName(
+            final DocumentType docType,
+            final String templateNameSuffixIfAny,
+            final String extension) {
+        final String name = docType.getName() + (templateNameSuffixIfAny != null ? templateNameSuffixIfAny : "");
+        return extension != null
+                ? name.endsWith(extension)
+                ? name
+                : name + extension
+                : name;
+    }
+
+
     @Inject
     protected DocumentTemplateRepository documentTemplateRepository;
 

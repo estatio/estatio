@@ -43,11 +43,13 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
@@ -59,6 +61,7 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.types.NotesType;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.document.dom.api.DocumentService;
@@ -96,6 +99,9 @@ import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.financial.dom.utils.IBANValidator;
 import org.estatio.module.invoice.dom.DocumentTypeData;
+import org.estatio.module.order.dom.attr.OrderAttribute;
+import org.estatio.module.order.dom.attr.OrderAttributeName;
+import org.estatio.module.order.dom.attr.OrderAttributeRepository;
 import org.estatio.module.party.app.services.ChamberOfCommerceCodeLookUpService;
 import org.estatio.module.party.app.services.OrganisationNameNumberViewModel;
 import org.estatio.module.party.dom.Organisation;
@@ -613,6 +619,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return meService.me().getAtPath().startsWith("/ITA");
     }
 
+    @Programmatic
     public void updateOrderNumber() {
         if (getAtPath().startsWith("/ITA")) {
             String possibleMultiPropertyReference = orderNumber.split("/").length > 1 ? orderNumber.split("/")[1] : "";
@@ -1456,6 +1463,32 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return this;
     }
 
+    @Persistent(mappedBy = "ordr", dependentElement = "true")
+    @Getter @Setter
+    private SortedSet<OrderAttribute> attributes = new TreeSet<OrderAttribute>();
+
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT,
+            restrictTo = RestrictTo.PROTOTYPING
+    )
+    public Order updateAttribute(
+            final OrderAttributeName name,
+            @Parameter(maxLength = NotesType.Meta.MAX_LEN)
+            @ParameterLayout(multiLine = AttributeDescriptionType.Meta.MULTI_LINE) final String value
+    ) {
+        final OrderAttribute orderAttribute = orderAttributeRepository.findByOrderAndName(this, name);
+        if (orderAttribute == null) {
+            orderAttributeRepository.newAttribute(this, name, value);
+        } else {
+            orderAttribute.setValue(value);
+        }
+        return this;
+    }
+
+
+    @Inject
+    OrderAttributeRepository orderAttributeRepository;
+
     @Inject
     LookupAttachedPdfService lookupAttachedPdfService;
 
@@ -1518,5 +1551,20 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Inject
     BuyerFinder buyerFinder;
+
+    public static class AttributeDescriptionType {
+
+        private AttributeDescriptionType() {
+        }
+
+        public static class Meta {
+
+            public static final int MAX_LEN = OrderAttribute.ValueType.Meta.MAX_LEN;
+            public static final int MULTI_LINE = 2;
+
+            private Meta() {
+            }
+        }
+    }
 
 }

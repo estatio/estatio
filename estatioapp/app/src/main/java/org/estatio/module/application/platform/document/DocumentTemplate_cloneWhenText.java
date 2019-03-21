@@ -49,6 +49,9 @@ import org.incode.module.document.dom.types.NameType;
 
 import org.estatio.module.base.dom.apptenancy.EstatioApplicationTenancyRepository;
 
+/**
+ * TODO: remove this once move to RenderingStrategyData
+ */
 @Mixin
 public class DocumentTemplate_cloneWhenText {
 

@@ -27,6 +27,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * TODO: remove this once move to DocumentTypeData, DocumentTemplateData and RenderingStrategyData
+ *
  * Indicates whether a domain object('s type) is applicable to a particular {@link DocumentTemplate}, providing the
  * (name of) the {@link RendererModelFactory} to use to create the renderer model to feed into that template, and the
  * (name of) the {@link AttachmentAdvisor} to use to specify which domain objects the resultant {@link Document}

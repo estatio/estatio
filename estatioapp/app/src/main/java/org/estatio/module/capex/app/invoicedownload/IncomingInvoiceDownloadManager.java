@@ -42,6 +42,7 @@ import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 import org.isisaddons.module.pdfbox.dom.service.PdfBoxService;
 
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
@@ -379,7 +380,7 @@ public class IncomingInvoiceDownloadManager {
 
         preparers.forEach(DocumentPreparer::cleanup);
 
-        return new Blob(fileName, "application/pdf", singlePdf);
+        return new Blob(fileName, MimeTypeData.APPLICATION_PDF.asStr(), singlePdf);
     }
 
     public String disableDownloadToPdfSingle() {

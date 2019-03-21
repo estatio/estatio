@@ -34,6 +34,7 @@ import org.incode.module.classification.dom.ClassificationModule;
 import org.incode.module.communications.CommunicationsModule;
 import org.incode.module.docfragment.DocFragmentModule;
 import org.incode.module.docrendering.freemarker.FreemarkerDocRenderingModule;
+import org.incode.module.docrendering.gotenberg.dom.GotenbergRenderingDomModule;
 import org.incode.module.docrendering.stringinterpolator.StringInterpolatorDocRenderingModule;
 import org.incode.module.docrendering.xdocreport.XDocReportDocRenderingModule;
 
@@ -42,7 +43,7 @@ import org.estatio.module.event.EstatioEventModule;
 import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.invoice.EstatioInvoiceModule;
 import org.estatio.module.invoice.dom.Invoice;
-import org.estatio.module.invoice.dom.InvoiceAttribute;
+import org.estatio.module.invoice.dom.attr.InvoiceAttribute;
 import org.estatio.module.invoice.dom.paperclips.PaperclipForInvoice;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
@@ -79,6 +80,7 @@ public final class EstatioLeaseModule extends ModuleAbstract {
                 new CommunicationsModule(),
                 new FreemarkerDocRenderingModule(),
                 new StringInterpolatorDocRenderingModule(),
+                new GotenbergRenderingDomModule(),
                 new XDocReportDocRenderingModule(),
                 new DocFragmentModule(),
                 new ClassificationModule()

@@ -39,21 +39,21 @@ import static com.google.common.base.Predicates.not;
 /**
  * TODO: REVIEW: this mixin could in theory be inlined, but it's a lot of functionality in its own right; and maybe we want to keep invoices and documents decoupled?
  */
-@Mixin
+@Mixin(method = "act")
 public class InvoiceForLease_prepare extends T_createAndAttachDocumentAndRender<InvoiceForLease> {
 
     public InvoiceForLease_prepare(final InvoiceForLease invoiceForLease) {
         super(invoiceForLease);
     }
 
-    public Object $$(DocumentTemplate template) throws IOException {
-        super.$$(template);
+    public Object act(DocumentTemplate template) throws IOException {
+        super.act(template);
         return domainObject;
     }
 
     @Override
-    public List<DocumentTemplate> choices0$$() {
-        List<DocumentTemplate> documentTemplates = super.choices0$$();
+    public List<DocumentTemplate> choices0Act() {
+        List<DocumentTemplate> documentTemplates = super.choices0Act();
         if(Invoice.Predicates.isChangeable().apply(domainObject)) {
             // cannot send an invoice note
             documentTemplates = Lists.newArrayList(
@@ -65,8 +65,8 @@ public class InvoiceForLease_prepare extends T_createAndAttachDocumentAndRender<
         return documentTemplates;
     }
 
-    public DocumentTemplate default0$$() {
-        final List<DocumentTemplate> documentTemplates = choices0$$();
+    public DocumentTemplate default0Act() {
+        final List<DocumentTemplate> documentTemplates = choices0Act();
         return documentTemplates.size() == 1 ? documentTemplates.get(0) : null;
     }
 

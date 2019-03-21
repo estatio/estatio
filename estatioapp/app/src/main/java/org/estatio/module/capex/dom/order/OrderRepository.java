@@ -16,7 +16,6 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.clock.ClockService;
-import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
@@ -35,6 +34,7 @@ import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
+import org.estatio.module.order.dom.attr.OrderAttributeRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -177,6 +177,10 @@ public class OrderRepository {
         order.setBuyerOrderNumber(new BigInteger(nextOrderNumber));
         order.addItem(charge, description, netAmount, null, null, tax, orderDate == null ? null : String.valueOf(orderDate.getYear()), property, project, null);
 
+        if(atPath.startsWith("/ITA")) {
+            orderAttributeRepository.initializeAttributes(order);
+        }
+
         return order;
     }
 
@@ -216,6 +220,7 @@ public class OrderRepository {
                 approvalStateIfAny);
         serviceRegistry2.injectServicesInto(order);
         repositoryService.persistAndFlush(order);
+
         return order;
     }
 
@@ -393,9 +398,6 @@ public class OrderRepository {
     RepositoryService repositoryService;
 
     @Inject
-    IsisJdoSupport isisJdoSupport;
-
-    @Inject
     ServiceRegistry2 serviceRegistry2;
 
     @Inject NumeratorRepository numeratorRepository;
@@ -405,5 +407,8 @@ public class OrderRepository {
     @Inject PartyRepository partyRepository;
 
     @Inject
-    private ClockService clockService;
+    OrderAttributeRepository orderAttributeRepository;
+
+    @Inject
+    ClockService clockService;
 }

@@ -18,7 +18,8 @@ import org.apache.isis.applib.services.email.EmailService;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
-        objectType = "incodeCommunicationsDemo.FakeEmailService"
+        objectType = "incodeCommunicationsDemo.FakeEmailService",
+        menuOrder = "98"
 )
 @DomainServiceLayout(
         named = "Fakes",

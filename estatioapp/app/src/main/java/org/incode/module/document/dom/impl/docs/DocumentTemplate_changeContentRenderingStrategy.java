@@ -10,6 +10,9 @@ import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.incode.module.document.DocumentModule;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
 
+/**
+ * TODO: remove this once move to RenderingStrategyData
+ */
 @Mixin
 public class DocumentTemplate_changeContentRenderingStrategy {
 

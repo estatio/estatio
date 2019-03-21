@@ -9,6 +9,8 @@ import org.junit.Test;
 
 import org.apache.isis.applib.value.Blob;
 
+import org.incode.module.base.dom.MimeTypeData;
+
 import org.estatio.module.capex.dom.coda.CodaMappingRepository;
 import org.estatio.module.capex.imports.CodaMappingFraManager;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
@@ -28,7 +30,7 @@ public class CodaMappingFraManager_IntegTest extends CapexModuleIntegTestAbstrac
 
         final byte[] pdfBytes = Resources.toByteArray(
                 Resources.getResource(CodaMappingFraManager_IntegTest.class, fileName));
-        final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);
+        final Blob blob = new Blob(fileName, MimeTypeData.APPLICATION_PDF.asStr(), pdfBytes);
 
 
         // When

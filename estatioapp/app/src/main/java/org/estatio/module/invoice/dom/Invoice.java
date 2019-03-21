@@ -76,9 +76,11 @@ import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPathPersisted;
-import org.estatio.module.base.platform.docfragment.FragmentRenderService;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.currency.dom.Currency;
+import org.estatio.module.invoice.dom.attr.InvoiceAttribute;
+import org.estatio.module.invoice.dom.attr.InvoiceAttributeName;
+import org.estatio.module.invoice.dom.attr.InvoiceAttributeRepository;
 import org.estatio.module.party.dom.Party;
 
 import lombok.AllArgsConstructor;
@@ -143,15 +145,6 @@ public abstract class Invoice<T extends Invoice<T>>
         extends UdoDomainObject2<T>
         implements WithApplicationTenancyAny, WithApplicationTenancyPathPersisted {
 
-    protected String attributeValueFor(final InvoiceAttributeName invoiceAttributeName) {
-        final InvoiceAttribute invoiceAttribute = invoiceAttributeRepository.findByInvoiceAndName(this, invoiceAttributeName);
-        return invoiceAttribute == null ? null : invoiceAttribute.getValue();
-    }
-
-    protected boolean attributeOverriddenFor(final InvoiceAttributeName invoiceAttributeName) {
-        final InvoiceAttribute invoiceAttribute = invoiceAttributeRepository.findByInvoiceAndName(this, invoiceAttributeName);
-        return invoiceAttribute == null ? false : invoiceAttribute.isOverridden();
-    }
 
     public static class UpdatingEvent extends ObjectUpdatingEvent<Invoice> {
     }
@@ -516,72 +509,4 @@ public abstract class Invoice<T extends Invoice<T>>
         }
     }
 
-    public static abstract class _overrideAttributeAbstract {
-        private final Invoice invoice;
-        private final InvoiceAttributeName invoiceAttributeName;
-
-        public _overrideAttributeAbstract(final Invoice invoice, final InvoiceAttributeName invoiceAttributeName) {
-            this.invoice = invoice;
-            this.invoiceAttributeName = invoiceAttributeName;
-        }
-
-        @Action(semantics = SemanticsOf.IDEMPOTENT)
-        @ActionLayout(contributed = Contributed.AS_ACTION)
-        public Invoice act(
-                @Parameter(maxLength = NotesType.Meta.MAX_LEN, optionality = Optionality.OPTIONAL)
-                @ParameterLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE) final String overrideWith) {
-            invoice.updateAttribute(this.invoiceAttributeName, overrideWith, InvoiceAttributeAction.OVERRIDE);
-            return invoice;
-        }
-
-        public String disableAct() {
-            if (invoice.isImmutableDueToState()) {
-                return "Invoice can't be changed";
-            }
-            return null;
-        }
-
-        public String default0Act() {
-            return invoice.attributeValueFor(invoiceAttributeName);
-        }
-
-    }
-
-    public static abstract class _resetAttributeAbstract<T extends Invoice<?>> {
-        private final T invoice;
-        private final InvoiceAttributeName invoiceAttributeName;
-
-        public _resetAttributeAbstract(final T invoice, final InvoiceAttributeName invoiceAttributeName) {
-            this.invoice = invoice;
-            this.invoiceAttributeName = invoiceAttributeName;
-        }
-
-        @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
-        @ActionLayout(contributed = Contributed.AS_ACTION)
-        public Invoice act() {
-            final Object domainObject = viewModelFor(invoice);
-            invoice.updateAttribute(
-                    invoiceAttributeName,
-                    fragmentRenderService.render(domainObject, invoiceAttributeName.getFragmentName()),
-                    InvoiceAttributeAction.RESET);
-            return invoice;
-        }
-
-        protected abstract Object viewModelFor(T invoice);
-
-        public boolean hideAct() {
-            return !invoice.attributeOverriddenFor(invoiceAttributeName);
-        }
-
-        public String disableAct() {
-            if (invoice.isImmutableDueToState()) {
-                return "Invoice can't be changed";
-            }
-            return null;
-        }
-
-        @Inject protected
-        FragmentRenderService fragmentRenderService;
-
-    }
 }

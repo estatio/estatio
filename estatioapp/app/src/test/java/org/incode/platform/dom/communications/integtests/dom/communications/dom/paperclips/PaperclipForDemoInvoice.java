@@ -17,7 +17,7 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.mixins.T_createAndAttachDocumentAndRender;
 import org.incode.module.document.dom.mixins.T_createAndAttachDocumentAndScheduleRender;
 import org.incode.module.document.dom.mixins.T_documents;
-import org.incode.module.document.dom.mixins.T_preview;
+import org.incode.module.document.dom.mixins.T_previewUrl;
 import org.incode.platform.dom.communications.integtests.demo.dom.invoice.DemoInvoice;
 
 @javax.jdo.annotations.PersistenceCapable(
@@ -78,7 +78,7 @@ public class PaperclipForDemoInvoice extends Paperclip {
     //region > mixins
 
     @Mixin
-    public static class _preview extends T_preview<DemoInvoice> {
+    public static class _preview extends T_previewUrl<DemoInvoice> {
         public _preview(final DemoInvoice demoInvoice) {
             super(demoInvoice);
         }

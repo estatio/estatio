@@ -31,10 +31,10 @@ import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.isisaddons.module.pdfbox.dom.service.PdfBoxService;
 
+import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.incode.module.communications.dom.impl.comms.Communication;
-import org.incode.module.communications.dom.mixins.DocumentConstants;
 import org.incode.module.communications.dom.mixins.Document_communicationAttachments;
 import org.incode.module.communications.dom.mixins.Document_sendByEmail;
 import org.incode.module.communications.dom.mixins.Document_sendByPost;
@@ -126,8 +126,7 @@ public abstract class InvoiceForLease_sendAbstract {
         if (!attachedDocSort.isBytes()) {
             return;
         }
-        final String mimeType = docAttachedToDocument.getMimeType();
-        if (!DocumentConstants.MIME_TYPE_APPLICATION_PDF.equals(mimeType)) {
+        if (!MimeTypeData.APPLICATION_PDF.matches(docAttachedToDocument)) {
             return;
         }
         final byte[] attachedDocBytes = attachedDocSort.asBytes(docAttachedToDocument);

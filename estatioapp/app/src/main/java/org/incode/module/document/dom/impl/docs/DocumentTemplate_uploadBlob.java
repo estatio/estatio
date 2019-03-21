@@ -32,7 +32,6 @@ public class DocumentTemplate_uploadBlob {
             @ParameterLayout(named = "File")
             final Blob blob
     ) {
-        documentTemplate.setMimeType(blob.getMimeType().toString());
         documentTemplate.setBlobBytes(blob.getBytes());
         return documentTemplate;
     }

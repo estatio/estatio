@@ -16,10 +16,13 @@
  */
 package org.estatio.module.invoice.dom;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
@@ -39,46 +42,200 @@ import lombok.Getter;
 /**
  * maximum length is 24 ({@link DocumentType.ReferenceType.Meta#MAX_LEN}).
  */
-@Getter
-public enum DocumentTypeData {
+public enum DocumentTypeData implements DocumentTypeApi {
 
     // cover notes
-    COVER_NOTE_PRELIM_LETTER("COVER-NOTE-PRELIM-LETTER", "Email Cover Note for Preliminary Letter"),
-    COVER_NOTE_INVOICE("COVER-NOTE-INVOICE", "Email Cover Note for Invoice"),
+    COVER_NOTE_PRELIM_LETTER(
+            "COVER-NOTE-PRELIM-LETTER", "Email Cover Note for Preliminary Letter",
+            Nature.OUTGOING, null,
+            null, // supports, always null if OUTGOING
+            null, // corresponding cover note
+            new DocumentTemplateData[] {
+                    DocumentTemplateData.COVER_NOTE_PRELIM_LETTER_GLOBAL,
+                    DocumentTemplateData.COVER_NOTE_PRELIM_LETTER_ITA
+            }
+    ),
+    COVER_NOTE_INVOICE(
+            "COVER-NOTE-INVOICE", "Email Cover Note for Invoice",
+            Nature.OUTGOING, null,
+            null, // supports, always null if OUTGOING
+            null, // corresponding cover note
+            new DocumentTemplateData[] {
+                    DocumentTemplateData.COVER_NOTE_INVOICE_GLOBAL,
+                    DocumentTemplateData.COVER_NOTE_INVOICE_ITA
+            }
+    ),
 
     // primary docs
-    PRELIM_LETTER("PRELIM-LETTER", "Preliminary letter for Invoice", "Merged Preliminary Letters.pdf", COVER_NOTE_PRELIM_LETTER, null, Nature.OUTGOING),
-    INVOICE("INVOICE", "Invoice", "Merged Invoices.pdf", COVER_NOTE_INVOICE, null, Nature.OUTGOING),
+    PRELIM_LETTER(
+            "PRELIM-LETTER", "Preliminary letter for Invoice",
+            Nature.OUTGOING, "Merged Preliminary Letters.pdf",
+            null, // supports, always null if OUTGOING
+            COVER_NOTE_PRELIM_LETTER,
+            new DocumentTemplateData[] {
+                    DocumentTemplateData.PRELIM_LETTER_GLOBAL,
+                    DocumentTemplateData.PRELIM_LETTER_ITA
+            }
+    ),
+    INVOICE(
+            "INVOICE", "Invoice",
+            Nature.OUTGOING, "Merged Invoices.pdf",
+            null, // supports, always null if OUTGOING
+            COVER_NOTE_INVOICE,
+            new DocumentTemplateData[] {
+                    DocumentTemplateData.INVOICE_GLOBAL,
+                    DocumentTemplateData.INVOICE_ITA
+            }
+    ),
 
     // supporting docs
-    SUPPLIER_RECEIPT("SUPPLIER-RECEIPT", "Supplier Receipt (for Invoice)", null, null, INVOICE, null),
-    TAX_REGISTER("TAX-REGISTER", "Tax Register (for Invoice)", null, null, INVOICE, Nature.INCOMING),
-    CALCULATION("CALCULATION", "Calculation (for Preliminary Letter)", null, null, PRELIM_LETTER, null),
-    SPECIAL_COMMUNICATION("SPECIAL-COMMUNICATION", "Special Communication (for Preliminary Letter)", null, null, PRELIM_LETTER, null),
+    SUPPLIER_RECEIPT(
+            "SUPPLIER-RECEIPT", "Supplier Receipt (for Invoice)",
+            Nature.NOT_SPECIFIED, null,
+            INVOICE, // supports
+            null, // corresponding cover note, always null if not OUTGOING
+            new DocumentTemplateData[]{}
+    ),
+    TAX_REGISTER(
+            "TAX-REGISTER", "Tax Register (for Invoice)",
+            // TODO: REVIEW - think this should probably be NOT_SPECIFIED (see calls to #hasIncomingType)
+            Nature.INCOMING, null,
+            INVOICE, // supports
+            null, // corresponding cover note, always null if not OUTGOING
+            new DocumentTemplateData[]{}
+    ),
+    CALCULATION(
+            "CALCULATION", "Calculation (for Preliminary Letter)",
+            Nature.NOT_SPECIFIED, null,
+            PRELIM_LETTER, //supports
+            null, // corresponding cover note, always null if not OUTGOING
+            new DocumentTemplateData[]{}
+    ),
+    SPECIAL_COMMUNICATION(
+            "SPECIAL-COMMUNICATION", "Special Communication (for Preliminary Letter)",
+            Nature.NOT_SPECIFIED, null,
+            PRELIM_LETTER, // supports
+            null, // corresponding cover note, always null if not OUTGOING
+            new DocumentTemplateData[]{}
+    ),
 
-    // preview only, applicable to InvoiceSummaryForPropertyDueDateStatus.class
-    INVOICES("INVOICES", "Invoices overview"),
-    INVOICES_PRELIM("INVOICES-PRELIM", "Preliminary letter for Invoices"),
-    INVOICES_FOR_SELLER("INVOICES-FOR-SELLER", "Preliminary Invoice for Seller"),
+    // preview only
+    INVOICES(
+            "INVOICES", "Invoices overview",
+            Nature.NOT_SPECIFIED, null,
+            null,
+            null, // corresponding cover note, always null if not OUTGOING
+            new DocumentTemplateData[]{
+                    DocumentTemplateData.INVOICES
+            }
+    ),
+    INVOICES_PRELIM(
+            "INVOICES-PRELIM", "Preliminary letter for Invoices",
+            Nature.NOT_SPECIFIED, null,
+            null,
+            null, // corresponding cover note, always null if not OUTGOING
+            new DocumentTemplateData[] {
+                    DocumentTemplateData.INVOICES_PRELIM
+            }
+    ),
+    INVOICES_FOR_SELLER(
+            "INVOICES-FOR-SELLER", "Preliminary Invoice for Seller",
+            Nature.NOT_SPECIFIED, null,
+            null,
+            null, // corresponding cover note, always null if not OUTGOING
+            new DocumentTemplateData[] {
+                    DocumentTemplateData.INVOICES_FOR_SELLER
+            }
+    ),
 
-    INCOMING("INCOMING", "Incoming", "Merged Incoming.pdf", null, null, Nature.INCOMING),
-    INCOMING_INVOICE("INCOMING_INVOICE", "Incoming Invoice", "Merged Incoming Invoices.pdf", null, null, Nature.INCOMING),
-    INCOMING_LOCAL_INVOICE("INCOMING_LOCAL_INVOICE", "Incoming Local Invoice", "Merged Incoming Local Invoices.pdf", null, null, Nature.INCOMING),
-    INCOMING_CORPORATE_INVOICE("INCOMING_CORPORATE_INVOICE", "Incoming Corporate Invoice", "Merged Incoming Corporate Invoices.pdf", null, null, Nature.INCOMING),
-    INCOMING_ORDER("INCOMING_ORDER", "Incoming Order", "Merged Incoming Orders.pdf", null, null, Nature.INCOMING),
+    INCOMING(
+            "INCOMING", "Incoming",
+            Nature.INCOMING, "Merged Incoming.pdf",
+            null, // supports
+            null, // corresponding cover note
+            new DocumentTemplateData[]{}
+    ),
+    INCOMING_INVOICE(
+            "INCOMING_INVOICE", "Incoming Invoice",
+            Nature.INCOMING, "Merged Incoming Invoices.pdf",
+            null, null, // corresponding cover note, always null if not outgoing
+            new DocumentTemplateData[]{}
+    ),
+    /*
+    not in DB, so unused.
+    INCOMING_LOCAL_INVOICE(
+            "INCOMING_LOCAL_INVOICE", "Incoming Local Invoice",
+            Nature.INCOMING, "Merged Incoming Local Invoices.pdf",
+            null,
+            null, // corresponding cover note, always null if not OUTGOING
+            null, null, null // renderModel, attachments etc; always null if INCOMING or supports
 
-    IBAN_PROOF("IBAN_PROOF", "Iban verification proof")
-    ;
 
+    ),
+     */
+    /*
+    not in DB, so unused.
+
+    INCOMING_CORPORATE_INVOICE(
+            "INCOMING_CORPORATE_INVOICE", "Incoming Corporate Invoice",
+            Nature.INCOMING, "Merged Incoming Corporate Invoices.pdf",
+            null,
+            null, // corresponding cover note, always null if not OUTGOING
+            null, null, null // renderModel, attachments etc; always null if INCOMING or supports
+
+    ),
+
+     */
+    INCOMING_ORDER(
+            "INCOMING_ORDER", "Incoming Order",
+            Nature.INCOMING, "Merged Incoming Orders.pdf",
+            null,
+            null,
+            new DocumentTemplateData[]{}
+    ),
+
+    ORDER_CONFIRM(
+            "ORDER_CONFIRM", "Confirm order with Supplier",
+            Nature.OUTGOING, null,
+            null,
+            null,
+            new DocumentTemplateData[]{
+                    DocumentTemplateData.ORDER_CONFIRM_ITA
+            }
+    ),
+    IBAN_PROOF(
+            "IBAN_PROOF", "Iban verification proof",
+            Nature.NOT_SPECIFIED, null,
+            null,
+            null,
+            new DocumentTemplateData[]{}
+    );
+
+    @Getter
     private final String ref;
+    @Getter
     private final String name;
+    @Getter
     private final String mergedFileName;
+    @Getter
     private final DocumentTypeData coverNote;
+    @Getter
     private final DocumentTypeData supports;
+    @Getter
     private final Nature nature;
+
+    private final Map<String,DocumentTemplateData> documentTemplateDataByPath;
 
     public boolean isIncoming() {
         return nature == Nature.INCOMING;
+    }
+
+    public DocumentTemplateData lookup(final String atPath) {
+        return documentTemplateDataByPath.get(atPath);
+    }
+
+    public Iterable<Map.Entry<String, DocumentTemplateData>> templateIterable() {
+        return documentTemplateDataByPath.entrySet();
     }
 
     public enum Nature {
@@ -87,23 +244,23 @@ public enum DocumentTypeData {
         NOT_SPECIFIED
     }
 
-    DocumentTypeData(final String ref, final String name) {
-        this(ref, name, null, null, null, Nature.NOT_SPECIFIED);
-    }
-
     DocumentTypeData(
             final String ref,
             final String name,
+            final Nature nature,
             final String mergedFileName,
-            final DocumentTypeData coverNote,
             final DocumentTypeData supports,
-            final Nature nature) {
+            final DocumentTypeData coverNote,
+            final DocumentTemplateData[] documentTemplateData
+    ) {
         this.ref = ref;
         this.name = name;
         this.mergedFileName = mergedFileName;
         this.coverNote = coverNote;
         this.supports = supports;
         this.nature = nature;
+        documentTemplateDataByPath = Arrays.stream(documentTemplateData)
+                                           .collect(Collectors.toMap(DocumentTemplateData::getAtPath, dtd -> dtd));
     }
 
     /**
@@ -225,7 +382,7 @@ public enum DocumentTypeData {
      * Returns the {@link DocumentTypeData} whose {@link DocumentTypeData#getRef()} corresponds to
      * {@link DocumentType#getReference() that} of the supplied {@link DocumentType}.
      */
-    private static DocumentTypeData reverseLookup(final DocumentType documentType) {
+    public static DocumentTypeData reverseLookup(final DocumentType documentType) {
         DocumentTypeData[] values = values();
         for (DocumentTypeData value : values) {
             if(value.isDocTypeFor(documentType)) {
@@ -269,14 +426,6 @@ public enum DocumentTypeData {
                         .transform(x -> x.findUsing(documentTypeRepository, queryResultsCache))
                         .toList()
         );
-    }
-
-    public static List<DocumentTypeData> incomingTypes() {
-        return natureOf(Nature.INCOMING);
-    }
-
-    public static List<DocumentTypeData> outgoingTypes() {
-        return natureOf(Nature.OUTGOING);
     }
 
     public static boolean hasIncomingType(final DocumentAbstract<?> document) {

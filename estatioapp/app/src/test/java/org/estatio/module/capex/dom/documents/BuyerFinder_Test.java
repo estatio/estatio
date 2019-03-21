@@ -59,7 +59,7 @@ public class BuyerFinder_Test {
         finder.partyRepository = mockPartyRepository;
         finder.lookupAttachedPdfService = mockLookupAttachedPdfService;
         finder.documentBarcodeService = mockDocumentBarcodeService;
-        Optional<Document> optional = Optional.of(new Document(null,null, documentName, null, null));
+        Optional<Document> optional = Optional.of(new Document(null,null, documentName, (String)null, null));
 
         // expect
         context.checking(new Expectations(){{
@@ -76,7 +76,7 @@ public class BuyerFinder_Test {
 
     private void testWhenParamIsDocument(final String documentName, final String derivedPartyReference){
         // given
-        Document document = new Document(null, null, documentName, null, null);
+        Document document = new Document(null, null, documentName, (String)null, null);
         BuyerFinder finder = new BuyerFinder();
         finder.partyRepository = mockPartyRepository;
         finder.documentBarcodeService = mockDocumentBarcodeService;
@@ -99,7 +99,7 @@ public class BuyerFinder_Test {
         finder.partyRepository = mockPartyRepository;
         finder.lookupAttachedPdfService = mockLookupAttachedPdfService;
         finder.documentBarcodeService = mockDocumentBarcodeService;
-        Optional<Document> optional = Optional.of(new Document(null,null, documentName, null, null));
+        Optional<Document> optional = Optional.of(new Document(null,null, documentName, (String)null, null));
 
         // expect
         context.checking(new Expectations(){{
@@ -116,7 +116,7 @@ public class BuyerFinder_Test {
 
     private void testWhenParamIsDocumentBel(final String documentName, final String derivedPartyReference){
         // given
-        Document document = new Document(null, null, documentName, null, null);
+        Document document = new Document(null, null, documentName, (String)null, null);
         BuyerFinder finder = new BuyerFinder();
         finder.partyRepository = mockPartyRepository;
         finder.documentBarcodeService = mockDocumentBarcodeService;
@@ -140,7 +140,7 @@ public class BuyerFinder_Test {
         finder.partyRepository = mockPartyRepository;
         finder.lookupAttachedPdfService = mockLookupAttachedPdfService;
         finder.documentBarcodeService = mockDocumentBarcodeService;
-        Optional<Document> optional = Optional.of(new Document(null,null, documentName, null, null));
+        Optional<Document> optional = Optional.of(new Document(null,null, documentName, (String)null, null));
 
         // expect
         context.checking(new Expectations(){{

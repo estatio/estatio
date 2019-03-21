@@ -15,6 +15,9 @@ import org.incode.module.document.dom.services.ClassNameViewModel;
 import org.incode.module.document.dom.services.ClassService;
 import org.incode.module.document.dom.spi.RendererModelFactoryClassNameService;
 
+/**
+ * TODO: remove this once move to DocumentTypeData, DocumentTemplateData and RenderingStrategyData
+ */
 @Mixin
 public class Applicability_changeRendererModelFactory {
 
