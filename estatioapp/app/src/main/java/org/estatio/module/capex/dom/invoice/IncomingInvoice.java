@@ -226,7 +226,8 @@ import lombok.Setter;
                 name = "findUniquePaymentMethodsForSeller", language = "JDOQL",
                 value = "SELECT DISTINCT paymentMethod "
                         + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
-                        + "WHERE seller == :seller"
+                        + "WHERE seller == :seller "
+                        + "&& paymentMethod != null"
         )
 })
 @FetchGroup(

@@ -122,6 +122,17 @@ public class IncomingInvoiceRepository_IntegTest extends CapexModuleIntegTestAbs
         // and then
         assertThat(paymentMethods).hasSize(2);
         assertThat(paymentMethods).containsExactlyInAnyOrder(PaymentMethod.BANK_TRANSFER, PaymentMethod.DIRECT_DEBIT);
+
+        // and given
+        IncomingInvoice invoice3 = createIncomingInvoice();
+        invoice3.setPaymentMethod(null);
+
+        // and when
+        paymentMethods = incomingInvoiceRepository.findUniquePaymentMethodsForSeller(invoice3.getSeller());
+
+        // and then
+        assertThat(paymentMethods).hasSize(2);
+        assertThat(paymentMethods).containsExactlyInAnyOrder(PaymentMethod.BANK_TRANSFER, PaymentMethod.DIRECT_DEBIT);
     }
 
     @Test
