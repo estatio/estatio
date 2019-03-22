@@ -47,7 +47,6 @@ import org.estatio.module.budget.dom.keytable.DirectCostTable;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
-import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
 import org.estatio.module.budgetassignment.imports.DirectCostLine;
 import org.estatio.module.budgetassignment.imports.KeyItemImportExportLineItem;
 import org.estatio.module.budgetassignment.imports.Status;
@@ -175,12 +174,16 @@ public class BudgetImportExportService {
             final Budget budget,
             final Blob spreadsheet) {
 
+        WorksheetSpec chargeSpec = new WorksheetSpec(ChargeImport.class, "charges");
+        List<ChargeImport> chargeLines = excelService.fromExcel(spreadsheet, chargeSpec);
+        chargeLines.forEach(l->l.importData(null));
+
+
         WorksheetSpec spec1 = new WorksheetSpec(BudgetImportExport.class, "budget");
         WorksheetSpec spec2 = new WorksheetSpec(KeyItemImportExportLineItem.class, "keyItems");
         WorksheetSpec spec3 = new WorksheetSpec(DirectCostLine.class, "directCosts");
-        WorksheetSpec spec4 = new WorksheetSpec(ChargeImport.class, "charges");
         List<List<?>> objects =
-                excelService.fromExcel(spreadsheet, Arrays.asList(spec1, spec2, spec3, spec4));
+                excelService.fromExcel(spreadsheet, Arrays.asList(spec1, spec2, spec3));
 
         List<BudgetImportExport> lineItems = (List<BudgetImportExport>) objects.get(0);
 
@@ -191,12 +194,6 @@ public class BudgetImportExportService {
             budget.removeNewCalculations();
             budget.removeAllBudgetItems();
             budget.removeAllPartitioningTables();
-
-            // first upsert charges
-            List<ChargeImport> chargeImportLines = (List<ChargeImport>) objects.get(3);
-            for (ChargeImport lineItem : chargeImportLines) {
-                lineItem.importData(null);
-            }
 
             // import budget and items
             BudgetImportExport previousRow = null;
@@ -338,7 +335,5 @@ public class BudgetImportExportService {
     @Inject MessageService messageService;
 
     @Inject PartitioningTableRepository partitioningTableRepository;
-
-    @Inject PartitionItemRepository partitionItemRepository;
 
 }
