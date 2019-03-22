@@ -28,6 +28,7 @@ import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.fixtures.order.enums.Order_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
+import org.estatio.module.capex.seed.ordertmplt.DocumentTemplateFSForOrderConfirm;
 import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
 import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesItaXlsxFixture;
 import org.estatio.module.invoice.dom.DocumentTypeData;
@@ -40,29 +41,12 @@ public class Order_generateDocument_IntegTest extends CapexModuleIntegTestAbstra
     @Rule
     public TogglzRule togglzRule = TogglzRule.allDisabled(EstatioTogglzFeature.class);
 
-//    @Inject
-//    DocumentMenu documentMenu;
-//
-//    @Inject
-//    List<GotenbergClientService> clientServices;
-//
-//    @Inject
-//    MetaModelService6 metaModelService6;
-
     DocumentType orderTemplateDocumentType;
     Order order;
 
 
     @Before
     public void setupData() {
-
-//        // check bootstrapping...
-//        final Module module = metaModelService6.getAppManifest2().getModule();
-//        Assertions.assertThat(module).isInstanceOf(ModuleForTesting.class);
-//
-//        Assertions.assertThat(documentMenu).isNotNull();
-//        Assertions.assertThat(clientServices).isNotNull();
-//        Assertions.assertThat(clientServices).hasSize(2);
 
         runFixtureScript(new FixtureScript() {
             @Override
@@ -81,6 +65,9 @@ public class Order_generateDocument_IntegTest extends CapexModuleIntegTestAbstra
                         Order_enum.fakeOrder2Pdf,
                         Order_enum.italianOrder,
                         Person_enum.JonathanIncomingInvoiceManagerGb);
+
+                executionContext.executeChild(this,
+                        new DocumentTemplateFSForOrderConfirm(null));
             }
         });
 

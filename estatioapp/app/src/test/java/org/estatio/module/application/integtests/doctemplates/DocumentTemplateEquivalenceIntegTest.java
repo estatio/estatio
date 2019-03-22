@@ -30,6 +30,8 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.incode.module.document.dom.impl.applicability.Applicability;
 import org.incode.module.document.dom.impl.applicability.AttachmentAdvisor;
 import org.incode.module.document.dom.impl.applicability.RendererModelFactory;
@@ -42,6 +44,7 @@ import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.module.application.integtests.ApplicationModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
+import org.estatio.module.capex.seed.ordertmplt.DocumentTemplateFSForOrderConfirm;
 import org.estatio.module.invoice.dom.DocumentTemplateData;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.invoice.dom.RenderingStrategyData;
@@ -62,8 +65,17 @@ public class DocumentTemplateEquivalenceIntegTest extends ApplicationModuleInteg
         //
         final LocalDate templateDate = new LocalDate(2012,1,1);
 
-        fixtureScripts.runFixtureScript(new DocumentTypesAndTemplatesForLeaseFixture(templateDate), null);
-        fixtureScripts.runFixtureScript(new DocumentTypesAndTemplatesForCapexFixture(templateDate), null);
+        fixtureScripts.runFixtureScript(new FixtureScript() {
+            @Override protected void execute(final ExecutionContext executionContext) {
+
+                executionContext.executeChild(this,
+                        new DocumentTypesAndTemplatesForLeaseFixture(templateDate));
+                executionContext.executeChild(this,
+                        new DocumentTypesAndTemplatesForCapexFixture(templateDate));
+                executionContext.executeChild(this,
+                        new DocumentTemplateFSForOrderConfirm(templateDate));
+            }
+        });
     }
 
     @Test
