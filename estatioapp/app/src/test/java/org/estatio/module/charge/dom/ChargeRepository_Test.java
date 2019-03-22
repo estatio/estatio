@@ -27,8 +27,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -108,7 +109,10 @@ public class ChargeRepository_Test {
         public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
 
         @Mock
-        private DomainObjectContainer mockContainer;
+        private ServiceRegistry2 mockServiceRegistry2;
+
+        @Mock
+        private RepositoryService mockRepositoryService;
 
         private Charge existingCharge;
 
@@ -127,21 +131,19 @@ public class ChargeRepository_Test {
                     return existingCharge;
                 }
             };
-            chargeRepository.setContainer(mockContainer);
+            chargeRepository.serviceRegistry2 = mockServiceRegistry2;
+            chargeRepository.repositoryService = mockRepositoryService;
         }
 
         @Test
         public void newCharge_whenDoesNotExist() {
-            final Charge charge = new Charge();
 
             existingCharge = null;
 
             context.checking(new Expectations() {
                 {
-                    oneOf(mockContainer).newTransientInstance(Charge.class);
-                    will(returnValue(charge));
-
-                    oneOf(mockContainer).persist(charge);
+                    oneOf(mockServiceRegistry2).injectServicesInto(with(any(Charge.class)));
+                    oneOf(mockRepositoryService).persistAndFlush(with(any(Charge.class)));
                 }
             });
 
