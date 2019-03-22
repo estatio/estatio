@@ -20,6 +20,8 @@ package org.estatio.module.charge.dom;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
@@ -30,6 +32,8 @@ import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -81,14 +85,14 @@ public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
             final String description,
             final String atPath,
             final Applicability applicability) {
-        final Charge charge;
-        charge = newTransientInstance();
+        Charge charge = new Charge();
         charge.setReference(reference);
         charge.setApplicability(applicability);
         charge.setName(name);
         charge.setDescription(description);
         charge.setApplicationTenancyPath(atPath);
-        persist(charge);
+        serviceRegistry2.injectServicesInto(charge);
+        repositoryService.persistAndFlush(charge);
         return charge;
     }
 
@@ -208,5 +212,9 @@ public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
             return charge;
         return create(reference, name, description, atPath, applicability);
     }
+
+    @Inject ServiceRegistry2 serviceRegistry2;
+
+    @Inject RepositoryService repositoryService;
 
 }
