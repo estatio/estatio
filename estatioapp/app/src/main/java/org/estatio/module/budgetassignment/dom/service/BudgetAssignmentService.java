@@ -106,13 +106,14 @@ public class BudgetAssignmentService {
 
 
     @Programmatic
-    public void assignCalculationResultsToLeases(final List<BudgetCalculationResult> results) {
+    public void assignNonAssignedCalculationResultsToLeases(final List<BudgetCalculationResult> results) {
 
-        List<Occupancy> distinctOccupanciesInResults = results.stream().map(r->r.getOccupancy()).distinct().collect(Collectors.toList());
+        List<BudgetCalculationResult> nonAssignedResults = results.stream().filter(r->r.getLeaseTerm()==null).collect(Collectors.toList());
+        List<Occupancy> distinctOccupanciesInResults = nonAssignedResults.stream().map(r->r.getOccupancy()).distinct().collect(Collectors.toList());
         for (Occupancy occupancy : distinctOccupanciesInResults){
 
-            List<BudgetCalculationResult> resultsForOccupancy = results.stream().filter(r->r.getOccupancy().equals(occupancy)).collect(Collectors.toList());
-            List<Charge> distinctInvoiceChargesForOccupancy = results.stream().map(r->r.getInvoiceCharge()).distinct().collect(Collectors.toList());
+            List<BudgetCalculationResult> resultsForOccupancy = nonAssignedResults.stream().filter(r->r.getOccupancy().equals(occupancy)).collect(Collectors.toList());
+            List<Charge> distinctInvoiceChargesForOccupancy = nonAssignedResults.stream().map(r->r.getInvoiceCharge()).distinct().collect(Collectors.toList());
             Lease lease = occupancy.getLease();
 
             if (resultsForOccupancy.size() != distinctInvoiceChargesForOccupancy.size()){

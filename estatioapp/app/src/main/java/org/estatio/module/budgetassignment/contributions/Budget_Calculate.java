@@ -38,7 +38,7 @@ public class Budget_Calculate {
         budgetCalculationService.calculatePersistedCalculations(budget);
         if (finalCalculation){
             List<BudgetCalculationResult> results = budgetAssignmentService.calculateResults(budget, BudgetCalculationType.BUDGETED);
-            budgetAssignmentService.assignCalculationResultsToLeases(results);
+            budgetAssignmentService.assignNonAssignedCalculationResultsToLeases(results);
             budget.setStatus(Status.ASSIGNED);
         }
         return budget;
