@@ -173,11 +173,12 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
 
     }
 
-    void resetValidationAndDerivations() {
+    @Programmatic
+    public void resetValidationAndDerivations() {
 
         // use setters so that DN is aware
         setHandling(Handling.INCLUDED);
-        
+
         setAccountCodeValidationStatus(ValidationStatus.NOT_CHECKED);
 
         setAccountCodeEl3(null);
@@ -205,6 +206,8 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
 
         setExtRefWorkTypeChargeReference(null);
         setExtRefWorkTypeValidationStatus(ValidationStatus.NOT_CHECKED);
+
+        setUserRef1ValidationStatus(ValidationStatus.NOT_CHECKED);
 
         setMediaCodePaymentMethod(null);
         setMediaCodeValidationStatus(ValidationStatus.NOT_CHECKED);
@@ -451,6 +454,11 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
     @Getter @Setter
     private ValidationStatus extRefOrderValidationStatus;
 
+    @Column(allowsNull = "false", length = 20)
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @Getter @Setter
+    private ValidationStatus userRef1ValidationStatus;
+
     /**
      * As parsed from extRef3/extRef4/extRef5, only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
      * <p>
@@ -474,7 +482,7 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
     @PropertyLayout(hidden = Where.ALL_TABLES)
     public Order getOrder() {
         final BigInteger buyerOrderNumber = getExtRefOrderGlobalNumerator();
-        if(getBuyer() == null || buyerOrderNumber == null) {
+        if (getBuyer() == null || buyerOrderNumber == null) {
             return null;
         }
         final List<Order> orders =
@@ -490,7 +498,6 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
     @PropertyLayout(named = "Buyer Order Number")
     @Getter @Setter
     private BigInteger extRefOrderGlobalNumerator;
-
 
     @Column(allowsNull = "true", name = "extRefOrderItemId")
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
