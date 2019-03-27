@@ -35,38 +35,12 @@ public class DocFlowZipRepository {
     }
 
     @Programmatic
-    public DocFlowZip findByCandidate(final DocFlowZip docFlowZip) {
-        return findBySdId(docFlowZip.getSdId());
-    }
-
-    @Programmatic
-    public DocFlowZip persistAsReplacementIfRequired(final DocFlowZip docFlowZip) {
-        // sanity check
-        if(repositoryService.isPersistent(docFlowZip)) {
-            throw new IllegalStateException(
-                    String.format("DocFlowZip '%s' is already persistent", titleService.titleOf(docFlowZip)));
-        }
-
-        final DocFlowZip existingDocFlowZip = findByCandidate(docFlowZip);
-
-        if (existingDocFlowZip != null) {
-            delete(existingDocFlowZip);
-        }
-
+    public DocFlowZip persist(final DocFlowZip docFlowZip) {
         return repositoryService.persistAndFlush(docFlowZip);
     }
 
-    private void delete(final DocFlowZip docFlowZip) {
-        paperclipRepository.deleteIfAttachedTo(docFlowZip, PaperclipRepository.Policy.PAPERCLIPS_ONLY);
-        repositoryService.removeAndFlush(docFlowZip);
-    }
-
-    @Inject
-    PaperclipRepository paperclipRepository;
 
     @Inject
     RepositoryService repositoryService;
-    @Inject
-    TitleService titleService;
 
 }

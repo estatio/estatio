@@ -63,6 +63,7 @@ import org.estatio.module.base.fixtures.security.users.personas.EstatioUserInGre
 import org.estatio.module.base.fixtures.security.users.personas.EstatioUserInItaly;
 import org.estatio.module.base.fixtures.security.users.personas.EstatioUserInNetherlands;
 import org.estatio.module.base.fixtures.security.users.personas.EstatioUserInSweden;
+import org.estatio.module.base.seed.RenderingStrategies;
 
 @XmlRootElement(name = "module")
 public final class EstatioBaseModule extends ModuleAbstract {
@@ -116,6 +117,7 @@ public final class EstatioBaseModule extends ModuleAbstract {
     }
 
     private static final ThreadLocal<Boolean> refData = ThreadLocal.withInitial(() -> false);
+
     @Override
     public FixtureScript getRefDataSetupFixture() {
         if(refData.get()) {
@@ -144,6 +146,8 @@ public final class EstatioBaseModule extends ModuleAbstract {
                 executionContext.executeChild(this, new EstatioUserInNetherlands());
                 executionContext.executeChild(this, new EstatioUserInSweden());
 
+                // document rendering strategies
+                executionContext.executeChild(this, new RenderingStrategies());
             }
         };
     }

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.lease.seed;
+package org.estatio.module.base.seed;
 
 import org.apache.isis.applib.annotation.Programmatic;
 

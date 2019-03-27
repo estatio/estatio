@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
+import org.estatio.module.docflow.seed.DocumentTypeFSForDocFlow;
 import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
 
 /**
@@ -54,6 +55,7 @@ public class DocumentTypesAndTemplatesSeedService {
 
         fixtureScripts.runFixtureScript(new DocumentTypesAndTemplatesForLeaseFixture(templateDate), null);
         fixtureScripts.runFixtureScript(new DocumentTypesAndTemplatesForCapexFixture(templateDate), null);
+        fixtureScripts.runFixtureScript(new DocumentTypeFSForDocFlow(), null);
     }
 
     @Inject

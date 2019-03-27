@@ -39,6 +39,8 @@ import org.incode.module.docrendering.stringinterpolator.StringInterpolatorDocRe
 import org.incode.module.docrendering.xdocreport.XDocReportDocRenderingModule;
 
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
+import org.estatio.module.capex.seed.DocumentTypeFSForIbanProof;
+import org.estatio.module.capex.seed.DocumentTypeFSForIncoming;
 import org.estatio.module.event.EstatioEventModule;
 import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.invoice.EstatioInvoiceModule;

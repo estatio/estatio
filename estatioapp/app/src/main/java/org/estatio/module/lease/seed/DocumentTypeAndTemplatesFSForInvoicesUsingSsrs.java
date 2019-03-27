@@ -42,6 +42,7 @@ import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 
+import org.estatio.module.base.seed.RenderingStrategies;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;
@@ -87,7 +88,6 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         // prereqs
         executionContext.executeChild(this, ApplicationTenancy_enum.Global.builder());
         executionContext.executeChild(this, ApplicationTenancy_enum.It.builder());
-        executionContext.executeChild(this, new RenderingStrategies());
 
         upsertTemplatesForInvoice(templateDate, executionContext);
 
@@ -100,13 +100,13 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
         final String url = "${reportServerBaseUrl}";
 
-
         final RenderingStrategy fmkRenderingStrategy =
                 renderingStrategyRepository.findByReference(RenderingStrategies.REF_FMK);
         final RenderingStrategy sipcRenderingStrategy =
                 renderingStrategyRepository.findByReference(RenderingStrategies.REF_SIPC);
         final RenderingStrategy siRenderingStrategy =
                 renderingStrategyRepository.findByReference(RenderingStrategies.REF_SI);
+
 
 
         //
