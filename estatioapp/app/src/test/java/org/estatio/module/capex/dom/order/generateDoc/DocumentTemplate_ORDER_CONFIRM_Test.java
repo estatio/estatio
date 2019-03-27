@@ -121,12 +121,7 @@ public class DocumentTemplate_ORDER_CONFIRM_Test {
             @Override protected LetterModel newLetterModel(final Order order) {
                 return LetterModel.of(mockClockService.now(), order.getAtPath(),
                         "some subject",
-                        "some introduction",
-                        "some order description",
-                        "some total work cost",
-                        "some work schedule",
-                        "some price and payments",
-                        "some signature");
+                        "some total work cost");
             }
 
             @Override protected String addressOf(final Party party) {

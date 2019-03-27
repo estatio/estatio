@@ -22,7 +22,6 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
-import org.estatio.module.capex.seed.ordertmplt.DocumentTemplateFSForOrderConfirm;
 import org.estatio.module.capex.seed.ordertmplt.DocumentTypeFSForOrderConfirm;
 
 import lombok.Getter;
@@ -50,6 +49,8 @@ public class DocumentTypesAndTemplatesForCapexFixture extends DiscoverableFixtur
         ec.executeChild(this, new DocumentTypeFSForIbanProof());
 
         ec.executeChild(this, new DocumentTypeFSForOrderConfirm());
-        ec.executeChild(this, new DocumentTemplateFSForOrderConfirm(templateDateIfAny));
+
+        // no longer run this fixture, orderConfirm template is under end-user management.
+        // ec.executeChild(this, new DocumentTemplateFSForOrderConfirm(templateDateIfAny));
     }
 }

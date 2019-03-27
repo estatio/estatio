@@ -31,13 +31,8 @@ import org.estatio.module.base.dom.CurrencyUtil;
 import org.estatio.module.base.dom.LocaleUtil;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
-import org.estatio.module.order.dom.attr.prop.Order_introduction;
-import org.estatio.module.order.dom.attr.prop.Order_orderDescription;
-import org.estatio.module.order.dom.attr.prop.Order_priceAndPayments;
-import org.estatio.module.order.dom.attr.prop.Order_signature;
 import org.estatio.module.order.dom.attr.prop.Order_subject;
 import org.estatio.module.order.dom.attr.prop.Order_totalWorkCost;
-import org.estatio.module.order.dom.attr.prop.Order_workSchedule;
 import org.estatio.module.party.dom.Party;
 
 import lombok.AccessLevel;
@@ -69,12 +64,7 @@ public class RendererModelFactoryForOrder extends RendererModelFactoryAbstract<O
     protected LetterModel newLetterModel(final Order order) {
         return LetterModel.of(getClockService().now(), order.getAtPath(),
                 factoryService.mixin(Order_subject.class, order).prop(),
-                factoryService.mixin(Order_introduction.class, order).prop(),
-                factoryService.mixin(Order_orderDescription.class, order).prop(),
-                factoryService.mixin(Order_totalWorkCost.class, order).prop(),
-                factoryService.mixin(Order_workSchedule.class, order).prop(),
-                factoryService.mixin(Order_priceAndPayments.class, order).prop(),
-                factoryService.mixin(Order_signature.class, order).prop()
+                factoryService.mixin(Order_totalWorkCost.class, order).prop()
         );
     }
 
@@ -137,12 +127,7 @@ public class RendererModelFactoryForOrder extends RendererModelFactoryAbstract<O
 
         private final String atPath;
         private final String subject;
-        private final String introduction;
-        private final String orderDescription;
         private final String totalWorkCost;
-        private final String workSchedule;
-        private final String priceAndPayments;
-        private final String signature;
     }
 
     @Data(staticConstructor = "of")

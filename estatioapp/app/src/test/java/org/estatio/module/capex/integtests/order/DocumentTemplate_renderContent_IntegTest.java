@@ -24,6 +24,7 @@ import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.fixtures.order.enums.Order_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
+import org.estatio.module.capex.seed.ordertmplt.DocumentTemplateFSForOrderConfirm;
 import org.estatio.module.capex.spiimpl.docs.rml.RendererModelFactoryForOrder;
 import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
 import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesItaXlsxFixture;
@@ -40,7 +41,7 @@ public class DocumentTemplate_renderContent_IntegTest extends CapexModuleIntegTe
     @Inject
     DocumentMenu documentMenu;
     @Inject
-    private DocumentTemplateRepository documentTemplateRepository;
+    DocumentTemplateRepository documentTemplateRepository;
 
     DocumentType orderTemplateDocumentType;
     Order order;
@@ -67,6 +68,9 @@ public class DocumentTemplate_renderContent_IntegTest extends CapexModuleIntegTe
                 executionContext.executeChildren(this,
                         Order_enum.italianOrder,
                         Person_enum.JonathanIncomingInvoiceManagerGb);
+
+                executionContext.executeChild(this,
+                        new DocumentTemplateFSForOrderConfirm(null));
             }
         });
 
