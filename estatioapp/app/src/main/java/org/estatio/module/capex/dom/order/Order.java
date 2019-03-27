@@ -280,7 +280,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final IncomingInvoiceType orderType,
             final org.estatio.module.asset.dom.Property property,
             final String orderNumber,
-            final Party supplier,
+            final @Nullable Party supplier,
             final @Nullable Boolean createRoleIfRequired,
             final @ParameterLayout(named = "Supplier order ref.") String supplierOrderReference,
             final LocalDate orderDate) {
@@ -369,7 +369,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final BigDecimal grossAmount,
             final Charge charge,
             final Project project,
-            final BudgetItem budgetItem,
+            final @Nullable BudgetItem budgetItem,
             final String period) {
         Optional<OrderItem> firstItemIfAny = getItems().stream().findFirst();
         if (firstItemIfAny.isPresent()) {
