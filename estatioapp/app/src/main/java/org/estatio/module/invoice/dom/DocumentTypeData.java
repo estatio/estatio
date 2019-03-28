@@ -209,6 +209,27 @@ public enum DocumentTypeData implements DocumentTypeApi {
             null,
             null,
             new DocumentTemplateData[]{}
+    ),
+    DOCFLOW_METADATA(
+            "DOCFLOW_METADATA", "DocFlow Metadata",
+            Nature.INCOMING, null,
+            null,
+            null,
+            new DocumentTemplateData[]{}
+    ),
+    DOCFLOW_FATURRA_XML(
+            "DOCFLOW_FATURRA_XML", "DocFlow Faturra (XML)",
+            Nature.INCOMING, null,
+            null,
+            null,
+            new DocumentTemplateData[]{}
+    ),
+    DOCFLOW_FATURRA_P7M(
+            "DOCFLOW_FATURRA_P7M", "DocFlow Faturra (Signed XML)",
+            Nature.INCOMING, null,
+            null,
+            null,
+            new DocumentTemplateData[]{}
     );
 
     @Getter

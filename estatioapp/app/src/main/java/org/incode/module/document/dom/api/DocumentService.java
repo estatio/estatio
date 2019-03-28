@@ -7,6 +7,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Blob;
+import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentRepository;
@@ -42,6 +43,27 @@ public class DocumentService {
     }
 
     /**
+     * @param documentName - override the name of the clob (if null, then uses the clob's name)
+     */
+    @Programmatic
+    public Document createForClob(
+            final DocumentType documentType,
+            final String documentAtPath,
+            String documentName,
+            final Clob clob) {
+        documentName = documentName != null? documentName: clob.getName();
+
+        final Document document = documentRepository.create(
+                documentType, documentAtPath, documentName, clob.getMimeType().getBaseType());
+
+        document.setRenderedAt(clockService.nowAsDateTime());
+        document.setState(DocumentState.RENDERED);
+        document.setSort(DocumentSort.CLOB);
+        document.setClobChars(clob.getChars().toString());
+        return document;
+    }
+
+    /**
      * @param documentName - override the name of the blob (if null, then uses the blob's name)
      */
     @Programmatic
@@ -54,6 +76,26 @@ public class DocumentService {
             final Object paperclipAttachTo){
 
         final Document document = createForBlob(documentType, documentAtPath, documentName, blob);
+
+        paperclipRepository.attach(document, paperclipRoleName, paperclipAttachTo);
+
+        return document;
+    }
+
+
+    /**
+     * @param documentName - override the name of the clob (if null, then uses the clob's name)
+     */
+    @Programmatic
+    public Document createAndAttachDocumentForClob(
+            final DocumentType documentType,
+            final String documentAtPath,
+            String documentName,
+            final Clob clob,
+            final String paperclipRoleName,
+            final Object paperclipAttachTo){
+
+        final Document document = createForClob(documentType, documentAtPath, documentName, clob);
 
         paperclipRepository.attach(document, paperclipRoleName, paperclipAttachTo);
 

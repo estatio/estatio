@@ -18,6 +18,10 @@
  */
 package org.estatio.module.base.integtests;
 
+import java.io.IOException;
+
+import com.google.common.io.Resources;
+
 import org.slf4j.event.Level;
 
 import org.apache.isis.applib.ModuleAbstract;
@@ -51,5 +55,10 @@ public abstract class BaseModuleIntegTestAbstract extends IntegrationTestAbstrac
                 )
         );
     }
+
+    protected byte[] read(final String resourceName) throws IOException {
+        return Resources.toByteArray(Resources.getResource(getClass(), resourceName));
+    }
+
 
 }

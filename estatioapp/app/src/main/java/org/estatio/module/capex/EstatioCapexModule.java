@@ -31,11 +31,13 @@ import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.module.capex.dom.payment.PaymentBatch;
 import org.estatio.module.capex.dom.payment.PaymentLine;
 import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalStateTransition;
-import org.estatio.module.capex.dom.project.ProjectItemTerm;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectItem;
+import org.estatio.module.capex.dom.project.ProjectItemTerm;
 import org.estatio.module.capex.dom.project.ProjectRole;
 import org.estatio.module.capex.dom.task.Task;
+import org.estatio.module.capex.seed.DocumentTypeFSForIbanProof;
+import org.estatio.module.capex.seed.DocumentTypeFSForIncoming;
 import org.estatio.module.invoice.EstatioInvoiceModule;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceItem;
@@ -60,6 +62,15 @@ public class EstatioCapexModule extends ModuleAbstract {
                 new EstatioCanonicalModule(),
                 new EstatioOrderAttributeModule()
         );
+    }
+
+    @Override public FixtureScript getRefDataSetupFixture() {
+        return new FixtureScript() {
+            @Override protected void execute(final ExecutionContext executionContext) {
+                executionContext.executeChild(this, new DocumentTypeFSForIncoming());
+                executionContext.executeChild(this, new DocumentTypeFSForIbanProof());
+            }
+        };
     }
 
 
