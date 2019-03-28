@@ -22,6 +22,8 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
+import org.estatio.module.base.seed.RenderingStrategies;
+
 @DomainObject(
         objectType = "org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture"
 )
@@ -40,6 +42,7 @@ public class DocumentTypesAndTemplatesForLeaseFixture extends DiscoverableFixtur
     @Override
     protected void execute(ExecutionContext ec) {
 
+        ec.executeChild(this, new RenderingStrategies());
         ec.executeChild(this, new DocumentTypeAndTemplatesFSForInvoicesUsingSsrs(getTemplateDateIfAny()));
 
     }

@@ -28,6 +28,7 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -78,6 +79,7 @@ public class DocumentTemplateEquivalenceIntegTest extends ApplicationModuleInteg
         });
     }
 
+    @Ignore
     @Test
     public void rendering_strategies_equivalent() throws Exception {
         final List<RenderingStrategy> renderingStrategies = renderingStrategyRepository.allStrategies();
@@ -108,6 +110,7 @@ public class DocumentTemplateEquivalenceIntegTest extends ApplicationModuleInteg
         assertThat(rsdLookup).isSameAs(rsd);
     }
 
+    @Ignore
     @Test
     public void document_types_equivalent() throws Exception {
         final List<DocumentType> documentTypes = documentTypeRepository.allTypes();
@@ -123,6 +126,7 @@ public class DocumentTemplateEquivalenceIntegTest extends ApplicationModuleInteg
         }
     }
 
+    @Ignore
     @Test
     public void document_templates_equivalent() throws Exception {
 

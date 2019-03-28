@@ -81,6 +81,7 @@ public class DocumentTemplateFSForOrderConfirm extends DocumentTemplateFSAbstrac
         ec.executeChildren(this,
                 ApplicationTenancy_enum.Global,
                 It);
+        ec.executeChild(this, new RenderingStrategies());
 
         upsertTemplatesForOrder(templateDate, ec);
     }
