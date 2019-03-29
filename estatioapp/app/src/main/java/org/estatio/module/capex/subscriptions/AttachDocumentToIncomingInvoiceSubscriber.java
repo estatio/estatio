@@ -47,21 +47,6 @@ public class AttachDocumentToIncomingInvoiceSubscriber extends AbstractSubscribe
         }
     }
 
-    @EventHandler
-    public void on(DerivedObjectUpdater.UpsertIncomingInvoiceEvent ev) {
-        switch (ev.getEventPhase()) {
-            case EXECUTED:
-                final IncomingInvoice incomingInvoice = (IncomingInvoice) ev.getReturnValue();
-                final DocumentType docType = DocumentTypeData.INCOMING_INVOICE.findUsing(documentTypeRepository);
-
-                incomingDocumentRepository.findAllIncomingDocumentsByName(ev.getUserRef1())
-                        .forEach(document -> {
-                            paperclipRepository.attach(document, null, incomingInvoice);
-                            document.setType(docType);
-                        });
-        }
-    }
-
     @Inject
     CodaDocLineRepository codaDocLineRepository;
 

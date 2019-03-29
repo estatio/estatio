@@ -10,7 +10,6 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.services.wrapper.DisabledException;
@@ -61,12 +60,6 @@ public class DerivedObjectUpdater {
             final boolean createIfDoesNotExist) {
         IncomingInvoice incomingInvoiceIfAny = derivedObjectLookup.invoiceIfAnyFrom(docHead);
         return upsertIncomingInvoice(docHead, incomingInvoiceIfAny, createIfDoesNotExist);
-    }
-
-    public static class UpsertIncomingInvoiceEvent extends ActionDomainEvent<Object> {
-        public String getUserRef1() {
-            return this.getArguments() != null ? ((CodaDocLine) this.getArguments().get(0)).getUserRef1() : null;
-        }
     }
 
     public IncomingInvoice upsertIncomingInvoice(
