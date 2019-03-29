@@ -26,12 +26,12 @@ public class DocFlowZipRepository {
     }
 
     @Programmatic
-    public DocFlowZip findBySdId(final long sdId) {
+    public DocFlowZip findBySdiId(final long sdId) {
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
                         DocFlowZip.class,
-                        "findBySdId",
-                        "sdId", sdId));
+                        "findBySdiId",
+                        "sdiId", sdId));
     }
 
     @Programmatic

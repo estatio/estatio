@@ -6,6 +6,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.message.MessageService;
 
@@ -22,14 +23,15 @@ public class DocFlowZipMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
     public DocFlowZip lookupDocFlowZip(
-            final long sdId
+            @ParameterLayout(named = "SDI Id")
+            final long sdiId
     ) {
         final DocFlowZip docFlowZip =
-                docFlowZipRepository.findBySdId(sdId);
+                docFlowZipRepository.findBySdiId(sdiId);
         if(docFlowZip == null) {
             messageService.informUser(String.format(
                     "No DocFlow zip found for '%d'",
-                    sdId));
+                    sdiId));
         }
         return docFlowZip;
     }

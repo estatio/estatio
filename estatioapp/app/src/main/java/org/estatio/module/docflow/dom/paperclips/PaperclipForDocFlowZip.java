@@ -53,7 +53,7 @@ import lombok.Setter;
 public class PaperclipForDocFlowZip extends Paperclip {
 
 
-    @Column(allowsNull = "false", name = "orderId")
+    @Column(allowsNull = "false", name = "docFlowZipId")
     @Getter @Setter
     private DocFlowZip docFlowZip;
 

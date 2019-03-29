@@ -20,7 +20,9 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="General" id="general">
-                                        <cpt:property id="sdId"/>
+                                        <cpt:property id="sdId">
+                                            <cpt:named>SDI Id</cpt:named>
+                                        </cpt:property>
                                     </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>

@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ObjectPersistedEvent;
 import org.apache.isis.applib.services.eventbus.ObjectRemovingEvent;
@@ -52,13 +53,13 @@ import lombok.Setter;
         column = "version")
 @Queries({
         @Query(
-                name = "findBySdId", language = "JDOQL",
+                name = "findBySdiId", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.docflow.dom.DocFlowZip "
-                        + "WHERE sdId == :sdId "),
+                        + "WHERE sdiId == :sdiId "),
 })
 @Uniques({
-        // none currently; note that sdId is a primary key
+        // none currently; note that sdiId is a primary key
 })
 @Indices({
         // none currently
@@ -86,23 +87,24 @@ public class DocFlowZip implements Comparable<DocFlowZip>, HasAtPath {
     }
 
     public DocFlowZip(
-            final long sdId,
+            final long sdiId,
             final String atPath,
             final String sha256) {
-        this.sdId = sdId;
+        this.sdiId = sdiId;
         this.atPath = atPath;
         this.sha256 = sha256;
     }
 
     public String title() {
-        return String.format("%s", getSdId());
+        return String.format("%s", getSdiId());
     }
 
     @PrimaryKey
     @Column(allowsNull = "false")
     @Property()
+    @PropertyLayout(named = "SDI Id")
     @Getter @Setter
-    private long sdId;
+    private long sdiId;
 
     @Column(allowsNull = "false", length = 64)
     @Property()
@@ -135,14 +137,14 @@ public class DocFlowZip implements Comparable<DocFlowZip>, HasAtPath {
     @Override
     public int compareTo(final DocFlowZip other) {
         return ComparisonChain.start()
-                .compare(getSdId(), other.getSdId())
+                .compare(getSdiId(), other.getSdiId())
                 .result();
     }
 
     @Override
     public String toString() {
         return "DocFlowZip{" +
-                "sdId='" + getSdId() + '\'' +
+                "sdiId='" + getSdiId() + '\'' +
                 '}';
     }
 
