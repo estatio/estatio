@@ -32,7 +32,6 @@ import org.estatio.module.lease.dom.LeaseItemStatus;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
-import org.estatio.module.lease.dom.LeaseTermRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -87,7 +86,7 @@ public class LeaseTermForTurnoverRentInvoicedByManagerImport implements ExcelFix
         LeaseItem item = importItem();
         LeaseTermForTurnoverRent term = (LeaseTermForTurnoverRent) item.findTerm(termStartDate);
         if (term==null) {
-            term = (LeaseTermForTurnoverRent) leaseTermRepository.newLeaseTerm(item, null, termStartDate, termStartDate.plusYears(1).minusDays(1));
+            term = (LeaseTermForTurnoverRent) item.newTerm(termStartDate, null);
             term.setManualTurnoverRent(rentNetAmount);
         }
         return Lists.newArrayList(term);
@@ -130,9 +129,6 @@ public class LeaseTermForTurnoverRentInvoicedByManagerImport implements ExcelFix
 
     @Inject
     LeaseItemRepository leaseItemRepository;
-
-    @Inject
-    LeaseTermRepository leaseTermRepository;
 
     @Inject
     private ChargeRepository chargeRepository;
