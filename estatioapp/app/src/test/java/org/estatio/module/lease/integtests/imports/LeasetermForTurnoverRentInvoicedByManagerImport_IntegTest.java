@@ -98,14 +98,14 @@ public class LeasetermForTurnoverRentInvoicedByManagerImport_IntegTest extends L
         // then
         assertThat(leaseForTopmodel.getItems()).hasSize(3);
         LeaseItem createdItem = leaseForTopmodel.findItem(LeaseItemType.TURNOVER_RENT, leaseForTopmodel.getStartDate(), LeaseAgreementRoleTypeEnum.MANAGER);
-        assertThat(createdItem.getTerms()).hasSize(2);
+        assertThat(createdItem.getTerms()).hasSize(3);
         assertThat(createdItem.getCharge()).isEqualTo(Charge_enum.GbTurnoverRent.findUsing(serviceRegistry2));
         assertThat(createdItem.getInvoicingFrequency()).isEqualTo(InvoicingFrequency.YEARLY_IN_ARREARS);
         assertThat(createdItem.getInvoicedBy()).isEqualTo(LeaseAgreementRoleTypeEnum.MANAGER);
         assertThat(createdItem.getPaymentMethod()).isEqualTo(PaymentMethod.MANUAL_PROCESS);
         final LeaseTermForTurnoverRent firstTerm = (LeaseTermForTurnoverRent) createdItem.getTerms().first();
         assertThat(firstTerm.getStartDate()).isEqualTo(term1StartDate);
-        assertThat(firstTerm.getEndDate()).isEqualTo(new LocalDate(2012, 12, 31));
+        assertThat(firstTerm.getEndDate()).isEqualTo(new LocalDate(2011, 12, 31));
         assertThat(firstTerm.getManualTurnoverRent()).isEqualTo(term1NetAmount);
         final LeaseTermForTurnoverRent lastTerm = (LeaseTermForTurnoverRent) createdItem.getTerms().last();
         assertThat(lastTerm.getStartDate()).isEqualTo(term2StartDate);

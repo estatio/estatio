@@ -15,6 +15,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.xactn.TransactionService3;
 
 import org.isisaddons.module.excel.dom.ExcelFixture;
 import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
@@ -86,6 +87,15 @@ public class LeaseTermForTurnoverRentInvoicedByManagerImport implements ExcelFix
         LeaseItem item = importItem();
         LeaseTermForTurnoverRent term = (LeaseTermForTurnoverRent) item.findTerm(termStartDate);
         if (term==null) {
+            if (!item.getTerms().isEmpty()){
+                LocalDate nextStartDate = item.getTerms().last().getStartDate().plusYears(1);
+                while (nextStartDate.isBefore(termStartDate)){
+                    LeaseTermForTurnoverRent emptyTerm = (LeaseTermForTurnoverRent) item.newTerm(nextStartDate, null);
+                    emptyTerm.setManualTurnoverRent(BigDecimal.ZERO);
+                    nextStartDate = nextStartDate.plusYears(1);
+                    transactionService3.nextTransaction(); // needed because of DN behaviour...
+                }
+            }
             term = (LeaseTermForTurnoverRent) item.newTerm(termStartDate, null);
             term.setManualTurnoverRent(rentNetAmount);
         }
@@ -132,5 +142,7 @@ public class LeaseTermForTurnoverRentInvoicedByManagerImport implements ExcelFix
 
     @Inject
     private ChargeRepository chargeRepository;
+
+    @Inject TransactionService3 transactionService3;
 
 }
