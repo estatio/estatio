@@ -13,6 +13,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
@@ -26,9 +27,11 @@ import org.estatio.module.docflow.dom.DocFlowZipService;
 )
 public class DocFlowZipServiceRestApi {
 
+    public static class UpsertDomainEvent extends ActionDomainEvent<Object> {}
+
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
-            domainEvent = DocFlowZipService.HandleDomainEvent.class,
+            domainEvent = UpsertDomainEvent.class,
             commandPersistence = CommandPersistence.IF_HINTED,
             publishing = Publishing.DISABLED
     )

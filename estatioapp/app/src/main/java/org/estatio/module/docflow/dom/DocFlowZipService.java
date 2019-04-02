@@ -20,13 +20,6 @@ public class DocFlowZipService {
     public static final String PAPERCLIP_ROLE_NAME_GENERATED = "generated from xml";
     public static final String PAPERCLIP_ROLE_NAME_SUPPLIERS = "supplier's";
 
-    /**
-     * This isn't really the correct pattern, because is only emitted by DocFlowZipServiceRestApi.
-     *
-     * But it is at least consistent with the functionality it replaces, of DocumentMenu/IncomingDocumentRepository.
-     */
-    public static class HandleDomainEvent extends ActionDomainEvent<Object> {}
-
     public DocFlowZip handle(
             final long sdId,
             final Clob xmlFileMetadatiIfAny,
