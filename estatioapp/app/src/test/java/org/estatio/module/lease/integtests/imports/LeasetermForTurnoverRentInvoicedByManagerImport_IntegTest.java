@@ -105,7 +105,7 @@ public class LeasetermForTurnoverRentInvoicedByManagerImport_IntegTest extends L
         assertThat(createdItem.getPaymentMethod()).isEqualTo(PaymentMethod.MANUAL_PROCESS);
         final LeaseTermForTurnoverRent firstTerm = (LeaseTermForTurnoverRent) createdItem.getTerms().first();
         assertThat(firstTerm.getStartDate()).isEqualTo(term1StartDate);
-        assertThat(firstTerm.getEndDate()).isEqualTo(new LocalDate(2012, 12, 31));
+        assertThat(firstTerm.getEndDate()).isEqualTo(new LocalDate(2011, 12, 31));
         assertThat(firstTerm.getManualTurnoverRent()).isEqualTo(term1NetAmount);
         final LeaseTermForTurnoverRent lastTerm = (LeaseTermForTurnoverRent) createdItem.getTerms().last();
         assertThat(lastTerm.getStartDate()).isEqualTo(term2StartDate);
