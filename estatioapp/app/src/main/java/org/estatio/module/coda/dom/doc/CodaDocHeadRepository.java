@@ -159,6 +159,17 @@ public class CodaDocHeadRepository {
         );
     }
 
+    @Programmatic
+    public boolean deleteIfNoInvoiceAttached(final CodaDocHead codaDocHead) {
+        // sanity check, is already validated at the REST endpoint
+        if (codaDocHead.getIncomingInvoice() == null) {
+            delete(codaDocHead);
+            return true;
+        }
+
+        return false;
+    }
+
     private void delete(final CodaDocHead codaDocHead) {
         for (final CodaDocLine line : Lists.newArrayList(codaDocHead.getLines())) {
             repositoryService.removeAndFlush(line);
