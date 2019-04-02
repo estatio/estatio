@@ -38,6 +38,10 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
+import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.paperclips.Paperclip;
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
+
 import org.estatio.module.financial.dom.BankAccount;
 
 import lombok.Getter;
@@ -122,6 +126,18 @@ public class DocFlowZip implements Comparable<DocFlowZip>, HasAtPath {
 
 
     @Programmatic
+    public Document locateAttachedDocument(final String role) {
+        return paperclipRepository.findByAttachedToAndRoleName(this, role)
+                .stream()
+                .map(Paperclip::getDocument)
+                .filter(Document.class::isInstance)
+                .map(Document.class::cast)
+                .findFirst()
+                .orElse(null);
+    }
+
+
+    @Programmatic
     public boolean isSameAs(final DocFlowZip other) {
         if (other == null) {
             return false;
@@ -150,10 +166,6 @@ public class DocFlowZip implements Comparable<DocFlowZip>, HasAtPath {
 
     //endregion
 
-    @NotPersistent
-    @Inject
-    DocFlowZipRepository docFlowZipRepository;
-
     @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "100")
     public static class TableColumnService implements TableColumnOrderService {
 
@@ -176,5 +188,11 @@ public class DocFlowZip implements Comparable<DocFlowZip>, HasAtPath {
         }
 
     }
+
+    @NotPersistent
+    @Inject
+    PaperclipRepository paperclipRepository;
+
+
 
 }

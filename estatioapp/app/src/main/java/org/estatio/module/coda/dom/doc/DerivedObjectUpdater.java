@@ -3,6 +3,7 @@ package org.estatio.module.coda.dom.doc;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -43,12 +44,15 @@ import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.docflow.dom.DocFlowZipRepository;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.tax.dom.Tax;
+
+import static org.estatio.module.docflow.dom.DocFlowZipService.PAPERCLIP_ROLE_NAME_GENERATED;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class DerivedObjectUpdater {
@@ -300,7 +304,33 @@ public class DerivedObjectUpdater {
     }
 
     /**
-     * attach paperclip to Document named after 'userref1', if exists.
+     * Attach paperclip to Document nbaed on the value of 'userref1', if exists.
+     *
+     * <p>
+     * we have two strategies:
+     *  <ol>
+     *      <li>
+     *          <p>
+     *           first (domestic Ita invoices), we see if the userRef1 is an sdiId of a DocFlowZip .
+     *           if so we attach the CodaDocHead to that DocFlowZip's PDF
+     *          </p>
+     *      </li>
+     *      <li>
+     *          <p>
+     *           otherwise,(foreign Ita invoices), we fall back to searching for Document whose name matches
+     *           the barcode ; if found, we attach the CodaHead to that Document just found.
+     *          </p>
+     *      </li>
+     *  </ol>
+     * </p>
+     *
+     * <p>
+     * This is equivalent to {@link org.estatio.module.capex.subscriptions.AttachDocumentToCodaDocHeadService}, but
+     * is for the case when the document has already been created (either uploaded via
+     * {@link org.estatio.module.capex.app.DocumentMenu}, or automatically sync'd via
+     * {@link org.estatio.module.docflow.restapi.DocFlowZipServiceRestApi}), and so the newly created/updated
+     * {@link CodaDocHead} needs to be associated (via a paperclip) with that existing document.
+     * </p>
      */
     public void updatePaperclip(
             final CodaDocHead docHead,
@@ -318,8 +348,8 @@ public class DerivedObjectUpdater {
 
         if (existingPaperclipIfAny != null) {
 
-            final String documentName = docHead.getSummaryLineDocumentName(LineCache.DEFAULT);
-            if (documentName == null) {
+            final String userRef1 = docHead.getSummaryLineDocumentName(LineCache.DEFAULT);
+            if (userRef1 == null) {
 
                 // userRef1 removed, so delete the existing paperclip.
                 paperclipRepository.delete(existingPaperclipIfAny);
@@ -329,30 +359,46 @@ public class DerivedObjectUpdater {
 
             } else {
 
-                if (!Objects.equals(existingDocumentNameIfAny, documentName)) {
-
-                    // reset the existing document back to vanilla 'INCOMING'
-                    existingPaperclipIfAny.getDocument().setType(incomingDocumentType);
+                if (!Objects.equals(existingDocumentNameIfAny, userRef1)) {
 
                     // userRef1 has been changed, so attempt to point to new Document
-                    final List<Document> documents =
-                            documentRepository.findByTypeAndNameAndAtPath(incomingDocumentType, AT_PATH, documentName);
-                    switch (documents.size()) {
-                        case 0:
-                            // could not locate new Document, so delete old paperclip and reset document
-                            paperclipRepository.delete(existingPaperclipIfAny);
-                            break;
-                        case 1:
-                            // update the paperclip to point to the new document.
-                            final Document document = documents.get(0);
-                            existingPaperclipIfAny.setDocument(document);
-                            document.setType(incomingInvoiceDocumentType);
-                            break;
-                        default:
-                            // could not locate a unique Document, so delete
-                            paperclipRepository.delete(existingPaperclipIfAny);
-                            softErrors.add("More than one document found named '%s'", documentName);
+
+                    final Optional<Document> documentIfAny = docFlowZipRepository.optFindBySdiId(userRef1)
+                            .map(docFlowZip -> docFlowZip.locateAttachedDocument(PAPERCLIP_ROLE_NAME_GENERATED));
+                    if(documentIfAny.isPresent()) {
+
+                        // domestic Ita: we found a DocFlowZip for the userRef1,
+                        // we simply point the existing paperclip of the CodaDocHead to its PDF
+                        final Document document = documentIfAny.get();
+                        existingPaperclipIfAny.setDocument(document);
+
+                    } else {
+
+                        // foreign Ita: no DocFlowZip, so we search on barcode
+
+                        // reset the existing document back to vanilla 'INCOMING'
+                        existingPaperclipIfAny.getDocument().setType(incomingDocumentType);
+
+                        final List<Document> documents =
+                                documentRepository.findByTypeAndNameAndAtPath(incomingDocumentType, AT_PATH, userRef1);
+                        switch (documents.size()) {
+                            case 0:
+                                // could not locate new Document, so delete old paperclip and reset document
+                                paperclipRepository.delete(existingPaperclipIfAny);
+                                break;
+                            case 1:
+                                // update the paperclip to point to the new document.
+                                final Document document = documents.get(0);
+                                existingPaperclipIfAny.setDocument(document);
+                                document.setType(incomingInvoiceDocumentType);
+                                break;
+                            default:
+                                // could not locate a unique Document, so delete
+                                paperclipRepository.delete(existingPaperclipIfAny);
+                                softErrors.add("More than one document found named '%s'", userRef1);
+                        }
                     }
+
                 } else {
                     // no change in the document name, so leave paperclip as it is
                 }
@@ -363,24 +409,39 @@ public class DerivedObjectUpdater {
             // if the DocHead is valid, and its handling is set to sync, then we create new Estatio objects
             if (createIfDoesNotExist) {
 
-                final String documentName = docHead.getSummaryLineDocumentName(LineCache.DEFAULT);
+                final String userRef1 = docHead.getSummaryLineDocumentName(LineCache.DEFAULT);
 
                 // userRef1 has been entered, there was no paperclip previously
-                final List<Document> documents =
-                        documentRepository.findByTypeAndNameAndAtPath(incomingDocumentType, "/ITA", documentName);
-                switch (documents.size()) {
-                    case 0:
-                        // nothing to do
-                        break;
-                    case 1:
-                        // attach
-                        final Document document = documents.get(0);
-                        paperclipRepository.attach(document, null, incomingInvoice);
-                        document.setType(incomingInvoiceDocumentType);
-                        break;
-                    default:
-                        // could not locate a unique Document, so do nothing
-                        softErrors.add("More than one document found named '%s'", documentName);
+
+                final Optional<Document> documentIfAny = docFlowZipRepository.optFindBySdiId(userRef1)
+                        .map(docFlowZip -> docFlowZip.locateAttachedDocument(PAPERCLIP_ROLE_NAME_GENERATED));
+                if(documentIfAny.isPresent()) {
+
+                    // domestic Ita, use docflow
+                    final Document document = documentIfAny.get();
+                    paperclipRepository.attach(document, null, incomingInvoice);
+                    document.setType(incomingInvoiceDocumentType);
+
+                } else {
+
+                    // foreign Ita, use barcode
+
+                    final List<Document> documents =
+                        documentRepository.findByTypeAndNameAndAtPath(incomingDocumentType, "/ITA", userRef1);
+                    switch (documents.size()) {
+                        case 0:
+                            // nothing to do
+                            break;
+                        case 1:
+                            // attach
+                            final Document document = documents.get(0);
+                            paperclipRepository.attach(document, null, incomingInvoice);
+                            document.setType(incomingInvoiceDocumentType);
+                            break;
+                        default:
+                            // could not locate a unique Document, so do nothing
+                            softErrors.add("More than one document found named '%s'", userRef1);
+                    }
                 }
 
             } else {
@@ -389,12 +450,15 @@ public class DerivedObjectUpdater {
         }
     }
 
+    @Inject
+    DocFlowZipRepository docFlowZipRepository;
+
     /**
      * update task description (if pending is to complete)
      * <p>
      * nb: note that the task description won't be updated if awaiting approval and there are only soft errors.
      */
-    public void tryUpdatePendingTaskIfRequired(
+    void tryUpdatePendingTaskIfRequired(
             final CodaDocHead docHead,
             final ErrorSet errors) {
 

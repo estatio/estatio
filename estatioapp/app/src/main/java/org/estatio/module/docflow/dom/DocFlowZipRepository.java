@@ -1,6 +1,7 @@
 package org.estatio.module.docflow.dom;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -9,9 +10,6 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.repository.RepositoryService;
-import org.apache.isis.applib.services.title.TitleService;
-
-import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -26,13 +24,34 @@ public class DocFlowZipRepository {
     }
 
     @Programmatic
-    public DocFlowZip findBySdiId(final long sdId) {
+    public DocFlowZip findBySdiId(final long sdiId) {
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
                         DocFlowZip.class,
                         "findBySdiId",
-                        "sdiId", sdId));
+                        "sdiId", sdiId));
     }
+
+    @Programmatic
+    public Optional<DocFlowZip> optFindBySdiId(final long sdiId) {
+        return Optional.ofNullable(findBySdiId(sdiId));
+    }
+
+    @Programmatic
+    public DocFlowZip findBySdiId(final String sdiIdStr) {
+        try {
+            final long sdiId = Long.parseLong(sdiIdStr);
+            return findBySdiId(sdiId);
+        } catch(NumberFormatException ex) {
+            return null;
+        }
+    }
+
+    @Programmatic
+    public Optional<DocFlowZip> optFindBySdiId(final String sdiIdStr) {
+        return Optional.ofNullable(findBySdiId(sdiIdStr));
+    }
+
 
     @Programmatic
     public DocFlowZip persist(final DocFlowZip docFlowZip) {
