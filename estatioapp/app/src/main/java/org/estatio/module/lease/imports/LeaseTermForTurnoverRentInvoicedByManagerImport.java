@@ -33,6 +33,7 @@ import org.estatio.module.lease.dom.LeaseItemStatus;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
+import org.estatio.module.lease.dom.LeaseTermStatus;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -92,12 +93,14 @@ public class LeaseTermForTurnoverRentInvoicedByManagerImport implements ExcelFix
                 while (nextStartDate.isBefore(termStartDate)){
                     LeaseTermForTurnoverRent emptyTerm = (LeaseTermForTurnoverRent) item.newTerm(nextStartDate, null);
                     emptyTerm.setManualTurnoverRent(BigDecimal.ZERO);
+                    emptyTerm.setStatus(LeaseTermStatus.APPROVED);
                     nextStartDate = nextStartDate.plusYears(1);
                     transactionService3.nextTransaction(); // needed because of DN behaviour...
                 }
             }
             term = (LeaseTermForTurnoverRent) item.newTerm(termStartDate, null);
             term.setManualTurnoverRent(rentNetAmount);
+            term.setStatus(LeaseTermStatus.APPROVED);
         }
         return Lists.newArrayList(term);
     }

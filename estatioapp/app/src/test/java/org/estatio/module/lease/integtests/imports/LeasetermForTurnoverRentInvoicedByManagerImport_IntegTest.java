@@ -41,6 +41,7 @@ import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
+import org.estatio.module.lease.dom.LeaseTermStatus;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
 import org.estatio.module.lease.imports.LeaseTermForTurnoverRentInvoicedByManagerImport;
@@ -107,10 +108,17 @@ public class LeasetermForTurnoverRentInvoicedByManagerImport_IntegTest extends L
         assertThat(firstTerm.getStartDate()).isEqualTo(term1StartDate);
         assertThat(firstTerm.getEndDate()).isEqualTo(new LocalDate(2011, 12, 31));
         assertThat(firstTerm.getManualTurnoverRent()).isEqualTo(term1NetAmount);
+        assertThat(firstTerm.getStatus()).isEqualTo(LeaseTermStatus.APPROVED);
+        final LeaseTermForTurnoverRent nextTerm = (LeaseTermForTurnoverRent) firstTerm.getNext();
+        assertThat(nextTerm.getStartDate()).isEqualTo(term1StartDate.plusYears(1));
+        assertThat(nextTerm.getEndDate()).isEqualTo(new LocalDate(2012, 12, 31));
+        assertThat(nextTerm.getManualTurnoverRent()).isEqualTo(BigDecimal.ZERO.setScale(2));
+        assertThat(nextTerm.getStatus()).isEqualTo(LeaseTermStatus.APPROVED);
         final LeaseTermForTurnoverRent lastTerm = (LeaseTermForTurnoverRent) createdItem.getTerms().last();
         assertThat(lastTerm.getStartDate()).isEqualTo(term2StartDate);
         assertThat(lastTerm.getEndDate()).isEqualTo(new LocalDate(2013, 12, 31));
         assertThat(lastTerm.getManualTurnoverRent()).isEqualTo(term2NetAmount);
+        assertThat(lastTerm.getStatus()).isEqualTo(LeaseTermStatus.APPROVED);
 
     }
 
