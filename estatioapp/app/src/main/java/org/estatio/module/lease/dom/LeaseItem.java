@@ -179,7 +179,7 @@ public class LeaseItem
     private static final int PAGE_SIZE = 15;
 
     public LeaseItem() {
-        super("lease, type, charge, startDate, sequence");
+        super("lease, type, charge, startDate, invoicedBy, sequence");
     }
 
     public LeaseItem(final Lease lease, final InvoicingFrequency invoicingFrequency) {

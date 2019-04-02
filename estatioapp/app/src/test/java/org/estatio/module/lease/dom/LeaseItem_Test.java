@@ -118,7 +118,7 @@ public class LeaseItem_Test {
         @Test
         public void happyCase() throws Exception {
             assertThat(lease.toString()).isEqualTo("Lease{type=Lease, reference=A}");
-            assertThat(leaseItem.toString()).isEqualTo("LeaseItem{lease=A, type=null, charge=null, startDate=null, sequence=null}");
+            assertThat(leaseItem.toString()).isEqualTo("LeaseItem{lease=A, type=null, charge=null, startDate=null, invoicedBy=null, sequence=null}");
         }
     }
 
