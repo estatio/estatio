@@ -27,7 +27,8 @@ import org.estatio.module.docflow.dom.DocFlowZipService;
 )
 public class DocFlowZipServiceRestApi {
 
-    public static class UpsertDomainEvent extends ActionDomainEvent<Object> {}
+    public static class UpsertDomainEvent
+            extends ActionDomainEvent<DocFlowZipServiceRestApi> {}
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
