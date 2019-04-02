@@ -1,7 +1,5 @@
 package org.estatio.module.capex.subscriptions;
 
-import java.util.Objects;
-
 import javax.inject.Inject;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -13,16 +11,10 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
-import org.incode.module.document.dom.impl.types.DocumentType;
-import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
-import org.estatio.module.coda.dom.doc.CodaDocHead;
-import org.estatio.module.coda.dom.doc.CodaDocLine;
-import org.estatio.module.coda.dom.doc.CodaDocLineRepository;
 import org.estatio.module.docflow.dom.DocFlowZip;
 import org.estatio.module.docflow.restapi.DocFlowZipServiceRestApi;
-import org.estatio.module.invoice.dom.DocumentTypeData;
 
 import static org.estatio.module.docflow.dom.DocFlowZipService.PAPERCLIP_ROLE_NAME_GENERATED;
 
@@ -61,31 +53,18 @@ public class AttachDocumentToIncomingInvoiceSubscriber extends AbstractSubscribe
 
                 final long sdiId = docFlowZip.getSdiId();
                 final String userRef1 = "" + sdiId;
+
                 attachCodaDocHead(document, userRef1);
         }
     }
 
     private void attachCodaDocHead(final Document document, final String userRef1) {
-        final DocumentType docType = DocumentTypeData.INCOMING_INVOICE.findUsing(documentTypeRepository);
-        codaDocLineRepository.findByUserRef1(userRef1)
-                .stream()
-                .map(CodaDocLine::getDocHead)
-                .distinct()
-                .map(CodaDocHead::getIncomingInvoice)
-                .filter(Objects::nonNull)
-                .forEach(invoice -> {
-                    paperclipRepository.attach(document, null, invoice);
-                    document.setType(docType);
-                });
+        attachDocumentToCodaDocHeadService.attachCodaDocHead(document, userRef1);
     }
-
-    @Inject
-    CodaDocLineRepository codaDocLineRepository;
 
     @Inject
     PaperclipRepository paperclipRepository;
 
     @Inject
-    DocumentTypeRepository documentTypeRepository;
-
+    AttachDocumentToCodaDocHeadService attachDocumentToCodaDocHeadService;
 }
