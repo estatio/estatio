@@ -76,7 +76,7 @@ public class LeasetermForTurnoverRentInvoicedByManagerImport_IntegTest extends L
                 term1StartDate,
                 term1NetAmount
         );
-        final LocalDate term2StartDate = new LocalDate(2012, 1, 1);
+        final LocalDate term2StartDate = new LocalDate(2013, 1, 1);
         final BigDecimal term2NetAmount = new BigDecimal("234.56");
         LeaseTermForTurnoverRentInvoicedByManagerImport leaseTermImport2 = new LeaseTermForTurnoverRentInvoicedByManagerImport(
                 leaseForTopmodel.getReference(),
@@ -105,11 +105,11 @@ public class LeasetermForTurnoverRentInvoicedByManagerImport_IntegTest extends L
         assertThat(createdItem.getPaymentMethod()).isEqualTo(PaymentMethod.MANUAL_PROCESS);
         final LeaseTermForTurnoverRent firstTerm = (LeaseTermForTurnoverRent) createdItem.getTerms().first();
         assertThat(firstTerm.getStartDate()).isEqualTo(term1StartDate);
-        assertThat(firstTerm.getEndDate()).isEqualTo(new LocalDate(2011, 12, 31));
+        assertThat(firstTerm.getEndDate()).isEqualTo(new LocalDate(2012, 12, 31));
         assertThat(firstTerm.getManualTurnoverRent()).isEqualTo(term1NetAmount);
         final LeaseTermForTurnoverRent lastTerm = (LeaseTermForTurnoverRent) createdItem.getTerms().last();
         assertThat(lastTerm.getStartDate()).isEqualTo(term2StartDate);
-        assertThat(lastTerm.getEndDate()).isEqualTo(new LocalDate(2012, 12, 31));
+        assertThat(lastTerm.getEndDate()).isEqualTo(new LocalDate(2013, 12, 31));
         assertThat(lastTerm.getManualTurnoverRent()).isEqualTo(term2NetAmount);
 
     }

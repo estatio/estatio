@@ -86,7 +86,7 @@ public class LeaseTermForTurnoverRentInvoicedByManagerImport implements ExcelFix
         LeaseItem item = importItem();
         LeaseTermForTurnoverRent term = (LeaseTermForTurnoverRent) item.findTerm(termStartDate);
         if (term==null) {
-            term = (LeaseTermForTurnoverRent) item.newTerm(termStartDate, termStartDate.plusYears(1).minusDays(1));
+            term = (LeaseTermForTurnoverRent) item.newTerm(termStartDate, null);
             term.setManualTurnoverRent(rentNetAmount);
         }
         return Lists.newArrayList(term);
