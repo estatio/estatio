@@ -16,11 +16,9 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
-import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.coda.dom.doc.CodaDocHead;
 import org.estatio.module.coda.dom.doc.CodaDocLine;
 import org.estatio.module.coda.dom.doc.CodaDocLineRepository;
-import org.estatio.module.coda.dom.doc.DerivedObjectUpdater;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 
 @DomainService(nature = NatureOfService.DOMAIN)
