@@ -33,7 +33,6 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
-import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.orderinvoice.IncomingInvoiceItem_createOrderItemLink;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
@@ -474,23 +473,29 @@ public class DerivedObjectUpdater {
                 stateTransitionService.pendingTransitionOf(
                         incomingInvoice, IncomingInvoiceApprovalStateTransition.class);
 
-        // invoice has transitioned to PAID even though there are errors. Will not occur for new invoices, only historical (when validation on CodaDocHead/Line is extended)
+        // there may be no pending transition, if the invoice has transition through to its final state.
+        // in such a case, there's no task to update, so we just quit and basically discard the detected errors because
+        // there's no way to bring them to anyone's attention.
+        //
+        // an example where this has occurred is for an invoice transitioned from PAYABLE to PAID, even though there
+        // are errors due to new validation (we introduced validation on userRef1 after go-live).
+        // Normally such invoices would have been pulled back for re-approval, however there is *also* logic to prevent
+        // PAYABLE invoices from being pulled back (this was for historical invoices).
+        //
+        // This should be a transitional issue; for new invoices, the validation on userRef1 will stop the invoice
+        // from even being created.
+        //
         if (pendingTransition == null) {
             return;
         }
 
-        final IncomingInvoiceApprovalStateTransitionType transitionType =
-                pendingTransition.getTransitionType();
-        switch (transitionType) {
-            case COMPLETE:
-                // this should always be the case; there are no other pending transitions from a state of NEW.
-                // update the task will the issues identified.
-                final Task task = pendingTransition.getTask();
-                if (task != null) {
-                    task.setDescription(errors.getText());
-                }
-                break;
+        // bring the errors (perhaps newly discovered, eg as result of stricter validation) to someone's attention
+        final Task task = pendingTransition.getTask();
+        if (task == null) {
+            return;
         }
+        task.setDescription(errors.getText());
+
     }
 
     private static IncomingInvoiceItem firstItemOf(final IncomingInvoice existingInvoiceIfAny) {
