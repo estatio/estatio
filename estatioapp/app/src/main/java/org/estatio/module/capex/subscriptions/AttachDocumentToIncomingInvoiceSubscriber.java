@@ -65,6 +65,7 @@ public class AttachDocumentToIncomingInvoiceSubscriber extends AbstractSubscribe
                 .stream()
                 .map(CodaDocLine::getDocHead)
                 .distinct()
+                .map(CodaDocHead::kick)// if was invalid but is now valid, then kick in order to create invoice etc.
                 .map(CodaDocHead::getIncomingInvoice)
                 .filter(Objects::nonNull)
                 .forEach(invoice -> {

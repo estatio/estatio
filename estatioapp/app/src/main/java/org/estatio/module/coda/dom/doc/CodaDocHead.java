@@ -481,44 +481,26 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         return ApplicationTenancyLevel.ROOT.getPath();
     }
 
-    public enum SynchronizationPolicy {
-        /**
-         * When revalidating a {@link CodaDocHead}, if the document ends up as {@link CodaDocHead#isValid() valid},
-         * then synchronize (ie create corresponding {@link IncomingInvoice Estatio invoice} and related objects.
-         */
-        SYNC_IF_VALID,
-        /**
-         * When revalidating a {@link CodaDocHead}, then even if the document ends up as
-         * {@link CodaDocHead#isValid() valid},
-         * do NOT synchronize.
-         *
-         * <p>
-         * Note that if the {@link CodaDocHead} was valid previously and had been sync'd, then those Estatio
-         * objects remain.
-         * </p>
-         */
-        DONT_SYNC_EVEN_IF_VALID
-    }
-
     @Programmatic
-    public void revalidate() {
+    public CodaDocHead revalidate() {
 
         final ErrorSet errors = new ErrorSet();
-
         final boolean syncIfValid = false;
 
         revalidateAndKickEstatioObjectsIfAny(errors, syncIfValid);
 
+        return this;
     }
 
     @Programmatic
-    public void kick() {
+    public CodaDocHead kick() {
 
         final ErrorSet errors = new ErrorSet();
-
         final boolean syncIfValid = true;
 
         revalidateAndKickEstatioObjectsIfAny(errors, syncIfValid);
+
+        return this;
     }
 
     @Programmatic
@@ -634,8 +616,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         // we'll create associated documents if an incoming invoice exists,
         // even if the DocHead is now invalid
         //
-        final boolean invoiceExists = incomingInvoice != null;
-        final boolean createIfDoesNotExist = invoiceExists;
+        final boolean createIfDoesNotExist = incomingInvoice != null;
 
         derivedObjectUpdater.updateLinkToOrderItem(
                 this,
@@ -658,7 +639,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
                 this,
                 errors);
 
-        if (invoiceExists) {
+        if (incomingInvoice != null) {
             setHandling(Handling.SYNCED);
         }
     }
