@@ -654,7 +654,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         tryTransitionToPayableWhenInCodaBooks(incomingInvoice);
         tryTransitionToPaidWhenPaidInCoda(incomingInvoice, this);
 
-        derivedObjectUpdater.updatePendingTask(
+        derivedObjectUpdater.tryUpdatePendingTaskIfRequired(
                 this,
                 errors);
 

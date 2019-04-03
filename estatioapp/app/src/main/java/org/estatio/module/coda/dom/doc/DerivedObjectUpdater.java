@@ -394,7 +394,7 @@ public class DerivedObjectUpdater {
      * <p>
      * nb: note that the task description won't be updated if awaiting approval and there are only soft errors.
      */
-    public void updatePendingTask(
+    public void tryUpdatePendingTaskIfRequired(
             final CodaDocHead docHead,
             final ErrorSet errors) {
 
@@ -409,6 +409,11 @@ public class DerivedObjectUpdater {
         final IncomingInvoiceApprovalStateTransition pendingTransition =
                 stateTransitionService.pendingTransitionOf(
                         incomingInvoice, IncomingInvoiceApprovalStateTransition.class);
+
+        // invoice has transitioned to PAID even though there are errors. Will not occur for new invoices, only historical (when validation on CodaDocHead/Line is extended)
+        if (pendingTransition == null) {
+            return;
+        }
 
         final IncomingInvoiceApprovalStateTransitionType transitionType =
                 pendingTransition.getTransitionType();
