@@ -164,6 +164,15 @@ import lombok.Setter;
                         + "&& charge == :charge "
                         + "&& startDate == :startDate "
                         + "&& invoicedBy == :invoicedBy "
+                        + "ORDER BY sequence "),
+        @Query(
+                name = "findByLeaseAndTypeAndInvoicedBy",
+                language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.lease.dom.LeaseItem "
+                        + "WHERE lease == :lease "
+                        + "&& type == :type "
+                        + "&& invoicedBy == :invoicedBy "
                         + "ORDER BY sequence ")
 })
 @Unique(name = "LeaseItem_lease_type_charge_startDate_invoicedBy_sequence_UNQ", members = {"lease", "type", "charge", "startDate", "invoicedBy", "sequence"})

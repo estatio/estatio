@@ -148,6 +148,14 @@ public class LeaseItemRepository extends UdoDomainRepositoryAndFactory<LeaseItem
                 "invoicedBy", invoicedBy);
     }
 
+    @Programmatic
+    public LeaseItem findByLeaseAndTypeAndInvoicedBy(final Lease lease, final LeaseItemType leaseItemType, final LeaseAgreementRoleTypeEnum invoicedBy) {
+        return firstMatch("findByLeaseAndTypeAndInvoicedBy",
+                "lease", lease,
+                "type", leaseItemType,
+                "invoicedBy", invoicedBy);
+    }
+
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
@@ -160,5 +168,4 @@ public class LeaseItemRepository extends UdoDomainRepositoryAndFactory<LeaseItem
 
     @Inject
     EstatioApplicationTenancyRepositoryForLease estatioApplicationTenancyRepository;
-
 }

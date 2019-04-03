@@ -85,15 +85,25 @@ public class LeasetermForTurnoverRentInvoicedByManagerImport_IntegTest extends L
                 term2StartDate,
                 term2NetAmount
         );
+        final LocalDate term3StartDate = new LocalDate(2018, 1, 1);
+        final BigDecimal term3NetAmount = new BigDecimal("345.67");
+        LeaseTermForTurnoverRentInvoicedByManagerImport leaseTermImport3 = new LeaseTermForTurnoverRentInvoicedByManagerImport(
+                leaseForTopmodel.getReference(),
+                Charge_enum.GbTurnoverRent.findUsing(serviceRegistry2).getReference(),
+                term3StartDate,
+                term3NetAmount
+        );
 
         serviceRegistry2.injectServicesInto(leaseTermImport1);
         serviceRegistry2.injectServicesInto(leaseTermImport2);
+        serviceRegistry2.injectServicesInto(leaseTermImport3);
 
         Assertions.assertThat(leaseForTopmodel.getItems()).hasSize(2);
 
         // when
         leaseTermImport1.importData();
         leaseTermImport2.importData();
+        leaseTermImport3.importData();
         transactionService2.nextTransaction();
 
         // then
@@ -119,6 +129,14 @@ public class LeasetermForTurnoverRentInvoicedByManagerImport_IntegTest extends L
         assertThat(lastTerm.getEndDate()).isEqualTo(new LocalDate(2013, 12, 31));
         assertThat(lastTerm.getManualTurnoverRent()).isEqualTo(term2NetAmount);
         assertThat(lastTerm.getStatus()).isEqualTo(LeaseTermStatus.APPROVED);
+
+        LeaseItem existingItem = leaseForTopmodel.findItem(LeaseItemType.TURNOVER_RENT, leaseForTopmodel.getStartDate(), LeaseAgreementRoleTypeEnum.LANDLORD);
+        final LeaseTermForTurnoverRent term2018InvoiceByLandlord = (LeaseTermForTurnoverRent) existingItem.getTerms().last();
+        assertThat(term2018InvoiceByLandlord.getManualTurnoverRent()).isEqualTo(term3NetAmount);
+        assertThat(term2018InvoiceByLandlord.getStartDate()).isEqualTo(term3StartDate);
+        assertThat(term2018InvoiceByLandlord.getEndDate()).isEqualTo(new LocalDate(2018,12,31));
+        final LeaseTermForTurnoverRent previous = (LeaseTermForTurnoverRent) term2018InvoiceByLandlord.getPrevious();
+        assertThat(previous.getManualTurnoverRent()).isEqualTo(BigDecimal.ZERO.setScale(2));
 
     }
 

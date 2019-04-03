@@ -109,9 +109,12 @@ public class LeaseTermForTurnoverRentInvoicedByManagerImport implements ExcelFix
     public LeaseItem importItem() {
         final Lease lease = fetchLease(leaseReference);
         final Charge charge = fetchCharge(chargeReference);
-        LeaseItem item = leaseItemRepository.findByLeaseAndTypeAndStartDateAndInvoicedBy(lease, LeaseItemType.TURNOVER_RENT, lease.getStartDate(), LeaseAgreementRoleTypeEnum.MANAGER);
+        final boolean itemManagedByManager = termStartDate.isBefore(new LocalDate(2018, 1, 1));
+        LeaseItem item = itemManagedByManager ?
+                leaseItemRepository.findByLeaseAndTypeAndStartDateAndInvoicedBy(lease, LeaseItemType.TURNOVER_RENT, lease.getStartDate(), LeaseAgreementRoleTypeEnum.MANAGER) :
+                leaseItemRepository.findByLeaseAndTypeAndInvoicedBy(lease, LeaseItemType.TURNOVER_RENT, LeaseAgreementRoleTypeEnum.LANDLORD);
         if (item == null) {
-            item = lease.newItem(LeaseItemType.TURNOVER_RENT, LeaseAgreementRoleTypeEnum.MANAGER, charge, InvoicingFrequency.YEARLY_IN_ARREARS, PaymentMethod.MANUAL_PROCESS, lease.getStartDate());
+            item = lease.newItem(LeaseItemType.TURNOVER_RENT, itemManagedByManager ? LeaseAgreementRoleTypeEnum.MANAGER : LeaseAgreementRoleTypeEnum.LANDLORD, charge, InvoicingFrequency.YEARLY_IN_ARREARS, itemManagedByManager ? PaymentMethod.MANUAL_PROCESS : PaymentMethod.CHEQUE, lease.getStartDate());
             item.setSequence(BigInteger.ONE);
             item.setApplicationTenancyPath(lease.getAtPath());
             item.setStatus(LeaseItemStatus.ACTIVE);
