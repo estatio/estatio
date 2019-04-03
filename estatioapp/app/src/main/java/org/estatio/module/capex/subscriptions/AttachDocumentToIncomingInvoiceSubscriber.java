@@ -1,8 +1,11 @@
 package org.estatio.module.capex.subscriptions;
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
+
+import com.google.common.collect.Lists;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
 
@@ -33,9 +36,13 @@ public class AttachDocumentToIncomingInvoiceSubscriber extends AbstractSubscribe
         switch (ev.getEventPhase()) {
             case EXECUTED:
                 final Document document = (Document) ev.getReturnValue();
-                final String userRef1 = document.getName().replace(".pdf", "");
 
-                attachCodaDocHead(document, userRef1);
+                List<String> userRef1Candidates = Lists.newArrayList();
+                final String userRef1 = document.getName().replace(".pdf", "");
+                userRef1Candidates.add(userRef1);
+                userRef1Candidates.add("B" + userRef1);
+
+                kickCodaDocHeadsAndUpdatePaperclips(document, userRef1Candidates);
         }
     }
 
@@ -54,24 +61,38 @@ public class AttachDocumentToIncomingInvoiceSubscriber extends AbstractSubscribe
                 final long sdiId = docFlowZip.getSdiId();
                 final String userRef1 = "" + sdiId;
 
-                attachCodaDocHead(document, userRef1);
+                kickCodaDocHeadsAndUpdatePaperclips(document, userRef1);
         }
     }
 
-    private void attachCodaDocHead(final Document document, final String userRef1) {
+    private void kickCodaDocHeadsAndUpdatePaperclips(final Document document, final List<String> userRef1Candidates) {
+        for (final String userRef1Candidate : userRef1Candidates) {
+            final List<CodaDocHead> updated = kickCodaDocHeadsAndUpdatePaperclips(document, userRef1Candidate);
+            if(!updated.isEmpty()) {
+                // one or more doc heads were found, so no need to try other candidates
+                return;
+            }
+        }
+    }
+
+    private List<CodaDocHead> kickCodaDocHeadsAndUpdatePaperclips(final Document document, final String userRef1) {
         final DocumentType docType = DocumentTypeData.INCOMING_INVOICE.findUsing(documentTypeRepository);
 
+        final List<CodaDocHead> updated = Lists.newArrayList();
         codaDocLineRepository.findByUserRef1(userRef1)
                 .stream()
                 .map(CodaDocLine::getDocHead)
                 .distinct()
-                .map(CodaDocHead::kick)// if was invalid but is now valid, then kick in order to create invoice etc.
+                .peek(CodaDocHead::kick) // if was invalid but is now valid, then kick in order to create invoice etc.
+                .peek(updated::add)      // keep track of fact that this was updated.
                 .map(CodaDocHead::getIncomingInvoice)
                 .filter(Objects::nonNull)
                 .forEach(invoice -> {
                     paperclipRepository.attach(document, null, invoice);
                     document.setType(docType);
                 });
+
+        return updated;
     }
 
     @Inject
