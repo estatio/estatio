@@ -43,7 +43,7 @@ public class DerivedObjectUpdater_Test {
     public void tryUpdatePendingTaskIfRequired_when_invoice_is_paid_but_has_errors() {
         // given
         ErrorSet errorSet = new ErrorSet();
-        errorSet.addIfNotEmpty("We added new validation and this existing invoice is now invalid!");
+        errorSet.add("We added new validation and this existing invoice is now invalid!");
 
         // expecting
         context.checking(new Expectations() {{
@@ -61,7 +61,7 @@ public class DerivedObjectUpdater_Test {
     public void tryUpdatePendingTaskIfRequired_when_invoice_is_in_state_complete() {
         // given
         ErrorSet errorSet = new ErrorSet();
-        errorSet.addIfNotEmpty("We added new validation and this existing invoice is now invalid!");
+        errorSet.add("We added new validation and this existing invoice is now invalid!");
 
         Task task = new Task(null, null, "I am valid!", null, null);
         IncomingInvoiceApprovalStateTransition transition = new IncomingInvoiceApprovalStateTransition();

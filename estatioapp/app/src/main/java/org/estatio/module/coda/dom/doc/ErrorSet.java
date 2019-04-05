@@ -9,15 +9,15 @@ public final class ErrorSet {
 
     private final List<String> commentList = Lists.newArrayList();
 
-    public ErrorSet addIfNotEmpty(final String text) {
-        if(!Strings.isNullOrEmpty(text)) {
-            commentList.add(text);
+    public ErrorSet add(final String format, final Object... args) {
+        if(format == null) {
+            return this;
+        }
+        final String message = String.format(format, args);
+        if(!Strings.isNullOrEmpty(message)) {
+            commentList.add(message);
         }
         return this;
-    }
-
-    public ErrorSet add(final String format, final Object... args) {
-        return addIfNotEmpty(String.format(format, args));
     }
 
     public String getText() {

@@ -3,6 +3,7 @@ package org.estatio.module.coda.dom.doc;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -32,7 +33,6 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
-import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.orderinvoice.IncomingInvoiceItem_createOrderItemLink;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
@@ -43,12 +43,15 @@ import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.docflow.dom.DocFlowZipRepository;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.tax.dom.Tax;
+
+import static org.estatio.module.docflow.dom.DocFlowZipService.PAPERCLIP_ROLE_NAME_GENERATED;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class DerivedObjectUpdater {
@@ -300,7 +303,33 @@ public class DerivedObjectUpdater {
     }
 
     /**
-     * attach paperclip to Document named after 'userref1', if exists.
+     * Attach paperclip to Document nbaed on the value of 'userref1', if exists.
+     *
+     * <p>
+     * we have two strategies:
+     *  <ol>
+     *      <li>
+     *          <p>
+     *           first (domestic Ita invoices), we see if the userRef1 is an sdiId of a DocFlowZip .
+     *           if so we attach the CodaDocHead to that DocFlowZip's PDF
+     *          </p>
+     *      </li>
+     *      <li>
+     *          <p>
+     *           otherwise,(foreign Ita invoices), we fall back to searching for Document whose name matches
+     *           the barcode ; if found, we attach the CodaHead to that Document just found.
+     *          </p>
+     *      </li>
+     *  </ol>
+     * </p>
+     *
+     * <p>
+     * This is equivalent to {@link org.estatio.module.capex.subscriptions.AttachDocumentToCodaDocHeadService}, but
+     * is for the case when the document has already been created (either uploaded via
+     * {@link org.estatio.module.capex.app.DocumentMenu}, or automatically sync'd via
+     * {@link org.estatio.module.docflow.restapi.DocFlowZipServiceRestApi}), and so the newly created/updated
+     * {@link CodaDocHead} needs to be associated (via a paperclip) with that existing document.
+     * </p>
      */
     public void updatePaperclip(
             final CodaDocHead docHead,
@@ -318,8 +347,8 @@ public class DerivedObjectUpdater {
 
         if (existingPaperclipIfAny != null) {
 
-            final String documentName = docHead.getSummaryLineDocumentName(LineCache.DEFAULT);
-            if (documentName == null) {
+            final String userRef1 = docHead.getSummaryLineDocumentName(LineCache.DEFAULT);
+            if (userRef1 == null) {
 
                 // userRef1 removed, so delete the existing paperclip.
                 paperclipRepository.delete(existingPaperclipIfAny);
@@ -329,15 +358,42 @@ public class DerivedObjectUpdater {
 
             } else {
 
-                if (!Objects.equals(existingDocumentNameIfAny, documentName)) {
-
-                    // reset the existing document back to vanilla 'INCOMING'
-                    existingPaperclipIfAny.getDocument().setType(incomingDocumentType);
+                if (!Objects.equals(existingDocumentNameIfAny, userRef1)) {
 
                     // userRef1 has been changed, so attempt to point to new Document
-                    final List<Document> documents =
-                            documentRepository.findByTypeAndNameAndAtPath(incomingDocumentType, AT_PATH, documentName);
-                    switch (documents.size()) {
+
+                    if(userRef1.startsWith(CodaDocLine.USER_REF_SDI_ID_PREFIX)) {
+
+                        // domestic Ita, search for a DocFlowZip
+                        final String sdiIdStr = userRef1.substring(1);
+                        final long sdiId;
+                        try {
+                            sdiId = Long.parseLong(userRef1);
+                        } catch(NumberFormatException ex) {
+                            softErrors.add("Could not find a 'DocFlowZip', inferred SDI Id '%s' is not numeric", sdiIdStr);
+                            return;
+                        }
+
+                        final Optional<Document> documentIfAny = docFlowZipRepository.optFindBySdiId(sdiId)
+                                .map(docFlowZip -> docFlowZip.locateAttachedDocument(PAPERCLIP_ROLE_NAME_GENERATED));
+                        if (!documentIfAny.isPresent()) {
+                            softErrors.add("Could not find a 'DocFlowZip' for SDI Id '%s'", sdiIdStr);
+                            return;
+                        }
+
+                        // we simply point the existing paperclip of the CodaDocHead to its PDF
+                        existingPaperclipIfAny.setDocument(documentIfAny.get());
+
+                    } else {
+
+                        // foreign Ita, so we search on barcode
+
+                        // reset the existing document back to vanilla 'INCOMING'
+                        existingPaperclipIfAny.getDocument().setType(incomingDocumentType);
+
+                        final List<Document> documents =
+                                documentRepository.findByTypeAndNameAndAtPath(incomingDocumentType, AT_PATH, userRef1);
+                        switch (documents.size()) {
                         case 0:
                             // could not locate new Document, so delete old paperclip and reset document
                             paperclipRepository.delete(existingPaperclipIfAny);
@@ -351,8 +407,11 @@ public class DerivedObjectUpdater {
                         default:
                             // could not locate a unique Document, so delete
                             paperclipRepository.delete(existingPaperclipIfAny);
-                            softErrors.add("More than one document found named '%s'", documentName);
+                            softErrors.add("More than one document found named '%s'", userRef1);
+                        }
                     }
+
+
                 } else {
                     // no change in the document name, so leave paperclip as it is
                 }
@@ -363,24 +422,53 @@ public class DerivedObjectUpdater {
             // if the DocHead is valid, and its handling is set to sync, then we create new Estatio objects
             if (createIfDoesNotExist) {
 
-                final String documentName = docHead.getSummaryLineDocumentName(LineCache.DEFAULT);
+                final String userRef1 = docHead.getSummaryLineDocumentName(LineCache.DEFAULT);
 
                 // userRef1 has been entered, there was no paperclip previously
-                final List<Document> documents =
-                        documentRepository.findByTypeAndNameAndAtPath(incomingDocumentType, "/ITA", documentName);
-                switch (documents.size()) {
-                    case 0:
-                        // nothing to do
-                        break;
-                    case 1:
-                        // attach
-                        final Document document = documents.get(0);
-                        paperclipRepository.attach(document, null, incomingInvoice);
-                        document.setType(incomingInvoiceDocumentType);
-                        break;
-                    default:
-                        // could not locate a unique Document, so do nothing
-                        softErrors.add("More than one document found named '%s'", documentName);
+                if(userRef1.startsWith(CodaDocLine.USER_REF_SDI_ID_PREFIX)) {
+
+                    // domestic Ita, search for a DocFlowZip
+                    final String sdiIdStr = userRef1.substring(1);
+                    final long sdiId;
+                    try {
+                        sdiId = Long.parseLong(userRef1);
+                    } catch(NumberFormatException ex) {
+                        softErrors.add("Could not find a 'DocFlowZip', inferred SDI Id '%s' is not numeric", sdiIdStr);
+                        return;
+                    }
+
+                    final Optional<Document> documentIfAny = docFlowZipRepository.optFindBySdiId(sdiId)
+                            .map(docFlowZip -> docFlowZip.locateAttachedDocument(PAPERCLIP_ROLE_NAME_GENERATED));
+                    if (!documentIfAny.isPresent()) {
+                        softErrors.add("Could not find a 'DocFlowZip' for SDI Id '%s'", sdiIdStr);
+                        return;
+                    }
+
+                    // domestic Ita, use docflow
+                    final Document document = documentIfAny.get();
+                    paperclipRepository.attach(document, null, incomingInvoice);
+                    document.setType(incomingInvoiceDocumentType);
+
+                } else {
+
+                    // foreign Ita, use barcode
+
+                    final List<Document> documents =
+                        documentRepository.findByTypeAndNameAndAtPath(incomingDocumentType, "/ITA", userRef1);
+                    switch (documents.size()) {
+                        case 0:
+                            // nothing to do
+                            break;
+                        case 1:
+                            // attach
+                            final Document document = documents.get(0);
+                            paperclipRepository.attach(document, null, incomingInvoice);
+                            document.setType(incomingInvoiceDocumentType);
+                            break;
+                        default:
+                            // could not locate a unique Document, so do nothing
+                            softErrors.add("More than one document found named '%s'", userRef1);
+                    }
                 }
 
             } else {
@@ -389,12 +477,15 @@ public class DerivedObjectUpdater {
         }
     }
 
+    @Inject
+    DocFlowZipRepository docFlowZipRepository;
+
     /**
      * update task description (if pending is to complete)
      * <p>
      * nb: note that the task description won't be updated if awaiting approval and there are only soft errors.
      */
-    public void tryUpdatePendingTaskIfRequired(
+    void tryUpdatePendingTaskIfRequired(
             final CodaDocHead docHead,
             final ErrorSet errors) {
 
@@ -410,23 +501,29 @@ public class DerivedObjectUpdater {
                 stateTransitionService.pendingTransitionOf(
                         incomingInvoice, IncomingInvoiceApprovalStateTransition.class);
 
-        // invoice has transitioned to PAID even though there are errors. Will not occur for new invoices, only historical (when validation on CodaDocHead/Line is extended)
+        // there may be no pending transition, if the invoice has transition through to its final state.
+        // in such a case, there's no task to update, so we just quit and basically discard the detected errors because
+        // there's no way to bring them to anyone's attention.
+        //
+        // an example where this has occurred is for an invoice transitioned from PAYABLE to PAID, even though there
+        // are errors due to new validation (we introduced validation on userRef1 after go-live).
+        // Normally such invoices would have been pulled back for re-approval, however there is *also* logic to prevent
+        // PAYABLE invoices from being pulled back (this was for historical invoices).
+        //
+        // This should be a transitional issue; for new invoices, the validation on userRef1 will stop the invoice
+        // from even being created.
+        //
         if (pendingTransition == null) {
             return;
         }
 
-        final IncomingInvoiceApprovalStateTransitionType transitionType =
-                pendingTransition.getTransitionType();
-        switch (transitionType) {
-            case COMPLETE:
-                // this should always be the case; there are no other pending transitions from a state of NEW.
-                // update the task will the issues identified.
-                final Task task = pendingTransition.getTask();
-                if (task != null) {
-                    task.setDescription(errors.getText());
-                }
-                break;
+        // bring the errors (perhaps newly discovered, eg as result of stricter validation) to someone's attention
+        final Task task = pendingTransition.getTask();
+        if (task == null) {
+            return;
         }
+        task.setDescription(errors.getText());
+
     }
 
     private static IncomingInvoiceItem firstItemOf(final IncomingInvoice existingInvoiceIfAny) {

@@ -114,6 +114,8 @@ import lombok.Setter;
 )
 public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
 
+    public static final String USER_REF_SDI_ID_PREFIX = "S";
+
     /**
      * For properties that are only populated for summary lines.
      */
