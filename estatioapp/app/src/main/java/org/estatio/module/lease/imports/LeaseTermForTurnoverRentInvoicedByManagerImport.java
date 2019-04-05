@@ -99,9 +99,10 @@ public class LeaseTermForTurnoverRentInvoicedByManagerImport implements ExcelFix
                 }
             }
             term = (LeaseTermForTurnoverRent) item.newTerm(termStartDate, null);
-            term.setManualTurnoverRent(rentNetAmount);
-            term.setStatus(LeaseTermStatus.APPROVED);
         }
+        // always overwrite manual turnover rent and status
+        term.setManualTurnoverRent(rentNetAmount);
+        term.setStatus(LeaseTermStatus.APPROVED);
         return Lists.newArrayList(term);
     }
 
