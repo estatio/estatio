@@ -52,6 +52,8 @@ public abstract class BaseModuleIntegTestAbstract extends IntegrationTestAbstrac
                         new FakeCommsServiceModule()
                 ).withConfigurationProperty(
                     SpecificationLoader.CONFIG_PROPERTY_MODE.of(introspectionMode)
+                ).withConfigurationProperty(
+                    "isis.services.eventbus.implementation", "axon"
                 )
         );
     }

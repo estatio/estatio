@@ -51,7 +51,7 @@ language governing permissions and limitations under the License.
         <connection>scm:git:https://github.com/estatio/estatio.git</connection>
         <developerConnection>scm:git:https://github.com/estatio/estatio.git</developerConnection>
         <url>https://github.com/estatio/estatio.git</url>
-p    </scm>
+    </scm>
     <developers>
         <developer>
             <id>jcvanderwal</id>
