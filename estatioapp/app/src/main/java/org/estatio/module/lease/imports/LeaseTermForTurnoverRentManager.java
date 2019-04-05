@@ -152,6 +152,7 @@ public class LeaseTermForTurnoverRentManager {
         for (LeaseTermForTurnoverRentLineItem lineItem : lineItems) {
             final LeaseTermForTurnoverRent leaseTerm = lineItem.getLeaseTerm();
             leaseTerm.setAuditedTurnover(lineItem.getAuditedTurnover());
+            leaseTerm.setManualTurnoverRent(lineItem.getManualTurnoverRent());
             leaseTerm.verify();
         }
         return this;
