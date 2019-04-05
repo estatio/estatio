@@ -37,12 +37,9 @@ public class AttachDocumentToIncomingInvoiceSubscriber extends AbstractSubscribe
             case EXECUTED:
                 final Document document = (Document) ev.getReturnValue();
 
-                List<String> userRef1Candidates = Lists.newArrayList();
                 final String userRef1 = document.getName().replace(".pdf", "");
-                userRef1Candidates.add(userRef1);
-                userRef1Candidates.add("B" + userRef1);
 
-                kickCodaDocHeadsAndUpdatePaperclips(document, userRef1Candidates);
+                kickCodaDocHeadsAndUpdatePaperclips(document, userRef1);
         }
     }
 
@@ -59,23 +56,14 @@ public class AttachDocumentToIncomingInvoiceSubscriber extends AbstractSubscribe
                 }
 
                 final long sdiId = docFlowZip.getSdiId();
-                final String userRef1 = "" + sdiId;
+                final String userRef1 = CodaDocLine.USER_REF_SDI_ID_PREFIX + sdiId;
 
                 kickCodaDocHeadsAndUpdatePaperclips(document, userRef1);
         }
     }
 
-    private void kickCodaDocHeadsAndUpdatePaperclips(final Document document, final List<String> userRef1Candidates) {
-        for (final String userRef1Candidate : userRef1Candidates) {
-            final List<CodaDocHead> updated = kickCodaDocHeadsAndUpdatePaperclips(document, userRef1Candidate);
-            if(!updated.isEmpty()) {
-                // one or more doc heads were found, so no need to try other candidates
-                return;
-            }
-        }
-    }
-
-    private List<CodaDocHead> kickCodaDocHeadsAndUpdatePaperclips(final Document document, final String userRef1) {
+    private List<CodaDocHead> kickCodaDocHeadsAndUpdatePaperclips(
+            final Document document, final String userRef1) {
         final DocumentType docType = DocumentTypeData.INCOMING_INVOICE.findUsing(documentTypeRepository);
 
         final List<CodaDocHead> updated = Lists.newArrayList();

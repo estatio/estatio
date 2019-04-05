@@ -9,7 +9,7 @@ public final class ErrorSet {
 
     private final List<String> commentList = Lists.newArrayList();
 
-    public ErrorSet addIfNotEmpty(final String text) {
+    private ErrorSet addIfNotEmpty(final String text) {
         if(!Strings.isNullOrEmpty(text)) {
             commentList.add(text);
         }

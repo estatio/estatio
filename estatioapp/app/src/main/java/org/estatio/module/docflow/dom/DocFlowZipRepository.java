@@ -37,20 +37,6 @@ public class DocFlowZipRepository {
         return Optional.ofNullable(findBySdiId(sdiId));
     }
 
-    @Programmatic
-    public DocFlowZip findBySdiId(final String sdiIdStr) {
-        try {
-            final long sdiId = Long.parseLong(sdiIdStr);
-            return findBySdiId(sdiId);
-        } catch(NumberFormatException ex) {
-            return null;
-        }
-    }
-
-    @Programmatic
-    public Optional<DocFlowZip> optFindBySdiId(final String sdiIdStr) {
-        return Optional.ofNullable(findBySdiId(sdiIdStr));
-    }
 
 
     @Programmatic

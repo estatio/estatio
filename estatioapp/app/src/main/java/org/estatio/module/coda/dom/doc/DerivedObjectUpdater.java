@@ -362,18 +362,31 @@ public class DerivedObjectUpdater {
 
                     // userRef1 has been changed, so attempt to point to new Document
 
-                    final Optional<Document> documentIfAny = docFlowZipRepository.optFindBySdiId(userRef1)
-                            .map(docFlowZip -> docFlowZip.locateAttachedDocument(PAPERCLIP_ROLE_NAME_GENERATED));
-                    if(documentIfAny.isPresent()) {
+                    if(userRef1.startsWith(CodaDocLine.USER_REF_SDI_ID_PREFIX)) {
 
-                        // domestic Ita: we found a DocFlowZip for the userRef1,
+                        // domestic Ita, search for a DocFlowZip
+                        final String sdiIdStr = userRef1.substring(1);
+                        final long sdiId;
+                        try {
+                            sdiId = Long.parseLong(userRef1);
+                        } catch(NumberFormatException ex) {
+                            softErrors.add("Could not find a 'DocFlowZip', inferred SDI Id '%s' is not numeric", sdiIdStr);
+                            return;
+                        }
+
+                        final Optional<Document> documentIfAny = docFlowZipRepository.optFindBySdiId(sdiId)
+                                .map(docFlowZip -> docFlowZip.locateAttachedDocument(PAPERCLIP_ROLE_NAME_GENERATED));
+                        if (!documentIfAny.isPresent()) {
+                            softErrors.add("Could not find a 'DocFlowZip' for SDI Id '%s'", sdiIdStr);
+                            return;
+                        }
+
                         // we simply point the existing paperclip of the CodaDocHead to its PDF
-                        final Document document = documentIfAny.get();
-                        existingPaperclipIfAny.setDocument(document);
+                        existingPaperclipIfAny.setDocument(documentIfAny.get());
 
                     } else {
 
-                        // foreign Ita: no DocFlowZip, so we search on barcode
+                        // foreign Ita, so we search on barcode
 
                         // reset the existing document back to vanilla 'INCOMING'
                         existingPaperclipIfAny.getDocument().setType(incomingDocumentType);
@@ -381,22 +394,23 @@ public class DerivedObjectUpdater {
                         final List<Document> documents =
                                 documentRepository.findByTypeAndNameAndAtPath(incomingDocumentType, AT_PATH, userRef1);
                         switch (documents.size()) {
-                            case 0:
-                                // could not locate new Document, so delete old paperclip and reset document
-                                paperclipRepository.delete(existingPaperclipIfAny);
-                                break;
-                            case 1:
-                                // update the paperclip to point to the new document.
-                                final Document document = documents.get(0);
-                                existingPaperclipIfAny.setDocument(document);
-                                document.setType(incomingInvoiceDocumentType);
-                                break;
-                            default:
-                                // could not locate a unique Document, so delete
-                                paperclipRepository.delete(existingPaperclipIfAny);
-                                softErrors.add("More than one document found named '%s'", userRef1);
+                        case 0:
+                            // could not locate new Document, so delete old paperclip and reset document
+                            paperclipRepository.delete(existingPaperclipIfAny);
+                            break;
+                        case 1:
+                            // update the paperclip to point to the new document.
+                            final Document document = documents.get(0);
+                            existingPaperclipIfAny.setDocument(document);
+                            document.setType(incomingInvoiceDocumentType);
+                            break;
+                        default:
+                            // could not locate a unique Document, so delete
+                            paperclipRepository.delete(existingPaperclipIfAny);
+                            softErrors.add("More than one document found named '%s'", userRef1);
                         }
                     }
+
 
                 } else {
                     // no change in the document name, so leave paperclip as it is
@@ -411,10 +425,24 @@ public class DerivedObjectUpdater {
                 final String userRef1 = docHead.getSummaryLineDocumentName(LineCache.DEFAULT);
 
                 // userRef1 has been entered, there was no paperclip previously
+                if(userRef1.startsWith(CodaDocLine.USER_REF_SDI_ID_PREFIX)) {
 
-                final Optional<Document> documentIfAny = docFlowZipRepository.optFindBySdiId(userRef1)
-                        .map(docFlowZip -> docFlowZip.locateAttachedDocument(PAPERCLIP_ROLE_NAME_GENERATED));
-                if(documentIfAny.isPresent()) {
+                    // domestic Ita, search for a DocFlowZip
+                    final String sdiIdStr = userRef1.substring(1);
+                    final long sdiId;
+                    try {
+                        sdiId = Long.parseLong(userRef1);
+                    } catch(NumberFormatException ex) {
+                        softErrors.add("Could not find a 'DocFlowZip', inferred SDI Id '%s' is not numeric", sdiIdStr);
+                        return;
+                    }
+
+                    final Optional<Document> documentIfAny = docFlowZipRepository.optFindBySdiId(sdiId)
+                            .map(docFlowZip -> docFlowZip.locateAttachedDocument(PAPERCLIP_ROLE_NAME_GENERATED));
+                    if (!documentIfAny.isPresent()) {
+                        softErrors.add("Could not find a 'DocFlowZip' for SDI Id '%s'", sdiIdStr);
+                        return;
+                    }
 
                     // domestic Ita, use docflow
                     final Document document = documentIfAny.get();

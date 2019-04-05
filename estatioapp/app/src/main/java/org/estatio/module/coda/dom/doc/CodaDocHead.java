@@ -602,7 +602,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
 
         // an invalid CodaDocHead are only soft errors (could just be book-keeping problems).
         // see Comparison (above) for hard errors.
-        errors.addIfNotEmpty(this.getReasonInvalid());
+        errors.add(this.getReasonInvalid());
 
         //
         // the various updates will only ever do an update of the derived objects, never create new stuff
