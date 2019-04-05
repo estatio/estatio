@@ -303,33 +303,13 @@ public class DerivedObjectUpdater {
     }
 
     /**
-     * Attach paperclip to Document nbaed on the value of 'userref1', if exists.
+     * Attach paperclip to Document based on the value of 'userref1', if exists.
      *
-     * <p>
-     * we have two strategies:
-     *  <ol>
-     *      <li>
-     *          <p>
-     *           first (domestic Ita invoices), we see if the userRef1 is an sdiId of a DocFlowZip .
-     *           if so we attach the CodaDocHead to that DocFlowZip's PDF
-     *          </p>
-     *      </li>
-     *      <li>
-     *          <p>
-     *           otherwise,(foreign Ita invoices), we fall back to searching for Document whose name matches
-     *           the barcode ; if found, we attach the CodaHead to that Document just found.
-     *          </p>
-     *      </li>
-     *  </ol>
-     * </p>
+     * If prefixed with 'S', then we strip and treat the remainder as a (numeric) SDI ID, and attach to the
+     * (generated PDF of the) corresponding {@link org.estatio.module.docflow.dom.DocFlowZip} (if it exists).
      *
-     * <p>
-     * This is equivalent to {@link org.estatio.module.capex.subscriptions.AttachDocumentToCodaDocHeadService}, but
-     * is for the case when the document has already been created (either uploaded via
-     * {@link org.estatio.module.capex.app.DocumentMenu}, or automatically sync'd via
-     * {@link org.estatio.module.docflow.restapi.DocFlowZipServiceRestApi}), and so the newly created/updated
-     * {@link CodaDocHead} needs to be associated (via a paperclip) with that existing document.
-     * </p>
+     * If no prefix, then we append '.pdf' and search for an uploaded {@link Document} with that name.
+     *
      */
     public void updatePaperclip(
             final CodaDocHead docHead,
