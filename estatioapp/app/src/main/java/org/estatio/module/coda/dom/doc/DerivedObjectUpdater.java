@@ -404,6 +404,12 @@ public class DerivedObjectUpdater {
 
                 final String userRef1 = docHead.getSummaryLineDocumentName(LineCache.DEFAULT);
 
+                // This should not happen for new invoices any longer, as CodaDocHeads can't be valid any longer if the userRef1 is missing.
+                // However, for some existing invoices before this validation was in place, it might not be present on the docHead. This null guard allows those to sync anyway.
+                if (userRef1 == null) {
+                    return;
+                }
+
                 // userRef1 has been entered, there was no paperclip previously
                 if(userRef1.startsWith(CodaDocLine.USER_REF_SDI_ID_PREFIX)) {
 
