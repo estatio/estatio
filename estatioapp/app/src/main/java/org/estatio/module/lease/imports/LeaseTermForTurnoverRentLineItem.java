@@ -50,6 +50,7 @@ public class LeaseTermForTurnoverRentLineItem  {
         this.leaseTerm = (LeaseTermForTurnoverRent) leaseTerm;
         this.auditedTurnover = getLeaseTerm().getAuditedTurnover();
         this.manualTurnoverRent = getLeaseTerm().getManualTurnoverRent();
+        this.auditedTORentReadOnly = getLeaseTerm().getAuditedTurnoverRent();
     }
 
     public String title() {
@@ -74,5 +75,9 @@ public class LeaseTermForTurnoverRentLineItem  {
     @Getter @Setter
     private BigDecimal manualTurnoverRent;
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @Property(optionality = Optionality.OPTIONAL)
+    @Getter @Setter
+    private BigDecimal auditedTORentReadOnly;
 
 }

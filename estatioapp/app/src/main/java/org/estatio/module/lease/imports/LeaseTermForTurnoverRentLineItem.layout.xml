@@ -13,6 +13,8 @@
             <ns2:fieldSet name="Selected" id="selected" unreferencedProperties="true">
                 <ns2:property id="leaseTerm"/>
                 <ns2:property id="auditedTurnover"/>
+                <ns2:property id="manualTurnoverRent"/>
+                <ns2:property id="auditedTORentReadOnly"/>
             </ns2:fieldSet>
         </col>
         <col span="4"/>
