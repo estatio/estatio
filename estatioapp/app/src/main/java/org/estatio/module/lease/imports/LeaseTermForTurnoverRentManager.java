@@ -18,6 +18,7 @@
 package org.estatio.module.lease.imports;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
@@ -41,6 +42,7 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
@@ -118,7 +120,8 @@ public class LeaseTermForTurnoverRentManager {
 
     //region > turnoverRents (derived collection)
     public List<LeaseTermForTurnoverRentLineItem> getTurnoverRents() {
-        final List<LeaseTerm> terms = leaseTermRepository.findByPropertyAndTypeAndStartDate(getProperty(), LeaseItemType.TURNOVER_RENT, getStartDate());
+        final List<LeaseTerm> terms = leaseTermRepository.findByPropertyAndTypeAndStartDate(getProperty(), LeaseItemType.TURNOVER_RENT, getStartDate())
+                .stream().filter(lt->lt.getLeaseItem().getInvoicedBy().equals(LeaseAgreementRoleTypeEnum.LANDLORD)).collect(Collectors.toList());
         return Lists.transform(terms, newLeaseTermForTurnoverRentAuditBulkUpdate());
     }
 
