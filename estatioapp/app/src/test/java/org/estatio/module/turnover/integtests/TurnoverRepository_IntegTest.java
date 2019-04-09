@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,10 +32,11 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.fixtures.enums.Currency_enum;
-import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverRepository;
+import org.estatio.module.turnover.dom.Type;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -56,41 +58,23 @@ public class TurnoverRepository_IntegTest extends TurnoverModuleIntegTestAbstrac
     public void find_or_create_works() throws Exception {
 
         // given
-        final Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2);
+        // occupancy - reportedAt is unique
+        final Occupancy occupancy = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2).getOccupancies().first();
+        final LocalDateTime reportedAt = new LocalDateTime(2019, 1, 1, 12, 0);
+
         final LocalDate turnoverDate = new LocalDate(2019, 1, 1);
         final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
-        final BigDecimal originalAmount = new BigDecimal("1234.56");
-        Turnover turnover = turnoverRepository.create(lease, turnoverDate, originalAmount, euro);
+        final BigDecimal originalGrossAmount = new BigDecimal("1234.56");
+        Turnover turnover = turnoverRepository.create(occupancy, turnoverDate, Type.AUDITED, reportedAt, "someone", euro, null, originalGrossAmount, null, null, false);
 
         // when
         final Currency sek = Currency_enum.SEK.findUsing(serviceRegistry2);
-        Turnover turnover2 = turnoverRepository.findOrCreate(lease, turnoverDate, new BigDecimal("4321.00"), sek);
+        Turnover turnover2 = turnoverRepository.findOrCreate(occupancy, turnoverDate, Type.AUDITED, reportedAt, "someone", sek, new BigDecimal("4321.00"), null, null, null, false);
 
         // then
         assertThat(turnover).isSameAs(turnover2);
-        assertThat(turnover2.getAmount()).isEqualTo(originalAmount);
+        assertThat(turnover2.getTurnoverGrossAmount()).isEqualTo(originalGrossAmount);
         assertThat(turnover2.getCurrency()).isEqualTo(euro);
-
-    }
-
-    @Test
-    public void upsert_works() throws Exception {
-
-        // given
-        final Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2);
-        final LocalDate turnoverDate = new LocalDate(2019, 1, 1);
-        final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
-        Turnover turnover = turnoverRepository.create(lease, turnoverDate, new BigDecimal("1234.56"), euro);
-
-        // when
-        final BigDecimal updatedAmount = new BigDecimal("4321.00");
-        final Currency sek = Currency_enum.SEK.findUsing(serviceRegistry2);
-        Turnover turnover2 = turnoverRepository.upsert(lease, turnoverDate, updatedAmount, sek);
-
-        // then
-        assertThat(turnover).isSameAs(turnover2);
-        assertThat(turnover2.getAmount()).isEqualTo(updatedAmount);
-        assertThat(turnover2.getCurrency()).isEqualTo(sek);
 
     }
 

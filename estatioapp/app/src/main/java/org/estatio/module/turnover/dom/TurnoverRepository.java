@@ -19,10 +19,12 @@
 package org.estatio.module.turnover.dom;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -32,7 +34,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.currency.dom.Currency;
-import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.occupancy.Occupancy;
 
 @DomainService(repositoryFor = Turnover.class, nature = NatureOfService.DOMAIN)
 public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> {
@@ -42,49 +44,49 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
     }
 
     public Turnover findOrCreate(
-            final Lease lease,
+            final Occupancy occupancy,
             final LocalDate date,
-            final BigDecimal amount,
-            final Currency currency){
-        Turnover turnover = findUnique(lease, date);
+            final Type type,
+            final LocalDateTime reportedAt,
+            final String reportedBy,
+            final Currency currency,
+            final BigDecimal turnoverNetAmount,
+            final BigDecimal turnoverGrossAmount,
+            final BigInteger turnoverPurchaseCount,
+            final String comments,
+            final boolean nonComparable){
+        Turnover turnover = findUnique(occupancy, reportedAt);
         if (turnover==null){
-            turnover = create(lease, date, amount, currency);
+            turnover = create(occupancy, date, type, reportedAt, reportedBy, currency, turnoverNetAmount, turnoverGrossAmount, turnoverPurchaseCount, comments, nonComparable);
         }
-        return turnover;
-    }
-
-    public Turnover upsert(
-            final Lease lease,
-            final LocalDate date,
-            final BigDecimal amount,
-            final Currency currency){
-        Turnover turnover = findUnique(lease, date);
-        if (turnover==null){
-            turnover = create(lease, date, amount, currency);
-        }
-        turnover.setAmount(amount);
-        turnover.setCurrency(currency);
         return turnover;
     }
 
     public Turnover create(
-            final Lease lease,
+            final Occupancy occupancy,
             final LocalDate date,
-            final BigDecimal amount,
-            final Currency currency) {
-        Turnover turnover = new Turnover(lease, date, amount, currency);
+            final Type type,
+            final LocalDateTime reportedAt,
+            final String reportedBy,
+            final Currency currency,
+            final BigDecimal turnoverNetAmount,
+            final BigDecimal turnoverGrossAmount,
+            final BigInteger turnoverPurchaseCount,
+            final String comments,
+            final boolean nonComparable) {
+        Turnover turnover = new Turnover(occupancy, date, type, reportedAt, reportedBy, currency, turnoverNetAmount, turnoverGrossAmount, turnoverPurchaseCount, comments, nonComparable);
         serviceRegistry2.injectServicesInto(turnover);
         repositoryService.persistAndFlush(turnover);
         return turnover;
     }
 
-    private Turnover findUnique(final Lease lease, final LocalDate date) {
+    private Turnover findUnique(final Occupancy occupancy, final LocalDateTime reportedAt) {
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
                         Turnover.class,
                         "findUnique",
-                        "lease", lease,
-                        "date", date));
+                        "occupancy", occupancy,
+                        "reportedAt", reportedAt));
     }
 
     @Inject
