@@ -7,6 +7,7 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainObject;
@@ -66,7 +67,7 @@ public class Turnover extends UdoDomainObject2<Turnover> {
 
     @Getter @Setter
     @Column(name = "leaseId", allowsNull = "false")
-    private Lease lease;
+    private Lease lease; // TODO: ==> occupancy
 
     @Getter @Setter
     @Column(allowsNull = "false")
@@ -74,7 +75,25 @@ public class Turnover extends UdoDomainObject2<Turnover> {
 
     @Getter @Setter
     @Column(allowsNull = "false")
+    private DateTime reportedAt;
+
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    private String reportedBy;
+
+    @Getter @Setter
+    @Column(allowsNull = "false")
     private BigDecimal amount;
+
+    /**
+     * TODO: split into turnoverGrossAmount ? turnoverNetAmount ? (turnoverVatAmount = 0 or null in ECPDW)
+     * Should we have specific Occupancy (anticipating multiple per lease)? Or is lease - level OK?
+     * Comments?
+     * NonComparable Flag?
+     * TurnoverPurchase count (tickets)? Or on separate entity?
+     *
+     * Two types of turnovers (prelim / audited)
+     */
 
     @Getter @Setter
     @Column(name = "currencyId", allowsNull = "false")
