@@ -31,6 +31,7 @@ import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.base.dom.Importable;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.dom.CurrencyRepository;
+import org.estatio.module.lease.dom.Frequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -69,6 +70,9 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
     private String type;
 
     @Getter @Setter
+    private String frequency;
+
+    @Getter @Setter
     private String currencyReference;
 
     @Getter @Setter
@@ -90,6 +94,15 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
             typeEnum = Type.valueOf(type);
         } catch (Exception e){
             logAndWarn(String.format("Type not found for %s", type));
+            return Lists.newArrayList();
+        }
+
+        Frequency frequencyEnum;
+
+        try {
+            frequencyEnum = Frequency.valueOf(frequency);
+        } catch (Exception e){
+            logAndWarn(String.format("Frequency not found for %s", frequency));
             return Lists.newArrayList();
         }
 
@@ -132,6 +145,7 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
                 occupancy,
                 date,
                 typeEnum,
+                frequencyEnum,
                 LocalDateTime.now(),
                 userService.getUser().getName(),
                 currency,
