@@ -16,6 +16,9 @@ import org.apache.isis.applib.annotation.Editing;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.types.MoneyType;
+import org.incode.module.base.dom.types.NotesType;
+
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -105,11 +108,11 @@ public class Turnover extends UdoDomainObject2<Turnover> {
     private Currency currency;
 
     @Getter @Setter
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
     private BigDecimal turnoverNetAmount;
 
     @Getter @Setter
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
     private BigDecimal turnoverGrossAmount;
 
     @Getter @Setter
@@ -117,7 +120,7 @@ public class Turnover extends UdoDomainObject2<Turnover> {
     private BigInteger turnoverPurchaseCount;
 
     @Getter @Setter
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", length = NotesType.Meta.MAX_LEN)
     private String comments;
 
     @Getter @Setter

@@ -20,6 +20,7 @@ package org.estatio.module.turnover.dom;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -80,13 +81,17 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
         return turnover;
     }
 
-    private Turnover findUnique(final Occupancy occupancy, final LocalDateTime reportedAt) {
+    public Turnover findUnique(final Occupancy occupancy, final LocalDateTime reportedAt) {
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
                         Turnover.class,
                         "findUnique",
                         "occupancy", occupancy,
                         "reportedAt", reportedAt));
+    }
+
+    public List<Turnover> listAll() {
+        return allInstances();
     }
 
     @Inject
