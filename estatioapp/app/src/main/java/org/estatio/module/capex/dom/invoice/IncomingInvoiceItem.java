@@ -560,6 +560,9 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
     }
 
     public List<Project> choices0EditProject(){
+        if (CountryUtil.isItalian(this.getIncomingInvoice())) {
+            return projectRepository.findUsingAtPath("/ITA");
+        }
         return getFixedAsset()!=null ?
                 projectRepository.findByFixedAsset(getFixedAsset())
                         .stream()
