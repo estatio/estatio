@@ -32,8 +32,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.currency.fixtures.enums.Currency_enum;
-import org.estatio.module.lease.dom.Frequency;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
@@ -80,7 +80,7 @@ public class TurnoverImport_IntegTest extends TurnoverModuleIntegTestAbstract {
         assertThat(second.getOccupancy().getUnit().getReference()).isEqualTo("OXF-001");
         assertThat(second.getDate()).isEqualTo(new LocalDate(2019,4,1));
         assertThat(second.getType()).isEqualTo(Type.AUDITED);
-        assertThat(second.getFrequency()).isEqualTo(Frequency.QUARTERLY);
+        assertThat(second.getFrequency()).isEqualTo(Frequency.DAILY);
         assertThat(second.getReportedAt().toLocalDate()).isEqualTo(LocalDate.now());
         assertThat(second.getReportedBy()).isEqualTo("tester");
         assertThat(second.getCurrency()).isEqualTo(Currency_enum.GBP.findUsing(serviceRegistry2));

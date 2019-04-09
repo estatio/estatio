@@ -35,7 +35,6 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.currency.dom.Currency;
-import org.estatio.module.lease.dom.Frequency;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 
 @DomainService(repositoryFor = Turnover.class, nature = NatureOfService.DOMAIN)
