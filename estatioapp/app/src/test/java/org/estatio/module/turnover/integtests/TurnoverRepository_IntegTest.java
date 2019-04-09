@@ -74,7 +74,7 @@ public class TurnoverRepository_IntegTest extends TurnoverModuleIntegTestAbstrac
 
         // then
         assertThat(turnover).isSameAs(turnover2);
-        assertThat(turnover2.getTurnoverGrossAmount()).isEqualTo(originalGrossAmount);
+        assertThat(turnover2.getGrossAmount()).isEqualTo(originalGrossAmount);
         assertThat(turnover2.getCurrency()).isEqualTo(euro);
 
     }

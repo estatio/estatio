@@ -51,6 +51,34 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
 
     private static final Logger LOG = LoggerFactory.getLogger(TurnoverImport.class);
 
+    /* needed for excel import */
+    public TurnoverImport(){}
+
+    public TurnoverImport(
+            final String leaseReference,
+            final String unitReference,
+            final LocalDate date,
+            final BigDecimal grossAmount,
+            final BigDecimal netAmount,
+            final String type,
+            final String frequency,
+            final String currencyReference,
+            final int nonComparableFlag,
+            final BigInteger purchaseCount,
+            final String comments) {
+        this.leaseReference = leaseReference;
+        this.unitReference = unitReference;
+        this.date = date;
+        this.grossAmount = grossAmount;
+        this.netAmount = netAmount;
+        this.type = type;
+        this.frequency = frequency;
+        this.currencyReference = currencyReference;
+        this.nonComparableFlag = nonComparableFlag;
+        this.purchaseCount = purchaseCount;
+        this.comments = comments;
+    }
+
     @Getter @Setter
     private String leaseReference;
 
@@ -61,10 +89,10 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
     private LocalDate date;
 
     @Getter @Setter
-    private BigDecimal turnoverGrossAmount;
+    private BigDecimal grossAmount;
 
     @Getter @Setter
-    private BigDecimal turnoverNetAmount;
+    private BigDecimal netAmount;
 
     @Getter @Setter
     private String type;
@@ -79,10 +107,11 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
     private int nonComparableFlag;
 
     @Getter @Setter
-    private BigInteger turnoverPurchaseCount;
+    private BigInteger purchaseCount;
 
     @Getter @Setter
     private String comments;
+
 
     @Programmatic
     @Override
@@ -149,9 +178,9 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
                 LocalDateTime.now(),
                 userService.getUser().getName(),
                 currency,
-                turnoverNetAmount.equals(BigDecimal.ZERO) ? null : turnoverNetAmount,
-                turnoverGrossAmount.equals(BigDecimal.ZERO) ? null : turnoverGrossAmount,
-                turnoverPurchaseCount.equals(BigInteger.ZERO) ? null : turnoverPurchaseCount,
+                netAmount==null || netAmount.equals(BigDecimal.ZERO) ? null : netAmount,
+                grossAmount==null || grossAmount.equals(BigDecimal.ZERO) ? null : grossAmount,
+                purchaseCount==null || purchaseCount.equals(BigInteger.ZERO) ? null : purchaseCount,
                 comments,
                 nonComparableFlag > 0 ? true: false);
 

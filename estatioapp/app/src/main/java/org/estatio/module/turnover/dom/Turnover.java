@@ -65,9 +65,9 @@ public class Turnover extends UdoDomainObject2<Turnover> {
             final LocalDateTime reportedAt,
             final String reportedBy,
             final Currency currency,
-            final BigDecimal turnoverNetAmount,
-            final BigDecimal turnoverGrossAmount,
-            final BigInteger turnoverPurchaseCount,
+            final BigDecimal netAmount,
+            final BigDecimal grossAmount,
+            final BigInteger purchaseCount,
             final String comments,
             final boolean nonComparable){
         this();
@@ -78,9 +78,9 @@ public class Turnover extends UdoDomainObject2<Turnover> {
         this.reportedAt = reportedAt;
         this.reportedBy = reportedBy;
         this.currency = currency;
-        this.turnoverNetAmount = turnoverNetAmount;
-        this.turnoverGrossAmount = turnoverGrossAmount;
-        this.turnoverPurchaseCount = turnoverPurchaseCount;
+        this.netAmount = netAmount;
+        this.grossAmount = grossAmount;
+        this.purchaseCount = purchaseCount;
         this.comments = comments;
         this.nonComparable = nonComparable;
     }
@@ -115,15 +115,15 @@ public class Turnover extends UdoDomainObject2<Turnover> {
 
     @Getter @Setter
     @Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
-    private BigDecimal turnoverNetAmount;
+    private BigDecimal netAmount;
 
     @Getter @Setter
     @Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
-    private BigDecimal turnoverGrossAmount;
+    private BigDecimal grossAmount;
 
     @Getter @Setter
     @Column(allowsNull = "true")
-    private BigInteger turnoverPurchaseCount;
+    private BigInteger purchaseCount;
 
     @Getter @Setter
     @Column(allowsNull = "true", length = NotesType.Meta.MAX_LEN)
