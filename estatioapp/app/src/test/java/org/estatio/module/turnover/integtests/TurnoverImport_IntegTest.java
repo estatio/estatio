@@ -69,9 +69,9 @@ public class TurnoverImport_IntegTest extends TurnoverModuleIntegTestAbstract {
         assertThat(first.getReportedAt().toLocalDate()).isEqualTo(LocalDate.now());
         assertThat(first.getReportedBy()).isEqualTo("tester");
         assertThat(first.getCurrency()).isEqualTo(Currency_enum.EUR.findUsing(serviceRegistry2));
-        assertThat(first.getTurnoverNetAmount()).isEqualTo(new BigDecimal("12345.56"));
-        assertThat(first.getTurnoverGrossAmount()).isEqualTo(new BigDecimal("14814.67"));
-        assertThat(first.getTurnoverPurchaseCount()).isEqualTo(BigInteger.valueOf(123));
+        assertThat(first.getNetAmount()).isEqualTo(new BigDecimal("12345.56"));
+        assertThat(first.getGrossAmount()).isEqualTo(new BigDecimal("14814.67"));
+        assertThat(first.getPurchaseCount()).isEqualTo(BigInteger.valueOf(123));
         assertThat(first.getComments()).isNull();
         assertThat(first.isNonComparable()).isFalse();
 
@@ -84,9 +84,9 @@ public class TurnoverImport_IntegTest extends TurnoverModuleIntegTestAbstract {
         assertThat(second.getReportedAt().toLocalDate()).isEqualTo(LocalDate.now());
         assertThat(second.getReportedBy()).isEqualTo("tester");
         assertThat(second.getCurrency()).isEqualTo(Currency_enum.GBP.findUsing(serviceRegistry2));
-        assertThat(second.getTurnoverNetAmount()).isNull();
-        assertThat(second.getTurnoverGrossAmount()).isEqualTo(new BigDecimal("2345.67"));
-        assertThat(second.getTurnoverPurchaseCount()).isNull();
+        assertThat(second.getNetAmount()).isNull();
+        assertThat(second.getGrossAmount()).isEqualTo(new BigDecimal("2345.67"));
+        assertThat(second.getPurchaseCount()).isNull();
         assertThat(second.getComments()).isEqualTo("This is non comparable because of some reason");
         assertThat(second.isNonComparable()).isTrue();
     }
