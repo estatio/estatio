@@ -21,7 +21,6 @@ import org.incode.module.base.dom.types.NotesType;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.currency.dom.Currency;
-import org.estatio.module.lease.dom.Frequency;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 
 import lombok.Getter;
