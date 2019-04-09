@@ -35,6 +35,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.currency.dom.Currency;
+import org.estatio.module.lease.dom.Frequency;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 
 @DomainService(repositoryFor = Turnover.class, nature = NatureOfService.DOMAIN)
@@ -48,6 +49,7 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
             final Occupancy occupancy,
             final LocalDate date,
             final Type type,
+            final Frequency frequency,
             final LocalDateTime reportedAt,
             final String reportedBy,
             final Currency currency,
@@ -58,7 +60,7 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
             final boolean nonComparable){
         Turnover turnover = findUnique(occupancy, reportedAt);
         if (turnover==null){
-            turnover = create(occupancy, date, type, reportedAt, reportedBy, currency, turnoverNetAmount, turnoverGrossAmount, turnoverPurchaseCount, comments, nonComparable);
+            turnover = create(occupancy, date, type, frequency, reportedAt, reportedBy, currency, turnoverNetAmount, turnoverGrossAmount, turnoverPurchaseCount, comments, nonComparable);
         }
         return turnover;
     }
@@ -67,6 +69,7 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
             final Occupancy occupancy,
             final LocalDate date,
             final Type type,
+            final Frequency frequency,
             final LocalDateTime reportedAt,
             final String reportedBy,
             final Currency currency,
@@ -75,7 +78,7 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
             final BigInteger turnoverPurchaseCount,
             final String comments,
             final boolean nonComparable) {
-        Turnover turnover = new Turnover(occupancy, date, type, reportedAt, reportedBy, currency, turnoverNetAmount, turnoverGrossAmount, turnoverPurchaseCount, comments, nonComparable);
+        Turnover turnover = new Turnover(occupancy, date, type, frequency, reportedAt, reportedBy, currency, turnoverNetAmount, turnoverGrossAmount, turnoverPurchaseCount, comments, nonComparable);
         serviceRegistry2.injectServicesInto(turnover);
         repositoryService.persistAndFlush(turnover);
         return turnover;

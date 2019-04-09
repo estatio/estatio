@@ -11,6 +11,7 @@
                 <ns2:property id="unitReference" />
                 <ns2:property id="date" />
                 <ns2:property id="type" />
+                <ns2:property id="frequency" />
                 <ns2:property id="turnoverGrossAmount" />
                 <ns2:property id="turnoverNetAmount" />
                 <ns2:property id="nonComparableFlag" />

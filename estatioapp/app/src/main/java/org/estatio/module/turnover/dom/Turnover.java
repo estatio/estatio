@@ -21,6 +21,7 @@ import org.incode.module.base.dom.types.NotesType;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.currency.dom.Currency;
+import org.estatio.module.lease.dom.Frequency;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 
 import lombok.Getter;
@@ -61,6 +62,7 @@ public class Turnover extends UdoDomainObject2<Turnover> {
     public Turnover(final Occupancy occupancy,
             final LocalDate date,
             final Type type,
+            final Frequency frequency,
             final LocalDateTime reportedAt,
             final String reportedBy,
             final Currency currency,
@@ -73,6 +75,7 @@ public class Turnover extends UdoDomainObject2<Turnover> {
         this.occupancy = occupancy;
         this.date = date;
         this.type = type;
+        this.frequency = frequency;
         this.reportedAt = reportedAt;
         this.reportedBy = reportedBy;
         this.currency = currency;
@@ -94,6 +97,10 @@ public class Turnover extends UdoDomainObject2<Turnover> {
     @Getter @Setter
     @Column(allowsNull = "false")
     private Type type;
+
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    private Frequency frequency;
 
     @Getter @Setter
     @Column(allowsNull = "false")

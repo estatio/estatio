@@ -32,6 +32,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.fixtures.enums.Currency_enum;
+import org.estatio.module.lease.dom.Frequency;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.turnover.dom.Turnover;
@@ -65,11 +66,11 @@ public class TurnoverRepository_IntegTest extends TurnoverModuleIntegTestAbstrac
         final LocalDate turnoverDate = new LocalDate(2019, 1, 1);
         final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
         final BigDecimal originalGrossAmount = new BigDecimal("1234.56");
-        Turnover turnover = turnoverRepository.create(occupancy, turnoverDate, Type.AUDITED, reportedAt, "someone", euro, null, originalGrossAmount, null, null, false);
+        Turnover turnover = turnoverRepository.create(occupancy, turnoverDate, Type.AUDITED, Frequency.MONTHLY, reportedAt, "someone", euro, null, originalGrossAmount, null, null, false);
 
         // when
         final Currency sek = Currency_enum.SEK.findUsing(serviceRegistry2);
-        Turnover turnover2 = turnoverRepository.findOrCreate(occupancy, turnoverDate, Type.AUDITED, reportedAt, "someone", sek, new BigDecimal("4321.00"), null, null, null, false);
+        Turnover turnover2 = turnoverRepository.findOrCreate(occupancy, turnoverDate, Type.AUDITED, Frequency.YEARLY, reportedAt, "someone", sek, new BigDecimal("4321.00"), null, null, null, false);
 
         // then
         assertThat(turnover).isSameAs(turnover2);
