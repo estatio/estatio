@@ -34,6 +34,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.estatio.module.currency.fixtures.enums.Currency_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.turnover.dom.Frequency;
+import org.estatio.module.turnover.dom.Status;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
@@ -66,6 +67,7 @@ public class TurnoverImport_IntegTest extends TurnoverModuleIntegTestAbstract {
         assertThat(first.getDate()).isEqualTo(new LocalDate(2019,1,1));
         assertThat(first.getType()).isEqualTo(Type.PRELIMINARY);
         assertThat(first.getFrequency()).isEqualTo(Frequency.MONTHLY);
+        assertThat(first.getStatus()).isEqualTo(Status.APPROVED);
         assertThat(first.getReportedAt().toLocalDate()).isEqualTo(LocalDate.now());
         assertThat(first.getReportedBy()).isEqualTo("tester");
         assertThat(first.getCurrency()).isEqualTo(Currency_enum.EUR.findUsing(serviceRegistry2));
@@ -81,6 +83,7 @@ public class TurnoverImport_IntegTest extends TurnoverModuleIntegTestAbstract {
         assertThat(second.getDate()).isEqualTo(new LocalDate(2019,4,1));
         assertThat(second.getType()).isEqualTo(Type.AUDITED);
         assertThat(second.getFrequency()).isEqualTo(Frequency.DAILY);
+        assertThat(second.getStatus()).isEqualTo(Status.APPROVED);
         assertThat(second.getReportedAt().toLocalDate()).isEqualTo(LocalDate.now());
         assertThat(second.getReportedBy()).isEqualTo("tester");
         assertThat(second.getCurrency()).isEqualTo(Currency_enum.GBP.findUsing(serviceRegistry2));

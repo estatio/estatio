@@ -46,29 +46,62 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
 
     public Turnover findOrCreate(
             final Occupancy occupancy,
-            final LocalDate date,
+            final LocalDate turnoverDate,
             final Type type,
             final Frequency frequency,
+            final Status status,
             final LocalDateTime reportedAt,
             final String reportedBy,
             final Currency currency,
-            final BigDecimal turnoverNetAmount,
-            final BigDecimal turnoverGrossAmount,
-            final BigInteger turnoverPurchaseCount,
+            final BigDecimal netAmount,
+            final BigDecimal grossAmount,
+            final BigInteger purchaseCount,
             final String comments,
             final boolean nonComparable){
-        Turnover turnover = findUnique(occupancy, reportedAt);
+        Turnover turnover = findUnique(occupancy, turnoverDate, type);
         if (turnover==null){
-            turnover = create(occupancy, date, type, frequency, reportedAt, reportedBy, currency, turnoverNetAmount, turnoverGrossAmount, turnoverPurchaseCount, comments, nonComparable);
+            turnover = create(occupancy, turnoverDate, type, frequency, status, reportedAt, reportedBy, currency, netAmount, grossAmount, purchaseCount, comments, nonComparable);
         }
+        return turnover;
+    }
+
+    public Turnover upsert(
+            final Occupancy occupancy,
+            final LocalDate turnoverDate,
+            final Type type,
+            final Frequency frequency,
+            final Status status,
+            final LocalDateTime reportedAt,
+            final String reportedBy,
+            final Currency currency,
+            final BigDecimal netAmount,
+            final BigDecimal grossAmount,
+            final BigInteger purchaseCount,
+            final String comments,
+            final boolean nonComparable){
+        Turnover turnover = findUnique(occupancy, turnoverDate, type);
+        if (turnover==null){
+            turnover = create(occupancy, turnoverDate, type, frequency, status, reportedAt, reportedBy, currency, netAmount, grossAmount, purchaseCount, comments, nonComparable);
+        }
+        /* NOTE: occupancy, date, type = unique,
+        we consider frequency and currency immutable */
+        turnover.setStatus(status);
+        turnover.setReportedAt(reportedAt);
+        turnover.setReportedBy(reportedBy);
+        turnover.setNetAmount(netAmount);
+        turnover.setGrossAmount(grossAmount);
+        turnover.setPurchaseCount(purchaseCount);
+        turnover.setComments(comments);
+        turnover.setNonComparable(nonComparable);
         return turnover;
     }
 
     public Turnover create(
             final Occupancy occupancy,
-            final LocalDate date,
+            final LocalDate turnoverDate,
             final Type type,
             final Frequency frequency,
+            final Status status,
             final LocalDateTime reportedAt,
             final String reportedBy,
             final Currency currency,
@@ -77,19 +110,43 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
             final BigInteger turnoverPurchaseCount,
             final String comments,
             final boolean nonComparable) {
-        Turnover turnover = new Turnover(occupancy, date, type, frequency, reportedAt, reportedBy, currency, turnoverNetAmount, turnoverGrossAmount, turnoverPurchaseCount, comments, nonComparable);
+        Turnover turnover = new Turnover(occupancy, turnoverDate, type, frequency, status, reportedAt, reportedBy, currency, turnoverNetAmount, turnoverGrossAmount, turnoverPurchaseCount, comments, nonComparable);
         serviceRegistry2.injectServicesInto(turnover);
         repositoryService.persistAndFlush(turnover);
         return turnover;
     }
 
-    public Turnover findUnique(final Occupancy occupancy, final LocalDateTime reportedAt) {
+    public Turnover createEmpty(
+            final Occupancy occupancy,
+            final LocalDate turnoverDate,
+            final Type type,
+            final Frequency frequency,
+            final Currency currency) {
+        Turnover turnover = new Turnover(occupancy, turnoverDate, type, frequency, currency, Status.NEW);
+        serviceRegistry2.injectServicesInto(turnover);
+        repositoryService.persistAndFlush(turnover);
+        return turnover;
+    }
+
+    public Turnover findUnique(final Occupancy occupancy, final LocalDate turnoverDate, final Type type) {
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
                         Turnover.class,
                         "findUnique",
                         "occupancy", occupancy,
-                        "reportedAt", reportedAt));
+                        "date", turnoverDate,
+                        "type", type));
+    }
+
+    public List<Turnover> findByOccupancyAndTypeAndFrequencyBeforeDate(final Occupancy occupancy, final Type type, final Frequency frequency, final LocalDate turnoverDate) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Turnover.class,
+                        "findByOccupancyAndTypeAndFrequencyBeforeDate",
+                        "occupancy", occupancy,
+                        "type", type,
+                        "frequency", frequency,
+                        "threshold", turnoverDate)); //NOTE: we changed the parameter name to be different from the property name because of a bug in Datanucleus ... (otherwise the order by close in the produced query holds the hardcoded value of the variable).
     }
 
     public List<Turnover> listAll() {
@@ -101,5 +158,4 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
 
     @Inject
     RepositoryService repositoryService;
-
 }

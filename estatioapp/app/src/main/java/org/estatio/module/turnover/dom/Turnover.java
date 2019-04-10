@@ -38,7 +38,7 @@ import lombok.Setter;
         column = "version")
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
-                name = "Turnover_lease_date_UNQ", members = {"occupancy", "reportedAt"})
+                name = "Turnover_occupancy_date_type_UNQ", members = {"occupancy", "date", "type"})
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -46,7 +46,16 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.module.turnover.dom.Turnover "
                         + "WHERE occupancy == :occupancy "
-                        + "&& reportedAt == :reportedAt "),
+                        + "&& date == :date "
+                        + "&& type == :type"),
+        @javax.jdo.annotations.Query(
+                name = "findByOccupancyAndTypeAndFrequencyBeforeDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.turnover.dom.Turnover "
+                        + "WHERE occupancy == :occupancy "
+                        + "&& type == :type "
+                        + "&& frequency == :frequency "
+                        + "&& date < :threshold ORDER BY date DESC "),
 })
 @DomainObject(
         editing = Editing.DISABLED,
@@ -55,13 +64,29 @@ import lombok.Setter;
 public class Turnover extends UdoDomainObject2<Turnover> {
 
     public Turnover(){
-        super("occupancy, reportedAt");
+        super("occupancy, date, type");
     }
 
     public Turnover(final Occupancy occupancy,
             final LocalDate date,
             final Type type,
             final Frequency frequency,
+            final Currency currency,
+            final Status status){
+        this();
+        this.occupancy = occupancy;
+        this.date = date;
+        this.type = type;
+        this.frequency = frequency;
+        this.currency = currency;
+        this.status = status;
+    }
+
+    public Turnover(final Occupancy occupancy,
+            final LocalDate date,
+            final Type type,
+            final Frequency frequency,
+            final Status status,
             final LocalDateTime reportedAt,
             final String reportedBy,
             final Currency currency,
@@ -75,6 +100,7 @@ public class Turnover extends UdoDomainObject2<Turnover> {
         this.date = date;
         this.type = type;
         this.frequency = frequency;
+        this.status = status;
         this.reportedAt = reportedAt;
         this.reportedBy = reportedBy;
         this.currency = currency;
@@ -103,10 +129,14 @@ public class Turnover extends UdoDomainObject2<Turnover> {
 
     @Getter @Setter
     @Column(allowsNull = "false")
+    private Status status;
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
     private LocalDateTime reportedAt;
 
     @Getter @Setter
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "true")
     private String reportedBy;
 
     @Getter @Setter
