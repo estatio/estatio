@@ -36,6 +36,7 @@ import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.turnover.dom.Frequency;
+import org.estatio.module.turnover.dom.Status;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
@@ -170,17 +171,18 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
         }
 
         Occupancy occupancy = activeOccupanciesForLeaseOnDateAndUnit.get(0);
-        Turnover turnover = turnoverRepository.create(
+        Turnover turnover = turnoverRepository.upsert(
                 occupancy,
                 date,
                 typeEnum,
                 frequencyEnum,
+                Status.APPROVED,
                 LocalDateTime.now(),
                 userService.getUser().getName(),
                 currency,
-                netAmount==null || netAmount.equals(BigDecimal.ZERO) ? null : netAmount,
-                grossAmount==null || grossAmount.equals(BigDecimal.ZERO) ? null : grossAmount,
-                purchaseCount==null || purchaseCount.equals(BigInteger.ZERO) ? null : purchaseCount,
+                netAmount==null || netAmount.equals(BigDecimal.ZERO) ? null : netAmount, // just because when using TurnoverImportXlsxFixture, somehow the values are set to 0 instead of null like in production
+                grossAmount==null || grossAmount.equals(BigDecimal.ZERO) ? null : grossAmount, // just because when using TurnoverImportXlsxFixture, somehow the values are set to 0 instead of null like in production
+                purchaseCount==null || purchaseCount.equals(BigInteger.ZERO) ? null : purchaseCount, // just because when using TurnoverImportXlsxFixture, somehow the values are set to 0 instead of null like in production
                 comments,
                 nonComparableFlag > 0 ? true: false);
 

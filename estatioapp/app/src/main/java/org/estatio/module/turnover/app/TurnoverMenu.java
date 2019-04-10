@@ -53,14 +53,14 @@ public class TurnoverMenu  {
             final Property property,
             final Type type,
             final Frequency frequency,
-            final LocalDate date
+            final LocalDate turnoverDate
     ){
         TurnoverImportManager manager = new TurnoverImportManager();
         serviceRegistry2.injectServicesInto(manager);
         manager.setPropertyReference(property.getReference());
         manager.setType(type);
         manager.setFrequency(frequency);
-        manager.setDate(date);
+        manager.setDate(turnoverDate);
         manager.setLines(manager.getLines());
         return manager;
     }

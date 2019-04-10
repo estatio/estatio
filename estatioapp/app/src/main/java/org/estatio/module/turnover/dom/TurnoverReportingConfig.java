@@ -1,0 +1,93 @@
+package org.estatio.module.turnover.dom;
+
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.VersionStrategy;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.module.base.dom.UdoDomainObject2;
+import org.estatio.module.lease.dom.occupancy.Occupancy;
+import org.estatio.module.party.dom.Person;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "dbo"
+)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER,
+        column = "version")
+@javax.jdo.annotations.Uniques({
+        @javax.jdo.annotations.Unique(
+                name = "TurnoverReportingConfig_occupancy_UNQ", members = "occupancy")
+})
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findUnique", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.turnover.dom.Turnover "
+                        + "WHERE occupancy == :occupancy "),
+})
+@DomainObject(
+        editing = Editing.DISABLED,
+        objectType = "org.estatio.module.turnover.dom.TurnoverReportingConfig"
+)
+public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
+
+    public TurnoverReportingConfig(){
+        super("occupancy");
+    }
+
+    public TurnoverReportingConfig(
+            final Occupancy occupancy,
+            final Person reporter,
+            final LocalDate startDate,
+            final Frequency prelimFrequency,
+            final Frequency auditedFrequency
+    ){
+        this();
+        this.occupancy = occupancy;
+        this.reporter = reporter;
+        this.startDate = startDate;
+        this.prelimFrequency = prelimFrequency;
+        this.auditedFrequency = auditedFrequency;
+    }
+
+    @Getter @Setter
+    @Column(name = "occupancyId", allowsNull = "false")
+    private Occupancy occupancy;
+
+    @Getter @Setter
+    @Column(name = "personId", allowsNull = "true")
+    private Person reporter;
+
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    private LocalDate startDate;
+
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    private Frequency prelimFrequency;
+
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    private Frequency auditedFrequency;
+
+    @Override
+    public ApplicationTenancy getApplicationTenancy() {
+        return getOccupancy().getApplicationTenancy();
+    }
+
+}
