@@ -149,6 +149,14 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
                         "threshold", turnoverDate)); //NOTE: we changed the parameter name to be different from the property name because of a bug in Datanucleus ... (otherwise the order by close in the produced query holds the hardcoded value of the variable).
     }
 
+    public List<Turnover> findByOccupancy(final Occupancy occupancy) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Turnover.class,
+                        "findByOccupancy",
+                        "occupancy", occupancy));
+    }
+
     public List<Turnover> listAll() {
         return allInstances();
     }
