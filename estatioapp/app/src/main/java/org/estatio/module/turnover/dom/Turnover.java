@@ -56,6 +56,12 @@ import lombok.Setter;
                         + "&& type == :type "
                         + "&& frequency == :frequency "
                         + "&& date < :threshold ORDER BY date DESC "),
+        @javax.jdo.annotations.Query(
+                name = "findByOccupancy", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.turnover.dom.Turnover "
+                        + "WHERE occupancy == :occupancy "
+                        + "ORDER BY date DESC "),
 })
 @DomainObject(
         editing = Editing.DISABLED,
