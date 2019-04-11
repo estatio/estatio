@@ -28,6 +28,8 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
+import org.estatio.module.currency.dom.Currency;
+import org.estatio.module.currency.fixtures.enums.Currency_enum;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.turnover.dom.Frequency;
@@ -41,6 +43,7 @@ public class TurnoverReportingConfigRepository_IntegTest extends TurnoverModuleI
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
+                executionContext.executeChild(this, Currency_enum.EUR.builder());
                 executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
             }
         });
@@ -52,10 +55,11 @@ public class TurnoverReportingConfigRepository_IntegTest extends TurnoverModuleI
         // given
         final Occupancy occupancy = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2).getOccupancies().first();
         final LocalDate startDate = new LocalDate(2019, 1, 1);
+        final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
         // when
-        TurnoverReportingConfig config = turnoverReportingConfigRepository.findOrCreate(occupancy, null, startDate, Frequency.MONTHLY, Frequency.YEARLY);
+        TurnoverReportingConfig config = turnoverReportingConfigRepository.findOrCreate(occupancy, null, startDate, Frequency.MONTHLY, Frequency.YEARLY, euro);
         // then
-        Assertions.assertThat(turnoverReportingConfigRepository.findOrCreate(occupancy, null, new LocalDate(2020,12,31), Frequency.DAILY, Frequency.DAILY)).isSameAs(config);
+        Assertions.assertThat(turnoverReportingConfigRepository.findOrCreate(occupancy, null, new LocalDate(2020,12,31), Frequency.DAILY, Frequency.DAILY, euro)).isSameAs(config);
         Assertions.assertThat(config.getPrelimFrequency()).isEqualTo(Frequency.MONTHLY);
 
     }

@@ -1,5 +1,6 @@
 package org.estatio.module.turnover.dom;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -13,6 +14,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
+import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.party.dom.Person;
 
@@ -37,8 +39,13 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.turnover.dom.Turnover "
+                        + "FROM org.estatio.module.turnover.dom.TurnoverReportingConfig "
                         + "WHERE occupancy == :occupancy "),
+        @javax.jdo.annotations.Query(
+                name = "findByStartDateOnOrBefore", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.turnover.dom.TurnoverReportingConfig "
+                        + "WHERE startDate <= :date"),
 })
 @DomainObject(
         editing = Editing.DISABLED,
@@ -55,7 +62,8 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
             final Person reporter,
             final LocalDate startDate,
             final Frequency prelimFrequency,
-            final Frequency auditedFrequency
+            final Frequency auditedFrequency,
+            final Currency currency
     ){
         this();
         this.occupancy = occupancy;
@@ -63,6 +71,7 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
         this.startDate = startDate;
         this.prelimFrequency = prelimFrequency;
         this.auditedFrequency = auditedFrequency;
+        this.currency = currency;
     }
 
     @Getter @Setter
@@ -85,9 +94,22 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
     @Column(allowsNull = "false")
     private Frequency auditedFrequency;
 
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    private Currency currency;
+
     @Override
     public ApplicationTenancy getApplicationTenancy() {
         return getOccupancy().getApplicationTenancy();
     }
 
+    public void produceEmptyTurnovers(final LocalDate date) {
+        if (!date.isBefore(getStartDate())) {
+            if (prelimFrequency.hasStartDate(date)) turnoverRepository.createEmpty(getOccupancy(), date, Type.PRELIMINARY, getPrelimFrequency(), getCurrency());
+            if (auditedFrequency.hasStartDate(date)) turnoverRepository.createEmpty(getOccupancy(), date, Type.AUDITED, getAuditedFrequency(), getCurrency());
+        }
+    }
+
+    @Inject
+    TurnoverRepository turnoverRepository;
 }

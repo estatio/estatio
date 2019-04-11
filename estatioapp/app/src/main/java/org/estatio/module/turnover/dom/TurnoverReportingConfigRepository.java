@@ -31,6 +31,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.party.dom.Person;
 
@@ -46,10 +47,11 @@ public class TurnoverReportingConfigRepository extends UdoDomainRepositoryAndFac
             final Person reporter,
             final LocalDate startDate,
             final Frequency prelimFrequency,
-            final Frequency auditedFrequency) {
+            final Frequency auditedFrequency,
+            final Currency currency) {
         TurnoverReportingConfig config = findUnique(occupancy);
         if (config==null){
-            config = create(occupancy, reporter, startDate, prelimFrequency, auditedFrequency);
+            config = create(occupancy, reporter, startDate, prelimFrequency, auditedFrequency, currency);
         }
         return config;
     }
@@ -59,8 +61,9 @@ public class TurnoverReportingConfigRepository extends UdoDomainRepositoryAndFac
             final Person reporter,
             final LocalDate startDate,
             final Frequency prelimFrequency,
-            final Frequency auditedFrequency) {
-        TurnoverReportingConfig config = new TurnoverReportingConfig(occupancy, reporter, startDate, prelimFrequency, auditedFrequency);
+            final Frequency auditedFrequency,
+            final Currency currency) {
+        TurnoverReportingConfig config = new TurnoverReportingConfig(occupancy, reporter, startDate, prelimFrequency, auditedFrequency, currency);
         serviceRegistry2.injectServicesInto(config);
         repositoryService.persistAndFlush(config);
         return config;
@@ -74,6 +77,14 @@ public class TurnoverReportingConfigRepository extends UdoDomainRepositoryAndFac
                         "occupancy", occupancy));
     }
 
+    public List<TurnoverReportingConfig> findAllActiveOnDate(final LocalDate date) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        TurnoverReportingConfig.class,
+                        "findByStartDateOnOrBefore",
+                        "date", date));
+    }
+
     public List<TurnoverReportingConfig> listAll() {
         return allInstances();
     }
@@ -83,5 +94,4 @@ public class TurnoverReportingConfigRepository extends UdoDomainRepositoryAndFac
 
     @Inject
     RepositoryService repositoryService;
-
 }
