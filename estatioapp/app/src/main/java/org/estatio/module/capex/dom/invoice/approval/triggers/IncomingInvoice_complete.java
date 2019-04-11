@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.role.IPartyRoleType;
 
 /**
  * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case
@@ -36,7 +37,7 @@ public class IncomingInvoice_complete extends IncomingInvoice_triggerAbstract {
     )
     @ActionLayout(cssClassFa = "fa-flag-checkered")
     public IncomingInvoice act(
-            final String role,
+            final IPartyRoleType role,
             @Nullable final Person personToAssignNextTo,
             @Nullable final String comment) {
         trigger(personToAssignNextTo, comment, comment);
@@ -51,16 +52,20 @@ public class IncomingInvoice_complete extends IncomingInvoice_triggerAbstract {
         return reasonGuardNotSatisified();
     }
 
-    public String default0Act() {
-        return enumPartyRoleTypeName();
+    public IPartyRoleType default0Act() {
+        return choices0Act().stream().findFirst().orElse(null);
     }
 
-    public Person default1Act() {
-        return defaultPersonToAssignNextTo();
+    public List<? extends IPartyRoleType> choices0Act() {
+        return enumPartyRoleType();
     }
 
-    public List<Person> choices1Act() {
-        return choicesPersonToAssignNextTo();
+    public Person default1Act(final IPartyRoleType roleType) {
+        return defaultPersonToAssignNextTo(roleType);
+    }
+
+    public List<Person> choices1Act(final IPartyRoleType roleType) {
+        return choicesPersonToAssignNextTo(roleType);
     }
 
 

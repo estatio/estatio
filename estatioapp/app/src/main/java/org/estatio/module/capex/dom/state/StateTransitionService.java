@@ -441,22 +441,21 @@ public class StateTransitionService {
         final Task taskIfAny = pendingTransitionIfAny.getTask();
         if(taskIfAny != null) {
             final PartyRoleType roleAssignedTo = taskIfAny.getAssignedTo();
-            final IPartyRoleType iRoleShouldBeAssignedTo = pendingTransitionType.getTaskAssignmentStrategy()
+            final List<IPartyRoleType> iRolesShouldBeAssignedTo = pendingTransitionType.getTaskAssignmentStrategy()
                     .getAssignTo(domainObject, serviceRegistry2);
 
             // always overwrite the role
-            final PartyRoleType roleShouldBeAssignedTo = partyRoleTypeRepository.findOrCreate(iRoleShouldBeAssignedTo);
-            if(roleAssignedTo != roleShouldBeAssignedTo) {
-                taskIfAny.setAssignedTo(roleShouldBeAssignedTo);
+            final List<PartyRoleType> rolesShouldBeAssignedTo = partyRoleTypeRepository.findOrCreate(iRolesShouldBeAssignedTo);
+            if(!rolesShouldBeAssignedTo.contains(roleAssignedTo)) {
+                taskIfAny.setAssignedTo(rolesShouldBeAssignedTo.stream().findFirst().orElse(null));
             }
 
             // only overwrite the person if not actually assigned
             final Person personAssignedToIfAny = taskIfAny.getPersonAssignedTo();
             if(personAssignedToIfAny == null) {
-                if(iRoleShouldBeAssignedTo != null) {
-                    Person person = partyRoleTypeService.onlyMemberOfElseNone(iRoleShouldBeAssignedTo, domainObject);
+                Person person = partyRoleTypeService.onlyMemberOfElseNone(iRolesShouldBeAssignedTo, domainObject);
                     taskIfAny.setPersonAssignedTo(person);
-                }
+
             }
         }
 
@@ -503,7 +502,7 @@ public class StateTransitionService {
                 transitionType.getTaskAssignmentStrategy();
         IPartyRoleType assignToIfAny = null;
         if(taskAssignmentStrategy != null) {
-            assignToIfAny = taskAssignmentStrategy.getAssignTo(domainObject, serviceRegistry2);
+            assignToIfAny = taskAssignmentStrategy.getAssignTo(domainObject, serviceRegistry2).stream().findFirst().orElse(null);
         }
 
         return transitionType
@@ -561,7 +560,7 @@ public class StateTransitionService {
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-    >  IPartyRoleType nextTaskRoleAssignToFor(
+    > List<IPartyRoleType> nextTaskRoleAssignToFor(
             final DO domainObject,
             final Class<ST> stateTransitionClass) {
 
@@ -597,7 +596,7 @@ public class StateTransitionService {
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-    >  IPartyRoleType peekTaskRoleAssignToAfter(
+    > List<IPartyRoleType> peekTaskRoleAssignToAfter(
             final DO domainObject,
             final STT precedingTransitionType) {
 

@@ -55,7 +55,7 @@ public enum BankAccountVerificationStateTransitionType
                 if (bankAccount.getAtPath().startsWith("/ITA")) {
                     return null;
                 }
-                return PartyRoleTypeEnum.TREASURER;
+                return Collections.singletonList(PartyRoleTypeEnum.TREASURER);
             };
         }
     },

@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import org.assertj.core.util.Lists;
-
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Mixin;
@@ -14,6 +12,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.role.IPartyRoleType;
 
 /**
  * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case
@@ -38,7 +37,7 @@ public class IncomingInvoice_approve extends IncomingInvoice_triggerAbstract {
     )
     @ActionLayout(cssClassFa = "fa-thumbs-o-up")
     public Object act(
-            @Nullable final String roleToAssignNextTo,      // ECP-855: this field serves as a hint to the user to which role the next task will be assigned
+            @Nullable final IPartyRoleType roleToAssignNextTo,      // ECP-855: this field serves as a hint to the user to which role the next task will be assigned
             @Nullable final Person personToAssignNextTo,
             @Nullable final String comment,
             final boolean goToNext) {
@@ -64,16 +63,20 @@ public class IncomingInvoice_approve extends IncomingInvoice_triggerAbstract {
         return reasonGuardNotSatisified();
     }
 
-    public String default0Act() {
-        return enumPartyRoleTypeName().isEmpty() ? "no further tasks" : enumPartyRoleTypeName(); // ECP-855: since this can be the only approval
+    public IPartyRoleType default0Act() {
+        return choices0Act().stream().findFirst().orElse(null);
     }
 
-    public Person default1Act() {
-        return defaultPersonToAssignNextTo();
+    public List<? extends IPartyRoleType> choices0Act() {
+        return enumPartyRoleType();
     }
 
-    public List<Person> choices1Act() {
-        return enumPartyRoleTypeName().isEmpty() ? Lists.emptyList() : choicesPersonToAssignNextTo(); // ECP-855: since this can be the only approval
+    public Person default1Act(final IPartyRoleType roleType) {
+        return defaultPersonToAssignNextTo(roleType);
+    }
+
+    public List<Person> choices1Act(final IPartyRoleType roleType) {
+        return choicesPersonToAssignNextTo(roleType);
     }
 
 }

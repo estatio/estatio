@@ -2,6 +2,7 @@ package org.estatio.module.capex.dom.triggers;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -177,40 +178,39 @@ public abstract class DomainObject_triggerAbstract<
                 nextTaskDescriptionIfAny);
     }
 
-    protected Person defaultPersonToAssignNextTo() {
+    protected Person defaultPersonToAssignNextTo(final IPartyRoleType roleType) {
         if(requiredTransitionType == null) {
             return null;
         }
-        IPartyRoleType partyRoleType = peekPartyRoleType();
-        return partyRoleTypeService.onlyMemberOfElseNone(partyRoleType, domainObject);
+        return partyRoleTypeService.onlyMemberOfElseNone(roleType, domainObject);
     }
 
-    protected List<Person> choicesPersonToAssignNextTo() {
+    protected List<Person> choicesPersonToAssignNextTo(final IPartyRoleType roleType) {
         if(requiredTransitionType == null) {
             return Collections.emptyList();
         }
-        IPartyRoleType partyRoleType = peekPartyRoleType();
-        return partyRoleTypeService.membersOf(partyRoleType);
+        return partyRoleTypeService.membersOf(roleType);
     }
 
-    private <T extends Enum<T> & IPartyRoleType> T peekPartyRoleType() {
+    private <T extends Enum<T> & IPartyRoleType> List<T> peekPartyRoleType() {
         if(requiredTransitionType == null) {
             return null;
         }
-        IPartyRoleType iPartyRoleType = stateTransitionService
+        List<IPartyRoleType> iPartyRoleTypes = stateTransitionService
                 .peekTaskRoleAssignToAfter(domainObject, requiredTransitionType);
-        return iPartyRoleType != null && Enum.class.isAssignableFrom(iPartyRoleType.getClass())
-                ? (T) iPartyRoleType
-                : null;
+        final List collect =
+                iPartyRoleTypes.stream()
+                        .filter(x -> Enum.class.isAssignableFrom(x.getClass()))
+                        .collect(Collectors.toList());
+        return collect;
     }
 
-    protected <T extends Enum<T> & IPartyRoleType> T enumPartyRoleType() {
+    protected <T extends Enum<T> & IPartyRoleType> List<T> enumPartyRoleType() {
         return peekPartyRoleType();
     }
 
-    protected String enumPartyRoleTypeName() {
-        final Enum roleType = enumPartyRoleType();
-        return roleType != null ? roleType.name() : "";
+    protected IPartyRoleType firstPartyRoleType() {
+        return enumPartyRoleType().stream().findFirst().orElse(null);
     }
 
     /**

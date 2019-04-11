@@ -19,6 +19,7 @@
 package org.estatio.module.party.dom.role;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -46,6 +47,10 @@ public class PartyRoleTypeRepository extends UdoDomainRepositoryAndFactory<Party
             return create(IPartyRoleType);
         }
         return partyRoleType;
+    }
+
+    public List<PartyRoleType> findOrCreate(final List<IPartyRoleType> IPartyRoleTypes) {
+        return IPartyRoleTypes.stream().map(this::findOrCreate).collect(Collectors.toList());
     }
 
     public List<PartyRoleType> listAll() {

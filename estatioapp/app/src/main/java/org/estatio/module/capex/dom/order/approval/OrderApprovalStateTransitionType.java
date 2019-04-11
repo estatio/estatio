@@ -60,11 +60,11 @@ public enum OrderApprovalStateTransitionType
                     OrderApprovalStateTransitionType,
                     OrderApprovalState>) (order, serviceRegistry2) -> {
 
-                if (isItalian(order)) return PartyRoleTypeEnum.ORDER_MANAGER;
+                if (isItalian(order)) return Collections.singletonList(PartyRoleTypeEnum.ORDER_MANAGER);
 
                 final boolean hasProperty = order.getProperty() != null;
                 if (hasProperty) {
-                    return PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER;
+                    return Collections.singletonList(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER);
                 }
                 if (order.getType()==null) return null;
                 switch (order.getType()) {
@@ -74,11 +74,11 @@ public enum OrderApprovalStateTransitionType
                     // this case should not be hit, because the upstream document categorisation process
                     // should have also set a property in this case, so the previous check would have been satisfied
                     // just adding this case in the switch stmt "for completeness"
-                    return PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER;
+                    return Collections.singletonList(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER);
                 case LOCAL_EXPENSES:
-                    return PartyRoleTypeEnum.OFFICE_ADMINISTRATOR;
+                    return Collections.singletonList(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
                 case CORPORATE_EXPENSES:
-                    return PartyRoleTypeEnum.CORPORATE_ADMINISTRATOR;
+                    return Collections.singletonList(PartyRoleTypeEnum.CORPORATE_ADMINISTRATOR);
                 }
                 // REVIEW: for other types, we haven't yet established a business process, so no task will be created
                 return null;

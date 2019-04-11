@@ -19,6 +19,7 @@ import org.estatio.module.capex.dom.payment.PaymentLine;
 import org.estatio.module.capex.dom.payment.PaymentLineRepository;
 import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.role.IPartyRoleType;
 
 /**
  * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case
@@ -44,7 +45,7 @@ public class IncomingInvoice_reject extends IncomingInvoice_triggerAbstract {
     )
     @ActionLayout(cssClassFa = "fa-thumbs-o-down", cssClass = "btn-warning")
     public Object act(
-            final String role,
+            final IPartyRoleType role,
             @Nullable final Person personToAssignNextTo,
             final String reason) {
 
@@ -86,16 +87,20 @@ public class IncomingInvoice_reject extends IncomingInvoice_triggerAbstract {
         return reasonGuardNotSatisified();
     }
 
-    public String default0Act() {
-        return enumPartyRoleTypeName();
+    public IPartyRoleType default0Act() {
+        return choices0Act().stream().findFirst().orElse(null);
     }
 
-    public Person default1Act() {
-        return defaultPersonToAssignNextTo();
+    public List<? extends IPartyRoleType> choices0Act() {
+        return enumPartyRoleType();
     }
 
-    public List<Person> choices1Act() {
-        return choicesPersonToAssignNextTo();
+    public Person default1Act(final IPartyRoleType roleType) {
+        return defaultPersonToAssignNextTo(roleType);
+    }
+
+    public List<Person> choices1Act(final IPartyRoleType roleType) {
+        return choicesPersonToAssignNextTo(roleType);
     }
 
     @Inject

@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.role.IPartyRoleType;
 
 /**
  * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case
@@ -36,7 +37,7 @@ public class IncomingInvoice_advise extends IncomingInvoice_triggerAbstract {
     )
     @ActionLayout(cssClassFa = "fa-check-circle")
     public Object act(
-            @Nullable final String roleToAssignNextTo,      // ECP-855: this field serves as a hint to the user to which role the next task will be assigned
+            @Nullable final IPartyRoleType roleToAssignNextTo,      // ECP-855: this field serves as a hint to the user to which role the next task will be assigned
             final Person personToAssignNextTo,  // should always be directed towards a person
             @Nullable final String comment,
             final boolean goToNext) {
@@ -53,6 +54,13 @@ public class IncomingInvoice_advise extends IncomingInvoice_triggerAbstract {
         return incomingInvoice;
     }
 
+    public IPartyRoleType default0Act() {
+        return choices0Act().stream().findFirst().orElse(null);
+    }
+
+    public List<? extends IPartyRoleType> choices0Act() {
+        return enumPartyRoleType();
+    }
 
     public boolean hideAct() {
         return cannotTransition();
@@ -62,16 +70,12 @@ public class IncomingInvoice_advise extends IncomingInvoice_triggerAbstract {
         return reasonGuardNotSatisified();
     }
 
-    public String default0Act() {
-        return enumPartyRoleTypeName();
+    public Person default1Act(final IPartyRoleType roleType) {
+        return defaultPersonToAssignNextTo(roleType);
     }
 
-    public Person default1Act() {
-        return defaultPersonToAssignNextTo();
-    }
-
-    public List<Person> choices1Act() {
-        return choicesPersonToAssignNextTo();
+    public List<Person> choices1Act(final IPartyRoleType roleType) {
+        return choicesPersonToAssignNextTo(roleType);
     }
 
 }

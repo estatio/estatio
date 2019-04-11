@@ -1,5 +1,6 @@
 package org.estatio.module.party.dom.role;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -48,6 +49,15 @@ public class PartyRoleTypeService {
     public Person onlyMemberOfElseNone(final IPartyRoleType partyRoleType, final Object domainObject) {
         final List<Person> persons = membersOf(partyRoleType, domainObject);
         return persons != null && persons.size() == 1 ? persons.get(0) : null;
+    }
+
+    @Programmatic
+    public Person onlyMemberOfElseNone(final List<IPartyRoleType> partyRoleTypes, final Object domainObject) {
+         List<Person> x = new ArrayList<>();
+         partyRoleTypes.forEach(r->{
+             x.addAll(membersOf(r, domainObject));
+         });
+         return x.size() == 1 ? x.get(0) : null;
     }
 
     @Programmatic

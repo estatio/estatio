@@ -149,14 +149,14 @@ public enum IncomingInvoiceApprovalStateTransitionType
                              incomingInvoice.getBuyer().getReference().equals("IT01")         )  ||
                             incomingInvoice.getBuyer().getReference().equals("IT04")               ) // or everything for IT04
                         ) {
-                        return FixedAssetRoleTypeEnum.PROPERTY_INV_MANAGER;
+                        return Collections.singletonList(FixedAssetRoleTypeEnum.PROPERTY_INV_MANAGER);
                     }
-                    return PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER;
+                    return Collections.singletonList(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER);
                 }
 
                 final boolean hasProperty = incomingInvoice.getProperty() != null;
                 if (hasProperty) {
-                    return PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER;
+                    return Collections.singletonList(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER);
                 }
                 // guard since EST-1508 type can be not set
                 if (incomingInvoice.getType()==null) return null;
@@ -167,11 +167,11 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     // this case should not be hit, because the upstream document categorisation process
                     // should have also set a property in this case, so the previous check would have been satisfied
                     // just adding this case in the switch stmt "for completeness"
-                    return PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER;
+                    return Collections.singletonList(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER);
                 case LOCAL_EXPENSES:
-                    return PartyRoleTypeEnum.OFFICE_ADMINISTRATOR;
+                    return Collections.singletonList(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
                 case CORPORATE_EXPENSES:
-                    return PartyRoleTypeEnum.CORPORATE_ADMINISTRATOR;
+                    return Collections.singletonList(PartyRoleTypeEnum.CORPORATE_ADMINISTRATOR);
                 }
                 // REVIEW: for other types, we haven't yet established a business process, so no task will be created
                 return null;
@@ -220,21 +220,22 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalStateTransitionType,
                     IncomingInvoiceApprovalState>) (incomingInvoice, serviceRegistry2) -> {
                 if (incomingInvoice.getBuyer() != null && hasPreferredManagerAndDirector(incomingInvoice.getBuyer())) {
-                    return PartyRoleTypeEnum.PREFERRED_MANAGER;
+                    return Collections.singletonList(PartyRoleTypeEnum.PREFERRED_MANAGER);
                 }
-                if (isItalian(incomingInvoice) && incomingInvoice.getProperty()==null) return PartyRoleTypeEnum.CORPORATE_MANAGER;
+                if (isItalian(incomingInvoice) && incomingInvoice.getProperty()==null) return Collections.singletonList(PartyRoleTypeEnum.CORPORATE_MANAGER);
                 // guard since EST-1508 type can be not set
                 if (incomingInvoice.getType()==null) return null;
 
                 switch (incomingInvoice.getType()) {
                 case CAPEX:
-                    if (isItalian(incomingInvoice)) return FixedAssetRoleTypeEnum.ASSET_MANAGER;
-                    return ProjectRoleTypeEnum.PROJECT_MANAGER;
+                    if (isItalian(incomingInvoice)) return Arrays.asList(FixedAssetRoleTypeEnum.ASSET_MANAGER, FixedAssetRoleTypeEnum.TECHNICIAN);
+                    return Collections.singletonList(ProjectRoleTypeEnum.PROJECT_MANAGER);
                 case PROPERTY_EXPENSES:
                 case SERVICE_CHARGES:
+                    return Collections.singletonList(FixedAssetRoleTypeEnum.ASSET_MANAGER);
                 case ITA_MANAGEMENT_COSTS:
                 case ITA_RECOVERABLE:
-                    return FixedAssetRoleTypeEnum.ASSET_MANAGER;
+                    return Arrays.asList(FixedAssetRoleTypeEnum.ASSET_MANAGER);
                 }
                 return null;
             };
@@ -377,14 +378,14 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalState>) (incomingInvoice, serviceRegistry2) -> {
 
                 if (incomingInvoice.getBuyer() != null && hasPreferredManagerAndDirector(incomingInvoice.getBuyer())) {
-                    return PartyRoleTypeEnum.PREFERRED_DIRECTOR;
+                    return Collections.singletonList(PartyRoleTypeEnum.PREFERRED_DIRECTOR);
                 }
 
                 // guard since EST-1508 type can be not set
                 if (incomingInvoice.getType()==null) return null;
                 // for an recoverable (ita) invoice of a property that has a center manager, take the invoice approval director (of that property)
-                if (incomingInvoice.getProperty()!=null && incomingInvoice.getType() == IncomingInvoiceType.ITA_RECOVERABLE && hasCenterManager(incomingInvoice.getProperty())) return FixedAssetRoleTypeEnum.INV_APPROVAL_DIRECTOR;
-                return PartyRoleTypeEnum.COUNTRY_DIRECTOR;
+                if (incomingInvoice.getProperty()!=null && incomingInvoice.getType() == IncomingInvoiceType.ITA_RECOVERABLE && hasCenterManager(incomingInvoice.getProperty())) return Collections.singletonList(FixedAssetRoleTypeEnum.INV_APPROVAL_DIRECTOR);
+                return Collections.singletonList(PartyRoleTypeEnum.COUNTRY_DIRECTOR);
             };
         }
         @Override

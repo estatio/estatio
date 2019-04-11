@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.role.IPartyRoleType;
 
 /**
  * This cannot be inlined (needs to be a mixin) because BankAccount does not know abouts its verification state machine
@@ -34,7 +35,7 @@ public class BankAccount_rejectProof extends BankAccount_triggerAbstract {
     )
     @MemberOrder(sequence = "9")
     public BankAccount act(
-            final String role,
+            final IPartyRoleType role,
             @Nullable final Person personToAssignNextTo,
             final String reason) {
         trigger(personToAssignNextTo, reason, reason);
@@ -49,16 +50,20 @@ public class BankAccount_rejectProof extends BankAccount_triggerAbstract {
         return reasonGuardNotSatisified();
     }
 
-    public String default0Act() {
-        return enumPartyRoleTypeName();
+    public IPartyRoleType default0Act() {
+        return choices0Act().stream().findFirst().orElse(null);
     }
 
-    public Person default1Act() {
-        return defaultPersonToAssignNextTo();
+    public List<? extends IPartyRoleType> choices0Act() {
+        return enumPartyRoleType();
     }
 
-    public List<Person> choices1Act() {
-        return choicesPersonToAssignNextTo();
+    public Person default1Act(final IPartyRoleType roleType) {
+        return defaultPersonToAssignNextTo(roleType);
+    }
+
+    public List<Person> choices1Act(final IPartyRoleType roleType) {
+        return choicesPersonToAssignNextTo(roleType);
     }
 
 
