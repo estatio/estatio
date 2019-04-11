@@ -20,9 +20,9 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
+import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
 
@@ -33,12 +33,12 @@ import lombok.Setter;
 public class TurnoverEntryRequest {
 
     public TurnoverEntryRequest(
-            final Occupancy occupancy,
+            final TurnoverReportingConfig config,
             final LocalDate date,
             final Type type,
             final Frequency frequency
     ){
-        this.occupancy = occupancy;
+        this.config = config;
         this.date = date;
         this.type = type;
         this.frequency = frequency;
@@ -46,14 +46,14 @@ public class TurnoverEntryRequest {
 
     @Getter @Setter
     @Property(hidden = Where.EVERYWHERE)
-    private Occupancy occupancy;
+    private TurnoverReportingConfig config;
 
     public Lease getlease(){
-        return getOccupancy().getLease();
+        return getConfig().getOccupancy().getLease();
     }
 
     public Unit getUnit(){
-        return getOccupancy().getUnit();
+        return getConfig().getOccupancy().getUnit();
     }
 
     @Getter @Setter
@@ -84,7 +84,7 @@ public class TurnoverEntryRequest {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<Turnover> getPreviousTurnoverEntries(){
-        return turnoverRepository.findByOccupancyAndTypeAndFrequencyBeforeDate(getOccupancy(), getType(), getFrequency(), getDate());
+        return turnoverRepository.findByOccupancyAndTypeAndFrequencyBeforeDate(getConfig().getOccupancy(), getType(), getFrequency(), getDate());
     }
 
     @Inject
