@@ -1,4 +1,4 @@
-package org.estatio.module.capex.subscriptions;
+package org.estatio.module.coda.subscribers;
 
 import java.util.List;
 import java.util.Objects;

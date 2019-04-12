@@ -22,6 +22,7 @@ import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.fixtures.enums.Country_enum;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
@@ -143,7 +144,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         try {
             queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
             sudoService.sudo(Person_enum.BrunoTreasurerFr.getRef().toLowerCase(), (Runnable) () ->
-                    wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
+                    wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.findUsing(partyRoleTypeRepository), null, null));
         } catch (DisabledException e){
             error = e;
         }
@@ -172,7 +173,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         try {
             queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
             sudoService.sudo(Person_enum.BrunoTreasurerFr.getRef().toLowerCase(), (Runnable) () ->
-                    wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
+                    wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository), null, null));
         } catch (DisabledException e){
             error = e;
         }
@@ -197,10 +198,10 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         sudoService.sudo(Person_enum.BertrandIncomingInvoiceManagerFr.getRef().toLowerCase(), (Runnable) () ->
                 wrap(incomingInvoice).changePaymentMethod(PaymentMethod.CREDIT_CARD));
         sudoService.sudo(Person_enum.BertrandIncomingInvoiceManagerFr.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository), null, null));
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.PeterPanProjectManagerFr.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act("COUNTRY_DIRECTOR", null, null, false));
+                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act(null, null, null, false));
         List<Task> tasksForTreasury = taskRepository.findIncompleteByRole(typeForTreasurer);
         assertThat(tasksForTreasury).isEmpty();
 
@@ -250,10 +251,10 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         sudoService.sudo(Person_enum.BertrandIncomingInvoiceManagerFr.getRef().toLowerCase(), (Runnable) () ->
                 wrap(incomingInvoice).changePaymentMethod(PaymentMethod.REFUND_BY_SUPPLIER));
         sudoService.sudo(Person_enum.BertrandIncomingInvoiceManagerFr.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository), null, null));
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.PeterPanProjectManagerFr.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act("COUNTRY_DIRECTOR", null, null, false));
+                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act(null, null, null, false));
         List<Task> tasksForTreasury = taskRepository.findIncompleteByRole(typeForTreasurer);
         assertThat(tasksForTreasury).isEmpty();
 
@@ -301,19 +302,19 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
 
         // when
         sudoService.sudo(Person_enum.BertrandIncomingInvoiceManagerFr.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository), null, null));
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.PeterPanProjectManagerFr.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act("PROJECT_MANAGER", null, null, false));
+                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act(ProjectRoleTypeEnum.PROJECT_MANAGER.findUsing(partyRoleTypeRepository), null, null, false));
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.GabrielCountryDirectorFr.getRef().toLowerCase(), (Runnable) () ->
                 wrap(mixin(IncomingInvoice_approveAsCountryDirector.class, incomingInvoice)).act( null, false));
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.BrunoTreasurerFr.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_reject.class, incomingInvoice)).act("TREASURER",null, "No good"));
+                wrap(mixin(IncomingInvoice_reject.class, incomingInvoice)).act(PartyRoleTypeEnum.TREASURER.findUsing(partyRoleTypeRepository),null, "No good"));
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.BertrandIncomingInvoiceManagerFr.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository), null, null));
 
         // then
         List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
@@ -367,10 +368,10 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         sudoService.sudo(Person_enum.BertrandIncomingInvoiceManagerFr.getRef().toLowerCase(), (Runnable) () ->
                 wrap(incomingInvoice).changePaymentMethod(PaymentMethod.CREDIT_CARD));
         sudoService.sudo(Person_enum.BertrandIncomingInvoiceManagerFr.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository), null, null));
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.PeterPanProjectManagerFr.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act("COUNTRY_DIRECTOR", null, null, false));
+                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act(null, null, null, false));
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.GabrielCountryDirectorFr.getRef().toLowerCase(), (Runnable) () ->
                 wrap(mixin(IncomingInvoice_approveAsCountryDirector.class, incomingInvoice)).act(null, false));
@@ -379,7 +380,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         // when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.BrunoTreasurerFr.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_reject.class, incomingInvoice)).act( "SOME_ROLE_WHY?", null, "test"));
+                wrap(mixin(IncomingInvoice_reject.class, incomingInvoice)).act( null, null, "test"));
 
         // then
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.NEW);

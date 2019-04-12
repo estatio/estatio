@@ -45,6 +45,7 @@ public class IncomingInvoice_reject extends IncomingInvoice_triggerAbstract {
     )
     @ActionLayout(cssClassFa = "fa-thumbs-o-down", cssClass = "btn-warning")
     public Object act(
+            @Nullable
             final IPartyRoleType role,
             @Nullable final Person personToAssignNextTo,
             final String reason) {

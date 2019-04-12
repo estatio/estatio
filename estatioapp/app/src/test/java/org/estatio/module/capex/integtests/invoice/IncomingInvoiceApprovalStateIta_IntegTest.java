@@ -180,7 +180,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         // when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("INCOMING_INVOICE_MANAGER", null, null));
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.findOrCreateUsing(partyRoleTypeRepository), null, null));
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
         assertThat(incomingInvoice.getGrossAmount()).isEqualTo(new BigDecimal("100000.00"));
 
@@ -198,7 +198,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         // and when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.FlorisAssetManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act("SOME_ROLE", null, null, false));
+                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act(null, null, null, false));
 
         // then
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK);
@@ -300,10 +300,10 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         // when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("INCOMING_INVOICE_MANAGER", null, null));
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.findUsing(partyRoleTypeRepository), null, null));
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.FlorisAssetManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act("SOME_ROLE", null, null, false));
+                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act(null, null, null, false));
 
         // then
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PAYABLE);
@@ -321,13 +321,13 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         item.addAmounts(new BigDecimal("0.01"), BigDecimal.ZERO, new BigDecimal("0.01"));
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("INCOMING_INVOICE_MANAGER", null, null));
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.findUsing(partyRoleTypeRepository), null, null));
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
 
         // when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.FlorisAssetManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act("SOME_ROLE", null, null, false));
+                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act(null, null, null, false));
 
         // then
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED);
@@ -429,7 +429,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         // and when completed
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.LoredanaPropertyInvoiceMgrIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_complete.class, recoverableInvoice)).act("SOME_ROLE", null, null));
+                wrap(mixin(IncomingInvoice_complete.class, recoverableInvoice)).act(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.findUsing(partyRoleTypeRepository), null, null));
         assertThat(recoverableInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
         assertThat(recoverableInvoice.getGrossAmount()).isEqualTo(new BigDecimal("100000.00"));
         transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(recoverableInvoice);
@@ -540,7 +540,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.LoredanaPropertyInvoiceMgrIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_complete.class, recoverableInvoice)).act("SOME_ROLE", null, null));
+                wrap(mixin(IncomingInvoice_complete.class, recoverableInvoice)).act(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.findUsing(partyRoleTypeRepository), null, null));
         assertThat(recoverableInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
 
         // when
@@ -643,7 +643,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         // when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("INCOMING_INVOICE_MANAGER", null, null));
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.findUsing(partyRoleTypeRepository), null, null));
 
         // then
         List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
@@ -667,7 +667,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         // and when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.FabrizioPreferredManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act("SOME_ROLE_WHY??", null, null, true));
+                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act(null, null, null, true));
 
         // then
         transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
@@ -755,7 +755,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         // when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("INCOMING_INVOICE_MANAGER", null, null));
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.findUsing(partyRoleTypeRepository), null, null));
 
         // then
         List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
@@ -780,7 +780,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         // when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("INCOMING_INVOICE_MANAGER", null, null));
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.findUsing(partyRoleTypeRepository), null, null));
 
         // then
         List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
@@ -821,7 +821,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         // and when rejected
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_reject.class, invoiceForDirectDebit)).act("INCOMING_INVOICE_MANAGER", null, "No good; but rejection is of no use since has payment method that does not require approval"));
+                wrap(mixin(IncomingInvoice_reject.class, invoiceForDirectDebit)).act(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.findUsing(partyRoleTypeRepository), null, "No good; but rejection is of no use since has payment method that does not require approval"));
 
         // then will end up in pending coda books check again
         transitionsOfDirectDebitInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceForDirectDebit);
@@ -872,7 +872,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         // given
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("INCOMING_INVOICE_MANAGER", null, null));
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.findUsing(partyRoleTypeRepository), null, null));
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
 
         transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
@@ -888,7 +888,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         // when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.FlorisAssetManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_advise.class, incomingInvoice)).act("ADVISOR", Person_enum.TechnizioAdvisorIt.findUsing(serviceRegistry2), "Please advise me. Is this correct?", true));
+                wrap(mixin(IncomingInvoice_advise.class, incomingInvoice)).act(null, Person_enum.TechnizioAdvisorIt.findUsing(serviceRegistry2), "Please advise me. Is this correct?", true));
 
         // then
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PENDING_ADVISE);
@@ -921,7 +921,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         // and when advise is positive
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.TechnizioAdvisorIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_adviseToApprove.class, incomingInvoice)).act("SOME_ROLE", null, "Looks good to me", true));
+                wrap(mixin(IncomingInvoice_adviseToApprove.class, incomingInvoice)).act(null, null, "Looks good to me", true));
 
         // then
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
@@ -976,18 +976,18 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice;
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("INCOMING_INVOICE_MANAGER", null, null));
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.findUsing(partyRoleTypeRepository), null, null));
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.FlorisAssetManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_advise.class, incomingInvoice)).act("ADVISOR", Person_enum.TechnizioAdvisorIt.findUsing(serviceRegistry2), "Please advise me. Is this correct?", true));
+                wrap(mixin(IncomingInvoice_advise.class, incomingInvoice)).act(null, Person_enum.TechnizioAdvisorIt.findUsing(serviceRegistry2), "Please advise me. Is this correct?", true));
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PENDING_ADVISE);
 
         // when no advise
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.TechnizioAdvisorIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_noAdvise.class, incomingInvoice)).act("ADVISOR", null, "Sorry, not my cup of tea", true));
+                wrap(mixin(IncomingInvoice_noAdvise.class, incomingInvoice)).act(null, null, "Sorry, not my cup of tea", true));
         transactionService.nextTransaction();
 
         // then
@@ -1032,18 +1032,18 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice;
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("INCOMING_INVOICE_MANAGER", null, null));
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.findUsing(partyRoleTypeRepository), null, null));
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.FlorisAssetManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_advise.class, incomingInvoice)).act("ADVISOR", Person_enum.TechnizioAdvisorIt.findUsing(serviceRegistry2), "Please advise me. Is this correct?", true));
+                wrap(mixin(IncomingInvoice_advise.class, incomingInvoice)).act(null, Person_enum.TechnizioAdvisorIt.findUsing(serviceRegistry2), "Please advise me. Is this correct?", true));
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PENDING_ADVISE);
 
         // when rejected by advisor
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.TechnizioAdvisorIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_reject.class, incomingInvoice)).act("ADVISOR", null, "Sorry, but this is not good at all"));
+                wrap(mixin(IncomingInvoice_reject.class, incomingInvoice)).act(null, null, "Sorry, but this is not good at all"));
         transactionService.nextTransaction();
 
         // then
@@ -1098,7 +1098,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("INCOMING_INVOICE_MANAGER", null, null));
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.findUsing(partyRoleTypeRepository), null, null));
 
         // then
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
@@ -1141,7 +1141,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         // and when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("INCOMING_INVOICE_MANAGER", null, "Time to pay now"));
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.findUsing(partyRoleTypeRepository), null, "Time to pay now"));
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
         transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
         assertThat(transitionsOfInvoice).hasSize(4);

@@ -35,6 +35,7 @@ public class BankAccount_rejectProof extends BankAccount_triggerAbstract {
     )
     @MemberOrder(sequence = "9")
     public BankAccount act(
+            @Nullable
             final IPartyRoleType role,
             @Nullable final Person personToAssignNextTo,
             final String reason) {

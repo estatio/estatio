@@ -17,6 +17,7 @@ import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.fixtures.enums.Country_enum;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
@@ -117,12 +118,12 @@ public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTest
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(personBertrandIncomingInvoiceManager.getUsername(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository), null, null));
 
         // when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(personBrunoTreasurer.getUsername(), (Runnable) () ->
-                wrap(mixin(BankAccount_rejectProof.class, bankAccount)).act("PROPERTY_MANAGER", null, "NO GOOD"));
+                wrap(mixin(BankAccount_rejectProof.class, bankAccount)).act(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository), null, "NO GOOD"));
 
         // then
         assertBankAccountState(bankAccount, BankAccountVerificationState.AWAITING_PROOF);
@@ -146,7 +147,7 @@ public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTest
         // and when 'resurrecting'
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(personBertrandIncomingInvoiceManager.getUsername(), (Runnable) () ->
-                wrap(mixin(BankAccount_proofUpdated.class, bankAccount)).act("TREASURER", null, null));
+                wrap(mixin(BankAccount_proofUpdated.class, bankAccount)).act(PartyRoleTypeEnum.TREASURER.findUsing(partyRoleTypeRepository), null, null));
 
         // then
         assertBankAccountState(bankAccount, BankAccountVerificationState.NOT_VERIFIED);

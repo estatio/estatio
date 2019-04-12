@@ -8,8 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.estatio.module.party.dom.Person;
-import org.estatio.module.party.dom.role.IPartyRoleType;
-import org.estatio.module.party.dom.role.PartyRoleTypeService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -44,7 +42,7 @@ public class PartyRoleTypeService_Test {
         members.add(person2);
 
         // when
-        final Person person = partyRoleTypeService.onlyMemberOfElseNone(null, null);
+        final Person person = partyRoleTypeService.onlyMemberOfElseNone((IPartyRoleType) null, null);
 
         // when
         assertThat(person).isNull();
@@ -56,7 +54,7 @@ public class PartyRoleTypeService_Test {
         members.add(person2);
 
         // when
-        final Person person = partyRoleTypeService.onlyMemberOfElseNone(null, null);
+        final Person person = partyRoleTypeService.onlyMemberOfElseNone((IPartyRoleType) null, null);
 
         // when
         assertThat(person).isSameAs(person2);
