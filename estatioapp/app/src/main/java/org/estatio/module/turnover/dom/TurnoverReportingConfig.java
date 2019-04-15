@@ -46,6 +46,11 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.module.turnover.dom.TurnoverReportingConfig "
                         + "WHERE startDate <= :date"),
+        @javax.jdo.annotations.Query(
+                name = "findByReporter", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.turnover.dom.TurnoverReportingConfig "
+                        + "WHERE reporter == :reporter "),
 })
 @DomainObject(
         editing = Editing.DISABLED,
