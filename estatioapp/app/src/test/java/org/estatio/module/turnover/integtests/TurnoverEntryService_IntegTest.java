@@ -27,10 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.estatio.module.lease.dom.occupancy.Occupancy;
-import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Status;
 import org.estatio.module.turnover.dom.Turnover;
@@ -88,8 +85,6 @@ public class TurnoverEntryService_IntegTest extends TurnoverModuleIntegTestAbstr
         assertThat(turnovers).hasSize(3);
         assertThat(turnovers.get(2).getType()).isEqualTo(Type.AUDITED);
         assertThat(turnovers.get(2).getFrequency()).isEqualTo(Frequency.YEARLY);
-        Occupancy occupancy = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2).getOccupancies().first();
-        assertThat(turnoverRepository.findByOccupancyAndTypeAndFrequencyBeforeDate(occupancy, Type.PRELIMINARY,Frequency.MONTHLY,start2015)).hasSize(1);
     }
 
     @Inject TurnoverReportingConfigRepository turnoverReportingConfigRepository;
@@ -98,6 +93,4 @@ public class TurnoverEntryService_IntegTest extends TurnoverModuleIntegTestAbstr
 
     @Inject TurnoverRepository turnoverRepository;
 
-    @Inject ServiceRegistry2 serviceRegistry2;
-    
 }

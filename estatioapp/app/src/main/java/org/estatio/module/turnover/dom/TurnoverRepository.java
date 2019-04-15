@@ -138,14 +138,15 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
                         "type", type));
     }
 
-    public List<Turnover> findByOccupancyAndTypeAndFrequencyBeforeDate(final Occupancy occupancy, final Type type, final Frequency frequency, final LocalDate turnoverDate) {
+    public List<Turnover> findApprovedByOccupancyAndTypeAndFrequencyBeforeDate(final Occupancy occupancy, final Type type, final Frequency frequency, final LocalDate turnoverDate) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         Turnover.class,
-                        "findByOccupancyAndTypeAndFrequencyBeforeDate",
+                        "findByOccupancyAndTypeAndFrequencyAndStatusBeforeDate",
                         "occupancy", occupancy,
                         "type", type,
                         "frequency", frequency,
+                        "status", Status.APPROVED,
                         "threshold", turnoverDate)); //NOTE: we changed the parameter name to be different from the property name because of a bug in Datanucleus ... (otherwise the order by close in the produced query holds the hardcoded value of the variable).
     }
 
@@ -155,6 +156,16 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
                         Turnover.class,
                         "findByOccupancy",
                         "occupancy", occupancy));
+    }
+
+    public List<Turnover> findByOccupancyAndTypeWithStatusNew(final Occupancy occupancy, final Type type) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Turnover.class,
+                        "findByOccupancyAndTypeAndStatus",
+                        "occupancy", occupancy,
+                        "type", type,
+                        "status", Status.NEW));
     }
 
     public List<Turnover> listAll() {

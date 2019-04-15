@@ -32,6 +32,8 @@ import lombok.Setter;
 @DomainObject(nature = Nature.VIEW_MODEL, objectType = "org.estatio.module.turnover.dom.entry.TurnoverEntryRequest")
 public class TurnoverEntryRequest {
 
+    public TurnoverEntryRequest(){}
+
     public TurnoverEntryRequest(
             final TurnoverReportingConfig config,
             final LocalDate date,
@@ -84,7 +86,7 @@ public class TurnoverEntryRequest {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<Turnover> getPreviousTurnoverEntries(){
-        return turnoverRepository.findByOccupancyAndTypeAndFrequencyBeforeDate(getConfig().getOccupancy(), getType(), getFrequency(), getDate());
+        return turnoverRepository.findApprovedByOccupancyAndTypeAndFrequencyBeforeDate(getConfig().getOccupancy(), getType(), getFrequency(), getDate());
     }
 
     @Inject
