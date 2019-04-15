@@ -47,6 +47,7 @@ import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTes
 
 import org.estatio.module.agreement.dom.type.AgreementType;
 import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.tax.dom.Tax;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -268,6 +269,50 @@ public class LeaseItem_Test {
             li.setType(type);
             li.setSequence(sequence != null ? BigInteger.valueOf(sequence.longValue()) : null);
             return li;
+        }
+
+    }
+
+    public static class OtherTests extends LeaseItem_Test {
+
+        @Test
+        public void is_invoiced_upon_works_when_no_terms_with_invoice_items() {
+
+            // given
+            LeaseTermForTesting term1 = new LeaseTermForTesting();
+            term1.setSequence(BigInteger.ONE);
+            LeaseTermForTesting term2 = new LeaseTermForTesting();
+            term2.setSequence(BigInteger.valueOf(2));
+
+            LeaseItem item = new LeaseItem();
+            item.getTerms().add(term1);
+            item.getTerms().add(term2);
+
+            // when, then
+            assertThat(item.getTerms()).hasSize(2);
+            assertThat(item.isInvoicedUpon()).isFalse();
+
+        }
+
+        @Test
+        public void is_invoiced_upon_works_when_having_term_with_invoice_items() {
+
+            // given
+            LeaseTermForTesting term1 = new LeaseTermForTesting();
+            term1.setSequence(BigInteger.ONE);
+            LeaseTermForTesting term2 = new LeaseTermForTesting();
+            InvoiceItemForLease invoiceItem = new InvoiceItemForLease();
+            term2.setSequence(BigInteger.valueOf(2));
+            term2.getInvoiceItems().add(invoiceItem);
+
+            LeaseItem item = new LeaseItem();
+            item.getTerms().add(term1);
+            item.getTerms().add(term2);
+
+            // when, then
+            assertThat(item.getTerms()).hasSize(2);
+            assertThat(item.isInvoicedUpon()).isTrue();
+
         }
 
     }

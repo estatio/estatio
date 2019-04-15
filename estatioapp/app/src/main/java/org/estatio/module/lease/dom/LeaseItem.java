@@ -271,11 +271,15 @@ public class LeaseItem
         return this;
     }
 
+    public String disableRemove(){
+        return isInvoicedUpon() ? "This item has been invoiced" : null;
+    }
+
     @Programmatic
     public boolean doRemove() {
-        boolean canDelete = true;
-        if (!getTerms().isEmpty()) {
-            canDelete = getTerms().first().doRemove();
+        boolean canDelete = !isInvoicedUpon();
+        if (canDelete && !getTerms().isEmpty()) {
+            getTerms().first().doRemove();
         }
         if (canDelete) {
             final Sets.SetView<LeaseItemSource> itemSources = Sets.union(
@@ -290,6 +294,11 @@ public class LeaseItem
             getContainer().flush();
         }
         return canDelete;
+    }
+
+    boolean isInvoicedUpon() {
+        LeaseTerm termWithInvoiceItems = new ArrayList<>(this.getTerms()).stream().filter(t->!t.getInvoiceItems().isEmpty()).findFirst().orElse(null);
+        return termWithInvoiceItems != null;
     }
 
     // //////////////////////////////////////
