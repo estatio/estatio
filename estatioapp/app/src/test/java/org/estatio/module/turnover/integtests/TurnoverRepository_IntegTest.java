@@ -147,10 +147,10 @@ public class TurnoverRepository_IntegTest extends TurnoverModuleIntegTestAbstrac
         final LocalDateTime reportedAt = new LocalDateTime(2019, 1, 1, 12, 0);
 
         // when
-        Turnover turnover1 = turnoverRepository.createEmpty(occupancy, turnoverDate, Type.PRELIMINARY, Frequency.MONTHLY, euro);
+        Turnover turnover1 = turnoverRepository.create(occupancy, turnoverDate, Type.PRELIMINARY, Frequency.MONTHLY, Status.APPROVED, reportedAt, "someone", euro, null, null, null, null, false);
         Turnover turnover2 = turnoverRepository.create(occupancy, turnoverDate.minusMonths(2), Type.PRELIMINARY, Frequency.MONTHLY, Status.APPROVED, reportedAt, "someone", euro, null, null, null, null, false);
         Turnover turnover3 = turnoverRepository.create(occupancy, turnoverDate.minusMonths(1), Type.PRELIMINARY, Frequency.MONTHLY, Status.APPROVED, reportedAt, "someone", euro, null, null, null, null, false);
-        List<Turnover> turnovers = turnoverRepository.findByOccupancyAndTypeAndFrequencyBeforeDate(occupancy, Type.PRELIMINARY, Frequency.MONTHLY, turnoverDate);
+        List<Turnover> turnovers = turnoverRepository.findApprovedByOccupancyAndTypeAndFrequencyBeforeDate(occupancy, Type.PRELIMINARY, Frequency.MONTHLY, turnoverDate);
 
         // then
         Assertions.assertThat(turnovers).hasSize(2);
@@ -158,7 +158,7 @@ public class TurnoverRepository_IntegTest extends TurnoverModuleIntegTestAbstrac
         Assertions.assertThat(turnovers.get(1)).isEqualTo(turnover2);
 
         // and when
-        turnovers = turnoverRepository.findByOccupancyAndTypeAndFrequencyBeforeDate(occupancy, Type.PRELIMINARY, Frequency.MONTHLY, turnoverDate.plusDays(1));
+        turnovers = turnoverRepository.findApprovedByOccupancyAndTypeAndFrequencyBeforeDate(occupancy, Type.PRELIMINARY, Frequency.MONTHLY, turnoverDate.plusDays(1));
 
         // then
         Assertions.assertThat(turnovers).hasSize(3);

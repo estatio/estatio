@@ -72,6 +72,7 @@ import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
 import org.estatio.module.party.fixtures.numerator.enums.NumeratorForOrganisation_enum;
 import org.estatio.module.party.fixtures.roles.enums.PartyRole_enum;
 import org.estatio.module.tax.EstatioTaxModule;
+import org.estatio.module.turnover.fixtures.data.TurnoverReportingConfig_enum;
 
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Global;
 
@@ -234,6 +235,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 InvoiceForLease_enum.KalPoison001Nl,
                 InvoiceForLease_enum.OxfMiracl005Gb);
 
+        ec.executeChildren(this,
+                TurnoverReportingConfig_enum.OxfTopModel001Gb);
 
         ec.executeChildren(this,
                 Budget_enum.OxfBudget2015,

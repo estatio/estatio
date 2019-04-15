@@ -37,6 +37,7 @@ import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
+import org.estatio.module.turnover.dom.entry.TurnoverEntryService;
 import org.estatio.module.turnover.imports.TurnoverImportManager;
 
 @DomainService(
@@ -48,6 +49,16 @@ import org.estatio.module.turnover.imports.TurnoverImportManager;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY)
 public class TurnoverMenu  {
 
+    @Action(restrictTo = RestrictTo.PROTOTYPING)
+    public void createEmptyTurnoversForPeriod(final LocalDate startDate, final LocalDate endDate){
+        if (!endDate.isBefore(startDate)){
+            LocalDate date = startDate;
+            while (!date.isAfter(endDate)){
+                turnoverEntryService.produceEmptyTurnoversFor(date);
+                date = date.plusDays(1);
+            }
+        }
+    }
 
     public TurnoverImportManager importTurnovers(
             final Property property,
@@ -71,6 +82,8 @@ public class TurnoverMenu  {
     }
 
     @Inject TurnoverRepository turnoverRepository;
+
+    @Inject TurnoverEntryService turnoverEntryService;
 
     @Inject ServiceRegistry2 serviceRegistry2;
 

@@ -2,7 +2,9 @@ package org.estatio.module.turnover.dom;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -11,13 +13,18 @@ import javax.jdo.annotations.VersionStrategy;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.MoneyType;
 import org.incode.module.base.dom.types.NotesType;
+import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.currency.dom.Currency;
@@ -49,18 +56,27 @@ import lombok.Setter;
                         + "&& date == :date "
                         + "&& type == :type"),
         @javax.jdo.annotations.Query(
-                name = "findByOccupancyAndTypeAndFrequencyBeforeDate", language = "JDOQL",
+                name = "findByOccupancyAndTypeAndFrequencyAndStatusBeforeDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.turnover.dom.Turnover "
                         + "WHERE occupancy == :occupancy "
                         + "&& type == :type "
                         + "&& frequency == :frequency "
+                        + "&& status == :status "
                         + "&& date < :threshold ORDER BY date DESC "),
         @javax.jdo.annotations.Query(
                 name = "findByOccupancy", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.turnover.dom.Turnover "
                         + "WHERE occupancy == :occupancy "
+                        + "ORDER BY date DESC "),
+        @javax.jdo.annotations.Query(
+                name = "findByOccupancyAndTypeAndStatus", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.turnover.dom.Turnover "
+                        + "WHERE occupancy == :occupancy "
+                        + "&& type == :type "
+                        + "&& status == :status "
                         + "ORDER BY date DESC "),
 })
 @DomainObject(
@@ -117,6 +133,14 @@ public class Turnover extends UdoDomainObject2<Turnover> {
         this.nonComparable = nonComparable;
     }
 
+    public String title() {
+       return TitleBuilder.start()
+               .withName(getDate())
+               .withName(getOccupancy().getUnit().getName())
+               .withName(getOccupancy().getLease().getReference())
+               .toString();
+    }
+
     @Getter @Setter
     @Column(name = "occupancyId", allowsNull = "false")
     private Occupancy occupancy;
@@ -169,9 +193,22 @@ public class Turnover extends UdoDomainObject2<Turnover> {
     @Column(allowsNull = "false")
     private boolean nonComparable;
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public List<Turnover> getPrevious(){
+        return turnoverRepository.findApprovedByOccupancyAndTypeAndFrequencyBeforeDate(getOccupancy(), getType(),getFrequency(), getDate());
+    }
+
+    @ActionLayout(contributed = Contributed.AS_ACTION)
+    public Turnover nextNew() {
+        return turnoverRepository.findByOccupancyAndTypeWithStatusNew(getOccupancy(), getType()).stream().filter(t->!t.equals(this)).findFirst().orElse(null);
+    }
+
     @Override
     public ApplicationTenancy getApplicationTenancy() {
         return getOccupancy().getApplicationTenancy();
     }
+
+    @Inject TurnoverRepository turnoverRepository;
 
 }
