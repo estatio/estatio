@@ -85,6 +85,14 @@ public class TurnoverReportingConfigRepository extends UdoDomainRepositoryAndFac
                         "date", date));
     }
 
+    public List<TurnoverReportingConfig> findByReporter(final Person reporter) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        TurnoverReportingConfig.class,
+                        "findByReporter",
+                        "reporter", reporter));
+    }
+
     public List<TurnoverReportingConfig> listAll() {
         return allInstances();
     }

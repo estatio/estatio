@@ -42,7 +42,7 @@ public enum TurnoverReportingConfig_enum
 
 
     OxfTopModel001Gb(
-            Lease_enum.OxfTopModel001Gb, null, ld(2014, 1, 2), Frequency.MONTHLY, Frequency.YEARLY, Currency_enum.EUR)
+            Lease_enum.OxfTopModel001Gb, Lease_enum.OxfTopModel001Gb.getManager_d(), ld(2014, 1, 2), Frequency.MONTHLY, Frequency.YEARLY, Currency_enum.EUR)
     ;
 
     private final Lease_enum lease_d;

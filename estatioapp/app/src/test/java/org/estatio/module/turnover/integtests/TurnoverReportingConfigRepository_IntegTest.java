@@ -20,7 +20,6 @@ package org.estatio.module.turnover.integtests;
 
 import javax.inject.Inject;
 
-import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,35 +31,75 @@ import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.fixtures.enums.Currency_enum;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.party.dom.Person;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
+import org.estatio.module.turnover.fixtures.data.TurnoverReportingConfig_enum;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TurnoverReportingConfigRepository_IntegTest extends TurnoverModuleIntegTestAbstract {
 
-    @Before
-    public void setupData() {
-        runFixtureScript(new FixtureScript() {
-            @Override
-            protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, Currency_enum.EUR.builder());
-                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
-            }
-        });
+    public static class FindOrCreate extends TurnoverReportingConfigRepository_IntegTest {
+
+        @Before
+        public void setupData() {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    executionContext.executeChild(this, Currency_enum.EUR.builder());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
+                }
+            });
+        }
+
+
+        @Test
+        public void find_or_create_works() throws Exception {
+
+            // given
+            final Occupancy occupancy = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2).getOccupancies().first();
+            final LocalDate startDate = new LocalDate(2019, 1, 1);
+            final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
+            // when
+            TurnoverReportingConfig config = turnoverReportingConfigRepository.findOrCreate(occupancy, null, startDate, Frequency.MONTHLY, Frequency.YEARLY, euro);
+            // then
+            assertThat(turnoverReportingConfigRepository.findOrCreate(occupancy, null, new LocalDate(2020, 12, 31), Frequency.DAILY, Frequency.DAILY, euro)).isSameAs(config);
+            assertThat(config.getPrelimFrequency()).isEqualTo(Frequency.MONTHLY);
+
+        }
+
     }
 
-    @Test
-    public void find_or_create_works() throws Exception {
+    public static class FindByReporter extends TurnoverReportingConfigRepository_IntegTest {
 
-        // given
-        final Occupancy occupancy = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2).getOccupancies().first();
-        final LocalDate startDate = new LocalDate(2019, 1, 1);
-        final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
-        // when
-        TurnoverReportingConfig config = turnoverReportingConfigRepository.findOrCreate(occupancy, null, startDate, Frequency.MONTHLY, Frequency.YEARLY, euro);
-        // then
-        Assertions.assertThat(turnoverReportingConfigRepository.findOrCreate(occupancy, null, new LocalDate(2020,12,31), Frequency.DAILY, Frequency.DAILY, euro)).isSameAs(config);
-        Assertions.assertThat(config.getPrelimFrequency()).isEqualTo(Frequency.MONTHLY);
+
+        @Before
+        public void setupData() {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfTopModel001Gb.builder());
+                }
+            });
+        }
+
+        @Test
+        public void find_by_reporter_works() throws Exception {
+
+            // given
+            assertThat(turnoverReportingConfigRepository.listAll()).hasSize(1);
+            final Person personGino = TurnoverReportingConfig_enum.OxfTopModel001Gb.getPerson_d().findUsing(serviceRegistry2);
+            assertThat(turnoverReportingConfigRepository.listAll().get(0).getReporter()).isEqualTo(personGino);
+
+            // when, then
+            assertThat(turnoverReportingConfigRepository.findByReporter(personGino)).hasSize(1);
+            assertThat(turnoverReportingConfigRepository.findByReporter(null)).isEmpty();
+
+
+        }
+
 
     }
 
