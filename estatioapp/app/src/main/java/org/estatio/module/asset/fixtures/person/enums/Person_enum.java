@@ -210,7 +210,7 @@ public enum Person_enum
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
 
-    GinoVannelliGb("GVANNELLI", "Gino", "Vannelli", "G", false, MALE, Gb, Gb,
+    GinoVannelliGb("GVANNELLI", "Gino", "Vannelli", "G", true, MALE, Gb, Gb,
             CONTACT, TopModelGb,
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
@@ -220,7 +220,7 @@ public enum Person_enum
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
 
-    JohnDoeNl("JDOE", "John", "Doe", "J", false, MALE, Nl, Nl,
+    JohnDoeNl("JDOE", "John", "Doe", "J", true, MALE, Nl, Nl,
             null, null,
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
