@@ -37,8 +37,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"reference"}, callSuper = false)
-@ToString(of={"reference"})
+@EqualsAndHashCode(of={"occupancy"}, callSuper = false)
+@ToString(of={"occupancy"})
 @Accessors(chain = true)
 public class TurnoverReportingConfigBuilder extends BuilderScriptAbstract<TurnoverReportingConfig, TurnoverReportingConfigBuilder> {
 
@@ -70,7 +70,7 @@ public class TurnoverReportingConfigBuilder extends BuilderScriptAbstract<Turnov
 
 
         final TurnoverReportingConfig config =
-                turnoverReportingConfigRepository.create(
+                turnoverReportingConfigRepository.findOrCreate(
                         occupancy,
                         reporter,
                         startDate,

@@ -33,6 +33,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.party.dom.Person;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverRepository;
@@ -74,6 +75,10 @@ public class TurnoverMenu  {
         manager.setDate(turnoverDate);
         manager.setLines(manager.getLines());
         return manager;
+    }
+
+    public List<Turnover> findTurnoverEntryRequestsFor(final Person reporter){
+        return turnoverEntryService.allNewForReporter(reporter);
     }
 
     @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.SAFE)

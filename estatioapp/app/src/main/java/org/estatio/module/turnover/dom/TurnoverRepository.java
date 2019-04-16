@@ -158,6 +158,15 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
                         "occupancy", occupancy));
     }
 
+    public List<Turnover> findByOccupancyWithStatusNew(final Occupancy occupancy) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Turnover.class,
+                        "findByOccupancyAndStatus",
+                        "occupancy", occupancy,
+                        "status", Status.NEW));
+    }
+
     public List<Turnover> findByOccupancyAndTypeWithStatusNew(final Occupancy occupancy, final Type type) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
@@ -165,6 +174,17 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
                         "findByOccupancyAndTypeAndStatus",
                         "occupancy", occupancy,
                         "type", type,
+                        "status", Status.NEW));
+    }
+
+    public List<Turnover> findByOccupancyAndTypeAndDateWithStatusNew(final Occupancy occupancy, final Type type, final LocalDate date) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Turnover.class,
+                        "findByOccupancyAndTypeAndDateAndStatus",
+                        "occupancy", occupancy,
+                        "type", type,
+                        "date", date,
                         "status", Status.NEW));
     }
 

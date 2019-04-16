@@ -29,6 +29,8 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
+import org.estatio.module.party.dom.PersonRepository;
+import org.estatio.module.turnover.dom.entry.TurnoverEntryService;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -63,12 +65,20 @@ import lombok.Setter;
                         + "&& type == :type "
                         + "&& frequency == :frequency "
                         + "&& status == :status "
-                        + "&& date < :threshold ORDER BY date DESC "),
+                        + "&& date < :threshold "
+                        + "ORDER BY date DESC "),
         @javax.jdo.annotations.Query(
                 name = "findByOccupancy", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.turnover.dom.Turnover "
                         + "WHERE occupancy == :occupancy "
+                        + "ORDER BY date DESC "),
+        @javax.jdo.annotations.Query(
+                name = "findByOccupancyAndStatus", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.turnover.dom.Turnover "
+                        + "WHERE occupancy == :occupancy "
+                        + "&& status == :status "
                         + "ORDER BY date DESC "),
         @javax.jdo.annotations.Query(
                 name = "findByOccupancyAndTypeAndStatus", language = "JDOQL",
@@ -78,6 +88,14 @@ import lombok.Setter;
                         + "&& type == :type "
                         + "&& status == :status "
                         + "ORDER BY date DESC "),
+        @javax.jdo.annotations.Query(
+                name = "findByOccupancyAndTypeAndDateAndStatus", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.turnover.dom.Turnover "
+                        + "WHERE occupancy == :occupancy "
+                        + "&& type == :type "
+                        + "&& status == :status "
+                        + "&& date == :date "),
 })
 @DomainObject(
         editing = Editing.DISABLED,
@@ -201,7 +219,7 @@ public class Turnover extends UdoDomainObject2<Turnover> {
 
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public Turnover nextNew() {
-        return turnoverRepository.findByOccupancyAndTypeWithStatusNew(getOccupancy(), getType()).stream().filter(t->!t.equals(this)).findFirst().orElse(null);
+        return turnoverEntryService.nextNewForReporter(personRepository.me(), this);
     }
 
     @Override
@@ -210,5 +228,9 @@ public class Turnover extends UdoDomainObject2<Turnover> {
     }
 
     @Inject TurnoverRepository turnoverRepository;
+
+    @Inject TurnoverEntryService turnoverEntryService;
+
+    @Inject PersonRepository personRepository;
 
 }
