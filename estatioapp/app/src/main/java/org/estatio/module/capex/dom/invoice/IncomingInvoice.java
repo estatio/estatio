@@ -351,6 +351,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final @Nullable Boolean createRoleIfRequired,
             final @Nullable BankAccount bankAccount,
             final String invoiceNumber,
+            final @Nullable String communicationNumber,
             final LocalDate dateReceived,
             final LocalDate invoiceDate,
             final LocalDate dueDate,
@@ -359,6 +360,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         IncomingInvoiceType previousType = getType();
         setType(incomingInvoiceType);
         setInvoiceNumber(invoiceNumber);
+        setCommunicationNumber(communicationNumber);
         setSeller(seller);
 
         if (createRoleIfRequired != null && createRoleIfRequired) {

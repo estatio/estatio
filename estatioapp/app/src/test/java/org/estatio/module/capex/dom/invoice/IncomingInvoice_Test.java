@@ -1332,6 +1332,7 @@ public class IncomingInvoice_Test {
                     Boolean.TRUE,
                     newBankAccount,
                     newInvoiceNumber,
+                    null,
                     newDateReceived,
                     newInvoiceDate,
                     newDueDate,
