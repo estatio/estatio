@@ -87,7 +87,7 @@ language governing permissions and limitations under the License.
         <maven-pmd-plugin.ruleset>${project.basedir}/codequality/pmd.xml</maven-pmd-plugin.ruleset>
 
         <lombok.version>1.18.0</lombok.version>
-        <rfc-2445.version>0.0.20110304.20180710-0922-720a7586</rfc-2445.version>
+        <rfc-2445.version>0.0.20110304.20190417-1223-444715cb</rfc-2445.version>
         <joda-time.version>2.3</joda-time.version>
         <freemarker.version>2.3.25-incubating</freemarker.version>
         <jdom.version>2.0.2</jdom.version>
