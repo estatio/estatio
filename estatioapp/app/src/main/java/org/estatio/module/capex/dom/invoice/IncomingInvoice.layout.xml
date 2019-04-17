@@ -25,6 +25,9 @@
                                         <cpt:property id="invoiceNumber">
                                             <cpt:action id="editInvoiceNumber" promptStyle="INLINE" position="RIGHT"/>
                                         </cpt:property>
+                                        <cpt:property id="communicationNumber">
+                                            <cpt:action id="editCommunicationNumber" promptStyle="INLINE" position="RIGHT"/>
+                                        </cpt:property>
                                         <cpt:property id="barcode"/>
                                         <cpt:property id="buyer">
                                             <cpt:action id="editBuyer" promptStyle="INLINE" position="RIGHT"/>

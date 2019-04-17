@@ -25,6 +25,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.validation.constraints.Digits;
+import javax.ws.rs.HEAD;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.google.common.collect.ComparisonChain;
@@ -1623,6 +1624,39 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     public boolean isImmutableDueToState() {
         final Object viewContext = this;
         return reasonDisabledDueToState(viewContext) != null;
+    }
+
+    @Column(allowsNull = "true", length = 128)
+    @org.apache.isis.applib.annotation.Property(hidden = Where.ALL_TABLES)
+    @Getter @Setter
+    private String communicationNumber;
+
+    public boolean hideCommunicationNumber() {
+        return CountryUtil.isItalian(this);
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public IncomingInvoice editCommunicationNumber(@Nullable final String communicationNumber) {
+        setCommunicationNumber(communicationNumber);
+        return this;
+    }
+
+    public String default0EditCommunicationNumber() {
+        return getCommunicationNumber();
+    }
+
+    public String disableEditCommunicationNumber() {
+
+        final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot edit communication number because");
+
+        final Object viewContext = this;
+        reasonDisabledDueToApprovalStateIfAny(viewContext, buf);
+
+        return buf.getReason();
+    }
+
+    public boolean hideEditCommunicationNumber() {
+        return CountryUtil.isItalian(this);
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
