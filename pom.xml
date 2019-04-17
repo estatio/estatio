@@ -80,8 +80,8 @@ language governing permissions and limitations under the License.
          -->
         <incode-platform.version>1.17.0.20190305-1828-b0e9bc8d</incode-platform.version>
 
-        <estatio-canonical.version>2.2.0.20190206-1801-39b67146</estatio-canonical.version>
-        <docflow-canonical.version>2.2.0.20190329-1127-6394a203</docflow-canonical.version>
+        <estatio-canonical.version>2.2.0.20190416-1524-28f2ac48</estatio-canonical.version>
+        <docflow-canonical.version>2.2.0.20190416-1656-3a162ef2</docflow-canonical.version>
 
         <maven-checkstyle-plugin.configLocation>${project.basedir}/codequality/checkstyle.xml</maven-checkstyle-plugin.configLocation>
         <maven-pmd-plugin.ruleset>${project.basedir}/codequality/pmd.xml</maven-pmd-plugin.ruleset>
