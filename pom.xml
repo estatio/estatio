@@ -826,17 +826,17 @@ language governing permissions and limitations under the License.
 
         <!-- required to pull down parent pom (incode-parent) -->
         <profile>
-            <id>incode-work-maven</id>
+            <id>repo-incode-work</id>
             <activation>
                 <property>
-                    <name>!skip.incode-work-maven</name>
+                    <name>!skip.repo-incode-work</name>
                 </property>
             </activation>
             <repositories>
                 <repository>
-                    <id>incode-work-maven</id>
+                    <id>repo-incode-work</id>
                     <url>https://repo.incode.work</url>
-                    <name>Incode Work (maven)</name>
+                    <name>repo.incode.work</name>
                     <releases>
                         <enabled>true</enabled>
                         <updatePolicy>always</updatePolicy>
@@ -850,19 +850,6 @@ language governing permissions and limitations under the License.
                     <layout>default</layout>
                 </repository>
             </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>incode-work-maven</id>
-                    <url>https://repo.incode.work</url>
-                    <name>Incode Work (maven)</name>
-                    <releases>
-                        <enabled>true</enabled>
-                        <updatePolicy>never</updatePolicy>
-                        <checksumPolicy>fail</checksumPolicy>
-                    </releases>
-                    <layout>default</layout>
-                </pluginRepository>
-            </pluginRepositories>
         </profile>
 
     </profiles>
