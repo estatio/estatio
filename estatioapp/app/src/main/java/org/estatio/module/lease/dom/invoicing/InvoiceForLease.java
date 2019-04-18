@@ -471,6 +471,7 @@ public class InvoiceForLease
 
             invoiceForLease.setInvoiceNumber(numerator.nextIncrementStr());
             invoiceForLease.setInvoiceDate(invoiceDate);
+            invoiceVatRoundingService.distributeVatRoundingByVatPercentage(invoiceForLease);
             invoiceForLease.setStatus(InvoiceStatus.INVOICED);
 
             messageService.informUser(
@@ -525,6 +526,9 @@ public class InvoiceForLease
             }
             return null;
         }
+
+        @Inject
+        InvoiceVatRoundingService invoiceVatRoundingService;
 
         @javax.inject.Inject
         NumeratorForCollectionRepository numeratorRepository;

@@ -88,6 +88,9 @@ public class InvoiceForLease_Test {
     Property invoiceProperty;
 
     @Mock
+    InvoiceVatRoundingService mockInvoiceVatRoundingService;
+
+    @Mock
     @Ignoring
     DomainObjectContainer mockContainer;
 
@@ -184,12 +187,13 @@ public class InvoiceForLease_Test {
             invoice_invoice.titleService = mockTitleService;
             invoice_invoice.messageService = mockMessageService;
             invoice_invoice.invoiceRepository = mockInvoiceRepository;
+            invoice_invoice.invoiceVatRoundingService = mockInvoiceVatRoundingService;
 
             // expect
             context.checking(new Expectations() {{
+                allowing(mockInvoiceVatRoundingService).distributeVatRoundingByVatPercentage(invoice);
                 allowing(mockTitleService).titleOf(invoice);
                 will(returnValue("Invoice #001"));
-
                 oneOf(mockMessageService).informUser("Assigned XXX-00011 to invoice Invoice #001");
 
             }});
