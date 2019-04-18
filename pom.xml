@@ -22,7 +22,7 @@ language governing permissions and limitations under the License.
         <groupId>org.incode</groupId>
         <artifactId>incode-parent</artifactId>
         <!-- NB: also update incode-platform.version property below. -->
-        <version>1.17.0.20190305-1828-b0e9bc8d</version>
+        <version>1.17.0.20190418-0755-7d3f32e7</version>
         <relativePath/>
     </parent>
 
@@ -78,16 +78,16 @@ language governing permissions and limitations under the License.
         Also specify the incode-platform.version by changing the parent's version, above.
         And, update the pom.xml for estatio-ecp similarly
          -->
-        <incode-platform.version>1.17.0.20190305-1828-b0e9bc8d</incode-platform.version>
+        <incode-platform.version>1.17.0.20190418-0755-7d3f32e7</incode-platform.version>
 
-        <estatio-canonical.version>2.2.0.20190206-1801-39b67146</estatio-canonical.version>
-        <docflow-canonical.version>2.2.0.20190329-1127-6394a203</docflow-canonical.version>
+        <estatio-canonical.version>2.2.0.20190416-1524-28f2ac48</estatio-canonical.version>
+        <docflow-canonical.version>2.2.0.20190416-1656-3a162ef2</docflow-canonical.version>
 
         <maven-checkstyle-plugin.configLocation>${project.basedir}/codequality/checkstyle.xml</maven-checkstyle-plugin.configLocation>
         <maven-pmd-plugin.ruleset>${project.basedir}/codequality/pmd.xml</maven-pmd-plugin.ruleset>
 
         <lombok.version>1.18.0</lombok.version>
-        <rfc-2445.version>0.0.20110304.20180710-0922-720a7586</rfc-2445.version>
+        <rfc-2445.version>0.0.20110304.20190417-1223-444715cb</rfc-2445.version>
         <joda-time.version>2.3</joda-time.version>
         <freemarker.version>2.3.25-incubating</freemarker.version>
         <jdom.version>2.0.2</jdom.version>
@@ -826,17 +826,17 @@ language governing permissions and limitations under the License.
 
         <!-- required to pull down parent pom (incode-parent) -->
         <profile>
-            <id>incode-cloud-maven</id>
+            <id>repo-incode-work</id>
             <activation>
                 <property>
-                    <name>!skip.incode-cloud-maven</name>
+                    <name>!skip.repo-incode-work</name>
                 </property>
             </activation>
             <repositories>
                 <repository>
-                    <id>incode-cloud-maven</id>
-                    <url>https://repo.incode.cloud/repository/maven/</url>
-                    <name>Incode Cloud (maven)</name>
+                    <id>repo-incode-work</id>
+                    <url>https://repo.incode.work</url>
+                    <name>repo.incode.work</name>
                     <releases>
                         <enabled>true</enabled>
                         <updatePolicy>always</updatePolicy>
@@ -850,19 +850,6 @@ language governing permissions and limitations under the License.
                     <layout>default</layout>
                 </repository>
             </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>incode-cloud-maven</id>
-                    <name>Incode Cloud (maven)</name>
-                    <releases>
-                        <enabled>true</enabled>
-                        <updatePolicy>never</updatePolicy>
-                        <checksumPolicy>fail</checksumPolicy>
-                    </releases>
-                    <url>https://repo.incode.cloud/repository/maven/</url>
-                    <layout>default</layout>
-                </pluginRepository>
-            </pluginRepositories>
         </profile>
 
     </profiles>
