@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedSet;
 import java.util.StringJoiner;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -54,6 +55,7 @@ import org.apache.isis.applib.util.TitleBuffer;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+import org.incode.module.country.dom.impl.Country;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 
@@ -91,10 +93,15 @@ import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
+import org.estatio.module.financial.dom.utils.IBANValidator;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
+import org.estatio.module.party.app.services.ChamberOfCommerceCodeLookUpService;
+import org.estatio.module.party.app.services.OrganisationNameNumberViewModel;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.role.PartyRoleRepository;
@@ -347,8 +354,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @ActionLayout(promptStyle = PromptStyle.DIALOG_SIDEBAR)
     public IncomingInvoice completeInvoice(
             final IncomingInvoiceType incomingInvoiceType,
-            final Party seller,
+            final @Nullable Party supplier,
             final @Nullable Boolean createRoleIfRequired,
+            final @Nullable OrganisationNameNumberViewModel newSupplierCandidate,
+            final @Nullable Country newSupplierCountry,
+            final @Nullable String newSupplierIban,
             final @Nullable BankAccount bankAccount,
             final String invoiceNumber,
             final @Nullable String communicationNumber,
@@ -361,10 +371,15 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         setType(incomingInvoiceType);
         setInvoiceNumber(invoiceNumber);
         setCommunicationNumber(communicationNumber);
-        setSeller(seller);
+
+        if (supplier != null) {
+            setSeller(supplier);
+        } else {
+            createNewSupplierWithRoleAndIban(newSupplierCandidate, newSupplierCountry, newSupplierIban);
+        }
 
         if (createRoleIfRequired != null && createRoleIfRequired) {
-            partyRoleRepository.findOrCreate(seller, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+            partyRoleRepository.findOrCreate(supplier, IncomingInvoiceRoleTypeEnum.SUPPLIER);
         }
 
         setInvoiceDate(invoiceDate);
@@ -382,10 +397,26 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return this;
     }
 
+    private void createNewSupplierWithRoleAndIban(@Nullable final OrganisationNameNumberViewModel newSupplierCandidate, @Nullable final Country newSupplierCountry, @Nullable final String newSupplierIban) {
+        Organisation organisation = organisationRepository.newOrganisation(null, true, newSupplierCandidate.getOrganisationName(), newSupplierCountry);
+        partyRoleRepository.findOrCreate(organisation, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+        if (newSupplierCandidate.getChamberOfCommerceCode() != null)
+            organisation.setChamberOfCommerceCode(newSupplierCandidate.getChamberOfCommerceCode());
+
+        setSeller(organisation);
+        if (newSupplierIban != null) {
+            bankAccountRepository.newBankAccount(organisation, newSupplierIban, null);
+        }
+        setBankAccount(bankAccountRepository.getFirstBankAccountOfPartyOrNull(organisation));
+    }
+
     public String validateCompleteInvoice(
             final IncomingInvoiceType incomingInvoiceType,
             final Party seller,
             final Boolean createRoleIfRequired,
+            final Party newSupplierCandidate,
+            final Country newSupplierCountry,
+            final String newSupplierIban,
             final BankAccount bankAccount,
             final String invoiceNumber,
             final LocalDate dateReceived,
@@ -393,6 +424,16 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final LocalDate dueDate,
             final PaymentMethod paymentMethod,
             final Currency currency) {
+        // only existing seller OR new seller params
+        if (seller != null && (newSupplierCandidate != null || newSupplierCountry != null || newSupplierIban != null))
+            return "Either select an existing seller OR fill out new supplier details, not both";
+
+        if (seller == null && !(newSupplierCandidate != null && newSupplierCountry != null))
+            return "Candidate and country are mandatory when adding a new supplier";
+
+        if (newSupplierIban != null && !IBANValidator.valid(newSupplierIban))
+            return String.format("%s is not a valid iban number", newSupplierIban);
+
         // validate seller
         final String sellerValidation = partyRoleRepository.validateThat(seller, IncomingInvoiceRoleTypeEnum.SUPPLIER);
         if ((createRoleIfRequired == null || !createRoleIfRequired) && sellerValidation != null) {
@@ -432,39 +473,50 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return partyRepository.autoCompleteSupplier(search, getAtPath());
     }
 
-    public BankAccount default3CompleteInvoice(
+    public List<OrganisationNameNumberViewModel> autoComplete3CompleteInvoice(@MinLength(3) final String search) {
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            // nothing
+        }
+        List<OrganisationNameNumberViewModel> result = new ArrayList<>(chamberOfCommerceCodeLookUpService.getChamberOfCommerceCodeCandidatesByOrganisation(search, getAtPath()));
+        result.add(new OrganisationNameNumberViewModel(search, null));
+        return result;
+    }
+
+    public BankAccount default6CompleteInvoice(
             final IncomingInvoiceType incomingInvoiceType,
             final Party seller) {
         return getBankAccount() != null ? getBankAccount() : bankAccountRepository.getFirstBankAccountOfPartyOrNull(seller);
     }
 
-    public List<BankAccount> choices3CompleteInvoice(
+    public List<BankAccount> choices6CompleteInvoice(
             final IncomingInvoiceType incomingInvoiceType,
             final Party seller) {
         return bankAccountRepository.findBankAccountsByOwner(seller);
     }
 
-    public String default4CompleteInvoice() {
+    public String default7CompleteInvoice() {
         return getInvoiceNumber();
     }
 
-    public LocalDate default5CompleteInvoice() {
+    public LocalDate default8CompleteInvoice() {
         return getDateReceived() == null ? dateReceivedDerivedFromDocument() : getDateReceived();
     }
 
-    public LocalDate default6CompleteInvoice() {
+    public LocalDate default9CompleteInvoice() {
         return getInvoiceDate();
     }
 
-    public LocalDate default7CompleteInvoice() {
+    public LocalDate default10CompleteInvoice() {
         return getDueDate() == null && getInvoiceDate() != null ? getInvoiceDate().plusMonths(1) : getDueDate();
     }
 
-    public PaymentMethod default8CompleteInvoice() {
+    public PaymentMethod default11CompleteInvoice() {
         return getPaymentMethod();
     }
 
-    public Currency default9CompleteInvoice() {
+    public Currency default12CompleteInvoice() {
         return getCurrency();
     }
 
@@ -2332,6 +2384,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Inject
     @NotPersistent
+    ChamberOfCommerceCodeLookUpService chamberOfCommerceCodeLookUpService;
+
+    @Inject
+    @NotPersistent
     LookupAttachedPdfService lookupAttachedPdfService;
 
     @Inject
@@ -2357,6 +2413,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Inject
     @NotPersistent
     PartyRepository partyRepository;
+
+    @Inject
+    @NotPersistent
+    OrganisationRepository organisationRepository;
 
     @Inject
     @NotPersistent
