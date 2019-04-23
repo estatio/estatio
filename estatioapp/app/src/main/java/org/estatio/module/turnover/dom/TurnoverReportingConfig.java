@@ -101,7 +101,7 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
     private Frequency auditedFrequency;
 
     @Getter @Setter
-    @Column(allowsNull = "false")
+    @Column(name = "currencyId", allowsNull = "false")
     private Currency currency;
 
     @Override
