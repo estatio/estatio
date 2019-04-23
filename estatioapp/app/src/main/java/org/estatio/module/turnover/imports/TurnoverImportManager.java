@@ -48,6 +48,7 @@ public class TurnoverImportManager {
         .map(to->new TurnoverImport(
                 to.getOccupancy().getLease().getReference(),
                 to.getOccupancy().getUnit().getReference(),
+                to.getOccupancy().getStartDate(),
                 getDate(),
                 to.getGrossAmount(),
                 to.getNetAmount(),
@@ -56,7 +57,9 @@ public class TurnoverImportManager {
                 to.getCurrency().getReference(),
                 to.isNonComparable() ? 1 : 0,
                 to.getPurchaseCount(),
-                to.getComments()
+                to.getComments(),
+                to.getReportedBy(),
+                to.getReportedAt()
                 ))
         .collect(Collectors.toList());
     }

@@ -25,6 +25,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -68,8 +69,8 @@ public class TurnoverImport_IntegTest extends TurnoverModuleIntegTestAbstract {
         assertThat(first.getType()).isEqualTo(Type.PRELIMINARY);
         assertThat(first.getFrequency()).isEqualTo(Frequency.MONTHLY);
         assertThat(first.getStatus()).isEqualTo(Status.APPROVED);
-        assertThat(first.getReportedAt().toLocalDate()).isEqualTo(LocalDate.now());
-        assertThat(first.getReportedBy()).isEqualTo("tester");
+        assertThat(first.getReportedAt().toLocalDate()).isEqualTo(new LocalDate(2018,11,19));
+        assertThat(first.getReportedBy()).isEqualTo("manager abc");
         assertThat(first.getCurrency()).isEqualTo(Currency_enum.EUR.findUsing(serviceRegistry2));
         assertThat(first.getNetAmount()).isEqualTo(new BigDecimal("12345.56"));
         assertThat(first.getGrossAmount()).isEqualTo(new BigDecimal("14814.67"));
@@ -84,8 +85,8 @@ public class TurnoverImport_IntegTest extends TurnoverModuleIntegTestAbstract {
         assertThat(second.getType()).isEqualTo(Type.AUDITED);
         assertThat(second.getFrequency()).isEqualTo(Frequency.DAILY);
         assertThat(second.getStatus()).isEqualTo(Status.APPROVED);
-        assertThat(second.getReportedAt().toLocalDate()).isEqualTo(LocalDate.now());
-        assertThat(second.getReportedBy()).isEqualTo("tester");
+        assertThat(second.getReportedAt()).isEqualTo(new LocalDateTime(2018,11,19, 11, 06, 20,400));
+        assertThat(second.getReportedBy()).isEqualTo("manager abc");
         assertThat(second.getCurrency()).isEqualTo(Currency_enum.GBP.findUsing(serviceRegistry2));
         assertThat(second.getNetAmount()).isNull();
         assertThat(second.getGrossAmount()).isEqualTo(new BigDecimal("2345.67"));

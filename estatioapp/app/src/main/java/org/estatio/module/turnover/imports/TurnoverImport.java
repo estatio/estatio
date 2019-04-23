@@ -3,7 +3,6 @@ package org.estatio.module.turnover.imports;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -19,7 +18,6 @@ import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.message.MessageService;
-import org.apache.isis.applib.services.user.UserService;
 
 import org.isisaddons.module.excel.dom.ExcelFixture;
 import org.isisaddons.module.excel.dom.ExcelFixture2;
@@ -58,6 +56,7 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
     public TurnoverImport(
             final String leaseReference,
             final String unitReference,
+            final LocalDate occupancyStartDate,
             final LocalDate date,
             final BigDecimal grossAmount,
             final BigDecimal netAmount,
@@ -66,9 +65,12 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
             final String currencyReference,
             final int nonComparableFlag,
             final BigInteger purchaseCount,
-            final String comments) {
+            final String comments,
+            final String reportedBy,
+            final LocalDateTime reportedAt) {
         this.leaseReference = leaseReference;
         this.unitReference = unitReference;
+        this.occupancyStartDate = occupancyStartDate;
         this.date = date;
         this.grossAmount = grossAmount;
         this.netAmount = netAmount;
@@ -78,6 +80,8 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
         this.nonComparableFlag = nonComparableFlag;
         this.purchaseCount = purchaseCount;
         this.comments = comments;
+        this.reportedBy = reportedBy;
+        this.reportedAt = reportedAt;
     }
 
     @Getter @Setter
@@ -85,6 +89,9 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
 
     @Getter @Setter
     private String unitReference;
+
+    @Getter @Setter
+    private LocalDate occupancyStartDate;
 
     @Getter @Setter
     private LocalDate date;
@@ -112,6 +119,12 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
 
     @Getter @Setter
     private String comments;
+
+    @Getter @Setter
+    private LocalDateTime reportedAt;
+
+    @Getter @Setter
+    private String reportedBy;
 
 
     @Programmatic
@@ -154,31 +167,21 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
             return Lists.newArrayList();
         }
 
-        final List<Occupancy> activeOccupanciesForLeaseOnDateAndUnit = occupancyRepository.findByLeaseAndDate(lease, date)
-                .stream()
-                .filter(o->o.getUnit().equals(unit))
-                .filter(o->o.getEndDate()==null || !o.getEndDate().isBefore(date))
-                .collect(Collectors.toList());
+        final Occupancy occupancy = occupancyRepository.findByLeaseAndUnitAndStartDate(lease, unit, occupancyStartDate);
 
-        if (activeOccupanciesForLeaseOnDateAndUnit.isEmpty()){
-            logAndWarn(String.format("No active occupancy found for lease %s and unit %s on date %s", leaseReference, unitReference, date));
+        if (occupancy==null){
+            logAndWarn(String.format("No occupancy found for lease %s and unit %s on date %s", leaseReference, unitReference, occupancyStartDate));
             return Lists.newArrayList();
         }
 
-        if (activeOccupanciesForLeaseOnDateAndUnit.size()>1){
-            logAndWarn(String.format("Multiple active occupancies found for lease %s and unit %s on date %s", leaseReference, unitReference, date));
-            return Lists.newArrayList();
-        }
-
-        Occupancy occupancy = activeOccupanciesForLeaseOnDateAndUnit.get(0);
         Turnover turnover = turnoverRepository.upsert(
                 occupancy,
                 date,
                 typeEnum,
                 frequencyEnum,
                 Status.APPROVED,
-                LocalDateTime.now(),
-                userService.getUser().getName(),
+                reportedAt,
+                reportedBy,
                 currency,
                 netAmount==null || netAmount.equals(BigDecimal.ZERO) ? null : netAmount, // just because when using TurnoverImportXlsxFixture, somehow the values are set to 0 instead of null like in production
                 grossAmount==null || grossAmount.equals(BigDecimal.ZERO) ? null : grossAmount, // just because when using TurnoverImportXlsxFixture, somehow the values are set to 0 instead of null like in production
@@ -235,7 +238,5 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
     @Inject MessageService messageService;
 
     @Inject TurnoverRepository turnoverRepository;
-
-    @Inject UserService userService;
 
 }
