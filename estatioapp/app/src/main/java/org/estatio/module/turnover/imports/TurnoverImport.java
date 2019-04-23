@@ -36,6 +36,7 @@ import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Status;
 import org.estatio.module.turnover.dom.Turnover;
+import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
 
@@ -189,6 +190,8 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
                 comments,
                 nonComparableFlag > 0 ? true: false);
 
+        turnoverReportingConfigRepository.findOrCreate(occupancy, null, date, Frequency.MONTHLY, Frequency.YEARLY, currency);
+
         return Lists.newArrayList(turnover);
     }
 
@@ -238,5 +241,7 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
     @Inject MessageService messageService;
 
     @Inject TurnoverRepository turnoverRepository;
+
+    @Inject TurnoverReportingConfigRepository turnoverReportingConfigRepository;
 
 }
