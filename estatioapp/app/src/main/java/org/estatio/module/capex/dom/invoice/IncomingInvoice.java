@@ -414,11 +414,12 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final IncomingInvoiceType incomingInvoiceType,
             final Party seller,
             final Boolean createRoleIfRequired,
-            final Party newSupplierCandidate,
+            final OrganisationNameNumberViewModel newSupplierCandidate,
             final Country newSupplierCountry,
             final String newSupplierIban,
             final BankAccount bankAccount,
             final String invoiceNumber,
+            final String communicationNumber,
             final LocalDate dateReceived,
             final LocalDate invoiceDate,
             final LocalDate dueDate,
@@ -500,23 +501,27 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return getInvoiceNumber();
     }
 
-    public LocalDate default8CompleteInvoice() {
-        return getDateReceived() == null ? dateReceivedDerivedFromDocument() : getDateReceived();
+    public String default8CompleteInvoice() {
+        return getCommunicationNumber();
     }
 
     public LocalDate default9CompleteInvoice() {
-        return getInvoiceDate();
+        return getDateReceived() == null ? dateReceivedDerivedFromDocument() : getDateReceived();
     }
 
     public LocalDate default10CompleteInvoice() {
+        return getInvoiceDate();
+    }
+
+    public LocalDate default11CompleteInvoice() {
         return getDueDate() == null && getInvoiceDate() != null ? getInvoiceDate().plusMonths(1) : getDueDate();
     }
 
-    public PaymentMethod default11CompleteInvoice() {
+    public PaymentMethod default12CompleteInvoice() {
         return getPaymentMethod();
     }
 
-    public Currency default12CompleteInvoice() {
+    public Currency default13CompleteInvoice() {
         return getCurrency();
     }
 
