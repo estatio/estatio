@@ -175,7 +175,7 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
             return Lists.newArrayList();
         }
 
-        Turnover turnover = turnoverRepository.upsert(
+        Turnover turnover = turnoverRepository.findOrCreate(
                 occupancy,
                 date,
                 typeEnum,
