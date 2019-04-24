@@ -222,6 +222,13 @@ import lombok.Setter;
                         + "ORDER BY invoiceDate DESC " // newest first
         ),
         @Query(
+                name = "findBySellerAndApprovalStates", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE seller == :seller "
+                        + "&& :approvalStates.contains(approvalState)"
+        ),
+        @Query(
                 name = "findPayableByBankTransferAndDueDateBetween", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
@@ -2327,6 +2334,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         List<IncomingInvoice> similarNumberedInvoices = incomingInvoiceRepository.findByInvoiceNumberAndSeller(getInvoiceNumber(), getSeller())
                 .stream()
                 .filter(invoice -> !invoice.equals(this))
+                .filter(invoice -> invoice.getApprovalState() != IncomingInvoiceApprovalState.DISCARDED)
                 .collect(Collectors.toList());
 
         if (similarNumberedInvoices.size() > 0) {

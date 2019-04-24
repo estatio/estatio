@@ -206,6 +206,13 @@
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
+                <bs3:tab name="Discarded Invoices From">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="discardedInvoicesFrom"/>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
             </bs3:tabGroup>
             <bs3:tabGroup>
                 <bs3:tab name="Financial Accounts">
