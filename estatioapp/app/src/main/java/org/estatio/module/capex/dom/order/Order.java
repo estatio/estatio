@@ -1341,7 +1341,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         }
 
         Order possibleDouble = orderRepository.findBySellerOrderReferenceAndSellerAndOrderDate(getSellerOrderReference(), getSeller(), getOrderDate());
-        if (possibleDouble == null || possibleDouble.equals(this)) {
+        if (possibleDouble == null || possibleDouble.equals(this) || possibleDouble.getApprovalState() == OrderApprovalState.DISCARDED) {
             return null;
         }
 
