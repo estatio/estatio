@@ -1,5 +1,6 @@
 package org.estatio.module.capex.integtests.order;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -16,7 +17,9 @@ import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwner
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
+import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
+import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
@@ -68,6 +71,36 @@ public class OrderRepository_IntegTest extends CapexModuleIntegTestAbstract {
 
         }
 
+    }
+
+    public static class FindBySellerAndApprovalStates extends OrderRepository_IntegTest {
+
+        @Test
+        public void findBySellerAndApprovalStates_works() throws Exception {
+            // given
+            String sellerOrderReference = "123-456-7";
+            LocalDate orderDate = new LocalDate(2017, 1, 1);
+
+            Organisation seller = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
+            Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
+
+            Order orderMade1 = orderRepository.create(property, "123", sellerOrderReference, orderDate.plusDays(4),
+                    orderDate, seller, null, null, "/GBR", OrderApprovalState.NEW);
+            Order orderMade2 = orderRepository.create(property, "456", sellerOrderReference, orderDate.plusDays(5),
+                    orderDate.plusDays(1), seller, null, null, "/GBR", OrderApprovalState.APPROVED);
+            Order orderMade3 = orderRepository.create(property, "789", sellerOrderReference, orderDate.plusDays(6),
+                    orderDate, seller, null, null, "/GBR", OrderApprovalState.DISCARDED);
+            Order orderMade4 = orderRepository.create(property, "012", sellerOrderReference, orderDate.plusDays(7),
+                    orderDate.plusDays(1), seller, null, null, "/GBR", null);
+
+            assertThat(orderRepository.findBySeller(seller)).contains(orderMade1, orderMade2, orderMade3, orderMade4);
+
+            // when
+            List<Order> ordersByApprovalState = orderRepository.findBySellerPartyAndApprovalStates(seller, Arrays.asList(OrderApprovalState.NEW, OrderApprovalState.APPROVED, null));
+
+            // then
+            assertThat(ordersByApprovalState).contains(orderMade1, orderMade2, orderMade4);
+        }
     }
 
     @Inject PartyRepository partyRepository;

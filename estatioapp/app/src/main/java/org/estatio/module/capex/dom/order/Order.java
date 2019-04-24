@@ -180,6 +180,12 @@ import static org.estatio.module.capex.dom.util.CountryUtil.isItalian;
                         + "FROM org.estatio.module.capex.dom.order.Order "
                         + "WHERE seller == :seller "),
         @Query(
+                name = "findBySellerAndApprovalStates", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.order.Order "
+                        + "WHERE seller == :seller "
+                        + "&& :approvalStates.contains(approvalState)"),
+        @Query(
                 name = "findByProperty", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.order.Order "
