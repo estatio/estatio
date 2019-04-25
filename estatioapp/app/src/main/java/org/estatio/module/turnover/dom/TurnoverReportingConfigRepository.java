@@ -46,6 +46,26 @@ public class TurnoverReportingConfigRepository extends UdoDomainRepositoryAndFac
         super(TurnoverReportingConfigRepository.class, TurnoverReportingConfig.class);
     }
 
+    public TurnoverReportingConfig upsert(
+            final Occupancy occupancy,
+            final Person reporter,
+            final LocalDate startDate,
+            final Frequency prelimFrequency,
+            final Frequency auditedFrequency,
+            final Currency currency) {
+        TurnoverReportingConfig config = findUnique(occupancy);
+        if (config==null){
+            config = create(occupancy, reporter == null ? deriveReporterFromOccupancy(occupancy) : reporter, startDate, prelimFrequency, auditedFrequency, currency);
+        } else {
+            config.setReporter(reporter == null ? deriveReporterFromOccupancy(occupancy) : reporter);
+            config.setStartDate(startDate);
+            config.setPrelimFrequency(prelimFrequency);
+            config.setAuditedFrequency(auditedFrequency);
+            config.setCurrency(currency);
+        }
+        return config;
+    }
+
     public TurnoverReportingConfig findOrCreate(
             final Occupancy occupancy,
             final Person reporter,

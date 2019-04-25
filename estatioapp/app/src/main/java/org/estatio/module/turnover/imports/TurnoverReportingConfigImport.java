@@ -1,7 +1,5 @@
 package org.estatio.module.turnover.imports;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -9,7 +7,6 @@ import javax.inject.Inject;
 import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,55 +31,32 @@ import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.turnover.dom.Frequency;
-import org.estatio.module.turnover.dom.Status;
-import org.estatio.module.turnover.dom.Turnover;
+import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
-import org.estatio.module.turnover.dom.TurnoverRepository;
-import org.estatio.module.turnover.dom.Type;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
-        objectType = "org.estatio.module.turnover.imports.TurnoverImport"
+        objectType = "org.estatio.module.turnover.imports.TurnoverReportingConfigImport"
 )
-public class TurnoverImport implements Importable, ExcelFixtureRowHandler, FixtureAwareRowHandler<TurnoverImport> {
+public class TurnoverReportingConfigImport implements Importable, ExcelFixtureRowHandler, FixtureAwareRowHandler<TurnoverReportingConfigImport> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TurnoverImport.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TurnoverReportingConfigImport.class);
 
     /* needed for excel import */
-    public TurnoverImport(){}
+    public TurnoverReportingConfigImport(){}
 
-    public TurnoverImport(
+    public TurnoverReportingConfigImport(
             final String leaseReference,
             final String unitReference,
             final LocalDate occupancyStartDate,
-            final LocalDate date,
-            final BigDecimal grossAmount,
-            final BigDecimal netAmount,
-            final String type,
-            final String frequency,
-            final String currencyReference,
-            final int nonComparableFlag,
-            final BigInteger purchaseCount,
-            final String comments,
-            final String reportedBy,
-            final LocalDateTime reportedAt) {
+            final String currencyReference) {
         this.leaseReference = leaseReference;
         this.unitReference = unitReference;
         this.occupancyStartDate = occupancyStartDate;
-        this.date = date;
-        this.grossAmount = grossAmount;
-        this.netAmount = netAmount;
-        this.type = type;
-        this.frequency = frequency;
         this.currencyReference = currencyReference;
-        this.nonComparableFlag = nonComparableFlag;
-        this.purchaseCount = purchaseCount;
-        this.comments = comments;
-        this.reportedBy = reportedBy;
-        this.reportedAt = reportedAt;
     }
 
     @Getter @Setter
@@ -95,60 +69,11 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
     private LocalDate occupancyStartDate;
 
     @Getter @Setter
-    private LocalDate date;
-
-    @Getter @Setter
-    private BigDecimal grossAmount;
-
-    @Getter @Setter
-    private BigDecimal netAmount;
-
-    @Getter @Setter
-    private String type;
-
-    @Getter @Setter
-    private String frequency;
-
-    @Getter @Setter
     private String currencyReference;
-
-    @Getter @Setter
-    private int nonComparableFlag;
-
-    @Getter @Setter
-    private BigInteger purchaseCount;
-
-    @Getter @Setter
-    private String comments;
-
-    @Getter @Setter
-    private LocalDateTime reportedAt;
-
-    @Getter @Setter
-    private String reportedBy;
-
 
     @Programmatic
     @Override
     public List<Object> importData(final Object previousRow) {
-
-        Type typeEnum;
-
-        try {
-            typeEnum = Type.valueOf(type);
-        } catch (Exception e){
-            logAndWarn(String.format("Type not found for %s", type));
-            return Lists.newArrayList();
-        }
-
-        Frequency frequencyEnum;
-
-        try {
-            frequencyEnum = Frequency.valueOf(frequency);
-        } catch (Exception e){
-            logAndWarn(String.format("Frequency not found for %s", frequency));
-            return Lists.newArrayList();
-        }
 
         final Lease lease = leaseRepository.findLeaseByReference(leaseReference);
         if (lease==null) {
@@ -175,24 +100,9 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
             return Lists.newArrayList();
         }
 
-        Turnover turnover = turnoverRepository.findOrCreate(
-                occupancy,
-                date,
-                typeEnum,
-                frequencyEnum,
-                Status.APPROVED,
-                reportedAt,
-                reportedBy,
-                currency,
-                netAmount==null || netAmount.equals(BigDecimal.ZERO) ? null : netAmount, // just because when using TurnoverImportXlsxFixture, somehow the values are set to 0 instead of null like in production
-                grossAmount==null || grossAmount.equals(BigDecimal.ZERO) ? null : grossAmount, // just because when using TurnoverImportXlsxFixture, somehow the values are set to 0 instead of null like in production
-                purchaseCount==null || purchaseCount.equals(BigInteger.ZERO) ? null : purchaseCount, // just because when using TurnoverImportXlsxFixture, somehow the values are set to 0 instead of null like in production
-                comments,
-                nonComparableFlag > 0 ? true: false);
+        TurnoverReportingConfig config = turnoverReportingConfigRepository.upsert(occupancy, null, occupancyStartDate, Frequency.MONTHLY, Frequency.YEARLY, currency);
 
-//        turnoverReportingConfigRepository.findOrCreate(occupancy, null, date, Frequency.MONTHLY, Frequency.YEARLY, currency);
-
-        return Lists.newArrayList(turnover);
+        return Lists.newArrayList(config);
     }
 
     private void logAndWarn(final String message) {
@@ -218,7 +128,7 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
     private ExcelFixture2 excelFixture2;
 
     @Override
-    public void handleRow(final TurnoverImport previousRow) {
+    public void handleRow(final TurnoverReportingConfigImport previousRow) {
 
         if (executionContext != null && excelFixture2 != null) {
             if (executionContext.getParameterAsBoolean("testMode") != null && executionContext.getParameterAsBoolean("testMode")) {
@@ -239,8 +149,6 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
     @Inject CurrencyRepository currencyRepository;
 
     @Inject MessageService messageService;
-
-    @Inject TurnoverRepository turnoverRepository;
 
     @Inject TurnoverReportingConfigRepository turnoverReportingConfigRepository;
 
