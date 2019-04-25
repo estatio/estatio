@@ -54,6 +54,13 @@ public enum TurnoverReportingConfig_enum
             Lease_enum.BudMiracle002Nl, Lease_enum.BudMiracle002Nl.getManager_d(), ld(2014, 1, 1), Frequency.MONTHLY, Frequency.YEARLY, Currency_enum.EUR),
     BudDago004Nl(
             Lease_enum.BudDago004Nl, Lease_enum.BudDago004Nl.getManager_d(), ld(2014, 1, 1), Frequency.MONTHLY, Frequency.YEARLY, Currency_enum.EUR),
+
+    OxfMiracl005Gb(
+            Lease_enum.OxfMiracl005Gb, Person_enum.JohnDoeNl, ld(2014, 1, 1), Frequency.MONTHLY, Frequency.YEARLY, Currency_enum.EUR),
+    OxfMediaX002Gb(
+            Lease_enum.OxfMediaX002Gb, Person_enum.JohnDoeNl, ld(2014, 1, 1), Frequency.MONTHLY, Frequency.YEARLY, Currency_enum.EUR),
+    OxfPoison003Gb(
+            Lease_enum.OxfPoison003Gb, Person_enum.JohnDoeNl, ld(2014, 1, 1), Frequency.MONTHLY, Frequency.YEARLY, Currency_enum.EUR),
     ;
 
     private final Lease_enum lease_d;

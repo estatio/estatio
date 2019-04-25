@@ -106,6 +106,10 @@ public class TurnoverEntryService_IntegTest extends TurnoverModuleIntegTestAbstr
                     executionContext.executeChild(this, TurnoverReportingConfig_enum.BudPoison001Nl);
                     executionContext.executeChild(this, TurnoverReportingConfig_enum.BudMiracle002Nl);
                     executionContext.executeChild(this, TurnoverReportingConfig_enum.BudDago004Nl);
+                    executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfMiracl005Gb);
+                    executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfMediaX002Gb);
+                    executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfPoison003Gb);
+
                 }
             });
         }
@@ -115,7 +119,7 @@ public class TurnoverEntryService_IntegTest extends TurnoverModuleIntegTestAbstr
 
             // given
             final List<TurnoverReportingConfig> configs = turnoverReportingConfigRepository.listAll();
-            assertThat(configs).hasSize(4);
+            assertThat(configs).hasSize(7);
             final LocalDate jan = new LocalDate(2014, 01, 01);
             turnoverEntryService.produceEmptyTurnoversFor(jan);
             final LocalDate feb = new LocalDate(2014, 02, 01);
@@ -123,11 +127,11 @@ public class TurnoverEntryService_IntegTest extends TurnoverModuleIntegTestAbstr
             final LocalDate march = new LocalDate(2014, 03, 01);
             turnoverEntryService.produceEmptyTurnoversFor(march);
             List<Turnover> turnovers = turnoverRepository.listAll();
-            assertThat(turnovers).hasSize(14); // no turnovers for topmodel on 01-01-2014
+            assertThat(turnovers).hasSize(26); // no turnovers for topmodel on 01-01-2014
 
             // when
             Person reporterJohnDoe = TurnoverReportingConfig_enum.BudPoison001Nl.getPerson_d().findUsing(serviceRegistry);
-            assertThat(turnoverReportingConfigRepository.findByReporter(reporterJohnDoe)).hasSize(3);
+            assertThat(turnoverReportingConfigRepository.findByReporter(reporterJohnDoe)).hasSize(6);
             Occupancy oPoison = TurnoverReportingConfig_enum.BudPoison001Nl.findUsing(serviceRegistry).getOccupancy();
             Turnover turnover = turnoverRepository.findByOccupancyAndTypeAndDateWithStatusNew(oPoison, Type.PRELIMINARY, march).get(0);
             mixin(Turnover_enter.class, turnover).$$(BigDecimal.ZERO, null, null, false, null);
@@ -150,6 +154,22 @@ public class TurnoverEntryService_IntegTest extends TurnoverModuleIntegTestAbstr
 
             // and when, then
             nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-MEDIAX");
+            assertThat(nextNew.getDate()).isEqualTo(march);
+            assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
+            // and when, then
+            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-MIRA");
+            assertThat(nextNew.getDate()).isEqualTo(march);
+            assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
+            // and when, then
+            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-POI");
+            assertThat(nextNew.getDate()).isEqualTo(march);
+            assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
+
+            // and when, then
+            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("BUD-DAGO");
             assertThat(nextNew.getDate()).isEqualTo(feb);
             assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
@@ -166,6 +186,22 @@ public class TurnoverEntryService_IntegTest extends TurnoverModuleIntegTestAbstr
 
             // and when, then
             nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-MEDIAX");
+            assertThat(nextNew.getDate()).isEqualTo(feb);
+            assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
+            // and when, then
+            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-MIRA");
+            assertThat(nextNew.getDate()).isEqualTo(feb);
+            assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
+            // and when, then
+            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-POI");
+            assertThat(nextNew.getDate()).isEqualTo(feb);
+            assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
+
+            // and when, then
+            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("BUD-DAGO");
             assertThat(nextNew.getDate()).isEqualTo(jan);
             assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
@@ -177,6 +213,22 @@ public class TurnoverEntryService_IntegTest extends TurnoverModuleIntegTestAbstr
             // and when, then
             nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("BUD-POI");
+            assertThat(nextNew.getDate()).isEqualTo(jan);
+            assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
+
+            // and when, then
+            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-MEDIAX");
+            assertThat(nextNew.getDate()).isEqualTo(jan);
+            assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
+            // and when, then
+            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-MIRA");
+            assertThat(nextNew.getDate()).isEqualTo(jan);
+            assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
+            // and when, then
+            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-POI");
             assertThat(nextNew.getDate()).isEqualTo(jan);
             assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
 
@@ -193,6 +245,21 @@ public class TurnoverEntryService_IntegTest extends TurnoverModuleIntegTestAbstr
 
             nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("BUD-POI");
+            assertThat(nextNew.getDate()).isEqualTo(jan);
+            assertThat(nextNew.getType()).isEqualTo(Type.AUDITED);
+
+            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-MEDIAX");
+            assertThat(nextNew.getDate()).isEqualTo(jan);
+            assertThat(nextNew.getType()).isEqualTo(Type.AUDITED);
+
+            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-MIRA");
+            assertThat(nextNew.getDate()).isEqualTo(jan);
+            assertThat(nextNew.getType()).isEqualTo(Type.AUDITED);
+
+            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-POI");
             assertThat(nextNew.getDate()).isEqualTo(jan);
             assertThat(nextNew.getType()).isEqualTo(Type.AUDITED);
 

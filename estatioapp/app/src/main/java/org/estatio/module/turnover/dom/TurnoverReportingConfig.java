@@ -50,8 +50,7 @@ import lombok.Setter;
                 name = "findByReporter", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.turnover.dom.TurnoverReportingConfig "
-                        + "WHERE reporter == :reporter "
-                        + "ORDER BY occupancy DESC "),
+                        + "WHERE reporter == :reporter "),
 })
 @DomainObject(
         editing = Editing.DISABLED,
