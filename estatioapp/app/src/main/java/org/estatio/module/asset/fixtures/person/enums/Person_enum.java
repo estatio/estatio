@@ -223,7 +223,13 @@ public enum Person_enum
     JohnDoeNl("JDOE", "John", "Doe", "J", true, MALE, Nl, Nl,
             null, null,
             new IPartyRoleType[] {  },
-            new FixedAssetRoleSpec[] {}),
+            new FixedAssetRoleSpec[] { }),
+    JohnTurnover("JTURN", "John", "Turnover", "J", true, MALE, Nl, Nl,
+            null, null,
+            new IPartyRoleType[] {  },
+            new FixedAssetRoleSpec[] {
+                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.TURNOVER_REPORTER, Property_enum.BudNl)
+            }),
 
     JohnSmithGb("JSMTH", "John", "Smith", "J", false, MALE, Gb, Gb,
             null, null,

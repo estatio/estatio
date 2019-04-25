@@ -27,9 +27,13 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.estatio.module.asset.dom.role.FixedAssetRole;
+import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -51,9 +55,20 @@ public class TurnoverReportingConfigRepository extends UdoDomainRepositoryAndFac
             final Currency currency) {
         TurnoverReportingConfig config = findUnique(occupancy);
         if (config==null){
-            config = create(occupancy, reporter, startDate, prelimFrequency, auditedFrequency, currency);
+            config = create(occupancy, reporter == null ? deriveReporterFromOccupancy(occupancy) : reporter, startDate, prelimFrequency, auditedFrequency, currency);
         }
         return config;
+    }
+
+    Person deriveReporterFromOccupancy(final Occupancy occupancy) {
+        final Person reporterToUse;List<FixedAssetRole> roles = fixedAssetRoleRepository.findAllForProperty(occupancy.getUnit().getProperty());
+        FixedAssetRole derivedRoleFromOccupancy = roles.stream()
+                .filter(r->r.getType()==FixedAssetRoleTypeEnum.TURNOVER_REPORTER)
+                .filter(r -> r.getStartDate() == null || r.getStartDate().isBefore(clockService.now().plusDays(1)))
+                .filter(r -> r.getEndDate() == null || r.getEndDate().isAfter(clockService.now().minusDays(1)))
+                .findFirst().orElse(null);
+        reporterToUse = derivedRoleFromOccupancy !=null ? (Person) derivedRoleFromOccupancy.getParty() : null;
+        return reporterToUse;
     }
 
     public TurnoverReportingConfig create(
@@ -102,4 +117,8 @@ public class TurnoverReportingConfigRepository extends UdoDomainRepositoryAndFac
 
     @Inject
     RepositoryService repositoryService;
+
+    @Inject FixedAssetRoleRepository fixedAssetRoleRepository;
+
+    @Inject ClockService clockService;
 }

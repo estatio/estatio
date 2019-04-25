@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.turnover.dom.Frequency;
@@ -102,6 +103,7 @@ public class TurnoverEntryService_IntegTest extends TurnoverModuleIntegTestAbstr
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final ExecutionContext executionContext) {
+                    executionContext.executeChild(this,Person_enum.JohnTurnover);
                     executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfTopModel001Gb);
                     executionContext.executeChild(this, TurnoverReportingConfig_enum.BudPoison001Nl);
                     executionContext.executeChild(this, TurnoverReportingConfig_enum.BudMiracle002Nl);
@@ -130,141 +132,141 @@ public class TurnoverEntryService_IntegTest extends TurnoverModuleIntegTestAbstr
             assertThat(turnovers).hasSize(26); // no turnovers for topmodel on 01-01-2014
 
             // when
-            Person reporterJohnDoe = TurnoverReportingConfig_enum.BudPoison001Nl.getPerson_d().findUsing(serviceRegistry);
-            assertThat(turnoverReportingConfigRepository.findByReporter(reporterJohnDoe)).hasSize(6);
+            Person reporterJohn = Person_enum.JohnTurnover.findUsing(serviceRegistry);
+            assertThat(turnoverReportingConfigRepository.findByReporter(reporterJohn)).hasSize(6);
             Occupancy oPoison = TurnoverReportingConfig_enum.BudPoison001Nl.findUsing(serviceRegistry).getOccupancy();
             Turnover turnover = turnoverRepository.findByOccupancyAndTypeAndDateWithStatusNew(oPoison, Type.PRELIMINARY, march).get(0);
             mixin(Turnover_enter.class, turnover).$$(BigDecimal.ZERO, null, null, false, null);
 
             // then
-            Turnover nextNew = turnoverEntryService.nextNewForReporter(reporterJohnDoe, turnover);
+            Turnover nextNew = turnoverEntryService.nextNewForReporter(reporterJohn, turnover);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("BUD-DAGO");
             assertThat(nextNew.getDate()).isEqualTo(march);
             // and when
-            nextNew = turnoverEntryService.nextNewForReporter(reporterJohnDoe, nextNew);
+            nextNew = turnoverEntryService.nextNewForReporter(reporterJohn, nextNew);
             // then still
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("BUD-DAGO");
             assertThat(nextNew.getDate()).isEqualTo(march);
 
             // and when, then
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("BUD-MIRA");
             assertThat(nextNew.getDate()).isEqualTo(march);
             assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
 
             // and when, then
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-MEDIAX");
             assertThat(nextNew.getDate()).isEqualTo(march);
             assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
             // and when, then
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-MIRA");
             assertThat(nextNew.getDate()).isEqualTo(march);
             assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
             // and when, then
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-POI");
             assertThat(nextNew.getDate()).isEqualTo(march);
             assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
 
             // and when, then
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("BUD-DAGO");
             assertThat(nextNew.getDate()).isEqualTo(feb);
             assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
             // and when, then
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("BUD-MIRA");
             assertThat(nextNew.getDate()).isEqualTo(feb);
             assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
             // and when, then
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("BUD-POI");
             assertThat(nextNew.getDate()).isEqualTo(feb);
             assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
 
             // and when, then
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-MEDIAX");
             assertThat(nextNew.getDate()).isEqualTo(feb);
             assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
             // and when, then
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-MIRA");
             assertThat(nextNew.getDate()).isEqualTo(feb);
             assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
             // and when, then
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-POI");
             assertThat(nextNew.getDate()).isEqualTo(feb);
             assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
 
             // and when, then
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("BUD-DAGO");
             assertThat(nextNew.getDate()).isEqualTo(jan);
             assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
             // and when, then
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("BUD-MIRA");
             assertThat(nextNew.getDate()).isEqualTo(jan);
             assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
             // and when, then
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("BUD-POI");
             assertThat(nextNew.getDate()).isEqualTo(jan);
             assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
 
             // and when, then
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-MEDIAX");
             assertThat(nextNew.getDate()).isEqualTo(jan);
             assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
             // and when, then
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-MIRA");
             assertThat(nextNew.getDate()).isEqualTo(jan);
             assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
             // and when, then
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-POI");
             assertThat(nextNew.getDate()).isEqualTo(jan);
             assertThat(nextNew.getType()).isEqualTo(Type.PRELIMINARY);
 
             // and finally the other types also in alphabetical order
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("BUD-DAGO");
             assertThat(nextNew.getDate()).isEqualTo(jan);
             assertThat(nextNew.getType()).isEqualTo(Type.AUDITED);
 
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("BUD-MIRA");
             assertThat(nextNew.getDate()).isEqualTo(jan);
             assertThat(nextNew.getType()).isEqualTo(Type.AUDITED);
 
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("BUD-POI");
             assertThat(nextNew.getDate()).isEqualTo(jan);
             assertThat(nextNew.getType()).isEqualTo(Type.AUDITED);
 
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-MEDIAX");
             assertThat(nextNew.getDate()).isEqualTo(jan);
             assertThat(nextNew.getType()).isEqualTo(Type.AUDITED);
 
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-MIRA");
             assertThat(nextNew.getDate()).isEqualTo(jan);
             assertThat(nextNew.getType()).isEqualTo(Type.AUDITED);
 
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew.getOccupancy().getLease().getReference()).startsWith("OXF-POI");
             assertThat(nextNew.getDate()).isEqualTo(jan);
             assertThat(nextNew.getType()).isEqualTo(Type.AUDITED);
 
             // and that is it
-            nextNew = nextAfterDataEntry(nextNew, reporterJohnDoe);
+            nextNew = nextAfterDataEntry(nextNew, reporterJohn);
             assertThat(nextNew).isNull();
 
         }
