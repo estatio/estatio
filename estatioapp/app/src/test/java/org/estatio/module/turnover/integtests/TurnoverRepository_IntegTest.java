@@ -126,15 +126,23 @@ public class TurnoverRepository_IntegTest extends TurnoverModuleIntegTestAbstrac
         final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
 
         // when
-        Turnover turnover = turnoverRepository.createEmpty(occupancy, turnoverDate, Type.AUDITED, Frequency.MONTHLY, euro);
+        Turnover turnover = turnoverRepository.createNewEmpty(occupancy, turnoverDate, Type.AUDITED, Frequency.MONTHLY, euro);
 
         // then
+        assertThat(turnoverRepository.listAll()).hasSize(1);
         assertThat(turnover.getOccupancy()).isEqualTo(occupancy);
         assertThat(turnover.getDate()).isEqualTo(turnoverDate);
         assertThat(turnover.getType()).isEqualTo(Type.AUDITED);
         assertThat(turnover.getFrequency()).isEqualTo(Frequency.MONTHLY);
         assertThat(turnover.getCurrency()).isEqualTo(euro);
         assertThat(turnover.isNonComparable()).isFalse();
+
+        // and when
+        Turnover secondTry = turnoverRepository.createNewEmpty(occupancy, turnoverDate, Type.AUDITED, Frequency.MONTHLY, euro);
+        // then still
+        assertThat(turnoverRepository.listAll()).hasSize(1);
+        assertThat(secondTry).isSameAs(turnover);
+
     }
 
     @Test

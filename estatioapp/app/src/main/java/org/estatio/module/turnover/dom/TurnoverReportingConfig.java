@@ -110,8 +110,8 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
 
     public void produceEmptyTurnovers(final LocalDate date) {
         if (!date.isBefore(getStartDate())) {
-            if (prelimFrequency.hasStartDate(date)) turnoverRepository.createEmpty(getOccupancy(), date, Type.PRELIMINARY, getPrelimFrequency(), getCurrency());
-            if (auditedFrequency.hasStartDate(date)) turnoverRepository.createEmpty(getOccupancy(), date, Type.AUDITED, getAuditedFrequency(), getCurrency());
+            if (prelimFrequency.hasStartDate(date)) turnoverRepository.createNewEmpty(getOccupancy(), date, Type.PRELIMINARY, getPrelimFrequency(), getCurrency());
+            if (auditedFrequency.hasStartDate(date)) turnoverRepository.createNewEmpty(getOccupancy(), date, Type.AUDITED, getAuditedFrequency(), getCurrency());
         }
     }
 

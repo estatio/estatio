@@ -116,15 +116,18 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
         return turnover;
     }
 
-    public Turnover createEmpty(
+    public Turnover createNewEmpty(
             final Occupancy occupancy,
             final LocalDate turnoverDate,
             final Type type,
             final Frequency frequency,
             final Currency currency) {
-        Turnover turnover = new Turnover(occupancy, turnoverDate, type, frequency, currency, Status.NEW);
-        serviceRegistry2.injectServicesInto(turnover);
-        repositoryService.persistAndFlush(turnover);
+        Turnover turnover = findUnique(occupancy, turnoverDate, type);
+        if (turnover==null) {
+            turnover = new Turnover(occupancy, turnoverDate, type, frequency, currency, Status.NEW);
+            serviceRegistry2.injectServicesInto(turnover);
+            repositoryService.persistAndFlush(turnover);
+        }
         return turnover;
     }
 
