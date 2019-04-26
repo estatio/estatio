@@ -8,8 +8,11 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.core.commons.lang.ArrayExtensions;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -102,6 +105,11 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
     @Getter @Setter
     @Column(name = "currencyId", allowsNull = "false")
     private Currency currency;
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public LocalDate getEndDate(){
+        return ArrayExtensions.coalesce(occupancy.getEndDate(), occupancy.getLease().getTenancyEndDate(), occupancy.getLease().getEndDate());
+    }
 
     @Override
     public ApplicationTenancy getApplicationTenancy() {

@@ -190,8 +190,6 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
                 comments,
                 nonComparableFlag > 0 ? true: false);
 
-//        turnoverReportingConfigRepository.findOrCreate(occupancy, null, date, Frequency.MONTHLY, Frequency.YEARLY, currency);
-
         return Lists.newArrayList(turnover);
     }
 
