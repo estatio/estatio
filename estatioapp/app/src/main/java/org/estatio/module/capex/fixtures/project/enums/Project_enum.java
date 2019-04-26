@@ -94,6 +94,18 @@ public enum Project_enum implements PersonaWithBuilderScript<Project, ProjectBui
 
             }
     ),
+    RonProject2It    ("ITPR002", "Another new extension", ld(2018, 1, 1), ld(2021, 7, 1), It,
+            new ItemSpec[]{
+                    new ItemSpec(IncomingCharge_enum.ItConstruction, "construction (costruzione)", bd("120000.00"), null, null, RonIt, null
+                    )
+            }
+    ),
+    RonProject3It    ("ITPR003", "Resurface car park", ld(2018, 1, 1), ld(2021, 7, 1), It,
+            new ItemSpec[]{
+                    new ItemSpec(IncomingCharge_enum.ItConstruction, "construction (costruzione)", bd("120000.00"), null, null, RonIt, null
+                    )
+            }
+    ),
     ;
 
     @AllArgsConstructor

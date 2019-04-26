@@ -258,6 +258,14 @@ import lombok.Setter;
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerBankAccountCreator, Stateful {
 
+    public static IncomingInvoiceItem firstItemOf(final IncomingInvoice invoiceIfAny) {
+        return invoiceIfAny != null
+                ? invoiceIfAny.getItems().size() == 1
+                    ? (IncomingInvoiceItem) invoiceIfAny.getItems().first()
+                    : null
+                : null;
+    }
+
     public static class ApprovalInvalidatedEvent extends java.util.EventObject {
         public ApprovalInvalidatedEvent(final Object source) {
             super(source);
