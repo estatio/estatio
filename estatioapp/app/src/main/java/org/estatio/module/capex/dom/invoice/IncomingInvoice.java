@@ -1129,7 +1129,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     public String disableSplitItem() {
 
         ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot split items because");
-        if (!CountryUtil.isItalian(this)) reasonDisabledDueToApprovalStateIfAny(this, buf); // we slack this constraint so Italian users can modify when already paid for reporting reasons
+        reasonDisabledDueToApprovalStateIfAny(this, buf);
         buf.append(() -> choices0SplitItem().isEmpty(), "there are no items");
         return buf.getReason();
     }
@@ -1235,7 +1235,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot merge items because");
 
         final Object viewContext = this;
-        if (!CountryUtil.isItalian(this)) reasonDisabledDueToApprovalStateIfAny(viewContext, buf); // we slack this constraint so Italian users can modify when already paid for reporting reasons
+        reasonDisabledDueToApprovalStateIfAny(viewContext, buf);
 
         buf.append(() -> getItems().size() < 2, "merging needs 2 or more items");
         return buf.getReason();
