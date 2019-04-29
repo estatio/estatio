@@ -1193,6 +1193,8 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
                         "docHead"
                         , "lineNum"
                         , "accountCode"
+                        , "incomingInvoiceType"
+                        , "incomingInvoiceItem"
                         , "description"
                         , "docValue"
                         , "docSumTax"
