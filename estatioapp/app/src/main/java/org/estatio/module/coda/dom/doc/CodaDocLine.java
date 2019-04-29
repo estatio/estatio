@@ -39,6 +39,7 @@ import org.apache.isis.applib.services.title.TitleService;
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
 import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
@@ -338,6 +339,11 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
     @PropertyLayout(multiLine = 5)
     @Getter @Setter
     private String reasonInvalid;
+
+    @Column(allowsNull = "true", name = "incomingInvoiceItemId")
+    @Property
+    @Getter @Setter
+    private IncomingInvoiceItem incomingInvoiceItem;
 
     @Programmatic
     public void appendInvalidReason(final String reasonFormat, Object... args) {

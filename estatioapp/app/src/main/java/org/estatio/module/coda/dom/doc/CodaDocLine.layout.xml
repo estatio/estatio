@@ -66,6 +66,7 @@
                     <cpt:fieldSet name="Description">
                         <cpt:property id="description"/>
                         <cpt:property id="incomingInvoiceType"/>
+                        <cpt:property id="incomingInvoiceItem"/>
                         <cpt:property id="userRef1">
                             <cpt:named>User Ref 1 (Barcode)</cpt:named>
                         </cpt:property>
