@@ -340,11 +340,6 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
     @Getter @Setter
     private String reasonInvalid;
 
-    @Column(allowsNull = "true", name = "incomingInvoiceItemId")
-    @Property
-    @Getter @Setter
-    private IncomingInvoiceItem incomingInvoiceItem;
-
     @Programmatic
     public void appendInvalidReason(final String reasonFormat, Object... args) {
         final String reason = String.format(reasonFormat, args);
@@ -584,6 +579,12 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
     @Property(domainEvent = AnalysisOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private IncomingInvoiceType incomingInvoiceType;
+
+
+    @Column(allowsNull = "true", name = "incomingInvoiceItemId")
+    @Property(domainEvent = AnalysisOnlyPropertyDomainEvent.class)
+    @Getter @Setter
+    private IncomingInvoiceItem incomingInvoiceItem;
 
     /**
      * Derived from parent {@link CodaDocHead#getHandling()}, for performance.
