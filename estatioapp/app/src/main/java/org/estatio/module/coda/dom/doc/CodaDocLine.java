@@ -256,17 +256,17 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
     private String accountCode;
 
     @Column(allowsNull = "true", length = 36)
-    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @Property()
     @Getter @Setter
     private String description;
 
     @Column(allowsNull = "true", scale = 2)
-    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @Property()
     @Getter @Setter
     private BigDecimal docValue;
 
     @Column(allowsNull = "true", scale = 2)
-    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @Property()
     @Getter @Setter
     private BigDecimal docSumTax;
 
@@ -296,12 +296,12 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
     private String extRef3;
 
     @Column(allowsNull = "true", length = 32)
-    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @Property(domainEvent = AnalysisOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private String extRef4;
 
     @Column(allowsNull = "true", length = 32)
-    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @Property(domainEvent = AnalysisOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private String extRef5;
 

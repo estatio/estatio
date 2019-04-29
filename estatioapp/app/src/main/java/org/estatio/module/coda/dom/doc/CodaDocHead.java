@@ -1207,24 +1207,36 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
                 final String collectionId,
                 final Class<?> collectionType,
                 final List<String> propertyIds) {
-            if (parent instanceof CodaDocHead && "lines".equals(collectionId)) {
+            if (parent instanceof CodaDocHead && "summaryLines".equals(collectionId)) {
                 return Arrays.asList(
                         "docHead"
                         , "lineNum"
                         , "accountCode"
-                        , "incomingInvoiceType"
-                        , "incomingInvoiceItem"
                         , "description"
                         , "docValue"
                         , "docSumTax"
                         , "valueDate"
                         , "extRef3"
-                        , "extRef4"
-                        , "extRef5"
                         , "userRef1"
                         , "userStatus"
                         , "elmBankAccount"
                         , "mediaCode"
+                        , "reasonInvalid"
+                );
+            }
+            if (parent instanceof CodaDocHead && "analysisLines".equals(collectionId)) {
+                return Arrays.asList(
+                        "docHead"
+                        , "lineNum"
+                        , "accountCode"
+                        , "description"
+                        , "docValue"
+                        , "docSumTax"
+                        , "valueDate"
+                        , "extRef4"
+                        , "extRef5"
+                        , "incomingInvoiceType"
+                        , "incomingInvoiceItem"
                         , "reasonInvalid"
                 );
             }
