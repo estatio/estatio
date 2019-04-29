@@ -32,12 +32,15 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.base.integtests.VT;
+import org.incode.module.docfragment.dom.impl.DocFragmentRepository;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexRepository;
 import org.estatio.module.invoice.dom.Invoice;
+import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.module.invoice.dom.InvoiceStatus;
@@ -310,5 +313,70 @@ public class InvoiceService_IntegTest extends LeaseModuleIntegTestAbstract {
         }
 
     }
+
+    public static class VatRoundingForItalianInvoices extends InvoiceService_IntegTest {
+
+        @Before
+        public void setupTransactionalData() {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(final ExecutionContext ec) {
+
+                    ec.executeChildren(this,
+                            LeaseItemForRent_enum.RonTopModel001It);
+
+                }
+            });
+        }
+
+        @Test
+        public void italian_invoice_with_rouding_issues_is_corrected_on_invoicing() throws Exception {
+
+            // given - italian lease with rounding problems
+            docFragmentRepository.create("org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "description", "/ITA/RON/HW_IT", "");
+            docFragmentRepository.create("org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "preliminaryLetterDescription", "/ITA/RON/HW_IT", "");
+            docFragmentRepository.create("org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM", "description", "/ITA/RON/HW_IT", "");
+
+            Lease lease = Lease_enum.RonTopModel001It.findUsing(serviceRegistry);
+            mixin(Lease_calculate.class, lease).exec(InvoiceRunType.NORMAL_RUN, Arrays.asList(LeaseItemType.RENT), new LocalDate(2019,01,01), new LocalDate(2019,01,01), new LocalDate(2019,1,2));
+            InvoiceForLease invoice = invoiceForLeaseRepository.findByLease(lease).get(0);
+            InvoiceItem rentItem = invoice.getItems().first();
+            Charge charge = rentItem.getCharge();
+            rentItem.remove();
+
+            InvoiceItem item = mixin(InvoiceForLease._newItem.class, invoice).$$(charge, new BigDecimal("1"), new BigDecimal("0.08"), null, null);
+            Assertions.assertThat(item.getVatAmount()).isEqualTo(new BigDecimal("0.02"));
+            Assertions.assertThat(item.getGrossAmount()).isEqualTo(new BigDecimal("0.10"));
+
+            InvoiceItem itemCausingRoundingProblem = mixin(InvoiceForLease._newItem.class, invoice).$$(charge, new BigDecimal("1"), new BigDecimal("0.17"), null, null);
+            Assertions.assertThat(itemCausingRoundingProblem.getVatAmount()).isEqualTo(new BigDecimal("0.04"));
+            Assertions.assertThat(itemCausingRoundingProblem.getGrossAmount()).isEqualTo(new BigDecimal("0.21"));
+
+            // when
+            mixin(InvoiceForLease._approve.class, invoice).$$();
+            // then still not corrected
+            Assertions.assertThat(invoice.getItems().first().getVatAmount()).isEqualTo("0.04");
+            Assertions.assertThat(invoice.getItems().first().getGrossAmount()).isEqualTo("0.21");
+
+            // when
+            mixin(InvoiceForLease._collect.class, invoice).$$();
+            // then still not corrected
+            Assertions.assertThat(invoice.getItems().first().getVatAmount()).isEqualTo("0.04");
+            Assertions.assertThat(invoice.getItems().first().getGrossAmount()).isEqualTo("0.21");
+
+            // when
+            mixin(InvoiceForLease._invoice.class, invoice).$$(new LocalDate(2019,01,01));
+            // then the largest amount is corrected
+            Assertions.assertThat(invoice.getItems().first().getVatAmount()).isEqualTo("0.03");
+            Assertions.assertThat(invoice.getItems().first().getGrossAmount()).isEqualTo("0.20");
+
+        }
+
+        @Inject InvoiceForLeaseRepository invoiceForLeaseRepository;
+
+        @Inject DocFragmentRepository docFragmentRepository;
+
+    }
+
 
 }

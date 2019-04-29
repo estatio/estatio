@@ -6,6 +6,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.order.dom.attr.OrderAttribute;
@@ -26,9 +27,16 @@ public class Order_initializePlaceholders {
 
     public boolean hideAct() {
         final List<OrderAttribute> attributes = orderAttributeRepository.findByOrder(order);
+        if (factoryService.mixin(Order_downloadDraft.class, order).hideAct()) {
+            return true;
+        }
         return !attributes.isEmpty();
     }
 
     @Inject
     OrderAttributeRepository orderAttributeRepository;
+
+    @Inject
+    FactoryService factoryService;
+
 }

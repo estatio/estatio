@@ -258,6 +258,14 @@ import lombok.Setter;
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerBankAccountCreator, Stateful {
 
+    public static IncomingInvoiceItem firstItemOf(final IncomingInvoice invoiceIfAny) {
+        return invoiceIfAny != null
+                ? invoiceIfAny.getItems().size() == 1
+                    ? (IncomingInvoiceItem) invoiceIfAny.getItems().first()
+                    : null
+                : null;
+    }
+
     public static class ApprovalInvalidatedEvent extends java.util.EventObject {
         public ApprovalInvalidatedEvent(final Object source) {
             super(source);
@@ -871,6 +879,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return this;
     }
 
+    public boolean hideAddItem(){
+        return CountryUtil.isItalian(this);
+    }
+
     public String disableAddItem() {
         final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot add item because");
 
@@ -1076,6 +1088,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return copyItem;
     }
 
+    public boolean hideReverseItem(){
+        return CountryUtil.isItalian(this);
+    }
+
     public String disableReverseItem() {
         ReasonBuffer2 buf = ReasonBuffer2.forAll("Invoice item cannot be reversed because");
 
@@ -1118,10 +1134,13 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return this;
     }
 
-    public String disableSplitItem() {
+    public boolean hideSplitItem(){
+        return CountryUtil.isItalian(this);
+    }
 
+    public String disableSplitItem() {
         ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot split items because");
-        if (!CountryUtil.isItalian(this)) reasonDisabledDueToApprovalStateIfAny(this, buf); // we slack this constraint so Italian users can modify when already paid for reporting reasons
+        reasonDisabledDueToApprovalStateIfAny(this, buf);
         buf.append(() -> choices0SplitItem().isEmpty(), "there are no items");
         return buf.getReason();
     }
@@ -1223,11 +1242,15 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return this;
     }
 
+    public boolean hideMergeItems(){
+        return CountryUtil.isItalian(this);
+    }
+
     public String disableMergeItems() {
         final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot merge items because");
 
         final Object viewContext = this;
-        if (!CountryUtil.isItalian(this)) reasonDisabledDueToApprovalStateIfAny(viewContext, buf); // we slack this constraint so Italian users can modify when already paid for reporting reasons
+        reasonDisabledDueToApprovalStateIfAny(viewContext, buf);
 
         buf.append(() -> getItems().size() < 2, "merging needs 2 or more items");
         return buf.getReason();

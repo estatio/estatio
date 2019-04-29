@@ -20,6 +20,7 @@ package org.estatio.module.lease.integtests.lease;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.SortedSet;
 
 import javax.inject.Inject;
@@ -33,6 +34,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.wrapper.DisabledException;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.incode.module.base.integtests.VT;
@@ -40,8 +42,10 @@ import org.incode.module.base.integtests.VT;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
+import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.app.LeaseMenu;
+import org.estatio.module.lease.contributions.Lease_calculate;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
@@ -369,6 +373,42 @@ public class LeaseItem_IntegTest extends LeaseModuleIntegTestAbstract {
 
             // then
             assertThat(leaseItem.getTerms()).hasSize(5);
+
+        }
+
+    }
+
+    public static class Remove extends LeaseItem_IntegTest {
+
+        @Rule
+        public ExpectedException thrown = ExpectedException.none();
+
+        @Test
+        public void item_remove_not_possible_when_item_is_invoice_upon() throws Exception {
+
+            // given
+            LeaseItem item = LeaseItemForRent_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+            Lease lease = item.getLease();
+            final LocalDate invoiceDueDate = new LocalDate(2018, 01, 01);
+            wrap(mixin(Lease_calculate.class, lease)).exec(InvoiceRunType.NORMAL_RUN, Arrays.asList(LeaseItemType.RENT), invoiceDueDate, invoiceDueDate, new LocalDate(2018, 01, 02));
+
+            assertThat(item.getTerms()).hasSize(8);
+            assertThat(item.getTerms().last().getInvoiceItems()).hasSize(1); // NOTE: there are invoices attached
+            assertThat(item.getTerms().first().getInvoiceItems()).isEmpty(); // But not to all the terms !!
+
+            // when
+            item.remove();
+
+            // then still
+            assertThat(item).isNotNull();
+            assertThat(item.getTerms()).hasSize(8);
+
+            // and expect
+            thrown.expect(DisabledException.class);
+            thrown.expectMessage("This item has been invoiced");
+
+            // when
+            wrap(item).remove();
 
         }
 
