@@ -16,6 +16,8 @@ import org.apache.isis.core.commons.lang.ArrayExtensions;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -117,7 +119,8 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
     }
 
     public void produceEmptyTurnovers(final LocalDate date) {
-        if (!date.isBefore(getStartDate())) {
+        LocalDateInterval interval = LocalDateInterval.including(getStartDate(), getEndDate());
+        if (interval.contains(date)) {
             if (prelimFrequency.hasStartDate(date)) turnoverRepository.createNewEmpty(getOccupancy(), date, Type.PRELIMINARY, getPrelimFrequency(), getCurrency());
             if (auditedFrequency.hasStartDate(date)) turnoverRepository.createNewEmpty(getOccupancy(), date, Type.AUDITED, getAuditedFrequency(), getCurrency());
         }
