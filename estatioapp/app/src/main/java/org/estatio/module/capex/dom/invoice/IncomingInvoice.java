@@ -26,7 +26,6 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.validation.constraints.Digits;
-import javax.ws.rs.HEAD;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.google.common.collect.ComparisonChain;
@@ -276,8 +275,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     public static IncomingInvoiceItem firstItemOf(final IncomingInvoice invoiceIfAny) {
         return invoiceIfAny != null
                 ? invoiceIfAny.getItems().size() == 1
-                    ? (IncomingInvoiceItem) invoiceIfAny.getItems().first()
-                    : null
+                ? (IncomingInvoiceItem) invoiceIfAny.getItems().first()
+                : null
                 : null;
     }
 
@@ -477,8 +476,36 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return getSeller();
     }
 
+    @Programmatic
+    private String disableWhenNewSupplier(
+            final OrganisationNameNumberViewModel newSupplierCandidate,
+            final Country newSupplierCountry,
+            final String newSupplierIban) {
+        return (newSupplierCandidate != null || newSupplierCountry != null || newSupplierIban != null) ? "Disabled when a new supplier candidate is selected" : null;
+    }
+
+    public String disable1CompleteInvoice(
+            final IncomingInvoiceType incomingInvoiceType,
+            final Party supplier,
+            final Boolean createRoleIfRequired,
+            final OrganisationNameNumberViewModel newSupplierCandidate,
+            final Country newSupplierCountry,
+            final String newSupplierIban) {
+        return disableWhenNewSupplier(newSupplierCandidate, newSupplierCountry, newSupplierIban);
+    }
+
     public List<Party> autoComplete1CompleteInvoice(final String search) {
         return partyRepository.autoCompleteSupplier(search, getAtPath());
+    }
+
+    public String disable2CompleteInvoice(
+            final IncomingInvoiceType incomingInvoiceType,
+            final Party supplier,
+            final Boolean createRoleIfRequired,
+            final OrganisationNameNumberViewModel newSupplierCandidate,
+            final Country newSupplierCountry,
+            final String newSupplierIban) {
+        return disableWhenNewSupplier(newSupplierCandidate, newSupplierCountry, newSupplierIban);
     }
 
     public List<OrganisationNameNumberViewModel> autoComplete3CompleteInvoice(@MinLength(3) final String search) {
@@ -490,6 +517,41 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         List<OrganisationNameNumberViewModel> result = new ArrayList<>(chamberOfCommerceCodeLookUpService.getChamberOfCommerceCodeCandidatesByOrganisation(search, getAtPath()));
         result.add(new OrganisationNameNumberViewModel(search, null));
         return result;
+    }
+
+    @Programmatic
+    private String disableWhenExistingSupplier(final Party supplier) {
+        return supplier != null ? "Disabled when an existing supplier is selected" : null;
+    }
+
+    public String disable3CompleteInvoice(
+            final IncomingInvoiceType incomingInvoiceType,
+            final Party supplier,
+            final Boolean createRoleIfRequired,
+            final OrganisationNameNumberViewModel newSupplierCandidate,
+            final Country newSupplierCountry,
+            final String newSupplierIban) {
+        return disableWhenExistingSupplier(supplier);
+    }
+
+    public String disable4CompleteInvoice(
+            final IncomingInvoiceType incomingInvoiceType,
+            final Party supplier,
+            final Boolean createRoleIfRequired,
+            final OrganisationNameNumberViewModel newSupplierCandidate,
+            final Country newSupplierCountry,
+            final String newSupplierIban) {
+        return disableWhenExistingSupplier(supplier);
+    }
+
+    public String disable5CompleteInvoice(
+            final IncomingInvoiceType incomingInvoiceType,
+            final Party supplier,
+            final Boolean createRoleIfRequired,
+            final OrganisationNameNumberViewModel newSupplierCandidate,
+            final Country newSupplierCountry,
+            final String newSupplierIban) {
+        return disableWhenExistingSupplier(supplier);
     }
 
     public BankAccount default6CompleteInvoice(
