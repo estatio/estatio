@@ -879,6 +879,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return this;
     }
 
+    public boolean hideAddItem(){
+        return CountryUtil.isItalian(this);
+    }
+
     public String disableAddItem() {
         final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot add item because");
 
@@ -1084,6 +1088,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return copyItem;
     }
 
+    public boolean hideReverseItem(){
+        return CountryUtil.isItalian(this);
+    }
+
     public String disableReverseItem() {
         ReasonBuffer2 buf = ReasonBuffer2.forAll("Invoice item cannot be reversed because");
 
@@ -1126,8 +1134,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return this;
     }
 
-    public String disableSplitItem() {
+    public boolean hideSplitItem(){
+        return CountryUtil.isItalian(this);
+    }
 
+    public String disableSplitItem() {
         ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot split items because");
         reasonDisabledDueToApprovalStateIfAny(this, buf);
         buf.append(() -> choices0SplitItem().isEmpty(), "there are no items");
@@ -1229,6 +1240,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final IncomingInvoiceItem mergeInto) {
         incomingInvoiceItemRepository.mergeItems(item, mergeInto);
         return this;
+    }
+
+    public boolean hideMergeItems(){
+        return CountryUtil.isItalian(this);
     }
 
     public String disableMergeItems() {
