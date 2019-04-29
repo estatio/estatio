@@ -73,7 +73,7 @@ public class DerivedObjectUpdater {
         final Party buyer = docHead.getCmpCodeBuyer();
 
         final Party seller = docHead.getSummaryLineAccountCodeEl6Supplier(LineCache.DEFAULT);
-        final IncomingInvoiceType type = docHead.getAnalysisLineIncomingInvoiceType(LineCache.DEFAULT);
+        final IncomingInvoiceType type = docHead.getFirstAnalysisLineIncomingInvoiceType(LineCache.DEFAULT);
         final String invoiceNumber = docHead.getSummaryLineExtRef2(LineCache.DEFAULT);
         final Property property = docHead.getSummaryLineAccountEl3Property(LineCache.DEFAULT);
 

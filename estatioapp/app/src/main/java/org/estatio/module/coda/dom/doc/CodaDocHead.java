@@ -364,7 +364,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     }
 
     @Programmatic
-    public CodaDocLine analysisDocLine(final LineCache lineCache) {
+    public CodaDocLine firstAnalysisDocLine(final LineCache lineCache) {
         return findFirstLineByType(LineType.ANALYSIS, lineCache);
     }
 
@@ -373,10 +373,6 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
                 .filter(x -> x.getLineType() == lineType)
                 .findFirst()
                 .orElse(null);
-    }
-
-    private SortedSet<CodaDocLine> linesFor() {
-        return linesFor(LineCache.DEFAULT);
     }
 
     private SortedSet<CodaDocLine> linesFor(final LineCache lineCache) {
@@ -566,9 +562,10 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
             lineValidator.validateSummaryDocLine(summaryDocLine);
         }
 
-        final CodaDocLine analysisDocLine = analysisDocLine(LineCache.DEFAULT);
-        if (analysisDocLine != null) {
-            lineValidator.validateAnalysisDocLine(analysisDocLine);
+        for (final CodaDocLine analysisDocLine : getAnalysisLines()) {
+            if (analysisDocLine != null) {
+                lineValidator.validateAnalysisDocLine(analysisDocLine);
+            }
         }
 
         updateInvalidReasonBasedOnLines();
@@ -968,14 +965,18 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     }
 
     @Programmatic
-    public String getAnalysisLineAccountCode(final LineCache lineCache) {
-        final CodaDocLine docLine = analysisDocLine(lineCache);
+    public String getFirstAnalysisLineAccountCode(final LineCache lineCache) {
+        final CodaDocLine docLine = firstAnalysisDocLine(lineCache);
         return docLine != null ? docLine.getAccountCode() : null;
     }
 
+    /**
+     * The {@link IncomingInvoiceType} of the first analysis line is used for routing the approval
+     * of the entire * {@link IncomingInvoice}.
+     */
     @Programmatic
-    public IncomingInvoiceType getAnalysisLineIncomingInvoiceType(final LineCache lineCache) {
-        final CodaDocLine docLine = analysisDocLine(lineCache);
+    public IncomingInvoiceType getFirstAnalysisLineIncomingInvoiceType(final LineCache lineCache) {
+        final CodaDocLine docLine = firstAnalysisDocLine(lineCache);
         return docLine != null ? docLine.getIncomingInvoiceType() : null;
     }
 
