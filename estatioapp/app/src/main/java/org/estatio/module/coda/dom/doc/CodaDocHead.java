@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -335,9 +336,27 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     @javax.jdo.annotations.Persistent(
             mappedBy = "docHead", defaultFetchGroup = "false", dependentElement = "true"
     )
-    @CollectionLayout(defaultView = "table", paged = 999)
+    @CollectionLayout(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private SortedSet<CodaDocLine> lines = new TreeSet<>();
+
+    @javax.jdo.annotations.NotPersistent
+    @CollectionLayout(defaultView = "table", paged = 999)
+    public List<CodaDocLine> getSummaryLines() {
+        return linesOf(LineType.SUMMARY);
+    }
+
+    @javax.jdo.annotations.NotPersistent
+    @CollectionLayout(defaultView = "table", paged = 999)
+    public List<CodaDocLine> getAnalysisLines() {
+        return linesOf(LineType.ANALYSIS);
+    }
+
+    private List<CodaDocLine> linesOf(final LineType lineType) {
+        return Lists.newArrayList(getLines()).stream()
+                .filter(x -> x.getLineType() == lineType)
+                .collect(Collectors.toList());
+    }
 
     @Programmatic
     public CodaDocLine summaryDocLine(final LineCache lineCache) {
