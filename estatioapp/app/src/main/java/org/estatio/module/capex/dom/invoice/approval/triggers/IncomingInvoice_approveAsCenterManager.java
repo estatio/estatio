@@ -37,6 +37,7 @@ public class IncomingInvoice_approveAsCenterManager extends IncomingInvoice_trig
     )
     @ActionLayout(cssClassFa = "fa-thumbs-o-up")
     public Object act(
+            @Nullable final IPartyRoleType roleToAssignNextTo,
             @Nullable final Person personToAssignNextTo,
             @Nullable final String comment,
             final boolean goToNext) {
@@ -45,7 +46,7 @@ public class IncomingInvoice_approveAsCenterManager extends IncomingInvoice_trig
         return objectToReturn(next);
     }
 
-    public boolean default2Act() {
+    public boolean default3Act() {
         return true;
     }
 
@@ -61,11 +62,11 @@ public class IncomingInvoice_approveAsCenterManager extends IncomingInvoice_trig
         return reasonGuardNotSatisified();
     }
 
-    public Person default0Act(final IPartyRoleType roleType) {
+    public Person default1Act(final IPartyRoleType roleType) {
         return defaultPersonToAssignNextTo(roleType);
     }
 
-    public List<Person> choices0Act(final IPartyRoleType roleType) {
+    public List<Person> choices1Act(final IPartyRoleType roleType) {
         return choicesPersonToAssignNextTo(roleType);
     }
 

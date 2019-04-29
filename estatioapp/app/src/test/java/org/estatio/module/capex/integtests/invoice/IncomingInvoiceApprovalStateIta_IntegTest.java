@@ -454,7 +454,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         // when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.IlicCenterManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_approveAsCenterManager.class, recoverableInvoice)).act(null, null, false));
+                wrap(mixin(IncomingInvoice_approveAsCenterManager.class, recoverableInvoice)).act(null,null, null, false));
 
         // then
         assertThat(recoverableInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER);
@@ -492,7 +492,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         // and when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.FloellaAssetManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_approveWhenApprovedByCenterManager.class, recoverableInvoice)).act(null, null, false));
+                wrap(mixin(IncomingInvoice_approveWhenApprovedByCenterManager.class, recoverableInvoice)).act(null,null, null, false));
 
         assertThat(recoverableInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK);
         transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(recoverableInvoice);
@@ -546,7 +546,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         // when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.IlicCenterManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_approveAsCenterManager.class, recoverableInvoice)).act(null, null, false));
+                wrap(mixin(IncomingInvoice_approveAsCenterManager.class, recoverableInvoice)).act(null,null, null, false));
 
         // then
         assertThat(recoverableInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER);

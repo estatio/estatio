@@ -37,11 +37,12 @@ public class Task_approveIncomingInvoiceWhenApprovedByCenterManager
     )
     @ActionLayout(contributed = Contributed.AS_ACTION, cssClassFa = "fa-thumbs-o-up")
     public Object act(
+            @Nullable final IPartyRoleType roleToAssignNextTo,
             @Nullable final Person personToAssignNextTo,
             @Nullable final String comment,
             final boolean goToNext) {
         final Object nextTaskIfAny = nextTaskOrWarnIfRequired(goToNext);
-        Object mixinResult = mixin().act(personToAssignNextTo, comment, goToNext);
+        Object mixinResult = mixin().act(roleToAssignNextTo, personToAssignNextTo, comment, goToNext);
         return coalesce(nextTaskIfAny, mixinResult);
     }
 
@@ -56,19 +57,19 @@ public class Task_approveIncomingInvoiceWhenApprovedByCenterManager
         return mixin().disableAct();
     }
 
-    public String validate1Act(String comment) {
+    public String validate2Act(String comment) {
         return validateCommentIfByProxy(comment);
     }
 
-    public Person default0Act(final IPartyRoleType roleType) {
-        return mixin().default0Act(roleType);
+    public Person default1Act(final IPartyRoleType roleType) {
+        return mixin().default1Act(roleType);
     }
 
-    public List<Person> choices0Act(final IPartyRoleType roleType) {
-        return mixin().choices0Act(roleType);
+    public List<Person> choices1Act(final IPartyRoleType roleType) {
+        return mixin().choices1Act(roleType);
     }
 
-    public boolean default2Act() {
+    public boolean default3Act() {
         return true;
     }
 
