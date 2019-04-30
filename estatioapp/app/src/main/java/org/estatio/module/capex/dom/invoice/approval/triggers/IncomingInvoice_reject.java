@@ -58,7 +58,7 @@ public class IncomingInvoice_reject extends IncomingInvoice_triggerAbstract {
             paymentBatch.removeLineFor(incomingInvoice);
         }
 
-        final IncomingInvoiceApprovalStateTransition transition = trigger(personToAssignNextTo, reason, reason);
+        final IncomingInvoiceApprovalStateTransition transition = trigger(role, personToAssignNextTo, reason, reason);
         if (transition.getTask() != null)
             transition.getTask().setToHighestPriority();
 

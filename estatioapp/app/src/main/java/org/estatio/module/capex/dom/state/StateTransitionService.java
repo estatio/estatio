@@ -222,15 +222,16 @@ public class StateTransitionService {
             final String currentTaskCommentIfAny,
             final String nextTaskDescriptionIfAny) {
 
-        return trigger(domainObject, stateTransitionClass, requestedTransitionTypeIfAny, null, currentTaskCommentIfAny,
-                nextTaskDescriptionIfAny);
+        return trigger(domainObject, stateTransitionClass, requestedTransitionTypeIfAny, null, null,
+                currentTaskCommentIfAny, nextTaskDescriptionIfAny);
     }
 
     /**
      * Apply the transition to the domain object and, if supported, create a {@link Task} for the <i>next</i> transition after that.
-     *   @param domainObject - the domain object whose
+     * @param domainObject - the domain object whose
      * @param stateTransitionClass - identifies the state chart being applied
      * @param requestedTransitionTypeIfAny
+     * @param role
      * @param currentTaskCommentIfAny
      * @param nextTaskDescriptionIfAny
      */
@@ -244,7 +245,8 @@ public class StateTransitionService {
             final DO domainObject,
             final Class<ST> stateTransitionClass,
             final STT requestedTransitionTypeIfAny, // null if checkState, if fix-up, if save view model
-                                                    // non-null if DomainObject_triggerAbstract, null
+            // non-null if DomainObject_triggerAbstract, null
+            final IPartyRoleType role,
             final Person personToAssignNextToIfAny,
             final String currentTaskCommentIfAny,
             final String nextTaskDescriptionIfAny) {
@@ -252,10 +254,10 @@ public class StateTransitionService {
         ST completedTransition = completeTransitionIfPossible(
                                         domainObject,
                                         stateTransitionClass,
-                                        requestedTransitionTypeIfAny,
-                                        null,                           // personToAssignNextToIfAny
-                                        currentTaskCommentIfAny,
-                                        nextTaskDescriptionIfAny);
+                                        requestedTransitionTypeIfAny, role,
+                // personToAssignNextToIfAny
+                null,
+                currentTaskCommentIfAny, nextTaskDescriptionIfAny);
 
         boolean keepTransitioning = (completedTransition != null);
         while(keepTransitioning) {
@@ -263,10 +265,9 @@ public class StateTransitionService {
             completedTransition = completeTransitionIfPossible(
                                         domainObject,
                                         stateTransitionClass,
-                                        null,                           // requestedTransitionTypeIfAny
-                                        personToAssignNextToIfAny,
-                                        null,
-                                        nextTaskDescriptionIfAny);
+                                        null, role,                           // requestedTransitionTypeIfAny
+                    personToAssignNextToIfAny,
+                    null, nextTaskDescriptionIfAny);
             keepTransitioning = (completedTransition != null && previousTransition != completedTransition);
         }
 
@@ -286,10 +287,10 @@ public class StateTransitionService {
         final Class<ST> stateTransitionClass = transitionClassFor(requestedTransitionType);
 
         return pendingTransitionIfPossible(
-                domainObject, stateTransitionClass, requestedTransitionType,
-                null, // personToAssignNextToIfAny
-                null  // nextTaskDescriptionIfAny
-                );
+                domainObject, stateTransitionClass, requestedTransitionType, null,
+                // personToAssignNextToIfAny
+                null,   // nextTaskDescriptionIfAny
+                null);
     }
 
 
@@ -305,14 +306,15 @@ public class StateTransitionService {
             final DO domainObject,
             final Class<ST> stateTransitionClass,
             final STT requestedTransitionTypeIfAny, // if non-null, then explicit action by end-user
+            final IPartyRoleType role,
             final Person personToAssignNextToIfAny,
             final String comment,
             final String nextTaskDescriptionIfAny) {
 
         final ST pendingTransitionIfAny =
                 pendingTransitionIfPossible(domainObject, stateTransitionClass,
-                    requestedTransitionTypeIfAny, personToAssignNextToIfAny,
-                nextTaskDescriptionIfAny);
+                    requestedTransitionTypeIfAny, role,
+                        personToAssignNextToIfAny, nextTaskDescriptionIfAny);
         if (pendingTransitionIfAny == null)
             return null;
 
@@ -337,6 +339,7 @@ public class StateTransitionService {
             final DO domainObject,
             final Class<ST> stateTransitionClass,
             final STT requestedTransitionTypeIfAny,
+            final IPartyRoleType role,
             final Person personToAssignNextToIfAny,
             final String nextTaskDescriptionIfAny) {
         // check the override, if any
@@ -401,8 +404,8 @@ public class StateTransitionService {
                     }
                     pendingTransitionType = nextTransitionType;
                     pendingTransitionIfAny  = createPendingTransition(
-                                                    domainObject, currentStateIfAny, nextTransitionType,
-                                                    personToAssignNextToIfAny, nextTaskDescriptionIfAny);
+                                                    domainObject, currentStateIfAny, nextTransitionType, role,
+                            personToAssignNextToIfAny, nextTaskDescriptionIfAny);
                 } else {
 
                     // in this branch the transition strategy for the most recently completed transition
@@ -419,8 +422,8 @@ public class StateTransitionService {
                 // pendingTransitionType == null, so nextTransitionType != null because of outer if
 
                 pendingTransitionIfAny  = createPendingTransition(
-                                                domainObject, currentStateIfAny, nextTransitionType,
-                                                personToAssignNextToIfAny, nextTaskDescriptionIfAny);
+                                                domainObject, currentStateIfAny, nextTransitionType, role,
+                        personToAssignNextToIfAny, nextTaskDescriptionIfAny);
                 pendingTransitionType = nextTransitionType;
             }
         }
@@ -495,13 +498,14 @@ public class StateTransitionService {
             final DO domainObject,
             final S currentState,
             final STT transitionType,
+            final IPartyRoleType role,
             final Person personToAssignToIfAny,
             final String taskDescriptionIfAny) {
 
         final TaskAssignmentStrategy<DO, ST, STT, S> taskAssignmentStrategy =
                 transitionType.getTaskAssignmentStrategy();
-        IPartyRoleType assignToIfAny = null;
-        if(taskAssignmentStrategy != null) {
+        IPartyRoleType assignToIfAny = role;
+        if(taskAssignmentStrategy != null && assignToIfAny==null) {
             assignToIfAny = taskAssignmentStrategy.getAssignTo(domainObject, serviceRegistry2).stream().findFirst().orElse(null);
         }
 

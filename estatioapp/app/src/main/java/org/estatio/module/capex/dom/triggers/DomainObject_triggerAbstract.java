@@ -171,11 +171,12 @@ public abstract class DomainObject_triggerAbstract<
     }
 
     protected final ST trigger(
+            final IPartyRoleType role,
             final Person personToAssignNextTo,
             final String currentTaskCommentIfAny,
             final String nextTaskDescriptionIfAny) {
-        return stateTransitionService.trigger(getDomainObject(), stateTransitionClass, requiredTransitionType, personToAssignNextTo, currentTaskCommentIfAny,
-                nextTaskDescriptionIfAny);
+        return stateTransitionService.trigger(getDomainObject(), stateTransitionClass, requiredTransitionType, role, personToAssignNextTo,
+                currentTaskCommentIfAny, nextTaskDescriptionIfAny);
     }
 
     protected Person defaultPersonToAssignNextTo(final IPartyRoleType roleType) {

@@ -27,6 +27,7 @@ import org.estatio.module.tax.fixtures.data.Tax_enum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import static org.estatio.module.capex.dom.invoice.IncomingInvoiceType.CAPEX;
 import static org.estatio.module.capex.dom.invoice.IncomingInvoiceType.ITA_MANAGEMENT_COSTS;
 import static org.estatio.module.capex.dom.invoice.IncomingInvoiceType.ITA_RECOVERABLE;
 import static org.incode.module.base.integtests.VT.bd;
@@ -46,6 +47,22 @@ public enum IncomingInvoiceNoDocument_enum
             ld(2018,01,01), ld(2018,02,10), ld (2017, 12, 20), null,
             bd("81967.21"), bd("100000.00"), null,
             ITA_MANAGEMENT_COSTS, null, "Some costs", bd("81967.21"), bd("18032.79"), bd("100000.00"), "F2018", null,
+            null, null, null, null, null, null, null,null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+    ),
+    invoiceForItaCapex(
+            ApplicationTenancy_enum.It,
+            Organisation_enum.TopModelIt, BankAccount_enum.TopModelIt, Organisation_enum.HelloWorldIt,
+            PropertyAndUnitsAndOwnerAndManager_enum.GraIt,
+            CAPEX, "cap12345", PaymentMethod.BANK_TRANSFER,
+            ld(2018,01,01), ld(2018,02,10), ld (2017, 12, 20), null,
+            bd("81967.21"), bd("100000.00"), null,
+            CAPEX, null, "Cappt. exp", bd("81967.21"), bd("18032.79"), bd("100000.00"), "F2018", null,
             null, null, null, null, null, null, null,null,
             null,
             null,

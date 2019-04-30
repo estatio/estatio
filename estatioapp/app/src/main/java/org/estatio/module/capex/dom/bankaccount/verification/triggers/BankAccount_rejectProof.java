@@ -39,7 +39,7 @@ public class BankAccount_rejectProof extends BankAccount_triggerAbstract {
             final IPartyRoleType role,
             @Nullable final Person personToAssignNextTo,
             final String reason) {
-        trigger(personToAssignNextTo, reason, reason);
+        trigger(role, personToAssignNextTo, reason, reason);
         return bankAccount;
     }
 

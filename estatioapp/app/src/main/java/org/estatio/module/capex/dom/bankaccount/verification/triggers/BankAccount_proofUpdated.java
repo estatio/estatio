@@ -38,7 +38,7 @@ public class BankAccount_proofUpdated extends BankAccount_triggerAbstract {
             final IPartyRoleType role,
             @Nullable final Person personToAssignNextTo,
             @Nullable final String comment) {
-        trigger(personToAssignNextTo, comment, null);
+        trigger(role, personToAssignNextTo, comment, null);
         return bankAccount;
     }
 

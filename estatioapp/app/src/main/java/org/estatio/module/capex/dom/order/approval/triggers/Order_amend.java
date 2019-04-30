@@ -40,7 +40,7 @@ public class Order_amend extends
             final IPartyRoleType role,
             @Nullable final Person personToAssignNextTo,
             final String reason) {
-        trigger(personToAssignNextTo, reason, reason);
+        trigger(role, personToAssignNextTo, reason, reason);
         return getDomainObject();
     }
 

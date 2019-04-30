@@ -155,7 +155,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
             final BankAccountVerificationState currentState = stateTransitionService
                     .currentStateOf(bankAccount, VERIFY_BANK_ACCOUNT);
             final Person personToAssignNextToIfAny = null;
-            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT,
+            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null,
                     personToAssignNextToIfAny, null);
             transactionService.nextTransaction();
 
@@ -239,7 +239,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
             // given
             assertState(bankAccount, NOT_VERIFIED);
             final Person personToAssignNextToIfAny = null;
-            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT,
+            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null,
                     personToAssignNextToIfAny, null);
             transactionService.nextTransaction();
 
@@ -293,7 +293,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
             // given
             assertState(bankAccount, NOT_VERIFIED);
             final Person personToAssignNextToIfAny = null;
-            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT,
+            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null,
                     personToAssignNextToIfAny, null);
             transactionService.nextTransaction();
 
@@ -343,7 +343,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
             // given
             assertState(this.bankAccount, NOT_VERIFIED);
             final Person personToAssignNextToIfAny = null;
-            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT,
+            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null,
                     personToAssignNextToIfAny, null);
             transactionService.nextTransaction();
 

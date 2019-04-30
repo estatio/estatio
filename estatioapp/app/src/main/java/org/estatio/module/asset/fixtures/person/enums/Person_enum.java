@@ -138,6 +138,12 @@ public enum Person_enum
             new FixedAssetRoleSpec[] {
                     new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.ASSET_MANAGER, Property_enum.GraIt)
             }),
+    TimoTechnicianIt("TTECH", "Timo", "Technician", null, true, MALE, It, It,
+            null, null,
+            new IPartyRoleType[] {  },
+            new FixedAssetRoleSpec[] {
+                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.TECHNICIAN, Property_enum.GraIt)
+            }),
 
     // preferred manager
     FabrizioPreferredManagerIt("FDARESPONS", "Fabrizio", "Da Respons", null, true, MALE, It, It,

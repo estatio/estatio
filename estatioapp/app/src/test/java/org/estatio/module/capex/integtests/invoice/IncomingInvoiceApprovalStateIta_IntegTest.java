@@ -84,6 +84,8 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
 
     IncomingInvoice invoiceWithPaidDate;
 
+    IncomingInvoice capexInvoice;
+
     BankAccount bankAccount;
 
     @Before
@@ -102,8 +104,10 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
                         Person_enum.FabrizioPreferredManagerIt,
                         Person_enum.TechnizioAdvisorIt,
                         Person_enum.LoredanaPropertyInvoiceMgrIt, // this fixture has to be set before the creation of the recoverable invoice because task assignment is determined by the role being setup here
+                        Person_enum.TimoTechnicianIt,
                         Organisation_enum.IncomingBuyerIt,
                         IncomingInvoiceNoDocument_enum.invoiceForItaNoOrder,
+                        IncomingInvoiceNoDocument_enum.invoiceForItaCapex,
                         IncomingInvoiceNoDocument_enum.invoiceForItaRecoverable,
                         IncomingInvoiceNoDocument_enum.invoiceForItaDirectDebit,
                         IncomingInvoiceNoDocument_enum.invoiceForItaWithPaidDate,
@@ -132,6 +136,9 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
 
         recoverableInvoice = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate("123456", seller, new LocalDate(2017, 12, 20));
         recoverableInvoice.setBankAccount(bankAccount);
+
+        capexInvoice = IncomingInvoiceNoDocument_enum.invoiceForItaCapex.findUsing(serviceRegistry2);
+        capexInvoice.setBankAccount(bankAccount);
 
         invoiceForDirectDebit = IncomingInvoiceNoDocument_enum.invoiceForItaDirectDebit.findUsing(serviceRegistry2);
 
@@ -288,6 +295,60 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
                 IncomingInvoiceApprovalState.PAID,
                 IncomingInvoiceApprovalStateTransitionType.PAID_IN_CODA
         ));
+
+    }
+
+    @Test
+    public void capex_invoice_can_be_approved_by_technician_as_well() throws Exception {
+
+        List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice;
+
+        // given
+        transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(capexInvoice);
+        assertThat(transitionsOfInvoice).hasSize(2);
+        IncomingInvoiceApprovalStateTransition nextPendingTransition = transitionsOfInvoice.get(0);
+        assertTransition(nextPendingTransition, new ExpectedTransitionResult(
+                false,
+                null,
+                IncomingInvoiceApprovalState.NEW,
+                null,
+                IncomingInvoiceApprovalStateTransitionType.COMPLETE
+        ));
+        Task nextPendingTask = nextPendingTransition.getTask();
+        assertTask(nextPendingTask, new ExpectedTaskResult(
+                false,
+                PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER,
+                null,       // task assigned to Role only, not to person
+                "Complete"
+        ));
+
+        // when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_complete.class, capexInvoice)).act(FixedAssetRoleTypeEnum.TECHNICIAN.findOrCreateUsing(partyRoleTypeRepository), Person_enum.TimoTechnicianIt.findUsing(serviceRegistry2), null));
+        assertThat(capexInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
+        assertThat(capexInvoice.getGrossAmount()).isEqualTo(new BigDecimal("100000.00"));
+
+        // then
+        transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(capexInvoice);
+        assertThat(transitionsOfInvoice).hasSize(3);
+        nextPendingTransition = transitionsOfInvoice.get(0);
+        nextPendingTask = nextPendingTransition.getTask();
+        assertTask(nextPendingTask, new ExpectedTaskResult(
+                false,
+                FixedAssetRoleTypeEnum.TECHNICIAN,
+                Person_enum.TimoTechnicianIt.findUsing(serviceRegistry2)
+        ));
+
+        // and when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.TimoTechnicianIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_approve.class, capexInvoice)).act(null, null, null, false));
+
+        // then
+        assertThat(capexInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK);
+        transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(capexInvoice);
+        assertThat(transitionsOfInvoice).hasSize(5);
 
     }
 

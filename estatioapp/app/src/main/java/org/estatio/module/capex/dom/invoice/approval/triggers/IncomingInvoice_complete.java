@@ -40,7 +40,7 @@ public class IncomingInvoice_complete extends IncomingInvoice_triggerAbstract {
             final IPartyRoleType role,
             @Nullable final Person personToAssignNextTo,
             @Nullable final String comment) {
-        trigger(personToAssignNextTo, comment, comment);
+        trigger(role, personToAssignNextTo, comment, comment);
         return getDomainObject();
     }
 
