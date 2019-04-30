@@ -227,9 +227,6 @@
                                         <cpt:property id="extRefOrderItem">
                                             <cpt:named>Order item</cpt:named>
                                         </cpt:property>
-                                        <cpt:property id="extRefCostCentreCode">
-                                            <cpt:named>Cost centre code</cpt:named>
-                                        </cpt:property>
                                     </cpt:fieldSet>
                                 </bs3:col>
                                 <bs3:col span="3">
@@ -239,9 +236,6 @@
                                         </cpt:property>
                                         <cpt:property id="extRefOrderValidationStatus" labelPosition="TOP">
                                             <cpt:named>Order?</cpt:named>
-                                        </cpt:property>
-                                        <cpt:property id="extRefCostCentreValidationStatus" labelPosition="TOP" hidden="EVERYWHERE">
-                                            <cpt:named>Cost centre?</cpt:named>
                                         </cpt:property>
                                     </cpt:fieldSet>
                                 </bs3:col>

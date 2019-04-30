@@ -2,7 +2,6 @@ package org.estatio.module.coda.dom.doc;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -203,9 +202,6 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
 
         setExtRefProjectReference(null);
         setExtRefProjectValidationStatus(ValidationStatus.NOT_CHECKED);
-
-        setExtRefCostCentreCode(null);
-        setExtRefCostCentreValidationStatus(ValidationStatus.NOT_CHECKED);
 
         setExtRefWorkTypeChargeReference(null);
         setExtRefWorkTypeValidationStatus(ValidationStatus.NOT_CHECKED);
@@ -515,18 +511,6 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
     @Getter @Setter
     private OrderItem extRefOrderItem;
 
-    @Column(allowsNull = "false", length = 20)
-    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
-    @Getter @Setter
-    private ValidationStatus extRefCostCentreValidationStatus;
-
-    /**
-     * As parsed from extRef3/extRef4/extRef5, only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
-     */
-    @Column(allowsNull = "true", length = 30)
-    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
-    @Getter @Setter
-    private String extRefCostCentreCode;
 
     @Column(allowsNull = "false", length = 20)
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)

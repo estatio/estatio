@@ -941,12 +941,6 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     }
 
     @Programmatic
-    public String getSummaryLineExtRefCostCentre(final LineCache lineCache) {
-        final CodaDocLine docLine = summaryDocLine(lineCache);
-        return docLine != null ? docLine.getExtRefCostCentreCode() : null;
-    }
-
-    @Programmatic
     public String getSummaryLineUserRef1(final LineCache lineCache) {
         final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getUserRef1() : null;
