@@ -223,7 +223,6 @@
                                         <cpt:property id="extRefOrderGlobalNumerator">
                                             <cpt:named>Buyer order number</cpt:named>
                                         </cpt:property>
-                                        <cpt:property id="order"/>
                                         <cpt:property id="extRefOrderItem">
                                             <cpt:named>Order item</cpt:named>
                                         </cpt:property>

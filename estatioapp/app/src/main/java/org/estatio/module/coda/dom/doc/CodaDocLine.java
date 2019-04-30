@@ -481,18 +481,6 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
         return this.getDocHead().getCmpCodeBuyer();
     }
 
-    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
-    @PropertyLayout(hidden = Where.ALL_TABLES)
-    public Order getOrder() {
-        final BigInteger buyerOrderNumber = getExtRefOrderGlobalNumerator();
-        if (getBuyer() == null || buyerOrderNumber == null) {
-            return null;
-        }
-        final List<Order> orders =
-                orderRepository.findByBuyerAndBuyerOrderNumber(getBuyer(), buyerOrderNumber);
-        return orders.size() == 1 ? orders.get(0) : null;
-    }
-
     @Column(allowsNull = "true", length = 8)
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @PropertyLayout(named = "Buyer Order Number")
