@@ -388,6 +388,7 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
      */
     @Column(allowsNull = "true", name = "accountCodeEl3CostCentreId")
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @PropertyLayout(named = "Cost Centre")
     @Getter @Setter
     private CostCentre accountCodeEl3CostCentre;
 
@@ -452,8 +453,11 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
     @Getter @Setter
     private ValidationStatus extRefValidationStatus;
 
+    /**
+     * indicates the validity of the order for summary lines, and the validity of the order item for analysis lines.
+     */
     @Column(allowsNull = "false", length = 20)
-    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @Property()
     @Getter @Setter
     private ValidationStatus extRefOrderValidationStatus;
 
@@ -493,17 +497,21 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
         return orders.size() == 1 ? orders.get(0) : null;
     }
 
-    @Inject
-    OrderRepository orderRepository;
-
     @Column(allowsNull = "true", length = 8)
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @PropertyLayout(named = "Buyer Order Number")
     @Getter @Setter
     private BigInteger extRefOrderGlobalNumerator;
 
-    @Column(allowsNull = "true", name = "extRefOrderItemId")
+    @Column(allowsNull = "true", name = "extRefOrderId")
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @PropertyLayout(named = "Order")
+    @Getter @Setter
+    private Order extRefOrder;
+
+    @Column(allowsNull = "true", name = "extRefOrderItemId")
+    @Property(domainEvent = AnalysisOnlyPropertyDomainEvent.class)
+    @PropertyLayout(named = "Order Item")
     @Getter @Setter
     private OrderItem extRefOrderItem;
 
@@ -537,6 +545,7 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
 
     @Column(allowsNull = "true", name = "extRefProjectId")
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @PropertyLayout(named = "Project")
     @Getter @Setter
     private Project extRefProject;
 
@@ -547,6 +556,7 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
 
     @Column(allowsNull = "true", name = "extRefWorkTypeChargeId")
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @PropertyLayout(named = "Charge")
     @Getter @Setter
     private Charge extRefWorkTypeCharge;
 
@@ -612,6 +622,9 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
                 ", extRef5='" + extRef5 + '\'' +
                 '}';
     }
+
+    @Inject
+    OrderRepository orderRepository;
 
     @DomainService
     public static class PropertyVisibilityAdvisor extends AbstractSubscriber {

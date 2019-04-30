@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -59,6 +60,7 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip;
 
 import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
@@ -67,7 +69,6 @@ import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStat
 import org.estatio.module.capex.dom.invoice.approval.tasks.IncomingInvoice_checkApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_reject;
 import org.estatio.module.capex.dom.order.OrderItem;
-import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.task.Task;
@@ -392,7 +393,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
 
     @Column(allowsNull = "false", length = 20)
     @Property()
-    @PropertyLayout(named = "Analysis line present?", hidden = Where.ALL_TABLES)
+    @PropertyLayout(named = "Analysis line(s) present?", hidden = Where.ALL_TABLES)
     @Getter @Setter
     private ValidationStatus analysisLineIsPresentValidationStatus;
 
@@ -557,16 +558,17 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
 
     void validateLines() {
 
-        final CodaDocLine summaryDocLine = summaryDocLine(LineCache.DEFAULT);
-        if (summaryDocLine != null) {
-            lineValidator.validateSummaryDocLine(summaryDocLine);
-        }
+        final CodaDocLine summaryDocLineIfAny = summaryDocLine(LineCache.DEFAULT);
+        if (summaryDocLineIfAny != null) {
+            lineValidator.validateSummaryDocLine(summaryDocLineIfAny);
 
-        for (final CodaDocLine analysisDocLine : getAnalysisLines()) {
-            if (analysisDocLine != null) {
-                lineValidator.validateAnalysisDocLine(analysisDocLine);
+            for (final CodaDocLine analysisDocLine : getAnalysisLines()) {
+                if (analysisDocLine != null) {
+                    lineValidator.validateAnalysisDocLine(summaryDocLineIfAny, analysisDocLine);
+                }
             }
         }
+
 
         updateInvalidReasonBasedOnLines();
     }
@@ -590,16 +592,41 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         //
         revalidateOnly();
 
-        final IncomingInvoice existingInvoiceIfAny = derivedObjectLookup.invoiceIfAnyFrom(this);
-
-        final OrderItemInvoiceItemLink existingLinkIfAny = derivedObjectLookup.linkIfAnyFrom(this);
-        final Paperclip existingPaperclipIfAny = derivedObjectLookup.paperclipIfAnyFrom(this);
-        final String existingDocumentNameIfAny = derivedObjectLookup.documentNameIfAnyFrom(this);
-
+        final Existing existing = new Existing(this, derivedObjectLookup);
         kickEstatioObjectsIfAny(
-                existingInvoiceIfAny,
-                existingLinkIfAny, existingDocumentNameIfAny, existingPaperclipIfAny,
+                existing,
                 errors, createIfValid);
+    }
+
+    private transient Map<Integer, IncomingInvoiceItem> analysisInvoiceItemByLineNumber;
+    @Programmatic
+    public Map<Integer, IncomingInvoiceItem> getAnalysisInvoiceItemByLineNumber() {
+        if(analysisInvoiceItemByLineNumber == null) {
+            analysisInvoiceItemByLineNumber = getAnalysisLines().stream()
+                .collect(Collectors.toMap(CodaDocLine::getLineNum, CodaDocLine::getIncomingInvoiceItem));
+        }
+        return analysisInvoiceItemByLineNumber;
+    }
+
+    private transient Map<Integer, Project> projectByLineNumber;
+
+    @Programmatic
+    public Map<Integer, Project> getAnalysisProjectByLineNumber() {
+        if(projectByLineNumber == null) {
+            projectByLineNumber = getAnalysisLines().stream()
+                .collect(Collectors.toMap(CodaDocLine::getLineNum, CodaDocLine::getExtRefProject));
+        }
+        return projectByLineNumber;
+    }
+
+    private transient Map<Integer, Charge> chargeByLineNumber;
+    @Programmatic
+    public Map<Integer, Charge> getAnalysisChargeByLineNumber() {
+        if(chargeByLineNumber == null) {
+            chargeByLineNumber = getAnalysisLines().stream()
+                .collect(Collectors.toMap(CodaDocLine::getLineNum, CodaDocLine::getExtRefWorkTypeCharge));
+        }
+        return chargeByLineNumber;
     }
 
     /**
@@ -607,12 +634,12 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
      */
     @Programmatic
     public void kickEstatioObjectsIfAny(
-            final IncomingInvoice existingInvoiceIfAny,
-            final OrderItemInvoiceItemLink existingLinkIfAny,
-            final String existingDocumentNameIfAny,
-            final Paperclip existingPaperclipIfAny,
+            final Existing existing,
             final ErrorSet errors,
             final boolean createIfValid) {
+
+        final String existingDocumentNameIfAny = existing.getDocumentNameIfAny();
+        final Paperclip existingPaperclipIfAny = existing.getPaperclipIfAny();
 
         final boolean createInvoice = createIfValid && isValid();
 
@@ -620,11 +647,13 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         // see Comparison (above) for hard errors.
         errors.add(this.getReasonInvalid());
 
+
         //
         // the various updates will only ever do an update of the derived objects, never create new stuff
         //
         final IncomingInvoice incomingInvoice =
-                derivedObjectUpdater.upsertIncomingInvoice(this, existingInvoiceIfAny, createInvoice);
+                derivedObjectUpdater.upsertIncomingInvoice(this, existing, createInvoice);
+
 
         this.setIncomingInvoice(incomingInvoice);
 
@@ -636,7 +665,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
 
         derivedObjectUpdater.updateLinkToOrderItem(
                 this,
-                existingLinkIfAny,
+                existing,
                 createIfDoesNotExist, errors);
 
         derivedObjectUpdater.updatePaperclip(
@@ -890,24 +919,6 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     public String getSummaryLineExtRefWorkTypeChargeReference(final LineCache lineCache) {
         final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getExtRefWorkTypeChargeReference() : null;
-    }
-
-    @Programmatic
-    public Charge getSummaryLineExtRefWorkTypeCharge(final LineCache lineCache) {
-        final CodaDocLine docLine = summaryDocLine(lineCache);
-        return docLine != null ? docLine.getExtRefWorkTypeCharge() : null;
-    }
-
-    @Programmatic
-    public String getSummaryLineExtRefProjectReference(final LineCache lineCache) {
-        final CodaDocLine docLine = summaryDocLine(lineCache);
-        return docLine != null ? docLine.getExtRefProjectReference() : null;
-    }
-
-    @Programmatic
-    public Project getSummaryLineExtRefProject(final LineCache lineCache) {
-        final CodaDocLine docLine = summaryDocLine(lineCache);
-        return docLine != null ? docLine.getExtRefProject() : null;
     }
 
     @Programmatic
@@ -1213,11 +1224,13 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
                         "docHead"
                         , "lineNum"
                         , "accountCode"
+                        , "accountCodeEl3CostCentre"
                         , "description"
                         , "docValue"
                         , "docSumTax"
                         , "valueDate"
                         , "extRef3"
+                        , "extRefOrder"
                         , "userRef1"
                         , "userStatus"
                         , "elmBankAccount"
@@ -1238,6 +1251,9 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
                         , "extRef5"
                         , "incomingInvoiceType"
                         , "incomingInvoiceItem"
+                        , "extRefWorkTypeCharge"
+                        , "extRefProject"
+                        , "extRefOrderItem"
                         , "reasonInvalid"
                 );
             }

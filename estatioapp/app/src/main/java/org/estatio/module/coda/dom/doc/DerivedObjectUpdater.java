@@ -2,6 +2,7 @@ package org.estatio.module.coda.dom.doc;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -32,6 +33,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.orderinvoice.IncomingInvoiceItem_createOrderItemLink;
@@ -57,55 +59,49 @@ import static org.estatio.module.docflow.dom.DocFlowZipService.PAPERCLIP_ROLE_NA
 public class DerivedObjectUpdater {
 
     static final String AT_PATH = "/ITA";
+    static final Tax NULL_TAX = null;
+    static final BudgetItem NULL_BUDGET_ITEM = null;
 
     public IncomingInvoice upsertIncomingInvoice(
             final CodaDocHead docHead,
-            final IncomingInvoice existingInvoiceIfAny,
+            final Existing existing,
             final boolean createIfDoesNotExist) {
 
-        final IncomingInvoiceItem existingInvoiceItemIfAny = IncomingInvoice.firstItemOf(existingInvoiceIfAny);
 
         //
-        // Now update any existing objects based on this new CodaDocHead.  Note that it's possible that this
+        // Update any existing objects based on this new CodaDocHead.  Note that it's possible that this
         // CodaDocHead is invalid even if a previous one was valid.  We simply align the Estatio objects
         // (if there are any) with whatever CodaDocHead says).
         //
         final Party buyer = docHead.getCmpCodeBuyer();
 
         final Party seller = docHead.getSummaryLineAccountCodeEl6Supplier(LineCache.DEFAULT);
-        final IncomingInvoiceType type = docHead.getFirstAnalysisLineIncomingInvoiceType(LineCache.DEFAULT);
+        final IncomingInvoiceType firstAnalysisLineType = docHead.getFirstAnalysisLineIncomingInvoiceType(LineCache.DEFAULT);
         final String invoiceNumber = docHead.getSummaryLineExtRef2(LineCache.DEFAULT);
         final Property property = docHead.getSummaryLineAccountEl3Property(LineCache.DEFAULT);
 
         final BankAccount bankAccount = docHead.getSummaryLineSupplierBankAccount(LineCache.DEFAULT);
-
         final PaymentMethod paymentMethod = docHead.getSummaryLinePaymentMethod(LineCache.DEFAULT);
-
         final LocalDate vatRegistrationDate = docHead.getSummaryLineValueDate(LineCache.DEFAULT);
-
         final LocalDate dateReceived = docHead.getInputDate();
-
         final LocalDate invoiceDate = docHead.getDocDate();
-        final LocalDate dueDate = docHead.getSummaryLineDueDate(LineCache.DEFAULT);
+        final LocalDate summaryLineDueDate = docHead.getSummaryLineDueDate(LineCache.DEFAULT);
 
         final LocalDate paidDate = docHead.getStatPayPaidDate();
 
         final InvoiceStatus invoiceStatus = InvoiceStatus.NEW; // we don't care, this is for outgoing invoices.
 
-        // there will be just a single InvoiceItem, combining info from
-        // both the CodaDocLine summary item and the analysis one
-        final String description = docHead.getSummaryLineDescription(LineCache.DEFAULT);
 
-        final Charge charge = docHead.getSummaryLineExtRefWorkTypeCharge(LineCache.DEFAULT);
-        final Project project = docHead.getSummaryLineExtRefProject(LineCache.DEFAULT);
-        final BudgetItem budgetItem = null;
-
-        final BigDecimal grossAmount = docHead.getSummaryLineDocValue(LineCache.DEFAULT);
-        final BigDecimal vatAmount = docHead.getSummaryLineDocSumTax(LineCache.DEFAULT) == null ? BigDecimal.ZERO : docHead.getSummaryLineDocSumTax(LineCache.DEFAULT);
-        final BigDecimal netAmount = Util.subtract(grossAmount, vatAmount);
         final String period = Util.asFinancialYear(docHead.getCodaPeriod());
-        final Tax tax = null;
         final boolean postedToCodaBooks = Objects.equals(docHead.getLocation(), "books");
+
+        final IncomingInvoice existingInvoiceIfAny = existing.getIncomingInvoiceIfAny();
+
+
+        final BigDecimal summaryGrossAmount = docHead.getSummaryLineDocValue(LineCache.DEFAULT);
+        final BigDecimal summaryVatAmount = elseZero(docHead.getSummaryLineDocSumTax(LineCache.DEFAULT));
+        final BigDecimal summaryNetAmount = Util.subtract(summaryGrossAmount, summaryVatAmount);
+
 
         //
         // update the incoming invoice (we simply blindly follow Coda, since Coda always leads.
@@ -114,86 +110,141 @@ public class DerivedObjectUpdater {
         if (existingInvoiceIfAny != null) {
 
             incomingInvoice = existingInvoiceIfAny;
+
+            final IncomingInvoiceType incomingInvoiceType = firstAnalysisLineType;
+            final LocalDate dueDate = summaryLineDueDate;
+
             incomingInvoiceRepository.updateInvoice(
                     incomingInvoice,
-                    type, invoiceNumber, property, AT_PATH, buyer, seller,
+                    incomingInvoiceType, invoiceNumber, property, AT_PATH, buyer, seller,
                     invoiceDate, dueDate, vatRegistrationDate, paymentMethod, invoiceStatus, dateReceived, bankAccount,
                     postedToCodaBooks, paidDate
             );
-            incomingInvoice.setGrossAmount(grossAmount);
-            incomingInvoice.setNetAmount(netAmount);
+
+            incomingInvoice.setGrossAmount(summaryGrossAmount);
+            incomingInvoice.setNetAmount(summaryNetAmount);
 
             //
-            // also update the existing item
+            // also update the existing items
             //
-            if (existingInvoiceItemIfAny != null) {
+            final Map<Integer, IncomingInvoiceItem> existingItems = existing.getItemByLineNumberIfAny();
+            final Map<Integer, Charge> existingCharges = existing.getChargeByLineNumberIfAny();
+            final Map<Integer, Project> existingProjects = existing.getProjectByLineNumberIfAny();
 
-                final LocalDateInterval ldi = PeriodUtil.yearFromPeriod(period);
+            for (final CodaDocLine docLine : docHead.getAnalysisLines()) {
+                final int lineNum = docLine.getLineNum();
 
-                existingInvoiceItemIfAny.setIncomingInvoiceType(type);
+                final IncomingInvoiceItem invoiceItemIfAny = existingItems.get(lineNum);
 
-                existingInvoiceItemIfAny.setDescription(description);
-                existingInvoiceItemIfAny.setNetAmount(netAmount);
-                existingInvoiceItemIfAny.setVatAmount(vatAmount);
-                existingInvoiceItemIfAny.setGrossAmount(grossAmount);
-                existingInvoiceItemIfAny.setTax(tax);
-                existingInvoiceItemIfAny.setDueDate(dueDate);
-                existingInvoiceItemIfAny.setStartDate(ldi.startDate());
-                existingInvoiceItemIfAny.setEndDate(ldi.endDate());
-                existingInvoiceItemIfAny.setFixedAsset(property);
+                if(invoiceItemIfAny != null) {
 
-                // we never overwrite these here.
-                // instead, we will keep in them in sync if they weren't changed compared to Coda.  But we do that
-                // in CodaDocService, which has access to both any existing CodaDocHead as well as its replacement.
-                //
-                // existingInvoiceItemIfAny.setCharge(charge);
-                // existingInvoiceItemIfAny.setProject(project);
-                // existingInvoiceItemIfAny.setBudgetItem(budgetItem);
+                    final IncomingInvoiceItem invoiceItem = invoiceItemIfAny;
+
+                    // only overwrite charge if value hasn't been modified in Estatio since originally sync'd
+                    final Charge existingChargeIfAny = existingCharges.get(lineNum);
+                    final Charge replacementCharge = docHead.getAnalysisChargeByLineNumber().get(lineNum);
+                    if(existingChargeIfAny == invoiceItem.getCharge()) {
+                        invoiceItem.setCharge(replacementCharge);
+                    }
+
+                    // only overwrite project if value hasn't been modified in Estatio since originally sync'd
+                    final Project existingProjectIfAny = existingProjects.get(lineNum);
+                    final Project replacementProject = docHead.getAnalysisProjectByLineNumber().get(lineNum);
+                    if(existingProjectIfAny == invoiceItem.getProject()) {
+                        invoiceItem.setProject(replacementProject);
+                    }
+
+                    final LocalDateInterval ldi = PeriodUtil.yearFromPeriod(period);
+
+                    invoiceItem.setIncomingInvoiceType(docLine.getIncomingInvoiceType());
+
+                    final BigDecimal grossAmount = elseZero(docLine.getDocValue());
+                    final BigDecimal vatAmount = elseZero(docLine.getDocSumTax());
+                    final BigDecimal netAmount = Util.subtract(grossAmount, vatAmount);
+
+                    invoiceItem.setDescription(docLine.getDescription());
+                    invoiceItem.setNetAmount(netAmount);
+                    invoiceItem.setVatAmount(vatAmount);
+                    invoiceItem.setGrossAmount(grossAmount);
+                    invoiceItem.setTax(NULL_TAX);
+                    invoiceItem.setDueDate(docLine.getDueDate());
+                    invoiceItem.setStartDate(ldi.startDate());
+                    invoiceItem.setEndDate(ldi.endDate());
+                    invoiceItem.setFixedAsset(property);
+
+                    // we never call invoiceItem.setBudgetItem(...) - maintained exclusively in Estatio
+                }
             }
 
+
+            // edge condition: if Coda somehow now has fewer lines than it did previously, then zero out those surplus items.
+            final int numLines = docHead.getAnalysisLines().size();
+            final int numItems = existingItems.size();
+            if(numItems > numLines) {
+                for (int n = numLines; n < numItems; n++) {
+                    final IncomingInvoiceItem invoiceItem = existingItems.get(n);
+
+                    invoiceItem.setDescription("<no longer exists in Coda>");
+                    invoiceItem.setNetAmount(BigDecimal.ZERO);
+                    invoiceItem.setVatAmount(BigDecimal.ZERO);
+                    invoiceItem.setGrossAmount(BigDecimal.ZERO);
+                }
+            }
+
+
         } else {
+
             // if the DocHead is valid, and sync has been requested, then we create new Estatio objects
             if (createIfDoesNotExist) {
 
                 // as a side-effect, the approvalState will be set to NEW
                 // (subscriber on ObjectPersist)
+
+                final IncomingInvoiceType incomingInvoiceType = firstAnalysisLineType;
+                final IncomingInvoiceApprovalState approvalState = null;
+
                 incomingInvoice =
                         incomingInvoiceRepository.create(
-                                type, invoiceNumber, property, AT_PATH, buyer, seller,
-                                invoiceDate, dueDate, vatRegistrationDate, paymentMethod,
-                                invoiceStatus, dateReceived, bankAccount, null, postedToCodaBooks, paidDate);
+                                incomingInvoiceType, invoiceNumber, property, AT_PATH, buyer, seller,
+                                invoiceDate, summaryLineDueDate, vatRegistrationDate, paymentMethod,
+                                invoiceStatus, dateReceived, bankAccount, approvalState, postedToCodaBooks, paidDate);
 
-                incomingInvoice.setGrossAmount(grossAmount);
-                incomingInvoice.setNetAmount(netAmount);
+                incomingInvoice.setGrossAmount(summaryGrossAmount);
+                incomingInvoice.setNetAmount(summaryNetAmount);
 
-                incomingInvoice.addItem(
-                        type, charge, description,
-                        netAmount, vatAmount, grossAmount, tax,
-                        dueDate, period, property, project, budgetItem);
+                for (final CodaDocLine docLine : docHead.getAnalysisLines()) {
+
+                    final BigDecimal grossAmount = elseZero(docLine.getDocValue());
+                    final BigDecimal vatAmount = elseZero(docLine.getDocSumTax());
+                    final BigDecimal netAmount = Util.subtract(grossAmount, vatAmount);
+                    final LocalDate dueDate = docLine.getDueDate();
+
+                    incomingInvoice.addItem(
+                            docLine.getIncomingInvoiceType(),
+                            docLine.getExtRefWorkTypeCharge(),
+                            docLine.getDescription(),
+                            netAmount, vatAmount, grossAmount, NULL_TAX,
+                            dueDate, period, property, docLine.getExtRefProject(), NULL_BUDGET_ITEM);
+                }
 
             } else {
                 // nothing to do; this CodaDocHead isn't valid and there isn't an IncomingInvoice to update.
                 incomingInvoice = null;
             }
         }
+
+
         return incomingInvoice;
     }
 
+
     void updateLinkToOrderItem(
             final CodaDocHead docHead,
+            final Existing existing,
             final boolean createIfDoesNotExist,
             final ErrorSet softErrors) {
 
-        final OrderItemInvoiceItemLink linkIfAny = derivedObjectLookup.linkIfAnyFrom(docHead);
-
-        updateLinkToOrderItem(docHead, linkIfAny, createIfDoesNotExist, softErrors);
-    }
-
-    public void updateLinkToOrderItem(
-            final CodaDocHead docHead,
-            final OrderItemInvoiceItemLink existingLinkIfAny,
-            final boolean createIfDoesNotExist,
-            final ErrorSet softErrors) {
+        final OrderItemInvoiceItemLink existingLinkIfAny = existing.getOrderItemLinkIfAny();
 
         final IncomingInvoice incomingInvoice = derivedObjectLookup.invoiceIfAnyFrom(docHead);
         final IncomingInvoiceItem invoiceItem = IncomingInvoice.firstItemOf(incomingInvoice);
@@ -510,6 +561,11 @@ public class DerivedObjectUpdater {
         task.setDescription(errors.getText());
 
     }
+
+    private static BigDecimal elseZero(final BigDecimal bd) {
+        return bd != null ? bd : BigDecimal.ZERO;
+    }
+
 
     @Inject
     TitleService titleService;
