@@ -1,7 +1,6 @@
 package org.estatio.module.coda.dom.doc;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -56,11 +55,8 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
-import org.incode.module.document.dom.impl.paperclips.Paperclip;
-
 import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
-import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
@@ -68,11 +64,10 @@ import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStat
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.capex.dom.invoice.approval.tasks.IncomingInvoice_checkApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_reject;
-import org.estatio.module.capex.dom.order.OrderItem;
-import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.capex.dom.order.Order;
+import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.task.Task;
-import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.coda.dom.doc.appsettings.ApplicationSettingKey;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.invoice.dom.PaymentMethod;
@@ -563,9 +558,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
             lineValidator.validateSummaryDocLine(summaryDocLineIfAny);
 
             for (final CodaDocLine analysisDocLine : getAnalysisLines()) {
-                if (analysisDocLine != null) {
-                    lineValidator.validateAnalysisDocLine(summaryDocLineIfAny, analysisDocLine);
-                }
+                lineValidator.validateAnalysisDocLine(summaryDocLineIfAny, analysisDocLine);
             }
         }
 
@@ -593,41 +586,20 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         //
         revalidateOnly();
 
-        final Existing existing = new Existing(this, derivedObjectLookup);
+        final Memento existing = new Memento(this, derivedObjectLookup);
         kickEstatioObjectsIfAny(
                 existing,
                 errors, createIfValid);
     }
 
-    private transient Map<Integer, IncomingInvoiceItem> analysisInvoiceItemByLineNumber;
+    private transient Map<Integer, LineData> lineDataByLineNumber;
     @Programmatic
-    public Map<Integer, IncomingInvoiceItem> getAnalysisInvoiceItemByLineNumber() {
-        if(analysisInvoiceItemByLineNumber == null) {
-            analysisInvoiceItemByLineNumber = getAnalysisLines().stream()
-                .collect(Collectors.toMap(CodaDocLine::getLineNum, CodaDocLine::getIncomingInvoiceItem));
+    public Map<Integer, LineData> getLineDataByLineNumber() {
+        if(lineDataByLineNumber == null) {
+            lineDataByLineNumber = getAnalysisLines().stream()
+                .collect(Collectors.toMap(CodaDocLine::getLineNum, LineData::new));
         }
-        return analysisInvoiceItemByLineNumber;
-    }
-
-    private transient Map<Integer, Project> projectByLineNumber;
-
-    @Programmatic
-    public Map<Integer, Project> getAnalysisProjectByLineNumber() {
-        if(projectByLineNumber == null) {
-            projectByLineNumber = getAnalysisLines().stream()
-                .collect(Collectors.toMap(CodaDocLine::getLineNum, CodaDocLine::getExtRefProject));
-        }
-        return projectByLineNumber;
-    }
-
-    private transient Map<Integer, Charge> chargeByLineNumber;
-    @Programmatic
-    public Map<Integer, Charge> getAnalysisChargeByLineNumber() {
-        if(chargeByLineNumber == null) {
-            chargeByLineNumber = getAnalysisLines().stream()
-                .collect(Collectors.toMap(CodaDocLine::getLineNum, CodaDocLine::getExtRefWorkTypeCharge));
-        }
-        return chargeByLineNumber;
+        return lineDataByLineNumber;
     }
 
     /**
@@ -635,12 +607,10 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
      */
     @Programmatic
     public void kickEstatioObjectsIfAny(
-            final Existing existing,
+            final Memento previous,
             final ErrorSet errors,
             final boolean createIfValid) {
 
-        final String existingDocumentNameIfAny = existing.getDocumentNameIfAny();
-        final Paperclip existingPaperclipIfAny = existing.getPaperclipIfAny();
 
         final boolean createInvoice = createIfValid && isValid();
 
@@ -653,7 +623,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         // the various updates will only ever do an update of the derived objects, never create new stuff
         //
         final IncomingInvoice incomingInvoice =
-                derivedObjectUpdater.upsertIncomingInvoice(this, existing, createInvoice);
+                derivedObjectUpdater.upsertIncomingInvoice(this, previous, createInvoice);
 
 
         this.setIncomingInvoice(incomingInvoice);
@@ -664,14 +634,9 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         //
         final boolean createIfDoesNotExist = incomingInvoice != null;
 
-        derivedObjectUpdater.updateLinkToOrderItem(
-                this,
-                existing,
-                createIfDoesNotExist, errors);
-
         derivedObjectUpdater.updatePaperclip(
                 this,
-                existingPaperclipIfAny, existingDocumentNameIfAny,
+                previous,
                 createIfDoesNotExist, errors);
 
         //
@@ -953,27 +918,15 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     }
 
     @Programmatic
-    public OrderItem getSummaryLineExtRefOrderItem(final LineCache lineCache) {
+    public Order getSummaryLineExtRefOrder(final LineCache lineCache) {
         final CodaDocLine docLine = summaryDocLine(lineCache);
-        return docLine != null ? docLine.getExtRefOrderItem() : null;
+        return docLine != null ? docLine.getExtRefOrder() : null;
     }
 
     @Programmatic
     public String getSummaryLineExtRef3Normalized(final LineCache lineCache) {
         final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getExtRef3Normalized() : null;
-    }
-
-    @Programmatic
-    public BigInteger getSummaryLineExtRefOrderGlobalNumerator(final LineCache lineCache) {
-        final CodaDocLine docLine = summaryDocLine(lineCache);
-        return docLine != null ? docLine.getExtRefOrderGlobalNumerator() : null;
-    }
-
-    @Programmatic
-    public String getFirstAnalysisLineAccountCode(final LineCache lineCache) {
-        final CodaDocLine docLine = firstAnalysisDocLine(lineCache);
-        return docLine != null ? docLine.getAccountCode() : null;
     }
 
     /**
@@ -1204,6 +1157,10 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     @NotPersistent
     @Inject
     FactoryService factoryService;
+
+    @NotPersistent
+    @Inject
+    OrderItemInvoiceItemLinkRepository linkRepository;
 
     @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "100")
     public static class TableColumnService implements TableColumnOrderService {

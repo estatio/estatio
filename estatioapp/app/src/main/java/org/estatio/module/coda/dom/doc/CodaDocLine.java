@@ -268,13 +268,13 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
 
     @Column(allowsNull = "true")
     @javax.jdo.annotations.Persistent
-    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @Property()
     @Getter @Setter
     private LocalDate dueDate;
 
     @Column(allowsNull = "true")
     @javax.jdo.annotations.Persistent
-    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @Property()
     @Getter @Setter
     private LocalDate valueDate;
 
