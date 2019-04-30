@@ -579,7 +579,8 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
                 .filter(CodaDocLine::isInvalid)
                 .forEach(codaDocLine -> {
                     setLineValidationStatus(ValidationStatus.INVALID);
-                    appendInvalidReason(codaDocLine.getLineType() + " #" + codaDocLine.getLineNum() + " : "+ codaDocLine.getReasonInvalid());
+                    appendInvalidReason(
+                            String.format("Line #%d (%s): %s", codaDocLine.getLineNum(), codaDocLine.getLineType(), codaDocLine.getReasonInvalid()));
                 });
     }
 

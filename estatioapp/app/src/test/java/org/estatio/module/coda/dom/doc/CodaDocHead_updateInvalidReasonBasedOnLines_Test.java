@@ -49,7 +49,9 @@ public class CodaDocHead_updateInvalidReasonBasedOnLines_Test {
 
         // then
         assertThat(codaDocHead.getReasonInvalid()).isNotNull();
-        assertThat(codaDocHead.getReasonInvalid()).isEqualTo("SUMMARY: line 1 is bad\nANALYSIS: line 2 is bad");
+        assertThat(codaDocHead.getReasonInvalid()).isEqualTo(
+                "Line #1 (SUMMARY): line 1 is bad\n" +
+                "Line #2 (ANALYSIS): line 2 is bad"   );
     }
 
 
