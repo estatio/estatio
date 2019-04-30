@@ -223,9 +223,8 @@
                                         <cpt:property id="extRefOrderGlobalNumerator">
                                             <cpt:named>Buyer order number</cpt:named>
                                         </cpt:property>
-                                        <cpt:property id="extRefOrderItem">
-                                            <cpt:named>Order item</cpt:named>
-                                        </cpt:property>
+                                        <cpt:property id="extRefOrder"/>
+                                        <cpt:property id="extRefOrderItem"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                                 <bs3:col span="3">
