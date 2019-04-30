@@ -504,9 +504,17 @@ public class StateTransitionService {
 
         final TaskAssignmentStrategy<DO, ST, STT, S> taskAssignmentStrategy =
                 transitionType.getTaskAssignmentStrategy();
-        IPartyRoleType assignToIfAny = role;
-        if(taskAssignmentStrategy != null && assignToIfAny==null) {
+        IPartyRoleType assignToIfAny = null;
+        if(taskAssignmentStrategy != null) {
             assignToIfAny = taskAssignmentStrategy.getAssignTo(domainObject, serviceRegistry2).stream().findFirst().orElse(null);
+            // Let the role given as param prevail when 'it makes sense'
+            if (role!=null && assignToIfAny!=null) {
+                for (IPartyRoleType roleType : taskAssignmentStrategy.getAssignTo(domainObject, serviceRegistry2)) {
+                    if (roleType.getKey() == role.getKey()) {
+                        assignToIfAny = role;
+                    }
+                }
+            }
         }
 
         return transitionType
