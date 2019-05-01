@@ -256,11 +256,36 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
     @Getter @Setter
     private String description;
 
+    /**
+     * Depending on line type, is either the GROSS or NET amount.
+     *
+     * <ul>
+     *     <li>
+     *          For summary lines, this is the value of the CODA's Line.docValue, which is the GROSS amount
+     *     </li>
+     *     <li>
+     *          For analysis lines, it is also the value of CODA's Line.docValue, but is the NET amount.
+     *     </li>
+     * </ul>
+     *
+     */
     @Column(allowsNull = "true", scale = 2)
     @Property()
     @Getter @Setter
     private BigDecimal docValue;
 
+    /**
+     * The amount of VAT, though the derivation depends on line type.
+     *
+     * <ul>
+     *     <li>
+     *          For summary lines, this is just the value of the CODA's Line.docSumTax
+     *     </li>
+     *     <li>
+     *          For analysis lines, it is the sum of Line.taxes.tax.value
+     *     </li>
+     * </ul>
+     */
     @Column(allowsNull = "true", scale = 2)
     @Property()
     @Getter @Setter

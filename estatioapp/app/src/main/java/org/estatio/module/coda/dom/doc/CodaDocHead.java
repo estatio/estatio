@@ -1011,6 +1011,9 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         public static Comparison invalidatesApprovals(final String reason) {
             return new Comparison(Type.DIFFERS_INVALIDATING_APPROVALS, reason);
         }
+        public static Comparison invalidatesApprovals(final String reasonFormatString, final Object... args) {
+            return new Comparison(Type.DIFFERS_INVALIDATING_APPROVALS, String.format(reasonFormatString, args));
+        }
 
         public static Comparison retainsApprovals() {
             return new Comparison(Type.DIFFERS_RETAIN_APPROVALS, null);
@@ -1053,32 +1056,72 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
             if (summaryLine.getSupplierBankAccountValidationStatus() != ValidationStatus.NOT_CHECKED &&
                     otherSummaryLine.getSupplierBankAccountValidationStatus() != ValidationStatus.NOT_CHECKED &&
                     !Objects.equals(summaryLine.getSupplierBankAccount(), otherSummaryLine.getSupplierBankAccount())) {
-                return Comparison.invalidatesApprovals("Supplier bank account has changed");
+                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
+                        summaryLine.getLineNum(), summaryLine.getLineType(), "Supplier bank account has changed");
             }
             if (!Objects.equals(summaryLine.getDocValue(), otherSummaryLine.getDocValue())) {
-                return Comparison.invalidatesApprovals("Doc value (gross amount) has changed");
+                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
+                        summaryLine.getLineNum(), summaryLine.getLineType(), "Doc value (gross amount) has changed");
             }
             if (!Objects.equals(summaryLine.getDocSumTax(), otherSummaryLine.getDocSumTax())) {
-                return Comparison.invalidatesApprovals("Doc sum tax (VAT amount) has changed");
+                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
+                        summaryLine.getLineNum(), summaryLine.getLineType(), "Doc sum tax (VAT amount) has changed");
             }
             if (summaryLine.getMediaCodeValidationStatus() != ValidationStatus.NOT_CHECKED &&
                     otherSummaryLine.getMediaCodeValidationStatus() != ValidationStatus.NOT_CHECKED &&
                     !Objects.equals(summaryLine.getMediaCode(), otherSummaryLine.getMediaCode())) {
-                return Comparison.invalidatesApprovals("Media code (payment method) has changed");
+                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
+                        summaryLine.getLineNum(), summaryLine.getLineType(), "Media code (payment method) has changed");
             }
             if (!Objects.equals(summaryLine.getDueDate(), otherSummaryLine.getDueDate())) {
-                return Comparison.invalidatesApprovals("Due date has changed");
+                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
+                        summaryLine.getLineNum(), summaryLine.getLineType(), "Due date has changed");
             }
             if (!Objects.equals(summaryLine.getValueDate(), otherSummaryLine.getValueDate())) {
-                return Comparison.invalidatesApprovals("Value date has changed");
+                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
+                        summaryLine.getLineNum(), summaryLine.getLineType(), "Value date has changed");
             }
             if (!Strings.isNullOrEmpty(otherSummaryLine.getUserRef1()) &&
                     !Objects.equals(summaryLine.getUserRef1(), otherSummaryLine.getUserRef1())) {
-                return Comparison.invalidatesApprovals("User Ref 1 (bar code) has changed");
+                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
+                        summaryLine.getLineNum(), summaryLine.getLineType(), "User Ref 1 (bar code) has changed");
             }
             if (otherSummaryLine.getDescription() != null &&
                     !Objects.equals(summaryLine.getDescription(), otherSummaryLine.getDescription())) {
-                return Comparison.invalidatesApprovals("Description has changed");
+                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
+                        summaryLine.getLineNum(), summaryLine.getLineType(), "Description has changed");
+            }
+        }
+        final List<CodaDocLine> analysisLines = getAnalysisLines();
+        final List<CodaDocLine> otherAnalysisLines = other.getAnalysisLines();
+        if(analysisLines.size() != otherAnalysisLines.size()) {
+            return Comparison.invalidatesApprovals("Number of analysis lines has changed (was %d, now %d)",
+                    otherAnalysisLines.size(), analysisLines.size());
+        }
+        for (int i = 0; i < analysisLines.size(); i++) {
+            final CodaDocLine docLine = analysisLines.get(i);
+            final CodaDocLine otherDocLine = otherAnalysisLines.get(i);
+
+            if (!Objects.equals(docLine.getDocValue(), otherDocLine.getDocValue())) {
+                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
+                        docLine.getLineNum(), docLine.getLineType(), "Doc value (net amount) has changed");
+            }
+            if (!Objects.equals(docLine.getDocSumTax(), otherDocLine.getDocSumTax())) {
+                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
+                        docLine.getLineNum(), docLine.getLineType(), "Doc sum tax (VAT amount) has changed");
+            }
+            if (!Objects.equals(docLine.getDueDate(), otherDocLine.getDueDate())) {
+                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
+                        docLine.getLineNum(), docLine.getLineType(), "Due date has changed");
+            }
+            if (!Objects.equals(docLine.getValueDate(), otherDocLine.getValueDate())) {
+                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
+                        docLine.getLineNum(), docLine.getLineType(), "Value date has changed");
+            }
+            if (otherDocLine.getDescription() != null &&
+                    !Objects.equals(docLine.getDescription(), otherDocLine.getDescription())) {
+                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
+                        docLine.getLineNum(), docLine.getLineType(), "Description has changed");
             }
         }
 
