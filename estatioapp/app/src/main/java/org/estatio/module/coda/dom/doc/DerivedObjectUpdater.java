@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+
+import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
 
@@ -217,11 +220,15 @@ public class DerivedObjectUpdater {
 
 
             // edge condition: if Coda somehow now has fewer lines than it did previously, then zero out those surplus items.
-            final int numLines = docHead.getAnalysisLines().size();
-            final int numItems = previousLineData.size();
-            if(numItems > numLines) {
-                for (int n = numLines; n < numItems; n++) {
-                    final LineData previousLineDatum = previousLineData.get(n);
+            final List<Integer> analysisLineNumbers = Lists.newArrayList(docHead.getAnalysisLines()).stream()
+                                                                                .map(CodaDocLine::getLineNum)
+                                                                                .collect(Collectors.toList());
+            for (final Integer lineNum : previousLineData.keySet()) {
+                if (analysisLineNumbers.contains(lineNum)) {
+                    // nothing to do, this line is still present
+                } else {
+                    // blank out the invoice item linked to the analysis line that has now gone.
+                    final LineData previousLineDatum = previousLineData.get(lineNum);
                     final Optional<IncomingInvoiceItem> invoiceItemIfAny = previousLineDatum.getInvoiceItemIfAny();
                     invoiceItemIfAny.ifPresent(
                             invoiceItem -> {
