@@ -15,7 +15,7 @@ public class Memento {
     @Getter
     private final IncomingInvoice incomingInvoiceIfAny;
     @Getter
-    private final Map<Integer, LineData> lineDataByLineNumberIfAny;
+    private final Map<Integer, LineData> analysisLineDataByLineNumberIfAny;
     @Getter
     private final String documentNameIfAny;
     @Getter
@@ -29,12 +29,12 @@ public class Memento {
 
         if(this.codaDocHeadIfAny == null) {
             this.incomingInvoiceIfAny = null;
-            this.lineDataByLineNumberIfAny = null;
+            this.analysisLineDataByLineNumberIfAny = null;
             this.documentNameIfAny = null;
             this.paperclipIfAny = null;
         } else {
             this.incomingInvoiceIfAny = codaDocHeadIfAny.getIncomingInvoice();
-            this.lineDataByLineNumberIfAny = codaDocHeadIfAny.getLineDataByLineNumber();
+            this.analysisLineDataByLineNumberIfAny = codaDocHeadIfAny.getAnalysisLineDataByLineNumber();
             this.documentNameIfAny = derivedObjectLookup.documentNameIfAnyFrom(codaDocHeadIfAny);
             this.paperclipIfAny = derivedObjectLookup.paperclipIfAnyFrom(codaDocHeadIfAny);
         }

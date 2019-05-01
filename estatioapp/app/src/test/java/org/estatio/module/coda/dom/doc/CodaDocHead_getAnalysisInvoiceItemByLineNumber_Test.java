@@ -27,7 +27,7 @@ public class CodaDocHead_getAnalysisInvoiceItemByLineNumber_Test {
 
         // when
         final Map<Integer, LineData> map =
-                codaDocHead.getLineDataByLineNumber();
+                codaDocHead.getAnalysisLineDataByLineNumber();
 
         // then
         assertThat(map).isEmpty();
@@ -50,7 +50,7 @@ public class CodaDocHead_getAnalysisInvoiceItemByLineNumber_Test {
 
         // when
         final Map<Integer, LineData> map =
-                codaDocHead.getLineDataByLineNumber();
+                codaDocHead.getAnalysisLineDataByLineNumber();
 
         // then
         assertThat(map).hasSize(1);
@@ -74,7 +74,7 @@ public class CodaDocHead_getAnalysisInvoiceItemByLineNumber_Test {
 
         // when
         final Map<Integer, LineData> map =
-                codaDocHead.getLineDataByLineNumber();
+                codaDocHead.getAnalysisLineDataByLineNumber();
 
         // then
         assertThat(map).hasSize(1);

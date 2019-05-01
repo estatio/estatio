@@ -127,13 +127,11 @@ public class DerivedObjectUpdater {
             //
             // also update the existing items
             //
-            final Map<Integer, LineData> previousLineData = previousMemento.getLineDataByLineNumberIfAny();
+            final Map<Integer, LineData> previousLineData = previousMemento.getAnalysisLineDataByLineNumberIfAny();
 
 
             for (final CodaDocLine docLine : docHead.getAnalysisLines()) {
                 final int lineNum = docLine.getLineNum();
-
-                final LineData previousLineDatum = previousLineData.get(lineNum);
 
                 final Charge chargeIfAny = docLine.getExtRefWorkTypeCharge();
                 final Project projectIfAny = docLine.getExtRefProject();
@@ -142,80 +140,99 @@ public class DerivedObjectUpdater {
                 final BigDecimal vatAmount = elseZero(docLine.getDocSumTax());
                 final BigDecimal grossAmount = Util.add(netAmount, vatAmount);
 
+                final LineData previousLineDatum = previousLineData.get(lineNum);
+                if(previousLineDatum == null) {
 
-                final Optional<IncomingInvoiceItem> previousItemIfAny = previousLineDatum.getInvoiceItemIfAny();
-                if(previousItemIfAny.isPresent()) {
+                    // there was no previous line, so no previous invoiceItem to update.
+                    // instead, we just create a new item and link
+                    final IncomingInvoiceItem invoiceItem = addInvoiceItemFor(docLine, incomingInvoice);
+                    createLinkIfPossible(orderIfAny, invoiceItem, chargeIfAny, projectIfAny, netAmount);
 
-                    final IncomingInvoiceItem invoiceItem = previousItemIfAny.get();
+                } else {
 
-                    boolean chargeInSync = false;
-                    // only overwrite charge if value hasn't been modified in Estatio since originally sync'd
-                    final Optional<Charge> previousChargeIfAny = previousLineDatum.getChargeIfAny();
-                    if(previousChargeIfAny.isPresent() &&
-                       chargeIfAny != null &&
-                       previousChargeIfAny.get() == invoiceItem.getCharge()) {
+                    // we have a new version of this line, so ...
 
-                        chargeInSync = true;
-                        invoiceItem.setCharge(chargeIfAny);
-                    }
+                    final Optional<IncomingInvoiceItem> previousItemIfAny = previousLineDatum.getInvoiceItemIfAny();
+                    if(previousItemIfAny.isPresent()) {
 
-                    // only overwrite project if value hasn't been modified in Estatio since originally sync'd
-                    boolean projectInSync = false;
-                    final Optional<Project> previousProjectIfAny = previousLineDatum.getProjectIfAny();
-                    if(previousProjectIfAny.isPresent() &&
-                       projectIfAny != null &&
-                       previousProjectIfAny.get() == invoiceItem.getProject()) {
+                        // ... fix up its invoice item and link
 
-                        projectInSync = true;
-                        invoiceItem.setProject(projectIfAny);
-                    }
+                        final IncomingInvoiceItem invoiceItem = previousItemIfAny.get();
 
-                    final LocalDateInterval ldi = PeriodUtil.yearFromPeriod(period);
+                        boolean chargeInSync = false;
+                        // only overwrite charge if value hasn't been modified in Estatio since originally sync'd
+                        final Optional<Charge> previousChargeIfAny = previousLineDatum.getChargeIfAny();
+                        if(previousChargeIfAny.isPresent() &&
+                                chargeIfAny != null &&
+                                previousChargeIfAny.get() == invoiceItem.getCharge()) {
 
-                    invoiceItem.setIncomingInvoiceType(docLine.getIncomingInvoiceType());
+                            chargeInSync = true;
+                            invoiceItem.setCharge(chargeIfAny);
+                        }
 
-                    invoiceItem.setDescription(docLine.getDescription());
-                    invoiceItem.setNetAmount(netAmount);
-                    invoiceItem.setVatAmount(vatAmount);
-                    invoiceItem.setGrossAmount(grossAmount);
-                    invoiceItem.setTax(NULL_TAX);
-                    invoiceItem.setDueDate(docLine.getDueDate());
-                    invoiceItem.setStartDate(ldi.startDate());
-                    invoiceItem.setEndDate(ldi.endDate());
-                    invoiceItem.setFixedAsset(property);
+                        // only overwrite project if value hasn't been modified in Estatio since originally sync'd
+                        boolean projectInSync = false;
+                        final Optional<Project> previousProjectIfAny = previousLineDatum.getProjectIfAny();
+                        if(previousProjectIfAny.isPresent() &&
+                                projectIfAny != null &&
+                                previousProjectIfAny.get() == invoiceItem.getProject()) {
 
-                    // we never call invoiceItem.setBudgetItem(...) - maintained exclusively in Estatio
+                            projectInSync = true;
+                            invoiceItem.setProject(projectIfAny);
+                        }
 
-                    // this returns the first match, but that is sufficient because
-                    // there will only ever be one link between InvoiceItem and OrderItem for CodaDocLine's
-                    final Optional<OrderItemInvoiceItemLink> linkIfAny = linkRepository.findByInvoiceItem(invoiceItem);
+                        final LocalDateInterval ldi = PeriodUtil.yearFromPeriod(period);
 
-                    if(linkIfAny.isPresent()) {
-                        final OrderItemInvoiceItemLink link = linkIfAny.get();
+                        invoiceItem.setIncomingInvoiceType(docLine.getIncomingInvoiceType());
 
-                        if(projectInSync && chargeInSync) {
+                        invoiceItem.setDescription(docLine.getDescription());
+                        invoiceItem.setNetAmount(netAmount);
+                        invoiceItem.setVatAmount(vatAmount);
+                        invoiceItem.setGrossAmount(grossAmount);
+                        invoiceItem.setTax(NULL_TAX);
+                        invoiceItem.setDueDate(docLine.getDueDate());
+                        invoiceItem.setStartDate(ldi.startDate());
+                        invoiceItem.setEndDate(ldi.endDate());
+                        invoiceItem.setFixedAsset(property);
 
-                            // just recreate the link.
-                            linkRepository.removeLink(link);
+                        // we never call invoiceItem.setBudgetItem(...) - maintained exclusively in Estatio
 
-                            createLink(orderIfAny, invoiceItem, chargeIfAny, projectIfAny, netAmount);
+                        // this returns the first match, but that is sufficient because
+                        // there will only ever be one link between InvoiceItem and OrderItem for CodaDocLine's
+                        final Optional<OrderItemInvoiceItemLink> linkIfAny = linkRepository.findByInvoiceItem(invoiceItem);
+
+                        if(linkIfAny.isPresent()) {
+                            final OrderItemInvoiceItemLink link = linkIfAny.get();
+
+                            if(projectInSync && chargeInSync) {
+
+                                // just recreate the link.
+                                linkRepository.removeLink(link);
+
+                                createLinkIfPossible(orderIfAny, invoiceItem, chargeIfAny, projectIfAny, netAmount);
+
+                            } else {
+                                // invoiceItem has a different charge/project from the DocLine, so it won't have
+                                // been updated earlier.  We therefore can't copy over any changed amounts
+                            }
 
                         } else {
-                            // invoiceItem has a different charge/project from the DocLine, so it won't have
-                            // been updated earlier.  We therefore can't copy over any changed amounts
+
+                            // no link previously, just create one.
+                            createLinkIfPossible(orderIfAny, invoiceItem, chargeIfAny, projectIfAny, netAmount);
                         }
 
                     } else {
 
-                        // no link previously, just create one.
-                        createLink(orderIfAny, invoiceItem, chargeIfAny, projectIfAny, netAmount);
+                        // this docline previously existed but had no invoice item (eg was invalid)
+                        // so create an item and a link if possible now
+
+                        final IncomingInvoiceItem invoiceItem = addInvoiceItemFor(docLine, incomingInvoice);
+                        createLinkIfPossible(orderIfAny, invoiceItem, chargeIfAny, projectIfAny, netAmount);
                     }
 
-                } else {
-                    // doclines that previously had no item, so create an item and a link if possible
-                    final IncomingInvoiceItem invoiceItem = addInvoiceItemFor(docLine, incomingInvoice);
-                    createLink(orderIfAny, invoiceItem, chargeIfAny, projectIfAny, netAmount);
                 }
+
             }
 
 
@@ -274,7 +291,7 @@ public class DerivedObjectUpdater {
                     final BigDecimal netAmount = elseZero(docLine.getDocValue());
 
                     final IncomingInvoiceItem invoiceItem = addInvoiceItemFor(docLine, incomingInvoice);
-                    createLink(orderIfAny, invoiceItem, chargeIfAny, projectIfAny, netAmount);
+                    createLinkIfPossible(orderIfAny, invoiceItem, chargeIfAny, projectIfAny, netAmount);
                 }
 
             } else {
@@ -311,7 +328,7 @@ public class DerivedObjectUpdater {
         return item;
     }
 
-    private void createLink(
+    private void createLinkIfPossible(
             final Order orderIfAny,
             final IncomingInvoiceItem invoiceItem,
             final Charge chargeIfAny,

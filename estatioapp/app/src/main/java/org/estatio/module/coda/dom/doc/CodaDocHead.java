@@ -592,14 +592,14 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
                 errors, createIfValid);
     }
 
-    private transient Map<Integer, LineData> lineDataByLineNumber;
+    private transient Map<Integer, LineData> analysisLineDataByLineNumber;
     @Programmatic
-    public Map<Integer, LineData> getLineDataByLineNumber() {
-        if(lineDataByLineNumber == null) {
-            lineDataByLineNumber = getAnalysisLines().stream()
+    public Map<Integer, LineData> getAnalysisLineDataByLineNumber() {
+        if(analysisLineDataByLineNumber == null) {
+            analysisLineDataByLineNumber = getAnalysisLines().stream()
                 .collect(Collectors.toMap(CodaDocLine::getLineNum, LineData::new));
         }
-        return lineDataByLineNumber;
+        return analysisLineDataByLineNumber;
     }
 
     /**
