@@ -38,14 +38,14 @@ import lombok.Setter;
         column = "version")
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
-                name = "TurnoverReportingConfig_occupancy_UNQ", members = "occupancy")
+                name = "TurnoverReportingConfig_occupancy_type_UNQ", members = { "occupancy", "type" })
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.turnover.dom.TurnoverReportingConfig "
-                        + "WHERE occupancy == :occupancy "),
+                        + "WHERE occupancy == :occupancy && type == :type "),
         @javax.jdo.annotations.Query(
                 name = "findByStartDateOnOrBefore", language = "JDOQL",
                 value = "SELECT "
@@ -56,6 +56,11 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.module.turnover.dom.TurnoverReportingConfig "
                         + "WHERE reporter == :reporter "),
+        @javax.jdo.annotations.Query(
+                name = "findByOccupancy", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.turnover.dom.TurnoverReportingConfig "
+                        + "WHERE occupancy == :occupancy "),
 })
 @DomainObject(
         editing = Editing.DISABLED,
@@ -64,29 +69,33 @@ import lombok.Setter;
 public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
 
     public TurnoverReportingConfig(){
-        super("occupancy");
+        super("occupancy, type");
     }
 
     public TurnoverReportingConfig(
             final Occupancy occupancy,
+            final Type type,
             final Person reporter,
             final LocalDate startDate,
-            final Frequency prelimFrequency,
-            final Frequency auditedFrequency,
+            final Frequency frequency,
             final Currency currency
     ){
         this();
         this.occupancy = occupancy;
+        this.type = type;
         this.reporter = reporter;
         this.startDate = startDate;
-        this.prelimFrequency = prelimFrequency;
-        this.auditedFrequency = auditedFrequency;
+        this.frequency = frequency;
         this.currency = currency;
     }
 
     @Getter @Setter
     @Column(name = "occupancyId", allowsNull = "false")
     private Occupancy occupancy;
+
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    private Type type;
 
     @Getter @Setter
     @Column(name = "personId", allowsNull = "true")
@@ -98,11 +107,7 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
 
     @Getter @Setter
     @Column(allowsNull = "false")
-    private Frequency prelimFrequency;
-
-    @Getter @Setter
-    @Column(allowsNull = "false")
-    private Frequency auditedFrequency;
+    private Frequency frequency;
 
     @Getter @Setter
     @Column(name = "currencyId", allowsNull = "false")
@@ -121,8 +126,7 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
     public void produceEmptyTurnovers(final LocalDate date) {
         LocalDateInterval interval = LocalDateInterval.including(getStartDate(), getEndDate());
         if (interval.contains(date)) {
-            if (prelimFrequency.hasStartDate(date)) turnoverRepository.createNewEmpty(getOccupancy(), date, Type.PRELIMINARY, getPrelimFrequency(), getCurrency());
-            if (auditedFrequency.hasStartDate(date)) turnoverRepository.createNewEmpty(getOccupancy(), date, Type.AUDITED, getAuditedFrequency(), getCurrency());
+            if (frequency.hasStartDate(date)) turnoverRepository.createNewEmpty(getOccupancy(), date, getType(), getFrequency(), getCurrency());
         }
     }
 

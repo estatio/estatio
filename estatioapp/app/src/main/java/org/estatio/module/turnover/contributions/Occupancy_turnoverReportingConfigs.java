@@ -29,12 +29,10 @@ public class Occupancy_turnoverReportingConfigs {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<TurnoverReportingConfig> turnoverReportingConfig() {
-        final TurnoverReportingConfig config = turnoverReportingConfigRepository.findUnique(occupancy);
-        return config!=null ? Arrays.asList(config) : Lists.emptyList();
+        return turnoverReportingConfigRepository.findByOccupancy(occupancy);
     }
 
     @Inject
     TurnoverReportingConfigRepository turnoverReportingConfigRepository;
-
 
 }

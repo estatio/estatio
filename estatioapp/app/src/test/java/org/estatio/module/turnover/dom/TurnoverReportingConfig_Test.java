@@ -70,14 +70,13 @@ public class TurnoverReportingConfig_Test {
         config.turnoverRepository = turnoverRepository;
         config.setStartDate(new LocalDate(2019, 01,01));
         config.setOccupancy(occupancy);
-        config.setPrelimFrequency(Frequency.MONTHLY);
-        config.setAuditedFrequency(Frequency.YEARLY);
+        config.setType(Type.PRELIMINARY);
+        config.setFrequency(Frequency.MONTHLY);
         config.setCurrency(currency);
 
         // expect
         context.checking(new Expectations(){{
             oneOf(turnoverRepository).createNewEmpty(occupancy, turnoverDate, Type.PRELIMINARY, Frequency.MONTHLY, currency);
-            oneOf(turnoverRepository).createNewEmpty(occupancy, turnoverDate, Type.AUDITED, Frequency.YEARLY, currency);
         }});
 
         // when

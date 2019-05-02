@@ -54,7 +54,8 @@ public class TurnoverEntryService_IntegTest extends TurnoverModuleIntegTestAbstr
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfTopModel001Gb);
+                    executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfTopModel001GbPrelim);
+                    executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfTopModel001GbAudit);
                 }
             });
         }
@@ -63,9 +64,10 @@ public class TurnoverEntryService_IntegTest extends TurnoverModuleIntegTestAbstr
         public void produce_empty_turnovers_works() throws Exception {
             // given
             final List<TurnoverReportingConfig> configs = turnoverReportingConfigRepository.listAll();
-            assertThat(configs).hasSize(1);
+            assertThat(configs).hasSize(2);
             LocalDate startConfig = new LocalDate(2014, 1, 2);
             assertThat(configs.get(0).getStartDate()).isEqualTo(startConfig);
+            assertThat(configs.get(1).getStartDate()).isEqualTo(startConfig);
             List<Turnover> turnovers = turnoverRepository.listAll();
             assertThat(turnovers).hasSize(0);
 
@@ -104,13 +106,20 @@ public class TurnoverEntryService_IntegTest extends TurnoverModuleIntegTestAbstr
                 @Override
                 protected void execute(final ExecutionContext executionContext) {
                     executionContext.executeChild(this,Person_enum.JohnTurnover);
-                    executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfTopModel001Gb);
-                    executionContext.executeChild(this, TurnoverReportingConfig_enum.BudPoison001Nl);
-                    executionContext.executeChild(this, TurnoverReportingConfig_enum.BudMiracle002Nl);
-                    executionContext.executeChild(this, TurnoverReportingConfig_enum.BudDago004Nl);
-                    executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfMiracl005Gb);
-                    executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfMediaX002Gb);
-                    executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfPoison003Gb);
+                    executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfTopModel001GbPrelim);
+                    executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfTopModel001GbAudit);
+                    executionContext.executeChild(this, TurnoverReportingConfig_enum.BudPoison001NlPrelim);
+                    executionContext.executeChild(this, TurnoverReportingConfig_enum.BudPoison001NlAudit);
+                    executionContext.executeChild(this, TurnoverReportingConfig_enum.BudMiracle002NlPrelim);
+                    executionContext.executeChild(this, TurnoverReportingConfig_enum.BudMiracle002NlAudit);
+                    executionContext.executeChild(this, TurnoverReportingConfig_enum.BudDago004NlPrelim);
+                    executionContext.executeChild(this, TurnoverReportingConfig_enum.BudDago004NlAudit);
+                    executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfMiracl005GbPrelim);
+                    executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfMiracl005GbAudit);
+                    executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfMediaX002GbPrelim);
+                    executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfMediaX002GbAudit);
+                    executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfPoison003GbPrelim);
+                    executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfPoison003GbAudit);
 
                 }
             });
@@ -121,7 +130,7 @@ public class TurnoverEntryService_IntegTest extends TurnoverModuleIntegTestAbstr
 
             // given
             final List<TurnoverReportingConfig> configs = turnoverReportingConfigRepository.listAll();
-            assertThat(configs).hasSize(7);
+            assertThat(configs).hasSize(14);
             final LocalDate jan = new LocalDate(2014, 01, 01);
             turnoverEntryService.produceEmptyTurnoversFor(jan);
             final LocalDate feb = new LocalDate(2014, 02, 01);
@@ -133,8 +142,8 @@ public class TurnoverEntryService_IntegTest extends TurnoverModuleIntegTestAbstr
 
             // when
             Person reporterJohn = Person_enum.JohnTurnover.findUsing(serviceRegistry);
-            assertThat(turnoverReportingConfigRepository.findByReporter(reporterJohn)).hasSize(6);
-            Occupancy oPoison = TurnoverReportingConfig_enum.BudPoison001Nl.findUsing(serviceRegistry).getOccupancy();
+            assertThat(turnoverReportingConfigRepository.findByReporter(reporterJohn)).hasSize(12);
+            Occupancy oPoison = TurnoverReportingConfig_enum.BudPoison001NlPrelim.findUsing(serviceRegistry).getOccupancy();
             Turnover turnover = turnoverRepository.findByOccupancyAndTypeAndDateWithStatusNew(oPoison, Type.PRELIMINARY, march).get(0);
             mixin(Turnover_enter.class, turnover).$$(BigDecimal.ZERO, null, null, false, null);
 

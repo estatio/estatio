@@ -30,6 +30,7 @@ import org.estatio.module.party.dom.Person;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
+import org.estatio.module.turnover.dom.Type;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -37,19 +38,21 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"occupancy"}, callSuper = false)
-@ToString(of={"occupancy"})
+@EqualsAndHashCode(of={"occupancy", "typeEnum"}, callSuper = false)
+@ToString(of={"occupancy", "typeEnum"})
 @Accessors(chain = true)
 public class TurnoverReportingConfigBuilder extends BuilderScriptAbstract<TurnoverReportingConfig, TurnoverReportingConfigBuilder> {
 
     @Getter @Setter
     Occupancy occupancy;
     @Getter @Setter
+    Type typeEnum;
+    @Getter @Setter
     Person reporter;
     @Getter @Setter
     LocalDate startDate;
     @Getter @Setter
-    Frequency prelimFrequency;
+    Frequency frequency;
     @Getter @Setter
     Frequency auditedFrequency;
     @Getter @Setter
@@ -63,19 +66,19 @@ public class TurnoverReportingConfigBuilder extends BuilderScriptAbstract<Turnov
     protected void execute(ExecutionContext ec) {
 
         checkParam("occupancy", ec, Occupancy.class);
+        checkParam("typeEnum", ec, Type.class);
         checkParam("startDate", ec, LocalDate.class);
-        checkParam("prelimFrequency", ec, Frequency.class);
-        checkParam("auditedFrequency", ec, Frequency.class);
+        checkParam("frequency", ec, Frequency.class);
         checkParam("currency", ec, Currency.class);
 
 
         final TurnoverReportingConfig config =
                 turnoverReportingConfigRepository.findOrCreate(
                         occupancy,
+                        typeEnum,
                         reporter,
                         startDate,
-                        prelimFrequency,
-                        auditedFrequency,
+                        frequency,
                         currency);
 
         ec.addResult(this, config);

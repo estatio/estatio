@@ -35,6 +35,7 @@ import org.estatio.module.party.dom.Person;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
+import org.estatio.module.turnover.dom.Type;
 import org.estatio.module.turnover.fixtures.data.TurnoverReportingConfig_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -63,10 +64,10 @@ public class TurnoverReportingConfigRepository_IntegTest extends TurnoverModuleI
             final LocalDate startDate = new LocalDate(2019, 1, 1);
             final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
             // when
-            TurnoverReportingConfig config = turnoverReportingConfigRepository.findOrCreate(occupancy, null, startDate, Frequency.MONTHLY, Frequency.YEARLY, euro);
+            TurnoverReportingConfig config = turnoverReportingConfigRepository.findOrCreate(occupancy, Type.PRELIMINARY, null, startDate, Frequency.MONTHLY, euro);
             // then
-            assertThat(turnoverReportingConfigRepository.findOrCreate(occupancy, null, new LocalDate(2020, 12, 31), Frequency.DAILY, Frequency.DAILY, euro)).isSameAs(config);
-            assertThat(config.getPrelimFrequency()).isEqualTo(Frequency.MONTHLY);
+            assertThat(turnoverReportingConfigRepository.findOrCreate(occupancy, Type.PRELIMINARY, null, new LocalDate(2020, 12, 31), Frequency.DAILY, euro)).isSameAs(config);
+            assertThat(config.getFrequency()).isEqualTo(Frequency.MONTHLY);
 
         }
 
@@ -80,7 +81,7 @@ public class TurnoverReportingConfigRepository_IntegTest extends TurnoverModuleI
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfTopModel001Gb.builder());
+                    executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfTopModel001GbPrelim.builder());
                 }
             });
         }
@@ -90,7 +91,7 @@ public class TurnoverReportingConfigRepository_IntegTest extends TurnoverModuleI
 
             // given
             assertThat(turnoverReportingConfigRepository.listAll()).hasSize(1);
-            final Person personGino = TurnoverReportingConfig_enum.OxfTopModel001Gb.getPerson_d().findUsing(serviceRegistry2);
+            final Person personGino = TurnoverReportingConfig_enum.OxfTopModel001GbPrelim.getPerson_d().findUsing(serviceRegistry2);
             assertThat(turnoverReportingConfigRepository.listAll().get(0).getReporter()).isEqualTo(personGino);
 
             // when, then

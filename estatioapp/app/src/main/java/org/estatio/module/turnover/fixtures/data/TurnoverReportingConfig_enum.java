@@ -32,6 +32,7 @@ import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
+import org.estatio.module.turnover.dom.Type;
 import org.estatio.module.turnover.fixtures.builders.TurnoverReportingConfigBuilder;
 
 import lombok.AllArgsConstructor;
@@ -46,28 +47,42 @@ public enum TurnoverReportingConfig_enum
         implements PersonaWithBuilderScript<TurnoverReportingConfig, TurnoverReportingConfigBuilder>, PersonaWithFinder<TurnoverReportingConfig> {
 
 
-    OxfTopModel001Gb(
-            Lease_enum.OxfTopModel001Gb, Lease_enum.OxfTopModel001Gb.getManager_d(), ld(2014, 1, 2), Frequency.MONTHLY, Frequency.YEARLY, Currency_enum.EUR),
-    BudPoison001Nl(
-            Lease_enum.BudPoison001Nl, null, ld(2014, 1, 1), Frequency.MONTHLY, Frequency.YEARLY, Currency_enum.EUR),
-    BudMiracle002Nl(
-            Lease_enum.BudMiracle002Nl, null, ld(2014, 1, 1), Frequency.MONTHLY, Frequency.YEARLY, Currency_enum.EUR),
-    BudDago004Nl(
-            Lease_enum.BudDago004Nl, null, ld(2014, 1, 1), Frequency.MONTHLY, Frequency.YEARLY, Currency_enum.EUR),
+    OxfTopModel001GbPrelim(
+            Lease_enum.OxfTopModel001Gb, Lease_enum.OxfTopModel001Gb.getManager_d(), Type.PRELIMINARY, ld(2014, 1, 2), Frequency.MONTHLY, Currency_enum.EUR),
+    OxfTopModel001GbAudit(
+            Lease_enum.OxfTopModel001Gb, Lease_enum.OxfTopModel001Gb.getManager_d(), Type.AUDITED, ld(2014, 1, 2), Frequency.YEARLY, Currency_enum.EUR),
+    BudPoison001NlPrelim(
+            Lease_enum.BudPoison001Nl, null, Type.PRELIMINARY, ld(2014, 1, 1), Frequency.MONTHLY, Currency_enum.EUR),
+    BudPoison001NlAudit(
+            Lease_enum.BudPoison001Nl, null, Type.AUDITED, ld(2014, 1, 1), Frequency.YEARLY, Currency_enum.EUR),
+    BudMiracle002NlPrelim(
+            Lease_enum.BudMiracle002Nl, null, Type.PRELIMINARY, ld(2014, 1, 1), Frequency.MONTHLY, Currency_enum.EUR),
+    BudMiracle002NlAudit(
+            Lease_enum.BudMiracle002Nl, null, Type.AUDITED, ld(2014, 1, 1), Frequency.YEARLY, Currency_enum.EUR),
+    BudDago004NlPrelim(
+            Lease_enum.BudDago004Nl, null, Type.PRELIMINARY, ld(2014, 1, 1), Frequency.MONTHLY, Currency_enum.EUR),
+    BudDago004NlAudit(
+            Lease_enum.BudDago004Nl, null, Type.AUDITED, ld(2014, 1, 1), Frequency.YEARLY, Currency_enum.EUR),
 
-    OxfMiracl005Gb(
-            Lease_enum.OxfMiracl005Gb, Person_enum.JohnTurnover, ld(2014, 1, 1), Frequency.MONTHLY, Frequency.YEARLY, Currency_enum.EUR),
-    OxfMediaX002Gb(
-            Lease_enum.OxfMediaX002Gb, Person_enum.JohnTurnover, ld(2014, 1, 1), Frequency.MONTHLY, Frequency.YEARLY, Currency_enum.EUR),
-    OxfPoison003Gb(
-            Lease_enum.OxfPoison003Gb, Person_enum.JohnTurnover, ld(2014, 1, 1), Frequency.MONTHLY, Frequency.YEARLY, Currency_enum.EUR),
+    OxfMiracl005GbPrelim(
+            Lease_enum.OxfMiracl005Gb, Person_enum.JohnTurnover, Type.PRELIMINARY, ld(2014, 1, 1), Frequency.MONTHLY, Currency_enum.EUR),
+    OxfMiracl005GbAudit(
+            Lease_enum.OxfMiracl005Gb, Person_enum.JohnTurnover, Type.AUDITED, ld(2014, 1, 1), Frequency.YEARLY, Currency_enum.EUR),
+    OxfMediaX002GbPrelim(
+            Lease_enum.OxfMediaX002Gb, Person_enum.JohnTurnover, Type.PRELIMINARY, ld(2014, 1, 1), Frequency.MONTHLY, Currency_enum.EUR),
+    OxfMediaX002GbAudit(
+            Lease_enum.OxfMediaX002Gb, Person_enum.JohnTurnover, Type.AUDITED, ld(2014, 1, 1), Frequency.YEARLY, Currency_enum.EUR),
+    OxfPoison003GbPrelim(
+            Lease_enum.OxfPoison003Gb, Person_enum.JohnTurnover, Type.PRELIMINARY, ld(2014, 1, 1), Frequency.MONTHLY, Currency_enum.EUR),
+    OxfPoison003GbAudit(
+            Lease_enum.OxfPoison003Gb, Person_enum.JohnTurnover, Type.AUDITED, ld(2014, 1, 1), Frequency.YEARLY, Currency_enum.EUR),
     ;
 
     private final Lease_enum lease_d;
     private final Person_enum person_d;
+    private final Type type;
     private final LocalDate startDate;
-    private final Frequency prelimfrequency;
-    private final Frequency auditedFrequency;
+    private final Frequency frequency;
     private final Currency_enum currency_d;
 
     @Override
@@ -75,9 +90,9 @@ public enum TurnoverReportingConfig_enum
         return new TurnoverReportingConfigBuilder()
                 .setPrereq((f,ec) -> f.setOccupancy(f.objectFor(lease_d, ec).getOccupancies().first()))
                 .setPrereq((f,ec) -> f.setReporter(f.objectFor(person_d, ec)))
+                .setTypeEnum(type)
                 .setStartDate(startDate)
-                .setPrelimFrequency(prelimfrequency)
-                .setAuditedFrequency(auditedFrequency)
+                .setFrequency(frequency)
                 .setPrereq((f, ec) -> f.setCurrency(f.objectFor(currency_d, ec)));
     }
 
@@ -86,7 +101,7 @@ public enum TurnoverReportingConfig_enum
         final TurnoverReportingConfigRepository turnoverReportingConfigRepository = serviceRegistry.lookupService(TurnoverReportingConfigRepository.class);
         final OccupancyRepository occupancyRepository = serviceRegistry.lookupService(OccupancyRepository.class);
         final Occupancy occupancy = occupancyRepository.findByLease(lease_d.findUsing(serviceRegistry)).stream().findFirst().orElse(null);
-        return turnoverReportingConfigRepository.findUnique(occupancy);
+        return turnoverReportingConfigRepository.findUnique(occupancy, type);
     }
 
 }

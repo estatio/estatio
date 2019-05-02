@@ -33,6 +33,7 @@ import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
+import org.estatio.module.turnover.dom.Type;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -100,7 +101,7 @@ public class TurnoverReportingConfigImport implements Importable, ExcelFixtureRo
             return Lists.newArrayList();
         }
 
-        TurnoverReportingConfig config = turnoverReportingConfigRepository.upsert(occupancy, null, occupancyStartDate, Frequency.MONTHLY, Frequency.YEARLY, currency);
+        TurnoverReportingConfig config = turnoverReportingConfigRepository.upsert(occupancy, Type.PRELIMINARY, null, occupancyStartDate, Frequency.MONTHLY, currency);
 
         return Lists.newArrayList(config);
     }

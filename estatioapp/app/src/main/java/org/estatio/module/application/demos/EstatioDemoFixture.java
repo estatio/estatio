@@ -236,10 +236,10 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 InvoiceForLease_enum.OxfMiracl005Gb);
 
         ec.executeChildren(this,
-                TurnoverReportingConfig_enum.OxfTopModel001Gb,
-                TurnoverReportingConfig_enum.BudPoison001Nl,
-                TurnoverReportingConfig_enum.BudMiracle002Nl,
-                TurnoverReportingConfig_enum.BudDago004Nl);
+                TurnoverReportingConfig_enum.OxfTopModel001GbPrelim,
+                TurnoverReportingConfig_enum.BudPoison001NlPrelim,
+                TurnoverReportingConfig_enum.BudMiracle002NlPrelim,
+                TurnoverReportingConfig_enum.BudDago004NlPrelim);
 
         ec.executeChildren(this,
                 Budget_enum.OxfBudget2015,

@@ -48,19 +48,18 @@ public class TurnoverReportingConfigRepository extends UdoDomainRepositoryAndFac
 
     public TurnoverReportingConfig upsert(
             final Occupancy occupancy,
+            final Type type,
             final Person reporter,
             final LocalDate startDate,
-            final Frequency prelimFrequency,
-            final Frequency auditedFrequency,
+            final Frequency frequency,
             final Currency currency) {
-        TurnoverReportingConfig config = findUnique(occupancy);
+        TurnoverReportingConfig config = findUnique(occupancy, type);
         if (config==null){
-            config = create(occupancy, reporter == null ? deriveReporterFromOccupancy(occupancy) : reporter, startDate, prelimFrequency, auditedFrequency, currency);
+            config = create(occupancy, type, reporter == null ? deriveReporterFromOccupancy(occupancy) : reporter, startDate, frequency, currency);
         } else {
             config.setReporter(reporter == null ? deriveReporterFromOccupancy(occupancy) : reporter);
             config.setStartDate(startDate);
-            config.setPrelimFrequency(prelimFrequency);
-            config.setAuditedFrequency(auditedFrequency);
+            config.setFrequency(frequency);
             config.setCurrency(currency);
         }
         return config;
@@ -68,14 +67,14 @@ public class TurnoverReportingConfigRepository extends UdoDomainRepositoryAndFac
 
     public TurnoverReportingConfig findOrCreate(
             final Occupancy occupancy,
+            final Type type,
             final Person reporter,
             final LocalDate startDate,
-            final Frequency prelimFrequency,
-            final Frequency auditedFrequency,
+            final Frequency frequency,
             final Currency currency) {
-        TurnoverReportingConfig config = findUnique(occupancy);
+        TurnoverReportingConfig config = findUnique(occupancy, type);
         if (config==null){
-            config = create(occupancy, reporter == null ? deriveReporterFromOccupancy(occupancy) : reporter, startDate, prelimFrequency, auditedFrequency, currency);
+            config = create(occupancy, type, reporter == null ? deriveReporterFromOccupancy(occupancy) : reporter, startDate, frequency, currency);
         }
         return config;
     }
@@ -93,22 +92,31 @@ public class TurnoverReportingConfigRepository extends UdoDomainRepositoryAndFac
 
     public TurnoverReportingConfig create(
             final Occupancy occupancy,
+            final Type type,
             final Person reporter,
             final LocalDate startDate,
-            final Frequency prelimFrequency,
-            final Frequency auditedFrequency,
+            final Frequency frequency,
             final Currency currency) {
-        TurnoverReportingConfig config = new TurnoverReportingConfig(occupancy, reporter, startDate, prelimFrequency, auditedFrequency, currency);
+        TurnoverReportingConfig config = new TurnoverReportingConfig(occupancy, type, reporter, startDate, frequency, currency);
         serviceRegistry2.injectServicesInto(config);
         repositoryService.persistAndFlush(config);
         return config;
     }
 
-    public TurnoverReportingConfig findUnique(final Occupancy occupancy) {
+    public TurnoverReportingConfig findUnique(final Occupancy occupancy, final Type type) {
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
                         TurnoverReportingConfig.class,
                         "findUnique",
+                        "occupancy", occupancy,
+                        "type", type));
+    }
+
+    public List<TurnoverReportingConfig> findByOccupancy(final Occupancy occupancy) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        TurnoverReportingConfig.class,
+                        "findByOccupancy",
                         "occupancy", occupancy));
     }
 
