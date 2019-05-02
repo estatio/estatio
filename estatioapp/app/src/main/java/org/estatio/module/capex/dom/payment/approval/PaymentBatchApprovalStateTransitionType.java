@@ -52,7 +52,7 @@ public enum PaymentBatchApprovalStateTransitionType
                         PaymentBatchApprovalStateTransitionType,
                         PaymentBatchApprovalState>) (paymentBatch, serviceRegistry2) -> {
                     if (paymentBatch.getAtPath().startsWith("/ITA")) return null;
-                    return PartyRoleTypeEnum.TREASURER;
+                    return Collections.singletonList(PartyRoleTypeEnum.TREASURER);
                 };
             }
         },

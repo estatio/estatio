@@ -93,7 +93,7 @@ public interface StateTransitionType<
     TaskAssignmentStrategy<DO, ST, STT, S> getTaskAssignmentStrategy();
 
     @Programmatic
-    default IPartyRoleType getAssignTo(DO domainObject, ServiceRegistry2 serviceRegistry2) {
+    default List<IPartyRoleType> getAssignTo(DO domainObject, ServiceRegistry2 serviceRegistry2) {
         return getTaskAssignmentStrategy()
                 .getAssignTo(domainObject, serviceRegistry2);
 

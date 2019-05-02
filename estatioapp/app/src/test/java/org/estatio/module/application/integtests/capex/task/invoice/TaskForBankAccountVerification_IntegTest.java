@@ -56,9 +56,9 @@ import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
+import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -73,8 +73,7 @@ import static org.estatio.module.capex.dom.bankaccount.verification.BankAccountV
 
 public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleIntegTestAbstract {
 
-    @Inject
-    PartyRepository partyRepository;
+    @Inject PartyRoleTypeRepository partyRoleTypeRepository;
 
     @Inject
     BankAccountRepository bankAccountRepository;
@@ -156,7 +155,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
             final BankAccountVerificationState currentState = stateTransitionService
                     .currentStateOf(bankAccount, VERIFY_BANK_ACCOUNT);
             final Person personToAssignNextToIfAny = null;
-            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT,
+            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null,
                     personToAssignNextToIfAny, null);
             transactionService.nextTransaction();
 
@@ -240,7 +239,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
             // given
             assertState(bankAccount, NOT_VERIFIED);
             final Person personToAssignNextToIfAny = null;
-            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT,
+            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null,
                     personToAssignNextToIfAny, null);
             transactionService.nextTransaction();
 
@@ -275,7 +274,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
             assertTransition(transitions.get(0), null, INSTANTIATE, NOT_VERIFIED);
 
             // when
-            wrap(mixin(BankAccount_rejectProof.class, bankAccount)).act("SOME ROLE", null, "bad proof, bad!");
+            wrap(mixin(BankAccount_rejectProof.class, bankAccount)).act(null, null, "bad proof, bad!");
             transactionService.nextTransaction();
 
             // then
@@ -294,7 +293,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
             // given
             assertState(bankAccount, NOT_VERIFIED);
             final Person personToAssignNextToIfAny = null;
-            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT,
+            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null,
                     personToAssignNextToIfAny, null);
             transactionService.nextTransaction();
 
@@ -304,7 +303,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
             assertTransition(transitions.get(1), null, INSTANTIATE, NOT_VERIFIED);
 
             // when
-            wrap(mixin(BankAccount_rejectProof.class, bankAccount)).act("SOME ROLE", null, "bad proof, bad!");
+            wrap(mixin(BankAccount_rejectProof.class, bankAccount)).act(null, null, "bad proof, bad!");
             transactionService.nextTransaction();
 
             // then
@@ -344,7 +343,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
             // given
             assertState(this.bankAccount, NOT_VERIFIED);
             final Person personToAssignNextToIfAny = null;
-            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT,
+            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null,
                     personToAssignNextToIfAny, null);
             transactionService.nextTransaction();
 

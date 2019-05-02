@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.role.IPartyRoleType;
 
 /**
  * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case
@@ -36,15 +37,16 @@ public class IncomingInvoice_approveWhenApprovedByCenterManager extends Incoming
     )
     @ActionLayout(cssClassFa = "fa-thumbs-o-up")
     public Object act(
+            @Nullable final IPartyRoleType roleToAssignNextTo,
             @Nullable final Person personToAssignNextTo,
             @Nullable final String comment,
             final boolean goToNext) {
         final IncomingInvoice next = nextAfterPendingIfRequested(goToNext);
-        trigger(personToAssignNextTo, comment, comment);
+        trigger(roleToAssignNextTo, personToAssignNextTo, comment, comment);
         return objectToReturn(next);
     }
 
-    public boolean default2Act() {
+    public boolean default3Act() {
         return true;
     }
 
@@ -60,12 +62,12 @@ public class IncomingInvoice_approveWhenApprovedByCenterManager extends Incoming
         return reasonGuardNotSatisified();
     }
 
-    public Person default0Act() {
-        return defaultPersonToAssignNextTo();
+    public Person default1Act(final IPartyRoleType roleType) {
+        return defaultPersonToAssignNextTo(roleType);
     }
 
-    public List<Person> choices0Act() {
-        return choicesPersonToAssignNextTo();
+    public List<Person> choices1Act(final IPartyRoleType roleType) {
+        return choicesPersonToAssignNextTo(roleType);
     }
 
 }

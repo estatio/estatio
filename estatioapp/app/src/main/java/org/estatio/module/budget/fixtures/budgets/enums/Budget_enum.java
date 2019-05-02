@@ -74,7 +74,13 @@ public enum Budget_enum implements PersonaWithBuilderScript<Budget, BudgetBuilde
                     new ItemSpec(Charge_enum.NlIncomingCharge2, bd(20000.00)),
                     new ItemSpec(Charge_enum.NlIncomingCharge3, bd(30000.00))
             }
-    )
+    ),
+    RonItaBudget2016(
+            PropertyAndUnitsAndOwnerAndManager_enum.RonIt, ld(2016, 1, 1),
+            new ItemSpec[]{
+                    new ItemSpec(Charge_enum.ItServiceCharge, bd("10000.00"))
+            }
+    ),
     ;
 
     private final PropertyAndUnitsAndOwnerAndManager_enum property_d;

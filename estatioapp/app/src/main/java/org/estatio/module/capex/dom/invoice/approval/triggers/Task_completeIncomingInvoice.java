@@ -11,6 +11,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.role.IPartyRoleType;
 
 /**
  * This mixin cannot be inlined because Task does not know about its target domain object.
@@ -35,7 +36,7 @@ public class Task_completeIncomingInvoice
     )
     @ActionLayout(cssClassFa = "fa-flag-checkered")
     public Object act(
-            final String role,
+            final IPartyRoleType role,
             @Nullable final Person personToAssignNextTo,
             @Nullable final String comment,
             final boolean goToNext) {
@@ -55,16 +56,16 @@ public class Task_completeIncomingInvoice
         return mixin().disableAct();
     }
 
-    public String default0Act() {
+    public IPartyRoleType default0Act() {
         return mixin().default0Act();
     }
 
-    public Person default1Act() {
-        return mixin().default1Act();
+    public Person default1Act(final IPartyRoleType roleType) {
+        return mixin().default1Act(roleType);
     }
 
-    public List<Person> choices1Act() {
-        return mixin().choices1Act();
+    public List<Person> choices1Act(final IPartyRoleType roleType) {
+        return mixin().choices1Act(roleType);
     }
 
     public boolean default3Act() {

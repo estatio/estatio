@@ -670,7 +670,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
                     try {
                         // hmm, seems like anyone can reject (no special roles required).
                         mixin.act(
-                                mixin.default0Act(), mixin.default1Act(), errors.getText());
+                                mixin.default0Act(), mixin.default1Act(mixin.default0Act()), errors.getText());
 
                     } catch (Exception ex) {
                         // best effort... being the issues to someone's attention, at least...

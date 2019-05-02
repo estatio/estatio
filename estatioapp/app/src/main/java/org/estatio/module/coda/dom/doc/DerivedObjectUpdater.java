@@ -58,19 +58,12 @@ public class DerivedObjectUpdater {
 
     static final String AT_PATH = "/ITA";
 
-    IncomingInvoice upsertIncomingInvoice(
-            final CodaDocHead docHead,
-            final boolean createIfDoesNotExist) {
-        IncomingInvoice incomingInvoiceIfAny = derivedObjectLookup.invoiceIfAnyFrom(docHead);
-        return upsertIncomingInvoice(docHead, incomingInvoiceIfAny, createIfDoesNotExist);
-    }
-
     public IncomingInvoice upsertIncomingInvoice(
             final CodaDocHead docHead,
             final IncomingInvoice existingInvoiceIfAny,
             final boolean createIfDoesNotExist) {
 
-        final IncomingInvoiceItem existingInvoiceItemIfAny = firstItemOf(existingInvoiceIfAny);
+        final IncomingInvoiceItem existingInvoiceItemIfAny = IncomingInvoice.firstItemOf(existingInvoiceIfAny);
 
         //
         // Now update any existing objects based on this new CodaDocHead.  Note that it's possible that this
@@ -138,7 +131,7 @@ public class DerivedObjectUpdater {
                 final LocalDateInterval ldi = PeriodUtil.yearFromPeriod(period);
 
                 existingInvoiceItemIfAny.setIncomingInvoiceType(type);
-                existingInvoiceItemIfAny.setCharge(charge);
+
                 existingInvoiceItemIfAny.setDescription(description);
                 existingInvoiceItemIfAny.setNetAmount(netAmount);
                 existingInvoiceItemIfAny.setVatAmount(vatAmount);
@@ -148,8 +141,14 @@ public class DerivedObjectUpdater {
                 existingInvoiceItemIfAny.setStartDate(ldi.startDate());
                 existingInvoiceItemIfAny.setEndDate(ldi.endDate());
                 existingInvoiceItemIfAny.setFixedAsset(property);
-                existingInvoiceItemIfAny.setProject(project);
-                existingInvoiceItemIfAny.setBudgetItem(budgetItem);
+
+                // we never overwrite these here.
+                // instead, we will keep in them in sync if they weren't changed compared to Coda.  But we do that
+                // in CodaDocService, which has access to both any existing CodaDocHead as well as its replacement.
+                //
+                // existingInvoiceItemIfAny.setCharge(charge);
+                // existingInvoiceItemIfAny.setProject(project);
+                // existingInvoiceItemIfAny.setBudgetItem(budgetItem);
             }
 
         } else {
@@ -197,7 +196,7 @@ public class DerivedObjectUpdater {
             final ErrorSet softErrors) {
 
         final IncomingInvoice incomingInvoice = derivedObjectLookup.invoiceIfAnyFrom(docHead);
-        final IncomingInvoiceItem invoiceItem = firstItemOf(incomingInvoice);
+        final IncomingInvoiceItem invoiceItem = IncomingInvoice.firstItemOf(incomingInvoice);
 
         final BigDecimal grossAmount = docHead.getSummaryLineDocValue(LineCache.DEFAULT);
         final BigDecimal vatAmount = docHead.getSummaryLineDocSumTax(LineCache.DEFAULT);
@@ -510,14 +509,6 @@ public class DerivedObjectUpdater {
         }
         task.setDescription(errors.getText());
 
-    }
-
-    private static IncomingInvoiceItem firstItemOf(final IncomingInvoice existingInvoiceIfAny) {
-        return existingInvoiceIfAny != null
-                ? existingInvoiceIfAny.getItems().size() == 1
-                ? (IncomingInvoiceItem) existingInvoiceIfAny.getItems().first()
-                : null
-                : null;
     }
 
     @Inject

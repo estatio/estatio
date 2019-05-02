@@ -8,12 +8,13 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.app.SwitchViewService;
 import org.estatio.module.capex.app.invoice.IncomingDocAsInvoiceViewModel;
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_approve;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_triggerAbstract;
-import org.estatio.module.capex.app.SwitchViewService;
 import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.role.IPartyRoleType;
 
 /**
  * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case
@@ -38,7 +39,7 @@ public class IncomingDocAsInvoiceViewModel_approve extends IncomingInvoice_appro
     )
     @ActionLayout(cssClassFa = "fa-thumbs-o-up")
     public Object act(
-            @Nullable final String roleToAssignNextTo,
+            @Nullable final IPartyRoleType roleToAssignNextTo,
             @Nullable final Person personToAssignNextTo,
             @Nullable final String comment,
             final boolean goToNext) {

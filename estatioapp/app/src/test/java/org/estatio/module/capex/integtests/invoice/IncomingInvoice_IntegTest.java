@@ -14,6 +14,7 @@ import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.fixtures.enums.Country_enum;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
@@ -34,6 +35,7 @@ import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -111,7 +113,7 @@ public class IncomingInvoice_IntegTest extends CapexModuleIntegTestAbstract {
     }
 
     private void incomingInvoiceIsCompleted() {
-        mixin(IncomingInvoice_complete.class, incomingInvoice).act("PROPERTY_MANAGER", null, null);
+        mixin(IncomingInvoice_complete.class, incomingInvoice).act(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository), null, null);
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
     }
 
@@ -178,6 +180,8 @@ public class IncomingInvoice_IntegTest extends CapexModuleIntegTestAbstract {
 
     @Inject
     BankAccountRepository bankAccountRepository;
+
+    @Inject PartyRoleTypeRepository partyRoleTypeRepository;
 
 }
 

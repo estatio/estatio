@@ -10,6 +10,7 @@ import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 import org.apache.isis.applib.services.sudo.SudoService;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.capex.dom.bankaccount.verification.triggers.BankAccount_verify;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
@@ -28,6 +29,7 @@ import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.estatio.module.tax.dom.Tax;
 
 import lombok.EqualsAndHashCode;
@@ -249,10 +251,10 @@ public class IncomingInvoiceNoDocumentBuilder extends BuilderScriptAbstract<Inco
         if (propertyManager!=null) {
             // complete and approve invoice and verify bankaccount
             sudoService.sudo(propertyManager.getUsername(), (Runnable) () ->
-                    wrap(mixin(IncomingInvoice_complete.class, invoice)).act("PROPERTY_MANAGER", null, null)
+                    wrap(mixin(IncomingInvoice_complete.class, invoice)).act(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository), null, null)
             );
             sudoService.sudo(assetManager.getUsername(), (Runnable) () ->
-                    wrap(mixin(IncomingInvoice_approve.class, invoice)).act("ASSET_MANAGER", null, null, false)
+                    wrap(mixin(IncomingInvoice_approve.class, invoice)).act(FixedAssetRoleTypeEnum.ASSET_MANAGER.findUsing(partyRoleTypeRepository), null, null, false)
             );
             sudoService.sudo(countryDirector.getUsername(), (Runnable) () ->
                     wrap(mixin(IncomingInvoice_approveAsCountryDirector.class, invoice)).act(null, false)
@@ -263,6 +265,9 @@ public class IncomingInvoiceNoDocumentBuilder extends BuilderScriptAbstract<Inco
         }
 
     }
+
+    @Inject
+    PartyRoleTypeRepository partyRoleTypeRepository;
 
     @Inject
     IncomingInvoiceRepository incomingInvoiceRepository;

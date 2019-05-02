@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.role.IPartyRoleType;
 
 /**
  * This mixin cannot be inlined because Task does not know about its target domain object.
@@ -36,7 +37,7 @@ public class Task_adviseToApprove
     )
     @ActionLayout(contributed = Contributed.AS_ACTION, cssClassFa = "fa-thumbs-o-up")
     public Object act(
-            @Nullable final String roleToAssignNextTo, // ECP-855: this field serves as a hint to the user to which role the next task will be assigned
+            @Nullable final IPartyRoleType roleToAssignNextTo, // ECP-855: this field serves as a hint to the user to which role the next task will be assigned
             @Nullable final Person personToAssignNextTo,
             @Nullable final String comment,
             final boolean goToNext) {
@@ -60,16 +61,20 @@ public class Task_adviseToApprove
         return validateCommentIfByProxy(comment);
     }
 
-    public String default0Act() {
+    public IPartyRoleType default0Act() {
         return mixin().default0Act();
     }
 
-    public Person default1Act() {
-        return mixin().default1Act();
+    public List<? extends IPartyRoleType> choices0Act() {
+        return mixin().choices0Act();
     }
 
-    public List<Person> choices1Act() {
-        return mixin().choices1Act();
+    public Person default1Act(final IPartyRoleType roleType) {
+        return mixin().default1Act(roleType);
+    }
+
+    public List<Person> choices1Act(final IPartyRoleType roleType) {
+        return mixin().choices1Act(roleType);
     }
 
     public boolean default3Act() {

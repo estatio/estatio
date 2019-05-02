@@ -40,6 +40,7 @@ import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
+import org.estatio.module.party.dom.role.IPartyRoleType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.incode.module.base.integtests.VT.ld;
@@ -157,8 +158,8 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
         // when
         final Order_amend mixin = mixin(Order_amend.class, order);
 
-        final String role = mixin.default0Act();
-        final Person person = mixin.default1Act();
+        final IPartyRoleType role = mixin.default0Act();
+        final Person person = mixin.default1Act(role);
         final String comment = "some reason";
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache

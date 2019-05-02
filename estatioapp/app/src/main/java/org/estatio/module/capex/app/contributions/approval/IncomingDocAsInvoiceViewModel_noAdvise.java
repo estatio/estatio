@@ -14,6 +14,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_noAdvise;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_triggerAbstract;
 import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.role.IPartyRoleType;
 
 /**
  * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case
@@ -38,7 +39,7 @@ public class IncomingDocAsInvoiceViewModel_noAdvise extends IncomingInvoice_noAd
     )
     @ActionLayout(cssClassFa = "fa-thumbs-o-down")
     public Object act(
-            @Nullable final String roleToAssignNextTo,
+            @Nullable final IPartyRoleType roleToAssignNextTo,
             @Nullable final Person personToAssignNextTo,
             final String comment, // there should be a reason why
             final boolean goToNext) {

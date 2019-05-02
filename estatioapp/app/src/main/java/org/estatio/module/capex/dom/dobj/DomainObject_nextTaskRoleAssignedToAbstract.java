@@ -1,6 +1,10 @@
 package org.estatio.module.capex.dom.dobj;
 
+import java.util.List;
+
 import javax.inject.Inject;
+
+import com.google.common.base.Joiner;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -13,7 +17,6 @@ import org.estatio.module.capex.dom.state.StateTransitionAbstract;
 import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.state.StateTransitionType;
 import org.estatio.module.party.dom.role.IPartyRoleType;
-import org.estatio.module.party.dom.role.PartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 
 /**
@@ -36,20 +39,24 @@ public abstract class DomainObject_nextTaskRoleAssignedToAbstract<
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed= Contributed.AS_ASSOCIATION)
-    public PartyRoleType prop() {
+    public Object prop() {
         return queryResultsCache.execute(
                 this::doProp,
                 getClass(),
                 "prop", domainObject);
     }
 
-    private PartyRoleType doProp() {
-        IPartyRoleType iPartyRoleType = stateTransitionService
+    private Object doProp() {
+        List<IPartyRoleType> iPartyRoleTypes = stateTransitionService
                 .nextTaskRoleAssignToFor(domainObject, stateTransitionClass);
-        if(iPartyRoleType == null) {
-            return null;
+        switch (iPartyRoleTypes.size()){
+            case 0:
+                return null;
+            case 1:
+                return iPartyRoleTypes.get(0).findUsing(partyRoleTypeRepository);
+            default:
+                return Joiner.on(",").join(iPartyRoleTypes);
         }
-        return iPartyRoleType.findUsing(partyRoleTypeRepository);
     }
 
     protected boolean hideProp() {
