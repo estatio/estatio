@@ -20,6 +20,7 @@ package org.estatio.module.turnover.dom;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -45,7 +46,7 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
     }
 
     public Turnover findOrCreate(
-            final Occupancy occupancy,
+            final TurnoverReportingConfig config,
             final LocalDate turnoverDate,
             final Type type,
             final Frequency frequency,
@@ -58,15 +59,15 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
             final BigInteger purchaseCount,
             final String comments,
             final boolean nonComparable){
-        Turnover turnover = findUnique(occupancy, turnoverDate, type);
+        Turnover turnover = findUnique(config, turnoverDate, type);
         if (turnover==null){
-            turnover = create(occupancy, turnoverDate, type, frequency, status, reportedAt, reportedBy, currency, netAmount, grossAmount, purchaseCount, comments, nonComparable);
+            turnover = create(config, turnoverDate, type, frequency, status, reportedAt, reportedBy, currency, netAmount, grossAmount, purchaseCount, comments, nonComparable);
         }
         return turnover;
     }
 
     public Turnover upsert(
-            final Occupancy occupancy,
+            final TurnoverReportingConfig config,
             final LocalDate turnoverDate,
             final Type type,
             final Frequency frequency,
@@ -79,11 +80,11 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
             final BigInteger purchaseCount,
             final String comments,
             final boolean nonComparable){
-        Turnover turnover = findUnique(occupancy, turnoverDate, type);
+        Turnover turnover = findUnique(config, turnoverDate, type);
         if (turnover==null){
-            turnover = create(occupancy, turnoverDate, type, frequency, status, reportedAt, reportedBy, currency, netAmount, grossAmount, purchaseCount, comments, nonComparable);
+            turnover = create(config, turnoverDate, type, frequency, status, reportedAt, reportedBy, currency, netAmount, grossAmount, purchaseCount, comments, nonComparable);
         }
-        /* NOTE: occupancy, date, type = unique,
+        /* NOTE: config, date, type = unique,
         we consider frequency and currency immutable */
         turnover.setStatus(status);
         turnover.setReportedAt(reportedAt);
@@ -97,7 +98,7 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
     }
 
     public Turnover create(
-            final Occupancy occupancy,
+            final TurnoverReportingConfig config,
             final LocalDate turnoverDate,
             final Type type,
             final Frequency frequency,
@@ -110,43 +111,43 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
             final BigInteger turnoverPurchaseCount,
             final String comments,
             final boolean nonComparable) {
-        Turnover turnover = new Turnover(occupancy, turnoverDate, type, frequency, status, reportedAt, reportedBy, currency, turnoverNetAmount, turnoverGrossAmount, turnoverPurchaseCount, comments, nonComparable);
+        Turnover turnover = new Turnover(config, turnoverDate, type, frequency, status, reportedAt, reportedBy, currency, turnoverNetAmount, turnoverGrossAmount, turnoverPurchaseCount, comments, nonComparable);
         serviceRegistry2.injectServicesInto(turnover);
         repositoryService.persistAndFlush(turnover);
         return turnover;
     }
 
     public Turnover createNewEmpty(
-            final Occupancy occupancy,
+            final TurnoverReportingConfig config,
             final LocalDate turnoverDate,
             final Type type,
             final Frequency frequency,
             final Currency currency) {
-        Turnover turnover = findUnique(occupancy, turnoverDate, type);
+        Turnover turnover = findUnique(config, turnoverDate, type);
         if (turnover==null) {
-            turnover = new Turnover(occupancy, turnoverDate, type, frequency, currency, Status.NEW);
+            turnover = new Turnover(config, turnoverDate, type, frequency, currency, Status.NEW);
             serviceRegistry2.injectServicesInto(turnover);
             repositoryService.persistAndFlush(turnover);
         }
         return turnover;
     }
 
-    public Turnover findUnique(final Occupancy occupancy, final LocalDate turnoverDate, final Type type) {
+    public Turnover findUnique(final TurnoverReportingConfig config, final LocalDate turnoverDate, final Type type) {
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
                         Turnover.class,
                         "findUnique",
-                        "occupancy", occupancy,
+                        "config", config,
                         "date", turnoverDate,
                         "type", type));
     }
 
-    public List<Turnover> findApprovedByOccupancyAndTypeAndFrequencyBeforeDate(final Occupancy occupancy, final Type type, final Frequency frequency, final LocalDate turnoverDate) {
+    public List<Turnover> findApprovedByConfigAndTypeAndFrequencyBeforeDate(final TurnoverReportingConfig config, final Type type, final Frequency frequency, final LocalDate turnoverDate) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         Turnover.class,
-                        "findByOccupancyAndTypeAndFrequencyAndStatusBeforeDate",
-                        "occupancy", occupancy,
+                        "findByConfigAndTypeAndFrequencyAndStatusBeforeDate",
+                        "config", config,
                         "type", type,
                         "frequency", frequency,
                         "status", Status.APPROVED,
@@ -154,38 +155,46 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
     }
 
     public List<Turnover> findByOccupancy(final Occupancy occupancy) {
-        return repositoryService.allMatches(
-                new QueryDefault<>(
-                        Turnover.class,
-                        "findByOccupancy",
-                        "occupancy", occupancy));
+        List<Turnover> result = new ArrayList<>();
+        turnoverReportingConfigRepository.findByOccupancy(occupancy).forEach(cf->{
+            result.addAll(findByConfig(cf));
+        });
+        return result;
     }
 
-    public List<Turnover> findByOccupancyWithStatusNew(final Occupancy occupancy) {
+    public List<Turnover> findByConfig(final TurnoverReportingConfig config) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         Turnover.class,
-                        "findByOccupancyAndStatus",
-                        "occupancy", occupancy,
+                        "findByConfig",
+                        "config", config));
+    }
+
+    public List<Turnover> findByConfigWithStatusNew(final TurnoverReportingConfig config) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Turnover.class,
+                        "findByConfigAndStatus",
+                        "config", config,
                         "status", Status.NEW));
     }
 
-    public List<Turnover> findByOccupancyAndTypeWithStatusNew(final Occupancy occupancy, final Type type) {
+    public List<Turnover> findByConfigAndTypeWithStatusNew(final TurnoverReportingConfig config, final Type type) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         Turnover.class,
-                        "findByOccupancyAndTypeAndStatus",
-                        "occupancy", occupancy,
+                        "findByConfigAndTypeAndStatus",
+                        "config", config,
                         "type", type,
                         "status", Status.NEW));
     }
 
-    public List<Turnover> findByOccupancyAndTypeAndDateWithStatusNew(final Occupancy occupancy, final Type type, final LocalDate date) {
+    public List<Turnover> findByConfigAndTypeAndDateWithStatusNew(final TurnoverReportingConfig config, final Type type, final LocalDate date) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         Turnover.class,
-                        "findByOccupancyAndTypeAndDateAndStatus",
-                        "occupancy", occupancy,
+                        "findByConfigAndTypeAndDateAndStatus",
+                        "config", config,
                         "type", type,
                         "date", date,
                         "status", Status.NEW));
@@ -200,4 +209,7 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
 
     @Inject
     RepositoryService repositoryService;
+
+    @Inject
+    TurnoverReportingConfigRepository turnoverReportingConfigRepository;
 }

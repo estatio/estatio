@@ -86,7 +86,7 @@ public class TurnoverEntryRequest {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<Turnover> getPreviousTurnoverEntries(){
-        return turnoverRepository.findApprovedByOccupancyAndTypeAndFrequencyBeforeDate(getConfig().getOccupancy(), getType(), getFrequency(), getDate());
+        return turnoverRepository.findApprovedByConfigAndTypeAndFrequencyBeforeDate(getConfig(), getType(), getFrequency(), getDate());
     }
 
     @Inject

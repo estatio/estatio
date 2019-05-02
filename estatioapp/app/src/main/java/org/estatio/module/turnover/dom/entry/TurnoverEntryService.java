@@ -52,7 +52,7 @@ public class TurnoverEntryService {
     private List<Turnover> anythingNew(final Person reporter) {
         List<Turnover> anythingNew = new ArrayList<>();
         turnoverReportingConfigRepository.findByReporter(reporter).stream().forEach(cf->{
-            anythingNew.addAll(turnoverRepository.findByOccupancyWithStatusNew(cf.getOccupancy()));
+            anythingNew.addAll(turnoverRepository.findByConfigWithStatusNew(cf));
         });
         return anythingNew.stream().sorted(turnoverComparatorByOccupancyThenDateDesc()).collect(Collectors.toList());
     }
@@ -60,7 +60,7 @@ public class TurnoverEntryService {
     private List<Turnover> sameType(final Person reporter, final Turnover current) {
         List<Turnover> sameType = new ArrayList<>();
         turnoverReportingConfigRepository.findByReporter(reporter).stream().forEach(cf->{
-            sameType.addAll(turnoverRepository.findByOccupancyAndTypeWithStatusNew(cf.getOccupancy(), current.getType()));
+            sameType.addAll(turnoverRepository.findByConfigAndTypeWithStatusNew(cf, current.getType()));
         });
         return sameType.stream().sorted(turnoverComparatorByOccupancyThenDateDesc()).collect(Collectors.toList());
     }
@@ -68,7 +68,7 @@ public class TurnoverEntryService {
     private List<Turnover> sameTypeAndDay(final Person reporter, final Turnover current) {
         List<Turnover> sameTypeAndDay = new ArrayList<>();
         turnoverReportingConfigRepository.findByReporter(reporter).stream().forEach(cf->{
-            sameTypeAndDay.addAll(turnoverRepository.findByOccupancyAndTypeAndDateWithStatusNew(cf.getOccupancy(), current.getType(), current.getDate()));
+            sameTypeAndDay.addAll(turnoverRepository.findByConfigAndTypeAndDateWithStatusNew(cf, current.getType(), current.getDate()));
         });
         return sameTypeAndDay.stream().sorted(turnoverComparatorByOccupancyThenDateDesc()).collect(Collectors.toList());
     }
@@ -76,9 +76,9 @@ public class TurnoverEntryService {
     private List<Turnover> samePropertyTypeAndDay(final Person reporter, final Turnover current) {
         List<Turnover> samePropertyTypeAndDay = new ArrayList<>();
         turnoverReportingConfigRepository.findByReporter(reporter).stream()
-                .filter(cf->cf.getOccupancy().getUnit().getProperty().equals(current.getOccupancy().getUnit().getProperty()))
+                .filter(cf->cf.getOccupancy().getUnit().getProperty().equals(current.getConfig().getOccupancy().getUnit().getProperty()))
                 .forEach(cf->{
-            samePropertyTypeAndDay.addAll(turnoverRepository.findByOccupancyAndTypeAndDateWithStatusNew(cf.getOccupancy(), current.getType(), current.getDate()));
+            samePropertyTypeAndDay.addAll(turnoverRepository.findByConfigAndTypeAndDateWithStatusNew(cf, current.getType(), current.getDate()));
         });
         return samePropertyTypeAndDay.stream().sorted(turnoverComparatorByOccupancyThenDateDesc()).collect(Collectors.toList());
     }

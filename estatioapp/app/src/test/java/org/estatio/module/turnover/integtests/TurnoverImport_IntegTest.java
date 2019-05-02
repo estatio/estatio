@@ -37,7 +37,6 @@ import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Status;
 import org.estatio.module.turnover.dom.Turnover;
-import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
 import org.estatio.module.turnover.fixtures.TurnoverImportXlsxFixture;
@@ -64,8 +63,8 @@ public class TurnoverImport_IntegTest extends TurnoverModuleIntegTestAbstract {
         final List<Turnover> turnovers = turnoverRepository.listAll();
         assertThat(turnovers).hasSize(2);
         final Turnover first = turnovers.get(0);
-        assertThat(first.getOccupancy().getLease()).isEqualTo(Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2));
-        assertThat(first.getOccupancy().getUnit().getReference()).isEqualTo("OXF-001");
+        assertThat(first.getConfig().getOccupancy().getLease()).isEqualTo(Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2));
+        assertThat(first.getConfig().getOccupancy().getUnit().getReference()).isEqualTo("OXF-001");
         assertThat(first.getDate()).isEqualTo(new LocalDate(2019,1,1));
         assertThat(first.getType()).isEqualTo(Type.PRELIMINARY);
         assertThat(first.getFrequency()).isEqualTo(Frequency.MONTHLY);
@@ -80,8 +79,8 @@ public class TurnoverImport_IntegTest extends TurnoverModuleIntegTestAbstract {
         assertThat(first.isNonComparable()).isFalse();
 
         final Turnover second = turnovers.get(1);
-        assertThat(second.getOccupancy().getLease()).isEqualTo(Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2));
-        assertThat(second.getOccupancy().getUnit().getReference()).isEqualTo("OXF-001");
+        assertThat(second.getConfig().getOccupancy().getLease()).isEqualTo(Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2));
+        assertThat(second.getConfig().getOccupancy().getUnit().getReference()).isEqualTo("OXF-001");
         assertThat(second.getDate()).isEqualTo(new LocalDate(2019,4,1));
         assertThat(second.getType()).isEqualTo(Type.AUDITED);
         assertThat(second.getFrequency()).isEqualTo(Frequency.DAILY);
@@ -98,8 +97,6 @@ public class TurnoverImport_IntegTest extends TurnoverModuleIntegTestAbstract {
     }
 
     @Inject TurnoverRepository turnoverRepository;
-
-    @Inject TurnoverReportingConfigRepository turnoverReportingConfigRepository;
 
     @Inject ServiceRegistry2 serviceRegistry2;
     

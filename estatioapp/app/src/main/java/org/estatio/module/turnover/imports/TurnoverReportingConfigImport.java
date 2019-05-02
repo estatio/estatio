@@ -97,7 +97,7 @@ public class TurnoverReportingConfigImport implements Importable, ExcelFixtureRo
         final Occupancy occupancy = occupancyRepository.findByLeaseAndUnitAndStartDate(lease, unit, occupancyStartDate);
 
         if (occupancy==null){
-            logAndWarn(String.format("No occupancy found for lease %s and unit %s on date %s", leaseReference, unitReference, occupancyStartDate));
+            logAndWarn(String.format("No config found for lease %s and unit %s on date %s", leaseReference, unitReference, occupancyStartDate));
             return Lists.newArrayList();
         }
 

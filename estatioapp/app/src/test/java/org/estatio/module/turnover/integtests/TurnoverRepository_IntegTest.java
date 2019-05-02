@@ -40,6 +40,8 @@ import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Status;
 import org.estatio.module.turnover.dom.Turnover;
+import org.estatio.module.turnover.dom.TurnoverReportingConfig;
+import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
 
@@ -69,11 +71,12 @@ public class TurnoverRepository_IntegTest extends TurnoverModuleIntegTestAbstrac
         final LocalDate turnoverDate = new LocalDate(2019, 1, 1);
         final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
         final BigDecimal originalGrossAmount = new BigDecimal("1234.56");
-        Turnover turnover = turnoverRepository.create(occupancy, turnoverDate, Type.AUDITED, Frequency.MONTHLY, Status.APPROVED, reportedAt, "someone", euro, null, originalGrossAmount, null, null, false);
+        TurnoverReportingConfig config = turnoverReportingConfigRepository.findOrCreate(occupancy, Type.AUDITED, null, occupancy.getStartDate(), Frequency.MONTHLY, euro);
+        Turnover turnover = turnoverRepository.create(config, turnoverDate, Type.AUDITED, Frequency.MONTHLY, Status.APPROVED, reportedAt, "someone", euro, null, originalGrossAmount, null, null, false);
 
         // when
         final Currency sek = Currency_enum.SEK.findUsing(serviceRegistry2);
-        Turnover turnover2 = turnoverRepository.findOrCreate(occupancy, turnoverDate, Type.AUDITED, Frequency.YEARLY, Status.NEW, reportedAt, "someone", sek, new BigDecimal("4321.00"), null, null, null, false);
+        Turnover turnover2 = turnoverRepository.findOrCreate(config, turnoverDate, Type.AUDITED, Frequency.YEARLY, Status.NEW, reportedAt, "someone", sek, new BigDecimal("4321.00"), null, null, null, false);
 
         // then
         assertThat(turnover).isSameAs(turnover2);
@@ -91,17 +94,18 @@ public class TurnoverRepository_IntegTest extends TurnoverModuleIntegTestAbstrac
         final LocalDate turnoverDate = new LocalDate(2019, 1, 1);
         final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
         final BigDecimal originalGrossAmount = new BigDecimal("1234.56");
-        Turnover turnover = turnoverRepository.create(occupancy, turnoverDate, Type.AUDITED, Frequency.MONTHLY, Status.NEW, reportedAt, "someone", euro, null, originalGrossAmount, null, null, false);
+        TurnoverReportingConfig config = turnoverReportingConfigRepository.findOrCreate(occupancy, Type.AUDITED, null, occupancy.getStartDate(), Frequency.MONTHLY, euro);
+        Turnover turnover = turnoverRepository.create(config, turnoverDate, Type.AUDITED, Frequency.MONTHLY, Status.NEW, reportedAt, "someone", euro, null, originalGrossAmount, null, null, false);
 
         // when
         final LocalDateTime reportedAt2 = new LocalDateTime(2019, 1, 1, 13, 30);
         final BigDecimal updatedGrossAmount = new BigDecimal("1230.00");
         final Currency sek = Currency_enum.SEK.findUsing(serviceRegistry2);
         final BigDecimal netAmount = new BigDecimal("4321.00");
-        Turnover turnover2 = turnoverRepository.upsert(occupancy, turnoverDate, Type.AUDITED, Frequency.YEARLY, Status.APPROVED, reportedAt2, "someone else", sek, netAmount, updatedGrossAmount, BigInteger.valueOf(123), "changed", true);
+        Turnover turnover2 = turnoverRepository.upsert(config, turnoverDate, Type.AUDITED, Frequency.YEARLY, Status.APPROVED, reportedAt2, "someone else", sek, netAmount, updatedGrossAmount, BigInteger.valueOf(123), "changed", true);
 
         // then
-        /* NOTE: occupancy, date, type = unique,
+        /* NOTE: config, date, type = unique,
         we consider frequency and currency immutable */
         assertThat(turnover).isSameAs(turnover2);
         assertThat(turnover2.getFrequency()).isEqualTo(Frequency.MONTHLY);
@@ -126,11 +130,12 @@ public class TurnoverRepository_IntegTest extends TurnoverModuleIntegTestAbstrac
         final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
 
         // when
-        Turnover turnover = turnoverRepository.createNewEmpty(occupancy, turnoverDate, Type.AUDITED, Frequency.MONTHLY, euro);
+        TurnoverReportingConfig config = turnoverReportingConfigRepository.findOrCreate(occupancy, Type.AUDITED, null, occupancy.getStartDate(), Frequency.MONTHLY, euro);
+        Turnover turnover = turnoverRepository.createNewEmpty(config, turnoverDate, Type.AUDITED, Frequency.MONTHLY, euro);
 
         // then
         assertThat(turnoverRepository.listAll()).hasSize(1);
-        assertThat(turnover.getOccupancy()).isEqualTo(occupancy);
+        assertThat(turnover.getConfig()).isEqualTo(config);
         assertThat(turnover.getDate()).isEqualTo(turnoverDate);
         assertThat(turnover.getType()).isEqualTo(Type.AUDITED);
         assertThat(turnover.getFrequency()).isEqualTo(Frequency.MONTHLY);
@@ -138,7 +143,7 @@ public class TurnoverRepository_IntegTest extends TurnoverModuleIntegTestAbstrac
         assertThat(turnover.isNonComparable()).isFalse();
 
         // and when
-        Turnover secondTry = turnoverRepository.createNewEmpty(occupancy, turnoverDate, Type.AUDITED, Frequency.MONTHLY, euro);
+        Turnover secondTry = turnoverRepository.createNewEmpty(config, turnoverDate, Type.AUDITED, Frequency.MONTHLY, euro);
         // then still
         assertThat(turnoverRepository.listAll()).hasSize(1);
         assertThat(secondTry).isSameAs(turnover);
@@ -146,7 +151,7 @@ public class TurnoverRepository_IntegTest extends TurnoverModuleIntegTestAbstrac
     }
 
     @Test
-    public void findByOccupancyAndTypeAndFrequencyBeforeDate_works() throws Exception {
+    public void findApprovedByConfigAndTypeAndFrequencyBeforeDate_works() throws Exception {
 
         // given
         final Occupancy occupancy = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2).getOccupancies().first();
@@ -155,10 +160,11 @@ public class TurnoverRepository_IntegTest extends TurnoverModuleIntegTestAbstrac
         final LocalDateTime reportedAt = new LocalDateTime(2019, 1, 1, 12, 0);
 
         // when
-        Turnover turnover1 = turnoverRepository.create(occupancy, turnoverDate, Type.PRELIMINARY, Frequency.MONTHLY, Status.APPROVED, reportedAt, "someone", euro, null, null, null, null, false);
-        Turnover turnover2 = turnoverRepository.create(occupancy, turnoverDate.minusMonths(2), Type.PRELIMINARY, Frequency.MONTHLY, Status.APPROVED, reportedAt, "someone", euro, null, null, null, null, false);
-        Turnover turnover3 = turnoverRepository.create(occupancy, turnoverDate.minusMonths(1), Type.PRELIMINARY, Frequency.MONTHLY, Status.APPROVED, reportedAt, "someone", euro, null, null, null, null, false);
-        List<Turnover> turnovers = turnoverRepository.findApprovedByOccupancyAndTypeAndFrequencyBeforeDate(occupancy, Type.PRELIMINARY, Frequency.MONTHLY, turnoverDate);
+        TurnoverReportingConfig config = turnoverReportingConfigRepository.findOrCreate(occupancy, Type.PRELIMINARY, null, occupancy.getStartDate(), Frequency.MONTHLY, euro);
+        Turnover turnover1 = turnoverRepository.create(config, turnoverDate, Type.PRELIMINARY, Frequency.MONTHLY, Status.APPROVED, reportedAt, "someone", euro, null, null, null, null, false);
+        Turnover turnover2 = turnoverRepository.create(config, turnoverDate.minusMonths(2), Type.PRELIMINARY, Frequency.MONTHLY, Status.APPROVED, reportedAt, "someone", euro, null, null, null, null, false);
+        Turnover turnover3 = turnoverRepository.create(config, turnoverDate.minusMonths(1), Type.PRELIMINARY, Frequency.MONTHLY, Status.APPROVED, reportedAt, "someone", euro, null, null, null, null, false);
+        List<Turnover> turnovers = turnoverRepository.findApprovedByConfigAndTypeAndFrequencyBeforeDate(config, Type.PRELIMINARY, Frequency.MONTHLY, turnoverDate);
 
         // then
         Assertions.assertThat(turnovers).hasSize(2);
@@ -166,7 +172,7 @@ public class TurnoverRepository_IntegTest extends TurnoverModuleIntegTestAbstrac
         Assertions.assertThat(turnovers.get(1)).isEqualTo(turnover2);
 
         // and when
-        turnovers = turnoverRepository.findApprovedByOccupancyAndTypeAndFrequencyBeforeDate(occupancy, Type.PRELIMINARY, Frequency.MONTHLY, turnoverDate.plusDays(1));
+        turnovers = turnoverRepository.findApprovedByConfigAndTypeAndFrequencyBeforeDate(config, Type.PRELIMINARY, Frequency.MONTHLY, turnoverDate.plusDays(1));
 
         // then
         Assertions.assertThat(turnovers).hasSize(3);
@@ -176,6 +182,8 @@ public class TurnoverRepository_IntegTest extends TurnoverModuleIntegTestAbstrac
     }
 
     @Inject TurnoverRepository turnoverRepository;
+
+    @Inject TurnoverReportingConfigRepository turnoverReportingConfigRepository;
 
     @Inject ServiceRegistry2 serviceRegistry2;
     

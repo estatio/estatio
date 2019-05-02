@@ -46,9 +46,9 @@ public class TurnoverImportManager {
         return turnoverRepository.listAll()
         .stream()
         .map(to->new TurnoverImport(
-                to.getOccupancy().getLease().getReference(),
-                to.getOccupancy().getUnit().getReference(),
-                to.getOccupancy().getStartDate(),
+                to.getConfig().getOccupancy().getLease().getReference(),
+                to.getConfig().getOccupancy().getUnit().getReference(),
+                to.getConfig().getStartDate(),
                 getDate(),
                 to.getGrossAmount(),
                 to.getNetAmount(),

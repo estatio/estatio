@@ -49,8 +49,8 @@ public final class EstatioTurnoverModule extends ModuleAbstract {
         return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                deleteFrom(TurnoverReportingConfig.class);
                 deleteFrom(Turnover.class);
+                deleteFrom(TurnoverReportingConfig.class);
             }
         };
     }

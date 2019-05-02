@@ -47,52 +47,52 @@ import lombok.Setter;
         column = "version")
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
-                name = "Turnover_occupancy_date_type_UNQ", members = {"occupancy", "date", "type"})
+                name = "Turnover_config_date_type_UNQ", members = {"config", "date", "type"})
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.turnover.dom.Turnover "
-                        + "WHERE occupancy == :occupancy "
+                        + "WHERE config == :config "
                         + "&& date == :date "
                         + "&& type == :type"),
         @javax.jdo.annotations.Query(
-                name = "findByOccupancyAndTypeAndFrequencyAndStatusBeforeDate", language = "JDOQL",
+                name = "findByConfigAndTypeAndFrequencyAndStatusBeforeDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.turnover.dom.Turnover "
-                        + "WHERE occupancy == :occupancy "
+                        + "WHERE config == :config "
                         + "&& type == :type "
                         + "&& frequency == :frequency "
                         + "&& status == :status "
                         + "&& date < :threshold "
                         + "ORDER BY date DESC "),
         @javax.jdo.annotations.Query(
-                name = "findByOccupancy", language = "JDOQL",
+                name = "findByConfig", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.turnover.dom.Turnover "
-                        + "WHERE occupancy == :occupancy "
+                        + "WHERE config == :config "
                         + "ORDER BY date DESC "),
         @javax.jdo.annotations.Query(
-                name = "findByOccupancyAndStatus", language = "JDOQL",
+                name = "findByConfigAndStatus", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.turnover.dom.Turnover "
-                        + "WHERE occupancy == :occupancy "
+                        + "WHERE config == :config "
                         + "&& status == :status "
                         + "ORDER BY date DESC "),
         @javax.jdo.annotations.Query(
-                name = "findByOccupancyAndTypeAndStatus", language = "JDOQL",
+                name = "findByConfigAndTypeAndStatus", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.turnover.dom.Turnover "
-                        + "WHERE occupancy == :occupancy "
+                        + "WHERE config == :config "
                         + "&& type == :type "
                         + "&& status == :status "
                         + "ORDER BY date DESC "),
         @javax.jdo.annotations.Query(
-                name = "findByOccupancyAndTypeAndDateAndStatus", language = "JDOQL",
+                name = "findByConfigAndTypeAndDateAndStatus", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.turnover.dom.Turnover "
-                        + "WHERE occupancy == :occupancy "
+                        + "WHERE config == :config "
                         + "&& type == :type "
                         + "&& status == :status "
                         + "&& date == :date "),
@@ -104,17 +104,18 @@ import lombok.Setter;
 public class Turnover extends UdoDomainObject2<Turnover> {
 
     public Turnover(){
-        super("occupancy, date, type");
+        super("config, date, type");
     }
 
-    public Turnover(final Occupancy occupancy,
+    public Turnover(
+            final TurnoverReportingConfig config,
             final LocalDate date,
             final Type type,
             final Frequency frequency,
             final Currency currency,
             final Status status){
         this();
-        this.occupancy = occupancy;
+        this.config = config;
         this.date = date;
         this.type = type;
         this.frequency = frequency;
@@ -122,7 +123,8 @@ public class Turnover extends UdoDomainObject2<Turnover> {
         this.status = status;
     }
 
-    public Turnover(final Occupancy occupancy,
+    public Turnover(
+            final TurnoverReportingConfig config,
             final LocalDate date,
             final Type type,
             final Frequency frequency,
@@ -136,7 +138,7 @@ public class Turnover extends UdoDomainObject2<Turnover> {
             final String comments,
             final boolean nonComparable){
         this();
-        this.occupancy = occupancy;
+        this.config = config;
         this.date = date;
         this.type = type;
         this.frequency = frequency;
@@ -154,14 +156,14 @@ public class Turnover extends UdoDomainObject2<Turnover> {
     public String title() {
        return TitleBuilder.start()
                .withName(getDate())
-               .withName(getOccupancy().getUnit().getName())
-               .withName(getOccupancy().getLease().getReference())
+               .withName(getConfig().getOccupancy().getUnit().getName())
+               .withName(getConfig().getOccupancy().getLease().getReference())
                .toString();
     }
 
     @Getter @Setter
-    @Column(name = "occupancyId", allowsNull = "false")
-    private Occupancy occupancy;
+    @Column(name = "turnoverReportingConfigId", allowsNull = "false")
+    private TurnoverReportingConfig config;
 
     @Getter @Setter
     @Column(allowsNull = "false")
@@ -214,7 +216,12 @@ public class Turnover extends UdoDomainObject2<Turnover> {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<Turnover> getPrevious(){
-        return turnoverRepository.findApprovedByOccupancyAndTypeAndFrequencyBeforeDate(getOccupancy(), getType(),getFrequency(), getDate());
+        return turnoverRepository.findApprovedByConfigAndTypeAndFrequencyBeforeDate(getConfig(), getType(),getFrequency(), getDate());
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public Occupancy getOccupancy(){
+        return getConfig().getOccupancy();
     }
 
     @ActionLayout(contributed = Contributed.AS_ACTION)
@@ -224,7 +231,7 @@ public class Turnover extends UdoDomainObject2<Turnover> {
 
     @Override
     public ApplicationTenancy getApplicationTenancy() {
-        return getOccupancy().getApplicationTenancy();
+        return getConfig().getApplicationTenancy();
     }
 
     @Inject TurnoverRepository turnoverRepository;

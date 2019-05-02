@@ -76,7 +76,7 @@ public class TurnoverReportingConfig_Test {
 
         // expect
         context.checking(new Expectations(){{
-            oneOf(turnoverRepository).createNewEmpty(occupancy, turnoverDate, Type.PRELIMINARY, Frequency.MONTHLY, currency);
+            oneOf(turnoverRepository).createNewEmpty(config, turnoverDate, Type.PRELIMINARY, Frequency.MONTHLY, currency);
         }});
 
         // when

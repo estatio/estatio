@@ -30,7 +30,7 @@
                                 <cpt:property id="status"/>
                             </cpt:fieldSet>
                             <cpt:fieldSet name="Turnover details" id="turnover">
-                                <cpt:property id="occupancy"/>
+                                <cpt:property id="config"/>
                                 <cpt:property id="frequency"/>
                                 <cpt:property id="type"/>
                                 <cpt:property id="currency"/>

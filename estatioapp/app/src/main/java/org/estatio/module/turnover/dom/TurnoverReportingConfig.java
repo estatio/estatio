@@ -126,7 +126,7 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
     public void produceEmptyTurnovers(final LocalDate date) {
         LocalDateInterval interval = LocalDateInterval.including(getStartDate(), getEndDate());
         if (interval.contains(date)) {
-            if (frequency.hasStartDate(date)) turnoverRepository.createNewEmpty(getOccupancy(), date, getType(), getFrequency(), getCurrency());
+            if (frequency.hasStartDate(date)) turnoverRepository.createNewEmpty(this, date, getType(), getFrequency(), getCurrency());
         }
     }
 
