@@ -28,6 +28,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.sudo.SudoService;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.party.dom.Person;
@@ -141,9 +142,9 @@ public class TurnoverEntryService_IntegTest extends TurnoverModuleIntegTestAbstr
 
             // when
             Person reporterJohn = Person_enum.JohnTurnover.findUsing(serviceRegistry);
-            assertThat(turnoverReportingConfigRepository.findByReporter(reporterJohn)).hasSize(12);
+            assertThat(turnoverReportingConfigRepository.findByReporter(reporterJohn)).hasSize(6); // these ones with the reporter set explicitly
             Turnover turnover = turnoverRepository.findByConfigAndTypeAndDateWithStatusNew(TurnoverReportingConfig_enum.BudPoison001NlPrelim.findUsing(serviceRegistry), Type.PRELIMINARY, march).get(0);
-            mixin(Turnover_enter.class, turnover).$$(BigDecimal.ZERO, null, null, false, null);
+            wrap(mixin(Turnover_enter.class, turnover)).$$(BigDecimal.ZERO, null, null, false, null);
 
             // then
             Turnover nextNew = turnoverEntryService.nextNewForReporter(reporterJohn, turnover);
@@ -279,7 +280,7 @@ public class TurnoverEntryService_IntegTest extends TurnoverModuleIntegTestAbstr
         }
 
         private Turnover nextAfterDataEntry(final Turnover turnover, final Person reporter){
-            mixin(Turnover_enter.class, turnover).$$(BigDecimal.ZERO, null, null, false, null);
+            wrap(mixin(Turnover_enter.class, turnover)).$$(BigDecimal.ZERO, null, null, false, null);
             return turnoverEntryService.nextNewForReporter(reporter, turnover);
         }
 
@@ -291,5 +292,7 @@ public class TurnoverEntryService_IntegTest extends TurnoverModuleIntegTestAbstr
     @Inject TurnoverEntryService turnoverEntryService;
 
     @Inject TurnoverRepository turnoverRepository;
+
+    @Inject SudoService sudoService;
 
 }

@@ -234,7 +234,8 @@ public enum Person_enum
             null, null,
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {
-                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.TURNOVER_REPORTER, Property_enum.BudNl)
+                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.TURNOVER_REPORTER, Property_enum.BudNl),
+                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.TURNOVER_REPORTER, Property_enum.OxfGb)
             }),
 
     JohnSmithGb("JSMTH", "John", "Smith", "J", false, MALE, Gb, Gb,
