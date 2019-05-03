@@ -110,7 +110,7 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
     private Type type;
 
     @Getter @Setter
-    @Column(name = "personId", allowsNull = "true")
+    @Column(name = "reporterPersonId", allowsNull = "true")
     private Person reporter;
 
     @Getter @Setter
