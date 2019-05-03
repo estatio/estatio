@@ -92,6 +92,7 @@ import org.estatio.module.capex.dom.state.State;
 import org.estatio.module.capex.dom.state.StateTransition;
 import org.estatio.module.capex.dom.state.StateTransitionType;
 import org.estatio.module.capex.dom.state.Stateful;
+import org.estatio.module.capex.dom.util.FinancialAmountUtil;
 import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.charge.dom.Applicability;
 import org.estatio.module.charge.dom.Charge;
@@ -296,6 +297,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         setOrderDate(orderDate);
         setSeller(supplier);
         setProperty(property);
+        setEntryDate(clockService.now());
 
         return this;
     }
@@ -370,8 +372,8 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     public Order completeOrderItem(
             final String description,
             final BigDecimal netAmount,
-            final BigDecimal vatAmount,
             final Tax tax,
+            final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Charge charge,
             final Project project,
@@ -413,24 +415,44 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return getDescriptionSummary();
     }
 
-    public BigDecimal default1CompleteOrderItem() {
-        final Optional<OrderItem> firstItemIfAny = getFirstItemIfAny();
-        return firstItemIfAny.map(OrderItem::getNetAmount).orElse(null);
+    public BigDecimal default1CompleteOrderItem(
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final Tax tax,
+            final BigDecimal grossAmount) {
+        BigDecimal calculatedNetAmount = FinancialAmountUtil.determineNetAmount(vatAmount, grossAmount, tax, clockService.now());
+        return calculatedNetAmount != null ?
+                calculatedNetAmount :
+                getFirstItemIfAny().map(OrderItem::getNetAmount).orElse(null);
     }
 
-    public BigDecimal default2CompleteOrderItem() {
-        final Optional<OrderItem> firstItemIfAny = getFirstItemIfAny();
-        return firstItemIfAny.map(OrderItem::getVatAmount).orElse(null);
-    }
-
-    public Tax default3CompleteOrderItem() {
+    public Tax default2CompleteOrderItem() {
         final Optional<OrderItem> firstItemIfAny = getFirstItemIfAny();
         return firstItemIfAny.map(OrderItem::getTax).orElse(null);
     }
 
-    public BigDecimal default4CompleteOrderItem() {
-        final Optional<OrderItem> firstItemIfAny = getFirstItemIfAny();
-        return firstItemIfAny.map(OrderItem::getGrossAmount).orElse(null);
+    public BigDecimal default3CompleteOrderItem(
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final Tax tax,
+            final BigDecimal grossAmount) {
+        BigDecimal calculatedVatAmount = FinancialAmountUtil.determineVatAmount(netAmount, grossAmount, tax, clockService.now());
+        return calculatedVatAmount != null ?
+                calculatedVatAmount :
+                getFirstItemIfAny().map(OrderItem::getVatAmount).orElse(null);
+    }
+
+    public BigDecimal default4CompleteOrderItem(
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final Tax tax) {
+        BigDecimal calculatedGrossAmount = FinancialAmountUtil.determineGrossAmount(netAmount, vatAmount, tax, clockService.now());
+        return calculatedGrossAmount != null ?
+                calculatedGrossAmount :
+                getFirstItemIfAny().map(OrderItem::getGrossAmount).orElse(null);
     }
 
     public Charge default5CompleteOrderItem() {
@@ -489,8 +511,8 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     public String validateCompleteOrderItem(
             final String description,
             final BigDecimal netAmount,
-            final BigDecimal vatAmount,
             final Tax tax,
+            final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Charge charge,
             final Project project,
@@ -1498,7 +1520,6 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         }
         return this;
     }
-
 
     @Inject
     OrderAttributeRepository orderAttributeRepository;

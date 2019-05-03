@@ -210,6 +210,11 @@ public class Tax
         return net.add(percentageFor(date.minusDays(1)).multiply(net).divide(new BigDecimal("100")).setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
+    @Programmatic
+    public BigDecimal netFromGross(final BigDecimal gross, LocalDate date) {
+        return gross.divide(percentageFor(date.minusDays(1)).add(new BigDecimal("100"))).multiply(new BigDecimal("100"));
+    }
+
 
     @Inject
     public TaxRateRepository taxRateRepository;
