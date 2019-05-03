@@ -149,7 +149,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 Person_enum.OlivePropertyManagerFr,
                 Person_enum.RosaireEvrardFr,
                 Person_enum.GabrielCountryDirectorFr,
-                Person_enum.BrunoTreasurerFr);
+                Person_enum.BrunoTreasurerFr,
+                Person_enum.JohnTurnover);
 
         ec.executeChildren(this,
                 PropertyAndUnitsAndOwnerAndManager_enum.GraIt,
@@ -239,7 +240,11 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 TurnoverReportingConfig_enum.OxfTopModel001GbPrelim,
                 TurnoverReportingConfig_enum.BudPoison001NlPrelim,
                 TurnoverReportingConfig_enum.BudMiracle002NlPrelim,
-                TurnoverReportingConfig_enum.BudDago004NlPrelim);
+                TurnoverReportingConfig_enum.BudDago004NlPrelim,
+                TurnoverReportingConfig_enum.OxfTopModel001GbAudit,
+                TurnoverReportingConfig_enum.BudPoison001NlAudit,
+                TurnoverReportingConfig_enum.BudMiracle002NlAudit,
+                TurnoverReportingConfig_enum.BudDago004NlAudit);
 
         ec.executeChildren(this,
                 Budget_enum.OxfBudget2015,

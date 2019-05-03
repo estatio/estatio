@@ -29,12 +29,12 @@ public class Turnover_enter {
             @Nullable final BigDecimal grossAmount,
             @Nullable final BigDecimal netAmount,
             @Nullable final BigInteger purchaseCount,
-            final boolean nonCompatable,
+            final boolean nonComparable,
             @Nullable @ParameterLayout(multiLine = 4) final String comments) {
         turnover.setGrossAmount(grossAmount);
         turnover.setNetAmount(netAmount);
         turnover.setPurchaseCount(purchaseCount);
-        turnover.setNonComparable(nonCompatable);
+        turnover.setNonComparable(nonComparable);
         turnover.setComments(comments);
         turnover.setStatus(Status.APPROVED);
         turnover.setReportedBy(userService.getUser().getName());

@@ -33,7 +33,6 @@ public class TurnoverImportXlsxFixture extends ExcelFixture2 {
             }
         });
 
-
         super.execute(executionContext);
 
         for (FixtureResult result : executionContext.getResults()){

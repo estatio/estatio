@@ -3,6 +3,7 @@ package org.estatio.module.turnover.imports;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
@@ -16,9 +17,11 @@ import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
-import org.estatio.module.turnover.dom.Frequency;
-import org.estatio.module.turnover.dom.TurnoverRepository;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.Type;
+import org.estatio.module.turnover.dom.entry.TurnoverEntryService;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -27,13 +30,13 @@ import lombok.Setter;
 public class TurnoverImportManager {
 
     @Getter @Setter
-    private String propertyReference;
+    private Person reporter;
+
+    @Getter @Setter
+    private Property property;
 
     @Getter @Setter
     private Type type;
-
-    @Getter @Setter
-    private Frequency frequency;
 
     @Getter @Setter
     private LocalDate date;
@@ -43,25 +46,46 @@ public class TurnoverImportManager {
 
 
     public List<TurnoverImport> getLines(){
-        return turnoverRepository.listAll()
+
+        return turnoverEntryService.findNewByReporterPropertyTypeAndDate(getReporter(), getProperty(), getType(), getDate())
         .stream()
         .map(to->new TurnoverImport(
                 to.getConfig().getOccupancy().getLease().getReference(),
+                to.getConfig().getOccupancy().getLease().getName(),
                 to.getConfig().getOccupancy().getUnit().getReference(),
-                to.getConfig().getStartDate(),
+                to.getConfig().getOccupancy().getStartDate(),
                 getDate(),
                 to.getGrossAmount(),
                 to.getNetAmount(),
                 getType().name(),
-                getFrequency().name(),
+                to.getFrequency().name(),
                 to.getCurrency().getReference(),
                 to.isNonComparable() ? 1 : 0,
                 to.getPurchaseCount(),
                 to.getComments(),
                 to.getReportedBy(),
-                to.getReportedAt()
+                to.getReportedAt(),
+                findTurnoverPreviousYear(to)!=null ? findTurnoverPreviousYear(to).getGrossAmount() : null,
+                findTurnoverPreviousYear(to)!=null ? findTurnoverPreviousYear(to).getNetAmount() : null,
+                findTurnoverPreviousYear(to)!=null ? findTurnoverPreviousYear(to).getPurchaseCount() : null
                 ))
         .collect(Collectors.toList());
+    }
+
+    public Blob downloadSpreadsheet(@Nullable final String fileName){
+        String fileNameToUse = fileName!=null ? fileName : createFileName();
+        return excelService.toExcel(getLines(), TurnoverImport.class, "TurnoverImport", fileNameToUse.concat(".xlsx"));
+    }
+
+    private String createFileName(){
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("Turnover_");
+        buffer.append(getProperty().getReference());
+        buffer.append("_");
+        buffer.append(getDate().toString("yyyy-MM-dd"));
+        buffer.append("_");
+        buffer.append(getType().name());
+        return buffer.toString();
     }
 
     public TurnoverImportManager uploadSpreadsheet(
@@ -72,8 +96,12 @@ public class TurnoverImportManager {
         return this;
     }
 
+    private Turnover findTurnoverPreviousYear(final Turnover turnover){
+        return turnoverEntryService.findTurnoverPreviousYear(turnover);
+    }
+
     @Inject
-    TurnoverRepository turnoverRepository;
+    TurnoverEntryService turnoverEntryService;
 
     @Inject
     ExcelService excelService;

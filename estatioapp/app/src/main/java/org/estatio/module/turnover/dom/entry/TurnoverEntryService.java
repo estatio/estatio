@@ -20,6 +20,7 @@ import org.estatio.module.party.dom.Person;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
 import org.estatio.module.turnover.dom.TurnoverRepository;
+import org.estatio.module.turnover.dom.Type;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class TurnoverEntryService {
@@ -32,7 +33,7 @@ public class TurnoverEntryService {
 
     public Turnover nextNewForReporter(final Person reporter, final Turnover current) {
         // first offer those of same property, type and date
-        List<Turnover> samePropertyTypeAndDay = samePropertyTypeAndDay(reporter, current);
+        List<Turnover> samePropertyTypeAndDay = findNewByReporterPropertyTypeAndDate(reporter, current.getOccupancy().getUnit().getProperty(), current.getType(), current.getDate());
         if (!samePropertyTypeAndDay.isEmpty()) return samePropertyTypeAndDay.get(0);
 
         // first offer those of same type and date
@@ -101,23 +102,27 @@ public class TurnoverEntryService {
         return sameTypeAndDay.stream().sorted(turnoverComparatorByOccupancyThenDateDesc()).collect(Collectors.toList());
     }
 
-    private List<Turnover> samePropertyTypeAndDay(final Person reporter, final Turnover current) {
-        List<Turnover> samePropertyTypeAndDay = new ArrayList<>();
-        turnoverReportingConfigRepository.findByPropertyAndTypeActiveOnDate(current.getOccupancy().getUnit().getProperty(), current.getType(), current.getDate())
-            .stream()
+    public List<Turnover> findNewByReporterPropertyTypeAndDate(final Person reporter, final Property property, final Type type, final LocalDate date) {
+        List<Turnover> result = new ArrayList<>();
+        turnoverReportingConfigRepository.findByPropertyAndTypeActiveOnDate(property, type, date)
+                .stream()
                 .filter(cf->cf.effectiveReporter().equals(reporter))
                 .forEach(cf->{
-                    samePropertyTypeAndDay.addAll(turnoverRepository.findByConfigAndTypeAndDateWithStatusNew(cf, current.getType(), current.getDate()));
+                    result.addAll(turnoverRepository.findByConfigAndTypeAndDateWithStatusNew(cf, type, date));
                 });
-        return samePropertyTypeAndDay.stream().sorted(turnoverComparatorByOccupancyThenDateDesc()).collect(Collectors.toList());
+        return result.stream().sorted(turnoverComparatorByOccupancyThenDateDesc()).collect(Collectors.toList());
     }
 
-    private List<Property> propertiesForReporter(final Person reporter) {
+    public List<Property> propertiesForReporter(final Person reporter) {
         return fixedAssetRoleRepository.findByPartyAndType(reporter, FixedAssetRoleTypeEnum.TURNOVER_REPORTER).stream()
                 .map(r->r.getAsset())
                 .filter(a->a.getClass().isAssignableFrom(Property.class))
                 .map(Property.class::cast)
                 .collect(Collectors.toList());
+    }
+
+    public Turnover findTurnoverPreviousYear(final Turnover turnover) {
+        return turnoverRepository.findUnique(turnover.getConfig(), turnover.getDate().minusYears(1), turnover.getType());
     }
 
     private static Comparator<Turnover> turnoverComparatorByOccupancyThenDateDesc() {
@@ -131,5 +136,4 @@ public class TurnoverEntryService {
     @Inject FixedAssetRoleRepository fixedAssetRoleRepository;
 
     @Inject ClockService clockService;
-
 }

@@ -18,11 +18,13 @@ import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.core.commons.lang.ArrayExtensions;
 
 import org.isisaddons.module.excel.dom.ExcelFixture;
 import org.isisaddons.module.excel.dom.ExcelFixture2;
 import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
 import org.isisaddons.module.excel.dom.FixtureAwareRowHandler;
+import org.isisaddons.module.security.app.user.MeService;
 
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
@@ -57,6 +59,7 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
 
     public TurnoverImport(
             final String leaseReference,
+            final String leaseName,
             final String unitReference,
             final LocalDate occupancyStartDate,
             final LocalDate date,
@@ -69,8 +72,12 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
             final BigInteger purchaseCount,
             final String comments,
             final String reportedBy,
-            final LocalDateTime reportedAt) {
+            final LocalDateTime reportedAt,
+            final BigDecimal grossAmountPreviousYear,
+            final BigDecimal netAmountPreviousYear,
+            final BigInteger purchaseCountPreviousYear) {
         this.leaseReference = leaseReference;
+        this.leaseName = leaseName;
         this.unitReference = unitReference;
         this.occupancyStartDate = occupancyStartDate;
         this.date = date;
@@ -78,16 +85,22 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
         this.netAmount = netAmount;
         this.type = type;
         this.frequency = frequency;
-        this.currencyReference = currencyReference;
+        this.currency = currencyReference;
         this.nonComparableFlag = nonComparableFlag;
         this.purchaseCount = purchaseCount;
         this.comments = comments;
         this.reportedBy = reportedBy;
         this.reportedAt = reportedAt;
+        this.grossAmountPreviousYear = grossAmountPreviousYear;
+        this.netAmountPreviousYear = netAmountPreviousYear;
+        this.purchaseCountPreviousYear = purchaseCountPreviousYear;
     }
 
     @Getter @Setter
     private String leaseReference;
+
+    @Getter @Setter
+    private String leaseName;
 
     @Getter @Setter
     private String unitReference;
@@ -111,7 +124,7 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
     private String frequency;
 
     @Getter @Setter
-    private String currencyReference;
+    private String currency;
 
     @Getter @Setter
     private int nonComparableFlag;
@@ -127,6 +140,15 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
 
     @Getter @Setter
     private String reportedBy;
+
+    @Getter @Setter
+    private BigDecimal grossAmountPreviousYear;
+
+    @Getter @Setter
+    private BigDecimal netAmountPreviousYear;
+
+    @Getter @Setter
+    private BigInteger purchaseCountPreviousYear;
 
 
     @Programmatic
@@ -163,9 +185,9 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
             return Lists.newArrayList();
         }
 
-        final Currency currency = currencyRepository.findCurrency(currencyReference);
+        final Currency currency = currencyRepository.findCurrency(this.currency);
         if (currency==null) {
-            logAndWarn(String.format("Currency not found for reference %s", currencyReference));
+            logAndWarn(String.format("Currency not found for reference %s", this.currency));
             return Lists.newArrayList();
         }
 
@@ -176,16 +198,25 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
             return Lists.newArrayList();
         }
 
-        TurnoverReportingConfig config = turnoverReportingConfigRepository.findOrCreate(occupancy,typeEnum, null, occupancyStartDate, frequencyEnum, currency);
+        final TurnoverReportingConfig config = turnoverReportingConfigRepository.findUnique(occupancy, typeEnum);
 
-        Turnover turnover = turnoverRepository.findOrCreate(
+        if (config==null){
+            logAndWarn(String.format("No reporting config found for lease %s and unit %s on date %s for type %s", leaseReference, unitReference, occupancyStartDate, typeEnum.name()));
+            return Lists.newArrayList();
+        }
+
+        final LocalDateTime reportedAtToUse = ArrayExtensions.coalesce(reportedAt, LocalDateTime.now());
+
+        final String reportedByToUse = ArrayExtensions.coalesce(reportedBy, meService.me().getUsername());
+
+        Turnover turnover = turnoverRepository.upsert(
                 config,
                 date,
                 typeEnum,
                 frequencyEnum,
                 Status.APPROVED,
-                reportedAt,
-                reportedBy,
+                reportedAtToUse,
+                reportedByToUse,
                 currency,
                 netAmount==null || netAmount.equals(BigDecimal.ZERO) ? null : netAmount, // just because when using TurnoverImportXlsxFixture, somehow the values are set to 0 instead of null like in production
                 grossAmount==null || grossAmount.equals(BigDecimal.ZERO) ? null : grossAmount, // just because when using TurnoverImportXlsxFixture, somehow the values are set to 0 instead of null like in production
@@ -244,5 +275,7 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
     @Inject TurnoverRepository turnoverRepository;
 
     @Inject TurnoverReportingConfigRepository turnoverReportingConfigRepository;
+
+    @Inject MeService meService;
 
 }

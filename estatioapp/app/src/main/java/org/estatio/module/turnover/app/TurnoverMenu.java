@@ -19,6 +19,7 @@
 package org.estatio.module.turnover.app;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -33,8 +34,10 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.party.dom.Person;
-import org.estatio.module.turnover.dom.Frequency;
+import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
@@ -62,19 +65,49 @@ public class TurnoverMenu  {
     }
 
     public TurnoverImportManager importTurnovers(
+            final Person reporter,
             final Property property,
             final Type type,
-            final Frequency frequency,
             final LocalDate turnoverDate
     ){
         TurnoverImportManager manager = new TurnoverImportManager();
         serviceRegistry2.injectServicesInto(manager);
-        manager.setPropertyReference(property.getReference());
+        manager.setReporter(reporter);
+        manager.setProperty(property);
         manager.setType(type);
-        manager.setFrequency(frequency);
         manager.setDate(turnoverDate);
         manager.setLines(manager.getLines());
         return manager;
+    }
+
+    public Person default0ImportTurnovers(){
+        return personRepository.me();
+    }
+
+    public List<Person> choices0ImportTurnovers(){
+        return fixedAssetRoleRepository.findByType(FixedAssetRoleTypeEnum.TURNOVER_REPORTER)
+                .stream()
+                .map(r->r.getParty())
+                .filter(p->p.getClass().isAssignableFrom(Person.class))
+                .map(Person.class::cast)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    public Property default1ImportTurnovers(
+            final Person reporter,
+            final Property property,
+            final Type type,
+            final LocalDate turnoverDate){
+        return turnoverEntryService.propertiesForReporter(reporter).stream().findFirst().orElse(null);
+    }
+
+    public List<Property> choices1ImportTurnovers(
+            final Person reporter,
+            final Property property,
+            final Type type,
+            final LocalDate turnoverDate){
+        return turnoverEntryService.propertiesForReporter(reporter);
     }
 
     public List<Turnover> findTurnoverEntryRequestsFor(final Person reporter){
@@ -91,5 +124,9 @@ public class TurnoverMenu  {
     @Inject TurnoverEntryService turnoverEntryService;
 
     @Inject ServiceRegistry2 serviceRegistry2;
+
+    @Inject PersonRepository personRepository;
+
+    @Inject FixedAssetRoleRepository fixedAssetRoleRepository;
 
 }

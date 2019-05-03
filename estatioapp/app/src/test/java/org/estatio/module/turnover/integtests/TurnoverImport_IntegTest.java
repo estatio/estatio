@@ -40,6 +40,7 @@ import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
 import org.estatio.module.turnover.fixtures.TurnoverImportXlsxFixture;
+import org.estatio.module.turnover.fixtures.data.TurnoverReportingConfig_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -52,6 +53,8 @@ public class TurnoverImport_IntegTest extends TurnoverModuleIntegTestAbstract {
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, Currency_enum.EUR.builder());
                 executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
+                executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfTopModel001GbPrelim);
+                executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfTopModel001GbAudit);
                 executionContext.executeChild(this, new TurnoverImportXlsxFixture());
             }
         });
