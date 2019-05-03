@@ -1365,10 +1365,12 @@ public class IncomingInvoice_Test {
                     newOrderItem,
                     newDescription,
                     newNetAmount,
-                    newVatAmount,
                     newTax,
+                    newVatAmount,
                     newGrossAmount,
                     newCharge,
+                    null,
+                    null,
                     newPeriod);
 
             assertThat(incomingInvoice.getDescriptionSummary()).isEqualTo(newDescription);
