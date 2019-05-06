@@ -21,6 +21,7 @@ public class TurnoverReportingConfig_Test {
 
         // given
         TurnoverReportingConfig config = new TurnoverReportingConfig();
+        config.setStartDate(new LocalDate(2018,1,1));
         final Occupancy occupancy = new Occupancy();
         final Lease lease = new LeaseForTesting();
         occupancy.setLease(lease);
