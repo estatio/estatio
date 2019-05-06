@@ -418,8 +418,8 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     public BigDecimal default1CompleteOrderItem(
             final String description,
             final BigDecimal netAmount,
-            final BigDecimal vatAmount,
             final Tax tax,
+            final BigDecimal vatAmount,
             final BigDecimal grossAmount) {
         BigDecimal calculatedNetAmount = FinancialAmountUtil.determineNetAmount(vatAmount, grossAmount, tax, clockService.now());
         return calculatedNetAmount != null ?
@@ -435,8 +435,8 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     public BigDecimal default3CompleteOrderItem(
             final String description,
             final BigDecimal netAmount,
-            final BigDecimal vatAmount,
             final Tax tax,
+            final BigDecimal vatAmount,
             final BigDecimal grossAmount) {
         BigDecimal calculatedVatAmount = FinancialAmountUtil.determineVatAmount(netAmount, grossAmount, tax, clockService.now());
         return calculatedVatAmount != null ?
@@ -447,8 +447,8 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     public BigDecimal default4CompleteOrderItem(
             final String description,
             final BigDecimal netAmount,
-            final BigDecimal vatAmount,
-            final Tax tax) {
+            final Tax tax,
+            final BigDecimal vatAmount) {
         BigDecimal calculatedGrossAmount = FinancialAmountUtil.determineGrossAmount(netAmount, vatAmount, tax, clockService.now());
         return calculatedGrossAmount != null ?
                 calculatedGrossAmount :
@@ -491,8 +491,8 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     public List<BudgetItem> choices7CompleteOrderItem(
             final String description,
             final BigDecimal netAmount,
-            final BigDecimal vatAmount,
             final Tax tax,
+            final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Charge charge,
             final Project project) {
