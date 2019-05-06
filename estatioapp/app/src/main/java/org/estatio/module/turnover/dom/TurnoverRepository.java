@@ -200,6 +200,16 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
                         "status", Status.NEW));
     }
 
+    public List<Turnover> findByConfigAndTypeAndDate(final TurnoverReportingConfig config, final Type type, final LocalDate date) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Turnover.class,
+                        "findByConfigAndTypeAndDateAndStatus",
+                        "config", config,
+                        "type", type,
+                        "date", date ));
+    }
+
     public List<Turnover> listAll() {
         return allInstances();
     }

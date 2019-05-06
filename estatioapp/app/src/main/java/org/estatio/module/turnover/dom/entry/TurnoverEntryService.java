@@ -113,6 +113,17 @@ public class TurnoverEntryService {
         return result.stream().sorted(turnoverComparatorByOccupancyThenDateDesc()).collect(Collectors.toList());
     }
 
+    public List<Turnover> findByReporterPropertyTypeAndDate(final Person reporter, final Property property, final Type type, final LocalDate date) {
+        List<Turnover> result = new ArrayList<>();
+        turnoverReportingConfigRepository.findByPropertyAndTypeActiveOnDate(property, type, date)
+                .stream()
+                .filter(cf->cf.effectiveReporter().equals(reporter))
+                .forEach(cf->{
+                    result.addAll(turnoverRepository.findByConfigAndTypeAndDate(cf, type, date));
+                });
+        return result.stream().sorted(turnoverComparatorByOccupancyThenDateDesc()).collect(Collectors.toList());
+    }
+
     public List<Property> propertiesForReporter(final Person reporter) {
         return fixedAssetRoleRepository.findByPartyAndType(reporter, FixedAssetRoleTypeEnum.TURNOVER_REPORTER).stream()
                 .map(r->r.getAsset())

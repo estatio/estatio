@@ -47,7 +47,7 @@ public class TurnoverImportManager {
 
     public List<TurnoverImport> getLines(){
 
-        return turnoverEntryService.findNewByReporterPropertyTypeAndDate(getReporter(), getProperty(), getType(), getDate())
+        return turnoverEntryService.findByReporterPropertyTypeAndDate(getReporter(), getProperty(), getType(), getDate())
         .stream()
         .map(to->new TurnoverImport(
                 to.getConfig().getOccupancy().getLease().getReference(),
