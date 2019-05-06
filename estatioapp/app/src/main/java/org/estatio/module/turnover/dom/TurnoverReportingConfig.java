@@ -11,6 +11,8 @@ import javax.jdo.annotations.VersionStrategy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -142,8 +144,13 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    public Person effectiveReporter(){
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public Person getEffectiveReporter(){
         return ArrayExtensions.coalesce(getReporter(), deriveReporterFromOccupancy(getOccupancy()));
+    }
+
+    public List<Turnover> getTurnovers(){
+        return turnoverRepository.findByConfig(this);
     }
 
     @Programmatic

@@ -204,7 +204,7 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         Turnover.class,
-                        "findByConfigAndTypeAndDateAndStatus",
+                        "findByConfigAndTypeAndDate",
                         "config", config,
                         "type", type,
                         "date", date ));

@@ -18,6 +18,7 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -95,6 +96,13 @@ import lombok.Setter;
                         + "WHERE config == :config "
                         + "&& type == :type "
                         + "&& status == :status "
+                        + "&& date == :date "),
+        @javax.jdo.annotations.Query(
+                name = "findByConfigAndTypeAndDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.turnover.dom.Turnover "
+                        + "WHERE config == :config "
+                        + "&& type == :type "
                         + "&& date == :date "),
 })
 @DomainObject(
@@ -224,7 +232,7 @@ public class Turnover extends UdoDomainObject2<Turnover> {
         return getConfig().getOccupancy();
     }
 
-    @ActionLayout(contributed = Contributed.AS_ACTION)
+    @Programmatic
     public Turnover nextNew() {
         return turnoverEntryService.nextNewForReporter(personRepository.me(), this);
     }

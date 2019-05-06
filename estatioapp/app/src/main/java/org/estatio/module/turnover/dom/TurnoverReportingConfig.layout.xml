@@ -9,30 +9,22 @@
     <bs3:row>
         <bs3:col span="4">
             <bs3:tabGroup>
-                <bs3:tab name="Turnover">
+                <bs3:tab name="Turnover Reporting Config">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:fieldSet name="Turnover date" id="date">
-                                <cpt:property id="date"/>
+                            <cpt:fieldSet name="Occupancy" id="occupancy">
+                                <cpt:property id="occupancy"/>
                             </cpt:fieldSet>
-                            <cpt:fieldSet name="Entry" id="entry">
-                                <cpt:action id="enter"/>
-                                <cpt:property id="grossAmount"/>
-                                <cpt:property id="netAmount"/>
-                                <cpt:property id="purchaseCount"/>
-                                <cpt:property id="nonComparable"/>
-                                <cpt:property id="comments"/>
-                            </cpt:fieldSet>
-                            <cpt:fieldSet name="Reporting" id="reporting">
-                                <cpt:property id="reportedAt"/>
-                                <cpt:property id="reportedBy"/>
-                                <cpt:property id="status"/>
-                            </cpt:fieldSet>
-                            <cpt:fieldSet name="Turnover details" id="turnover">
-                                <cpt:property id="config"/>
-                                <cpt:property id="frequency"/>
+                            <cpt:fieldSet name="Configuration" id="config">
                                 <cpt:property id="type"/>
+                                <cpt:property id="frequency"/>
+                                <cpt:property id="startDate"/>
+                                <cpt:property id="endDate"/>
                                 <cpt:property id="currency"/>
+                            </cpt:fieldSet>
+                            <cpt:fieldSet name="Reporter" id="reporter">
+                                <cpt:property id="reporter"/>
+                                <cpt:property id="effectiveReporter"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
@@ -69,7 +61,7 @@
             </bs3:tabGroup>
         </bs3:col>
         <bs3:col span="8">
-            <cpt:collection id="previous" defaultView="table"/>
+            <cpt:collection id="turnovers" defaultView="table"/>
         </bs3:col>
     </bs3:row>
     <bs3:row>
