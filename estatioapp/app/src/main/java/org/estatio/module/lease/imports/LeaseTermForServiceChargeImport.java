@@ -68,6 +68,9 @@ public class LeaseTermForServiceChargeImport implements ExcelFixtureRowHandler, 
     private LocalDate itemStartDate;
 
     @Getter @Setter
+    private LocalDate itemEndDate;
+
+    @Getter @Setter
     private LocalDate itemNextDueDate;
 
     @Getter @Setter
@@ -163,6 +166,7 @@ public class LeaseTermForServiceChargeImport implements ExcelFixtureRowHandler, 
         item.setNextDueDate(itemNextDueDate);
         final LeaseItemStatus leaseItemStatus = LeaseItemStatus.valueOfElse(itemStatus, LeaseItemStatus.ACTIVE);
         item.setStatus(leaseItemStatus);
+        if (itemEndDate!=null && itemEndDate.isAfter(item.getStartDate().minusDays(1))) item.setEndDate(itemEndDate);
 
         //create term
         LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) item.findTermWithSequence(sequence);
