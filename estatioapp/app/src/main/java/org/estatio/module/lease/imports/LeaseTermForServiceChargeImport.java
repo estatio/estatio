@@ -194,6 +194,11 @@ public class LeaseTermForServiceChargeImport implements ExcelFixtureRowHandler, 
         final Lease lease;
         lease = leaseRepository.findLeaseByReference(leaseReference.trim().replaceAll("~", "+"));
         if (lease == null) {
+            // TRY IF THIS IS A PREVIOUS LEASE
+            Lease previous = leaseRepository.findLeaseByReference(leaseReference.trim().replaceAll("~", "+").concat("_"));
+            if (previous!=null) {
+                return (Lease) previous.getNext();
+            }
             throw new ApplicationException(String.format("Lease with reference %s not found.", leaseReference));
         }
         return lease;
