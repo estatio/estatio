@@ -2,6 +2,7 @@ package org.estatio.module.turnover.imports;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -150,6 +151,17 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
     @Getter @Setter
     private BigInteger purchaseCountPreviousYear;
 
+    public BigDecimal getNetAmountDivPercentage(){
+        if (getNetAmountPreviousYear() == null || getNetAmountPreviousYear().compareTo(BigDecimal.ZERO) == 0) return new BigDecimal("100");
+        BigDecimal numerator = getNetAmount()!=null ? getNetAmount().subtract(getNetAmountPreviousYear()) : BigDecimal.ZERO.subtract(getNetAmountPreviousYear());
+        return numerator.divide(getNetAmountPreviousYear(), MathContext.DECIMAL64).multiply(new BigDecimal("100")).setScale(0, BigDecimal.ROUND_HALF_UP);
+    }
+
+    public BigDecimal getGrossAmountDivPercentage(){
+        if (getGrossAmountPreviousYear() == null || getGrossAmountPreviousYear().compareTo(BigDecimal.ZERO) == 0) return new BigDecimal("100");
+        BigDecimal numerator = getGrossAmount()!=null ? getNetAmount().subtract(getGrossAmountPreviousYear()) : BigDecimal.ZERO.subtract(getGrossAmountPreviousYear());
+        return numerator.divide(getGrossAmountPreviousYear(), MathContext.DECIMAL64).multiply(new BigDecimal("100")).setScale(0, BigDecimal.ROUND_HALF_UP);
+    }
 
     @Programmatic
     @Override
