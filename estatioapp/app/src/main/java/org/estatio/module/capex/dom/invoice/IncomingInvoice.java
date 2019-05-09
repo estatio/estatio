@@ -43,6 +43,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -360,12 +361,13 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @ActionLayout(promptStyle = PromptStyle.DIALOG_SIDEBAR)
     public IncomingInvoice completeInvoice(
             final IncomingInvoiceType incomingInvoiceType,
+            final @ParameterLayout(named = "Create new supplier?") boolean createNewSupplier,
             final @Nullable Party supplier,
             final @Nullable Boolean createRoleIfRequired,
+            final @Nullable BankAccount bankAccount,
             final @Nullable OrganisationNameNumberViewModel newSupplierCandidate,
             final @Nullable Country newSupplierCountry,
             final @Nullable String newSupplierIban,
-            final @Nullable BankAccount bankAccount,
             final String invoiceNumber,
             final @Nullable String communicationNumber,
             final LocalDate dateReceived,
@@ -378,14 +380,16 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         setInvoiceNumber(invoiceNumber);
         setCommunicationNumber(communicationNumber);
 
-        if (supplier != null) {
+        if (createNewSupplier) {
             setSeller(supplier);
-        } else {
-            createNewSupplierWithRoleAndIban(newSupplierCandidate, newSupplierCountry, newSupplierIban);
-        }
+            setBankAccount(bankAccount);
 
-        if (createRoleIfRequired != null && createRoleIfRequired) {
-            partyRoleRepository.findOrCreate(supplier, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+            if (createRoleIfRequired != null && createRoleIfRequired) {
+                partyRoleRepository.findOrCreate(supplier, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+            }
+
+        } else {
+            createAndSetNewSupplierWithRoleAndIban(newSupplierCandidate, newSupplierCountry, newSupplierIban);
         }
 
         setInvoiceDate(invoiceDate);
@@ -393,7 +397,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         setPaymentMethod(paymentMethod);
         setCurrency(currency);
         setDateReceived(dateReceived);
-        setBankAccount(bankAccount);
 
         // if changed the type, then we need to re-evaluate the state machine
         if (previousType != incomingInvoiceType) {
@@ -403,7 +406,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return this;
     }
 
-    private void createNewSupplierWithRoleAndIban(@Nullable final OrganisationNameNumberViewModel newSupplierCandidate, @Nullable final Country newSupplierCountry, @Nullable final String newSupplierIban) {
+    private void createAndSetNewSupplierWithRoleAndIban(
+            final OrganisationNameNumberViewModel newSupplierCandidate,
+            final Country newSupplierCountry,
+            final String newSupplierIban) {
         Organisation organisation = organisationRepository.newOrganisation(null, true, newSupplierCandidate.getOrganisationName(), newSupplierCountry);
         partyRoleRepository.findOrCreate(organisation, IncomingInvoiceRoleTypeEnum.SUPPLIER);
         if (newSupplierCandidate.getChamberOfCommerceCode() != null)
@@ -418,12 +424,13 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     public String validateCompleteInvoice(
             final IncomingInvoiceType incomingInvoiceType,
+            final boolean createNewSupplier,
             final Party seller,
             final Boolean createRoleIfRequired,
+            final BankAccount bankAccount,
             final OrganisationNameNumberViewModel newSupplierCandidate,
             final Country newSupplierCountry,
             final String newSupplierIban,
-            final BankAccount bankAccount,
             final String invoiceNumber,
             final String communicationNumber,
             final LocalDate dateReceived,
@@ -431,11 +438,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final LocalDate dueDate,
             final PaymentMethod paymentMethod,
             final Currency currency) {
-        // only existing seller OR new seller params
-        if (seller != null && (newSupplierCandidate != null || newSupplierCountry != null || newSupplierIban != null))
-            return "Either select an existing seller OR fill out new supplier details, not both";
-
-        if (seller == null && !(newSupplierCandidate != null && newSupplierCountry != null))
+        if (!(newSupplierCandidate != null && newSupplierCountry != null))
             return "Candidate and country are mandatory when adding a new supplier";
 
         if (newSupplierIban != null && !IBANValidator.valid(newSupplierIban))
@@ -472,43 +475,50 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return getType();
     }
 
-    public Party default1CompleteInvoice() {
+    public Party default2CompleteInvoice() {
         return getSeller();
     }
 
-    @Programmatic
-    private String disableWhenNewSupplier(
-            final OrganisationNameNumberViewModel newSupplierCandidate,
-            final Country newSupplierCountry,
-            final String newSupplierIban) {
-        return (newSupplierCandidate != null || newSupplierCountry != null || newSupplierIban != null) ? "Disabled when a new supplier candidate is selected" : null;
-    }
-
-    public String disable1CompleteInvoice(
+    public boolean hide2CompleteInvoice(
             final IncomingInvoiceType incomingInvoiceType,
-            final Party supplier,
-            final Boolean createRoleIfRequired,
-            final OrganisationNameNumberViewModel newSupplierCandidate,
-            final Country newSupplierCountry,
-            final String newSupplierIban) {
-        return disableWhenNewSupplier(newSupplierCandidate, newSupplierCountry, newSupplierIban);
+            final boolean createNewSupplier) {
+        return createNewSupplier;
     }
 
-    public List<Party> autoComplete1CompleteInvoice(final String search) {
+    public List<Party> autoComplete2CompleteInvoice(final String search) {
         return partyRepository.autoCompleteSupplier(search, getAtPath());
     }
 
-    public String disable2CompleteInvoice(
+    public boolean hide3CompleteInvoice(
             final IncomingInvoiceType incomingInvoiceType,
-            final Party supplier,
-            final Boolean createRoleIfRequired,
-            final OrganisationNameNumberViewModel newSupplierCandidate,
-            final Country newSupplierCountry,
-            final String newSupplierIban) {
-        return disableWhenNewSupplier(newSupplierCandidate, newSupplierCountry, newSupplierIban);
+            final boolean createNewSupplier) {
+        return createNewSupplier;
     }
 
-    public List<OrganisationNameNumberViewModel> autoComplete3CompleteInvoice(@MinLength(3) final String search) {
+    public BankAccount default4CompleteInvoice(
+            final IncomingInvoiceType incomingInvoiceType,
+            final boolean createNewSupplier,
+            final Party seller) {
+        if (getBankAccount() != null && (seller == null || bankAccount.getOwner().equals(seller)))
+            return getBankAccount();
+
+        return bankAccountRepository.getFirstBankAccountOfPartyOrNull(seller);
+    }
+
+    public List<BankAccount> choices4CompleteInvoice(
+            final IncomingInvoiceType incomingInvoiceType,
+            final boolean createNewSupplier,
+            final Party seller) {
+        return bankAccountRepository.findBankAccountsByOwner(seller);
+    }
+
+    public boolean hide4CompleteInvoice(
+            final IncomingInvoiceType incomingInvoiceType,
+            final boolean createNewSupplier) {
+        return createNewSupplier;
+    }
+
+    public List<OrganisationNameNumberViewModel> autoComplete5CompleteInvoice(@MinLength(3) final String search) {
         try {
             TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {
@@ -519,78 +529,49 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return result;
     }
 
-    @Programmatic
-    private String disableWhenExistingSupplier(final Party supplier) {
-        return supplier != null ? "Disabled when an existing supplier is selected" : null;
-    }
-
-    public String disable3CompleteInvoice(
+    public boolean hide5CompleteInvoice(
             final IncomingInvoiceType incomingInvoiceType,
-            final Party supplier,
-            final Boolean createRoleIfRequired,
-            final OrganisationNameNumberViewModel newSupplierCandidate,
-            final Country newSupplierCountry,
-            final String newSupplierIban) {
-        return disableWhenExistingSupplier(supplier);
+            final boolean createNewSupplier) {
+        return !createNewSupplier;
     }
 
-    public String disable4CompleteInvoice(
+    public boolean hide6CompleteInvoice(
             final IncomingInvoiceType incomingInvoiceType,
-            final Party supplier,
-            final Boolean createRoleIfRequired,
-            final OrganisationNameNumberViewModel newSupplierCandidate,
-            final Country newSupplierCountry,
-            final String newSupplierIban) {
-        return disableWhenExistingSupplier(supplier);
+            final boolean createNewSupplier) {
+        return !createNewSupplier;
     }
 
-    public String disable5CompleteInvoice(
+    public boolean hide7CompleteInvoice(
             final IncomingInvoiceType incomingInvoiceType,
-            final Party supplier,
-            final Boolean createRoleIfRequired,
-            final OrganisationNameNumberViewModel newSupplierCandidate,
-            final Country newSupplierCountry,
-            final String newSupplierIban) {
-        return disableWhenExistingSupplier(supplier);
-    }
-
-    public BankAccount default6CompleteInvoice(
-            final IncomingInvoiceType incomingInvoiceType,
-            final Party seller) {
-        return getBankAccount() != null ? getBankAccount() : bankAccountRepository.getFirstBankAccountOfPartyOrNull(seller);
-    }
-
-    public List<BankAccount> choices6CompleteInvoice(
-            final IncomingInvoiceType incomingInvoiceType,
-            final Party seller) {
-        return bankAccountRepository.findBankAccountsByOwner(seller);
-    }
-
-    public String default7CompleteInvoice() {
-        return getInvoiceNumber();
+            final boolean createNewSupplier) {
+        return !createNewSupplier;
     }
 
     public String default8CompleteInvoice() {
+        return getInvoiceNumber();
+    }
+
+    public String default9CompleteInvoice() {
         return getCommunicationNumber();
     }
 
-    public LocalDate default9CompleteInvoice() {
+    public LocalDate default10CompleteInvoice() {
         return getDateReceived() == null ? dateReceivedDerivedFromDocument() : getDateReceived();
     }
 
-    public LocalDate default10CompleteInvoice() {
+    public LocalDate default11CompleteInvoice() {
         return getInvoiceDate();
     }
 
-    public LocalDate default11CompleteInvoice() {
+    public LocalDate default12CompleteInvoice() {
         return getDueDate() == null && getInvoiceDate() != null ? getInvoiceDate().plusMonths(1) : getDueDate();
     }
 
-    public PaymentMethod default12CompleteInvoice() {
+    public PaymentMethod default13CompleteInvoice() {
         return getPaymentMethod();
     }
 
-    public Currency default13CompleteInvoice() {
+    public Currency default14CompleteInvoice() {
         return getCurrency();
     }
 

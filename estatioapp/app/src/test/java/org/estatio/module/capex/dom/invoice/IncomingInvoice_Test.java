@@ -1328,12 +1328,13 @@ public class IncomingInvoice_Test {
             // when
             incomingInvoice.completeInvoice(
                     newIncomingInvoiceType,
+                    false,
                     newSeller,
                     Boolean.TRUE,
-                    null,
-                    null,
-                    null,
                     newBankAccount,
+                    null,
+                    null,
+                    null,
                     newInvoiceNumber,
                     null,
                     newDateReceived,
