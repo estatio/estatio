@@ -49,6 +49,9 @@ public abstract class DomainObject_nextTaskRoleAssignedToAbstract<
     private Object doProp() {
         List<IPartyRoleType> iPartyRoleTypes = stateTransitionService
                 .nextTaskRoleAssignToFor(domainObject, stateTransitionClass);
+        if(iPartyRoleTypes == null) {
+            return null;
+        }
         switch (iPartyRoleTypes.size()){
             case 0:
                 return null;

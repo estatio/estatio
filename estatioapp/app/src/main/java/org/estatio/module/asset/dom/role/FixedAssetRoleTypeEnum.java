@@ -35,7 +35,6 @@ public enum FixedAssetRoleTypeEnum implements TitledEnum, IPartyRoleType {
     PROPERTY_OWNER,
     PROPERTY_MANAGER, 
     ASSET_MANAGER,
-    TECHNICIAN,
     PROPERTY_CONTACT,
     TENANTS_ASSOCIATION,
     CENTER_MANAGER,
