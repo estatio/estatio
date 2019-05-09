@@ -77,6 +77,7 @@ import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
+import org.estatio.module.capex.app.SupplierCreationService;
 import org.estatio.module.capex.dom.documents.BudgetItemChooser;
 import org.estatio.module.capex.dom.documents.BuyerFinder;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
@@ -287,15 +288,29 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final IncomingInvoiceType orderType,
             final org.estatio.module.asset.dom.Property property,
             final String orderNumber,
+            final @ParameterLayout(named = "Create new supplier?") boolean createNewSupplier,
             final @Nullable Party supplier,
             final @Nullable Boolean createRoleIfRequired,
+            final @Nullable OrganisationNameNumberViewModel newSupplierCandidate,
+            final @Nullable Country newSupplierCountry,
+            final @Nullable String newSupplierIban,
             final @ParameterLayout(named = "Supplier order ref.") String supplierOrderReference,
             final LocalDate orderDate) {
         setType(orderType);
         setOrderNumber(orderNumber);
         setSellerOrderReference(supplierOrderReference);
         setOrderDate(orderDate);
-        setSeller(supplier);
+
+        if (createNewSupplier) {
+            setSeller(supplier);
+
+            if (createRoleIfRequired != null && createRoleIfRequired) {
+                partyRoleRepository.findOrCreate(supplier, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+            }
+        } else {
+            final Organisation newSupplier = supplierCreationService.createNewSupplierAndOptionallyBankAccount(newSupplierCandidate, newSupplierCountry, newSupplierIban);
+            setSeller(newSupplier);
+        }
         setProperty(property);
         setEntryDate(clockService.now());
 
@@ -326,19 +341,63 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return getOrderNumber();
     }
 
-    public Party default3CompleteOrder() {
+    public Party default4CompleteOrder() {
         return getSeller();
     }
 
-    public List<Party> autoComplete3CompleteOrder(final @MinLength(3) String search) {
+    public boolean hide4CompleteOrder(
+            final IncomingInvoiceType orderType,
+            final org.estatio.module.asset.dom.Property property,
+            final String orderNumber,
+            final boolean createNewSupplier) {
+        return createNewSupplier;
+    }
+
+    public List<Party> autoComplete4CompleteOrder(final @MinLength(3) String search) {
         return partyRepository.autoCompleteSupplier(search, getAtPath());
     }
 
-    public String default5CompleteOrder() {
+    public boolean hide5CompleteOrder(
+            final IncomingInvoiceType orderType,
+            final org.estatio.module.asset.dom.Property property,
+            final String orderNumber,
+            final boolean createNewSupplier) {
+        return createNewSupplier;
+    }
+
+    public List<OrganisationNameNumberViewModel> autoComplete6CompleteOrder(final @MinLength(3) String search) {
+        return supplierCreationService.autoCompleteNewSupplier(search, getAtPath());
+    }
+
+    public boolean hide6CompleteOrder(
+            final IncomingInvoiceType orderType,
+            final org.estatio.module.asset.dom.Property property,
+            final String orderNumber,
+            final boolean createNewSupplier) {
+        return !createNewSupplier;
+    }
+
+    public boolean hide7CompleteOrder(
+            final IncomingInvoiceType orderType,
+            final org.estatio.module.asset.dom.Property property,
+            final String orderNumber,
+            final boolean createNewSupplier) {
+        return !createNewSupplier;
+    }
+
+    public boolean hide8CompleteOrder(
+            final IncomingInvoiceType orderType,
+            final org.estatio.module.asset.dom.Property property,
+            final String orderNumber,
+            final boolean createNewSupplier) {
+        return !createNewSupplier;
+    }
+
+    public String default9CompleteOrder() {
         return getSellerOrderReference();
     }
 
-    public LocalDate default6CompleteOrder() {
+    public LocalDate default10CompleteOrder() {
         return getOrderDate();
     }
 
@@ -346,8 +405,12 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final IncomingInvoiceType orderType,
             final org.estatio.module.asset.dom.Property property,
             final String orderNumber,
+            final boolean createNewSupplier,
             final Party supplier,
             final Boolean createRoleIfRequired,
+            final OrganisationNameNumberViewModel newSupplierCandidate,
+            final Country newSupplierCountry,
+            final String newSupplierIban,
             final String supplierOrderReference,
             final LocalDate orderDate) {
         // validate seller
@@ -497,6 +560,10 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final Charge charge,
             final Project project) {
         return budgetItemChooser.choicesBudgetItemFor(getProperty(), charge);
+    }
+
+    public boolean hide7CompleteOrderItem() {
+        return getType() == IncomingInvoiceType.CAPEX || getType() == IncomingInvoiceType.PROPERTY_EXPENSES;
     }
 
     public String default8CompleteOrderItem() {
@@ -1570,7 +1637,10 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     FixedAssetRoleRepository fixedAssetRoleRepository;
 
     @Inject
-    private MeService meService;
+    MeService meService;
+
+    @Inject
+    SupplierCreationService supplierCreationService;
 
     @Inject
     PaperclipRepository paperclipRepository;

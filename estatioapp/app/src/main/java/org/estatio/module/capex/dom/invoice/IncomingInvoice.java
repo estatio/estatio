@@ -8,7 +8,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedSet;
 import java.util.StringJoiner;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -63,6 +62,7 @@ import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.base.platform.applib.ReasonBuffer2;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
+import org.estatio.module.capex.app.SupplierCreationService;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.capex.dom.documents.BudgetItemChooser;
@@ -389,7 +389,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             }
 
         } else {
-            createAndSetNewSupplierWithRoleAndIban(newSupplierCandidate, newSupplierCountry, newSupplierIban);
+            final Organisation newSupplier = supplierCreationService.createNewSupplierAndOptionallyBankAccount(newSupplierCandidate, newSupplierCountry, newSupplierIban);
+            setSeller(newSupplier);
+            setBankAccount(bankAccountRepository.getFirstBankAccountOfPartyOrNull(newSupplier));
         }
 
         setInvoiceDate(invoiceDate);
@@ -404,22 +406,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         }
 
         return this;
-    }
-
-    private void createAndSetNewSupplierWithRoleAndIban(
-            final OrganisationNameNumberViewModel newSupplierCandidate,
-            final Country newSupplierCountry,
-            final String newSupplierIban) {
-        Organisation organisation = organisationRepository.newOrganisation(null, true, newSupplierCandidate.getOrganisationName(), newSupplierCountry);
-        partyRoleRepository.findOrCreate(organisation, IncomingInvoiceRoleTypeEnum.SUPPLIER);
-        if (newSupplierCandidate.getChamberOfCommerceCode() != null)
-            organisation.setChamberOfCommerceCode(newSupplierCandidate.getChamberOfCommerceCode());
-
-        setSeller(organisation);
-        if (newSupplierIban != null) {
-            bankAccountRepository.newBankAccount(organisation, newSupplierIban, null);
-        }
-        setBankAccount(bankAccountRepository.getFirstBankAccountOfPartyOrNull(organisation));
     }
 
     public String validateCompleteInvoice(
@@ -519,14 +505,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public List<OrganisationNameNumberViewModel> autoComplete5CompleteInvoice(@MinLength(3) final String search) {
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException e) {
-            // nothing
-        }
-        List<OrganisationNameNumberViewModel> result = new ArrayList<>(chamberOfCommerceCodeLookUpService.getChamberOfCommerceCodeCandidatesByOrganisation(search, getAtPath()));
-        result.add(new OrganisationNameNumberViewModel(search, null));
-        return result;
+        return supplierCreationService.autoCompleteNewSupplier(search, getAtPath());
     }
 
     public boolean hide5CompleteInvoice(
@@ -2278,6 +2257,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Inject
     @NotPersistent
     OrganisationRepository organisationRepository;
+
+    @Inject
+    SupplierCreationService supplierCreationService;
 
     @Inject
     @NotPersistent
