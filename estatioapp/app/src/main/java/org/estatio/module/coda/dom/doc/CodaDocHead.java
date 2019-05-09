@@ -1092,38 +1092,6 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
                         summaryLine.getLineNum(), summaryLine.getLineType(), "Description has changed");
             }
         }
-        final List<CodaDocLine> analysisLines = getAnalysisLines();
-        final List<CodaDocLine> otherAnalysisLines = other.getAnalysisLines();
-        if(analysisLines.size() != otherAnalysisLines.size()) {
-            return Comparison.invalidatesApprovals("Number of analysis lines has changed (was %d, now %d)",
-                    otherAnalysisLines.size(), analysisLines.size());
-        }
-        for (int i = 0; i < analysisLines.size(); i++) {
-            final CodaDocLine docLine = analysisLines.get(i);
-            final CodaDocLine otherDocLine = otherAnalysisLines.get(i);
-
-            if (!Objects.equals(docLine.getDocValue(), otherDocLine.getDocValue())) {
-                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
-                        docLine.getLineNum(), docLine.getLineType(), "Doc value (net amount) has changed");
-            }
-            if (!Objects.equals(docLine.getDocSumTax(), otherDocLine.getDocSumTax())) {
-                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
-                        docLine.getLineNum(), docLine.getLineType(), "Doc sum tax (VAT amount) has changed");
-            }
-            if (!Objects.equals(docLine.getDueDate(), otherDocLine.getDueDate())) {
-                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
-                        docLine.getLineNum(), docLine.getLineType(), "Due date has changed");
-            }
-            if (!Objects.equals(docLine.getValueDate(), otherDocLine.getValueDate())) {
-                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
-                        docLine.getLineNum(), docLine.getLineType(), "Value date has changed");
-            }
-            if (otherDocLine.getDescription() != null &&
-                    !Objects.equals(docLine.getDescription(), otherDocLine.getDescription())) {
-                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
-                        docLine.getLineNum(), docLine.getLineType(), "Description has changed");
-            }
-        }
 
         return Comparison.retainsApprovals();
     }

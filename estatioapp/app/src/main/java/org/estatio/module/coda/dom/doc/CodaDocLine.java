@@ -8,6 +8,8 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Index;
+import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
@@ -104,6 +106,9 @@ import lombok.Setter;
 })
 @Uniques({
         @Unique(name = "CodaDocLine_docHead_lineNum_UNQ", members = { "docHead", "lineNum" }),
+})
+@Indices({
+        @Index(name = "CodaDocLine_incomingInvoiceItem_IDX", members = { "incomingInvoiceItem" }),
 })
 @DomainObject(
         objectType = "coda.CodaDocLine",

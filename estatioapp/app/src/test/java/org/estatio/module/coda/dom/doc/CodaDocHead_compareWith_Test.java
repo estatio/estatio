@@ -298,8 +298,8 @@ public class CodaDocHead_compareWith_Test {
         CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
 
         // then
-        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_INVALIDATING_APPROVALS);
-        assertThat(comparison.getReason()).isEqualTo("Number of analysis lines has changed (was 2, now 1)");
+        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_RETAIN_APPROVALS);
+        assertThat(comparison.getReason()).isNull();
     }
 
     @Test
@@ -311,8 +311,8 @@ public class CodaDocHead_compareWith_Test {
         CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
 
         // then
-        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_INVALIDATING_APPROVALS);
-        assertThat(comparison.getReason()).isEqualTo("Number of analysis lines has changed (was 1, now 2)");
+        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_RETAIN_APPROVALS);
+        assertThat(comparison.getReason()).isNull();
     }
 
     @Test
@@ -325,8 +325,8 @@ public class CodaDocHead_compareWith_Test {
         CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
 
         // then
-        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_INVALIDATING_APPROVALS);
-        assertThat(comparison.getReason()).isEqualTo("Line #2 (ANALYSIS): Description has changed");
+        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_RETAIN_APPROVALS);
+        assertThat(comparison.getReason()).isNull();
     }
 
     @Test
@@ -339,8 +339,8 @@ public class CodaDocHead_compareWith_Test {
         CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
 
         // then
-        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_INVALIDATING_APPROVALS);
-        assertThat(comparison.getReason()).isEqualTo("Line #2 (ANALYSIS): Doc value (net amount) has changed");
+        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_RETAIN_APPROVALS);
+        assertThat(comparison.getReason()).isNull();
     }
 
     @Test
@@ -353,8 +353,8 @@ public class CodaDocHead_compareWith_Test {
         CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
 
         // then
-        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_INVALIDATING_APPROVALS);
-        assertThat(comparison.getReason()).isEqualTo("Line #2 (ANALYSIS): Doc sum tax (VAT amount) has changed");
+        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_RETAIN_APPROVALS);
+        assertThat(comparison.getReason()).isNull();
     }
 
     @Test
@@ -367,8 +367,8 @@ public class CodaDocHead_compareWith_Test {
         CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
 
         // then
-        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_INVALIDATING_APPROVALS);
-        assertThat(comparison.getReason()).isEqualTo("Line #2 (ANALYSIS): Due date has changed");
+        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_RETAIN_APPROVALS);
+        assertThat(comparison.getReason()).isNull();
     }
 
     @Test
@@ -381,8 +381,8 @@ public class CodaDocHead_compareWith_Test {
         CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
 
         // then
-        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_INVALIDATING_APPROVALS);
-        assertThat(comparison.getReason()).isEqualTo("Line #2 (ANALYSIS): Value date has changed");
+        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_RETAIN_APPROVALS);
+        assertThat(comparison.getReason()).isNull();
     }
 
 
