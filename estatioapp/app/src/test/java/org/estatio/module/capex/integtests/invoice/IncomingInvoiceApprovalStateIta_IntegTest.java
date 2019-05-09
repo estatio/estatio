@@ -325,7 +325,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         // when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
-                wrap(mixin(IncomingInvoice_complete.class, capexInvoice)).act(FixedAssetRoleTypeEnum.TECHNICIAN.findOrCreateUsing(partyRoleTypeRepository), Person_enum.TimoTechnicianIt.findUsing(serviceRegistry2), null));
+                wrap(mixin(IncomingInvoice_complete.class, capexInvoice)).act(PartyRoleTypeEnum.TECHNICIAN.findOrCreateUsing(partyRoleTypeRepository), Person_enum.TimoTechnicianIt.findUsing(serviceRegistry2), null));
         assertThat(capexInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
         assertThat(capexInvoice.getGrossAmount()).isEqualTo(new BigDecimal("100000.00"));
 
@@ -336,7 +336,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         nextPendingTask = nextPendingTransition.getTask();
         assertTask(nextPendingTask, new ExpectedTaskResult(
                 false,
-                FixedAssetRoleTypeEnum.TECHNICIAN,
+                PartyRoleTypeEnum.TECHNICIAN,
                 Person_enum.TimoTechnicianIt.findUsing(serviceRegistry2)
         ));
 

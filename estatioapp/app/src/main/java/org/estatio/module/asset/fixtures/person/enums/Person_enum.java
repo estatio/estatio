@@ -140,9 +140,8 @@ public enum Person_enum
             }),
     TimoTechnicianIt("TTECH", "Timo", "Technician", null, true, MALE, It, It,
             null, null,
-            new IPartyRoleType[] {  },
+            new IPartyRoleType[] { PartyRoleTypeEnum.TECHNICIAN },
             new FixedAssetRoleSpec[] {
-                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.TECHNICIAN, Property_enum.GraIt)
             }),
 
     // preferred manager

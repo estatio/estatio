@@ -228,7 +228,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
 
                 switch (incomingInvoice.getType()) {
                 case CAPEX:
-                    if (isItalian(incomingInvoice)) return Arrays.asList(FixedAssetRoleTypeEnum.ASSET_MANAGER, FixedAssetRoleTypeEnum.TECHNICIAN);
+                    if (isItalian(incomingInvoice)) return Arrays.asList(FixedAssetRoleTypeEnum.ASSET_MANAGER, PartyRoleTypeEnum.TECHNICIAN);
                     return Collections.singletonList(ProjectRoleTypeEnum.PROJECT_MANAGER);
                 case PROPERTY_EXPENSES:
                 case SERVICE_CHARGES:
