@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -29,6 +30,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import com.google.common.base.Strings;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import org.joda.time.LocalDate;
 
@@ -57,6 +59,7 @@ import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
 import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
@@ -66,8 +69,10 @@ import org.estatio.module.capex.dom.invoice.approval.tasks.IncomingInvoice_check
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_reject;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
+import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.task.Task;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.coda.dom.doc.appsettings.ApplicationSettingKey;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.invoice.dom.PaymentMethod;
@@ -595,11 +600,57 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     private transient Map<Integer, LineData> analysisLineDataByLineNumber;
     @Programmatic
     public Map<Integer, LineData> getAnalysisLineDataByLineNumber() {
+
         if(analysisLineDataByLineNumber == null) {
-            analysisLineDataByLineNumber = getAnalysisLines().stream()
-                .collect(Collectors.toMap(CodaDocLine::getLineNum, LineData::new));
+            if(isLegacy()) {
+                analysisLineDataByLineNumber = Maps.newHashMap();
+
+                // get hold of the summary line and extract its project and charge
+                final CodaDocLine summaryDocLine = summaryDocLine(LineCache.DEFAULT);
+
+                if(summaryDocLine != null) {
+
+                    final Optional<Project> projectIfAny = Optional.ofNullable(
+                            summaryDocLine.getExtRefProject());
+                    final Optional<Charge> chargeIfAny = Optional.ofNullable(
+                            summaryDocLine.getExtRefWorkTypeCharge());
+
+                    // we also need to get hold of the invoice item from the parent invoice
+                    final IncomingInvoice incomingInvoice = getIncomingInvoice();
+                    final Optional<IncomingInvoiceItem> incomingInvoiceItemIfAny =
+                            incomingInvoice != null ? incomingInvoice.firstItemIfAny() : Optional.empty();
+
+                    // ... and treat the summary line as if it's the analysisLine = 2
+                    analysisLineDataByLineNumber.put(2,
+                            new LineData(incomingInvoiceItemIfAny, projectIfAny, chargeIfAny));
+                }
+
+            } else {
+                // create memento for existing analysis lines so can compare with their replacement.
+                analysisLineDataByLineNumber = getAnalysisLines().stream()
+                    .collect(Collectors.toMap(CodaDocLine::getLineNum, LineData::new));
+            }
         }
         return analysisLineDataByLineNumber;
+    }
+
+    /**
+     * Originally we interpreted the CodaDoc XML by creating only a single summary line and a single analysis line,
+     * where the summary line was used for the values and the project/work item, while the analysis line merely for
+     * the el6 accode.
+     *
+     * However, we NOW create the XML from the analysis lines only.
+     *
+     * This method allows us to process the original summary line-based CodaDocHeads correctly with respect to the
+     * new algorithm.
+     */
+    boolean isLegacy() {
+        CodaDocLine codaDocLine = firstAnalysisDocLine(LineCache.DEFAULT);
+        if(codaDocLine == null) {
+            return false;
+        }
+        final BigDecimal docValue = codaDocLine.getDocValue();
+        return docValue == null;
     }
 
     /**
@@ -989,6 +1040,14 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         return autosyncSetting != null && autosyncSetting.valueAsBoolean();
     }
 
+    @Programmatic
+    IncomingInvoiceType getIncomingInvoiceType() {
+        final CodaDocLine line = isLegacy() ? summaryDocLine(LineCache.DEFAULT) : firstAnalysisDocLine(LineCache.DEFAULT);
+        return Optional.ofNullable(line)
+                       .map(CodaDocLine::getIncomingInvoiceType)
+                       .orElse(null);
+    }
+
     @Data
     public static class Comparison {
         public enum Type {
@@ -1032,8 +1091,15 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         if (other == this) {
             return true;
         }
+        if(isLegacyStateDiffers(this, other) || isLegacyStateDiffers(other, this)) {
+            return false;
+        }
         return Objects.equals(getSha256(), other.getSha256()) &&
-                Objects.equals(getStatPay(), other.getStatPay());
+               Objects.equals(getStatPay(), other.getStatPay());
+    }
+
+    private boolean isLegacyStateDiffers(final CodaDocHead one, final CodaDocHead other) {
+        return one.isLegacy() && !other.isLegacy();
     }
 
     @Programmatic

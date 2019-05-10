@@ -72,6 +72,11 @@ import lombok.Setter;
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
                         + "WHERE userRef1 == :userRef1"),
         @Query(
+                name = "findByIncomingInvoiceItem", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
+                        + "WHERE incomingInvoiceItem == :incomingInvoiceItem"),
+        @Query(
                 name = "findByDocHeadAndLineNum", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "

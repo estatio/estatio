@@ -75,7 +75,7 @@ public class DerivedObjectUpdater {
         final Party buyer = docHead.getCmpCodeBuyer();
 
         final Party seller = docHead.getSummaryLineAccountCodeEl6Supplier(LineCache.DEFAULT);
-        final IncomingInvoiceType firstAnalysisLineType = docHead.getFirstAnalysisLineIncomingInvoiceType(LineCache.DEFAULT);
+        final IncomingInvoiceType incomingInvoiceType = docHead.getIncomingInvoiceType();
         final String invoiceNumber = docHead.getSummaryLineExtRef2(LineCache.DEFAULT);
         final Property property = docHead.getSummaryLineAccountEl3Property(LineCache.DEFAULT);
 
@@ -94,8 +94,7 @@ public class DerivedObjectUpdater {
         final String period = Util.asFinancialYear(docHead.getCodaPeriod());
         final boolean postedToCodaBooks = Objects.equals(docHead.getLocation(), "books");
 
-        final IncomingInvoice existingInvoiceIfAny = previousMemento.getIncomingInvoiceIfAny();
-
+        final IncomingInvoice previousInvoiceIfAny = previousMemento.getIncomingInvoiceIfAny();
 
         final BigDecimal summaryGrossAmount = docHead.getSummaryLineDocValue(LineCache.DEFAULT);
         final BigDecimal summaryVatAmount = elseZero(docHead.getSummaryLineDocSumTax(LineCache.DEFAULT));
@@ -103,15 +102,15 @@ public class DerivedObjectUpdater {
 
         final Order orderIfAny = docHead.getSummaryLineExtRefOrder(LineCache.DEFAULT);
 
+
         //
         // update the incoming invoice (we simply blindly follow Coda, since Coda always leads).
         //
         final IncomingInvoice incomingInvoice;
-        if (existingInvoiceIfAny != null) {
+        if (previousInvoiceIfAny != null) {
 
-            incomingInvoice = existingInvoiceIfAny;
+            incomingInvoice = previousInvoiceIfAny;
 
-            final IncomingInvoiceType incomingInvoiceType = firstAnalysisLineType;
             final LocalDate dueDate = summaryLineDueDate;
 
             incomingInvoiceRepository.updateInvoice(
@@ -158,6 +157,9 @@ public class DerivedObjectUpdater {
                         // ... fix up its invoice item and link
 
                         final IncomingInvoiceItem invoiceItem = previousItemIfAny.get();
+
+                        // and associate this NEW docline with the EXISTING invoiceitem
+                        docLine.setIncomingInvoiceItem(invoiceItem);
 
                         boolean chargeInSync = false;
                         // only overwrite charge if value hasn't been modified in Estatio since originally sync'd
@@ -270,7 +272,6 @@ public class DerivedObjectUpdater {
                 // as a side-effect, the approvalState will be set to NEW
                 // (subscriber on ObjectPersist)
 
-                final IncomingInvoiceType incomingInvoiceType = firstAnalysisLineType;
                 final IncomingInvoiceApprovalState approvalState = null;
 
                 incomingInvoice =

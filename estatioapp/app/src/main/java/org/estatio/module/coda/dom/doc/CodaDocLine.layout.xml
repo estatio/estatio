@@ -68,7 +68,7 @@
                         <cpt:property id="incomingInvoiceType"/>
                         <cpt:property id="incomingInvoiceItem"/>
                         <cpt:property id="userRef1">
-                            <cpt:named>User Ref 1 (Barcode)</cpt:named>
+                            <cpt:named>User Ref 1</cpt:named>
                         </cpt:property>
                         <cpt:property id="userRef1ValidationStatus"/>
                     </cpt:fieldSet>

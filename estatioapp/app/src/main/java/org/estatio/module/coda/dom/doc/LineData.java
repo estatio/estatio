@@ -15,17 +15,20 @@ public class LineData {
     private final Optional<Project> projectIfAny;
     private final Optional<Charge> chargeIfAny;
 
-    public LineData(
+    LineData(
             final CodaDocLine codaDocLine) {
-        final IncomingInvoiceItem incomingInvoiceItem = codaDocLine.getIncomingInvoiceItem();
-        if(incomingInvoiceItem != null) {
-            invoiceItemIfAny = Optional.of(incomingInvoiceItem);
-            projectIfAny = Optional.ofNullable(codaDocLine.getExtRefProject());
-            chargeIfAny = Optional.ofNullable(codaDocLine.getExtRefWorkTypeCharge());
-        } else {
-            invoiceItemIfAny = Optional.empty();
-            projectIfAny = Optional.empty();
-            chargeIfAny = Optional.empty();
-        }
+        this(Optional.ofNullable(codaDocLine.getIncomingInvoiceItem()),
+             Optional.ofNullable(codaDocLine.getExtRefProject()),
+             Optional.ofNullable(codaDocLine.getExtRefWorkTypeCharge()));
+    }
+
+    LineData(
+            final Optional<IncomingInvoiceItem> invoiceItemIfAny,
+            final Optional<Project> projectIfAny,
+            final Optional<Charge> chargeIfAny) {
+
+        this.invoiceItemIfAny = invoiceItemIfAny;
+        this.projectIfAny = projectIfAny;
+        this.chargeIfAny = chargeIfAny;
     }
 }
