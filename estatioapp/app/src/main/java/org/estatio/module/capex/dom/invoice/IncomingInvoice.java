@@ -381,17 +381,16 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         setCommunicationNumber(communicationNumber);
 
         if (createNewSupplier) {
+            final Organisation newSupplier = supplierCreationService.createNewSupplierAndOptionallyBankAccount(newSupplierCandidate, newSupplierCountry, newSupplierIban);
+            setSeller(newSupplier);
+            setBankAccount(bankAccountRepository.getFirstBankAccountOfPartyOrNull(newSupplier));
+        } else {
             setSeller(supplier);
             setBankAccount(bankAccount);
 
             if (createRoleIfRequired != null && createRoleIfRequired) {
                 partyRoleRepository.findOrCreate(supplier, IncomingInvoiceRoleTypeEnum.SUPPLIER);
             }
-
-        } else {
-            final Organisation newSupplier = supplierCreationService.createNewSupplierAndOptionallyBankAccount(newSupplierCandidate, newSupplierCountry, newSupplierIban);
-            setSeller(newSupplier);
-            setBankAccount(bankAccountRepository.getFirstBankAccountOfPartyOrNull(newSupplier));
         }
 
         setInvoiceDate(invoiceDate);
@@ -2199,8 +2198,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             if (getPaymentMethod() == PaymentMethod.BANK_TRANSFER && historicalPaymentMethods.size() > 1) {
                 StringBuilder builder = new StringBuilder().append("WARNING: payment method is set to bank transfer, but previous invoices from this seller have used the following payment methods: ");
                 historicalPaymentMethods.forEach(pm -> {
-                    builder.append(pm.title());
-                    builder.append(", ");
+                    if (pm != PaymentMethod.BANK_TRANSFER) {
+                        builder.append(pm.title());
+                        builder.append(", ");
+                    }
                 });
 
                 builder.delete(builder.length() - 2, builder.length() - 1);

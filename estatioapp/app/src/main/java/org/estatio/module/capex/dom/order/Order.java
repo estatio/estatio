@@ -302,15 +302,22 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         setOrderDate(orderDate);
 
         if (createNewSupplier) {
+            final Organisation newSupplier = supplierCreationService.createNewSupplierAndOptionallyBankAccount(newSupplierCandidate, newSupplierCountry, newSupplierIban);
+            setSeller(newSupplier);
+        } else {
             setSeller(supplier);
 
             if (createRoleIfRequired != null && createRoleIfRequired) {
                 partyRoleRepository.findOrCreate(supplier, IncomingInvoiceRoleTypeEnum.SUPPLIER);
             }
-        } else {
-            final Organisation newSupplier = supplierCreationService.createNewSupplierAndOptionallyBankAccount(newSupplierCandidate, newSupplierCountry, newSupplierIban);
-            setSeller(newSupplier);
         }
+
+        if (orderType != IncomingInvoiceType.CAPEX)
+            getFirstItemIfAny().ifPresent(order -> order.setProject(null));
+
+        if (orderType != IncomingInvoiceType.SERVICE_CHARGES)
+            getFirstItemIfAny().ifPresent(order -> order.setBudgetItem(null));
+
         setProperty(property);
         setEntryDate(clockService.now());
 
@@ -439,7 +446,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Charge charge,
-            final Project project,
+            final @Nullable Project project,
             final @Nullable BudgetItem budgetItem,
             final String period) {
         Optional<OrderItem> firstItemIfAny = getItems().stream().findFirst();
@@ -528,12 +535,15 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public Project default6CompleteOrderItem() {
+        if (getType() != IncomingInvoiceType.CAPEX)
+            return null;
+
         final Optional<OrderItem> firstItemIfAny = getFirstItemIfAny();
         return firstItemIfAny.map(OrderItem::getProject).orElse(null);
     }
 
     public List<Project> choices6CompleteOrderItem() {
-        return getProperty() == null ?
+        final List<Project> projects = getProperty() == null ?
                 projectRepository.listAll()
                 : projectRepository.findByFixedAsset(getProperty())
                 .stream()
@@ -544,6 +554,10 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
                     return x.getEndDate() == null || !x.getEndDate().isBefore(dateToUse);
                 })
                 .collect(Collectors.toList());
+
+        // hacky way to allow user to deselect project (the collector does not include a null value)
+        projects.add(null);
+        return projects;
     }
 
     public BudgetItem default7CompleteOrderItem() {
@@ -563,7 +577,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public boolean hide7CompleteOrderItem() {
-        return getType() == IncomingInvoiceType.CAPEX || getType() == IncomingInvoiceType.PROPERTY_EXPENSES;
+        return getType() != IncomingInvoiceType.SERVICE_CHARGES;
     }
 
     public String default8CompleteOrderItem() {
@@ -590,6 +604,9 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
         if (project != null && getType() != IncomingInvoiceType.CAPEX)
             return "Project can only be added to orders of type CAPEX";
+
+        if (budgetItem == null && getType() == IncomingInvoiceType.SERVICE_CHARGES)
+            return "Budget item is required for orders of type Service Charges";
 
         return period != null ? PeriodUtil.reasonInvalidPeriod(period) : null;
     }
