@@ -36,9 +36,11 @@ import org.estatio.module.asset.dom.CommunicationChannelOwnerLinkForFixedAsset;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.Unit;
+import org.estatio.module.asset.dom.erv.EstimatedRentalValue;
 import org.estatio.module.asset.dom.paperclips.PaperclipForFixedAsset;
 import org.estatio.module.asset.dom.registration.FixedAssetRegistration;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
+import org.estatio.module.currency.EstatioCurrencyModule;
 import org.estatio.module.party.EstatioPartyModule;
 
 @XmlRootElement(name = "module")
@@ -48,7 +50,7 @@ public class EstatioAssetModule extends ModuleAbstract {
 
     @Override
     public Set<Module> getDependencies(){
-        return Sets.newHashSet(new EstatioPartyModule(), new ClassificationModule());
+        return Sets.newHashSet(new EstatioPartyModule(), new ClassificationModule(), new EstatioCurrencyModule());
     }
 
 
@@ -60,6 +62,7 @@ public class EstatioAssetModule extends ModuleAbstract {
                 deleteFrom(FixedAssetRegistration.class);
                 deleteFrom(CommunicationChannelOwnerLinkForFixedAsset.class);
                 deleteFrom(PaperclipForFixedAsset.class);
+                deleteFrom(EstimatedRentalValue.class);
                 deleteFrom(Unit.class);
                 deleteFrom(Property.class);
                 deleteFrom(FixedAssetRole.class);
