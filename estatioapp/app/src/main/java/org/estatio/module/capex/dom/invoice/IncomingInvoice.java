@@ -86,6 +86,7 @@ import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.state.StateTransitionType;
 import org.estatio.module.capex.dom.state.Stateful;
 import org.estatio.module.capex.dom.util.CountryUtil;
+import org.estatio.module.capex.dom.util.FinancialAmountUtil;
 import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.charge.dom.Applicability;
 import org.estatio.module.charge.dom.Charge;
@@ -608,6 +609,13 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             links.ifPresent(OrderItemInvoiceItemLink::remove);
         }
 
+        // previously done in autoFillIn on IncomingDocAsInvoiceViewModel
+        if (getBuyer() == null)
+            setBuyer(orderItem.getOrdr().getBuyer());
+
+        if (getSeller() == null)
+            setSeller(orderItem.getOrdr().getSeller());
+
         // also set amounts on invoice
         this.setNetAmount(netAmount);
         this.setGrossAmount(grossAmount);
@@ -660,27 +668,76 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .collect(Collectors.toList());
     }
 
-    public String default1CompleteInvoiceItem() {
+    public String default1CompleteInvoiceItem(final OrderItem orderItem) {
+        if (default0CompleteInvoiceItem() == null && orderItem != null)
+            return orderItem.getDescription();
+
         return default0CompleteInvoiceItem() == null ? null : default0CompleteInvoiceItem().getDescription();
     }
 
-    public BigDecimal default2CompleteInvoiceItem() {
-        return default0CompleteInvoiceItem() == null ? null : default0CompleteInvoiceItem().getNetAmount();
+    public BigDecimal default2CompleteInvoiceItem(
+            final OrderItem orderItem,
+            final String description,
+            final BigDecimal netAmount,
+            final Tax tax,
+            final BigDecimal vatAmount) {
+        BigDecimal calculatedNetAmount = FinancialAmountUtil.determineNetAmount(vatAmount, grossAmount, tax, clockService.now());
+
+        if (default0CompleteInvoiceItem() == null && orderItem == null)
+            return calculatedNetAmount;
+
+        if (default0CompleteInvoiceItem() == null && orderItem != null)
+            return orderItem.getNetAmount();
+
+        return default0CompleteInvoiceItem().getNetAmount();
     }
 
-    public Tax default3CompleteInvoiceItem() {
+    public Tax default3CompleteInvoiceItem(final OrderItem orderItem) {
+        if (default0CompleteInvoiceItem() == null && orderItem != null)
+            return orderItem.getTax();
+
         return default0CompleteInvoiceItem() == null ? null : default0CompleteInvoiceItem().getTax();
     }
 
-    public BigDecimal default4CompleteInvoiceItem() {
-        return default0CompleteInvoiceItem() == null ? null : default0CompleteInvoiceItem().getVatAmount();
+    public BigDecimal default4CompleteInvoiceItem(
+            final OrderItem orderItem,
+            final String description,
+            final BigDecimal netAmount,
+            final Tax tax,
+            final BigDecimal vatAmount,
+            final BigDecimal grossAmount) {
+        BigDecimal calculatedVatAmount = FinancialAmountUtil.determineVatAmount(netAmount, grossAmount, tax, clockService.now());
+
+        if (default0CompleteInvoiceItem() == null && orderItem == null)
+            return calculatedVatAmount;
+
+        if (default0CompleteInvoiceItem() == null && orderItem != null)
+            return orderItem.getVatAmount();
+
+        return default0CompleteInvoiceItem().getVatAmount();
     }
 
-    public BigDecimal default5CompleteInvoiceItem() {
-        return default0CompleteInvoiceItem() == null ? null : default0CompleteInvoiceItem().getGrossAmount();
+    public BigDecimal default5CompleteInvoiceItem(
+            final OrderItem orderItem,
+            final String description,
+            final BigDecimal netAmount,
+            final Tax tax,
+            final BigDecimal vatAmount) {
+        BigDecimal calculatedGrossAmount = FinancialAmountUtil.determineGrossAmount(netAmount, vatAmount, tax, clockService.now());
+
+        if (default0CompleteInvoiceItem() == null && orderItem == null)
+            return calculatedGrossAmount;
+
+        if (default0CompleteInvoiceItem() == null && orderItem != null)
+            return orderItem.getGrossAmount();
+
+        return default0CompleteInvoiceItem().getGrossAmount();
     }
 
-    public Charge default6CompleteInvoiceItem() {
+    public Charge default6CompleteInvoiceItem(final OrderItem orderItem) {
+        if (default0CompleteInvoiceItem() == null && orderItem != null)
+            return orderItem.getCharge();
+
         return default0CompleteInvoiceItem() == null ? null : default0CompleteInvoiceItem().getCharge();
     }
 
@@ -688,7 +745,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return chargeRepository.findByApplicabilityAndMatchOnReferenceOrName(search, Applicability.INCOMING);
     }
 
-    public Project default7CompleteInvoiceItem() {
+    public Project default7CompleteInvoiceItem(final OrderItem orderItem) {
+        if (default0CompleteInvoiceItem() == null && orderItem != null)
+            return orderItem.getProject();
+
         return default0CompleteInvoiceItem() == null ? null : default0CompleteInvoiceItem().getProject();
     }
 
@@ -716,7 +776,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .collect(Collectors.toList());
     }
 
-    public BudgetItem default8CompleteInvoiceItem() {
+    public BudgetItem default8CompleteInvoiceItem(final OrderItem orderItem) {
+        if (default0CompleteInvoiceItem() == null && orderItem != null)
+            return orderItem.getBudgetItem();
+
         return default0CompleteInvoiceItem() == null ? null : default0CompleteInvoiceItem().getBudgetItem();
     }
 
@@ -735,7 +798,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return budgetItemChooser.choicesBudgetItemFor(getProperty(), charge);
     }
 
-    public String default9CompleteInvoiceItem() {
+    public String default9CompleteInvoiceItem(final OrderItem orderItem) {
+        if (default0CompleteInvoiceItem() == null && orderItem != null)
+            return orderItem.getPeriod();
+
         return default0CompleteInvoiceItem() == null ? null : default0CompleteInvoiceItem().getPeriod();
     }
 

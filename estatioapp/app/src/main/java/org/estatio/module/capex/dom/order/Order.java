@@ -82,6 +82,7 @@ import org.estatio.module.capex.dom.documents.BudgetItemChooser;
 import org.estatio.module.capex.dom.documents.BuyerFinder;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
@@ -492,9 +493,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final BigDecimal vatAmount,
             final BigDecimal grossAmount) {
         BigDecimal calculatedNetAmount = FinancialAmountUtil.determineNetAmount(vatAmount, grossAmount, tax, clockService.now());
-        return calculatedNetAmount != null ?
-                calculatedNetAmount :
-                getFirstItemIfAny().map(OrderItem::getNetAmount).orElse(null);
+        return getFirstItemIfAny().map(OrderItem::getNetAmount).orElse(calculatedNetAmount);
     }
 
     public Tax default2CompleteOrderItem() {
@@ -509,9 +508,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final BigDecimal vatAmount,
             final BigDecimal grossAmount) {
         BigDecimal calculatedVatAmount = FinancialAmountUtil.determineVatAmount(netAmount, grossAmount, tax, clockService.now());
-        return calculatedVatAmount != null ?
-                calculatedVatAmount :
-                getFirstItemIfAny().map(OrderItem::getVatAmount).orElse(null);
+        return getFirstItemIfAny().map(OrderItem::getVatAmount).orElse(calculatedVatAmount);
     }
 
     public BigDecimal default4CompleteOrderItem(
@@ -520,9 +517,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final Tax tax,
             final BigDecimal vatAmount) {
         BigDecimal calculatedGrossAmount = FinancialAmountUtil.determineGrossAmount(netAmount, vatAmount, tax, clockService.now());
-        return calculatedGrossAmount != null ?
-                calculatedGrossAmount :
-                getFirstItemIfAny().map(OrderItem::getGrossAmount).orElse(null);
+        return getFirstItemIfAny().map(OrderItem::getGrossAmount).orElse(calculatedGrossAmount);
     }
 
     public Charge default5CompleteOrderItem() {
@@ -586,7 +581,19 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public String disableCompleteOrderItem() {
-        return reasonDisabledDueToState();
+        final List<IncomingInvoiceItem> items = getItems().stream()
+                .filter(IncomingInvoiceItem.class::isInstance)
+                .map(IncomingInvoiceItem.class::cast)
+                .collect(Collectors.toList());
+
+        switch (items.size()) {
+            case 0:
+            case 1:
+                return reasonDisabledDueToState();
+            default:
+                return "Can only complete invoice item for invoices with a single item";
+
+        }
     }
 
     public String validateCompleteOrderItem(
