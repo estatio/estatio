@@ -2,13 +2,14 @@ package org.estatio.module.coda.dom.doc;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Index;
+import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
@@ -39,6 +40,7 @@ import org.apache.isis.applib.services.title.TitleService;
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
 import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
@@ -69,6 +71,11 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
                         + "WHERE userRef1 == :userRef1"),
+        @Query(
+                name = "findByIncomingInvoiceItem", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
+                        + "WHERE incomingInvoiceItem == :incomingInvoiceItem"),
         @Query(
                 name = "findByDocHeadAndLineNum", language = "JDOQL",
                 value = "SELECT "
@@ -104,6 +111,9 @@ import lombok.Setter;
 })
 @Uniques({
         @Unique(name = "CodaDocLine_docHead_lineNum_UNQ", members = { "docHead", "lineNum" }),
+})
+@Indices({
+        @Index(name = "CodaDocLine_incomingInvoiceItem_IDX", members = { "incomingInvoiceItem" }),
 })
 @DomainObject(
         objectType = "coda.CodaDocLine",
@@ -203,9 +213,6 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
         setExtRefProjectReference(null);
         setExtRefProjectValidationStatus(ValidationStatus.NOT_CHECKED);
 
-        setExtRefCostCentreCode(null);
-        setExtRefCostCentreValidationStatus(ValidationStatus.NOT_CHECKED);
-
         setExtRefWorkTypeChargeReference(null);
         setExtRefWorkTypeValidationStatus(ValidationStatus.NOT_CHECKED);
 
@@ -255,29 +262,54 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
     private String accountCode;
 
     @Column(allowsNull = "true", length = 36)
-    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @Property()
     @Getter @Setter
     private String description;
 
+    /**
+     * Depending on line type, is either the GROSS or NET amount.
+     *
+     * <ul>
+     *     <li>
+     *          For summary lines, this is the value of the CODA's Line.docValue, which is the GROSS amount
+     *     </li>
+     *     <li>
+     *          For analysis lines, it is also the value of CODA's Line.docValue, but is the NET amount.
+     *     </li>
+     * </ul>
+     *
+     */
     @Column(allowsNull = "true", scale = 2)
-    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @Property()
     @Getter @Setter
     private BigDecimal docValue;
 
+    /**
+     * The amount of VAT, though the derivation depends on line type.
+     *
+     * <ul>
+     *     <li>
+     *          For summary lines, this is just the value of the CODA's Line.docSumTax
+     *     </li>
+     *     <li>
+     *          For analysis lines, it is the sum of Line.taxes.tax.value
+     *     </li>
+     * </ul>
+     */
     @Column(allowsNull = "true", scale = 2)
-    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @Property()
     @Getter @Setter
     private BigDecimal docSumTax;
 
     @Column(allowsNull = "true")
     @javax.jdo.annotations.Persistent
-    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @Property()
     @Getter @Setter
     private LocalDate dueDate;
 
     @Column(allowsNull = "true")
     @javax.jdo.annotations.Persistent
-    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @Property()
     @Getter @Setter
     private LocalDate valueDate;
 
@@ -295,12 +327,12 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
     private String extRef3;
 
     @Column(allowsNull = "true", length = 32)
-    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @Property(domainEvent = AnalysisOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private String extRef4;
 
     @Column(allowsNull = "true", length = 32)
-    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @Property(domainEvent = AnalysisOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private String extRef5;
 
@@ -387,6 +419,7 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
      */
     @Column(allowsNull = "true", name = "accountCodeEl3CostCentreId")
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @PropertyLayout(named = "Cost Centre")
     @Getter @Setter
     private CostCentre accountCodeEl3CostCentre;
 
@@ -451,8 +484,11 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
     @Getter @Setter
     private ValidationStatus extRefValidationStatus;
 
+    /**
+     * indicates the validity of the order for summary lines, and the validity of the order item for analysis lines.
+     */
     @Column(allowsNull = "false", length = 20)
-    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @Property()
     @Getter @Setter
     private ValidationStatus extRefOrderValidationStatus;
 
@@ -480,44 +516,24 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
         return this.getDocHead().getCmpCodeBuyer();
     }
 
-    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
-    @PropertyLayout(hidden = Where.ALL_TABLES)
-    public Order getOrder() {
-        final BigInteger buyerOrderNumber = getExtRefOrderGlobalNumerator();
-        if (getBuyer() == null || buyerOrderNumber == null) {
-            return null;
-        }
-        final List<Order> orders =
-                orderRepository.findByBuyerAndBuyerOrderNumber(getBuyer(), buyerOrderNumber);
-        return orders.size() == 1 ? orders.get(0) : null;
-    }
-
-    @Inject
-    OrderRepository orderRepository;
-
     @Column(allowsNull = "true", length = 8)
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @PropertyLayout(named = "Buyer Order Number")
     @Getter @Setter
     private BigInteger extRefOrderGlobalNumerator;
 
-    @Column(allowsNull = "true", name = "extRefOrderItemId")
+    @Column(allowsNull = "true", name = "extRefOrderId")
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @PropertyLayout(named = "Order")
+    @Getter @Setter
+    private Order extRefOrder;
+
+    @Column(allowsNull = "true", name = "extRefOrderItemId")
+    @Property(domainEvent = AnalysisOnlyPropertyDomainEvent.class)
+    @PropertyLayout(named = "Order Item")
     @Getter @Setter
     private OrderItem extRefOrderItem;
 
-    @Column(allowsNull = "false", length = 20)
-    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
-    @Getter @Setter
-    private ValidationStatus extRefCostCentreValidationStatus;
-
-    /**
-     * As parsed from extRef3/extRef4/extRef5, only populated if {@link #getExtRefValidationStatus()} is {@link ValidationStatus#VALID valid}.
-     */
-    @Column(allowsNull = "true", length = 30)
-    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
-    @Getter @Setter
-    private String extRefCostCentreCode;
 
     @Column(allowsNull = "false", length = 20)
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
@@ -536,6 +552,7 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
 
     @Column(allowsNull = "true", name = "extRefProjectId")
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @PropertyLayout(named = "Project")
     @Getter @Setter
     private Project extRefProject;
 
@@ -546,6 +563,7 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
 
     @Column(allowsNull = "true", name = "extRefWorkTypeChargeId")
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @PropertyLayout(named = "Charge")
     @Getter @Setter
     private Charge extRefWorkTypeCharge;
 
@@ -579,6 +597,12 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
     @Getter @Setter
     private IncomingInvoiceType incomingInvoiceType;
 
+
+    @Column(allowsNull = "true", name = "incomingInvoiceItemId")
+    @Property(domainEvent = AnalysisOnlyPropertyDomainEvent.class)
+    @Getter @Setter
+    private IncomingInvoiceItem incomingInvoiceItem;
+
     /**
      * Derived from parent {@link CodaDocHead#getHandling()}, for performance.
      */
@@ -605,6 +629,9 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
                 ", extRef5='" + extRef5 + '\'' +
                 '}';
     }
+
+    @Inject
+    OrderRepository orderRepository;
 
     @DomainService
     public static class PropertyVisibilityAdvisor extends AbstractSubscriber {

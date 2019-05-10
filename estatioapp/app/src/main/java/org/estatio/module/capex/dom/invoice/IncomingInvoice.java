@@ -741,7 +741,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
             firstItem = item;
         } else {
-            firstItem = addItemToThis(getType(), charge, description, netAmount, vatAmount, grossAmount, tax, getDueDate(), period, getProperty(), project, budgetItem);
+            firstItem = addItemInternal(getType(), charge, description, netAmount, vatAmount, grossAmount, tax, getDueDate(), period, getProperty(), project, budgetItem);
         }
 
         if (orderItem != null) {
@@ -873,7 +873,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             @Nullable final Project project,
             @Nullable final BudgetItem budgetItem) {
 
-        addItemToThis(
+        addItemInternal(
                 type, charge, description, netAmount, vatAmount, grossAmount, tax, dueDate,
                 period, property, project, budgetItem);
         return this;
@@ -1064,7 +1064,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         final Project project = itemToReverse.getProject();
         final BudgetItem budgetItem = itemToReverse.getBudgetItem();
 
-        final IncomingInvoiceItem copyItem = addItemToThis(
+        final IncomingInvoiceItem copyItem = addItemInternal(
                 type, charge,
                 sort.prefixTo(description),
                 sort.adjust(netAmount),
@@ -1128,7 +1128,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final String newItemPeriod
     ) {
         itemToSplit.subtractAmounts(newItemNetAmount, newItemVatAmount, newItemGrossAmount);
-        addItemToThis(getType(), newItemCharge, newItemDescription, newItemNetAmount,
+        addItemInternal(getType(), newItemCharge, newItemDescription, newItemNetAmount,
                 newItemVatAmount, newItemGrossAmount, newItemtax, getDueDate(), newItemPeriod, newItemProperty,
                 newItemProject, newItemBudgetItem);
         return this;
@@ -1279,7 +1279,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .collect(Collectors.toList());
     }
 
-    private IncomingInvoiceItem addItemToThis(
+    @Programmatic
+    public IncomingInvoiceItem addItemInternal(
             final IncomingInvoiceType type,
             final Charge charge,
             final String description,

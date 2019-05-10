@@ -1,13 +1,15 @@
 package org.estatio.module.coda.dom.doc;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -28,6 +30,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import com.google.common.base.Strings;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import org.joda.time.LocalDate;
 
@@ -54,10 +57,9 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
-import org.incode.module.document.dom.impl.paperclips.Paperclip;
-
 import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
@@ -65,8 +67,8 @@ import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStat
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.capex.dom.invoice.approval.tasks.IncomingInvoice_checkApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_reject;
-import org.estatio.module.capex.dom.order.OrderItem;
-import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
+import org.estatio.module.capex.dom.order.Order;
+import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.task.Task;
@@ -335,9 +337,27 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     @javax.jdo.annotations.Persistent(
             mappedBy = "docHead", defaultFetchGroup = "false", dependentElement = "true"
     )
-    @CollectionLayout(defaultView = "table", paged = 999)
+    @CollectionLayout(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private SortedSet<CodaDocLine> lines = new TreeSet<>();
+
+    @javax.jdo.annotations.NotPersistent
+    @CollectionLayout(defaultView = "table", paged = 999)
+    public List<CodaDocLine> getSummaryLines() {
+        return linesOf(LineType.SUMMARY);
+    }
+
+    @javax.jdo.annotations.NotPersistent
+    @CollectionLayout(defaultView = "table", paged = 999)
+    public List<CodaDocLine> getAnalysisLines() {
+        return linesOf(LineType.ANALYSIS);
+    }
+
+    private List<CodaDocLine> linesOf(final LineType lineType) {
+        return Lists.newArrayList(getLines()).stream()
+                .filter(x -> x.getLineType() == lineType)
+                .collect(Collectors.toList());
+    }
 
     @Programmatic
     public CodaDocLine summaryDocLine(final LineCache lineCache) {
@@ -345,7 +365,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     }
 
     @Programmatic
-    public CodaDocLine analysisDocLine(final LineCache lineCache) {
+    public CodaDocLine firstAnalysisDocLine(final LineCache lineCache) {
         return findFirstLineByType(LineType.ANALYSIS, lineCache);
     }
 
@@ -354,10 +374,6 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
                 .filter(x -> x.getLineType() == lineType)
                 .findFirst()
                 .orElse(null);
-    }
-
-    private SortedSet<CodaDocLine> linesFor() {
-        return linesFor(LineCache.DEFAULT);
     }
 
     private SortedSet<CodaDocLine> linesFor(final LineCache lineCache) {
@@ -377,7 +393,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
 
     @Column(allowsNull = "false", length = 20)
     @Property()
-    @PropertyLayout(named = "Analysis line present?", hidden = Where.ALL_TABLES)
+    @PropertyLayout(named = "Analysis line(s) present?", hidden = Where.ALL_TABLES)
     @Getter @Setter
     private ValidationStatus analysisLineIsPresentValidationStatus;
 
@@ -542,15 +558,15 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
 
     void validateLines() {
 
-        final CodaDocLine summaryDocLine = summaryDocLine(LineCache.DEFAULT);
-        if (summaryDocLine != null) {
-            lineValidator.validateSummaryDocLine(summaryDocLine);
+        final CodaDocLine summaryDocLineIfAny = summaryDocLine(LineCache.DEFAULT);
+        if (summaryDocLineIfAny != null) {
+            lineValidator.validateSummaryDocLine(summaryDocLineIfAny);
+
+            for (final CodaDocLine analysisDocLine : getAnalysisLines()) {
+                lineValidator.validateAnalysisDocLine(summaryDocLineIfAny, analysisDocLine);
+            }
         }
 
-        final CodaDocLine analysisDocLine = analysisDocLine(LineCache.DEFAULT);
-        if (analysisDocLine != null) {
-            lineValidator.validateAnalysisDocLine(analysisDocLine);
-        }
 
         updateInvalidReasonBasedOnLines();
     }
@@ -561,7 +577,8 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
                 .filter(CodaDocLine::isInvalid)
                 .forEach(codaDocLine -> {
                     setLineValidationStatus(ValidationStatus.INVALID);
-                    appendInvalidReason(codaDocLine.getLineType() + ": " + codaDocLine.getReasonInvalid());
+                    appendInvalidReason(
+                            String.format("Line #%d (%s): %s", codaDocLine.getLineNum(), codaDocLine.getLineType(), codaDocLine.getReasonInvalid()));
                 });
     }
 
@@ -574,16 +591,66 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         //
         revalidateOnly();
 
-        final IncomingInvoice existingInvoiceIfAny = derivedObjectLookup.invoiceIfAnyFrom(this);
-
-        final OrderItemInvoiceItemLink existingLinkIfAny = derivedObjectLookup.linkIfAnyFrom(this);
-        final Paperclip existingPaperclipIfAny = derivedObjectLookup.paperclipIfAnyFrom(this);
-        final String existingDocumentNameIfAny = derivedObjectLookup.documentNameIfAnyFrom(this);
-
+        final Memento existing = new Memento(this, derivedObjectLookup);
         kickEstatioObjectsIfAny(
-                existingInvoiceIfAny,
-                existingLinkIfAny, existingDocumentNameIfAny, existingPaperclipIfAny,
+                existing,
                 errors, createIfValid);
+    }
+
+    private transient Map<Integer, LineData> analysisLineDataByLineNumber;
+    @Programmatic
+    public Map<Integer, LineData> getAnalysisLineDataByLineNumber() {
+
+        if(analysisLineDataByLineNumber == null) {
+            if(isLegacy()) {
+                analysisLineDataByLineNumber = Maps.newHashMap();
+
+                // get hold of the summary line and extract its project and charge
+                final CodaDocLine summaryDocLine = summaryDocLine(LineCache.DEFAULT);
+
+                if(summaryDocLine != null) {
+
+                    final Optional<Project> projectIfAny = Optional.ofNullable(
+                            summaryDocLine.getExtRefProject());
+                    final Optional<Charge> chargeIfAny = Optional.ofNullable(
+                            summaryDocLine.getExtRefWorkTypeCharge());
+
+                    // we also need to get hold of the invoice item from the parent invoice
+                    final IncomingInvoice incomingInvoice = getIncomingInvoice();
+                    final Optional<IncomingInvoiceItem> incomingInvoiceItemIfAny =
+                            incomingInvoice != null ? incomingInvoice.firstItemIfAny() : Optional.empty();
+
+                    // ... and treat the summary line as if it's the analysisLine = 2
+                    analysisLineDataByLineNumber.put(2,
+                            new LineData(incomingInvoiceItemIfAny, projectIfAny, chargeIfAny));
+                }
+
+            } else {
+                // create memento for existing analysis lines so can compare with their replacement.
+                analysisLineDataByLineNumber = getAnalysisLines().stream()
+                    .collect(Collectors.toMap(CodaDocLine::getLineNum, LineData::new));
+            }
+        }
+        return analysisLineDataByLineNumber;
+    }
+
+    /**
+     * Originally we interpreted the CodaDoc XML by creating only a single summary line and a single analysis line,
+     * where the summary line was used for the values and the project/work item, while the analysis line merely for
+     * the el6 accode.
+     *
+     * However, we NOW create the XML from the analysis lines only.
+     *
+     * This method allows us to process the original summary line-based CodaDocHeads correctly with respect to the
+     * new algorithm.
+     */
+    boolean isLegacy() {
+        CodaDocLine codaDocLine = firstAnalysisDocLine(LineCache.DEFAULT);
+        if(codaDocLine == null) {
+            return false;
+        }
+        final BigDecimal docValue = codaDocLine.getDocValue();
+        return docValue == null;
     }
 
     /**
@@ -591,12 +658,10 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
      */
     @Programmatic
     public void kickEstatioObjectsIfAny(
-            final IncomingInvoice existingInvoiceIfAny,
-            final OrderItemInvoiceItemLink existingLinkIfAny,
-            final String existingDocumentNameIfAny,
-            final Paperclip existingPaperclipIfAny,
+            final Memento previous,
             final ErrorSet errors,
             final boolean createIfValid) {
+
 
         final boolean createInvoice = createIfValid && isValid();
 
@@ -604,11 +669,13 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         // see Comparison (above) for hard errors.
         errors.add(this.getReasonInvalid());
 
+
         //
         // the various updates will only ever do an update of the derived objects, never create new stuff
         //
         final IncomingInvoice incomingInvoice =
-                derivedObjectUpdater.upsertIncomingInvoice(this, existingInvoiceIfAny, createInvoice);
+                derivedObjectUpdater.upsertIncomingInvoice(this, previous, createInvoice);
+
 
         this.setIncomingInvoice(incomingInvoice);
 
@@ -618,14 +685,9 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         //
         final boolean createIfDoesNotExist = incomingInvoice != null;
 
-        derivedObjectUpdater.updateLinkToOrderItem(
-                this,
-                existingLinkIfAny,
-                createIfDoesNotExist, errors);
-
         derivedObjectUpdater.updatePaperclip(
                 this,
-                existingPaperclipIfAny, existingDocumentNameIfAny,
+                previous,
                 createIfDoesNotExist, errors);
 
         //
@@ -877,24 +939,6 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     }
 
     @Programmatic
-    public Charge getSummaryLineExtRefWorkTypeCharge(final LineCache lineCache) {
-        final CodaDocLine docLine = summaryDocLine(lineCache);
-        return docLine != null ? docLine.getExtRefWorkTypeCharge() : null;
-    }
-
-    @Programmatic
-    public String getSummaryLineExtRefProjectReference(final LineCache lineCache) {
-        final CodaDocLine docLine = summaryDocLine(lineCache);
-        return docLine != null ? docLine.getExtRefProjectReference() : null;
-    }
-
-    @Programmatic
-    public Project getSummaryLineExtRefProject(final LineCache lineCache) {
-        final CodaDocLine docLine = summaryDocLine(lineCache);
-        return docLine != null ? docLine.getExtRefProject() : null;
-    }
-
-    @Programmatic
     public BigDecimal getSummaryLineDocValue(final LineCache lineCache) {
         final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getDocValue() : null;
@@ -913,12 +957,6 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     }
 
     @Programmatic
-    public String getSummaryLineExtRefCostCentre(final LineCache lineCache) {
-        final CodaDocLine docLine = summaryDocLine(lineCache);
-        return docLine != null ? docLine.getExtRefCostCentreCode() : null;
-    }
-
-    @Programmatic
     public String getSummaryLineUserRef1(final LineCache lineCache) {
         final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getUserRef1() : null;
@@ -931,9 +969,9 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     }
 
     @Programmatic
-    public OrderItem getSummaryLineExtRefOrderItem(final LineCache lineCache) {
+    public Order getSummaryLineExtRefOrder(final LineCache lineCache) {
         final CodaDocLine docLine = summaryDocLine(lineCache);
-        return docLine != null ? docLine.getExtRefOrderItem() : null;
+        return docLine != null ? docLine.getExtRefOrder() : null;
     }
 
     @Programmatic
@@ -942,21 +980,13 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         return docLine != null ? docLine.getExtRef3Normalized() : null;
     }
 
+    /**
+     * The {@link IncomingInvoiceType} of the first analysis line is used for routing the approval
+     * of the entire * {@link IncomingInvoice}.
+     */
     @Programmatic
-    public BigInteger getSummaryLineExtRefOrderGlobalNumerator(final LineCache lineCache) {
-        final CodaDocLine docLine = summaryDocLine(lineCache);
-        return docLine != null ? docLine.getExtRefOrderGlobalNumerator() : null;
-    }
-
-    @Programmatic
-    public String getAnalysisLineAccountCode(final LineCache lineCache) {
-        final CodaDocLine docLine = analysisDocLine(lineCache);
-        return docLine != null ? docLine.getAccountCode() : null;
-    }
-
-    @Programmatic
-    public IncomingInvoiceType getAnalysisLineIncomingInvoiceType(final LineCache lineCache) {
-        final CodaDocLine docLine = analysisDocLine(lineCache);
+    public IncomingInvoiceType getFirstAnalysisLineIncomingInvoiceType(final LineCache lineCache) {
+        final CodaDocLine docLine = firstAnalysisDocLine(lineCache);
         return docLine != null ? docLine.getIncomingInvoiceType() : null;
     }
 
@@ -1010,6 +1040,14 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         return autosyncSetting != null && autosyncSetting.valueAsBoolean();
     }
 
+    @Programmatic
+    IncomingInvoiceType getIncomingInvoiceType() {
+        final CodaDocLine line = isLegacy() ? summaryDocLine(LineCache.DEFAULT) : firstAnalysisDocLine(LineCache.DEFAULT);
+        return Optional.ofNullable(line)
+                       .map(CodaDocLine::getIncomingInvoiceType)
+                       .orElse(null);
+    }
+
     @Data
     public static class Comparison {
         public enum Type {
@@ -1032,6 +1070,9 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         public static Comparison invalidatesApprovals(final String reason) {
             return new Comparison(Type.DIFFERS_INVALIDATING_APPROVALS, reason);
         }
+        public static Comparison invalidatesApprovals(final String reasonFormatString, final Object... args) {
+            return new Comparison(Type.DIFFERS_INVALIDATING_APPROVALS, String.format(reasonFormatString, args));
+        }
 
         public static Comparison retainsApprovals() {
             return new Comparison(Type.DIFFERS_RETAIN_APPROVALS, null);
@@ -1050,8 +1091,15 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         if (other == this) {
             return true;
         }
+        if(isLegacyStateDiffers(this, other) || isLegacyStateDiffers(other, this)) {
+            return false;
+        }
         return Objects.equals(getSha256(), other.getSha256()) &&
-                Objects.equals(getStatPay(), other.getStatPay());
+               Objects.equals(getStatPay(), other.getStatPay());
+    }
+
+    private boolean isLegacyStateDiffers(final CodaDocHead one, final CodaDocHead other) {
+        return one.isLegacy() && !other.isLegacy();
     }
 
     @Programmatic
@@ -1074,32 +1122,40 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
             if (summaryLine.getSupplierBankAccountValidationStatus() != ValidationStatus.NOT_CHECKED &&
                     otherSummaryLine.getSupplierBankAccountValidationStatus() != ValidationStatus.NOT_CHECKED &&
                     !Objects.equals(summaryLine.getSupplierBankAccount(), otherSummaryLine.getSupplierBankAccount())) {
-                return Comparison.invalidatesApprovals("Supplier bank account has changed");
+                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
+                        summaryLine.getLineNum(), summaryLine.getLineType(), "Supplier bank account has changed");
             }
             if (!Objects.equals(summaryLine.getDocValue(), otherSummaryLine.getDocValue())) {
-                return Comparison.invalidatesApprovals("Doc value (gross amount) has changed");
+                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
+                        summaryLine.getLineNum(), summaryLine.getLineType(), "Doc value (gross amount) has changed");
             }
             if (!Objects.equals(summaryLine.getDocSumTax(), otherSummaryLine.getDocSumTax())) {
-                return Comparison.invalidatesApprovals("Doc sum tax (VAT amount) has changed");
+                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
+                        summaryLine.getLineNum(), summaryLine.getLineType(), "Doc sum tax (VAT amount) has changed");
             }
             if (summaryLine.getMediaCodeValidationStatus() != ValidationStatus.NOT_CHECKED &&
                     otherSummaryLine.getMediaCodeValidationStatus() != ValidationStatus.NOT_CHECKED &&
                     !Objects.equals(summaryLine.getMediaCode(), otherSummaryLine.getMediaCode())) {
-                return Comparison.invalidatesApprovals("Media code (payment method) has changed");
+                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
+                        summaryLine.getLineNum(), summaryLine.getLineType(), "Media code (payment method) has changed");
             }
             if (!Objects.equals(summaryLine.getDueDate(), otherSummaryLine.getDueDate())) {
-                return Comparison.invalidatesApprovals("Due date has changed");
+                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
+                        summaryLine.getLineNum(), summaryLine.getLineType(), "Due date has changed");
             }
             if (!Objects.equals(summaryLine.getValueDate(), otherSummaryLine.getValueDate())) {
-                return Comparison.invalidatesApprovals("Value date has changed");
+                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
+                        summaryLine.getLineNum(), summaryLine.getLineType(), "Value date has changed");
             }
             if (!Strings.isNullOrEmpty(otherSummaryLine.getUserRef1()) &&
                     !Objects.equals(summaryLine.getUserRef1(), otherSummaryLine.getUserRef1())) {
-                return Comparison.invalidatesApprovals("User Ref 1 (bar code) has changed");
+                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
+                        summaryLine.getLineNum(), summaryLine.getLineType(), "User Ref 1 (bar code) has changed");
             }
             if (otherSummaryLine.getDescription() != null &&
                     !Objects.equals(summaryLine.getDescription(), otherSummaryLine.getDescription())) {
-                return Comparison.invalidatesApprovals("Description has changed");
+                return Comparison.invalidatesApprovals("Line #%d (%s): %s",
+                        summaryLine.getLineNum(), summaryLine.getLineType(), "Description has changed");
             }
         }
 
@@ -1179,6 +1235,10 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     @Inject
     FactoryService factoryService;
 
+    @NotPersistent
+    @Inject
+    OrderItemInvoiceItemLinkRepository linkRepository;
+
     @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "100")
     public static class TableColumnService implements TableColumnOrderService {
 
@@ -1188,7 +1248,26 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
                 final String collectionId,
                 final Class<?> collectionType,
                 final List<String> propertyIds) {
-            if (parent instanceof CodaDocHead && "lines".equals(collectionId)) {
+            if (parent instanceof CodaDocHead && "summaryLines".equals(collectionId)) {
+                return Arrays.asList(
+                        "docHead"
+                        , "lineNum"
+                        , "accountCode"
+                        , "accountCodeEl3CostCentre"
+                        , "description"
+                        , "docValue"
+                        , "docSumTax"
+                        , "valueDate"
+                        , "extRef3"
+                        , "extRefOrder"
+                        , "userRef1"
+                        , "userStatus"
+                        , "elmBankAccount"
+                        , "mediaCode"
+                        , "reasonInvalid"
+                );
+            }
+            if (parent instanceof CodaDocHead && "analysisLines".equals(collectionId)) {
                 return Arrays.asList(
                         "docHead"
                         , "lineNum"
@@ -1197,13 +1276,13 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
                         , "docValue"
                         , "docSumTax"
                         , "valueDate"
-                        , "extRef3"
                         , "extRef4"
                         , "extRef5"
-                        , "userRef1"
-                        , "userStatus"
-                        , "elmBankAccount"
-                        , "mediaCode"
+                        , "incomingInvoiceType"
+                        , "incomingInvoiceItem"
+                        , "extRefWorkTypeCharge"
+                        , "extRefProject"
+                        , "extRefOrderItem"
                         , "reasonInvalid"
                 );
             }

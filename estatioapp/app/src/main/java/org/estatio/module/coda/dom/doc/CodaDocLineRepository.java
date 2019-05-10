@@ -10,6 +10,8 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
+
 @DomainService(
         nature = NatureOfService.DOMAIN,
         repositoryFor = CodaDocLine.class
@@ -442,8 +444,24 @@ public class CodaDocLineRepository {
         return docHead;
     }
 
-    @Inject
-    RepositoryService repositoryService;
+    public CodaDocLine findByIncomingInvoiceItem(final IncomingInvoiceItem incomingInvoiceItem) {
+        final List<CodaDocLine> codaDocLines = repositoryService.allMatches(
+                new QueryDefault<>(
+                        CodaDocLine.class,
+                        "findByIncomingInvoiceItem",
+                        "incomingInvoiceItem", incomingInvoiceItem
+                ));
+        switch (codaDocLines.size()) {
+        case 0:
+            return null;
+        case 1:
+            return codaDocLines.get(0);
+        default:
+            // not expected, there shouldn't be more than one CodaDocLine pointing at any given IncomingInvoiceItem.
+            // to fail fast, we could throw an exception?  But this probably isn't critical enough functionality to care.
+            return null;
+        }
+    }
 
     public List<CodaDocLine> findByCodaPeriodQuarterAndHandlingAndValidity(
             final String codaPeriodQuarter,
@@ -474,5 +492,9 @@ public class CodaDocLineRepository {
                                 "handling", handling));
         }
     }
+
+    @Inject
+    RepositoryService repositoryService;
+
 
 }

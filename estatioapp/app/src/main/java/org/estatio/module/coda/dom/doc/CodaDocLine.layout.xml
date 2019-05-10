@@ -66,9 +66,11 @@
                     <cpt:fieldSet name="Description">
                         <cpt:property id="description"/>
                         <cpt:property id="incomingInvoiceType"/>
+                        <cpt:property id="incomingInvoiceItem"/>
                         <cpt:property id="userRef1">
-                            <cpt:named>User Ref 1 (Barcode)</cpt:named>
+                            <cpt:named>User Ref 1</cpt:named>
                         </cpt:property>
+                        <cpt:property id="userRef1ValidationStatus"/>
                     </cpt:fieldSet>
                     <cpt:fieldSet name="Dates">
                         <cpt:property id="dueDate"/>
@@ -221,13 +223,8 @@
                                         <cpt:property id="extRefOrderGlobalNumerator">
                                             <cpt:named>Buyer order number</cpt:named>
                                         </cpt:property>
-                                        <cpt:property id="order"/>
-                                        <cpt:property id="extRefOrderItem">
-                                            <cpt:named>Order item</cpt:named>
-                                        </cpt:property>
-                                        <cpt:property id="extRefCostCentreCode">
-                                            <cpt:named>Cost centre code</cpt:named>
-                                        </cpt:property>
+                                        <cpt:property id="extRefOrder"/>
+                                        <cpt:property id="extRefOrderItem"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                                 <bs3:col span="3">
@@ -237,9 +234,6 @@
                                         </cpt:property>
                                         <cpt:property id="extRefOrderValidationStatus" labelPosition="TOP">
                                             <cpt:named>Order?</cpt:named>
-                                        </cpt:property>
-                                        <cpt:property id="extRefCostCentreValidationStatus" labelPosition="TOP" hidden="EVERYWHERE">
-                                            <cpt:named>Cost centre?</cpt:named>
                                         </cpt:property>
                                     </cpt:fieldSet>
                                 </bs3:col>

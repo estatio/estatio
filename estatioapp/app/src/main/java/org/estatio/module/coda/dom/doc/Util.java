@@ -19,5 +19,8 @@ public class Util {
     static BigDecimal subtract(final BigDecimal m, final BigDecimal n) {
         return m == null ? null : m.subtract(n != null ? n : BigDecimal.ZERO);
     }
+    static BigDecimal add(final BigDecimal m, final BigDecimal n) {
+        return m == null ? null : m.add(n != null ? n : BigDecimal.ZERO);
+    }
 
 }

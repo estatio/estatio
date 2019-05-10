@@ -1041,7 +1041,15 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Programmatic
     public Optional<OrderItem> firstItemIfAny() {
-        return getItems().stream()
+        return Lists.newArrayList(getItems()).stream()
+                .findFirst();
+    }
+
+    @Programmatic
+    public Optional<OrderItem> itemFor(final Charge charge, final Project project) {
+        return Lists.newArrayList(getItems()).stream()
+                .filter(x -> x.getCharge() == charge)
+                .filter(x -> x.getProject() == project)
                 .findFirst();
     }
 
