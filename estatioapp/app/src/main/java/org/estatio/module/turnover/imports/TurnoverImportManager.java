@@ -29,6 +29,10 @@ import lombok.Setter;
 @DomainObject(nature = Nature.VIEW_MODEL, objectType = "org.estatio.module.turnover.imports.TurnoverImportManager")
 public class TurnoverImportManager {
 
+    public String title(){
+        return "Turnover import manager";
+    }
+
     @Getter @Setter
     private Person reporter;
 

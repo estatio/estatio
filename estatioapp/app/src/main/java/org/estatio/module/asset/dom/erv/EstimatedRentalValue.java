@@ -19,6 +19,7 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.PropertyLayout;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -101,6 +102,7 @@ public class EstimatedRentalValue extends UdoDomainObject2<EstimatedRentalValue>
     private Type type;
 
     @Column(allowsNull = "false", scale = 2)
+    @PropertyLayout(named = "value per m2")
     @Getter @Setter
     private BigDecimal value;
 

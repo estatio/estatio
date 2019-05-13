@@ -19,8 +19,12 @@
 package org.estatio.module.asset.dom;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -46,6 +50,7 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -55,10 +60,13 @@ import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 import org.incode.module.base.dom.types.ProperNameType;
 import org.incode.module.country.dom.impl.Country;
 
+import org.estatio.module.asset.dom.erv.EstimatedRentalValueRepository;
+import org.estatio.module.asset.dom.erv.Type;
 import org.estatio.module.asset.dom.location.LocationLookupService;
 import org.estatio.module.asset.dom.ownership.FixedAssetOwnershipRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.asset.imports.ErvImportManager;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.party.dom.Party;
@@ -267,6 +275,21 @@ public class Property
         return getDisposalDate() == null ? null : "Property already disposed";
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    public ErvImportManager maintainErv(final Type type, final LocalDate date) {
+        return new ErvImportManager(this, type, date);
+    }
+
+    public List<LocalDate> choices1MaintainErv(final Type type, final LocalDate date){
+        List<LocalDate> result = new ArrayList<>();
+        unitRepository.findByProperty(this).forEach(u->{
+            result.addAll(estimatedRentalValueRepository.findByUnitAndType(u, type).stream().map(e->e.getDate()).distinct().collect(Collectors.toList()));
+        });
+        result.add(new LocalDate(clockService.now().getYear(), clockService.now().getMonthOfYear(), 1));
+        return result.stream().distinct().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+    }
+
+
     // //////////////////////////////////////
 
     @Override
@@ -297,6 +320,10 @@ public class Property
 
     @Inject
     FixedAssetOwnershipRepository fixedAssetOwnershipRepository;
+
+    @Inject EstimatedRentalValueRepository estimatedRentalValueRepository;
+
+    @Inject ClockService clockService;
 
 
     // //////////////////////////////////////

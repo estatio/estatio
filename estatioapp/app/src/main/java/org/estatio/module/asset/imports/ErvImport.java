@@ -36,17 +36,28 @@ import lombok.Setter;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
-        objectType = "org.estatio.dom.viewmodels.ErvImport"
+        objectType = "org.estatio.module.asset.imports.ErvImport"
 )
 public class ErvImport implements ExcelFixtureRowHandler, Importable, FixtureAwareRowHandler<ErvImport> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ErvImport.class);
 
+    public ErvImport(){}
+
+    public ErvImport(final EstimatedRentalValue previousErv){
+        this.unitReference = previousErv.getUnit().getReference();
+        this.unitName = previousErv.getUnit().getName();
+        this.previousDate = previousErv.getDate();
+        this.type = previousErv.getType().name();
+        this.previousValue = previousErv.getValue();
+        this.currencyReference = previousErv.getCurrency().getReference();
+    }
+
     @Getter @Setter
     private String unitReference;
 
     @Getter @Setter
-    private String unitname;
+    private String unitName;
 
     @Getter @Setter
     private LocalDate date;
@@ -59,6 +70,12 @@ public class ErvImport implements ExcelFixtureRowHandler, Importable, FixtureAwa
 
     @Getter @Setter
     private String currencyReference;
+
+    @Getter @Setter
+    private LocalDate previousDate;
+
+    @Getter @Setter
+    private BigDecimal previousValue;
 
     @Programmatic
     @Override

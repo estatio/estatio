@@ -95,4 +95,5 @@ public class EstimatedRentalValueRepository {
 
     @Inject
     ServiceRegistry2 serviceRegistry2;
+
 }
