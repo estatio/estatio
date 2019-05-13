@@ -10,35 +10,35 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
-import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.util.CountryUtil;
-import org.estatio.module.coda.dom.doc.CodaDocHead;
-import org.estatio.module.coda.dom.doc.CodaDocHeadRepository;
+import org.estatio.module.coda.dom.doc.CodaDocLine;
+import org.estatio.module.coda.dom.doc.CodaDocLineRepository;
 
 @Mixin(method="prop")
-public class IncomingInvoice_codaDocHead {
+public class IncomingInvoiceItem_analysisLine {
 
-    private final IncomingInvoice incomingInvoice;
-    public IncomingInvoice_codaDocHead(final IncomingInvoice incomingInvoice) {
-        this.incomingInvoice = incomingInvoice;
+    private final IncomingInvoiceItem incomingInvoiceItem;
+    public IncomingInvoiceItem_analysisLine(final IncomingInvoiceItem incomingInvoiceItem) {
+        this.incomingInvoiceItem = incomingInvoiceItem;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed= Contributed.AS_ASSOCIATION)
     @Property
-    public CodaDocHead prop() {
+    public CodaDocLine prop() {
         return queryResultsCache.execute(
-                () -> codaDocHeadRepository.findByIncomingInvoice(incomingInvoice),
+                () -> codaDocLineRepository.findByIncomingInvoiceItem(incomingInvoiceItem),
                 getClass(), "prop"
         );
     }
+
     public boolean hideProp() {
-        return !CountryUtil.isItalian(incomingInvoice);
+        return !CountryUtil.isItalian(incomingInvoiceItem.getInvoice());
     }
 
     @Inject
-    CodaDocHeadRepository codaDocHeadRepository;
-
+    CodaDocLineRepository codaDocLineRepository;
     @Inject
     QueryResultsCache queryResultsCache;
 }

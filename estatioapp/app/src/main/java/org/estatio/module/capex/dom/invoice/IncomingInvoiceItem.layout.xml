@@ -22,6 +22,7 @@
                                 <cpt:property id="description">
                                     <cpt:action id="editDescription" promptStyle="INLINE" position="RIGHT"/>
                                 </cpt:property>
+                                <cpt:property id="analysisLine"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
@@ -57,7 +58,7 @@
             </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="4">
-            <bs3:tabGroup>
+            <bs3:tabGroup collapseIfOne="false">
                 <bs3:tab name="Dimensions">
                     <bs3:row>
                         <bs3:col span="12">
@@ -81,15 +82,6 @@
                                 </cpt:property>
                                 <cpt:property id="endDate"/>
                                 <cpt:property id="type" hidden="OBJECT_FORMS"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="dummy_1">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet id="dummy_1">
-                                <cpt:property id="dummy_1"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>

@@ -7,13 +7,17 @@ package org.estatio.module.coda.dom.doc;
 public interface LineValidator {
     void validateSummaryDocLine(CodaDocLine summaryDocLine);
 
-    void validateAnalysisDocLine(CodaDocLine analysisDocLine);
+    void validateAnalysisDocLine(
+            final CodaDocLine summaryDocLine,
+            final CodaDocLine analysisDocLine);
 
     LineValidator NOOP = new LineValidator() {
         @Override public void validateSummaryDocLine(final CodaDocLine summaryDocLine) {
         }
 
-        @Override public void validateAnalysisDocLine(final CodaDocLine analysisDocLine) {
+        @Override public void validateAnalysisDocLine(
+                final CodaDocLine summaryDocLine,
+                final CodaDocLine analysisDocLine) {
 
         }
     };

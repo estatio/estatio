@@ -509,7 +509,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
             //  -L 17-01-302-RO
             //  -FC-1702CS1-0002-RO
             //  -AF1T2017ASL-RO
-            final String remittanceInformation = extractAndJoin(lines, line -> line.getInvoice().getInvoiceNumber(), ";");
+            final String remittanceInformation = extractAndJoin(lines, line -> line.getInvoice().getInvoiceNumber() + (line.getInvoice().getCommunicationNumber() != null ? " (" + line.getInvoice().getCommunicationNumber() + ")" : ""), ";");
             creditTransfer.setRemittanceInformation(remittanceInformation);
 
             creditTransfer.setSeller(bankAccount.getOwner());

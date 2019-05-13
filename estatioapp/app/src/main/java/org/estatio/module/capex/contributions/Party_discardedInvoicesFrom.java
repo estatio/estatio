@@ -1,7 +1,6 @@
 package org.estatio.module.capex.contributions;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -17,25 +16,20 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.party.dom.Party;
 
-/**
- * This cannot be inlined (needs to be a mixin) because Party does not know about invoices.
- */
-@Mixin(method = "coll")
-public class Party_invoicesFrom {
+@Mixin
+public class Party_discardedInvoicesFrom {
 
     private final Party seller;
 
-    public Party_invoicesFrom(final Party seller) {
+    public Party_discardedInvoicesFrom(final Party seller) {
         this.seller = seller;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<IncomingInvoice> coll() {
-        EnumSet<IncomingInvoiceApprovalState> allStatesExceptDiscarded = EnumSet.complementOf(EnumSet.of(IncomingInvoiceApprovalState.DISCARDED));
-        return incomingInvoiceRepository.findBySellerAndApprovalStates(seller, new ArrayList<>(allStatesExceptDiscarded));
+    @ActionLayout(contributed= Contributed.AS_ASSOCIATION)
+    public List<IncomingInvoice> $$() {
+        return incomingInvoiceRepository.findBySellerAndApprovalStates(seller, Arrays.asList(IncomingInvoiceApprovalState.DISCARDED));
     }
-
     @Inject
-    IncomingInvoiceRepository incomingInvoiceRepository;
+    private IncomingInvoiceRepository incomingInvoiceRepository;
 }

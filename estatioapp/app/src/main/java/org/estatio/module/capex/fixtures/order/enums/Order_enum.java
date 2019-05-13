@@ -82,6 +82,17 @@ public enum Order_enum
             null,
             IncomingCharge_enum.ItExternalConsultantCosts, "italian order item #4112", bd("5000.00"), bd("500.00"), bd("5500.00"), "F2018",
             null, null, null, null, null, null
+    ),
+    italianOrder4113(
+            IncomingInvoiceType.CAPEX, Person_enum.CarmenIncomingInvoiceManagerIt,
+            null, "4113/RON/006/001",
+            ApplicationTenancy_enum.It, null, null,
+            Organisation_enum.TopModelIt, Organisation_enum.HelloWorldIt,
+            Project_enum.RonProject2It, PropertyAndUnitsAndOwnerAndManager_enum.RonIt,
+            ld(2018, 4, 5),
+            null,
+            IncomingCharge_enum.ItConstruction, "italian order item #4113, construction costs", bd("15000.00"), bd("1500.00"), bd("16500.00"), "F2018",
+            IncomingCharge_enum.ItInternalConsultantCosts, "italian order item #4113, internal consultant costs", bd("5000.00"), bd("500.00"), bd("5500.00"), "F2018"
     );
 
     private final IncomingInvoiceType orderType;

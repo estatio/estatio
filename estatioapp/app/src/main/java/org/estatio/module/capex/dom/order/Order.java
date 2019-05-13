@@ -77,10 +77,12 @@ import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
+import org.estatio.module.capex.app.SupplierCreationService;
 import org.estatio.module.capex.dom.documents.BudgetItemChooser;
 import org.estatio.module.capex.dom.documents.BuyerFinder;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
@@ -92,6 +94,7 @@ import org.estatio.module.capex.dom.state.State;
 import org.estatio.module.capex.dom.state.StateTransition;
 import org.estatio.module.capex.dom.state.StateTransitionType;
 import org.estatio.module.capex.dom.state.Stateful;
+import org.estatio.module.capex.dom.util.FinancialAmountUtil;
 import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.charge.dom.Applicability;
 import org.estatio.module.charge.dom.Charge;
@@ -179,6 +182,12 @@ import static org.estatio.module.capex.dom.util.CountryUtil.isItalian;
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.order.Order "
                         + "WHERE seller == :seller "),
+        @Query(
+                name = "findBySellerAndApprovalStates", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.order.Order "
+                        + "WHERE seller == :seller "
+                        + "&& :approvalStates.contains(approvalState)"),
         @Query(
                 name = "findByProperty", language = "JDOQL",
                 value = "SELECT "
@@ -280,16 +289,38 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final IncomingInvoiceType orderType,
             final org.estatio.module.asset.dom.Property property,
             final String orderNumber,
-            final Party supplier,
+            final @ParameterLayout(named = "Create new supplier?") boolean createNewSupplier,
+            final @Nullable Party supplier,
             final @Nullable Boolean createRoleIfRequired,
+            final @Nullable OrganisationNameNumberViewModel newSupplierCandidate,
+            final @Nullable Country newSupplierCountry,
+            final @Nullable String newSupplierIban,
             final @ParameterLayout(named = "Supplier order ref.") String supplierOrderReference,
             final LocalDate orderDate) {
         setType(orderType);
         setOrderNumber(orderNumber);
         setSellerOrderReference(supplierOrderReference);
         setOrderDate(orderDate);
-        setSeller(supplier);
+
+        if (createNewSupplier) {
+            final Organisation newSupplier = supplierCreationService.createNewSupplierAndOptionallyBankAccount(newSupplierCandidate, newSupplierCountry, newSupplierIban);
+            setSeller(newSupplier);
+        } else {
+            setSeller(supplier);
+
+            if (createRoleIfRequired != null && createRoleIfRequired) {
+                partyRoleRepository.findOrCreate(supplier, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+            }
+        }
+
+        if (orderType != IncomingInvoiceType.CAPEX)
+            getFirstItemIfAny().ifPresent(order -> order.setProject(null));
+
+        if (orderType != IncomingInvoiceType.SERVICE_CHARGES)
+            getFirstItemIfAny().ifPresent(order -> order.setBudgetItem(null));
+
         setProperty(property);
+        setEntryDate(clockService.now());
 
         return this;
     }
@@ -318,19 +349,63 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return getOrderNumber();
     }
 
-    public Party default3CompleteOrder() {
+    public Party default4CompleteOrder() {
         return getSeller();
     }
 
-    public List<Party> autoComplete3CompleteOrder(final @MinLength(3) String search) {
+    public boolean hide4CompleteOrder(
+            final IncomingInvoiceType orderType,
+            final org.estatio.module.asset.dom.Property property,
+            final String orderNumber,
+            final boolean createNewSupplier) {
+        return createNewSupplier;
+    }
+
+    public List<Party> autoComplete4CompleteOrder(final @MinLength(3) String search) {
         return partyRepository.autoCompleteSupplier(search, getAtPath());
     }
 
-    public String default5CompleteOrder() {
+    public boolean hide5CompleteOrder(
+            final IncomingInvoiceType orderType,
+            final org.estatio.module.asset.dom.Property property,
+            final String orderNumber,
+            final boolean createNewSupplier) {
+        return createNewSupplier;
+    }
+
+    public List<OrganisationNameNumberViewModel> autoComplete6CompleteOrder(final @MinLength(3) String search) {
+        return supplierCreationService.autoCompleteNewSupplier(search, getAtPath());
+    }
+
+    public boolean hide6CompleteOrder(
+            final IncomingInvoiceType orderType,
+            final org.estatio.module.asset.dom.Property property,
+            final String orderNumber,
+            final boolean createNewSupplier) {
+        return !createNewSupplier;
+    }
+
+    public boolean hide7CompleteOrder(
+            final IncomingInvoiceType orderType,
+            final org.estatio.module.asset.dom.Property property,
+            final String orderNumber,
+            final boolean createNewSupplier) {
+        return !createNewSupplier;
+    }
+
+    public boolean hide8CompleteOrder(
+            final IncomingInvoiceType orderType,
+            final org.estatio.module.asset.dom.Property property,
+            final String orderNumber,
+            final boolean createNewSupplier) {
+        return !createNewSupplier;
+    }
+
+    public String default9CompleteOrder() {
         return getSellerOrderReference();
     }
 
-    public LocalDate default6CompleteOrder() {
+    public LocalDate default10CompleteOrder() {
         return getOrderDate();
     }
 
@@ -338,8 +413,12 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final IncomingInvoiceType orderType,
             final org.estatio.module.asset.dom.Property property,
             final String orderNumber,
+            final boolean createNewSupplier,
             final Party supplier,
             final Boolean createRoleIfRequired,
+            final OrganisationNameNumberViewModel newSupplierCandidate,
+            final Country newSupplierCountry,
+            final String newSupplierIban,
             final String supplierOrderReference,
             final LocalDate orderDate) {
         // validate seller
@@ -364,12 +443,12 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     public Order completeOrderItem(
             final String description,
             final BigDecimal netAmount,
-            final BigDecimal vatAmount,
             final Tax tax,
+            final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Charge charge,
-            final Project project,
-            final BudgetItem budgetItem,
+            final @Nullable Project project,
+            final @Nullable BudgetItem budgetItem,
             final String period) {
         Optional<OrderItem> firstItemIfAny = getItems().stream().findFirst();
         if (firstItemIfAny.isPresent()) {
@@ -407,24 +486,38 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return getDescriptionSummary();
     }
 
-    public BigDecimal default1CompleteOrderItem() {
-        final Optional<OrderItem> firstItemIfAny = getFirstItemIfAny();
-        return firstItemIfAny.map(OrderItem::getNetAmount).orElse(null);
+    public BigDecimal default1CompleteOrderItem(
+            final String description,
+            final BigDecimal netAmount,
+            final Tax tax,
+            final BigDecimal vatAmount,
+            final BigDecimal grossAmount) {
+        BigDecimal calculatedNetAmount = FinancialAmountUtil.determineNetAmount(vatAmount, grossAmount, tax, clockService.now());
+        return getFirstItemIfAny().map(OrderItem::getNetAmount).orElse(calculatedNetAmount);
     }
 
-    public BigDecimal default2CompleteOrderItem() {
-        final Optional<OrderItem> firstItemIfAny = getFirstItemIfAny();
-        return firstItemIfAny.map(OrderItem::getVatAmount).orElse(null);
-    }
-
-    public Tax default3CompleteOrderItem() {
+    public Tax default2CompleteOrderItem() {
         final Optional<OrderItem> firstItemIfAny = getFirstItemIfAny();
         return firstItemIfAny.map(OrderItem::getTax).orElse(null);
     }
 
-    public BigDecimal default4CompleteOrderItem() {
-        final Optional<OrderItem> firstItemIfAny = getFirstItemIfAny();
-        return firstItemIfAny.map(OrderItem::getGrossAmount).orElse(null);
+    public BigDecimal default3CompleteOrderItem(
+            final String description,
+            final BigDecimal netAmount,
+            final Tax tax,
+            final BigDecimal vatAmount,
+            final BigDecimal grossAmount) {
+        BigDecimal calculatedVatAmount = FinancialAmountUtil.determineVatAmount(netAmount, grossAmount, tax, clockService.now());
+        return getFirstItemIfAny().map(OrderItem::getVatAmount).orElse(calculatedVatAmount);
+    }
+
+    public BigDecimal default4CompleteOrderItem(
+            final String description,
+            final BigDecimal netAmount,
+            final Tax tax,
+            final BigDecimal vatAmount) {
+        BigDecimal calculatedGrossAmount = FinancialAmountUtil.determineGrossAmount(netAmount, vatAmount, tax, clockService.now());
+        return getFirstItemIfAny().map(OrderItem::getGrossAmount).orElse(calculatedGrossAmount);
     }
 
     public Charge default5CompleteOrderItem() {
@@ -437,12 +530,15 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public Project default6CompleteOrderItem() {
+        if (getType() != IncomingInvoiceType.CAPEX)
+            return null;
+
         final Optional<OrderItem> firstItemIfAny = getFirstItemIfAny();
         return firstItemIfAny.map(OrderItem::getProject).orElse(null);
     }
 
     public List<Project> choices6CompleteOrderItem() {
-        return getProperty() == null ?
+        final List<Project> projects = getProperty() == null ?
                 projectRepository.listAll()
                 : projectRepository.findByFixedAsset(getProperty())
                 .stream()
@@ -453,6 +549,10 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
                     return x.getEndDate() == null || !x.getEndDate().isBefore(dateToUse);
                 })
                 .collect(Collectors.toList());
+
+        // hacky way to allow user to deselect project (the collector does not include a null value)
+        projects.add(null);
+        return projects;
     }
 
     public BudgetItem default7CompleteOrderItem() {
@@ -463,12 +563,16 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     public List<BudgetItem> choices7CompleteOrderItem(
             final String description,
             final BigDecimal netAmount,
-            final BigDecimal vatAmount,
             final Tax tax,
+            final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Charge charge,
             final Project project) {
         return budgetItemChooser.choicesBudgetItemFor(getProperty(), charge);
+    }
+
+    public boolean hide7CompleteOrderItem() {
+        return getType() != IncomingInvoiceType.SERVICE_CHARGES;
     }
 
     public String default8CompleteOrderItem() {
@@ -477,14 +581,26 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public String disableCompleteOrderItem() {
-        return reasonDisabledDueToState();
+        final List<IncomingInvoiceItem> items = getItems().stream()
+                .filter(IncomingInvoiceItem.class::isInstance)
+                .map(IncomingInvoiceItem.class::cast)
+                .collect(Collectors.toList());
+
+        switch (items.size()) {
+            case 0:
+            case 1:
+                return reasonDisabledDueToState();
+            default:
+                return "Can only complete invoice item for invoices with a single item";
+
+        }
     }
 
     public String validateCompleteOrderItem(
             final String description,
             final BigDecimal netAmount,
-            final BigDecimal vatAmount,
             final Tax tax,
+            final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Charge charge,
             final Project project,
@@ -495,6 +611,9 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
         if (project != null && getType() != IncomingInvoiceType.CAPEX)
             return "Project can only be added to orders of type CAPEX";
+
+        if (budgetItem == null && getType() == IncomingInvoiceType.SERVICE_CHARGES)
+            return "Budget item is required for orders of type Service Charges";
 
         return period != null ? PeriodUtil.reasonInvalidPeriod(period) : null;
     }
@@ -1041,7 +1160,15 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Programmatic
     public Optional<OrderItem> firstItemIfAny() {
-        return getItems().stream()
+        return Lists.newArrayList(getItems()).stream()
+                .findFirst();
+    }
+
+    @Programmatic
+    public Optional<OrderItem> itemFor(final Charge charge, final Project project) {
+        return Lists.newArrayList(getItems()).stream()
+                .filter(x -> x.getCharge() == charge)
+                .filter(x -> x.getProject() == project)
                 .findFirst();
     }
 
@@ -1327,7 +1454,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         }
 
         Order possibleDouble = orderRepository.findBySellerOrderReferenceAndSellerAndOrderDate(getSellerOrderReference(), getSeller(), getOrderDate());
-        if (possibleDouble == null || possibleDouble.equals(this)) {
+        if (possibleDouble == null || possibleDouble.equals(this) || possibleDouble.getApprovalState() == OrderApprovalState.DISCARDED) {
             return null;
         }
 
@@ -1485,7 +1612,6 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return this;
     }
 
-
     @Inject
     OrderAttributeRepository orderAttributeRepository;
 
@@ -1535,7 +1661,10 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     FixedAssetRoleRepository fixedAssetRoleRepository;
 
     @Inject
-    private MeService meService;
+    MeService meService;
+
+    @Inject
+    SupplierCreationService supplierCreationService;
 
     @Inject
     PaperclipRepository paperclipRepository;

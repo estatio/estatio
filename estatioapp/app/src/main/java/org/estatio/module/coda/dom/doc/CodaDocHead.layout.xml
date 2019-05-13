@@ -124,7 +124,8 @@
         <bs3:col span="12">
             <bs3:row>
                 <bs3:col span="12">
-                    <cpt:collection id="selectedCodaDocuments"/>
+                    <cpt:collection id="summaryLines"/>
+                    <cpt:collection id="analysisLines"/>
                 </bs3:col>
             </bs3:row>
         </bs3:col>

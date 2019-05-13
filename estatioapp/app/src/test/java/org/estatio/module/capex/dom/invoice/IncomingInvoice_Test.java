@@ -1156,7 +1156,7 @@ public class IncomingInvoice_Test {
             notification = incomingInvoice.getNotification();
 
             // then
-            assertThat(notification).isEqualTo("WARNING: payment method is set to bank transfer, but previous invoices from this seller have used the following payment methods: Direct Debit, Bank Transfer, Cash ");
+            assertThat(notification).isEqualTo("WARNING: payment method is set to bank transfer, but previous invoices from this seller have used the following payment methods: Direct Debit, Cash ");
 
             // and expecting
             context.checking(new Expectations() {{
@@ -1328,10 +1328,15 @@ public class IncomingInvoice_Test {
             // when
             incomingInvoice.completeInvoice(
                     newIncomingInvoiceType,
+                    false,
                     newSeller,
                     Boolean.TRUE,
                     newBankAccount,
+                    null,
+                    null,
+                    null,
                     newInvoiceNumber,
+                    null,
                     newDateReceived,
                     newInvoiceDate,
                     newDueDate,
@@ -1361,10 +1366,12 @@ public class IncomingInvoice_Test {
                     newOrderItem,
                     newDescription,
                     newNetAmount,
-                    newVatAmount,
                     newTax,
+                    newVatAmount,
                     newGrossAmount,
                     newCharge,
+                    null,
+                    null,
                     newPeriod);
 
             assertThat(incomingInvoice.getDescriptionSummary()).isEqualTo(newDescription);

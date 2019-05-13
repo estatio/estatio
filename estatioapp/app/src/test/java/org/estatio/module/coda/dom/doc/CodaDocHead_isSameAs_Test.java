@@ -1,71 +1,114 @@
 package org.estatio.module.coda.dom.doc;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CodaDocHead_isSameAs_Test {
 
     CodaDocHead codaDocHead;
-    CodaDocHead other;
+    boolean codaDocHeadLegacyState;
+
+    CodaDocHead otherDocHead;
+    boolean otherDocHeadLegacyState;
 
     @Before
     public void setUp() throws Exception {
-        codaDocHead = new CodaDocHead();
+        codaDocHead = new CodaDocHead() {
+            @Override boolean isLegacy() {
+                return codaDocHeadLegacyState;
+            }
+        };
         codaDocHead.setSha256("SHA256");
         codaDocHead.setStatPay("");
+        codaDocHeadLegacyState = false;
 
-        other = new CodaDocHead();
-        other.setSha256(codaDocHead.getSha256()); // start off as equal
-        other.setStatPay(codaDocHead.getStatPay());
+        otherDocHead = new CodaDocHead() {
+            @Override boolean isLegacy() {
+                return otherDocHeadLegacyState;
+            }
+        };
+        otherDocHead.setSha256(codaDocHead.getSha256()); // start off as equal
+        otherDocHead.setStatPay(codaDocHead.getStatPay());
+        otherDocHeadLegacyState = false;
     }
 
     @Test
     public void when_null() throws Exception {
         // given
-        other = null;
+        otherDocHead = null;
 
         // when
-        Assertions.assertThat(codaDocHead.isSameAs(other)).isFalse();
+        assertThat(codaDocHead.isSameAs(otherDocHead)).isFalse();
     }
 
     @Test
     public void when_same() throws Exception {
         // given
-        other = codaDocHead;
+        otherDocHead = codaDocHead;
 
         // when
-        Assertions.assertThat(codaDocHead.isSameAs(other)).isTrue();
+        assertThat(codaDocHead.isSameAs(otherDocHead)).isTrue();
     }
 
     @Test
     public void when_equal() throws Exception {
         // given
-        Assertions.assertThat(codaDocHead.getSha256()).isEqualTo(other.getSha256());
-        Assertions.assertThat(codaDocHead.getStatPay()).isEqualTo(other.getStatPay());
+        assertThat(codaDocHead.getSha256()).isEqualTo(otherDocHead.getSha256());
+        assertThat(codaDocHead.getStatPay()).isEqualTo(otherDocHead.getStatPay());
+        assertThat(codaDocHead.isLegacy()).isEqualTo(otherDocHead.isLegacy());
 
         // when
-        Assertions.assertThat(codaDocHead.isSameAs(other)).isTrue();
+        assertThat(codaDocHead.isSameAs(otherDocHead)).isTrue();
     }
 
     @Test
     public void when_different_sha256() throws Exception {
         // given
-        other.setSha256("DIFFERENT_SHA256");
-        Assertions.assertThat(codaDocHead.getStatPay()).isEqualTo(other.getStatPay());
+        otherDocHead.setSha256("DIFFERENT_SHA256");
+        assertThat(codaDocHead.getStatPay()).isEqualTo(otherDocHead.getStatPay());
+        assertThat(codaDocHead.isLegacy()).isEqualTo(otherDocHead.isLegacy());
 
         // when
-        Assertions.assertThat(codaDocHead.isSameAs(other)).isFalse();
+        assertThat(codaDocHead.isSameAs(otherDocHead)).isFalse();
     }
 
     @Test
     public void when_different_statPay() throws Exception {
         // given
-        Assertions.assertThat(codaDocHead.getSha256()).isEqualTo(other.getSha256());
+        assertThat(codaDocHead.getSha256()).isEqualTo(otherDocHead.getSha256());
         codaDocHead.setStatPay("");
-        other.setStatPay("paid");
+        otherDocHead.setStatPay("paid");
+        assertThat(codaDocHead.isLegacy()).isEqualTo(otherDocHead.isLegacy());
 
         // when
-        Assertions.assertThat(codaDocHead.isSameAs(other)).isFalse();
+        assertThat(codaDocHead.isSameAs(otherDocHead)).isFalse();
+    }
+
+    @Test
+    public void when_different_legacyState_1() throws Exception {
+        // given
+        assertThat(codaDocHead.getSha256()).isEqualTo(otherDocHead.getSha256());
+        assertThat(codaDocHead.getStatPay()).isEqualTo(otherDocHead.getStatPay());
+
+        codaDocHeadLegacyState = false;
+        otherDocHeadLegacyState = true;
+
+        // when, then
+        assertThat(codaDocHead.isSameAs(otherDocHead)).isFalse();
+    }
+
+    @Test
+    public void when_different_legacyState_2() throws Exception {
+        // given
+        assertThat(codaDocHead.getSha256()).isEqualTo(otherDocHead.getSha256());
+        assertThat(codaDocHead.getStatPay()).isEqualTo(otherDocHead.getStatPay());
+
+        codaDocHeadLegacyState = true;
+        otherDocHeadLegacyState = false;
+
+        // when, then
+        assertThat(codaDocHead.isSameAs(otherDocHead)).isFalse();
     }
 }

@@ -80,6 +80,7 @@ public class PaymentBatch_Test {
         // given
         final IncomingInvoice invoice1 =
                 newInvoice(new LocalDate(2017, 7, 7), seller1, seller1BankAccount, "EUR", "361754.46", "AF3T2017");
+        invoice1.setCommunicationNumber("+++111/222/333+++");
         final IncomingInvoice invoice2 =
                 newInvoice(new LocalDate(2017, 6, 30), seller2, seller2BankAccount, "EUR", "15251.76", "DGD 11420 - 170522");
         final IncomingInvoice invoice3 =
@@ -100,7 +101,7 @@ public class PaymentBatch_Test {
         assertThat(transfer1.getSellerName()).isEqualTo(seller1.getName());
         assertThat(transfer1.getAmount()).isEqualTo(invoice1.getGrossAmount().add(invoice3.getGrossAmount()));
         assertThat(transfer1.getEndToEndId()).isEqualTo("97834-1-3"); // the "1-3" suffix indicates payment lines with sequence 1 and 3 together
-        assertThat(transfer1.getRemittanceInformation()).isEqualTo("AF3T2017;REDD2016VT");
+        assertThat(transfer1.getRemittanceInformation()).isEqualTo("AF3T2017 (+++111/222/333+++);REDD2016VT");
         assertThat(transfer1.getSellerBankAccount()).isEqualTo(seller1BankAccount);
         assertThat(transfer1.getSellerBic()).isEqualTo(seller1BankAccount.getBic());
         assertThat(transfer1.getSellerIban()).isEqualTo(seller1BankAccount.getIban());

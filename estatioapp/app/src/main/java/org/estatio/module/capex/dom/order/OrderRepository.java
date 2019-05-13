@@ -331,6 +331,19 @@ public class OrderRepository {
     }
 
     @Programmatic
+    public List<Order> findBySellerPartyAndApprovalStates(final Party party, final List<OrderApprovalState> approvalStates) {
+        if (party instanceof Organisation) {
+            return repositoryService.allMatches(
+                    new QueryDefault<>(
+                            Order.class,
+                            "findBySellerAndApprovalStates",
+                            "seller", party,
+                            "approvalStates", approvalStates));
+        }
+        return Lists.newArrayList();
+    }
+
+    @Programmatic
     public List<Order> findBySeller(final Organisation seller) {
         return repositoryService.allMatches(
                 new QueryDefault<>(

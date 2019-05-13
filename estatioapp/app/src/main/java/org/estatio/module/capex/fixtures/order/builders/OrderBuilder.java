@@ -47,8 +47,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"document", "seller", "buyer", "property", "entryDate"}, callSuper = false)
-@ToString(of={"document", "seller", "buyer", "property", "entryDate"})
+@EqualsAndHashCode(of={"document", "seller", "buyer", "property", "entryDate", "orderNumber"}, callSuper = false)
+@ToString(of={"document", "seller", "buyer", "property", "entryDate", "orderNumber"})
 @Accessors(chain = true)
 public class OrderBuilder extends BuilderScriptAbstract<Order, OrderBuilder> {
 
