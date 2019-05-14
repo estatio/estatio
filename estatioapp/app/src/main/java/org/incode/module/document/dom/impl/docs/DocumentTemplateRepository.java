@@ -15,12 +15,10 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.clock.ClockService;
-import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
-import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.document.dom.impl.types.DocumentType;
 
 @DomainService(
@@ -92,12 +90,6 @@ public class DocumentTemplateRepository {
     }
     //endregion
 
-    //region > delete
-    @Programmatic
-    public void delete(final DocumentTemplate documentTemplate) {
-        repositoryService.removeAndFlush(documentTemplate);
-    }
-    //endregion
 
     //region > findBy...
 
@@ -174,7 +166,6 @@ public class DocumentTemplateRepository {
                         "date", date));
     }
 
-
     /**
      * Returns all templates for a type, ordered by application tenancy and date desc.
      */
@@ -186,7 +177,6 @@ public class DocumentTemplateRepository {
                         "type", documentType));
     }
 
-
     //endregion
 
     //region > allTemplates
@@ -196,45 +186,6 @@ public class DocumentTemplateRepository {
     }
     //endregion
 
-    //region > validate...
-    @Programmatic
-    public TranslatableString validateApplicationTenancyAndDate(
-            final DocumentType proposedType,
-            final String proposedAtPath,
-            final LocalDate proposedDate,
-            final DocumentTemplate ignore) {
-
-        final List<DocumentTemplate> existingTemplates =
-                findByTypeAndAtPath(proposedType, proposedAtPath);
-        for (DocumentTemplate existingTemplate : existingTemplates) {
-            if(existingTemplate == ignore) {
-                continue;
-            }
-            if(java.util.Objects.equals(existingTemplate.getDate(), proposedDate)) {
-                return TranslatableString.tr("A template already exists for this date");
-            }
-            if (proposedDate == null && existingTemplate.getDate() != null) {
-                return TranslatableString.tr(
-                        "Must provide a date (there are existing templates that already have a date specified)");
-            }
-        }
-        return null;
-    }
-
-    @Programmatic
-    public TranslatableString validateSortAndRenderingStrategyInputNature(
-            final DocumentSort sort,
-            final RenderingStrategy renderingStrategy) {
-        final DocumentNature documentNature = renderingStrategy.getInputNature();
-        if(sort.isBytes() && documentNature == DocumentNature.CHARACTERS) {
-            return TranslatableString.tr("Must provide text or Clob template with a character-based rendering strategy");
-        }
-        if(sort.isCharacters() && documentNature == DocumentNature.BYTES) {
-            return TranslatableString.tr("Must provide Blob template with a binary-based rendering strategy");
-        }
-        return null;
-    }
-    //endregion
 
 
     //region > injected services
