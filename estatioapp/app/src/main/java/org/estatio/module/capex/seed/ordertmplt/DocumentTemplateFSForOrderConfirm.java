@@ -35,8 +35,6 @@ import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate_applicable;
-import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
-import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 
@@ -44,7 +42,6 @@ import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.spiimpl.docs.aa.AttachToSameForOrder;
 import org.estatio.module.capex.spiimpl.docs.rml.RendererModelFactoryForOrder;
 import org.estatio.module.invoice.dom.DocumentTypeData;
-import org.estatio.module.base.seed.RenderingStrategies;
 
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.It;
 
@@ -82,7 +79,6 @@ public class DocumentTemplateFSForOrderConfirm extends DocumentTemplateFSAbstrac
         ec.executeChildren(this,
                 ApplicationTenancy_enum.Global,
                 It);
-        ec.executeChild(this, new RenderingStrategies());
 
         upsertTemplatesForOrder(templateDate, ec);
     }
@@ -91,10 +87,6 @@ public class DocumentTemplateFSForOrderConfirm extends DocumentTemplateFSAbstrac
             final LocalDate templateDate,
             final ExecutionContext ec) {
 
-        final RenderingStrategy xddRenderingStrategy =
-                renderingStrategyRepository.findByReference(RenderingStrategies.REF_XDD);
-        final RenderingStrategy fmkRenderingStrategy =
-                renderingStrategyRepository.findByReference(RenderingStrategies.REF_FMK);
 
         final DocumentType documentType = upsertType(DocumentTypeData.ORDER_CONFIRM, ec);
         final byte[] contentBytes = loadBytesForOrderConfirmTemplateItaDocx();
@@ -146,8 +138,6 @@ public class DocumentTemplateFSForOrderConfirm extends DocumentTemplateFSAbstrac
     }
 
 
-    @Inject
-    RenderingStrategyRepository renderingStrategyRepository;
     @Inject
     ClockService clockService;
 

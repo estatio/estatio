@@ -4,8 +4,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
-import org.incode.module.document.dom.impl.rendering.RenderingStrategyForTesting;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeForTesting;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
@@ -25,7 +23,6 @@ public class DocumentTemplate_Test {
             newPojoTester()
                     .withFixture(FixtureDatumFactoriesForApplib.blobs())
                     .withFixture(pojos(DocumentType.class, DocumentTypeForTesting.class))
-                    .withFixture(pojos(RenderingStrategy.class, RenderingStrategyForTesting.class))
                     .exercise(new DocumentTemplateForTesting());
         }
 

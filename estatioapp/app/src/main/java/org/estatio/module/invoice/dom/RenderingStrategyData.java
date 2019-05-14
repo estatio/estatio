@@ -16,8 +16,6 @@
  */
 package org.estatio.module.invoice.dom;
 
-import java.util.Objects;
-
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.incode.module.docrendering.freemarker.dom.impl.RendererForFreemarker;
@@ -30,8 +28,6 @@ import org.incode.module.docrendering.xdocreport.dom.impl.RendererForXDocReportT
 import org.incode.module.document.dom.impl.docs.DocumentNature;
 import org.incode.module.document.dom.impl.renderers.PreviewToUrl;
 import org.incode.module.document.dom.impl.renderers.Renderer;
-import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
-import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository;
 import org.incode.module.document.dom.services.ClassService;
 
 import lombok.Getter;
@@ -101,19 +97,6 @@ public enum RenderingStrategyData {
         this.outputNature = outputNature;
         this.rendererClass = rendererClass;
         this.previewsToUrl =  PreviewToUrl.class.isAssignableFrom(rendererClass);
-    }
-
-    public static RenderingStrategyData reverseLookup(final RenderingStrategy rs) {
-        for (final RenderingStrategyData renderingStrategyData : RenderingStrategyData.values()) {
-            if(Objects.equals(renderingStrategyData.getReference(), rs.getReference())) {
-                return renderingStrategyData;
-            }
-        }
-        return null;
-    }
-
-    public RenderingStrategy findUsing(final RenderingStrategyRepository repository) {
-        return repository.findByReference(getReference());
     }
 
     public Renderer newRenderer(final ClassService classService, final ServiceRegistry2 serviceRegistry2) {

@@ -17,8 +17,6 @@ import org.apache.isis.applib.value.Clob;
 import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate_applicable;
-import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
-import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 import org.incode.platform.dom.document.integtests.demo.dom.demowithurl.DemoObjectWithUrl;
@@ -56,29 +54,14 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
-        // prereqs
-        executionContext.executeChild(this, new RenderingStrategy_create6());
-
         // these document types have no associated templates (for attachPdf mixin)
-        final DocumentType invoiceType =
-                upsertType(DOC_TYPE_REF_TAX_RECEIPT, "Tax receipt", executionContext);
-        final DocumentType docType =
-                upsertType(DOC_TYPE_REF_SUPPLIER_RECEIPT, "Supplier receipt", executionContext);
+        upsertType(DOC_TYPE_REF_TAX_RECEIPT, "Tax receipt", executionContext);
+        upsertType(DOC_TYPE_REF_SUPPLIER_RECEIPT, "Supplier receipt", executionContext);
 
 
         final DocumentType docTypeForFreemarkerHtml =
                 upsertType(DOC_TYPE_REF_FREEMARKER_HTML, "Demo Freemarker HTML (eg email Cover Note)", executionContext);
 
-        final RenderingStrategy fmkRenderingStrategy = renderingStrategyRepository.findByReference(
-                RenderingStrategy_create6.REF_FMK);
-        final RenderingStrategy sipcRenderingStrategy = renderingStrategyRepository.findByReference(
-                RenderingStrategy_create6.REF_SIPC);
-        final RenderingStrategy siRenderingStrategy = renderingStrategyRepository.findByReference(
-                RenderingStrategy_create6.REF_SI);
-        final RenderingStrategy xdpRenderingStrategy = renderingStrategyRepository.findByReference(
-                RenderingStrategy_create6.REF_XDP);
-        final RenderingStrategy xddRenderingStrategy = renderingStrategyRepository.findByReference(
-                RenderingStrategy_create6.REF_XDD);
 
         final String atPath = "/";
 
@@ -200,8 +183,6 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
     }
 
 
-    @Inject
-    private RenderingStrategyRepository renderingStrategyRepository;
     @Inject
     private ClockService clockService;
 
