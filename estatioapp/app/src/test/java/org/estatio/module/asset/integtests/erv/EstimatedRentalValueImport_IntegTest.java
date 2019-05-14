@@ -39,7 +39,6 @@ import org.estatio.module.asset.dom.erv.Type;
 import org.estatio.module.asset.fixtures.erv.ERVImportXlsxFixture;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
-import org.estatio.module.currency.fixtures.enums.Currency_enum;
 
 public class EstimatedRentalValueImport_IntegTest extends AssetModuleIntegTestAbstract {
 
@@ -66,11 +65,9 @@ public class EstimatedRentalValueImport_IntegTest extends AssetModuleIntegTestAb
 
         Assertions.assertThat(recentValueInternally.getDate()).isEqualTo(new LocalDate(2019,01,01));
         Assertions.assertThat(recentValueInternally.getValue()).isEqualTo(new BigDecimal("14814.68"));
-        Assertions.assertThat(recentValueInternally.getCurrency()).isEqualTo(Currency_enum.EUR.findUsing(serviceRegistry2));
 
         Assertions.assertThat(valueValuer.getDate()).isEqualTo(new LocalDate(2019,04,01));
         Assertions.assertThat(valueValuer.getValue()).isEqualTo(new BigDecimal("2345.60"));
-        Assertions.assertThat(valueValuer.getCurrency()).isEqualTo(Currency_enum.GBP.findUsing(serviceRegistry2));
     }
 
     @Inject EstimatedRentalValueRepository estimatedRentalValueRepository;

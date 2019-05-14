@@ -21,7 +21,6 @@
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Value" id="value">
                                 <ns2:property id="value" />
-                                <ns2:property id="currency"/>
                                 <ns2:property id="atPath" hidden="EVERYWHERE"/>
                                 <ns2:property id="applicationTenancy" hidden="EVERYWHERE"/>
                             </ns2:fieldSet>

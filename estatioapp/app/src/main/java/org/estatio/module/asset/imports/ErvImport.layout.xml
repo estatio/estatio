@@ -14,7 +14,6 @@
                 <ns2:property id="value" />
                 <ns2:property id="previousDate" />
                 <ns2:property id="previousValue" />
-                <ns2:property id="currencyReference" />
             </ns2:fieldSet>
         </col>
     </row>

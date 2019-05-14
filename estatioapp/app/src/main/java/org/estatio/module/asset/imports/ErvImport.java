@@ -28,8 +28,6 @@ import org.estatio.module.asset.dom.erv.EstimatedRentalValue;
 import org.estatio.module.asset.dom.erv.EstimatedRentalValueRepository;
 import org.estatio.module.asset.dom.erv.Type;
 import org.estatio.module.base.dom.Importable;
-import org.estatio.module.currency.dom.Currency;
-import org.estatio.module.currency.dom.CurrencyRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -50,7 +48,6 @@ public class ErvImport implements ExcelFixtureRowHandler, Importable, FixtureAwa
         this.previousDate = previousErv.getDate();
         this.type = previousErv.getType().name();
         this.previousValue = previousErv.getValue();
-        this.currencyReference = previousErv.getCurrency().getReference();
     }
 
     @Getter @Setter
@@ -67,9 +64,6 @@ public class ErvImport implements ExcelFixtureRowHandler, Importable, FixtureAwa
 
     @Getter @Setter
     private BigDecimal value;
-
-    @Getter @Setter
-    private String currencyReference;
 
     @Getter @Setter
     private LocalDate previousDate;
@@ -111,22 +105,13 @@ public class ErvImport implements ExcelFixtureRowHandler, Importable, FixtureAwa
             return Lists.newArrayList();
         }
 
-        final Currency currency = currencyRepository.findCurrency(currencyReference);
-        if (currency==null) {
-            logAndWarn(String.format("Currency not found for reference %s", currencyReference));
-            return Lists.newArrayList();
-        }
-
-        EstimatedRentalValue erv = estimatedRentalValueRepository.upsert(unit, date, typeEnum, value, currency);
+        EstimatedRentalValue erv = estimatedRentalValueRepository.upsert(unit, date, typeEnum, value);
 
         return Lists.newArrayList(erv);
     }
 
     @Inject
     UnitRepository unitRepository;
-
-    @Inject
-    CurrencyRepository currencyRepository;
 
     @Inject
     EstimatedRentalValueRepository estimatedRentalValueRepository;

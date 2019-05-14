@@ -39,8 +39,6 @@ import org.estatio.module.asset.dom.erv.Type;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
-import org.estatio.module.currency.dom.Currency;
-import org.estatio.module.currency.fixtures.enums.Currency_enum;
 
 public class EstimatedRentalValueRepository_IntegTest extends AssetModuleIntegTestAbstract {
 
@@ -62,7 +60,6 @@ public class EstimatedRentalValueRepository_IntegTest extends AssetModuleIntegTe
         Unit unit = unitRepository.findByProperty(oxf).get(0);
         final LocalDate date = new LocalDate(2019, 01, 01);
         final BigDecimal value = new BigDecimal("123.45");
-        final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry);
         final Type type = Type.VALUED_INTERNALLY;
         Assertions.assertThat(estimatedRentalValueRepository.listAll()).isEmpty();
 
@@ -71,8 +68,7 @@ public class EstimatedRentalValueRepository_IntegTest extends AssetModuleIntegTe
                 unit,
                 date,
                 type,
-                value,
-                euro
+                value
         );
 
         // then
@@ -81,18 +77,15 @@ public class EstimatedRentalValueRepository_IntegTest extends AssetModuleIntegTe
         Assertions.assertThat(erv1).isSameAs(erv);
 
         // and when
-        final Currency sek = Currency_enum.SEK.findUsing(serviceRegistry);
         final BigDecimal newValue = new BigDecimal("1234.56");
         estimatedRentalValueRepository.upsert(
                 unit,
                 date,
                 type,
-                newValue,
-                sek);
+                newValue);
         // then
         Assertions.assertThat(estimatedRentalValueRepository.listAll()).hasSize(1);
         Assertions.assertThat(erv.getValue()).isEqualTo(newValue);
-        Assertions.assertThat(erv.getCurrency()).isEqualTo(sek);
 
     }
 

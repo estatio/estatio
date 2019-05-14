@@ -15,7 +15,6 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.asset.dom.Unit;
-import org.estatio.module.currency.dom.Currency;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -43,15 +42,13 @@ public class EstimatedRentalValueRepository {
             final Unit unit,
             final LocalDate date,
             final Type type,
-            final BigDecimal value,
-            final Currency currency) {
+            final BigDecimal value) {
         final EstimatedRentalValue estimatedRentalValue =
                 new EstimatedRentalValue(
                         unit,
                         date,
                         type,
-                        value,
-                        currency);
+                        value);
         serviceRegistry2.injectServicesInto(estimatedRentalValue);
         repositoryService.persistAndFlush(estimatedRentalValue);
         return estimatedRentalValue;
@@ -62,15 +59,13 @@ public class EstimatedRentalValueRepository {
             final Unit unit,
             final LocalDate date,
             final Type type,
-            final BigDecimal value,
-            final Currency currency
+            final BigDecimal value
     ) {
         EstimatedRentalValue estimatedRentalValue = findUnique(unit, date, type);
         if (estimatedRentalValue == null) {
-            estimatedRentalValue = create(unit, date, type, value, currency);
+            estimatedRentalValue = create(unit, date, type, value);
         } else {
             estimatedRentalValue.setValue(value);
-            estimatedRentalValue.setCurrency(currency);
         }
         return estimatedRentalValue;
     }

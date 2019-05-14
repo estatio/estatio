@@ -27,7 +27,6 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.base.dom.UdoDomainObject2;
-import org.estatio.module.currency.dom.Currency;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -71,14 +70,12 @@ public class EstimatedRentalValue extends UdoDomainObject2<EstimatedRentalValue>
             final Unit unit,
             final LocalDate date,
             final Type type,
-            final BigDecimal value,
-            final Currency currency) {
+            final BigDecimal value) {
         this();
         this.unit = unit;
         this.date = date;
         this.type = type;
         this.value = value;
-        this.currency = currency;
     }
 
     public String title() {
@@ -105,10 +102,6 @@ public class EstimatedRentalValue extends UdoDomainObject2<EstimatedRentalValue>
     @PropertyLayout(named = "value per m2")
     @Getter @Setter
     private BigDecimal value;
-
-    @Column(allowsNull = "false", name = "currencyId")
-    @Getter @Setter
-    private Currency currency;
 
     @Override
     public ApplicationTenancy getApplicationTenancy() {

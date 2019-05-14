@@ -300,9 +300,19 @@ public class Unit
         return estimatedRentalValueRepository.findByUnitAndType(this, Type.VALUED_INTERNALLY);
     }
 
+    public Unit newErvByEcp(final LocalDate date, final BigDecimal value){
+        estimatedRentalValueRepository.upsert(this, date, Type.VALUED_INTERNALLY, value);
+        return this;
+    }
+
     @Action(semantics = SemanticsOf.SAFE)
     public List<EstimatedRentalValue> getEstimatedRentalValuesByValuer(){
         return estimatedRentalValueRepository.findByUnitAndType(this, Type.VALUED_BY_VALUER);
+    }
+
+    public Unit newErvByValuer(final LocalDate date, final BigDecimal value){
+        estimatedRentalValueRepository.upsert(this, date, Type.VALUED_BY_VALUER, value);
+        return this;
     }
 
     public static class ReferenceType {
@@ -322,4 +332,5 @@ public class Unit
 
     @Inject
     private EstimatedRentalValueRepository estimatedRentalValueRepository;
+
 }
