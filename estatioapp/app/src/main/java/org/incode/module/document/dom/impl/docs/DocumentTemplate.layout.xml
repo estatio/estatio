@@ -3,15 +3,6 @@
     <bs3:row>
         <bs3:col span="12" unreferencedActions="true">
             <cpt:domainObject/>
-            <cpt:action id="cloneWhenBlob">
-                <cpt:named>Clone</cpt:named>
-            </cpt:action>
-            <cpt:action id="cloneWhenClob">
-                <cpt:named>Clone</cpt:named>
-            </cpt:action>
-            <cpt:action id="cloneWhenText">
-                <cpt:named>Clone</cpt:named>
-            </cpt:action>
         </bs3:col>
     </bs3:row>
     <bs3:row>
