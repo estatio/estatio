@@ -24,13 +24,7 @@ public class DocumentTemplate_notApplicable {
         this.documentTemplate = documentTemplate;
     }
 
-    public static class NotApplicableDomainEvent extends DocumentTemplate.ActionDomainEvent {
-    }
-
-    @Action(
-            domainEvent = NotApplicableDomainEvent.class,
-            semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE
-    )
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     @ActionLayout(
             cssClassFa = "fa-minus"
     )

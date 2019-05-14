@@ -35,9 +35,8 @@ public class DocumentTemplate_applicable {
     }
 
 
-    public static class ActionDomainEvent extends DocumentAbstract.ActionDomainEvent { }
 
-    @Action(domainEvent = ActionDomainEvent.class, semantics = SemanticsOf.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(cssClassFa = "fa-plus", contributed = Contributed.AS_ACTION)
     @MemberOrder(name = "appliesTo", sequence = "1")
     public DocumentTemplate $$(
