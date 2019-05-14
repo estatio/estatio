@@ -5,8 +5,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
 /**
- * TODO: once have moved to DocumentTypeData, DocumentTemplateData and RenderingStrategyData, ought to be able to collapse this responsibility into DocumentTemplateData
- *
  * Implementation is responsible for creating the appropriate model object to feed into the
  * {@link DocumentTemplate#getContentRenderingStrategyData()}  rendering}
  * {@link DocumentTemplate#getNameRenderingStrategyData() strategies} of the supplied {@link DocumentTemplate}, obtaining
