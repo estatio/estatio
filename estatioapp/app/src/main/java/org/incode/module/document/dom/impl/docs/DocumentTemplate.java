@@ -24,21 +24,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.background.BackgroundService2;
-import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.xactn.TransactionService;
@@ -46,7 +40,6 @@ import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.document.dom.impl.applicability.Applicability;
-import org.incode.module.document.dom.impl.applicability.ApplicabilityRepository;
 import org.incode.module.document.dom.impl.applicability.AttachmentAdvisor;
 import org.incode.module.document.dom.impl.applicability.RendererModelFactory;
 import org.incode.module.document.dom.impl.renderers.Renderer;
@@ -319,22 +312,18 @@ public class DocumentTemplate
     @Getter @Setter
     private SortedSet<Applicability> appliesTo = new TreeSet<>();
 
-    //endregion
-
-    //endregion
-
 
     //region > appliesTo, newRendererModelFactory + newRendererModel, newAttachmentAdvisor + newAttachmentAdvice
 
     private RendererModelFactory newRendererModelFactory(final Object domainObject) {
         final Class<?> domainClass = domainObject.getClass();
-        return getTemplateData().newRenderModelFactory(domainClass, classService, serviceRegistry2);
+        return templateData.newRenderModelFactory(domainClass, classService, serviceRegistry2);
     }
 
     @Programmatic
     public AttachmentAdvisor newAttachmentAdvisor(final Object domainObject) {
         final Class<?> domainClass = domainObject.getClass();
-        return getTemplateData().newAttachmentAdvisor(domainClass, classService, serviceRegistry2);
+        return templateData.newAttachmentAdvisor(domainClass, classService, serviceRegistry2);
     }
 
     @Programmatic
@@ -381,10 +370,10 @@ public class DocumentTemplate
                     getTemplateData().getContentRenderingStrategy().getReference()));
         }
 
-        final DocumentNature inputNature = getTemplateData().getContentRenderingStrategy().getInputNature();
-        final DocumentNature outputNature = getTemplateData().getContentRenderingStrategy().getOutputNature();
+        final DocumentNature inputNature = contentRenderingStrategyData.getInputNature();
+        final DocumentNature outputNature = contentRenderingStrategyData.getOutputNature();
 
-        final Renderer renderer = getContentRenderingStrategyData().newRenderer(
+        final Renderer renderer = contentRenderingStrategyData.newRenderer(
                 classService, serviceRegistry2);
         switch (inputNature){
         case BYTES:
@@ -494,14 +483,13 @@ public class DocumentTemplate
             final Object contentDataModel) {
         final String documentName = determineDocumentName(contentDataModel);
         document.setName(documentName);
-        final RenderingStrategyData renderingStrategy = getContentRenderingStrategyData();
         final String variant = "content";
         try {
 
-            final DocumentNature inputNature = renderingStrategy.getInputNature();
-            final DocumentNature outputNature = renderingStrategy.getOutputNature();
+            final DocumentNature inputNature = contentRenderingStrategyData.getInputNature();
+            final DocumentNature outputNature = contentRenderingStrategyData.getOutputNature();
 
-            final Renderer renderer = renderingStrategy.newRenderer(classService, serviceRegistry2);
+            final Renderer renderer = contentRenderingStrategyData.newRenderer(classService, serviceRegistry2);
 
             switch (inputNature){
                 case BYTES:
@@ -609,28 +597,18 @@ public class DocumentTemplate
     //region > types
 
     public static class FileSuffixType {
-
         private FileSuffixType() {}
-
         public static class Meta {
-
             public static final int MAX_LEN = 12;
-
             private Meta() {}
-
         }
     }
 
     public static class NameTextType {
-
         private NameTextType() {}
-
         public static class Meta {
-
             public static final int MAX_LEN = 255;
-
             private Meta() {}
-
         }
     }
 
