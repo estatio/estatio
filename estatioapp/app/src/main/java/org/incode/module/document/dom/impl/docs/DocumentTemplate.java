@@ -81,11 +81,8 @@ import org.incode.module.document.dom.spi.RendererModelFactoryClassNameService;
 import org.incode.module.document.dom.types.AtPathType;
 import org.incode.module.document.dom.types.FqcnType;
 
-import org.estatio.module.invoice.dom.DocumentTemplateApi;
 import org.estatio.module.invoice.dom.DocumentTemplateData;
-import org.estatio.module.invoice.dom.DocumentTypeApi;
 import org.estatio.module.invoice.dom.DocumentTypeData;
-import org.estatio.module.invoice.dom.RenderingStrategyApi;
 import org.estatio.module.invoice.dom.RenderingStrategyData;
 
 import lombok.Getter;
@@ -180,55 +177,7 @@ import lombok.Setter;
         bookmarking = BookmarkPolicy.AS_ROOT
 )
 public class DocumentTemplate
-        extends DocumentAbstract<DocumentTemplate>
-        implements DocumentTemplateApi {
-
-    enum Toggle {
-        ENTITIES {
-            @Override public DocumentTemplateApi getTemplateApi(final DocumentTemplate documentTemplate) {
-                return documentTemplate;
-            }
-
-            @Override public DocumentTypeApi getTypeApi(final DocumentTemplate documentTemplate) {
-                return documentTemplate.getType();
-            }
-
-            @Override public RenderingStrategyApi getContentRenderingStrategyApi(final DocumentTemplate documentTemplate) {
-                return documentTemplate.getContentRenderingStrategy();
-            }
-
-            @Override public RenderingStrategyApi getNameRenderingStrategyApi(final DocumentTemplate documentTemplate) {
-                return documentTemplate.getNameRenderingStrategy();
-            }
-        },
-        DATA {
-            @Override public DocumentTemplateApi getTemplateApi(final DocumentTemplate documentTemplate) {
-                return documentTemplate.getTemplateData();
-            }
-
-            @Override public DocumentTypeApi getTypeApi(final DocumentTemplate documentTemplate) {
-                return documentTemplate.getTypeData();
-            }
-
-            @Override public RenderingStrategyApi getContentRenderingStrategyApi(final DocumentTemplate documentTemplate) {
-                return documentTemplate.getContentRenderingStrategyData();
-            }
-
-            @Override public RenderingStrategyApi getNameRenderingStrategyApi(final DocumentTemplate documentTemplate) {
-                return documentTemplate.getNameRenderingStrategyData();
-            }
-        };
-
-        public abstract DocumentTemplateApi getTemplateApi(final DocumentTemplate documentTemplate);
-
-        public abstract DocumentTypeApi getTypeApi(final DocumentTemplate documentTemplate);
-
-        public abstract RenderingStrategyApi getContentRenderingStrategyApi(final DocumentTemplate documentTemplate);
-
-        public abstract RenderingStrategyApi getNameRenderingStrategyApi(final DocumentTemplate documentTemplate);
-    }
-
-    static Toggle toggle = Toggle.DATA;
+        extends DocumentAbstract<DocumentTemplate> {
 
     //region > ui event classes
     public static class TitleUiEvent extends DocumentModule.TitleUiEvent<DocumentTemplate>{}
@@ -429,11 +378,6 @@ public class DocumentTemplate
                 : (templateData = getTypeData().lookup(getAtPathCopy()));
     }
 
-    @Programmatic
-    public DocumentTemplateApi getTemplateApi() {
-        return toggle.getTemplateApi(this);
-    }
-
     @NotPersistent
     private DocumentTypeData typeData;
     @Programmatic
@@ -444,18 +388,13 @@ public class DocumentTemplate
     }
 
     @Programmatic
-    public DocumentTypeApi getTypeApi() {
-        return toggle.getTypeApi(this);
-    }
-
-    @Programmatic
     public RenderingStrategyData getContentRenderingStrategyData() {
         return getTemplateData().getContentRenderingStrategy();
     }
 
     @Programmatic
-    public RenderingStrategyApi getContentRenderingStrategyApi() {
-        return toggle.getContentRenderingStrategyApi(this);
+    public RenderingStrategyData getContentRenderingStrategyApi() {
+        return getContentRenderingStrategyData();
     }
 
     @Programmatic
@@ -464,8 +403,8 @@ public class DocumentTemplate
     }
 
     @Programmatic
-    public RenderingStrategyApi getNameRenderingStrategyApi() {
-        return toggle.getNameRenderingStrategyApi(this);
+    public RenderingStrategyData getNameRenderingStrategyApi() {
+        return getNameRenderingStrategyData();
     }
 
     //region > date (property)
@@ -768,41 +707,13 @@ public class DocumentTemplate
 
     private RendererModelFactory newRendererModelFactory(final Object domainObject) {
         final Class<?> domainClass = domainObject.getClass();
-        return getTemplateApi().newRenderModelFactory(domainClass, classService, serviceRegistry2);
-    }
-
-    @Override
-    public RendererModelFactory newRenderModelFactory(
-            final Class<?> domainClass,
-            final ClassService classService,
-            final ServiceRegistry2 serviceRegistry2) {
-
-        final Optional<Applicability> applicability = applicableTo(domainClass);
-        return applicability.map(Applicability::getRendererModelFactoryClassName)
-                .map(classService::instantiate)
-                .map(RendererModelFactory.class::cast)
-                .map(serviceRegistry2::injectServicesInto)
-                .orElse(null);
+        return getTemplateData().newRenderModelFactory(domainClass, classService, serviceRegistry2);
     }
 
     @Programmatic
     public AttachmentAdvisor newAttachmentAdvisor(final Object domainObject) {
         final Class<?> domainClass = domainObject.getClass();
-        return getTemplateApi().newAttachmentAdvisor(domainClass, classService, serviceRegistry2);
-    }
-
-    @Programmatic
-    public AttachmentAdvisor newAttachmentAdvisor(
-            final Class<?> domainClass,
-            final ClassService classService,
-            final ServiceRegistry2 serviceRegistry2) {
-
-        final Optional<Applicability> applicability = applicableTo(domainClass);
-        return applicability.map(Applicability::getAttachmentAdvisorClassName)
-                .map(classService::instantiate)
-                .map(AttachmentAdvisor.class::cast)
-                .map(serviceRegistry2::injectServicesInto)
-                .orElse(null);
+        return getTemplateData().newAttachmentAdvisor(domainClass, classService, serviceRegistry2);
     }
 
     @Programmatic
@@ -962,7 +873,7 @@ public class DocumentTemplate
             final Object contentDataModel) {
         final String documentName = determineDocumentName(contentDataModel);
         document.setName(documentName);
-        final RenderingStrategyApi renderingStrategy = getContentRenderingStrategyApi();
+        final RenderingStrategyData renderingStrategy = getContentRenderingStrategyApi();
         final String variant = "content";
         try {
 

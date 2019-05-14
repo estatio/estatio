@@ -45,8 +45,6 @@ import org.incode.module.document.dom.services.ClassService;
 import org.incode.module.document.dom.types.FqcnType;
 import org.incode.module.document.dom.types.NameType;
 
-import org.estatio.module.invoice.dom.RenderingStrategyApi;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -84,7 +82,7 @@ import lombok.Setter;
         cssClassUiEvent = RenderingStrategy.CssClassUiEvent.class,
         bookmarking = BookmarkPolicy.AS_ROOT
 )
-public class RenderingStrategy implements Comparable<RenderingStrategy>, RenderingStrategyApi {
+public class RenderingStrategy implements Comparable<RenderingStrategy> {
 
 
     //region > ui event classes

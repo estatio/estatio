@@ -42,7 +42,7 @@ import lombok.Getter;
 /**
  * maximum length is 24 ({@link DocumentType.ReferenceType.Meta#MAX_LEN}).
  */
-public enum DocumentTypeData implements DocumentTypeApi {
+public enum DocumentTypeData {
 
     // cover notes
     COVER_NOTE_PRELIM_LETTER(

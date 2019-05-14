@@ -37,7 +37,7 @@ import org.incode.module.document.dom.services.ClassService;
 import lombok.Getter;
 
 @Getter
-public enum RenderingStrategyData implements RenderingStrategyApi {
+public enum RenderingStrategyData {
 
     SIPC(
             "String interpolate URL for Preview and Capture",
@@ -116,7 +116,6 @@ public enum RenderingStrategyData implements RenderingStrategyApi {
         return repository.findByReference(getReference());
     }
 
-    @Override
     public Renderer newRenderer(final ClassService classService, final ServiceRegistry2 serviceRegistry2) {
         final Renderer renderer = (Renderer) classService.instantiate(rendererClass);
         serviceRegistry2.injectServicesInto(renderer);
