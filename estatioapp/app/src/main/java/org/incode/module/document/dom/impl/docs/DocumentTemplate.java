@@ -22,13 +22,10 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Uniques;
 
 import com.google.common.collect.Lists;
-import com.google.common.eventbus.Subscribe;
 
 import org.apache.commons.lang3.StringUtils;
-import org.axonframework.eventhandling.annotation.EventHandler;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -37,11 +34,9 @@ import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -52,12 +47,10 @@ import org.apache.isis.applib.services.background.BackgroundService2;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
-import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
-import org.incode.module.document.DocumentModule;
 import org.incode.module.document.dom.impl.applicability.Applicability;
 import org.incode.module.document.dom.impl.applicability.ApplicabilityRepository;
 import org.incode.module.document.dom.impl.applicability.AttachmentAdvisor;
@@ -72,7 +65,6 @@ import org.incode.module.document.dom.impl.renderers.RendererFromCharsToBytes;
 import org.incode.module.document.dom.impl.renderers.RendererFromCharsToBytesWithPreviewToUrl;
 import org.incode.module.document.dom.impl.renderers.RendererFromCharsToChars;
 import org.incode.module.document.dom.impl.renderers.RendererFromCharsToCharsWithPreviewToUrl;
-import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.services.ClassNameViewModel;
 import org.incode.module.document.dom.services.ClassService;
@@ -170,97 +162,25 @@ import lombok.Setter;
         objectType = "incodeDocuments.DocumentTemplate",
         editing = Editing.DISABLED
 )
-@DomainObjectLayout(
-        titleUiEvent = DocumentTemplate.TitleUiEvent.class,
-        iconUiEvent = DocumentTemplate.IconUiEvent.class,
-        cssClassUiEvent = DocumentTemplate.CssClassUiEvent.class,
-        bookmarking = BookmarkPolicy.AS_ROOT
-)
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class DocumentTemplate
         extends DocumentAbstract<DocumentTemplate> {
 
-    //region > ui event classes
-    public static class TitleUiEvent extends DocumentModule.TitleUiEvent<DocumentTemplate>{}
-    public static class IconUiEvent extends DocumentModule.IconUiEvent<DocumentTemplate>{}
-    public static class CssClassUiEvent extends DocumentModule.CssClassUiEvent<DocumentTemplate>{}
-    //endregion
 
-    //region > title, icon, cssClass
-    /**
-     * Implemented as a subscriber so can be overridden by consuming application if required.
-     */
-    @DomainService(nature = NatureOfService.DOMAIN)
-    public static class TitleSubscriber extends AbstractSubscriber {
-
-        public String getId() {
-            return "incodeDocuments.DocumentTemplate$TitleSubscriber";
-        }
-
-        @EventHandler
-        @Subscribe
-        public void on(DocumentTemplate.TitleUiEvent ev) {
-            if(ev.getTitle() != null) {
-                return;
-            }
-            ev.setTranslatableTitle(titleOf(ev.getSource()));
-        }
-        private TranslatableString titleOf(final DocumentTemplate template) {
-            if(template.getDate() != null) {
-                return TranslatableString.tr("[{type}] ({date})",
-                        "type", template.getType().getReference(),
-                        "date", template.getDate());
-            } else {
-                return TranslatableString.tr("[{type}] {name}",
-                        "name", template.getName(),
-                        "type", template.getType().getReference());
-            }
-        }
-        @Inject
-        TitleService titleService;
-    }
-
-    /**
-     * Implemented as a subscriber so can be overridden by consuming application if required.
-     */
-    @DomainService(nature = NatureOfService.DOMAIN)
-    public static class IconSubscriber extends AbstractSubscriber {
-
-        public String getId() {
-            return "incodeDocuments.DocumentTemplate$IconSubscriber";
-        }
-
-        @EventHandler
-        @Subscribe
-        public void on(DocumentTemplate.IconUiEvent ev) {
-            if(ev.getIconName() != null) {
-                return;
-            }
-            ev.setIconName("");
+    public TranslatableString title() {
+        final DocumentTemplate template = this;
+        if(template.getDate() != null) {
+            return TranslatableString.tr("[{type}] ({date})",
+                    "type", template.getType().getReference(),
+                    "date", template.getDate());
+        } else {
+            return TranslatableString.tr("[{type}] {name}",
+                    "name", template.getName(),
+                    "type", template.getType().getReference());
         }
     }
 
-    /**
-     * Implemented as a subscriber so can be overridden by consuming application if required.
-     */
-    @DomainService(nature = NatureOfService.DOMAIN)
-    public static class CssClassSubscriber extends AbstractSubscriber {
 
-        public String getId() {
-            return "incodeDocuments.DocumentTemplate$CssClassSubscriber";
-        }
-
-        @EventHandler
-        @Subscribe
-        public void on(DocumentTemplate.CssClassUiEvent ev) {
-            if(ev.getCssClass() != null) {
-                return;
-            }
-            ev.setCssClass("");
-        }
-    }
-    //endregion
-
-    //region > constructor
     DocumentTemplate() {
         // for unit testing only
     }
@@ -330,10 +250,8 @@ public class DocumentTemplate
         return stripLeadingDot.toLowerCase();
     }
 
-    //endregion
 
 
-    //region > typeCopy (derived property, persisted)
     /**
      * Copy of {@link #getType()}, for query purposes only.
      */
@@ -345,9 +263,6 @@ public class DocumentTemplate
     )
     private DocumentType typeCopy;
 
-    //endregion
-
-    //region > atPathCopy (derived property, persisted)
     /**
      * Copy of {@link #getAtPath()}, for query purposes only.
      */
@@ -358,7 +273,6 @@ public class DocumentTemplate
             hidden = Where.EVERYWHERE
     )
     private String atPathCopy;
-    //endregion
 
     @NotPersistent
     @Programmatic
@@ -378,10 +292,6 @@ public class DocumentTemplate
     @Getter
     private RenderingStrategyData nameRenderingStrategyData;
 
-
-    //region > date (property)
-    public static class DateDomainEvent extends DocumentTemplate.PropertyDomainEvent<LocalDate> { }
-
     /**
      * TODO: there is no need to have different versions of a DocumentTemplate over time,
      *  so we should just get rid of this property.
@@ -389,78 +299,38 @@ public class DocumentTemplate
      */
     @Getter @Setter
     @Column(allowsNull = "false")
-    @Property(
-            domainEvent = DateDomainEvent.class,
-            editing = Editing.DISABLED
-    )
+    @Property()
     private LocalDate date;
-    //endregion
 
-
-    //region > fileSuffix (property)
-    public static class FileSuffixDomainEvent extends PropertyDomainEvent<String> { }
     @Getter @Setter
     @Column(allowsNull = "false", length = FileSuffixType.Meta.MAX_LEN)
-    @Property(
-            domainEvent = FileSuffixDomainEvent.class,
-            editing = Editing.DISABLED
-    )
+    @Property()
     private String fileSuffix;
-    //endregion
-
-
-    //region > nameText (persisted property)
-    public static class NameTextDomainEvent extends PropertyDomainEvent<Clob> { }
 
     /**
      * Used to determine the name of the {@link Document#getName() name} of the rendered {@link Document}.
      */
     @Getter @Setter
     @javax.jdo.annotations.Column(allowsNull = "false", length = NameTextType.Meta.MAX_LEN)
-    @Property(
-            notPersisted = true, // exclude from auditing
-            domainEvent = NameTextDomainEvent.class,
-            editing = Editing.DISABLED
-    )
+    @Property()
     private String nameText;
-    //endregion
 
-
-    //region > PreviewOnly (property)
-    public static class PreviewOnlyDomainEvent extends RenderingStrategy.PropertyDomainEvent<Boolean> { }
 
     /**
      * Whether this template can only be previewed (not used to also create a document).
      */
     @Getter @Setter
     @Column(allowsNull = "false")
-    @Property(
-            domainEvent = PreviewOnlyDomainEvent.class,
-            editing = Editing.DISABLED
-    )
+    @Property()
     private boolean previewOnly;
-    //endregion
 
-
-    //region > applicabilities (collection)
-    public static class ApplicabilitiesDomainEvent extends DocumentType.CollectionDomainEvent<Applicability> {
-    }
 
     @javax.jdo.annotations.Persistent(mappedBy = "documentTemplate", dependentElement = "true")
-    @Collection(
-            domainEvent = ApplicabilitiesDomainEvent.class,
-            editing = Editing.DISABLED
-    )
+    @Collection()
     @Getter @Setter
     private SortedSet<Applicability> appliesTo = new TreeSet<>();
 
-    //endregion
-
     //region > applicable (action)
-
-    /**
-     * TODO: remove once moved over to using DocumentTypeData and DocumentTemplateData
-     */
     @Mixin
     public static class _applicable {
         private final DocumentTemplate documentTemplate;
@@ -580,13 +450,9 @@ public class DocumentTemplate
         ApplicabilityRepository applicabilityRepository;
 
     }
-
     //endregion
 
     //region > notApplicable (action)
-    /**
-     * TODO: remove once moved over to using DocumentTypeData and DocumentTemplateData
-     */
     @Mixin
     public static class _notApplicable {
 
@@ -629,30 +495,10 @@ public class DocumentTemplate
         @Inject
         FactoryService factoryService;
     }
-
     //endregion
 
 
     //region > appliesTo, newRendererModelFactory + newRendererModel, newAttachmentAdvisor + newAttachmentAdvice
-
-    /**
-     * TODO: only called by DocumentTemplateEquivalenceIntegTest, so eventually should be able to delete (along with Applicable etc).
-     */
-    @Programmatic
-    public Optional<Applicability> applicableTo(final Class<?> domainObjectClass) {
-        return Lists.newArrayList(getAppliesTo()).stream()
-                .filter(applicability -> applies(applicability, domainObjectClass)).findFirst();
-    }
-
-    /**
-     * TODO: only called indirectly by {@link #applicableTo(Class)}, itself called only by test code, so should be able to delete.
-     */
-    private boolean applies(
-            final Applicability applicability,
-            final Class<?> domainObjectClass) {
-        final Class<?> load = classService.load(applicability.getDomainClassName());
-        return load.isAssignableFrom(domainObjectClass);
-    }
 
     private RendererModelFactory newRendererModelFactory(final Object domainObject) {
         final Class<?> domainClass = domainObject.getClass();
