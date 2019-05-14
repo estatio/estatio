@@ -57,11 +57,7 @@
                 <!-- assuming a mixin is present to look this up -->
                 <cpt:property id="applicationTenancy"/>
                 <cpt:property id="createdAt" hidden="EVERYWHERE"/>
-                <cpt:property id="previewOnly">
-                    <cpt:action id="updatePreviewOnly">
-                        <cpt:named>Toggle</cpt:named>
-                    </cpt:action>
-                </cpt:property>
+                <cpt:property id="previewOnly"/>
             </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="6">
