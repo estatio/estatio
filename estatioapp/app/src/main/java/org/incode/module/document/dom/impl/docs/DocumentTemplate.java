@@ -326,6 +326,9 @@ public class DocumentTemplate
         this.contentRenderingStrategy = contentRenderingStrategy;
         this.nameText = nameText;
         this.nameRenderingStrategy = nameRenderingStrategy;
+
+        this.typeData = DocumentTypeData.reverseLookup(type);
+        this.templateData = getTypeData().lookup(atPath);
     }
 
     static String stripLeadingDotAndLowerCase(final String fileSuffix) {
@@ -365,22 +368,12 @@ public class DocumentTemplate
     //endregion
 
     @NotPersistent
+    @Getter
     private DocumentTemplateData templateData;
-    @Programmatic
-    public DocumentTemplateData getTemplateData() {
-        return  templateData != null
-                ? templateData
-                : (templateData = getTypeData().lookup(getAtPathCopy()));
-    }
 
     @NotPersistent
+    @Getter
     private DocumentTypeData typeData;
-    @Programmatic
-    public DocumentTypeData getTypeData() {
-        return typeData != null
-                ? typeData
-                : (typeData = DocumentTypeData.reverseLookup(getTypeCopy()));
-    }
 
     @Programmatic
     public RenderingStrategyData getContentRenderingStrategyData() {
