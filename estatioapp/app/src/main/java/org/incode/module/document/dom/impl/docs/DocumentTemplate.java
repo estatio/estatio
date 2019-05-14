@@ -275,9 +275,8 @@ public class DocumentTemplate
             final RenderingStrategy contentRenderingStrategy,
             final String subjectText,
             final RenderingStrategy subjectRenderingStrategy) {
-        super(type, atPath);
+        this(type, date, atPath, fileSuffix, previewOnly, contentRenderingStrategy, subjectText, subjectRenderingStrategy);
         modifyBlob(blob);
-        init(type, date, atPath, fileSuffix, previewOnly, contentRenderingStrategy, subjectText, subjectRenderingStrategy);
     }
 
     public DocumentTemplate(
@@ -290,9 +289,8 @@ public class DocumentTemplate
             final RenderingStrategy contentRenderingStrategy,
             final String subjectText,
             final RenderingStrategy subjectRenderingStrategy) {
-        super(type, atPath);
+        this(type, date, atPath, fileSuffix, previewOnly, contentRenderingStrategy, subjectText, subjectRenderingStrategy);
         setTextData(name, mimeType, text);
-        init(type, date, atPath, fileSuffix, previewOnly, contentRenderingStrategy, subjectText, subjectRenderingStrategy);
     }
 
     public DocumentTemplate(
@@ -305,12 +303,11 @@ public class DocumentTemplate
             final RenderingStrategy contentRenderingStrategy,
             final String subjectText,
             final RenderingStrategy subjectRenderingStrategy) {
-        super(type, atPath);
+        this(type, date, atPath, fileSuffix, previewOnly, contentRenderingStrategy, subjectText, subjectRenderingStrategy);
         modifyClob(clob);
-        init(type, date, atPath, fileSuffix, previewOnly, contentRenderingStrategy, subjectText, subjectRenderingStrategy);
     }
 
-    private void init(
+    private DocumentTemplate(
             final DocumentType type,
             final LocalDate date,
             final String atPath,
@@ -319,6 +316,8 @@ public class DocumentTemplate
             final RenderingStrategy contentRenderingStrategy,
             final String nameText,
             final RenderingStrategy nameRenderingStrategy) {
+        super(type, atPath);
+
         this.typeCopy = type;
         this.atPathCopy = atPath;
         this.date = date;
@@ -349,10 +348,6 @@ public class DocumentTemplate
             hidden = Where.EVERYWHERE
     )
     private DocumentType typeCopy;
-
-    public DocumentType getTypeCopy() {
-        return typeCopy;
-    }
 
     //endregion
 
