@@ -22,9 +22,7 @@
                         <bs3:col span="12">
                             <cpt:fieldSet name="Identifier">
                                 <cpt:property id="name"/>
-                                <cpt:property id="date">
-                                    <cpt:action id="changeDate" position="BELOW"/>
-                                </cpt:property>
+                                <cpt:property id="date"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
