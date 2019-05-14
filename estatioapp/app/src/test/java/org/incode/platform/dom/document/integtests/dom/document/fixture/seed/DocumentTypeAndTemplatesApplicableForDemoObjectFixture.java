@@ -16,6 +16,7 @@ import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
+import org.incode.module.document.dom.impl.docs.DocumentTemplate_applicable;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
@@ -97,7 +98,7 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
                 "Freemarker-html-cover-note-for-${demoObject.name}",
                 executionContext);
 
-        mixin(DocumentTemplate._applicable.class, fmkTemplate).applicable(
+        mixin(DocumentTemplate_applicable.class, fmkTemplate).applicable(
                 DemoObjectWithUrl.class,
                 FreemarkerModelOfDemoObject.class,
                 ForDemoObjectAttachToSame.class);
@@ -122,7 +123,7 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
                 "pdf-of-url-held-in-${demoObject.name}",
                 executionContext);
 
-        mixin(DocumentTemplate._applicable.class, siTemplate).applicable(
+        mixin(DocumentTemplate_applicable.class, siTemplate).applicable(
                 DemoObjectWithUrl.class,
                 StringInterpolatorRootOfDemoObject.class,
                 ForDemoObjectAttachToSame.class);
@@ -147,7 +148,7 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
                 "${demoObject.name}",
                 executionContext);
 
-        mixin(DocumentTemplate._applicable.class, xdpTemplate).applicable(
+        mixin(DocumentTemplate_applicable.class, xdpTemplate).applicable(
                 DemoObjectWithUrl.class,
                 XDocReportModelOfDemoObject.class,
                 ForDemoObjectAttachToSame.class);
@@ -172,7 +173,7 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
                 "${demoObject.name}",
                 executionContext);
 
-        mixin(DocumentTemplate._applicable.class, xddTemplate).applicable(
+        mixin(DocumentTemplate_applicable.class, xddTemplate).applicable(
                 DemoObjectWithUrl.class,
                 XDocReportModelOfDemoObject.class,
                 ForDemoObjectAlsoAttachToFirstOtherObject.class);

@@ -37,6 +37,7 @@ import org.incode.module.document.dom.impl.applicability.AttachmentAdvisor;
 import org.incode.module.document.dom.impl.applicability.RendererModelFactory;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
+import org.incode.module.document.dom.impl.docs.DocumentTemplate_applicable;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
@@ -346,7 +347,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 						nameText, nameRenderingStrategy, 
 						executionContext);
 
-        mixin(DocumentTemplate._applicable.class, template)
+        mixin(DocumentTemplate_applicable.class, template)
                 .applicable(applicableToClass, rendererModelFactoryClass, attachmentAdvisorClass);
 
         return template;
@@ -396,7 +397,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 nameText,
                 executionContext);
 
-        mixin(DocumentTemplate._applicable.class, documentTemplate).applicable(domainClass, rendererModelFactoryClass, attachmentAdvisorClass);
+        mixin(DocumentTemplate_applicable.class, documentTemplate).applicable(domainClass, rendererModelFactoryClass, attachmentAdvisorClass);
 
         executionContext.addResult(this, documentTemplate);
     }

@@ -34,6 +34,7 @@ import org.apache.isis.applib.value.Blob;
 import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
+import org.incode.module.document.dom.impl.docs.DocumentTemplate_applicable;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
@@ -113,7 +114,7 @@ public class DocumentTemplateFSForOrderConfirm extends DocumentTemplateFSAbstrac
                 nameChars,
                 ec);
 
-        mixin(DocumentTemplate._applicable.class, documentTemplate).applicable(
+        mixin(DocumentTemplate_applicable.class, documentTemplate).applicable(
                 Order.class, RendererModelFactoryForOrder.class, AttachToSameForOrder.class);
 
     }

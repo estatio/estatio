@@ -3,7 +3,6 @@ package org.incode.module.document.dom.impl.docs;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -21,8 +20,6 @@ import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Uniques;
 
-import com.google.common.collect.Lists;
-
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 
@@ -31,14 +28,11 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Collection;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -54,7 +48,6 @@ import org.apache.isis.applib.value.Clob;
 import org.incode.module.document.dom.impl.applicability.Applicability;
 import org.incode.module.document.dom.impl.applicability.ApplicabilityRepository;
 import org.incode.module.document.dom.impl.applicability.AttachmentAdvisor;
-import org.incode.module.document.dom.impl.applicability.AttachmentAdvisorAttachToNone;
 import org.incode.module.document.dom.impl.applicability.RendererModelFactory;
 import org.incode.module.document.dom.impl.renderers.Renderer;
 import org.incode.module.document.dom.impl.renderers.RendererFromBytesToBytes;
@@ -66,12 +59,8 @@ import org.incode.module.document.dom.impl.renderers.RendererFromCharsToBytesWit
 import org.incode.module.document.dom.impl.renderers.RendererFromCharsToChars;
 import org.incode.module.document.dom.impl.renderers.RendererFromCharsToCharsWithPreviewToUrl;
 import org.incode.module.document.dom.impl.types.DocumentType;
-import org.incode.module.document.dom.services.ClassNameViewModel;
 import org.incode.module.document.dom.services.ClassService;
-import org.incode.module.document.dom.spi.AttachmentAdvisorClassNameService;
-import org.incode.module.document.dom.spi.RendererModelFactoryClassNameService;
 import org.incode.module.document.dom.types.AtPathType;
-import org.incode.module.document.dom.types.FqcnType;
 
 import org.estatio.module.invoice.dom.DocumentTemplateData;
 import org.estatio.module.invoice.dom.DocumentTypeData;
@@ -330,171 +319,8 @@ public class DocumentTemplate
     @Getter @Setter
     private SortedSet<Applicability> appliesTo = new TreeSet<>();
 
-    //region > applicable (action)
-    @Mixin
-    public static class _applicable {
-        private final DocumentTemplate documentTemplate;
-
-        public _applicable(final DocumentTemplate documentTemplate) {
-            this.documentTemplate = documentTemplate;
-        }
-
-
-        public static class ActionDomainEvent extends DocumentAbstract.ActionDomainEvent { }
-
-        @Action(domainEvent = ActionDomainEvent.class, semantics = SemanticsOf.IDEMPOTENT)
-        @ActionLayout(cssClassFa = "fa-plus", contributed = Contributed.AS_ACTION)
-        @MemberOrder(name = "appliesTo", sequence = "1")
-        public DocumentTemplate $$(
-                @Parameter(maxLength = FqcnType.Meta.MAX_LEN, mustSatisfy = FqcnType.Meta.Specification.class)
-                @ParameterLayout(named = "Domain type")
-                final String domainClassName,
-                @Parameter(maxLength = FqcnType.Meta.MAX_LEN, mustSatisfy = FqcnType.Meta.Specification.class)
-                @ParameterLayout(named = "Renderer Model Factory")
-                final ClassNameViewModel rendererModelFactoryClassNameViewModel,
-                @Parameter(maxLength = FqcnType.Meta.MAX_LEN, mustSatisfy = FqcnType.Meta.Specification.class)
-                @ParameterLayout(named = "Attachment Advisor")
-                final ClassNameViewModel attachmentAdvisorClassNameViewModel) {
-
-            applicable(
-                    domainClassName, rendererModelFactoryClassNameViewModel.getFullyQualifiedClassName(), attachmentAdvisorClassNameViewModel.getFullyQualifiedClassName());
-            return this.documentTemplate;
-        }
-
-        public TranslatableString disable$$() {
-            if (rendererModelFactoryClassNameService == null) {
-                return TranslatableString.tr(
-                        "No RendererModelFactoryClassNameService registered to locate implementations of RendererModelFactory");
-            }
-            if (attachmentAdvisorClassNameService == null) {
-                return TranslatableString.tr(
-                        "No AttachmentAdvisorClassNameService registered to locate implementations of AttachmentAdvisor");
-            }
-            return null;
-        }
-
-        public List<ClassNameViewModel> choices1$$() {
-            return rendererModelFactoryClassNameService.rendererModelFactoryClassNames();
-        }
-
-        public List<ClassNameViewModel> choices2$$() {
-            return attachmentAdvisorClassNameService.attachmentAdvisorClassNames();
-        }
-
-        public TranslatableString validate0$$(final String domainTypeName) {
-
-            return isApplicable(domainTypeName) ?
-                    TranslatableString.tr(
-                            "Already applicable for '{domainTypeName}'",
-                            "domainTypeName", domainTypeName)
-                    : null;
-        }
-
-
-        @Programmatic
-        public Applicability applicable(
-                final Class<?> domainClass,
-                final Class<? extends RendererModelFactory> renderModelFactoryClass,
-                final Class<? extends AttachmentAdvisor> attachmentAdvisorClass) {
-            return applicable(
-                    domainClass.getName(),
-                    renderModelFactoryClass,
-                    attachmentAdvisorClass != null
-                            ? attachmentAdvisorClass
-                            : AttachmentAdvisorAttachToNone.class
-            );
-        }
-
-        @Programmatic
-        public Applicability applicable(
-                final String domainClassName,
-                final Class<? extends RendererModelFactory> renderModelFactoryClass,
-                final Class<? extends AttachmentAdvisor> attachmentAdvisorClass) {
-            return applicable(domainClassName, renderModelFactoryClass.getName(), attachmentAdvisorClass.getName() );
-        }
-
-        @Programmatic
-        public Applicability applicable(
-                final String domainClassName,
-                final String renderModelFactoryClassName,
-                final String attachmentAdvisorClassName) {
-            Applicability applicability = existingApplicability(domainClassName);
-            if(applicability == null) {
-                applicability = applicabilityRepository.create(documentTemplate, domainClassName, renderModelFactoryClassName, attachmentAdvisorClassName);
-            } else {
-                applicability.setRendererModelFactoryClassName(renderModelFactoryClassName);
-                applicability.setAttachmentAdvisorClassName(attachmentAdvisorClassName);
-            }
-            return applicability;
-        }
-
-        private boolean isApplicable(final String domainClassName) {
-            return existingApplicability(domainClassName) != null;
-        }
-        private Applicability existingApplicability(final String domainClassName) {
-            SortedSet<Applicability> applicabilities = documentTemplate.getAppliesTo();
-            for (Applicability applicability : applicabilities) {
-                if (applicability.getDomainClassName().equals(domainClassName)) {
-                    return applicability;
-                }
-            }
-            return null;
-        }
-
-
-        @Inject
-        RendererModelFactoryClassNameService rendererModelFactoryClassNameService;
-        @Inject
-        AttachmentAdvisorClassNameService attachmentAdvisorClassNameService;
-        @Inject
-        ApplicabilityRepository applicabilityRepository;
-
-    }
     //endregion
 
-    //region > notApplicable (action)
-    @Mixin
-    public static class _notApplicable {
-
-        private final DocumentTemplate documentTemplate;
-
-        public _notApplicable(final DocumentTemplate documentTemplate) {
-            this.documentTemplate = documentTemplate;
-        }
-
-        public static class NotApplicableDomainEvent extends DocumentTemplate.ActionDomainEvent {
-        }
-
-        @Action(
-                domainEvent = NotApplicableDomainEvent.class,
-                semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE
-        )
-        @ActionLayout(
-                cssClassFa = "fa-minus"
-        )
-        @MemberOrder(name = "appliesTo", sequence = "2")
-        public DocumentTemplate $$(final Applicability applicability) {
-            applicabilityRepository.delete(applicability);
-            return this.documentTemplate;
-        }
-
-        public TranslatableString disable$$() {
-            final TranslatableString tr = factoryService.mixin(_applicable.class, documentTemplate).disable$$();
-            if(tr != null) {
-                return tr;
-            }
-            return choices0$$().isEmpty() ? TranslatableString.tr("No applicabilities to remove") : null;
-        }
-
-        public SortedSet<Applicability> choices0$$() {
-            return documentTemplate.getAppliesTo();
-        }
-
-        @Inject
-        ApplicabilityRepository applicabilityRepository;
-        @Inject
-        FactoryService factoryService;
-    }
     //endregion
 
 

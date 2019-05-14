@@ -16,6 +16,7 @@ import org.apache.isis.applib.value.Clob;
 import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
+import org.incode.module.document.dom.impl.docs.DocumentTemplate_applicable;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
@@ -80,7 +81,7 @@ public class DocumentType_and_DocumentTemplates_createSome extends DocumentTempl
                 "Freemarker-html-cover-note-for-${demoInvoice.num}",
                 executionContext);
 
-        mixin(DocumentTemplate._applicable.class, fmkTemplate).applicable(
+        mixin(DocumentTemplate_applicable.class, fmkTemplate).applicable(
                 Document.class,
                 RenderModelFactoryOfDocumentAttachedToDemoInvoice.class,
                 null);
