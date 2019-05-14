@@ -174,21 +174,6 @@ public class DocumentTemplateRepository {
                         "date", date));
     }
 
-    /**
-     * As {@link #findByTypeAndApplicableToAtPath(DocumentType, String)}, but excludes any templates in the future.  Those returned
-     * are ordered by most specific application tenancy first, and then by most recent first; so the first template returned
-     * is usually the one to be used.
-     */
-    @Programmatic
-    public List<DocumentTemplate> findByTypeAndApplicableToAtPathAndCurrent(final DocumentType documentType, final String atPath) {
-        final LocalDate now = clockService.now();
-        return repositoryService.allMatches(
-                new QueryDefault<>(DocumentTemplate.class,
-                        "findByTypeAndApplicableToAtPathAndCurrent",
-                        "type", documentType,
-                        "atPath", atPath,
-                        "now", now));
-    }
 
     /**
      * Returns all templates for a type, ordered by application tenancy and date desc.
