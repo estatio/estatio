@@ -187,19 +187,6 @@ public class DocumentTemplateRepository {
     }
 
 
-    /**
-     * Returns all templates available for a particular application tenancy, ordered by most specific tenancy first and
-     * then within that the most recent first.
-     */
-    @Programmatic
-    public List<DocumentTemplate> findByApplicableToAtPathAndCurrent(final String atPath) {
-        final LocalDate now = clockService.now();
-        return repositoryService.allMatches(
-                new QueryDefault<>(DocumentTemplate.class,
-                        "findByApplicableToAtPathAndCurrent",
-                        "atPath", atPath,
-                        "now", now));
-    }
     //endregion
 
     //region > allTemplates

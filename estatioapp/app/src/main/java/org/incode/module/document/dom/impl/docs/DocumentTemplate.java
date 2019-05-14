@@ -106,14 +106,6 @@ import lombok.Setter;
                         + "WHERE typeCopy   == :type "
                         + "ORDER BY atPathCopy DESC, date DESC "
         ),
-        @javax.jdo.annotations.Query(
-                name = "findByApplicableToAtPathAndCurrent", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.incode.module.document.dom.impl.docs.DocumentTemplate "
-                        + "   && :atPath.startsWith(atPathCopy) "
-                        + "   && (date == null || date <= :now) "
-                        + "ORDER BY atPathCopy DESC, typeCopy, date DESC "
-        )
 })
 @Uniques({
         @Unique(
