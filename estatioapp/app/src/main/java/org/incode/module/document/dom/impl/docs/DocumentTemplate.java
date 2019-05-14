@@ -383,6 +383,12 @@ public class DocumentTemplate
 
     //region > date (property)
     public static class DateDomainEvent extends DocumentTemplate.PropertyDomainEvent<LocalDate> { }
+
+    /**
+     * TODO: there is no need to have different versions of a DocumentTemplate over time,
+     *  so we should just get rid of this property.
+     *  It is already hidden in the UI via layout.xml
+     */
     @Getter @Setter
     @Column(allowsNull = "false")
     @Property(
