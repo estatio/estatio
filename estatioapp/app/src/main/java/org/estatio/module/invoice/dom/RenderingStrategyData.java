@@ -122,4 +122,8 @@ public enum RenderingStrategyData {
         return renderer;
 
     }
+
+    public String title() {
+        return this.name;
+    }
 }

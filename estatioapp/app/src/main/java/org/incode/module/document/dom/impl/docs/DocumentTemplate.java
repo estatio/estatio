@@ -371,12 +371,10 @@ public class DocumentTemplate
     private DocumentTypeData typeData;
 
     @NotPersistent
-    @Programmatic
     @Getter
     private RenderingStrategyData contentRenderingStrategyData;
 
     @NotPersistent
-    @Programmatic
     @Getter
     private RenderingStrategyData nameRenderingStrategyData;
 
