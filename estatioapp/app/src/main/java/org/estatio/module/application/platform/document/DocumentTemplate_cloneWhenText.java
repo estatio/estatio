@@ -43,7 +43,6 @@ import org.incode.module.document.dom.impl.applicability.Applicability;
 import org.incode.module.document.dom.impl.docs.DocumentSort;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.docs.DocumentTemplateRepository;
-import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.types.NameType;
 
@@ -76,12 +75,8 @@ public class DocumentTemplate_cloneWhenText {
             final LocalDate date,
             @ParameterLayout(named = "Text", multiLine = DocumentModule.Constants.TEXT_MULTILINE)
             final String templateText,
-            @ParameterLayout(named = "Content rendering strategy")
-            final RenderingStrategy contentRenderingStrategy,
             @Parameter(maxLength = DocumentTemplate.NameTextType.Meta.MAX_LEN)
             final String nameText,
-            @ParameterLayout(named = "Name rendering strategy")
-            final RenderingStrategy nameRenderingStrategy,
             @ParameterLayout(named = "Preview only?")
             final boolean previewOnly) {
 
@@ -91,8 +86,8 @@ public class DocumentTemplate_cloneWhenText {
 
         final DocumentTemplate template = documentTemplateRepository.createText(
                 type, date, applicationTenancy.getPath(), fileSuffix, previewOnly, name, mimeType,
-                templateText, contentRenderingStrategy,
-                nameText, nameRenderingStrategy);
+                templateText,
+                nameText);
 
         final DocumentTemplate._applicable template_applicable =
                 factoryService.mixin(DocumentTemplate._applicable.class, template);
@@ -131,19 +126,11 @@ public class DocumentTemplate_cloneWhenText {
         return documentTemplate.getText();
     }
 
-    public RenderingStrategy default4$$() {
-        return documentTemplate.getContentRenderingStrategy();
-    }
-
-    public String default5$$() {
+    public String default4$$() {
         return documentTemplate.getNameText();
     }
 
-    public RenderingStrategy default6$$() {
-        return documentTemplate.getNameRenderingStrategy();
-    }
-
-    public boolean default7$$() {
+    public boolean default5$$() {
         return documentTemplate.isPreviewOnly();
     }
 
@@ -160,9 +147,7 @@ public class DocumentTemplate_cloneWhenText {
             final ApplicationTenancy proposedApplicationTenancy,
             final LocalDate proposedDate,
             final String templateText,
-            final RenderingStrategy customRenderingStrategy,
             final String subjectText,
-            final RenderingStrategy subjectRenderingStrategy,
             final boolean previewOnly) {
 
         return documentTemplateRepository.validateApplicationTenancyAndDate(

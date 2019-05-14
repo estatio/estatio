@@ -93,8 +93,8 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
                 docTypeForFreemarkerHtml, now, atPath,
                 ".html",
                 false,
-                clob, fmkRenderingStrategy,
-                "Freemarker-html-cover-note-for-${demoObject.name}", fmkRenderingStrategy,
+                clob,
+                "Freemarker-html-cover-note-for-${demoObject.name}",
                 executionContext);
 
         mixin(DocumentTemplate._applicable.class, fmkTemplate).applicable(
@@ -118,8 +118,8 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
                 false,
                 docTypeForStringInterpolatorUrl.getName(),
                 MimeTypeData.APPLICATION_PDF.asStr(),
-                "${demoObject.url}", sipcRenderingStrategy,
-                "pdf-of-url-held-in-${demoObject.name}", siRenderingStrategy,
+                "${demoObject.url}",
+                "pdf-of-url-held-in-${demoObject.name}",
                 executionContext);
 
         mixin(DocumentTemplate._applicable.class, siTemplate).applicable(
@@ -143,8 +143,8 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
                         docTypeForXDocReportPdf.getName() + ".docx",
                         MimeTypeData.APPLICATION_PDF.asStr(),
                         loadResourceBytes("demoObject-template.docx")
-                ), xdpRenderingStrategy,
-                "${demoObject.name}", fmkRenderingStrategy,
+                ),
+                "${demoObject.name}",
                 executionContext);
 
         mixin(DocumentTemplate._applicable.class, xdpTemplate).applicable(
@@ -168,8 +168,8 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
                         docTypeForXDocReportDocx.getName() + ".docx",
                         MimeTypeData.APPLICATION_PDF.asStr(),
                         loadResourceBytes("demoObject-template.docx")
-                ), xddRenderingStrategy,
-                "${demoObject.name}", fmkRenderingStrategy,
+                ),
+                "${demoObject.name}",
                 executionContext);
 
         mixin(DocumentTemplate._applicable.class, xddTemplate).applicable(

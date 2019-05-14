@@ -76,8 +76,8 @@ public class DocumentType_and_DocumentTemplates_createSome extends DocumentTempl
                 docTypeForFreemarkerHtml, now, atPath,
                 ".html",
                 false,
-                clob, fmkRenderingStrategy,
-                "Freemarker-html-cover-note-for-${demoInvoice.num}", fmkRenderingStrategy,
+                clob,
+                "Freemarker-html-cover-note-for-${demoInvoice.num}",
                 executionContext);
 
         mixin(DocumentTemplate._applicable.class, fmkTemplate).applicable(

@@ -368,8 +368,8 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 previewOnly,
                 buildTemplateName(docType, templateNameSuffixIfAny),
                 MimeTypeData.APPLICATION_PDF.asStr(),
-                contentText, contentRenderingStrategy,
-                nameText, nameRenderingStrategy,
+                contentText,
+                nameText,
                 executionContext);
     }
 
@@ -392,8 +392,8 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 docType, templateDate, atPath,
                 ".html",
                 false,
-                clob, contentRenderingStrategy,
-                nameText, nameRenderingStrategy,
+                clob,
+                nameText,
                 executionContext);
 
         mixin(DocumentTemplate._applicable.class, documentTemplate).applicable(domainClass, rendererModelFactoryClass, attachmentAdvisorClass);

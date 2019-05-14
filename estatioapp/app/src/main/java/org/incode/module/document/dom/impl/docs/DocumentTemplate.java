@@ -272,10 +272,8 @@ public class DocumentTemplate
             final String fileSuffix,
             final boolean previewOnly,
             final Blob blob,
-            final RenderingStrategy contentRenderingStrategy,
-            final String subjectText,
-            final RenderingStrategy subjectRenderingStrategy) {
-        this(type, date, atPath, fileSuffix, previewOnly, contentRenderingStrategy, subjectText, subjectRenderingStrategy);
+            final String subjectText) {
+        this(type, date, atPath, fileSuffix, previewOnly, subjectText);
         modifyBlob(blob);
     }
 
@@ -286,10 +284,8 @@ public class DocumentTemplate
             final String fileSuffix,
             final boolean previewOnly,
             final String name, final String mimeType, final String text,
-            final RenderingStrategy contentRenderingStrategy,
-            final String subjectText,
-            final RenderingStrategy subjectRenderingStrategy) {
-        this(type, date, atPath, fileSuffix, previewOnly, contentRenderingStrategy, subjectText, subjectRenderingStrategy);
+            final String subjectText) {
+        this(type, date, atPath, fileSuffix, previewOnly, subjectText);
         setTextData(name, mimeType, text);
     }
 
@@ -300,10 +296,8 @@ public class DocumentTemplate
             final String fileSuffix,
             final boolean previewOnly,
             final Clob clob,
-            final RenderingStrategy contentRenderingStrategy,
-            final String subjectText,
-            final RenderingStrategy subjectRenderingStrategy) {
-        this(type, date, atPath, fileSuffix, previewOnly, contentRenderingStrategy, subjectText, subjectRenderingStrategy);
+            final String subjectText) {
+        this(type, date, atPath, fileSuffix, previewOnly, subjectText);
         modifyClob(clob);
     }
 
@@ -313,9 +307,7 @@ public class DocumentTemplate
             final String atPath,
             final String fileSuffix,
             final boolean previewOnly,
-            final RenderingStrategy contentRenderingStrategy,
-            final String nameText,
-            final RenderingStrategy nameRenderingStrategy) {
+            final String nameText) {
         super(type, atPath);
 
         this.typeCopy = type;
@@ -323,9 +315,7 @@ public class DocumentTemplate
         this.date = date;
         this.fileSuffix = stripLeadingDotAndLowerCase(fileSuffix);
         this.previewOnly = previewOnly;
-        this.contentRenderingStrategy = contentRenderingStrategy;
         this.nameText = nameText;
-        this.nameRenderingStrategy = nameRenderingStrategy;
 
         this.typeData = DocumentTypeData.reverseLookup(type);
         this.templateData = getTypeData().lookup(atPath);
@@ -403,21 +393,6 @@ public class DocumentTemplate
     //endregion
 
 
-    //region > contentRenderingStrategy (property)
-    public static class RenderingStrategyDomainEvent extends PropertyDomainEvent<RenderingStrategy> { }
-    @Getter @Setter
-    @Column(allowsNull = "false", name = "contentRenderStrategyId")
-    @Property(
-            domainEvent = RenderingStrategyDomainEvent.class,
-            editing = Editing.DISABLED
-    )
-    private RenderingStrategy contentRenderingStrategy;
-
-    public RenderingStrategy getContentRenderingStrategy() {
-        return contentRenderingStrategy;
-    }
-    //endregion
-
     //region > fileSuffix (property)
     public static class FileSuffixDomainEvent extends PropertyDomainEvent<String> { }
     @Getter @Setter
@@ -446,20 +421,6 @@ public class DocumentTemplate
     private String nameText;
     //endregion
 
-    //region > nameRenderingStrategy (property)
-    public static class NameRenderingStrategyDomainEvent extends PropertyDomainEvent<RenderingStrategy> { }
-    @Getter @Setter
-    @Column(allowsNull = "false", name = "nameRenderStrategyId")
-    @Property(
-            domainEvent = NameRenderingStrategyDomainEvent.class,
-            editing = Editing.DISABLED
-    )
-    private RenderingStrategy nameRenderingStrategy;
-
-    public RenderingStrategy getNameRenderingStrategy() {
-        return nameRenderingStrategy;
-    }
-    //endregion
 
     //region > PreviewOnly (property)
     public static class PreviewOnlyDomainEvent extends RenderingStrategy.PropertyDomainEvent<Boolean> { }
