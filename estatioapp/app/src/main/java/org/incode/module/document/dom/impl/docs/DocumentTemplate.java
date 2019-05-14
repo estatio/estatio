@@ -329,6 +329,9 @@ public class DocumentTemplate
 
         this.typeData = DocumentTypeData.reverseLookup(type);
         this.templateData = getTypeData().lookup(atPath);
+
+        this.contentRenderingStrategyData = this.templateData.getContentRenderingStrategy();
+        this.nameRenderingStrategyData = this.templateData.getNameRenderingStrategy();
     }
 
     static String stripLeadingDotAndLowerCase(final String fileSuffix) {
@@ -368,32 +371,25 @@ public class DocumentTemplate
     //endregion
 
     @NotPersistent
+    @Programmatic
     @Getter
     private DocumentTemplateData templateData;
 
     @NotPersistent
+    @Programmatic
     @Getter
     private DocumentTypeData typeData;
 
+    @NotPersistent
     @Programmatic
-    public RenderingStrategyData getContentRenderingStrategyData() {
-        return getTemplateData().getContentRenderingStrategy();
-    }
+    @Getter
+    private RenderingStrategyData contentRenderingStrategyData;
 
+    @NotPersistent
     @Programmatic
-    public RenderingStrategyData getContentRenderingStrategyApi() {
-        return getContentRenderingStrategyData();
-    }
+    @Getter
+    private RenderingStrategyData nameRenderingStrategyData;
 
-    @Programmatic
-    public RenderingStrategyData getNameRenderingStrategyData() {
-        return getTemplateData().getNameRenderingStrategy();
-    }
-
-    @Programmatic
-    public RenderingStrategyData getNameRenderingStrategyApi() {
-        return getNameRenderingStrategyData();
-    }
 
     //region > date (property)
     public static class DateDomainEvent extends DocumentTemplate.PropertyDomainEvent<LocalDate> { }
@@ -751,7 +747,7 @@ public class DocumentTemplate
         final DocumentNature inputNature = getTemplateData().getContentRenderingStrategy().getInputNature();
         final DocumentNature outputNature = getTemplateData().getContentRenderingStrategy().getOutputNature();
 
-        final Renderer renderer = getContentRenderingStrategyApi().newRenderer(
+        final Renderer renderer = getContentRenderingStrategyData().newRenderer(
                 classService, serviceRegistry2);
         switch (inputNature){
         case BYTES:
@@ -829,7 +825,7 @@ public class DocumentTemplate
 
         // subject
         final RendererFromCharsToChars nameRenderer =
-                (RendererFromCharsToChars) getNameRenderingStrategyApi().newRenderer(
+                (RendererFromCharsToChars) getNameRenderingStrategyData().newRenderer(
                         classService, serviceRegistry2);
         String renderedDocumentName;
         try {
@@ -861,7 +857,7 @@ public class DocumentTemplate
             final Object contentDataModel) {
         final String documentName = determineDocumentName(contentDataModel);
         document.setName(documentName);
-        final RenderingStrategyData renderingStrategy = getContentRenderingStrategyApi();
+        final RenderingStrategyData renderingStrategy = getContentRenderingStrategyData();
         final String variant = "content";
         try {
 
