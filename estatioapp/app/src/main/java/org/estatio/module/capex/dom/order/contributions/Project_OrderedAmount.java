@@ -16,6 +16,7 @@ import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
+import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.project.Project;
 
 /**
@@ -38,6 +39,7 @@ public class Project_OrderedAmount {
 
     private BigDecimal sum(final Function<OrderItem, BigDecimal> x) {
         return orderItemRepository.findByProject(project).stream()
+                .filter(oi->oi.getOrdr().getApprovalState()!=OrderApprovalState.DISCARDED)
                 .map(x)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -56,4 +58,5 @@ public class Project_OrderedAmount {
 
     @Inject
     WrapperFactory wrapperFactory;
+
 }

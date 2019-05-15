@@ -7,6 +7,8 @@ import java.util.function.Function;
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
@@ -15,9 +17,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
-import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.invoice.dom.InvoiceItem;
 
 /**
  * TODO: although this could currently be inlined, we expect to factor out project from incoming invoice, in which case this will be a typical contribution across modules.
@@ -34,18 +36,22 @@ public class Project_PaidAmount {
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @Column(scale = 2)
     public BigDecimal paidAmount(){
-        return project.isParentProject() ? amountWhenParentProject() : sum(IncomingInvoice::getNetAmount);
+        return project.isParentProject() ? amountWhenParentProject() : sum(InvoiceItem::getNetAmount);
     }
 
-    private BigDecimal sum(final Function<IncomingInvoice, BigDecimal> x) {
+    private BigDecimal sum(final Function<InvoiceItem, BigDecimal> x) {
         return incomingInvoiceItemRepository.findByProject(project).stream()
-                .filter(i->i.getClass().isAssignableFrom(IncomingInvoiceItem.class))
-                .map(i->(IncomingInvoice) i.getInvoice())
-                .filter(i->i.getPaidDate()!=null)
+                .filter(ii->paidDate(ii)!=null)
                 .map(x)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+
+    private LocalDate paidDate(final InvoiceItem invoiceItem){
+        IncomingInvoice invoice = (IncomingInvoice) invoiceItem.getInvoice();
+        return invoice.getPaidDate();
+    }
+
 
     private BigDecimal amountWhenParentProject(){
         BigDecimal result = BigDecimal.ZERO;
