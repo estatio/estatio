@@ -234,8 +234,8 @@ public class DocumentTemplate
     private String atPathCopy;
 
     @NotPersistent
-    @Programmatic
     private DocumentTemplateData templateData;
+    @Programmatic
     public DocumentTemplateData getTemplateData() {
         if (templateData == null) {
             templateData = getTypeData().lookup(getAtPath());
@@ -244,8 +244,8 @@ public class DocumentTemplate
     }
 
     @NotPersistent
-    @Programmatic
     private DocumentTypeData typeData;
+    @Programmatic
     public DocumentTypeData getTypeData() {
         if (typeData == null) {
             typeData = DocumentTypeData.reverseLookup(getType());
