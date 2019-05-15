@@ -201,12 +201,6 @@ public class DocumentTemplate
         this.fileSuffix = stripLeadingDotAndLowerCase(fileSuffix);
         this.previewOnly = previewOnly;
         this.nameText = nameText;
-
-        this.typeData = DocumentTypeData.reverseLookup(type);
-        this.templateData = getTypeData().lookup(atPath);
-
-        this.contentRenderingStrategyData = this.templateData.getContentRenderingStrategy();
-        this.nameRenderingStrategyData = this.templateData.getNameRenderingStrategy();
     }
 
     static String stripLeadingDotAndLowerCase(final String fileSuffix) {
@@ -241,21 +235,31 @@ public class DocumentTemplate
 
     @NotPersistent
     @Programmatic
-    @Getter
     private DocumentTemplateData templateData;
+    public DocumentTemplateData getTemplateData() {
+        if (templateData == null) {
+            templateData = getTypeData().lookup(getAtPath());
+        }
+        return templateData;
+    }
 
     @NotPersistent
     @Programmatic
-    @Getter
     private DocumentTypeData typeData;
+    public DocumentTypeData getTypeData() {
+        if (typeData == null) {
+            typeData = DocumentTypeData.reverseLookup(getType());
+        }
+        return typeData;
+    }
 
-    @NotPersistent
-    @Getter
-    private RenderingStrategyData contentRenderingStrategyData;
+    public RenderingStrategyData getContentRenderingStrategyData() {
+        return getTemplateData().getContentRenderingStrategy();
+    }
 
-    @NotPersistent
-    @Getter
-    private RenderingStrategyData nameRenderingStrategyData;
+    public RenderingStrategyData getNameRenderingStrategyData() {
+        return getTemplateData().getNameRenderingStrategy();
+    }
 
     /**
      * TODO: there is no need to have different versions of a DocumentTemplate over time,
@@ -300,13 +304,13 @@ public class DocumentTemplate
 
     private RendererModelFactory newRendererModelFactory(final Object domainObject) {
         final Class<?> domainClass = domainObject.getClass();
-        return templateData.newRenderModelFactory(domainClass, classService, serviceRegistry2);
+        return getTemplateData().newRenderModelFactory(domainClass, classService, serviceRegistry2);
     }
 
     @Programmatic
     public AttachmentAdvisor newAttachmentAdvisor(final Object domainObject) {
         final Class<?> domainClass = domainObject.getClass();
-        return templateData.newAttachmentAdvisor(domainClass, classService, serviceRegistry2);
+        return getTemplateData().newAttachmentAdvisor(domainClass, classService, serviceRegistry2);
     }
 
     @Programmatic
@@ -353,11 +357,10 @@ public class DocumentTemplate
                     getTemplateData().getContentRenderingStrategy().getReference()));
         }
 
-        final DocumentNature inputNature = contentRenderingStrategyData.getInputNature();
-        final DocumentNature outputNature = contentRenderingStrategyData.getOutputNature();
+        final DocumentNature inputNature = getContentRenderingStrategyData().getInputNature();
+        final DocumentNature outputNature = getContentRenderingStrategyData().getOutputNature();
 
-        final Renderer renderer = contentRenderingStrategyData.newRenderer(
-                classService, serviceRegistry2);
+        final Renderer renderer = getContentRenderingStrategyData().newRenderer(classService, serviceRegistry2);
         switch (inputNature){
         case BYTES:
             switch (outputNature) {
@@ -434,8 +437,7 @@ public class DocumentTemplate
 
         // subject
         final RendererFromCharsToChars nameRenderer =
-                (RendererFromCharsToChars) getNameRenderingStrategyData().newRenderer(
-                        classService, serviceRegistry2);
+                (RendererFromCharsToChars) getNameRenderingStrategyData().newRenderer(classService, serviceRegistry2);
         String renderedDocumentName;
         try {
             renderedDocumentName = nameRenderer.renderCharsToChars(
@@ -469,10 +471,10 @@ public class DocumentTemplate
         final String variant = "content";
         try {
 
-            final DocumentNature inputNature = contentRenderingStrategyData.getInputNature();
-            final DocumentNature outputNature = contentRenderingStrategyData.getOutputNature();
+            final DocumentNature inputNature = getContentRenderingStrategyData().getInputNature();
+            final DocumentNature outputNature = getContentRenderingStrategyData().getOutputNature();
 
-            final Renderer renderer = contentRenderingStrategyData.newRenderer(classService, serviceRegistry2);
+            final Renderer renderer = getContentRenderingStrategyData().newRenderer(classService, serviceRegistry2);
 
             switch (inputNature){
                 case BYTES:
