@@ -29,7 +29,7 @@ public class IncomingInvoice_codaDocHead {
     public CodaDocHead prop() {
         return queryResultsCache.execute(
                 () -> codaDocHeadRepository.findByIncomingInvoice(incomingInvoice),
-                getClass(), "prop"
+                getClass(), "prop", incomingInvoice
         );
     }
     public boolean hideProp() {
