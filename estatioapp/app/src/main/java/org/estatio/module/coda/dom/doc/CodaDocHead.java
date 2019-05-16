@@ -654,6 +654,23 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     }
 
     /**
+     * specifically, is an FR-ART17, with an analysis line that has a non-zero docSumTax
+     */
+    boolean isLegacyFrArt17WithNonZeroTax() {
+        CodaDocLine codaDocLine = firstAnalysisDocLine(LineCache.DEFAULT);
+        if (codaDocLine == null) {
+            return false;
+        }
+        if (!getDocCode().equals("FR-ART17")) {
+            return false;
+        }
+        if (codaDocLine.getDocSumTax() == null || codaDocLine.getDocSumTax().equals(BigDecimal.ZERO)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Expects that the doc has been {@link #revalidateOnly() validated} previously.
      */
     @Programmatic
@@ -1091,15 +1108,22 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         if (other == this) {
             return true;
         }
-        if(isLegacyStateDiffers(this, other) || isLegacyStateDiffers(other, this)) {
+        if(isLegacyAnalysisLineStateDiffers(this, other) || isLegacyAnalysisLineStateDiffers(other, this)) {
+            return false;
+        }
+        if(isLegacyFrArt17Differs(this, other) || isLegacyFrArt17Differs(other, this)) {
             return false;
         }
         return Objects.equals(getSha256(), other.getSha256()) &&
                Objects.equals(getStatPay(), other.getStatPay());
     }
 
-    private boolean isLegacyStateDiffers(final CodaDocHead one, final CodaDocHead other) {
+    private boolean isLegacyAnalysisLineStateDiffers(final CodaDocHead one, final CodaDocHead other) {
         return one.isLegacy() && !other.isLegacy();
+    }
+
+    private boolean isLegacyFrArt17Differs(final CodaDocHead one, final CodaDocHead other) {
+        return one.isLegacyFrArt17WithNonZeroTax() && !other.isLegacyFrArt17WithNonZeroTax();
     }
 
     @Programmatic
