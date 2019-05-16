@@ -3,6 +3,7 @@ package org.estatio.module.capex.dom.order;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -40,9 +41,11 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -54,6 +57,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 import org.apache.isis.applib.util.TitleBuffer;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
@@ -1694,6 +1698,53 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             private Meta() {
             }
         }
+    }
+
+    @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "100")
+    public static class TableColumnService implements TableColumnOrderService {
+
+        @Override
+        public List<String> orderParented(
+                final Object parent,
+                final String collectionId,
+                final Class<?> collectionType,
+                final List<String> propertyIds) {
+            return null;
+        }
+
+        @Override
+        public List<String> orderStandalone(final Class<?> collectionType, final List<String> propertyIds) {
+            if(Order.class.isAssignableFrom(collectionType)) {
+                return Arrays.asList(
+                        "orderNumber"
+                        , "orderDate"
+                        , "property"
+                        , "seller"
+//                        , "sellerOrderReference"
+                        , "descriptionSummary"
+                        , "approvalState"
+                        , "approvedBy"
+                        , "approvedOn"
+                        , "barcode"
+//                        , "confirmationTemplate"
+                        , "netAmount"
+                        , "grossAmount"
+                        , "entryDate"
+                        , "applicationTenancy"
+                        , "invoiced"
+//                        , "nextApprovalTaskRoleAssignedTo"
+//                        , "nextApprovalTaskTransitionType"
+//                        , "notification"
+//                        , "pdf"
+//                        , "pendingApprovalTask"
+//                        , "subject"
+//                        , "totalWorkCost"
+//                        , "type"
+                );
+            }
+            return null;
+        }
+
     }
 
 }
