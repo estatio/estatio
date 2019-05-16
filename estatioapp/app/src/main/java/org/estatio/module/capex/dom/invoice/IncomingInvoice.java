@@ -632,7 +632,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         switch (items.size()) {
             case 0:
             case 1:
-                return null;
+                return reasonDisabledDueToState(this);
             default:
                 return "Can only complete invoice item for invoices with a single item";
         }
