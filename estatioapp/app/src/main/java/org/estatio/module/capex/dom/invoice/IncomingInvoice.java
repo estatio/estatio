@@ -1269,7 +1269,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     /**
-     * TODO: inline this mixin.
+     * TODO: extract this mixin.
      */
     @Mixin(method = "act")
     public static class changeBankAccount {
@@ -1285,6 +1285,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         public IncomingInvoice act(final BankAccount bankAccount) {
             incomingInvoice.setBankAccount(bankAccount);
             return incomingInvoice;
+        }
+
+        public boolean hideAct() {
+            return CountryUtil.isItalian(incomingInvoice);
         }
 
         public String disableAct() {
@@ -1386,6 +1390,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     public boolean default1EditType() {
         return true;
+    }
+
+    public boolean hideEditType() {
+        return CountryUtil.isItalian(this);
     }
 
     public String disableEditType() {
@@ -1554,12 +1562,38 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return orderItemInvoiceItemLinkRepository.calculateNetAmountLinkedToInvoice(this);
     }
 
+
+    public boolean hideTotalNetAmount() {
+        return CountryUtil.isItalian(this);
+    }
+    public boolean hideTotalVatAmount() {
+        return CountryUtil.isItalian(this);
+    }
+    public boolean hideTotalGrossAmount() {
+        return CountryUtil.isItalian(this);
+    }
+
+    public boolean hideChangeDueDate() {
+        return CountryUtil.isItalian(this);
+    }
+
+    public boolean hideChangePaymentMethod() {
+        return CountryUtil.isItalian(this);
+    }
+
+
+
+
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public IncomingInvoice changeAmounts(final BigDecimal netAmount, final BigDecimal grossAmount) {
         setNetAmount(netAmount);
         setGrossAmount(grossAmount);
         return this;
     }
+    public boolean hideChangeAmounts() {
+        return CountryUtil.isItalian(this);
+    }
+
 
     public BigDecimal default0ChangeAmounts() {
         return getNetAmount();
@@ -1624,6 +1658,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return this;
     }
 
+    public boolean hideEditInvoiceNumber() {
+        return CountryUtil.isItalian(this);
+    }
+
+
     public String default0EditInvoiceNumber() {
         return getInvoiceNumber();
     }
@@ -1645,6 +1684,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         setBuyer(buyer);
         return this;
     }
+
+    public boolean hideEditBuyer() {
+        return CountryUtil.isItalian(this);
+    }
+
 
     public List<Party> autoComplete0EditBuyer(@MinLength(3) final String searchPhrase) {
         return partyRepository.autoCompleteWithRole(searchPhrase, IncomingInvoiceRoleTypeEnum.ECP);
@@ -1693,6 +1737,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return partyRepository.autoCompleteSupplier(search, getAtPath());
     }
 
+    public boolean hideEditSeller() {
+        return CountryUtil.isItalian(this);
+    }
+
     public String disableEditSeller() {
 
         final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot edit seller because");
@@ -1735,6 +1783,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     public LocalDate default2ChangeDates() {
         return getDueDate();
+    }
+
+    public boolean hideChangeDates() {
+        return CountryUtil.isItalian(this);
     }
 
     public String disableChangeDates() {
