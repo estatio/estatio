@@ -1972,6 +1972,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         }
 
         IncomingInvoice.Validator validateForAmounts(IncomingInvoice incomingInvoice) {
+            if(CountryUtil.isItalian(incomingInvoice)) {
+                // don't validate at all if Italian
+                return this;
+            }
             if (incomingInvoice.getNetAmount() == null || incomingInvoice.getGrossAmount() == null) {
                 // only validate when amounts are set on the invoice
                 return this;
