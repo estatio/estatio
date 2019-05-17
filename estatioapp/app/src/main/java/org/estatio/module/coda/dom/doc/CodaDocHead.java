@@ -602,7 +602,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     public Map<Integer, LineData> getAnalysisLineDataByLineNumber() {
 
         if(analysisLineDataByLineNumber == null) {
-            if(isLegacy()) {
+            if(isLegacyAnalysisLineWithNullDocValue()) {
                 analysisLineDataByLineNumber = Maps.newHashMap();
 
                 // get hold of the summary line and extract its project and charge
@@ -644,13 +644,30 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
      * This method allows us to process the original summary line-based CodaDocHeads correctly with respect to the
      * new algorithm.
      */
-    boolean isLegacy() {
+    boolean isLegacyAnalysisLineWithNullDocValue() {
         CodaDocLine codaDocLine = firstAnalysisDocLine(LineCache.DEFAULT);
         if(codaDocLine == null) {
             return false;
         }
         final BigDecimal docValue = codaDocLine.getDocValue();
         return docValue == null;
+    }
+
+    /**
+     * specifically, is an FR-ART17, with an analysis line that has a non-zero docSumTax
+     */
+    boolean isLegacyAnalysisLineForFrArt17WithNonZeroTax() {
+        CodaDocLine codaDocLine = firstAnalysisDocLine(LineCache.DEFAULT);
+        if (codaDocLine == null) {
+            return false;
+        }
+        if (!getDocCode().equals("FR-ART17")) {
+            return false;
+        }
+        if (codaDocLine.getDocSumTax() == null || codaDocLine.getDocSumTax().equals(BigDecimal.ZERO)) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -1042,7 +1059,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
 
     @Programmatic
     IncomingInvoiceType getIncomingInvoiceType() {
-        final CodaDocLine line = isLegacy() ? summaryDocLine(LineCache.DEFAULT) : firstAnalysisDocLine(LineCache.DEFAULT);
+        final CodaDocLine line = isLegacyAnalysisLineWithNullDocValue() ? summaryDocLine(LineCache.DEFAULT) : firstAnalysisDocLine(LineCache.DEFAULT);
         return Optional.ofNullable(line)
                        .map(CodaDocLine::getIncomingInvoiceType)
                        .orElse(null);
@@ -1091,15 +1108,24 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         if (other == this) {
             return true;
         }
-        if(isLegacyStateDiffers(this, other) || isLegacyStateDiffers(other, this)) {
+        if(legacyAnalysisLineWithNullDocValue_StateDiffers(this, other) ||
+           legacyAnalysisLineWithNullDocValue_StateDiffers(other, this)) {
+            return false;
+        }
+        if(legacyAnalysisLineForFrArt17WithNonZeroTax_StateDiffers(this, other) ||
+           legacyAnalysisLineForFrArt17WithNonZeroTax_StateDiffers(other, this)) {
             return false;
         }
         return Objects.equals(getSha256(), other.getSha256()) &&
                Objects.equals(getStatPay(), other.getStatPay());
     }
 
-    private boolean isLegacyStateDiffers(final CodaDocHead one, final CodaDocHead other) {
-        return one.isLegacy() && !other.isLegacy();
+    private boolean legacyAnalysisLineWithNullDocValue_StateDiffers(final CodaDocHead one, final CodaDocHead other) {
+        return one.isLegacyAnalysisLineWithNullDocValue() && !other.isLegacyAnalysisLineWithNullDocValue();
+    }
+
+    private boolean legacyAnalysisLineForFrArt17WithNonZeroTax_StateDiffers(final CodaDocHead one, final CodaDocHead other) {
+        return one.isLegacyAnalysisLineForFrArt17WithNonZeroTax() && !other.isLegacyAnalysisLineForFrArt17WithNonZeroTax();
     }
 
     @Programmatic

@@ -300,51 +300,6 @@ public class IncomingInvoice_Test {
 
         }
 
-        @Test
-        public void validateForAmounts() throws Exception {
-
-            String result;
-            IncomingInvoice.Validator validator;
-
-            // given
-            validator = new IncomingInvoice.Validator();
-            invoice.setNetAmount(new BigDecimal("100.00"));
-            invoice.setGrossAmount(new BigDecimal("100.00"));
-
-            // when
-            result = validator.validateForAmounts(invoice).getResult();
-
-            // then
-            Assertions.assertThat(result).isEqualTo("total amount on items equal to amount on the invoice required");
-
-            // and given
-            invoice.setGrossAmount(BigDecimal.ZERO);
-            invoice.setNetAmount(BigDecimal.ZERO);
-            // when
-            validator = new IncomingInvoice.Validator();
-            result = validator.validateForAmounts(invoice).getResult();
-            // then
-            Assertions.assertThat(result).isNull();
-
-            // and given
-            invoice.setNetAmount(new BigDecimal("100.00"));
-            invoice.setGrossAmount(new BigDecimal("100.00"));
-            IncomingInvoiceItem item = new IncomingInvoiceItem() {
-                @Override
-                void invalidateApproval() {
-                    // nothing
-                }
-            };
-            item.setNetAmount(new BigDecimal("100.00"));
-            item.setGrossAmount(new BigDecimal("100.00"));
-            invoice.getItems().add(item);
-            // when
-            validator = new IncomingInvoice.Validator();
-            result = validator.validateForAmounts(invoice).getResult();
-            // then
-            Assertions.assertThat(result).isNull();
-
-        }
 
         @Test
         public void validateForBankAccountOwner() throws Exception {

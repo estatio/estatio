@@ -1976,14 +1976,21 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 // only validate when amounts are set on the invoice
                 return this;
             }
-            String message;
-            if (!incomingInvoice.getTotalNetAmount().setScale(2).equals(incomingInvoice.getNetAmount().setScale(2))
-                    || !incomingInvoice.getTotalGrossAmount().setScale(2).equals(incomingInvoice.getGrossAmount().setScale(2))
-                    || !incomingInvoice.getTotalVatAmount().setScale(2).equals(incomingInvoice.getVatAmount().setScale(2))) {
-                message = "total amount on items equal to amount on the invoice";
+            if (       notEquals(incomingInvoice.getTotalNetAmount(), incomingInvoice.getNetAmount())
+                    || notEquals(incomingInvoice.getTotalGrossAmount(), incomingInvoice.getGrossAmount())
+                    || notEquals(incomingInvoice.getTotalVatAmount(), incomingInvoice.getVatAmount())) {
+                String message = "total amount on items equal to amount on the invoice";
                 setResult(result == null ? message : result.concat(", ").concat(message));
             }
             return this;
+        }
+
+        private static boolean notEquals(final BigDecimal totalNetAmount, final BigDecimal netAmount) {
+            return !equals(totalNetAmount, netAmount);
+        }
+
+        private static boolean equals(final BigDecimal totalNetAmount, final BigDecimal netAmount) {
+            return totalNetAmount.setScale(2).equals(netAmount.setScale(2));
         }
 
         IncomingInvoice.Validator validateForBankAccountOwner(IncomingInvoice incomingInvoice) {

@@ -31,7 +31,7 @@ public class CodaDocHead_getAnalysisLineDataByLineNumber_Test {
     @Before
     public void setUp() throws Exception {
         codaDocHead = new CodaDocHead() {
-            @Override boolean isLegacy() {
+            @Override boolean isLegacyAnalysisLineWithNullDocValue() {
                 return codaDocHeadLegacyState;
             }
         };
