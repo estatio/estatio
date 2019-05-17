@@ -9,21 +9,15 @@ public class CodaDocHead_isSameAs_Test {
 
     CodaDocHead codaDocHead;
     boolean codaDocHeadLegacyState;
-    boolean codaDocHeadLegacyFrArt17State;
 
     CodaDocHead otherDocHead;
     boolean otherDocHeadLegacyState;
-    boolean otherDocHeadLegacyFrArt17State;
 
     @Before
     public void setUp() throws Exception {
         codaDocHead = new CodaDocHead() {
             @Override boolean isLegacyAnalysisLineWithNullDocValue() {
                 return codaDocHeadLegacyState;
-            }
-
-            @Override boolean isLegacyAnalysisLineForFrArt17WithNonZeroTax() {
-                return codaDocHeadLegacyFrArt17State;
             }
         };
         codaDocHead.setSha256("SHA256");
@@ -33,10 +27,6 @@ public class CodaDocHead_isSameAs_Test {
         otherDocHead = new CodaDocHead() {
             @Override boolean isLegacyAnalysisLineWithNullDocValue() {
                 return otherDocHeadLegacyState;
-            }
-
-            @Override boolean isLegacyAnalysisLineForFrArt17WithNonZeroTax() {
-                return otherDocHeadLegacyFrArt17State;
             }
         };
         otherDocHead.setSha256(codaDocHead.getSha256()); // start off as equal
@@ -122,30 +112,5 @@ public class CodaDocHead_isSameAs_Test {
         assertThat(codaDocHead.isSameAs(otherDocHead)).isFalse();
     }
 
-    @Test
-    public void when_different_legacyStateFrArt17_1() throws Exception {
-        // given
-        assertThat(codaDocHead.getSha256()).isEqualTo(otherDocHead.getSha256());
-        assertThat(codaDocHead.getStatPay()).isEqualTo(otherDocHead.getStatPay());
-
-        codaDocHeadLegacyFrArt17State = false;
-        otherDocHeadLegacyFrArt17State = true;
-
-        // when, then
-        assertThat(codaDocHead.isSameAs(otherDocHead)).isFalse();
-    }
-
-    @Test
-    public void when_different_legacyStateFrArt17_2() throws Exception {
-        // given
-        assertThat(codaDocHead.getSha256()).isEqualTo(otherDocHead.getSha256());
-        assertThat(codaDocHead.getStatPay()).isEqualTo(otherDocHead.getStatPay());
-
-        codaDocHeadLegacyFrArt17State = true;
-        otherDocHeadLegacyFrArt17State = false;
-
-        // when, then
-        assertThat(codaDocHead.isSameAs(otherDocHead)).isFalse();
-    }
 
 }

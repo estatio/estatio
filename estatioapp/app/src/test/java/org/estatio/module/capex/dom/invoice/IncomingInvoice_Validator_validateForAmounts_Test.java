@@ -9,6 +9,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class IncomingInvoice_Validator_validateForAmounts_Test {
 
+    String invoiceAtPath;
+
     IncomingInvoice invoice;
     IncomingInvoiceItem item;
 
@@ -18,7 +20,11 @@ public class IncomingInvoice_Validator_validateForAmounts_Test {
     public void setUp() throws Exception {
         validator = new IncomingInvoice.Validator();
 
-        invoice = new IncomingInvoice();
+        invoice = new IncomingInvoice() {
+            @Override public String getAtPath() {
+                return invoiceAtPath;
+            }
+        };
         item = new IncomingInvoiceItem(){
             @Override void invalidateApproval() {
             }
@@ -120,6 +126,30 @@ public class IncomingInvoice_Validator_validateForAmounts_Test {
 
         // then
         assertThat(result).isEqualTo("total amount on items equal to amount on the invoice required");
+    }
+
+
+    @Test
+    public void when_italian_then_no_check() throws Exception {
+
+        // given
+        invoice.setNetAmount(bd("90.00"));
+        invoice.setGrossAmount(bd("100.00"));
+        assertThat(invoice.getVatAmount()).isEqualTo(bd("10.00"));
+
+        item.setNetAmount(bd("90.00"));
+        item.setGrossAmount(bd("100.00"));
+        item.setVatAmount(bd("11.00")); // should be 10.00
+        invoice.getItems().add(item);
+
+        // and also
+        invoiceAtPath = "/ITA";
+
+        // when
+        final String result = validator.validateForAmounts(invoice).getResult();
+
+        // then
+        assertThat(result).isNull();
     }
 
 

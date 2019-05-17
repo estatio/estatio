@@ -1112,20 +1112,12 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
            legacyAnalysisLineWithNullDocValue_StateDiffers(other, this)) {
             return false;
         }
-        if(legacyAnalysisLineForFrArt17WithNonZeroTax_StateDiffers(this, other) ||
-           legacyAnalysisLineForFrArt17WithNonZeroTax_StateDiffers(other, this)) {
-            return false;
-        }
         return Objects.equals(getSha256(), other.getSha256()) &&
                Objects.equals(getStatPay(), other.getStatPay());
     }
 
     private boolean legacyAnalysisLineWithNullDocValue_StateDiffers(final CodaDocHead one, final CodaDocHead other) {
         return one.isLegacyAnalysisLineWithNullDocValue() && !other.isLegacyAnalysisLineWithNullDocValue();
-    }
-
-    private boolean legacyAnalysisLineForFrArt17WithNonZeroTax_StateDiffers(final CodaDocHead one, final CodaDocHead other) {
-        return one.isLegacyAnalysisLineForFrArt17WithNonZeroTax() && !other.isLegacyAnalysisLineForFrArt17WithNonZeroTax();
     }
 
     @Programmatic

@@ -121,14 +121,19 @@
                         </bs3:tab>
                         <bs3:tab name="Dates">
                             <bs3:row>
-                                <bs3:col span="12">
-                                    <cpt:fieldSet name="Dates">
+                                <bs3:col span="6">
+                                    <cpt:fieldSet name="Dates" id="dates1">
                                         <cpt:action id="changeDates" position="PANEL"/>
                                         <cpt:property id="dateReceived"/>
                                         <cpt:property id="invoiceDate"/>
                                         <cpt:property id="dueDate">
                                             <cpt:action id="changeDueDate" hidden="EVERYWHERE"/>
                                         </cpt:property>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                                <bs3:col span="6">
+                                    <cpt:fieldSet name="VAT" id="dates-2">
+                                        <cpt:action id="changeDates" position="PANEL"/>
                                         <cpt:property id="vatRegistrationDate"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
