@@ -854,7 +854,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     @Property(notPersisted = true)
     @PropertyLayout(hidden = Where.OBJECT_FORMS)
     public Character getUserStatus() {
-        final LineCache lineCache = (LineCache) scratchpad.get("lineCache");
+        final LineCache lineCache = (LineCache) scratchpad.get(LineCache.class);
         if (lineCache == null) {
             return null;
         }

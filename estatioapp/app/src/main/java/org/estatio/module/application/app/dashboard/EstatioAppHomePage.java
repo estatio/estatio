@@ -288,8 +288,33 @@ public class EstatioAppHomePage {
 
     @Collection(notPersisted = true)
     public List<IncomingInvoiceWhenPayableBankTransfer> getIncomingInvoicesItaPayableBankTransfer() {
+        return cacheGetIncomingInvoicesItaPayableBankTransfer().stream()
+                .filter(x -> x.getUserStatus() != null)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * These indicate a failure to sync.
+     *
+     * That is, the IncomingInvoice has hit the "payable" status, and so its corresponding {@link CodaDocHead}'s
+     * "mark as payable" action has been invoked, which will in turn have triggered Camel to update Coda, and yet
+     * for some reason this has failed to happen.
+     */
+    @Collection(notPersisted = true)
+    public List<IncomingInvoiceWhenPayableBankTransfer> getIncomingInvoicesItaPayableBankTransferNoUserStatus() {
+        return cacheGetIncomingInvoicesItaPayableBankTransfer().stream()
+                    .filter(x -> x.getUserStatus() == null)
+                    .collect(Collectors.toList());
+    }
+
+    private List<IncomingInvoiceWhenPayableBankTransfer> cacheGetIncomingInvoicesItaPayableBankTransfer() {
+        return queryResultsCache.execute(this::doGetIncomingInvoicesItaPayableBankTransfer,
+                getClass(), "cacheGetIncomingInvoicesItaPayableBankTransfer");
+    }
+
+    private List<IncomingInvoiceWhenPayableBankTransfer> doGetIncomingInvoicesItaPayableBankTransfer() {
         return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalStateAndPaymentMethod(
-                AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.BANK_TRANSFER).stream()
+                AT_PATHS_ITA_OFFICE, IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.BANK_TRANSFER).stream()
                 .map(incomingInvoice -> {
                     final CodaDocHead codaDocHead = factoryService.mixin(
                             IncomingInvoice_codaDocHead.class, incomingInvoice).prop();
