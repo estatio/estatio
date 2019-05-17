@@ -60,6 +60,10 @@ public class Task_completeIncomingInvoice
         return mixin().default0Act();
     }
 
+    public List<? extends IPartyRoleType> choices0Act() {
+        return mixin().choices0Act();
+    }
+
     public Person default1Act(final IPartyRoleType roleType) {
         return mixin().default1Act(roleType);
     }
