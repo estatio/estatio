@@ -18,11 +18,11 @@ public class CodaDocHead_isSameAs_Test {
     @Before
     public void setUp() throws Exception {
         codaDocHead = new CodaDocHead() {
-            @Override boolean isLegacy() {
+            @Override boolean isLegacyAnalysisLineWithNullDocValue() {
                 return codaDocHeadLegacyState;
             }
 
-            @Override boolean isLegacyFrArt17WithNonZeroTax() {
+            @Override boolean isLegacyAnalysisLineForFrArt17WithNonZeroTax() {
                 return codaDocHeadLegacyFrArt17State;
             }
         };
@@ -31,11 +31,11 @@ public class CodaDocHead_isSameAs_Test {
         codaDocHeadLegacyState = false;
 
         otherDocHead = new CodaDocHead() {
-            @Override boolean isLegacy() {
+            @Override boolean isLegacyAnalysisLineWithNullDocValue() {
                 return otherDocHeadLegacyState;
             }
 
-            @Override boolean isLegacyFrArt17WithNonZeroTax() {
+            @Override boolean isLegacyAnalysisLineForFrArt17WithNonZeroTax() {
                 return otherDocHeadLegacyFrArt17State;
             }
         };
@@ -67,7 +67,7 @@ public class CodaDocHead_isSameAs_Test {
         // given
         assertThat(codaDocHead.getSha256()).isEqualTo(otherDocHead.getSha256());
         assertThat(codaDocHead.getStatPay()).isEqualTo(otherDocHead.getStatPay());
-        assertThat(codaDocHead.isLegacy()).isEqualTo(otherDocHead.isLegacy());
+        assertThat(codaDocHead.isLegacyAnalysisLineWithNullDocValue()).isEqualTo(otherDocHead.isLegacyAnalysisLineWithNullDocValue());
 
         // when
         assertThat(codaDocHead.isSameAs(otherDocHead)).isTrue();
@@ -78,7 +78,7 @@ public class CodaDocHead_isSameAs_Test {
         // given
         otherDocHead.setSha256("DIFFERENT_SHA256");
         assertThat(codaDocHead.getStatPay()).isEqualTo(otherDocHead.getStatPay());
-        assertThat(codaDocHead.isLegacy()).isEqualTo(otherDocHead.isLegacy());
+        assertThat(codaDocHead.isLegacyAnalysisLineWithNullDocValue()).isEqualTo(otherDocHead.isLegacyAnalysisLineWithNullDocValue());
 
         // when
         assertThat(codaDocHead.isSameAs(otherDocHead)).isFalse();
@@ -90,7 +90,7 @@ public class CodaDocHead_isSameAs_Test {
         assertThat(codaDocHead.getSha256()).isEqualTo(otherDocHead.getSha256());
         codaDocHead.setStatPay("");
         otherDocHead.setStatPay("paid");
-        assertThat(codaDocHead.isLegacy()).isEqualTo(otherDocHead.isLegacy());
+        assertThat(codaDocHead.isLegacyAnalysisLineWithNullDocValue()).isEqualTo(otherDocHead.isLegacyAnalysisLineWithNullDocValue());
 
         // when
         assertThat(codaDocHead.isSameAs(otherDocHead)).isFalse();
