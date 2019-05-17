@@ -30,7 +30,7 @@ public class SellerBankAccountCreator_createBankAccount {
         return sellerBankAccountCreator;
     }
 
-    public boolean hideEditSeller() {
+    public boolean hideAct() {
         if (!(sellerBankAccountCreator instanceof WithApplicationTenancy)) {
             return false;
         }
