@@ -3,7 +3,6 @@ package org.estatio.module.capex.dom.invoice;
 import java.math.BigDecimal;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -123,12 +122,6 @@ public class IncomingInvoice_Validator_validateForAmounts_Test {
         assertThat(result).isEqualTo("total amount on items equal to amount on the invoice required");
     }
 
-    @Ignore
-    @Test
-    public void tax_ignored_if_FR_ART17() throws Exception {
-
-
-    }
 
     @Test
     public void when_all_zero_no_items_and_amounts_do_match() throws Exception {
