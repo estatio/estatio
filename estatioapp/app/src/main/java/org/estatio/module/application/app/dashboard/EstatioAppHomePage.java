@@ -299,6 +299,9 @@ public class EstatioAppHomePage {
      * That is, the IncomingInvoice has hit the "payable" status, and so its corresponding {@link CodaDocHead}'s
      * "mark as payable" action has been invoked, which will in turn have triggered Camel to update Coda, and yet
      * for some reason this has failed to happen.
+     *
+     * In these cases, the 'markAsPayable' action should still be enabled on the CodaDocHead, to allow app-support
+     * to retry.
      */
     @Collection(notPersisted = true)
     public List<IncomingInvoiceWhenPayableBankTransfer> getIncomingInvoicesItaPayableBankTransferNoUserStatus() {
