@@ -21,6 +21,7 @@ import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.coda.dom.doc.CodaDocHead;
+import org.estatio.module.coda.dom.doc.LineCache;
 import org.estatio.module.party.dom.Party;
 
 import lombok.Getter;
@@ -35,6 +36,7 @@ import static org.apache.isis.applib.annotation.Projecting.PROJECTED;
             "lastApprovedBy",
             "lastApprovedOn",
             "codaDocHead",
+            "userStatus",
     }
 )
 @DomainObject(objectType = "homePage.IncomingInvoiceWhenPayableBankTransfer")
@@ -52,6 +54,8 @@ public class IncomingInvoiceWhenPayableBankTransfer {
         }
         this.codaDocHead = codaDocHead;
         this.incomingInvoice = incomingInvoice;
+
+        this.userStatus = codaDocHead.getSummaryLineUserStatus(LineCache.DEFAULT);
     }
 
     @org.apache.isis.applib.annotation.Property(projecting = PROJECTED)
@@ -86,6 +90,9 @@ public class IncomingInvoiceWhenPayableBankTransfer {
 
     @Getter @Setter @Nullable
     private String lastApprovedBy;
+
+    @Getter @Setter @Nullable
+    private Character userStatus;
 
     @Getter @Setter @Nullable
     private CodaDocHead codaDocHead;
