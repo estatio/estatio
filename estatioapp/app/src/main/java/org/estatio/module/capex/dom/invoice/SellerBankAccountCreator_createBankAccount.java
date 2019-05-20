@@ -4,13 +4,15 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Mixin;
 
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancy;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.module.capex.dom.util.CountryUtil;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.financial.dom.utils.IBANValidator;
 
 /**
- * This interface cannot be inlined, because SellerBankAccountCreator is an interface.
+ * This mixin cannot be inlined, because SellerBankAccountCreator is an interface.
  */
 @Mixin(method = "act")
 public class SellerBankAccountCreator_createBankAccount {
@@ -26,6 +28,14 @@ public class SellerBankAccountCreator_createBankAccount {
         final BankAccount bankAccount = bankAccountRepository.findBankAccountByReference(sellerBankAccountCreator.getSeller(), ibanNumber); // not exactly sure why, but this lookup is required (instead of setting bankaccount right away) in order that jaxb viewmodel is recreated correctly (otherwise we get an empty bank account).
         sellerBankAccountCreator.setBankAccount(bankAccount);
         return sellerBankAccountCreator;
+    }
+
+    public boolean hideAct() {
+        if (!(sellerBankAccountCreator instanceof WithApplicationTenancy)) {
+            return false;
+        }
+        final WithApplicationTenancy withApplicationTenancy = (WithApplicationTenancy) sellerBankAccountCreator;
+        return CountryUtil.isItalian(withApplicationTenancy);
     }
 
     public String disableAct() {

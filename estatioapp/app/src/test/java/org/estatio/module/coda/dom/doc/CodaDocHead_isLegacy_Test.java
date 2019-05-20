@@ -47,7 +47,7 @@ public class CodaDocHead_isLegacy_Test {
         analysisLine.setDocValue(null);
 
         // when, then
-        assertThat(codaDocHead.isLegacy()).isTrue();
+        assertThat(codaDocHead.isLegacyAnalysisLineWithNullDocValue()).isTrue();
 
     }
 
@@ -58,7 +58,7 @@ public class CodaDocHead_isLegacy_Test {
         analysisLine.setDocValue(BigDecimal.ONE);
 
         // when, then
-        assertThat(codaDocHead.isLegacy()).isFalse();
+        assertThat(codaDocHead.isLegacyAnalysisLineWithNullDocValue()).isFalse();
     }
 
     @Test
@@ -68,7 +68,7 @@ public class CodaDocHead_isLegacy_Test {
         analysisLine.setDocValue(BigDecimal.ZERO);  // can even be zero, still not legacy.
 
         // when, then
-        assertThat(codaDocHead.isLegacy()).isFalse();
+        assertThat(codaDocHead.isLegacyAnalysisLineWithNullDocValue()).isFalse();
     }
 
     @Test
@@ -77,7 +77,7 @@ public class CodaDocHead_isLegacy_Test {
         codaDocHead.getLines().clear();
 
         // when, then
-        assertThat(codaDocHead.isLegacy()).isFalse();
+        assertThat(codaDocHead.isLegacyAnalysisLineWithNullDocValue()).isFalse();
     }
 
 }
