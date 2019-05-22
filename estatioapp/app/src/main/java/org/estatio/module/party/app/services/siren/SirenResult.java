@@ -18,6 +18,8 @@ package org.estatio.module.party.app.services.siren;
 
 import java.util.Comparator;
 
+import org.joda.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -29,11 +31,15 @@ public class SirenResult implements Comparable<SirenResult> {
     @Getter
     private String companyName;
 
+    @Getter
+    private LocalDate entryDate;
+
     @Override
     public int compareTo(final SirenResult o) {
         return Comparator
                 .comparing(SirenResult::getChamberOfCommerceCode)
                 .thenComparing(SirenResult::getCompanyName)
+                .thenComparing(SirenResult::getEntryDate)
                 .compare(this, o);
     }
 }

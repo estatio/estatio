@@ -16,9 +16,9 @@
  */
 package org.estatio.module.party.app.services.siren;
 
-import java.net.ConnectException;
 import java.util.List;
 
+import org.apache.http.client.ClientProtocolException;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -34,16 +34,18 @@ public class SirenServiceTest {
     public void company_query_should_return_company_code() {
         // given
         SirenService sirenService = new SirenService();
+        sirenService.bearerToken = "Bearer b016dcd8-99d7-3c74-a58a-1d4f5846aa7d";
 
         // when
         List<SirenResult> results = null;
         try {
             results = sirenService.getChamberOfCommerceCodes(COMPANY_QUERY);
-        } catch (ConnectException e) {
+        } catch (ClientProtocolException e) {
             e.printStackTrace();
         }
 
         // then
+        assertThat(results).isNotNull();
         assertThat(results.size()).isEqualTo(1);
         SirenResult result = results.get(0);
         assertThat(result.getChamberOfCommerceCode()).isEqualTo(COMPANY_CODE);
@@ -54,16 +56,18 @@ public class SirenServiceTest {
     public void company_code_should_return_company_name() {
         // given
         SirenService sirenService = new SirenService();
+        sirenService.bearerToken = "Bearer b016dcd8-99d7-3c74-a58a-1d4f5846aa7d";
 
         // when
         SirenResult result = null;
         try {
             result = sirenService.getCompanyName(COMPANY_CODE);
-        } catch (ConnectException e) {
+        } catch (ClientProtocolException e) {
             e.printStackTrace();
         }
 
         // then
+        assertThat(result).isNotNull();
         assertThat(result.getCompanyName()).isEqualTo(COMPANY_NAME);
     }
 
@@ -72,12 +76,13 @@ public class SirenServiceTest {
     public void full_circle() {
         // given
         SirenService sirenService = new SirenService();
+        sirenService.bearerToken = "Bearer b016dcd8-99d7-3c74-a58a-1d4f5846aa7d";
 
         // when
         List<SirenResult> codeResults = null;
         try {
             codeResults = sirenService.getChamberOfCommerceCodes(COMPANY_QUERY);
-        } catch (ConnectException e) {
+        } catch (ClientProtocolException e) {
             e.printStackTrace();
         }
 
@@ -90,7 +95,7 @@ public class SirenServiceTest {
         SirenResult companyNameResult = null;
         try {
             companyNameResult = sirenService.getCompanyName(codeResult.getChamberOfCommerceCode());
-        } catch (ConnectException e) {
+        } catch (ClientProtocolException e) {
             e.printStackTrace();
         }
 
