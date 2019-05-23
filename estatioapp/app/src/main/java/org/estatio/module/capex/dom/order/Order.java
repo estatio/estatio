@@ -871,7 +871,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         }
         List<OrganisationNameNumberViewModel> result = new ArrayList<>();
         result.addAll(chamberOfCommerceCodeLookUpService.getChamberOfCommerceCodeCandidatesByOrganisation(search, atPath));
-        result.add(new OrganisationNameNumberViewModel(search, null));
+        result.add(new OrganisationNameNumberViewModel(search, null, null));
         return result;
     }
 

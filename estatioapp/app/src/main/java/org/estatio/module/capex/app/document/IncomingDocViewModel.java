@@ -239,7 +239,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         }
         List<OrganisationNameNumberViewModel> result = new ArrayList<>();
         result.addAll(chamberOfCommerceCodeLookUpService.getChamberOfCommerceCodeCandidatesByOrganisation(search, atPath));
-        result.add(new OrganisationNameNumberViewModel(search, null));
+        result.add(new OrganisationNameNumberViewModel(search, null, null));w
         return result;
     }
 

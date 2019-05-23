@@ -32,7 +32,7 @@ public class SupplierCreationService {
             // nothing
         }
         List<OrganisationNameNumberViewModel> result = new ArrayList<>(chamberOfCommerceCodeLookUpService.getChamberOfCommerceCodeCandidatesByOrganisation(search, atPath));
-        result.add(new OrganisationNameNumberViewModel(search, null));
+        result.add(new OrganisationNameNumberViewModel(search, null, null));
         return result;
     }
 
