@@ -14,6 +14,9 @@ import org.apache.isis.applib.services.factory.FactoryService;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentRepository;
 import org.incode.module.document.dom.impl.docs.minio.Document_purgeBlob;
+import org.incode.module.document.seed.ApplicationSettingKey;
+
+import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class DocumentBlobPurgeService {
@@ -27,22 +30,36 @@ public class DocumentBlobPurgeService {
     }
 
     /**
-     * Intended to be called daily from Quartz or similar.
+     * Intended to be called periodically from Quartz or similar.
      */
     @Programmatic
     public void purge() {
 
+        final Boolean purgeBlobs = ApplicationSettingKey.purgeBlobs.find(applicationSettingsService).valueAsBoolean();
+        if (purgeBlobs == null || !purgeBlobs) {
+            // nothing to do
+            return;
+        }
+
+        Integer purgeBlobsAfterWeeks = ApplicationSettingKey.purgeBlobsAfterWeeks.find(applicationSettingsService).valueAsInt();
+        if (purgeBlobsAfterWeeks == null) {
+            purgeBlobsAfterWeeks = this.purgeAfterInWeeks;
+        }
+
         final List<Document> documents =
-                documentRepository.findOldestWithPurgeableBlogsAndCreatedAtBeforeInWeeks(purgeAfterInWeeks);
+                documentRepository.findOldestWithPurgeableBlogsAndCreatedAtBeforeInWeeks(purgeBlobsAfterWeeks);
         for (final Document document : documents) {
             final Document_purgeBlob mixin = factoryService.mixin(Document_purgeBlob.class, document);
             if(!mixin.hideAct()) {
                 mixin.act();
             }
         }
+
     }
 
 
+    @Inject
+    ApplicationSettingsServiceRW applicationSettingsService;
     @Inject
     DocumentRepository documentRepository;
     @Inject
