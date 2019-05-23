@@ -179,7 +179,7 @@ public class IncomingDocAsInvoiceViewModel_Test {
         Organisation seller = new Organisation();
         BankAccount bankAccount = new BankAccount();
         String sellerName = "some name";
-        OrganisationNameNumberViewModel candidate = new OrganisationNameNumberViewModel(sellerName, null);
+        OrganisationNameNumberViewModel candidate = new OrganisationNameNumberViewModel(sellerName, null, null);
         String iban = "NL02RABO0313246581";
 
         // expect

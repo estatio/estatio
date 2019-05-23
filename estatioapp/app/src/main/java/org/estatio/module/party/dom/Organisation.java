@@ -178,7 +178,7 @@ public class Organisation
                 setChamberOfCommerceCodeIfNotAlready(organisationCheck.getChamberOfCommerceCode());
             }
             if (!Strings.isNullOrEmpty(organisationCheck.getOrganisationName()) && !organisationCheck.getOrganisationName().equals(getName())) {
-                changeName(organisationCheck.getOrganisationName(), clockService.now());
+                changeName(organisationCheck.getOrganisationName(), organisationCheck.getEntryDate().minusDays(1));
             }
             setVerified(true);
 
