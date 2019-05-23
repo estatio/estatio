@@ -11,7 +11,6 @@ import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.docs.DocumentTemplateRepository;
-import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
@@ -52,9 +51,7 @@ public abstract class DocumentTemplateFSAbstract extends FixtureScript {
             final String name,
             final String mimeType,
             final String contentText,
-            final RenderingStrategy contentRenderingStrategy,
             final String nameText,
-            final RenderingStrategy nameRenderingStrategy,
             final ExecutionContext executionContext) {
 
         DocumentTemplate documentTemplate = documentTemplateRepository
@@ -65,17 +62,15 @@ public abstract class DocumentTemplateFSAbstract extends FixtureScript {
             documentTemplate.setName(name);
             documentTemplate.setMimeType(mimeType);
             documentTemplate.setText(contentText);
-            documentTemplate.setContentRenderingStrategy(contentRenderingStrategy);
             documentTemplate.setNameText(nameText);
-            documentTemplate.setNameRenderingStrategy(nameRenderingStrategy);
         } else {
             documentTemplate =
                     documentTemplateRepository.createText(
                             documentType, date, atPath,
                             fileSuffix, previewOnly,
                             name, mimeType,
-                            contentText, contentRenderingStrategy,
-                            nameText, nameRenderingStrategy);
+                            contentText,
+                            nameText);
         }
         return executionContext.addResult(this, documentTemplate);
     }
@@ -87,8 +82,7 @@ public abstract class DocumentTemplateFSAbstract extends FixtureScript {
             final String fileSuffix,
             final boolean previewOnly,
             final Clob clob,
-            final RenderingStrategy contentRenderingStrategy,
-            final String nameText, final RenderingStrategy nameRenderingStrategy,
+            final String nameText,
             ExecutionContext executionContext) {
 
         DocumentTemplate documentTemplate = documentTemplateRepository
@@ -98,16 +92,13 @@ public abstract class DocumentTemplateFSAbstract extends FixtureScript {
             documentTemplate.setFileSuffix(fileSuffix);
             documentTemplate.setPreviewOnly(previewOnly);
             documentTemplate.modifyClob(clob);
-            documentTemplate.setContentRenderingStrategy(contentRenderingStrategy);
             documentTemplate.setNameText(nameText);
-            documentTemplate.setNameRenderingStrategy(nameRenderingStrategy);
         } else {
             documentTemplate =
                     documentTemplateRepository.createClob(
                             documentType, date, atPath,
                             fileSuffix, previewOnly, clob,
-                            contentRenderingStrategy,
-                            nameText, nameRenderingStrategy);
+                            nameText);
         }
         return executionContext.addResult(this, documentTemplate);
     }
@@ -119,8 +110,7 @@ public abstract class DocumentTemplateFSAbstract extends FixtureScript {
             final String fileSuffix,
             final boolean previewOnly,
             final Blob blob,
-            final RenderingStrategy contentRenderingStrategy,
-            final String nameText, final RenderingStrategy nameRenderingStrategy,
+            final String nameText,
             ExecutionContext executionContext) {
 
         DocumentTemplate documentTemplate = documentTemplateRepository
@@ -129,16 +119,13 @@ public abstract class DocumentTemplateFSAbstract extends FixtureScript {
             documentTemplate.setFileSuffix(fileSuffix);
             documentTemplate.setPreviewOnly(previewOnly);
             documentTemplate.modifyBlob(blob);
-            documentTemplate.setContentRenderingStrategy(contentRenderingStrategy);
             documentTemplate.setNameText(nameText);
-            documentTemplate.setNameRenderingStrategy(nameRenderingStrategy);
         } else {
             documentTemplate =
                     documentTemplateRepository.createBlob(
                             documentType, date, atPath,
                             fileSuffix, previewOnly, blob,
-                            contentRenderingStrategy,
-                            nameText, nameRenderingStrategy);
+                            nameText);
         }
 
         return executionContext.addResult(this, documentTemplate);

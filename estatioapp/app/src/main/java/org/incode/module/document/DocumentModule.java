@@ -17,7 +17,6 @@ import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.docs.paperclips.PaperclipForDocument;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
-import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.minio.dopserver.MinioDopServerModule;
 
@@ -40,7 +39,6 @@ public class DocumentModule extends ModuleAbstract {
                 deleteFrom(DocumentTemplate.class);
                 deleteFrom(DocumentAbstract.class);
                 deleteFrom(DocumentType.class);
-                deleteFrom(RenderingStrategy.class);
             }
         };
     }

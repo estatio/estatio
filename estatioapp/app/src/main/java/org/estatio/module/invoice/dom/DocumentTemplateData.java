@@ -45,7 +45,7 @@ import static org.estatio.module.lease.seed.DocumentTypeAndTemplatesFSForInvoice
 /**
  * maximum length is 24 ({@link DocumentType.ReferenceType.Meta#MAX_LEN}).
  */
-public enum DocumentTemplateData implements DocumentTemplateApi {
+public enum DocumentTemplateData {
 
     // cover notes
     COVER_NOTE_PRELIM_LETTER_GLOBAL (
@@ -275,7 +275,6 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
     private final Class<? extends AttachmentAdvisor> attachmentAdvisorClass;
     private final Class<? extends RendererModelFactory> rendererModelFactoryClass;
 
-    @Override
     public RendererModelFactory newRenderModelFactory(
             final Class<?> domainClass,
             final ClassService classService,
@@ -292,7 +291,6 @@ public enum DocumentTemplateData implements DocumentTemplateApi {
         return rendererModelFactory;
     }
 
-    @Override
     public AttachmentAdvisor newAttachmentAdvisor(
             final Class<?> domainClass, final ClassService classService, final ServiceRegistry2 serviceRegistry2) {
 

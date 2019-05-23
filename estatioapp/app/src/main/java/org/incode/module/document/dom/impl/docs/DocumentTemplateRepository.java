@@ -15,12 +15,10 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.clock.ClockService;
-import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
-import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.document.dom.impl.types.DocumentType;
 
 @DomainService(
@@ -42,15 +40,12 @@ public class DocumentTemplateRepository {
             final String fileSuffix,
             final boolean previewOnly,
             final Blob blob,
-            final RenderingStrategy contentRenderingStrategy,
-            final String subjectText,
-            final RenderingStrategy subjectRenderingStrategy) {
+            final String subjectText) {
         final DocumentTemplate document =
                 new DocumentTemplate(
                         type, date, atPath,
                         fileSuffix, previewOnly, blob,
-                        contentRenderingStrategy,
-                        subjectText, subjectRenderingStrategy);
+                        subjectText);
         repositoryService.persistAndFlush(document);
         return document;
     }
@@ -63,15 +58,12 @@ public class DocumentTemplateRepository {
             final String fileSuffix,
             final boolean previewOnly,
             final Clob clob,
-            final RenderingStrategy contentRenderingStrategy,
-            final String subjectText,
-            final RenderingStrategy subjectRenderingStrategy) {
+            final String subjectText) {
         final DocumentTemplate document =
                 new DocumentTemplate(
                         type, date, atPath,
                         fileSuffix, previewOnly, clob,
-                        contentRenderingStrategy,
-                        subjectText, subjectRenderingStrategy);
+                        subjectText);
         repositoryService.persistAndFlush(document);
         return document;
     }
@@ -86,27 +78,18 @@ public class DocumentTemplateRepository {
             final String name,
             final String mimeType,
             final String text,
-            final RenderingStrategy contentRenderingStrategy,
-            final String subjectText,
-            final RenderingStrategy subjectRenderingStrategy) {
+            final String subjectText) {
         final DocumentTemplate document =
                 new DocumentTemplate(
                         type, date, atPath,
                         fileSuffix, previewOnly,
                         name, mimeType, text,
-                        contentRenderingStrategy,
-                        subjectText, subjectRenderingStrategy);
+                        subjectText);
         repositoryService.persistAndFlush(document);
         return document;
     }
     //endregion
 
-    //region > delete
-    @Programmatic
-    public void delete(final DocumentTemplate documentTemplate) {
-        repositoryService.removeAndFlush(documentTemplate);
-    }
-    //endregion
 
     //region > findBy...
 
@@ -184,22 +167,6 @@ public class DocumentTemplateRepository {
     }
 
     /**
-     * As {@link #findByTypeAndApplicableToAtPath(DocumentType, String)}, but excludes any templates in the future.  Those returned
-     * are ordered by most specific application tenancy first, and then by most recent first; so the first template returned
-     * is usually the one to be used.
-     */
-    @Programmatic
-    public List<DocumentTemplate> findByTypeAndApplicableToAtPathAndCurrent(final DocumentType documentType, final String atPath) {
-        final LocalDate now = clockService.now();
-        return repositoryService.allMatches(
-                new QueryDefault<>(DocumentTemplate.class,
-                        "findByTypeAndApplicableToAtPathAndCurrent",
-                        "type", documentType,
-                        "atPath", atPath,
-                        "now", now));
-    }
-
-    /**
      * Returns all templates for a type, ordered by application tenancy and date desc.
      */
     @Programmatic
@@ -210,20 +177,6 @@ public class DocumentTemplateRepository {
                         "type", documentType));
     }
 
-
-    /**
-     * Returns all templates available for a particular application tenancy, ordered by most specific tenancy first and
-     * then within that the most recent first.
-     */
-    @Programmatic
-    public List<DocumentTemplate> findByApplicableToAtPathAndCurrent(final String atPath) {
-        final LocalDate now = clockService.now();
-        return repositoryService.allMatches(
-                new QueryDefault<>(DocumentTemplate.class,
-                        "findByApplicableToAtPathAndCurrent",
-                        "atPath", atPath,
-                        "now", now));
-    }
     //endregion
 
     //region > allTemplates
@@ -233,45 +186,6 @@ public class DocumentTemplateRepository {
     }
     //endregion
 
-    //region > validate...
-    @Programmatic
-    public TranslatableString validateApplicationTenancyAndDate(
-            final DocumentType proposedType,
-            final String proposedAtPath,
-            final LocalDate proposedDate,
-            final DocumentTemplate ignore) {
-
-        final List<DocumentTemplate> existingTemplates =
-                findByTypeAndAtPath(proposedType, proposedAtPath);
-        for (DocumentTemplate existingTemplate : existingTemplates) {
-            if(existingTemplate == ignore) {
-                continue;
-            }
-            if(java.util.Objects.equals(existingTemplate.getDate(), proposedDate)) {
-                return TranslatableString.tr("A template already exists for this date");
-            }
-            if (proposedDate == null && existingTemplate.getDate() != null) {
-                return TranslatableString.tr(
-                        "Must provide a date (there are existing templates that already have a date specified)");
-            }
-        }
-        return null;
-    }
-
-    @Programmatic
-    public TranslatableString validateSortAndRenderingStrategyInputNature(
-            final DocumentSort sort,
-            final RenderingStrategy renderingStrategy) {
-        final DocumentNature documentNature = renderingStrategy.getInputNature();
-        if(sort.isBytes() && documentNature == DocumentNature.CHARACTERS) {
-            return TranslatableString.tr("Must provide text or Clob template with a character-based rendering strategy");
-        }
-        if(sort.isCharacters() && documentNature == DocumentNature.BYTES) {
-            return TranslatableString.tr("Must provide Blob template with a binary-based rendering strategy");
-        }
-        return null;
-    }
-    //endregion
 
 
     //region > injected services
