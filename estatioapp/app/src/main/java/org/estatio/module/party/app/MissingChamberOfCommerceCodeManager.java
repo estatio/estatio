@@ -12,11 +12,20 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.wicketstuff.pdfjs.Scale;
+
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.value.Blob;
+
+import org.isisaddons.wicket.pdfjs.cpt.applib.PdfJsViewer;
 
 import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
@@ -47,6 +56,15 @@ public class MissingChamberOfCommerceCodeManager {
     @Getter @Setter
     private String chamberOfCommerceCode;
 
+    @ActionLayout(
+            position = ActionLayout.Position.PANEL,
+            promptStyle = PromptStyle.INLINE_AS_IF_EDIT
+    )
+    public MissingChamberOfCommerceCodeManager editChamberOfCommerceCode(final String chamberOfCommerceCode) {
+        setChamberOfCommerceCode(chamberOfCommerceCode);
+        return this;
+    }
+
     @Getter @Setter
     public List<Organisation> remainingOrganisations = new ArrayList<>();
 
@@ -69,7 +87,10 @@ public class MissingChamberOfCommerceCodeManager {
         return lookUpService.getChamberOfCommerceCodeCandidatesByOrganisation(supplier);
     }
 
-    public Document getNewestInvoice() {
+    @PdfJsViewer(initialPageNum = 1, initialScale = Scale.PAGE_WIDTH, initialHeight = 1500)
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public Blob getNewestInvoice() {
         Optional<IncomingInvoice> invoiceIfAny = incomingInvoiceRepository.findBySellerAndApprovalStates(supplier, Arrays.asList(IncomingInvoiceApprovalState.values()))
                 .stream()
                 .max(Comparator.comparing(IncomingInvoice::getInvoiceDate));
@@ -78,7 +99,29 @@ public class MissingChamberOfCommerceCodeManager {
                 pdfService.lookupIncomingInvoicePdfFrom(invoiceIfAny.get()) :
                 Optional.empty();
 
-        return documentIfAny.orElse(null);
+        return documentIfAny.map(DocumentAbstract::getBlob).orElse(null);
+    }
+
+    public MissingChamberOfCommerceCodeManager save() {
+        this.supplier.setChamberOfCommerceCode(getChamberOfCommerceCode());
+
+        this.supplier = this.remainingOrganisations.isEmpty() ? null : this.remainingOrganisations.remove(0);
+        this.chamberOfCommerceCode = null;
+
+        return this;
+    }
+
+    public String disableSave() {
+        return chamberOfCommerceCode == null ? "Chamber of Commerce code is required to save" : null;
+    }
+
+    public MissingChamberOfCommerceCodeManager skip() {
+        this.skippedOrganisations.add(this.supplier);
+
+        this.supplier = this.remainingOrganisations.isEmpty() ? null : this.remainingOrganisations.remove(0);
+        this.chamberOfCommerceCode = null;
+
+        return this;
     }
 
     @XmlTransient

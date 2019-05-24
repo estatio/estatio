@@ -78,11 +78,6 @@ public class SirenService {
         bearerToken = (consumerKey != null && consumerSecret != null) ?
                 getBearerTokenFromKeyAndSecret(consumerKey, consumerSecret) :
                 null;
-
-        // should not happen, but let's safeguard anyway
-        if (bearerToken == null) {
-            throw new ClientProtocolException("Bearer token for Siren API authorization is null");
-        }
     }
 
     String getBearerTokenFromKeyAndSecret(final String consumerKey, final String consumerSecret) throws ClientProtocolException {
@@ -110,6 +105,11 @@ public class SirenService {
     }
 
     public List<SirenResult> getChamberOfCommerceCodes(String query) throws ClientProtocolException {
+        // should not happen, but let's safeguard anyway
+        if (bearerToken == null) {
+            throw new ClientProtocolException("Bearer token for Siren API authorization is null");
+        }
+
         UriBuilder uriBuilder = UriBuilder
                 .fromUri(BASE_URI)
                 .queryParam(
@@ -143,6 +143,11 @@ public class SirenService {
     }
 
     public SirenResult getCompanyName(String chamberOfCommerceCode) throws ClientProtocolException {
+        // should not happen, but let's safeguard anyway
+        if (bearerToken == null) {
+            throw new ClientProtocolException("Bearer token for Siren API authorization is null");
+        }
+
         UriBuilder uriBuilder = UriBuilder
                 .fromUri(BASE_URI)
                 .path(chamberOfCommerceCode)
