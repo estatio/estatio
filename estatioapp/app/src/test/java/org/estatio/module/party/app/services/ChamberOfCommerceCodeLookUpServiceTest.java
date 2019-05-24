@@ -91,17 +91,21 @@ public class ChamberOfCommerceCodeLookUpServiceTest {
 
     @Mock MessageService mockMessageService;
 
+    @Mock SirenService mockSirenService;
+
     @Test
     public void find_Candidate_For_France_By_Code_works_when_no_result() throws Exception {
 
         // given
         ChamberOfCommerceCodeLookUpService service = new ChamberOfCommerceCodeLookUpService();
         service.messageService = mockMessageService;
-        service.sirenService = new SirenService();
+        service.sirenService = mockSirenService;
         String noResultsWarning = "A connection to the external Siren service could be made, but no results were returned";
 
         // expect
         context.checking(new Expectations(){{
+            oneOf(mockSirenService).getCompanyName("some cocc that returns no results");
+            will(returnValue(null));
             allowing(mockMessageService).warnUser(noResultsWarning);
         }});
 
