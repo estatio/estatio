@@ -15,7 +15,6 @@
                         <cpt:property id="chamberOfCommerceCode">
                             <cpt:action id="editChamberOfCommerceCode"/>
                         </cpt:property>
-                        <cpt:property id="newestInvoice"/>
                         <cpt:property id="supplier"/>
                     </cpt:fieldSet>
                 </bs3:col>
@@ -29,6 +28,11 @@
                     <cpt:collection id="skippedOrganisations"/>
                 </bs3:col>
             </bs3:row>
+        </bs3:col>
+        <bs3:col span="8">
+            <cpt:fieldSet name="Newest invoice if found" id="content">
+                    <cpt:property id="newestInvoice"/>
+            </cpt:fieldSet>
         </bs3:col>
     </bs3:row>
 </bs3:grid>
