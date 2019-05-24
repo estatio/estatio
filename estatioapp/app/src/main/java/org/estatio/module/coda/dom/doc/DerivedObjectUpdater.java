@@ -135,7 +135,7 @@ public class DerivedObjectUpdater {
                 final Charge chargeIfAny = docLine.getExtRefWorkTypeCharge();
                 final Project projectIfAny = docLine.getExtRefProject();
 
-                final BigDecimal netAmount = elseZero(docLine.getDocValue());
+                final BigDecimal netAmount = elseZero(docLine.getEffectiveDocValue());
                 final BigDecimal vatAmount = elseZero(docLine.getDocSumTax());
                 final BigDecimal grossAmount = Util.add(netAmount, vatAmount);
 
@@ -145,7 +145,7 @@ public class DerivedObjectUpdater {
                     // there was no previous line, so no previous invoiceItem to update.
                     // instead, we just create a new item and link
                     final IncomingInvoiceItem invoiceItem = addInvoiceItemFor(docLine, incomingInvoice);
-                    createLinkIfPossible(orderIfAny, invoiceItem, chargeIfAny, projectIfAny, netAmount);
+                    createLinkIfPossible(orderIfAny, chargeIfAny, projectIfAny, invoiceItem, netAmount);
 
                 } else {
 
@@ -211,7 +211,7 @@ public class DerivedObjectUpdater {
                                 // just recreate the link.
                                 linkRepository.removeLink(link);
 
-                                createLinkIfPossible(orderIfAny, invoiceItem, chargeIfAny, projectIfAny, netAmount);
+                                createLinkIfPossible(orderIfAny, chargeIfAny, projectIfAny, invoiceItem, netAmount);
 
                             } else {
                                 // invoiceItem has a different charge/project from the DocLine, so it won't have
@@ -221,7 +221,7 @@ public class DerivedObjectUpdater {
                         } else {
 
                             // no link previously, just create one.
-                            createLinkIfPossible(orderIfAny, invoiceItem, chargeIfAny, projectIfAny, netAmount);
+                            createLinkIfPossible(orderIfAny, chargeIfAny, projectIfAny, invoiceItem, netAmount);
                         }
 
                     } else {
@@ -230,7 +230,7 @@ public class DerivedObjectUpdater {
                         // so create an item and a link if possible now
 
                         final IncomingInvoiceItem invoiceItem = addInvoiceItemFor(docLine, incomingInvoice);
-                        createLinkIfPossible(orderIfAny, invoiceItem, chargeIfAny, projectIfAny, netAmount);
+                        createLinkIfPossible(orderIfAny, chargeIfAny, projectIfAny, invoiceItem, netAmount);
                     }
 
                 }
@@ -289,10 +289,10 @@ public class DerivedObjectUpdater {
                     final Charge chargeIfAny = docLine.getExtRefWorkTypeCharge();
                     final Project projectIfAny = docLine.getExtRefProject();
 
-                    final BigDecimal netAmount = elseZero(docLine.getDocValue());
+                    final BigDecimal netAmount = elseZero(docLine.getEffectiveDocValue());
 
                     final IncomingInvoiceItem invoiceItem = addInvoiceItemFor(docLine, incomingInvoice);
-                    createLinkIfPossible(orderIfAny, invoiceItem, chargeIfAny, projectIfAny, netAmount);
+                    createLinkIfPossible(orderIfAny, chargeIfAny, projectIfAny, invoiceItem, netAmount);
                 }
 
             } else {
@@ -312,7 +312,7 @@ public class DerivedObjectUpdater {
         final String periodFromDocHead = Util.asFinancialYear(docHead.getCodaPeriod());
         final Property propertyFromDocHead = docHead.getSummaryLineAccountEl3Property(LineCache.DEFAULT);
 
-        final BigDecimal netAmount = elseZero(docLine.getDocValue());
+        final BigDecimal netAmount = elseZero(docLine.getEffectiveDocValue());
         final BigDecimal vatAmount = elseZero(docLine.getDocSumTax());
         final BigDecimal grossAmount = Util.add(netAmount, vatAmount);
         final LocalDate dueDate = docLine.getDueDate();
@@ -329,23 +329,29 @@ public class DerivedObjectUpdater {
         return item;
     }
 
-    private void createLinkIfPossible(
+    void createLinkIfPossible(
             final Order orderIfAny,
-            final IncomingInvoiceItem invoiceItem,
             final Charge chargeIfAny,
             final Project projectIfAny,
+            final IncomingInvoiceItem invoiceItem,
             final BigDecimal netAmount) {
 
-        if (orderIfAny != null &&
-                projectIfAny != null &&
-                chargeIfAny != null) {
+        if (orderIfAny   != null &&
+            projectIfAny != null &&
+            chargeIfAny  != null    ) {
 
-            final Optional<OrderItem> orderItemIfAny = orderIfAny.itemFor(chargeIfAny, projectIfAny);
-            orderItemIfAny.ifPresent(
-                    orderItem -> linkRepository.createLink(orderItem, invoiceItem, netAmount));
+            if(positiveValueFor(netAmount)) {
+                final Optional<OrderItem> orderItemIfAny = orderIfAny.itemFor(chargeIfAny, projectIfAny);
+                orderItemIfAny.ifPresent(
+                        orderItem -> linkRepository.createLink(orderItem, invoiceItem, netAmount));
+            }
+
         }
     }
 
+    private static boolean positiveValueFor(final BigDecimal x) {
+        return x != null && x.compareTo(BigDecimal.ZERO) > 0;
+    }
 
     /**
      * Attach paperclip to Document based on the value of 'userref1', if exists.

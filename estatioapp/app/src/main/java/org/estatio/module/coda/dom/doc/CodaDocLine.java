@@ -2,6 +2,8 @@ package org.estatio.module.coda.dom.doc;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
+import java.util.Objects;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -125,6 +127,8 @@ import lombok.Setter;
 public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
 
     public static final String USER_REF_SDI_ID_PREFIX = "S";
+
+    static final String EL5_FOR_PRO_FORMA = "IT9998";
 
     /**
      * For properties that are only populated for summary lines.
@@ -267,6 +271,8 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
     private String description;
 
     /**
+     * NOTE : Please see {@link #getEffectiveDocValue()} - this might be what you should use instead, at least for analysis lines.
+     *
      * Depending on line type, is either the GROSS or NET amount.
      *
      * <ul>
@@ -588,6 +594,24 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
     private MediaCodePaymentMethod mediaCodePaymentMethod;
+
+    /**
+     * @return
+     */
+    @Programmatic
+    public BigDecimal getEffectiveDocValue() {
+        return isAnalysis() && isProForma()
+                ? BigDecimal.ZERO.setScale(2, RoundingMode.DOWN)
+                : getDocValue();
+    }
+
+    private boolean isAnalysis() {
+        return getLineType() == LineType.ANALYSIS;
+    }
+
+    private boolean isProForma() {
+        return Objects.equals(getAccountCodeEl5(), EL5_FOR_PRO_FORMA);
+    }
 
     /**
      * Populated only for analysis lines.
