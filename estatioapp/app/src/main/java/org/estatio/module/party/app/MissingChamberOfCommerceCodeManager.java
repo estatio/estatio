@@ -18,7 +18,8 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.PromptStyle;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.value.Blob;
 
@@ -54,16 +55,17 @@ public class MissingChamberOfCommerceCodeManager {
     private Organisation supplier;
 
     @Getter @Setter
+    @Property(editing = Editing.ENABLED)
     private String chamberOfCommerceCode;
 
-    @ActionLayout(
-            position = ActionLayout.Position.PANEL,
-            promptStyle = PromptStyle.INLINE_AS_IF_EDIT
-    )
-    public MissingChamberOfCommerceCodeManager editChamberOfCommerceCode(final String chamberOfCommerceCode) {
-        setChamberOfCommerceCode(chamberOfCommerceCode);
-        return this;
-    }
+//    @ActionLayout(
+//            position = ActionLayout.Position.PANEL,
+//            promptStyle = PromptStyle.INLINE
+//    )
+//    public MissingChamberOfCommerceCodeManager editChamberOfCommerceCode(final String chamberOfCommerceCode) {
+//        setChamberOfCommerceCode(chamberOfCommerceCode);
+//        return this;
+//    }
 
     @Getter @Setter
     public List<Organisation> remainingOrganisations = new ArrayList<>();
