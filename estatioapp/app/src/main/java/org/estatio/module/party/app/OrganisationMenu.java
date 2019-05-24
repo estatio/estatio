@@ -116,6 +116,17 @@ public class OrganisationMenu {
 
     // //////////////////////////////////////
 
+    public MissingChamberOfCommerceCodeManager fixMissingChamberOfCommerceCodes(final Country country) {
+        List<Organisation> organisationsMissingCode = organisationRepository.findByAtPathMissingChamberOfCommerceCode("/".concat(country.getReference()));
+        return new MissingChamberOfCommerceCodeManager(organisationsMissingCode);
+    }
+
+    public List<Country> choices0FixMissingChamberOfCommerceCodes() {
+        return countryServiceForCurrentUser.countriesForCurrentUser();
+    }
+
+    // //////////////////////////////////////
+
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "99")
     public List<Organisation> allOrganisations() {

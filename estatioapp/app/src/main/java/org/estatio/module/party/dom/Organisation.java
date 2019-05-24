@@ -64,7 +64,14 @@ import lombok.Setter;
                 name = "findByChamberOfCommerceCode", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.party.dom.Organisation "
-                        + "WHERE chamberOfCommerceCode == :chamberOfCommerceCode ")
+                        + "WHERE chamberOfCommerceCode == :chamberOfCommerceCode "),
+        @javax.jdo.annotations.Query(
+                name = "findByAtPathMissingChamberOfCommerceCode", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.party.dom.Organisation "
+                        + "WHERE chamberOfCommerceCode == null "
+                        + "&& applicationTenancyPath.startsWith(:atPath)")
+
 })
 @DomainObject(editing = Editing.DISABLED)
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)

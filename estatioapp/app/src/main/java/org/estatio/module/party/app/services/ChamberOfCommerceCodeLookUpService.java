@@ -1,8 +1,10 @@
 package org.estatio.module.party.app.services;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -24,6 +26,8 @@ public class ChamberOfCommerceCodeLookUpService {
 
     private final static String CONNECTION_WARNING = "A connection to the external Siren service could not be made";
     private final static String NO_RESULTS_WARNING = "A connection to the external Siren service could be made, but no results were returned";
+
+    public static final List<String> LEGAL_FORMS = Arrays.asList("SA", "SAS", "SASU", "SARL", "EURL", "SCI", "SNC");
 
     public List<OrganisationNameNumberViewModel> getChamberOfCommerceCodeCandidatesByOrganisation(final Organisation organisation) {
         return getChamberOfCommerceCodeCandidatesByOrganisation(organisation.getName(), organisation.getAtPath());
@@ -84,6 +88,12 @@ public class ChamberOfCommerceCodeLookUpService {
         }
 
         return null;
+    }
+
+    String filterLegalFormsFromOrganisationName(final String name ) {
+        return Arrays.stream(name.split(" "))
+                .filter(element -> !LEGAL_FORMS.contains(element))
+                .collect(Collectors.joining(" "));
     }
 
     @Inject MessageService messageService;

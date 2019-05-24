@@ -107,6 +107,11 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
                 "chamberOfCommerceCode", chamberOfCommerceCode);
     }
 
+    public List<Organisation> findByAtPathMissingChamberOfCommerceCode(final String atPath) {
+        return allMatches("findByAtPathMissingChamberOfCommerceCode",
+                "atPath", atPath);
+    }
+
     // //////////////////////////////////////
 
     @Programmatic
