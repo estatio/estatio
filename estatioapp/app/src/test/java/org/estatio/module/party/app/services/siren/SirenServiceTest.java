@@ -31,10 +31,10 @@ public class SirenServiceTest {
 
     @Test
     @Ignore //This test can hinder a build when the service is down temporarily or returns no results
-    public void company_query_should_return_company_code() {
+    public void company_query_should_return_company_code() throws Exception {
         // given
         SirenService sirenService = new SirenService();
-        sirenService.bearerToken = "Bearer b016dcd8-99d7-3c74-a58a-1d4f5846aa7d";
+        sirenService.bearerToken = sirenService.getBearerTokenFromKeyAndSecret("foo", "foo"); // this will fail, but test is ignored anyway
 
         // when
         List<SirenResult> results = null;
@@ -53,10 +53,10 @@ public class SirenServiceTest {
 
     @Test
     @Ignore //This test can hinder a build when the service is down temporarily or returns no results
-    public void company_code_should_return_company_name() {
+    public void company_code_should_return_company_name() throws Exception {
         // given
         SirenService sirenService = new SirenService();
-        sirenService.bearerToken = "Bearer b016dcd8-99d7-3c74-a58a-1d4f5846aa7d";
+        sirenService.bearerToken = sirenService.getBearerTokenFromKeyAndSecret("foo", "foo"); // this will fail, but test is ignored anyway
 
         // when
         SirenResult result = null;
@@ -73,10 +73,10 @@ public class SirenServiceTest {
 
     @Test
     @Ignore //This test can hinder a build when the service is down temporarily or returns no results
-    public void full_circle() {
+    public void full_circle() throws Exception {
         // given
         SirenService sirenService = new SirenService();
-        sirenService.bearerToken = "Bearer b016dcd8-99d7-3c74-a58a-1d4f5846aa7d";
+        sirenService.bearerToken = sirenService.getBearerTokenFromKeyAndSecret("foo", "foo"); // this will fail, but test is ignored anyway
 
         // when
         List<SirenResult> codeResults = null;

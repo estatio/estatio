@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
+import org.estatio.module.party.app.services.siren.SirenService;
 import org.estatio.module.party.dom.Organisation;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -96,6 +97,7 @@ public class ChamberOfCommerceCodeLookUpServiceTest {
         // given
         ChamberOfCommerceCodeLookUpService service = new ChamberOfCommerceCodeLookUpService();
         service.messageService = mockMessageService;
+        service.sirenService = new SirenService();
         String noResultsWarning = "A connection to the external Siren service could be made, but no results were returned";
 
         // expect

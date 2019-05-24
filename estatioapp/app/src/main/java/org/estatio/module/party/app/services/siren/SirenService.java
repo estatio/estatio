@@ -47,6 +47,8 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
@@ -69,13 +71,42 @@ public class SirenService {
     String bearerToken;
 
     @PostConstruct
-    public void init(final Map<String, String> properties) {
+    public void init(final Map<String, String> properties) throws ClientProtocolException {
         final String consumerKey = properties.get("estatio.siren.consumerKey");
         final String consumerSecret = properties.get("estatio.siren.consumerSecret");
 
         bearerToken = (consumerKey != null && consumerSecret != null) ?
-                "Bearer ".concat(new String(Base64.getDecoder().decode(consumerKey + ":" + consumerSecret))) :
-                "Bearer b016dcd8-99d7-3c74-a58a-1d4f5846aa7d";
+                getBearerTokenFromKeyAndSecret(consumerKey, consumerSecret) :
+                null;
+
+        // should not happen, but let's safeguard anyway
+        if (bearerToken == null) {
+            throw new ClientProtocolException("Bearer token for Siren API authorization is null");
+        }
+    }
+
+    String getBearerTokenFromKeyAndSecret(final String consumerKey, final String consumerSecret) throws ClientProtocolException {
+        final String authString = Base64.getEncoder().encodeToString((consumerKey + ":" + consumerSecret).getBytes());
+
+        URI uri = UriBuilder.fromUri("https://api.insee.fr/token").build();
+
+        RequestBuilder builder = RequestBuilder.post()
+                .setHeader(HttpHeaders.AUTHORIZATION, "Basic ".concat(authString))
+                .setHeader(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded")
+                .setEntity(new StringEntity("grant_type=client_credentials", ContentType.APPLICATION_FORM_URLENCODED));
+
+        try {
+            JsonObject jsonObject = executeForRequestBuilderAndUri(builder, uri).getAsJsonObject();
+            final String tokenType = jsonObject.get("token_type").getAsString();
+            final String accessToken = jsonObject.get("access_token").getAsString();
+
+            return tokenType.concat(" ").concat(accessToken);
+        } catch (ClientProtocolException e) {
+            throw e;
+        } catch (Exception e) {
+            // too bad
+            return null;
+        }
     }
 
     public List<SirenResult> getChamberOfCommerceCodes(String query) throws ClientProtocolException {
@@ -90,11 +121,17 @@ public class SirenService {
                 .queryParam( // just return organisation name and siren (chamber of commerce) code
                         "champs",
                         "denominationUniteLegale,siren"
-                        );
+                );
+
         URI uri = uriBuilder.build();
 
         try {
-            JsonArray jsonArray = getForURI(uri).getAsJsonArray(MEMBER_KEY_SEARCH_BY_ORGANISATION_NAME);
+            RequestBuilder builder = RequestBuilder.get()
+                    .setHeader(HttpHeaders.AUTHORIZATION, bearerToken);
+
+            JsonArray jsonArray = executeForRequestBuilderAndUri(builder, uri)
+                    .getAsJsonArray(MEMBER_KEY_SEARCH_BY_ORGANISATION_NAME);
+
             return getSirenResultsFromJsonArray(jsonArray);
         } catch (ClientProtocolException e) {
             // throw for message service to warn user
@@ -113,10 +150,16 @@ public class SirenService {
                         "champs",
                         "denominationUniteLegale,siren"
                 );
+
         URI uri = uriBuilder.build();
 
         try {
-            JsonObject jsonObject = getForURI(uri).getAsJsonObject(MEMBER_KEY_SEARCH_BY_SIREN);
+            RequestBuilder builder = RequestBuilder.get()
+                    .setHeader(HttpHeaders.AUTHORIZATION, bearerToken);
+
+            JsonObject jsonObject = executeForRequestBuilderAndUri(builder, uri)
+                    .getAsJsonObject(MEMBER_KEY_SEARCH_BY_SIREN);
+
             return jsonObjectToSirenResult(jsonObject);
         } catch (ClientProtocolException e) {
             // throw for message service to warn user
@@ -127,12 +170,7 @@ public class SirenService {
         }
     }
 
-    private JsonObject getForURI(URI uri) throws IOException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
-        // should not happen, but let's safeguard anyway
-        if (bearerToken == null) {
-            throw new ClientProtocolException("Bearer token for Siren API authorization is null");
-        }
-
+    private JsonObject executeForRequestBuilderAndUri(RequestBuilder builder, URI uri) throws IOException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
         SSLContext sslContext = SSLContexts.custom()
                 .loadTrustMaterial((chain, authType) -> true).build();
 
@@ -145,12 +183,9 @@ public class SirenService {
                 .setSSLSocketFactory(sslConnectionSocketFactory)
                 .build();
 
-        HttpUriRequest getRequest = RequestBuilder.get()
-                .setUri(uri)
-                .setHeader(HttpHeaders.AUTHORIZATION, bearerToken)
-                .build();
+        HttpUriRequest request = builder.setUri(uri).build();
 
-        HttpResponse response = client.execute(getRequest);
+        HttpResponse response = client.execute(request);
 
         int statusCode = response.getStatusLine().getStatusCode();
         if (statusCode != 200) {
@@ -163,7 +198,6 @@ public class SirenService {
 
         JsonElement jsonElement = new JsonParser().parse(jsonAsString);
         return jsonElement.getAsJsonObject();
-//        return jsonObject.getAsJsonArray(memberName); // ignore header, just get the legal entities
     }
 
     private List<SirenResult> getSirenResultsFromJsonArray(JsonArray jsonArray) {
