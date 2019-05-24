@@ -23,7 +23,8 @@ import lombok.Setter;
 @XmlType(
         propOrder = {
                 "organisationName",
-                "chamberOfCommerceCode"
+                "chamberOfCommerceCode",
+                "entryDate"
         }
 )
 @XmlAccessorType(XmlAccessType.FIELD)
