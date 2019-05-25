@@ -17,6 +17,7 @@ import org.wicketstuff.pdfjs.Scale;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
@@ -55,14 +56,14 @@ public class MissingChamberOfCommerceCodeManager {
 
     public MissingChamberOfCommerceCodeManager(final List<Organisation> remainingOrganisations) {
         this.remainingOrganisations = remainingOrganisations;
-        this.supplier = this.remainingOrganisations.remove(0);
+        this.organisation = this.remainingOrganisations.remove(0);
     }
 
     @Getter @Setter
-    private Organisation supplier;
+    private Organisation organisation;
 
     public String getRoles() {
-        return supplier.getRoles().stream()
+        return organisation.getRoles().stream()
                 .map(PartyRole::getRoleType)
                 .map(PartyRoleType::getTitle)
                 .collect(Collectors.joining(", "));
@@ -78,6 +79,10 @@ public class MissingChamberOfCommerceCodeManager {
     @Getter @Setter
     public List<Organisation> skippedOrganisations = new ArrayList<>();
 
+    @Getter @Setter
+    @CollectionLayout(named = "No suggestions and no invoice")
+    public List<Organisation> noSuggestions = new ArrayList<>();
+
     @Action(associateWith = "candidateCodes", semantics = SemanticsOf.IDEMPOTENT)
     public MissingChamberOfCommerceCodeManager chooseChamberOfCommerceCode(final List<OrganisationNameNumberViewModel> choice) {
         setChamberOfCommerceCode(choice.get(0).getChamberOfCommerceCode());
@@ -91,14 +96,14 @@ public class MissingChamberOfCommerceCodeManager {
     }
 
     public List<OrganisationNameNumberViewModel> getCandidateCodes() {
-        return lookUpService.getChamberOfCommerceCodeCandidatesByOrganisation(supplier);
+        return lookUpService.getChamberOfCommerceCodeCandidatesByOrganisation(organisation);
     }
 
     @PdfJsViewer(initialPageNum = 1, initialScale = Scale.PAGE_WIDTH, initialHeight = 1500)
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public Blob getNewestInvoice() {
-        Optional<IncomingInvoice> invoiceIfAny = incomingInvoiceRepository.findBySellerAndApprovalStates(supplier, Arrays.asList(IncomingInvoiceApprovalState.values()))
+        Optional<IncomingInvoice> invoiceIfAny = incomingInvoiceRepository.findBySellerAndApprovalStates(organisation, Arrays.asList(IncomingInvoiceApprovalState.values()))
                 .stream()
                 .max(Comparator.comparing(IncomingInvoice::getInvoiceDate));
 
@@ -110,10 +115,9 @@ public class MissingChamberOfCommerceCodeManager {
     }
 
     public MissingChamberOfCommerceCodeManager save() {
-        this.supplier.setChamberOfCommerceCode(getChamberOfCommerceCode());
+        this.organisation.setChamberOfCommerceCode(getChamberOfCommerceCode());
 
-        this.supplier = this.remainingOrganisations.isEmpty() ? null : this.remainingOrganisations.remove(0);
-        this.chamberOfCommerceCode = null;
+        prepareForNextOrganisation();
 
         return this;
     }
@@ -123,12 +127,20 @@ public class MissingChamberOfCommerceCodeManager {
     }
 
     public MissingChamberOfCommerceCodeManager skip() {
-        this.skippedOrganisations.add(this.supplier);
+        this.skippedOrganisations.add(this.organisation);
 
-        this.supplier = this.remainingOrganisations.isEmpty() ? null : this.remainingOrganisations.remove(0);
-        this.chamberOfCommerceCode = null;
+        prepareForNextOrganisation();
 
         return this;
+    }
+
+    private void prepareForNextOrganisation() {
+        this.organisation = this.remainingOrganisations.isEmpty() ? null : this.remainingOrganisations.remove(0);
+        this.chamberOfCommerceCode = null;
+
+        // not very helpful to the user, skip to next in line
+        if (getNewestInvoice() == null && getCandidateCodes().isEmpty())
+            prepareForNextOrganisation();
     }
 
     @XmlTransient

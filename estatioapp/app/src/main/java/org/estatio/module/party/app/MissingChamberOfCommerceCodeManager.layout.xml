@@ -26,6 +26,7 @@
                         <cpt:action id="chooseChamberOfCommerceCode"/>
                     </cpt:collection>
                     <cpt:collection id="remainingOrganisations"/>
+                    <cpt:collection id="noSuggestions"/>
                     <cpt:collection id="skippedOrganisations"/>
                 </bs3:col>
             </bs3:row>
