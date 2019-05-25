@@ -93,6 +93,7 @@ public class ChamberOfCommerceCodeLookUpService {
     String filterLegalFormsFromOrganisationName(final String name ) {
         return Arrays.stream(name.split(" "))
                 .filter(element -> !LEGAL_FORMS.contains(element))
+                .filter(element -> !LEGAL_FORMS.contains(element.replace(".", "")))
                 .collect(Collectors.joining(" "));
     }
 

@@ -116,18 +116,19 @@ public class ChamberOfCommerceCodeLookUpServiceTest {
 
     @Test
     public void filterLegalFormsFromOrganisationName_works() throws Exception {
-//        public static final List<String> LEGAL_FORMS = Arrays.asList("SA", "SAS", "SASU", "SARL", "EURL", "SCI", "SNC");
         // given
         ChamberOfCommerceCodeLookUpService service = new ChamberOfCommerceCodeLookUpService();
 
         // when
         final String legalForm_SA_without_occurrence_in_name_1 = "SA ACME";
         final String legalForm_SA_without_occurrence_in_name_2 = "ACME SA";
+        final String legalForm_SA_without_occurrence_in_name_with_dots = "ACME S.A.S";
         final String legalForm_SA_with_occurrence_in_name = "SACME SA";
 
         // then
         Assertions.assertThat(service.filterLegalFormsFromOrganisationName(legalForm_SA_without_occurrence_in_name_1)).isEqualTo("ACME");
         Assertions.assertThat(service.filterLegalFormsFromOrganisationName(legalForm_SA_without_occurrence_in_name_2)).isEqualTo("ACME");
+        Assertions.assertThat(service.filterLegalFormsFromOrganisationName(legalForm_SA_without_occurrence_in_name_with_dots)).isEqualTo("ACME");
         Assertions.assertThat(service.filterLegalFormsFromOrganisationName(legalForm_SA_with_occurrence_in_name)).isEqualTo("SACME");
     }
 

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -35,6 +36,8 @@ import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStat
 import org.estatio.module.party.app.services.ChamberOfCommerceCodeLookUpService;
 import org.estatio.module.party.app.services.OrganisationNameNumberViewModel;
 import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.role.PartyRole;
+import org.estatio.module.party.dom.role.PartyRoleType;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,6 +49,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MissingChamberOfCommerceCodeManager {
 
+    public String title() {
+        return "Fix missing Chamber of Commerce codes";
+    }
+
     public MissingChamberOfCommerceCodeManager(final List<Organisation> remainingOrganisations) {
         this.remainingOrganisations = remainingOrganisations;
         this.supplier = this.remainingOrganisations.remove(0);
@@ -54,18 +61,16 @@ public class MissingChamberOfCommerceCodeManager {
     @Getter @Setter
     private Organisation supplier;
 
+    public String getRoles() {
+        return supplier.getRoles().stream()
+                .map(PartyRole::getRoleType)
+                .map(PartyRoleType::getTitle)
+                .collect(Collectors.joining(", "));
+    }
+
     @Getter @Setter
     @Property(editing = Editing.ENABLED)
     private String chamberOfCommerceCode;
-
-//    @ActionLayout(
-//            position = ActionLayout.Position.PANEL,
-//            promptStyle = PromptStyle.INLINE
-//    )
-//    public MissingChamberOfCommerceCodeManager editChamberOfCommerceCode(final String chamberOfCommerceCode) {
-//        setChamberOfCommerceCode(chamberOfCommerceCode);
-//        return this;
-//    }
 
     @Getter @Setter
     public List<Organisation> remainingOrganisations = new ArrayList<>();
