@@ -19,7 +19,9 @@
 
 package org.estatio.module.party.app;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -41,8 +43,10 @@ import org.incode.module.base.dom.Dflt;
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.country.dom.impl.Country;
 
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.countryapptenancy.dom.CountryServiceForCurrentUser;
 import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.numerator.dom.NumeratorRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
@@ -71,8 +75,7 @@ public class OrganisationMenu {
                     regexPattern = ReferenceType.Meta.REGEX,
                     regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION,
                     optionality = Optionality.OPTIONAL
-            )
-            final String reference,
+            ) final String reference,
             final String name,
             final Country country,
             final List<IPartyRoleType> partyRoleTypes) {
@@ -109,20 +112,32 @@ public class OrganisationMenu {
             return "No numerator found";
         } else {
             if (!Strings.isNullOrEmpty(reference) && numeratorRepository
-                    .findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy) != null) return "Reference must be left empty because a numerator is being used";
+                    .findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy) != null)
+                return "Reference must be left empty because a numerator is being used";
         }
         return null;
     }
 
     // //////////////////////////////////////
 
-    public MissingChamberOfCommerceCodeManager fixMissingChamberOfCommerceCodes(final Country country) {
-        List<Organisation> organisationsMissingCode = organisationRepository.findByAtPathMissingChamberOfCommerceCode("/".concat(country.getReference()));
+    public MissingChamberOfCommerceCodeManager fixMissingChamberOfCommerceCodes(final Country country, final IPartyRoleType role) {
+        List<Organisation> organisationsMissingCode = organisationRepository.findByAtPathMissingChamberOfCommerceCode("/".concat(country.getReference()))
+                .stream()
+                .filter(org -> org.hasPartyRoleType(role))
+                .collect(Collectors.toList());
+
         return new MissingChamberOfCommerceCodeManager(organisationsMissingCode);
     }
 
     public List<Country> choices0FixMissingChamberOfCommerceCodes() {
         return countryServiceForCurrentUser.countriesForCurrentUser();
+    }
+
+    public List<PartyRoleType> choices1FixMissingChamberOfCommerceCodes() {
+        return Arrays.asList(
+                partyRoleTypeRepository.findByKey(LeaseAgreementRoleTypeEnum.TENANT.getKey()),
+                partyRoleTypeRepository.findByKey(IncomingInvoiceRoleTypeEnum.SUPPLIER.getKey())
+        );
     }
 
     // //////////////////////////////////////

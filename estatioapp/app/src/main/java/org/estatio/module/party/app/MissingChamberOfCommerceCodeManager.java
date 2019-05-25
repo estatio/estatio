@@ -33,7 +33,9 @@ import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.party.app.services.ChamberOfCommerceCodeLookUpService;
 import org.estatio.module.party.app.services.OrganisationNameNumberViewModel;
 import org.estatio.module.party.dom.Organisation;
@@ -65,6 +67,7 @@ public class MissingChamberOfCommerceCodeManager {
     public String getRoles() {
         return organisation.getRoles().stream()
                 .map(PartyRole::getRoleType)
+                .filter(type -> type.getKey().equals(LeaseAgreementRoleTypeEnum.TENANT.getKey()) || type.getKey().equals(IncomingInvoiceRoleTypeEnum.SUPPLIER.getKey()))
                 .map(PartyRoleType::getTitle)
                 .collect(Collectors.joining(", "));
     }
@@ -135,12 +138,17 @@ public class MissingChamberOfCommerceCodeManager {
     }
 
     private void prepareForNextOrganisation() {
+        if (organisation == null)
+            return; // we hit the end of the recursive cycle
+
         this.organisation = this.remainingOrganisations.isEmpty() ? null : this.remainingOrganisations.remove(0);
         this.chamberOfCommerceCode = null;
 
         // not very helpful to the user, skip to next in line
-        if (getNewestInvoice() == null && getCandidateCodes().isEmpty())
+        if (getNewestInvoice() == null && getCandidateCodes().isEmpty()) {
+            this.noSuggestions.add(this.organisation);
             prepareForNextOrganisation();
+        }
     }
 
     @XmlTransient

@@ -12,7 +12,9 @@
             <bs3:row>
                 <bs3:col span="12">
                     <cpt:fieldSet name="General" id="general" unreferencedProperties="true">
-                        <cpt:property id="supplier"/>
+                        <cpt:action id="save" position="PANEL"/>
+                        <cpt:action id="skip" position="PANEL"/>
+                        <cpt:property id="organisation"/>
                         <cpt:property id="roles"/>
                         <cpt:property id="chamberOfCommerceCode">
                             <cpt:action id="editChamberOfCommerceCode"/>
