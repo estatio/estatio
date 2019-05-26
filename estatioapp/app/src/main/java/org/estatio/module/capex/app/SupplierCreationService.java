@@ -40,7 +40,7 @@ public class SupplierCreationService {
             final OrganisationNameNumberViewModel newSupplierCandidate,
             final Country newSupplierCountry,
             final String newSupplierIban) {
-        Organisation organisation = organisationRepository.newOrganisation(null, true, newSupplierCandidate.getOrganisationName(), newSupplierCountry);
+        Organisation organisation = organisationRepository.newOrganisation(null, true, newSupplierCandidate.getOrganisationName(), newSupplierCandidate.getChamberOfCommerceCode(), newSupplierCountry);
         partyRoleRepository.findOrCreate(organisation, IncomingInvoiceRoleTypeEnum.SUPPLIER);
         if (newSupplierCandidate.getChamberOfCommerceCode() != null)
             organisation.setChamberOfCommerceCode(newSupplierCandidate.getChamberOfCommerceCode());

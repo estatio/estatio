@@ -101,7 +101,7 @@ public class PartySubscriptions_IntegTest extends LeaseModuleIntegTestAbstract {
             oldParty = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
             // EST-467: shouldn't be using global here.
             ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath("/");
-            newParty = organisationRepository.newOrganisation("TEST", false, "Test", applicationTenancy);
+            newParty = organisationRepository.newOrganisation("TEST", false, "Test", null, applicationTenancy);
         }
 
         @Test

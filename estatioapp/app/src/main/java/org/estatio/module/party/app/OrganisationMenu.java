@@ -23,7 +23,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import com.google.common.base.Strings;
@@ -81,10 +83,11 @@ public class OrganisationMenu {
             ) final String reference,
             final String name,
             final Country country,
+            final @Nullable String chamberOfCommerceCode,
             final List<IPartyRoleType> partyRoleTypes) {
         boolean useNumerator = Strings.isNullOrEmpty(reference);
         final Organisation organisation = organisationRepository
-                .newOrganisation(reference, useNumerator, name, country);
+                .newOrganisation(reference, useNumerator, name, chamberOfCommerceCode, country);
         for (IPartyRoleType partyRoleType : partyRoleTypes) {
             partyRoleRepository.findOrCreate(organisation, partyRoleType);
         }
@@ -95,7 +98,7 @@ public class OrganisationMenu {
         return countryServiceForCurrentUser.countriesForCurrentUser();
     }
 
-    public List<PartyRoleType> choices3NewOrganisation() {
+    public List<PartyRoleType> choices4NewOrganisation() {
         return partyRoleTypeRepository.listAll();
     }
 
@@ -107,6 +110,7 @@ public class OrganisationMenu {
             final String reference,
             final String name,
             final Country country,
+            final String chamberOfCommerceCode,
             final List<IPartyRoleType> partyRoleTypes
     ) {
         final ApplicationTenancy applicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
@@ -118,6 +122,10 @@ public class OrganisationMenu {
                     .findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy) != null)
                 return "Reference must be left empty because a numerator is being used";
         }
+
+        if (chamberOfCommerceCode == null && Stream.of("/FRA", "/BEL").anyMatch(applicationTenancy.getPath()::startsWith))
+            return "Chamber of Commerce code is mandatory for French and Belgian organisations";
+
         return null;
     }
 
@@ -130,7 +138,8 @@ public class OrganisationMenu {
             final Country country,
             final IPartyRoleType role,
             final @ParameterLayout(named = "Start from bottom?") boolean reversed) {
-        List<Organisation> organisationsMissingCode = organisationRepository.findByAtPathMissingChamberOfCommerceCode("/".concat(country.getReference()))
+        final ApplicationTenancy applicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
+        List<Organisation> organisationsMissingCode = organisationRepository.findByAtPathMissingChamberOfCommerceCode(applicationTenancy.getPath())
                 .stream()
                 .filter(org -> org.hasPartyRoleType(role))
                 .collect(Collectors.collectingAndThen(

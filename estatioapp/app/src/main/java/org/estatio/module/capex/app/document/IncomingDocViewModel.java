@@ -219,9 +219,9 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
             @Parameter(optionality = Optionality.OPTIONAL)
             final String ibanNumber) {
         Organisation organisation = organisationRepository
-                .newOrganisation(null, true, candidate.getOrganisationName(), country);
+                .newOrganisation(null, true, candidate.getOrganisationName(), candidate.getChamberOfCommerceCode(), country);
         partyRoleRepository.findOrCreate(organisation, IncomingInvoiceRoleTypeEnum.SUPPLIER);
-        if (candidate.getChamberOfCommerceCode()!=null) organisation.setChamberOfCommerceCode(candidate.getChamberOfCommerceCode());
+
         setSeller(organisation);
         if (ibanNumber != null) {
             bankAccountRepository.newBankAccount(organisation, ibanNumber, null);

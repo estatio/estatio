@@ -179,13 +179,14 @@ public class IncomingDocAsInvoiceViewModel_Test {
         Organisation seller = new Organisation();
         BankAccount bankAccount = new BankAccount();
         String sellerName = "some name";
-        OrganisationNameNumberViewModel candidate = new OrganisationNameNumberViewModel(sellerName, null, null);
+        String sellerCoCCode = "123456789";
+        OrganisationNameNumberViewModel candidate = new OrganisationNameNumberViewModel(sellerName, sellerCoCCode, null);
         String iban = "NL02RABO0313246581";
 
         // expect
         context.checking(new Expectations() {{
 
-            oneOf(mockOrganisationRepo).newOrganisation(null, true, sellerName, country);
+            oneOf(mockOrganisationRepo).newOrganisation(null, true, sellerName, sellerCoCCode, country);
             will(returnValue(seller));
             oneOf(mockPartyRoleRepository).findOrCreate(seller, IncomingInvoiceRoleTypeEnum.SUPPLIER);
             oneOf(mockBankAccountRepository).newBankAccount(seller, iban, null);

@@ -23,7 +23,6 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.dom.role.PartyRoleRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -74,7 +73,7 @@ public class OrganisationImport implements ExcelFixtureRowHandler, Importable {
                 if (applicationTenancy == null){
                     throw new IllegalArgumentException("atPath not found");
                 }
-                org = organisationRepository.newOrganisation(reference, false, name, applicationTenancy);
+                org = organisationRepository.newOrganisation(reference, false, name, chamberOfCommerceCode, applicationTenancy);
             } catch (Exception e) {
                 LOG.error("Error importing organisation : " + reference, e);
             }
