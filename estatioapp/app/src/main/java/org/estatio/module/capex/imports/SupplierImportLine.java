@@ -84,7 +84,8 @@ public class SupplierImportLine implements Importable {
             setChamberOfCommerceCodeIfEmpty(organisation);
         } else {
             if (organisation == null) {
-                organisation = organisationRepository.newOrganisation(null, true, getSupplierName(), countryObj);
+                // CoC code NULL should really not be allowed, but I don't think this manager is actually used anymore (should probably be removed)
+                organisation = organisationRepository.newOrganisation(null, true, getSupplierName(), null, countryObj);
             }
             bankAccountRepository.newBankAccount(organisation, getIban(), getBic());
             setChamberOfCommerceCodeIfEmpty(organisation);

@@ -37,9 +37,9 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.country.dom.impl.CountryRepository;
+import org.incode.module.country.fixtures.enums.Country_enum;
 
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
-import org.incode.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationPreviousName;
@@ -153,8 +153,8 @@ public class Organisation_IntegTest extends AssetModuleIntegTestAbstract {
                     Country_enum.FRA.getRef3()));
 
             // when
-            organisation1 = organisationRepository.newOrganisation(null, true, "SOME_NAME", applicationTenancyForFra);
-            organisation2 = organisationRepository.newOrganisation(null, true, "SOME_OTHER_NAME", applicationTenancyForFra);
+            organisation1 = organisationRepository.newOrganisation(null, true, "SOME_NAME", null, applicationTenancyForFra);
+            organisation2 = organisationRepository.newOrganisation(null, true, "SOME_OTHER_NAME", null, applicationTenancyForFra);
 
             // then
             Assertions.assertThat(organisation1.getReference()).isEqualTo("FRCL0001");

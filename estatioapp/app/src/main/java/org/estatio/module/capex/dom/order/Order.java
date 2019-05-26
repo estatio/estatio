@@ -855,9 +855,8 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final Country country,
             @Nullable final String ibanNumber) {
         Organisation organisation = organisationRepository
-                .newOrganisation(null, true, candidate.getOrganisationName(), country);
-        if (candidate.getChamberOfCommerceCode() != null)
-            organisation.setChamberOfCommerceCode(candidate.getChamberOfCommerceCode());
+                .newOrganisation(null, true, candidate.getOrganisationName(), candidate.getChamberOfCommerceCode(), country);
+
         setSeller(organisation);
         if (ibanNumber != null) {
             bankAccountRepository.newBankAccount(organisation, ibanNumber, null);
@@ -875,7 +874,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         }
         List<OrganisationNameNumberViewModel> result = new ArrayList<>();
         result.addAll(chamberOfCommerceCodeLookUpService.getChamberOfCommerceCodeCandidatesByOrganisation(search, atPath));
-        result.add(new OrganisationNameNumberViewModel(search, null));
+        result.add(new OrganisationNameNumberViewModel(search, null, null));
         return result;
     }
 

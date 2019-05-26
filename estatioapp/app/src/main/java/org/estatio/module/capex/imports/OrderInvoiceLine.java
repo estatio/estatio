@@ -376,7 +376,8 @@ public class OrderInvoiceLine {
                 String name = line.seller;
                 Country country = france;
 
-                party = organisationRepository.newOrganisation(orgReference.toUpperCase(), useNumeratorForReference, name, country);
+                // CoC code NULL should really not be allowed, but I don't think this manager is actually used anymore (should probably be removed)
+                party = organisationRepository.newOrganisation(orgReference.toUpperCase(), useNumeratorForReference, name, null, country);
             }
             return party;
         }

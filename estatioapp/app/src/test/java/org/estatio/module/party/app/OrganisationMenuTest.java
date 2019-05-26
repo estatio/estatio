@@ -58,6 +58,7 @@ public class OrganisationMenuTest {
             country = new Country();
 
             applicationTenancy = new ApplicationTenancy();
+            applicationTenancy.setPath("/PATH");
             context.checking(new Expectations() {{
                 allowing(mockEstatioApplicationTenancyRepositoryForCountry).findOrCreateTenancyFor(country);
                 will(returnValue(applicationTenancy));
@@ -77,12 +78,12 @@ public class OrganisationMenuTest {
             }});
 
             // when
-            String reason = organisationMenu.validateNewOrganisation(null, name, country, Collections.emptyList());
+            String reason = organisationMenu.validateNewOrganisation(null, name, country, applicationTenancy.getPath(), Collections.emptyList());
             // then
             assertThat(reason).isEqualTo("No numerator found");
 
             // and when
-            reason = organisationMenu.validateNewOrganisation(reference, name, country, Collections.emptyList());
+            reason = organisationMenu.validateNewOrganisation(reference, name, country, applicationTenancy.getPath(), Collections.emptyList());
             // then
             assertThat(reason).isNull();
         }
@@ -101,12 +102,12 @@ public class OrganisationMenuTest {
             }});
 
             // when
-            String reason = organisationMenu.validateNewOrganisation(null, name, country, Collections.emptyList());
+            String reason = organisationMenu.validateNewOrganisation(null, name, country, applicationTenancy.getPath(), Collections.emptyList());
             // then
             assertThat(reason).isNull();
 
             // and when
-            reason = organisationMenu.validateNewOrganisation(reference, name, country, Collections.emptyList());
+            reason = organisationMenu.validateNewOrganisation(reference, name, country, applicationTenancy.getPath(), Collections.emptyList());
             // then
             assertThat(reason).isEqualTo("Reference must be left empty because a numerator is being used");
         }
