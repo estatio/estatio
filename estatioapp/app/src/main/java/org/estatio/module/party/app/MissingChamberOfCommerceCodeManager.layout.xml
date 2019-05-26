@@ -3,8 +3,6 @@
     <bs3:row>
         <bs3:col span="12" unreferencedActions="true">
             <cpt:domainObject/>
-            <cpt:action id="save"/>
-            <cpt:action id="skip"/>
         </bs3:col>
     </bs3:row>
     <bs3:row>

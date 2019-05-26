@@ -20,6 +20,7 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -47,6 +48,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @DomainObject(objectType = "party.MissingChamberOfCommerceCodeManager")
+@DomainObjectLayout(cssClassFa = "fa-wrench")
 @XmlRootElement(name = "missingChamberOfCommerceCodeViewModel")
 @XmlAccessorType(XmlAccessType.FIELD)
 @NoArgsConstructor

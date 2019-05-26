@@ -20,6 +20,7 @@
 package org.estatio.module.party.app;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,12 +29,14 @@ import javax.inject.Inject;
 import com.google.common.base.Strings;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -120,11 +123,22 @@ public class OrganisationMenu {
 
     // //////////////////////////////////////
 
-    public MissingChamberOfCommerceCodeManager fixMissingChamberOfCommerceCodes(final Country country, final IPartyRoleType role) {
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(cssClassFa = "fa-wrench")
+    @MemberOrder(sequence = "98")
+    public MissingChamberOfCommerceCodeManager fixMissingChamberOfCommerceCodes(
+            final Country country,
+            final IPartyRoleType role,
+            final @ParameterLayout(named = "Start from bottom?") boolean reversed) {
         List<Organisation> organisationsMissingCode = organisationRepository.findByAtPathMissingChamberOfCommerceCode("/".concat(country.getReference()))
                 .stream()
                 .filter(org -> org.hasPartyRoleType(role))
-                .collect(Collectors.toList());
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toList(), lst -> {
+                            if (reversed) Collections.reverse(lst);
+                            return lst;
+                        }
+                ));
 
         return new MissingChamberOfCommerceCodeManager(organisationsMissingCode);
     }
