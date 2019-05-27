@@ -16,8 +16,7 @@ import org.apache.isis.applib.value.Clob;
 import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
-import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
-import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository;
+import org.incode.module.document.dom.impl.docs.DocumentTemplate_applicable;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 import org.incode.platform.dom.communications.integtests.dom.document.dom.applicability.rmf.RenderModelFactoryOfDocumentAttachedToDemoInvoice;
@@ -49,18 +48,13 @@ public class DocumentType_and_DocumentTemplates_createSome extends DocumentTempl
     protected void execute(final ExecutionContext executionContext) {
 
         // these document types have no associated templates
-        final DocumentType invoiceType =
-                upsertType(DOC_TYPE_REF_INVOICE, "Demo invoice document type", executionContext);
-        final DocumentType docType =
-                upsertType(DOC_TYPE_REF_RECEIPT, "Receipt document type", executionContext);
+        upsertType(DOC_TYPE_REF_INVOICE, "Demo invoice document type", executionContext);
+        upsertType(DOC_TYPE_REF_RECEIPT, "Receipt document type", executionContext);
 
 
         // doc type for rendering cover notes.
         final DocumentType docTypeForFreemarkerHtml =
                 upsertType(DOC_TYPE_REF_FREEMARKER_HTML, "Demo Freemarker HTML (eg email Cover Note)", executionContext);
-
-        final RenderingStrategy fmkRenderingStrategy = renderingStrategyRepository.findByReference(
-                RenderingStrategy_create1.REF_FMK);
 
         final String atPath = "/";
 
@@ -76,11 +70,11 @@ public class DocumentType_and_DocumentTemplates_createSome extends DocumentTempl
                 docTypeForFreemarkerHtml, now, atPath,
                 ".html",
                 false,
-                clob, fmkRenderingStrategy,
-                "Freemarker-html-cover-note-for-${demoInvoice.num}", fmkRenderingStrategy,
+                clob,
+                "Freemarker-html-cover-note-for-${demoInvoice.num}",
                 executionContext);
 
-        mixin(DocumentTemplate._applicable.class, fmkTemplate).applicable(
+        mixin(DocumentTemplate_applicable.class, fmkTemplate).applicable(
                 Document.class,
                 RenderModelFactoryOfDocumentAttachedToDemoInvoice.class,
                 null);
@@ -100,8 +94,6 @@ public class DocumentType_and_DocumentTemplates_createSome extends DocumentTempl
     }
 
 
-    @Inject
-    RenderingStrategyRepository renderingStrategyRepository;
     @Inject
     ClockService clockService;
 

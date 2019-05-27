@@ -16,9 +16,9 @@
  */
 package org.estatio.module.party.app.services.siren;
 
-import java.net.ConnectException;
 import java.util.List;
 
+import org.apache.http.client.ClientProtocolException;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -31,19 +31,21 @@ public class SirenServiceTest {
 
     @Test
     @Ignore //This test can hinder a build when the service is down temporarily or returns no results
-    public void company_query_should_return_company_code() {
+    public void company_query_should_return_company_code() throws Exception {
         // given
         SirenService sirenService = new SirenService();
+        sirenService.bearerToken = sirenService.getBearerTokenFromKeyAndSecret("foo", "foo"); // this will fail, but test is ignored anyway
 
         // when
         List<SirenResult> results = null;
         try {
             results = sirenService.getChamberOfCommerceCodes(COMPANY_QUERY);
-        } catch (ConnectException e) {
+        } catch (ClientProtocolException e) {
             e.printStackTrace();
         }
 
         // then
+        assertThat(results).isNotNull();
         assertThat(results.size()).isEqualTo(1);
         SirenResult result = results.get(0);
         assertThat(result.getChamberOfCommerceCode()).isEqualTo(COMPANY_CODE);
@@ -51,33 +53,36 @@ public class SirenServiceTest {
 
     @Test
     @Ignore //This test can hinder a build when the service is down temporarily or returns no results
-    public void company_code_should_return_company_name() {
+    public void company_code_should_return_company_name() throws Exception {
         // given
         SirenService sirenService = new SirenService();
+        sirenService.bearerToken = sirenService.getBearerTokenFromKeyAndSecret("foo", "foo"); // this will fail, but test is ignored anyway
 
         // when
         SirenResult result = null;
         try {
             result = sirenService.getCompanyName(COMPANY_CODE);
-        } catch (ConnectException e) {
+        } catch (ClientProtocolException e) {
             e.printStackTrace();
         }
 
         // then
+        assertThat(result).isNotNull();
         assertThat(result.getCompanyName()).isEqualTo(COMPANY_NAME);
     }
 
     @Test
     @Ignore //This test can hinder a build when the service is down temporarily or returns no results
-    public void full_circle() {
+    public void full_circle() throws Exception {
         // given
         SirenService sirenService = new SirenService();
+        sirenService.bearerToken = sirenService.getBearerTokenFromKeyAndSecret("foo", "foo"); // this will fail, but test is ignored anyway
 
         // when
         List<SirenResult> codeResults = null;
         try {
             codeResults = sirenService.getChamberOfCommerceCodes(COMPANY_QUERY);
-        } catch (ConnectException e) {
+        } catch (ClientProtocolException e) {
             e.printStackTrace();
         }
 
@@ -90,7 +95,7 @@ public class SirenServiceTest {
         SirenResult companyNameResult = null;
         try {
             companyNameResult = sirenService.getCompanyName(codeResult.getChamberOfCommerceCode());
-        } catch (ConnectException e) {
+        } catch (ClientProtocolException e) {
             e.printStackTrace();
         }
 

@@ -64,7 +64,14 @@ import lombok.Setter;
                 name = "findByChamberOfCommerceCode", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.party.dom.Organisation "
-                        + "WHERE chamberOfCommerceCode == :chamberOfCommerceCode ")
+                        + "WHERE chamberOfCommerceCode == :chamberOfCommerceCode "),
+        @javax.jdo.annotations.Query(
+                name = "findByAtPathMissingChamberOfCommerceCode", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.party.dom.Organisation "
+                        + "WHERE chamberOfCommerceCode == null "
+                        + "&& applicationTenancyPath.startsWith(:atPath)")
+
 })
 @DomainObject(editing = Editing.DISABLED)
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
@@ -178,7 +185,7 @@ public class Organisation
                 setChamberOfCommerceCodeIfNotAlready(organisationCheck.getChamberOfCommerceCode());
             }
             if (!Strings.isNullOrEmpty(organisationCheck.getOrganisationName()) && !organisationCheck.getOrganisationName().equals(getName())) {
-                changeName(organisationCheck.getOrganisationName(), clockService.now());
+                changeName(organisationCheck.getOrganisationName(), organisationCheck.getEntryDate().minusDays(1));
             }
             setVerified(true);
 

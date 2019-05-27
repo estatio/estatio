@@ -234,14 +234,12 @@ public class Organisation_Test {
 
         final String looked_up_name = "Looked Up Name";
         final String chamberOfCommerceCode = "123456789";
-        OrganisationNameNumberViewModel vm = new OrganisationNameNumberViewModel(looked_up_name, chamberOfCommerceCode);
-
         final LocalDate previousNameEndDate = new LocalDate(2017, 01,01);
+        OrganisationNameNumberViewModel vm = new OrganisationNameNumberViewModel(looked_up_name, chamberOfCommerceCode, previousNameEndDate.plusDays(1));
+
 
         // expect
         context.checking(new Expectations(){{
-            oneOf(mockClockService).now();
-            will(returnValue(previousNameEndDate));
             oneOf(mockOrganisationPreviousNameRepository).newOrganisationPreviousName(null, previousNameEndDate);
         }});
 
@@ -268,14 +266,14 @@ public class Organisation_Test {
 
         final String looked_up_name = "Looked Up Name";
         final String newChamberOfCommerceCode = "987654321";
-        OrganisationNameNumberViewModel vm = new OrganisationNameNumberViewModel(looked_up_name, newChamberOfCommerceCode);
 
         final LocalDate previousNameEndDate = new LocalDate(2017, 01,01);
 
+        OrganisationNameNumberViewModel vm = new OrganisationNameNumberViewModel(looked_up_name, newChamberOfCommerceCode, previousNameEndDate.plusDays(1));
+
+
         // expect
         context.checking(new Expectations(){{
-            oneOf(mockClockService).now();
-            will(returnValue(previousNameEndDate));
             oneOf(mockOrganisationPreviousNameRepository).newOrganisationPreviousName(null, previousNameEndDate);
         }});
 

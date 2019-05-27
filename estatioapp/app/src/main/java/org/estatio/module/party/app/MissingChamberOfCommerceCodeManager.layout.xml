@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/links http://isis.apache.org/applib/layout/links/links.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:lnk="http://isis.apache.org/applib/layout/links" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bs3:row>
+        <bs3:col span="12" unreferencedActions="true">
+            <cpt:domainObject/>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="4">
+            <bs3:row>
+                <bs3:col span="12">
+                    <cpt:fieldSet name="General" id="general" unreferencedProperties="true">
+                        <cpt:action id="save" position="PANEL"/>
+                        <cpt:action id="skip" position="PANEL"/>
+                        <cpt:property id="organisation"/>
+                        <cpt:property id="roles"/>
+                        <cpt:property id="chamberOfCommerceCode">
+                            <cpt:action id="editChamberOfCommerceCode"/>
+                        </cpt:property>
+                    </cpt:fieldSet>
+                </bs3:col>
+            </bs3:row>
+            <bs3:row>
+                <bs3:col span="12" unreferencedCollections="true">
+                    <cpt:collection id="candidateCodes">
+                        <cpt:action id="chooseChamberOfCommerceCode"/>
+                    </cpt:collection>
+                    <cpt:collection id="remainingOrganisations"/>
+                    <cpt:collection id="noSuggestions"/>
+                    <cpt:collection id="skippedOrganisations"/>
+                </bs3:col>
+            </bs3:row>
+        </bs3:col>
+        <bs3:col span="8">
+            <cpt:fieldSet name="Newest invoice if found" id="content">
+                    <cpt:property id="newestInvoice"/>
+            </cpt:fieldSet>
+        </bs3:col>
+    </bs3:row>
+</bs3:grid>

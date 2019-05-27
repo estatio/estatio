@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
+import org.estatio.module.party.app.services.siren.SirenService;
 import org.estatio.module.party.dom.Organisation;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -90,22 +91,45 @@ public class ChamberOfCommerceCodeLookUpServiceTest {
 
     @Mock MessageService mockMessageService;
 
+    @Mock SirenService mockSirenService;
+
     @Test
     public void find_Candidate_For_France_By_Code_works_when_no_result() throws Exception {
 
         // given
         ChamberOfCommerceCodeLookUpService service = new ChamberOfCommerceCodeLookUpService();
         service.messageService = mockMessageService;
+        service.sirenService = mockSirenService;
         String noResultsWarning = "A connection to the external Siren service could be made, but no results were returned";
 
         // expect
         context.checking(new Expectations(){{
+            oneOf(mockSirenService).getCompanyName("some cocc that returns no results");
+            will(returnValue(null));
             allowing(mockMessageService).warnUser(noResultsWarning);
         }});
 
         // when
         service.findCandidateForFranceByCode("some cocc that returns no results");
 
+    }
+
+    @Test
+    public void filterLegalFormsFromOrganisationName_works() throws Exception {
+        // given
+        ChamberOfCommerceCodeLookUpService service = new ChamberOfCommerceCodeLookUpService();
+
+        // when
+        final String legalForm_SA_without_occurrence_in_name_1 = "SA ACME";
+        final String legalForm_SA_without_occurrence_in_name_2 = "ACME SA";
+        final String legalForm_SA_without_occurrence_in_name_with_dots = "ACME S.A.S";
+        final String legalForm_SA_with_occurrence_in_name = "SACME SA";
+
+        // then
+        Assertions.assertThat(service.filterLegalFormsFromOrganisationName(legalForm_SA_without_occurrence_in_name_1)).isEqualTo("ACME");
+        Assertions.assertThat(service.filterLegalFormsFromOrganisationName(legalForm_SA_without_occurrence_in_name_2)).isEqualTo("ACME");
+        Assertions.assertThat(service.filterLegalFormsFromOrganisationName(legalForm_SA_without_occurrence_in_name_with_dots)).isEqualTo("ACME");
+        Assertions.assertThat(service.filterLegalFormsFromOrganisationName(legalForm_SA_with_occurrence_in_name)).isEqualTo("SACME");
     }
 
     /**

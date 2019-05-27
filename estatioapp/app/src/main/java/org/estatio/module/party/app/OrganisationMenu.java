@@ -19,19 +19,26 @@
 
 package org.estatio.module.party.app;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import com.google.common.base.Strings;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -41,8 +48,10 @@ import org.incode.module.base.dom.Dflt;
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.country.dom.impl.Country;
 
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.countryapptenancy.dom.CountryServiceForCurrentUser;
 import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.numerator.dom.NumeratorRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
@@ -71,14 +80,14 @@ public class OrganisationMenu {
                     regexPattern = ReferenceType.Meta.REGEX,
                     regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION,
                     optionality = Optionality.OPTIONAL
-            )
-            final String reference,
+            ) final String reference,
             final String name,
             final Country country,
+            final @Nullable String chamberOfCommerceCode,
             final List<IPartyRoleType> partyRoleTypes) {
         boolean useNumerator = Strings.isNullOrEmpty(reference);
         final Organisation organisation = organisationRepository
-                .newOrganisation(reference, useNumerator, name, country);
+                .newOrganisation(reference, useNumerator, name, chamberOfCommerceCode, country);
         for (IPartyRoleType partyRoleType : partyRoleTypes) {
             partyRoleRepository.findOrCreate(organisation, partyRoleType);
         }
@@ -89,7 +98,7 @@ public class OrganisationMenu {
         return countryServiceForCurrentUser.countriesForCurrentUser();
     }
 
-    public List<PartyRoleType> choices3NewOrganisation() {
+    public List<PartyRoleType> choices4NewOrganisation() {
         return partyRoleTypeRepository.listAll();
     }
 
@@ -101,6 +110,7 @@ public class OrganisationMenu {
             final String reference,
             final String name,
             final Country country,
+            final String chamberOfCommerceCode,
             final List<IPartyRoleType> partyRoleTypes
     ) {
         final ApplicationTenancy applicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
@@ -109,9 +119,48 @@ public class OrganisationMenu {
             return "No numerator found";
         } else {
             if (!Strings.isNullOrEmpty(reference) && numeratorRepository
-                    .findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy) != null) return "Reference must be left empty because a numerator is being used";
+                    .findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy) != null)
+                return "Reference must be left empty because a numerator is being used";
         }
+
+        if (chamberOfCommerceCode == null && Stream.of("/FRA", "/BEL").anyMatch(applicationTenancy.getPath()::startsWith))
+            return "Chamber of Commerce code is mandatory for French and Belgian organisations";
+
         return null;
+    }
+
+    // //////////////////////////////////////
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(cssClassFa = "fa-wrench")
+    @MemberOrder(sequence = "98")
+    public MissingChamberOfCommerceCodeManager fixMissingChamberOfCommerceCodes(
+            final Country country,
+            final IPartyRoleType role,
+            final @ParameterLayout(named = "Start from bottom?") boolean reversed) {
+        final ApplicationTenancy applicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
+        List<Organisation> organisationsMissingCode = organisationRepository.findByAtPathMissingChamberOfCommerceCode(applicationTenancy.getPath())
+                .stream()
+                .filter(org -> org.hasPartyRoleType(role))
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toList(), lst -> {
+                            if (reversed) Collections.reverse(lst);
+                            return lst;
+                        }
+                ));
+
+        return new MissingChamberOfCommerceCodeManager(organisationsMissingCode);
+    }
+
+    public List<Country> choices0FixMissingChamberOfCommerceCodes() {
+        return countryServiceForCurrentUser.countriesForCurrentUser();
+    }
+
+    public List<PartyRoleType> choices1FixMissingChamberOfCommerceCodes() {
+        return Arrays.asList(
+                partyRoleTypeRepository.findByKey(LeaseAgreementRoleTypeEnum.TENANT.getKey()),
+                partyRoleTypeRepository.findByKey(IncomingInvoiceRoleTypeEnum.SUPPLIER.getKey())
+        );
     }
 
     // //////////////////////////////////////

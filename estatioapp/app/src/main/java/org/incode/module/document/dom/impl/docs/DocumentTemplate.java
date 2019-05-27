@@ -3,7 +3,6 @@ package org.incode.module.document.dom.impl.docs;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -21,47 +20,27 @@ import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Uniques;
 
-import com.google.common.collect.Lists;
-import com.google.common.eventbus.Subscribe;
-
 import org.apache.commons.lang3.StringUtils;
-import org.axonframework.eventhandling.annotation.EventHandler;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Collection;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.background.BackgroundService2;
-import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
-import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
-import org.incode.module.document.DocumentModule;
 import org.incode.module.document.dom.impl.applicability.Applicability;
-import org.incode.module.document.dom.impl.applicability.ApplicabilityRepository;
 import org.incode.module.document.dom.impl.applicability.AttachmentAdvisor;
-import org.incode.module.document.dom.impl.applicability.AttachmentAdvisorAttachToNone;
 import org.incode.module.document.dom.impl.applicability.RendererModelFactory;
 import org.incode.module.document.dom.impl.renderers.Renderer;
 import org.incode.module.document.dom.impl.renderers.RendererFromBytesToBytes;
@@ -72,20 +51,12 @@ import org.incode.module.document.dom.impl.renderers.RendererFromCharsToBytes;
 import org.incode.module.document.dom.impl.renderers.RendererFromCharsToBytesWithPreviewToUrl;
 import org.incode.module.document.dom.impl.renderers.RendererFromCharsToChars;
 import org.incode.module.document.dom.impl.renderers.RendererFromCharsToCharsWithPreviewToUrl;
-import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.document.dom.impl.types.DocumentType;
-import org.incode.module.document.dom.services.ClassNameViewModel;
 import org.incode.module.document.dom.services.ClassService;
-import org.incode.module.document.dom.spi.AttachmentAdvisorClassNameService;
-import org.incode.module.document.dom.spi.RendererModelFactoryClassNameService;
 import org.incode.module.document.dom.types.AtPathType;
-import org.incode.module.document.dom.types.FqcnType;
 
-import org.estatio.module.invoice.dom.DocumentTemplateApi;
 import org.estatio.module.invoice.dom.DocumentTemplateData;
-import org.estatio.module.invoice.dom.DocumentTypeApi;
 import org.estatio.module.invoice.dom.DocumentTypeData;
-import org.estatio.module.invoice.dom.RenderingStrategyApi;
 import org.estatio.module.invoice.dom.RenderingStrategyData;
 
 import lombok.Getter;
@@ -129,29 +100,12 @@ import lombok.Setter;
                         + "ORDER BY typeCopy ASC, atPathCopy DESC, date DESC "
         ),
         @javax.jdo.annotations.Query(
-                name = "findByTypeAndApplicableToAtPathAndCurrent", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.incode.module.document.dom.impl.docs.DocumentTemplate "
-                        + "WHERE typeCopy   == :type "
-                        + "   && :atPath.startsWith(atPathCopy) "
-                        + "   && (date == null || date <= :now) "
-                        + "ORDER BY atPathCopy DESC, date DESC "
-        ),
-        @javax.jdo.annotations.Query(
                 name = "findByType", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.incode.module.document.dom.impl.docs.DocumentTemplate "
                         + "WHERE typeCopy   == :type "
                         + "ORDER BY atPathCopy DESC, date DESC "
         ),
-        @javax.jdo.annotations.Query(
-                name = "findByApplicableToAtPathAndCurrent", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.incode.module.document.dom.impl.docs.DocumentTemplate "
-                        + "   && :atPath.startsWith(atPathCopy) "
-                        + "   && (date == null || date <= :now) "
-                        + "ORDER BY atPathCopy DESC, typeCopy, date DESC "
-        )
 })
 @Uniques({
         @Unique(
@@ -173,145 +127,25 @@ import lombok.Setter;
         objectType = "incodeDocuments.DocumentTemplate",
         editing = Editing.DISABLED
 )
-@DomainObjectLayout(
-        titleUiEvent = DocumentTemplate.TitleUiEvent.class,
-        iconUiEvent = DocumentTemplate.IconUiEvent.class,
-        cssClassUiEvent = DocumentTemplate.CssClassUiEvent.class,
-        bookmarking = BookmarkPolicy.AS_ROOT
-)
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class DocumentTemplate
-        extends DocumentAbstract<DocumentTemplate>
-        implements DocumentTemplateApi {
+        extends DocumentAbstract<DocumentTemplate> {
 
-    enum Toggle {
-        ENTITIES {
-            @Override public DocumentTemplateApi getTemplateApi(final DocumentTemplate documentTemplate) {
-                return documentTemplate;
-            }
 
-            @Override public DocumentTypeApi getTypeApi(final DocumentTemplate documentTemplate) {
-                return documentTemplate.getType();
-            }
-
-            @Override public RenderingStrategyApi getContentRenderingStrategyApi(final DocumentTemplate documentTemplate) {
-                return documentTemplate.getContentRenderingStrategy();
-            }
-
-            @Override public RenderingStrategyApi getNameRenderingStrategyApi(final DocumentTemplate documentTemplate) {
-                return documentTemplate.getNameRenderingStrategy();
-            }
-        },
-        DATA {
-            @Override public DocumentTemplateApi getTemplateApi(final DocumentTemplate documentTemplate) {
-                return documentTemplate.getTemplateData();
-            }
-
-            @Override public DocumentTypeApi getTypeApi(final DocumentTemplate documentTemplate) {
-                return documentTemplate.getTypeData();
-            }
-
-            @Override public RenderingStrategyApi getContentRenderingStrategyApi(final DocumentTemplate documentTemplate) {
-                return documentTemplate.getContentRenderingStrategyData();
-            }
-
-            @Override public RenderingStrategyApi getNameRenderingStrategyApi(final DocumentTemplate documentTemplate) {
-                return documentTemplate.getNameRenderingStrategyData();
-            }
-        };
-
-        public abstract DocumentTemplateApi getTemplateApi(final DocumentTemplate documentTemplate);
-
-        public abstract DocumentTypeApi getTypeApi(final DocumentTemplate documentTemplate);
-
-        public abstract RenderingStrategyApi getContentRenderingStrategyApi(final DocumentTemplate documentTemplate);
-
-        public abstract RenderingStrategyApi getNameRenderingStrategyApi(final DocumentTemplate documentTemplate);
-    }
-
-    static Toggle toggle = Toggle.DATA;
-
-    //region > ui event classes
-    public static class TitleUiEvent extends DocumentModule.TitleUiEvent<DocumentTemplate>{}
-    public static class IconUiEvent extends DocumentModule.IconUiEvent<DocumentTemplate>{}
-    public static class CssClassUiEvent extends DocumentModule.CssClassUiEvent<DocumentTemplate>{}
-    //endregion
-
-    //region > title, icon, cssClass
-    /**
-     * Implemented as a subscriber so can be overridden by consuming application if required.
-     */
-    @DomainService(nature = NatureOfService.DOMAIN)
-    public static class TitleSubscriber extends AbstractSubscriber {
-
-        public String getId() {
-            return "incodeDocuments.DocumentTemplate$TitleSubscriber";
-        }
-
-        @EventHandler
-        @Subscribe
-        public void on(DocumentTemplate.TitleUiEvent ev) {
-            if(ev.getTitle() != null) {
-                return;
-            }
-            ev.setTranslatableTitle(titleOf(ev.getSource()));
-        }
-        private TranslatableString titleOf(final DocumentTemplate template) {
-            if(template.getDate() != null) {
-                return TranslatableString.tr("[{type}] ({date})",
-                        "type", template.getType().getReference(),
-                        "date", template.getDate());
-            } else {
-                return TranslatableString.tr("[{type}] {name}",
-                        "name", template.getName(),
-                        "type", template.getType().getReference());
-            }
-        }
-        @Inject
-        TitleService titleService;
-    }
-
-    /**
-     * Implemented as a subscriber so can be overridden by consuming application if required.
-     */
-    @DomainService(nature = NatureOfService.DOMAIN)
-    public static class IconSubscriber extends AbstractSubscriber {
-
-        public String getId() {
-            return "incodeDocuments.DocumentTemplate$IconSubscriber";
-        }
-
-        @EventHandler
-        @Subscribe
-        public void on(DocumentTemplate.IconUiEvent ev) {
-            if(ev.getIconName() != null) {
-                return;
-            }
-            ev.setIconName("");
+    public TranslatableString title() {
+        final DocumentTemplate template = this;
+        if(template.getDate() != null) {
+            return TranslatableString.tr("[{type}] ({date})",
+                    "type", template.getType().getReference(),
+                    "date", template.getDate());
+        } else {
+            return TranslatableString.tr("[{type}] {name}",
+                    "name", template.getName(),
+                    "type", template.getType().getReference());
         }
     }
 
-    /**
-     * Implemented as a subscriber so can be overridden by consuming application if required.
-     */
-    @DomainService(nature = NatureOfService.DOMAIN)
-    public static class CssClassSubscriber extends AbstractSubscriber {
 
-        public String getId() {
-            return "incodeDocuments.DocumentTemplate$CssClassSubscriber";
-        }
-
-        @EventHandler
-        @Subscribe
-        public void on(DocumentTemplate.CssClassUiEvent ev) {
-            if(ev.getCssClass() != null) {
-                return;
-            }
-            ev.setCssClass("");
-        }
-    }
-    //endregion
-
-    //region > constructor
     DocumentTemplate() {
         // for unit testing only
     }
@@ -323,12 +157,9 @@ public class DocumentTemplate
             final String fileSuffix,
             final boolean previewOnly,
             final Blob blob,
-            final RenderingStrategy contentRenderingStrategy,
-            final String subjectText,
-            final RenderingStrategy subjectRenderingStrategy) {
-        super(type, atPath);
+            final String subjectText) {
+        this(type, date, atPath, fileSuffix, previewOnly, subjectText);
         modifyBlob(blob);
-        init(type, date, atPath, fileSuffix, previewOnly, contentRenderingStrategy, subjectText, subjectRenderingStrategy);
     }
 
     public DocumentTemplate(
@@ -338,12 +169,9 @@ public class DocumentTemplate
             final String fileSuffix,
             final boolean previewOnly,
             final String name, final String mimeType, final String text,
-            final RenderingStrategy contentRenderingStrategy,
-            final String subjectText,
-            final RenderingStrategy subjectRenderingStrategy) {
-        super(type, atPath);
+            final String subjectText) {
+        this(type, date, atPath, fileSuffix, previewOnly, subjectText);
         setTextData(name, mimeType, text);
-        init(type, date, atPath, fileSuffix, previewOnly, contentRenderingStrategy, subjectText, subjectRenderingStrategy);
     }
 
     public DocumentTemplate(
@@ -353,31 +181,26 @@ public class DocumentTemplate
             final String fileSuffix,
             final boolean previewOnly,
             final Clob clob,
-            final RenderingStrategy contentRenderingStrategy,
-            final String subjectText,
-            final RenderingStrategy subjectRenderingStrategy) {
-        super(type, atPath);
+            final String subjectText) {
+        this(type, date, atPath, fileSuffix, previewOnly, subjectText);
         modifyClob(clob);
-        init(type, date, atPath, fileSuffix, previewOnly, contentRenderingStrategy, subjectText, subjectRenderingStrategy);
     }
 
-    private void init(
+    private DocumentTemplate(
             final DocumentType type,
             final LocalDate date,
             final String atPath,
             final String fileSuffix,
             final boolean previewOnly,
-            final RenderingStrategy contentRenderingStrategy,
-            final String nameText,
-            final RenderingStrategy nameRenderingStrategy) {
+            final String nameText) {
+        super(type, atPath);
+
         this.typeCopy = type;
         this.atPathCopy = atPath;
         this.date = date;
         this.fileSuffix = stripLeadingDotAndLowerCase(fileSuffix);
         this.previewOnly = previewOnly;
-        this.contentRenderingStrategy = contentRenderingStrategy;
         this.nameText = nameText;
-        this.nameRenderingStrategy = nameRenderingStrategy;
     }
 
     static String stripLeadingDotAndLowerCase(final String fileSuffix) {
@@ -386,10 +209,8 @@ public class DocumentTemplate
         return stripLeadingDot.toLowerCase();
     }
 
-    //endregion
 
 
-    //region > typeCopy (derived property, persisted)
     /**
      * Copy of {@link #getType()}, for query purposes only.
      */
@@ -401,13 +222,6 @@ public class DocumentTemplate
     )
     private DocumentType typeCopy;
 
-    public DocumentType getTypeCopy() {
-        return typeCopy;
-    }
-
-    //endregion
-
-    //region > atPathCopy (derived property, persisted)
     /**
      * Copy of {@link #getAtPath()}, for query purposes only.
      */
@@ -418,391 +232,85 @@ public class DocumentTemplate
             hidden = Where.EVERYWHERE
     )
     private String atPathCopy;
-    //endregion
 
     @NotPersistent
     private DocumentTemplateData templateData;
     @Programmatic
     public DocumentTemplateData getTemplateData() {
-        return  templateData != null
-                ? templateData
-                : (templateData = getTypeData().lookup(getAtPathCopy()));
-    }
-
-    @Programmatic
-    public DocumentTemplateApi getTemplateApi() {
-        return toggle.getTemplateApi(this);
+        if (templateData == null) {
+            templateData = getTypeData().lookup(getAtPath());
+        }
+        return templateData;
     }
 
     @NotPersistent
     private DocumentTypeData typeData;
     @Programmatic
     public DocumentTypeData getTypeData() {
-        return typeData != null
-                ? typeData
-                : (typeData = DocumentTypeData.reverseLookup(getTypeCopy()));
+        if (typeData == null) {
+            typeData = DocumentTypeData.reverseLookup(getType());
+        }
+        return typeData;
     }
 
-    @Programmatic
-    public DocumentTypeApi getTypeApi() {
-        return toggle.getTypeApi(this);
-    }
-
-    @Programmatic
     public RenderingStrategyData getContentRenderingStrategyData() {
         return getTemplateData().getContentRenderingStrategy();
     }
 
-    @Programmatic
-    public RenderingStrategyApi getContentRenderingStrategyApi() {
-        return toggle.getContentRenderingStrategyApi(this);
-    }
-
-    @Programmatic
     public RenderingStrategyData getNameRenderingStrategyData() {
         return getTemplateData().getNameRenderingStrategy();
     }
 
-    @Programmatic
-    public RenderingStrategyApi getNameRenderingStrategyApi() {
-        return toggle.getNameRenderingStrategyApi(this);
-    }
-
-    //region > date (property)
-    public static class DateDomainEvent extends DocumentTemplate.PropertyDomainEvent<LocalDate> { }
+    /**
+     * TODO: there is no need to have different versions of a DocumentTemplate over time,
+     *  so we should just get rid of this property.
+     *  It is already hidden in the UI via layout.xml
+     */
     @Getter @Setter
     @Column(allowsNull = "false")
-    @Property(
-            domainEvent = DateDomainEvent.class,
-            editing = Editing.DISABLED
-    )
+    @Property()
     private LocalDate date;
-    //endregion
 
-
-    //region > contentRenderingStrategy (property)
-    public static class RenderingStrategyDomainEvent extends PropertyDomainEvent<RenderingStrategy> { }
-    @Getter @Setter
-    @Column(allowsNull = "false", name = "contentRenderStrategyId")
-    @Property(
-            domainEvent = RenderingStrategyDomainEvent.class,
-            editing = Editing.DISABLED
-    )
-    private RenderingStrategy contentRenderingStrategy;
-
-    public RenderingStrategy getContentRenderingStrategy() {
-        return contentRenderingStrategy;
-    }
-    //endregion
-
-    //region > fileSuffix (property)
-    public static class FileSuffixDomainEvent extends PropertyDomainEvent<String> { }
     @Getter @Setter
     @Column(allowsNull = "false", length = FileSuffixType.Meta.MAX_LEN)
-    @Property(
-            domainEvent = FileSuffixDomainEvent.class,
-            editing = Editing.DISABLED
-    )
+    @Property()
     private String fileSuffix;
-    //endregion
-
-
-    //region > nameText (persisted property)
-    public static class NameTextDomainEvent extends PropertyDomainEvent<Clob> { }
 
     /**
      * Used to determine the name of the {@link Document#getName() name} of the rendered {@link Document}.
      */
     @Getter @Setter
     @javax.jdo.annotations.Column(allowsNull = "false", length = NameTextType.Meta.MAX_LEN)
-    @Property(
-            notPersisted = true, // exclude from auditing
-            domainEvent = NameTextDomainEvent.class,
-            editing = Editing.DISABLED
-    )
+    @Property()
     private String nameText;
-    //endregion
 
-    //region > nameRenderingStrategy (property)
-    public static class NameRenderingStrategyDomainEvent extends PropertyDomainEvent<RenderingStrategy> { }
-    @Getter @Setter
-    @Column(allowsNull = "false", name = "nameRenderStrategyId")
-    @Property(
-            domainEvent = NameRenderingStrategyDomainEvent.class,
-            editing = Editing.DISABLED
-    )
-    private RenderingStrategy nameRenderingStrategy;
-
-    public RenderingStrategy getNameRenderingStrategy() {
-        return nameRenderingStrategy;
-    }
-    //endregion
-
-    //region > PreviewOnly (property)
-    public static class PreviewOnlyDomainEvent extends RenderingStrategy.PropertyDomainEvent<Boolean> { }
 
     /**
      * Whether this template can only be previewed (not used to also create a document).
      */
     @Getter @Setter
     @Column(allowsNull = "false")
-    @Property(
-            domainEvent = PreviewOnlyDomainEvent.class,
-            editing = Editing.DISABLED
-    )
+    @Property()
     private boolean previewOnly;
-    //endregion
 
-
-    //region > applicabilities (collection)
-    public static class ApplicabilitiesDomainEvent extends DocumentType.CollectionDomainEvent<Applicability> {
-    }
 
     @javax.jdo.annotations.Persistent(mappedBy = "documentTemplate", dependentElement = "true")
-    @Collection(
-            domainEvent = ApplicabilitiesDomainEvent.class,
-            editing = Editing.DISABLED
-    )
+    @Collection()
     @Getter @Setter
     private SortedSet<Applicability> appliesTo = new TreeSet<>();
-
-    //endregion
-
-    //region > applicable (action)
-
-    /**
-     * TODO: remove once moved over to using DocumentTypeData and DocumentTemplateData
-     */
-    @Mixin
-    public static class _applicable {
-        private final DocumentTemplate documentTemplate;
-
-        public _applicable(final DocumentTemplate documentTemplate) {
-            this.documentTemplate = documentTemplate;
-        }
-
-
-        public static class ActionDomainEvent extends DocumentAbstract.ActionDomainEvent { }
-
-        @Action(domainEvent = ActionDomainEvent.class, semantics = SemanticsOf.IDEMPOTENT)
-        @ActionLayout(cssClassFa = "fa-plus", contributed = Contributed.AS_ACTION)
-        @MemberOrder(name = "appliesTo", sequence = "1")
-        public DocumentTemplate $$(
-                @Parameter(maxLength = FqcnType.Meta.MAX_LEN, mustSatisfy = FqcnType.Meta.Specification.class)
-                @ParameterLayout(named = "Domain type")
-                final String domainClassName,
-                @Parameter(maxLength = FqcnType.Meta.MAX_LEN, mustSatisfy = FqcnType.Meta.Specification.class)
-                @ParameterLayout(named = "Renderer Model Factory")
-                final ClassNameViewModel rendererModelFactoryClassNameViewModel,
-                @Parameter(maxLength = FqcnType.Meta.MAX_LEN, mustSatisfy = FqcnType.Meta.Specification.class)
-                @ParameterLayout(named = "Attachment Advisor")
-                final ClassNameViewModel attachmentAdvisorClassNameViewModel) {
-
-            applicable(
-                    domainClassName, rendererModelFactoryClassNameViewModel.getFullyQualifiedClassName(), attachmentAdvisorClassNameViewModel.getFullyQualifiedClassName());
-            return this.documentTemplate;
-        }
-
-        public TranslatableString disable$$() {
-            if (rendererModelFactoryClassNameService == null) {
-                return TranslatableString.tr(
-                        "No RendererModelFactoryClassNameService registered to locate implementations of RendererModelFactory");
-            }
-            if (attachmentAdvisorClassNameService == null) {
-                return TranslatableString.tr(
-                        "No AttachmentAdvisorClassNameService registered to locate implementations of AttachmentAdvisor");
-            }
-            return null;
-        }
-
-        public List<ClassNameViewModel> choices1$$() {
-            return rendererModelFactoryClassNameService.rendererModelFactoryClassNames();
-        }
-
-        public List<ClassNameViewModel> choices2$$() {
-            return attachmentAdvisorClassNameService.attachmentAdvisorClassNames();
-        }
-
-        public TranslatableString validate0$$(final String domainTypeName) {
-
-            return isApplicable(domainTypeName) ?
-                    TranslatableString.tr(
-                            "Already applicable for '{domainTypeName}'",
-                            "domainTypeName", domainTypeName)
-                    : null;
-        }
-
-
-        @Programmatic
-        public Applicability applicable(
-                final Class<?> domainClass,
-                final Class<? extends RendererModelFactory> renderModelFactoryClass,
-                final Class<? extends AttachmentAdvisor> attachmentAdvisorClass) {
-            return applicable(
-                    domainClass.getName(),
-                    renderModelFactoryClass,
-                    attachmentAdvisorClass != null
-                            ? attachmentAdvisorClass
-                            : AttachmentAdvisorAttachToNone.class
-            );
-        }
-
-        @Programmatic
-        public Applicability applicable(
-                final String domainClassName,
-                final Class<? extends RendererModelFactory> renderModelFactoryClass,
-                final Class<? extends AttachmentAdvisor> attachmentAdvisorClass) {
-            return applicable(domainClassName, renderModelFactoryClass.getName(), attachmentAdvisorClass.getName() );
-        }
-
-        @Programmatic
-        public Applicability applicable(
-                final String domainClassName,
-                final String renderModelFactoryClassName,
-                final String attachmentAdvisorClassName) {
-            Applicability applicability = existingApplicability(domainClassName);
-            if(applicability == null) {
-                applicability = applicabilityRepository.create(documentTemplate, domainClassName, renderModelFactoryClassName, attachmentAdvisorClassName);
-            } else {
-                applicability.setRendererModelFactoryClassName(renderModelFactoryClassName);
-                applicability.setAttachmentAdvisorClassName(attachmentAdvisorClassName);
-            }
-            return applicability;
-        }
-
-        private boolean isApplicable(final String domainClassName) {
-            return existingApplicability(domainClassName) != null;
-        }
-        private Applicability existingApplicability(final String domainClassName) {
-            SortedSet<Applicability> applicabilities = documentTemplate.getAppliesTo();
-            for (Applicability applicability : applicabilities) {
-                if (applicability.getDomainClassName().equals(domainClassName)) {
-                    return applicability;
-                }
-            }
-            return null;
-        }
-
-
-        @Inject
-        RendererModelFactoryClassNameService rendererModelFactoryClassNameService;
-        @Inject
-        AttachmentAdvisorClassNameService attachmentAdvisorClassNameService;
-        @Inject
-        ApplicabilityRepository applicabilityRepository;
-
-    }
-
-    //endregion
-
-    //region > notApplicable (action)
-    /**
-     * TODO: remove once moved over to using DocumentTypeData and DocumentTemplateData
-     */
-    @Mixin
-    public static class _notApplicable {
-
-        private final DocumentTemplate documentTemplate;
-
-        public _notApplicable(final DocumentTemplate documentTemplate) {
-            this.documentTemplate = documentTemplate;
-        }
-
-        public static class NotApplicableDomainEvent extends DocumentTemplate.ActionDomainEvent {
-        }
-
-        @Action(
-                domainEvent = NotApplicableDomainEvent.class,
-                semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE
-        )
-        @ActionLayout(
-                cssClassFa = "fa-minus"
-        )
-        @MemberOrder(name = "appliesTo", sequence = "2")
-        public DocumentTemplate $$(final Applicability applicability) {
-            applicabilityRepository.delete(applicability);
-            return this.documentTemplate;
-        }
-
-        public TranslatableString disable$$() {
-            final TranslatableString tr = factoryService.mixin(_applicable.class, documentTemplate).disable$$();
-            if(tr != null) {
-                return tr;
-            }
-            return choices0$$().isEmpty() ? TranslatableString.tr("No applicabilities to remove") : null;
-        }
-
-        public SortedSet<Applicability> choices0$$() {
-            return documentTemplate.getAppliesTo();
-        }
-
-        @Inject
-        ApplicabilityRepository applicabilityRepository;
-        @Inject
-        FactoryService factoryService;
-    }
-
-    //endregion
 
 
     //region > appliesTo, newRendererModelFactory + newRendererModel, newAttachmentAdvisor + newAttachmentAdvice
 
-    /**
-     * TODO: only called by DocumentTemplateEquivalenceIntegTest, so eventually should be able to delete (along with Applicable etc).
-     */
-    @Programmatic
-    public Optional<Applicability> applicableTo(final Class<?> domainObjectClass) {
-        return Lists.newArrayList(getAppliesTo()).stream()
-                .filter(applicability -> applies(applicability, domainObjectClass)).findFirst();
-    }
-
-    /**
-     * TODO: only called indirectly by {@link #applicableTo(Class)}, itself called only by test code, so should be able to delete.
-     */
-    private boolean applies(
-            final Applicability applicability,
-            final Class<?> domainObjectClass) {
-        final Class<?> load = classService.load(applicability.getDomainClassName());
-        return load.isAssignableFrom(domainObjectClass);
-    }
-
     private RendererModelFactory newRendererModelFactory(final Object domainObject) {
         final Class<?> domainClass = domainObject.getClass();
-        return getTemplateApi().newRenderModelFactory(domainClass, classService, serviceRegistry2);
-    }
-
-    @Override
-    public RendererModelFactory newRenderModelFactory(
-            final Class<?> domainClass,
-            final ClassService classService,
-            final ServiceRegistry2 serviceRegistry2) {
-
-        final Optional<Applicability> applicability = applicableTo(domainClass);
-        return applicability.map(Applicability::getRendererModelFactoryClassName)
-                .map(classService::instantiate)
-                .map(RendererModelFactory.class::cast)
-                .map(serviceRegistry2::injectServicesInto)
-                .orElse(null);
+        return getTemplateData().newRenderModelFactory(domainClass, classService, serviceRegistry2);
     }
 
     @Programmatic
     public AttachmentAdvisor newAttachmentAdvisor(final Object domainObject) {
         final Class<?> domainClass = domainObject.getClass();
-        return getTemplateApi().newAttachmentAdvisor(domainClass, classService, serviceRegistry2);
-    }
-
-    @Programmatic
-    public AttachmentAdvisor newAttachmentAdvisor(
-            final Class<?> domainClass,
-            final ClassService classService,
-            final ServiceRegistry2 serviceRegistry2) {
-
-        final Optional<Applicability> applicability = applicableTo(domainClass);
-        return applicability.map(Applicability::getAttachmentAdvisorClassName)
-                .map(classService::instantiate)
-                .map(AttachmentAdvisor.class::cast)
-                .map(serviceRegistry2::injectServicesInto)
-                .orElse(null);
+        return getTemplateData().newAttachmentAdvisor(domainClass, classService, serviceRegistry2);
     }
 
     @Programmatic
@@ -849,11 +357,10 @@ public class DocumentTemplate
                     getTemplateData().getContentRenderingStrategy().getReference()));
         }
 
-        final DocumentNature inputNature = getTemplateData().getContentRenderingStrategy().getInputNature();
-        final DocumentNature outputNature = getTemplateData().getContentRenderingStrategy().getOutputNature();
+        final DocumentNature inputNature = getContentRenderingStrategyData().getInputNature();
+        final DocumentNature outputNature = getContentRenderingStrategyData().getOutputNature();
 
-        final Renderer renderer = getContentRenderingStrategyApi().newRenderer(
-                classService, serviceRegistry2);
+        final Renderer renderer = getContentRenderingStrategyData().newRenderer(classService, serviceRegistry2);
         switch (inputNature){
         case BYTES:
             switch (outputNature) {
@@ -930,8 +437,7 @@ public class DocumentTemplate
 
         // subject
         final RendererFromCharsToChars nameRenderer =
-                (RendererFromCharsToChars) getNameRenderingStrategyApi().newRenderer(
-                        classService, serviceRegistry2);
+                (RendererFromCharsToChars) getNameRenderingStrategyData().newRenderer(classService, serviceRegistry2);
         String renderedDocumentName;
         try {
             renderedDocumentName = nameRenderer.renderCharsToChars(
@@ -962,14 +468,13 @@ public class DocumentTemplate
             final Object contentDataModel) {
         final String documentName = determineDocumentName(contentDataModel);
         document.setName(documentName);
-        final RenderingStrategyApi renderingStrategy = getContentRenderingStrategyApi();
         final String variant = "content";
         try {
 
-            final DocumentNature inputNature = renderingStrategy.getInputNature();
-            final DocumentNature outputNature = renderingStrategy.getOutputNature();
+            final DocumentNature inputNature = getContentRenderingStrategyData().getInputNature();
+            final DocumentNature outputNature = getContentRenderingStrategyData().getOutputNature();
 
-            final Renderer renderer = renderingStrategy.newRenderer(classService, serviceRegistry2);
+            final Renderer renderer = getContentRenderingStrategyData().newRenderer(classService, serviceRegistry2);
 
             switch (inputNature){
                 case BYTES:
@@ -1077,28 +582,18 @@ public class DocumentTemplate
     //region > types
 
     public static class FileSuffixType {
-
         private FileSuffixType() {}
-
         public static class Meta {
-
             public static final int MAX_LEN = 12;
-
             private Meta() {}
-
         }
     }
 
     public static class NameTextType {
-
         private NameTextType() {}
-
         public static class Meta {
-
             public static final int MAX_LEN = 255;
-
             private Meta() {}
-
         }
     }
 

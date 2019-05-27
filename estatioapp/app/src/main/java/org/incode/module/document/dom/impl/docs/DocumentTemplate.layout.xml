@@ -3,15 +3,6 @@
     <bs3:row>
         <bs3:col span="12" unreferencedActions="true">
             <cpt:domainObject/>
-            <cpt:action id="cloneWhenBlob">
-                <cpt:named>Clone</cpt:named>
-            </cpt:action>
-            <cpt:action id="cloneWhenClob">
-                <cpt:named>Clone</cpt:named>
-            </cpt:action>
-            <cpt:action id="cloneWhenText">
-                <cpt:named>Clone</cpt:named>
-            </cpt:action>
         </bs3:col>
     </bs3:row>
     <bs3:row>
@@ -22,9 +13,7 @@
                         <bs3:col span="12">
                             <cpt:fieldSet name="Identifier">
                                 <cpt:property id="name"/>
-                                <cpt:property id="date">
-                                    <cpt:action id="changeDate" position="BELOW"/>
-                                </cpt:property>
+                                <cpt:property id="date" hidden="EVERYWHERE"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
@@ -59,11 +48,7 @@
                 <!-- assuming a mixin is present to look this up -->
                 <cpt:property id="applicationTenancy"/>
                 <cpt:property id="createdAt" hidden="EVERYWHERE"/>
-                <cpt:property id="previewOnly">
-                    <cpt:action id="updatePreviewOnly">
-                        <cpt:named>Toggle</cpt:named>
-                    </cpt:action>
-                </cpt:property>
+                <cpt:property id="previewOnly"/>
             </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="6">
@@ -72,10 +57,8 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="Rendering" id="contentRendering">
-                                <cpt:property id="contentRenderingStrategy" hidden="ALL_TABLES">
-                                    <cpt:action id="changeContentRenderingStrategy">
-                                        <cpt:named>Change</cpt:named>
-                                    </cpt:action>
+                                <cpt:property id="contentRenderingStrategyData" hidden="ALL_TABLES">
+                                    <cpt:named>Content Rendering Strategy</cpt:named>
                                 </cpt:property>
                             </cpt:fieldSet>
                             <cpt:fieldSet name="Template" id="contentTemplate">
@@ -108,10 +91,8 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="Rendering" id="nameRendering">
-                                <cpt:property id="nameRenderingStrategy" hidden="ALL_TABLES">
-                                    <cpt:action id="changeNameRenderingStrategy">
-                                        <cpt:named>Change</cpt:named>
-                                    </cpt:action>
+                                <cpt:property id="nameRenderingStrategyData" hidden="ALL_TABLES">
+                                    <cpt:named>Name Rendering Strategy</cpt:named>
                                 </cpt:property>
                             </cpt:fieldSet>
                             <cpt:fieldSet name="Template" id="subjectTemplate">

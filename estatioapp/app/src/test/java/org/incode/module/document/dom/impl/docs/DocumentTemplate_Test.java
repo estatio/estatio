@@ -1,15 +1,20 @@
 package org.incode.module.document.dom.impl.docs;
 
+import org.jmock.Expectations;
+import org.jmock.auto.Mock;
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
 
-import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
-import org.incode.module.document.dom.impl.rendering.RenderingStrategyForTesting;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeForTesting;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.incode.module.unittestsupport.dom.bean.FixtureDatumFactoriesForApplib;
+
+import org.estatio.module.invoice.dom.DocumentTypeData;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,7 +30,6 @@ public class DocumentTemplate_Test {
             newPojoTester()
                     .withFixture(FixtureDatumFactoriesForApplib.blobs())
                     .withFixture(pojos(DocumentType.class, DocumentTypeForTesting.class))
-                    .withFixture(pojos(RenderingStrategy.class, RenderingStrategyForTesting.class))
                     .exercise(new DocumentTemplateForTesting());
         }
 
@@ -306,9 +310,19 @@ public class DocumentTemplate_Test {
 
     public static class FileSuffix_Test extends DocumentTemplate_Test {
 
+        @Rule
+        public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
+
+        @Mock
+        DocumentType mockDocumentType;
+
         @Before
         public void setUp() throws Exception {
-            template = new DocumentTemplate(null, null, null, "pdf", false, null, null, null, null, null, null);
+            context.checking(new Expectations() {{
+                allowing(mockDocumentType).getReference();
+                will(returnValue(DocumentTypeData.INVOICE.getRef()));
+            }});
+            template = new DocumentTemplate(mockDocumentType, null, "/ITA", "pdf", false, null, null, null, null);
         }
 
         @Test

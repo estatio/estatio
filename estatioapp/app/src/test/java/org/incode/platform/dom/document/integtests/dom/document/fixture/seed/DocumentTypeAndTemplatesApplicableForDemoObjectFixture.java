@@ -16,8 +16,7 @@ import org.apache.isis.applib.value.Clob;
 
 import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
-import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
-import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository;
+import org.incode.module.document.dom.impl.docs.DocumentTemplate_applicable;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 import org.incode.platform.dom.document.integtests.demo.dom.demowithurl.DemoObjectWithUrl;
@@ -55,29 +54,14 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
-        // prereqs
-        executionContext.executeChild(this, new RenderingStrategy_create6());
-
         // these document types have no associated templates (for attachPdf mixin)
-        final DocumentType invoiceType =
-                upsertType(DOC_TYPE_REF_TAX_RECEIPT, "Tax receipt", executionContext);
-        final DocumentType docType =
-                upsertType(DOC_TYPE_REF_SUPPLIER_RECEIPT, "Supplier receipt", executionContext);
+        upsertType(DOC_TYPE_REF_TAX_RECEIPT, "Tax receipt", executionContext);
+        upsertType(DOC_TYPE_REF_SUPPLIER_RECEIPT, "Supplier receipt", executionContext);
 
 
         final DocumentType docTypeForFreemarkerHtml =
                 upsertType(DOC_TYPE_REF_FREEMARKER_HTML, "Demo Freemarker HTML (eg email Cover Note)", executionContext);
 
-        final RenderingStrategy fmkRenderingStrategy = renderingStrategyRepository.findByReference(
-                RenderingStrategy_create6.REF_FMK);
-        final RenderingStrategy sipcRenderingStrategy = renderingStrategyRepository.findByReference(
-                RenderingStrategy_create6.REF_SIPC);
-        final RenderingStrategy siRenderingStrategy = renderingStrategyRepository.findByReference(
-                RenderingStrategy_create6.REF_SI);
-        final RenderingStrategy xdpRenderingStrategy = renderingStrategyRepository.findByReference(
-                RenderingStrategy_create6.REF_XDP);
-        final RenderingStrategy xddRenderingStrategy = renderingStrategyRepository.findByReference(
-                RenderingStrategy_create6.REF_XDD);
 
         final String atPath = "/";
 
@@ -93,11 +77,11 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
                 docTypeForFreemarkerHtml, now, atPath,
                 ".html",
                 false,
-                clob, fmkRenderingStrategy,
-                "Freemarker-html-cover-note-for-${demoObject.name}", fmkRenderingStrategy,
+                clob,
+                "Freemarker-html-cover-note-for-${demoObject.name}",
                 executionContext);
 
-        mixin(DocumentTemplate._applicable.class, fmkTemplate).applicable(
+        mixin(DocumentTemplate_applicable.class, fmkTemplate).applicable(
                 DemoObjectWithUrl.class,
                 FreemarkerModelOfDemoObject.class,
                 ForDemoObjectAttachToSame.class);
@@ -118,11 +102,11 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
                 false,
                 docTypeForStringInterpolatorUrl.getName(),
                 MimeTypeData.APPLICATION_PDF.asStr(),
-                "${demoObject.url}", sipcRenderingStrategy,
-                "pdf-of-url-held-in-${demoObject.name}", siRenderingStrategy,
+                "${demoObject.url}",
+                "pdf-of-url-held-in-${demoObject.name}",
                 executionContext);
 
-        mixin(DocumentTemplate._applicable.class, siTemplate).applicable(
+        mixin(DocumentTemplate_applicable.class, siTemplate).applicable(
                 DemoObjectWithUrl.class,
                 StringInterpolatorRootOfDemoObject.class,
                 ForDemoObjectAttachToSame.class);
@@ -143,11 +127,11 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
                         docTypeForXDocReportPdf.getName() + ".docx",
                         MimeTypeData.APPLICATION_PDF.asStr(),
                         loadResourceBytes("demoObject-template.docx")
-                ), xdpRenderingStrategy,
-                "${demoObject.name}", fmkRenderingStrategy,
+                ),
+                "${demoObject.name}",
                 executionContext);
 
-        mixin(DocumentTemplate._applicable.class, xdpTemplate).applicable(
+        mixin(DocumentTemplate_applicable.class, xdpTemplate).applicable(
                 DemoObjectWithUrl.class,
                 XDocReportModelOfDemoObject.class,
                 ForDemoObjectAttachToSame.class);
@@ -168,11 +152,11 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
                         docTypeForXDocReportDocx.getName() + ".docx",
                         MimeTypeData.APPLICATION_PDF.asStr(),
                         loadResourceBytes("demoObject-template.docx")
-                ), xddRenderingStrategy,
-                "${demoObject.name}", fmkRenderingStrategy,
+                ),
+                "${demoObject.name}",
                 executionContext);
 
-        mixin(DocumentTemplate._applicable.class, xddTemplate).applicable(
+        mixin(DocumentTemplate_applicable.class, xddTemplate).applicable(
                 DemoObjectWithUrl.class,
                 XDocReportModelOfDemoObject.class,
                 ForDemoObjectAlsoAttachToFirstOtherObject.class);
@@ -199,8 +183,6 @@ public class DocumentTypeAndTemplatesApplicableForDemoObjectFixture extends Docu
     }
 
 
-    @Inject
-    private RenderingStrategyRepository renderingStrategyRepository;
     @Inject
     private ClockService clockService;
 

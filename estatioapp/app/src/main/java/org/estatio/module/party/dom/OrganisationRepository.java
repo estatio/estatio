@@ -48,12 +48,13 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
             final String reference,
             final boolean useNumeratorForReference,
             final String name,
+            final String chamberOfCommerceCode,
             final Country country) {
 
         final ApplicationTenancy applicationTenancy =
                 estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
 
-        return newOrganisation(reference, useNumeratorForReference, name, applicationTenancy);
+        return newOrganisation(reference, useNumeratorForReference, name, chamberOfCommerceCode, applicationTenancy);
     }
 
     @Programmatic
@@ -61,6 +62,7 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
             final String reference,
             final boolean useNumeratorForReference,
             final String name,
+            final String chamberOfCommerceCode,
             final ApplicationTenancy applicationTenancy) {
 
         final Party party = partyRepository.findPartyByReference(reference);
@@ -72,7 +74,7 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
             }
 
         }
-        return newOrganisation(reference, useNumeratorForReference, name, applicationTenancy);
+        return newOrganisation(reference, useNumeratorForReference, name, chamberOfCommerceCode, applicationTenancy);
     }
 
     @Programmatic
@@ -80,6 +82,7 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
             final String reference,
             final boolean useNumeratorForReference,
             final String name,
+            final String chamberOfCommerceCode,
             final ApplicationTenancy applicationTenancy) {
 
         final Organisation organisation = newTransientInstance(Organisation.class);
@@ -92,6 +95,7 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
 
         organisation.setReference(refToUse);
         organisation.setName(name);
+        organisation.setChamberOfCommerceCode(chamberOfCommerceCode);
         persist(organisation);
         getContainer().flush();
         return organisation;
@@ -105,6 +109,11 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
     public Organisation findByChamberOfCommerceCode(final String chamberOfCommerceCode) {
         return firstMatch("findByChamberOfCommerceCode",
                 "chamberOfCommerceCode", chamberOfCommerceCode);
+    }
+
+    public List<Organisation> findByAtPathMissingChamberOfCommerceCode(final String atPath) {
+        return allMatches("findByAtPathMissingChamberOfCommerceCode",
+                "atPath", atPath);
     }
 
     // //////////////////////////////////////
