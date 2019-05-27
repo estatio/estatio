@@ -1,5 +1,6 @@
 package org.estatio.module.turnover.imports;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,12 +14,15 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.party.dom.Person;
+import org.estatio.module.tax.dom.Tax;
+import org.estatio.module.tax.dom.TaxRepository;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.Type;
 import org.estatio.module.turnover.dom.entry.TurnoverEntryService;
@@ -61,6 +65,7 @@ public class TurnoverImportManager {
                 getDate(),
                 to.getGrossAmount(),
                 to.getNetAmount(),
+                defaultVatPercentage(),
                 getType().name(),
                 to.getFrequency().name(),
                 to.getCurrency().getReference(),
@@ -104,10 +109,30 @@ public class TurnoverImportManager {
         return turnoverEntryService.findTurnoverPreviousYear(turnover);
     }
 
+    private BigDecimal defaultVatPercentage(){
+        if (defaultTax()!=null){
+            return defaultTax().taxRateFor(clockService.now()).getPercentage();
+        }
+        return null;
+    }
+
+    private Tax defaultTax(){
+        String countryReference = getProperty().getCountry().getReference();
+        switch (countryReference) {
+        case "SWE":
+            return taxRepository.findByReference("SESTD");
+        default: return null;
+        }
+    }
+
+    @Inject TaxRepository taxRepository;
+
     @Inject
     TurnoverEntryService turnoverEntryService;
 
     @Inject
     ExcelService excelService;
+
+    @Inject ClockService clockService;
 
 }

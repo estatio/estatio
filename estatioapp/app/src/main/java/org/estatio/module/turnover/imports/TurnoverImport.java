@@ -66,6 +66,7 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
             final LocalDate date,
             final BigDecimal grossAmount,
             final BigDecimal netAmount,
+            final BigDecimal vatPercentage,
             final String type,
             final String frequency,
             final String currencyReference,
@@ -84,6 +85,7 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
         this.date = date;
         this.grossAmount = grossAmount;
         this.netAmount = netAmount;
+        this.vatPercentage = vatPercentage;
         this.type = type;
         this.frequency = frequency;
         this.currency = currencyReference;
@@ -117,6 +119,9 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
 
     @Getter @Setter
     private BigDecimal netAmount;
+
+    @Getter @Setter
+    private BigDecimal vatPercentage;
 
     @Getter @Setter
     private String type;
@@ -231,12 +236,20 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
                 reportedByToUse,
                 currency,
                 netAmount==null || netAmount.equals(BigDecimal.ZERO) ? null : netAmount, // just because when using TurnoverImportXlsxFixture, somehow the values are set to 0 instead of null like in production
-                grossAmount==null || grossAmount.equals(BigDecimal.ZERO) ? null : grossAmount, // just because when using TurnoverImportXlsxFixture, somehow the values are set to 0 instead of null like in production
+                grossAmountToUse(),
                 purchaseCount==null || purchaseCount.equals(BigInteger.ZERO) ? null : purchaseCount, // just because when using TurnoverImportXlsxFixture, somehow the values are set to 0 instead of null like in production
                 comments,
                 nonComparableFlag > 0 ? true: false);
 
         return Lists.newArrayList(turnover);
+    }
+
+    private BigDecimal grossAmountToUse(){
+        if (grossAmount!=null) return grossAmount;
+        if (netAmount!=null && vatPercentage!=null) return netAmount.add(
+                netAmount.multiply(vatPercentage).divide(new BigDecimal("100"), MathContext.DECIMAL64)
+        ).setScale(2, BigDecimal.ROUND_HALF_UP);
+        return null;
     }
 
     private void logAndWarn(final String message) {
