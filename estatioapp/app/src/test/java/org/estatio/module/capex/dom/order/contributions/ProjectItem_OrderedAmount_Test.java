@@ -11,9 +11,9 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
+import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
-import org.estatio.module.capex.dom.order.contributions.ProjectItem_OrderedAmount;
 import org.estatio.module.capex.dom.project.ProjectItem;
 
 public class ProjectItem_OrderedAmount_Test {
@@ -37,12 +37,16 @@ public class ProjectItem_OrderedAmount_Test {
         ProjectItem_OrderedAmount mixin = new ProjectItem_OrderedAmount(projectItem);
         mixin.orderItemRepository = mockOrderItemRepository;
 
+        Order order = new Order();
         OrderItem orderItem1 = new OrderItem();
         orderItem1.setNetAmount(netAmountOnItem1);
+        orderItem1.setOrdr(order);
         OrderItem orderItem2 = new OrderItem();
         orderItem2.setNetAmount(netAmountOnItem2);
+        orderItem2.setOrdr(order);
         OrderItem orderItem3 = new OrderItem();
         orderItem3.setNetAmount(netAmountOnItem3);
+        orderItem3.setOrdr(order);
 
         // expect
         context.checking(new Expectations(){{

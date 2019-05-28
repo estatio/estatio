@@ -424,7 +424,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final LocalDate dueDate,
             final PaymentMethod paymentMethod,
             final Currency currency) {
-        if (!(newSupplierCandidate != null && newSupplierCountry != null))
+        if (seller == null && !(newSupplierCandidate != null && newSupplierCountry != null))
             return "Candidate and country are mandatory when adding a new supplier";
 
         if (newSupplierIban != null && !IBANValidator.valid(newSupplierIban))

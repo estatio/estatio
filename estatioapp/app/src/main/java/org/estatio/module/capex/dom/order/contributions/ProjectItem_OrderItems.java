@@ -1,6 +1,7 @@
 package org.estatio.module.capex.dom.order.contributions;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -12,6 +13,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
+import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.project.ProjectItem;
 
 /**
@@ -28,7 +30,9 @@ public class ProjectItem_OrderItems {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<OrderItem> orderItems() {
-        return orderItemRepository.findByProjectAndCharge(projectItem.getProject(), projectItem.getCharge());
+        return orderItemRepository.findByProjectAndCharge(projectItem.getProject(), projectItem.getCharge()).stream()
+                .filter(oi->oi.getOrdr().getApprovalState()!=OrderApprovalState.DISCARDED)
+                .collect(Collectors.toList());
     }
 
     @Inject
