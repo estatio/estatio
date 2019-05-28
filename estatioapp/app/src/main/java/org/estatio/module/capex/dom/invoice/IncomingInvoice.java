@@ -383,7 +383,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         setCommunicationNumber(communicationNumber);
 
         if (createNewSupplier) {
-            final Organisation newSupplier = supplierCreationService.createNewSupplierAndOptionallyBankAccount(newSupplierCandidate, newSupplierCountry, newSupplierIban);
+            final Organisation newSupplier = supplierCreationService.createNewSupplierAndOptionallyBankAccount(newSupplierCandidate, newSupplierCountry, newSupplierChamberOfCommerceCode, newSupplierIban);
             setSeller(newSupplier);
             setBankAccount(bankAccountRepository.getFirstBankAccountOfPartyOrNull(newSupplier));
         } else {
@@ -426,7 +426,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final LocalDate dueDate,
             final PaymentMethod paymentMethod,
             final Currency currency) {
-        if (seller == null && !(newSupplierCandidate != null && newSupplierCountry != null && newSupplierChamberOfCommerceCode != null))
+        if (createNewSupplier && !(newSupplierCandidate != null && newSupplierCountry != null && newSupplierChamberOfCommerceCode != null))
             return "Candidate, country, and Chamber of Commerce code are mandatory when adding a new supplier";
 
         if (newSupplierIban != null && !IBANValidator.valid(newSupplierIban))
