@@ -245,7 +245,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     }
 
     public String default2CreateSeller(final OrganisationNameNumberViewModel candidate) {
-        return candidate.getChamberOfCommerceCode();
+        return candidate != null ? candidate.getChamberOfCommerceCode() : null;
     }
 
     public String validateCreateSeller(
