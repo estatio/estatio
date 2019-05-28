@@ -36,7 +36,7 @@ public class OrganisationNameNumberViewModel {
         return TitleBuilder.start()
                 .withName(getOrganisationName())
                 .withName(getChamberOfCommerceCode())
-                .withReference(getEntryDate().toString())
+                .withReference(getEntryDate() != null ? getEntryDate().toString() : "")
                 .toString();
     }
 
