@@ -535,7 +535,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final Boolean createRoleIfRequired,
             final BankAccount bankAccount,
             final OrganisationNameNumberViewModel newSupplierCandidate) {
-        return newSupplierCandidate.getChamberOfCommerceCode();
+        return newSupplierCandidate != null ? newSupplierCandidate.getChamberOfCommerceCode() : null;
     }
 
     public boolean hide8CompleteInvoice(
