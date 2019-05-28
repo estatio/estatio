@@ -15,6 +15,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
+import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.project.ProjectItem;
 
 /**
@@ -37,6 +38,7 @@ public class ProjectItem_OrderedAmount {
 
     private BigDecimal sum(final Function<OrderItem, BigDecimal> x) {
         return orderItemRepository.findByProjectAndCharge(projectItem.getProject(), projectItem.getCharge()).stream()
+                .filter(oi->oi.getOrdr().getApprovalState()!=OrderApprovalState.DISCARDED)
                 .map(x)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
