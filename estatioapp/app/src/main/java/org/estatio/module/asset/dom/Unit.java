@@ -19,7 +19,9 @@
 package org.estatio.module.asset.dom;
 
 import java.math.BigDecimal;
+import java.util.List;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -43,6 +45,9 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.dom.with.WithIntervalMutable;
 
+import org.estatio.module.asset.dom.erv.EstimatedRentalValue;
+import org.estatio.module.asset.dom.erv.EstimatedRentalValueRepository;
+import org.estatio.module.asset.dom.erv.Type;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 
 import lombok.Getter;
@@ -290,6 +295,26 @@ public class Unit
         return getDehorsArea();
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<EstimatedRentalValue> getEstimatedRentalValuesByEcp(){
+        return estimatedRentalValueRepository.findByUnitAndType(this, Type.VALUED_INTERNALLY);
+    }
+
+    public Unit newErvByEcp(final LocalDate date, final BigDecimal value){
+        estimatedRentalValueRepository.upsert(this, date, Type.VALUED_INTERNALLY, value);
+        return this;
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<EstimatedRentalValue> getEstimatedRentalValuesByValuer(){
+        return estimatedRentalValueRepository.findByUnitAndType(this, Type.VALUED_BY_VALUER);
+    }
+
+    public Unit newErvByValuer(final LocalDate date, final BigDecimal value){
+        estimatedRentalValueRepository.upsert(this, date, Type.VALUED_BY_VALUER, value);
+        return this;
+    }
+
     public static class ReferenceType {
 
         private ReferenceType() {}
@@ -304,4 +329,8 @@ public class Unit
         }
 
     }
+
+    @Inject
+    private EstimatedRentalValueRepository estimatedRentalValueRepository;
+
 }

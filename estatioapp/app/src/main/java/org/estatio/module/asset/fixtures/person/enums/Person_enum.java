@@ -215,7 +215,7 @@ public enum Person_enum
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
 
-    GinoVannelliGb("GVANNELLI", "Gino", "Vannelli", "G", false, MALE, Gb, Gb,
+    GinoVannelliGb("GVANNELLI", "Gino", "Vannelli", "G", true, MALE, Gb, Gb,
             CONTACT, TopModelGb,
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
@@ -225,10 +225,17 @@ public enum Person_enum
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
 
-    JohnDoeNl("JDOE", "John", "Doe", "J", false, MALE, Nl, Nl,
+    JohnDoeNl("JDOE", "John", "Doe", "J", true, MALE, Nl, Nl,
             null, null,
             new IPartyRoleType[] {  },
-            new FixedAssetRoleSpec[] {}),
+            new FixedAssetRoleSpec[] { }),
+    JohnTurnover("JTURN", "John", "Turnover", "J", true, MALE, Nl, Nl,
+            null, null,
+            new IPartyRoleType[] {  },
+            new FixedAssetRoleSpec[] {
+                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.TURNOVER_REPORTER, Property_enum.BudNl),
+                    new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.TURNOVER_REPORTER, Property_enum.OxfGb)
+            }),
 
     JohnSmithGb("JSMTH", "John", "Smith", "J", false, MALE, Gb, Gb,
             null, null,

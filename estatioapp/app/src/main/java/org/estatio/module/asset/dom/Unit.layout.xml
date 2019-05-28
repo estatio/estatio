@@ -121,6 +121,18 @@
                         </col>
                     </row>
                 </tab>
+                <tab name="ERV">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="estimatedRentalValuesByEcp">
+                                <ns2:action id="newErvByEcp" position="PANEL"/>
+                            </ns2:collection>
+                            <ns2:collection id="estimatedRentalValuesByValuer">
+                                <ns2:action id="newErvByValuer" position="PANEL"/>
+                            </ns2:collection>
+                        </col>
+                    </row>
+                </tab>
             </tabGroup>
         </col>
     </row>

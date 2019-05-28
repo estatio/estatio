@@ -33,6 +33,7 @@ import org.isisaddons.module.security.seed.scripts.AbstractUserAndRolesFixtureSc
 
 import org.incode.module.country.CountryModule;
 
+import org.estatio.module.asset.fixtures.erv.ERVImportXlsxFixture;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.assetfinancial.fixtures.enums.BankAccountFaFa_enum;
@@ -72,6 +73,7 @@ import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
 import org.estatio.module.party.fixtures.numerator.enums.NumeratorForOrganisation_enum;
 import org.estatio.module.party.fixtures.roles.enums.PartyRole_enum;
 import org.estatio.module.tax.EstatioTaxModule;
+import org.estatio.module.turnover.fixtures.data.TurnoverReportingConfig_enum;
 
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Global;
 
@@ -148,7 +150,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 Person_enum.OlivePropertyManagerFr,
                 Person_enum.RosaireEvrardFr,
                 Person_enum.GabrielCountryDirectorFr,
-                Person_enum.BrunoTreasurerFr);
+                Person_enum.BrunoTreasurerFr,
+                Person_enum.JohnTurnover);
 
         ec.executeChildren(this,
                 PropertyAndUnitsAndOwnerAndManager_enum.GraIt,
@@ -234,6 +237,15 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 InvoiceForLease_enum.KalPoison001Nl,
                 InvoiceForLease_enum.OxfMiracl005Gb);
 
+        ec.executeChildren(this,
+                TurnoverReportingConfig_enum.OxfTopModel001GbPrelim,
+                TurnoverReportingConfig_enum.BudPoison001NlPrelim,
+                TurnoverReportingConfig_enum.BudMiracle002NlPrelim,
+                TurnoverReportingConfig_enum.BudDago004NlPrelim,
+                TurnoverReportingConfig_enum.OxfTopModel001GbAudit,
+                TurnoverReportingConfig_enum.BudPoison001NlAudit,
+                TurnoverReportingConfig_enum.BudMiracle002NlAudit,
+                TurnoverReportingConfig_enum.BudDago004NlAudit);
 
         ec.executeChildren(this,
                 Budget_enum.OxfBudget2015,
@@ -284,6 +296,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 IncomingInvoice_enum.fakeInvoice2Pdf,
                 IncomingInvoice_enum.fakeInvoice3Pdf);
 
+        ec.executeChildren(this,
+                new ERVImportXlsxFixture());
     }
 
 }

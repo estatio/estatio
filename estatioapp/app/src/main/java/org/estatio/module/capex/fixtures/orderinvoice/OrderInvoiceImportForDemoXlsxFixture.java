@@ -30,7 +30,7 @@ public class OrderInvoiceImportForDemoXlsxFixture extends ExcelFixture2 {
                 return new WorksheetSpec(
                         rowFactoryFor(OrderInvoiceImportHandler.class, executionContext),
                         sheetName,
-                        Mode.RELAXED);
+                        Mode.STRICT);
             }
             else {
                 return null;
