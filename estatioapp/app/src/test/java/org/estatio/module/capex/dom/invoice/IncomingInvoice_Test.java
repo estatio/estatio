@@ -1290,6 +1290,7 @@ public class IncomingInvoice_Test {
                     null,
                     null,
                     null,
+                    null,
                     newInvoiceNumber,
                     null,
                     newDateReceived,
