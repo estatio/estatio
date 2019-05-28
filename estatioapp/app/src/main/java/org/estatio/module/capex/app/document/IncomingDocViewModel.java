@@ -216,10 +216,11 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     public IncomingDocViewModel createSeller(
             final OrganisationNameNumberViewModel candidate,
             final Country country,
+            final String chamberOfCommerceCode,
             @Parameter(optionality = Optionality.OPTIONAL)
             final String ibanNumber) {
         Organisation organisation = organisationRepository
-                .newOrganisation(null, true, candidate.getOrganisationName(), candidate.getChamberOfCommerceCode(), country);
+                .newOrganisation(null, true, candidate.getOrganisationName(), chamberOfCommerceCode, country);
         partyRoleRepository.findOrCreate(organisation, IncomingInvoiceRoleTypeEnum.SUPPLIER);
 
         setSeller(organisation);
@@ -243,9 +244,14 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         return result;
     }
 
+    public String default2CreateSeller(final OrganisationNameNumberViewModel candidate) {
+        return candidate.getChamberOfCommerceCode();
+    }
+
     public String validateCreateSeller(
             final OrganisationNameNumberViewModel name,
             final Country country,
+            final String chamberOfCommerceCode,
             final String ibanNumber){
         if (ibanNumber != null && !IBANValidator.valid(ibanNumber)){
             return String.format("%s is not a valid iban number", ibanNumber);
