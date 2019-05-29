@@ -132,10 +132,10 @@ public class DerivedObjectUpdater {
             for (final CodaDocLine docLine : docHead.getAnalysisLines()) {
                 final int lineNum = docLine.getLineNum();
 
-                final Charge chargeIfAny = docLine.getExtRefWorkTypeCharge();
-                final Project projectIfAny = docLine.getExtRefProject();
+                final Charge chargeIfAny = effectiveChargeOf(docLine);
+                final Project projectIfAny = effectiveProjectOf(docLine);
 
-                final BigDecimal netAmount = elseZero(docLine.getEffectiveDocValue());
+                final BigDecimal netAmount = elseZero(docLine.getDocValue());
                 final BigDecimal vatAmount = elseZero(docLine.getDocSumTax());
                 final BigDecimal grossAmount = Util.add(netAmount, vatAmount);
 
@@ -286,10 +286,10 @@ public class DerivedObjectUpdater {
                 // create an invoice item for each analysis line, and link over to order item if possible.
                 for (final CodaDocLine docLine : docHead.getAnalysisLines()) {
 
-                    final Charge chargeIfAny = docLine.getExtRefWorkTypeCharge();
-                    final Project projectIfAny = docLine.getExtRefProject();
+                    final Charge chargeIfAny = effectiveChargeOf(docLine);
+                    final Project projectIfAny = effectiveProjectOf(docLine);
 
-                    final BigDecimal netAmount = elseZero(docLine.getEffectiveDocValue());
+                    final BigDecimal netAmount = elseZero(docLine.getDocValue());
 
                     final IncomingInvoiceItem invoiceItem = addInvoiceItemFor(docLine, incomingInvoice);
                     createLinkIfPossible(orderIfAny, chargeIfAny, projectIfAny, invoiceItem, netAmount);
@@ -304,6 +304,14 @@ public class DerivedObjectUpdater {
         return incomingInvoice;
     }
 
+    static Charge effectiveChargeOf(final CodaDocLine docLine) {
+        return docLine.isAnalysisAndProForma() ? null : docLine.getExtRefWorkTypeCharge();
+    }
+
+    static Project effectiveProjectOf(final CodaDocLine docLine) {
+        return docLine.isAnalysisAndProForma() ? null : docLine.getExtRefProject();
+    }
+
     private IncomingInvoiceItem addInvoiceItemFor(
             final CodaDocLine docLine,
             final IncomingInvoice incomingInvoice) {
@@ -312,17 +320,20 @@ public class DerivedObjectUpdater {
         final String periodFromDocHead = Util.asFinancialYear(docHead.getCodaPeriod());
         final Property propertyFromDocHead = docHead.getSummaryLineAccountEl3Property(LineCache.DEFAULT);
 
-        final BigDecimal netAmount = elseZero(docLine.getEffectiveDocValue());
+        final BigDecimal netAmount = elseZero(docLine.getDocValue());
         final BigDecimal vatAmount = elseZero(docLine.getDocSumTax());
         final BigDecimal grossAmount = Util.add(netAmount, vatAmount);
         final LocalDate dueDate = docLine.getDueDate();
 
+        final Charge charge   = effectiveChargeOf(docLine);
+        final Project project = effectiveProjectOf(docLine);
+
         final IncomingInvoiceItem item = incomingInvoice.addItemInternal(
                 docLine.getIncomingInvoiceType(),
-                docLine.getExtRefWorkTypeCharge(),
+                charge,
                 docLine.getDescription(),
                 netAmount, vatAmount, grossAmount, NULL_TAX,
-                dueDate, periodFromDocHead, propertyFromDocHead, docLine.getExtRefProject(), NULL_BUDGET_ITEM);
+                dueDate, periodFromDocHead, propertyFromDocHead, project, NULL_BUDGET_ITEM);
 
         docLine.setIncomingInvoiceItem(item);
 
@@ -443,7 +454,6 @@ public class DerivedObjectUpdater {
                             softErrors.add("More than one document found named '%s'", userRef1);
                         }
                     }
-
 
                 } else {
                     // no change in the document name, so leave paperclip as it is
