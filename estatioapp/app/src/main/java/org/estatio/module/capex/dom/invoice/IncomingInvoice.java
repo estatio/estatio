@@ -368,6 +368,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final @Nullable BankAccount bankAccount,
             final @Nullable OrganisationNameNumberViewModel newSupplierCandidate,
             final @Nullable Country newSupplierCountry,
+            final @Nullable String newSupplierChamberOfCommerceCode,
             final @Nullable String newSupplierIban,
             final String invoiceNumber,
             final @Nullable String communicationNumber,
@@ -382,7 +383,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         setCommunicationNumber(communicationNumber);
 
         if (createNewSupplier) {
-            final Organisation newSupplier = supplierCreationService.createNewSupplierAndOptionallyBankAccount(newSupplierCandidate, newSupplierCountry, newSupplierIban);
+            final Organisation newSupplier = supplierCreationService.createNewSupplierAndOptionallyBankAccount(newSupplierCandidate, newSupplierCountry, newSupplierChamberOfCommerceCode, newSupplierIban);
             setSeller(newSupplier);
             setBankAccount(bankAccountRepository.getFirstBankAccountOfPartyOrNull(newSupplier));
         } else {
@@ -416,6 +417,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final BankAccount bankAccount,
             final OrganisationNameNumberViewModel newSupplierCandidate,
             final Country newSupplierCountry,
+            final String newSupplierChamberOfCommerceCode,
             final String newSupplierIban,
             final String invoiceNumber,
             final String communicationNumber,
@@ -424,8 +426,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final LocalDate dueDate,
             final PaymentMethod paymentMethod,
             final Currency currency) {
-        if (seller == null && !(newSupplierCandidate != null && newSupplierCountry != null))
-            return "Candidate and country are mandatory when adding a new supplier";
+        if (createNewSupplier && !(newSupplierCandidate != null && newSupplierCountry != null && newSupplierChamberOfCommerceCode != null))
+            return "Candidate, country, and Chamber of Commerce code are mandatory when adding a new supplier";
 
         if (newSupplierIban != null && !IBANValidator.valid(newSupplierIban))
             return String.format("%s is not a valid iban number", newSupplierIban);
@@ -526,31 +528,47 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return !createNewSupplier;
     }
 
-    public String default8CompleteInvoice() {
-        return getInvoiceNumber();
+    public String default7CompleteInvoice(
+            final IncomingInvoiceType incomingInvoiceType,
+            final boolean createNewSupplier,
+            final Party seller,
+            final Boolean createRoleIfRequired,
+            final BankAccount bankAccount,
+            final OrganisationNameNumberViewModel newSupplierCandidate) {
+        return newSupplierCandidate != null ? newSupplierCandidate.getChamberOfCommerceCode() : null;
+    }
+
+    public boolean hide8CompleteInvoice(
+            final IncomingInvoiceType incomingInvoiceType,
+            final boolean createNewSupplier) {
+        return !createNewSupplier;
     }
 
     public String default9CompleteInvoice() {
+        return getInvoiceNumber();
+    }
+
+    public String default10CompleteInvoice() {
         return getCommunicationNumber();
     }
 
-    public LocalDate default10CompleteInvoice() {
+    public LocalDate default11CompleteInvoice() {
         return getDateReceived() == null ? dateReceivedDerivedFromDocument() : getDateReceived();
     }
 
-    public LocalDate default11CompleteInvoice() {
+    public LocalDate default12CompleteInvoice() {
         return getInvoiceDate();
     }
 
-    public LocalDate default12CompleteInvoice() {
+    public LocalDate default13CompleteInvoice() {
         return getDueDate() == null && getInvoiceDate() != null ? getInvoiceDate().plusMonths(1) : getDueDate();
     }
 
-    public PaymentMethod default13CompleteInvoice() {
+    public PaymentMethod default14CompleteInvoice() {
         return getPaymentMethod();
     }
 
-    public Currency default14CompleteInvoice() {
+    public Currency default15CompleteInvoice() {
         return getCurrency();
     }
 
@@ -838,7 +856,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return this;
     }
 
-    public boolean hideAddItem(){
+    public boolean hideAddItem() {
         return CountryUtil.isItalian(this);
     }
 
@@ -1047,7 +1065,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return copyItem;
     }
 
-    public boolean hideReverseItem(){
+    public boolean hideReverseItem() {
         return CountryUtil.isItalian(this);
     }
 
@@ -1093,7 +1111,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return this;
     }
 
-    public boolean hideSplitItem(){
+    public boolean hideSplitItem() {
         return CountryUtil.isItalian(this);
     }
 
@@ -1201,7 +1219,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return this;
     }
 
-    public boolean hideMergeItems(){
+    public boolean hideMergeItems() {
         return CountryUtil.isItalian(this);
     }
 
@@ -1562,13 +1580,14 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return orderItemInvoiceItemLinkRepository.calculateNetAmountLinkedToInvoice(this);
     }
 
-
     public boolean hideTotalNetAmount() {
         return CountryUtil.isItalian(this);
     }
+
     public boolean hideTotalVatAmount() {
         return CountryUtil.isItalian(this);
     }
+
     public boolean hideTotalGrossAmount() {
         return CountryUtil.isItalian(this);
     }
@@ -1581,19 +1600,16 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return CountryUtil.isItalian(this);
     }
 
-
-
-
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public IncomingInvoice changeAmounts(final BigDecimal netAmount, final BigDecimal grossAmount) {
         setNetAmount(netAmount);
         setGrossAmount(grossAmount);
         return this;
     }
+
     public boolean hideChangeAmounts() {
         return CountryUtil.isItalian(this);
     }
-
 
     public BigDecimal default0ChangeAmounts() {
         return getNetAmount();
@@ -1662,7 +1678,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return CountryUtil.isItalian(this);
     }
 
-
     public String default0EditInvoiceNumber() {
         return getInvoiceNumber();
     }
@@ -1688,7 +1703,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     public boolean hideEditBuyer() {
         return CountryUtil.isItalian(this);
     }
-
 
     public List<Party> autoComplete0EditBuyer(@MinLength(3) final String searchPhrase) {
         return partyRepository.autoCompleteWithRole(searchPhrase, IncomingInvoiceRoleTypeEnum.ECP);
@@ -2024,7 +2038,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         }
 
         IncomingInvoice.Validator validateForAmounts(IncomingInvoice incomingInvoice) {
-            if(CountryUtil.isItalian(incomingInvoice)) {
+            if (CountryUtil.isItalian(incomingInvoice)) {
                 // don't validate at all if Italian
                 return this;
             }
@@ -2032,7 +2046,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 // only validate when amounts are set on the invoice
                 return this;
             }
-            if (       notEquals(incomingInvoice.getTotalNetAmount(), incomingInvoice.getNetAmount())
+            if (notEquals(incomingInvoice.getTotalNetAmount(), incomingInvoice.getNetAmount())
                     || notEquals(incomingInvoice.getTotalGrossAmount(), incomingInvoice.getGrossAmount())
                     || notEquals(incomingInvoice.getTotalVatAmount(), incomingInvoice.getVatAmount())) {
                 String message = "total amount on items equal to amount on the invoice";

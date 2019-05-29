@@ -39,11 +39,11 @@ public class SupplierCreationService {
     public Organisation createNewSupplierAndOptionallyBankAccount(
             final OrganisationNameNumberViewModel newSupplierCandidate,
             final Country newSupplierCountry,
+            final String chamberOfCommerceCode,
             final String newSupplierIban) {
-        Organisation organisation = organisationRepository.newOrganisation(null, true, newSupplierCandidate.getOrganisationName(), newSupplierCandidate.getChamberOfCommerceCode(), newSupplierCountry);
+        Organisation organisation = organisationRepository.newOrganisation(null, true, newSupplierCandidate.getOrganisationName(), chamberOfCommerceCode, newSupplierCountry);
         partyRoleRepository.findOrCreate(organisation, IncomingInvoiceRoleTypeEnum.SUPPLIER);
-        if (newSupplierCandidate.getChamberOfCommerceCode() != null)
-            organisation.setChamberOfCommerceCode(newSupplierCandidate.getChamberOfCommerceCode());
+        organisation.setChamberOfCommerceCode(chamberOfCommerceCode);
 
         if (newSupplierIban != null) {
             bankAccountRepository.newBankAccount(organisation, newSupplierIban, null);

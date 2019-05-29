@@ -197,7 +197,7 @@ public class IncomingDocAsInvoiceViewModel_Test {
         }});
 
         // when
-        viewModel.createSeller(candidate, country, iban);
+        viewModel.createSeller(candidate, country, sellerCoCCode, iban);
 
         // then
         assertThat(viewModel.getSeller()).isEqualTo(seller);

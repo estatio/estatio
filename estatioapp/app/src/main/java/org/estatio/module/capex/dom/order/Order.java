@@ -298,6 +298,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final @Nullable Boolean createRoleIfRequired,
             final @Nullable OrganisationNameNumberViewModel newSupplierCandidate,
             final @Nullable Country newSupplierCountry,
+            final @Nullable String newSupplierChamberOfCommerceCode,
             final @Nullable String newSupplierIban,
             final @ParameterLayout(named = "Supplier order ref.") String supplierOrderReference,
             final LocalDate orderDate) {
@@ -307,7 +308,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         setOrderDate(orderDate);
 
         if (createNewSupplier) {
-            final Organisation newSupplier = supplierCreationService.createNewSupplierAndOptionallyBankAccount(newSupplierCandidate, newSupplierCountry, newSupplierIban);
+            final Organisation newSupplier = supplierCreationService.createNewSupplierAndOptionallyBankAccount(newSupplierCandidate, newSupplierCountry, newSupplierChamberOfCommerceCode, newSupplierIban);
             setSeller(newSupplier);
         } else {
             setSeller(supplier);
@@ -405,11 +406,30 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return !createNewSupplier;
     }
 
-    public String default9CompleteOrder() {
+    public String default8CompleteOrder(
+            final IncomingInvoiceType orderType,
+            final org.estatio.module.asset.dom.Property property,
+            final String orderNumber,
+            final boolean createNewSupplier,
+            final Party supplier,
+            final Boolean createRoleIfRequired,
+            final OrganisationNameNumberViewModel newSupplierCandidate) {
+        return newSupplierCandidate != null ? newSupplierCandidate.getChamberOfCommerceCode() : null;
+    }
+
+    public boolean hide9CompleteOrder(
+            final IncomingInvoiceType orderType,
+            final org.estatio.module.asset.dom.Property property,
+            final String orderNumber,
+            final boolean createNewSupplier) {
+        return !createNewSupplier;
+    }
+
+    public String default10CompleteOrder() {
         return getSellerOrderReference();
     }
 
-    public LocalDate default10CompleteOrder() {
+    public LocalDate default11CompleteOrder() {
         return getOrderDate();
     }
 
@@ -422,9 +442,14 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final Boolean createRoleIfRequired,
             final OrganisationNameNumberViewModel newSupplierCandidate,
             final Country newSupplierCountry,
+            final String newSupplierChamberOfCommerceCode,
             final String newSupplierIban,
             final String supplierOrderReference,
             final LocalDate orderDate) {
+        if (createNewSupplier && !(newSupplierCandidate != null && newSupplierCountry != null && newSupplierChamberOfCommerceCode != null)) {
+            return "Candidate, country, and Chamber of Commerce code are mandatory when adding a new supplier";
+        }
+
         // validate seller
         final String sellerValidation = partyRoleRepository.validateThat(supplier, IncomingInvoiceRoleTypeEnum.SUPPLIER);
         if ((createRoleIfRequired == null || !createRoleIfRequired) && sellerValidation != null) {
@@ -1713,32 +1738,32 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
         @Override
         public List<String> orderStandalone(final Class<?> collectionType, final List<String> propertyIds) {
-            if(Order.class.isAssignableFrom(collectionType)) {
+            if (Order.class.isAssignableFrom(collectionType)) {
                 return Arrays.asList(
                         "orderNumber"
                         , "orderDate"
                         , "property"
                         , "seller"
-//                        , "sellerOrderReference"
+                        //                        , "sellerOrderReference"
                         , "descriptionSummary"
                         , "approvalState"
                         , "approvedBy"
                         , "approvedOn"
                         , "barcode"
-//                        , "confirmationTemplate"
+                        //                        , "confirmationTemplate"
                         , "netAmount"
                         , "grossAmount"
                         , "entryDate"
                         , "applicationTenancy"
                         , "invoiced"
-//                        , "nextApprovalTaskRoleAssignedTo"
-//                        , "nextApprovalTaskTransitionType"
-//                        , "notification"
-//                        , "pdf"
-//                        , "pendingApprovalTask"
-//                        , "subject"
-//                        , "totalWorkCost"
-//                        , "type"
+                        //                        , "nextApprovalTaskRoleAssignedTo"
+                        //                        , "nextApprovalTaskTransitionType"
+                        //                        , "notification"
+                        //                        , "pdf"
+                        //                        , "pendingApprovalTask"
+                        //                        , "subject"
+                        //                        , "totalWorkCost"
+                        //                        , "type"
                 );
             }
             return null;
