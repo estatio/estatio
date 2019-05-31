@@ -8,7 +8,6 @@
             <ns2:action id="verify"/>
             <ns2:action id="verifyUntil"/>
             <ns2:action id="calculate"/>
-            <ns2:action id="recentChanges"/>
             <ns2:action id="findByLeaseAndInvoiceStatus"/>
             <ns2:action id="links"/>
             <ns2:action id="primaryOccupancy" hidden="EVERYWHERE"/>
@@ -57,6 +56,7 @@
                         <col span="12">
                             <ns2:fieldSet name="Metadata" id="metadata">
                                 <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
                                 <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
                                 <ns2:property id="id"/>
                                 <ns2:property id="versionSequence"/>

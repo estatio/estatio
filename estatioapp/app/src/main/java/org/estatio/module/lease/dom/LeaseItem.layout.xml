@@ -29,7 +29,6 @@
                                     <ns2:action id="suspend" position="BELOW"/>
                                     <ns2:action id="terminate" position="BELOW"/>
                                 </ns2:property>
-                                <ns2:property id="applicationTenancyPath" hidden="ALL_TABLES"/>
                             </ns2:fieldSet>
                         </col>
                     </row>
@@ -38,6 +37,7 @@
                     <row>
                         <col span="12">
                             <ns2:fieldSet name="Application Level" id="applicationLevel">
+                                <ns2:property id="applicationTenancyPath" hidden="ALL_TABLES"/>
                                 <ns2:property id="applicationTenancy"/>
                             </ns2:fieldSet>
                         </col>
