@@ -44,6 +44,7 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItemRepository;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
@@ -64,11 +65,12 @@ public class LeaseTermForServiceChargeBudgetAuditManager  {
     public LeaseTermForServiceChargeBudgetAuditManager() {
     }
 
-    public LeaseTermForServiceChargeBudgetAuditManager(Property property, final List<LeaseItemType> leaseItemTypes, LocalDate startDate, LocalDate endDate) {
+    public LeaseTermForServiceChargeBudgetAuditManager(Property property, final List<LeaseItemType> leaseItemTypes, final List<LeaseAgreementRoleTypeEnum> invoicedBy, LocalDate startDate, LocalDate endDate) {
         this.property = property;
         this.startDate = startDate;
         this.endDate = endDate;
         this.leaseItemTypes = typesToString(leaseItemTypes);
+        this.invoicedBy = invoicedByToString(invoicedBy);
     }
 
     public String title() {
@@ -95,10 +97,13 @@ public class LeaseTermForServiceChargeBudgetAuditManager  {
     @Getter @Setter
     public String leaseItemTypes;
 
+    @Getter @Setter
+    public String invoicedBy;
+
     //region > serviceCharges (derived collection)
 
     public List<LeaseTermForServiceChargeBudgetAuditLineItem> getServiceCharges() {
-        final List<LeaseTermForServiceCharge> terms = leaseTermRepository.findServiceChargeByPropertyAndItemTypeWithStartDateInPeriod(getProperty(), typesFromString(getLeaseItemTypes()), getStartDate(), getEndDate());
+        final List<LeaseTermForServiceCharge> terms = leaseTermRepository.findServiceChargeByPropertyAndItemTypeWithStartDateInPeriod(getProperty(), typesFromString(getLeaseItemTypes()), invoicedByFromString(getInvoicedBy()), getStartDate(), getEndDate());
         return Lists.transform(terms, newLeaseTermForServiceChargeAuditBulkUpdate());
     }
 
@@ -160,6 +165,21 @@ public class LeaseTermForServiceChargeBudgetAuditManager  {
 
     List<LeaseItemType> typesFromString(final String stringOfTypes){
         return Arrays.stream(stringOfTypes.split(",\\s+")).map(LeaseItemType::valueOf).collect(Collectors.toList());
+    }
+
+    String invoicedByToString(final List<LeaseAgreementRoleTypeEnum> leaseItemTypes){
+        String result = new String();
+        for (int i = 0; i < leaseItemTypes.size(); i++){
+            result = result.concat(leaseItemTypes.get(i).name());
+            if (i != leaseItemTypes.size()-1){
+                result = result.concat(", ");
+            }
+        }
+        return result;
+    }
+
+    List<LeaseAgreementRoleTypeEnum> invoicedByFromString(final String stringOfTypes){
+        return Arrays.stream(stringOfTypes.split(",\\s+")).map(LeaseAgreementRoleTypeEnum::valueOf).collect(Collectors.toList());
     }
 
     //region > injected services
