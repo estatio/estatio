@@ -19,6 +19,7 @@
 
 package org.estatio.module.assetfinancial.contributions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -64,11 +65,12 @@ public class FixedAssetFinancialAccountContributions extends UdoDomainService<Fi
     public List<FinancialAccount> choices1NewAccount(
             final FixedAsset fixedAsset,
             final FinancialAccount financialAccount) {
-        final FixedAssetRole role = fixedAssetRoleRepository.findRole(fixedAsset, FixedAssetRoleTypeEnum.PROPERTY_OWNER);
-        if (role != null) {
-            return financialAccountRepository.findAccountsByOwner(role.getParty());
-        }
-        return null;
+        final List<FixedAssetRole> roles = fixedAssetRoleRepository.findByAssetAndType(fixedAsset, FixedAssetRoleTypeEnum.PROPERTY_OWNER);
+        List<FinancialAccount> result = new ArrayList<>();
+        roles.forEach(r->{
+            result.addAll(financialAccountRepository.findAccountsByOwner(r.getParty()));
+        });
+        return result;
     }
 
     // //////////////////////////////////////
