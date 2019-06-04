@@ -67,6 +67,7 @@ public class TurnoverReportingConfig_Test {
         Occupancy occupancy = new Occupancy();
         Lease lease = new LeaseForTesting();
         occupancy.setLease(lease);
+        occupancy.setReportTurnover(Occupancy.OccupancyReportingType.YES);
 
         config.turnoverRepository = turnoverRepository;
         config.setStartDate(new LocalDate(2019, 01,01));
@@ -95,6 +96,7 @@ public class TurnoverReportingConfig_Test {
         Occupancy occupancy = new Occupancy();
         Lease lease = new LeaseForTesting();
         occupancy.setLease(lease);
+        occupancy.setReportTurnover(Occupancy.OccupancyReportingType.YES);
         occupancy.setEndDate(new LocalDate(2019,01,31));
 
         config.setOccupancy(occupancy);
@@ -108,6 +110,27 @@ public class TurnoverReportingConfig_Test {
         // and when
         turnoverDate = new LocalDate(2019,2,1);
         // then nothing again
+        config.produceEmptyTurnovers(turnoverDate);
+
+    }
+
+    @Test
+    public void produceEmptyTurnoverswhen_occupancy_set_to_NOT_report_turnovers() throws Exception {
+
+        final LocalDate turnoverDate = new LocalDate(2019,1,1);
+
+        // given
+        TurnoverReportingConfig config = new TurnoverReportingConfig();
+        final Currency currency = new Currency();
+        Occupancy occupancy = new Occupancy();
+        Lease lease = new LeaseForTesting();
+        occupancy.setLease(lease);
+        occupancy.setReportTurnover(Occupancy.OccupancyReportingType.NO);
+
+        config.setStartDate(new LocalDate(2019, 01,01));
+        config.setOccupancy(occupancy);
+
+        // when
         config.produceEmptyTurnovers(turnoverDate);
 
     }
