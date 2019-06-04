@@ -91,7 +91,7 @@ public class TurnoverImport_IntegTest extends TurnoverModuleIntegTestAbstract {
         assertThat(second.getReportedAt()).isEqualTo(new LocalDateTime(2018,11,19, 11, 06, 20,400));
         assertThat(second.getReportedBy()).isEqualTo("manager abc");
         assertThat(second.getCurrency()).isEqualTo(Currency_enum.GBP.findUsing(serviceRegistry2));
-        assertThat(second.getNetAmount()).isNull();
+        assertThat(second.getNetAmount()).isEqualTo(new BigDecimal("0.00"));
         assertThat(second.getGrossAmount()).isEqualTo(new BigDecimal("2345.67"));
         assertThat(second.getPurchaseCount()).isNull();
         assertThat(second.getComments()).isEqualTo("This is non comparable because of some reason");
