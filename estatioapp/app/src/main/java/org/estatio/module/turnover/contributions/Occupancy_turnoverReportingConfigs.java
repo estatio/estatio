@@ -1,11 +1,8 @@
 package org.estatio.module.turnover.contributions;
 
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import org.assertj.core.util.Lists;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -28,7 +25,7 @@ public class Occupancy_turnoverReportingConfigs {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<TurnoverReportingConfig> turnoverReportingConfig() {
+    public List<TurnoverReportingConfig> turnoverReportingConfigs() {
         return turnoverReportingConfigRepository.findByOccupancy(occupancy);
     }
 
