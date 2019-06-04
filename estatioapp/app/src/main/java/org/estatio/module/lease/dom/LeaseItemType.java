@@ -110,4 +110,8 @@ public enum LeaseItemType implements PowerType<LeaseTerm> {
         return EnumUtils.getEnumList(LeaseItemType.class).stream().filter(x->x.cls == LeaseTermForServiceCharge.class).collect(Collectors.toList());
     }
 
+    public static List<LeaseAgreementRoleTypeEnum> invoicedByForLeaseTermForServiceCharge(){
+        return EnumUtils.getEnumList(LeaseAgreementRoleTypeEnum.class);
+    }
+
 }

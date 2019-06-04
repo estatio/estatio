@@ -203,11 +203,28 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
         return startDates;
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
+    public List<LocalDate> findStartDatesByPropertyAndTypeAndInvoicedBy(
+            final Property property,
+            final LeaseItemType leaseItemType,
+            final List<LeaseAgreementRoleTypeEnum> invoicedByList) {
+        List<LocalDate> result = new ArrayList<>();
+        for (LeaseAgreementRoleTypeEnum invoicedBy : invoicedByList) {
+            result.addAll((List) allMatches(
+                    "findStartDatesByPropertyAndTypeAndInvoicedBy",
+                    "property", property,
+                    "leaseItemType", leaseItemType,
+                    "invoicedBy", invoicedBy));
+        }
+        return result;
+    }
+
     @Programmatic
-    public List<LocalDate> findServiceChargeDatesByPropertyAndLeaseItemType(final Property property, final List<LeaseItemType> leaseItemTypes) {
+    public List<LocalDate> findServiceChargeDatesByPropertyAndLeaseItemTypeAndInvoicedBy(final Property property, final List<LeaseItemType> leaseItemTypes, final List<LeaseAgreementRoleTypeEnum> invoicedBy) {
         List<LocalDate> result = new ArrayList<>();
         for (LeaseItemType type : leaseItemTypes){
-            for (LocalDate date : findStartDatesByPropertyAndType(property, type)){
+            for (LocalDate date : findStartDatesByPropertyAndTypeAndInvoicedBy(property, type, invoicedBy)){
                 if (!result.contains(date)){
                     result.add(date);
                 }
@@ -217,7 +234,7 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
     }
 
     @Programmatic
-    public List<LeaseTermForServiceCharge> findServiceChargeByPropertyAndItemTypeWithStartDateInPeriod(final Property property, final List<LeaseItemType> leaseItemTypes, final LocalDate startDate, final LocalDate endDate) {
+    public List<LeaseTermForServiceCharge> findServiceChargeByPropertyAndItemTypeWithStartDateInPeriod(final Property property, final List<LeaseItemType> leaseItemTypes, final List<LeaseAgreementRoleTypeEnum> invoicedBy, final LocalDate startDate, final LocalDate endDate) {
         List<LeaseTermForServiceCharge> result = new ArrayList<>();
         for (LeaseItemType type : leaseItemTypes) {
             result.addAll((List) findByPropertyAndType(property, type));
@@ -225,6 +242,7 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
         return result.stream()
                 .filter(lt->!lt.getStartDate().isBefore(startDate))
                 .filter(lt->!lt.getStartDate().isAfter(endDate))
+                .filter(lt->invoicedBy.contains(lt.getLeaseItem().getInvoicedBy()))
                 .collect(Collectors.toList());
     }
 

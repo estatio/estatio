@@ -147,6 +147,16 @@ import lombok.Setter;
                         + "VARIABLES org.estatio.module.lease.dom.occupancy.Occupancy lu "
                         + "ORDER BY startDate"),
         @javax.jdo.annotations.Query(
+                name = "findStartDatesByPropertyAndTypeAndInvoicedBy", language = "JDOQL",
+                value = "SELECT DISTINCT startDate "
+                        + "FROM org.estatio.module.lease.dom.LeaseTerm "
+                        + "WHERE leaseItem.type == :leaseItemType "
+                        + "   && leaseItem.invoicedBy == :invoicedBy "
+                        + "   && leaseItem.lease.occupancies.contains(lu) "
+                        + "   && (lu.unit.property == :property) "
+                        + "VARIABLES org.estatio.module.lease.dom.occupancy.Occupancy lu "
+                        + "ORDER BY startDate"),
+        @javax.jdo.annotations.Query(
                 name = "findByStatusAndActiveDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.LeaseTerm "
