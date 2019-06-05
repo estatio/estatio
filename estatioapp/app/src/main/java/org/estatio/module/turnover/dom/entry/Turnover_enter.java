@@ -43,6 +43,26 @@ public class Turnover_enter {
         return next!=null ? next : turnover;
     }
 
+    public BigDecimal default0$$(){
+        return turnover.getGrossAmount();
+    }
+
+    public BigDecimal default1$$(){
+        return turnover.getNetAmount();
+    }
+
+    public BigInteger default2$$(){
+        return turnover.getPurchaseCount();
+    }
+
+    public boolean default3$$(){
+        return turnover.isNonComparable();
+    }
+
+    public String default4$$(){
+        return turnover.getComments();
+    }
+
     @Inject UserService userService;
 
     @Inject ClockService clockService;
