@@ -235,8 +235,8 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
                 reportedAtToUse,
                 reportedByToUse,
                 currency,
-                netAmount==null || netAmount.equals(BigDecimal.ZERO) ? null : netAmount, // just because when using TurnoverImportXlsxFixture, somehow the values are set to 0 instead of null like in production
-                grossAmountToUse(),
+                netAmountToUse(),
+                grossAmount,
                 purchaseCount==null || purchaseCount.equals(BigInteger.ZERO) ? null : purchaseCount, // just because when using TurnoverImportXlsxFixture, somehow the values are set to 0 instead of null like in production
                 comments,
                 nonComparableFlag > 0 ? true: false);
@@ -244,11 +244,14 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
         return Lists.newArrayList(turnover);
     }
 
-    private BigDecimal grossAmountToUse(){
-        if (grossAmount!=null) return grossAmount;
-        if (netAmount!=null && vatPercentage!=null) return netAmount.add(
-                netAmount.multiply(vatPercentage).divide(new BigDecimal("100"), MathContext.DECIMAL64)
-        ).setScale(2, BigDecimal.ROUND_HALF_UP);
+    BigDecimal netAmountToUse(){
+        if (netAmount!=null) return netAmount;
+        if (grossAmount!=null && vatPercentage!=null) return
+                grossAmount.divide(
+                    BigDecimal.ONE.add(
+                            vatPercentage.divide(new BigDecimal("100"), MathContext.DECIMAL64)
+                    )
+                ).setScale(2, BigDecimal.ROUND_HALF_UP);
         return null;
     }
 

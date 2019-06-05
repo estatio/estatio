@@ -174,6 +174,7 @@ public final class LeaseBuilder
             occupancy.setBrandName(spec.brand, spec.brandCoverage, spec.countryOfOrigin);
             occupancy.setSectorName(spec.sector);
             occupancy.setActivityName(spec.activity);
+            occupancy.setReportTurnover(Occupancy.OccupancyReportingType.YES);
             executionContext.addResult(this, occupancy);
 
         }

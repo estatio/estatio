@@ -80,6 +80,9 @@
             </tabGroup>
         </col>
         <col span="12" unreferencedCollections="true">
+            <ns2:collection id="turnoverReportingConfigs">
+                <ns2:action id="createTurnoverReportingConfig"/>
+            </ns2:collection>
         </col>
     </row>
 </grid>
