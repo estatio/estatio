@@ -110,7 +110,7 @@ public class MissingChamberOfCommerceCodeManager {
     public Blob getNewestInvoice() {
         Optional<IncomingInvoice> invoiceIfAny = incomingInvoiceRepository.findBySellerAndApprovalStates(organisation, Arrays.asList(IncomingInvoiceApprovalState.values()))
                 .stream()
-                .max(Comparator.comparing(IncomingInvoice::getInvoiceDate));
+                .max(Comparator.comparing(IncomingInvoice::getInvoiceDate, Comparator.nullsFirst(Comparator.naturalOrder())));
 
         Optional<Document> documentIfAny = invoiceIfAny.isPresent() ?
                 pdfService.lookupIncomingInvoicePdfFrom(invoiceIfAny.get()) :
@@ -137,6 +137,30 @@ public class MissingChamberOfCommerceCodeManager {
         prepareForNextOrganisation();
 
         return this;
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public MissingChamberOfCommerceCodeManager skipToSpecificOrganisation(final Organisation organisation) {
+        final List<Organisation> toBeSkipped = new ArrayList<>();
+
+        for (final Organisation current : remainingOrganisations) {
+            if (!current.equals(organisation)) {
+                toBeSkipped.add(current);
+            } else {
+                this.organisation = current;
+                this.chamberOfCommerceCode = null;
+                break;
+            }
+        }
+
+        skippedOrganisations.addAll(toBeSkipped);
+        remainingOrganisations.removeAll(toBeSkipped);
+
+        return this;
+    }
+
+    public List<Organisation> choices0SkipToSpecificOrganisation() {
+        return remainingOrganisations;
     }
 
     private void prepareForNextOrganisation() {
