@@ -34,7 +34,7 @@ public class TurnoverReportingConfig_Test {
         final LocalDate leaseEndDate = new LocalDate(2019, 1, 31);
         lease.setEndDate(leaseEndDate);
         // then
-        Assertions.assertThat(config.getEndDate()).isEqualTo(leaseEndDate);
+        Assertions.assertThat(config.getEndDate()).isNull();
 
         // and when
         final LocalDate leaseTenancyEndDate = new LocalDate(2019, 2, 1);

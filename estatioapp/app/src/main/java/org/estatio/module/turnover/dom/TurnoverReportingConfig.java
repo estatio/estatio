@@ -129,7 +129,7 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
 
     @Action(semantics = SemanticsOf.SAFE)
     public LocalDate getEndDate(){
-        final LocalDate endDateToUse = ArrayExtensions.coalesce(occupancy.getEndDate(), occupancy.getLease().getTenancyEndDate(), occupancy.getLease().getEndDate());
+        final LocalDate endDateToUse = ArrayExtensions.coalesce(occupancy.getEndDate(), occupancy.getLease().getTenancyEndDate());
         return endDateToUse==null || endDateToUse.isAfter(getStartDate()) ? endDateToUse : getStartDate(); // ECP-962: prevents bad occupancy and / or lease data to produce wrong illegal interval on turnover reporting config
     }
 
