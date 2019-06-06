@@ -53,7 +53,7 @@ import org.estatio.module.turnover.imports.TurnoverImportManager;
         menuBar = DomainServiceLayout.MenuBar.PRIMARY)
 public class TurnoverMenu  {
 
-    @Action(restrictTo = RestrictTo.PROTOTYPING)
+    @Action
     public void createEmptyTurnoversForPeriod(final LocalDate startDate, final LocalDate endDate){
         if (!endDate.isBefore(startDate)){
             LocalDate date = startDate;
