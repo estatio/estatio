@@ -184,8 +184,8 @@ public class LeaseItem_IntegTest extends LeaseModuleIntegTestAbstract {
             final BigInteger nextSequenceNumber = leaseItem.getSequence().add(VT.bi(1));
             assertThat(newLeaseItem.getSequence()).isEqualTo(nextSequenceNumber);
 
-            final String atPath = leaseItem.getApplicationTenancyPath();
-            assertThat(newLeaseItem.getApplicationTenancyPath()).isEqualTo(atPath);
+            final String atPath = leaseItem.getAtPath();
+            assertThat(newLeaseItem.getAtPath()).isEqualTo(atPath);
 
             assertThat(newLeaseItem.getTerms().size()).isEqualTo(leaseItem.getTerms().size());
             assertThat(newLeaseItem.getEndDate()).isNull();
@@ -196,7 +196,7 @@ public class LeaseItem_IntegTest extends LeaseModuleIntegTestAbstract {
     public static class ChangeCharge extends LeaseItem_IntegTest {
 
         @Inject
-        private ChargeRepository chargeRepository;
+        ChargeRepository chargeRepository;
 
         @Test
         public void happyCase() throws Exception {

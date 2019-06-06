@@ -39,6 +39,7 @@
                             <ns2:fieldSet name="Application Level" id="applicationLevel">
                                 <ns2:property id="applicationTenancyPath" hidden="ALL_TABLES"/>
                                 <ns2:property id="applicationTenancy"/>
+                                <ns2:property id="atPath" hidden="ALL_TABLES"/>
                             </ns2:fieldSet>
                         </col>
                     </row>

@@ -75,7 +75,6 @@ import org.incode.module.base.dom.with.WithSequence;
 import org.estatio.module.agreement.dom.role.IAgreementRoleType;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.EstatioApplicationTenancyRepository;
-import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
@@ -183,7 +182,7 @@ import lombok.Setter;
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class LeaseItem
         extends UdoDomainObject2<LeaseItem>
-        implements WithIntervalMutable<LeaseItem>, WithSequence, WithApplicationTenancyPropertyLocal, WithApplicationTenancyPathPersisted {
+        implements WithIntervalMutable<LeaseItem>, WithSequence, WithApplicationTenancyPropertyLocal {
 
     private static final int PAGE_SIZE = 15;
 
@@ -210,15 +209,6 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    @Column(
-            length = ApplicationTenancy.MAX_LENGTH_PATH,
-            allowsNull = "false",
-            name = "atPath"
-
-    )
-    @Property(hidden = Where.EVERYWHERE)
-    @Getter @Setter
-    private String applicationTenancyPath;
 
     @PropertyLayout(
             named = "Application Level",
@@ -226,7 +216,7 @@ public class LeaseItem
             describedAs = "Determines those users for whom this object is available to view and/or modify."
     )
     public ApplicationTenancy getApplicationTenancy() {
-        return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
+        return getLease().getApplicationTenancy();
     }
 
     // //////////////////////////////////////

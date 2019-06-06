@@ -117,7 +117,6 @@ public class LeaseTermForTurnoverRentInvoicedByManagerImport implements ExcelFix
         if (item == null) {
             item = lease.newItem(LeaseItemType.TURNOVER_RENT, itemManagedByManager ? LeaseAgreementRoleTypeEnum.MANAGER : LeaseAgreementRoleTypeEnum.LANDLORD, charge, InvoicingFrequency.YEARLY_IN_ARREARS, itemManagedByManager ? PaymentMethod.MANUAL_PROCESS : PaymentMethod.CHEQUE, lease.getStartDate());
             item.setSequence(BigInteger.ONE);
-            item.setApplicationTenancyPath(lease.getAtPath());
             item.setStatus(LeaseItemStatus.ACTIVE);
         }
         return item;
