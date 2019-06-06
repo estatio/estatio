@@ -291,7 +291,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
             assertThat(leaseItem.getPaymentMethod()).isEqualTo(PaymentMethod.DIRECT_DEBIT);
             assertThat(leaseItem.getStartDate()).isEqualTo(leasePoison.getStartDate());
             assertThat(leaseItem.getSequence()).isEqualTo(VT.bi(1));
-            assertThat(leaseItem.getApplicationTenancy().getPath()).isEqualTo("/GBR/OXF/HELLOWORLD_GB");
+            assertThat(leaseItem.getApplicationTenancy().getPath()).isEqualTo("/GBR/OXF");
         }
 
         @Test

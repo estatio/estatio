@@ -208,7 +208,7 @@ public class InvoiceService_IntegTest extends LeaseModuleIntegTestAbstract {
             mixin(InvoiceForLease._approve.class, invoice).$$();
             mixin(InvoiceForLease._invoice.class, invoice).$$(VT.ld(2013, 11, 7));
 
-            assertThat(invoice.getInvoiceNumber(), is("OXF-0001"));
+            assertThat(invoice.getInvoiceNumber(), is("OXF-000001"));
             assertThat(invoice.getStatus(), is(InvoiceStatus.INVOICED));
         }
 
@@ -330,12 +330,12 @@ public class InvoiceService_IntegTest extends LeaseModuleIntegTestAbstract {
         }
 
         @Test
-        public void italian_invoice_with_rouding_issues_is_corrected_on_invoicing() throws Exception {
+        public void italian_invoice_with_rounding_issues_is_corrected_on_invoicing() throws Exception {
 
             // given - italian lease with rounding problems
-            docFragmentRepository.create("org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "description", "/ITA/RON/HW_IT", "");
-            docFragmentRepository.create("org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "preliminaryLetterDescription", "/ITA/RON/HW_IT", "");
-            docFragmentRepository.create("org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM", "description", "/ITA/RON/HW_IT", "");
+            docFragmentRepository.create("org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "description", "/ITA/RON", "");
+            docFragmentRepository.create("org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "preliminaryLetterDescription", "/ITA/RON", "");
+            docFragmentRepository.create("org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM", "description", "/ITA/RON", "");
 
             Lease lease = Lease_enum.RonTopModel001It.findUsing(serviceRegistry);
             mixin(Lease_calculate.class, lease).exec(InvoiceRunType.NORMAL_RUN, Arrays.asList(LeaseItemType.RENT), new LocalDate(2019,01,01), new LocalDate(2019,01,01), new LocalDate(2019,1,2));
