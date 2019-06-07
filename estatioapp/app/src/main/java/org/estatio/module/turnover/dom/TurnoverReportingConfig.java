@@ -129,8 +129,19 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
 
     @Action(semantics = SemanticsOf.SAFE)
     public LocalDate getEndDate(){
-        final LocalDate endDateToUse = ArrayExtensions.coalesce(occupancy.getEndDate(), occupancy.getLease().getTenancyEndDate());
-        return endDateToUse==null || endDateToUse.isAfter(getStartDate()) ? endDateToUse : getStartDate(); // ECP-962: prevents bad occupancy and / or lease data to produce wrong illegal interval on turnover reporting config
+
+        LocalDate endDateToUse = ArrayExtensions.coalesce(occupancy.getEndDate(), occupancy.getLease().getTenancyEndDate());
+        if (endDateToUse==null) return null;
+
+        // when an end date can be derived, add frequency period for monthly and yearly because turnovers are reported afterwards.
+        if (getFrequency() == Frequency.MONTHLY){
+            endDateToUse = endDateToUse.plusMonths(1);
+        }
+        if (getFrequency() == Frequency.YEARLY){
+            endDateToUse = endDateToUse.plusYears(1);
+        }
+
+        return endDateToUse.isAfter(getStartDate()) ? endDateToUse : getStartDate(); // ECP-962: prevents bad occupancy and / or lease data to produce wrong illegal interval on turnover reporting config
     }
 
     @Override

@@ -48,6 +48,16 @@ public class TurnoverReportingConfig_Test {
         // then
         Assertions.assertThat(config.getEndDate()).isEqualTo(occupancyEndDate);
 
+        // and when
+        config.setFrequency(Frequency.MONTHLY);
+        // then
+        Assertions.assertThat(config.getEndDate()).isEqualTo(occupancyEndDate.plusMonths(1));
+
+        // and when
+        config.setFrequency(Frequency.YEARLY);
+        // then
+        Assertions.assertThat(config.getEndDate()).isEqualTo(occupancyEndDate.plusYears(1));
+
     }
 
     @Rule
