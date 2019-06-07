@@ -92,7 +92,7 @@ public class TurnoverReportingConfig_Test {
         }});
 
         // when
-        config.produceEmptyTurnovers(turnoverDate);
+        config.produceEmptyTurnover(turnoverDate);
         
     }
 
@@ -115,12 +115,12 @@ public class TurnoverReportingConfig_Test {
         // when
         turnoverDate = new LocalDate(2018, 12,31);
         // then nothing
-        config.produceEmptyTurnovers(turnoverDate);
+        config.produceEmptyTurnover(turnoverDate);
 
         // and when
         turnoverDate = new LocalDate(2019,2,1);
         // then nothing again
-        config.produceEmptyTurnovers(turnoverDate);
+        config.produceEmptyTurnover(turnoverDate);
 
     }
 
@@ -141,7 +141,7 @@ public class TurnoverReportingConfig_Test {
         config.setOccupancy(occupancy);
 
         // when
-        config.produceEmptyTurnovers(turnoverDate);
+        config.produceEmptyTurnover(turnoverDate);
 
     }
 }

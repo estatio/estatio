@@ -149,7 +149,7 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
         return getOccupancy().getApplicationTenancy();
     }
 
-    public void produceEmptyTurnovers(final LocalDate date) {
+    public void produceEmptyTurnover(final LocalDate date) {
         if (isActiveOnDate(date) && !getOccupancy().getReportTurnover().equals(Occupancy.OccupancyReportingType.NO)) {
             if (frequency.hasStartDate(date)) turnoverRepository.createNewEmpty(this, date, getType(), getFrequency(), getCurrency());
         }

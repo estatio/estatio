@@ -27,7 +27,7 @@ public class TurnoverEntryService {
 
     public void produceEmptyTurnoversFor(final LocalDate date) {
         turnoverReportingConfigRepository.findAllActiveOnDate(date).forEach(
-                c->c.produceEmptyTurnovers(date)
+                c->c.produceEmptyTurnover(date)
         );
     }
 

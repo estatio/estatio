@@ -27,6 +27,8 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -117,6 +119,8 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
         return turnover;
     }
 
+    private static final Logger LOG = LoggerFactory.getLogger(TurnoverRepository.class);
+
     public Turnover createNewEmpty(
             final TurnoverReportingConfig config,
             final LocalDate turnoverDate,
@@ -128,6 +132,7 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
             turnover = new Turnover(config, turnoverDate, type, frequency, currency, Status.NEW);
             serviceRegistry2.injectServicesInto(turnover);
             repositoryService.persistAndFlush(turnover);
+            LOG.info(String.format("Empty turnover created with type %s, date %s for lease %s", turnover.getType(), turnover.getDate(), turnover.getOccupancy().getLease().getReference()));
         }
         return turnover;
     }
