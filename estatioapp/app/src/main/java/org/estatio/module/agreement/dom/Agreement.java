@@ -180,28 +180,40 @@ public abstract class Agreement
 
     @Property(notPersisted = true)
     public Party getPrimaryParty() {
-        // can probably also use:
-        // final AgreementRoleType art = primaryRoleType.findOrCreateUsing(agreementRoleTypeRepository);
-        final AgreementRoleType art = agreementRoleTypeRepository.findByTitle(primaryRoleType.getTitle());
-        final AgreementRole currentOrMostRecentRole = findCurrentOrMostRecentAgreementRole(art);
-        return partyOf(currentOrMostRecentRole);
-    }
-
-    @Programmatic
-    public Party primaryPartyAsOf(final LocalDate date) {
-        // can probably also use:
-        // final AgreementRoleType art = primaryRoleType.findOrCreateUsing(agreementRoleTypeRepository);
-        final AgreementRoleType art = agreementRoleTypeRepository.findByTitle(primaryRoleType.getTitle());
-        final AgreementRole currentOrMostRecentRole = findAgreementRoleAsOf(art, date);
-        return partyOf(currentOrMostRecentRole);
+        return partyOf(this.primaryRoleType);
     }
 
     @Property(notPersisted = true)
     public Party getSecondaryParty() {
-        final AgreementRoleType art = agreementRoleTypeRepository.findByTitle(secondaryRoleType.getTitle());
+        return partyOf(this.secondaryRoleType);
+    }
+
+    @Programmatic
+    public Party primaryPartyAsOf(final LocalDate date) {
+        return partyAsOf(this.primaryRoleType, date);
+    }
+
+    @Programmatic
+    public Party secondaryPartyAsOf(final LocalDate date) {
+        return partyAsOf(this.secondaryRoleType, date);
+    }
+
+    private Party partyAsOf(final IAgreementRoleType roleType, final LocalDate date) {
+        // can probably also use:
+        // final AgreementRoleType art = primaryRoleType.findOrCreateUsing(agreementRoleTypeRepository);
+        final AgreementRoleType art = agreementRoleTypeRepository.findByTitle(roleType.getTitle());
+        final AgreementRole currentOrMostRecentRole = findAgreementRoleAsOf(art, date);
+        return partyOf(currentOrMostRecentRole);
+    }
+
+    private Party partyOf(final IAgreementRoleType roleType) {
+        // can probably also use:
+        // final AgreementRoleType art = primaryRoleType.findOrCreateUsing(agreementRoleTypeRepository);
+        final AgreementRoleType art = agreementRoleTypeRepository.findByTitle(roleType.getTitle());
         final AgreementRole currentOrMostRecentRole = findCurrentOrMostRecentAgreementRole(art);
         return partyOf(currentOrMostRecentRole);
     }
+
 
     // //////////////////////////////////////
 
