@@ -243,32 +243,6 @@ public class Lease
 
     // //////////////////////////////////////
 
-    @Override
-    @org.apache.isis.applib.annotation.Property(notPersisted = true, hidden = Where.OBJECT_FORMS)
-    public Party getPrimaryParty() {
-        final AgreementRole ar = getPrimaryAgreementRole();
-        return partyOf(ar);
-    }
-
-    @Override
-    @org.apache.isis.applib.annotation.Property(notPersisted = true, hidden = Where.OBJECT_FORMS)
-    public Party getSecondaryParty() {
-        final AgreementRole ar = getSecondaryAgreementRole();
-        return partyOf(ar);
-    }
-
-    @Programmatic
-    protected AgreementRole getPrimaryAgreementRole() {
-        return findCurrentOrMostRecentAgreementRole(LeaseAgreementRoleTypeEnum.LANDLORD.getTitle());
-    }
-
-    @Programmatic
-    protected AgreementRole getSecondaryAgreementRole() {
-        return findCurrentOrMostRecentAgreementRole(LeaseAgreementRoleTypeEnum.TENANT.getTitle());
-    }
-
-    // //////////////////////////////////////
-
     /**
      * The {@link Property} of the (first of the) {@link #getOccupancies()
      * LeaseUnit}s.

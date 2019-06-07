@@ -28,6 +28,7 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Objects;
@@ -143,13 +144,15 @@ public abstract class Agreement
         Chained<Agreement>,
         WithNameGetter {
 
-    protected final String primaryRoleTypeTitle;
-    protected final String secondaryRoleTypeTitle;
+    @NotPersistent
+    protected final IAgreementRoleType primaryRoleType;
+    @NotPersistent
+    protected final IAgreementRoleType secondaryRoleType;
 
     public Agreement(final IAgreementRoleType primaryRoleType, final IAgreementRoleType secondaryRoleType) {
         super("type,reference");
-        this.primaryRoleTypeTitle = primaryRoleType == null ? null : primaryRoleType.getTitle();
-        this.secondaryRoleTypeTitle = secondaryRoleType == null ? null : secondaryRoleType.getTitle();
+        this.primaryRoleType = primaryRoleType;
+        this.secondaryRoleType = secondaryRoleType;
     }
 
     public String title() {
@@ -177,24 +180,37 @@ public abstract class Agreement
 
     @Property(notPersisted = true)
     public Party getPrimaryParty() {
-        return findCurrentOrMostRecentParty(primaryRoleTypeTitle);
+        // can probably also use:
+        // final AgreementRoleType art = primaryRoleType.findOrCreateUsing(agreementRoleTypeRepository);
+        final AgreementRoleType art = agreementRoleTypeRepository.findByTitle(primaryRoleType.getTitle());
+        final AgreementRole currentOrMostRecentRole = findCurrentOrMostRecentAgreementRole(art);
+        return partyOf(currentOrMostRecentRole);
     }
 
     @Property(notPersisted = true)
     public Party getSecondaryParty() {
-        return findCurrentOrMostRecentParty(secondaryRoleTypeTitle);
+        final AgreementRoleType art = agreementRoleTypeRepository.findByTitle(secondaryRoleType.getTitle());
+        final AgreementRole currentOrMostRecentRole = findCurrentOrMostRecentAgreementRole(art);
+        return partyOf(currentOrMostRecentRole);
     }
 
     // //////////////////////////////////////
 
     @Programmatic
     protected AgreementRole getPrimaryAgreementRole() {
-        return findCurrentOrMostRecentAgreementRole(primaryRoleTypeTitle);
+        // can probably also use:
+        // final AgreementRoleType art = primaryRoleType.findOrCreateUsing(agreementRoleTypeRepository);
+        final AgreementRoleType art = agreementRoleTypeRepository.findByTitle(primaryRoleType.getTitle());
+        return findCurrentOrMostRecentAgreementRole(art);
     }
+
 
     @Programmatic
     protected AgreementRole getSecondaryAgreementRole() {
-        return findCurrentOrMostRecentAgreementRole(secondaryRoleTypeTitle);
+        // can probably also use:
+        // final AgreementRoleType art = primaryRoleType.findOrCreateUsing(agreementRoleTypeRepository);
+        final AgreementRoleType art = agreementRoleTypeRepository.findByTitle(secondaryRoleType.getTitle());
+        return findCurrentOrMostRecentAgreementRole(art);
     }
 
     // //////////////////////////////////////
@@ -214,7 +230,7 @@ public abstract class Agreement
         return findCurrentOrMostRecentAgreementRole(art);
     }
 
-    private AgreementRole findCurrentOrMostRecentAgreementRole(final AgreementRoleType agreementRoleType) {
+    protected AgreementRole findCurrentOrMostRecentAgreementRole(final AgreementRoleType agreementRoleType) {
         // all available roles
         final Iterable<AgreementRole> rolesOfType =
                 Iterables.filter(getRoles(), AgreementRole.Predicates.whetherTypeIs(agreementRoleType));
