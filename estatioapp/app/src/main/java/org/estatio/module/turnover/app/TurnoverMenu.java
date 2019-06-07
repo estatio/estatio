@@ -31,6 +31,7 @@ import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.asset.dom.Property;
@@ -110,6 +111,14 @@ public class TurnoverMenu  {
         return turnoverEntryService.propertiesForReporter(reporter);
     }
 
+    public Type default2ImportTurnovers(){
+        return Type.PRELIMINARY;
+    }
+
+    public LocalDate default3ImportTurnovers(){
+        return new LocalDate(clockService.now().getYear(), clockService.now().getMonthOfYear(), 1);
+    }
+
     public List<Turnover> findTurnoverEntryRequestsFor(final Person reporter){
         return turnoverEntryService.allNewForReporter(reporter);
     }
@@ -128,5 +137,7 @@ public class TurnoverMenu  {
     @Inject PersonRepository personRepository;
 
     @Inject FixedAssetRoleRepository fixedAssetRoleRepository;
+
+    @Inject ClockService clockService;
 
 }
