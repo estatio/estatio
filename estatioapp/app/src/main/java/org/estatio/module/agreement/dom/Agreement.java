@@ -66,12 +66,12 @@ import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.base.dom.with.WithNameGetter;
 import org.incode.module.base.dom.with.WithReferenceGetter;
 
-import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.agreement.dom.role.AgreementRoleType;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.agreement.dom.role.IAgreementRoleType;
 import org.estatio.module.agreement.dom.type.AgreementType;
 import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
+import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.party.dom.Party;
 
 import lombok.Getter;
@@ -187,6 +187,15 @@ public abstract class Agreement
         return partyOf(currentOrMostRecentRole);
     }
 
+    @Programmatic
+    public Party primaryPartyAsOf(final LocalDate date) {
+        // can probably also use:
+        // final AgreementRoleType art = primaryRoleType.findOrCreateUsing(agreementRoleTypeRepository);
+        final AgreementRoleType art = agreementRoleTypeRepository.findByTitle(primaryRoleType.getTitle());
+        final AgreementRole currentOrMostRecentRole = findAgreementRoleAsOf(art, date);
+        return partyOf(currentOrMostRecentRole);
+    }
+
     @Property(notPersisted = true)
     public Party getSecondaryParty() {
         final AgreementRoleType art = agreementRoleTypeRepository.findByTitle(secondaryRoleType.getTitle());
@@ -248,6 +257,13 @@ public abstract class Agreement
         // and return the party
         final AgreementRole currentOrMostRecentRole = firstElseNull(roles);
         return currentOrMostRecentRole;
+    }
+
+    protected AgreementRole findAgreementRoleAsOf(final AgreementRoleType agreementRoleType, final LocalDate date) {
+        return Lists.newArrayList(getRoles()).stream()
+                        .filter(ar -> ar != null && ar.getType() == agreementRoleType)
+                        .filter(ar -> ar.getInterval().contains(date))
+                        .findFirst().orElse(null);
     }
 
     private static <T> T firstElseNull(final Iterable<T> iterable) {

@@ -456,13 +456,7 @@ public class AgreementRole
          * {@link AgreementRole#getType() type} is the specified value.
          */
         public static Predicate<AgreementRole> whetherTypeIs(final AgreementRoleType art) {
-            return new Predicate<AgreementRole>() {
-
-                @Override
-                public boolean apply(final AgreementRole input) {
-                    return input != null && input.getType() == art;
-                }
-            };
+            return input -> input != null && input.getType() == art;
         }
 
         /**
@@ -471,13 +465,7 @@ public class AgreementRole
          * {@link Agreement#getType() type} is the specified value.
          */
         public static Predicate<AgreementRole> whetherAgreementTypeIs(final AgreementType at) {
-            return new Predicate<AgreementRole>() {
-
-                @Override
-                public boolean apply(final AgreementRole input) {
-                    return input != null && input.getAgreement().getType() == at;
-                }
-            };
+            return input -> input != null && input.getAgreement().getType() == at;
         }
 
         @Programmatic
@@ -485,12 +473,7 @@ public class AgreementRole
                 final AgreementRoleType art,
                 final LocalDate startDate,
                 final LocalDate endDate) {
-            return new Predicate<AgreementRole>() {
-                @Override
-                public boolean apply(final AgreementRole ar) {
-                    return Objects.equal(ar.getType(), art) && ar.getInterval().overlaps(new LocalDateInterval(startDate, endDate));
-                }
-            };
+            return (Predicate<AgreementRole>) ar -> Objects.equal(ar.getType(), art) && ar.getInterval().overlaps(new LocalDateInterval(startDate, endDate));
         }
 
         @Programmatic
