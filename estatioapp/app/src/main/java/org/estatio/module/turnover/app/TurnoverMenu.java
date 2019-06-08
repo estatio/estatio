@@ -116,7 +116,7 @@ public class TurnoverMenu  {
     }
 
     public LocalDate default3ImportTurnovers(){
-        return new LocalDate(clockService.now().getYear(), clockService.now().getMonthOfYear(), 1);
+        return new LocalDate(clockService.now().getYear(), clockService.now().getMonthOfYear() - 1, 1);
     }
 
     public List<Turnover> findTurnoverEntryRequestsFor(final Person reporter){
