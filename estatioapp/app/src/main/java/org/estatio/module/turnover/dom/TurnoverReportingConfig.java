@@ -1,6 +1,8 @@
 package org.estatio.module.turnover.dom;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -11,8 +13,6 @@ import javax.jdo.annotations.VersionStrategy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -155,10 +155,22 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
         }
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public Person getEffectiveReporter(){
-        return ArrayExtensions.coalesce(getReporter(), deriveReporterFromOccupancy(getOccupancy()));
+    @Programmatic
+    public List<Person> allTurnoverReporters(){
+        List<Person> result = new ArrayList<>();
+        List<FixedAssetRole> roles = fixedAssetRoleRepository.findAllForProperty(occupancy.getUnit().getProperty());
+        result.addAll(
+                roles.stream()
+                .filter(r->r.getType()==FixedAssetRoleTypeEnum.TURNOVER_REPORTER)
+                .filter(r -> r.getStartDate() == null || r.getStartDate().isBefore(clockService.now().plusDays(1)))
+                .filter(r -> r.getEndDate() == null || r.getEndDate().isAfter(clockService.now().minusDays(1)))
+                .map(r->r.getParty())
+                .filter(p->p.getClass().isAssignableFrom(Person.class))
+                .map(Person.class::cast)
+                .collect(Collectors.toList())
+        );
+        if (getReporter()!=null) result.add(getReporter());
+        return result;
     }
 
     public List<Turnover> getTurnovers(){
@@ -169,7 +181,6 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
     public LocalDateInterval getInterval(){
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
-
 
     @Programmatic
     public boolean isActiveOnDate(final LocalDate date){

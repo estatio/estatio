@@ -24,7 +24,6 @@
                             </cpt:fieldSet>
                             <cpt:fieldSet name="Reporter" id="reporter">
                                 <cpt:property id="reporter"/>
-                                <cpt:property id="effectiveReporter"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>

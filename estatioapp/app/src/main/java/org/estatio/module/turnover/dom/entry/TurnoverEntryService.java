@@ -32,6 +32,10 @@ public class TurnoverEntryService {
     }
 
     public Turnover nextNewForReporter(final Person reporter, final Turnover current) {
+
+        // return a result only if the reporter is specified on the config
+        if (current.getConfig().getReporter()==null) return null;
+
         // first offer those of same property, type and date
         List<Turnover> samePropertyTypeAndDay = findNewByReporterPropertyTypeAndDate(reporter, current.getOccupancy().getUnit().getProperty(), current.getType(), current.getDate());
         if (!samePropertyTypeAndDay.isEmpty()) return samePropertyTypeAndDay.get(0);
@@ -59,7 +63,7 @@ public class TurnoverEntryService {
         propertiesForReporter(reporter).forEach(p->{
             turnoverReportingConfigRepository.findByPropertyActiveOnDate(p, date)
                     .stream()
-                    .filter(cf->cf.getEffectiveReporter().equals(reporter))
+                    .filter(cf->cf.getReporter()!=null && cf.getReporter().equals(reporter))
                     .forEach(cf->{
                         anythingNew.addAll(turnoverRepository.findByConfigWithStatusNew(cf));
                     });
@@ -73,7 +77,7 @@ public class TurnoverEntryService {
                 p->{
                     turnoverReportingConfigRepository.findByPropertyAndTypeActiveOnDate(p, current.getType(), current.getDate())
                             .stream()
-                            .filter(cf->cf.getEffectiveReporter().equals(reporter))
+                            .filter(cf->cf.getReporter()!=null && cf.getReporter().equals(reporter))
                             .forEach(cf->{
                                 sameType.addAll(turnoverRepository.findByConfigAndTypeWithStatusNew(cf, current.getType()));
                             });
@@ -93,7 +97,7 @@ public class TurnoverEntryService {
                 p->{
                     turnoverReportingConfigRepository.findByPropertyAndTypeActiveOnDate(p, current.getType(), current.getDate())
                             .stream()
-                            .filter(cf->cf.getEffectiveReporter().equals(reporter))
+                            .filter(cf->cf.getReporter()!=null && cf.getReporter().equals(reporter))
                             .forEach(cf->{
                                 sameTypeAndDay.addAll(turnoverRepository.findByConfigAndTypeAndDateWithStatusNew(cf, current.getType(), current.getDate()));
                             });
@@ -106,7 +110,7 @@ public class TurnoverEntryService {
         List<Turnover> result = new ArrayList<>();
         turnoverReportingConfigRepository.findByPropertyAndTypeActiveOnDate(property, type, date)
                 .stream()
-                .filter(cf->cf.getEffectiveReporter().equals(reporter))
+                .filter(cf->cf.getReporter()!=null && cf.getReporter().equals(reporter))
                 .forEach(cf->{
                     result.addAll(turnoverRepository.findByConfigAndTypeAndDateWithStatusNew(cf, type, date));
                 });
@@ -117,7 +121,7 @@ public class TurnoverEntryService {
         List<Turnover> result = new ArrayList<>();
         turnoverReportingConfigRepository.findByPropertyAndTypeActiveOnDate(property, type, date)
                 .stream()
-                .filter(cf->cf.getEffectiveReporter().equals(reporter))
+                .filter(cf->!cf.allTurnoverReporters().isEmpty() && cf.allTurnoverReporters().contains(reporter))
                 .forEach(cf->{
                     result.addAll(turnoverRepository.findByConfigAndTypeAndDate(cf, type, date));
                 });
