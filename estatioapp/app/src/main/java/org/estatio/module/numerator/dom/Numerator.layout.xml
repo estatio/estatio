@@ -18,10 +18,13 @@
                 <ns2:property id="applicationTenancyPath"/>
                 <ns2:property id="object"/>
             </ns2:fieldSet>
-            <ns2:fieldSet name="Scoping" id="scoping">
+            <ns2:fieldSet name="Scoping Level 1" id="scoping">
                 <ns2:property id="scoped"/>
                 <ns2:property id="objectType"/>
                 <ns2:property id="objectIdentifier"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Scoping Level 2" id="scoping2">
+                <ns2:property id="scoped2"/>
                 <ns2:property id="objectType2"/>
                 <ns2:property id="objectIdentifier2"/>
             </ns2:fieldSet>

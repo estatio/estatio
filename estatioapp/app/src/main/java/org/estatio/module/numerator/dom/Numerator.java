@@ -160,6 +160,12 @@ public class Numerator
         return getObjectType() != null;
     }
 
+    @javax.jdo.annotations.NotPersistent
+    @Property(notPersisted = true)
+    public boolean isScoped2() {
+        return getObjectType2() != null;
+    }
+
     // //////////////////////////////////////
 
     /**
@@ -234,7 +240,7 @@ public class Numerator
 
     @NotPersistent
     public Object getObject2() {
-        return isScoped() ? this.bookmarkService.lookup(this::bookmark2) : null;
+        return isScoped2() ? this.bookmarkService.lookup(this::bookmark2) : null;
     }
 
     // //////////////////////////////////////
@@ -285,7 +291,7 @@ public class Numerator
     private String objectIdentifier2;
 
     public boolean hideObjectIdentifier2() {
-        return !isScoped();
+        return !isScoped2();
     }
 
     // //////////////////////////////////////
@@ -361,7 +367,7 @@ public class Numerator
         return isScoped() ? new Bookmark(getObjectType(), getObjectIdentifier()) : null;
     }
     private Bookmark bookmark2() {
-        return isScoped() ? new Bookmark(getObjectType2(), getObjectIdentifier2()) : null;
+        return isScoped2() ? new Bookmark(getObjectType2(), getObjectIdentifier2()) : null;
     }
 
     @NotPersistent
