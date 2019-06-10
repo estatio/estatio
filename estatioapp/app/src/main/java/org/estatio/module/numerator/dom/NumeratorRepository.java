@@ -77,7 +77,11 @@ public class NumeratorRepository extends UdoDomainRepositoryAndFactory<Numerator
             final Object scopedTo,
             final ApplicationTenancy applicationTenancy) {
         Numerator result = findNumerator(numeratorName, scopedTo, applicationTenancy);
-        return result == null ? findFirstNumeratorForObjectTypeMatchingAppTenancyPath(numeratorName, scopedTo, applicationTenancy) : result;
+        if (result != null) {
+            return result;
+        }
+
+        return findFirstNumeratorForObjectTypeMatchingAppTenancyPath(numeratorName, scopedTo, applicationTenancy);
     }
 
 
