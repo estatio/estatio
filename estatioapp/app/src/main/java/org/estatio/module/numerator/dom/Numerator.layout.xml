@@ -22,6 +22,8 @@
                 <ns2:property id="scoped"/>
                 <ns2:property id="objectType"/>
                 <ns2:property id="objectIdentifier"/>
+                <ns2:property id="objectType2"/>
+                <ns2:property id="objectIdentifier2"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Application Level" id="applicationLevel">
                 <ns2:property id="applicationTenancy"/>

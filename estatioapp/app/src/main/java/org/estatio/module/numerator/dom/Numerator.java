@@ -20,9 +20,11 @@ package org.estatio.module.numerator.dom;
 
 import java.math.BigInteger;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.DomainObject;
@@ -32,7 +34,7 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.bookmark.Bookmark;
-import org.apache.isis.applib.services.bookmark.BookmarkHolder;
+import org.apache.isis.applib.services.bookmark.BookmarkService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -110,10 +112,10 @@ import lombok.Setter;
 )
 public class Numerator
         extends UdoDomainObject2<Numerator>
-        implements Comparable<Numerator>, BookmarkHolder, WithApplicationTenancyAny, WithApplicationTenancyPathPersisted {
+        implements Comparable<Numerator>,  WithApplicationTenancyAny, WithApplicationTenancyPathPersisted {
 
     public Numerator() {
-        super("name, objectType, objectIdentifier, format");
+        super("name, objectType, objectIdentifier, objectType2, objectIdentifier2, format");
     }
 
     // //////////////////////////////////////
@@ -176,7 +178,7 @@ public class Numerator
 
     /**
      * The {@link Bookmark#getObjectType() object type} (either the class name
-     * or a unique alias of it) of the object to which this {@link Numerator}
+     * or a unique alias of it) of the first object to which this {@link Numerator}
      * belongs.
      *
      * <p>
@@ -201,7 +203,7 @@ public class Numerator
     // //////////////////////////////////////
 
     /**
-     * The {@link Bookmark#getIdentifier() identifier} of the object to which
+     * The {@link Bookmark#getIdentifier() identifier} of the first object to which
      * this {@link Numerator} belongs.
      *
      * <p>
@@ -220,6 +222,69 @@ public class Numerator
     private String objectIdentifier;
 
     public boolean hideObjectIdentifier() {
+        return !isScoped();
+    }
+
+    // //////////////////////////////////////
+
+    @NotPersistent
+    public Object getObject() {
+        return isScoped() ? this.bookmarkService.lookup(this::bookmark) : null;
+    }
+
+    @NotPersistent
+    public Object getObject2() {
+        return isScoped() ? this.bookmarkService.lookup(this::bookmark2) : null;
+    }
+
+    // //////////////////////////////////////
+
+    /**
+     * The {@link Bookmark#getObjectType() object type} (either the class name
+     * or a unique alias of it) of the second object to which this {@link Numerator}
+     * belongs.
+     *
+     * <p>
+     * If omitted, then the {@link Numerator} is taken to be global.
+     *
+     * <p>
+     * If present, then the {@link #getObjectIdentifier2() object identifier}
+     * must also be present.
+     *
+     * <p>
+     * The ({@link #getObjectType2() objectType}, {@link #getObjectIdentifier2()
+     * identifier}) can be used to recreate a {@link Bookmark}, if required.
+     */
+    @javax.jdo.annotations.Column(allowsNull = "true", length = FqcnType.Meta.MAX_LEN)
+    @Getter @Setter
+    private String objectType2;
+
+    public boolean hideObjectType2() {
+        return !isScoped();
+    }
+
+    // //////////////////////////////////////
+
+    /**
+     * The {@link Bookmark#getIdentifier() identifier} of the second object to which
+     * this {@link Numerator} belongs.
+     *
+     * <p>
+     * If omitted, then the {@link Numerator} is taken to be global.
+     *
+     * <p>
+     * If present, then the {@link #getObjectType2() object type} must also be
+     * present.
+     *
+     * <p>
+     * The ({@link #getObjectType() objectType}, {@link #getObjectIdentifier()
+     * identifier}) can be used to recreate a {@link Bookmark}, if required.
+     */
+    @javax.jdo.annotations.Column(allowsNull = "true", length = ObjectIdentifierType.Meta.MAX_LEN)
+    @Getter @Setter
+    private String objectIdentifier2;
+
+    public boolean hideObjectIdentifier2() {
         return !isScoped();
     }
 
@@ -292,11 +357,17 @@ public class Numerator
 
     // //////////////////////////////////////
 
-    @Programmatic
-    @Override
-    public Bookmark bookmark() {
+    private Bookmark bookmark() {
         return isScoped() ? new Bookmark(getObjectType(), getObjectIdentifier()) : null;
     }
+    private Bookmark bookmark2() {
+        return isScoped() ? new Bookmark(getObjectType2(), getObjectIdentifier2()) : null;
+    }
+
+    @NotPersistent
+    @Inject
+    private BookmarkService bookmarkService;
+
 
     // //////////////////////////////////////
 
