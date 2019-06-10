@@ -95,6 +95,10 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
             final Currency currency) {
 
         final Property propertyIfAny = lease.getProperty();
+
+        // TODO: this should look up primary and secondary parties for dueDate, so callers
+        //  should check/disable if none defined for that period.
+
         final Party seller = lease.getPrimaryParty();
         final Party buyer = lease.getSecondaryParty();
 

@@ -82,6 +82,10 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
             final InvoiceStatus invoiceStatus,
             final LocalDate dueDate,
             final String interactionId) {
+
+        // TODO: this should look up primary and secondary parties for startDate, so callers
+        //  should check/disable if none defined for that period.
+
         Party buyer = lease.getSecondaryParty();
         Party seller = lease.getPrimaryParty();
         return findOrCreateMatchingInvoice(

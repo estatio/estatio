@@ -68,6 +68,8 @@ public class NumeratorForCollectionRepository extends UdoDomainService<Numerator
     public Numerator findInvoiceNumberNumerator(
             final FixedAsset fixedAsset,
             final ApplicationTenancy applicationTenancy) {
+
+        // TODO: this should be queried based on the invoice's seller, not on the app tenancy.
         return numeratorRepository
                 .findScopedNumeratorIncludeWildCardMatching(Constants.NumeratorName.INVOICE_NUMBER, fixedAsset, applicationTenancy);
     }

@@ -719,16 +719,25 @@ public class Lease
 
     // //////////////////////////////////////
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public Lease newMandate(
             final BankAccount bankAccount,
-            final @Parameter(regexPattern = org.incode.module.base.dom.types.ReferenceType.Meta.REGEX, regexPatternReplacement = org.incode.module.base.dom.types.ReferenceType.Meta.REGEX_DESCRIPTION) String reference,
+            @Parameter(
+                    regexPattern = ReferenceType.Meta.REGEX,
+                    regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION)
+            final String reference,
             final LocalDate startDate,
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate,
             final SequenceType sequenceType,
             final Scheme scheme,
             final LocalDate signatureDate) {
 
+        // TODO: really, ought to use primaryPartyAsOf(startDate).
+        //  Update the disableXxx accordingly
         final Party creditor = getPrimaryParty();
+
+        // TODO: really, ought to use secondaryPartyAsOf(startDate)
+        //  Update the disableXxx accordingly
         final Party debtor = getSecondaryParty();
 
         final BankMandate bankMandate =
@@ -914,6 +923,9 @@ public class Lease
             final Party tenant,
             final LocalDate tenancyStartDate
     ) {
+        // TODO: this should look up primary and secondary parties for startDate, so callers
+        //  should check/disable if none defined for that period.
+
         Lease newLease = copyToNewLease(reference, name, tenant, getStartDate(), getEndDate(), tenancyStartDate, null, true);
         this.terminate(LocalDateInterval.endDateFromStartDate(tenancyStartDate));
         return newLease;
@@ -946,6 +958,9 @@ public class Lease
             final LocalDate tenancyStartDate,
             final LocalDate tenancyEndDate,
             boolean copyEpochDate) {
+
+        // TODO: this should look up primary and secondary parties for startDate, so callers
+        //  should check/disable if none defined for that period.
         Lease newLease = leaseRepository.newLease(
                 this.getApplicationTenancy(),
                 reference,
@@ -1024,6 +1039,9 @@ public class Lease
             final LocalDate startDate,
             final LocalDate endDate
     ) {
+        // TODO: this should look up primary and secondary parties for startDate, so callers
+        //  should check/disable if none defined for that period.
+
         Lease newLease = copyToNewLease(reference, name, getSecondaryParty(), startDate, endDate, startDate, endDate, false);
         if (newLease != null){
             wrapperFactory.wrapSkipRules(this).terminate(startDate.minusDays(1));
@@ -1062,9 +1080,17 @@ public class Lease
         return null;
     }
 
-    public Lease renewKeepingThis(final LocalDate newStartDate, final LocalDate newEndDate) {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public Lease renewKeepingThis(
+            final LocalDate newStartDate,
+            final LocalDate newEndDate
+    ) {
         final String newReference = left(getReference(), 14).concat("_");
         final String newName = getName().concat(" - Archived");
+
+        // TODO: this should look up primary and secondary parties for startDate, so callers
+        //  should check/disable if none defined for that period.
+
         Lease prevLease = leaseRepository.newLease(
                 getApplicationTenancy(),
                 newReference,
