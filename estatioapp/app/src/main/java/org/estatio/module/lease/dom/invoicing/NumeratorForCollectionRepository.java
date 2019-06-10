@@ -26,12 +26,13 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.invoice.dom.Constants;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
+import org.estatio.module.party.dom.Party;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class NumeratorForCollectionRepository extends UdoDomainService<NumeratorForCollectionRepository> {
@@ -67,6 +68,7 @@ public class NumeratorForCollectionRepository extends UdoDomainService<Numerator
     @Programmatic
     public Numerator findInvoiceNumberNumerator(
             final FixedAsset fixedAsset,
+            final Party seller,
             final ApplicationTenancy applicationTenancy) {
 
         // TODO: this should be queried based on the invoice's seller, not on the app tenancy.

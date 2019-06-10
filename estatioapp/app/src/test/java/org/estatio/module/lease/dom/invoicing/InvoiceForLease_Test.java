@@ -51,6 +51,7 @@ import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.numerator.dom.Numerator;
+import org.estatio.module.party.dom.Party;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -116,7 +117,9 @@ public class InvoiceForLease_Test {
     void allowingMockInvoicesToReturnNumerator(final Numerator numerator) {
         context.checking(new Expectations() {
             {
-                allowing(mockNumeratorRepository).findInvoiceNumberNumerator(with(any(Property.class)), with(any(ApplicationTenancy.class)));
+                allowing(mockNumeratorRepository).findInvoiceNumberNumerator(with(any(Property.class)),
+                        with(any(Party.class)), with(any(ApplicationTenancy.class))
+                );
                 will(returnValue(numerator));
             }
         });

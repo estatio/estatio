@@ -34,6 +34,7 @@ import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.lease.dom.invoicing.NumeratorForCollectionRepository;
 import org.estatio.module.numerator.dom.Numerator;
+import org.estatio.module.party.dom.Party;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -84,8 +85,11 @@ public class NumeratorForCollectionMenu extends UdoDomainService<NumeratorForCol
     @MemberOrder(sequence = "3")
     public Numerator findInvoiceNumberNumerator(
             final FixedAsset fixedAsset,
+            final Party seller,
             final ApplicationTenancy applicationTenancy) {
-        return numeratorRepository.findInvoiceNumberNumerator(fixedAsset, applicationTenancy);
+        return numeratorRepository.findInvoiceNumberNumerator(fixedAsset, seller,
+                applicationTenancy
+        );
     }
 
 

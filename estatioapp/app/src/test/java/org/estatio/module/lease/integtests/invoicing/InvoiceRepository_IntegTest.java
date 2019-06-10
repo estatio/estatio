@@ -39,6 +39,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.incode.module.base.integtests.VT;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 
@@ -46,7 +47,6 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.currency.fixtures.enums.Currency_enum;
 import org.estatio.module.invoice.dom.Constants;
@@ -69,6 +69,7 @@ import org.estatio.module.lease.imports.InvoiceImportLine;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
+import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
@@ -136,6 +137,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
     public static class CreateInvoiceNumberNumerator extends InvoiceRepository_IntegTest {
 
+
         @Before
         public void setupData() {
             runFixtureScript(new FixtureScript() {
@@ -148,6 +150,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         }
 
         private Property propertyOxf;
+        private Organisation seller;
         private Property propertyKal;
 
         private Bookmark propertyOxfBookmark;
@@ -156,6 +159,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         public void setUp() throws Exception {
             propertyOxf = Property_enum.OxfGb.findUsing(serviceRegistry);
             propertyKal = Property_enum.KalNl.findUsing(serviceRegistry);
+            seller = PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.getOwner_d().findUsing(serviceRegistry);
 
             propertyOxfBookmark = bookmarkService.bookmarkFor(propertyOxf);
         }
@@ -164,7 +168,8 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         public void whenNoneForProperty() throws Exception {
 
             // given
-            Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, applicationTenancyRepository.findByPath("/"));
+            Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, seller,
+                    applicationTenancyRepository.findByPath("/"));
             Assert.assertNull(numerator);
 
             // when
@@ -232,16 +237,19 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         }
 
         private Property propertyOxf;
+        private Organisation seller;
 
         @Before
         public void setUp() throws Exception {
             propertyOxf = Property_enum.OxfGb.findUsing(serviceRegistry);
+            seller = PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.getOwner_d().findUsing(serviceRegistry);
         }
 
         @Test
         public void whenNone() throws Exception {
             // when
-            Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, applicationTenancyRepository.findByPath("/"));
+            Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, seller,
+                    applicationTenancyRepository.findByPath("/"));
             // then
             Assert.assertNull(numerator);
         }
@@ -249,6 +257,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
     }
 
     public static class FindInvoiceNumberNumeratorUsingWildCard extends InvoiceRepository_IntegTest {
+
 
         @Before
         public void setupData() {
@@ -262,6 +271,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
         private Property propertyOxf;
         private ApplicationTenancy applicationTenancyForOxf;
+        private Organisation seller;
         private ApplicationTenancy applicationTenancyWithWildCard;
         private String OXFTENANCYPATH = "/GBR/OXF/GB01";
         private String WILCARDTENANCYPATH = "/GBR/%/GB01";
@@ -273,6 +283,8 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
             applicationTenancyWithWildCard = applicationTenancyRepository.newTenancy(WILCARDTENANCYPATH, WILCARDTENANCYPATH, null);
             propertyOxf = Property_enum.OxfGb.findUsing(serviceRegistry);
             propertyOxf.setApplicationTenancyPath(OXFTENANCYPATH);
+
+            seller = PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.getOwner_d().findUsing(serviceRegistry);
             numeratorForOxfUsingWildCard = numeratorRepository.createScopedNumerator(
                     Constants.NumeratorName.INVOICE_NUMBER,
                     propertyOxf,
@@ -286,7 +298,8 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         public void whenUsingWildCardForAppTenancyPath() throws Exception {
 
             // when
-            Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, applicationTenancyRepository.findByPath(OXFTENANCYPATH));
+            Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, seller,
+                    applicationTenancyRepository.findByPath(OXFTENANCYPATH));
 
             // then
             assertThat(numerator).isEqualTo(numeratorForOxfUsingWildCard);

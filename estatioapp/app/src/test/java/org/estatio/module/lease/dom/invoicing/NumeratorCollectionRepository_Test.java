@@ -118,6 +118,9 @@ public class NumeratorCollectionRepository_Test {
         @JUnitRuleMockery2.Ignoring
         @Mock
         Property mockProperty;
+        @JUnitRuleMockery2.Ignoring
+        @Mock
+        Party mockSeller;
 
         private String format;
         private BigInteger lastIncrement;
@@ -163,7 +166,9 @@ public class NumeratorCollectionRepository_Test {
                     oneOf(mockNumeratorRepository).createGlobalNumerator(Constants.NumeratorName.COLLECTION_NUMBER, format, lastIncrement, applicationTenancy);
                 }
             });
-            estatioNumeratorRepository.findInvoiceNumberNumerator(mockProperty, applicationTenancy);
+            estatioNumeratorRepository.findInvoiceNumberNumerator(mockProperty, mockSeller,
+                    applicationTenancy
+            );
         }
 
         @Action(hidden = Where.EVERYWHERE)
