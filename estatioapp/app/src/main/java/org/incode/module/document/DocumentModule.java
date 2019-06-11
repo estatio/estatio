@@ -20,11 +20,13 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.minio.dopserver.MinioDopServerModule;
 
+import org.estatio.module.settings.EstatioSettingsModule;
+
 @XmlRootElement(name = "module")
 public class DocumentModule extends ModuleAbstract {
 
     @Override public Set<Module> getDependencies() {
-        return Sets.newHashSet(new MinioDopServerModule());
+        return Sets.newHashSet(new MinioDopServerModule(), new EstatioSettingsModule());
     }
 
     @Override
