@@ -70,8 +70,10 @@ public class CountryRepository  {
                         "alpha2Code", alpha2Code));
     }
 
-    public Country findCountryByAtPath(
-            final String atPath) {
+    public Country findCountryByAtPath(final String atPath) {
+        if(atPath == null) {
+            return null;
+        }
         Matcher matcher = PATTERN_COUNTRY_CODE_FROM_ATPATH.matcher(atPath);
         if(!matcher.matches()) {
             return null;
