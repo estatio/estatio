@@ -15,10 +15,10 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.numerator.dom.Numerator;
+import org.estatio.module.numerator.dom.NumeratorAtPathRepository;
 import org.estatio.module.party.dom.PartyConstants;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.numerator.dom.Numerator;
-import org.estatio.module.numerator.dom.NumeratorRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,7 +33,7 @@ public class OrganisationMenuTest {
         EstatioApplicationTenancyRepositoryForCountry mockEstatioApplicationTenancyRepositoryForCountry;
 
         @Mock
-        NumeratorRepository mockNumeratorRepository;
+        NumeratorAtPathRepository mockNumeratorAtPathRepository;
 
         @Mock
         PartyRepository mockPartyRepository;
@@ -50,7 +50,7 @@ public class OrganisationMenuTest {
             organisationMenu = new OrganisationMenu();
 
             organisationMenu.estatioApplicationTenancyRepository = mockEstatioApplicationTenancyRepositoryForCountry;
-            organisationMenu.numeratorAtPathRepository = mockNumeratorRepository;
+            organisationMenu.numeratorAtPathRepository = mockNumeratorAtPathRepository;
             organisationMenu.partyRepository = mockPartyRepository;
 
             reference = "someReference";
@@ -71,7 +71,7 @@ public class OrganisationMenuTest {
 
             // given
             context.checking(new Expectations() {{
-                allowing(mockNumeratorRepository).findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy);
+                allowing(mockNumeratorAtPathRepository).findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy);
                 will(returnValue(null));
 
                 ignoring(mockPartyRepository);
@@ -95,7 +95,7 @@ public class OrganisationMenuTest {
             boolean useNumeratorForReference = true;
 
             context.checking(new Expectations() {{
-                allowing(mockNumeratorRepository).findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy);
+                allowing(mockNumeratorAtPathRepository).findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy);
                 will(returnValue(new Numerator()));
 
                 ignoring(mockPartyRepository);

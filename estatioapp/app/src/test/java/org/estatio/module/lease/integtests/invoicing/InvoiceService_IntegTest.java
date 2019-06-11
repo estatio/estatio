@@ -19,7 +19,7 @@
 package org.estatio.module.lease.integtests.invoicing;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -208,7 +208,7 @@ public class InvoiceService_IntegTest extends LeaseModuleIntegTestAbstract {
             mixin(InvoiceForLease._approve.class, invoice).$$();
             mixin(InvoiceForLease._invoice.class, invoice).$$(VT.ld(2013, 11, 7));
 
-            assertThat(invoice.getInvoiceNumber(), is("OXF-000001"));
+            assertThat(invoice.getInvoiceNumber(), is("OXF-0001"));
             assertThat(invoice.getStatus(), is(InvoiceStatus.INVOICED));
         }
 
@@ -294,15 +294,15 @@ public class InvoiceService_IntegTest extends LeaseModuleIntegTestAbstract {
 
             Assertions.assertThat(entryFeeItem.getInvoicingFrequency()).isEqualTo(InvoicingFrequency.FIXED_IN_ADVANCE);
             Assertions.assertThat(invoiceForLeaseRepository.findByLease(leaseForFix).isEmpty()).isTrue();
-            Assertions.assertThat(entryFeeTerm.getValue()).isEqualTo(new BigDecimal("5000.00"));
+            Assertions.assertThat(entryFeeTerm.getValue()).isEqualTo(VT.bd("5000.00"));
 
             // when
             wrap(mixin(Lease_calculate.class, leaseForFix)).exec(
                     InvoiceRunType.RETRO_RUN,
-                    Arrays.asList(LeaseItemType.ENTRY_FEE),
-                    new LocalDate(2018, 1, 1),
-                    new LocalDate(2018, 1, 1),
-                    new LocalDate(2018, 1, 2)
+                    Collections.singletonList(LeaseItemType.ENTRY_FEE),
+                    VT.ld(2018, 1, 1),
+                    VT.ld(2018, 1, 1),
+                    VT.ld(2018, 1, 2)
                     );
 
             // then
@@ -338,19 +338,23 @@ public class InvoiceService_IntegTest extends LeaseModuleIntegTestAbstract {
             docFragmentRepository.create("org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM", "description", "/ITA/RON", "");
 
             Lease lease = Lease_enum.RonTopModel001It.findUsing(serviceRegistry);
-            mixin(Lease_calculate.class, lease).exec(InvoiceRunType.NORMAL_RUN, Arrays.asList(LeaseItemType.RENT), new LocalDate(2019,01,01), new LocalDate(2019,01,01), new LocalDate(2019,1,2));
+            mixin(Lease_calculate.class, lease).exec(
+                    InvoiceRunType.NORMAL_RUN,
+                    Collections.singletonList(LeaseItemType.RENT),
+                    VT.ld(2019,1, 1), VT.ld(2019, 1, 1), VT.ld(2019,1,2));
+
             InvoiceForLease invoice = invoiceForLeaseRepository.findByLease(lease).get(0);
             InvoiceItem rentItem = invoice.getItems().first();
             Charge charge = rentItem.getCharge();
             rentItem.remove();
 
-            InvoiceItem item = mixin(InvoiceForLease._newItem.class, invoice).$$(charge, new BigDecimal("1"), new BigDecimal("0.08"), null, null);
-            Assertions.assertThat(item.getVatAmount()).isEqualTo(new BigDecimal("0.02"));
-            Assertions.assertThat(item.getGrossAmount()).isEqualTo(new BigDecimal("0.10"));
+            InvoiceItem item = mixin(InvoiceForLease._newItem.class, invoice).$$(charge, VT.bd("1"), VT.bd("0.08"), null, null);
+            Assertions.assertThat(item.getVatAmount()).isEqualTo(VT.bd("0.02"));
+            Assertions.assertThat(item.getGrossAmount()).isEqualTo(VT.bd("0.10"));
 
-            InvoiceItem itemCausingRoundingProblem = mixin(InvoiceForLease._newItem.class, invoice).$$(charge, new BigDecimal("1"), new BigDecimal("0.17"), null, null);
-            Assertions.assertThat(itemCausingRoundingProblem.getVatAmount()).isEqualTo(new BigDecimal("0.04"));
-            Assertions.assertThat(itemCausingRoundingProblem.getGrossAmount()).isEqualTo(new BigDecimal("0.21"));
+            InvoiceItem itemCausingRoundingProblem = mixin(InvoiceForLease._newItem.class, invoice).$$(charge, VT.bd("1"), VT.bd("0.17"), null, null);
+            Assertions.assertThat(itemCausingRoundingProblem.getVatAmount()).isEqualTo(VT.bd("0.04"));
+            Assertions.assertThat(itemCausingRoundingProblem.getGrossAmount()).isEqualTo(VT.bd("0.21"));
 
             // when
             mixin(InvoiceForLease._approve.class, invoice).$$();
@@ -365,7 +369,7 @@ public class InvoiceService_IntegTest extends LeaseModuleIntegTestAbstract {
             Assertions.assertThat(invoice.getItems().first().getGrossAmount()).isEqualTo("0.21");
 
             // when
-            mixin(InvoiceForLease._invoice.class, invoice).$$(new LocalDate(2019,01,01));
+            mixin(InvoiceForLease._invoice.class, invoice).$$(VT.ld(2019, 1, 1));
             // then the largest amount is corrected
             Assertions.assertThat(invoice.getItems().first().getVatAmount()).isEqualTo("0.03");
             Assertions.assertThat(invoice.getItems().first().getGrossAmount()).isEqualTo("0.20");

@@ -679,7 +679,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
             assertThat(invoiceDocComm.getState()).isEqualTo(CommunicationState.SENT);
             assertThat(invoiceDocComm.getCreatedAt()).isNotNull();
             assertThat(invoiceDocComm.getSentAt()).isNotNull();
-            assertThat(invoiceDocComm.getSubject()).isEqualTo("Invoice OXF-000001 2012-01-01, OXF-POISON-003 Poison Perfumeries.pdf");
+            assertThat(invoiceDocComm.getSubject()).isEqualTo("Invoice OXF-0001 2012-01-01, OXF-POISON-003 Poison Perfumeries.pdf");
 
             // and InvNote doc now also attached to comm, invoice.buyer and invoice.seller (as well as invoice, but not the receipt)
             paperclips = paperclipRepository.findByDocument(invoiceDoc);

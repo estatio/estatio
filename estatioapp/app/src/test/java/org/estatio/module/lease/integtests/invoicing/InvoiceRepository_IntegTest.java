@@ -68,7 +68,7 @@ import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRe
 import org.estatio.module.lease.imports.InvoiceImportLine;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.numerator.dom.Numerator;
-import org.estatio.module.numerator.dom.NumeratorRepository;
+import org.estatio.module.numerator.dom.NumeratorAtPathRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -95,7 +95,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
     NumeratorForCollectionMenu estatioNumeratorRepository;
 
     @Inject
-    NumeratorRepository numeratorRepository;
+    NumeratorAtPathRepository numeratorAtPathRepository;
 
     @Inject
     PartyRepository partyRepository;
@@ -169,11 +169,11 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
             // given
             Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, seller,
-                    applicationTenancyRepository.findByPath("/"));
+                    applicationTenancyRepository.findByPath("/GBR"));
             Assert.assertNull(numerator);
 
             // when
-            numerator = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN, applicationTenancyRepository.findByPath("/"));
+            numerator = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN, applicationTenancyRepository.findByPath("/GBR"));
 
             // then
             Assert.assertNotNull(numerator);
@@ -187,11 +187,11 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         public void canCreateOnePerProperty() throws Exception {
 
             // given
-            Numerator numerator1 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN, applicationTenancyRepository.findByPath("/"));
+            Numerator numerator1 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN, applicationTenancyRepository.findByPath("/GBR"));
             Assert.assertNotNull(numerator1);
 
             // when
-            Numerator numerator2 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyKal, "KAL-%05d", BigInteger.ZERO, applicationTenancyRepository.findByPath("/"));
+            Numerator numerator2 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyKal, "KAL-%05d", BigInteger.ZERO, applicationTenancyRepository.findByPath("/NLD"));
 
             // then
             Assert.assertNotNull(numerator2);
@@ -207,13 +207,13 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         public void canOnlyCreateOnePerProperty_andCannotReset() throws Exception {
 
             // given
-            Numerator numerator1 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN, applicationTenancyRepository.findByPath("/"));
+            Numerator numerator1 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN, applicationTenancyRepository.findByPath("/GBR"));
             Assert.assertNotNull(numerator1);
 
             assertThat(numerator1.nextIncrementStr(), is("OXF-00011"));
 
             // when
-            Numerator numerator2 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, "KAL-%05d", BigInteger.ZERO, applicationTenancyRepository.findByPath("/"));
+            Numerator numerator2 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, "KAL-%05d", BigInteger.ZERO, applicationTenancyRepository.findByPath("/GBR"));
 
             // then
             Assert.assertNotNull(numerator2);
@@ -249,64 +249,13 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         public void whenNone() throws Exception {
             // when
             Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, seller,
-                    applicationTenancyRepository.findByPath("/"));
+                    applicationTenancyRepository.findByPath("/GBR"));
             // then
             Assert.assertNull(numerator);
         }
 
     }
 
-    public static class FindInvoiceNumberNumeratorUsingWildCard extends InvoiceRepository_IntegTest {
-
-
-        @Before
-        public void setupData() {
-            runFixtureScript(new FixtureScript() {
-                @Override
-                protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.builder());
-                }
-            });
-        }
-
-        private Property propertyOxf;
-        private ApplicationTenancy applicationTenancyForOxf;
-        private Organisation seller;
-        private ApplicationTenancy applicationTenancyWithWildCard;
-        private String OXFTENANCYPATH = "/GBR/OXF/GB01";
-        private String WILCARDTENANCYPATH = "/GBR/%/GB01";
-        private Numerator numeratorForOxfUsingWildCard;
-
-        @Before
-        public void setUp() throws Exception {
-            applicationTenancyForOxf = applicationTenancyRepository.newTenancy(OXFTENANCYPATH, OXFTENANCYPATH, null);
-            applicationTenancyWithWildCard = applicationTenancyRepository.newTenancy(WILCARDTENANCYPATH, WILCARDTENANCYPATH, null);
-            propertyOxf = Property_enum.OxfGb.findUsing(serviceRegistry);
-            propertyOxf.setApplicationTenancyPath(OXFTENANCYPATH);
-
-            seller = PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.getOwner_d().findUsing(serviceRegistry);
-            numeratorForOxfUsingWildCard = numeratorRepository.createScopedNumerator(
-                    Constants.NumeratorName.INVOICE_NUMBER,
-                    propertyOxf,
-                    propertyOxf.getReference().concat("-%04d"),
-                    BigInteger.ZERO,
-                    applicationTenancyWithWildCard
-            );
-        }
-
-        @Test
-        public void whenUsingWildCardForAppTenancyPath() throws Exception {
-
-            // when
-            Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, seller,
-                    applicationTenancyRepository.findByPath(OXFTENANCYPATH));
-
-            // then
-            assertThat(numerator).isEqualTo(numeratorForOxfUsingWildCard);
-
-        }
-
-    }
 
     public static class FindInvoiceRepositoryTest extends InvoiceRepository_IntegTest {
 
