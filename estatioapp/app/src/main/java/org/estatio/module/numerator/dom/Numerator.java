@@ -79,33 +79,35 @@ import lombok.Setter;
         column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
-                name = "findByNameAndObjectTypeAndObjectIdentifierAndApplicationTenancyPath", language = "JDOQL",
+                name = "findByName", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.numerator.dom.Numerator "
-                        + "WHERE name == :name "
-                        + "&& objectIdentifier == :objectIdentifier "
-                        + "&& objectType == :objectType "
-                        + "&& applicationTenancyPath == :applicationTenancyPath "),
+                        + "WHERE name == :name "),
         @javax.jdo.annotations.Query(
-                name = "findByNameAndObjectTypeAndApplicationTenancyPath", language = "JDOQL",
+                name = "findByNameAndCountry", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.numerator.dom.Numerator "
-                        + "WHERE name == :name "
-                        + "&& objectType == :objectType "
-                        + "&& :applicationTenancyPath.matches(applicationTenancyPath) "),
+                        + "WHERE name    == :name "
+                        + "   && country == :country "),
         @javax.jdo.annotations.Query(
-                name = "findByNameAndApplicationTenancyPath", language = "JDOQL",
+                name = "findByNameAndCountryAndObject", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.numerator.dom.Numerator "
-                        + "WHERE name == :name"
-                        + "&& applicationTenancyPath == :applicationTenancyPath "),
+                        + "WHERE name             == :name "
+                        + "   && country          == :country "
+                        + "   && objectIdentifier == :objectIdentifier "
+                        + "   && objectType       == :objectType "),
         @javax.jdo.annotations.Query(
-                name = "findByObjectTypeAndObjectIdentifierAndApplicationTenancyPath", language = "JDOQL",
+                name = "findByNameAndCountryAndObjectAndObject2", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.numerator.dom.Numerator "
-                        + "WHERE objectIdentifier == :objectIdentifier "
-                        + "&& objectType == :objectType "
-                        + "&& applicationTenancyPath == :applicationTenancyPath ")
+                        + "WHERE name              == :name "
+                        + "   && country           == :country "
+                        + "   && objectIdentifier  == :objectIdentifier "
+                        + "   && objectType        == :objectType "
+                        + "   && objectIdentifier2 == :objectIdentifier2 "
+                        + "   && objectType2       == :objectType2 "
+                        )
 })
 @DomainObject(
         editing = Editing.DISABLED,
@@ -116,7 +118,7 @@ public class Numerator
         implements Comparable<Numerator>,  WithApplicationTenancyAny, WithApplicationTenancyPathPersisted {
 
     public Numerator() {
-        super("name, objectType, objectIdentifier, objectType2, objectIdentifier2, format");
+        super("name, country, objectType, objectIdentifier, objectType2, objectIdentifier2, format");
     }
 
     // //////////////////////////////////////
@@ -125,6 +127,20 @@ public class Numerator
     @Column(name = "atPath")
     @Property(hidden = Where.EVERYWHERE)
     private String applicationTenancyPath;
+
+    public Numerator(
+            final String name,
+            final Country countryIfAny,
+            final String applicationTenancyPath,
+            final String format,
+            final BigInteger lastIncrement) {
+        this();
+        this.name = name;
+        this.country = countryIfAny;
+        this.applicationTenancyPath = applicationTenancyPath;
+        this.format = format;
+        this.lastIncrement = lastIncrement;
+    }
 
     @PropertyLayout(
             named = "Application Level",
