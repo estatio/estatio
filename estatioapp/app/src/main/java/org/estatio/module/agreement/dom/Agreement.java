@@ -180,33 +180,52 @@ public abstract class Agreement
 
     @Property(notPersisted = true)
     public Party getPrimaryParty() {
-        return partyOf(this.primaryRoleType);
+        return currentOrMostRecentPartyOf(this.primaryRoleType);
     }
 
     @Property(notPersisted = true)
     public Party getSecondaryParty() {
-        return partyOf(this.secondaryRoleType);
+        return currentOrMostRecentPartyOf(this.secondaryRoleType);
     }
 
     @Programmatic
-    public Party primaryPartyAsOf(final LocalDate date) {
-        return partyAsOf(this.primaryRoleType, date);
+    public Party primaryPartyAsOfElseCurrent(final LocalDate date) {
+        return partyAsOfElseCurrent(this.primaryRoleType, date);
     }
 
     @Programmatic
-    public Party secondaryPartyAsOf(final LocalDate date) {
-        return partyAsOf(this.secondaryRoleType, date);
+    public Party secondaryPartyAsOfElseCurrent(final LocalDate date) {
+        return partyAsOfElseCurrent(this.secondaryRoleType, date);
     }
 
-    private Party partyAsOf(final IAgreementRoleType roleType, final LocalDate date) {
+    private Party partyAsOfElseCurrent(final IAgreementRoleType roleType, final LocalDate date) {
         // can probably also use:
         // final AgreementRoleType art = primaryRoleType.findOrCreateUsing(agreementRoleTypeRepository);
         final AgreementRoleType art = agreementRoleTypeRepository.findByTitle(roleType.getTitle());
-        final AgreementRole currentOrMostRecentRole = findAgreementRoleAsOf(art, date);
-        return partyOf(currentOrMostRecentRole);
+        AgreementRole roleAsOf = findAgreementRoleAsOf(art, date);
+
+        if(roleAsOf == null) {
+            //
+            // fallback to current role.
+            //
+            // this seems to be a reasonable assumption, as it emulates the previous behaviour
+            // where we used to call getPrimaryParty() or getSecondaryParty()
+            //
+            // inspecting the prod DB (see ECP-1042 ticket for the queries), there are currently:
+            // - 20,724 with a null end date (meaning they are match for any date in the future)
+            // - 26 roles which have a non-null end date, but which have a subsequent open ended role to replace them
+            // - 2 roles with a non-null end date whose subsequent role is also NOT open ended
+            // - 3 roles with a non-null end date with no subsequent rol
+            //
+            // so, it's for these 5 roles (out of 20,000+) to which this fallback applies.
+            //
+            roleAsOf = findCurrentOrMostRecentAgreementRole(art);
+        }
+
+        return partyOf(roleAsOf);
     }
 
-    private Party partyOf(final IAgreementRoleType roleType) {
+    private Party currentOrMostRecentPartyOf(final IAgreementRoleType roleType) {
         // can probably also use:
         // final AgreementRoleType art = primaryRoleType.findOrCreateUsing(agreementRoleTypeRepository);
         final AgreementRoleType art = agreementRoleTypeRepository.findByTitle(roleType.getTitle());
@@ -217,7 +236,6 @@ public abstract class Agreement
 
     // //////////////////////////////////////
 
-    @Programmatic
     protected AgreementRole getPrimaryAgreementRole() {
         // can probably also use:
         // final AgreementRoleType art = primaryRoleType.findOrCreateUsing(agreementRoleTypeRepository);
@@ -226,7 +244,6 @@ public abstract class Agreement
     }
 
 
-    @Programmatic
     protected AgreementRole getSecondaryAgreementRole() {
         // can probably also use:
         // final AgreementRoleType art = primaryRoleType.findOrCreateUsing(agreementRoleTypeRepository);
@@ -236,17 +253,17 @@ public abstract class Agreement
 
     // //////////////////////////////////////
 
-    protected Party findCurrentOrMostRecentParty(final String agreementRoleTypeTitle) {
+    Party findCurrentOrMostRecentParty(final String agreementRoleTypeTitle) {
         final AgreementRole currentOrMostRecentRole = findCurrentOrMostRecentAgreementRole(agreementRoleTypeTitle);
         return partyOf(currentOrMostRecentRole);
     }
 
-    protected Party findCurrentOrMostRecentParty(final AgreementRoleType art) {
+    Party findCurrentOrMostRecentParty(final AgreementRoleType art) {
         final AgreementRole currentOrMostRecentRole = findCurrentOrMostRecentAgreementRole(art);
         return partyOf(currentOrMostRecentRole);
     }
 
-    protected AgreementRole findCurrentOrMostRecentAgreementRole(final String agreementRoleTypeTitle) {
+    private AgreementRole findCurrentOrMostRecentAgreementRole(final String agreementRoleTypeTitle) {
         final AgreementRoleType art = agreementRoleTypeRepository.findByTitle(agreementRoleTypeTitle);
         return findCurrentOrMostRecentAgreementRole(art);
     }

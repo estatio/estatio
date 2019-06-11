@@ -131,6 +131,7 @@ public class Guarantee
     @Getter @Setter
     private GuaranteeType guaranteeType;
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public void changeGuaranteeType(GuaranteeType guaranteeType) {
         FinancialAccountType financialAccountType = guaranteeType.getFinancialAccountType();
         if (financialAccountType != null) {

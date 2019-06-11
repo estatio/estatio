@@ -35,15 +35,6 @@ import org.estatio.module.party.dom.Party;
 )
 public class EstatioApplicationTenancyRepositoryForLease {
 
-
-    public ApplicationTenancy findOrCreateTenancyFor(final Lease lease) {
-        return estatioApplicationTenancyRepositoryForProperty.findOrCreateTenancyFor(lease.getProperty());
-    }
-
-    public ApplicationTenancy findOrCreateTenancyFor(final LeaseItem leaseItem) {
-        return findOrCreateTenancyFor(leaseItem.getLease().getProperty(), leaseItem.getLease().getPrimaryParty());
-    }
-
     public ApplicationTenancy findOrCreateTenancyFor(final Property property, final Party party) {
         ApplicationTenancy propertyPartyTenancy = applicationTenancies.findByPath(pathFor(property, party));
         if (propertyPartyTenancy != null){
@@ -55,7 +46,7 @@ public class EstatioApplicationTenancyRepositoryForLease {
     }
 
 
-    protected String pathFor(final Property property, final Party party) {
+    String pathFor(final Property property, final Party party) {
         return estatioApplicationTenancyRepositoryForProperty.pathFor(property).concat(String.format("/%s", party.getReference()));
     }
 

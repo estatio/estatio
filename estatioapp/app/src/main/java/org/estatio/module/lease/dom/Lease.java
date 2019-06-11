@@ -732,13 +732,8 @@ public class Lease
             final Scheme scheme,
             final LocalDate signatureDate) {
 
-        // TODO: really, ought to use primaryPartyAsOf(startDate).
-        //  Update the disableXxx accordingly
-        final Party creditor = getPrimaryParty();
-
-        // TODO: really, ought to use secondaryPartyAsOf(startDate)
-        //  Update the disableXxx accordingly
-        final Party debtor = getSecondaryParty();
+        final Party creditor = primaryPartyAsOfElseCurrent(startDate);
+        final Party debtor = secondaryPartyAsOfElseCurrent(startDate);
 
         final BankMandate bankMandate =
                 bankMandateRepository.newBankMandate(
@@ -949,7 +944,7 @@ public class Lease
 
     // //////////////////////////////////////
 
-    @Programmatic Lease copyToNewLease(
+    Lease copyToNewLease(
             final String reference,
             final String name,
             final Party tenant,
@@ -959,8 +954,6 @@ public class Lease
             final LocalDate tenancyEndDate,
             boolean copyEpochDate) {
 
-        // TODO: this should look up primary and secondary parties for startDate, so callers
-        //  should check/disable if none defined for that period.
         Lease newLease = leaseRepository.newLease(
                 this.getApplicationTenancy(),
                 reference,
@@ -970,7 +963,7 @@ public class Lease
                 endDate,
                 tenancyStartDate,
                 tenancyEndDate,
-                this.getPrimaryParty(),
+                this.primaryPartyAsOfElseCurrent(startDate),
                 tenant);
 
         copyOccupancies(newLease, tenancyStartDate);
@@ -1034,15 +1027,16 @@ public class Lease
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Lease renew(
-            @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION) final String reference,
+            @Parameter(
+                    regexPattern = ReferenceType.Meta.REGEX,
+                    regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION)
+            final String reference,
             final String name,
             final LocalDate startDate,
             final LocalDate endDate
     ) {
-        // TODO: this should look up primary and secondary parties for startDate, so callers
-        //  should check/disable if none defined for that period.
-
-        Lease newLease = copyToNewLease(reference, name, getSecondaryParty(), startDate, endDate, startDate, endDate, false);
+        Party tenant = secondaryPartyAsOfElseCurrent(startDate);
+        final Lease newLease = copyToNewLease(reference, name, tenant, startDate, endDate, startDate, endDate, false);
         if (newLease != null){
             wrapperFactory.wrapSkipRules(this).terminate(startDate.minusDays(1));
         }
@@ -1100,8 +1094,8 @@ public class Lease
                 getEndDate(),
                 getTenancyStartDate(),
                 getTenancyEndDate(),
-                getPrimaryParty(),
-                getSecondaryParty());
+                primaryPartyAsOfElseCurrent(newStartDate),
+                secondaryPartyAsOfElseCurrent(newStartDate));
         prevLease.setNext(this);
         prevLease.setComments(getComments());
 
