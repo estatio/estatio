@@ -33,7 +33,7 @@ import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.numerator.dom.Numerator;
-import org.estatio.module.numerator.dom.NumeratorRepository;
+import org.estatio.module.numerator.dom.NumeratorAtPathRepository;
 import org.estatio.module.order.dom.attr.OrderAttributeRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
@@ -228,7 +228,7 @@ public class OrderRepository {
     private String generateNextOrderNumber(final Organisation buyer, final String atPath) {
         final String format = atPath.startsWith("/ITA") ? "%04d" : "%05d";
         final Organisation buyerToUse = atPath.startsWith("/ITA") ? buyer : null;
-        final Numerator numerator = numeratorRepository.findOrCreateNumerator(
+        final Numerator numerator = numeratorAtPathRepository.findOrCreateNumerator(
                 "Order number",
                 buyerToUse,
                 format,
@@ -425,7 +425,8 @@ public class OrderRepository {
     @Inject
     ServiceRegistry2 serviceRegistry2;
 
-    @Inject NumeratorRepository numeratorRepository;
+    @Inject
+    NumeratorAtPathRepository numeratorAtPathRepository;
 
     @Inject ApplicationTenancyRepository applicationTenancyRepository;
 

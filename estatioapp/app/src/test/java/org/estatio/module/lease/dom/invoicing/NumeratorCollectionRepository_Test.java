@@ -133,7 +133,7 @@ public class NumeratorCollectionRepository_Test {
 
             invoiceRepository = new InvoiceRepository();
             estatioNumeratorRepository = new NumeratorForCollectionRepository();
-            estatioNumeratorRepository.numeratorRepository = mockNumeratorRepository;
+            estatioNumeratorRepository.numeratorAtPathRepository = mockNumeratorRepository;
 
             applicationTenancy = new ApplicationTenancy();
             applicationTenancy.setPath("/");

@@ -11,7 +11,7 @@ import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.numerator.dom.Numerator;
-import org.estatio.module.numerator.dom.NumeratorRepository;
+import org.estatio.module.numerator.dom.NumeratorAtPathRepository;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -48,10 +48,10 @@ public final class NumeratorBuilder extends BuilderScriptAbstract<Numerator, Num
 
         Numerator numerator;
         if (scopedTo == null) {
-            numerator = numeratorRepository
+            numerator = numeratorAtPathRepository
                     .createGlobalNumerator(name, format, BigInteger.ZERO, estatioApplicationTenancyRepository.findOrCreateTenancyFor(country));
         } else {
-            numerator = numeratorRepository
+            numerator = numeratorAtPathRepository
                     .createScopedNumerator(name, scopedTo, format, BigInteger.ZERO, estatioApplicationTenancyRepository.findOrCreateTenancyFor(country));
         }
 
@@ -61,7 +61,7 @@ public final class NumeratorBuilder extends BuilderScriptAbstract<Numerator, Num
     }
 
     @Inject
-    NumeratorRepository numeratorRepository;
+    NumeratorAtPathRepository numeratorAtPathRepository;
 
     @Inject
     EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;

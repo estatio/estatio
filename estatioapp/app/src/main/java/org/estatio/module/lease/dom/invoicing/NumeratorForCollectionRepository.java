@@ -26,11 +26,15 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.country.dom.impl.Country;
+import org.incode.module.country.dom.impl.CountryRepository;
+
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.invoice.dom.Constants;
 import org.estatio.module.numerator.dom.Numerator;
+import org.estatio.module.numerator.dom.NumeratorAtPathRepository;
 import org.estatio.module.numerator.dom.NumeratorRepository;
 import org.estatio.module.party.dom.Party;
 
@@ -45,7 +49,7 @@ public class NumeratorForCollectionRepository extends UdoDomainService<Numerator
 
     @Programmatic
     public Numerator findCollectionNumberNumerator() {
-        return numeratorRepository.findGlobalNumerator(Constants.NumeratorName.COLLECTION_NUMBER, null);
+        return numeratorAtPathRepository.findGlobalNumerator(Constants.NumeratorName.COLLECTION_NUMBER, null);
     }
 
 
@@ -57,7 +61,7 @@ public class NumeratorForCollectionRepository extends UdoDomainService<Numerator
             final BigInteger lastValue,
             final ApplicationTenancy applicationTenancy) {
 
-        return numeratorRepository
+        return numeratorAtPathRepository
                 .createGlobalNumerator(Constants.NumeratorName.COLLECTION_NUMBER, format, lastValue, applicationTenancy);
     }
 
@@ -71,9 +75,8 @@ public class NumeratorForCollectionRepository extends UdoDomainService<Numerator
             final Party seller,
             final ApplicationTenancy applicationTenancy) {
 
-        // TODO: this should be queried based on the invoice's seller, not on the app tenancy.
-        return numeratorRepository
-                .findScopedNumeratorIncludeWildCardMatching(Constants.NumeratorName.INVOICE_NUMBER, fixedAsset, applicationTenancy);
+        final Country country = countryRepository.findCountryByAtPath(applicationTenancy.getPath());
+        return numeratorRepository.find(Constants.NumeratorName.INVOICE_NUMBER, country, fixedAsset, seller);
     }
 
 
@@ -85,13 +88,19 @@ public class NumeratorForCollectionRepository extends UdoDomainService<Numerator
             final String format,
             final BigInteger lastIncrement,
             final ApplicationTenancy applicationTenancy) {
-        return numeratorRepository.createScopedNumerator(
+        return numeratorAtPathRepository.createScopedNumerator(
                 Constants.NumeratorName.INVOICE_NUMBER, property, format, lastIncrement, applicationTenancy);
     }
 
 
 
 
+
+    @javax.inject.Inject
+    NumeratorAtPathRepository numeratorAtPathRepository;
+
+    @javax.inject.Inject
+    CountryRepository countryRepository;
 
     @javax.inject.Inject
     NumeratorRepository numeratorRepository;

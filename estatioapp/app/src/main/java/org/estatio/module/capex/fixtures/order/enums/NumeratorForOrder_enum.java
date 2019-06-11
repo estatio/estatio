@@ -4,15 +4,16 @@ import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.fixtures.enums.Country_enum;
 
 import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.numerator.dom.Numerator;
-import org.estatio.module.numerator.dom.NumeratorRepository;
+import org.estatio.module.numerator.dom.NumeratorAtPathRepository;
 import org.estatio.module.numerator.fixtures.builders.NumeratorBuilder;
-import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import lombok.AllArgsConstructor;
@@ -46,18 +47,21 @@ public enum NumeratorForOrder_enum
 
     @Override
     public Numerator findUsing(final ServiceRegistry2 serviceRegistry) {
-        final NumeratorRepository numeratorRepository = serviceRegistry
-                .lookupService(NumeratorRepository.class);
+        final NumeratorAtPathRepository numeratorAtPathRepository = serviceRegistry
+                .lookupService(NumeratorAtPathRepository.class);
         final CountryRepository countryRepository = serviceRegistry
                 .lookupService(CountryRepository.class);
         final EstatioApplicationTenancyRepositoryForCountry applicationTenancyRepository = serviceRegistry
                 .lookupService(EstatioApplicationTenancyRepositoryForCountry.class);
-        final PartyRepository partyRepository = serviceRegistry
-                .lookupService(PartyRepository.class);
 
         final Country country = countryRepository.findCountry(country_d.getRef3());
-        return organisation_d == null
-                ? numeratorRepository.findNumerator(name, null, applicationTenancyRepository.findOrCreateTenancyFor(country))
-                : numeratorRepository.findNumerator(name, partyRepository.findPartyByReference(organisation_d.getRef()), applicationTenancyRepository.findOrCreateTenancyFor(country));
+        final ApplicationTenancy applicationTenancy = applicationTenancyRepository.findOrCreateTenancyFor(country);
+
+        return numeratorAtPathRepository.findNumerator(
+                name,
+                organisation_d == null
+                        ? null
+                        : organisation_d.findUsing(serviceRegistry),
+                applicationTenancy);
     }
 }

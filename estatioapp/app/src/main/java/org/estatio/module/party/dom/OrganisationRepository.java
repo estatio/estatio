@@ -32,7 +32,7 @@ import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
-import org.estatio.module.numerator.dom.NumeratorRepository;
+import org.estatio.module.numerator.dom.NumeratorAtPathRepository;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Organisation.class)
 public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organisation> {
@@ -102,7 +102,7 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
     }
 
     private String referenceByNumerator(final ApplicationTenancy applicationTenancy) {
-        return numeratorRepository
+        return numeratorAtPathRepository
                 .findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy).nextIncrementStr();
     }
 
@@ -129,7 +129,7 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
     private EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
 
     @Inject
-    private NumeratorRepository numeratorRepository;
+    private NumeratorAtPathRepository numeratorAtPathRepository;
 
     @Inject
     private PartyRepository partyRepository;

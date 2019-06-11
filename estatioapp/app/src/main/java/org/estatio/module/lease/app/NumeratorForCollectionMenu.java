@@ -87,9 +87,7 @@ public class NumeratorForCollectionMenu extends UdoDomainService<NumeratorForCol
             final FixedAsset fixedAsset,
             final Party seller,
             final ApplicationTenancy applicationTenancy) {
-        return numeratorRepository.findInvoiceNumberNumerator(fixedAsset, seller,
-                applicationTenancy
-        );
+        return numeratorRepository.findInvoiceNumberNumerator(fixedAsset, seller, applicationTenancy);
     }
 
 

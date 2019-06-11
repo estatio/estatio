@@ -50,7 +50,7 @@ public class OrganisationMenuTest {
             organisationMenu = new OrganisationMenu();
 
             organisationMenu.estatioApplicationTenancyRepository = mockEstatioApplicationTenancyRepositoryForCountry;
-            organisationMenu.numeratorRepository = mockNumeratorRepository;
+            organisationMenu.numeratorAtPathRepository = mockNumeratorRepository;
             organisationMenu.partyRepository = mockPartyRepository;
 
             reference = "someReference";

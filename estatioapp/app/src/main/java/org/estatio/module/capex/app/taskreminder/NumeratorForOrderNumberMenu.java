@@ -14,7 +14,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.numerator.dom.Numerator;
-import org.estatio.module.numerator.dom.NumeratorRepository;
+import org.estatio.module.numerator.dom.NumeratorAtPathRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -34,7 +34,7 @@ public class NumeratorForOrderNumberMenu {
             final Organisation buyer,
             final String format,
             final BigInteger lastValue) {
-        return numeratorRepository.findOrCreateNumerator("Order number", buyer, format, lastValue, buyer.getApplicationTenancy());
+        return numeratorAtPathRepository.findOrCreateNumerator("Order number", buyer, format, lastValue, buyer.getApplicationTenancy());
     }
 
     public List<Party> choices0CreateOrderNumberNumerator() {
@@ -50,7 +50,7 @@ public class NumeratorForOrderNumberMenu {
     }
 
     @Inject
-    private NumeratorRepository numeratorRepository;
+    private NumeratorAtPathRepository numeratorAtPathRepository;
 
     @Inject
     private PartyRepository partyRepository;

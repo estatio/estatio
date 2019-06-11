@@ -41,7 +41,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.numerator.dom.Numerator;
-import org.estatio.module.numerator.dom.NumeratorRepository;
+import org.estatio.module.numerator.dom.NumeratorAtPathRepository;
 
 
 @DomainService(repositoryFor = Project.class, nature = NatureOfService.DOMAIN)
@@ -151,7 +151,7 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
     @Programmatic
     public String generateNextProjectNumber(final String atPath) {
         final String format = atPath.startsWith("/ITA") ? "ITPR%03d" : "%04d";
-        final Numerator numerator = numeratorRepository.findOrCreateNumerator(
+        final Numerator numerator = numeratorAtPathRepository.findOrCreateNumerator(
                 "Project number",
                 null,
                 format,
@@ -167,7 +167,7 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
     @Inject
     RepositoryService repositoryService;
 
-    @Inject NumeratorRepository numeratorRepository;
+    @Inject NumeratorAtPathRepository numeratorAtPathRepository;
 
     @Inject ApplicationTenancyRepository applicationTenancyRepository;
 }
