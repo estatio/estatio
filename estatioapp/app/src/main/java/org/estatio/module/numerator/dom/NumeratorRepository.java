@@ -24,7 +24,6 @@ import java.util.List;
 import org.apache.isis.applib.RecoverableException;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -42,60 +41,6 @@ public class NumeratorRepository extends UdoDomainRepositoryAndFactory<Numerator
 
     public List<Numerator> allNumerators() {
         return allInstances();
-    }
-
-    public Numerator findByName(final String name) {
-        return firstMatch(
-                "findByName",
-                "name", name);
-    }
-
-    public Numerator findByNameAndCountry(
-            final String name,
-            final Country country) {
-        return firstMatch(
-                "findByNameAndCountry",
-                "name", name,
-                "country", country);
-    }
-
-    public Numerator findByNameAndCountryAndObject(
-            final String name,
-            final Country country,
-            final Object object) {
-
-        final Bookmark bookmark = bookmarkService.bookmarkFor(object);
-        final String objectType = bookmark.getObjectType();
-        final String objectIdentifier = bookmark.getIdentifier();
-
-        return firstMatch("findByNameAndCountryAndObject",
-                "name", name,
-                "country", country,
-                "objectType", objectType,
-                "objectIdentifier", objectIdentifier);
-    }
-
-    public Numerator findByNameAndCountryAndObjectAndObject2(
-            final String name,
-            final Country country,
-            final Object object,
-            final Object object2) {
-
-        final Bookmark bookmark = bookmarkService.bookmarkFor(object);
-        final String objectType = bookmark.getObjectType();
-        final String objectIdentifier = bookmark.getIdentifier();
-
-        final Bookmark bookmark2 = getBookmarkService().bookmarkFor(object2);
-        final String objectType2 = bookmark2.getObjectType();
-        final String objectIdentifier2 = bookmark.getIdentifier();
-
-        return firstMatch("findByNameAndCountryAndObject",
-                "name", name,
-                "country", country,
-                "objectType", objectType,
-                "objectIdentifier", objectIdentifier,
-                "objectType2", objectType2,
-                "objectIdentifier2", objectIdentifier2);
     }
 
     public Numerator find(
@@ -116,6 +61,59 @@ public class NumeratorRepository extends UdoDomainRepositoryAndFactory<Numerator
         return findByNameAndCountryAndObjectAndObject2(name, countryIfAny, objectIfAny, object2IfAny);
     }
 
+    private Numerator findByName(final String name) {
+        return firstMatch(
+                "findByName",
+                "name", name);
+    }
+
+    private Numerator findByNameAndCountry(
+            final String name,
+            final Country country) {
+        return firstMatch(
+                "findByNameAndCountry",
+                "name", name,
+                "country", country);
+    }
+
+    private Numerator findByNameAndCountryAndObject(
+            final String name,
+            final Country country,
+            final Object object) {
+
+        final Bookmark bookmark = bookmarkService.bookmarkFor(object);
+        final String objectType = bookmark.getObjectType();
+        final String objectIdentifier = bookmark.getIdentifier();
+
+        return firstMatch("findByNameAndCountryAndObject",
+                "name", name,
+                "country", country,
+                "objectType", objectType,
+                "objectIdentifier", objectIdentifier);
+    }
+
+    private Numerator findByNameAndCountryAndObjectAndObject2(
+            final String name,
+            final Country country,
+            final Object object,
+            final Object object2) {
+
+        final Bookmark bookmark = bookmarkService.bookmarkFor(object);
+        final String objectType = bookmark.getObjectType();
+        final String objectIdentifier = bookmark.getIdentifier();
+
+        final Bookmark bookmark2 = getBookmarkService().bookmarkFor(object2);
+        final String objectType2 = bookmark2.getObjectType();
+        final String objectIdentifier2 = bookmark2.getIdentifier();
+
+        return firstMatch("findByNameAndCountryAndObjectAndObject2",
+                "name", name,
+                "country", country,
+                "objectType", objectType,
+                "objectIdentifier", objectIdentifier,
+                "objectType2", objectType2,
+                "objectIdentifier2", objectIdentifier2);
+    }
 
     public Numerator findOrCreate(
             final String name,
