@@ -117,7 +117,6 @@ public class NumeratorRepository extends UdoDomainRepositoryAndFactory<Numerator
     }
 
 
-    @Programmatic
     public Numerator findOrCreate(
             final String name,
             final Country countryIfAny,
@@ -137,6 +136,19 @@ public class NumeratorRepository extends UdoDomainRepositoryAndFactory<Numerator
         if(existingIfAny != null) {
             return existingIfAny;
         }
+
+        return create(name, countryIfAny, objectIfAny, object2IfAny, format, lastIncrement, applicationTenancy);
+    }
+
+
+    public Numerator create(
+            final String name,
+            final Country countryIfAny,
+            final Object objectIfAny,
+            final Object object2IfAny,
+            final String format,
+            final BigInteger lastIncrement,
+            final ApplicationTenancy applicationTenancy) {
 
         final Numerator numerator = new Numerator(name, countryIfAny, applicationTenancy.getPath(), format, lastIncrement);
         if(objectIfAny != null) {
