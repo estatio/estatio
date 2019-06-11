@@ -19,6 +19,8 @@
 package org.estatio.module.numerator.dom;
 
 import java.math.BigInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -30,11 +32,17 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 
+import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
+
 /**
  * Acts as an adapter between the pure NumeratorRepository and the legacy clients.
  */
 @DomainService(nature = NatureOfService.DOMAIN)
 public class NumeratorAtPathRepository  {
+
+    static final Pattern PATTERN_FOR_ATPATH = Pattern.compile("/(?<countryRef>[^/]+?)/[^/]+?/(?<partyRef>.+)");
 
     /**
      * This can either be global, or per country
@@ -85,8 +93,23 @@ public class NumeratorAtPathRepository  {
             final String formatStr,
             final BigInteger lastIncrement,
             final ApplicationTenancy applicationTenancy) {
+
+        final String atPath = applicationTenancy.getPath();
+        final Matcher matcher = PATTERN_FOR_ATPATH.matcher(atPath);
+
+        final Party seller;
+        if(matcher.matches()) {
+            final String partyRef = matcher.group("partyRef");
+            seller = partyRepository.findPartyByReference(partyRef);
+        } else {
+            seller = null;
+        }
+
         final Country countryIfAny = toCountry(applicationTenancy);
-        return numeratorRepository.create(numeratorName, countryIfAny, scopedTo, null, formatStr, lastIncrement, applicationTenancy);
+        final ApplicationTenancy applicationTenancyToUse = estatioApplicationTenancyRepositoryForCountry
+                .findOrCreateTenancyFor(countryIfAny);
+
+        return numeratorRepository.findOrCreate(numeratorName, countryIfAny, scopedTo, seller, formatStr, lastIncrement, applicationTenancyToUse);
     }
 
     private Country toCountry(final ApplicationTenancy applicationTenancyIfAny) {
@@ -98,6 +121,12 @@ public class NumeratorAtPathRepository  {
     NumeratorRepository numeratorRepository;
 
     @Inject
+    PartyRepository partyRepository;
+
+    @Inject
     CountryRepository countryRepository;
+
+    @Inject
+    EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepositoryForCountry;
 
 }
