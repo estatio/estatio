@@ -42,6 +42,7 @@ import org.incode.module.base.dom.types.FqcnType;
 import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.types.ObjectIdentifierType;
 import org.incode.module.base.dom.types.ReferenceType;
+import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyAny;
@@ -179,6 +180,12 @@ public class Numerator
     @Property(editing = Editing.DISABLED)
     @Getter @Setter
     private String name;
+
+    // //////////////////////////////////////
+
+    @javax.jdo.annotations.Column(allowsNull = "true", name = "countryId")
+    @Getter @Setter
+    private Country country;
 
     // //////////////////////////////////////
 
