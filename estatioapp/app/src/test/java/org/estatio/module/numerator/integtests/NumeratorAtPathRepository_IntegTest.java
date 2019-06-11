@@ -41,7 +41,7 @@ import org.estatio.module.numerator.integtests.dom.NumeratorExampleObject_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstract {
+public class NumeratorAtPathRepository_IntegTest extends NumeratorModuleIntegTestAbstract {
 
     @Inject
     NumeratorAtPathRepository numeratorAtPathRepository;
@@ -75,7 +75,7 @@ public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstr
         exampleObjectOxf = NumeratorExampleObject_enum.Oxf.findUsing(serviceRegistry);
     }
 
-    public static class AllNumerators extends NumeratorRepository_IntegTest {
+    public static class AllNumerators extends NumeratorAtPathRepository_IntegTest {
 
         @Test
         public void whenExist() throws Exception {
@@ -91,7 +91,7 @@ public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstr
 
     }
 
-    public static class FindGlobalNumerator extends NumeratorRepository_IntegTest {
+    public static class FindGlobalNumerator extends NumeratorAtPathRepository_IntegTest {
 
         @Test
         public void whenExists() throws Exception {
@@ -167,7 +167,7 @@ public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstr
 //
 //    }
 
-    public static class Increment extends NumeratorRepository_IntegTest {
+    public static class Increment extends NumeratorAtPathRepository_IntegTest {
 
         private Numerator scopedNumerator;
         private Numerator scopedNumerator2;
