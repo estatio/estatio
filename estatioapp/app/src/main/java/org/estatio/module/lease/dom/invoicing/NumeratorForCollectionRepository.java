@@ -67,8 +67,6 @@ public class NumeratorForCollectionRepository extends UdoDomainService<Numerator
 
 
 
-
-
     @Programmatic
     public Numerator findInvoiceNumberNumerator(
             final FixedAsset fixedAsset,
@@ -81,7 +79,6 @@ public class NumeratorForCollectionRepository extends UdoDomainService<Numerator
 
 
 
-
     @Programmatic
     public Numerator createInvoiceNumberNumerator(
             final Property property,
@@ -90,6 +87,18 @@ public class NumeratorForCollectionRepository extends UdoDomainService<Numerator
             final ApplicationTenancy applicationTenancy) {
         return numeratorAtPathRepository.createScopedNumerator(
                 Constants.NumeratorName.INVOICE_NUMBER, property, format, lastIncrement, applicationTenancy);
+    }
+
+    @Programmatic
+    public Numerator findOrCreateInvoiceNumberNumerator(
+            final Property property,
+            final Party seller,
+            final String format,
+            final BigInteger lastIncrement,
+            final ApplicationTenancy applicationTenancy) {
+        Country country = countryRepository.findCountryByAtPath(applicationTenancy.getPath());
+        return numeratorRepository.findOrCreate(
+                Constants.NumeratorName.INVOICE_NUMBER, country, property, seller, format, lastIncrement, applicationTenancy);
     }
 
 
