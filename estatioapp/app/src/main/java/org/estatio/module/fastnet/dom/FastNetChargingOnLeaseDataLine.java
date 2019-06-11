@@ -110,7 +110,7 @@ import lombok.Setter;
                                 "INNER JOIN \"dbo\".\"LeaseTerm\" lt ON lt.\"leaseItemId\" = li.\"id\" " +
                                 "LEFT OUTER JOIN (SELECT * FROM \"dbo\".\"AgreementRole\" WHERE \"typeId\" = 6 AND \"endDate\" is null) AS agr ON agr.\"agreementId\" = a.\"id\" " +
                                 "LEFT OUTER JOIN \"dbo\".\"Party\" p ON p.\"id\" = agr.\"partyId\" " +
-                                "WHERE li.\"atPath\" LIKE \'/SWE%\' " +
+                                "WHERE l.\"atPath\" LIKE \'/SWE%\' " +
                                 "AND lt.\"nextLeaseTermId\" is null " +
                                 " ) " +
 
