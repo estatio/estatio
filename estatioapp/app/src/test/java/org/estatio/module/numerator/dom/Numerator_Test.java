@@ -82,20 +82,6 @@ public class Numerator_Test {
         }
     }
 
-    public static class AppTenancyPathAdaption extends Numerator_Test {
-
-        @Test
-        public void appTenancyPathWithWildCardIsSetToParent() {
-
-            //when
-            numerator.setApplicationTenancyPath("/FRA/%/FR03");
-
-            //then
-            assertEquals(numerator.adaptedAppPathIfNeeded(), "/FRA");
-        }
-
-    }
-
 
     public static class BeanProperties extends AbstractBeanPropertiesTest {
 

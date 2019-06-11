@@ -147,16 +147,7 @@ public class Numerator
             describedAs = "Determines those users for whom this object is available to view and/or modify."
     )
     public ApplicationTenancy getApplicationTenancy() {
-        return securityApplicationTenancyRepository.findByPathCached(adaptedAppPathIfNeeded());
-    }
-
-    // helper to set appTenancyPath to parent when containing wildcard '%'
-    @Programmatic
-    String adaptedAppPathIfNeeded(){
-        if (getApplicationTenancyPath() != null && getApplicationTenancyPath().contains("/%/")) {
-            return getApplicationTenancyPath().split("/%/")[0];
-        }
-        return getApplicationTenancyPath();
+        return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
     }
 
     // //////////////////////////////////////

@@ -41,7 +41,7 @@ import org.estatio.module.party.dom.Organisation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NumeratorRepository_Test {
+public class NumeratorRepository_find_Test {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
@@ -106,7 +106,7 @@ public class NumeratorRepository_Test {
         numeratorRepository.bookmarkService = mockBookmarkService;
     }
 
-    public static class FindNumerator extends NumeratorRepository_Test {
+    public static class FindNumerator extends NumeratorRepository_find_Test {
 
         private static final String INVOICE_NUMBER_NUMERATOR_NAME = "Invoice number";
 
@@ -129,7 +129,7 @@ public class NumeratorRepository_Test {
         }
     }
 
-    public static class AllNumerators extends NumeratorRepository_Test {
+    public static class AllNumerators extends NumeratorRepository_find_Test {
 
         @Test
         public void allNumerators() {
