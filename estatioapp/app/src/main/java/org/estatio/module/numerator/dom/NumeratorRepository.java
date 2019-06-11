@@ -22,11 +22,9 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.apache.isis.applib.RecoverableException;
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -38,22 +36,6 @@ public class NumeratorRepository extends UdoDomainRepositoryAndFactory<Numerator
 
     public NumeratorRepository() {
         super(NumeratorRepository.class, Numerator.class);
-    }
-
-    /**
-     * Required for integration testing.
-     *
-     * <p>
-     *     When running integration tests for just this module, the Isis metamodel validation (as of 1.13.1) requires
-     *     that there is at least one entity found.  Such tests only have a single service - this repository - to
-     *     locate entities (transitively), and all the other methods in this service are @Programmatic, meaning that
-     *     they are ignored.  This dummy method therefore ensures that the Numerator class is found, ensuring that
-     *     the validation error does not trip up.
-     * </p>
-     */
-    @Action(hidden = Where.EVERYWHERE)
-    public Numerator registerInMetaModel() {
-        return null;
     }
 
 
