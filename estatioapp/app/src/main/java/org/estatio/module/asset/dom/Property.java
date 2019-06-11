@@ -246,9 +246,13 @@ public class Property
             final BigInteger pedestianCount,
             @Nullable
             final BigInteger carCount){
-        return countRepository.upsert(this, date, null, null);
+        return countRepository.upsert(this, date, pedestianCount, carCount);
     }
 
+    public String validateNewCount(final LocalDate date, final BigInteger pedestianCount, final BigInteger carCount){
+        if (countRepository.findUnique(this, date) != null) return "There is already a count for this date";
+        return null;
+    }
 
     /**
      * For use by Api and by fixtures.

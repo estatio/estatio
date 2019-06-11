@@ -78,6 +78,10 @@ public class CountRepository {
                 "property", property));
     }
 
+    public void remove(final Count count){
+        repositoryService.removeAndFlush(count);
+    }
+
     @Programmatic
     public List<Count> listAll() {
         return repositoryService.allInstances(Count.class);

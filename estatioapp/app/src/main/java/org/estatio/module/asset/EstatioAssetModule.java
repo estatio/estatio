@@ -36,6 +36,7 @@ import org.estatio.module.asset.dom.CommunicationChannelOwnerLinkForFixedAsset;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.Unit;
+import org.estatio.module.asset.dom.counts.Count;
 import org.estatio.module.asset.dom.erv.EstimatedRentalValue;
 import org.estatio.module.asset.dom.paperclips.PaperclipForFixedAsset;
 import org.estatio.module.asset.dom.registration.FixedAssetRegistration;
@@ -64,6 +65,7 @@ public class EstatioAssetModule extends ModuleAbstract {
                 deleteFrom(PaperclipForFixedAsset.class);
                 deleteFrom(EstimatedRentalValue.class);
                 deleteFrom(Unit.class);
+                deleteFrom(Count.class);
                 deleteFrom(Property.class);
                 deleteFrom(FixedAssetRole.class);
                 deleteFrom(FixedAsset.class);

@@ -2,6 +2,7 @@ package org.estatio.module.asset.dom.counts;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -109,7 +110,29 @@ public class Count extends UdoDomainObject2<Count> {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<Count> getPrevious(){
-        return countRepository.findByProperty(getProperty());
+        return countRepository.findByProperty(getProperty()).stream().filter(c->c.getDate().isBefore(getDate())).collect(Collectors.toList());
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Count changeCount(final BigInteger pedestrianCount, final BigInteger carCount){
+        setPedestrianCount(pedestrianCount);
+        setCarCount(carCount);
+        return this;
+    }
+
+    public BigInteger default0ChangeCount(){
+        return getPedestrianCount();
+    }
+
+    public BigInteger default1ChangeCount(){
+        return getCarCount();
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public Property remove(){
+        Property result = getProperty();
+        countRepository.remove(this);
+        return result;
     }
 
     @Override
