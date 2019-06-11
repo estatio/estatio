@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd"
+      xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <row>
+        <col span="12" unreferencedActions="true">
+            <ns2:domainObject/>
+        </col>
+    </row>
+    <row>
+        <col span="4">
+            <tabGroup>
+                <tab name="Count">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Property" id="property">
+                                <ns2:property id="property" hidden="PARENTED_TABLES"/>
+                            </ns2:fieldSet>
+                            <ns2:fieldSet name="Date" id="date">
+                                <ns2:property id="date"/>
+                            </ns2:fieldSet>
+                            <ns2:fieldSet name="Counts" id="counts">
+                                <ns2:property id="pedestrianCount" />
+                                <ns2:property id="carCount" />
+                                <ns2:property id="atPath" hidden="EVERYWHERE"/>
+                                <ns2:property id="applicationTenancy" hidden="EVERYWHERE"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Other">
+                    <row><col span="12">
+                        <ns2:fieldSet name="Other" id="other" unreferencedProperties="true"/>
+                    </col></row>
+                </tab>
+                <tab name="Metadata">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Metadata" id="metadata">
+                                <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <ns2:property id="id"/>
+                                <ns2:property id="versionSequence"/>
+                                <ns2:property id="datanucleusId"/>
+                                <ns2:property id="datanucleusVersionLong"/>
+                                <ns2:property id="datanucleusVersionTimestamp"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
+        </col>
+        <col span="8">
+            <ns2:collection id="previous" defaultView="table"/>
+        </col>
+    </row>
+    <row>
+        <col span="12">
+            <tabGroup unreferencedCollections="true">
+                <tab name="_">
+                    <row>
+                        <col span="12">
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
+        </col>
+    </row>
+</grid>

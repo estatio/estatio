@@ -19,6 +19,7 @@
 package org.estatio.module.asset.dom;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -60,6 +62,8 @@ import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 import org.incode.module.base.dom.types.ProperNameType;
 import org.incode.module.country.dom.impl.Country;
 
+import org.estatio.module.asset.dom.counts.Count;
+import org.estatio.module.asset.dom.counts.CountRepository;
 import org.estatio.module.asset.dom.erv.EstimatedRentalValueRepository;
 import org.estatio.module.asset.dom.erv.Type;
 import org.estatio.module.asset.dom.location.LocationLookupService;
@@ -231,6 +235,21 @@ public class Property
 
     // //////////////////////////////////////
 
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<Count> getCounts(){
+        return countRepository.findByProperty(this);
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public Count newCount(final LocalDate date,
+            @Nullable
+            final BigInteger pedestianCount,
+            @Nullable
+            final BigInteger carCount){
+        return countRepository.upsert(this, date, null, null);
+    }
+
+
     /**
      * For use by Api and by fixtures.
      */
@@ -289,7 +308,6 @@ public class Property
         return result.stream().distinct().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
     }
 
-
     // //////////////////////////////////////
 
     @Override
@@ -324,6 +342,8 @@ public class Property
     @Inject EstimatedRentalValueRepository estimatedRentalValueRepository;
 
     @Inject ClockService clockService;
+
+    @Inject CountRepository countRepository;
 
 
     // //////////////////////////////////////
