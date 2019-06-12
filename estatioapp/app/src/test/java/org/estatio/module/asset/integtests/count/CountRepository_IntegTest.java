@@ -33,6 +33,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.counts.Count;
 import org.estatio.module.asset.dom.counts.CountRepository;
+import org.estatio.module.asset.dom.counts.Type;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 
@@ -57,26 +58,24 @@ public class CountRepository_IntegTest extends AssetModuleIntegTestAbstract {
 
         // when
         final LocalDate date = new LocalDate(2019, 1, 1);
-        Count cnt = countRepository.upsert(oxf, date, BigInteger.valueOf(123), BigInteger.valueOf(111));
+        Count cnt = countRepository.upsert(oxf, Type.PEDESTRIAL, date, BigInteger.valueOf(123));
 
 
         // then
         Assertions.assertThat(countRepository.listAll()).hasSize(1);
-        Count cnt1 = countRepository.findUnique(oxf, date);
+        Count cnt1 = countRepository.findUnique(oxf, Type.PEDESTRIAL, date);
         Assertions.assertThat(cnt1).isSameAs(cnt);
 
         // and when
         final BigInteger newPedCnt = BigInteger.valueOf(333);
-        final BigInteger newCarCnt = BigInteger.valueOf(222);
         countRepository.upsert(
                 oxf,
+                Type.PEDESTRIAL,
                 date,
-                newPedCnt,
-                newCarCnt);
+                newPedCnt);
         // then
         Assertions.assertThat(countRepository.listAll()).hasSize(1);
-        Assertions.assertThat(cnt.getPedestrianCount()).isEqualTo(newPedCnt);
-        Assertions.assertThat(cnt.getCarCount()).isEqualTo(newCarCnt);
+        Assertions.assertThat(cnt.getValue()).isEqualTo(newPedCnt);
     }
 
     @Inject CountRepository countRepository;

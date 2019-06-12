@@ -27,7 +27,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -236,21 +235,42 @@ public class Property
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE)
-    public List<Count> getCounts(){
-        return countRepository.findByProperty(this);
+    public List<Count> getPedestrialCounts(){
+        return countRepository.findByPropertyAndType(this, org.estatio.module.asset.dom.counts.Type.PEDESTRIAL);
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<Count> getCarCounts(){
+        return countRepository.findByPropertyAndType(this, org.estatio.module.asset.dom.counts.Type.CAR);
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    public Count newCount(final LocalDate date,
-            @Nullable
-            final BigInteger pedestianCount,
-            @Nullable
-            final BigInteger carCount){
-        return countRepository.upsert(this, date, pedestianCount, carCount);
+    public Property newPedestrialCount(
+            final LocalDate date,
+            final BigInteger value){
+        countRepository.upsert(this, org.estatio.module.asset.dom.counts.Type.PEDESTRIAL, date, value);
+        return this;
     }
 
-    public String validateNewCount(final LocalDate date, final BigInteger pedestianCount, final BigInteger carCount){
-        if (countRepository.findUnique(this, date) != null) return "There is already a count for this date";
+    public String validateNewPedestrialCount(
+            final LocalDate date,
+            final BigInteger value){
+        if (countRepository.findUnique(this, org.estatio.module.asset.dom.counts.Type.PEDESTRIAL, date) != null) return "There is already a count for this type and date";
+        return null;
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public Property newCarCount(
+            final LocalDate date,
+            final BigInteger value){
+        countRepository.upsert(this, org.estatio.module.asset.dom.counts.Type.CAR, date, value);
+        return this;
+    }
+
+    public String validateNewCarCount(
+            final LocalDate date,
+            final BigInteger value){
+        if (countRepository.findUnique(this, org.estatio.module.asset.dom.counts.Type.CAR, date) != null) return "There is already a count for this type and date";
         return null;
     }
 

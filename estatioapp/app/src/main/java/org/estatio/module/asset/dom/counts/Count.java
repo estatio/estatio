@@ -52,14 +52,16 @@ import lombok.Setter;
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.asset.dom.counts.Count "
-                        + "WHERE property == :property && date == :date "),
+                        + "WHERE property == :property && type == :type && date == :date "),
         @Query(
-                name = "findByProperty", language = "JDOQL",
+                name = "findByPropertyAndType", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.asset.dom.counts.Count "
-                        + "WHERE property == :property ORDER BY date DESC")
+                        + "WHERE property == :property "
+                        + "&& type == :type "
+                        + "ORDER BY date DESC")
 })
-@Unique(name = "Count_property_date_UNQ", members = { "property", "date" })
+@Unique(name = "Count_property_type_date_UNQ", members = { "property", "type", "date" })
 @DomainObject(
         editing = Editing.DISABLED
 )
@@ -74,14 +76,14 @@ public class Count extends UdoDomainObject2<Count> {
 
     public Count(
             final Property property,
+            final Type type,
             final LocalDate date,
-            final BigInteger pedestrianCount,
-            final BigInteger carCount) {
+            final BigInteger value) {
         this();
         this.property = property;
+        this.type = type;
         this.date = date;
-        this.pedestrianCount = pedestrianCount;
-        this.carCount = carCount;
+        this.value = value;
     }
 
     public String title() {
@@ -97,35 +99,30 @@ public class Count extends UdoDomainObject2<Count> {
 
     @Column(allowsNull = "false")
     @Getter @Setter
+    private Type type;
+
+    @Column(allowsNull = "false")
+    @Getter @Setter
     private LocalDate date;
 
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "false")
     @Getter @Setter
-    private BigInteger pedestrianCount;
-
-    @Column(allowsNull = "true")
-    @Getter @Setter
-    private BigInteger carCount;
+    private BigInteger value;
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<Count> getPrevious(){
-        return countRepository.findByProperty(getProperty()).stream().filter(c->c.getDate().isBefore(getDate())).collect(Collectors.toList());
+        return countRepository.findByPropertyAndType(getProperty(), getType()).stream().filter(c->c.getDate().isBefore(getDate())).collect(Collectors.toList());
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public Count changeCount(final BigInteger pedestrianCount, final BigInteger carCount){
-        setPedestrianCount(pedestrianCount);
-        setCarCount(carCount);
+    public Count changeCount(final BigInteger value){
+        setValue(value);
         return this;
     }
 
     public BigInteger default0ChangeCount(){
-        return getPedestrianCount();
-    }
-
-    public BigInteger default1ChangeCount(){
-        return getCarCount();
+        return getValue();
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)

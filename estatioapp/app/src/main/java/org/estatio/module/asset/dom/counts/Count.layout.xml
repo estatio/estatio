@@ -21,7 +21,7 @@
                             <ns2:fieldSet name="Counts" id="counts">
                                 <ns2:action id="changeCount" position="PANEL"/>
                                 <ns2:action id="remove" position="PANEL"/>
-                                <ns2:property id="pedestrianCount" />
+                                <ns2:property id="value" />
                                 <ns2:property id="carCount" />
                                 <ns2:property id="atPath" hidden="EVERYWHERE"/>
                                 <ns2:property id="applicationTenancy" hidden="EVERYWHERE"/>

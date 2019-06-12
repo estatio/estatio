@@ -30,8 +30,10 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.counts.Count;
 import org.estatio.module.asset.dom.counts.CountRepository;
+import org.estatio.module.asset.dom.counts.Type;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.asset.imports.CountImport;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
@@ -52,12 +54,13 @@ public class CountImport_IntegTest extends AssetModuleIntegTestAbstract {
     public void import_works() throws Exception {
 
         // given
+        final Property oxf = Property_enum.OxfGb.findUsing(serviceRegistry2);
         final LocalDate date = new LocalDate(2019, 1, 1);
         final BigInteger pCount = BigInteger.valueOf(345);
         final BigInteger cCount = BigInteger.valueOf(123);
 
-        CountImport p1 = new CountImport("OXF", date, "P", pCount);
-        CountImport c1 = new CountImport("OXF", date, "C", cCount);
+        CountImport p1 = new CountImport("OXF", "PEDESTRIAL", date, pCount);
+        CountImport c1 = new CountImport("OXF", "CAR", date, cCount);
         serviceRegistry2.injectServicesInto(p1);
         serviceRegistry2.injectServicesInto(c1);
 
@@ -66,13 +69,15 @@ public class CountImport_IntegTest extends AssetModuleIntegTestAbstract {
         c1.importData();
 
         // then
-        Assertions.assertThat(countRepository.listAll()).hasSize(1);
-        Count cnt1 = countRepository.listAll().get(0);
-        Assertions.assertThat(cnt1.getProperty()).isEqualTo(Property_enum.OxfGb.findUsing(serviceRegistry2));
-        Assertions.assertThat(cnt1.getDate()).isEqualTo(date);
-        Assertions.assertThat(cnt1.getPedestrianCount()).isEqualTo(pCount);
-        Assertions.assertThat(cnt1.getCarCount()).isEqualTo(cCount);
-
+        Assertions.assertThat(countRepository.listAll()).hasSize(2);
+        Count pcnt1 = countRepository.findByPropertyAndType(oxf, Type.PEDESTRIAL).get(0);
+        Assertions.assertThat(pcnt1.getProperty()).isEqualTo(oxf);
+        Assertions.assertThat(pcnt1.getDate()).isEqualTo(date);
+        Assertions.assertThat(pcnt1.getValue()).isEqualTo(pCount);
+        Count ccnt1 = countRepository.findByPropertyAndType(oxf, Type.CAR).get(0);
+        Assertions.assertThat(ccnt1.getProperty()).isEqualTo(oxf);
+        Assertions.assertThat(ccnt1.getDate()).isEqualTo(date);
+        Assertions.assertThat(ccnt1.getValue()).isEqualTo(cCount);
 
     }
 

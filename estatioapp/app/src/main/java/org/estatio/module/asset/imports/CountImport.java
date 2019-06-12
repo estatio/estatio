@@ -26,6 +26,7 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.counts.Count;
 import org.estatio.module.asset.dom.counts.CountRepository;
+import org.estatio.module.asset.dom.counts.Type;
 import org.estatio.module.base.dom.Importable;
 
 import lombok.Getter;
@@ -41,10 +42,10 @@ public class CountImport implements ExcelFixtureRowHandler, Importable, FixtureA
 
     public CountImport(){}
 
-    public CountImport(final String propertyReference, final LocalDate date, final String type, final BigInteger value){
+    public CountImport(final String propertyReference, final String type, final LocalDate date, final BigInteger value){
         this.propertyReference = propertyReference;
-        this.date = date;
         this.type = type;
+        this.date = date;
         this.value = value;
     }
 
@@ -52,10 +53,10 @@ public class CountImport implements ExcelFixtureRowHandler, Importable, FixtureA
     private String propertyReference;
 
     @Getter @Setter
-    private LocalDate date;
+    private String type;
 
     @Getter @Setter
-    private String type;
+    private LocalDate date;
 
     @Getter @Setter
     private BigInteger value;
@@ -80,8 +81,12 @@ public class CountImport implements ExcelFixtureRowHandler, Importable, FixtureA
             return Lists.newArrayList();
         }
 
-        if (type == null || !(type.equals("P") || type.equals("C"))) {
-            logAndWarn(String.format("Type with value %s is not correct; type should be either P or C", type));
+        Type typeEnum;
+
+        try {
+            typeEnum = Type.valueOf(type);
+        } catch (Exception e){
+            logAndWarn(String.format("Type not found for %s", type));
             return Lists.newArrayList();
         }
 
@@ -90,11 +95,7 @@ public class CountImport implements ExcelFixtureRowHandler, Importable, FixtureA
             return Lists.newArrayList();
         }
 
-        Count count = countRepository.findUnique(property, date);
-        if (count == null) count = countRepository.create(property, date, null, null);
-        if (type.equals("P")) count.setPedestrianCount(value);
-        if (type.equals("C")) count.setCarCount(value);
-
+        Count count = countRepository.upsert(property, typeEnum, date, value);
         return Lists.newArrayList(count);
     }
 

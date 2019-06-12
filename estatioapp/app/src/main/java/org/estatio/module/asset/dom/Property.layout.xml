@@ -155,8 +155,11 @@
                 <tab name="Counts">
                     <row>
                         <col span="12">
-                            <ns2:collection id="counts">
-                                <ns2:action id="newCount" position="PANEL"/>
+                            <ns2:collection id="pedestrialCounts">
+                                <ns2:action id="newPedestrialCount" position="PANEL"/>
+                            </ns2:collection>
+                            <ns2:collection id="carCounts" >
+                                <ns2:action id="newCarCount" position="PANEL"/>
                             </ns2:collection>
                         </col>
                     </row>

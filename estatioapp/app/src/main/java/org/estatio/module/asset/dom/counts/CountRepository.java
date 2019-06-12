@@ -25,6 +25,7 @@ public class CountRepository {
     @Programmatic
     public Count findUnique(
             final Property property,
+            final Type type,
             final LocalDate date
     ) {
         return repositoryService.uniqueMatch(
@@ -32,21 +33,17 @@ public class CountRepository {
                         Count.class,
                         "findUnique",
                         "property", property,
+                        "type", type,
                         "date", date));
     }
 
     @Programmatic
     public Count create(
             final Property property,
+            final Type type,
             final LocalDate date,
-            final BigInteger pedestrianCount,
-            final BigInteger carCount) {
-        final Count count =
-                new Count(
-                        property,
-                        date,
-                        pedestrianCount,
-                        carCount);
+            final BigInteger value) {
+        final Count count = new Count(property, type, date, value);
         serviceRegistry2.injectServicesInto(count);
         repositoryService.persistAndFlush(count);
         return count;
@@ -55,27 +52,26 @@ public class CountRepository {
     @Programmatic
     public Count upsert(
             final Property property,
+            final Type type,
             final LocalDate date,
-            final BigInteger pedestrianCount,
-            final BigInteger carCount
+            final BigInteger value
     ) {
-        Count count = findUnique(property, date);
+        Count count = findUnique(property, type, date);
         if (count == null) {
-            count = create(property, date, pedestrianCount, carCount);
+            count = create(property, type, date, value);
         } else {
-            count.setPedestrianCount(pedestrianCount);
-            count.setCarCount(carCount);
+            count.setValue(value);
         }
         return count;
     }
 
     @Programmatic
-    public List<Count> findByProperty(final Property property) {
+    public List<Count> findByPropertyAndType(final Property property, final Type type) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                 Count.class,
-                "findByProperty",
-                "property", property));
+                "findByPropertyAndType",
+                "property", property, "type", type));
     }
 
     public void remove(final Count count){
