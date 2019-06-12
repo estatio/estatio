@@ -100,7 +100,7 @@ public class OrderMenu {
         if (property != null && multiPropertyReference != null)
             return "Can not define both property and multi property reference";
 
-        if (numeratorForOrdersRepository.findOrderNumerator(buyer) == null)
+        if (numeratorForOrdersRepository.findNumerator(buyer) == null)
             return "No order number numerator found for this buyer";
 
         return null;

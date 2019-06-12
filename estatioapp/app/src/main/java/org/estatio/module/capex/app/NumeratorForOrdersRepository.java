@@ -19,12 +19,15 @@
 
 package org.estatio.module.capex.app;
 
+import java.math.BigInteger;
+
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.country.dom.impl.Country;
 
@@ -41,20 +44,43 @@ public class NumeratorForOrdersRepository {
     public Numerator findNumerator(
             final Country country,
             final Object scopedToIfAny) {
-        final ApplicationTenancy applicationTenancy = applicationTenancyRepository.findOrCreateTenancyFor(country);
+        final ApplicationTenancy applicationTenancy = applicationTenancyRepositoryForCountry.findOrCreateTenancyFor(country);
         return numeratorAtPathRepository.findNumerator(
                 NUMERATOR_NAME,
                 scopedToIfAny,
                 applicationTenancy);
     }
 
-
-    Numerator findOrderNumerator(final Organisation buyer) {
+    Numerator findNumerator(final Organisation buyer) {
         return numeratorAtPathRepository.findNumerator(NUMERATOR_NAME, buyer, buyer.getApplicationTenancy());
     }
 
+    /**
+     *
+     * @param atPath - instead this should be the country; perhaps derived from the buyer - this is what is used in the {@link #findNumerator(Organisation)}, above ?
+     * @param buyer
+     * @param format
+     * @return
+     */
+    public Numerator findOrCreateNumerator(
+            final String atPath,
+            final Organisation buyer,
+            final String format) {
+        ApplicationTenancy applicationTenancy = applicationTenancyRepository.findByPath(atPath);
+        return numeratorAtPathRepository.findOrCreateNumerator(
+                NUMERATOR_NAME,
+                buyer,
+                format,
+                BigInteger.ZERO,
+                applicationTenancy);
+    }
+
+
     @Inject
-    EstatioApplicationTenancyRepositoryForCountry applicationTenancyRepository;
+    EstatioApplicationTenancyRepositoryForCountry applicationTenancyRepositoryForCountry;
+
+    @Inject
+    ApplicationTenancyRepository applicationTenancyRepository;
 
     @Inject
     NumeratorAtPathRepository numeratorAtPathRepository;

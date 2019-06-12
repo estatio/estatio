@@ -19,21 +19,19 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
-
 import org.incode.module.base.dom.utils.StringUtils;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.capex.app.NumeratorForOrdersRepository;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.numerator.dom.Numerator;
-import org.estatio.module.numerator.dom.NumeratorAtPathRepository;
 import org.estatio.module.order.dom.attr.OrderAttributeRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
@@ -224,16 +222,10 @@ public class OrderRepository {
         return order;
     }
 
-
     private String generateNextOrderNumber(final Organisation buyer, final String atPath) {
         final String format = atPath.startsWith("/ITA") ? "%04d" : "%05d";
         final Organisation buyerToUse = atPath.startsWith("/ITA") ? buyer : null;
-        final Numerator numerator = numeratorAtPathRepository.findOrCreateNumerator(
-                "Order number",
-                buyerToUse,
-                format,
-                BigInteger.ZERO,
-                applicationTenancyRepository.findByPath(atPath));
+        final Numerator numerator = numeratorForOrdersRepository.findOrCreateNumerator(atPath, buyerToUse, format);
         return numerator.nextIncrementStr();
     }
 
@@ -426,15 +418,15 @@ public class OrderRepository {
     ServiceRegistry2 serviceRegistry2;
 
     @Inject
-    NumeratorAtPathRepository numeratorAtPathRepository;
+    NumeratorForOrdersRepository numeratorForOrdersRepository;
 
-    @Inject ApplicationTenancyRepository applicationTenancyRepository;
-
-    @Inject PartyRepository partyRepository;
+    @Inject
+    PartyRepository partyRepository;
 
     @Inject
     OrderAttributeRepository orderAttributeRepository;
 
     @Inject
     ClockService clockService;
+
 }
