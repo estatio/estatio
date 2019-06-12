@@ -55,7 +55,6 @@ import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.numerator.dom.NumeratorAtPathRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
-import org.estatio.module.party.dom.PartyConstants;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleRepository;
@@ -72,6 +71,9 @@ import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
         menuOrder = "20.2"
 )
 public class OrganisationMenu {
+
+    @Inject
+    NumeratorForOrganisationsRepository numeratorForOrganisationsRepository;
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
@@ -114,12 +116,10 @@ public class OrganisationMenu {
             final List<IPartyRoleType> partyRoleTypes
     ) {
         final ApplicationTenancy applicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
-        if (Strings.isNullOrEmpty(reference) && numeratorAtPathRepository
-                .findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy) == null) {
+        if (Strings.isNullOrEmpty(reference) && numeratorForOrganisationsRepository.findNumerator(applicationTenancy) == null) {
             return "No numerator found";
         } else {
-            if (!Strings.isNullOrEmpty(reference) && numeratorAtPathRepository
-                    .findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy) != null)
+            if (!Strings.isNullOrEmpty(reference) && numeratorForOrganisationsRepository.findNumerator(applicationTenancy) != null)
                 return "Reference must be left empty because a numerator is being used";
         }
 
@@ -128,6 +128,7 @@ public class OrganisationMenu {
 
         return null;
     }
+
 
     // //////////////////////////////////////
 
