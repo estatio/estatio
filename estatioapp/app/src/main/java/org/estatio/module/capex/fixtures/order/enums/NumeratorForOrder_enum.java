@@ -10,6 +10,7 @@ import org.incode.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.capex.app.NumeratorForOrdersRepository;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.fixtures.builders.NumeratorBuilder;
+import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import lombok.AllArgsConstructor;
@@ -48,7 +49,7 @@ public enum NumeratorForOrder_enum
                 .lookupService(NumeratorForOrdersRepository.class);
 
         final Country country = country_d.findUsing(serviceRegistry);
-        final Object scopedToIfAny = organisation_d == null
+        final Organisation scopedToIfAny = organisation_d == null
                 ? null
                 : organisation_d.findUsing(serviceRegistry);
 

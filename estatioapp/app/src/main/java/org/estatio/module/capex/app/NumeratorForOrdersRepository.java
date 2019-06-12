@@ -43,17 +43,32 @@ public class NumeratorForOrdersRepository {
 
     public Numerator findNumerator(
             final Country country,
-            final Object scopedToIfAny) {
+            final Organisation organisationIfAny) {
         final ApplicationTenancy applicationTenancy = applicationTenancyRepositoryForCountry.findOrCreateTenancyFor(country);
         return numeratorAtPathRepository.findNumerator(
                 NUMERATOR_NAME,
-                scopedToIfAny,
+                organisationIfAny,
                 applicationTenancy);
     }
 
-    Numerator findNumerator(final Organisation buyer) {
-        return numeratorAtPathRepository.findNumerator(NUMERATOR_NAME, buyer, buyer.getApplicationTenancy());
+    public Numerator findNumerator(final Organisation buyer) {
+        ApplicationTenancy buyerApplicationTenancy = buyer.getApplicationTenancy();
+        return numeratorAtPathRepository.findNumerator(
+                NUMERATOR_NAME,
+                buyer,
+                buyerApplicationTenancy);
     }
+
+    public Numerator findOrCreateOrderNumerator(
+            final Organisation buyer,
+            final String format,
+            final BigInteger lastValue) {
+        ApplicationTenancy buyerApplicationTenancy = buyer.getApplicationTenancy();
+        return numeratorAtPathRepository.findOrCreateNumerator(
+                NUMERATOR_NAME, buyer, format, lastValue, buyerApplicationTenancy);
+    }
+
+
 
     /**
      *
