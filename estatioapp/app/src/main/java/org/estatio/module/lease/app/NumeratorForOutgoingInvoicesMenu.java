@@ -86,8 +86,8 @@ public class NumeratorForOutgoingInvoicesMenu extends UdoDomainService<Numerator
         return numeratorRepository.findOrCreateInvoiceNumberNumerator(property, seller, format, lastIncrement);
     }
 
-    public List<Party> choices1CreateInvoiceNumberNumerator(final FixedAsset fixedAsset) {
-        return allOwnersOf(fixedAsset);
+    public List<Party> choices1CreateInvoiceNumberNumerator(final Property property) {
+        return allOwnersOf(property);
     }
 
     public String default2CreateInvoiceNumberNumerator() {
