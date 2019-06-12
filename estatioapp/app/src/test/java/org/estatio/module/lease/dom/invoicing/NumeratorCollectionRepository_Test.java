@@ -28,8 +28,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
@@ -113,7 +111,7 @@ public class NumeratorCollectionRepository_Test {
         public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
 
         @Mock
-        private NumeratorAtPathRepository mockNumeratorAtPathRepository;
+        NumeratorAtPathRepository mockNumeratorAtPathRepository;
 
         @JUnitRuleMockery2.Ignoring
         @Mock
@@ -133,7 +131,6 @@ public class NumeratorCollectionRepository_Test {
 
             invoiceRepository = new InvoiceRepository();
             estatioNumeratorRepository = new NumeratorForOutgoingInvoicesRepository();
-            estatioNumeratorRepository.numeratorAtPathRepository = mockNumeratorAtPathRepository;
 
             applicationTenancy = new ApplicationTenancy();
             applicationTenancy.setPath("/");
@@ -156,34 +153,20 @@ public class NumeratorCollectionRepository_Test {
                     oneOf(mockNumeratorAtPathRepository).createGlobalNumerator(Constants.NumeratorName.COLLECTION_NUMBER, format, lastIncrement, applicationTenancy);
                 }
             });
-            estatioNumeratorRepository.createCollectionNumberNumerator(format, lastIncrement, applicationTenancy);
+            estatioNumeratorRepository.createCollectionNumberNumerator(format, lastIncrement);
         }
 
-        @Action(hidden = Where.EVERYWHERE)
+        @Test
         public void findInvoiceNumberNumerator() {
             context.checking(new Expectations() {
                 {
                     oneOf(mockNumeratorAtPathRepository).createGlobalNumerator(Constants.NumeratorName.COLLECTION_NUMBER, format, lastIncrement, applicationTenancy);
                 }
             });
-            estatioNumeratorRepository.findInvoiceNumberNumerator(mockProperty, mockSeller,
-                    applicationTenancy
+            estatioNumeratorRepository.findInvoiceNumberNumerator(mockProperty, mockSeller
             );
         }
 
-        @Action(hidden = Where.EVERYWHERE)
-        public void createInvoiceNumberNumerator(
-                final Property property,
-                final String format,
-                final BigInteger lastIncrement) {
-
-            context.checking(new Expectations() {
-                {
-                    oneOf(mockNumeratorAtPathRepository).createScopedNumerator(Constants.NumeratorName.INVOICE_NUMBER, mockProperty, format, lastIncrement, applicationTenancy);
-                }
-            });
-            estatioNumeratorRepository.createInvoiceNumberNumerator(mockProperty, format, lastIncrement, applicationTenancy);
-        }
 
     }
 

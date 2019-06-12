@@ -466,9 +466,9 @@ public class InvoiceForLease
                 return invoiceForLease;
             }
 
+            ApplicationTenancy invoiceForLeaseApplicationTenancy = invoiceForLease.getApplicationTenancy();
             final Numerator numerator = numeratorRepository
-                    .findInvoiceNumberNumerator(invoiceForLease.getFixedAsset(), invoiceForLease.getSeller(),
-                            invoiceForLease.getApplicationTenancy()
+                    .findInvoiceNumberNumerator(invoiceForLease.getFixedAsset(), invoiceForLease.getSeller()
                     );
 
             invoiceForLease.setInvoiceNumber(numerator.nextIncrementStr());
@@ -487,9 +487,9 @@ public class InvoiceForLease
             if (invoiceForLease.getInvoiceNumber() != null) {
                 return "Invoice number already assigned";
             }
+            ApplicationTenancy invoiceForLeaseApplicationTenancy = invoiceForLease.getApplicationTenancy();
             final Numerator numerator = numeratorRepository
-                    .findInvoiceNumberNumerator(invoiceForLease.getFixedAsset(), invoiceForLease.getSeller(),
-                            invoiceForLease.getApplicationTenancy()
+                    .findInvoiceNumberNumerator(invoiceForLease.getFixedAsset(), invoiceForLease.getSeller()
                     );
             if (numerator == null) {
                 return "No 'invoice number' numerator found for invoice's property";
@@ -516,7 +516,7 @@ public class InvoiceForLease
             }
             final ApplicationTenancy applicationTenancy = invoiceForLease.getApplicationTenancy();
             final Numerator numerator = numeratorRepository.findInvoiceNumberNumerator(invoiceForLease.getFixedAsset(),
-                    invoiceForLease.getSeller(), applicationTenancy
+                    invoiceForLease.getSeller()
             );
             if (numerator != null) {
                 final String invoiceNumber = numerator.lastIncrementStr();

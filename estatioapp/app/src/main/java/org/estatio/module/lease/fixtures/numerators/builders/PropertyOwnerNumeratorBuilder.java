@@ -64,9 +64,9 @@ public final class PropertyOwnerNumeratorBuilder
         this.object =
                 estatioNumeratorRepository.createInvoiceNumberNumerator(
                         property,
+                        owner,
                         numeratorReferenceFor(property),
-                        bi(0),
-                        applicationTenancy);
+                        bi(0));
 
         ec.addResult(this, property.getReference(), object);
     }

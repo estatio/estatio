@@ -33,7 +33,6 @@ import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
-import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.currency.dom.Currency;
@@ -125,7 +124,7 @@ public class InvoiceForLeaseBuilder extends BuilderScriptAbstract<InvoiceForLeas
         final BigInteger lastIncrement = BigInteger.ZERO;
 
         this.numerator = numeratorForOutgoingInvoicesRepository
-                .findOrCreateInvoiceNumberNumerator(property, seller, format, lastIncrement, applicationTenancy);
+                .createInvoiceNumberNumerator(property, seller, format, lastIncrement);
 
         ec.addResult(this, numerator);
 
@@ -168,9 +167,6 @@ public class InvoiceForLeaseBuilder extends BuilderScriptAbstract<InvoiceForLeas
 
     @Inject
     InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;
-
-    @Inject
-    CountryRepository countryRepository;
 
     @Inject
     NumeratorForOutgoingInvoicesRepository numeratorForOutgoingInvoicesRepository;

@@ -48,7 +48,7 @@ public enum PropertyOwnerNumerator_enum implements PersonaWithFinder<Numerator>,
 
         final NumeratorForOutgoingInvoicesRepository repository = serviceRegistry.lookupService(
                 NumeratorForOutgoingInvoicesRepository.class);
-        return repository.findInvoiceNumberNumerator(property, owner, applicationTenancy);
+        return repository.findInvoiceNumberNumerator(property, owner);
     }
 
     @Override

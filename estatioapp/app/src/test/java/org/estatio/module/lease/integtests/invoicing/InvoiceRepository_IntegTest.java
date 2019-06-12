@@ -77,8 +77,6 @@ import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enu
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -111,29 +109,6 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Inject
     BookmarkService bookmarkService;
-
-    public static class CreateCollectionNumberNumerator extends InvoiceRepository_IntegTest {
-
-
-        @Test
-        public void createThenFind() throws Exception {
-            // when
-            Numerator numerator = estatioNumeratorRepository.createCollectionNumberNumerator("%09d", BigInteger.TEN, applicationTenancyRepository.findByPath("/"));
-            // then
-            assertThat(numerator, is(notNullValue()));
-            assertThat(numerator.getName(), is(Constants.NumeratorName.COLLECTION_NUMBER));
-            assertThat(numerator.getObjectType(), is(nullValue()));
-            assertThat(numerator.getObjectIdentifier(), is(nullValue()));
-            assertThat(numerator.getLastIncrement(), is(BigInteger.TEN));
-        }
-
-        @Test
-        public void whenNone() throws Exception {
-            Numerator numerator = estatioNumeratorRepository.findCollectionNumberNumerator();
-            assertThat(numerator, is(nullValue()));
-        }
-
-    }
 
     public static class CreateInvoiceNumberNumerator extends InvoiceRepository_IntegTest {
 
@@ -168,12 +143,12 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         public void whenNoneForProperty() throws Exception {
 
             // given
-            Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, seller,
-                    applicationTenancyRepository.findByPath("/GBR"));
+            Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, seller
+            );
             Assert.assertNull(numerator);
 
             // when
-            numerator = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN, applicationTenancyRepository.findByPath("/GBR"));
+            numerator = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, seller, "OXF-%05d", BigInteger.TEN);
 
             // then
             Assert.assertNotNull(numerator);
@@ -187,11 +162,13 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         public void canCreateOnePerProperty() throws Exception {
 
             // given
-            Numerator numerator1 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN, applicationTenancyRepository.findByPath("/GBR"));
+            Numerator numerator1 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, seller,
+                    "OXF-%05d", BigInteger.TEN);
             Assert.assertNotNull(numerator1);
 
             // when
-            Numerator numerator2 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyKal, "KAL-%05d", BigInteger.ZERO, applicationTenancyRepository.findByPath("/NLD"));
+            Numerator numerator2 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyKal, seller,
+                    "KAL-%05d", BigInteger.ZERO);
 
             // then
             Assert.assertNotNull(numerator2);
@@ -207,13 +184,15 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         public void canOnlyCreateOnePerProperty_andCannotReset() throws Exception {
 
             // given
-            Numerator numerator1 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN, applicationTenancyRepository.findByPath("/GBR"));
+            Numerator numerator1 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, seller,
+                    "OXF-%05d", BigInteger.TEN);
             Assert.assertNotNull(numerator1);
 
             assertThat(numerator1.nextIncrementStr(), is("OXF-00011"));
 
             // when
-            Numerator numerator2 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, "KAL-%05d", BigInteger.ZERO, applicationTenancyRepository.findByPath("/GBR"));
+            Numerator numerator2 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, seller,
+                    "KAL-%05d", BigInteger.ZERO);
 
             // then
             Assert.assertNotNull(numerator2);
@@ -248,8 +227,8 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         @Test
         public void whenNone() throws Exception {
             // when
-            Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, seller,
-                    applicationTenancyRepository.findByPath("/GBR"));
+            Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, seller
+            );
             // then
             Assert.assertNull(numerator);
         }
