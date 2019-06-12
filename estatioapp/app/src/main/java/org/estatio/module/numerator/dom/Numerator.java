@@ -121,13 +121,6 @@ public class Numerator
         super("name, country, objectType, objectIdentifier, objectType2, objectIdentifier2, format");
     }
 
-    // //////////////////////////////////////
-
-    @Getter @Setter
-    @Column(name = "atPath")
-    @Property(hidden = Where.EVERYWHERE)
-    private String applicationTenancyPath;
-
     public Numerator(
             final String name,
             final Country countryIfAny,
@@ -137,17 +130,9 @@ public class Numerator
         this();
         this.name = name;
         this.country = countryIfAny;
-        this.applicationTenancyPath = applicationTenancyPath;
         this.format = format;
         this.lastIncrement = lastIncrement;
-    }
-
-    @PropertyLayout(
-            named = "Application Level",
-            describedAs = "Determines those users for whom this object is available to view and/or modify."
-    )
-    public ApplicationTenancy getApplicationTenancy() {
-        return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
+        this.applicationTenancyPath = applicationTenancyPath;
     }
 
     // //////////////////////////////////////
@@ -158,20 +143,6 @@ public class Numerator
         } else {
             return getName();
         }
-    }
-
-    // //////////////////////////////////////
-
-    @javax.jdo.annotations.NotPersistent
-    @Property(notPersisted = true)
-    public boolean isScoped() {
-        return getObjectType() != null;
-    }
-
-    @javax.jdo.annotations.NotPersistent
-    @Property(notPersisted = true)
-    public boolean isScoped2() {
-        return getObjectType2() != null;
     }
 
     // //////////////////////////////////////
@@ -195,6 +166,13 @@ public class Numerator
     private Country country;
 
     // //////////////////////////////////////
+
+
+    @javax.jdo.annotations.NotPersistent
+    @Property(notPersisted = true)
+    public boolean isScoped() {
+        return getObjectType() != null;
+    }
 
     /**
      * The {@link Bookmark#getObjectType() object type} (either the class name
@@ -259,6 +237,12 @@ public class Numerator
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.NotPersistent
+    @Property(notPersisted = true)
+    public boolean isScoped2() {
+        return getObjectType2() != null;
+    }
+
     /**
      * The {@link Bookmark#getObjectType() object type} (either the class name
      * or a unique alias of it) of the second object to which this {@link Numerator}
@@ -283,7 +267,6 @@ public class Numerator
         return !isScoped();
     }
 
-    // //////////////////////////////////////
 
     /**
      * The {@link Bookmark#getIdentifier() identifier} of the second object to which
@@ -310,6 +293,23 @@ public class Numerator
 
     // //////////////////////////////////////
 
+    @Getter @Setter
+    @Column(name = "atPath")
+    @Property(hidden = Where.EVERYWHERE)
+    private String applicationTenancyPath;
+
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
+    }
+
+
+    // //////////////////////////////////////
+
     /**
      * The String format to use to generate the value.
      */
@@ -321,7 +321,6 @@ public class Numerator
         return String.format(getFormat(), n);
     }
     
-    // //////////////////////////////////////
 
     public Numerator changeParameters(
             final String format,
