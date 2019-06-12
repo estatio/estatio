@@ -24,6 +24,11 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.incode.module.country.dom.impl.Country;
+
+import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorAtPathRepository;
 import org.estatio.module.party.dom.Organisation;
@@ -31,9 +36,25 @@ import org.estatio.module.party.dom.Organisation;
 @DomainService(nature = NatureOfService.DOMAIN)
 public class NumeratorForOrdersRepository {
 
-    Numerator findOrderNumerator(final Organisation buyer) {
-        return numeratorAtPathRepository.findNumerator("Order number", buyer, buyer.getApplicationTenancy());
+    public final static String NUMERATOR_NAME = "Order number";
+
+    public Numerator findNumerator(
+            final Country country,
+            final Object scopedToIfAny) {
+        final ApplicationTenancy applicationTenancy = applicationTenancyRepository.findOrCreateTenancyFor(country);
+        return numeratorAtPathRepository.findNumerator(
+                NUMERATOR_NAME,
+                scopedToIfAny,
+                applicationTenancy);
     }
+
+
+    Numerator findOrderNumerator(final Organisation buyer) {
+        return numeratorAtPathRepository.findNumerator(NUMERATOR_NAME, buyer, buyer.getApplicationTenancy());
+    }
+
+    @Inject
+    EstatioApplicationTenancyRepositoryForCountry applicationTenancyRepository;
 
     @Inject
     NumeratorAtPathRepository numeratorAtPathRepository;
