@@ -47,7 +47,7 @@ import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.lease.app.InvoiceMenu;
 import org.estatio.module.lease.app.InvoiceServiceMenu;
 import org.estatio.module.lease.app.LeaseMenu;
-import org.estatio.module.lease.app.NumeratorForCollectionMenu;
+import org.estatio.module.lease.app.NumeratorForOutgoingInvoicesMenu;
 import org.estatio.module.lease.contributions.Lease_calculate;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
@@ -99,7 +99,7 @@ public class InvoiceService_IntegTest extends LeaseModuleIntegTestAbstract {
     InvoiceMenu invoiceMenu;
 
     @Inject
-    NumeratorForCollectionMenu estatioNumeratorRepository;
+    NumeratorForOutgoingInvoicesMenu estatioNumeratorRepository;
 
     @Inject
     IndexRepository indexRepository;

@@ -44,10 +44,10 @@ import org.estatio.module.party.dom.Party;
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "900.15")
-public class NumeratorForCollectionMenu extends UdoDomainService<NumeratorForCollectionMenu> {
+public class NumeratorForOutgoingInvoicesMenu extends UdoDomainService<NumeratorForOutgoingInvoicesMenu> {
 
-    public NumeratorForCollectionMenu() {
-        super(NumeratorForCollectionMenu.class);
+    public NumeratorForOutgoingInvoicesMenu() {
+        super(NumeratorForOutgoingInvoicesMenu.class);
     }
 
 

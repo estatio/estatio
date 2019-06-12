@@ -55,7 +55,7 @@ import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
-import org.estatio.module.lease.app.NumeratorForCollectionMenu;
+import org.estatio.module.lease.app.NumeratorForOutgoingInvoicesMenu;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
@@ -92,7 +92,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
     InvoiceForLeaseRepository invoiceForLeaseRepository;
 
     @Inject
-    NumeratorForCollectionMenu estatioNumeratorRepository;
+    NumeratorForOutgoingInvoicesMenu estatioNumeratorRepository;
 
     @Inject
     NumeratorAtPathRepository numeratorAtPathRepository;

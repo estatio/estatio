@@ -48,7 +48,7 @@ import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.invoice.subscriptions.CommunicationChannelSubscriptions;
-import org.estatio.module.lease.app.NumeratorForCollectionMenu;
+import org.estatio.module.lease.app.NumeratorForOutgoingInvoicesMenu;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
@@ -79,7 +79,7 @@ public class CommunicationChannelSubscriptions_IntegTest extends LeaseModuleInte
     InvoiceForLeaseRepository invoiceForLeaseRepository;
 
     @Inject
-    NumeratorForCollectionMenu estatioNumeratorRepository;
+    NumeratorForOutgoingInvoicesMenu estatioNumeratorRepository;
 
     @Inject
     NumeratorRepository numeratorRepository;
