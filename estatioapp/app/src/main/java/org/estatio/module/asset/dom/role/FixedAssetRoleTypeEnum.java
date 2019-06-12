@@ -18,7 +18,6 @@
  */
 package org.estatio.module.asset.dom.role;
 
-import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -49,12 +48,7 @@ public enum FixedAssetRoleTypeEnum implements TitledEnum, IPartyRoleType {
 
     @Programmatic
     public Predicate<? super FixedAssetRole> matchingRole() {
-        return new Predicate<FixedAssetRole>() {
-            @Override
-            public boolean apply(final FixedAssetRole far) {
-                return far != null && Objects.equal(far.getType(), this) ? true : false;
-            }
-        };
+        return (Predicate<FixedAssetRole>) far -> far != null && far.getType() == FixedAssetRoleTypeEnum.this;
     }
 
     @DomainService(nature = NatureOfService.DOMAIN)
