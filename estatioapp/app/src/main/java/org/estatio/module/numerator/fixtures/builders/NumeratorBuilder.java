@@ -5,13 +5,16 @@ import java.math.BigInteger;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
-import org.apache.isis.applib.services.registry.ServiceRegistry2;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorAtPathRepository;
+import org.estatio.module.numerator.dom.NumeratorRepository;
+import org.estatio.module.party.dom.PartyRepository;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -36,6 +39,9 @@ public final class NumeratorBuilder extends BuilderScriptAbstract<Numerator, Num
     @Getter @Setter
     Object scopedTo;
 
+    @Getter @Setter
+    Object scopedTo2;
+
     @Getter
     Numerator object;
 
@@ -46,14 +52,10 @@ public final class NumeratorBuilder extends BuilderScriptAbstract<Numerator, Num
         checkParam("format", executionContext, String.class);
         checkParam("name", executionContext, String.class);
 
-        Numerator numerator;
-        if (scopedTo == null) {
-            numerator = numeratorAtPathRepository
-                    .createGlobalNumerator(name, format, BigInteger.ZERO, estatioApplicationTenancyRepository.findOrCreateTenancyFor(country));
-        } else {
-            numerator = numeratorAtPathRepository
-                    .createScopedNumerator(name, scopedTo, format, BigInteger.ZERO, estatioApplicationTenancyRepository.findOrCreateTenancyFor(country));
-        }
+        final ApplicationTenancy applicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
+
+        final Numerator numerator = numeratorRepository.findOrCreate(
+                name, country, scopedTo, scopedTo2, format, BigInteger.ZERO, applicationTenancy);
 
         executionContext.addResult(this, name, numerator);
 
@@ -61,11 +63,10 @@ public final class NumeratorBuilder extends BuilderScriptAbstract<Numerator, Num
     }
 
     @Inject
-    NumeratorAtPathRepository numeratorAtPathRepository;
+    NumeratorRepository numeratorRepository;
 
     @Inject
     EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
 
-    @Inject ServiceRegistry2 serviceRegistry;
 
 }

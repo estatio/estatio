@@ -42,7 +42,7 @@ import org.estatio.module.party.dom.PartyRepository;
 @DomainService(nature = NatureOfService.DOMAIN)
 public class NumeratorAtPathRepository  {
 
-    static final Pattern PATTERN_FOR_ATPATH = Pattern.compile("/(?<countryRef>[^/]+?)/[^/]+?/(?<partyRef>.+)");
+    public static final Pattern PATTERN_FOR_ATPATH = Pattern.compile("/(?<countryRef>[^/]+?)/[^/]+?/(?<partyRef>.+)");
 
     /**
      * This can either be global, or per country
