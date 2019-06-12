@@ -33,7 +33,7 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.property.builders.PropertyOwnerBuilder;
 import org.estatio.module.lease.dom.EstatioApplicationTenancyRepositoryForLease;
-import org.estatio.module.lease.dom.invoicing.NumeratorForCollectionRepository;
+import org.estatio.module.lease.dom.invoicing.NumeratorForOutgoingInvoicesRepository;
 import org.estatio.module.numerator.dom.Numerator;
 
 import static org.incode.module.base.integtests.VT.bi;
@@ -71,7 +71,7 @@ public class CreateInvoiceNumerators extends DiscoverableFixtureScript {
     // //////////////////////////////////////
 
     @javax.inject.Inject
-    NumeratorForCollectionRepository estatioNumeratorRepository;
+    NumeratorForOutgoingInvoicesRepository estatioNumeratorRepository;
 
     @javax.inject.Inject
     PropertyRepository propertyRepository;

@@ -403,7 +403,7 @@ public class InvoiceForLease
         }
 
         @javax.inject.Inject
-        NumeratorForCollectionRepository numeratorRepository;
+        NumeratorForOutgoingInvoicesRepository numeratorRepository;
 
     }
 
@@ -537,7 +537,7 @@ public class InvoiceForLease
         InvoiceVatRoundingService invoiceVatRoundingService;
 
         @javax.inject.Inject
-        NumeratorForCollectionRepository numeratorRepository;
+        NumeratorForOutgoingInvoicesRepository numeratorRepository;
 
         @javax.inject.Inject
         ClockService clockService;
@@ -623,7 +623,7 @@ public class InvoiceForLease
     FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
 
     @javax.inject.Inject
-    NumeratorForCollectionRepository numeratorRepository;
+    NumeratorForOutgoingInvoicesRepository numeratorRepository;
 
 
     @Programmatic

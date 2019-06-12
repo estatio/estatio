@@ -46,7 +46,7 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLeaseRepository;
-import org.estatio.module.lease.dom.invoicing.NumeratorForCollectionRepository;
+import org.estatio.module.lease.dom.invoicing.NumeratorForOutgoingInvoicesRepository;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.party.dom.Party;
 
@@ -124,7 +124,7 @@ public class InvoiceForLeaseBuilder extends BuilderScriptAbstract<InvoiceForLeas
         final String format = property.getReference() + "-%06d";
         final BigInteger lastIncrement = BigInteger.ZERO;
 
-        this.numerator = numeratorForCollectionRepository
+        this.numerator = numeratorForOutgoingInvoicesRepository
                 .findOrCreateInvoiceNumberNumerator(property, seller, format, lastIncrement, applicationTenancy);
 
         ec.addResult(this, numerator);
@@ -173,7 +173,7 @@ public class InvoiceForLeaseBuilder extends BuilderScriptAbstract<InvoiceForLeas
     CountryRepository countryRepository;
 
     @Inject
-    NumeratorForCollectionRepository numeratorForCollectionRepository;
+    NumeratorForOutgoingInvoicesRepository numeratorForOutgoingInvoicesRepository;
 
 
 }

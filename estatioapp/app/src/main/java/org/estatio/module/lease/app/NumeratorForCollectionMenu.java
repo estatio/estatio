@@ -32,7 +32,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.lease.dom.invoicing.NumeratorForCollectionRepository;
+import org.estatio.module.lease.dom.invoicing.NumeratorForOutgoingInvoicesRepository;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.party.dom.Party;
 
@@ -116,7 +116,7 @@ public class NumeratorForCollectionMenu extends UdoDomainService<NumeratorForCol
 
 
     @javax.inject.Inject
-    NumeratorForCollectionRepository numeratorRepository;
+    NumeratorForOutgoingInvoicesRepository numeratorRepository;
 
 
 }

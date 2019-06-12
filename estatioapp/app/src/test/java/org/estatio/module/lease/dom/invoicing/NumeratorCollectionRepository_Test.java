@@ -55,7 +55,7 @@ public class NumeratorCollectionRepository_Test {
     InvoiceRepository invoiceRepository;
     InvoiceForLeaseRepository invoiceForLeaseRepository;
 
-    NumeratorForCollectionRepository estatioNumeratorRepository;
+    NumeratorForOutgoingInvoicesRepository estatioNumeratorRepository;
 
     Party seller;
     Party buyer;
@@ -103,7 +103,7 @@ public class NumeratorCollectionRepository_Test {
 
         };
 
-        estatioNumeratorRepository = new NumeratorForCollectionRepository();
+        estatioNumeratorRepository = new NumeratorForOutgoingInvoicesRepository();
     }
 
 
@@ -132,7 +132,7 @@ public class NumeratorCollectionRepository_Test {
             lastIncrement = BigInteger.TEN;
 
             invoiceRepository = new InvoiceRepository();
-            estatioNumeratorRepository = new NumeratorForCollectionRepository();
+            estatioNumeratorRepository = new NumeratorForOutgoingInvoicesRepository();
             estatioNumeratorRepository.numeratorAtPathRepository = mockNumeratorAtPathRepository;
 
             applicationTenancy = new ApplicationTenancy();

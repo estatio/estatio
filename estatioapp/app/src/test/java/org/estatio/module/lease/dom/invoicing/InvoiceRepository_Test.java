@@ -54,7 +54,7 @@ public class InvoiceRepository_Test {
     InvoiceRepository invoiceRepository;
     InvoiceForLeaseRepository invoiceForLeaseRepository;
 
-    NumeratorForCollectionRepository estatioNumeratorRepository;
+    NumeratorForOutgoingInvoicesRepository estatioNumeratorRepository;
 
     Party seller;
     Party buyer;
@@ -118,7 +118,7 @@ public class InvoiceRepository_Test {
             }
         };
 
-        estatioNumeratorRepository = new NumeratorForCollectionRepository();
+        estatioNumeratorRepository = new NumeratorForOutgoingInvoicesRepository();
     }
 
     public static class FindMatchingInvoices extends InvoiceRepository_Test {

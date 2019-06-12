@@ -39,10 +39,10 @@ import org.estatio.module.numerator.dom.NumeratorRepository;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(nature = NatureOfService.DOMAIN)
-public class NumeratorForCollectionRepository extends UdoDomainService<NumeratorForCollectionRepository> {
+public class NumeratorForOutgoingInvoicesRepository extends UdoDomainService<NumeratorForOutgoingInvoicesRepository> {
 
-    public NumeratorForCollectionRepository() {
-        super(NumeratorForCollectionRepository.class);
+    public NumeratorForOutgoingInvoicesRepository() {
+        super(NumeratorForOutgoingInvoicesRepository.class);
     }
 
 
