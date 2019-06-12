@@ -30,8 +30,12 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorAtPathRepository;
+import org.estatio.module.numerator.dom.NumeratorRepository;
 import org.estatio.module.party.dom.PartyConstants;
 
+/**
+ * TODO: refactor to call {@link NumeratorRepository} directly, rather than the legacy {@link NumeratorAtPathRepository}.
+ */
 @DomainService(nature = NatureOfService.DOMAIN)
 public class NumeratorForOrganisationsRepository {
 
