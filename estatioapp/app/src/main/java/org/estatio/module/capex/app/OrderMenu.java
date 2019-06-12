@@ -100,7 +100,7 @@ public class OrderMenu {
         if (property != null && multiPropertyReference != null)
             return "Can not define both property and multi property reference";
 
-        if (numeratorAtPathRepository.findNumerator("Order number", buyer, buyer.getApplicationTenancy()) == null)
+        if (numeratorForOrdersRepository.findOrderNumerator(buyer) == null)
             return "No order number numerator found for this buyer";
 
         return null;
@@ -359,4 +359,8 @@ public class OrderMenu {
     ExcelService excelService;
 
     @Inject UserService userService;
+
+    @Inject
+    NumeratorForOrdersRepository numeratorForOrdersRepository;
+
 }
