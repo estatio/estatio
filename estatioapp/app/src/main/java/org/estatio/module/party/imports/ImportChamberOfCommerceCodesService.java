@@ -66,7 +66,8 @@ public class ImportChamberOfCommerceCodesService {
         return organisationRepository.findByAtPathMissingChamberOfCommerceCode(atPath)
                 .stream()
                 .filter(org ->
-                        org.hasPartyRoleType(LeaseAgreementRoleTypeEnum.TENANT) ||
+                        org.getRoles().isEmpty() ||
+                                org.hasPartyRoleType(LeaseAgreementRoleTypeEnum.TENANT) ||
                                 incomingInvoiceRepository.findBySellerAndApprovalStates(org, Arrays.asList(IncomingInvoiceApprovalState.values())).isEmpty()
                 )
                 .map(org -> {
