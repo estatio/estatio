@@ -226,7 +226,7 @@ public class Organisation
             /**
              * TODO: review
              */
-            public static final int MAX_LEN = 30;
+            public static final int MAX_LEN = 150;
 
             private Meta() {}
 

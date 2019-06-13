@@ -5,6 +5,7 @@ import org.apache.isis.applib.annotation.Nature;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @DomainObject(
@@ -12,6 +13,7 @@ import lombok.Setter;
         objectType = "org.estatio.dom.viewmodels.ChamberOfCommerceImportLine"
 )
 @Getter @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class ChamberOfCommerceImportLine {
 
