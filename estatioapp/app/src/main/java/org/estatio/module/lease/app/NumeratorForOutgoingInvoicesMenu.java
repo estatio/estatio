@@ -62,6 +62,7 @@ public class NumeratorForOutgoingInvoicesMenu extends UdoDomainService<Numerator
     public Numerator findCollectionNumberNumerator() {
         return numeratorRepository.findCollectionNumberNumerator();
     }
+    
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3")
@@ -90,8 +91,8 @@ public class NumeratorForOutgoingInvoicesMenu extends UdoDomainService<Numerator
         return allOwnersOf(property);
     }
 
-    public String default2CreateInvoiceNumberNumerator() {
-        return "XXX-%06d";
+    public String default2CreateInvoiceNumberNumerator(final Property property) {
+        return (property != null ? property.getReference() : "XXX") +  "-%06d";
     }
 
     public BigInteger default3CreateInvoiceNumberNumerator() {

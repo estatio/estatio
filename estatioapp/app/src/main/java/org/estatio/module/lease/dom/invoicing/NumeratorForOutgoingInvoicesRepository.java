@@ -52,13 +52,11 @@ public class NumeratorForOutgoingInvoicesRepository extends UdoDomainService<Num
     }
 
 
-    @Programmatic
     public Numerator findCollectionNumberNumerator() {
         return numeratorRepository.find(COLLECTION_NUMBER, null, null, null);
     }
 
 
-    @Programmatic
     public Numerator createCollectionNumberNumerator(
             final String format,
             final BigInteger lastValue) {
@@ -69,7 +67,6 @@ public class NumeratorForOutgoingInvoicesRepository extends UdoDomainService<Num
     }
 
 
-    @Programmatic
     public Numerator findInvoiceNumberNumerator(
             final FixedAsset fixedAsset,
             final Party seller) {
@@ -81,7 +78,6 @@ public class NumeratorForOutgoingInvoicesRepository extends UdoDomainService<Num
     }
 
 
-    @Programmatic
     public Numerator createInvoiceNumberNumerator(
             final Property property,
             final Party seller,
@@ -99,7 +95,6 @@ public class NumeratorForOutgoingInvoicesRepository extends UdoDomainService<Num
         return findOrCreateInvoiceNumberNumerator(property, seller, format, lastIncrement);
     }
 
-    @Programmatic
     public Numerator findOrCreateInvoiceNumberNumerator(
             final Property property,
             final Party seller,

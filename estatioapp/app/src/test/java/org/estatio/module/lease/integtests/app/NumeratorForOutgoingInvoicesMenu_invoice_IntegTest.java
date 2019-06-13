@@ -43,7 +43,7 @@ import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NumeratorForOutgoingInvoicesMenu_IntegTest extends LeaseModuleIntegTestAbstract {
+public class NumeratorForOutgoingInvoicesMenu_invoice_IntegTest extends LeaseModuleIntegTestAbstract {
 
     private final String format = "GBFO-%04d";
     private final BigInteger lastIncrement = BigInteger.ZERO;
