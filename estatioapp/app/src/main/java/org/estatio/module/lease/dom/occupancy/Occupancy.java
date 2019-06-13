@@ -403,7 +403,7 @@ public class Occupancy
     }
 
 
-    public void verify() {
+    public Occupancy verify() {
         Lease lease = getLease();
 
         if (ObjectUtils.compare(lease.getTenancyStartDate(), getStartDate()) != 0) {
@@ -413,6 +413,8 @@ public class Occupancy
         if (getEndDate() != null && (ObjectUtils.compare(lease.getTenancyEndDate(), getEndDate()) != 0)) {
             setEndDate(lease.getTenancyEndDate());
         }
+
+        return this;
     }
 
     @Inject
