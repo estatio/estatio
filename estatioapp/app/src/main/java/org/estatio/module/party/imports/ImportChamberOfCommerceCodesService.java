@@ -45,7 +45,7 @@ public class ImportChamberOfCommerceCodesService {
         final List<ChamberOfCommerceImportLine> toCompleteForFra = getLinesForAtPath("/FRA");
         final List<ChamberOfCommerceImportLine> toCompleteForBel = getLinesForAtPath("/BEL");
 
-        return excelService.toExcel(ListUtils.union(toCompleteForFra, toCompleteForBel), ChamberOfCommerceImportLine.class, "CoCCodeImport", fileName.concat("xlsx"));
+        return excelService.toExcel(ListUtils.union(toCompleteForFra, toCompleteForBel), ChamberOfCommerceImportLine.class, "CoCCodeImport", fileName.concat(".xlsx"));
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -76,9 +76,10 @@ public class ImportChamberOfCommerceCodesService {
                             .map(role -> ((Lease) role.getAgreement()).getProperty())
                             .filter(Objects::nonNull)
                             .map(Property::getName)
+                            .distinct()
                             .collect(Collectors.joining(", "));
 
-                    return new ChamberOfCommerceImportLine(org.getReference(), null, propertyNamesIfAny);
+                    return new ChamberOfCommerceImportLine(org.getReference(), propertyNamesIfAny);
                 })
                 .collect(Collectors.toList());
     }
