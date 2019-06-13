@@ -26,6 +26,7 @@ import org.apache.isis.applib.services.user.UserService;
 import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.util.Mode;
 import org.isisaddons.module.security.app.user.MeService;
+import org.isisaddons.module.security.dom.user.ApplicationUser;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
@@ -123,8 +124,21 @@ public class OrderMenu {
     }
 
     public boolean hideCreateOrder() {
+        // admin can always see
         final boolean userIsAdmin = EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
-        return !meService.me().getAtPath().startsWith("/ITA") && !userIsAdmin;
+        if(userIsAdmin) {
+            return false;
+        }
+
+        // otherwise, user needs to be Italian
+        final ApplicationUser me = meService.me();
+        if(me == null) { return true; }
+
+        final String atPath = me.getAtPath();
+        if(atPath == null) { return true; }
+
+        boolean hideIfNotItalian = !atPath.startsWith("/ITA");
+        return hideIfNotItalian;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
