@@ -36,6 +36,7 @@ import org.incode.module.country.dom.impl.CountryRepository;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.base.dom.UdoDomainService;
+import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
 import org.estatio.module.party.dom.Party;
@@ -104,14 +105,20 @@ public class NumeratorForOutgoingInvoicesRepository extends UdoDomainService<Num
             final Party seller,
             final String format,
             final BigInteger lastIncrement) {
-        final ApplicationTenancy applicationTenancy = property.getApplicationTenancy();
 
+        final ApplicationTenancy applicationTenancy = property.getApplicationTenancy();
         final Country country = countryRepository.findCountryByAtPath(applicationTenancy.getPath());
+        final ApplicationTenancy countryTenancy =
+                estatioApplicationTenancyRepositoryForCountry.findOrCreateTenancyFor(country);
+
         return numeratorRepository.findOrCreate(
-                INVOICE_NUMBER, country, property, seller, format, lastIncrement, applicationTenancy);
+                INVOICE_NUMBER, country, property, seller, format, lastIncrement, countryTenancy);
     }
 
 
+
+    @javax.inject.Inject
+    EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepositoryForCountry;
 
     @javax.inject.Inject
     CountryRepository countryRepository;
