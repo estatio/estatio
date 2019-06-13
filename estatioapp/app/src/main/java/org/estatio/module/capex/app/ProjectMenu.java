@@ -64,13 +64,16 @@ import org.estatio.module.countryapptenancy.dom.CountryServiceForCurrentUser;
 )
 public class ProjectMenu {
 
+
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     public List<Project> allProjects() {
         return projectRepository.listAll();
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    public List<Project> findProject(final @ParameterLayout(named = "Name or reference") String searchStr, final boolean includeArchived) {
+    public List<Project> findProject(
+            final @ParameterLayout(named = "Name or reference") String searchStr,
+            final boolean includeArchived) {
         return includeArchived ?
                 projectRepository.findProject(searchStr) :
                 projectRepository.findProject(searchStr)

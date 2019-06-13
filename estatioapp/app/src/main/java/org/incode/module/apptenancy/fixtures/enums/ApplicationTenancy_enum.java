@@ -1,5 +1,7 @@
 package org.incode.module.apptenancy.fixtures.enums;
 
+import java.util.regex.Pattern;
+
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
@@ -11,11 +13,9 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.apptenancy.fixtures.builders.ApplicationTenancyBuilder;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
-@AllArgsConstructor
 @Getter
 @Accessors(chain = true)
 public enum ApplicationTenancy_enum
@@ -59,6 +59,17 @@ public enum ApplicationTenancy_enum
 
     private final String path;
     private final String name;
+    private final boolean countryLevel;
+
+    ApplicationTenancy_enum(final String path, final String name) {
+        this.path = path;
+        this.name = name;
+        this.countryLevel = Pattern.compile("^/[^/]{3}$").matcher(path).matches();
+    }
+
+    public boolean isCountryLevel() {
+        return countryLevel;
+    }
 
     private String getPathOfParent() {
         final int lastSlash = path.lastIndexOf("/");
