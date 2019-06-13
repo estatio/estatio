@@ -17,8 +17,9 @@ public class ChamberOfCommerceImportLine {
     public ChamberOfCommerceImportLine() {
     }
 
-    public ChamberOfCommerceImportLine(final String reference, final String properties) {
+    public ChamberOfCommerceImportLine(final String reference, final String name, final String properties) {
         this.reference = reference;
+        this.name = name;
         this.properties = properties;
     }
 
@@ -33,6 +34,5 @@ public class ChamberOfCommerceImportLine {
 
     @MemberOrder(sequence = "4")
     private String code;
-
 
 }

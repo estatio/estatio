@@ -79,7 +79,7 @@ public class ImportChamberOfCommerceCodesService {
                             .distinct()
                             .collect(Collectors.joining(", "));
 
-                    return new ChamberOfCommerceImportLine(org.getReference(), propertyNamesIfAny);
+                    return new ChamberOfCommerceImportLine(org.getReference(), org.getName(), propertyNamesIfAny);
                 })
                 .collect(Collectors.toList());
     }
