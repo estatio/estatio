@@ -67,9 +67,11 @@
         </col>
         <col span="4">
             <ns2:fieldSet name="Details">
-                <ns2:property id="format"/>
+                <ns2:property id="format">
+                    <ns2:action id="changeFormat" position="BELOW"/>
+                </ns2:property>
                 <ns2:property id="lastIncrement">
-                    <ns2:action id="changeParameters" position="BELOW"/>
+                    <ns2:action id="reset" position="BELOW"/>
                 </ns2:property>
             </ns2:fieldSet>
         </col>

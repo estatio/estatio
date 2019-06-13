@@ -13,6 +13,7 @@
                     <row>
                         <col span="12">
                             <cpt:fieldSet name="General" id="general" unreferencedProperties="true">
+                                <cpt:action id="remove"/>
                                 <cpt:property id="type"/>
                                 <cpt:property id="party"/>
                                 <cpt:property id="agreement"/>
@@ -27,7 +28,8 @@
                     <row>
                         <col span="12">
                             <cpt:fieldSet name="Application Level" id="applicationLevel">
-                                <cpt:property id="applicationTenancy"/>
+                                <cpt:property id="applicationTenancy" hidden="ALL_TABLES"/>
+                                <cpt:property id="atPath" hidden="ALL_TABLES"/>
                             </cpt:fieldSet>
                         </col>
                     </row>

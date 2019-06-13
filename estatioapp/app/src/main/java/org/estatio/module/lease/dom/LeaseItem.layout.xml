@@ -3,33 +3,28 @@
     <row>
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
-            <ns2:action id="verify"/>
-            <ns2:action id="verifyUntil"/>
-            <ns2:action id="copy"/>
-            <ns2:action id="remove"/>
-            <ns2:action id="findByLeaseItemAndInvoiceStatus"/>
-            <ns2:action id="newLeaseTerm"/>
-            <ns2:action id="findByLeaseItemAndSequence"/>
-            <ns2:action id="links"/>
         </col>
     </row>
     <row>
         <col span="3">
-
             <tabGroup>
                 <tab name="General">
                     <row>
                         <col span="12">
-                            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+                            <ns2:fieldSet name="General" id="general">
+                                <ns2:action id="copy"/>
+                                <ns2:action id="remove"/>
                                 <ns2:property id="lease"/>
                                 <ns2:property id="sequence"/>
                                 <ns2:property id="type"/>
-                                <ns2:property id="status">
-                                    <ns2:action id="resume" position="BELOW"/>
-                                    <ns2:action id="suspend" position="BELOW"/>
-                                    <ns2:action id="terminate" position="BELOW"/>
-                                </ns2:property>
                             </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Other">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Other" unreferencedProperties="true"/>
                         </col>
                     </row>
                 </tab>
@@ -61,15 +56,14 @@
                     </row>
                 </tab>
             </tabGroup>
-
-            <ns2:fieldSet name="Invoicing" id="invoicing">
-                <ns2:property id="invoicedBy"/>
-                <ns2:property id="invoicingFrequency">
-                    <ns2:action id="changeInvoicingFrequency" position="BELOW" />
+            <ns2:fieldSet name="Status" id="status">
+                <ns2:property id="status">
+                    <ns2:action id="resume" position="BELOW"/>
+                    <ns2:action id="suspend" position="BELOW"/>
+                    <ns2:action id="terminate" position="BELOW"/>
                 </ns2:property>
-                <ns2:property id="paymentMethod">
-                    <ns2:action id="changePaymentMethod" position="BELOW"/>
-                </ns2:property>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Charge &amp; Tax" id="charge-n-tax">
                 <ns2:property id="charge">
                     <ns2:action id="changeCharge" position="BELOW"/>
                 </ns2:property>
@@ -81,6 +75,8 @@
         </col>
         <col span="3">
             <ns2:fieldSet name="Dates" id="dates">
+                <ns2:action id="verify"/>
+                <ns2:action id="verifyUntil"/>
                 <ns2:property id="startDate"/>
                 <ns2:property id="endDate">
                     <ns2:action id="changeDates" position="BELOW"/>
@@ -90,6 +86,15 @@
             </ns2:fieldSet>
             <ns2:fieldSet name="Current Value" id="currentValue">
                 <ns2:property id="value"/>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Invoicing" id="invoicing">
+                <ns2:property id="invoicedBy"/>
+                <ns2:property id="invoicingFrequency">
+                    <ns2:action id="changeInvoicingFrequency" position="BELOW" />
+                </ns2:property>
+                <ns2:property id="paymentMethod">
+                    <ns2:action id="changePaymentMethod" position="BELOW"/>
+                </ns2:property>
             </ns2:fieldSet>
         </col>
         <col span="6" unreferencedCollections="true">
