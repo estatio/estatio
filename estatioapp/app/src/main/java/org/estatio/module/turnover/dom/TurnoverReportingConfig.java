@@ -133,14 +133,6 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
         LocalDate endDateToUse = ArrayExtensions.coalesce(occupancy.getEndDate(), occupancy.getLease().getTenancyEndDate());
         if (endDateToUse==null) return null;
 
-        // when an end date can be derived, add frequency period for monthly and yearly because turnovers are reported afterwards.
-        if (getFrequency() == Frequency.MONTHLY){
-            endDateToUse = endDateToUse.plusMonths(1);
-        }
-        if (getFrequency() == Frequency.YEARLY){
-            endDateToUse = endDateToUse.plusYears(1);
-        }
-
         return endDateToUse.isAfter(getStartDate()) ? endDateToUse : getStartDate(); // ECP-962: prevents bad occupancy and / or lease data to produce wrong illegal interval on turnover reporting config
     }
 
@@ -178,13 +170,24 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
     }
 
     @Programmatic
-    public LocalDateInterval getInterval(){
-        return LocalDateInterval.including(getStartDate(), getEndDate());
-    }
-
-    @Programmatic
     public boolean isActiveOnDate(final LocalDate date){
-        return getInterval().contains(date);
+
+        LocalDate startDateToUse;
+        switch (getFrequency()){
+
+            case MONTHLY:
+                startDateToUse = new LocalDate(getStartDate().getYear(), getStartDate().getMonthOfYear(), 1);
+            break;
+
+            case YEARLY:
+                startDateToUse = new LocalDate(getStartDate().getYear(), 1, 1);
+            break;
+
+            default:
+                startDateToUse = getStartDate();
+        }
+        LocalDateInterval interval = LocalDateInterval.including(startDateToUse, getEndDate());
+        return interval.contains(date);
     }
 
     @Programmatic

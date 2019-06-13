@@ -48,15 +48,56 @@ public class TurnoverReportingConfig_Test {
         // then
         Assertions.assertThat(config.getEndDate()).isEqualTo(occupancyEndDate);
 
-        // and when
+    }
+
+    @Test
+    public void isActiveOnDate_works(){
+
+        // given
+        final LocalDate inspectionDateBeforeStartDate = new LocalDate(2019,1,1);
+        final LocalDate configStartDate = new LocalDate(2019,1,15);
+        Occupancy occupancy = new Occupancy();
+        Lease lease = new LeaseForTesting();
+        occupancy.setLease(lease);
+        occupancy.setEndDate(configStartDate.plusDays(1));
+
+        TurnoverReportingConfig config = new TurnoverReportingConfig();
+        config.setOccupancy(occupancy);
+        config.setStartDate(configStartDate);
+
+        // when
+        config.setFrequency(Frequency.DAILY);
+        // then
+        Assertions.assertThat(config.isActiveOnDate(inspectionDateBeforeStartDate)).isFalse();
+
+        // when
         config.setFrequency(Frequency.MONTHLY);
         // then
-        Assertions.assertThat(config.getEndDate()).isEqualTo(occupancyEndDate.plusMonths(1));
+        Assertions.assertThat(config.isActiveOnDate(inspectionDateBeforeStartDate)).isTrue();
 
-        // and when
+        // when
         config.setFrequency(Frequency.YEARLY);
         // then
-        Assertions.assertThat(config.getEndDate()).isEqualTo(occupancyEndDate.plusYears(1));
+        Assertions.assertThat(config.isActiveOnDate(inspectionDateBeforeStartDate)).isTrue();
+
+        // given
+        final LocalDate inspectionDateAfterDerivedEndDate = new LocalDate(2019,1,17);
+        Assertions.assertThat(config.getEndDate().isBefore(inspectionDateAfterDerivedEndDate));
+
+        // when
+        config.setFrequency(Frequency.DAILY);
+        // then
+        Assertions.assertThat(config.isActiveOnDate(inspectionDateAfterDerivedEndDate)).isFalse();
+
+        // when
+        config.setFrequency(Frequency.MONTHLY);
+        // then
+        Assertions.assertThat(config.isActiveOnDate(inspectionDateAfterDerivedEndDate)).isFalse();
+
+        // when
+        config.setFrequency(Frequency.YEARLY);
+        // then
+        Assertions.assertThat(config.isActiveOnDate(inspectionDateAfterDerivedEndDate)).isFalse();
 
     }
 
@@ -67,7 +108,7 @@ public class TurnoverReportingConfig_Test {
     TurnoverRepository turnoverRepository;
 
     @Test
-    public void produceEmptyTurnovers_when_turnover_date_in_interval() throws Exception {
+    public void produceEmptyTurnovers_when_turnover_config_is_active() throws Exception {
 
         final LocalDate turnoverDate = new LocalDate(2019,1,1);
 
@@ -93,11 +134,11 @@ public class TurnoverReportingConfig_Test {
 
         // when
         config.produceEmptyTurnover(turnoverDate);
-        
+
     }
 
     @Test
-    public void produceEmptyTurnoverswhen_turnover_date_NOT_in_interval() throws Exception {
+    public void produceEmptyTurnoverswhen_turnover_config_is_not_active() throws Exception {
 
         LocalDate turnoverDate;
 
@@ -111,15 +152,11 @@ public class TurnoverReportingConfig_Test {
 
         config.setOccupancy(occupancy);
         config.setStartDate(new LocalDate(2019, 01,01));
+        config.setFrequency(Frequency.MONTHLY);
 
         // when
         turnoverDate = new LocalDate(2018, 12,31);
         // then nothing
-        config.produceEmptyTurnover(turnoverDate);
-
-        // and when
-        turnoverDate = new LocalDate(2019,2,1);
-        // then nothing again
         config.produceEmptyTurnover(turnoverDate);
 
     }
@@ -139,6 +176,7 @@ public class TurnoverReportingConfig_Test {
 
         config.setStartDate(new LocalDate(2019, 01,01));
         config.setOccupancy(occupancy);
+        config.setFrequency(Frequency.MONTHLY);
 
         // when
         config.produceEmptyTurnover(turnoverDate);
