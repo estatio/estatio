@@ -22,14 +22,6 @@ public final class Constants {
     
     private Constants(){}
 
-    // TODO: convert this into NumeratorData, similar to DocTypeData
-    public static class NumeratorName {
-        private NumeratorName(){}
-
-        public static final String INVOICE_NUMBER = "Invoice number";
-        public static final String COLLECTION_NUMBER = "Collection number";
-    }
-
     public enum InvoiceRoleTypeEnum implements IPartyRoleType {
 
         BUYER,

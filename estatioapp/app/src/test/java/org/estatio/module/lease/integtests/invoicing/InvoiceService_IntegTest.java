@@ -203,7 +203,7 @@ public class InvoiceService_IntegTest extends LeaseModuleIntegTestAbstract {
         public void step3_approveInvoice() throws Exception {
             final List<Invoice> allInvoices = invoiceMenu.allInvoices();
             final Invoice invoice = allInvoices.get(allInvoices.size() - 1);
-            //estatioNumeratorRepository.createInvoiceNumberNumerator(lease.getProperty(), "OXF-%06d", BigInteger.ZERO, invoice.getApplicationTenancy());
+            //numeratorForOutgoingInvoicesMenu.createInvoiceNumberNumerator(lease.getProperty(), "OXF-%06d", BigInteger.ZERO, invoice.getApplicationTenancy());
 
             mixin(InvoiceForLease._approve.class, invoice).$$();
             mixin(InvoiceForLease._invoice.class, invoice).$$(VT.ld(2013, 11, 7));

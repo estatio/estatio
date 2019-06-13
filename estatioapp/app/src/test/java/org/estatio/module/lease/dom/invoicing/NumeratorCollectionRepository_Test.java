@@ -37,7 +37,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.invoice.dom.Constants;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;
@@ -142,7 +141,7 @@ public class NumeratorCollectionRepository_Test {
         public void findCollectionNumberNumerator() {
             context.checking(new Expectations() {
                 {
-                    oneOf(mockNumeratorAtPathRepository).findGlobalNumerator(Constants.NumeratorName.COLLECTION_NUMBER, null);
+                    oneOf(mockNumeratorAtPathRepository).findGlobalNumerator(NumeratorForOutgoingInvoicesRepository.COLLECTION_NUMBER, null);
                 }
             });
             estatioNumeratorRepository.findCollectionNumberNumerator();
@@ -153,7 +152,7 @@ public class NumeratorCollectionRepository_Test {
         public void createCollectionNumberNumerator() {
             context.checking(new Expectations() {
                 {
-                    oneOf(mockNumeratorAtPathRepository).createGlobalNumerator(Constants.NumeratorName.COLLECTION_NUMBER, format, lastIncrement, applicationTenancy);
+                    oneOf(mockNumeratorAtPathRepository).createGlobalNumerator(NumeratorForOutgoingInvoicesRepository.COLLECTION_NUMBER, format, lastIncrement, applicationTenancy);
                 }
             });
             estatioNumeratorRepository.createCollectionNumberNumerator(format, lastIncrement);
@@ -164,7 +163,7 @@ public class NumeratorCollectionRepository_Test {
         public void findInvoiceNumberNumerator() {
             context.checking(new Expectations() {
                 {
-                    oneOf(mockNumeratorAtPathRepository).createGlobalNumerator(Constants.NumeratorName.COLLECTION_NUMBER, format, lastIncrement, applicationTenancy);
+                    oneOf(mockNumeratorAtPathRepository).createGlobalNumerator(NumeratorForOutgoingInvoicesRepository.COLLECTION_NUMBER, format, lastIncrement, applicationTenancy);
                 }
             });
             estatioNumeratorRepository.findInvoiceNumberNumerator(mockProperty, mockSeller

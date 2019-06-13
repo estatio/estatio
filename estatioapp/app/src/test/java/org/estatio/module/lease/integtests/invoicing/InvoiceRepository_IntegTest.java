@@ -44,12 +44,10 @@ import org.incode.module.base.integtests.VT;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.currency.fixtures.enums.Currency_enum;
-import org.estatio.module.invoice.dom.Constants;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.invoice.dom.InvoiceRepository;
@@ -60,6 +58,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
+import org.estatio.module.lease.dom.invoicing.NumeratorForOutgoingInvoicesRepository;
 import org.estatio.module.lease.fixtures.invoice.enums.InvoiceForLease_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
@@ -68,10 +67,8 @@ import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRe
 import org.estatio.module.lease.imports.InvoiceImportLine;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.numerator.dom.Numerator;
-import org.estatio.module.numerator.dom.NumeratorAtPathRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -90,19 +87,10 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
     InvoiceForLeaseRepository invoiceForLeaseRepository;
 
     @Inject
-    NumeratorForOutgoingInvoicesMenu estatioNumeratorRepository;
-
-    @Inject
-    NumeratorAtPathRepository numeratorAtPathRepository;
-
-    @Inject
-    PartyRepository partyRepository;
+    NumeratorForOutgoingInvoicesMenu numeratorForOutgoingInvoicesMenu;
 
     @Inject
     LeaseRepository leaseRepository;
-
-    @Inject
-    PropertyRepository propertyRepository;
 
     @Inject
     ApplicationTenancyRepository applicationTenancyRepository;
@@ -131,7 +119,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         private Bookmark propertyOxfBookmark;
 
         @Before
-        public void setUp() throws Exception {
+        public void setUp() {
             propertyOxf = Property_enum.OxfGb.findUsing(serviceRegistry);
             propertyKal = Property_enum.KalNl.findUsing(serviceRegistry);
             seller = PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.getOwner_d().findUsing(serviceRegistry);
@@ -140,34 +128,35 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         }
 
         @Test
-        public void whenNoneForProperty() throws Exception {
+        public void whenNoneForProperty() {
 
             // given
-            Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, seller
+            Numerator numerator = numeratorForOutgoingInvoicesMenu.findInvoiceNumberNumerator(propertyOxf, seller
             );
             Assert.assertNull(numerator);
 
             // when
-            numerator = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, seller, "OXF-%05d", BigInteger.TEN);
+            numerator = numeratorForOutgoingInvoicesMenu
+                    .createInvoiceNumberNumerator(propertyOxf, seller, "OXF-%05d", BigInteger.TEN);
 
             // then
             Assert.assertNotNull(numerator);
-            assertThat(numerator.getName(), is(Constants.NumeratorName.INVOICE_NUMBER));
+            assertThat(numerator.getName(), is(NumeratorForOutgoingInvoicesRepository.INVOICE_NUMBER));
             assertThat(numerator.getObjectType(), is(propertyOxfBookmark.getObjectType()));
             assertThat(numerator.getObjectIdentifier(), is(propertyOxfBookmark.getIdentifier()));
             assertThat(numerator.getLastIncrement(), is(BigInteger.TEN));
         }
 
         @Test
-        public void canCreateOnePerProperty() throws Exception {
+        public void canCreateOnePerProperty() {
 
             // given
-            Numerator numerator1 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, seller,
+            Numerator numerator1 = numeratorForOutgoingInvoicesMenu.createInvoiceNumberNumerator(propertyOxf, seller,
                     "OXF-%05d", BigInteger.TEN);
             Assert.assertNotNull(numerator1);
 
             // when
-            Numerator numerator2 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyKal, seller,
+            Numerator numerator2 = numeratorForOutgoingInvoicesMenu.createInvoiceNumberNumerator(propertyKal, seller,
                     "KAL-%05d", BigInteger.ZERO);
 
             // then
@@ -181,17 +170,17 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         }
 
         @Test
-        public void canOnlyCreateOnePerProperty_andCannotReset() throws Exception {
+        public void canOnlyCreateOnePerProperty_andCannotReset() {
 
             // given
-            Numerator numerator1 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, seller,
+            Numerator numerator1 = numeratorForOutgoingInvoicesMenu.createInvoiceNumberNumerator(propertyOxf, seller,
                     "OXF-%05d", BigInteger.TEN);
             Assert.assertNotNull(numerator1);
 
             assertThat(numerator1.nextIncrementStr(), is("OXF-00011"));
 
             // when
-            Numerator numerator2 = estatioNumeratorRepository.createInvoiceNumberNumerator(propertyOxf, seller,
+            Numerator numerator2 = numeratorForOutgoingInvoicesMenu.createInvoiceNumberNumerator(propertyOxf, seller,
                     "KAL-%05d", BigInteger.ZERO);
 
             // then
@@ -219,15 +208,15 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         private Organisation seller;
 
         @Before
-        public void setUp() throws Exception {
+        public void setUp() {
             propertyOxf = Property_enum.OxfGb.findUsing(serviceRegistry);
             seller = PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.getOwner_d().findUsing(serviceRegistry);
         }
 
         @Test
-        public void whenNone() throws Exception {
+        public void whenNone() {
             // when
-            Numerator numerator = estatioNumeratorRepository.findInvoiceNumberNumerator(propertyOxf, seller
+            Numerator numerator = numeratorForOutgoingInvoicesMenu.findInvoiceNumberNumerator(propertyOxf, seller
             );
             // then
             Assert.assertNull(numerator);
@@ -262,7 +251,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         ApplicationTenancy applicationTenancy;
 
         @Before
-        public void setUp() throws Exception {
+        public void setUp() {
             applicationTenancy = applicationTenancyRepository.findByPath(ApplicationTenancy_enum.Nl.getPath());
             seller = InvoiceForLease_enum.KalPoison001Nl.getSeller_d().findUsing(serviceRegistry);
             buyer = InvoiceForLease_enum.KalPoison001Nl.getBuyer_d().findUsing(serviceRegistry);
@@ -365,7 +354,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
             CommunicationChannel communicationChannel1;
 
             @Before
-            public void lookupCommChannel() throws Exception {
+            public void lookupCommChannel() {
                 final List<CommunicationChannel> communicationChannels = repositoryService
                         .allInstances(CommunicationChannel.class);
                 assertThat(communicationChannels.size()).isGreaterThanOrEqualTo(2);
@@ -418,7 +407,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         private static String runId = "2014-02-16T02:30:03.156 - OXF - [OXF-TOPMODEL-001] - [RENT, SERVICE_CHARGE, TURNOVER_RENT, TAX] - 2012-01-01 - 2012-01-01/2012-01-02";
 
         @Before
-        public void setUp() throws Exception {
+        public void setUp() {
             final ApplicationTenancy applicationTenancy = applicationTenancyRepository.findByPath(
                     ApplicationTenancy_enum.Gb.getPath());
             final Party seller = InvoiceForLease_enum.OxfPoison003Gb.getSeller_d().findUsing(serviceRegistry);
@@ -467,7 +456,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         private LocalDate invoiceStartDate;
 
         @Before
-        public void setUp() throws Exception {
+        public void setUp() {
             applicationTenancy = applicationTenancyRepository.findByPath(ApplicationTenancy_enum.Gb.getPath());
             seller = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
             buyer = OrganisationAndComms_enum.PoisonGb.findUsing(serviceRegistry);
@@ -535,13 +524,13 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         LocalDate itemEndDate;
 
         @Test
-        public void importInvoiceLine() throws Exception {
+        public void importInvoiceLine() {
 
             // given
             leaseReference = Lease_enum.OxfPoison003Gb.getRef();
-            dueDate = new LocalDate(2016, 07, 01);
-            itemStartDate = new LocalDate(2015, 01, 01);
-            itemEndDate = new LocalDate(2015, 12, 31);
+            dueDate = VT.ld(2016, 7, 1);
+            itemStartDate = VT.ld(2015, 1, 1);
+            itemEndDate = VT.ld(2015, 12, 31);
             paymentMethodStr = "DIRECT_DEBIT";
             itemChargeReference = Charge_enum.ItServiceCharge.getRef();
             itemDescription = "Some description";
