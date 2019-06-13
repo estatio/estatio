@@ -31,7 +31,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.base.dom.UdoDomainService;
-import org.estatio.module.invoice.dom.Constants;
+import org.estatio.module.invoice.dom.InvoiceRoleTypeEnum;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(
@@ -80,7 +80,7 @@ public class PartySubscriptionsForOrders extends UdoDomainService<PartySubscript
         case EXECUTING:
             Party sourceParty = ev.getSource();
             if (orderRepository.findBySellerParty(sourceParty).size() > 0) {
-                sourceParty.addRole(Constants.InvoiceRoleTypeEnum.SELLER);
+                sourceParty.addRole(InvoiceRoleTypeEnum.SELLER);
                 sourceParty.addRole(IncomingInvoiceRoleTypeEnum.SUPPLIER);
             }
             break;

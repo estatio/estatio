@@ -18,18 +18,12 @@ package org.estatio.module.invoice.dom;
 
 import org.estatio.module.party.dom.role.IPartyRoleType;
 
-public final class Constants {
-    
-    private Constants(){}
+public enum InvoiceRoleTypeEnum implements IPartyRoleType {
 
-    public enum InvoiceRoleTypeEnum implements IPartyRoleType {
+    BUYER,
+    SELLER;
 
-        BUYER,
-        SELLER;
-
-        @Override public String getKey() {
-            return this.name();
-        }
+    @Override public String getKey() {
+        return this.name();
     }
-
 }
