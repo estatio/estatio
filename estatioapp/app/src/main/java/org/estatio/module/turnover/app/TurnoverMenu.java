@@ -57,11 +57,7 @@ public class TurnoverMenu  {
     @Action
     public void createEmptyTurnoversForPeriod(final LocalDate startDate, final LocalDate endDate){
         if (!endDate.isBefore(startDate)){
-            LocalDate date = startDate;
-            while (!date.isAfter(endDate)){
-                turnoverEntryService.produceEmptyTurnoversFor(date);
-                date = date.plusDays(1);
-            }
+            turnoverEntryService.produceEmptyTurnoversForPeriod(startDate, endDate);
         }
     }
 

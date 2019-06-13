@@ -25,6 +25,14 @@ import org.estatio.module.turnover.dom.Type;
 @DomainService(nature = NatureOfService.DOMAIN)
 public class TurnoverEntryService {
 
+    public void produceEmptyTurnoversForPeriod(final LocalDate startDate, final LocalDate endDate){
+        LocalDate date = startDate;
+        while (!date.isAfter(endDate)){
+            produceEmptyTurnoversFor(date);
+            date = date.plusDays(1);
+        }
+    }
+
     public void produceEmptyTurnoversFor(final LocalDate date) {
         turnoverReportingConfigRepository.findAllActiveOnDate(date).forEach(
                 c->c.produceEmptyTurnover(date)
