@@ -62,18 +62,18 @@ public class NumeratorForOutgoingInvoicesMenu extends UdoDomainService<Numerator
     public Numerator findCollectionNumberNumerator() {
         return numeratorRepository.findCollectionNumberNumerator();
     }
-    
+
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3")
     public Numerator findInvoiceNumberNumerator(
-            final FixedAsset fixedAsset,
+            final Property property,
             final Party seller) {
-        return numeratorRepository.findInvoiceNumberNumerator(fixedAsset, seller);
+        return numeratorRepository.findInvoiceNumberNumerator(property, seller);
     }
 
-    public List<Party> choices1FindInvoiceNumberNumerator(final FixedAsset fixedAsset) {
-        return allOwnersOf(fixedAsset);
+    public List<Party> choices1FindInvoiceNumberNumerator(final Property property) {
+        return allOwnersOf(property);
     }
 
 
@@ -92,12 +92,17 @@ public class NumeratorForOutgoingInvoicesMenu extends UdoDomainService<Numerator
     }
 
     public String default2CreateInvoiceNumberNumerator(final Property property) {
-        return (property != null ? property.getReference() : "XXX") +  "-%06d";
+        return invoiceNumberPrefixFor(property) +  "-%06d";
     }
 
     public BigInteger default3CreateInvoiceNumberNumerator() {
         return BigInteger.ZERO;
     }
+
+    private static String invoiceNumberPrefixFor(final Property property) {
+        return property != null ? property.getReference() : "XXX";
+    }
+
 
 
 
