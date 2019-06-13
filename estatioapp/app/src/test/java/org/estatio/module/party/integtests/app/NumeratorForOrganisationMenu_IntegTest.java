@@ -66,23 +66,24 @@ public class NumeratorForOrganisationMenu_IntegTest extends PartyModuleIntegTest
 
         applicationTenancy = ApplicationTenancy_enum.Gb.findUsing(serviceRegistry);
         assertThat(applicationTenancy).isNotNull();
-
-        List<Numerator> numerators = numeratorRepository.allNumerators();
-        assertThat(numerators).isEmpty();
     }
 
     @Test
     public void create_and_find() throws Exception {
 
+        // given
+        List<Numerator> numerators = numeratorRepository.allNumerators();
+        assertThat(numerators).isEmpty();
+
         // when
-        final Numerator numeratorBefore = numeratorForOrganisationMenu
+        final Numerator numeratorBefore = wrap(numeratorForOrganisationMenu)
                 .findOrganisationReferenceNumerator(applicationTenancy);
 
         // then
         assertThat(numeratorBefore).isNull();
 
         // when
-        final Numerator numerator = numeratorForOrganisationMenu
+        final Numerator numerator = wrap(numeratorForOrganisationMenu)
                 .createOrganisationReferenceNumerator(format, lastIncrement, applicationTenancy);
 
         // then
@@ -90,17 +91,20 @@ public class NumeratorForOrganisationMenu_IntegTest extends PartyModuleIntegTest
         assertThat(numerator.getApplicationTenancy()).isSameAs(applicationTenancy);
         assertThat(numerator.getFormat()).isEqualTo(format);
         assertThat(numerator.getLastIncrement()).isEqualTo(lastIncrement);
-
-        // ... the organisation isn't persisted though... it's merely used
         assertThat(numerator.getObjectType()).isNull();
         assertThat(numerator.getObjectIdentifier()).isNull();
 
         // when
-        final Numerator numeratorAfter = numeratorForOrganisationMenu
+        final Numerator numeratorAfter = wrap(numeratorForOrganisationMenu)
                 .findOrganisationReferenceNumerator(applicationTenancy);
 
         // then
         assertThat(numeratorAfter).isSameAs(numerator);
+
+        // given
+        List<Numerator> numeratorsFromRepoAfter = numeratorRepository.allNumerators();
+        assertThat(numeratorsFromRepoAfter).hasSize(1);
+        assertThat(numeratorsFromRepoAfter.get(0)).isSameAs(numerator);
     }
 
 }
