@@ -3,6 +3,7 @@ package org.estatio.module.party.imports;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,13 +12,13 @@ import lombok.Setter;
         objectType = "org.estatio.dom.viewmodels.ChamberOfCommerceImportLine"
 )
 @Getter @Setter
+@AllArgsConstructor
 public class ChamberOfCommerceImportLine {
-
-    public ChamberOfCommerceImportLine() {
-    }
 
     private String reference;
 
     private String code;
+
+    private String properties;
 
 }
