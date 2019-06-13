@@ -200,6 +200,15 @@ public class Numerator
 
     // //////////////////////////////////////
 
+    @NotPersistent
+    public Object getObject() {
+        return isScoped() ? this.bookmarkService.lookup(this::bookmark) : null;
+    }
+
+    private Bookmark bookmark() {
+        return isScoped() ? new Bookmark(getObjectType(), getObjectIdentifier()) : null;
+    }
+
     /**
      * The {@link Bookmark#getIdentifier() identifier} of the first object to which
      * this {@link Numerator} belongs.
@@ -225,17 +234,15 @@ public class Numerator
 
     // //////////////////////////////////////
 
-    @NotPersistent
-    public Object getObject() {
-        return isScoped() ? this.bookmarkService.lookup(this::bookmark) : null;
-    }
 
     @NotPersistent
     public Object getObject2() {
         return isScoped2() ? this.bookmarkService.lookup(this::bookmark2) : null;
     }
 
-    // //////////////////////////////////////
+    private Bookmark bookmark2() {
+        return isScoped2() ? new Bookmark(getObjectType2(), getObjectIdentifier2()) : null;
+    }
 
     @javax.jdo.annotations.NotPersistent
     @Property(notPersisted = true)
@@ -320,24 +327,7 @@ public class Numerator
     String format(final BigInteger n) {
         return String.format(getFormat(), n);
     }
-    
 
-    public Numerator changeParameters(
-            final String format,
-            final BigInteger lastIncrement
-            ) {
-        setFormat(format);
-        setLastIncrement(lastIncrement);
-        return this;
-    }
-
-    public String default0ChangeParameters() {
-        return getFormat();
-    }
-
-    public BigInteger default1ChangeParameters() {
-        return getLastIncrement();
-    }
 
     // //////////////////////////////////////
 
@@ -376,34 +366,22 @@ public class Numerator
 
     // //////////////////////////////////////
 
-    private Bookmark bookmark() {
-        return isScoped() ? new Bookmark(getObjectType(), getObjectIdentifier()) : null;
-    }
-    private Bookmark bookmark2() {
-        return isScoped2() ? new Bookmark(getObjectType2(), getObjectIdentifier2()) : null;
-    }
 
     @NotPersistent
     @Inject
-    private BookmarkService bookmarkService;
+    BookmarkService bookmarkService;
 
 
     // //////////////////////////////////////
 
     public static class FormatType {
-
         private FormatType() {}
-
         public static class Meta {
-
             /**
              * {@link ReferenceType.Meta#MAX_LEN} plus a few chars
              */
             public final static int MAX_LEN = 30;
-
             private Meta() {}
-
         }
-
     }
 }
