@@ -105,8 +105,10 @@ public class NumeratorForOrderNumberMenu_IntegTest extends CapexModuleIntegTestA
         // then
         assertThat(numerator).isNotNull();
         assertThat(numerator.getApplicationTenancy()).isSameAs(selectedParty.getApplicationTenancy());
+        assertThat(numerator.getName()).isEqualTo("Order number");
         assertThat(numerator.getFormat()).isEqualTo(format);
         assertThat(numerator.getLastIncrement()).isEqualTo(lastIncrement);
+
 
         final Bookmark bookmark = bookmarkService.bookmarkFor(selectedParty);
         assertThat(numerator.getObjectType()).isEqualTo(bookmark.getObjectType());

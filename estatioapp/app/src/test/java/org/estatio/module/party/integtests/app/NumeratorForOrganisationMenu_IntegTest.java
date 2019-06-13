@@ -88,11 +88,13 @@ public class NumeratorForOrganisationMenu_IntegTest extends PartyModuleIntegTest
 
         // then
         assertThat(numerator).isNotNull();
+        assertThat(numerator.getName()).isEqualTo("Reference for organisation");
         assertThat(numerator.getApplicationTenancy()).isSameAs(applicationTenancy);
         assertThat(numerator.getFormat()).isEqualTo(format);
         assertThat(numerator.getLastIncrement()).isEqualTo(lastIncrement);
         assertThat(numerator.getObjectType()).isNull();
         assertThat(numerator.getObjectIdentifier()).isNull();
+
 
         // when
         final Numerator numeratorAfter = wrap(numeratorForOrganisationMenu)

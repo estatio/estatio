@@ -16,41 +16,38 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.capex.integtests.app.taskreminder;
+package org.estatio.module.capex.integtests.project;
 
 import java.math.BigInteger;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.bookmark.Bookmark;
-import org.apache.isis.applib.services.bookmark.BookmarkService;
+import org.apache.isis.applib.services.sudo.SudoService;
 
 import org.isisaddons.module.fakedata.dom.FakeDataService;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.module.capex.app.taskreminder.NumeratorForOrderNumberMenu;
-import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
+
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
+import org.estatio.module.capex.app.ProjectMenu;
+import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
-import org.estatio.module.party.dom.Organisation;
-import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NumeratorForOrderNumberMenu_IntegTest extends CapexModuleIntegTestAbstract {
-
-    private final String format = "GBFO-%04d";
-    private final BigInteger lastIncrement = BigInteger.ZERO;
-
+public class ProjectMenu_IntegTest extends CapexModuleIntegTestAbstract {
 
     @Inject
-    NumeratorForOrderNumberMenu numeratorForOrderNumberMenu;
+    ProjectMenu projectMenu;
 
     @Inject
     NumeratorRepository numeratorRepository;
@@ -59,69 +56,81 @@ public class NumeratorForOrderNumberMenu_IntegTest extends CapexModuleIntegTestA
     FakeDataService fakeDataService;
 
     @Inject
-    BookmarkService bookmarkService;
+    SudoService sudoService;
+
+    private ApplicationTenancy itaAppTenancy;
 
     @Before
     public void setupData() {
+        itaAppTenancy = ApplicationTenancy_enum.It.findUsing(serviceRegistry);
         runFixtureScript(new FixtureScript() {
-            @Override
-            protected void execute(ExecutionContext ec) {
-
-                // we set up 4 orgs of a variety of countries, but this functionality only applies to Italian.
-                final Organisation_enum[] orgs = {
-                        Organisation_enum.HelloWorldIt,
-                        Organisation_enum.HelloWorldGb,
-                        Organisation_enum.HelloWorldFr,
-                        Organisation_enum.HelloWorldIt01
-                };
-
-                for (final Organisation_enum org : orgs) {
-                    ec.executeChild(this, org);
-                    org.findUsing(serviceRegistry).addRole(IncomingInvoiceRoleTypeEnum.ECP);
-                }
+            @Override protected void execute(final ExecutionContext ec) {
+                ec.executeChild(this, Person_enum.LoredanaPropertyInvoiceMgrIt);
             }
         });
     }
 
     @Test
-    public void create_for_Italy_only() {
+    public void scenario_for_italy() {
 
         // given
         List<Numerator> numerators = numeratorRepository.allNumerators();
         assertThat(numerators).isEmpty();
 
-        // when
-        final List<Party> parties = numeratorForOrderNumberMenu.choices0CreateOrderNumberNumerator();
-
-        // then only the Italian parties are available.
-        assertThat(parties).hasSize(2);
-        assertThat(parties).extracting(Party::getApplicationTenancyPath).containsOnly("/ITA");
+        // when, then
+        final List<Project> projectsBefore = projectMenu.allProjects();
+        assertThat(projectsBefore).isEmpty();
 
         // when
-        final Organisation selectedParty = (Organisation) fakeDataService.collections().anyOf(parties);
-        final Numerator numerator =
-                wrap(numeratorForOrderNumberMenu).createOrderNumberNumerator(selectedParty, format, lastIncrement);
+        String projName = fakeDataService.strings().upper(20);
+        final LocalDate startDate = fakeDataService.jodaLocalDates().any();
+        final LocalDate endDate = startDate.plusDays(fakeDataService.jodaPeriods().yearsBetween(1, 5).getDays());
+
+        final Project project = sudoService.sudo(Person_enum.LoredanaPropertyInvoiceMgrIt.getRef().toLowerCase(),
+                () -> wrap(projectMenu).newProjectItaly(projName, startDate, endDate)
+        );
+        transactionService.nextTransaction();
 
         // then
-        assertThat(numerator).isNotNull();
-        assertThat(numerator.getApplicationTenancy()).isSameAs(selectedParty.getApplicationTenancy());
-        assertThat(numerator.getFormat()).isEqualTo(format);
-        assertThat(numerator.getLastIncrement()).isEqualTo(lastIncrement);
+        assertThat(project.getApplicationTenancy()).isEqualTo(itaAppTenancy);
+        assertThat(project.getName()).isEqualTo(projName);
+        assertThat(project.getStartDate()).isEqualTo(startDate);
+        assertThat(project.getEndDate()).isEqualTo(endDate);
+        assertThat(project.getReference()).isEqualTo("ITPR001");
 
-        final Bookmark bookmark = bookmarkService.bookmarkFor(selectedParty);
-        assertThat(numerator.getObjectType()).isEqualTo(bookmark.getObjectType());
-        assertThat(numerator.getObjectIdentifier()).isEqualTo(bookmark.getIdentifier());
+        final List<Project> projectsAfter = projectMenu.allProjects();
+        assertThat(projectsAfter).hasSize(1);
+        assertThat(projectsAfter.get(0)).isSameAs(project);
+
+        // and also
+        final List<Numerator> numeratorsAfter = numeratorRepository.allNumerators();
+        assertThat(numeratorsAfter).hasSize(1);
+        final Numerator numerator = numeratorsAfter.get(0);
+        assertThat(numerator.getFormat()).isEqualTo("ITPR%03d");
+        assertThat(numerator.getApplicationTenancyPath()).isEqualTo("/ITA");
+        assertThat(numerator.getName()).isEqualTo("Project number");
 
         // when
-        final Numerator numeratorAfter =
-                wrap(numeratorForOrderNumberMenu).createOrderNumberNumerator(selectedParty, format, lastIncrement);
+        final String projName2 = fakeDataService.strings().upper(20);
+        final Project project2 = sudoService.sudo(Person_enum.LoredanaPropertyInvoiceMgrIt.getRef().toLowerCase(),
+                () -> wrap(projectMenu).newProjectItaly(projName2, null, null)
+        );
+        transactionService.nextTransaction();
 
         // then
-        assertThat(numeratorAfter).isSameAs(numerator);
+        assertThat(project2.getApplicationTenancy()).isEqualTo(itaAppTenancy);
+        assertThat(project2.getName()).isEqualTo(projName2);
+        assertThat(project2.getStartDate()).isNull();
+        assertThat(project2.getEndDate()).isNull();
+        assertThat(project2.getReference()).isEqualTo("ITPR002");
 
-        List<Numerator> numeratorsFromRepoAfter = numeratorRepository.allNumerators();
-        assertThat(numeratorsFromRepoAfter).hasSize(1);
-        assertThat(numeratorsFromRepoAfter.get(0)).isSameAs(numerator);
+        final List<Project> projectsAfter2 = projectMenu.allProjects();
+        assertThat(projectsAfter2).hasSize(2);
+        assertThat(projectsAfter2.get(1)).isSameAs(project2);
+
+        // then
+        final List<Numerator> numeratorsAfter2 = numeratorRepository.allNumerators();
+        assertThat(numeratorsAfter2).hasSize(1);
 
     }
 
