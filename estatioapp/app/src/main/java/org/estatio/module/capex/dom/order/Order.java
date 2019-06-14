@@ -193,6 +193,12 @@ import static org.estatio.module.capex.dom.util.CountryUtil.isItalian;
                         + "WHERE seller == :seller "
                         + "&& :approvalStates.contains(approvalState)"),
         @Query(
+                name = "findBySellerAndApprovalStateIsNull", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.order.Order "
+                        + "WHERE seller == :seller "
+                        + "&& approvalState == null"),
+        @Query(
                 name = "findByProperty", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.order.Order "

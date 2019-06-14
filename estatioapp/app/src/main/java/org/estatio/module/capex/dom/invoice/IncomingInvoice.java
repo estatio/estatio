@@ -230,6 +230,13 @@ import lombok.Setter;
                         + "&& :approvalStates.contains(approvalState)"
         ),
         @Query(
+                name = "findBySellerAndApprovalStateIsNull", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE seller == :seller "
+                        + "&& approvalState == null"
+        ),
+        @Query(
                 name = "findPayableByBankTransferAndDueDateBetween", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "

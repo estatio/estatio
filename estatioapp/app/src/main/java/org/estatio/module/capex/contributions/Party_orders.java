@@ -2,6 +2,8 @@ package org.estatio.module.capex.contributions;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
@@ -31,7 +33,10 @@ public class Party_orders {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<Order> $$() {
-        return orderRepository.findBySellerPartyAndApprovalStates(party, Arrays.asList(OrderApprovalState.NEW, OrderApprovalState.APPROVED, null));
+        List<Order> newAndApproved = orderRepository.findBySellerPartyAndApprovalStates(party, Arrays.asList(OrderApprovalState.NEW, OrderApprovalState.APPROVED));
+        List<Order> approvalStateNull = orderRepository.findBySellerPartyAndApprovalStateIsNull(party);
+
+        return Stream.concat(newAndApproved.stream(), approvalStateNull.stream()).collect(Collectors.toList());
     }
 
     @Inject

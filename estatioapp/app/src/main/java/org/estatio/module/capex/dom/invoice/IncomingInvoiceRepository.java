@@ -255,6 +255,15 @@ public class IncomingInvoiceRepository {
     }
 
     @Programmatic
+    public List<IncomingInvoice> findBySellerAndApprovalStateIsNull(final Party seller) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoice.class,
+                        "findBySellerAndApprovalStateIsNull",
+                        "seller", seller));
+    }
+
+    @Programmatic
     public List<IncomingInvoice> findCompletedOrLaterWithItemsByReportedDate(final LocalDate reportedDate) {
 
         // equivalent to:

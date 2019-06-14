@@ -3,6 +3,8 @@ package org.estatio.module.capex.contributions;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
@@ -33,7 +35,10 @@ public class Party_invoicesFrom {
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<IncomingInvoice> coll() {
         EnumSet<IncomingInvoiceApprovalState> allStatesExceptDiscarded = EnumSet.complementOf(EnumSet.of(IncomingInvoiceApprovalState.DISCARDED));
-        return incomingInvoiceRepository.findBySellerAndApprovalStates(seller, new ArrayList<>(allStatesExceptDiscarded));
+        List<IncomingInvoice> allInvoicesNotDiscardedOrNull = incomingInvoiceRepository.findBySellerAndApprovalStates(seller, new ArrayList<>(allStatesExceptDiscarded));
+        List<IncomingInvoice> allInvoicesApprovalStateNull = incomingInvoiceRepository.findBySellerAndApprovalStateIsNull(seller);
+
+        return Stream.concat(allInvoicesNotDiscardedOrNull.stream(), allInvoicesApprovalStateNull.stream()).collect(Collectors.toList());
     }
 
     @Inject

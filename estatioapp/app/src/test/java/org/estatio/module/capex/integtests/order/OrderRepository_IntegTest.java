@@ -2,6 +2,8 @@ package org.estatio.module.capex.integtests.order;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
@@ -93,13 +95,17 @@ public class OrderRepository_IntegTest extends CapexModuleIntegTestAbstract {
             Order orderMade4 = orderRepository.create(property, "012", sellerOrderReference, orderDate.plusDays(7),
                     orderDate.plusDays(1), seller, null, null, "/GBR", null);
 
+            orderMade4.setApprovalState(null); // for some reason, creating through repository with null value sets the state to NEW anyway.
+
             assertThat(orderRepository.findBySeller(seller)).contains(orderMade1, orderMade2, orderMade3, orderMade4);
 
             // when
-            List<Order> ordersByApprovalState = orderRepository.findBySellerPartyAndApprovalStates(seller, Arrays.asList(OrderApprovalState.NEW, OrderApprovalState.APPROVED, null));
+            List<Order> ordersByApprovalState = orderRepository.findBySellerPartyAndApprovalStates(seller, Arrays.asList(OrderApprovalState.NEW, OrderApprovalState.APPROVED));
+            List<Order> ordersNullApprovalState = orderRepository.findBySellerPartyAndApprovalStateIsNull(seller);
+            List<Order> total = Stream.concat(ordersByApprovalState.stream(), ordersNullApprovalState.stream()).collect(Collectors.toList());
 
             // then
-            assertThat(ordersByApprovalState).contains(orderMade1, orderMade2, orderMade4);
+            assertThat(total).contains(orderMade1, orderMade2, orderMade4);
         }
     }
 
