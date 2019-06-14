@@ -2,7 +2,6 @@ package org.estatio.module.party.imports;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -28,6 +27,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.dom.LeaseStatus;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.PartyRepository;
@@ -72,15 +72,21 @@ public class ImportChamberOfCommerceCodesService {
                 )
                 .map(org -> {
                     AgreementRoleType tenantType = agreementRoleTypeRepository.find(LeaseAgreementRoleTypeEnum.TENANT);
-                    String propertyNamesIfAny = agreementRoleRepository.findByPartyAndType(org, tenantType)
+                    String propertiesIfAnyWithLeaseStatus = agreementRoleRepository.findByPartyAndType(org, tenantType)
                             .stream()
-                            .map(role -> ((Lease) role.getAgreement()).getProperty())
-                            .filter(Objects::nonNull)
-                            .map(Property::getName)
+                            .map(role -> ((Lease) role.getAgreement()))
+                            .map(lease -> {
+                                LeaseStatus status = lease.getStatus();
+                                Property propertyIfAny = lease.getProperty();
+
+                                return propertyIfAny != null ?
+                                        String.format("%s [%s]", propertyIfAny.getName(), status.title()) :
+                                        status.title();
+                            })
                             .distinct()
                             .collect(Collectors.joining(", "));
 
-                    return new ChamberOfCommerceImportLine(org.getReference(), org.getName(), propertyNamesIfAny);
+                    return new ChamberOfCommerceImportLine(org.getReference(), org.getName(), propertiesIfAnyWithLeaseStatus);
                 })
                 .collect(Collectors.toList());
     }
