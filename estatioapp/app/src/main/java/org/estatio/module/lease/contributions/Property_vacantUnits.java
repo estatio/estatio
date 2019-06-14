@@ -39,7 +39,7 @@ import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 
-@Mixin
+@Mixin(method = "coll")
 public class Property_vacantUnits {
 
     final private Property property;
@@ -50,7 +50,7 @@ public class Property_vacantUnits {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<Unit> $$() {
+    public List<Unit> coll() {
         final LocalDate now = clockService.now();
         final List<Unit> occupiedUnits = occupiedUnits();
         return unitRepository.findByProperty(property)

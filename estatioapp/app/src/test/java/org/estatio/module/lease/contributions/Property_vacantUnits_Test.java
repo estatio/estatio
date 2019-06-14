@@ -1,17 +1,20 @@
 package org.estatio.module.lease.contributions;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
+import org.incode.module.base.integtests.VT;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.Unit;
@@ -19,116 +22,123 @@ import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class Property_vacantUnits_Test {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
 
     @Mock OccupancyRepository mockOccupancyRepository;
+    @Mock UnitRepository mockUnitRepository;
 
     @Mock ClockService mockClockService;
+
+    Property_vacantUnits mixin;
+
+    Property property;
+    Unit unit1;
+    Unit unit2;
+
+    Occupancy occupancy1;
+    Occupancy occupancy2;
+
+    LocalDate now;
+
+    @Before
+    public void setUp() throws Exception {
+
+        property = new Property();
+        unit1 = new Unit();
+        unit2 = new Unit();
+
+        context.checking(new Expectations(){{
+            allowing(mockUnitRepository).findByProperty(property);
+            will(returnValue(Arrays.asList(unit1, unit2)));
+        }});
+
+        occupancy1 = new Occupancy();
+        occupancy1.setUnit(unit1);
+        occupancy2 = new Occupancy();
+        occupancy1.setUnit(unit2);
+
+
+        mixin = new Property_vacantUnits(property);
+        mixin.occupancyRepository = mockOccupancyRepository;
+        mixin.unitRepository = mockUnitRepository;
+        mixin.clockService = mockClockService;
+
+
+        now = VT.ld(2017, 1, 1);
+        context.checking(new Expectations(){{
+            allowing(mockClockService).now();
+            will(returnValue(now));
+        }});
+    }
 
     @Test
     public void occupiedUnits() throws Exception {
 
         // given
-        Property property = new Property();
-        Unit unit1 = new Unit();
-        Unit unit2 = new Unit();
-        Property_vacantUnits mixin = new Property_vacantUnits(property);
-        mixin.occupancyRepository = mockOccupancyRepository;
-        mixin.clockService = mockClockService;
+        context.checking(new Expectations(){{
+            allowing(mockOccupancyRepository).findByProperty(property);
+            will(returnValue(Arrays.asList(occupancy1, occupancy2)));
+        }});
 
         // when
-        Occupancy occupancy1 = new Occupancy();
-        occupancy1.setUnit(unit1);
-        Occupancy occupancy2 = new Occupancy();
-        occupancy1.setUnit(unit2);
-
-        // expect
-        context.checking(new Expectations(){{
-            oneOf(mockOccupancyRepository).findByProperty(property);
-            will(returnValue(Arrays.asList(occupancy1, occupancy2)));
-        }});
+        final List<Unit> units = mixin.occupiedUnits();
 
         // then
-        Assertions.assertThat(mixin.occupiedUnits().size()).isEqualTo(2);
+        assertThat(units.size()).isEqualTo(2);
 
-        // and when
-        LocalDate now = new LocalDate(2017,01,01);
+        // given
         occupancy1.setEndDate(now);
+
+        // when
         occupancy2.setEndDate(now.plusDays(1));
 
-        // expect
-        context.checking(new Expectations(){{
-            oneOf(mockOccupancyRepository).findByProperty(property);
-            will(returnValue(Arrays.asList(occupancy1, occupancy2)));
-            allowing(mockClockService).now();
-            will(returnValue(now));
-        }});
-
         // then
-        Assertions.assertThat(mixin.occupiedUnits().size()).isEqualTo(1);
+        assertThat(mixin.occupiedUnits().size()).isEqualTo(1);
 
     }
-
-    @Mock UnitRepository mockUnitRepository;
 
     @Test
     public void vacant_Units_works() throws Exception {
 
         // given
-        Property property = new Property();
-        Unit unit1 = new Unit();
-        Unit unit2 = new Unit();
-        Property_vacantUnits mixin = new Property_vacantUnits(property);
-        mixin.unitRepository = mockUnitRepository;
-        mixin.occupancyRepository = mockOccupancyRepository;
-        mixin.clockService = mockClockService;
-        LocalDate now = new LocalDate(2017,01,01);
-
-        // expect
         context.checking(new Expectations(){{
             allowing(mockOccupancyRepository).findByProperty(property);
-            oneOf(mockUnitRepository).findByProperty(property);
-            will(returnValue(Arrays.asList(unit1, unit2)));
+            will(returnValue(Collections.emptyList()));
         }});
+
         // when
-        List<Unit> expectedVacantUnits = mixin.$$();
+        List<Unit> expectedVacantUnits = mixin.coll();
+
         // then
-        Assertions.assertThat(expectedVacantUnits.size()).isEqualTo(2);
+        assertThat(expectedVacantUnits.size()).isEqualTo(2);
 
 
-        // and expect
-        context.checking(new Expectations(){{
-            allowing(mockOccupancyRepository).findByProperty(property);
-            oneOf(mockUnitRepository).findByProperty(property);
-            will(returnValue(Arrays.asList(unit1, unit2)));
-            oneOf(mockClockService).now();
-            will(returnValue(now));
-        }});
-        // when
+
+        // given
         unit1.setEndDate(now.plusDays(1));
-        expectedVacantUnits = mixin.$$();
-        // then
-        Assertions.assertThat(expectedVacantUnits.size()).isEqualTo(2);
 
-
-        // and expect
-        context.checking(new Expectations(){{
-            allowing(mockOccupancyRepository).findByProperty(property);
-            oneOf(mockUnitRepository).findByProperty(property);
-            will(returnValue(Arrays.asList(unit1, unit2)));
-            oneOf(mockClockService).now();
-            will(returnValue(now));
-        }});
         // when
-        unit1.setEndDate(now);
-        expectedVacantUnits = mixin.$$();
-        // then
-        Assertions.assertThat(expectedVacantUnits.size()).isEqualTo(1);
-        Assertions.assertThat(expectedVacantUnits).doesNotContain(unit1);
+        expectedVacantUnits = mixin.coll();
 
+        // then
+        assertThat(expectedVacantUnits.size()).isEqualTo(2);
+
+
+
+        // and given
+        unit1.setEndDate(now);
+
+        // when
+        expectedVacantUnits = mixin.coll();
+
+        // then
+        assertThat(expectedVacantUnits.size()).isEqualTo(1);
+        assertThat(expectedVacantUnits).doesNotContain(unit1);
 
     }
 
