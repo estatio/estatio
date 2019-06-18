@@ -722,10 +722,7 @@ public class Lease
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public Lease newMandate(
             final BankAccount bankAccount,
-            @Parameter(
-                    regexPattern = ReferenceType.Meta.REGEX,
-                    regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION)
-            final String reference,
+            final @Parameter(regexPattern = org.incode.module.base.dom.types.ReferenceType.Meta.REGEX, regexPatternReplacement = org.incode.module.base.dom.types.ReferenceType.Meta.REGEX_DESCRIPTION) String reference,
             final LocalDate startDate,
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate,
             final SequenceType sequenceType,
