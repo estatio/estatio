@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.country.dom.impl.Country;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -81,20 +82,6 @@ public class Numerator_Test {
         }
     }
 
-    public static class AppTenancyPathAdaption extends Numerator_Test {
-
-        @Test
-        public void appTenancyPathWithWildCardIsSetToParent() {
-
-            //when
-            numerator.setApplicationTenancyPath("/FRA/%/FR03");
-
-            //then
-            assertEquals(numerator.adaptedAppPathIfNeeded(), "/FRA");
-        }
-
-    }
-
 
     public static class BeanProperties extends AbstractBeanPropertiesTest {
 
@@ -103,6 +90,7 @@ public class Numerator_Test {
             newPojoTester()
                     .withFixture(pojos(PropertyForTest.class))
                     .withFixture(pojos(ApplicationTenancy.class))
+                    .withFixture(pojos(Country.class))
                     .exercise(new Numerator());
         }
 

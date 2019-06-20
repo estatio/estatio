@@ -19,19 +19,20 @@
 package org.estatio.module.numerator.integtests;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.setup.PersonaEnumPersistAll;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
+import org.incode.module.country.dom.impl.Country;
+import org.incode.module.country.fixtures.enums.Country_enum;
 
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
@@ -44,171 +45,208 @@ public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstr
 
     @Inject
     NumeratorRepository numeratorRepository;
-    @Inject
-    ApplicationTenancyRepository applicationTenancyRepository;
 
     NumeratorExampleObject exampleObjectOxf;
     NumeratorExampleObject exampleObjectKal;
 
-    ApplicationTenancy applicationTenancyOxf;
-    ApplicationTenancy applicationTenancyKal;
+    Country countryGbr;
+    Country countryNld;
+
+    ApplicationTenancy applicationTenancyGlobal;
+    ApplicationTenancy applicationTenancyGb;
+    ApplicationTenancy applicationTenancyNl;
+
+    static final String NAME = "ABC";
+    static final String NAME2 = "DEF";
+
+    static final String FORMAT = "ABC-%04d";
+    static final String FORMAT2 = "DEF-%06d";
 
     @Before
     public void setUp() throws Exception {
         runFixtureScript(new PersonaEnumPersistAll<>(NumeratorExampleObject_enum.class));
-        runFixtureScript(new FixtureScript() {
-            @Override
-            protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, ApplicationTenancy_enum.NlKal);
-                executionContext.executeChild(this, ApplicationTenancy_enum.GbOxf);
-            }
-        });
+        runFixtureScript(new PersonaEnumPersistAll<>(Country_enum.class));
+        runFixtureScript(new PersonaEnumPersistAll<>(ApplicationTenancy_enum.class));
 
-        applicationTenancyKal = ApplicationTenancy_enum.NlKal.findUsing(serviceRegistry);
-        applicationTenancyOxf = ApplicationTenancy_enum.GbOxf.findUsing(serviceRegistry);
+        countryNld = Country_enum.NLD.findUsing(serviceRegistry);
+        countryGbr = Country_enum.GBR.findUsing(serviceRegistry);
+
+        applicationTenancyGlobal = ApplicationTenancy_enum.Global.findUsing(serviceRegistry);
+        applicationTenancyNl = ApplicationTenancy_enum.Nl.findUsing(serviceRegistry);
+        applicationTenancyGb = ApplicationTenancy_enum.Gb.findUsing(serviceRegistry);
 
         exampleObjectKal = NumeratorExampleObject_enum.Kal.findUsing(serviceRegistry);
         exampleObjectOxf = NumeratorExampleObject_enum.Oxf.findUsing(serviceRegistry);
-    }
 
-    public static class AllNumerators extends NumeratorRepository_IntegTest {
-
-        @Test
-        public void whenExist() throws Exception {
-
-            numeratorRepository
-                    .createScopedNumerator("Invoice number", exampleObjectOxf, "ABC-%05d", new BigInteger("10"), applicationTenancyOxf);
-            numeratorRepository
-                    .createScopedNumerator("Invoice number", exampleObjectKal, "DEF-%05d", new BigInteger("100"), applicationTenancyKal);
-            numeratorRepository.createGlobalNumerator("Collection number", "ABC-%05d", new BigInteger("1000"), applicationTenancyOxf);
-
-            assertThat(numeratorRepository.allNumerators()).hasSize(3);
-        }
+        // given
+        final List<Numerator> numeratorsBefore = numeratorRepository.allNumerators();
+        assertThat(numeratorsBefore).isEmpty();
 
     }
 
-    public static class FindGlobalNumerator extends NumeratorRepository_IntegTest {
+    @Test
+    public void when_null_country() throws Exception {
 
-        @Test
-        public void whenExists() throws Exception {
+        // when
+        numeratorRepository.findOrCreate(
+                NAME, null, null, null, FORMAT, BigInteger.ZERO, applicationTenancyGlobal);
 
-            // given
-            numeratorRepository
-                    .createScopedNumerator("Invoice number", exampleObjectOxf, "ABC-%05d", new BigInteger("10"), applicationTenancyOxf);
-            numeratorRepository
-                    .createScopedNumerator("Invoice number", exampleObjectKal, "DEF-%05d", new BigInteger("100"), applicationTenancyKal);
-            numeratorRepository.createGlobalNumerator("Collection number", "ABC-%05d", new BigInteger("1000"), applicationTenancyOxf);
+        // then
+        final List<Numerator> numeratorsAfter = numeratorRepository.allNumerators();
+        assertThat(numeratorsAfter).hasSize(1);
+        final Numerator numerator = numeratorsAfter.get(0);
 
-            // when
-            Numerator in = numeratorRepository
-                    .findGlobalNumerator("Collection number", applicationTenancyOxf);
+        assertThat(numerator.getName()).isEqualTo(NAME);
+        assertThat(numerator.getCountry()).isNull();
+        assertThat(numerator.getObject()).isNull();
+        assertThat(numerator.getObject2()).isNull();
+        assertThat(numerator.getFormat()).isEqualTo(FORMAT);
+        assertThat(numerator.getApplicationTenancy()).isSameAs(applicationTenancyGlobal);
 
-            // then
-            assertThat(in.getLastIncrement()).isEqualTo(new BigInteger("1000"));
-        }
+        // and when
+        numeratorRepository.findOrCreate(
+                NAME, null, null, null, FORMAT, BigInteger.ZERO, applicationTenancyGlobal);
+
+        final List<Numerator> numeratorsAfter2 = numeratorRepository.allNumerators();
+        assertThat(numeratorsAfter2).hasSize(1);
+    }
+
+    @Test
+    public void when_non_null_country_but_null_objects() throws Exception {
+
+        // when
+        numeratorRepository.findOrCreate(
+                NAME, countryGbr, null, null, FORMAT, BigInteger.ZERO, applicationTenancyGb);
+
+        // then
+        final List<Numerator> numeratorsAfter = numeratorRepository.allNumerators();
+        assertThat(numeratorsAfter).hasSize(1);
+        final Numerator numerator = numeratorsAfter.get(0);
+
+        assertThat(numerator.getName()).isEqualTo(NAME);
+        assertThat(numerator.getCountry()).isSameAs(countryGbr);
+        assertThat(numerator.getObject()).isNull();
+        assertThat(numerator.getObject2()).isNull();
+        assertThat(numerator.getFormat()).isEqualTo(FORMAT);
+        assertThat(numerator.getApplicationTenancy()).isSameAs(applicationTenancyGb);
+
+
+        // and when
+        numeratorRepository.findOrCreate(
+                NAME, null, null, null, FORMAT, BigInteger.ZERO, applicationTenancyGb);
+
+        final List<Numerator> numeratorsAfter2 = numeratorRepository.allNumerators();
+        assertThat(numeratorsAfter2).hasSize(1);
+    }
+
+    @Test
+    public void when_non_null_object1() throws Exception {
+
+        // when
+        numeratorRepository.findOrCreate(
+                NAME, countryGbr, exampleObjectOxf, null, FORMAT, BigInteger.ZERO, applicationTenancyGb);
+
+        // then
+        final List<Numerator> numeratorsAfter = numeratorRepository.allNumerators();
+        assertThat(numeratorsAfter).hasSize(1);
+        final Numerator numerator = numeratorsAfter.get(0);
+
+        assertThat(numerator.getName()).isEqualTo(NAME);
+        assertThat(numerator.getCountry()).isSameAs(countryGbr);
+        assertThat(numerator.getObject()).isSameAs(exampleObjectOxf);
+        assertThat(numerator.getObject2()).isNull();
+        assertThat(numerator.getFormat()).isEqualTo(FORMAT);
+        assertThat(numerator.getApplicationTenancy()).isSameAs(applicationTenancyGb);
+
+
+        // and when
+        numeratorRepository.findOrCreate(
+                NAME, countryGbr, exampleObjectOxf, null, FORMAT, BigInteger.ZERO, applicationTenancyGb);
+
+        final List<Numerator> numeratorsAfter2 = numeratorRepository.allNumerators();
+        assertThat(numeratorsAfter2).hasSize(1);
 
     }
 
-    public static class FindScopedNumerator extends NumeratorRepository_IntegTest {
+    @Test
+    public void when_non_null_object1_and_non_null_object2() throws Exception {
 
-        @Test
-        public void whenExists() throws Exception {
+        // when
+        numeratorRepository.findOrCreate(
+                NAME, countryGbr, exampleObjectOxf, exampleObjectKal, FORMAT, BigInteger.ZERO, applicationTenancyGb);
 
-            // given
-            numeratorRepository
-                    .createScopedNumerator("Invoice number", exampleObjectOxf, "ABC-%05d", new BigInteger("10"), applicationTenancyOxf);
-            numeratorRepository
-                    .createScopedNumerator("Invoice number", exampleObjectKal, "DEF-%05d", new BigInteger("100"), applicationTenancyKal);
-            numeratorRepository.createGlobalNumerator("Collection number", "ABC-%05d", new BigInteger("1000"), applicationTenancyOxf);
+        // then
+        final List<Numerator> numeratorsAfter = numeratorRepository.allNumerators();
+        assertThat(numeratorsAfter).hasSize(1);
+        final Numerator numerator = numeratorsAfter.get(0);
 
-            // when
-            Numerator in = numeratorRepository
-                    .findScopedNumeratorIncludeWildCardMatching("Invoice number", exampleObjectOxf, applicationTenancyOxf);
+        assertThat(numerator.getName()).isEqualTo(NAME);
+        assertThat(numerator.getCountry()).isSameAs(countryGbr);
+        assertThat(numerator.getObject()).isSameAs(exampleObjectOxf);
+        assertThat(numerator.getObject2()).isSameAs(exampleObjectKal);
+        assertThat(numerator.getFormat()).isEqualTo(FORMAT);
+        assertThat(numerator.getApplicationTenancy()).isSameAs(applicationTenancyGb);
 
-            // then
-            assertThat(in.getLastIncrement()).isEqualTo(new BigInteger("10"));
-        }
 
-        ApplicationTenancy wildCardAppTenancy;
-        ApplicationTenancy appTenToBefound;
-        ApplicationTenancy appTenNotToBefound1;
-        ApplicationTenancy appTenNotToBefound2;
+        // and when
+        numeratorRepository.findOrCreate(
+                NAME, countryGbr, exampleObjectOxf, exampleObjectKal, FORMAT, BigInteger.ZERO, applicationTenancyGb);
 
-        @Test
-        public void withWildCard() throws Exception {
+        final List<Numerator> numeratorsAfter2 = numeratorRepository.allNumerators();
+        assertThat(numeratorsAfter2).hasSize(1);
+    }
 
-            // given
-            wildCardAppTenancy = applicationTenancyRepository.newTenancy("France/wildcard/FR03", "/FRA/%/FR03", null);
-            numeratorRepository
-                    .createScopedNumerator("Invoice number", exampleObjectKal, "AAA-%05d", new BigInteger("100"), wildCardAppTenancy);
+    @Test
+    public void when_different_scopes() throws Exception {
 
-            appTenToBefound = applicationTenancyRepository.newTenancy("France/property/FR03", "/FRA/ABC/FR03", null);
-            appTenNotToBefound1 = applicationTenancyRepository.newTenancy("France/property/FR02", "/FRA/ABC/FR02", null);
-            appTenNotToBefound2 = applicationTenancyRepository.newTenancy("France/no property", "/FRA", null);
+        // given
+        numeratorRepository.findOrCreate(
+                NAME, null, null, null, FORMAT, BigInteger.ZERO, applicationTenancyGlobal);
+        numeratorRepository.findOrCreate(
+                NAME2, null, null, null, FORMAT, BigInteger.ZERO, applicationTenancyGlobal);
 
-            // when
-            Numerator inToBeFound = numeratorRepository
-                    .findScopedNumeratorIncludeWildCardMatching("Invoice number", exampleObjectKal, appTenToBefound);
-            Numerator inNotToBeFound1 = numeratorRepository
-                    .findScopedNumeratorIncludeWildCardMatching("Invoice number", exampleObjectKal, appTenNotToBefound1);
-            Numerator inNotToBeFound2 = numeratorRepository
-                    .findScopedNumeratorIncludeWildCardMatching("Invoice number", exampleObjectKal, appTenNotToBefound2);
+        numeratorRepository.findOrCreate(
+                NAME, countryGbr, null, null, FORMAT, BigInteger.ZERO, applicationTenancyGb);
+        numeratorRepository.findOrCreate(
+                NAME, countryNld, null, null, FORMAT, BigInteger.ZERO, applicationTenancyGb);
 
-            // then
-            assertThat(inToBeFound.getLastIncrement()).isEqualTo(new BigInteger("100"));
-            assertThat(inNotToBeFound1).isNull();
-            assertThat(inNotToBeFound2).isNull();
+        numeratorRepository.findOrCreate(
+                NAME, countryGbr, exampleObjectOxf, null, FORMAT, BigInteger.ZERO, applicationTenancyGb);
+        numeratorRepository.findOrCreate(
+                NAME, countryGbr, exampleObjectKal, null, FORMAT, BigInteger.ZERO, applicationTenancyGb);
 
-        }
+        numeratorRepository.findOrCreate(
+                NAME, countryGbr, exampleObjectOxf, exampleObjectKal, FORMAT, BigInteger.ZERO, applicationTenancyGb);
+        numeratorRepository.findOrCreate(
+                NAME, countryGbr, exampleObjectKal, exampleObjectOxf, FORMAT, BigInteger.ZERO, applicationTenancyGb);
+
+        // when
+        final List<Numerator> numerators = numeratorRepository.allNumerators();
+
+        // then
+        assertThat(numerators).hasSize(8);
+
+
+        // when attempt to create again, with different format or lastIncrement or appTenancy
+        numeratorRepository.findOrCreate(
+                NAME, null, null, null, FORMAT2, BigInteger.ZERO, applicationTenancyGb);
+
+        numeratorRepository.findOrCreate(
+                NAME, countryGbr, null, null, FORMAT2, BigInteger.ZERO, applicationTenancyNl);
+
+        numeratorRepository.findOrCreate(
+                NAME, countryGbr, exampleObjectOxf, null, FORMAT2, BigInteger.ZERO, applicationTenancyNl);
+
+        numeratorRepository.findOrCreate(
+                NAME, countryGbr, exampleObjectOxf, exampleObjectKal, FORMAT2, BigInteger.ZERO, applicationTenancyNl);
+
+        final List<Numerator> numeratorsAfter = numeratorRepository.allNumerators();
+
+        // then
+        assertThat(numeratorsAfter).hasSize(8);
+        assertThat(numeratorsAfter).containsExactlyElementsOf(numerators);
 
     }
 
-    public static class Increment extends NumeratorRepository_IntegTest {
-
-        private Numerator scopedNumerator;
-        private Numerator scopedNumerator2;
-        private Numerator globalNumerator;
-
-        @Before
-        public void setUp() throws Exception {
-            super.setUp();
-
-            scopedNumerator = numeratorRepository
-                    .createScopedNumerator("Invoice number", exampleObjectOxf, "ABC-%05d", new BigInteger("10"), applicationTenancyOxf);
-            scopedNumerator2 = numeratorRepository
-                    .createScopedNumerator("Invoice number", exampleObjectKal, "DEF-%05d", new BigInteger("100"), applicationTenancyKal);
-            globalNumerator = numeratorRepository
-                    .createGlobalNumerator("Collection number", "ABC-%05d", new BigInteger("1000"), applicationTenancyOxf);
-
-        }
-
-        @Test
-        public void forScopedNumerator() throws Exception {
-
-            // given
-            assertThat(scopedNumerator.getLastIncrement()).isEqualTo(new BigInteger("10"));
-
-            // when
-            assertThat(scopedNumerator.nextIncrementStr()).isEqualTo("ABC-00011");
-
-            // then
-            assertThat(scopedNumerator.getLastIncrement()).isEqualTo(new BigInteger("11"));
-        }
-
-        @Test
-        public void forGlobalNumerator() throws Exception {
-
-            // givem
-            //globalNumerator = numeratorRepository.findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME);
-            assertThat(globalNumerator.getLastIncrement()).isEqualTo(new BigInteger("1000"));
-
-            // when
-            assertThat(globalNumerator.nextIncrementStr()).isEqualTo("ABC-01001");
-
-            // then
-            assertThat(globalNumerator.getLastIncrement()).isEqualTo(new BigInteger("1001"));
-        }
-
-    }
 
 }

@@ -26,7 +26,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.lease.dom.EstatioApplicationTenancyRepositoryForLease;
-import org.estatio.module.lease.dom.invoicing.NumeratorForCollectionRepository;
+import org.estatio.module.lease.dom.invoicing.NumeratorForOutgoingInvoicesRepository;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.party.dom.Party;
 
@@ -64,9 +64,9 @@ public final class PropertyOwnerNumeratorBuilder
         this.object =
                 estatioNumeratorRepository.createInvoiceNumberNumerator(
                         property,
+                        owner,
                         numeratorReferenceFor(property),
-                        bi(0),
-                        applicationTenancy);
+                        bi(0));
 
         ec.addResult(this, property.getReference(), object);
     }
@@ -76,7 +76,7 @@ public final class PropertyOwnerNumeratorBuilder
     }
 
     @Inject
-    NumeratorForCollectionRepository estatioNumeratorRepository;
+    NumeratorForOutgoingInvoicesRepository estatioNumeratorRepository;
 
     @Inject
     EstatioApplicationTenancyRepositoryForLease estatioApplicationTenancyRepository;

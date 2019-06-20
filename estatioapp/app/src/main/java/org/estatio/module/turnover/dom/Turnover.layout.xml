@@ -8,66 +8,74 @@
     </bs3:row>
     <bs3:row>
         <bs3:col span="4">
-            <bs3:tabGroup>
-                <bs3:tab name="Turnover">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Turnover date" id="date">
-                                <cpt:property id="date"/>
-                            </cpt:fieldSet>
-                            <cpt:fieldSet name="Entry" id="entry">
-                                <cpt:action id="enter"/>
-                                <cpt:property id="grossAmount"/>
-                                <cpt:property id="netAmount"/>
-                                <cpt:property id="purchaseCount"/>
-                                <cpt:property id="nonComparable"/>
-                                <cpt:property id="comments"/>
-                            </cpt:fieldSet>
-                            <cpt:fieldSet name="Reporting" id="reporting">
-                                <cpt:property id="reportedAt"/>
-                                <cpt:property id="reportedBy"/>
-                                <cpt:property id="status"/>
-                            </cpt:fieldSet>
-                            <cpt:fieldSet name="Turnover details" id="turnover">
-                                <cpt:property id="occupancy"/>
-                                <cpt:property id="config"/>
-                                <cpt:property id="frequency"/>
-                                <cpt:property id="type"/>
-                                <cpt:property id="currency"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Other">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Other" id="other" unreferencedProperties="true"/>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Application Level">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Application Tenancy" id="appTenancy">
-                                <cpt:property id="applicationTenancy"/>
-                                <cpt:property id="atPath" hidden="ALL_TABLES"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Metadata">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Metadata" id="metadata">
-                                <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                                <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                                <cpt:property id="datanucleusVersionLong"/>
-                                <cpt:property id="datanucleusVersionTimestamp"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-            </bs3:tabGroup>
+            <bs3:row>
+                <bs3:col span="12">
+                    <bs3:tabGroup>
+                        <bs3:tab name="General">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Turnover date" id="date">
+                                        <cpt:property id="date"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Other">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Other" id="other" unreferencedProperties="true"/>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Application Level">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Application Tenancy" id="appTenancy">
+                                        <cpt:property id="applicationTenancy" hidden="ALL_TABLES"/>
+                                        <cpt:property id="atPath" hidden="ALL_TABLES"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Metadata">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Metadata" id="metadata">
+                                        <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                        <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                        <cpt:property id="datanucleusVersionLong"/>
+                                        <cpt:property id="datanucleusVersionTimestamp"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                    </bs3:tabGroup>
+                </bs3:col>
+            </bs3:row>
+            <bs3:row>
+                <bs3:col span="12">
+                    <cpt:fieldSet name="Entry" id="entry">
+                        <cpt:action id="enter"/>
+                        <cpt:property id="grossAmount"/>
+                        <cpt:property id="netAmount"/>
+                        <cpt:property id="purchaseCount"/>
+                        <cpt:property id="nonComparable"/>
+                        <cpt:property id="comments" hidden="ALL_TABLES"/>
+                    </cpt:fieldSet>
+                    <cpt:fieldSet name="Reporting" id="reporting">
+                        <cpt:property id="reportedAt"/>
+                        <cpt:property id="reportedBy"/>
+                        <cpt:property id="status"/>
+                    </cpt:fieldSet>
+                    <cpt:fieldSet name="Turnover details" id="turnover">
+                        <cpt:property id="occupancy" hidden="PARENTED_TABLES"/>
+                        <cpt:property id="config" hidden="PARENTED_TABLES"/>
+                        <cpt:property id="frequency"/>
+                        <cpt:property id="type"/>
+                        <cpt:property id="currency"/>
+                    </cpt:fieldSet>
+                </bs3:col>
+            </bs3:row>
         </bs3:col>
         <bs3:col span="8">
             <cpt:collection id="previous" defaultView="table"/>

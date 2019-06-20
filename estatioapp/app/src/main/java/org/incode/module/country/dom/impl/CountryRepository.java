@@ -1,6 +1,8 @@
 package org.incode.module.country.dom.impl;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -17,7 +19,8 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Country.class)
 public class CountryRepository  {
 
-    @Programmatic
+    static final Pattern PATTERN_COUNTRY_CODE_FROM_ATPATH = Pattern.compile("/(?<reference>[^/]{3}).*");
+
     public List<Country> newCountry(
             final String reference,
             final String alpha2Code,
@@ -27,13 +30,11 @@ public class CountryRepository  {
     }
 
 
-    @Programmatic
     public List<Country> allCountries() {
         return repositoryService.allInstances(Country.class);
     }
 
 
-    @Programmatic
     public Country createCountry(
             final String reference,
             final String alpha2Code,
@@ -43,7 +44,6 @@ public class CountryRepository  {
         return country;
     }
 
-    @Programmatic
     public Country findOrCreateCountry(
             final String reference,
             final String alpha2Code,
@@ -52,8 +52,6 @@ public class CountryRepository  {
         return country == null ? createCountry(reference, alpha2Code, name) : country;
     }
 
-
-    @Programmatic
     public Country findCountry(
             final String reference) {
         return repositoryService.uniqueMatch(
@@ -63,7 +61,6 @@ public class CountryRepository  {
                     "reference", reference));
     }
 
-    @Programmatic
     public Country findCountryByAlpha2Code(
             final String alpha2Code) {
         return repositoryService.uniqueMatch(
@@ -73,7 +70,18 @@ public class CountryRepository  {
                         "alpha2Code", alpha2Code));
     }
 
-    @Programmatic
+    public Country findCountryByAtPath(final String atPath) {
+        if(atPath == null) {
+            return null;
+        }
+        Matcher matcher = PATTERN_COUNTRY_CODE_FROM_ATPATH.matcher(atPath);
+        if(!matcher.matches()) {
+            return null;
+        }
+        final String reference = matcher.group("reference");
+        return findCountry(reference);
+    }
+
     public List<Country> countriesFor(final Iterable<String> countryCodes) {
         List<Country> available = Lists.newArrayList();
         final ImmutableMap<String, Country> countryByCode = Maps.uniqueIndex(allCountries(), input -> input.getName());

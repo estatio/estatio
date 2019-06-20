@@ -19,6 +19,10 @@
 package org.estatio.module.lease.app;
 
 import java.math.BigInteger;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
@@ -27,13 +31,15 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
-import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.lease.dom.invoicing.NumeratorForCollectionRepository;
+import org.estatio.module.asset.dom.role.FixedAssetRole;
+import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.base.dom.UdoDomainService;
+import org.estatio.module.lease.dom.invoicing.NumeratorForOutgoingInvoicesRepository;
 import org.estatio.module.numerator.dom.Numerator;
+import org.estatio.module.party.dom.Party;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -43,10 +49,10 @@ import org.estatio.module.numerator.dom.Numerator;
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "900.15")
-public class NumeratorForCollectionMenu extends UdoDomainService<NumeratorForCollectionMenu> {
+public class NumeratorForOutgoingInvoicesMenu extends UdoDomainService<NumeratorForOutgoingInvoicesMenu> {
 
-    public NumeratorForCollectionMenu() {
-        super(NumeratorForCollectionMenu.class);
+    public NumeratorForOutgoingInvoicesMenu() {
+        super(NumeratorForOutgoingInvoicesMenu.class);
     }
 
 
@@ -58,63 +64,61 @@ public class NumeratorForCollectionMenu extends UdoDomainService<NumeratorForCol
     }
 
 
-
-
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @MemberOrder(sequence = "2")
-    public Numerator createCollectionNumberNumerator(
-            final String format,
-            final BigInteger lastValue,
-            final ApplicationTenancy applicationTenancy) {
-        return numeratorRepository.createCollectionNumberNumerator(format, lastValue, applicationTenancy);
-    }
-
-    public String default0CreateCollectionNumberNumerator() {
-        return "%09d";
-    }
-
-    public BigInteger default1CreateCollectionNumberNumerator() {
-        return BigInteger.ZERO;
-    }
-
-
-
-
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3")
     public Numerator findInvoiceNumberNumerator(
-            final FixedAsset fixedAsset,
-            final ApplicationTenancy applicationTenancy) {
-        return numeratorRepository.findInvoiceNumberNumerator(fixedAsset, applicationTenancy);
+            final Property property,
+            final Party seller) {
+        return numeratorRepository.findInvoiceNumberNumerator(property, seller);
     }
 
-
+    public List<Party> choices1FindInvoiceNumberNumerator(final Property property) {
+        return allOwnersOf(property);
+    }
 
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @MemberOrder(sequence = "4")
     public Numerator createInvoiceNumberNumerator(
             final Property property,
+            final Party seller,
             final String format,
-            final BigInteger lastIncrement,
-            final ApplicationTenancy applicationTenancy) {
-        return numeratorRepository.createInvoiceNumberNumerator(property, format, lastIncrement, applicationTenancy);
+            final BigInteger lastIncrement) {
+        return numeratorRepository.findOrCreateInvoiceNumberNumerator(property, seller, format, lastIncrement);
     }
 
-    public String default1CreateInvoiceNumberNumerator() {
-        return "XXX-%06d";
+    public List<Party> choices1CreateInvoiceNumberNumerator(final Property property) {
+        return allOwnersOf(property);
     }
 
-    public BigInteger default2CreateInvoiceNumberNumerator() {
+    public String default2CreateInvoiceNumberNumerator(final Property property) {
+        return invoiceNumberPrefixFor(property) +  "-%06d";
+    }
+
+    public BigInteger default3CreateInvoiceNumberNumerator() {
         return BigInteger.ZERO;
     }
 
+    private static String invoiceNumberPrefixFor(final Property property) {
+        return property != null ? property.getReference() : "XXX";
+    }
 
 
+
+
+    private List<Party> allOwnersOf(final FixedAsset fixedAsset) {
+        return fixedAssetRoleRepository
+                .findByAssetAndType(fixedAsset, FixedAssetRoleTypeEnum.PROPERTY_OWNER).stream()
+                .map(FixedAssetRole::getParty)
+                .collect(Collectors.toList());
+    }
+
+    @Inject
+    FixedAssetRoleRepository fixedAssetRoleRepository;
 
 
     @javax.inject.Inject
-    NumeratorForCollectionRepository numeratorRepository;
+    NumeratorForOutgoingInvoicesRepository numeratorRepository;
 
 
 }

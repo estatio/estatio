@@ -29,6 +29,8 @@ import org.apache.isis.applib.ModuleAbstract;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
 
+import org.incode.module.country.CountryModule;
+
 import org.estatio.module.base.EstatioBaseModule;
 import org.estatio.module.numerator.dom.Numerator;
 
@@ -40,7 +42,7 @@ public class EstatioNumeratorModule extends ModuleAbstract {
 
     @Override
     public Set<Module> getDependencies() {
-        return Sets.newHashSet(new EstatioBaseModule());
+        return Sets.newHashSet(new EstatioBaseModule(), new CountryModule());
     }
 
 

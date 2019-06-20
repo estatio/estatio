@@ -84,17 +84,18 @@ public class BankMandateBuilder extends BuilderScriptAbstract<BankMandate, BankM
             agreementRoleRepository.findByAgreementAndTypeAndContainsDate(agreement, agreementRoleType, leaseDate);
         final Party owner = role.getParty();
 
+        LocalDate agreementStartDate = agreement.getStartDate();
         final BankMandate bankMandate = bankMandateRepository.newBankMandate(
                 referenceFrom(owner, sequence),
                 owner.getReference(),
-                agreement.getStartDate(),
+                agreementStartDate,
                 agreement.getEndDate(),
-                agreement.getSecondaryParty(),
-                agreement.getPrimaryParty(),
+                agreement.secondaryPartyAsOfElseCurrent(agreementStartDate),
+                agreement.primaryPartyAsOfElseCurrent(agreementStartDate),
                 bankAccount,
                 sequenceType,
                 scheme,
-                agreement.getStartDate());
+                agreementStartDate);
         ec.addResult(this, bankMandate.getReference(), bankMandate);
 
         object = bankMandate;

@@ -43,6 +43,8 @@ public class Lease_newGuarantee {
             final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal contractualAmount,
             final BigDecimal startAmount
     ) {
+        // TODO: need a disableXxx to ensure that there is a primary and secondary party
+        //  on the lease at the startDate of the guarantee.
         return leaseGuaranteeService.newGuarantee(lease, reference, name, guaranteeType, startDate, endDate, description, contractualAmount, startAmount);
     }
 

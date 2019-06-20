@@ -32,6 +32,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
+import org.estatio.module.party.dom.Party;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -110,11 +111,16 @@ public class InvoiceImportLine implements Importable {
         List<Object> result = new ArrayList<>();
         Lease lease = fetchLease(getLeaseReference());
         PaymentMethod paymentMethod = fetchPaymentMethod(getPaymentMethod());
-        String atPath = lease.getApplicationTenancyPath().concat("/").concat(lease.getPrimaryParty().getReference());
+
+        final Party primaryParty = lease.primaryPartyAsOfElseCurrent(getDueDate());
+        final Party secondaryParty = lease.secondaryPartyAsOfElseCurrent(getDueDate());
+
+        final String atPath = lease.getApplicationTenancyPath().concat("/").concat(primaryParty.getReference());
+
         ApplicationTenancy applicationTenancy = applicationTenancyRepository.findByPath(atPath);
         Invoice invoice = invoiceForLeaseRepository.newInvoice(applicationTenancy,
-                lease.getPrimaryParty(),
-                lease.getSecondaryParty(),
+                primaryParty,
+                secondaryParty,
                 paymentMethod,
                 currencyRepository.findCurrency("EUR"),
                 getDueDate(),

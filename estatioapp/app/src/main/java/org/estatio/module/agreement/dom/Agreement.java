@@ -28,6 +28,7 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Objects;
@@ -65,12 +66,12 @@ import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.base.dom.with.WithNameGetter;
 import org.incode.module.base.dom.with.WithReferenceGetter;
 
-import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.agreement.dom.role.AgreementRoleType;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.agreement.dom.role.IAgreementRoleType;
 import org.estatio.module.agreement.dom.type.AgreementType;
 import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
+import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.party.dom.Party;
 
 import lombok.Getter;
@@ -143,13 +144,15 @@ public abstract class Agreement
         Chained<Agreement>,
         WithNameGetter {
 
-    protected final String primaryRoleTypeTitle;
-    protected final String secondaryRoleTypeTitle;
+    @NotPersistent
+    protected final IAgreementRoleType primaryRoleType;
+    @NotPersistent
+    protected final IAgreementRoleType secondaryRoleType;
 
     public Agreement(final IAgreementRoleType primaryRoleType, final IAgreementRoleType secondaryRoleType) {
         super("type,reference");
-        this.primaryRoleTypeTitle = primaryRoleType == null ? null : primaryRoleType.getTitle();
-        this.secondaryRoleTypeTitle = secondaryRoleType == null ? null : secondaryRoleType.getTitle();
+        this.primaryRoleType = primaryRoleType;
+        this.secondaryRoleType = secondaryRoleType;
     }
 
     public String title() {
@@ -177,44 +180,95 @@ public abstract class Agreement
 
     @Property(notPersisted = true)
     public Party getPrimaryParty() {
-        return findCurrentOrMostRecentParty(primaryRoleTypeTitle);
+        return currentOrMostRecentPartyOf(this.primaryRoleType);
     }
 
     @Property(notPersisted = true)
     public Party getSecondaryParty() {
-        return findCurrentOrMostRecentParty(secondaryRoleTypeTitle);
-    }
-
-    // //////////////////////////////////////
-
-    @Programmatic
-    protected AgreementRole getPrimaryAgreementRole() {
-        return findCurrentOrMostRecentAgreementRole(primaryRoleTypeTitle);
+        return currentOrMostRecentPartyOf(this.secondaryRoleType);
     }
 
     @Programmatic
-    protected AgreementRole getSecondaryAgreementRole() {
-        return findCurrentOrMostRecentAgreementRole(secondaryRoleTypeTitle);
+    public Party primaryPartyAsOfElseCurrent(final LocalDate date) {
+        return partyAsOfElseCurrent(this.primaryRoleType, date);
     }
 
-    // //////////////////////////////////////
-
-    protected Party findCurrentOrMostRecentParty(final String agreementRoleTypeTitle) {
-        final AgreementRole currentOrMostRecentRole = findCurrentOrMostRecentAgreementRole(agreementRoleTypeTitle);
-        return partyOf(currentOrMostRecentRole);
+    @Programmatic
+    public Party secondaryPartyAsOfElseCurrent(final LocalDate date) {
+        return partyAsOfElseCurrent(this.secondaryRoleType, date);
     }
 
-    protected Party findCurrentOrMostRecentParty(final AgreementRoleType art) {
+    private Party partyAsOfElseCurrent(final IAgreementRoleType roleType, final LocalDate date) {
+        // can probably also use:
+        // final AgreementRoleType art = primaryRoleType.findOrCreateUsing(agreementRoleTypeRepository);
+        final AgreementRoleType art = agreementRoleTypeRepository.findByTitle(roleType.getTitle());
+        AgreementRole roleAsOf = findAgreementRoleAsOf(art, date);
+
+        if(roleAsOf == null) {
+            //
+            // fallback to current role.
+            //
+            // this seems to be a reasonable assumption, as it emulates the previous behaviour
+            // where we used to call getPrimaryParty() or getSecondaryParty()
+            //
+            // inspecting the prod DB (see ECP-1042 ticket for the queries), there are currently:
+            // - 20,724 with a null end date (meaning they are match for any date in the future)
+            // - 26 roles which have a non-null end date, but which have a subsequent open ended role to replace them
+            // - 2 roles with a non-null end date whose subsequent role is also NOT open ended
+            // - 3 roles with a non-null end date with no subsequent rol
+            //
+            // so, it's for these 5 roles (out of 20,000+) to which this fallback applies.
+            //
+            roleAsOf = findCurrentOrMostRecentAgreementRole(art);
+        }
+
+        return partyOf(roleAsOf);
+    }
+
+    private Party currentOrMostRecentPartyOf(final IAgreementRoleType roleType) {
+        // can probably also use:
+        // final AgreementRoleType art = primaryRoleType.findOrCreateUsing(agreementRoleTypeRepository);
+        final AgreementRoleType art = agreementRoleTypeRepository.findByTitle(roleType.getTitle());
         final AgreementRole currentOrMostRecentRole = findCurrentOrMostRecentAgreementRole(art);
         return partyOf(currentOrMostRecentRole);
     }
 
-    protected AgreementRole findCurrentOrMostRecentAgreementRole(final String agreementRoleTypeTitle) {
+
+    // //////////////////////////////////////
+
+    protected AgreementRole getPrimaryAgreementRole() {
+        // can probably also use:
+        // final AgreementRoleType art = primaryRoleType.findOrCreateUsing(agreementRoleTypeRepository);
+        final AgreementRoleType art = agreementRoleTypeRepository.findByTitle(primaryRoleType.getTitle());
+        return findCurrentOrMostRecentAgreementRole(art);
+    }
+
+
+    protected AgreementRole getSecondaryAgreementRole() {
+        // can probably also use:
+        // final AgreementRoleType art = primaryRoleType.findOrCreateUsing(agreementRoleTypeRepository);
+        final AgreementRoleType art = agreementRoleTypeRepository.findByTitle(secondaryRoleType.getTitle());
+        return findCurrentOrMostRecentAgreementRole(art);
+    }
+
+    // //////////////////////////////////////
+
+    Party findCurrentOrMostRecentParty(final String agreementRoleTypeTitle) {
+        final AgreementRole currentOrMostRecentRole = findCurrentOrMostRecentAgreementRole(agreementRoleTypeTitle);
+        return partyOf(currentOrMostRecentRole);
+    }
+
+    Party findCurrentOrMostRecentParty(final AgreementRoleType art) {
+        final AgreementRole currentOrMostRecentRole = findCurrentOrMostRecentAgreementRole(art);
+        return partyOf(currentOrMostRecentRole);
+    }
+
+    private AgreementRole findCurrentOrMostRecentAgreementRole(final String agreementRoleTypeTitle) {
         final AgreementRoleType art = agreementRoleTypeRepository.findByTitle(agreementRoleTypeTitle);
         return findCurrentOrMostRecentAgreementRole(art);
     }
 
-    private AgreementRole findCurrentOrMostRecentAgreementRole(final AgreementRoleType agreementRoleType) {
+    protected AgreementRole findCurrentOrMostRecentAgreementRole(final AgreementRoleType agreementRoleType) {
         // all available roles
         final Iterable<AgreementRole> rolesOfType =
                 Iterables.filter(getRoles(), AgreementRole.Predicates.whetherTypeIs(agreementRoleType));
@@ -232,6 +286,13 @@ public abstract class Agreement
         // and return the party
         final AgreementRole currentOrMostRecentRole = firstElseNull(roles);
         return currentOrMostRecentRole;
+    }
+
+    protected AgreementRole findAgreementRoleAsOf(final AgreementRoleType agreementRoleType, final LocalDate date) {
+        return Lists.newArrayList(getRoles()).stream()
+                        .filter(ar -> ar != null && ar.getType() == agreementRoleType)
+                        .filter(ar -> ar.getInterval().contains(date))
+                        .findFirst().orElse(null);
     }
 
     private static <T> T firstElseNull(final Iterable<T> iterable) {

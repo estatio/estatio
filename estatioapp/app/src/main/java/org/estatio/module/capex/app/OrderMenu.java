@@ -26,6 +26,7 @@ import org.apache.isis.applib.services.user.UserService;
 import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.util.Mode;
 import org.isisaddons.module.security.app.user.MeService;
+import org.isisaddons.module.security.dom.user.ApplicationUser;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
@@ -39,7 +40,7 @@ import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.imports.OrderProjectImportAdapter;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.numerator.dom.NumeratorRepository;
+import org.estatio.module.numerator.dom.NumeratorAtPathRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -100,7 +101,7 @@ public class OrderMenu {
         if (property != null && multiPropertyReference != null)
             return "Can not define both property and multi property reference";
 
-        if (numeratorRepository.findNumerator("Order number", buyer, buyer.getApplicationTenancy()) == null)
+        if (numeratorForOrdersRepository.findNumerator(buyer) == null)
             return "No order number numerator found for this buyer";
 
         return null;
@@ -123,8 +124,21 @@ public class OrderMenu {
     }
 
     public boolean hideCreateOrder() {
+        // admin can always see
         final boolean userIsAdmin = EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
-        return !meService.me().getAtPath().startsWith("/ITA") && !userIsAdmin;
+        if(userIsAdmin) {
+            return false;
+        }
+
+        // otherwise, user needs to be Italian
+        final ApplicationUser me = meService.me();
+        if(me == null) { return true; }
+
+        final String atPath = me.getAtPath();
+        if(atPath == null) { return true; }
+
+        boolean hideIfNotItalian = !atPath.startsWith("/ITA");
+        return hideIfNotItalian;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
@@ -347,7 +361,7 @@ public class OrderMenu {
     ClockService clockService;
 
     @Inject
-    NumeratorRepository numeratorRepository;
+    NumeratorAtPathRepository numeratorAtPathRepository;
 
     @Inject
     MeService meService;
@@ -359,4 +373,8 @@ public class OrderMenu {
     ExcelService excelService;
 
     @Inject UserService userService;
+
+    @Inject
+    NumeratorForOrdersRepository numeratorForOrdersRepository;
+
 }

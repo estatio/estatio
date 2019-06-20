@@ -3,9 +3,6 @@
     <row>
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
-            <ns2:action id="terminate"/>
-            <ns2:action id="verify"/>
-            <ns2:action id="remove"/>
             <ns2:action id="links"/>
         </col>
     </row>
@@ -15,16 +12,28 @@
                 <tab name="General">
                     <row>
                         <col span="12">
-                            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+                            <ns2:fieldSet name="General" id="general">
+                                <ns2:action id="remove"/>
                                 <ns2:property id="lease"/>
                                 <ns2:property id="unit"/>
-                                <ns2:property id="startDate"/>
-                                <ns2:property id="endDate">
-                                    <ns2:action id="changeDates" position="BELOW"/>
-                                </ns2:property>
                             </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Other">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Other" id="other" unreferencedProperties="true">
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Application Level">
+                    <row>
+                        <col span="12">
                             <ns2:fieldSet name="Application Level" id="applicationLevel">
-                                <ns2:property id="applicationTenancy"/>
+                                <ns2:property id="applicationTenancy" hidden="ALL_TABLES"/>
+                                <ns2:property id="atPath" hidden="ALL_TABLES"/>
                             </ns2:fieldSet>
                         </col>
                     </row>
@@ -46,6 +55,14 @@
                     </row>
                 </tab>
             </tabGroup>
+            <ns2:fieldSet name="Dates" id="dates">
+                <ns2:property id="startDate"/>
+                <ns2:property id="endDate">
+                    <ns2:action id="changeDates" position="BELOW"/>
+                    <ns2:action id="verify" position="BELOW"/>
+                    <ns2:action id="terminate" position="BELOW"/>
+                </ns2:property>
+            </ns2:fieldSet>
         </col>
         <col span="6">
             <tabGroup>

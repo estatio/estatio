@@ -94,7 +94,7 @@ public class Property_IntegTest extends LeaseModuleIntegTestAbstract {
             assertThat(occupiedUnits).isNotEmpty();
 
             // When
-            List<Unit> vacantUnits = wrap(mixin(Property_vacantUnits.class, property)).$$();
+            List<Unit> vacantUnits = wrap(mixin(Property_vacantUnits.class, property)).coll();
 
             // Then
             assertThat(vacantUnits).isNotEmpty();

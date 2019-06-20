@@ -5,14 +5,12 @@ import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.incode.module.country.dom.impl.Country;
-import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.fixtures.enums.Country_enum;
 
-import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.capex.app.NumeratorForOrdersRepository;
 import org.estatio.module.numerator.dom.Numerator;
-import org.estatio.module.numerator.dom.NumeratorRepository;
 import org.estatio.module.numerator.fixtures.builders.NumeratorBuilder;
-import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import lombok.AllArgsConstructor;
@@ -25,39 +23,38 @@ import lombok.experimental.Accessors;
 public enum NumeratorForOrder_enum
         implements PersonaWithBuilderScript<Numerator, NumeratorBuilder>, PersonaWithFinder<Numerator> {
 
-    Ita(Country_enum.ITA, "%04d", "Order number", null),
-    ItaScopedToHelloWorldIt(Country_enum.ITA, "%04d", "Order number", Organisation_enum.HelloWorldIt),
-    Fra(Country_enum.FRA, "%05d", "Order number", null),
+    Ita(Country_enum.ITA, "%04d", null),
+    ItaScopedToHelloWorldIt(Country_enum.ITA, "%04d", Organisation_enum.HelloWorldIt),
+    Fra(Country_enum.FRA, "%05d", null),
     ;
 
     private final Country_enum country_d;
     private final String format;
-    private final String name;
     private final Organisation_enum organisation_d;
+
 
     @Override
     public NumeratorBuilder builder() {
         return new NumeratorBuilder()
+                .setName(NumeratorForOrdersRepository.NUMERATOR_NAME)
                 .setPrereq((f, ec) -> f.setCountry(f.objectFor(country_d, ec)))
                 .setPrereq((f, ec) -> f.setScopedTo(f.objectFor(organisation_d, ec)))
                 .setFormat(format)
-                .setName(name);
+                ;
     }
 
     @Override
     public Numerator findUsing(final ServiceRegistry2 serviceRegistry) {
-        final NumeratorRepository numeratorRepository = serviceRegistry
-                .lookupService(NumeratorRepository.class);
-        final CountryRepository countryRepository = serviceRegistry
-                .lookupService(CountryRepository.class);
-        final EstatioApplicationTenancyRepositoryForCountry applicationTenancyRepository = serviceRegistry
-                .lookupService(EstatioApplicationTenancyRepositoryForCountry.class);
-        final PartyRepository partyRepository = serviceRegistry
-                .lookupService(PartyRepository.class);
+        final NumeratorForOrdersRepository numeratorForOrdersRepository = serviceRegistry
+                .lookupService(NumeratorForOrdersRepository.class);
 
-        final Country country = countryRepository.findCountry(country_d.getRef3());
-        return organisation_d == null
-                ? numeratorRepository.findNumerator(name, null, applicationTenancyRepository.findOrCreateTenancyFor(country))
-                : numeratorRepository.findNumerator(name, partyRepository.findPartyByReference(organisation_d.getRef()), applicationTenancyRepository.findOrCreateTenancyFor(country));
+        final Country country = country_d.findUsing(serviceRegistry);
+        final Organisation scopedToIfAny = organisation_d == null
+                ? null
+                : organisation_d.findUsing(serviceRegistry);
+
+        return numeratorForOrdersRepository.findNumerator(country, scopedToIfAny);
     }
+
+
 }

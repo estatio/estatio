@@ -59,11 +59,6 @@ public class LeaseItemRepository extends UdoDomainRepositoryAndFactory<LeaseItem
             final LocalDate startDate) {
         BigInteger nextSequence = nextSequenceFor(lease, type);
         LeaseItem leaseItem = newTransientInstance();
-        leaseItem.setApplicationTenancyPath(
-                lease.getProperty() == null
-                        ? lease.getApplicationTenancyPath()
-                        : estatioApplicationTenancyRepository.findOrCreateTenancyFor(
-                                lease.getProperty(), lease.getPrimaryParty()).getPath());
         leaseItem.setType(type);
         leaseItem.setCharge(charge);
         leaseItem.setPaymentMethod(paymentMethod);

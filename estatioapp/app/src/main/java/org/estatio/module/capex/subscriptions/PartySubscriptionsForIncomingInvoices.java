@@ -29,9 +29,9 @@ import org.apache.isis.applib.services.scratchpad.Scratchpad;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.base.dom.UdoDomainService;
-import org.estatio.module.invoice.dom.Constants;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceRepository;
+import org.estatio.module.invoice.dom.InvoiceRoleTypeEnum;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(
@@ -87,11 +87,11 @@ public class PartySubscriptionsForIncomingInvoices extends UdoDomainService<Part
         case EXECUTING:
             Party sourceParty = ev.getSource();
             if (incomingInvoiceRepository.findByBuyer(sourceParty).size() > 0) {
-                sourceParty.addRole(Constants.InvoiceRoleTypeEnum.BUYER);
+                sourceParty.addRole(InvoiceRoleTypeEnum.BUYER);
                 sourceParty.addRole(IncomingInvoiceRoleTypeEnum.ECP);
             }
             if (incomingInvoiceRepository.findBySeller(sourceParty).size() > 0) {
-                sourceParty.addRole(Constants.InvoiceRoleTypeEnum.SELLER);
+                sourceParty.addRole(InvoiceRoleTypeEnum.SELLER);
                 sourceParty.addRole(IncomingInvoiceRoleTypeEnum.SUPPLIER);
             }
             break;

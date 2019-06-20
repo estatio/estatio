@@ -95,8 +95,9 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
             final Currency currency) {
 
         final Property propertyIfAny = lease.getProperty();
-        final Party seller = lease.getPrimaryParty();
-        final Party buyer = lease.getSecondaryParty();
+
+        final Party seller = lease.primaryPartyAsOfElseCurrent(dueDate);
+        final Party buyer = lease.secondaryPartyAsOfElseCurrent(dueDate);
 
         final ApplicationTenancy propertySellerTenancy =
                 estatioApplicationTenancyRepositoryForLease.findOrCreateTenancyFor(propertyIfAny, seller);
@@ -110,7 +111,12 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
                 lease, null);
     }
 
-    public String validateNewInvoiceForLease(final Lease lease, final LocalDate dueDate, final PaymentMethod paymentMethod, final Currency currency ) {
+    public String validateNewInvoiceForLease(
+            final Lease lease,
+            final LocalDate dueDate,
+            final PaymentMethod paymentMethod,
+            final Currency currency ) {
+
         final Property propertyIfAny = lease.getProperty();
         if(propertyIfAny == null) {
             return "Can only create invoices for leases that have an occupancy";

@@ -403,7 +403,7 @@ public class InvoiceForLease
         }
 
         @javax.inject.Inject
-        NumeratorForCollectionRepository numeratorRepository;
+        NumeratorForOutgoingInvoicesRepository numeratorRepository;
 
     }
 
@@ -466,8 +466,10 @@ public class InvoiceForLease
                 return invoiceForLease;
             }
 
+            ApplicationTenancy invoiceForLeaseApplicationTenancy = invoiceForLease.getApplicationTenancy();
             final Numerator numerator = numeratorRepository
-                    .findInvoiceNumberNumerator(invoiceForLease.getFixedAsset(), invoiceForLease.getApplicationTenancy());
+                    .findInvoiceNumberNumerator(invoiceForLease.getFixedAsset(), invoiceForLease.getSeller()
+                    );
 
             invoiceForLease.setInvoiceNumber(numerator.nextIncrementStr());
             invoiceForLease.setInvoiceDate(invoiceDate);
@@ -485,8 +487,10 @@ public class InvoiceForLease
             if (invoiceForLease.getInvoiceNumber() != null) {
                 return "Invoice number already assigned";
             }
+            ApplicationTenancy invoiceForLeaseApplicationTenancy = invoiceForLease.getApplicationTenancy();
             final Numerator numerator = numeratorRepository
-                    .findInvoiceNumberNumerator(invoiceForLease.getFixedAsset(), invoiceForLease.getApplicationTenancy());
+                    .findInvoiceNumberNumerator(invoiceForLease.getFixedAsset(), invoiceForLease.getSeller()
+                    );
             if (numerator == null) {
                 return "No 'invoice number' numerator found for invoice's property";
             }
@@ -511,7 +515,9 @@ public class InvoiceForLease
                 return String.format("Invoice date must be on or before the due date (%s)", invoiceForLease.getDueDate().toString());
             }
             final ApplicationTenancy applicationTenancy = invoiceForLease.getApplicationTenancy();
-            final Numerator numerator = numeratorRepository.findInvoiceNumberNumerator(invoiceForLease.getFixedAsset(), applicationTenancy);
+            final Numerator numerator = numeratorRepository.findInvoiceNumberNumerator(invoiceForLease.getFixedAsset(),
+                    invoiceForLease.getSeller()
+            );
             if (numerator != null) {
                 final String invoiceNumber = numerator.lastIncrementStr();
                 if (invoiceNumber != null) {
@@ -531,7 +537,7 @@ public class InvoiceForLease
         InvoiceVatRoundingService invoiceVatRoundingService;
 
         @javax.inject.Inject
-        NumeratorForCollectionRepository numeratorRepository;
+        NumeratorForOutgoingInvoicesRepository numeratorRepository;
 
         @javax.inject.Inject
         ClockService clockService;
@@ -617,7 +623,7 @@ public class InvoiceForLease
     FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
 
     @javax.inject.Inject
-    NumeratorForCollectionRepository numeratorRepository;
+    NumeratorForOutgoingInvoicesRepository numeratorRepository;
 
 
     @Programmatic

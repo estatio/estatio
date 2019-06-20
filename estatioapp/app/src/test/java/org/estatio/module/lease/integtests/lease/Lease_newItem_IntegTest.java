@@ -101,7 +101,6 @@ public class Lease_newItem_IntegTest extends LeaseModuleIntegTestAbstract {
             // given
             final Charge charge = Charge_enum.GbDiscount.findUsing(serviceRegistry);
             final ApplicationTenancy leaseAppTenancy = leasePoison.getApplicationTenancy();
-            final ApplicationTenancy firstChildAppTenancy = leaseAppTenancy.getChildren().first();
 
             // when
             final LeaseItem leaseItem = wrap(leasePoison).newItem(
@@ -119,7 +118,7 @@ public class Lease_newItem_IntegTest extends LeaseModuleIntegTestAbstract {
             assertThat(leaseItem.getPaymentMethod()).isEqualTo(PaymentMethod.DIRECT_DEBIT);
             assertThat(leaseItem.getStartDate()).isEqualTo(leasePoison.getStartDate());
             assertThat(leaseItem.getSequence()).isEqualTo(VT.bi(1));
-            assertThat(leaseItem.getApplicationTenancy()).isEqualTo(firstChildAppTenancy);
+            assertThat(leaseItem.getApplicationTenancy()).isEqualTo(leaseAppTenancy);
         }
 
         @Test

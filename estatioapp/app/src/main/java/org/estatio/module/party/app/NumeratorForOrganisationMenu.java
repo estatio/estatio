@@ -35,9 +35,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.module.party.dom.PartyConstants;
 import org.estatio.module.numerator.dom.Numerator;
-import org.estatio.module.numerator.dom.NumeratorRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -57,11 +55,11 @@ public class NumeratorForOrganisationMenu extends UdoDomainRepositoryAndFactory<
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "1")
     public Numerator findOrganisationReferenceNumerator(final ApplicationTenancy applicationTenancy) {
-        return numeratorRepository
-                .findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy);
+        return numeratorForOrganisationsRepository.findNumerator(applicationTenancy);
     }
 
-    // //////////////////////////////////////
+
+
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_NEITHER)
@@ -71,15 +69,19 @@ public class NumeratorForOrganisationMenu extends UdoDomainRepositoryAndFactory<
             final BigInteger lastValue,
             final ApplicationTenancy applicationTenancy) {
 
-        return numeratorRepository
-                .createGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, format, lastValue, applicationTenancy);
+        return numeratorForOrganisationsRepository.createNumerator(format, lastValue, applicationTenancy);
     }
+
 
     public BigInteger default1CreateOrganisationReferenceNumerator() {
         return BigInteger.ZERO;
     }
 
+
+
+
+
     @Inject
-    private NumeratorRepository numeratorRepository;
+    NumeratorForOrganisationsRepository numeratorForOrganisationsRepository;
 
 }

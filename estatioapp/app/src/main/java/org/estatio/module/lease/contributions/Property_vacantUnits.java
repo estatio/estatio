@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
@@ -37,7 +39,7 @@ import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 
-@Mixin
+@Mixin(method = "coll")
 public class Property_vacantUnits {
 
     final private Property property;
@@ -48,17 +50,21 @@ public class Property_vacantUnits {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<Unit> $$() {
+    public List<Unit> coll() {
+        final LocalDate now = clockService.now();
+        final List<Unit> occupiedUnits = occupiedUnits();
         return unitRepository.findByProperty(property)
                 .stream()
-                .filter(unit -> !occupiedUnits().contains(unit) && (unit.getEndDate()==null || unit.getEndDate().isAfter(clockService.now())))
+                .filter(unit ->
+                        (unit.getEndDate() == null || unit.getEndDate().isAfter(now)) && !occupiedUnits.contains(unit))
                 .collect(Collectors.toList());
     }
 
     List<Unit> occupiedUnits(){
+        final LocalDate now = clockService.now();
         return occupancyRepository.findByProperty(property)
                 .stream()
-                .filter(x->x.getEndDate()==null || x.getEndDate().isAfter(clockService.now()))
+                .filter(x -> x.getEndDate()==null || x.getEndDate().isAfter(now))
                 .map(Occupancy::getUnit)
                 .collect(Collectors.toList());
     }

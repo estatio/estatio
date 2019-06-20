@@ -18,26 +18,12 @@ package org.estatio.module.invoice.dom;
 
 import org.estatio.module.party.dom.role.IPartyRoleType;
 
-public final class Constants {
-    
-    private Constants(){}
+public enum InvoiceRoleTypeEnum implements IPartyRoleType {
 
-    // TODO: convert this into NumeratorData, similar to DocTypeData
-    public static class NumeratorName {
-        private NumeratorName(){}
+    BUYER,
+    SELLER;
 
-        public static final String INVOICE_NUMBER = "Invoice number";
-        public static final String COLLECTION_NUMBER = "Collection number";
+    @Override public String getKey() {
+        return this.name();
     }
-
-    public enum InvoiceRoleTypeEnum implements IPartyRoleType {
-
-        BUYER,
-        SELLER;
-
-        @Override public String getKey() {
-            return this.name();
-        }
-    }
-
 }

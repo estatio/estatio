@@ -51,6 +51,8 @@ import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.numerator.dom.Numerator;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.Party;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -67,7 +69,7 @@ public class InvoiceForLease_Test {
     InvoiceRepository mockInvoiceRepository;
 
     @Mock
-    NumeratorForCollectionRepository mockNumeratorRepository;
+    NumeratorForOutgoingInvoicesRepository mockNumeratorForOutgoingInvoicesRepository;
 
     @Mock
     ClockService mockClockService;
@@ -85,7 +87,10 @@ public class InvoiceForLease_Test {
     Lease lease;
 
     @Mock
-    Property invoiceProperty;
+    Property stubInvoiceProperty;
+
+    @Mock
+    Organisation stubInvoiceSeller;
 
     @Mock
     InvoiceVatRoundingService mockInvoiceVatRoundingService;
@@ -93,6 +98,9 @@ public class InvoiceForLease_Test {
     @Mock
     @Ignoring
     DomainObjectContainer mockContainer;
+
+    @Mock
+    ApplicationTenancy stubApplicationTenancy;
 
     ApplicationTenancy applicationTenancy;
 
@@ -116,7 +124,9 @@ public class InvoiceForLease_Test {
     void allowingMockInvoicesToReturnNumerator(final Numerator numerator) {
         context.checking(new Expectations() {
             {
-                allowing(mockNumeratorRepository).findInvoiceNumberNumerator(with(any(Property.class)), with(any(ApplicationTenancy.class)));
+                allowing(mockNumeratorForOutgoingInvoicesRepository).findInvoiceNumberNumerator(with(any(Property.class)),
+                        with(any(Party.class))
+                );
                 will(returnValue(numerator));
             }
         });
@@ -125,7 +135,7 @@ public class InvoiceForLease_Test {
     void allowingMockInvoicesToReturnCollectionNumerator(final Numerator numerator) {
         context.checking(new Expectations() {
             {
-                allowing(mockNumeratorRepository).findCollectionNumberNumerator();
+                allowing(mockNumeratorForOutgoingInvoicesRepository).findCollectionNumberNumerator();
                 will(returnValue(numerator));
             }
         });
@@ -154,11 +164,15 @@ public class InvoiceForLease_Test {
         });
     }
 
-    InvoiceForLease createInvoice(final FixedAsset fixedAsset, final InvoiceStatus invoiceStatus) {
+    InvoiceForLease createInvoice(final InvoiceStatus invoiceStatus) {
         final InvoiceForLease invoice = new InvoiceForLease() {
             @Override
             public FixedAsset getFixedAsset() {
-                return fixedAsset;
+                return stubInvoiceProperty;
+            }
+
+            @Override public Party getSeller() {
+                return stubInvoiceSeller;
             }
 
             @Override public ApplicationTenancy getApplicationTenancy() {
@@ -167,7 +181,7 @@ public class InvoiceForLease_Test {
         };
         invoice.setStatus(invoiceStatus);
         invoice.setContainer(mockContainer);
-        invoice.numeratorRepository = mockNumeratorRepository;
+        invoice.numeratorRepository = mockNumeratorForOutgoingInvoicesRepository;
         invoice.clockService = mockClockService;
         return invoice;
     }
@@ -179,11 +193,11 @@ public class InvoiceForLease_Test {
         public void happyCase_whenNoInvoiceNumberPreviouslyAssigned() {
             allowingMockInvoicesToReturnNumerator(numerator);
             allowingMockInvoicesToReturnInvoice("XXX-00010", new LocalDate(2012, 1, 1));
-            invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
+            invoice = createInvoice(InvoiceStatus.APPROVED);
 
             // when
             final InvoiceForLease._invoice invoice_invoice = new InvoiceForLease._invoice(invoice);
-            invoice_invoice.numeratorRepository = mockNumeratorRepository;
+            invoice_invoice.numeratorRepository = mockNumeratorForOutgoingInvoicesRepository;
             invoice_invoice.titleService = mockTitleService;
             invoice_invoice.messageService = mockMessageService;
             invoice_invoice.invoiceRepository = mockInvoiceRepository;
@@ -208,7 +222,7 @@ public class InvoiceForLease_Test {
         @Test
         public void whenInvoiceNumberAlreadyAssigned() {
             allowingMockInvoicesToReturnNumerator(numerator);
-            invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
+            invoice = createInvoice(InvoiceStatus.APPROVED);
             invoice.setInvoiceNumber("SOME-INVOICE-NUMBER");
 
             // when
@@ -223,11 +237,11 @@ public class InvoiceForLease_Test {
         public void whenNoProperty() {
 
             allowingMockInvoicesToReturnNumerator(null);
-            invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
+            invoice = createInvoice(InvoiceStatus.APPROVED);
 
             // when
             final InvoiceForLease._invoice invoice_invoice = new InvoiceForLease._invoice(this.invoice);
-            invoice_invoice.numeratorRepository = mockNumeratorRepository;
+            invoice_invoice.numeratorRepository = mockNumeratorForOutgoingInvoicesRepository;
 
             assertThat(invoice_invoice.disable$$()).isEqualTo("No 'invoice number' numerator found for invoice's property");
 
@@ -239,10 +253,10 @@ public class InvoiceForLease_Test {
         public void whenNotInCollectedState() {
 
             allowingMockInvoicesToReturnNumerator(null);
-            invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
+            invoice = createInvoice(InvoiceStatus.APPROVED);
 
             final InvoiceForLease._invoice invoice_invoice = new InvoiceForLease._invoice(this.invoice);
-            invoice_invoice.numeratorRepository = mockNumeratorRepository;
+            invoice_invoice.numeratorRepository = mockNumeratorForOutgoingInvoicesRepository;
 
             // when
             assertThat(invoice_invoice.disable$$()).isEqualTo("No 'invoice number' numerator found for invoice's property");
@@ -273,7 +287,7 @@ public class InvoiceForLease_Test {
                 }
             };
             invoice.setContainer(mockContainer);
-            invoice.numeratorRepository = mockNumeratorRepository;
+            invoice.numeratorRepository = mockNumeratorForOutgoingInvoicesRepository;
             return invoice;
         }
 
@@ -299,11 +313,11 @@ public class InvoiceForLease_Test {
                 }
             });
 
-            invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
+            invoice = createInvoice(stubInvoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
             invoice.setLease(lease);
 
             final InvoiceForLease._collect invoice_collect = new InvoiceForLease._collect(invoice);
-            invoice_collect.numeratorRepository = mockNumeratorRepository;
+            invoice_collect.numeratorRepository = mockNumeratorForOutgoingInvoicesRepository;
 
 
             assertThat(invoice_collect.hide$$()).isFalse();
@@ -317,11 +331,11 @@ public class InvoiceForLease_Test {
         public void whenNoMandateAssigned() {
             allowingMockInvoicesToReturnCollectionNumerator(numerator);
 
-            invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
+            invoice = createInvoice(stubInvoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
             invoice.setLease(new Lease());
 
             final InvoiceForLease._collect invoice_collect = new InvoiceForLease._collect(invoice);
-            invoice_collect.numeratorRepository = mockNumeratorRepository;
+            invoice_collect.numeratorRepository = mockNumeratorForOutgoingInvoicesRepository;
 
             assertThat(invoice_collect.hide$$()).isFalse();
             assertThat(invoice_collect.disable$$()).isEqualTo("No mandate assigned to invoice's lease");
@@ -334,7 +348,7 @@ public class InvoiceForLease_Test {
         public void whenInvoiceNumberAlreadyAssigned() {
             allowingMockInvoicesToReturnNumerator(numerator);
 
-            invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
+            invoice = createInvoice(stubInvoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
 
             invoice.setCollectionNumber("SOME-COLLECTION-NUMBER");
 
@@ -350,10 +364,10 @@ public class InvoiceForLease_Test {
         public void whenNoProperty() {
             allowingMockInvoicesToReturnCollectionNumerator(null);
 
-            invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
+            invoice = createInvoice(stubInvoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
 
             final InvoiceForLease._collect invoice_collect = new InvoiceForLease._collect(invoice);
-            invoice_collect.numeratorRepository = mockNumeratorRepository;
+            invoice_collect.numeratorRepository = mockNumeratorForOutgoingInvoicesRepository;
 
             assertThat(invoice_collect.hide$$()).isFalse();
             assertThat(invoice_collect.disable$$()).isEqualTo("No 'collection number' numerator found for invoice's property");
@@ -366,11 +380,11 @@ public class InvoiceForLease_Test {
         public void whenNotDirectDebit() {
             allowingMockInvoicesToReturnCollectionNumerator(numerator);
 
-            invoice = createInvoice(invoiceProperty, PaymentMethod.BANK_TRANSFER, InvoiceStatus.APPROVED);
+            invoice = createInvoice(stubInvoiceProperty, PaymentMethod.BANK_TRANSFER, InvoiceStatus.APPROVED);
             invoice.setLease(new Lease());
 
             final InvoiceForLease._collect invoice_collect = new InvoiceForLease._collect(invoice);
-            invoice_collect.numeratorRepository = mockNumeratorRepository;
+            invoice_collect.numeratorRepository = mockNumeratorForOutgoingInvoicesRepository;
 
             assertThat(invoice_collect.hide$$()).isTrue();
             assertThat(invoice_collect.disable$$()).isEqualTo("No mandate assigned to invoice's lease");
@@ -386,11 +400,11 @@ public class InvoiceForLease_Test {
             allowingMockInvoicesToReturnCollectionNumerator(numerator);
 
             // when
-            invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.NEW);
+            invoice = createInvoice(stubInvoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.NEW);
 
             // then
             final InvoiceForLease._collect invoice_collect = new InvoiceForLease._collect(invoice);
-            invoice_collect.numeratorRepository = mockNumeratorRepository;
+            invoice_collect.numeratorRepository = mockNumeratorForOutgoingInvoicesRepository;
 
             assertThat(invoice_collect.hide$$()).isFalse();
             assertThat(invoice_collect.disable$$()).isEqualTo("Must be in status of 'approved'");
@@ -430,15 +444,19 @@ public class InvoiceForLease_Test {
         @Before
         public void setUp() throws Exception {
             invoice = new InvoiceForLease() {
-                @Override public ApplicationTenancy getApplicationTenancy() {
-                    return new ApplicationTenancy();
+
+                @Override public Party getSeller() {
+                    return stubInvoiceSeller;
                 }
 
-                ;
+                @Override
+                public ApplicationTenancy getApplicationTenancy() {
+                    return stubApplicationTenancy;
+                }
             };
             invoice.setDueDate(new LocalDate(2012, 2, 2));
-            invoice.numeratorRepository = mockNumeratorRepository;
-            invoice.setFixedAsset(invoiceProperty);
+            invoice.numeratorRepository = mockNumeratorForOutgoingInvoicesRepository;
+            invoice.setFixedAsset(stubInvoiceProperty);
 
             numerator = new Numerator();
             numerator.setLastIncrement(BigInteger.TEN);
@@ -447,7 +465,7 @@ public class InvoiceForLease_Test {
             applicationTenancy.setPath("/");
 
             invoice_invoice = new InvoiceForLease._invoice(this.invoice);
-            invoice_invoice.numeratorRepository = mockNumeratorRepository;
+            invoice_invoice.numeratorRepository = mockNumeratorForOutgoingInvoicesRepository;
             invoice_invoice.invoiceRepository = mockInvoiceRepository;
         }
 

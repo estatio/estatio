@@ -1,108 +1,109 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <row>
         <col span="12" unreferencedActions="true">
-            <ns2:domainObject/>
-            <ns2:action id="approve"/>
-            <ns2:action id="saveAsHistoric"/>
-            <ns2:action id="links"/>
-            <ns2:action id="invoice"/>
-            <ns2:action id="collect"/>
-            <ns2:action id="attachSupportingDocument"/>
-            <ns2:action id="remove"/>
+            <cpt:domainObject/>
+            <cpt:action id="approve"/>
+            <cpt:action id="saveAsHistoric"/>
+            <cpt:action id="links"/>
+            <cpt:action id="invoice"/>
+            <cpt:action id="collect"/>
+            <cpt:action id="attachSupportingDocument"/>
+            <cpt:action id="remove"/>
         </col>
     </row>
     <row>
         <col span="6">
-            <tabGroup>
-                <tab name="Invoice">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
-                                <ns2:property id="seller"/>
-                                <ns2:property id="buyer"/>
-                                <ns2:property id="collectionNumber"/>
-                                <ns2:property id="invoiceNumber"/>
-                                <ns2:property id="lastItemSequence"/>
-                                <ns2:property id="status"/>
-                                <ns2:property id="uuid"/>
-                                <ns2:property id="number"/>
-                                <ns2:property id="runId"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Application Level">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Application Level" id="applicationLevel">
-                                <ns2:property id="applicationTenancy"/>
-                                <ns2:property id="applicationTenancyPath"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Metadata">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Metadata" id="metadata">
-                                <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
-                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                                <ns2:property id="id"/>
-                                <ns2:property id="versionSequence"/>
-                                <ns2:property id="datanucleusId"/>
-                                <ns2:property id="datanucleusVersionLong"/>
-                                <ns2:property id="datanucleusVersionTimestamp"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-            </tabGroup>
-            <ns2:fieldSet name="Communications" id="comms">
-                <ns2:property id="sendTo" hidden="ALL_TABLES">
-                    <ns2:action id="overrideSendTo">
-                        <ns2:named>Override</ns2:named>
-                    </ns2:action>
-                </ns2:property>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="RelatedTo" id="relatedTo">
-                <ns2:property id="fixedAsset"/>
-                <ns2:property id="lease"/>
-            </ns2:fieldSet>
+            <row>
+                <col span="12">
+                    <tabGroup>
+                        <tab name="Invoice">
+                            <row>
+                                <col span="12">
+                                    <cpt:fieldSet name="General" id="general" unreferencedProperties="true">
+                                        <cpt:property id="seller"/>
+                                        <cpt:property id="buyer"/>
+                                        <cpt:property id="collectionNumber"/>
+                                        <cpt:property id="invoiceNumber"/>
+                                        <cpt:property id="lastItemSequence"/>
+                                        <cpt:property id="uuid"/>
+                                        <cpt:property id="number"/>
+                                        <cpt:property id="runId"/>
+                                    </cpt:fieldSet>
+                                </col>
+                            </row>
+                        </tab>
+                        <tab name="Application Level">
+                            <row>
+                                <col span="12">
+                                    <cpt:fieldSet name="Application Level" id="applicationLevel">
+                                        <cpt:property id="applicationTenancy" hidden="ALL_TABLES"/>
+                                        <cpt:property id="atPath" hidden="ALL_TABLES"/>
+                                    </cpt:fieldSet>
+                                </col>
+                            </row>
+                        </tab>
+                        <tab name="Metadata">
+                            <row>
+                                <col span="12">
+                                    <cpt:fieldSet name="Metadata" id="metadata">
+                                        <cpt:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                                        <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                        <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                        <cpt:property id="id"/>
+                                        <cpt:property id="versionSequence"/>
+                                        <cpt:property id="datanucleusId"/>
+                                        <cpt:property id="datanucleusVersionLong"/>
+                                        <cpt:property id="datanucleusVersionTimestamp"/>
+                                    </cpt:fieldSet>
+                                </col>
+                            </row>
+                        </tab>
+                    </tabGroup>
+                </col>
+            </row>
+            <row>
+                <col span="12">
+                    <cpt:fieldSet name="Status">
+                        <cpt:property id="status"/>
+                    </cpt:fieldSet>
+                    <cpt:fieldSet name="Communications" id="comms">
+                        <cpt:property id="sendTo" hidden="ALL_TABLES">
+                            <cpt:action id="overrideSendTo">
+                                <cpt:named>Override</cpt:named>
+                            </cpt:action>
+                        </cpt:property>
+                    </cpt:fieldSet>
+                    <cpt:fieldSet name="RelatedTo" id="relatedTo">
+                        <cpt:property id="fixedAsset"/>
+                        <cpt:property id="lease" hidden="PARENTED_TABLES"/>
+                    </cpt:fieldSet>
+                </col>
+            </row>
         </col>
          <col span="6">
-            <tabGroup>
+            <tabGroup collapseIfOne="false">
                 <tab name="Dates and Amounts">
                     <row>
                         <col span="12">
-                            <ns2:fieldSet name="Dates" id="dates">
-                                <ns2:property id="invoiceDate"/>
-                                <ns2:property id="dueDate">
-                                    <ns2:action id="changeDueDate" position="BELOW"/>
-                                </ns2:property>
-                            </ns2:fieldSet>
-                            <ns2:fieldSet name="Payment" id="payment">
-                                <ns2:property id="paymentMethod">
-                                    <ns2:action id="changePaymentMethod" position="BELOW"/>
-                                </ns2:property>
-                                <ns2:property id="paidBy"/>
-                            </ns2:fieldSet>
-                            <ns2:fieldSet name="Amounts" id="amounts">
-                                <ns2:property id="currency"/>
-                                <ns2:property id="netAmount"/>
-                                <ns2:property id="vatAmount"/>
-                                <ns2:property id="grossAmount"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Dummy">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="dummy-to-make-first-tab-appear">
-                                <ns2:property id="dummy"/>
-                            </ns2:fieldSet>
+                            <cpt:fieldSet name="Dates" id="dates">
+                                <cpt:property id="invoiceDate"/>
+                                <cpt:property id="dueDate">
+                                    <cpt:action id="changeDueDate" position="BELOW"/>
+                                </cpt:property>
+                            </cpt:fieldSet>
+                            <cpt:fieldSet name="Payment" id="payment">
+                                <cpt:property id="paymentMethod">
+                                    <cpt:action id="changePaymentMethod" position="BELOW"/>
+                                </cpt:property>
+                                <cpt:property id="paidBy"/>
+                            </cpt:fieldSet>
+                            <cpt:fieldSet name="Amounts" id="amounts">
+                                <cpt:property id="currency"/>
+                                <cpt:property id="netAmount"/>
+                                <cpt:property id="vatAmount"/>
+                                <cpt:property id="grossAmount"/>
+                            </cpt:fieldSet>
                         </col>
                     </row>
                 </tab>
@@ -113,59 +114,59 @@
                 <tab name="Items">
                     <row>
                         <col span="12">
-                            <ns2:collection id="items">
-                                <ns2:action id="newItem"/>
-                            </ns2:collection>
+                            <cpt:collection id="items">
+                                <cpt:action id="newItem"/>
+                            </cpt:collection>
                         </col>
                     </row>
                 </tab>
                 <tab name="Documents">
                     <row>
                         <col span="12">
-                            <ns2:collection id="documents">
-                                <ns2:action id="attachSupportingDocument"/>
-                                <ns2:action id="preview"/>
-                                <ns2:action id="prepare"/>
-                                <ns2:action id="sendByEmail"/>
-                                <ns2:action id="sendByPost"/>
-                            </ns2:collection>
+                            <cpt:collection id="documents">
+                                <cpt:action id="attachSupportingDocument"/>
+                                <cpt:action id="preview"/>
+                                <cpt:action id="prepare"/>
+                                <cpt:action id="sendByEmail"/>
+                                <cpt:action id="sendByPost"/>
+                            </cpt:collection>
                         </col>
                     </row>
                 </tab>
                 <tab name="Preliminary Letter / Invoice Document">
                     <row>
                         <col span="12">
-                            <ns2:collection id="preliminaryLetters">
-                                <ns2:action id="preparePrelimLetter">
-                                    <ns2:named>Prepare</ns2:named>
-                                </ns2:action>
-                                <ns2:action id="sendByEmailPrelimLetter" cssClassFa="at">
-                                    <ns2:named>Send by email</ns2:named>
-                                </ns2:action>
-                                <ns2:action id="sendByPostPrelimLetter" cssClassFa="print">
-                                    <ns2:named>Send by post</ns2:named>
-                                </ns2:action>
-                            </ns2:collection>
-                            <ns2:collection id="invoiceDocs">
-                                <ns2:action id="prepareInvoiceDoc">
-                                    <ns2:named>Prepare</ns2:named>
-                                </ns2:action>
-                                <ns2:action id="sendByEmailInvoiceDoc">
-                                    <ns2:named>Send by email</ns2:named>
-                                </ns2:action>
-                                <ns2:action id="sendByPostInvoiceDoc" cssClassFa="print">
-                                    <ns2:named>Send by post</ns2:named>
-                                </ns2:action>
-                            </ns2:collection>
+                            <cpt:collection id="preliminaryLetters">
+                                <cpt:action id="preparePrelimLetter">
+                                    <cpt:named>Prepare</cpt:named>
+                                </cpt:action>
+                                <cpt:action id="sendByEmailPrelimLetter" cssClassFa="at">
+                                    <cpt:named>Send by email</cpt:named>
+                                </cpt:action>
+                                <cpt:action id="sendByPostPrelimLetter" cssClassFa="print">
+                                    <cpt:named>Send by post</cpt:named>
+                                </cpt:action>
+                            </cpt:collection>
+                            <cpt:collection id="invoiceDocs">
+                                <cpt:action id="prepareInvoiceDoc">
+                                    <cpt:named>Prepare</cpt:named>
+                                </cpt:action>
+                                <cpt:action id="sendByEmailInvoiceDoc">
+                                    <cpt:named>Send by email</cpt:named>
+                                </cpt:action>
+                                <cpt:action id="sendByPostInvoiceDoc" cssClassFa="print">
+                                    <cpt:named>Send by post</cpt:named>
+                                </cpt:action>
+                            </cpt:collection>
                         </col>
                     </row>
                 </tab>
                 <tab name="Attributes">
                     <row>
                         <col span="12">
-                            <ns2:collection id="attributes" defaultView="table">
-                                <ns2:action id="updateAttribute"/>
-                            </ns2:collection>
+                            <cpt:collection id="attributes" defaultView="table">
+                                <cpt:action id="updateAttribute"/>
+                            </cpt:collection>
                         </col>
                     </row>
                 </tab>

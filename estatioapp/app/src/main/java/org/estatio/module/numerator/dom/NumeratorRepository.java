@@ -22,14 +22,13 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.apache.isis.applib.RecoverableException;
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
@@ -40,136 +39,128 @@ public class NumeratorRepository extends UdoDomainRepositoryAndFactory<Numerator
         super(NumeratorRepository.class, Numerator.class);
     }
 
-    /**
-     * Required for integration testing.
-     *
-     * <p>
-     *     When running integration tests for just this module, the Isis metamodel validation (as of 1.13.1) requires
-     *     that there is at least one entity found.  Such tests only have a single service - this repository - to
-     *     locate entities (transitively), and all the other methods in this service are @Programmatic, meaning that
-     *     they are ignored.  This dummy method therefore ensures that the Numerator class is found, ensuring that
-     *     the validation error does not trip up.
-     * </p>
-     */
-    @Action(hidden = Where.EVERYWHERE)
-    public Numerator registerInMetaModel() {
-        return null;
-    }
-
-
-    @Programmatic
     public List<Numerator> allNumerators() {
         return allInstances();
     }
 
+    public Numerator find(
+            final String name,
+            final Country countryIfAny,
+            final Object objectIfAny,
+            final Object object2IfAny) {
 
-
-    @Programmatic
-    public Numerator findGlobalNumerator(
-            final String numeratorName,
-            final ApplicationTenancy applicationTenancy) {
-        return findNumerator(numeratorName, null, applicationTenancy);
-    }
-
-    @Programmatic
-    public Numerator findScopedNumeratorIncludeWildCardMatching(
-            final String numeratorName,
-            final Object scopedTo,
-            final ApplicationTenancy applicationTenancy) {
-        Numerator result = findNumerator(numeratorName, scopedTo, applicationTenancy);
-        return result == null ? findFirstNumeratorForObjectTypeMatchingAppTenancyPath(numeratorName, scopedTo, applicationTenancy) : result;
-    }
-
-
-    @Programmatic
-    public Numerator findNumerator(final String numeratorName, final Object scopedToIfAny, final ApplicationTenancy applicationTenancy) {
-        if(scopedToIfAny == null) {
-            return firstMatch("findByNameAndApplicationTenancyPath",
-                    "name", numeratorName,
-                    "applicationTenancyPath", applicationTenancy == null ? "/" : applicationTenancy.getPath());
-        } else {
-            final Bookmark bookmark = getBookmarkService().bookmarkFor(scopedToIfAny);
-            final String objectType = bookmark.getObjectType();
-            final String objectIdentifier = bookmark.getIdentifier();
-            return firstMatch("findByNameAndObjectTypeAndObjectIdentifierAndApplicationTenancyPath",
-                    "name", numeratorName, 
-                    "objectType", objectType, 
-                    "objectIdentifier", objectIdentifier,
-                    "applicationTenancyPath", applicationTenancy == null ? "/" : applicationTenancy.getPath());
+        if(countryIfAny == null) {
+            return findByName(name);
         }
+        if(objectIfAny == null) {
+            return findByNameAndCountry(name, countryIfAny);
+        }
+        if (object2IfAny == null) {
+            return findByNameAndCountryAndObject(name, countryIfAny, objectIfAny);
+        }
+        return findByNameAndCountryAndObjectAndObject2(name, countryIfAny, objectIfAny, object2IfAny);
     }
 
-    private Numerator findFirstNumeratorForObjectTypeMatchingAppTenancyPath(final String numeratorName, final Object scopedToIfAny, final ApplicationTenancy applicationTenancy){
-        final Bookmark bookmark = getBookmarkService().bookmarkFor(scopedToIfAny);
+    private Numerator findByName(final String name) {
+        return firstMatch(
+                "findByName",
+                "name", name);
+    }
+
+    private Numerator findByNameAndCountry(
+            final String name,
+            final Country country) {
+        return firstMatch(
+                "findByNameAndCountry",
+                "name", name,
+                "country", country);
+    }
+
+    private Numerator findByNameAndCountryAndObject(
+            final String name,
+            final Country country,
+            final Object object) {
+
+        final Bookmark bookmark = bookmarkService.bookmarkFor(object);
         final String objectType = bookmark.getObjectType();
-        return firstMatch("findByNameAndObjectTypeAndApplicationTenancyPath",
-                "name", numeratorName,
+        final String objectIdentifier = bookmark.getIdentifier();
+
+        return firstMatch("findByNameAndCountryAndObject",
+                "name", name,
+                "country", country,
                 "objectType", objectType,
-                "applicationTenancyPath", applicationTenancy == null ? "/" : applicationTenancy.getPath());
+                "objectIdentifier", objectIdentifier);
     }
 
-    // //////////////////////////////////////
+    private Numerator findByNameAndCountryAndObjectAndObject2(
+            final String name,
+            final Country country,
+            final Object object,
+            final Object object2) {
 
-    @Programmatic
-    public Numerator createGlobalNumerator(
-            final String numeratorName,
+        final Bookmark bookmark = bookmarkService.bookmarkFor(object);
+        final String objectType = bookmark.getObjectType();
+        final String objectIdentifier = bookmark.getIdentifier();
+
+        final Bookmark bookmark2 = getBookmarkService().bookmarkFor(object2);
+        final String objectType2 = bookmark2.getObjectType();
+        final String objectIdentifier2 = bookmark2.getIdentifier();
+
+        return firstMatch("findByNameAndCountryAndObjectAndObject2",
+                "name", name,
+                "country", country,
+                "objectType", objectType,
+                "objectIdentifier", objectIdentifier,
+                "objectType2", objectType2,
+                "objectIdentifier2", objectIdentifier2);
+    }
+
+    public Numerator findOrCreate(
+            final String name,
+            final Country countryIfAny,
+            final Object objectIfAny,
+            final Object object2IfAny,
             final String format,
             final BigInteger lastIncrement,
             final ApplicationTenancy applicationTenancy) {
 
-        return findOrCreateNumerator(numeratorName, null, format, lastIncrement, applicationTenancy);
-    }
-
-    @Programmatic
-    public Numerator createScopedNumerator(
-            final String numeratorName,
-            final Object scopedTo,
-            final String format,
-            final BigInteger lastIncrement, final ApplicationTenancy applicationTenancy) {
-
-        return findOrCreateNumerator(numeratorName, scopedTo, format, lastIncrement, applicationTenancy);
-    }
-
-    @Programmatic
-    public Numerator findOrCreateNumerator(
-            final String numeratorName,
-            final Object scopedToIfAny,
-            final String format,
-            final BigInteger lastIncrement,
-            final ApplicationTenancy applicationTenancy) {
-
-        // validate
         try {
             String.format(format, lastIncrement);
         } catch(Exception ex) {
-            throw new RecoverableException("Invalid format string '" + format + "'");
+            throw new RecoverableException(String.format("Invalid format string '%s'", format));
         }
 
-        final Numerator existingIfAny = findNumerator(numeratorName, scopedToIfAny, applicationTenancy);
+        final Numerator existingIfAny = find(name, countryIfAny, objectIfAny, object2IfAny);
         if(existingIfAny != null) {
             return existingIfAny;
         }
-        return createNumerator(numeratorName, scopedToIfAny, format, lastIncrement, applicationTenancy);
+
+        return create(name, countryIfAny, objectIfAny, object2IfAny, format, lastIncrement, applicationTenancy);
     }
 
-    private Numerator createNumerator(
-            final String numeratorName,
-            final Object scopedToIfAny,
+
+    public Numerator create(
+            final String name,
+            final Country countryIfAny,
+            final Object objectIfAny,
+            final Object object2IfAny,
             final String format,
             final BigInteger lastIncrement,
             final ApplicationTenancy applicationTenancy) {
-        final Numerator numerator = newTransientInstance();
-        numerator.setName(numeratorName);
-        numerator.setApplicationTenancyPath(applicationTenancy.getPath());
-        if(scopedToIfAny != null) {
-            final Bookmark bookmark = getBookmarkService().bookmarkFor(scopedToIfAny);
+
+        final Numerator numerator = new Numerator(name, countryIfAny, applicationTenancy.getPath(), format, lastIncrement);
+        if(objectIfAny != null) {
+            final Bookmark bookmark = bookmarkService.bookmarkFor(objectIfAny);
             numerator.setObjectType(bookmark.getObjectType());
             numerator.setObjectIdentifier(bookmark.getIdentifier());
         }
-        numerator.setFormat(format);
-        numerator.setLastIncrement(lastIncrement);
-        persist(numerator);
-        return numerator;
+        if(object2IfAny != null) {
+            final Bookmark bookmark2 = bookmarkService.bookmarkFor(object2IfAny);
+            numerator.setObjectType2(bookmark2.getObjectType());
+            numerator.setObjectIdentifier2(bookmark2.getIdentifier());
+        }
+
+        return persist(numerator);
     }
 
 

@@ -1094,10 +1094,10 @@ public class Lease_Test {
             final Organisation tenant = new Organisation();
             final Organisation landlord = new Organisation();
             LeaseForTesting lease = new LeaseForTesting(){
-                @Override public Party getPrimaryParty() {
+                @Override public Party primaryPartyAsOfElseCurrent(LocalDate dt) {
                     return landlord;
                 }
-                @Override public Party getSecondaryParty() {
+                @Override public Party secondaryPartyAsOfElseCurrent(LocalDate dt) {
                     return tenant;
                 }
             };

@@ -23,14 +23,13 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import com.google.common.collect.Sets;
 
 import org.joda.time.LocalDate;
 
@@ -42,7 +41,6 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.Property;
@@ -59,14 +57,14 @@ import org.incode.module.base.dom.with.WithNameComparable;
 import org.incode.module.base.dom.with.WithReferenceUnique;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
 
-import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.asset.dom.ownership.FixedAssetOwnership;
 import org.estatio.module.asset.dom.ownership.FixedAssetOwnershipRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
-import org.estatio.module.party.dom.Party;
 import org.estatio.module.base.dom.EstatioRole;
+import org.estatio.module.base.dom.UdoDomainObject2;
+import org.estatio.module.party.dom.Party;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -241,8 +239,10 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
     public FixedAsset newRole(
             final FixedAssetRoleTypeEnum type,
             final Party party,
-            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
+            @Nullable
+            final LocalDate startDate,
+            @Nullable
+            final LocalDate endDate) {
         createRole(type, party, startDate, endDate);
         return this;
     }
@@ -265,9 +265,6 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
             return "End date cannot be earlier than start date";
         }
 
-        if (!Sets.filter(getRoles(), type.matchingRole()).isEmpty()) {
-            return "Add a successor/predecessor from existing role";
-        }
         return null;
     }
 

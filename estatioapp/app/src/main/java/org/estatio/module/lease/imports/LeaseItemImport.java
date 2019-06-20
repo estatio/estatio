@@ -145,7 +145,6 @@ public class LeaseItemImport implements ExcelFixtureRowHandler, Importable {
             item.setSequence(sequence);
         }
         if (updateExisting) {
-            item.setApplicationTenancyPath(atPath);
             item.setEpochDate(epochDate);
             item.setNextDueDate(nextDueDate);
             item.setStatus(LeaseItemStatus.valueOfElse(status, LeaseItemStatus.ACTIVE));

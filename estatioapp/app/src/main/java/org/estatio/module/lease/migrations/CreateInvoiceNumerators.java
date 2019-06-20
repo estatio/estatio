@@ -24,17 +24,15 @@ import java.util.List;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
-import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.property.builders.PropertyOwnerBuilder;
-import org.estatio.module.lease.dom.EstatioApplicationTenancyRepositoryForLease;
-import org.estatio.module.lease.dom.invoicing.NumeratorForCollectionRepository;
+import org.estatio.module.lease.dom.invoicing.NumeratorForOutgoingInvoicesRepository;
 import org.estatio.module.numerator.dom.Numerator;
+import org.estatio.module.party.dom.Party;
 
 import static org.incode.module.base.integtests.VT.bi;
 
@@ -53,15 +51,13 @@ public class CreateInvoiceNumerators extends DiscoverableFixtureScript {
         for (final Property property : propertyRepository.allProperties()) {
             for (final FixedAssetRole fixedAssetRole : fixedAssetRoleRepository.findAllForProperty(property)){
                 if (roleTypes.contains(fixedAssetRole.getType())) {
-                    ApplicationTenancy applicationTenancy =
-                            estatioApplicationTenancyRepository.findOrCreateTenancyFor(
-                                    property, fixedAssetRole.getParty());
+                    final Party party = fixedAssetRole.getParty();
                     final Numerator numerator =
                             estatioNumeratorRepository.createInvoiceNumberNumerator(
                                     property,
+                                    party,
                                     PropertyOwnerBuilder.numeratorReferenceFor(property),
-                                    bi(0),
-                                    applicationTenancy);
+                                    bi(0));
 
                     ec.addResult(this, property.getReference(), numerator);
                 }
@@ -71,14 +67,11 @@ public class CreateInvoiceNumerators extends DiscoverableFixtureScript {
     // //////////////////////////////////////
 
     @javax.inject.Inject
-    NumeratorForCollectionRepository estatioNumeratorRepository;
+    NumeratorForOutgoingInvoicesRepository estatioNumeratorRepository;
 
     @javax.inject.Inject
     PropertyRepository propertyRepository;
 
     @javax.inject.Inject
     FixedAssetRoleRepository fixedAssetRoleRepository;
-
-    @javax.inject.Inject
-    EstatioApplicationTenancyRepositoryForLease estatioApplicationTenancyRepository;
 }

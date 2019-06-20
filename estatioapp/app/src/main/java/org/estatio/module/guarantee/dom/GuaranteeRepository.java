@@ -76,10 +76,10 @@ public class GuaranteeRepository extends UdoDomainRepositoryAndFactory<Guarantee
     ) {
 
         AgreementRoleType artGuarantee = agreementRoleTypeRepository.find(GuaranteeAgreementRoleTypeEnum.GUARANTEE);
-        Party leasePrimaryParty = lease.getPrimaryParty();
+        Party leasePrimaryParty = lease.primaryPartyAsOfElseCurrent(startDate);
 
         AgreementRoleType artGuarantor = agreementRoleTypeRepository.find(GuaranteeAgreementRoleTypeEnum.GUARANTOR);
-        Party leaseSecondaryParty = lease.getSecondaryParty();
+        Party leaseSecondaryParty = lease.secondaryPartyAsOfElseCurrent(startDate);
 
         Guarantee guarantee = newTransientInstance(Guarantee.class);
         final AgreementType at = agreementTypeRepository.find(GuaranteeAgreementTypeEnum.GUARANTEE);

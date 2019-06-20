@@ -18,7 +18,6 @@
  */
 package org.estatio.module.capex.integtests.project;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import javax.inject.Inject;

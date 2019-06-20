@@ -28,7 +28,6 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -56,7 +55,6 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
         super(InvoiceForLeaseRepository.class, InvoiceForLease.class);
     }
 
-    @Programmatic
     public List<InvoiceForLease> findMatchingInvoices(
             final Party seller,
             final Party buyer,
@@ -74,7 +72,6 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
                 "dueDate", dueDate);
     }
 
-    @Programmatic
     public InvoiceForLease findOrCreateMatchingInvoice(
             final ApplicationTenancy applicationTenancy,
             final PaymentMethod paymentMethod,
@@ -82,13 +79,13 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
             final InvoiceStatus invoiceStatus,
             final LocalDate dueDate,
             final String interactionId) {
-        Party buyer = lease.getSecondaryParty();
-        Party seller = lease.getPrimaryParty();
+
+        Party buyer = lease.secondaryPartyAsOfElseCurrent(dueDate);
+        Party seller = lease.primaryPartyAsOfElseCurrent(dueDate);
         return findOrCreateMatchingInvoice(
                 applicationTenancy, seller, buyer, paymentMethod, lease, invoiceStatus, dueDate, interactionId);
     }
 
-    @Programmatic
     public InvoiceForLease findMatchingInvoice(
             final Party seller,
             final Party buyer,
@@ -104,7 +101,6 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
         return invoices.get(0);
     }
 
-    @Programmatic
     public InvoiceForLease findOrCreateMatchingInvoice(
             final ApplicationTenancy applicationTenancy,
             final Party seller,
@@ -122,12 +118,10 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
         return invoices.get(0);
     }
 
-    @Programmatic
     public List<InvoiceForLease> findByLease(final Lease lease) {
         return allMatches("findByLease", "lease", lease);
     }
 
-    @Programmatic
     public InvoiceForLease newInvoice(
             final ApplicationTenancy applicationTenancy,
             final Party seller,
@@ -178,7 +172,6 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
 
 
 
-    @Programmatic
     public List<InvoiceForLease> findByFixedAssetAndStatus(
             final FixedAsset fixedAsset,
             final InvoiceStatus status) {
@@ -187,7 +180,6 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
                 "status", status);
     }
 
-    @Programmatic
     public List<InvoiceForLease> findByFixedAssetAndDueDate(
             final FixedAsset fixedAsset,
             final LocalDate dueDate) {
@@ -196,7 +188,6 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
                 "dueDate", dueDate);
     }
 
-    @Programmatic
     public List<InvoiceForLease> findByFixedAssetAndDueDateAndStatus(
             final FixedAsset fixedAsset,
             final LocalDate dueDate,
@@ -209,7 +200,6 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
 
 
 
-    @Programmatic
     public List<InvoiceForLease> findByApplicationTenancyPathAndSellerAndDueDateAndStatus(
             final String applicationTenancyPath,
             final Party seller,
@@ -221,7 +211,6 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
                 "dueDate", dueDate,
                 "status", status);
     }
-    @Programmatic
     public List<InvoiceForLease> findByApplicationTenancyPathAndSellerAndInvoiceDate(
             final String applicationTenancyPath,
             final Party seller,
@@ -235,13 +224,11 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
 
 
 
-    @Programmatic
     public List<InvoiceForLease> findInvoicesByRunId(final String runId) {
         return allMatches("findByRunId",
                 "runId", runId);
     }
 
-    @Programmatic
     public List<InvoiceForLease> findByRunIdAndApplicationTenancyPath(final String runId, final String applicationTenancyPath) {
         return allMatches("findByRunIdAndApplicationTenancyPath",
                 "runId", runId,
@@ -250,7 +237,6 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
 
 
 
-    @Programmatic
     public void removeRuns(InvoiceCalculationParameters parameters) {
         List<InvoiceForLease> invoices = findByFixedAssetAndDueDateAndStatus(parameters.property(), parameters.invoiceDueDate(), InvoiceStatus.NEW);
         for (Invoice invoice : invoices) {
@@ -258,7 +244,6 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
         }
     }
 
-    @Programmatic
     public List<InvoiceForLease> findInvoicesByInvoiceNumber(
             final String invoiceNumber,
             final Integer yearIfAny) {
@@ -272,7 +257,6 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
                 .collect(Collectors.toList());
     }
 
-    @Programmatic
     public Optional<InvoiceForLease> findInvoiceByInvoiceNumber(
             final String invoiceNumber,
             final Integer year) {
@@ -286,14 +270,14 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
                 .findFirst();
     }
 
-    @javax.inject.Inject
+    @Inject
     FactoryService factoryService;
 
-    @javax.inject.Inject
+    @Inject
     AgreementCommunicationChannelLocator locator;
 
 
-    @javax.inject.Inject
+    @Inject
     LeaseInvoicingSettingsService settingsService;
 
     @Inject

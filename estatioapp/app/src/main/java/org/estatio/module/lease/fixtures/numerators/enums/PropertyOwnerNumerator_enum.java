@@ -8,9 +8,9 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
+import org.estatio.module.lease.dom.invoicing.NumeratorForOutgoingInvoicesRepository;
 import org.estatio.module.lease.fixtures.numerators.builders.PropertyOwnerNumeratorBuilder;
 import org.estatio.module.lease.dom.EstatioApplicationTenancyRepositoryForLease;
-import org.estatio.module.lease.dom.invoicing.NumeratorForCollectionRepository;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.party.dom.Organisation;
 
@@ -46,8 +46,9 @@ public enum PropertyOwnerNumerator_enum implements PersonaWithFinder<Numerator>,
         final ApplicationTenancy applicationTenancy =
                 estatioApplicationTenancyRepository.findOrCreateTenancyFor(property, owner);
 
-        final NumeratorForCollectionRepository repository = serviceRegistry.lookupService(NumeratorForCollectionRepository.class);
-        return repository.findInvoiceNumberNumerator(property, applicationTenancy);
+        final NumeratorForOutgoingInvoicesRepository repository = serviceRegistry.lookupService(
+                NumeratorForOutgoingInvoicesRepository.class);
+        return repository.findInvoiceNumberNumerator(property, owner);
     }
 
     @Override
