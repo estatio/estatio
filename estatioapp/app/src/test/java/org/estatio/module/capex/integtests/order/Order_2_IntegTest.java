@@ -120,7 +120,7 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
 
         // when
         approve(Person_enum.JonathanIncomingInvoiceManagerGb.getSecurityUserName(), this.order);
-        
+
     }
 
     @Test

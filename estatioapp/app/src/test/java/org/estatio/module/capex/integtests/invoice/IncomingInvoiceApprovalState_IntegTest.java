@@ -54,6 +54,7 @@ import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXl
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.invoice.dom.PaymentMethod;
+import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
@@ -108,6 +109,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
 
         buyer = OrganisationAndComms_enum.HelloWorldFr.findUsing(serviceRegistry);
         seller = OrganisationAndComms_enum.TopModelFr.findUsing(serviceRegistry);
+        ((Organisation) seller).setChamberOfCommerceCode("Code");
 
         france = countryRepository.findCountry(Country_enum.FRA.getRef3());
         charge_for_works = chargeRepository.findByReference("WORKS");
@@ -152,6 +154,35 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         assertThat(error.getMessage()).isNotNull();
         assertThat(error.getMessage()).contains("Reason: Task assigned to 'INCOMING_INVOICE_MANAGER' role");
 
+    }
+
+    @Test
+    public void complete_should_fail_when_supplier_misses_chamber_of_commerce_code() throws Exception {
+        Exception error = new Exception();
+
+        // given
+        Person personEmma = (Person) partyRepository.findPartyByReference(
+                Person_enum.BrunoTreasurerFr.getRef());
+        PartyRoleType roleAsIncInvoiceManager = partyRoleTypeRepository.findByKey("INCOMING_INVOICE_MANAGER");
+        personEmma.addRole(roleAsIncInvoiceManager);
+        transactionService.nextTransaction();
+        SortedSet<PartyRole> rolesforEmma = personEmma.getRoles();
+        assertThat(rolesforEmma.size()).isEqualTo(2);
+        assertThat(rolesforEmma.first().getRoleType()).isEqualTo(partyRoleTypeRepository.findByKey("INCOMING_INVOICE_MANAGER"));
+
+        ((Organisation) incomingInvoice.getSeller()).setChamberOfCommerceCode(null);
+
+        // when
+        try {
+            queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+            sudoService.sudo(Person_enum.BrunoTreasurerFr.getRef().toLowerCase(), (Runnable) () ->
+                    wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository), null, null));
+        } catch (DisabledException e){
+            error = e;
+        }
+
+        assertThat(error.getMessage()).isNotNull();
+        assertThat(error.getMessage()).contains("Supplier is missing chamber of commerce code");
     }
 
     @Test

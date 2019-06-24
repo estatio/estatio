@@ -30,6 +30,7 @@ import org.estatio.module.capex.dom.state.StateTransitionServiceSupportAbstract;
 import org.estatio.module.capex.dom.state.StateTransitionType;
 import org.estatio.module.capex.dom.state.TaskAssignmentStrategy;
 import org.estatio.module.invoice.dom.PaymentMethod;
+import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.IPartyRoleType;
@@ -189,7 +190,11 @@ public enum IncomingInvoiceApprovalStateTransitionType
         public String reasonGuardNotSatisified(
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
-            return incomingInvoice.reasonIncomplete();
+            final boolean missingChamberOfCommerceCode = !incomingInvoice.getAtPath().startsWith("/ITA") && incomingInvoice.getSeller() instanceof Organisation && ((Organisation) incomingInvoice.getSeller()).getChamberOfCommerceCode() == null;
+
+            return missingChamberOfCommerceCode ?
+                    "Supplier is missing chamber of commerce code" :
+                    incomingInvoice.reasonIncomplete();
         }
 
     },
