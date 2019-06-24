@@ -72,28 +72,35 @@ public class TurnoverEntryService_IntegTest extends TurnoverModuleIntegTestAbstr
             assertThat(turnovers).hasSize(0);
 
             // when
+            turnoverEntryService.produceEmptyTurnoversFor(new LocalDate(2013, 1, 1));
+            // then
+            turnovers = turnoverRepository.listAll();
+            assertThat(turnovers).isEmpty();
+
+            // when
             turnoverEntryService.produceEmptyTurnoversFor(new LocalDate(2014, 1, 1));
             // then
-            assertThat(turnovers).isEmpty();
+            turnovers = turnoverRepository.listAll();
+            assertThat(turnovers).hasSize(2);
+            assertThat(turnovers.get(0).getType()).isEqualTo(Type.PRELIMINARY);
+            assertThat(turnovers.get(0).getFrequency()).isEqualTo(Frequency.MONTHLY);
+            assertThat(turnovers.get(0).getStatus()).isEqualTo(Status.NEW);
+            assertThat(turnovers.get(0).getDate()).isEqualTo(new LocalDate(2014, 1, 1));
+            assertThat(turnovers.get(1).getType()).isEqualTo(Type.AUDITED);
+            assertThat(turnovers.get(1).getFrequency()).isEqualTo(Frequency.YEARLY);
+            assertThat(turnovers.get(1).getStatus()).isEqualTo(Status.NEW);
+            assertThat(turnovers.get(1).getDate()).isEqualTo(new LocalDate(2014, 1, 1));
 
             // and when
             turnoverEntryService.produceEmptyTurnoversFor(new LocalDate(2014, 2, 1));
             // then
             turnovers = turnoverRepository.listAll();
-            assertThat(turnovers).hasSize(1);
-            assertThat(turnovers.get(0).getType()).isEqualTo(Type.PRELIMINARY);
-            assertThat(turnovers.get(0).getFrequency()).isEqualTo(Frequency.MONTHLY);
-            assertThat(turnovers.get(0).getStatus()).isEqualTo(Status.NEW);
-
-            // and when
-            final LocalDate start2015 = new LocalDate(2015, 1, 1);
-            turnoverEntryService.produceEmptyTurnoversFor(start2015);
-
-            // then
-            turnovers = turnoverRepository.listAll();
             assertThat(turnovers).hasSize(3);
-            assertThat(turnovers.get(2).getType()).isEqualTo(Type.AUDITED);
-            assertThat(turnovers.get(2).getFrequency()).isEqualTo(Frequency.YEARLY);
+            assertThat(turnovers.get(2).getType()).isEqualTo(Type.PRELIMINARY);
+            assertThat(turnovers.get(2).getFrequency()).isEqualTo(Frequency.MONTHLY);
+            assertThat(turnovers.get(2).getStatus()).isEqualTo(Status.NEW);
+            assertThat(turnovers.get(2).getDate()).isEqualTo(new LocalDate(2014, 2, 1));
+
         }
 
     }
@@ -138,7 +145,7 @@ public class TurnoverEntryService_IntegTest extends TurnoverModuleIntegTestAbstr
             final LocalDate march = new LocalDate(2014, 03, 01);
             turnoverEntryService.produceEmptyTurnoversFor(march);
             List<Turnover> turnovers = turnoverRepository.listAll();
-            assertThat(turnovers).hasSize(26); // no turnovers for topmodel on 01-01-2014
+            assertThat(turnovers).hasSize(28);
 
             assertThat(turnoverReportingConfigRepository.listAll()).hasSize(14);
             Person reporterJohn = Person_enum.JohnTurnover.findUsing(serviceRegistry);
