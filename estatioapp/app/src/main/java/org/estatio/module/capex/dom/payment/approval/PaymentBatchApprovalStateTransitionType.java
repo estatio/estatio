@@ -2,6 +2,8 @@ package org.estatio.module.capex.dom.payment.approval;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -10,6 +12,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.capex.dom.payment.PaymentBatch;
+import org.estatio.module.capex.dom.payment.PaymentLine;
 import org.estatio.module.capex.dom.state.AdvancePolicy;
 import org.estatio.module.capex.dom.state.NextTransitionSearchStrategy;
 import org.estatio.module.capex.dom.state.StateTransitionEvent;
@@ -17,6 +20,8 @@ import org.estatio.module.capex.dom.state.StateTransitionRepository;
 import org.estatio.module.capex.dom.state.StateTransitionServiceSupportAbstract;
 import org.estatio.module.capex.dom.state.StateTransitionType;
 import org.estatio.module.capex.dom.state.TaskAssignmentStrategy;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
@@ -33,7 +38,7 @@ public enum PaymentBatchApprovalStateTransitionType
 
     // a "pseudo" transition type; won't ever see this persisted as a state transition
     INSTANTIATE(
-            (PaymentBatchApprovalState)null,
+            (PaymentBatchApprovalState) null,
             PaymentBatchApprovalState.NEW,
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.none(),
@@ -43,19 +48,44 @@ public enum PaymentBatchApprovalStateTransitionType
             PaymentBatchApprovalState.COMPLETED,
             NextTransitionSearchStrategy.none(),
             null, // task assignment strategy overridden below
-            AdvancePolicy.MANUAL){
-            @Override
-            public TaskAssignmentStrategy getTaskAssignmentStrategy() {
-                return (TaskAssignmentStrategy<
-                        PaymentBatch,
-                        PaymentBatchApprovalStateTransition,
-                        PaymentBatchApprovalStateTransitionType,
-                        PaymentBatchApprovalState>) (paymentBatch, serviceRegistry2) -> {
-                    if (paymentBatch.getAtPath().startsWith("/ITA")) return null;
-                    return Collections.singletonList(PartyRoleTypeEnum.TREASURER);
-                };
+            AdvancePolicy.MANUAL) {
+        @Override
+        public TaskAssignmentStrategy getTaskAssignmentStrategy() {
+            return (TaskAssignmentStrategy<
+                    PaymentBatch,
+                    PaymentBatchApprovalStateTransition,
+                    PaymentBatchApprovalStateTransitionType,
+                    PaymentBatchApprovalState>) (paymentBatch, serviceRegistry2) -> {
+                if (paymentBatch.getAtPath().startsWith("/ITA"))
+                    return null;
+                return Collections.singletonList(PartyRoleTypeEnum.TREASURER);
+            };
+        }
+
+        @Override
+        public String reasonGuardNotSatisified(final PaymentBatch paymentBatch, final ServiceRegistry2 serviceRegistry2) {
+            if (paymentBatch.getAtPath().startsWith("/ITA"))
+                return null;
+
+            boolean satisfied = true;
+            StringJoiner joiner = new StringJoiner(", ", "Cannot complete payment batch because the following organisations are missing a chamber of commerce code: ", "");
+
+            final List<Party> partiesInBatch = paymentBatch.getLines()
+                    .stream()
+                    .map(PaymentLine::getCreditor)
+                    .distinct()
+                    .collect(Collectors.toList());
+
+            for (Party party : partiesInBatch) {
+                if (party instanceof Organisation && ((Organisation) party).getChamberOfCommerceCode() == null) {
+                    satisfied = false;
+                    joiner.add(String.format("%s [%s]", party.getName(), party.getReference()));
+                }
             }
-        },
+
+            return satisfied ? null : joiner.toString();
+        }
+    },
     CONFIRM_AUTHORISATION(
             PaymentBatchApprovalState.COMPLETED,
             PaymentBatchApprovalState.PAID,
@@ -94,7 +124,7 @@ public enum PaymentBatchApprovalStateTransitionType
             final NextTransitionSearchStrategy nextTransitionSearchStrategy,
             final TaskAssignmentStrategy taskAssignmentStrategy,
             final AdvancePolicy advancePolicy) {
-        this(fromState != null ? Collections.singletonList(fromState): null, toState, nextTransitionSearchStrategy,
+        this(fromState != null ? Collections.singletonList(fromState) : null, toState, nextTransitionSearchStrategy,
                 taskAssignmentStrategy,
                 advancePolicy);
     }
@@ -131,7 +161,6 @@ public enum PaymentBatchApprovalStateTransitionType
         return new TransitionEvent(domainObject, pendingTransitionIfAny, this);
     }
 
-
     @Override
     public PaymentBatchApprovalStateTransition createTransition(
             final PaymentBatch domainObject,
@@ -148,7 +177,6 @@ public enum PaymentBatchApprovalStateTransitionType
 
         return repository.create(domainObject, this, fromState, assignToIfAny, personToAssignToIfAny, taskDescription);
     }
-
 
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class SupportService extends StateTransitionServiceSupportAbstract<

@@ -9,12 +9,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.wrapper.DisabledException;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.payment.PaymentBatch;
 import org.estatio.module.capex.dom.payment.PaymentBatchRepository;
 import org.estatio.module.capex.dom.payment.PaymentLine;
 import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalState;
+import org.estatio.module.capex.dom.payment.approval.triggers.PaymentBatch_complete;
 import org.estatio.module.capex.fixtures.incominginvoice.enums.IncomingInvoice_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
@@ -92,6 +95,47 @@ public class PaymentBatch_IntegTest extends CapexModuleIntegTestAbstract {
         assertThat(urgentPaymentBatch.getApprovalState()).isEqualTo(PaymentBatchApprovalState.COMPLETED);
     }
 
+    @Test
+    public void reasonGuardNotSatisfied_works() throws Exception {
+        // given
+        paymentBatch.addLineIfRequired(invoice1); // sequence = 1
+        paymentBatch.addLineIfRequired(invoice2); // sequence = 2
+        final PaymentBatch_complete mixin = factoryService.mixin(PaymentBatch_complete.class, paymentBatch);
+
+        transactionService.nextTransaction();
+
+        // expected
+        expectedExceptions.expect(DisabledException.class);
+        expectedExceptions.expectMessage("Cannot complete payment batch because the following organisations are missing a chamber of commerce code: Topmodel Fashion [TOPMODEL_FR], Topseller goods [TOPSELLER_FR]");
+
+        // when
+        wrap(mixin).act(mixin.default0Act(), "Complete");
+
+        // and given
+        ((Organisation) invoice1.getSeller()).setChamberOfCommerceCode("Code");
+
+        // then expected
+        expectedExceptions.expect(DisabledException.class);
+        expectedExceptions.expectMessage("Cannot complete payment batch because the following organisations are missing a chamber of commerce code: Topseller goods [TOPSELLER_FR]");
+
+        // when
+        wrap(mixin).act(mixin.default0Act(), "Complete");
+
+        // and given
+        ((Organisation) invoice2.getSeller()).setChamberOfCommerceCode("Code");
+
+        // when
+        wrap(mixin).act(mixin.default0Act(), "Complete");
+
+        // then
+        assertThat(paymentBatch.getApprovalState()).isEqualTo(PaymentBatchApprovalState.COMPLETED);
+
+    }
+
     @Inject
     PaymentBatchRepository paymentBatchRepository;
+
+    @Inject
+    FactoryService factoryService;
+
 }
