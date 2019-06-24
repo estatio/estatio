@@ -50,6 +50,9 @@ public final class OrganisationBuilder
     private String name;
 
     @Getter @Setter
+    private String chamberOfCommerceCode;
+
+    @Getter @Setter
     private Boolean useNumeratorForReference;
 
     @Getter
@@ -66,7 +69,7 @@ public final class OrganisationBuilder
 
         ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
 
-        this.object = organisationRepository.findOrCreateOrganisation(reference, useNumeratorForReference, name, null, applicationTenancy);
+        this.object = organisationRepository.findOrCreateOrganisation(reference, useNumeratorForReference, name, chamberOfCommerceCode, applicationTenancy);
 
         executionContext.addResult(this, object.getReference(), object);
     }

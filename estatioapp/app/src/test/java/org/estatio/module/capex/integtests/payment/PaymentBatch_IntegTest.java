@@ -98,6 +98,8 @@ public class PaymentBatch_IntegTest extends CapexModuleIntegTestAbstract {
     @Test
     public void reasonGuardNotSatisfied_works() throws Exception {
         // given
+        ((Organisation) invoice1.getSeller()).setChamberOfCommerceCode(null);
+        ((Organisation) invoice2.getSeller()).setChamberOfCommerceCode(null);
         paymentBatch.addLineIfRequired(invoice1); // sequence = 1
         paymentBatch.addLineIfRequired(invoice2); // sequence = 2
         final PaymentBatch_complete mixin = factoryService.mixin(PaymentBatch_complete.class, paymentBatch);

@@ -34,7 +34,11 @@ public class BankAccount_verify_Test {
     @Before
     public void setUp() throws Exception {
 
-        bankAccount = new BankAccount();
+        bankAccount = new BankAccount() {
+            public String getAtPath() {
+                return "/FRA";
+            }
+        };
         mixin = new BankAccount_verify(bankAccount);
 
         mixin.paperclipRepository = mockPaperclipRepository;
