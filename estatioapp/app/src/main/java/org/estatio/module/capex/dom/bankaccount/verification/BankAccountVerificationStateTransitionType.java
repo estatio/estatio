@@ -18,6 +18,8 @@ import org.estatio.module.capex.dom.state.StateTransitionServiceSupportAbstract;
 import org.estatio.module.capex.dom.state.StateTransitionType;
 import org.estatio.module.capex.dom.state.TaskAssignmentStrategy;
 import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
@@ -27,14 +29,14 @@ import lombok.Getter;
 @Getter
 public enum BankAccountVerificationStateTransitionType
         implements StateTransitionType<
-            BankAccount,
-            BankAccountVerificationStateTransition,
-            BankAccountVerificationStateTransitionType,
-            BankAccountVerificationState> {
+        BankAccount,
+        BankAccountVerificationStateTransition,
+        BankAccountVerificationStateTransitionType,
+        BankAccountVerificationState> {
 
     // a "pseudo" transition type; won't ever see this persisted as a state transition
     INSTANTIATE(
-            (BankAccountVerificationState)null,
+            (BankAccountVerificationState) null,
             BankAccountVerificationState.NOT_VERIFIED,
             NextTransitionSearchStrategy.none(), TaskAssignmentStrategy.none(),
             // don't automatically create pending transition to next state; this will be done only on request (by StateTransitionService#createPendingTransition)
@@ -44,7 +46,7 @@ public enum BankAccountVerificationStateTransitionType
             BankAccountVerificationState.VERIFIED,
             NextTransitionSearchStrategy.none(),
             null,  // task assignment strategy overridden below
-            AdvancePolicy.MANUAL){
+            AdvancePolicy.MANUAL) {
         @Override
         public TaskAssignmentStrategy getTaskAssignmentStrategy() {
             return (TaskAssignmentStrategy<
@@ -57,6 +59,14 @@ public enum BankAccountVerificationStateTransitionType
                 }
                 return Collections.singletonList(PartyRoleTypeEnum.TREASURER);
             };
+        }
+
+        @Override
+        public String reasonGuardNotSatisified(final BankAccount bankAccount, final ServiceRegistry2 serviceRegistry2) {
+            Party owner = bankAccount.getOwner();
+            return !bankAccount.getAtPath().startsWith("/ITA") && owner instanceof Organisation && ((Organisation) owner).getChamberOfCommerceCode() == null ?
+                    "Can not verify bank account because owner is missing chamber of commerce code" :
+                    null;
         }
     },
     RESET(
@@ -109,18 +119,17 @@ public enum BankAccountVerificationStateTransitionType
             final NextTransitionSearchStrategy nextTransitionSearchStrategy,
             final TaskAssignmentStrategy taskAssignmentStrategy,
             final AdvancePolicy advancePolicy) {
-        this(fromState != null ? Collections.singletonList(fromState): null, toState, nextTransitionSearchStrategy,
+        this(fromState != null ? Collections.singletonList(fromState) : null, toState, nextTransitionSearchStrategy,
                 taskAssignmentStrategy,
                 advancePolicy);
     }
 
-
     public static class TransitionEvent
             extends StateTransitionEvent<
-                        BankAccount,
-                        BankAccountVerificationStateTransition,
-                        BankAccountVerificationStateTransitionType,
-                        BankAccountVerificationState> {
+            BankAccount,
+            BankAccountVerificationStateTransition,
+            BankAccountVerificationStateTransitionType,
+            BankAccountVerificationState> {
         public TransitionEvent(
                 final BankAccount domainObject,
                 final BankAccountVerificationStateTransition stateTransitionIfAny,
@@ -163,14 +172,13 @@ public enum BankAccountVerificationStateTransitionType
         return repository.create(domainObject, this, fromState, assignToIfAny, personToAssignToIfAny, taskDescription);
     }
 
-
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class SupportService
             extends StateTransitionServiceSupportAbstract<
-                        BankAccount,
-                        BankAccountVerificationStateTransition,
-                        BankAccountVerificationStateTransitionType,
-                        BankAccountVerificationState> {
+            BankAccount,
+            BankAccountVerificationStateTransition,
+            BankAccountVerificationStateTransitionType,
+            BankAccountVerificationState> {
 
         public SupportService() {
             super(BankAccountVerificationStateTransitionType.class, BankAccountVerificationStateTransition.class

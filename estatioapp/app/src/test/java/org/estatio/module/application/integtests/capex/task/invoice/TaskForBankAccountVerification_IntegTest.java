@@ -32,6 +32,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.sudo.SudoService;
+import org.apache.isis.applib.services.wrapper.DisabledException;
 import org.apache.isis.applib.services.wrapper.HiddenException;
 import org.apache.isis.applib.value.Blob;
 
@@ -55,6 +56,7 @@ import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
@@ -133,6 +135,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
 
             // given
             seller = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
+            ((Organisation) seller).setChamberOfCommerceCode("Code");
         }
 
         @Test
@@ -195,6 +198,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
 
             // given
             seller = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
+            ((Organisation) seller).setChamberOfCommerceCode("Code");
             bankAccount = bankAccountRepository.findBankAccountByReference(seller,
                     BankAccount_enum.TopModelGb.getIban());
             // bank accounts now need BICs so can verify
@@ -262,6 +266,20 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
             assertState(bankAccount, VERIFIED);
         }
 
+        @Test
+        public void can_not_verify_when_missing_chamber_of_commerce_code() throws Exception {
+            // given
+            assertState(bankAccount, NOT_VERIFIED);
+            ((Organisation) seller).setChamberOfCommerceCode(null);
+
+            // expect
+            expectedExceptions.expect(DisabledException.class);
+            expectedExceptions.expectMessage("Can not verify bank account because owner is missing chamber of commerce code");
+
+            // when
+            wrap(mixin(BankAccount_verify.class, bankAccount)).act(null);
+
+        }
 
         @Test
         public void can_reject_proof_when_not_verified() throws Exception {
