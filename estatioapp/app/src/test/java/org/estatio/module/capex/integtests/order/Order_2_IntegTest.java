@@ -38,6 +38,7 @@ import org.estatio.module.capex.fixtures.order.enums.Order_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
+import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.party.dom.role.IPartyRoleType;
@@ -71,6 +72,8 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
             }
         });
         order = Order_enum.fakeOrder2Pdf.findUsing(serviceRegistry);
+
+        ((Organisation) order.getSeller()).setChamberOfCommerceCode("Code");
     }
 
     Order order;
@@ -103,6 +106,21 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
         // then
         assertThat(this.order.getApprovalState()).isEqualTo(OrderApprovalState.APPROVED);
 
+    }
+
+    @Test
+    public void can_not_approve_when_no_chamber_of_commerce_code() throws Exception {
+        // given
+        ((Organisation) order.getSeller()).setChamberOfCommerceCode(null);
+        assertNotNull(order);
+
+        // expected
+        expectedExceptions.expect(DisabledException.class);
+        expectedExceptions.expectMessage("Supplier is missing chamber of commerce code");
+
+        // when
+        approve(Person_enum.JonathanIncomingInvoiceManagerGb.getSecurityUserName(), this.order);
+        
     }
 
     @Test

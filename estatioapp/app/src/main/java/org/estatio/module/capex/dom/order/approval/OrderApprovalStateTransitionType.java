@@ -17,6 +17,7 @@ import org.estatio.module.capex.dom.state.StateTransitionRepository;
 import org.estatio.module.capex.dom.state.StateTransitionServiceSupportAbstract;
 import org.estatio.module.capex.dom.state.StateTransitionType;
 import org.estatio.module.capex.dom.state.TaskAssignmentStrategy;
+import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
@@ -34,7 +35,7 @@ public enum OrderApprovalStateTransitionType
 
     // a "pseudo" transition type; won't ever see this persisted as a state transition
     INSTANTIATE(
-            (OrderApprovalState)null,
+            (OrderApprovalState) null,
             OrderApprovalState.NEW,
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.none(),
@@ -44,14 +45,18 @@ public enum OrderApprovalStateTransitionType
             OrderApprovalState.APPROVED,
             NextTransitionSearchStrategy.none(),
             null, // task assignment strategy overridden below,
-            AdvancePolicy.MANUAL){
-
+            AdvancePolicy.MANUAL) {
         @Override
         public String reasonGuardNotSatisified(
                 final Order order,
                 final ServiceRegistry2 serviceRegistry2) {
-            return order.reasonIncomplete();
+            final boolean missingChamberOfCommerceCode = !order.getAtPath().startsWith("/ITA") && order.getSeller() instanceof Organisation && ((Organisation) order.getSeller()).getChamberOfCommerceCode() == null;
+
+            return missingChamberOfCommerceCode ?
+                    "Supplier is missing chamber of commerce code" :
+                    order.reasonIncomplete();
         }
+
         @Override
         public TaskAssignmentStrategy getTaskAssignmentStrategy() {
             return (TaskAssignmentStrategy<
@@ -60,25 +65,27 @@ public enum OrderApprovalStateTransitionType
                     OrderApprovalStateTransitionType,
                     OrderApprovalState>) (order, serviceRegistry2) -> {
 
-                if (isItalian(order)) return Collections.singletonList(PartyRoleTypeEnum.ORDER_MANAGER);
+                if (isItalian(order))
+                    return Collections.singletonList(PartyRoleTypeEnum.ORDER_MANAGER);
 
                 final boolean hasProperty = order.getProperty() != null;
                 if (hasProperty) {
                     return Collections.singletonList(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER);
                 }
-                if (order.getType()==null) return null;
+                if (order.getType() == null)
+                    return null;
                 switch (order.getType()) {
-                case CAPEX:
-                case PROPERTY_EXPENSES:
-                case SERVICE_CHARGES:
-                    // this case should not be hit, because the upstream document categorisation process
-                    // should have also set a property in this case, so the previous check would have been satisfied
-                    // just adding this case in the switch stmt "for completeness"
-                    return Collections.singletonList(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER);
-                case LOCAL_EXPENSES:
-                    return Collections.singletonList(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
-                case CORPORATE_EXPENSES:
-                    return Collections.singletonList(PartyRoleTypeEnum.CORPORATE_ADMINISTRATOR);
+                    case CAPEX:
+                    case PROPERTY_EXPENSES:
+                    case SERVICE_CHARGES:
+                        // this case should not be hit, because the upstream document categorisation process
+                        // should have also set a property in this case, so the previous check would have been satisfied
+                        // just adding this case in the switch stmt "for completeness"
+                        return Collections.singletonList(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER);
+                    case LOCAL_EXPENSES:
+                        return Collections.singletonList(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
+                    case CORPORATE_EXPENSES:
+                        return Collections.singletonList(PartyRoleTypeEnum.CORPORATE_ADMINISTRATOR);
                 }
                 // REVIEW: for other types, we haven't yet established a business process, so no task will be created
                 return null;
@@ -123,7 +130,7 @@ public enum OrderApprovalStateTransitionType
             final NextTransitionSearchStrategy nextTransitionSearchStrategy,
             final TaskAssignmentStrategy taskAssignmentStrategy,
             final AdvancePolicy advancePolicy) {
-        this(fromState != null ? Collections.singletonList(fromState): null, toState, nextTransitionSearchStrategy,
+        this(fromState != null ? Collections.singletonList(fromState) : null, toState, nextTransitionSearchStrategy,
                 taskAssignmentStrategy,
                 advancePolicy);
     }
@@ -160,7 +167,6 @@ public enum OrderApprovalStateTransitionType
         return new TransitionEvent(domainObject, pendingTransitionIfAny, this);
     }
 
-
     @Override
     public OrderApprovalStateTransition createTransition(
             final Order domainObject,
@@ -177,7 +183,6 @@ public enum OrderApprovalStateTransitionType
 
         return repository.create(domainObject, this, fromState, assignToIfAny, personToAssignToIfAny, taskDescription);
     }
-
 
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class SupportService extends StateTransitionServiceSupportAbstract<
