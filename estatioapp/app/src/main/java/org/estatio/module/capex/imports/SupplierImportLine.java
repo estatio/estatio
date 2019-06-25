@@ -28,7 +28,8 @@ import lombok.Setter;
 )
 public class SupplierImportLine implements Importable {
 
-    public SupplierImportLine(){}
+    public SupplierImportLine() {
+    }
 
     public SupplierImportLine(
             final String supplierName,
@@ -64,11 +65,11 @@ public class SupplierImportLine implements Importable {
     public List<Object> importData(Object previousRow) {
 
         SupplierImportLine previous = (SupplierImportLine) previousRow;
-        if (getSupplierName()==null && getChamberOfCommerceCode()==null){
+        if (getSupplierName() == null && getChamberOfCommerceCode() == null) {
             setSupplierName(previous.getSupplierName());
             setChamberOfCommerceCode(previous.getChamberOfCommerceCode());
         }
-        if (getCountry()==null){
+        if (getCountry() == null) {
             setCountry(previous.getCountry());
         }
 
@@ -78,7 +79,7 @@ public class SupplierImportLine implements Importable {
         Organisation organisation;
         organisation = findExistingOrganisation();
 
-        if (bankAccountRepository.findByReference(getIban()).size()>0) {
+        if (bankAccountRepository.findByReference(getIban()).size() > 0) {
             message = message.concat(String.format("More than one iban found for %s. ", getIban()));
             // only set chamber of commerce code - do not create organisation or bank account
             setChamberOfCommerceCodeIfEmpty(organisation);
@@ -91,7 +92,7 @@ public class SupplierImportLine implements Importable {
             setChamberOfCommerceCodeIfEmpty(organisation);
         }
 
-        if (message!=""){
+        if (message != "") {
             messageService.warnUser(message);
         }
 
@@ -99,21 +100,24 @@ public class SupplierImportLine implements Importable {
 
     }
 
-    private Organisation findExistingOrganisation(){
+    private Organisation findExistingOrganisation() {
         Organisation organisation = null;
-        if (getChamberOfCommerceCode()!=null){
-            organisation = organisationRepository.findByChamberOfCommerceCode(getChamberOfCommerceCode()).get(0);
+        if (getChamberOfCommerceCode() != null) {
+            organisation = organisationRepository.findByChamberOfCommerceCode(getChamberOfCommerceCode())
+                    .stream()
+                    .findFirst()
+                    .orElse(null);
         }
-        if (organisation==null && partyRepository.findParties(getSupplierName()).size()>0){
+        if (organisation == null && partyRepository.findParties(getSupplierName()).size() > 0) {
             organisation = (Organisation) partyRepository.findParties(getSupplierName()).get(0);
-            if (partyRepository.findParties(getSupplierName()).size()>1){
+            if (partyRepository.findParties(getSupplierName()).size() > 1) {
                 message = message.concat(String.format("More than one supplier found for %s; first found is taken. ", getSupplierName()));
             }
         }
         return organisation;
     }
 
-    private void setChamberOfCommerceCodeIfEmpty(final Organisation organisation){
+    private void setChamberOfCommerceCodeIfEmpty(final Organisation organisation) {
         if (organisation != null) {
             if (organisation.getChamberOfCommerceCode() == null) {
                 organisation.setChamberOfCommerceCode(this.getChamberOfCommerceCode());
