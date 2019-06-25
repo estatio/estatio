@@ -574,7 +574,11 @@ public class Agreement_Test {
                 art = new AgreementRoleType();
                 artOther = new AgreementRoleType();
 
-                party = new PartyForTesting();
+                party = new PartyForTesting() {
+                    public String getAtPath() {
+                        return "/ITA";
+                    }
+                };
 
                 startDate = new LocalDate(2013, 4, 1);
                 endDate = new LocalDate(2023, 3, 30);
@@ -633,6 +637,18 @@ public class Agreement_Test {
                 assertThat(agreement.validateNewRole(art, party, null, null)).isEqualTo("There is already a role for this type and period");
             }
 
+            @Test
+            public void validateNewRole_invalid_FrenchOrganisationMissingChamberOfCommerceCode() throws Exception {
+                party = new Organisation() {
+                    public String getAtPath() {
+                        return "/FRA";
+                    }
+                };
+                party.setName("Party");
+                party.setReference("REFERENCE");
+
+                assertThat(agreement.validateNewRole(art, party, startDate, endDate)).isEqualTo("Party Party [REFERENCE] is missing a chamber of commerce code");
+            }
         }
 
     }

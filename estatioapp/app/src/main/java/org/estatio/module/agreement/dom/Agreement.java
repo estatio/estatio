@@ -72,6 +72,7 @@ import org.estatio.module.agreement.dom.role.IAgreementRoleType;
 import org.estatio.module.agreement.dom.type.AgreementType;
 import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
 import org.estatio.module.base.dom.UdoDomainObject2;
+import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 
 import lombok.Getter;
@@ -431,6 +432,13 @@ public abstract class Agreement
             final LocalDate endDate) {
 
         Party currentParty = findCurrentOrMostRecentParty(art);
+
+        if ((newParty.getAtPath().startsWith("/FRA") || newParty.getAtPath().startsWith("/BEL")) &&
+                newParty instanceof Organisation &&
+                ((Organisation) newParty).getChamberOfCommerceCode() == null) {
+            return String.format("Party %s [%s] is missing a chamber of commerce code", newParty.getName(), newParty.getReference());
+        }
+
         if (currentParty != null && !Objects.equal(currentParty.getApplicationTenancy(), newParty.getApplicationTenancy())) {
             return "The application level of the new party must be the same as that of the current party";
         }
