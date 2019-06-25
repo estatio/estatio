@@ -103,6 +103,7 @@ import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.charge.dom.Applicability;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
+import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.financial.dom.utils.IBANValidator;
 import org.estatio.module.invoice.dom.DocumentTypeData;
@@ -916,6 +917,9 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         if (ibanNumber != null && !IBANValidator.valid(ibanNumber)) {
             return String.format("%s is not a valid iban number", ibanNumber);
         }
+
+
+
         return null;
     }
 
@@ -1714,6 +1718,9 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Inject
     BuyerFinder buyerFinder;
+
+    @Inject
+    EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
 
     public static class AttributeDescriptionType {
 

@@ -4,8 +4,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -65,6 +67,7 @@ import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.charge.dom.Applicability;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
+import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.financial.dom.utils.IBANValidator;
 import org.estatio.module.party.app.services.ChamberOfCommerceCodeLookUpService;
@@ -256,7 +259,18 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         if (ibanNumber != null && !IBANValidator.valid(ibanNumber)){
             return String.format("%s is not a valid iban number", ibanNumber);
         }
-        return null;
+
+        final String countryAtPath = estatioApplicationTenancyRepository.findOrCreateTenancyFor(country).getPath();
+
+        if (chamberOfCommerceCode == null && Stream.of("/FRA", "/BEL").anyMatch(countryAtPath::startsWith))
+            return "Chamber of Commerce code is mandatory for French and Belgian organisations";
+
+        Optional<Organisation> orgIfAny = organisationRepository.findByChamberOfCommerceCode(chamberOfCommerceCode)
+                .stream()
+                .filter(org -> org.getApplicationTenancy().getPath().equals(countryAtPath))
+                .findFirst();
+
+        return orgIfAny.map(organisation -> String.format("An organisation for this country and chamber of commerce code already exists: %s [%s]", organisation.getName(), organisation.getReference())).orElse(null);
     }
 
     protected void onCreateSeller(final Party seller){
@@ -669,5 +683,9 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     @XmlTransient
     @Inject
     ChamberOfCommerceCodeLookUpService chamberOfCommerceCodeLookUpService;
+
+    @XmlTransient
+    @Inject
+    EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
 
 }

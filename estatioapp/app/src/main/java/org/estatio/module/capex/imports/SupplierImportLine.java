@@ -102,7 +102,7 @@ public class SupplierImportLine implements Importable {
     private Organisation findExistingOrganisation(){
         Organisation organisation = null;
         if (getChamberOfCommerceCode()!=null){
-            organisation = organisationRepository.findByChamberOfCommerceCode(getChamberOfCommerceCode());
+            organisation = organisationRepository.findByChamberOfCommerceCode(getChamberOfCommerceCode()).get(0);
         }
         if (organisation==null && partyRepository.findParties(getSupplierName()).size()>0){
             organisation = (Organisation) partyRepository.findParties(getSupplierName()).get(0);

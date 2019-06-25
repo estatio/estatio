@@ -1,5 +1,6 @@
 package org.estatio.module.capex.dom.documents;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import javax.inject.Inject;
@@ -92,9 +93,15 @@ public interface HasSeller {
                 final Country country) {
             final String countryAtPath = estatioApplicationTenancyRepository.findOrCreateTenancyFor(country).getPath();
 
-            return chamberOfCommerceCode == null && Stream.of("/FRA", "/BEL").anyMatch(countryAtPath::startsWith) ?
-                    "Chamber of Commerce code is mandatory for French and Belgian organisations" :
-                    null;
+            if (chamberOfCommerceCode == null && Stream.of("/FRA", "/BEL").anyMatch(countryAtPath::startsWith))
+                return "Chamber of Commerce code is mandatory for French and Belgian organisations";
+
+            Optional<Organisation> orgIfAny = organisationRepository.findByChamberOfCommerceCode(chamberOfCommerceCode)
+                    .stream()
+                    .filter(org -> org.getApplicationTenancy().getPath().equals(countryAtPath))
+                    .findFirst();
+
+            return orgIfAny.map(organisation -> String.format("An organisation for this country and chamber of commerce code already exists: %s [%s]", organisation.getName(), organisation.getReference())).orElse(null);
         }
 
         @Inject

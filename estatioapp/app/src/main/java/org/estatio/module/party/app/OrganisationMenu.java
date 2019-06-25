@@ -22,6 +22,7 @@ package org.estatio.module.party.app;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -126,9 +127,14 @@ public class OrganisationMenu {
         if (chamberOfCommerceCode == null && Stream.of("/FRA", "/BEL").anyMatch(applicationTenancy.getPath()::startsWith))
             return "Chamber of Commerce code is mandatory for French and Belgian organisations";
 
-        return null;
-    }
+        Optional<Organisation> orgIfAny = organisationRepository.findByChamberOfCommerceCode(chamberOfCommerceCode)
+                .stream()
+                .filter(org -> org.getApplicationTenancy().equals(applicationTenancy))
+                .findFirst();
 
+        return orgIfAny.map(organisation -> String.format("An organisation for this country and chamber of commerce code already exists: %s [%s]", organisation.getName(), organisation.getReference())).orElse(null);
+
+    }
 
     // //////////////////////////////////////
 
@@ -145,7 +151,8 @@ public class OrganisationMenu {
                 .filter(org -> org.hasPartyRoleType(role))
                 .collect(Collectors.collectingAndThen(
                         Collectors.toList(), lst -> {
-                            if (reversed) Collections.reverse(lst);
+                            if (reversed)
+                                Collections.reverse(lst);
                             return lst;
                         }
                 ));

@@ -109,8 +109,8 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
     @Inject
     NumeratorForOrganisationsRepository numeratorForOrganisationsRepository;
 
-    public Organisation findByChamberOfCommerceCode(final String chamberOfCommerceCode) {
-        return firstMatch("findByChamberOfCommerceCode",
+    public List<Organisation> findByChamberOfCommerceCode(final String chamberOfCommerceCode) {
+        return allMatches("findByChamberOfCommerceCode",
                 "chamberOfCommerceCode", chamberOfCommerceCode);
     }
 
