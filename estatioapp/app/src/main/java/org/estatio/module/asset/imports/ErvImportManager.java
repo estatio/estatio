@@ -55,12 +55,10 @@ public class ErvImportManager {
 
     public List<ErvImport> getLines(){
         List<ErvImport> result = new ArrayList<>();
-        unitRepository.findByProperty(getProperty()).forEach(u->{
+        unitRepository.findByPropertyAndActiveOnDate(getProperty(), getDate()).forEach(u->{
             final EstimatedRentalValue erv = estimatedRentalValueRepository.findUnique(u, getDate(), getType());
             if (erv!=null){
                 ErvImport line = new ErvImport(erv);
-                line.setDate(getDate());
-                line.setValue(erv.getValue());
                 // try to find a previous value
                 EstimatedRentalValue prevErv = estimatedRentalValueRepository.findByUnitAndType(u, getType()).stream().filter(e->e.getDate().isBefore(getDate())).findFirst().orElse(null);
                 if (prevErv!=null){
@@ -72,9 +70,10 @@ public class ErvImportManager {
                 // try to find a previous value
                 EstimatedRentalValue prevErv = estimatedRentalValueRepository.findByUnitAndType(u, getType()).stream().filter(e->e.getDate().isBefore(getDate())).findFirst().orElse(null);
                 if (prevErv!=null){
-                    ErvImport line = new ErvImport(prevErv);
-                    line.setDate(getDate());
-                    result.add(line);
+                    result.add(new ErvImport(prevErv, getDate()));
+                } else {
+                    // create a new blank line
+                    result.add(new ErvImport(u, getDate(), getType()));
                 }
             }
         });

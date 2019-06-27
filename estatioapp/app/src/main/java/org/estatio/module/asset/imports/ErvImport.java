@@ -42,11 +42,30 @@ public class ErvImport implements ExcelFixtureRowHandler, Importable, FixtureAwa
 
     public ErvImport(){}
 
-    public ErvImport(final EstimatedRentalValue previousErv){
+    public ErvImport(final Unit unit,
+            final LocalDate date,
+            final Type type
+    ){
+        this.unitReference = unit.getReference();
+        this.unitName = unit.getName();
+        this.date = date;
+        this.type = type.name();
+    }
+
+    public ErvImport(final EstimatedRentalValue erv){
+        this.unitReference = erv.getUnit().getReference();
+        this.unitName = erv.getUnit().getName();
+        this.date = erv.getDate();
+        this.type = erv.getType().name();
+        this.value = erv.getValue();
+    }
+
+    public ErvImport(final EstimatedRentalValue previousErv, final LocalDate date){
         this.unitReference = previousErv.getUnit().getReference();
         this.unitName = previousErv.getUnit().getName();
-        this.previousDate = previousErv.getDate();
+        this.date = date;
         this.type = previousErv.getType().name();
+        this.previousDate = previousErv.getDate();
         this.previousValue = previousErv.getValue();
     }
 
@@ -101,7 +120,7 @@ public class ErvImport implements ExcelFixtureRowHandler, Importable, FixtureAwa
         }
 
         if (value == null) {
-            logAndWarn(String.format("Cannot parse value for %s", unitReference, date.toString("yyyy-MM-dd"), type));
+            logAndWarn(String.format("No value found for %s", unitReference));
             return Lists.newArrayList();
         }
 

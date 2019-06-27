@@ -20,12 +20,9 @@ package org.estatio.module.asset.dom;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -321,15 +318,6 @@ public class Property
     @Action(semantics = SemanticsOf.SAFE)
     public ErvImportManager maintainErv(final Type type, final LocalDate date) {
         return new ErvImportManager(this, type, date);
-    }
-
-    public List<LocalDate> choices1MaintainErv(final Type type, final LocalDate date){
-        List<LocalDate> result = new ArrayList<>();
-        unitRepository.findByProperty(this).forEach(u->{
-            result.addAll(estimatedRentalValueRepository.findByUnitAndType(u, type).stream().map(e->e.getDate()).distinct().collect(Collectors.toList()));
-        });
-        result.add(new LocalDate(clockService.now().getYear(), clockService.now().getMonthOfYear(), 1));
-        return result.stream().distinct().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
     }
 
     // //////////////////////////////////////
