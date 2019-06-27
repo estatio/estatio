@@ -61,6 +61,12 @@ public class ErvImportManager {
                 ErvImport line = new ErvImport(erv);
                 line.setDate(getDate());
                 line.setValue(erv.getValue());
+                // try to find a previous value
+                EstimatedRentalValue prevErv = estimatedRentalValueRepository.findByUnitAndType(u, getType()).stream().filter(e->e.getDate().isBefore(getDate())).findFirst().orElse(null);
+                if (prevErv!=null){
+                    line.setPreviousDate(prevErv.getDate());
+                    line.setPreviousValue(prevErv.getValue());
+                }
                 result.add(line);
             } else {
                 // try to find a previous value
