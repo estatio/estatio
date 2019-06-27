@@ -179,7 +179,7 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
     }
 
     public String disableExternalReference(){
-        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser()) ? "Only Admministrators can change existing external references" : null ;
+        return !EstatioRole.SUPERUSER.isApplicableFor(getUser()) ? "Only Superusers can change existing external references" : null ;
     }
 
     // //////////////////////////////////////
