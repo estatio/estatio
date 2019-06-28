@@ -55,6 +55,7 @@ import org.estatio.module.currency.EstatioCurrencyModule;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.guarantee.fixtures.enums.Guarantee_enum;
 import org.estatio.module.index.EstatioIndexModule;
+import org.estatio.module.invoicegroup.fixtures.InvoiceGroup_enum;
 import org.estatio.module.lease.fixtures.bankaccount.enums.BankMandate_enum;
 import org.estatio.module.lease.fixtures.breakoptions.enums.BreakOption_enum;
 import org.estatio.module.lease.fixtures.docfrag.enums.DocFragment_demo_enum;
@@ -298,6 +299,9 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
         ec.executeChildren(this,
                 new ERVImportXlsxFixture());
+
+        ec.executeChildren(this,
+                new InvoiceGroup_enum.PersistAll());
     }
 
 }

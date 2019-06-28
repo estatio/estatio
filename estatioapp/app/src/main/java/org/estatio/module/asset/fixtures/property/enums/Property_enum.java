@@ -46,6 +46,8 @@ public enum Property_enum implements PersonaWithFinder<Property>, PersonaWithBui
     OxfGb   ("OXF", "Oxford Super Mall", "Oxford", GBR, SHOPPING_CENTER,
             ld(1999, 1, 1), ld(2008, 6, 1), "51.74579;-1.24334"),
     VivFr   ("VIV", "Vive les shops", "Paris", FRA, SHOPPING_CENTER,
+            ld(2004, 5, 6), ld(2008, 6, 1), "48.8740002697085;2.326230019708498"),
+    BvvFr   ("BVV", "Bureaux Vive", "Paris", FRA, SHOPPING_CENTER,  // in the same invoice group as VivFr
             ld(2004, 5, 6), ld(2008, 6, 1), "48.8740002697085;2.326230019708498");
 
     private final String ref;

@@ -6,9 +6,7 @@
             <ns2:domainObject/>
             <ns2:action id="maintainServiceCharges"/>
             <ns2:action id="maintainTurnoverRent" cssClassFa="btn-edit"/>
-            <ns2:action id="calculateInvoicesForProperty"/>
             <ns2:action id="newDocument"/>
-            <ns2:action id="createRetroInvoicesForProperty"/>
             <ns2:action id="findLeasesActiveOnDate"/>
             <ns2:action id="findServiceChargeByPropertyAndStartDate"/>
             <ns2:action id="links"/>
@@ -44,7 +42,7 @@
                                 <col span="12">
                                     <ns2:fieldSet name="Application Level" id="applicationLevel">
                                         <ns2:property id="applicationTenancy"/>
-                                        <ns2:property id="atPath"/>
+                                        <ns2:property id="atPath" hidden="ALL_TABLES"/>
                                     </ns2:fieldSet>
                                 </col>
                             </row>
@@ -71,35 +69,37 @@
             <row>
                 <col span="12">
                     <tabGroup>
+                        <tab name="Invoicing">
+                            <row>
+                                <col span="12">
+                                    <ns2:fieldSet name="Invoicing" id="invoicing">
+                                        <ns2:action id="calculateInvoices" position="PANEL"/>
+                                        <ns2:property id="invoiceGroup"  hidden="REFERENCES_PARENT">
+                                        </ns2:property>
+                                    </ns2:fieldSet>
+                                </col>
+                            </row>
+                        </tab>
                         <tab name="Dates">
                             <row>
                                 <col span="12">
-                                    <ns2:fieldSet name="Dates" id="dates">
+                                    <ns2:fieldSet name="" id="dates">
                                         <ns2:property id="acquireDate"/>
-                                        <ns2:property id="openingDate"/>
-                                        <ns2:property id="disposalDate">
+                                        <ns2:property id="openingDate" hidden="ALL_TABLES"/>
+                                        <ns2:property id="disposalDate"  hidden="ALL_TABLES">
                                             <ns2:action id="dispose" position="BELOW"/>
                                         </ns2:property>
                                     </ns2:fieldSet>
-
                                 </col>
                             </row>
                         </tab>
-                        <tab name="Type">
+                        <tab name="Type/Areas">
                             <row>
                                 <col span="12">
-                                    <ns2:fieldSet name="Type" id="type">
+                                    <ns2:fieldSet name="" id="type">
                                         <ns2:property id="type"/>
-                                    </ns2:fieldSet>
-                                </col>
-                            </row>
-                        </tab>
-                        <tab name="Area">
-                            <row>
-                                <col span="12">
-                                    <ns2:fieldSet name="Area" id="area">
-                                        <ns2:property id="area"/>
-                                        <ns2:property id="parkingSpaces"/>
+                                        <ns2:property id="area" hidden="ALL_TABLES"/>
+                                        <ns2:property id="parkingSpaces" hidden="ALL_TABLES"/>
                                     </ns2:fieldSet>
                                 </col>
                             </row>
@@ -107,9 +107,9 @@
                         <tab name="Location">
                             <row>
                                 <col span="12">
-                                    <ns2:fieldSet name="Location" id="location">
+                                    <ns2:fieldSet name="" id="location">
                                         <ns2:property id="city"/>
-                                        <ns2:property id="country"/>
+                                        <ns2:property id="country" hidden="ALL_TABLES"/>
                                         <ns2:property id="location">
                                             <ns2:action id="lookupLocation" position="BELOW"/>
                                         </ns2:property>
@@ -120,7 +120,7 @@
                         <tab name="Ownership">
                             <row>
                                 <col span="12">
-                                    <ns2:fieldSet name="Ownership" id="ownership">
+                                    <ns2:fieldSet name="" id="ownership">
                                         <ns2:property id="fullOwnership"/>
                                     </ns2:fieldSet>
                                 </col>
@@ -136,7 +136,7 @@
                         <tab name="Display ordering">
                             <row>
                                 <col span="12">
-                                    <ns2:fieldSet name="Display Ordering" id="ordering">
+                                    <ns2:fieldSet name="" id="ordering">
                                         <ns2:property id="displayOrder"/>
                                     </ns2:fieldSet>
                                 </col>
