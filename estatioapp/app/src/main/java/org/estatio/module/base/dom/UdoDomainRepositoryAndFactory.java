@@ -19,10 +19,12 @@
 package org.estatio.module.base.dom;
 
 import java.util.List;
+
 import javax.jdo.Query;
 
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 public abstract class UdoDomainRepositoryAndFactory<T> extends UdoDomainService<T> {
 
@@ -87,5 +89,9 @@ public abstract class UdoDomainRepositoryAndFactory<T> extends UdoDomainService<
     protected IsisJdoSupport getIsisJdoSupport() {
         return isisJdoSupport;
     }
+
+
+    @javax.inject.Inject
+    protected RepositoryService repositoryService;
 
 }

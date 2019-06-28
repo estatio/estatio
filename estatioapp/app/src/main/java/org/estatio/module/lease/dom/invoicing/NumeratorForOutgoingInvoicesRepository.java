@@ -24,7 +24,6 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -37,6 +36,7 @@ import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.invoicegroup.dom.InvoiceGroupRepository;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
 import org.estatio.module.party.dom.Party;
@@ -74,7 +74,20 @@ public class NumeratorForOutgoingInvoicesRepository extends UdoDomainService<Num
         final ApplicationTenancy applicationTenancy = fixedAsset.getApplicationTenancy();
         final Country country = countryRepository.findCountryByAtPath(applicationTenancy.getPath());
 
-        return numeratorRepository.find(INVOICE_NUMBER, country, fixedAsset, seller);
+        final Numerator numerator = numeratorRepository.find(INVOICE_NUMBER, country, fixedAsset, seller);
+
+        if(numerator != null) {
+            return numerator;
+        }
+
+        if (!(fixedAsset instanceof Property)) {
+            return null;
+        }
+
+        final Property property = (Property) fixedAsset;
+        return invoiceGroupRepository.findContainingProperty(property)
+                .map(invoiceGroup -> numeratorRepository.find(INVOICE_NUMBER, country, invoiceGroup, seller))
+                .orElse(null);
     }
 
 
@@ -120,6 +133,9 @@ public class NumeratorForOutgoingInvoicesRepository extends UdoDomainService<Num
 
     @javax.inject.Inject
     NumeratorRepository numeratorRepository;
+
+    @javax.inject.Inject
+    InvoiceGroupRepository invoiceGroupRepository;
 
     @Inject
     ServiceRegistry2 serviceRegistry;

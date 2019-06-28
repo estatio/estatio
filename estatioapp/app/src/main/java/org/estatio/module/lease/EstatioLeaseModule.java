@@ -39,14 +39,13 @@ import org.incode.module.docrendering.stringinterpolator.StringInterpolatorDocRe
 import org.incode.module.docrendering.xdocreport.XDocReportDocRenderingModule;
 
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
-import org.estatio.module.capex.seed.DocumentTypeFSForIbanProof;
-import org.estatio.module.capex.seed.DocumentTypeFSForIncoming;
 import org.estatio.module.event.EstatioEventModule;
 import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.invoice.EstatioInvoiceModule;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.attr.InvoiceAttribute;
 import org.estatio.module.invoice.dom.paperclips.PaperclipForInvoice;
+import org.estatio.module.invoicegroup.EstatioInvoiceGroupModule;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemSource;
@@ -73,6 +72,7 @@ public final class EstatioLeaseModule extends ModuleAbstract {
     public Set<Module> getDependencies(){
         return Sets.newHashSet(
                 new EstatioInvoiceModule(),
+                new EstatioInvoiceGroupModule(),
                 new EstatioAssetFinancialModule(),
                 new EstatioIndexModule(),
                 new EstatioEventModule(),
