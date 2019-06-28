@@ -41,7 +41,7 @@ public class InvoiceGroupMenu {
     public InvoiceGroup createInvoiceGroup(final String reference, final String name) {
         return invoiceGroupRepository.createInvoiceGroup(reference, name);
     }
-    public String validate0Reference(final String reference) {
+    public String validate0CreateInvoiceGroup(final String reference) {
         return invoiceGroupRepository.findByReference(reference)
                 .map(x -> "Reference already in use")
                 .orElse(null);
