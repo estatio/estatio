@@ -55,7 +55,7 @@ public class ErvImportManager {
 
     public List<ErvImport> getLines(){
         List<ErvImport> result = new ArrayList<>();
-        unitRepository.findByPropertyAndActiveOnDate(getProperty(), getDate()).forEach(u->{
+        unitRepository.findByPropertyAndActiveOnDate(getProperty(), getDate()).stream().sorted().forEach(u->{
             final EstimatedRentalValue erv = estimatedRentalValueRepository.findUnique(u, getDate(), getType());
             if (erv!=null){
                 ErvImport line = new ErvImport(erv);
