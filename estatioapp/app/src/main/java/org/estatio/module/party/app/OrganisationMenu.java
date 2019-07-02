@@ -124,16 +124,20 @@ public class OrganisationMenu {
                 return "Reference must be left empty because a numerator is being used";
         }
 
-        if (chamberOfCommerceCode == null && Stream.of("/FRA", "/BEL").anyMatch(applicationTenancy.getPath()::startsWith))
-            return "Chamber of Commerce code is mandatory for French and Belgian organisations";
+        if (Stream.of("/FRA", "/BEL").anyMatch(applicationTenancy.getPath()::startsWith)) {
+            if (chamberOfCommerceCode == null)
+                return "Chamber of Commerce code is mandatory for French and Belgian organisations";
 
-        Optional<Organisation> orgIfAny = organisationRepository.findByChamberOfCommerceCode(chamberOfCommerceCode)
-                .stream()
-                .filter(org -> org.getApplicationTenancy().equals(applicationTenancy))
-                .findFirst();
+            Optional<Organisation> orgIfAny =
+                    organisationRepository.findByChamberOfCommerceCode(chamberOfCommerceCode)
+                            .stream()
+                            .filter(org -> org.getApplicationTenancy().equals(applicationTenancy))
+                            .findFirst();
 
-        return orgIfAny.map(organisation -> String.format("An organisation for this country and chamber of commerce code already exists: %s [%s]", organisation.getName(), organisation.getReference())).orElse(null);
+            return orgIfAny.map(organisation -> String.format("An organisation for this country and chamber of commerce code already exists: %s [%s]", organisation.getName(), organisation.getReference())).orElse(null);
+        }
 
+        return null;
     }
 
     // //////////////////////////////////////
