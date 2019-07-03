@@ -99,6 +99,22 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
         this.purchaseCountPreviousYear = purchaseCountPreviousYear;
     }
 
+    public TurnoverImport(final Turnover t) {
+        this.leaseReference = t.getConfig().getOccupancy().getLease().getReference();
+        this.leaseName = t.getConfig().getOccupancy().getLease().getName();
+        this.unitReference = t.getConfig().getOccupancy().getUnit().getReference();
+        this.occupancyStartDate = t.getConfig().getOccupancy().getStartDate();
+        this.date = t.getDate();
+        this.grossAmount = t.getGrossAmount();
+        this.netAmount = t.getNetAmount();
+        this.type = t.getType().name();
+        this.frequency = t.getFrequency().name();
+        this.currency = t.getCurrency().getReference();
+        this.nonComparableFlag = t.isNonComparable() ? 1 : 0;
+        this.purchaseCount = t.getPurchaseCount();
+        this.comments = t.getComments();
+    }
+
     @Getter @Setter
     private String leaseReference;
 
