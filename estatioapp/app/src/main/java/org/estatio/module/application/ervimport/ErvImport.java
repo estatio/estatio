@@ -1,4 +1,4 @@
-package org.estatio.module.asset.imports;
+package org.estatio.module.application.ervimport;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -34,7 +34,7 @@ import lombok.Setter;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
-        objectType = "org.estatio.module.asset.imports.ErvImport"
+        objectType = "org.estatio.module.application.ervimport.ErvImport"
 )
 public class ErvImport implements ExcelFixtureRowHandler, Importable, FixtureAwareRowHandler<ErvImport> {
 
@@ -48,6 +48,7 @@ public class ErvImport implements ExcelFixtureRowHandler, Importable, FixtureAwa
     ){
         this.unitReference = unit.getReference();
         this.unitName = unit.getName();
+        this.externalReference = unit.getExternalReference();
         this.date = date;
         this.type = type.name();
     }
@@ -55,6 +56,7 @@ public class ErvImport implements ExcelFixtureRowHandler, Importable, FixtureAwa
     public ErvImport(final EstimatedRentalValue erv){
         this.unitReference = erv.getUnit().getReference();
         this.unitName = erv.getUnit().getName();
+        this.externalReference = erv.getUnit().getExternalReference();
         this.date = erv.getDate();
         this.type = erv.getType().name();
         this.value = erv.getValue();
@@ -63,6 +65,7 @@ public class ErvImport implements ExcelFixtureRowHandler, Importable, FixtureAwa
     public ErvImport(final EstimatedRentalValue previousErv, final LocalDate date){
         this.unitReference = previousErv.getUnit().getReference();
         this.unitName = previousErv.getUnit().getName();
+        this.externalReference = previousErv.getUnit().getExternalReference();
         this.date = date;
         this.type = previousErv.getType().name();
         this.previousDate = previousErv.getDate();
@@ -74,6 +77,12 @@ public class ErvImport implements ExcelFixtureRowHandler, Importable, FixtureAwa
 
     @Getter @Setter
     private String unitName;
+
+    @Getter @Setter
+    private String externalReference;
+
+    @Getter @Setter
+    private String currentBrand;
 
     @Getter @Setter
     private LocalDate date;

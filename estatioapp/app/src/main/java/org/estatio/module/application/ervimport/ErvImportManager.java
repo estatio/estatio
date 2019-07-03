@@ -1,4 +1,4 @@
-package org.estatio.module.asset.imports;
+package org.estatio.module.application.ervimport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,16 +17,21 @@ import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.asset.dom.erv.EstimatedRentalValue;
 import org.estatio.module.asset.dom.erv.EstimatedRentalValueRepository;
 import org.estatio.module.asset.dom.erv.Type;
+import org.estatio.module.lease.dom.occupancy.Occupancy;
+import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@DomainObject(nature = Nature.VIEW_MODEL, objectType = "org.estatio.module.asset.imports.ErvImportManager")
+@DomainObject(nature = Nature.VIEW_MODEL, objectType = "org.estatio.module.application.ervimport.ErvImportManager")
 public class ErvImportManager {
 
     public String title(){
@@ -56,25 +61,32 @@ public class ErvImportManager {
     public List<ErvImport> getLines(){
         List<ErvImport> result = new ArrayList<>();
         unitRepository.findByPropertyAndActiveOnDate(getProperty(), getDate()).stream().sorted().forEach(u->{
+
             final EstimatedRentalValue erv = estimatedRentalValueRepository.findUnique(u, getDate(), getType());
+            ErvImport line;
+
             if (erv!=null){
-                ErvImport line = new ErvImport(erv);
+                line = new ErvImport(erv);
                 // try to find a previous value
                 EstimatedRentalValue prevErv = estimatedRentalValueRepository.findByUnitAndType(u, getType()).stream().filter(e->e.getDate().isBefore(getDate())).findFirst().orElse(null);
                 if (prevErv!=null){
                     line.setPreviousDate(prevErv.getDate());
                     line.setPreviousValue(prevErv.getValue());
                 }
-                result.add(line);
             } else {
                 // try to find a previous value
                 EstimatedRentalValue prevErv = estimatedRentalValueRepository.findByUnitAndType(u, getType()).stream().filter(e->e.getDate().isBefore(getDate())).findFirst().orElse(null);
                 if (prevErv!=null){
-                    result.add(new ErvImport(prevErv, getDate()));
+                    line = new ErvImport(prevErv, getDate());
                 } else {
                     // create a new blank line
-                    result.add(new ErvImport(u, getDate(), getType()));
+                    line = new ErvImport(u, getDate(), getType());
                 }
+            }
+
+            if (line!=null) {
+                line.setCurrentBrand(brandNameFromOccupancy(u));
+                result.add(line);
             }
         });
 
@@ -105,11 +117,21 @@ public class ErvImportManager {
         return this;
     }
 
+    private String brandNameFromOccupancy(final Unit unit){
+        Occupancy occOnDate = occupancyRepository.occupanciesByUnitAndInterval(unit, LocalDateInterval.including(getDate(), getDate())).stream().findFirst().orElse(null);
+        if (occOnDate!=null) {
+            return occOnDate.getBrand()!=null ? occOnDate.getBrand().getName() : null;
+        }
+        return null;
+    }
+
     @Inject
     EstimatedRentalValueRepository estimatedRentalValueRepository;
 
     @Inject
     UnitRepository unitRepository;
+
+    @Inject OccupancyRepository occupancyRepository;
 
     @Inject
     ExcelService excelService;

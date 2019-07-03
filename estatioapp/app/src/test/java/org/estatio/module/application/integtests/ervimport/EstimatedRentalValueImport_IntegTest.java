@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.asset.integtests.erv;
+package org.estatio.module.application.integtests.ervimport;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -36,7 +36,7 @@ import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.asset.dom.erv.EstimatedRentalValue;
 import org.estatio.module.asset.dom.erv.EstimatedRentalValueRepository;
 import org.estatio.module.asset.dom.erv.Type;
-import org.estatio.module.asset.fixtures.erv.ERVImportXlsxFixture;
+import org.estatio.module.application.ervimport.fixtures.ERVImportXlsxFixture;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 

@@ -33,7 +33,7 @@ import org.isisaddons.module.security.seed.scripts.AbstractUserAndRolesFixtureSc
 
 import org.incode.module.country.CountryModule;
 
-import org.estatio.module.asset.fixtures.erv.ERVImportXlsxFixture;
+import org.estatio.module.application.ervimport.fixtures.ERVImportXlsxFixture;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.assetfinancial.fixtures.enums.BankAccountFaFa_enum;

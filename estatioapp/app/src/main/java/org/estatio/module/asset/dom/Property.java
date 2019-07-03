@@ -61,12 +61,10 @@ import org.incode.module.country.dom.impl.Country;
 import org.estatio.module.asset.dom.counts.Count;
 import org.estatio.module.asset.dom.counts.CountRepository;
 import org.estatio.module.asset.dom.erv.EstimatedRentalValueRepository;
-import org.estatio.module.asset.dom.erv.Type;
 import org.estatio.module.asset.dom.location.LocationLookupService;
 import org.estatio.module.asset.dom.ownership.FixedAssetOwnershipRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
-import org.estatio.module.asset.imports.ErvImportManager;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.party.dom.Party;
@@ -313,11 +311,6 @@ public class Property
 
     public String disableDispose() {
         return getDisposalDate() == null ? null : "Property already disposed";
-    }
-
-    @Action(semantics = SemanticsOf.SAFE)
-    public ErvImportManager maintainErv(final Type type, final LocalDate date) {
-        return new ErvImportManager(this, type, date);
     }
 
     // //////////////////////////////////////

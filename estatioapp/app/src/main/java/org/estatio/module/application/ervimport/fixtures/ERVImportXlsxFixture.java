@@ -1,4 +1,4 @@
-package org.estatio.module.asset.fixtures.erv;
+package org.estatio.module.application.ervimport.fixtures;
 
 import com.google.common.io.Resources;
 
@@ -9,10 +9,10 @@ import org.isisaddons.module.excel.dom.ExcelFixture2;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 import org.isisaddons.module.excel.dom.util.Mode;
 
-import org.estatio.module.asset.imports.ErvImport;
+import org.estatio.module.application.ervimport.ErvImport;
 
 @DomainObject(
-        objectType = "org.estatio.module.turnover.fixtures.ERVImportXlsxFixture"
+        objectType = "org.estatio.module.application.ervimport.fixtures.ERVImportXlsxFixture"
 )
 public class ERVImportXlsxFixture extends ExcelFixture2 {
 
