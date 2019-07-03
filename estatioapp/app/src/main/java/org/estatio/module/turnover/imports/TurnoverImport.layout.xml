@@ -16,9 +16,7 @@
                 <ns2:property id="netAmount" />
                 <ns2:property id="purchaseCount" />
                 <ns2:property id="grossAmountPreviousYear" />
-                <ns2:property id="grossAmountDivPercentage" />
                 <ns2:property id="netAmountPreviousYear" />
-                <ns2:property id="netAmountDivPercentage" />
                 <ns2:property id="purchaseCountPreviousYear" />
                 <ns2:property id="nonComparableFlag" />
                 <ns2:property id="comments" />
@@ -26,6 +24,8 @@
                 <ns2:property id="vatPercentage" />
                 <ns2:property id="currency" />
                 <ns2:property id="occupancyStartDate" />
+                <ns2:property id="reportedAt" />
+                <ns2:property id="reportedBy" />
             </ns2:fieldSet>
         </col>
     </row>
