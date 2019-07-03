@@ -100,20 +100,23 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
         this.purchaseCountPreviousYear = purchaseCountPreviousYear;
     }
 
-    public TurnoverImport(final Turnover t) {
-        this.leaseReference = t.getConfig().getOccupancy().getLease().getReference();
-        this.leaseName = t.getConfig().getOccupancy().getLease().getName();
-        this.unitReference = t.getConfig().getOccupancy().getUnit().getReference();
-        this.occupancyStartDate = t.getConfig().getOccupancy().getStartDate();
-        this.date = t.getDate();
-        this.grossAmount = t.getGrossAmount();
-        this.netAmount = t.getNetAmount();
-        this.type = t.getType().name();
-        this.frequency = t.getFrequency().name();
-        this.currency = t.getCurrency().getReference();
-        this.nonComparableFlag = t.isNonComparable() ? 1 : 0;
-        this.purchaseCount = t.getPurchaseCount();
-        this.comments = t.getComments();
+    public TurnoverImport(final Turnover turnover, final Turnover turnoverPreviousYear) {
+        this.leaseReference = turnover.getConfig().getOccupancy().getLease().getReference();
+        this.leaseName = turnover.getConfig().getOccupancy().getLease().getName();
+        this.unitReference = turnover.getConfig().getOccupancy().getUnit().getReference();
+        this.occupancyStartDate = turnover.getConfig().getOccupancy().getStartDate();
+        this.date = turnover.getDate();
+        this.grossAmount = turnover.getGrossAmount();
+        this.netAmount = turnover.getNetAmount();
+        this.type = turnover.getType().name();
+        this.frequency = turnover.getFrequency().name();
+        this.currency = turnover.getCurrency().getReference();
+        this.nonComparableFlag = turnover.isNonComparable() ? 1 : 0;
+        this.purchaseCount = turnover.getPurchaseCount();
+        this.comments = turnover.getComments();
+        this.grossAmountPreviousYear = turnoverPreviousYear!=null ? turnoverPreviousYear.getGrossAmount() : null;
+        this.netAmountPreviousYear = turnoverPreviousYear!=null ? turnoverPreviousYear.getNetAmount() : null;
+        this.purchaseCountPreviousYear = turnoverPreviousYear!=null ? turnoverPreviousYear.getPurchaseCount() : null;
     }
 
     @Getter @Setter

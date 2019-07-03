@@ -19,6 +19,7 @@ import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
+import org.estatio.module.turnover.dom.entry.TurnoverEntryService;
 import org.estatio.module.turnover.imports.TurnoverImport;
 
 @Mixin
@@ -39,7 +40,8 @@ public class Occupancy_downloadTurnovers {
         final List<Turnover> turnovers = turnoverRepository.findByConfig(config).stream().filter(t->t.getDate().getYear() == year).collect(Collectors.toList());
         List<TurnoverImport> lines = new ArrayList<>();
         turnovers.forEach(t->{
-            lines.add(new TurnoverImport(t));
+            Turnover turnoverPreviousYear = turnoverEntryService.findTurnoverPreviousYear(t);
+            lines.add(new TurnoverImport(t, turnoverPreviousYear));
         });
         return excelService.toExcel(lines, TurnoverImport.class, "TurnoverImport", filename == null ? filename() : filename.concat(fileSuffix));
     }
@@ -58,6 +60,8 @@ public class Occupancy_downloadTurnovers {
 
     @Inject
     TurnoverReportingConfigRepository turnoverReportingConfigRepository;
+
+    @Inject TurnoverEntryService turnoverEntryService;
 
     @Inject
     ExcelService excelService;
