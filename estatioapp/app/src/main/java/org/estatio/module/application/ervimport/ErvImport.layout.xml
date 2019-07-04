@@ -11,6 +11,7 @@
                 <ns2:property id="unitReference" />
                 <ns2:property id="unitName" />
                 <ns2:property id="externalReference" />
+                <ns2:property id="unitArea" />
                 <ns2:property id="currentBrand" />
                 <ns2:property id="date" />
                 <ns2:property id="value" />

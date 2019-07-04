@@ -49,6 +49,7 @@ public class ErvImport implements ExcelFixtureRowHandler, Importable, FixtureAwa
         this.unitReference = unit.getReference();
         this.unitName = unit.getName();
         this.externalReference = unit.getExternalReference();
+        this.unitArea = unit.getArea();
         this.date = date;
         this.type = type.name();
     }
@@ -57,6 +58,7 @@ public class ErvImport implements ExcelFixtureRowHandler, Importable, FixtureAwa
         this.unitReference = erv.getUnit().getReference();
         this.unitName = erv.getUnit().getName();
         this.externalReference = erv.getUnit().getExternalReference();
+        this.unitArea = erv.getUnit().getArea();
         this.date = erv.getDate();
         this.type = erv.getType().name();
         this.value = erv.getValue();
@@ -66,6 +68,7 @@ public class ErvImport implements ExcelFixtureRowHandler, Importable, FixtureAwa
         this.unitReference = previousErv.getUnit().getReference();
         this.unitName = previousErv.getUnit().getName();
         this.externalReference = previousErv.getUnit().getExternalReference();
+        this.unitArea = previousErv.getUnit().getArea();
         this.date = date;
         this.type = previousErv.getType().name();
         this.previousDate = previousErv.getDate();
@@ -80,6 +83,9 @@ public class ErvImport implements ExcelFixtureRowHandler, Importable, FixtureAwa
 
     @Getter @Setter
     private String externalReference;
+
+    @Getter @Setter
+    private BigDecimal unitArea;
 
     @Getter @Setter
     private String currentBrand;

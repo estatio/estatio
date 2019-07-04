@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -120,79 +119,79 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
     }
 
     @Getter @Setter
-    @MemberOrder(sequence = "3")
+//    @MemberOrder(sequence = "3")
     private String leaseReference;
 
     @Getter @Setter
-    @MemberOrder(sequence = "4")
+//    @MemberOrder(sequence = "4")
     private String leaseName;
 
     @Getter @Setter
-    @MemberOrder(sequence = "2")
+//    @MemberOrder(sequence = "2")
     private String unitReference;
 
     @Getter @Setter
-    @MemberOrder(sequence = "17")
+//    @MemberOrder(sequence = "17")
     private LocalDate occupancyStartDate;
 
     @Getter @Setter
-    @MemberOrder(sequence = "5")
+//    @MemberOrder(sequence = "5")
     private LocalDate date;
 
     @Getter @Setter
-    @MemberOrder(sequence = "6")
+//    @MemberOrder(sequence = "6")
     private BigDecimal grossAmount;
 
     @Getter @Setter
-    @MemberOrder(sequence = "7")
+//    @MemberOrder(sequence = "7")
     private BigDecimal netAmount;
 
     @Getter @Setter
-    @MemberOrder(sequence = "15")
+//    @MemberOrder(sequence = "15")
     private BigDecimal vatPercentage;
 
     @Getter @Setter
-    @MemberOrder(sequence = "1")
+//    @MemberOrder(sequence = "1")
     private String type;
 
     @Getter @Setter
-    @MemberOrder(sequence = "14")
+//    @MemberOrder(sequence = "14")
     private String frequency;
 
     @Getter @Setter
-    @MemberOrder(sequence = "16")
+//    @MemberOrder(sequence = "16")
     private String currency;
 
     @Getter @Setter
-    @MemberOrder(sequence = "12")
+//    @MemberOrder(sequence = "12")
     private int nonComparableFlag;
 
     @Getter @Setter
-    @MemberOrder(sequence = "8")
+//    @MemberOrder(sequence = "8")
     private BigInteger purchaseCount;
 
     @Getter @Setter
-    @MemberOrder(sequence = "13")
+//    @MemberOrder(sequence = "13")
     private String comments;
 
     @Getter @Setter
-    @MemberOrder(sequence = "18")
+//    @MemberOrder(sequence = "18")
     private LocalDateTime reportedAt;
 
     @Getter @Setter
-    @MemberOrder(sequence = "19")
+//    @MemberOrder(sequence = "19")
     private String reportedBy;
 
     @Getter @Setter
-    @MemberOrder(sequence = "9")
+//    @MemberOrder(sequence = "9")
     private BigDecimal grossAmountPreviousYear;
 
     @Getter @Setter
-    @MemberOrder(sequence = "10")
+//    @MemberOrder(sequence = "10")
     private BigDecimal netAmountPreviousYear;
 
     @Getter @Setter
-    @MemberOrder(sequence = "11")
+//    @MemberOrder(sequence = "11")
     private BigInteger purchaseCountPreviousYear;
 
     public BigDecimal getNetAmountDivPercentage(){
