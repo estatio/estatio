@@ -65,17 +65,42 @@ public class NumeratorForOutgoingInvoicesRepository extends UdoDomainService<Num
                 COLLECTION_NUMBER, null, null, null, format, lastValue, globalAppTenancy);
     }
 
-
+    /**
+     * Same as {@link #findInvoiceNumberNumeratorExact(FixedAsset, Party)}, but if there is no numerator for this
+     * property, then will look at that {@link Property}'s {@link Property#getNumeratorProperty() numerator property}
+     * and use that instead.
+     */
     public Numerator findInvoiceNumberNumerator(
             final FixedAsset fixedAsset,
             final Party seller) {
 
+        final Numerator numeratorIfAny = findInvoiceNumberNumeratorExact(fixedAsset, seller);
+        if (numeratorIfAny != null) {
+            return numeratorIfAny;
+        }
+
+        // otherwise, if this property has a "numeratorProperty", then use that instead.
+        if(fixedAsset instanceof Property) { // it always will be, actually...
+            final Property property = (Property) fixedAsset;
+            final Property parentProperty = property.getNumeratorProperty();
+            if(parentProperty != null) {
+                return findInvoiceNumberNumeratorExact(parentProperty, seller);
+            }
+        }
+
+        return null;
+    }
+
+    public Numerator findInvoiceNumberNumeratorExact(final FixedAsset fixedAsset, final Party seller) {
         final ApplicationTenancy applicationTenancy = fixedAsset.getApplicationTenancy();
         final Country country = countryRepository.findCountryByAtPath(applicationTenancy.getPath());
 
-        return numeratorRepository.find(INVOICE_NUMBER, country, fixedAsset, seller);
+        final Numerator numeratorIfAny = numeratorRepository.find(INVOICE_NUMBER, country, fixedAsset, seller);
+        if (numeratorIfAny != null) {
+            return numeratorIfAny;
+        }
+        return null;
     }
-
 
     public Numerator createInvoiceNumberNumerator(
             final Property property,
@@ -83,18 +108,15 @@ public class NumeratorForOutgoingInvoicesRepository extends UdoDomainService<Num
             final String format,
             final BigInteger lastIncrement) {
 
-        final ApplicationTenancy applicationTenancy = property.getApplicationTenancy();
-
-        final Country country = countryRepository.findCountryByAtPath(applicationTenancy.getPath());
-        final Numerator numerator = numeratorRepository.find(
-                INVOICE_NUMBER, country, property, seller);
+        final Numerator numerator = findInvoiceNumberNumeratorExact(property, seller);
         if (numerator != null) {
             return numerator;
         }
+
         return findOrCreateInvoiceNumberNumerator(property, seller, format, lastIncrement);
     }
 
-    public Numerator findOrCreateInvoiceNumberNumerator(
+    public Numerator findInvoiceNumberNumerator(
             final Property property,
             final Party seller,
             final String format,
@@ -105,8 +127,21 @@ public class NumeratorForOutgoingInvoicesRepository extends UdoDomainService<Num
         final ApplicationTenancy countryTenancy =
                 estatioApplicationTenancyRepositoryForCountry.findOrCreateTenancyFor(country);
 
-        return numeratorRepository.findOrCreate(
+        return numeratorRepository.find(
                 INVOICE_NUMBER, country, property, seller, format, lastIncrement, countryTenancy);
+    }
+
+    private Numerator findOrCreateInvoiceNumberNumerator(
+            final Property property,
+            final Party seller,
+            final String format,
+            final BigInteger lastIncrement) {
+
+        Numerator numerator = findInvoiceNumberNumerator(property, seller, format, lastIncrement);
+        if(numerator == null) {
+            numerator = createInvoiceNumberNumerator(property, seller, format, lastIncrement);
+        }
+        return numerator;
     }
 
 

@@ -138,6 +138,24 @@ public class NumeratorRepository extends UdoDomainRepositoryAndFactory<Numerator
         return create(name, countryIfAny, objectIfAny, object2IfAny, format, lastIncrement, applicationTenancy);
     }
 
+    public Numerator find(
+            final String name,
+            final Country countryIfAny,
+            final Object objectIfAny,
+            final Object object2IfAny,
+            final String format,
+            final BigInteger lastIncrement,
+            final ApplicationTenancy applicationTenancyUNUSED) {
+
+        try {
+            String.format(format, lastIncrement);
+        } catch(Exception ex) {
+            throw new RecoverableException(String.format("Invalid format string '%s'", format));
+        }
+
+        return find(name, countryIfAny, objectIfAny, object2IfAny);
+    }
+
 
     public Numerator create(
             final String name,
