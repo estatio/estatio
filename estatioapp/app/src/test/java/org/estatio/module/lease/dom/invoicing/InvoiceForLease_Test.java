@@ -124,7 +124,7 @@ public class InvoiceForLease_Test {
     void allowingMockInvoicesToReturnNumerator(final Numerator numerator) {
         context.checking(new Expectations() {
             {
-                allowing(mockNumeratorForOutgoingInvoicesRepository).findInvoiceNumberNumeratorExact(with(any(Property.class)),
+                allowing(mockNumeratorForOutgoingInvoicesRepository).findInvoiceNumberNumerator(with(any(Property.class)),
                         with(any(Party.class))
                 );
                 will(returnValue(numerator));
