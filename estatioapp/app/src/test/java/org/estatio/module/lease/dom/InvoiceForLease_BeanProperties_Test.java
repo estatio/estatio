@@ -36,29 +36,26 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyForTesting;
 
-public class InvoiceForLease_Test {
+public class InvoiceForLease_BeanProperties_Test extends AbstractBeanPropertiesTest {
 
-    public static class BeanProperties extends AbstractBeanPropertiesTest {
-
-        @Test
-        public void test() {
-            newPojoTester()
-                    .withFixture(statii())
-                    .withFixture(pojos(Party.class, PartyForTesting.class))
-                    .withFixture(pojos(Currency.class))
-                    .withFixture(pojos(Lease.class))
-                    .withFixture(pojos(FixedAsset.class, FixedAssetForTesting.class))
-                    .withFixture(pojos(BankMandate.class))
-                    .withFixture(pojos(ApplicationTenancy.class))
-                    .withFixture(pojos(CommunicationChannel.class, CommunicationChannelForTesting.class))
-                    .exercise(new InvoiceForLease());
-        }
-
-
-        @SuppressWarnings({"rawtypes", "unchecked"})
-        private static FixtureDatumFactory<InvoiceStatus> statii() {
-            return new FixtureDatumFactory(InvoiceStatus.class, (Object[]) InvoiceStatus.values());
-        }
-
+    @Test
+    public void test() {
+        newPojoTester()
+                .withFixture(statii())
+                .withFixture(pojos(Party.class, PartyForTesting.class))
+                .withFixture(pojos(Currency.class))
+                .withFixture(pojos(Lease.class))
+                .withFixture(pojos(FixedAsset.class, FixedAssetForTesting.class))
+                .withFixture(pojos(BankMandate.class))
+                .withFixture(pojos(ApplicationTenancy.class))
+                .withFixture(pojos(CommunicationChannel.class, CommunicationChannelForTesting.class))
+                .exercise(new InvoiceForLease());
     }
+
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static FixtureDatumFactory<InvoiceStatus> statii() {
+        return new FixtureDatumFactory(InvoiceStatus.class, (Object[]) InvoiceStatus.values());
+    }
+
 }

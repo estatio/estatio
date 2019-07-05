@@ -124,15 +124,15 @@ public class NumeratorRepository extends UdoDomainRepositoryAndFactory<Numerator
             final BigInteger lastIncrement,
             final ApplicationTenancy applicationTenancy) {
 
+        final Numerator existingIfAny = find(name, countryIfAny, objectIfAny, object2IfAny);
+        if(existingIfAny != null) {
+            return existingIfAny;
+        }
+
         try {
             String.format(format, lastIncrement);
         } catch(Exception ex) {
             throw new RecoverableException(String.format("Invalid format string '%s'", format));
-        }
-
-        final Numerator existingIfAny = find(name, countryIfAny, objectIfAny, object2IfAny);
-        if(existingIfAny != null) {
-            return existingIfAny;
         }
 
         return create(name, countryIfAny, objectIfAny, object2IfAny, format, lastIncrement, applicationTenancy);

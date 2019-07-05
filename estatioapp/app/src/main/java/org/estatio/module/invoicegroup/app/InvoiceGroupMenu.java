@@ -24,9 +24,11 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.module.invoicegroup.dom.InvoiceGroup;
 import org.estatio.module.invoicegroup.dom.InvoiceGroupRepository;
@@ -38,6 +40,7 @@ public class InvoiceGroupMenu {
 
 
     @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(hidden = Where.EVERYWHERE) // suppressed for now; see instead Property#numeratorProperty
     public InvoiceGroup createInvoiceGroup(final String reference, final String name) {
         return invoiceGroupRepository.createInvoiceGroup(reference, name);
     }
@@ -50,6 +53,7 @@ public class InvoiceGroupMenu {
 
 
     @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(hidden = Where.EVERYWHERE) // suppressed for now; see instead Property#numeratorProperty
     public InvoiceGroup findInvoiceGroup(final String reference) {
         return invoiceGroupRepository.findByReference(reference).orElse(null);
     }
@@ -57,6 +61,7 @@ public class InvoiceGroupMenu {
 
 
     @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(hidden = Where.EVERYWHERE) // suppressed for now; see instead Property#numeratorProperty
     public List<InvoiceGroup> allInvoiceGroups() {
         return invoiceGroupRepository.allInvoiceGroups();
     }

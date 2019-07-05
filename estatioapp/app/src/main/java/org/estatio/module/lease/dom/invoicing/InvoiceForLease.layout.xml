@@ -86,7 +86,7 @@
                         </cpt:property>
                     </cpt:fieldSet>
                     <cpt:fieldSet name="RelatedTo" id="relatedTo">
-                        <cpt:property id="fixedAsset"/>
+                        <cpt:property id="property"/>
                         <cpt:property id="lease" hidden="PARENTED_TABLES"/>
                     </cpt:fieldSet>
                 </bs3:col>

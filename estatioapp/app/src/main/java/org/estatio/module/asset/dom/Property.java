@@ -140,56 +140,74 @@ public class Property
         setFullName(fullName);
     }
 
-    // //////////////////////////////////////
+
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = PropertyType.Meta.MAX_LEN)
     @Getter @Setter
     private PropertyType type;
 
-    // //////////////////////////////////////
+
 
     @javax.jdo.annotations.Persistent
     @javax.jdo.annotations.Column(allowsNull = "true")
     @Getter @Setter
     private LocalDate openingDate;
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     @javax.jdo.annotations.Column(allowsNull = "true")
     @Getter @Setter
     private LocalDate acquireDate;
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     @javax.jdo.annotations.Column(allowsNull = "true")
     @Getter @Setter
     private LocalDate disposalDate;
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Getter @Setter
     private BigDecimal area;
 
+
     @javax.jdo.annotations.Column(allowsNull = "true")
     @Getter @Setter
     private Integer parkingSpaces;
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = ProperNameType.Meta.MAX_LEN)
     @Getter @Setter
     private String city;
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "countryId", allowsNull = "true")
     @Getter @Setter
     private Country country;
 
-    // //////////////////////////////////////
+    /**
+     * An alternative design, and which we partially implemented, is to create a flat "group" of properties that share
+     * the same {@link org.estatio.module.numerator.dom.Numerator}; this was the purpose of the <code>InvoiceGroup</code>
+     * entity that was introduced.
+     *
+     * <p>
+     *     We decided though to go with this simpler design, namely that some {@link Property properties} can point to
+     *     other {@link Property properties} .  We've kept <code>InvoiceGroup</code> around because it might evolve
+     *     into something more complex (it represents a badly understood/articulated missing concept in the business
+     *     domain).  Or, since currently it does nothing, it might be that we decide to delete
+     *     <code>InvoiceGroup</code> completely in the future.  If when you are reading this comment you can't find
+     *     <code>InvoiceGroup</code> but this comment is still around, then go ahead and delete this comment too.
+     * </p>
+     */
+    @javax.jdo.annotations.Column(name = "numeratorPropertyId", allowsNull = "true")
+    @Getter @Setter
+    @PropertyLayout(
+            describedAs = "The property whose numerator should be used if this property does not have a numerator.  "
+                        + "Used, for example, in 'Bureau' properties in France."
+    )
+    private Property numeratorProperty;
+
+
 
     @javax.jdo.annotations.Persistent
     @org.apache.isis.applib.annotation.Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL, hidden = Where.ALL_TABLES)
@@ -207,7 +225,7 @@ public class Property
         return this;
     }
 
-    // //////////////////////////////////////
+
 
     @javax.jdo.annotations.Persistent(mappedBy = "property")
     @CollectionLayout(render = RenderType.EAGERLY)

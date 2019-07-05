@@ -53,6 +53,7 @@ public class Property_Test {
                     .withFixture(pojos(Country.class))
                     .withFixture(pojos(Location.class))
                     .withFixture(pojos(ApplicationTenancy.class))
+                    .withFixture(pojos(Property.class))
                     .exercise(new Property());
         }
 

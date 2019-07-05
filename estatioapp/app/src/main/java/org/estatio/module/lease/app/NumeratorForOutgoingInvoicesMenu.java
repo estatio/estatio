@@ -69,7 +69,7 @@ public class NumeratorForOutgoingInvoicesMenu extends UdoDomainService<Numerator
     public Numerator findInvoiceNumberNumerator(
             final Property property,
             final Party seller) {
-        return numeratorRepository.findInvoiceNumberNumerator(property, seller);
+        return numeratorRepository.findInvoiceNumberNumeratorExact(property, seller);
     }
 
     public List<Party> choices1FindInvoiceNumberNumerator(final Property property) {
@@ -84,7 +84,11 @@ public class NumeratorForOutgoingInvoicesMenu extends UdoDomainService<Numerator
             final Party seller,
             final String format,
             final BigInteger lastIncrement) {
-        return numeratorRepository.findOrCreateInvoiceNumberNumerator(property, seller, format, lastIncrement);
+        final Numerator numerator = numeratorRepository.findInvoiceNumberNumeratorExact(property, seller);
+        if(numerator != null) {
+            return numerator;
+        }
+        return numeratorRepository.createInvoiceNumberNumerator(property, seller, format, lastIncrement);
     }
 
     public List<Party> choices1CreateInvoiceNumberNumerator(final Property property) {

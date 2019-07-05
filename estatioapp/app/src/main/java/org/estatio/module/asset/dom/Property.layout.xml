@@ -74,7 +74,9 @@
                                 <col span="12">
                                     <ns2:fieldSet name="Invoicing" id="invoicing">
                                         <ns2:action id="calculateInvoices" position="PANEL"/>
-                                        <ns2:property id="invoiceGroup"  hidden="REFERENCES_PARENT">
+                                        <ns2:property id="invoiceGroup"  hidden="EVERYWHERE"/>
+                                        <ns2:property id="numeratorProperty">
+                                            <ns2:action id="linkToNumeratorProperty" />
                                         </ns2:property>
                                     </ns2:fieldSet>
                                 </col>

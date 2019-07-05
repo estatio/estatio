@@ -32,7 +32,6 @@ import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 
-import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
@@ -55,7 +54,6 @@ public class NumeratorForOutgoingInvoicesRepository extends UdoDomainService<Num
         return numeratorRepository.find(COLLECTION_NUMBER, null, null, null);
     }
 
-
     public Numerator createCollectionNumberNumerator(
             final String format,
             final BigInteger lastValue) {
@@ -65,17 +63,36 @@ public class NumeratorForOutgoingInvoicesRepository extends UdoDomainService<Num
                 COLLECTION_NUMBER, null, null, null, format, lastValue, globalAppTenancy);
     }
 
-
+    /**
+     * Same as {@link #findInvoiceNumberNumeratorExact(Property, Party)}, but if there is no numerator for this
+     * property, then will look at that {@link Property}'s {@link Property#getNumeratorProperty() numerator property}
+     * and use that instead.
+     */
     public Numerator findInvoiceNumberNumerator(
-            final FixedAsset fixedAsset,
+            final Property property,
             final Party seller) {
 
-        final ApplicationTenancy applicationTenancy = fixedAsset.getApplicationTenancy();
-        final Country country = countryRepository.findCountryByAtPath(applicationTenancy.getPath());
+        final Numerator numeratorIfAny = findInvoiceNumberNumeratorExact(property, seller);
+        if (numeratorIfAny != null) {
+            return numeratorIfAny;
+        }
 
-        return numeratorRepository.find(INVOICE_NUMBER, country, fixedAsset, seller);
+        // otherwise, if this property has a "numeratorProperty", then use that instead.
+        final Property numeratorProperty = property.getNumeratorProperty();
+        if(numeratorProperty != null) {
+            return findInvoiceNumberNumeratorExact(numeratorProperty, seller);
+        }
+
+        return null;
     }
 
+    public Numerator findInvoiceNumberNumeratorExact(
+            final Property property,
+            final Party seller) {
+
+        final Country country = property.getCountry();
+        return numeratorRepository.find(INVOICE_NUMBER, country, property, seller);
+    }
 
     public Numerator createInvoiceNumberNumerator(
             final Property property,
@@ -83,32 +100,18 @@ public class NumeratorForOutgoingInvoicesRepository extends UdoDomainService<Num
             final String format,
             final BigInteger lastIncrement) {
 
-        final ApplicationTenancy applicationTenancy = property.getApplicationTenancy();
-
-        final Country country = countryRepository.findCountryByAtPath(applicationTenancy.getPath());
-        final Numerator numerator = numeratorRepository.find(
-                INVOICE_NUMBER, country, property, seller);
+        final Numerator numerator = findInvoiceNumberNumeratorExact(property, seller);
         if (numerator != null) {
             return numerator;
         }
-        return findOrCreateInvoiceNumberNumerator(property, seller, format, lastIncrement);
-    }
 
-    public Numerator findOrCreateInvoiceNumberNumerator(
-            final Property property,
-            final Party seller,
-            final String format,
-            final BigInteger lastIncrement) {
-
-        final ApplicationTenancy applicationTenancy = property.getApplicationTenancy();
-        final Country country = countryRepository.findCountryByAtPath(applicationTenancy.getPath());
+        final Country country = property.getCountry();
         final ApplicationTenancy countryTenancy =
                 estatioApplicationTenancyRepositoryForCountry.findOrCreateTenancyFor(country);
 
-        return numeratorRepository.findOrCreate(
+        return numeratorRepository.create(
                 INVOICE_NUMBER, country, property, seller, format, lastIncrement, countryTenancy);
     }
-
 
 
     @javax.inject.Inject
