@@ -47,7 +47,6 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -60,6 +59,7 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.module.base.dom.EstatioRole;
@@ -205,13 +205,39 @@ public class InvoiceForLease
      * Another reason for persisting this is that it allows eager validation
      * when attaching additional {@link InvoiceItem}s to an invoice, to check
      * that they relate to the same fixed asset.
+     *
+     * @see #getProperty() - generally use instead.
      */
     @javax.jdo.annotations.Column(name = "fixedAssetId", allowsNull = "false")
     // for the moment, might be generalized (to the user) in the future
-    @Property(hidden = Where.PARENTED_TABLES)
-    @PropertyLayout(named = "Property")
+    @Property(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private FixedAsset fixedAsset;
+
+    @Property(hidden = Where.PARENTED_TABLES)
+    public org.estatio.module.asset.dom.Property getProperty() {
+        final FixedAsset fixedAsset = getFixedAsset();
+        if(fixedAsset == null) {
+            return null;
+        }
+
+        if (fixedAsset instanceof org.estatio.module.asset.dom.Property) {
+            return (org.estatio.module.asset.dom.Property) fixedAsset;
+        }
+
+        if (fixedAsset instanceof org.estatio.module.asset.dom.Unit) {
+            // this branch doesn't seem likely... there are currently no InvoiceForLease's
+            // where the fixedAsset is a unit instead of a property, so it seems never to happen
+            // still, as a fallback we can still figure it out...
+            final Unit unit = (Unit) fixedAsset;
+            return unit.getProperty();
+        }
+
+        // can't happen, there are no other subtypes of FixedAsset
+        throw new IllegalStateException(String.format("Fixed asset '%s' is of type '%s'",
+                fixedAsset.getReference(), fixedAsset.getClass().getName()));
+    }
+
 
 
     @Property(hidden = Where.EVERYWHERE, optionality = Optionality.OPTIONAL)
@@ -468,7 +494,7 @@ public class InvoiceForLease
 
             ApplicationTenancy invoiceForLeaseApplicationTenancy = invoiceForLease.getApplicationTenancy();
             final Numerator numerator = numeratorRepository
-                    .findInvoiceNumberNumerator(invoiceForLease.getFixedAsset(), invoiceForLease.getSeller()
+                    .findInvoiceNumberNumerator(invoiceForLease.getProperty(), invoiceForLease.getSeller()
                     );
 
             invoiceForLease.setInvoiceNumber(numerator.nextIncrementStr());
@@ -489,7 +515,7 @@ public class InvoiceForLease
             }
             ApplicationTenancy invoiceForLeaseApplicationTenancy = invoiceForLease.getApplicationTenancy();
             final Numerator numerator = numeratorRepository
-                    .findInvoiceNumberNumerator(invoiceForLease.getFixedAsset(), invoiceForLease.getSeller()
+                    .findInvoiceNumberNumerator(invoiceForLease.getProperty(), invoiceForLease.getSeller()
                     );
             if (numerator == null) {
                 return "No 'invoice number' numerator found for invoice's property";
@@ -515,7 +541,7 @@ public class InvoiceForLease
                 return String.format("Invoice date must be on or before the due date (%s)", invoiceForLease.getDueDate().toString());
             }
             final ApplicationTenancy applicationTenancy = invoiceForLease.getApplicationTenancy();
-            final Numerator numerator = numeratorRepository.findInvoiceNumberNumerator(invoiceForLease.getFixedAsset(),
+            final Numerator numerator = numeratorRepository.findInvoiceNumberNumerator(invoiceForLease.getProperty(),
                     invoiceForLease.getSeller()
             );
             if (numerator != null) {
@@ -578,6 +604,9 @@ public class InvoiceForLease
         UserService userService;
     }
 
+    /**
+     * Callback from the framework.
+     */
     public void updating() {
         updateDescriptions();
     }

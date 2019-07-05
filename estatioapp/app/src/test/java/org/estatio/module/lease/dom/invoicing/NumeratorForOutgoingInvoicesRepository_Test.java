@@ -54,19 +54,15 @@ public class NumeratorForOutgoingInvoicesRepository_Test {
             return ApplicationTenancy_enum.Global.getPath();
         }
     };
-    private ApplicationTenancy propertyApplicationTenancy = new ApplicationTenancy() {
-        @Override public String getPath() {
-            return ApplicationTenancy_enum.Gb.getPath();
-        }
-    };
 
-    Property stubProperty = new Property(){
-        @Override public ApplicationTenancy getApplicationTenancy() {
-            return propertyApplicationTenancy;
-        }
-    };
 
     Country propertyCountry = new Country();
+    Property stubProperty = new Property(){
+
+        @Override public Country getCountry() {
+            return propertyCountry;
+        }
+    };
     Party stubSeller = new Organisation();
 
     @Mock
@@ -99,8 +95,6 @@ public class NumeratorForOutgoingInvoicesRepository_Test {
                 allowing(mockApplicationTenancyRepository).findByPath(ApplicationTenancy_enum.Global.getPath());
                 will(returnValue(globalApplicationTenancy));
 
-                allowing(mockCountryRepository).findCountryByAtPath(propertyApplicationTenancy.getPath());
-                will(returnValue(propertyCountry));
             }
         });
     }
