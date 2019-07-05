@@ -4,13 +4,10 @@ import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.PersonaWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.lease.dom.invoicing.NumeratorForOutgoingInvoicesRepository;
 import org.estatio.module.lease.fixtures.numerators.builders.PropertyOwnerNumeratorBuilder;
-import org.estatio.module.lease.dom.EstatioApplicationTenancyRepositoryForLease;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.party.dom.Organisation;
 
@@ -38,17 +35,12 @@ public enum PropertyOwnerNumerator_enum implements PersonaWithFinder<Numerator>,
     @Override
     public Numerator findUsing(final ServiceRegistry2 serviceRegistry) {
 
-        final EstatioApplicationTenancyRepositoryForLease estatioApplicationTenancyRepository =
-                serviceRegistry.lookupService(EstatioApplicationTenancyRepositoryForLease.class);
-
         final Property property = propertyAndUnitsAndOwnerAndManager_d.findUsing(serviceRegistry);
         final Organisation owner = propertyAndUnitsAndOwnerAndManager_d.getOwner_d().findUsing(serviceRegistry);
-        final ApplicationTenancy applicationTenancy =
-                estatioApplicationTenancyRepository.findOrCreateTenancyFor(property, owner);
 
         final NumeratorForOutgoingInvoicesRepository repository = serviceRegistry.lookupService(
                 NumeratorForOutgoingInvoicesRepository.class);
-        return repository.findInvoiceNumberNumerator(property, owner);
+        return repository.findInvoiceNumberNumeratorExact(property, owner);
     }
 
     @Override

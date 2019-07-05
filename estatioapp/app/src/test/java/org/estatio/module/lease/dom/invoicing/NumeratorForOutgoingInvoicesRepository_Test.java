@@ -135,7 +135,7 @@ public class NumeratorForOutgoingInvoicesRepository_Test {
                         NumeratorForOutgoingInvoicesRepository.INVOICE_NUMBER, propertyCountry, stubProperty, stubSeller);
             }
         });
-        numeratorForOutgoingInvoicesRepository.findInvoiceNumberNumerator(stubProperty, stubSeller);
+        numeratorForOutgoingInvoicesRepository.findInvoiceNumberNumeratorExact(stubProperty, stubSeller);
     }
 
 
