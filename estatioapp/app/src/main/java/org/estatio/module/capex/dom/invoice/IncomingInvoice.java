@@ -595,8 +595,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Charge charge,
-            final Project project,
-            final BudgetItem budgetItem,
+            final @Nullable Project project,
+            final @Nullable BudgetItem budgetItem,
             final String period) {
         // upsert invoice item
         // this will also update the parent header's property with that from the first item
