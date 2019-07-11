@@ -12,6 +12,7 @@ import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -884,6 +885,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     @ActionLayout(named = "Create Supplier")
     public Order createSeller(
             final OrganisationNameNumberViewModel candidate,
+            final String chamberOfCommerceCode,
             final Country country,
             @Nullable final String ibanNumber) {
         Organisation organisation = organisationRepository
@@ -910,15 +912,31 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return result;
     }
 
+    public String default1CreateSeller(final OrganisationNameNumberViewModel candidate) {
+        return candidate.getChamberOfCommerceCode();
+    }
+
     public String validateCreateSeller(
             final OrganisationNameNumberViewModel candidate,
+            final String chamberOfCommerceCode,
             final Country country,
             final String ibanNumber) {
         if (ibanNumber != null && !IBANValidator.valid(ibanNumber)) {
             return String.format("%s is not a valid iban number", ibanNumber);
         }
 
+        if (Stream.of("/FRA", "/BEL").anyMatch(getAtPath()::startsWith)) {
+            if (chamberOfCommerceCode == null)
+                return "Chamber of Commerce code is mandatory for French and Belgian organisations";
 
+            Optional<Organisation> orgIfAny =
+                    organisationRepository.findByChamberOfCommerceCode(chamberOfCommerceCode)
+                            .stream()
+                            .filter(org -> org.getApplicationTenancy().equals(getApplicationTenancy()))
+                            .findFirst();
+
+            return orgIfAny.map(organisation -> String.format("An organisation for this country and chamber of commerce code already exists: %s [%s]", organisation.getName(), organisation.getReference())).orElse(null);
+        }
 
         return null;
     }

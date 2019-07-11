@@ -433,8 +433,18 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final LocalDate dueDate,
             final PaymentMethod paymentMethod,
             final Currency currency) {
-        if (createNewSupplier && !(newSupplierCandidate != null && newSupplierCountry != null && newSupplierChamberOfCommerceCode != null))
-            return "Candidate, country, and Chamber of Commerce code are mandatory when adding a new supplier";
+        if (createNewSupplier) {
+            if (newSupplierCandidate == null || newSupplierCountry == null || newSupplierChamberOfCommerceCode == null)
+                return "Candidate, country, and Chamber of Commerce code are mandatory when adding a new supplier";
+
+            Optional<Organisation> orgIfAny =
+                    organisationRepository.findByChamberOfCommerceCode(newSupplierChamberOfCommerceCode)
+                            .stream()
+                            .filter(org -> org.getApplicationTenancy().equals(getApplicationTenancy()))
+                            .findFirst();
+
+            return orgIfAny.map(organisation -> String.format("An organisation for this country and chamber of commerce code already exists: %s [%s]", organisation.getName(), organisation.getReference())).orElse(null);
+        }
 
         if (newSupplierIban != null && !IBANValidator.valid(newSupplierIban))
             return String.format("%s is not a valid iban number", newSupplierIban);
