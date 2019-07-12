@@ -808,6 +808,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         switch (incomingInvoiceApprovalState) {
 
             case NEW:
+            case SUSPENDED:
             case COMPLETED:
             case PENDING_ADVISE:
             case ADVISE_POSITIVE:

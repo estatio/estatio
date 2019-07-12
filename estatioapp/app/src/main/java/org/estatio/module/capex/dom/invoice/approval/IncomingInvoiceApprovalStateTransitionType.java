@@ -606,6 +606,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
     PAID_IN_CODA(
             Lists.newArrayList(
                     IncomingInvoiceApprovalState.NEW,
+                    IncomingInvoiceApprovalState.SUSPENDED,
                     IncomingInvoiceApprovalState.COMPLETED,
                     IncomingInvoiceApprovalState.PENDING_ADVISE,
                     IncomingInvoiceApprovalState.ADVISE_POSITIVE,
