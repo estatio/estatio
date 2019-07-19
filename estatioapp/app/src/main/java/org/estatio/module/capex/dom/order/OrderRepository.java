@@ -222,11 +222,18 @@ public class OrderRepository {
         return order;
     }
 
-    private String generateNextOrderNumber(final Organisation buyer, final String atPath) {
+    String generateNextOrderNumber(final Organisation buyer, final String atPath) {
         final String format = atPath.startsWith("/ITA") ? "%04d" : "%05d";
         final Organisation buyerToUse = atPath.startsWith("/ITA") ? buyer : null;
         final Numerator numerator = numeratorForOrdersRepository.findOrCreateNumerator(atPath, buyerToUse, format);
-        return numerator.nextIncrementStr();
+
+        // due to change of buyer on orders issued before the demerger, we need to safeguard that the numerator of the new buyer will not increment to an existing value. See ECP-1064
+        String nextIncrement = numerator.nextIncrementStr();
+        while (!findByBuyerAndBuyerOrderNumber(buyer, new BigInteger(nextIncrement)).isEmpty()) {
+            nextIncrement = numerator.nextIncrementStr();
+        }
+
+        return nextIncrement;
     }
 
     public static String toItaOrderNumber(
