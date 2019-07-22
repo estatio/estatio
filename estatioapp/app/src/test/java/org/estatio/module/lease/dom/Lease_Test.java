@@ -43,7 +43,6 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
@@ -54,18 +53,18 @@ import org.estatio.module.agreement.dom.AgreementForTesting;
 import org.estatio.module.agreement.dom.AgreementRepository;
 import org.estatio.module.agreement.dom.AgreementRole;
 import org.estatio.module.agreement.dom.AgreementRoleRepository;
+import org.estatio.module.agreement.dom.Agreement_Test;
 import org.estatio.module.agreement.dom.role.AgreementRoleType;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.agreement.dom.type.AgreementType;
 import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
-import org.estatio.module.agreement.dom.Agreement_Test;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.bankmandate.dom.BankMandate;
+import org.estatio.module.bankmandate.dom.BankMandateAgreementRoleTypeEnum;
 import org.estatio.module.bankmandate.dom.BankMandateAgreementTypeEnum;
 import org.estatio.module.bankmandate.dom.BankMandateRepository;
-import org.estatio.module.bankmandate.dom.BankMandateAgreementRoleTypeEnum;
 import org.estatio.module.bankmandate.dom.Scheme;
 import org.estatio.module.bankmandate.dom.SequenceType;
 import org.estatio.module.charge.dom.Charge;
@@ -1077,104 +1076,6 @@ public class Lease_Test {
             //When, Then
             assertThat(lease.disableRenew()).isNotNull();
         }
-    }
-
-
-    public static class RenewKeepingThis extends Lease_Test {
-
-        @Mock
-        LeaseRepository mockLeaseRepository;
-
-        @Mock
-        ApplicationTenancyRepository mockApplicationTenancyRepository;
-
-        @Test
-        public void happy_case() throws Exception {
-            //Given
-            final Organisation tenant = new Organisation();
-            final Organisation landlord = new Organisation();
-            LeaseForTesting lease = new LeaseForTesting(){
-                @Override public Party primaryPartyAsOfElseCurrent(LocalDate dt) {
-                    return landlord;
-                }
-                @Override public Party secondaryPartyAsOfElseCurrent(LocalDate dt) {
-                    return tenant;
-                }
-            };
-            lease.setReference("OXF-HELLO-123");
-            lease.setName("OXF-HELLO-123");
-            lease.setComments("Comments");
-            final LocalDate startDate = new LocalDate(2000, 1, 1);
-            final LocalDate endDate = new LocalDate(2009, 12, 31);
-            final LocalDate tenancyStartDate = new LocalDate(1990, 1, 1);
-            final LocalDate tenancyEndDate = null;
-            lease.setStartDate(startDate);
-            lease.setEndDate(endDate);
-            lease.setTenancyStartDate(tenancyStartDate);
-            lease.leaseRepository = mockLeaseRepository;
-            lease.setSecurityApplicationTenancyRepository(mockApplicationTenancyRepository);
-
-            Lease previousLease = new Lease();
-
-            final LocalDate newStartDate = new LocalDate(2010, 1, 1);
-            final LocalDate newEndDate = new LocalDate(2019, 12, 31);
-
-            //Then
-            context.checking(new Expectations() {
-                {
-                    allowing(mockApplicationTenancyRepository).findByPathCached(with(aNull(String.class)));
-                    final ApplicationTenancy applicationTenancy = new ApplicationTenancy();
-                    will(returnValue(applicationTenancy));
-                    allowing(mockLeaseRepository).newLease(
-                            applicationTenancy,
-                            "OXF-HELLO-123_",
-                            "OXF-HELLO-123 - Archived",
-                            null,
-                            startDate,
-                            endDate,
-                            tenancyStartDate,
-                            tenancyEndDate,
-                            landlord,
-                            tenant);
-                    will(returnValue(previousLease));
-                }
-            });
-
-            //When
-            lease.renewKeepingThis(newStartDate, newEndDate);
-
-            //Then
-            assertThat(previousLease.getNext()).isEqualTo(lease);
-            assertThat(previousLease.getComments()).isEqualTo("Comments");
-
-            assertThat(lease.getStartDate()).isEqualTo(newStartDate);
-            assertThat(lease.getEndDate()).isEqualTo(newEndDate);
-            assertThat(lease.getTenancyStartDate()).isEqualTo(tenancyStartDate);
-            assertThat(lease.getTenancyEndDate()).isNull();
-
-        }
-
-        @Test
-        public void disabled_when_previous_lease_found() throws Exception {
-            //Given
-            Lease lease =  new Lease();
-            lease.setNext(new Lease());
-            //When, Then
-            assertThat(lease.disableRenewKeepingThis()).isNotNull();
-
-        }
-
-        @Test
-        public void disabled_when_next_lease_found() throws Exception {
-            //Given
-            Lease lease =  new Lease();
-            lease.setPrevious(new Lease());
-            //When, Then
-            assertThat(lease.disableRenewKeepingThis()).isNotNull();
-
-        }
-
-
     }
 
     public static class CopyToNewLease extends Lease_Test {

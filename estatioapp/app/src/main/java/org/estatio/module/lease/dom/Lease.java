@@ -102,7 +102,6 @@ import org.estatio.module.party.dom.Party;
 
 import lombok.Getter;
 import lombok.Setter;
-import static org.apache.commons.lang3.StringUtils.left;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -1068,46 +1067,6 @@ public class Lease
     public String disableRenew() {
         if(getNext() != null){
             return "Cannot renew when there is a next lease";
-        }
-        return null;
-    }
-
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    public Lease renewKeepingThis(
-            final LocalDate newStartDate,
-            final LocalDate newEndDate
-    ) {
-        final String newReference = left(getReference(), 14).concat("_");
-        final String newName = getName().concat(" - Archived");
-
-        // TODO: this should look up primary and secondary parties for startDate, so callers
-        //  should check/disable if none defined for that period.
-
-        Lease prevLease = leaseRepository.newLease(
-                getApplicationTenancy(),
-                newReference,
-                newName,
-                getLeaseType(),
-                getStartDate(),
-                getEndDate(),
-                getTenancyStartDate(),
-                getTenancyEndDate(),
-                primaryPartyAsOfElseCurrent(newStartDate),
-                secondaryPartyAsOfElseCurrent(newStartDate));
-        prevLease.setNext(this);
-        prevLease.setComments(getComments());
-
-        setStartDate(newStartDate);
-        setEndDate(newEndDate);
-        return this;
-    }
-
-    public String disableRenewKeepingThis() {
-        if (getPrevious() != null) {
-            return "Previous lease found";
-        }
-        if (getNext() != null) {
-            return "Next lease found";
         }
         return null;
     }

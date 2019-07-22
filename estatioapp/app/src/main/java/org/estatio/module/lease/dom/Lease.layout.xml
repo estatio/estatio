@@ -116,7 +116,6 @@
                     <ns2:action id="suspendAll" position="BELOW"/>
                     <ns2:action id="resumeAll" position="BELOW"/>
                     <ns2:action id="renew" position="BELOW"/>
-                    <ns2:action id="renewKeepingThis" position="BELOW"/>
                 </ns2:property>
             </ns2:fieldSet>
         </col>
