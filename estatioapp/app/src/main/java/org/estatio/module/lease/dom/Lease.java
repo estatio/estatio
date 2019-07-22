@@ -976,7 +976,8 @@ public class Lease
         for (LeaseItem item : getItems()) {
             LeaseItem newItem = newLease.newItem(
                     item.getType(),
-                    LeaseAgreementRoleTypeEnum.LANDLORD, item.getCharge(),
+                    item.getInvoicedBy(),
+                    item.getCharge(),
                     item.getInvoicingFrequency(),
                     item.getPaymentMethod(),
                     item.getStartDate()

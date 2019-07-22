@@ -1256,6 +1256,36 @@ public class Lease_Test {
 
         }
 
+        @Mock
+        Lease mockLease;
+
+        @Test
+        public void invoice_by_is_copied_for_each_item() throws Exception {
+
+            // given
+            Lease lease = new Lease();
+            LeaseItem itemInvoiceByLandlord = new LeaseItem();
+            itemInvoiceByLandlord.setInvoicedBy(LeaseAgreementRoleTypeEnum.LANDLORD);
+            itemInvoiceByLandlord.setType(LeaseItemType.RENT);
+            lease.getItems().add(itemInvoiceByLandlord);
+            LeaseItem itemInvoiceByManager = new LeaseItem();
+            itemInvoiceByManager.setType(LeaseItemType.PROPERTY_TAX);
+            itemInvoiceByManager.setInvoicedBy(LeaseAgreementRoleTypeEnum.MANAGER);
+            lease.getItems().add(itemInvoiceByManager);
+
+            // expect
+            context.checking(new Expectations(){{
+                oneOf(mockLease).newItem(LeaseItemType.RENT, LeaseAgreementRoleTypeEnum.LANDLORD, null, null, null, null);
+                oneOf(mockLease).newItem(LeaseItemType.PROPERTY_TAX, LeaseAgreementRoleTypeEnum.MANAGER, null, null, null, null);
+            }});
+
+            // when
+            lease.copyItemsAndTerms(mockLease, null, false);
+
+
+
+        }
+
     }
 
     public static class Finders extends Lease_Test {
