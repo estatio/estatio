@@ -19,6 +19,7 @@
 
 package org.estatio.module.lease.dom.occupancy.tags;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -53,8 +54,9 @@ public class BrandRepository extends UdoDomainRepositoryAndFactory<Brand> {
 
     @SuppressWarnings({ "unchecked" })
     @Programmatic
-    public List<String> findUniqueGroups() {
-        List groups = allMatches("findUniqueGroups");
+    public List<String> findUniqueGroups(final String search) {
+        if (search == null) return Collections.emptyList();
+        List groups = allMatches("findUniqueGroups", "search", search);
         return groups;
     }
 
@@ -130,11 +132,15 @@ public class BrandRepository extends UdoDomainRepositoryAndFactory<Brand> {
     }
 
     @Programmatic
+    public String findDistinctGroups(final String search) {
+        return null;
+    }
+
+    @Programmatic
     public List<Brand> allBrands() {
         return allInstances();
     }
 
     @Inject
     private EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
-
 }

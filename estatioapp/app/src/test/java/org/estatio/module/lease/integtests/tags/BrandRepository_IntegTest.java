@@ -32,8 +32,6 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.incode.module.country.dom.impl.CountryRepository;
-
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.BrandRepository;
 import org.estatio.module.lease.fixtures.brands.enums.Brand_enum;
@@ -97,7 +95,7 @@ public class BrandRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         public void happyCase() throws Exception {
             // given
             // when
-            final List<String> uniqueGroups = brandRepository.findUniqueGroups();
+            final List<String> uniqueGroups = brandRepository.findUniqueGroups("yU g");
             // then
             assertThat(uniqueGroups.size()).isEqualTo(1);
             assertThat(uniqueGroups.get(0)).isEqualTo(Brand_enum.Yu_s_Noodle_Joint.getGroup()); // choose any one

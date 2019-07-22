@@ -79,11 +79,6 @@ public class BrandMenu extends UdoDomainRepositoryAndFactory<Brand> {
         return brandRepository.newBrand(name, coverage, countryOfOrigin, group, country);
     }
 
-    public List<String> choices3NewBrand() {
-        return brandRepository.findUniqueGroups();
-    }
-
-
     public String validateNewBrand(
             final String name,
             final BrandCoverage coverage,

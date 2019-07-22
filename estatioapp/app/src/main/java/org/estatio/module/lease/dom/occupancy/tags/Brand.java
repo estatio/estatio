@@ -87,6 +87,7 @@ import lombok.Setter;
                 name = "findUniqueGroups", language = "JDOQL",
                 value = "SELECT DISTINCT this.group "
                         + "FROM org.estatio.module.lease.dom.occupancy.tags.Brand WHERE this.group != null "
+                        + "&& group.toUpperCase().startsWith(:search.toUpperCase()) "
                         + "ORDER BY this.group ")
 })
 @DomainObject(
@@ -211,5 +212,5 @@ public class Brand
             return null;
         }
     }
-
+    
 }
