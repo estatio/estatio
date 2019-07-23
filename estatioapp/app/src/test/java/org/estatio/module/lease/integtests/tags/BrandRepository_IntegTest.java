@@ -33,6 +33,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
+import org.estatio.module.lease.dom.occupancy.tags.BrandGroupViewModel;
 import org.estatio.module.lease.dom.occupancy.tags.BrandRepository;
 import org.estatio.module.lease.fixtures.brands.enums.Brand_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
@@ -103,6 +104,22 @@ public class BrandRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         }
     }
 
+    public static class AutoCompleteBrandGroup extends BrandRepository_IntegTest {
+
+        @Test
+        public void happyCase() throws Exception {
+            // given
+            // when
+            final List<BrandGroupViewModel> groups = brandRepository.autoCompleteBrandGroup("yU g");
+
+            // then
+            assertThat(groups).hasSize(2);
+            assertThat(groups)
+                    .extracting(BrandGroupViewModel::getGroup)
+                    .containsExactly(Brand_enum.Yu_s_Noodle_Joint.getGroup(), "yU g");
+        }
+    }
+
     public static class FindUniqueBrand extends BrandRepository_IntegTest {
 
         @Test
@@ -128,7 +145,6 @@ public class BrandRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
     }
 
-
     public static class NewBrand extends BrandRepository_IntegTest {
 
         @Test
@@ -142,7 +158,6 @@ public class BrandRepository_IntegTest extends LeaseModuleIntegTestAbstract {
             Assertions.assertThat(brandGbr.getName()).isEqualTo("Test123");
 
         }
-
 
     }
 

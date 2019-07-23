@@ -26,6 +26,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
@@ -43,6 +44,7 @@ import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
 import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
+import org.estatio.module.lease.dom.occupancy.tags.BrandGroupViewModel;
 import org.estatio.module.lease.dom.occupancy.tags.BrandRepository;
 
 @DomainService(
@@ -66,29 +68,25 @@ public class BrandMenu extends UdoDomainRepositoryAndFactory<Brand> {
     @MemberOrder(sequence = "1")
     public Brand newBrand(
             final String name,
+            @Parameter(optionality = Optionality.OPTIONAL) final BrandCoverage coverage,
+            @Parameter(optionality = Optionality.OPTIONAL) final Country countryOfOrigin,
+            @Parameter(optionality = Optionality.OPTIONAL) final BrandGroupViewModel group,
             @Parameter(optionality = Optionality.OPTIONAL)
-            final BrandCoverage coverage,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final Country countryOfOrigin,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final String group,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            @ParameterLayout(describedAs = "Leave blank for a global brand")
-            final Country country
+            @ParameterLayout(describedAs = "Leave blank for a global brand") final Country country
     ) {
-        return brandRepository.newBrand(name, coverage, countryOfOrigin, group, country);
+        return brandRepository.newBrand(name, coverage, countryOfOrigin, group.getGroup(), country);
     }
 
     public String validateNewBrand(
             final String name,
             final BrandCoverage coverage,
             final Country countryOfOrigin,
-            final String group,
+            final BrandGroupViewModel group,
             final Country countryIfAny) {
 
         final String atPath = meService.me().getFirstAtPathUsingSeparator(';');
         final ApplicationTenancyLevel userAtPath = ApplicationTenancyLevel.of(atPath);
-        if(countryIfAny == null && (userAtPath == null || !userAtPath.isRoot())) {
+        if (countryIfAny == null && (userAtPath == null || !userAtPath.isRoot())) {
             return "You may only create country-specific brands";
         }
 
@@ -100,13 +98,15 @@ public class BrandMenu extends UdoDomainRepositoryAndFactory<Brand> {
         return null;
     }
 
+    public List<BrandGroupViewModel> autoComplete3NewBrand(final @MinLength(2) String search) {
+        return brandRepository.autoCompleteBrandGroup(search);
+    }
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
     public List<Brand> findBrand(final String search) {
         return brandRepository.matchByName(search);
     }
-
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3")

@@ -21,6 +21,7 @@ package org.estatio.module.lease.dom.occupancy.tags;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -57,6 +58,17 @@ public class BrandRepository extends UdoDomainRepositoryAndFactory<Brand> {
     public List<String> findUniqueGroups(final String search) {
         if (search == null) return Collections.emptyList();
         List groups = allMatches("findUniqueGroups", "search", search);
+        return groups;
+    }
+
+    @Programmatic
+    public List<BrandGroupViewModel> autoCompleteBrandGroup(final String search) {
+        final List<BrandGroupViewModel> groups = findUniqueGroups(search)
+                .stream()
+                .map(BrandGroupViewModel::new)
+                .collect(Collectors.toList());
+        groups.add(new BrandGroupViewModel(search));
+
         return groups;
     }
 
@@ -129,11 +141,6 @@ public class BrandRepository extends UdoDomainRepositoryAndFactory<Brand> {
             brand = newBrand(name, brandCoverage, countryOfOrigin, null, estatioApplicationTenancyRepository.findCountryTenancyFor(applicationTenancy));
         }
         return brand;
-    }
-
-    @Programmatic
-    public String findDistinctGroups(final String search) {
-        return null;
     }
 
     @Programmatic

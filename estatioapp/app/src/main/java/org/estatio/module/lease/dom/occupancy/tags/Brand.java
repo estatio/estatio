@@ -18,6 +18,9 @@
  */
 package org.estatio.module.lease.dom.occupancy.tags;
 
+import java.util.List;
+
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -26,6 +29,7 @@ import javax.jdo.annotations.VersionStrategy;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Property;
@@ -49,7 +53,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
-        ,schema = "dbo"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
+        , schema = "dbo"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -57,7 +61,7 @@ import lombok.Setter;
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
-@javax.jdo.annotations.Unique(name = "Brand_name_atPath_UNQ", members = {"name", "applicationTenancyPath"})
+@javax.jdo.annotations.Unique(name = "Brand_name_atPath_UNQ", members = { "name", "applicationTenancyPath" })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByName", language = "JDOQL",
@@ -155,11 +159,11 @@ public class Brand
 
     public Brand change(
             final String name,
-            final @Parameter(optionality = Optionality.OPTIONAL) String group,
+            final @Parameter(optionality = Optionality.OPTIONAL) BrandGroupViewModel group,
             final @Parameter(optionality = Optionality.OPTIONAL) BrandCoverage coverage,
             final @Parameter(optionality = Optionality.OPTIONAL) Country countryOfOrigin) {
         setName(name);
-        setGroup(group);
+        setGroup(group.getGroup());
         setCoverage(coverage);
         setCountryOfOrigin(countryOfOrigin);
         return this;
@@ -169,8 +173,8 @@ public class Brand
         return this.getName();
     }
 
-    public String default1Change() {
-        return this.getGroup();
+    public BrandGroupViewModel default1Change() {
+        return getGroup() == null ? null : new BrandGroupViewModel(this.getGroup());
     }
 
     public BrandCoverage default2Change() {
@@ -179,6 +183,10 @@ public class Brand
 
     public Country default3Change() {
         return this.getCountryOfOrigin();
+    }
+
+    public List<BrandGroupViewModel> autoComplete1Change(final @MinLength(2) String search) {
+        return brandRepository.autoCompleteBrandGroup(search);
     }
 
     // //////////////////////////////////////
@@ -212,5 +220,8 @@ public class Brand
             return null;
         }
     }
-    
+
+    @Inject
+    BrandRepository brandRepository;
+
 }
