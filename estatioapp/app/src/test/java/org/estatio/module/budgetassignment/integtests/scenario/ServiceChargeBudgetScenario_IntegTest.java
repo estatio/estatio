@@ -111,7 +111,6 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
         calculate_budgeted();
         when_not_final_and_calculating_again();
         finalCalculation_budgeted();
-        finalCalculation_budgeted_does_not_override_manual_changes();
 //            assignBudgetWhenUpdated();
 //            assignBudgetWhenAudited();
 //            assignBudgetWhenAuditedAndUpdated();
@@ -242,26 +241,6 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
         final LeaseTermForServiceCharge term2 = (LeaseTermForServiceCharge) secondScItem.getTerms().first();
         assertThat(term2.getBudgetedValue()).isEqualTo(U4_BVAL_2.add(U7_BVAL_2));
         assertThat(budgetCalculationResultRepository.findByLeaseTerm(term2)).hasSize(2);
-
-    }
-
-    public void finalCalculation_budgeted_does_not_override_manual_changes() throws Exception {
-
-        // given
-        LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) leasePoison.findItemsOfType(LeaseItemType.SERVICE_CHARGE).get(0).getTerms().first();
-        assertThat(term.getBudgetedValue()).isEqualTo(U1_BVAL_1);
-
-        // when
-        final BigDecimal manualChangedBudgetedValue = new BigDecimal("2000.00");
-
-        // NOTE: a user can make changes to the calculated budgeted value - this is a business rule part of the process discussed with the users
-        wrap(term).changeValues(manualChangedBudgetedValue, null);
-        // when calculating the budget again ....
-        wrap(mixin(Budget_Calculate.class, budget)).calculate(true);
-        transactionService.nextTransaction();
-
-        // then ... these changes are not effected since only budget calculation results not yet assigned to a term are matched with leases; see: budgetAssignmentService#assignNonAssignedCalculationResultsToLeases
-        assertThat(term.getBudgetedValue()).isEqualTo(manualChangedBudgetedValue);
 
     }
 

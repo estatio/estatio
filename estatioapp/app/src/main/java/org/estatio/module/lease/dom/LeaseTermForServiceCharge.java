@@ -51,16 +51,26 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     @Getter @Setter
     private BigDecimal budgetedValue;
 
-    // //////////////////////////////////////
-
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Property(optionality = Optionality.OPTIONAL)
     @Getter @Setter
     private BigDecimal auditedValue;
 
-    // //////////////////////////////////////
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @Property(optionality = Optionality.OPTIONAL)
+    @Getter @Setter
+    private BigDecimal manualServiceChargeValue;
+
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @Property(optionality = Optionality.OPTIONAL)
+    @Getter @Setter
+    private BigDecimal shortfall;
 
     public static class changeValuesEvent extends IsisApplibModule.ActionDomainEvent<LeaseTermForServiceCharge> {
+        private static final long serialVersionUID = 1L;
+    }
+
+    public static class changeManualValueEvent extends IsisApplibModule.ActionDomainEvent<LeaseTermForServiceCharge> {
         private static final long serialVersionUID = 1L;
     }
 
@@ -81,11 +91,30 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
         return getAuditedValue();
     }
 
+    @Action(domainEvent = changeManualValueEvent.class)
+    public LeaseTermForServiceCharge changeManualValue(final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal manualValue){
+        setManualServiceChargeValue(manualValue);
+        return this;
+    }
+
+    public BigDecimal default0ChangeManualValue() {
+        return getManualServiceChargeValue();
+    }
+
+    public LeaseTermForServiceCharge changeShortfall(final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal shortfall){
+        setShortfall(shortfall);
+        return this;
+    }
+
+    public BigDecimal default0ChangeShortfall() {
+        return getShortfall();
+    }
+
     // //////////////////////////////////////
 
     @Override
     public BigDecimal getEffectiveValue() {
-        return MathUtils.firstNonZero(getAuditedValue(), getBudgetedValue());
+        return MathUtils.firstNonZero(getManualServiceChargeValue(), getAuditedValue(), getBudgetedValue());
     }
 
     // //////////////////////////////////////
@@ -98,7 +127,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
         if (endDate != null) {
             LocalDate effectiveDate = endDate;
             if (getEndDate() != null && effectiveDate.compareTo(dueDate) <= 0) {
-                return MathUtils.firstNonZero(getAuditedValue(), getBudgetedValue());
+                return getEffectiveValue();
             }
         }
         return getBudgetedValue();
@@ -137,6 +166,8 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
         super.copyValuesTo(t);
         t.setBudgetedValue(getBudgetedValue());
         t.setAuditedValue(getAuditedValue());
+        t.setManualServiceChargeValue(getManualServiceChargeValue());
+        t.setShortfall(getShortfall());
     }
 
 }

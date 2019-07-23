@@ -83,8 +83,12 @@
         <col span="4">
             <ns2:fieldSet name="Service Charges" id="serviceCharges">
                 <ns2:property id="budgetedValue"/>
-                <ns2:property id="auditedValue">
+                <ns2:property id="auditedValue" />
+                <ns2:property id="manualServiceChargeValue" />
+                <ns2:property id="shortfall">
                     <ns2:action id="changeValues" position="BELOW"/>
+                    <ns2:action id="changeManualValue" position="BELOW"/>
+                    <ns2:action id="changeShortfall" position="BELOW"/>
                 </ns2:property>
                 <ns2:property id="controlledByBudget"/>
             </ns2:fieldSet>
