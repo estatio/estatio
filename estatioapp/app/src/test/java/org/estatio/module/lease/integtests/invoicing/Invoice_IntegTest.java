@@ -18,17 +18,22 @@
  */
 package org.estatio.module.lease.integtests.invoicing;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import org.assertj.core.api.Assertions;
 import org.hamcrest.core.Is;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.wrapper.HiddenException;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -45,10 +50,13 @@ import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.dom.CurrencyRepository;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceRepository;
+import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.app.LeaseMenu;
+import org.estatio.module.lease.contributions.Lease_calculate;
 import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
@@ -213,6 +221,107 @@ public class Invoice_IntegTest extends LeaseModuleIntegTestAbstract {
                     lease, InvoiceStatus.NEW,
                     invoiceStartDate);
         }
+    }
+
+    public static class Reverse extends Invoice_IntegTest {
+
+        @Before
+        public void setupData() {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext ec) {
+
+                    ec.executeChildren(this,
+                            Lease_enum.OxfTopModel001Gb,
+                            LeaseItemForRent_enum.OxfTopModel001Gb,
+                            LeaseItemForServiceCharge_enum.OxfTopModel001Gb
+                    );
+
+                }
+            });
+        }
+
+        @Before
+        public void setUp() throws Exception {
+            lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+            mixin(Lease_calculate.class, lease).exec(
+                    InvoiceRunType.NORMAL_RUN,
+                    Arrays.asList(LeaseItemType.RENT, LeaseItemType.SERVICE_CHARGE),
+                    new LocalDate(2019,01,01),
+                    new LocalDate(2019, 01,01),
+                    new LocalDate(2019,1,2)
+            );
+            transactionService.nextTransaction(); // otherwise terms are not flushed
+        }
+
+        @Rule
+        public ExpectedException expectedExceptions = ExpectedException.none();
+
+        @Test
+        public void happyCase() throws Exception {
+            // given
+            List<InvoiceForLease> invoicesForPoisonLease = invoiceForLeaseRepository.findByLease(lease);
+            Assertions.assertThat(invoicesForPoisonLease).hasSize(1);
+            InvoiceForLease invoice = invoicesForPoisonLease.get(0);
+            mixin(InvoiceForLease._approve.class, invoice).$$();
+            mixin(InvoiceForLease._invoice.class, invoice).$$(new LocalDate(2018,12,31));
+
+            InvoiceItemForLease firstItem = (InvoiceItemForLease) invoice.getItems().first();
+            InvoiceItemForLease lastItem = (InvoiceItemForLease) invoice.getItems().last();
+
+            // when
+            Assertions.assertThat(invoice.getStatus()).isEqualTo(InvoiceStatus.INVOICED);
+            InvoiceForLease reversedInvoice = wrap(invoice).reverse();
+
+            // then
+            Assertions.assertThat(reversedInvoice.getItems()).hasSize(2);
+            Assertions.assertThat(reversedInvoice.getLease()).isEqualTo(invoice.getLease());
+            Assertions.assertThat(reversedInvoice.getSeller()).isEqualTo(invoice.getSeller());
+            Assertions.assertThat(reversedInvoice.getBuyer()).isEqualTo(invoice.getBuyer());
+            Assertions.assertThat(reversedInvoice.getAtPath()).isEqualTo(invoice.getAtPath());
+            Assertions.assertThat(reversedInvoice.getPaymentMethod()).isEqualTo(invoice.getPaymentMethod());
+            Assertions.assertThat(reversedInvoice.getCurrency()).isEqualTo(invoice.getCurrency());
+            Assertions.assertThat(reversedInvoice.getDueDate()).isEqualTo(invoice.getDueDate());
+            Assertions.assertThat(reversedInvoice.getStatus()).isEqualTo(InvoiceStatus.NEW);
+
+            InvoiceItemForLease firstReversedItem = (InvoiceItemForLease) reversedInvoice.getItems().first();
+            InvoiceItemForLease lastReversedItem = (InvoiceItemForLease) reversedInvoice.getItems().last();
+            checkReversedInvoiceItems(firstItem, firstReversedItem);
+            checkReversedInvoiceItems(lastItem, lastReversedItem);
+
+        }
+
+        private void checkReversedInvoiceItems(final InvoiceItemForLease original, final InvoiceItemForLease reversed){
+            Assertions.assertThat(reversed.getNetAmount()).isEqualTo(original.getNetAmount().negate());
+            Assertions.assertThat(reversed.getGrossAmount()).isEqualTo(original.getGrossAmount().negate());
+            Assertions.assertThat(reversed.getVatAmount()).isEqualTo(original.getVatAmount().negate());
+            Assertions.assertThat(reversed.getCharge()).isEqualTo(original.getCharge());
+            Assertions.assertThat(reversed.getLeaseTerm()).isEqualTo(original.getLeaseTerm());
+            Assertions.assertThat(reversed.getDescription()).isEqualTo(original.getDescription());
+            Assertions.assertThat(reversed.getTax()).isEqualTo(original.getTax());
+            Assertions.assertThat(reversed.getStartDate()).isEqualTo(original.getStartDate());
+            Assertions.assertThat(reversed.getEndDate()).isEqualTo(original.getEndDate());
+            Assertions.assertThat(reversed.getEffectiveStartDate()).isEqualTo(original.getEffectiveStartDate());
+            Assertions.assertThat(reversed.getEffectiveEndDate()).isEqualTo(original.getEffectiveEndDate());
+        }
+
+
+        @Test
+        public void when_not_invoiced() throws Exception {
+            // given
+            List<InvoiceForLease> invoicesForPoisonLease = invoiceForLeaseRepository.findByLease(lease);
+            Assertions.assertThat(invoicesForPoisonLease).hasSize(1);
+            InvoiceForLease invoice = invoicesForPoisonLease.get(0);
+            mixin(InvoiceForLease._approve.class, invoice).$$();
+
+            // expect
+            expectedExceptions.expect(HiddenException.class);
+
+            // when
+            InvoiceForLease reversedInvoice = wrap(invoice).reverse();
+
+        }
+
     }
 
 }

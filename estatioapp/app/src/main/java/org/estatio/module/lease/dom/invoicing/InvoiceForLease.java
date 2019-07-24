@@ -51,6 +51,7 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.services.user.UserService;
@@ -603,6 +604,42 @@ public class InvoiceForLease
         @Inject
         UserService userService;
     }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public InvoiceForLease reverse(){
+        InvoiceForLease reversedInvoice = invoiceForLeaseRepository.newInvoice(
+                this.getApplicationTenancy(),
+                this.getSeller(),
+                this.getBuyer(),
+                this.getPaymentMethod(),
+                this.getCurrency(),
+                this.getDueDate(),
+                this.getLease(),
+                null
+        );
+        for (InvoiceItem item : getItems()){
+            InvoiceItem newReversedItem = factoryService.mixin(InvoiceForLease._newItem.class, reversedInvoice).$$(
+                    item.getCharge(),
+                    item.getQuantity(),
+                    item.getNetAmount().negate(),
+                    item.getStartDate(),
+                    item.getEndDate()
+            );
+            InvoiceItemForLease castedTargetItem = (InvoiceItemForLease) newReversedItem;
+            castedTargetItem.setLeaseTerm(((InvoiceItemForLease) item).getLeaseTerm());
+            castedTargetItem.setEffectiveStartDate(item.getEffectiveStartDate());
+            castedTargetItem.setEffectiveEndDate(item.getEffectiveEndDate());
+        }
+        return reversedInvoice;
+    }
+
+    public boolean hideReverse(){
+        return getStatus()!=InvoiceStatus.INVOICED;
+    }
+
+    @Inject InvoiceForLeaseRepository invoiceForLeaseRepository;
+
+    @Inject FactoryService factoryService;
 
     /**
      * Callback from the framework.

@@ -267,8 +267,9 @@ public abstract class Invoice<T extends Invoice<T>>
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public void changeDueDate(final LocalDate dueDate) {
+    public Invoice changeDueDate(final LocalDate dueDate) {
         this.setDueDate(dueDate);
+        return this;
     }
 
     public LocalDate default0ChangeDueDate(final LocalDate dueDate) {
