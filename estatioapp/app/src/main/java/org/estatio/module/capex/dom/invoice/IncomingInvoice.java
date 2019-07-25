@@ -19,7 +19,6 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
@@ -50,6 +49,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.metamodel.MetaModelService2;
 import org.apache.isis.applib.services.metamodel.MetaModelService3;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.util.TitleBuffer;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
@@ -99,7 +99,6 @@ import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
-import org.estatio.module.party.app.services.ChamberOfCommerceCodeLookUpService;
 import org.estatio.module.party.app.services.OrganisationNameNumberViewModel;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
@@ -2273,7 +2272,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         getItems().stream()
                 .filter(IncomingInvoiceItem.class::isInstance)
                 .map(IncomingInvoiceItem.class::cast)
-                .map(item -> orderItemInvoiceItemLinkRepository.findByInvoiceItem(item))
+                .map(item -> queryResultsCache.execute(
+                        () -> orderItemInvoiceItemLinkRepository.findByInvoiceItem(item)
+                        , getClass(), "mismatchedTypesOnLinkedItemsCheck", item))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .filter(orderItemInvoiceItemLink -> {
@@ -2308,7 +2309,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             return null;
         }
 
-        IncomingInvoice possibleDouble = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate(getInvoiceNumber(), getSeller(), getInvoiceDate());
+        IncomingInvoice possibleDouble = queryResultsCache.execute(
+                () -> incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate(getInvoiceNumber(), getSeller(), getInvoiceDate())
+                , getClass(), "possibleDoubleInvoice", getInvoiceNumber(), getSeller(), getInvoiceDate());
         if (possibleDouble == null || possibleDouble.equals(this)) {
             return null;
         }
@@ -2322,7 +2325,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             return null;
         }
 
-        List<IncomingInvoice> similarNumberedInvoices = incomingInvoiceRepository.findByInvoiceNumberAndSeller(getInvoiceNumber(), getSeller())
+        final List<IncomingInvoice> invoicesForNumberCached = queryResultsCache.execute(
+                () -> incomingInvoiceRepository.findByInvoiceNumberAndSeller(getInvoiceNumber(), getSeller())
+                , getClass(), "sameInvoiceNumber", getInvoiceNumber(), getSeller());
+
+        List<IncomingInvoice> similarNumberedInvoices = invoicesForNumberCached
                 .stream()
                 .filter(invoice -> !invoice.equals(this))
                 .filter(invoice -> invoice.getApprovalState() != IncomingInvoiceApprovalState.DISCARDED)
@@ -2344,10 +2351,14 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Programmatic
     private String buyerBarcodeMatchValidation() {
         if (getBuyer() != null) {
-            if (buyerFinder.buyerDerivedFromDocumentName(this) == null) {
+            Party buyerCached = queryResultsCache.execute(
+                    () -> buyerFinder.buyerDerivedFromDocumentName(this)
+                    , getClass(), "buyerBarcodeMatchValidation", this);
+
+            if (buyerCached == null) {
                 return null; // covers all cases where no buyer could be derived from document name
             }
-            if (!getBuyer().equals(buyerFinder.buyerDerivedFromDocumentName(this))) {
+            if (!getBuyer().equals(buyerCached)) {
                 return "Buyer does not match barcode (document name); ";
             }
         }
@@ -2357,7 +2368,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Programmatic
     private String paymentMethodValidation() {
         if (getPaymentMethod() != null && getSeller() != null) {
-            List<PaymentMethod> historicalPaymentMethods = incomingInvoiceRepository.findUniquePaymentMethodsForSeller(getSeller());
+            List<PaymentMethod> historicalPaymentMethods = queryResultsCache.execute(
+                    () -> incomingInvoiceRepository.findUniquePaymentMethodsForSeller(getSeller())
+                    , getClass(), "paymentMethodValidation", getSeller());
 
             // Current payment method is bank transfer, but at least one different payment method has been used before
             if (getPaymentMethod() == PaymentMethod.BANK_TRANSFER && historicalPaymentMethods.size() > 1) {
@@ -2381,78 +2394,60 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     //endregion
 
     @Inject
-    @NotPersistent
     public IncomingInvoiceApprovalStateTransition.Repository stateTransitionRepository;
 
     @Inject
-    @NotPersistent
     PaymentLineRepository paymentLineRepository;
 
     @Inject
-    @NotPersistent
-    ChamberOfCommerceCodeLookUpService chamberOfCommerceCodeLookUpService;
-
-    @Inject
-    @NotPersistent
     LookupAttachedPdfService lookupAttachedPdfService;
 
     @Inject
-    @NotPersistent
     MetaModelService3 metaModelService3;
 
     @Inject
-    @NotPersistent
     BankAccountRepository bankAccountRepository;
 
     @Inject
-    @NotPersistent
     OrderItemRepository orderItemRepository;
 
     @Inject
-    @NotPersistent
     OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
     @Inject
-    @NotPersistent
     PartyRoleRepository partyRoleRepository;
 
     @Inject
-    @NotPersistent
     PartyRepository partyRepository;
 
     @Inject
-    @NotPersistent
     OrganisationRepository organisationRepository;
 
     @Inject
     SupplierCreationService supplierCreationService;
 
     @Inject
-    @NotPersistent
     ProjectRepository projectRepository;
 
     @Inject
-    @NotPersistent
     BudgetItemChooser budgetItemChooser;
 
     @Inject
-    @NotPersistent
     IncomingInvoiceItemRepository incomingInvoiceItemRepository;
 
     @Inject
-    @NotPersistent
     IncomingInvoiceRepository incomingInvoiceRepository;
 
     @Inject
-    @NotPersistent
     ChargeRepository chargeRepository;
 
     @Inject
-    @NotPersistent
     StateTransitionService stateTransitionService;
 
     @Inject
-    @NotPersistent
     BuyerFinder buyerFinder;
+
+    @Inject
+    QueryResultsCache queryResultsCache;
 
 }
