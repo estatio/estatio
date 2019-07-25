@@ -302,6 +302,7 @@ public class IncomingInvoice_Test {
 
         }
 
+
         @Test
         public void validateForBankAccountOwner() throws Exception {
 
@@ -1082,65 +1083,6 @@ public class IncomingInvoice_Test {
 
         @Mock
         OrderItemInvoiceItemLinkRepository mockOrderItemInvoiceItemLinkRepository;
-
-        @Test
-        public void hashCode_updates_on_property_changes() throws Exception {
-            BigInteger newHashCode;
-
-            // given
-            IncomingInvoice incomingInvoice = new IncomingInvoice();
-            incomingInvoice.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
-            incomingInvoice.setCurrentHashCode(BigInteger.valueOf(incomingInvoice.hashCode()));
-
-            // when payment method changes
-            incomingInvoice.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
-            newHashCode = BigInteger.valueOf(incomingInvoice.hashCode());
-
-            // then
-            assertThat(incomingInvoice.getCurrentHashCode().equals(newHashCode)).isFalse();
-            incomingInvoice.setCurrentHashCode(newHashCode);
-
-            // and given
-            Organisation buyer = new Organisation();
-
-            // when buyer changes
-            incomingInvoice.setBuyer(buyer);
-            newHashCode = BigInteger.valueOf(incomingInvoice.hashCode());
-
-            // then
-            assertThat(incomingInvoice.getCurrentHashCode().equals(newHashCode)).isFalse();
-            incomingInvoice.setCurrentHashCode(newHashCode);
-
-            // and given
-            incomingInvoice.setSeller(new Organisation());
-            incomingInvoice.setInvoiceNumber("Invoice 123");
-            incomingInvoice.setInvoiceDate(LocalDate.parse("2019-01-01"));
-            incomingInvoice.setCurrentHashCode(BigInteger.valueOf(incomingInvoice.hashCode())); // set already because we want to prevent the method returning null
-
-            // when seller changes
-            incomingInvoice.setSeller(new Organisation());
-            newHashCode = BigInteger.valueOf(incomingInvoice.hashCode());
-
-            // then
-            assertThat(incomingInvoice.getCurrentHashCode().equals(newHashCode)).isFalse();
-            incomingInvoice.setCurrentHashCode(newHashCode);
-
-            // when invoice number changes
-            incomingInvoice.setInvoiceNumber("Invoice 345");
-            newHashCode = BigInteger.valueOf(incomingInvoice.hashCode());
-
-            // then
-            assertThat(incomingInvoice.getCurrentHashCode().equals(newHashCode)).isFalse();
-            incomingInvoice.setCurrentHashCode(newHashCode);
-
-            // when invoice date changes
-            incomingInvoice.setInvoiceDate(LocalDate.parse("2019-02-01"));
-            newHashCode = BigInteger.valueOf(incomingInvoice.hashCode());
-
-            // then
-            assertThat(incomingInvoice.getCurrentHashCode().equals(newHashCode)).isFalse();
-            incomingInvoice.setCurrentHashCode(newHashCode);
-        }
 
         @Test
         public void historicalPaymentMethod_works() throws Exception {

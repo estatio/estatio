@@ -84,7 +84,6 @@ import org.estatio.module.invoice.dom.attr.InvoiceAttributeRepository;
 import org.estatio.module.party.dom.Party;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -142,7 +141,6 @@ import lombok.Setter;
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public abstract class Invoice<T extends Invoice<T>>
         extends UdoDomainObject2<T>
         implements WithApplicationTenancyAny, WithApplicationTenancyPathPersisted {
@@ -195,12 +193,10 @@ public abstract class Invoice<T extends Invoice<T>>
                 title());
     }
 
-    @EqualsAndHashCode.Include
     @javax.jdo.annotations.Column(name = "buyerPartyId", allowsNull = "true")
     @Getter @Setter
     private Party buyer;
 
-    @EqualsAndHashCode.Include
     @javax.jdo.annotations.Column(name = "sellerPartyId", allowsNull = "true")
     @Property(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
@@ -211,13 +207,11 @@ public abstract class Invoice<T extends Invoice<T>>
     @Getter @Setter
     private String collectionNumber;
 
-    @EqualsAndHashCode.Include
     @javax.jdo.annotations.Column(allowsNull = "true", length = 128)
     @Property(hidden = Where.ALL_TABLES)
     @Getter @Setter
     private String invoiceNumber;
 
-    @EqualsAndHashCode.Include
     @javax.jdo.annotations.Column(allowsNull = "true")
     @javax.jdo.annotations.Persistent
     @Getter @Setter
@@ -300,7 +294,6 @@ public abstract class Invoice<T extends Invoice<T>>
     @Getter @Setter
     private Currency currency;
 
-    @EqualsAndHashCode.Include
     @javax.jdo.annotations.Column(allowsNull = "true", length = PaymentMethod.Meta.MAX_LEN)
     @Getter @Setter
     private PaymentMethod paymentMethod;
@@ -342,7 +335,6 @@ public abstract class Invoice<T extends Invoice<T>>
      * @return
      */
     protected abstract String reasonDisabledFinanceDetailsDueToState(final Object viewContext);
-
 
     @CollectionLayout(defaultView = "table")
     @javax.jdo.annotations.Persistent(mappedBy = "invoice")

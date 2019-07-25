@@ -1,8 +1,6 @@
 package org.estatio.module.capex.dom.invoice;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -111,7 +109,6 @@ import org.estatio.module.party.dom.role.PartyRoleRepository;
 import org.estatio.module.tax.dom.Tax;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -283,8 +280,7 @@ import lombok.Setter;
         bookmarking = BookmarkPolicy.AS_ROOT
 )
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerBankAccountCreator, Stateful, Serializable {
+public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerBankAccountCreator, Stateful {
 
     public static IncomingInvoiceItem firstItemOf(final IncomingInvoice invoiceIfAny) {
         return invoiceIfAny != null
@@ -2235,14 +2231,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     //region > notification
 
-    @PropertyLayout(hidden = Where.EVERYWHERE)
-    @Getter @Setter
-    private BigInteger currentHashCode;
-
-    @PropertyLayout(hidden = Where.EVERYWHERE)
-    @Getter @Setter
-    private String notificationMessage;
-
     @org.apache.isis.applib.annotation.Property(editing = Editing.DISABLED)
     @PropertyLayout(multiLine = 5, hidden = Where.ALL_TABLES)
     public String getNotification() {
@@ -2250,36 +2238,29 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             return null;
         }
 
-        if (getCurrentHashCode() == null || !BigInteger.valueOf(hashCode()).equals(getCurrentHashCode())) {
+        final StringBuilder result = new StringBuilder();
 
-            final StringBuilder result = new StringBuilder();
-
-            final String noBuyerBarcodeMatch = buyerBarcodeMatchValidation();
-            if (noBuyerBarcodeMatch != null) {
-                result.append(noBuyerBarcodeMatch);
-            }
-
-            final String sameInvoiceNumberCheck = doubleInvoiceCheck();
-            if (sameInvoiceNumberCheck != null) {
-                result.append(sameInvoiceNumberCheck);
-            }
-
-            final String multiplePaymentMethods = paymentMethodValidation();
-            if (multiplePaymentMethods != null) {
-                result.append(multiplePaymentMethods);
-            }
-
-            setNotificationMessage(result.length() > 0 ? result.toString() : null);
-
-            setCurrentHashCode(BigInteger.valueOf(hashCode()));
+        final String noBuyerBarcodeMatch = buyerBarcodeMatchValidation();
+        if (noBuyerBarcodeMatch != null) {
+            result.append(noBuyerBarcodeMatch);
         }
 
-        // excluded from hash, because it's a cheap OP that might make speed gain from other checks redundant on minor changes on item
-        final String mismatchedTypes = mismatchedTypesOnLinkedItemsCheck();
+        final String sameInvoiceNumberCheck = doubleInvoiceCheck();
+        if (sameInvoiceNumberCheck != null) {
+            result.append(sameInvoiceNumberCheck);
+        }
 
-        return mismatchedTypes != null ?
-                getNotificationMessage().concat(mismatchedTypes) :
-                getNotificationMessage();
+        final String multiplePaymentMethods = paymentMethodValidation();
+        if (multiplePaymentMethods != null) {
+            result.append(multiplePaymentMethods);
+        }
+
+        final String mismatchedTypes = mismatchedTypesOnLinkedItemsCheck();
+        if (mismatchedTypes != null) {
+            result.append(mismatchedTypes);
+        }
+
+        return result.length() > 0 ? result.toString() : null;
     }
 
     public boolean hideNotification() {
