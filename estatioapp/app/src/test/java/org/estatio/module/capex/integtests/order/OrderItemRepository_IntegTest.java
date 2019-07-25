@@ -10,11 +10,10 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
-import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceImportForDemoXlsxFixture;
+import org.estatio.module.capex.fixtures.order.enums.Order_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
 import org.estatio.module.party.dom.Party;
@@ -32,9 +31,7 @@ public class OrderItemRepository_IntegTest extends CapexModuleIntegTestAbstract 
             @Override
             protected void execute(final ExecutionContext ec) {
                 ec.executeChild(this, new IncomingChargesFraXlsxFixture());
-                ec.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.builder());
-                ec.executeChild(this, Organisation_enum.YoukeaSe.builder());
-                ec.executeChild(this, new OrderInvoiceImportForDemoXlsxFixture());
+                ec.executeChild(this, Order_enum.fakeOrder2Pdf);
             }
         });
     }
@@ -56,32 +53,32 @@ public class OrderItemRepository_IntegTest extends CapexModuleIntegTestAbstract 
         @Test
         public void when_seller_is_not_null() {
             // given
-            Party seller = Organisation_enum.YoukeaSe.findUsing(serviceRegistry);
+            Party seller = Organisation_enum.TopModelFr.findUsing(serviceRegistry);
 
             // when
             List<OrderItem> orderItems = orderItemRepository.findBySeller(seller);
 
             // then
             assertThat(orderItems).isNotEmpty();
-            assertThat(orderItems.size()).isEqualTo(1);
+            assertThat(orderItems.size()).isEqualTo(2);
         }
 
     }
 
-    public static class FindBySellerAndPropery extends OrderItemRepository_IntegTest {
+    public static class FindBySellerAndProperty extends OrderItemRepository_IntegTest {
 
         @Test
         public void find_by_seller_and_property_works() {
             // given
-            Party seller = Organisation_enum.YoukeaSe.findUsing(serviceRegistry);
-            Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
+            Party seller = Organisation_enum.TopModelFr.findUsing(serviceRegistry);
+            Property property = Property_enum.VivFr.findUsing(serviceRegistry);
 
             // when
             List<OrderItem> orderItems = orderItemRepository.findBySellerAndProperty(seller, property);
 
             // then
             assertThat(orderItems).isNotEmpty();
-            assertThat(orderItems.size()).isEqualTo(1);
+            assertThat(orderItems.size()).isEqualTo(2);
         }
 
     }

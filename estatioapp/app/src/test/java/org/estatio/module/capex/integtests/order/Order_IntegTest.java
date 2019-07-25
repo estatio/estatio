@@ -28,12 +28,11 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
-import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
-import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceImportForDemoXlsxFixture;
+import org.estatio.module.capex.fixtures.order.enums.Order_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
+import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesItaXlsxFixture;
 
 public class Order_IntegTest extends CapexModuleIntegTestAbstract {
 
@@ -47,16 +46,16 @@ public class Order_IntegTest extends CapexModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.builder());
-                    executionContext.executeChild(this, new IncomingChargesFraXlsxFixture());
-                    executionContext.executeChild(this, new OrderInvoiceImportForDemoXlsxFixture());
+                    executionContext.executeChild(this, new IncomingChargesItaXlsxFixture());
+                    executionContext.executeChild(this, Order_enum.italianOrder);
+                    executionContext.executeChild(this, Order_enum.italianOrder4112);
                 }
             });
         }
 
         @Test
         public void happyCase() {
-            List<Order> ordersFound = orderRepository.matchByOrderNumber("oXf*");
+            List<Order> ordersFound = orderRepository.matchByOrderNumber("ron*");
             Assertions.assertThat(ordersFound.size()).isEqualTo(2);
         }
 

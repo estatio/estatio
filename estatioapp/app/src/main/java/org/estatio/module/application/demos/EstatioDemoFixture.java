@@ -44,7 +44,6 @@ import org.estatio.module.capex.fixtures.document.enums.IncomingPdf_enum;
 import org.estatio.module.capex.fixtures.incominginvoice.enums.IncomingInvoice_enum;
 import org.estatio.module.capex.fixtures.order.enums.NumeratorForOrder_enum;
 import org.estatio.module.capex.fixtures.order.enums.Order_enum;
-import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceImportForDemoXlsxFixture;
 import org.estatio.module.capex.fixtures.project.enums.ProjectItemTerm_enum;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
@@ -263,8 +262,6 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 new IncomingChargesFraXlsxFixture());
         ec.executeChild(this,
                 new IncomingChargesItaXlsxFixture());
-        ec.executeChild(this,
-                new OrderInvoiceImportForDemoXlsxFixture());
 
         ec.executeChildren(this,
                 Project_enum.KalProject1,

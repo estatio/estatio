@@ -41,7 +41,7 @@ public enum Order_enum
 
     fakeOrder2Pdf(
             IncomingInvoiceType.CAPEX, Person_enum.DanielOfficeAdministratorFr,
-            IncomingPdf_enum.FakeOrder2, null,
+            IncomingPdf_enum.FakeOrder2, "TopModel-1234",
             ApplicationTenancy_enum.Fr, new DateTime(2014, 3, 5, 10, 0), "estatio-user-fr",
             Organisation_enum.TopModelFr, Organisation_enum.HelloWorldFr,
             Project_enum.VivProjectFr, PropertyAndUnitsAndOwnerAndManager_enum.VivFr,
@@ -52,7 +52,7 @@ public enum Order_enum
     ),
     fakeOrder3Pdf(
             IncomingInvoiceType.LOCAL_EXPENSES, Person_enum.DanielOfficeAdministratorFr,
-            IncomingPdf_enum.FakeOrder2, null,
+            IncomingPdf_enum.FakeOrder2, "TopModel-2345",
             ApplicationTenancy_enum.Fr, new DateTime(2018, 1, 5, 10, 0), "estatio-user-fr",
             Organisation_enum.TopModelFr, Organisation_enum.HelloWorldFr,
             null, null,
