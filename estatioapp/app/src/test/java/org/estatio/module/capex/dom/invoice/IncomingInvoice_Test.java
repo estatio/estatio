@@ -27,6 +27,8 @@ import org.apache.isis.applib.services.metamodel.MetaModelService2;
 import org.apache.isis.applib.services.metamodel.MetaModelService3;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.capex.dom.documents.BuyerFinder;
@@ -299,7 +301,6 @@ public class IncomingInvoice_Test {
             assertThat(result).isNull();
 
         }
-
 
         @Test
         public void validateForBankAccountOwner() throws Exception {
@@ -1083,6 +1084,65 @@ public class IncomingInvoice_Test {
         OrderItemInvoiceItemLinkRepository mockOrderItemInvoiceItemLinkRepository;
 
         @Test
+        public void hashCode_updates_on_property_changes() throws Exception {
+            BigInteger newHashCode;
+
+            // given
+            IncomingInvoice incomingInvoice = new IncomingInvoice();
+            incomingInvoice.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
+            incomingInvoice.setCurrentHashCode(BigInteger.valueOf(incomingInvoice.hashCode()));
+
+            // when payment method changes
+            incomingInvoice.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
+            newHashCode = BigInteger.valueOf(incomingInvoice.hashCode());
+
+            // then
+            assertThat(incomingInvoice.getCurrentHashCode().equals(newHashCode)).isFalse();
+            incomingInvoice.setCurrentHashCode(newHashCode);
+
+            // and given
+            Organisation buyer = new Organisation();
+
+            // when buyer changes
+            incomingInvoice.setBuyer(buyer);
+            newHashCode = BigInteger.valueOf(incomingInvoice.hashCode());
+
+            // then
+            assertThat(incomingInvoice.getCurrentHashCode().equals(newHashCode)).isFalse();
+            incomingInvoice.setCurrentHashCode(newHashCode);
+
+            // and given
+            incomingInvoice.setSeller(new Organisation());
+            incomingInvoice.setInvoiceNumber("Invoice 123");
+            incomingInvoice.setInvoiceDate(LocalDate.parse("2019-01-01"));
+            incomingInvoice.setCurrentHashCode(BigInteger.valueOf(incomingInvoice.hashCode())); // set already because we want to prevent the method returning null
+
+            // when seller changes
+            incomingInvoice.setSeller(new Organisation());
+            newHashCode = BigInteger.valueOf(incomingInvoice.hashCode());
+
+            // then
+            assertThat(incomingInvoice.getCurrentHashCode().equals(newHashCode)).isFalse();
+            incomingInvoice.setCurrentHashCode(newHashCode);
+
+            // when invoice number changes
+            incomingInvoice.setInvoiceNumber("Invoice 345");
+            newHashCode = BigInteger.valueOf(incomingInvoice.hashCode());
+
+            // then
+            assertThat(incomingInvoice.getCurrentHashCode().equals(newHashCode)).isFalse();
+            incomingInvoice.setCurrentHashCode(newHashCode);
+
+            // when invoice date changes
+            incomingInvoice.setInvoiceDate(LocalDate.parse("2019-02-01"));
+            newHashCode = BigInteger.valueOf(incomingInvoice.hashCode());
+
+            // then
+            assertThat(incomingInvoice.getCurrentHashCode().equals(newHashCode)).isFalse();
+            incomingInvoice.setCurrentHashCode(newHashCode);
+        }
+
+        @Test
         public void historicalPaymentMethod_works() throws Exception {
             String notification;
 
@@ -1094,6 +1154,11 @@ public class IncomingInvoice_Test {
 
                 public String buyerBarcodeMatchValidation() {
                     return null;
+                }
+
+                @Override
+                public ApplicationTenancy getApplicationTenancy() {
+                    return new ApplicationTenancy();
                 }
             };
             Party seller = new Organisation();
@@ -1132,7 +1197,13 @@ public class IncomingInvoice_Test {
             String notification;
 
             // given
-            IncomingInvoice incomingInvoice = new IncomingInvoice();
+            IncomingInvoice incomingInvoice = new IncomingInvoice() {
+                @Override
+                public ApplicationTenancy getApplicationTenancy() {
+                    return new ApplicationTenancy();
+                }
+            };
+
             Party buyerDerived = new Organisation();
             Party buyerOnInvoice = new Organisation();
             incomingInvoice.buyerFinder = new BuyerFinder() {
@@ -1192,6 +1263,11 @@ public class IncomingInvoice_Test {
                 }
 
                 protected void invalidateApproval() {
+                }
+
+                @Override
+                public ApplicationTenancy getApplicationTenancy() {
+                    return new ApplicationTenancy();
                 }
             };
 
