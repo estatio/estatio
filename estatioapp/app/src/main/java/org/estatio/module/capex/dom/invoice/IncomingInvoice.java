@@ -19,7 +19,6 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
@@ -62,11 +61,11 @@ import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.base.platform.applib.ReasonBuffer2;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
+import org.estatio.module.capex.app.IncomingInvoiceNotificationService;
 import org.estatio.module.capex.app.SupplierCreationService;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.capex.dom.documents.BudgetItemChooser;
-import org.estatio.module.capex.dom.documents.BuyerFinder;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
@@ -99,7 +98,6 @@ import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
-import org.estatio.module.party.app.services.ChamberOfCommerceCodeLookUpService;
 import org.estatio.module.party.app.services.OrganisationNameNumberViewModel;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
@@ -250,7 +248,8 @@ import lombok.Setter;
                 value = "SELECT DISTINCT paymentMethod "
                         + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
                         + "WHERE seller == :seller "
-                        + "&& paymentMethod != null"
+                        + "&& paymentMethod != null "
+                        + "&& paymentMethod != 'MANUAL_PROCESS' "
         )
 })
 @FetchGroup(
@@ -2233,6 +2232,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @org.apache.isis.applib.annotation.Property(editing = Editing.DISABLED)
     @PropertyLayout(multiLine = 5, hidden = Where.ALL_TABLES)
     public String getNotification() {
+        if (CountryUtil.isItalian(this)) {
+            return null;
+        }
+
         final StringBuilder result = new StringBuilder();
 
         final String noBuyerBarcodeMatch = buyerBarcodeMatchValidation();
@@ -2259,29 +2262,22 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public boolean hideNotification() {
-        return CountryUtil.isItalian(this) || getNotification() == null;
+        return getNotification() == null;
     }
 
     @Programmatic
-    private String mismatchedTypesOnLinkedItemsCheck() {
-        StringJoiner sj = new StringJoiner("; ");
-        getItems().stream()
-                .filter(IncomingInvoiceItem.class::isInstance)
-                .map(IncomingInvoiceItem.class::cast)
-                .map(item -> orderItemInvoiceItemLinkRepository.findByInvoiceItem(item))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .filter(orderItemInvoiceItemLink -> {
-                    IncomingInvoiceType orderItemType = orderItemInvoiceItemLink.getOrderItem().getOrdr().getType();
-                    IncomingInvoiceType invoiceItemType = orderItemInvoiceItemLink.getInvoiceItem().getIncomingInvoiceType();
-                    return (orderItemType != null && invoiceItemType != null) && !orderItemType.equals(invoiceItemType);
-                })
-                .forEach(link -> sj.add(String.format("an invoice item of type %s is linked to an order item of type %s",
-                        link.getInvoiceItem().getIncomingInvoiceType().toString(),
-                        link.getOrderItem().getOrdr().getType().toString()))
-                );
+    private String buyerBarcodeMatchValidation() {
+        if (getBuyer() != null) {
 
-        return sj.length() != 0 ? new StringJoiner("").add("WARNING: mismatched types between linked items: ").merge(sj).toString() : null;
+            final Party buyer = notificationService.deriveBuyer(this);
+            if (buyer == null) {
+                return null; // covers all cases where no buyer could be derived from document name
+            }
+            if (!getBuyer().equals(buyer)) {
+                return "Buyer does not match barcode (document name); ";
+            }
+        }
+        return null;
     }
 
     @Programmatic
@@ -2303,7 +2299,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             return null;
         }
 
-        IncomingInvoice possibleDouble = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate(getInvoiceNumber(), getSeller(), getInvoiceDate());
+        IncomingInvoice possibleDouble = notificationService.findDuplicateInvoice(this);
         if (possibleDouble == null || possibleDouble.equals(this)) {
             return null;
         }
@@ -2317,7 +2313,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             return null;
         }
 
-        List<IncomingInvoice> similarNumberedInvoices = incomingInvoiceRepository.findByInvoiceNumberAndSeller(getInvoiceNumber(), getSeller())
+        List<IncomingInvoice> similarNumberedInvoices = notificationService.findSimilarInvoices(this)
                 .stream()
                 .filter(invoice -> !invoice.equals(this))
                 .filter(invoice -> invoice.getApprovalState() != IncomingInvoiceApprovalState.DISCARDED)
@@ -2337,22 +2333,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     @Programmatic
-    private String buyerBarcodeMatchValidation() {
-        if (getBuyer() != null) {
-            if (buyerFinder.buyerDerivedFromDocumentName(this) == null) {
-                return null; // covers all cases where no buyer could be derived from document name
-            }
-            if (!getBuyer().equals(buyerFinder.buyerDerivedFromDocumentName(this))) {
-                return "Buyer does not match barcode (document name); ";
-            }
-        }
-        return null;
-    }
-
-    @Programmatic
     private String paymentMethodValidation() {
         if (getPaymentMethod() != null && getSeller() != null) {
-            List<PaymentMethod> historicalPaymentMethods = incomingInvoiceRepository.findUniquePaymentMethodsForSeller(getSeller());
+            List<PaymentMethod> historicalPaymentMethods = notificationService.uniquePaymentMethodsForSeller(this);
 
             // Current payment method is bank transfer, but at least one different payment method has been used before
             if (getPaymentMethod() == PaymentMethod.BANK_TRANSFER && historicalPaymentMethods.size() > 1) {
@@ -2373,81 +2356,82 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return null;
     }
 
+    @Programmatic
+    private String mismatchedTypesOnLinkedItemsCheck() {
+        StringJoiner sj = new StringJoiner("; ");
+        getItems().stream()
+                .filter(IncomingInvoiceItem.class::isInstance)
+                .map(IncomingInvoiceItem.class::cast)
+                .map(item -> notificationService.findLinkForInvoiceItemIfAny(item))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .filter(orderItemInvoiceItemLink -> {
+                    IncomingInvoiceType orderItemType = orderItemInvoiceItemLink.getOrderItem().getOrdr().getType();
+                    IncomingInvoiceType invoiceItemType = orderItemInvoiceItemLink.getInvoiceItem().getIncomingInvoiceType();
+                    return (orderItemType != null && invoiceItemType != null) && !orderItemType.equals(invoiceItemType);
+                })
+                .forEach(link -> sj.add(String.format("an invoice item of type %s is linked to an order item of type %s",
+                        link.getInvoiceItem().getIncomingInvoiceType().toString(),
+                        link.getOrderItem().getOrdr().getType().toString()))
+                );
+
+        return sj.length() != 0 ? new StringJoiner("").add("WARNING: mismatched types between linked items: ").merge(sj).toString() : null;
+    }
+
     //endregion
 
     @Inject
-    @NotPersistent
     public IncomingInvoiceApprovalStateTransition.Repository stateTransitionRepository;
 
     @Inject
-    @NotPersistent
     PaymentLineRepository paymentLineRepository;
 
     @Inject
-    @NotPersistent
-    ChamberOfCommerceCodeLookUpService chamberOfCommerceCodeLookUpService;
-
-    @Inject
-    @NotPersistent
     LookupAttachedPdfService lookupAttachedPdfService;
 
     @Inject
-    @NotPersistent
     MetaModelService3 metaModelService3;
 
     @Inject
-    @NotPersistent
     BankAccountRepository bankAccountRepository;
 
     @Inject
-    @NotPersistent
     OrderItemRepository orderItemRepository;
 
     @Inject
-    @NotPersistent
     OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
     @Inject
-    @NotPersistent
     PartyRoleRepository partyRoleRepository;
 
     @Inject
-    @NotPersistent
     PartyRepository partyRepository;
 
     @Inject
-    @NotPersistent
     OrganisationRepository organisationRepository;
 
     @Inject
     SupplierCreationService supplierCreationService;
 
     @Inject
-    @NotPersistent
     ProjectRepository projectRepository;
 
     @Inject
-    @NotPersistent
     BudgetItemChooser budgetItemChooser;
 
     @Inject
-    @NotPersistent
     IncomingInvoiceItemRepository incomingInvoiceItemRepository;
 
     @Inject
-    @NotPersistent
     IncomingInvoiceRepository incomingInvoiceRepository;
 
     @Inject
-    @NotPersistent
     ChargeRepository chargeRepository;
 
     @Inject
-    @NotPersistent
     StateTransitionService stateTransitionService;
 
     @Inject
-    @NotPersistent
-    BuyerFinder buyerFinder;
+    IncomingInvoiceNotificationService notificationService;
 
 }

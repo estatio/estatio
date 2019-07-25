@@ -20,7 +20,6 @@ package org.estatio.module.capex.app.invoice;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedSet;
 import java.util.stream.Collectors;
@@ -83,7 +82,6 @@ import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.financial.dom.BankAccount;
-import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.PaymentMethod;
@@ -670,26 +668,20 @@ public class IncomingDocAsInvoiceViewModel
     @Programmatic
     private String paymentMethodValidation() {
         if (getPaymentMethod() != null && getSeller() != null) {
-            List<PaymentMethod> historicalPaymentMethods = invoiceRepository.findBySeller(getSeller()).stream()
-                    .map(Invoice::getPaymentMethod)
-                    .filter(Objects::nonNull)
-                    .filter(pm -> pm != PaymentMethod.BANK_TRANSFER)
-                    .filter(pm -> pm != PaymentMethod.REFUND_BY_SUPPLIER)
-                    .filter(pm -> pm != PaymentMethod.MANUAL_PROCESS)
-                    .distinct()
-                    .collect(Collectors.toList());
+            List<PaymentMethod> historicalPaymentMethods = incomingInvoiceRepository.findUniquePaymentMethodsForSeller(getSeller());
 
             // Current payment method is bank transfer, but at least one different payment method has been used before
-            if (getPaymentMethod() == PaymentMethod.BANK_TRANSFER && !historicalPaymentMethods.isEmpty()) {
+            if (getPaymentMethod() == PaymentMethod.BANK_TRANSFER && historicalPaymentMethods.size() > 1) {
                 StringBuilder builder = new StringBuilder().append("WARNING: payment method is set to bank transfer, but previous invoices from this seller have used the following payment methods: ");
                 historicalPaymentMethods.forEach(pm -> {
-                    builder.append(pm.title());
-                    builder.append(", ");
+                    if (pm != PaymentMethod.BANK_TRANSFER) {
+                        builder.append(pm.title());
+                        builder.append(", ");
+                    }
                 });
 
                 builder.delete(builder.length() - 2, builder.length() - 1);
 
-                messageService.warnUser(builder.toString());
                 return builder.toString();
             }
         }
