@@ -31,7 +31,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
-import org.estatio.module.capex.dom.documents.BuyerFinder;
+import org.estatio.module.capex.app.IncomingInvoiceNotificationService;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.order.Order;
@@ -1079,10 +1079,7 @@ public class IncomingInvoice_Test {
     public static class Notification_Test extends IncomingInvoice_Test {
 
         @Mock
-        IncomingInvoiceRepository mockIncomingInvoiceRepository;
-
-        @Mock
-        OrderItemInvoiceItemLinkRepository mockOrderItemInvoiceItemLinkRepository;
+        IncomingInvoiceNotificationService mockNotificationService;
 
         @Test
         public void historicalPaymentMethod_works() throws Exception {
@@ -1090,11 +1087,15 @@ public class IncomingInvoice_Test {
 
             // given
             IncomingInvoice incomingInvoice = new IncomingInvoice() {
-                public String doubleInvoiceCheck() {
+                private String doubleInvoiceCheck() {
                     return null;
                 }
 
-                public String buyerBarcodeMatchValidation() {
+                private String buyerBarcodeMatchValidation() {
+                    return null;
+                }
+
+                private String mismatchedTypesOnLinkedItemsCheck() {
                     return null;
                 }
 
@@ -1103,14 +1104,15 @@ public class IncomingInvoice_Test {
                     return new ApplicationTenancy();
                 }
             };
+
             Party seller = new Organisation();
             incomingInvoice.setSeller(seller);
             incomingInvoice.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
-            incomingInvoice.incomingInvoiceRepository = mockIncomingInvoiceRepository;
+            incomingInvoice.notificationService = mockNotificationService;
 
             // expecting
             context.checking(new Expectations() {{
-                oneOf(mockIncomingInvoiceRepository).findUniquePaymentMethodsForSeller(seller);
+                oneOf(mockNotificationService).uniquePaymentMethodsForSeller(incomingInvoice);
                 will(returnValue(Arrays.asList(PaymentMethod.DIRECT_DEBIT, PaymentMethod.BANK_TRANSFER, PaymentMethod.CASH)));
             }});
 
@@ -1122,7 +1124,7 @@ public class IncomingInvoice_Test {
 
             // and expecting
             context.checking(new Expectations() {{
-                oneOf(mockIncomingInvoiceRepository).findUniquePaymentMethodsForSeller(seller);
+                oneOf(mockNotificationService).uniquePaymentMethodsForSeller(incomingInvoice);
                 will(returnValue(Arrays.asList(PaymentMethod.BANK_TRANSFER))); // All historical invoices use payment method BANK_TRANSFER...
             }});
 
@@ -1140,22 +1142,35 @@ public class IncomingInvoice_Test {
 
             // given
             IncomingInvoice incomingInvoice = new IncomingInvoice() {
+                private String doubleInvoiceCheck() {
+                    return null;
+                }
+
+                private String paymentMethodValidation() {
+                    return null;
+                }
+
+                private String mismatchedTypesOnLinkedItemsCheck() {
+                    return null;
+                }
+
                 @Override
                 public ApplicationTenancy getApplicationTenancy() {
                     return new ApplicationTenancy();
                 }
             };
+            incomingInvoice.notificationService = mockNotificationService;
 
             Party buyerDerived = new Organisation();
             Party buyerOnInvoice = new Organisation();
-            incomingInvoice.buyerFinder = new BuyerFinder() {
-                @Override
-                public Party buyerDerivedFromDocumentName(final IncomingInvoice incomingInvoice) {
-                    return buyerDerived;
-                }
-            };
 
             incomingInvoice.setBuyer(buyerOnInvoice);
+
+            // expecting
+            context.checking(new Expectations() {{
+                oneOf(mockNotificationService).deriveBuyer(incomingInvoice);
+                will(returnValue(buyerDerived));
+            }});
 
             // when
             notification = incomingInvoice.getNotification();
@@ -1165,18 +1180,24 @@ public class IncomingInvoice_Test {
 
             // and given (buyers matching)
             incomingInvoice.setBuyer(buyerDerived);
+
+            // expecting
+            context.checking(new Expectations() {{
+                oneOf(mockNotificationService).deriveBuyer(incomingInvoice);
+                will(returnValue(buyerDerived));
+            }});
+
             // when
             notification = incomingInvoice.getNotification();
+
             // then
             assertThat(notification).isNull();
 
-            // and given (no buyer derived)
-            incomingInvoice.buyerFinder = new BuyerFinder() {
-                @Override
-                public Party buyerDerivedFromDocumentName(final IncomingInvoice incomingInvoice) {
-                    return null;
-                }
-            };
+            // and expecting
+            context.checking(new Expectations() {{
+                oneOf(mockNotificationService).deriveBuyer(incomingInvoice);
+                will(returnValue(null));
+            }});
 
             // when
             notification = incomingInvoice.getNotification();
@@ -1212,12 +1233,12 @@ public class IncomingInvoice_Test {
                     return new ApplicationTenancy();
                 }
             };
+            incomingInvoice.notificationService = mockNotificationService;
 
             IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem();
             invoiceItem.setInvoice(incomingInvoice);
             invoiceItem.setIncomingInvoiceType(IncomingInvoiceType.PROPERTY_EXPENSES);
             incomingInvoice.setItems(Sets.newTreeSet(Collections.singletonList(invoiceItem)));
-            incomingInvoice.orderItemInvoiceItemLinkRepository = mockOrderItemInvoiceItemLinkRepository;
 
             OrderItem orderItem = new OrderItem();
             Order order = new Order();
@@ -1230,7 +1251,7 @@ public class IncomingInvoice_Test {
 
             // expecting
             context.checking(new Expectations() {{
-                oneOf(mockOrderItemInvoiceItemLinkRepository).findByInvoiceItem(invoiceItem);
+                oneOf(mockNotificationService).findLinkForInvoiceItemIfAny(invoiceItem);
                 will(returnValue(optional));
             }});
 
