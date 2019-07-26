@@ -98,8 +98,7 @@ public enum DocumentTypeData {
     ),
     TAX_REGISTER(
             "TAX-REGISTER", "Tax Register (for Invoice)",
-            // TODO: REVIEW - think this should probably be NOT_SPECIFIED (see calls to #hasIncomingType)
-            Nature.INCOMING, null,
+            Nature.NOT_SPECIFIED, null,
             INVOICE, // supports
             null, // corresponding cover note, always null if not OUTGOING
             new DocumentTemplateData[]{}
