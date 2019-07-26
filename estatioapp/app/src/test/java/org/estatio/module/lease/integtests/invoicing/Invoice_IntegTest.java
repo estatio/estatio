@@ -271,7 +271,8 @@ public class Invoice_IntegTest extends LeaseModuleIntegTestAbstract {
 
             // when
             Assertions.assertThat(invoice.getStatus()).isEqualTo(InvoiceStatus.INVOICED);
-            InvoiceForLease reversedInvoice = wrap(invoice).reverse();
+            LocalDate newDueDate = invoice.getDueDate().plusMonths(2);
+            InvoiceForLease reversedInvoice = wrap(invoice).reverse(newDueDate);
 
             // then
             Assertions.assertThat(reversedInvoice.getItems()).hasSize(2);
@@ -281,7 +282,7 @@ public class Invoice_IntegTest extends LeaseModuleIntegTestAbstract {
             Assertions.assertThat(reversedInvoice.getAtPath()).isEqualTo(invoice.getAtPath());
             Assertions.assertThat(reversedInvoice.getPaymentMethod()).isEqualTo(invoice.getPaymentMethod());
             Assertions.assertThat(reversedInvoice.getCurrency()).isEqualTo(invoice.getCurrency());
-            Assertions.assertThat(reversedInvoice.getDueDate()).isEqualTo(invoice.getDueDate());
+            Assertions.assertThat(reversedInvoice.getDueDate()).isEqualTo(newDueDate);
             Assertions.assertThat(reversedInvoice.getStatus()).isEqualTo(InvoiceStatus.NEW);
 
             InvoiceItemForLease firstReversedItem = (InvoiceItemForLease) reversedInvoice.getItems().first();

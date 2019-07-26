@@ -111,7 +111,7 @@ import lombok.Setter;
                         "WHERE lease == :lease " +
                         "ORDER BY dueDate DESC"),
         @javax.jdo.annotations.Query(
-                   name = "findByFixedAssetAndStatus", language = "JDOQL",
+                name = "findByFixedAssetAndStatus", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.module.invoice.dom.Invoice " +
                         "WHERE " +
@@ -218,7 +218,7 @@ public class InvoiceForLease
     @Property(hidden = Where.PARENTED_TABLES)
     public org.estatio.module.asset.dom.Property getProperty() {
         final FixedAsset fixedAsset = getFixedAsset();
-        if(fixedAsset == null) {
+        if (fixedAsset == null) {
             return null;
         }
 
@@ -238,8 +238,6 @@ public class InvoiceForLease
         throw new IllegalStateException(String.format("Fixed asset '%s' is of type '%s'",
                 fixedAsset.getReference(), fixedAsset.getClass().getName()));
     }
-
-
 
     @Property(hidden = Where.EVERYWHERE, optionality = Optionality.OPTIONAL)
     @Column(length = 512)
@@ -266,7 +264,6 @@ public class InvoiceForLease
         return getStatus().invoiceIsChangable() ? null : "Invoice cannot be changed";
     }
 
-
     @Override
     protected String reasonDisabledFinanceDetailsDueToState(final Object viewContext) {
         return reasonDisabledDueToState(viewContext);
@@ -290,10 +287,8 @@ public class InvoiceForLease
                 final Charge charge,
                 final BigDecimal quantity,
                 final BigDecimal netAmount,
-                @Nullable
-                final LocalDate startDate,
-                @Nullable
-                final LocalDate endDate) {
+                @Nullable final LocalDate startDate,
+                @Nullable final LocalDate endDate) {
 
             InvoiceItemForLease invoiceItem = invoiceItemForLeaseRepository.newInvoiceItem(invoice, invoice.getDueDate());
 
@@ -606,18 +601,18 @@ public class InvoiceForLease
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public InvoiceForLease reverse(){
+    public InvoiceForLease reverse(final LocalDate newDueDate) {
         InvoiceForLease reversedInvoice = invoiceForLeaseRepository.newInvoice(
                 this.getApplicationTenancy(),
                 this.getSeller(),
                 this.getBuyer(),
                 this.getPaymentMethod(),
                 this.getCurrency(),
-                this.getDueDate(),
+                newDueDate,
                 this.getLease(),
                 null
         );
-        for (InvoiceItem item : getItems()){
+        for (InvoiceItem item : getItems()) {
             InvoiceItem newReversedItem = factoryService.mixin(InvoiceForLease._newItem.class, reversedInvoice).$$(
                     item.getCharge(),
                     item.getQuantity(),
@@ -633,8 +628,8 @@ public class InvoiceForLease
         return reversedInvoice;
     }
 
-    public boolean hideReverse(){
-        return getStatus()!=InvoiceStatus.INVOICED;
+    public boolean hideReverse() {
+        return getStatus() != InvoiceStatus.INVOICED;
     }
 
     @Inject InvoiceForLeaseRepository invoiceForLeaseRepository;
@@ -676,7 +671,7 @@ public class InvoiceForLease
             return null;
         }
         // TODO: EST-xxxx to enforce the constraint that there can only be one "at any given time".
-        Predicate<FixedAssetFinancialAccount> bankaccountOwnerEqualsSeller = x->x.getFinancialAccount().getOwner().equals(getSeller());
+        Predicate<FixedAssetFinancialAccount> bankaccountOwnerEqualsSeller = x -> x.getFinancialAccount().getOwner().equals(getSeller());
         final Optional<FixedAssetFinancialAccount> fafrIfAny =
                 fixedAssetFinancialAccountRepository.findByFixedAsset(getFixedAsset())
                         .stream()
@@ -691,7 +686,6 @@ public class InvoiceForLease
     @javax.inject.Inject
     NumeratorForOutgoingInvoicesRepository numeratorRepository;
 
-
     @Programmatic
     public LocalDate getCodaValDate() {
         // for invoices (status == INVOICED), the invoiceDate will be set.
@@ -701,7 +695,8 @@ public class InvoiceForLease
 
     private static <T> T coalesce(final T... values) {
         for (final T value : values) {
-            if(value != null) return value;
+            if (value != null)
+                return value;
         }
         return null;
     }
