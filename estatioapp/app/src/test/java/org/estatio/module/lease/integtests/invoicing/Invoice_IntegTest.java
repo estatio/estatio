@@ -319,7 +319,7 @@ public class Invoice_IntegTest extends LeaseModuleIntegTestAbstract {
             expectedExceptions.expect(HiddenException.class);
 
             // when
-            InvoiceForLease reversedInvoice = wrap(invoice).reverse();
+            InvoiceForLease reversedInvoice = wrap(invoice).reverse(invoice.getDueDate().plusMonths(2));
 
         }
 
