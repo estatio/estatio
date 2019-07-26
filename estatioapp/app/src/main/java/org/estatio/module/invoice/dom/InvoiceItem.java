@@ -219,7 +219,7 @@ public abstract class InvoiceItem<P extends Invoice<P>, T extends InvoiceItem<P,
 
     protected void appendReasonChangeTaxDisabledIfAny(final ReasonBuffer2 buf) {
         buf.append(() -> getInvoice().isImmutableDueToState(), "Invoice can't be changed");
-        buf.append(() -> getSource() == null, "Cannot change tax on a generated invoice item");
+//        buf.append(() -> getSource() == null, "Cannot change tax on a generated invoice item");   EST-1947: when adding a manual item to an invoice calculated on the lease, there are seem to be uses cases to change tax
     }
 
     // //////////////////////////////////////
