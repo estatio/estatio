@@ -138,13 +138,13 @@ public class InvoiceItem_Test {
 
     }
 
+    @Rule
+    public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
+
+    @Mock
+    Tax mockTax;
+
     public static class Verify extends InvoiceItem_Test {
-
-        @Rule
-        public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
-
-        @Mock
-        Tax mockTax;
 
         private InvoiceItem invoiceItem;
         private LocalDate date = new LocalDate(2014,1,1);
@@ -196,6 +196,66 @@ public class InvoiceItem_Test {
             assertThat(invoiceItem.getVatAmount()).isEqualTo(new BigDecimal("0"));
             assertThat(invoiceItem.getGrossAmount()).isEqualTo(new BigDecimal("1.50"));
         }
+    }
+
+    public static class ChangeTax extends InvoiceItem_Test {
+
+        private InvoiceItem invoiceItem;
+        private TaxRate taxRate;
+
+        @Before
+        public void setup() {
+            taxRate = new TaxRate();
+            final BigDecimal oldPercentage = new BigDecimal("17.5");
+            taxRate.setPercentage(oldPercentage);
+
+            context.checking(new Expectations() {
+                {
+                    allowing(mockTax).taxRateFor(with(anyOf(aNull(LocalDate.class),any(LocalDate.class))));
+                    will(returnValue(taxRate));
+                }
+            });
+            invoiceItem = new InvoiceItem(){
+                public ApplicationTenancy getApplicationTenancy() {
+                    return null;
+                }
+            };
+            invoiceItem.setTax(mockTax);
+            invoiceItem.setInvoice(new InvoiceForLease());
+            invoiceItem.setNetAmount(new BigDecimal("1000.00"));
+            invoiceItem.setVatAmount(new BigDecimal("175.00"));
+            invoiceItem.setGrossAmount(new BigDecimal("1175.00"));
+
+        }
+
+        @Test
+        public void change_tax_resets_taxrate_and_recalculates() throws Exception {
+
+            // given
+            final BigDecimal percentageNewRate = new BigDecimal("10.0");
+            final TaxRate newRate = new TaxRate();
+            newRate.setPercentage(percentageNewRate);
+            Tax newTax = new Tax(){
+                @Override
+                public TaxRate taxRateFor(final LocalDate date) {
+                    return newRate;
+                }
+
+            };
+            invoiceItem.setTaxRate(taxRate);
+            assertThat(invoiceItem.getTaxRate()).isEqualTo(taxRate);
+            assertThat(invoiceItem.getGrossAmount()).isEqualTo(new BigDecimal("1175.00"));
+
+            // when
+            invoiceItem.changeTax(newTax);
+
+            // then
+            assertThat(invoiceItem.getTaxRate()).isEqualTo(newRate);
+            assertThat(invoiceItem.getGrossAmount()).isEqualTo(new BigDecimal("1100.00"));
+            assertThat(invoiceItem.getVatAmount()).isEqualTo(new BigDecimal("100.00"));
+
+        }
+
     }
 
 }

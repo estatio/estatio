@@ -203,6 +203,7 @@ public abstract class InvoiceItem<P extends Invoice<P>, T extends InvoiceItem<P,
     @MemberOrder(name = "tax", sequence = "1")
     public InvoiceItem changeTax(final Tax tax) {
         setTax(tax);
+        setTaxRate(null); // EST-1947: calculate determines the taxrate again
         this.calculateTax();
         return this;
     }
