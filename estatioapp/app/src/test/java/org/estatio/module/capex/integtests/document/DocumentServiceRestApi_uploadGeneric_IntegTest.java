@@ -204,7 +204,7 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
                 Resources.getResource(DocumentServiceRestApi_uploadGeneric_IntegTest.class, fileName));
         final Blob blob = new Blob(fileName, MimeTypeData.APPLICATION_PDF.asStr(), pdfBytes);
 
-        wrap(documentService).uploadGeneric(blob, "TAX_REGISTER", "/ITA");
+        wrap(documentService).uploadGeneric(blob, "INCOMING_TAX_REGISTER", "/ITA");
 
         transactionService.nextTransaction();
 
@@ -220,7 +220,7 @@ public class DocumentServiceRestApi_uploadGeneric_IntegTest extends CapexModuleI
         assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
         assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
         assertThat(JDOHelper.getVersion(document)).isEqualTo(1L);
-        assertThat(document.getType()).isEqualTo(DocumentTypeData.TAX_REGISTER.findUsing(documentTypeRepository));
+        assertThat(document.getType()).isEqualTo(DocumentTypeData.INCOMING_TAX_REGISTER.findUsing(documentTypeRepository));
 
     }
 

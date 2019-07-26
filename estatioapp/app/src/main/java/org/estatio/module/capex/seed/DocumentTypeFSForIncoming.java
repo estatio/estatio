@@ -37,7 +37,7 @@ public class DocumentTypeFSForIncoming extends DocumentTemplateFSAbstract {
         upsertType(DocumentTypeData.INCOMING, executionContext);
         upsertType(DocumentTypeData.INCOMING_INVOICE, executionContext);
         upsertType(DocumentTypeData.INCOMING_ORDER, executionContext);
-        upsertType(DocumentTypeData.TAX_REGISTER, executionContext);
+        upsertType(DocumentTypeData.INCOMING_TAX_REGISTER, executionContext);
     }
 
 

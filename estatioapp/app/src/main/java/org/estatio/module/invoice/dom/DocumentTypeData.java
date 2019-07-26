@@ -160,6 +160,13 @@ public enum DocumentTypeData {
             null, null, // corresponding cover note, always null if not outgoing
             new DocumentTemplateData[]{}
     ),
+    INCOMING_TAX_REGISTER(
+            "INCOMING_TAX-REGISTER", "",
+            Nature.INCOMING, null,
+            null,
+            null, // corresponding cover note, always null if not outgoing
+            new DocumentTemplateData[]{}
+    ),
     /*
     not in DB, so unused.
     INCOMING_LOCAL_INVOICE(

@@ -71,7 +71,7 @@ public class DocumentServiceRestApi extends UdoDomainService<DocumentServiceRest
             case INCOMING:
                 return documentBarcodeService.deriveAtPathFromBarcode(documentName, atPath);
 
-            case TAX_REGISTER:
+            case INCOMING_TAX_REGISTER:
                 return atPath;
 
             default:
