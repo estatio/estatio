@@ -32,6 +32,8 @@ import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import com.google.common.collect.Lists;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
@@ -75,6 +77,9 @@ import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.attr.InvoiceAttributeName;
 import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.LeaseTermStatus;
 import org.estatio.module.lease.dom.invoicing.ssrs.InvoiceAttributesVM;
 import org.estatio.module.lease.dom.invoicing.ssrs.InvoiceItemAttributesVM;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -497,6 +502,16 @@ public class InvoiceForLease
             invoiceForLease.setInvoiceDate(invoiceDate);
             invoiceVatRoundingService.distributeVatRoundingByVatPercentage(invoiceForLease);
             invoiceForLease.setStatus(InvoiceStatus.INVOICED);
+            Lists.newArrayList(invoiceForLease.getItems()).stream()
+                    .map(InvoiceItemForLease.class::cast)
+                    .forEach(ii->{
+                        if (ii.getLeaseTerm()!=null){
+                            final LeaseTerm leaseTerm = ii.getLeaseTerm();
+                            if (leaseTerm.getLeaseItem().getType() == LeaseItemType.TURNOVER_RENT) {
+                                leaseTerm.setStatus(LeaseTermStatus.APPROVED);
+                            }
+                        }
+                    });
 
             messageService.informUser(
                     String.format("Assigned %s to invoice %s",

@@ -22,6 +22,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
+import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -50,6 +51,11 @@ import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
+import org.estatio.module.lease.dom.LeaseTermStatus;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
@@ -553,6 +559,111 @@ public class InvoiceForLease_Test {
         }
     }
 
+    public static class ApproveLeaseTermForTurnoverRent_Test extends InvoiceForLease_Test {
 
+        InvoiceForLease._invoice invoice_invoice;
+
+        @Before
+        public void setUp() throws Exception {
+            invoice = new InvoiceForLease() {
+
+                @Override public Party getSeller() {
+                    return stubInvoiceSeller;
+                }
+
+                @Override
+                public ApplicationTenancy getApplicationTenancy() {
+                    return stubApplicationTenancy;
+                }
+            };
+            invoice.setDueDate(new LocalDate(2019, 2, 1));
+            invoice.numeratorRepository = mockNumeratorForOutgoingInvoicesRepository;
+            invoice.setFixedAsset(stubInvoiceProperty);
+
+            numerator = new Numerator();
+            numerator.setLastIncrement(BigInteger.TEN);
+            numerator.setFormat("XXX-%05d");
+            applicationTenancy = new ApplicationTenancy();
+            applicationTenancy.setPath("/");
+
+            invoice_invoice = new InvoiceForLease._invoice(this.invoice){
+
+            };
+            invoice_invoice.numeratorRepository = mockNumeratorForOutgoingInvoicesRepository;
+            invoice_invoice.invoiceRepository = mockInvoiceRepository;
+            invoice_invoice.invoiceVatRoundingService = mockInvoiceVatRoundingService;
+            invoice_invoice.messageService = mockMessageService;
+            invoice_invoice.titleService = mockTitleService;
+        }
+
+        @Test
+        public void invoice_action_approves_lease_term_for_turnover_rent() throws Exception {
+
+            final LocalDate invoiceDate = new LocalDate(2019, 1, 1);
+
+            //Given
+            invoice.setStatus(InvoiceStatus.APPROVED);
+            InvoiceItemForLease invoiceItem = new InvoiceItemForLease();
+            LeaseTerm term = new LeaseTermForTurnoverRent();
+            LeaseItem leaseItem = new LeaseItem();
+            leaseItem.setType(LeaseItemType.TURNOVER_RENT);
+            term.setLeaseItem(leaseItem);
+            invoiceItem.setLeaseTerm(term);
+            invoice.getItems().add(invoiceItem);
+            Assertions.assertThat(term.getStatus()).isNull();
+
+            // expect
+            allowingMockInvoicesToReturnNumerator(numerator);
+            allowingMockInvoicesToReturnInvoice("123", invoiceDate);
+            context.checking(new Expectations(){{
+                oneOf(mockInvoiceVatRoundingService).distributeVatRoundingByVatPercentage(invoice);
+                allowing(mockTitleService).titleOf(invoice);
+                will(returnValue("Invoice #001"));
+                oneOf(mockMessageService).informUser("Assigned XXX-00011 to invoice Invoice #001");
+            }});
+
+            // when
+            invoice_invoice.$$(invoiceDate);
+
+            // then
+            Assertions.assertThat(term.getStatus()).isEqualTo(LeaseTermStatus.APPROVED);
+
+        }
+
+        @Test
+        public void invoice_action_does_not_approve_lease_term_for_sc() throws Exception {
+
+            final LocalDate invoiceDate = new LocalDate(2019, 1, 1);
+
+            //Given
+            invoice.setStatus(InvoiceStatus.APPROVED);
+            InvoiceItemForLease invoiceItem = new InvoiceItemForLease();
+            LeaseTerm term = new LeaseTermForTurnoverRent();
+            LeaseItem leaseItem = new LeaseItem();
+            leaseItem.setType(LeaseItemType.SERVICE_CHARGE);
+            term.setLeaseItem(leaseItem);
+            invoiceItem.setLeaseTerm(term);
+            invoice.getItems().add(invoiceItem);
+            Assertions.assertThat(term.getStatus()).isNull();
+
+            // expect
+            allowingMockInvoicesToReturnNumerator(numerator);
+            allowingMockInvoicesToReturnInvoice("123", invoiceDate);
+            context.checking(new Expectations(){{
+                oneOf(mockInvoiceVatRoundingService).distributeVatRoundingByVatPercentage(invoice);
+                allowing(mockTitleService).titleOf(invoice);
+                will(returnValue("Invoice #001"));
+                oneOf(mockMessageService).informUser("Assigned XXX-00011 to invoice Invoice #001");
+            }});
+
+            // when
+            invoice_invoice.$$(invoiceDate);
+
+            // then still
+            Assertions.assertThat(term.getStatus()).isNull();
+
+        }
+
+    }
 
 }
