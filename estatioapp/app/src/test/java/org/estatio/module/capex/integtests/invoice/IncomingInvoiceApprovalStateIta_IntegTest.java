@@ -34,6 +34,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_addComment;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_advise;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_adviseToApprove;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_approve;
@@ -1224,6 +1225,57 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         ));
         assertThat(pendingTransition.getTask()).isNotNull();
 
+    }
+
+    @Test
+    public void adding_comment_while_suspended_works() throws Exception {
+        // given
+        List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice;
+        transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitionsOfInvoice).hasSize(2);
+        assertTransition(transitionsOfInvoice.get(0), new ExpectedTransitionResult(
+                false,
+                null,
+                IncomingInvoiceApprovalState.NEW,
+                null,
+                IncomingInvoiceApprovalStateTransitionType.COMPLETE
+        ));
+        assertThat(transitionsOfInvoice.get(0).getTask()).isNotNull();
+
+        // when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_suspend.class, incomingInvoice)).act("Do not pay for a while"));
+
+        // then
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.SUSPENDED);
+        transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitionsOfInvoice).hasSize(2); // still, no pending transition is created
+        assertTransition(transitionsOfInvoice.get(0), new ExpectedTransitionResult(
+                true,
+                "crigatoni",
+                IncomingInvoiceApprovalState.NEW,
+                IncomingInvoiceApprovalState.SUSPENDED,
+                IncomingInvoiceApprovalStateTransitionType.SUSPEND
+        ));
+
+        // and when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.CarmenIncomingInvoiceManagerIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_addComment.class, incomingInvoice)).act("Update: renegotiating invoice"));
+
+        // then
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.SUSPENDED);
+        transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitionsOfInvoice).hasSize(3);
+        assertTransition(transitionsOfInvoice.get(0), new ExpectedTransitionResult(
+                true,
+                "crigatoni",
+                IncomingInvoiceApprovalState.SUSPENDED,
+                IncomingInvoiceApprovalState.SUSPENDED,
+                IncomingInvoiceApprovalStateTransitionType.SUSPEND
+        ));
+        assertThat(transitionsOfInvoice.get(0).getComment()).isEqualTo("Update: renegotiating invoice");
     }
 
     private void assertTransition(IncomingInvoiceApprovalStateTransition transition, ExpectedTransitionResult result) {
