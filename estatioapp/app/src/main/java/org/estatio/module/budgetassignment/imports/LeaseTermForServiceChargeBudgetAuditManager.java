@@ -37,6 +37,7 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
@@ -44,10 +45,9 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.budgetassignment.contributions.LeaseTermForServiceCharge_controlledByBudget;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
-import org.estatio.module.lease.dom.LeaseItemRepository;
 import org.estatio.module.lease.dom.LeaseItemType;
-import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 import org.estatio.module.lease.dom.LeaseTermRepository;
 
@@ -103,7 +103,10 @@ public class LeaseTermForServiceChargeBudgetAuditManager  {
     //region > serviceCharges (derived collection)
 
     public List<LeaseTermForServiceChargeBudgetAuditLineItem> getServiceCharges() {
-        final List<LeaseTermForServiceCharge> terms = leaseTermRepository.findServiceChargeByPropertyAndItemTypeWithStartDateInPeriod(getProperty(), typesFromString(getLeaseItemTypes()), invoicedByFromString(getInvoicedBy()), getStartDate(), getEndDate());
+        final List<LeaseTermForServiceCharge> terms = leaseTermRepository.findServiceChargeByPropertyAndItemTypeWithStartDateInPeriod(getProperty(), typesFromString(getLeaseItemTypes()), invoicedByFromString(getInvoicedBy()), getStartDate(), getEndDate())
+                .stream()
+                .filter(t->!factoryService.mixin(LeaseTermForServiceCharge_controlledByBudget.class, t).$$()) //ECP-1023: filters out terms controlled by a budget
+                .collect(Collectors.toList());
         return Lists.transform(terms, newLeaseTermForServiceChargeAuditBulkUpdate());
     }
 
@@ -189,11 +192,7 @@ public class LeaseTermForServiceChargeBudgetAuditManager  {
     @Inject
     private ExcelService excelService;
 
-    @Inject
-    private LeaseItemRepository leaseItemRepository;
-
-    @Inject
-    private LeaseRepository leaseRepository;
+    @Inject FactoryService factoryService;
     //endregion
 
 }
