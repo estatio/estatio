@@ -148,6 +148,7 @@
                         <cpt:action id="reverse" cssClassFa="undo">
                             <cpt:named>Reverse Item</cpt:named>
                         </cpt:action>
+                        <cpt:action id="changeChargeDates" />
                     </cpt:collection>
                 </bs3:col>
             </bs3:row>

@@ -1302,6 +1302,34 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 budgetItem);
     }
 
+    public IncomingInvoice changeChargeDates(final LocalDate startDate, final LocalDate endDate){
+        Lists.newArrayList(getItems())
+                .stream()
+                .map(IncomingInvoiceItem.class::cast)
+                .forEach(x -> {
+                    x.setChargeStartDate(startDate);
+                    x.setChargeEndDate(endDate);
+                });
+        return this;
+    }
+
+    public LocalDate default0ChangeStartDates(){
+        if (getItems().isEmpty()) return null;
+        IncomingInvoiceItem item = (IncomingInvoiceItem) getItems().first();
+        return  item.getChargeStartDate();
+    }
+
+    public LocalDate default1ChangeStartDates(){
+        if (getItems().isEmpty()) return null;
+        IncomingInvoiceItem item = (IncomingInvoiceItem) getItems().first();
+        return  item.getChargeEndDate();
+    }
+
+    public boolean hideChangeChargeDates(){
+        if (isItalian() && getType()==IncomingInvoiceType.ITA_RECOVERABLE) return false;
+        return true;
+    }
+
     /**
      * TODO: extract this mixin.
      */
@@ -1500,7 +1528,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     private LocalDate vatRegistrationDate;
 
     public boolean hideVatRegistrationDate() {
-        return !this.getAtPath().startsWith("/ITA");
+        return !isItalian();
+    }
+
+    private boolean isItalian() {
+        return this.getAtPath().startsWith("/ITA");
     }
 
     @Getter @Setter
