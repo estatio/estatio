@@ -74,7 +74,7 @@ public class BrandMenu extends UdoDomainRepositoryAndFactory<Brand> {
             @Parameter(optionality = Optionality.OPTIONAL)
             @ParameterLayout(describedAs = "Leave blank for a global brand") final Country country
     ) {
-        return brandRepository.newBrand(name, coverage, countryOfOrigin, group.getGroup(), country);
+        return brandRepository.newBrand(name, coverage, countryOfOrigin, group != null ? group.getGroup() : null, country);
     }
 
     public String validateNewBrand(
