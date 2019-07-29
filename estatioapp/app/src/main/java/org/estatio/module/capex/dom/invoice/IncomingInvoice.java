@@ -49,6 +49,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.metamodel.MetaModelService2;
 import org.apache.isis.applib.services.metamodel.MetaModelService3;
+import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.apache.isis.applib.util.TitleBuffer;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
@@ -1307,8 +1308,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .stream()
                 .map(IncomingInvoiceItem.class::cast)
                 .forEach(x -> {
-                    x.setChargeStartDate(startDate);
-                    x.setChargeEndDate(endDate);
+                    wrapperFactory.wrap(x).editBudgetItem(x.getBudgetItem(), startDate, endDate);
                 });
         return this;
     }
@@ -2465,5 +2465,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Inject
     IncomingInvoiceNotificationService notificationService;
+
+    @Inject WrapperFactory wrapperFactory;
 
 }
