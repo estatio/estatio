@@ -130,7 +130,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
                 return getEffectiveValue();
             }
         }
-        return getBudgetedValue();
+        return MathUtils.firstNonZero(getManualServiceChargeValue(), getBudgetedValue());
     }
 
     // //////////////////////////////////////
