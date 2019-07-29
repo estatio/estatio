@@ -1313,13 +1313,13 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return this;
     }
 
-    public LocalDate default0ChangeStartDates(){
+    public LocalDate default0ChangeChargeDates(){
         if (getItems().isEmpty()) return null;
         IncomingInvoiceItem item = (IncomingInvoiceItem) getItems().first();
         return  item.getChargeStartDate();
     }
 
-    public LocalDate default1ChangeStartDates(){
+    public LocalDate default1ChangeChargeDates(){
         if (getItems().isEmpty()) return null;
         IncomingInvoiceItem item = (IncomingInvoiceItem) getItems().first();
         return  item.getChargeEndDate();
