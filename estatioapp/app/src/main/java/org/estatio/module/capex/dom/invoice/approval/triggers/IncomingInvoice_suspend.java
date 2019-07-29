@@ -8,6 +8,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 
 /**
@@ -39,7 +40,7 @@ public class IncomingInvoice_suspend extends IncomingInvoice_triggerAbstract {
     }
 
     public boolean hideAct() {
-        return cannotTransition();
+        return incomingInvoice.getApprovalState().equals(IncomingInvoiceApprovalState.SUSPENDED) || cannotTransition();
     }
 
     public String disableAct() {
