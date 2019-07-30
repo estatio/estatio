@@ -57,8 +57,8 @@ public class BudgetItemValueRepository extends UdoDomainRepositoryAndFactory<Bud
         if (type == BudgetCalculationType.BUDGETED && findByBudgetItemAndType(budgetItem, type).size() > 0){
             return "Only one value of type BUDGETED is allowed";
         }
-        if (type == BudgetCalculationType.ACTUAL && findByBudgetItemAndType(budgetItem, type).size() > 0){
-            return "Only one value of type ACTUAL is supported at the moment";
+        if (type == BudgetCalculationType.AUDITED && findByBudgetItemAndType(budgetItem, type).size() > 0){
+            return "Only one value of type AUDITED is supported at the moment";
         }
         if (value == null){
             return "Value cannot be empty";

@@ -121,13 +121,13 @@ public class BudgetItemValueRepository_IntegTest extends BudgetModuleIntegTestAb
         assertThat(budgetItem.getValues().first().getValue()).isEqualTo(new BigDecimal("30000.55"));
 
         // when
-        BudgetItemValue result = budgetItemValueRepository.updateOrCreateBudgetItemValue(new BigDecimal("33333.00"), budgetItem, budgetStart, BudgetCalculationType.ACTUAL);
+        BudgetItemValue result = budgetItemValueRepository.updateOrCreateBudgetItemValue(new BigDecimal("33333.00"), budgetItem, budgetStart, BudgetCalculationType.AUDITED);
         transactionService.flushTransaction();
 
         // then
         assertThat(budgetItem.getValues().size()).isEqualTo(2);
         assertThat(result.getValue()).isEqualTo(new BigDecimal("33333.00"));
-        assertThat(result.getType()).isEqualTo(BudgetCalculationType.ACTUAL);
+        assertThat(result.getType()).isEqualTo(BudgetCalculationType.AUDITED);
 
     }
 

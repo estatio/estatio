@@ -187,16 +187,16 @@ public class Budget extends UdoDomainObject2<Budget>
     @ActionLayout(contributed = Contributed.AS_ACTION)
     @MemberOrder(name = "partitionings", sequence = "1")
     public Budget newPartitioning(){
-        partitioningRepository.newPartitioning(this, getStartDate(), getEndDate(), BudgetCalculationType.ACTUAL);
+        partitioningRepository.newPartitioning(this, getStartDate(), getEndDate(), BudgetCalculationType.AUDITED);
         return this;
     }
 
     public String validateNewPartitioning(){
-        return partitioningRepository.validateNewPartitioning(this, getStartDate(), getEndDate(), BudgetCalculationType.ACTUAL);
+        return partitioningRepository.validateNewPartitioning(this, getStartDate(), getEndDate(), BudgetCalculationType.AUDITED);
     }
 
     public String disableNewPartitioning(){
-        return partitioningRepository.findByBudgetAndType(this, BudgetCalculationType.ACTUAL).size()>0 ? "Partitioning for reconciliation already exists" : null;
+        return partitioningRepository.findByBudgetAndType(this, BudgetCalculationType.AUDITED).size()>0 ? "Partitioning for reconciliation already exists" : null;
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)

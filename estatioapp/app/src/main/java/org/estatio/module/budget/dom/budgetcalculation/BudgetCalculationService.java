@@ -54,7 +54,7 @@ public class BudgetCalculationService {
         List<BudgetCalculationViewmodel> budgetCalculationViewmodels = new ArrayList<>();
         for (BudgetItem budgetItem : budget.getItems()) {
 
-            budgetCalculationViewmodels.addAll(calculate(budgetItem, BudgetCalculationType.ACTUAL));
+            budgetCalculationViewmodels.addAll(calculate(budgetItem, BudgetCalculationType.AUDITED));
 
         }
         return budgetCalculationViewmodels;
@@ -65,7 +65,7 @@ public class BudgetCalculationService {
         for (BudgetItem budgetItem : budget.getItems()) {
 
             budgetCalculationViewmodels.addAll(calculate(budgetItem, BudgetCalculationType.BUDGETED));
-            budgetCalculationViewmodels.addAll(calculate(budgetItem, BudgetCalculationType.ACTUAL));
+            budgetCalculationViewmodels.addAll(calculate(budgetItem, BudgetCalculationType.AUDITED));
 
         }
         return budgetCalculationViewmodels;
@@ -92,9 +92,9 @@ public class BudgetCalculationService {
                 results.addAll(calculateForTotalAndType(partitionItem, partitionItem.getBudgetedValue(), BudgetCalculationType.BUDGETED));
             break;
 
-            case ACTUAL:
+            case AUDITED:
                 if (partitionItem.getBudgetItem().getAuditedValue() != null) {
-                    results.addAll(calculateForTotalAndType(partitionItem, partitionItem.getAuditedValue(), BudgetCalculationType.ACTUAL));
+                    results.addAll(calculateForTotalAndType(partitionItem, partitionItem.getAuditedValue(), BudgetCalculationType.AUDITED));
                 }
             break;
         }

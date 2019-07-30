@@ -162,7 +162,7 @@ public class BudgetAssignmentService {
                 term.setBudgetedValue(newValue);
                 break;
 
-            case ACTUAL:
+            case AUDITED:
                 BigDecimal oldActual = term.getAuditedValue();
                 newValue = oldActual!=null ? oldActual.add(result.getValue()) : result.getValue();
                 term.setAuditedValue(newValue);

@@ -264,7 +264,7 @@ public class BudgetAssignmentService_Test {
         budget.setStartDate(startDate);
         budget.setEndDate(endDate);
         result.setBudget(budget);
-        result.setType(BudgetCalculationType.ACTUAL);
+        result.setType(BudgetCalculationType.AUDITED);
         result.setValue(new BigDecimal("123.45"));
 
         BudgetCalculationResult previousResult1 = new BudgetCalculationResult();
@@ -316,7 +316,7 @@ public class BudgetAssignmentService_Test {
         budget.setStartDate(startDate);
         budget.setEndDate(endDate);
         result.setBudget(budget);
-        result.setType(BudgetCalculationType.ACTUAL);
+        result.setType(BudgetCalculationType.AUDITED);
         result.setValue(new BigDecimal("123.45"));
 
         BudgetCalculationResult previousResult1 = new BudgetCalculationResult();

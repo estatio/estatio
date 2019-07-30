@@ -143,7 +143,7 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public BudgetItem newValue(final BigDecimal value, final LocalDate date){
-        return newValue(value, date, BudgetCalculationType.ACTUAL);
+        return newValue(value, date, BudgetCalculationType.AUDITED);
     }
 
     public LocalDate default1NewValue(final BigDecimal value, final LocalDate date){
@@ -151,11 +151,11 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
     }
 
     public String validateNewValue(final BigDecimal value, final LocalDate date){
-        return budgetItemValueRepository.validateNewBudgetItemValue(this, value, date, BudgetCalculationType.ACTUAL);
+        return budgetItemValueRepository.validateNewBudgetItemValue(this, value, date, BudgetCalculationType.AUDITED);
     }
 
     public String disableNewValue(){
-        return budgetItemValueRepository.findByBudgetItemAndType(this, BudgetCalculationType.ACTUAL).size()>0 ? "Audited value already entered" : null;
+        return budgetItemValueRepository.findByBudgetItemAndType(this, BudgetCalculationType.AUDITED).size()>0 ? "Audited value already entered" : null;
     }
 
     @Programmatic
@@ -177,8 +177,8 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public BigDecimal getAuditedValue(){
-        if (budgetItemValueRepository.findByBudgetItemAndType(this, BudgetCalculationType.ACTUAL).size() > 0) {
-            return budgetItemValueRepository.findByBudgetItemAndType(this, BudgetCalculationType.ACTUAL).get(0).getValue();
+        if (budgetItemValueRepository.findByBudgetItemAndType(this, BudgetCalculationType.AUDITED).size() > 0) {
+            return budgetItemValueRepository.findByBudgetItemAndType(this, BudgetCalculationType.AUDITED).get(0).getValue();
         } else {
             return null;
         }
@@ -274,7 +274,7 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
         case BUDGETED:
             return isAssignedForType(budgetCalculationType) ? "This item has been assigned" : null;
 
-        case ACTUAL:
+        case AUDITED:
             return isAssignedForType(budgetCalculationType) ? "This item has been reconciled" : null;
         }
         return null;

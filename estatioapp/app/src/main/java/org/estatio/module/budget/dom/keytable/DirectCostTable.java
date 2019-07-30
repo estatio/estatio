@@ -202,8 +202,8 @@ public class DirectCostTable extends PartitioningTable {
     }
 
     private String isAssignedReason(){
-        if (isAssignedForTypeReason(BudgetCalculationType.ACTUAL)!=null){
-            return isAssignedForTypeReason(BudgetCalculationType.ACTUAL);
+        if (isAssignedForTypeReason(BudgetCalculationType.AUDITED)!=null){
+            return isAssignedForTypeReason(BudgetCalculationType.AUDITED);
         }
         return isAssignedForTypeReason(BudgetCalculationType.BUDGETED);
     }
@@ -232,7 +232,7 @@ public class DirectCostTable extends PartitioningTable {
                             type
                     ));
                 }
-            case ACTUAL:
+            case AUDITED:
                 if (i.getAuditedCost()!=null){
                     results.add(new BudgetCalculationViewmodel(
                             partitionItem,

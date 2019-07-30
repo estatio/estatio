@@ -102,12 +102,12 @@ public class PartitioningRepository_IntegTest extends BudgetModuleIntegTestAbstr
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
             Budget budget = budgetRepository.findByPropertyAndStartDate(property,
                     Budget_enum.OxfBudget2015.getStartDate());
-            partitioningRepository.newPartitioning(budget, budget.getStartDate(), budget.getEndDate(), BudgetCalculationType.ACTUAL);
+            partitioningRepository.newPartitioning(budget, budget.getStartDate(), budget.getEndDate(), BudgetCalculationType.AUDITED);
 
             // when again
             final String reason = partitioningRepository
                     .validateNewPartitioning(budget, budget.getStartDate(), budget.getEndDate(),
-                            BudgetCalculationType.ACTUAL);
+                            BudgetCalculationType.AUDITED);
 
             // then
             assertThat(reason).isEqualTo("This partitioning already exists");

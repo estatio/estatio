@@ -101,7 +101,7 @@ public class KeyTable_Test {
 
             // when
             assertThat(keyTable.isAssignedForTypeReason(BudgetCalculationType.BUDGETED)).isNull();
-            assertThat(keyTable.isAssignedForTypeReason(BudgetCalculationType.ACTUAL)).isNull();
+            assertThat(keyTable.isAssignedForTypeReason(BudgetCalculationType.AUDITED)).isNull();
         }
 
         @Test
@@ -145,14 +145,14 @@ public class KeyTable_Test {
             context.checking(new Expectations() {{
                 oneOf(mockPartitionItemRepository).findByPartitioningTable(keyTable);
                 will(returnValue(Arrays.asList(partitionItemActual)));
-                oneOf(mockBudgetItem).isAssignedForType(BudgetCalculationType.ACTUAL);
+                oneOf(mockBudgetItem).isAssignedForType(BudgetCalculationType.AUDITED);
                 will(returnValue(true));
-                oneOf(mockBudgetItem).isAssignedForTypeReason(BudgetCalculationType.ACTUAL);
+                oneOf(mockBudgetItem).isAssignedForTypeReason(BudgetCalculationType.AUDITED);
                 will(returnValue("some reason"));
             }});
 
             // when
-            String reason =  keyTable.isAssignedForTypeReason(BudgetCalculationType.ACTUAL);
+            String reason =  keyTable.isAssignedForTypeReason(BudgetCalculationType.AUDITED);
 
             // then
             assertThat(reason).isEqualTo("some reason");

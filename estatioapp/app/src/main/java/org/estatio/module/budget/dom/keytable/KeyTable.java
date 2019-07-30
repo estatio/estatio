@@ -333,8 +333,8 @@ public class KeyTable extends PartitioningTable {
     }
 
     private String isAssignedReason(){
-        if (isAssignedForTypeReason(BudgetCalculationType.ACTUAL)!=null){
-            return isAssignedForTypeReason(BudgetCalculationType.ACTUAL);
+        if (isAssignedForTypeReason(BudgetCalculationType.AUDITED)!=null){
+            return isAssignedForTypeReason(BudgetCalculationType.AUDITED);
         }
         return isAssignedForTypeReason(BudgetCalculationType.BUDGETED);
     }
