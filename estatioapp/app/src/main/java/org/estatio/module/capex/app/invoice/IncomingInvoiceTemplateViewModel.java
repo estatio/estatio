@@ -21,9 +21,24 @@ import lombok.Setter;
 @AllArgsConstructor
 public class IncomingInvoiceTemplateViewModel {
 
-    // todo
+    public IncomingInvoiceTemplateViewModel(final Party supplier, final IncomingInvoiceType type, final BigDecimal netAmount) {
+        this.supplier = supplier;
+        this.type = type;
+        this.netAmount = netAmount;
+    }
+
     public String title() {
-        return null;
+        StringBuilder buf = new StringBuilder();
+        buf.append(getSupplier().getName()).append(": ");
+        buf.append(getType());
+
+        if (getProperty() != null) {
+            buf.append("/").append(getProperty().getName());
+        }
+
+        buf.append(", ").append(getNetAmount().toString());
+
+        return buf.toString();
     }
 
     @Getter @Setter
