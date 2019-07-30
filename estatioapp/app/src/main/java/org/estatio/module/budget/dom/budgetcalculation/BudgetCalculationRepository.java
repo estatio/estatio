@@ -104,5 +104,8 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
         return allMatches("findByBudgetAndUnitAndInvoiceChargeAndIncomingChargeAndType", "budget", budget, "unit", unit, "invoiceCharge", invoiceCharge, "incomingCharge", incomingCharge, "type", type);
     }
 
+    public void delete(final BudgetCalculation calc) {
+        repositoryService.removeAndFlush(calc);
+    }
 }
 

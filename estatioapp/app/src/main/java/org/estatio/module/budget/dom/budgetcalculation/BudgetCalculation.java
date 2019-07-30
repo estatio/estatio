@@ -219,13 +219,6 @@ public class BudgetCalculation extends UdoDomainObject2<BudgetCalculation>
     }
 
     @Programmatic
-    public void removeWithStatusNew() {
-        if (getStatus() == Status.NEW) {
-            repositoryService.removeAndFlush(this);
-        }
-    }
-
-    @Programmatic
     public void finalizeCalculation() {
         setStatus(Status.ASSIGNED);
     }

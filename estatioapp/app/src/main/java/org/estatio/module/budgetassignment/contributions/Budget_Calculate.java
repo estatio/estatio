@@ -35,7 +35,7 @@ public class Budget_Calculate {
             @ParameterLayout(describedAs = "Final calculation will make the calculations permanent and impact the leases")
             final boolean finalCalculation
     ) {
-        budgetCalculationService.calculatePersistedCalculations(budget);
+        budgetCalculationService.calculate(budget, BudgetCalculationType.BUDGETED);
         if (finalCalculation){
             List<BudgetCalculationResult> results = budgetAssignmentService.calculateResults(budget, BudgetCalculationType.BUDGETED);
             budgetAssignmentService.assignNonAssignedCalculationResultsToLeases(results);

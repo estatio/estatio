@@ -17,9 +17,9 @@ import org.estatio.module.budget.dom.partioning.PartitionItem;
 @DomainService(nature = NatureOfService.DOMAIN)
 public class BudgetCalculationService {
 
-    public List<BudgetCalculation> calculatePersistedCalculations(final Budget budget) {
+    public List<BudgetCalculation> calculate(final Budget budget, final BudgetCalculationType type) {
 
-        removeNewCalculations(budget);
+        removeNewCalculationsOfType(budget, BudgetCalculationType.BUDGETED);
 
         List<BudgetCalculation> budgetCalculations = new ArrayList<>();
         for (BudgetCalculationViewmodel result : getBudgetedCalculations(budget)){
@@ -34,10 +34,10 @@ public class BudgetCalculationService {
         return budgetCalculations;
     }
 
-    public void removeNewCalculations(final Budget budget) {
-        for (BudgetCalculation calc : budgetCalculationRepository.findByBudget(budget)){
-            calc.removeWithStatusNew();
-        }
+    public void removeNewCalculationsOfType(final Budget budget, final BudgetCalculationType type) {
+        budgetCalculationRepository.findByBudgetAndTypeAndStatus(budget, type, Status.NEW).forEach(
+                c->budgetCalculationRepository.delete(c)
+        );
     }
 
     public List<BudgetCalculationViewmodel> getBudgetedCalculations(final Budget budget){

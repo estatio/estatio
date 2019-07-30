@@ -12,6 +12,7 @@ import org.apache.isis.applib.services.user.UserService;
 
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.Status;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
@@ -34,7 +35,7 @@ public class Budget_Remove {
             final boolean areYouSure
     ) {
 
-        budget.removeNewCalculations();
+        budget.removeNewCalculationsOfType(BudgetCalculationType.BUDGETED);
 
         // delete partition items
         for (BudgetItem budgetItem : budget.getItems()) {

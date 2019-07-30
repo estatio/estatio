@@ -17,13 +17,7 @@
 
 package org.estatio.module.budget.dom.budgetcalculation;
 
-import org.jmock.Expectations;
-import org.jmock.auto.Mock;
-import org.junit.Rule;
 import org.junit.Test;
-
-import org.apache.isis.applib.services.repository.RepositoryService;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
@@ -51,46 +45,4 @@ public class BudgetCalculation_Test {
         }
 
     }
-
-    @Rule
-    public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
-
-    @Mock
-    private RepositoryService repositoryService;
-
-    @Test
-    public void removeWithStatusNew(){
-
-        // given
-        BudgetCalculation calculation = new BudgetCalculation();
-        calculation.repositoryService = repositoryService;
-        calculation.setStatus(Status.NEW);
-
-        // expect
-        context.checking(new Expectations() {
-            {
-                oneOf(repositoryService).removeAndFlush(calculation);
-            }
-
-        });
-
-        // when
-        calculation.removeWithStatusNew();
-    }
-
-    @Test
-    public void doNotremoveWithStatusAssigned(){
-
-        // given
-        BudgetCalculation value = new BudgetCalculation();
-        value.repositoryService = repositoryService;
-        value.setStatus(Status.ASSIGNED);
-
-        // when
-        value.removeWithStatusNew();
-
-        // then
-        /*nothing*/
-    }
-
 }

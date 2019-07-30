@@ -40,6 +40,7 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keyitem.DirectCost;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
@@ -191,7 +192,7 @@ public class BudgetImportExportService {
         Budget budgetOfFirstLine = budgetRepository.findByPropertyAndDate(property, lineItems.get(0).getBudgetStartDate());
         if (budgetOfFirstLine.equals(budget)) {
 
-            budget.removeNewCalculations();
+            budget.removeNewCalculationsOfType(BudgetCalculationType.BUDGETED);
             budget.removeAllBudgetItems();
             budget.removeAllPartitioningTables();
 
