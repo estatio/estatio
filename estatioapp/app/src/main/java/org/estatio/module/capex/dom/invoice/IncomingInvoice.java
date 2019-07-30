@@ -2,6 +2,7 @@ package org.estatio.module.capex.dom.invoice;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -1303,29 +1304,41 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 budgetItem);
     }
 
-    public IncomingInvoice changeChargeDates(final LocalDate startDate, final LocalDate endDate){
+    public IncomingInvoice editBudgetItem(final BudgetItem budgetItem, final LocalDate startDate, final LocalDate endDate){
         Lists.newArrayList(getItems())
                 .stream()
                 .map(IncomingInvoiceItem.class::cast)
                 .forEach(x -> {
-                    wrapperFactory.wrap(x).editBudgetItem(x.getBudgetItem(), startDate, endDate);
+                    wrapperFactory.wrap(x).editBudgetItem(budgetItem, startDate, endDate);
                 });
         return this;
     }
 
-    public LocalDate default0ChangeChargeDates(){
+    public BudgetItem default0EditBudgetItem(){
         if (getItems().isEmpty()) return null;
         IncomingInvoiceItem item = (IncomingInvoiceItem) getItems().first();
-        return  item.getChargeStartDate();
+        return item.getBudgetItem();
     }
 
-    public LocalDate default1ChangeChargeDates(){
+    public LocalDate default1EditBudgetItem(){
         if (getItems().isEmpty()) return null;
         IncomingInvoiceItem item = (IncomingInvoiceItem) getItems().first();
-        return  item.getChargeEndDate();
+        return item.getChargeStartDate();
     }
 
-    public boolean hideChangeChargeDates(){
+    public LocalDate default2EditBudgetItem(){
+        if (getItems().isEmpty()) return null;
+        IncomingInvoiceItem item = (IncomingInvoiceItem) getItems().first();
+        return item.getChargeEndDate();
+    }
+
+    public List<BudgetItem> choices0EditBudgetItem(){
+        if (getItems().isEmpty()) return Collections.emptyList();
+        IncomingInvoiceItem item = (IncomingInvoiceItem) getItems().first();
+        return budgetItemChooser.choicesBudgetItemFor((org.estatio.module.asset.dom.Property) item.getFixedAsset(), item.getCharge());
+    }
+
+    public boolean hideEditBudgetItem(){
         if (isItalian() && getType()==IncomingInvoiceType.ITA_RECOVERABLE) return false;
         return true;
     }
