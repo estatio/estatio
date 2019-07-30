@@ -317,6 +317,15 @@ public class IncomingInvoiceRepository {
     }
 
     @Programmatic
+    public List<IncomingInvoice> findTemplatesForSeller(final Party seller) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoice.class,
+                        "findTemplatesForSeller",
+                        "seller", seller));
+    }
+
+    @Programmatic
     public IncomingInvoice create(
             final IncomingInvoiceType type,
             final String invoiceNumber,

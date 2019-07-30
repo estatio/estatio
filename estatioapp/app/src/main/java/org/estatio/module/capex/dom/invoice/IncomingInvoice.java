@@ -253,6 +253,13 @@ import lombok.Setter;
                         + "WHERE seller == :seller "
                         + "&& paymentMethod != null "
                         + "&& paymentMethod != 'MANUAL_PROCESS' "
+        ),
+        @Query(
+                name = "findTemplatesForSeller", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE seller == :seller "
+                        + " && useAsTemplate == true"
         )
 })
 @FetchGroup(
@@ -2466,6 +2473,17 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return this;
     }
 
+    public Party default0CompleteUsingTemplate() {
+        return getSeller();
+    }
+
+    public List<IncomingInvoiceTemplateViewModel> choices1CompleteUsingTemplate(final Party supplier) {
+        return incomingInvoiceRepository.findTemplatesForSeller(supplier)
+                .stream()
+                .map(IncomingInvoiceTemplateViewModel::new)
+                .collect(Collectors.toList());
+    }
+
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public IncomingInvoice addAsTemplate() {
         setUseAsTemplate(true);
@@ -2473,6 +2491,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String disableAddAsTemplate() {
+        if (getApprovalState().equals(IncomingInvoiceApprovalState.NEW) || getApprovalState().equals(IncomingInvoiceApprovalState.DISCARDED)) {
+            return "Only completed invoices can be added as a template";
+        }
+
         return getItems().size() > 1 ?
                 "Can not add invoice with more than one item as a template" :
                 null;
