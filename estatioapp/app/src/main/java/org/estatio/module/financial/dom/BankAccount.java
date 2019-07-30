@@ -152,6 +152,9 @@ public class BankAccount
     @Getter @Setter
     private String bic;
 
+    public static class BicUpdatedEvent extends ActionDomainEvent<BankAccount>{};
+
+    @Action(domainEvent = BicUpdatedEvent.class)
     public BankAccount updateBic(@Nullable String bic) {
         setBic(trimBic(bic));
         return this;
