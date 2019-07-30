@@ -65,6 +65,7 @@ import org.estatio.module.base.platform.applib.ReasonBuffer2;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.capex.app.IncomingInvoiceNotificationService;
 import org.estatio.module.capex.app.SupplierCreationService;
+import org.estatio.module.capex.app.invoice.IncomingInvoiceTemplateViewModel;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.capex.dom.documents.BudgetItemChooser;
@@ -1324,7 +1325,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 budgetItem);
     }
 
-    public IncomingInvoice editBudgetItem(final BudgetItem budgetItem, final LocalDate startDate, final LocalDate endDate){
+    public IncomingInvoice editBudgetItem(final BudgetItem budgetItem, final LocalDate startDate, final LocalDate endDate) {
         Lists.newArrayList(getItems())
                 .stream()
                 .map(IncomingInvoiceItem.class::cast)
@@ -1334,32 +1335,37 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return this;
     }
 
-    public BudgetItem default0EditBudgetItem(){
-        if (getItems().isEmpty()) return null;
+    public BudgetItem default0EditBudgetItem() {
+        if (getItems().isEmpty())
+            return null;
         IncomingInvoiceItem item = (IncomingInvoiceItem) getItems().first();
         return item.getBudgetItem();
     }
 
-    public LocalDate default1EditBudgetItem(){
-        if (getItems().isEmpty()) return null;
+    public LocalDate default1EditBudgetItem() {
+        if (getItems().isEmpty())
+            return null;
         IncomingInvoiceItem item = (IncomingInvoiceItem) getItems().first();
         return item.getChargeStartDate();
     }
 
-    public LocalDate default2EditBudgetItem(){
-        if (getItems().isEmpty()) return null;
+    public LocalDate default2EditBudgetItem() {
+        if (getItems().isEmpty())
+            return null;
         IncomingInvoiceItem item = (IncomingInvoiceItem) getItems().first();
         return item.getChargeEndDate();
     }
 
-    public List<BudgetItem> choices0EditBudgetItem(){
-        if (getItems().isEmpty()) return Collections.emptyList();
+    public List<BudgetItem> choices0EditBudgetItem() {
+        if (getItems().isEmpty())
+            return Collections.emptyList();
         IncomingInvoiceItem item = (IncomingInvoiceItem) getItems().first();
         return budgetItemChooser.choicesBudgetItemFor((org.estatio.module.asset.dom.Property) item.getFixedAsset(), item.getCharge());
     }
 
-    public boolean hideEditBudgetItem(){
-        if (isItalian() && getType()==IncomingInvoiceType.ITA_RECOVERABLE) return false;
+    public boolean hideEditBudgetItem() {
+        if (isItalian() && getType() == IncomingInvoiceType.ITA_RECOVERABLE)
+            return false;
         return true;
     }
 
@@ -2442,6 +2448,53 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
         return sj.length() != 0 ? new StringJoiner("").add("WARNING: mismatched types between linked items: ").merge(sj).toString() : null;
     }
+
+    //endregion
+
+    //region > template
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public IncomingInvoice completeUsingTemplate(
+            final Party supplier,
+            final IncomingInvoiceTemplateViewModel template,
+            final LocalDate dateReceived,
+            final LocalDate invoiceDate,
+            final String invoiceNumber,
+            final @Nullable BudgetItem budgetItem,
+            final @Nullable Charge charge,
+            final String period) {
+        return this;
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public IncomingInvoice addAsTemplate() {
+        setUseAsTemplate(true);
+        return this;
+    }
+
+    public String disableAddAsTemplate() {
+        return getItems().size() > 1 ?
+                "Can not add invoice with more than one item as a template" :
+                null;
+    }
+
+    public boolean hideAddAsTemplate() {
+        return getUseAsTemplate();
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public IncomingInvoice removeAsTemplate() {
+        setUseAsTemplate(false);
+        return this;
+    }
+
+    public boolean hideRemoveAsTemplate() {
+        return !getUseAsTemplate();
+    }
+
+    @Column(allowsNull = "false", defaultValue = "false")
+    @Getter @Setter
+    private Boolean useAsTemplate;
 
     //endregion
 
