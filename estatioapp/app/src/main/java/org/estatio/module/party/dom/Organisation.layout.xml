@@ -18,6 +18,7 @@
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Name" id="name">
                                         <cpt:action id="syncFromCoda" position="PANEL"/>
+                                        <cpt:action id="syncToCoda" position="PANEL"/>
                                         <cpt:action id="remove" position="PANEL"/>
                                         <cpt:action id="removeAndReplace" position="PANEL"/>
                                         <cpt:property id="reference"/>
