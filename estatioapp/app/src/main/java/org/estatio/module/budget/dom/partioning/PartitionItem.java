@@ -32,6 +32,8 @@ import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.collect.Lists;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Auditing;
@@ -51,6 +53,7 @@ import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetcalculation.Status;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.PartitioningTable;
 import org.estatio.module.charge.dom.Charge;
@@ -99,7 +102,7 @@ public class PartitionItem extends UdoDomainObject2<PartitionItem> implements Wi
     //region > identificatiom
     public String title() {
 
-        return "Partitioning from "
+        return "From "
                 .concat(getBudgetItem().getCharge().getName()
                 .concat(" to "))
                 .concat(getCharge().getName());
@@ -180,9 +183,21 @@ public class PartitionItem extends UdoDomainObject2<PartitionItem> implements Wi
         return getBudgetItem().getBudget().getApplicationTenancy();
     }
 
-    @Programmatic
-    public void remove() {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public BudgetItem remove() {
+        BudgetItem budgetItem = getBudgetItem();
         repositoryService.removeAndFlush(this);
+        return budgetItem;
+    }
+
+    public String disableRemove(){
+        if (isAssigned()) return "This item has assigned calculations";
+        return null;
+    }
+
+    private boolean isAssigned(){
+        BudgetCalculation firstAssigned = Lists.newArrayList(getCalculations()).stream().filter(x->x.getStatus()==Status.ASSIGNED).findFirst().orElse(null);
+        return firstAssigned != null;
     }
 
     @Programmatic

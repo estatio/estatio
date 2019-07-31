@@ -199,13 +199,14 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    public PartitionItem createPartitionItemForBudgeting(
+    public BudgetItem createPartitionItemForBudgeting(
             final Charge charge,
             final PartitioningTable partitioningTable,
             final BigDecimal percentage,
             @Parameter(optionality = Optionality.OPTIONAL)
             final BigDecimal fixedBudgetedValue) {
-        return partitionItemRepository.newPartitionItem(getBudget().getPartitioningForBudgeting(), charge, partitioningTable, this, percentage, fixedBudgetedValue, null);
+        partitionItemRepository.newPartitionItem(getBudget().getPartitioningForBudgeting(), charge, partitioningTable, this, percentage, fixedBudgetedValue, null);
+        return this;
     }
 
     public List<Charge> choices0CreatePartitionItemForBudgeting() {
@@ -218,8 +219,52 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
                 .collect(Collectors.toList());
     }
 
+    public String validateCreatePartitionItemForBudgeting(
+            final Charge charge,
+            final PartitioningTable partitioningTable,
+            final BigDecimal percentage,
+            final BigDecimal fixedBudgetedValue){
+        if (partitionItemRepository.findUnique(getBudget().getPartitioningForBudgeting(), charge, this, partitioningTable)!=null) return "This partition item exists already";
+        return null;
+    }
+
     public String disableCreatePartitionItemForBudgeting(){
         return isAssignedForTypeReason(BudgetCalculationType.BUDGETED);
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public BudgetItem createPartitionItemForReconciliation(
+            final Charge charge,
+            final PartitioningTable partitioningTable,
+            final BigDecimal percentage,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final BigDecimal fixedAuditedValue) {
+        partitionItemRepository.newPartitionItem(getBudget().getPartitioningForReconciliation(), charge, partitioningTable, this, percentage, null, fixedAuditedValue);
+        return this;
+    }
+
+    public List<Charge> choices0CreatePartitionItemForReconciliation() {
+        return chargeRepository.allOutgoing();
+    }
+
+    public List<PartitioningTable> choices1CreatePartitionItemForReconciliation() {
+        return partitioningTableRepository.findByBudget(getBudget())
+                .stream()
+                .collect(Collectors.toList());
+    }
+
+    public String validateCreatePartitionItemForReconciliation(
+            final Charge charge,
+            final PartitioningTable partitioningTable,
+            final BigDecimal percentage,
+            final BigDecimal fixedAuditedValue){
+        if (partitionItemRepository.findUnique(getBudget().getPartitioningForReconciliation(), charge, this, partitioningTable)!=null) return "This partition item exists already";
+        return null;
+    }
+
+    public String disableCreatePartitionItemForReconciliation(){
+        if (getBudget().getPartitioningForReconciliation()==null) return "No partitioning of type AUDITED found";
+        return isAssignedForTypeReason(BudgetCalculationType.AUDITED);
     }
 
     @Programmatic
@@ -272,10 +317,10 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
         switch (budgetCalculationType) {
 
         case BUDGETED:
-            return isAssignedForType(budgetCalculationType) ? "This item has been assigned" : null;
+            return isAssignedForType(budgetCalculationType) ? "Budget item has been assigned" : null;
 
         case AUDITED:
-            return isAssignedForType(budgetCalculationType) ? "This item has been reconciled" : null;
+            return isAssignedForType(budgetCalculationType) ? "Budget item has been reconciled" : null;
         }
         return null;
     }

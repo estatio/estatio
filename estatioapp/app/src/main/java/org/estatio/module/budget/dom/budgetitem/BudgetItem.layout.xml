@@ -48,7 +48,7 @@
         <col span="8" unreferencedCollections="false">
             <ns2:collection id="partitionItems" defaultView="table">
                 <ns2:action id="createPartitionItemForBudgeting"/>
-                <ns2:action id="createPartitionItemForActuals"/>
+                <ns2:action id="createPartitionItemForReconciliation"/>
             </ns2:collection>
         </col>
     </row>

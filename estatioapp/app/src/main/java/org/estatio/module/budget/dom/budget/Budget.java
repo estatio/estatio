@@ -331,6 +331,11 @@ public class Budget extends UdoDomainObject2<Budget>
     }
 
     @Programmatic
+    public Partitioning getPartitioningForReconciliation(){
+        return partitioningRepository.findUnique(this, BudgetCalculationType.AUDITED, getStartDate());
+    }
+
+    @Programmatic
     public void remove(){
         remove(this);
     }

@@ -65,21 +65,6 @@ public class PartitionItemRepository extends UdoDomainRepositoryAndFactory<Parti
         return partitionItem;
     }
 
-    public String validateNewPartitionItem(
-            final Partitioning partitioning,
-            final Charge charge,
-            final PartitioningTable partitioningTable,
-            final BudgetItem budgetItem,
-            final BigDecimal percentage
-    ){
-        if(findUnique(partitioning, charge, budgetItem, partitioningTable) != null) {
-            return "This partition item already exists";
-        }
-        return null;
-    }
-
-    // //////////////////////////////////////
-
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @ActionLayout()
     public List<PartitionItem> allPartitionItems() {

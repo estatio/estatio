@@ -42,31 +42,6 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
         runFixtureScript(Partitioning_enum.OxfPartitioning2015.builder());
     }
 
-    public static class validateNewPartitionItem extends PartitionItemRepository_IntegTest {
-
-        @Test
-        public void doublePartitionItem() throws Exception {
-
-            // given
-            Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
-            Budget budget = budgetRepository.findByPropertyAndStartDate(property,
-                    Budget_enum.OxfBudget2015.getStartDate());
-            PartitionItem partitionItem = budget.getItems().first().getPartitionItems().get(0);
-
-            //when, then
-            assertThat(partitionItemRepository
-                    .validateNewPartitionItem(
-                            budget.getPartitionings().first(),
-                            partitionItem.getCharge(),
-                            partitionItem.getPartitioningTable(),
-                            partitionItem.getBudgetItem(),
-                            null)
-            ).isEqualTo("This partition item already exists");
-
-        }
-
-    }
-
     public static class FindByPartitionItem extends PartitionItemRepository_IntegTest {
 
         @Test
