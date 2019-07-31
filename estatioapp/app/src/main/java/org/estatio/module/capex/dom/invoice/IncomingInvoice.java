@@ -2509,6 +2509,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final IncomingInvoiceTemplateViewModel template,
             final LocalDate dateReceived,
             final LocalDate invoiceDate,
+            final LocalDate dueDate,
             final String invoiceNumber,
             final BudgetItem budgetItem,
             final String period) {
