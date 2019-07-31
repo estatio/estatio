@@ -8,8 +8,7 @@
                     <cpt:domainObject/>
                     <cpt:action id="completeInvoice"/>
                     <cpt:action id="completeInvoiceItem"/>
-                    <cpt:action id="completeInvoiceItemWithBudgetItem"/>
-                    <cpt:action id="completeInvoiceItemWithProject"/>
+                    <cpt:action id="completeUsingTemplate"/>
                     <cpt:action id="verify" hidden="EVERYWHERE"/>
                     <cpt:action id="links" hidden="EVERYWHERE"/>
                 </bs3:col>
@@ -44,6 +43,17 @@
                                         </cpt:property>
                                         <cpt:property id="codaDocHead"/>
                                         <cpt:property id="notification" labelPosition="NONE" hidden="ALL_TABLES"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Template">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Template">
+                                        <cpt:property id="useAsTemplate" hidden="ALL_TABLES"/>
+                                        <cpt:action id="addAsTemplate"/>
+                                        <cpt:action id="removeAsTemplate"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>

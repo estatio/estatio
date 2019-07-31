@@ -2466,15 +2466,64 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final IncomingInvoiceTemplateViewModel template,
             final LocalDate dateReceived,
             final LocalDate invoiceDate,
+            final LocalDate dueDate,
             final String invoiceNumber,
             final @Nullable BudgetItem budgetItem,
-            final @Nullable Charge charge,
             final String period) {
+        final IncomingInvoice templateInvoice = template.getIncomingInvoice();
+
+        setSeller(supplier);
+        setDateReceived(dateReceived);
+        setInvoiceDate(invoiceDate);
+        setDueDate(dueDate);
+        setInvoiceNumber(invoiceNumber);
+
+        setProperty(templateInvoice.getProperty());
+        setNetAmount(templateInvoice.getNetAmount());
+        setGrossAmount(templateInvoice.getGrossAmount());
+
+
+        // should not happen, but let's guard to be safe
+        if (!templateInvoice.getItems().isEmpty()) {
+            final IncomingInvoiceItem templateItem = (IncomingInvoiceItem) templateInvoice.getItems().first();
+            addItemInternal(
+                    templateItem.getIncomingInvoiceType(),
+                    templateItem.getCharge(),
+                    templateItem.getDescription(),
+                    templateItem.getNetAmount(),
+                    templateItem.getVatAmount(),
+                    templateItem.getGrossAmount(),
+                    templateItem.getTax(),
+                    dueDate,
+                    period,
+                    templateItem.getFixedAsset(),
+                    templateItem.getProject(),
+                    budgetItem);
+        }
+
         return this;
+    }
+
+    public String validateCompleteUsingTemplate(
+            final Party supplier,
+            final IncomingInvoiceTemplateViewModel template,
+            final LocalDate dateReceived,
+            final LocalDate invoiceDate,
+            final String invoiceNumber,
+            final BudgetItem budgetItem,
+            final String period) {
+        if (budgetItem == null && template.getType() == IncomingInvoiceType.SERVICE_CHARGES)
+            return "Budget item is required for orders of type Service Charges";
+
+        return PeriodUtil.reasonInvalidPeriod(period);
     }
 
     public Party default0CompleteUsingTemplate() {
         return getSeller();
+    }
+
+    public List<Party> autoComplete0CompleteUsingTemplate(final @MinLength(3) String search) {
+        return partyRepository.autoCompleteSupplier(search, getAtPath());
     }
 
     public List<IncomingInvoiceTemplateViewModel> choices1CompleteUsingTemplate(final Party supplier) {
@@ -2482,6 +2531,27 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .stream()
                 .map(IncomingInvoiceTemplateViewModel::new)
                 .collect(Collectors.toList());
+    }
+
+    public LocalDate default2CompleteUsingTemplate() {
+        return getDateReceived() == null ? dateReceivedDerivedFromDocument() : getDateReceived();
+    }
+
+    public LocalDate default3CompleteUsingTemplate() {
+        return getInvoiceDate();
+    }
+
+    public LocalDate default4CompleteUsingTemplate() {
+        return getDueDate() == null && getInvoiceDate() != null ? getInvoiceDate().plusMonths(1) : getDueDate();
+    }
+
+    public List<BudgetItem> choices6CompleteUsingTemplate(
+            final Party supplier,
+            final IncomingInvoiceTemplateViewModel template,
+            final LocalDate dateReceived,
+            final LocalDate invoiceDate,
+            final String invoiceNumber) {
+        return budgetItemChooser.choicesBudgetItemFor(getProperty(), template.getCharge());
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)

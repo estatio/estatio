@@ -4,10 +4,13 @@ import java.math.BigDecimal;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.party.dom.Party;
 
 import lombok.AllArgsConstructor;
@@ -26,6 +29,8 @@ public class IncomingInvoiceTemplateViewModel {
         this.supplier = incomingInvoice.getSeller();
         this.type = incomingInvoice.getType();
         this.netAmount = incomingInvoice.getNetAmount();
+        this.incomingInvoice = incomingInvoice;
+        this.charge = incomingInvoice.getItems().isEmpty() ? null : incomingInvoice.getItems().first().getCharge();
     }
 
     public String title() {
@@ -60,6 +65,14 @@ public class IncomingInvoiceTemplateViewModel {
 
     @Getter @Setter
     private BigDecimal netAmount;
+
+    @PropertyLayout(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private IncomingInvoice incomingInvoice;
+
+    @PropertyLayout(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private Charge charge;
 
 
 }
