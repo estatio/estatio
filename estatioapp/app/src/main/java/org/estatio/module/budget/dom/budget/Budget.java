@@ -33,6 +33,8 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import com.google.common.collect.Lists;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -187,7 +189,12 @@ public class Budget extends UdoDomainObject2<Budget>
     @ActionLayout(contributed = Contributed.AS_ACTION)
     @MemberOrder(name = "partitionings", sequence = "1")
     public Budget newPartitioning(){
-        partitioningRepository.newPartitioning(this, getStartDate(), getEndDate(), BudgetCalculationType.AUDITED);
+        Partitioning partitioning = partitioningRepository.newPartitioning(this, getStartDate(), getEndDate(), BudgetCalculationType.AUDITED);
+        if (getPartitioningForBudgeting()!=null){
+            Lists.newArrayList(getPartitioningForBudgeting().getItems()).forEach(i->{
+                partitioning.copyItemFrom(i);
+            });
+        }
         return this;
     }
 

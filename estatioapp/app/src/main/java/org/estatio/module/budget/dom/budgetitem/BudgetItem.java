@@ -280,6 +280,11 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
         return null;
     }
 
+    @Programmatic
+    public List<PartitionItem> getPartitionItemsForType(final BudgetCalculationType type) {
+        return getPartitionItems().stream().filter(x->x.getPartitioning().getType() == type).collect(Collectors.toList());
+    }
+
     @Inject
     private PartitionItemRepository partitionItemRepository;
 
@@ -294,5 +299,4 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
 
     @Inject
     BudgetCalculationRepository budgetCalculationRepository;
-
 }

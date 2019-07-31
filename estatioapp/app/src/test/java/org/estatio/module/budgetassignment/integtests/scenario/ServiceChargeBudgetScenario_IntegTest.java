@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Lists;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,6 +26,7 @@ import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
 import org.estatio.module.budgetassignment.contributions.Budget_Calculate;
+import org.estatio.module.budgetassignment.contributions.Budget_Reconcile;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
@@ -112,7 +115,8 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
         when_not_final_and_calculating_again();
         finalCalculation_budgeted();
 //            assignBudgetWhenUpdated();
-//            assignBudgetWhenAudited();
+            calculate_audited();
+            finalCalculation_audited();
 //            assignBudgetWhenAuditedAndUpdated();
     }
 
@@ -246,10 +250,77 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
 
     public void assignBudgetWhenUpdated() throws Exception {
 
+
+
     }
 
-    public void assignBudgetWhenAudited() throws Exception {
+    public void calculate_audited() throws Exception {
 
+        // given
+        wrap(mixin(Budget_Reconcile.class, budget)).reconcile(false);
+        calculations = budgetCalculationRepository.findByBudget(budget);
+        assertThat(calculations).hasSize(33);
+
+        // when creating partitioning of type audited
+        budget.newPartitioning();
+        wrap(mixin(Budget_Reconcile.class, budget)).reconcile(false);
+        calculations = budgetCalculationRepository.findByBudget(budget);
+
+        // then still
+        assertThat(calculations).hasSize(33);
+
+        // when adding audited values to budget items
+        Lists.newArrayList(budget.getItems()).forEach(i->{
+            i.newValue(i.getBudgetedValue(), budget.getStartDate(), BudgetCalculationType.AUDITED);
+        });
+        wrap(mixin(Budget_Reconcile.class, budget)).reconcile(false);
+        calculations = budgetCalculationRepository.findByBudget(budget);
+
+        // then
+        assertThat(calculations.size()).isEqualTo(66);
+        final List<BudgetCalculation> budgetedCalculations = calculations.stream().filter(c -> c.getCalculationType() == BudgetCalculationType.BUDGETED).collect(Collectors.toList());
+        assertThat(budgetedCalculations).hasSize(33); // still
+        assertThat(budgetedCalculations.stream().filter(c->c.getStatus()==Status.ASSIGNED).collect(Collectors.toList())).hasSize(28); // still
+        assertThat(budgetedCalculations.stream().filter(c->c.getStatus()==Status.NEW).collect(Collectors.toList())).hasSize(5); // still
+
+        final List<BudgetCalculation> auditedCalculations = calculations.stream().filter(c -> c.getCalculationType() == BudgetCalculationType.AUDITED).collect(Collectors.toList());
+        assertThat(auditedCalculations).hasSize(33);
+        auditedCalculations.forEach(c->{
+            assertThat(c.getStatus()==Status.NEW);
+        });
+
+
+    }
+
+    public void finalCalculation_audited() throws Exception {
+
+        // when
+        wrap(mixin(Budget_Reconcile.class, budget)).reconcile(true);
+        transactionService.nextTransaction(); // done for rounding to be applied
+
+        // then
+        final List<BudgetCalculation> assignedAuditedCalculations = budgetCalculationRepository.findByBudgetAndTypeAndStatus(budget, BudgetCalculationType.AUDITED, Status.ASSIGNED);
+        assertThat(assignedAuditedCalculations).hasSize(28);
+
+        final List<BudgetCalculation> newAuditedCalculations = budgetCalculationRepository.findByBudgetAndTypeAndStatus(budget, BudgetCalculationType.AUDITED, Status.NEW);
+        assertThat(newAuditedCalculations).hasSize(5);
+
+        final List<BudgetCalculationResult> allResults = budgetCalculationResultRepository.findByBudget(budget);
+        final List<BudgetCalculationResult> budgetedResults = allResults.stream().filter(r->r.getType()==BudgetCalculationType.BUDGETED).collect(Collectors.toList());
+        assertThat(budgetedResults).hasSize(14); // still
+        final List<BudgetCalculationResult> auditedResults = allResults.stream().filter(r->r.getType()==BudgetCalculationType.AUDITED).collect(Collectors.toList());
+        assertThat(auditedResults).hasSize(14);
+
+        // sample check of one lease
+        LeaseItem item1 = leasePoison.findFirstItemOfTypeAndCharge(LeaseItemType.SERVICE_CHARGE, invoiceCharge1);
+        LeaseTermForServiceCharge term1 = (LeaseTermForServiceCharge) item1.getTerms().first();
+        LeaseItem item2 = leasePoison.findFirstItemOfTypeAndCharge(LeaseItemType.SERVICE_CHARGE, invoiceCharge2);
+        LeaseTermForServiceCharge term2 = (LeaseTermForServiceCharge) item2.getTerms().first();
+
+        assertThat(term1.getBudgetedValue()).isEqualTo(U1_BVAL_1);
+        assertThat(term1.getAuditedValue()).isEqualTo(U1_BVAL_1.subtract(BigDecimal.valueOf(357.14))); // because partition on budget item 1 has fixed budgeted amount, but no fixed audited amount
+        assertThat(term2.getBudgetedValue()).isEqualTo(U1_BVAL_2);
+        assertThat(term2.getAuditedValue()).isEqualTo(U1_BVAL_2);
     }
 
     public void assignBudgetWhenAuditedAndUpdated() throws Exception {

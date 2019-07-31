@@ -20,6 +20,7 @@
                 <ns2:property id="keyTable">
                     <ns2:action id="changeKeyTable" position="BELOW"/>
                 </ns2:property>
+                <ns2:property id="type"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Charge" id="charge">
                 <ns2:property id="charge"/>

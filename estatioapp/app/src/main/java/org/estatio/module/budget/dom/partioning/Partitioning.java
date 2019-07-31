@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -151,6 +152,11 @@ public class Partitioning extends UdoDomainObject2<Partitioning>
         return numberOfDaysInInterval.divide(numberOfDaysInYear, MathContext.DECIMAL64);
     }
 
+    @Programmatic
+    public PartitionItem copyItemFrom(final PartitionItem source) {
+        return partitionItemRepository.findOrCreatePartitionItem(this, source.getBudgetItem(), source.getCharge(), source.getPartitioningTable(), source.getPercentage(),source.getFixedBudgetedAmount(), source.getFixedAuditedAmount());
+    }
+
     @Override public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
@@ -162,6 +168,9 @@ public class Partitioning extends UdoDomainObject2<Partitioning>
     @Override public boolean isCurrent() {
         return isActiveOn(getClockService().now());
     }
+
+    @Inject
+    PartitionItemRepository partitionItemRepository;
 
     private boolean isActiveOn(final LocalDate date) {
         return getInterval().contains(date);

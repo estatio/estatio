@@ -159,6 +159,11 @@ public class PartitionItem extends UdoDomainObject2<PartitionItem> implements Wi
         return getBudgetItem().isAssignedForTypeReason(type);
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    public BudgetCalculationType getType(){
+        return getPartitioning().getType();
+    }
+
     @Persistent(mappedBy = "partitionItem", dependentElement = "true")
     @Getter @Setter
     private SortedSet<BudgetCalculation> calculations = new TreeSet<>();

@@ -1,5 +1,7 @@
 package org.estatio.module.budgetassignment.contributions;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
@@ -13,6 +15,7 @@ import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.Status;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.service.BudgetAssignmentService;
 
 /**
@@ -33,8 +36,11 @@ public class Budget_Reconcile {
             @ParameterLayout(describedAs = "Final calculation will make the calculations permanent and impact the leases")
             final boolean finalCalculation) {
             budgetCalculationService.calculate(budget, BudgetCalculationType.AUDITED);
-        // TODO: implement
-            budget.setStatus(Status.RECONCILED);
+            if (finalCalculation){
+                List<BudgetCalculationResult> results = budgetAssignmentService.calculateResults(budget, BudgetCalculationType.AUDITED);
+                budgetAssignmentService.assignNonAssignedCalculationResultsToLeases(results);
+                budget.setStatus(Status.RECONCILED);
+            }
         return budget;
     }
 

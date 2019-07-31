@@ -19,10 +19,10 @@ public class BudgetCalculationService {
 
     public List<BudgetCalculation> calculate(final Budget budget, final BudgetCalculationType type) {
 
-        removeNewCalculationsOfType(budget, BudgetCalculationType.BUDGETED);
+        removeNewCalculationsOfType(budget, type);
 
         List<BudgetCalculation> budgetCalculations = new ArrayList<>();
-        for (BudgetCalculationViewmodel result : getBudgetedCalculations(budget)){
+        for (BudgetCalculationViewmodel result : getCalculationsForType(budget, type)){
             budgetCalculations.add(
                     budgetCalculationRepository.findOrCreateBudgetCalculation(
                     result.getPartitionItem(),
@@ -40,21 +40,11 @@ public class BudgetCalculationService {
         );
     }
 
-    public List<BudgetCalculationViewmodel> getBudgetedCalculations(final Budget budget){
+    public List<BudgetCalculationViewmodel> getCalculationsForType(final Budget budget, final BudgetCalculationType type){
         List<BudgetCalculationViewmodel> budgetCalculationViewmodels = new ArrayList<>();
         for (BudgetItem budgetItem : budget.getItems()) {
 
-            budgetCalculationViewmodels.addAll(calculate(budgetItem, BudgetCalculationType.BUDGETED));
-
-        }
-        return budgetCalculationViewmodels;
-    }
-
-    public List<BudgetCalculationViewmodel> getAuditedCalculations(final Budget budget){
-        List<BudgetCalculationViewmodel> budgetCalculationViewmodels = new ArrayList<>();
-        for (BudgetItem budgetItem : budget.getItems()) {
-
-            budgetCalculationViewmodels.addAll(calculate(budgetItem, BudgetCalculationType.AUDITED));
+            budgetCalculationViewmodels.addAll(calculate(budgetItem, type));
 
         }
         return budgetCalculationViewmodels;
@@ -74,7 +64,7 @@ public class BudgetCalculationService {
     private List<BudgetCalculationViewmodel> calculate(final BudgetItem budgetItem, final BudgetCalculationType type) {
 
         List<BudgetCalculationViewmodel> result = new ArrayList<>();
-        for (PartitionItem partitionItem : budgetItem.getPartitionItems()) {
+        for (PartitionItem partitionItem : budgetItem.getPartitionItemsForType(type)) {
 
             result.addAll(calculate(partitionItem, type));
 

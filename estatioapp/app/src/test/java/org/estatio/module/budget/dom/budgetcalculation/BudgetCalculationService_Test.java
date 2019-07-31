@@ -64,7 +64,7 @@ public class BudgetCalculationService_Test {
                     return null;
                 }
                 @Override
-                public List<PartitionItem> getPartitionItems(){
+                public List<PartitionItem> getPartitionItemsForType(final BudgetCalculationType type){
                     return Arrays.asList(partitionItem);
                 }
             };
