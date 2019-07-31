@@ -38,6 +38,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.module.asset.dom.Unit;
+import org.estatio.module.budget.dom.budget.Status;
 import org.estatio.module.budget.dom.keytable.DirectCostTable;
 
 import lombok.Getter;
@@ -93,6 +94,7 @@ public class DirectCost extends PartitioningTableItem {
             return BigDecimal.ZERO;
         }
     }
+
     public String validateChangeBudgetedCost(final BigDecimal budgetedCost) {
         if (budgetedCost.compareTo(BigDecimal.ZERO) < 0) {
             return "Value cannot be less than zero";
@@ -100,11 +102,16 @@ public class DirectCost extends PartitioningTableItem {
         return null;
     }
 
+    public String disableChangeBudgetedCost(){
+        if (getPartitioningTable().getBudget().getStatus() != Status.NEW) return "The budget status is not new";
+        return null;
+    }
+
     @Column(allowsNull = "true", scale = 2)
     @Getter @Setter
     private BigDecimal auditedCost;
 
-    @ActionLayout(hidden = Where.EVERYWHERE)
+    @ActionLayout()
     public DirectCost changeAuditedCost(final BigDecimal auditedCost) {
         setAuditedCost(auditedCost);
         return this;
@@ -113,10 +120,16 @@ public class DirectCost extends PartitioningTableItem {
     public BigDecimal default0ChangeAuditedCost() {
         return getAuditedCost();
     }
+
     public String validateChangeAuditedCost(final BigDecimal auditedCost) {
         if (auditedCost!=null && auditedCost.compareTo(BigDecimal.ZERO) < 0) {
             return "Value cannot be less than zero";
         }
+        return null;
+    }
+
+    public String disableChangeAuditedCost(){
+        if (getPartitioningTable().getBudget().getStatus()==Status.RECONCILED) return "The budget is reconciled";
         return null;
     }
 
