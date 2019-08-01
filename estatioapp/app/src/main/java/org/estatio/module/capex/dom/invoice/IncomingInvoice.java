@@ -599,7 +599,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(named = "Complete Invoice Item", promptStyle = PromptStyle.DIALOG_SIDEBAR)
     public IncomingInvoice completeInvoiceItem(
-            final OrderItem orderItem,
+            final @Nullable OrderItem orderItem,
             final String description,
             final BigDecimal netAmount,
             final Tax tax,
@@ -657,6 +657,26 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         this.setGrossAmount(grossAmount);
 
         return this;
+    }
+
+    public String validateCompleteInvoiceItem(
+            final OrderItem orderItem,
+            final String description,
+            final BigDecimal netAmount,
+            final Tax tax,
+            final BigDecimal vatAmount,
+            final BigDecimal grossAmount,
+            final Charge charge,
+            final Project project,
+            final BudgetItem budgetItem,
+            final String period) {
+        if (project != null && getType() != IncomingInvoiceType.CAPEX)
+            return "Project can only be added to orders of type CAPEX";
+
+        if (budgetItem == null && getType() == IncomingInvoiceType.SERVICE_CHARGES)
+            return "Budget item is required for orders of type Service Charges";
+
+        return period != null ? PeriodUtil.reasonInvalidPeriod(period) : null;
     }
 
     public String disableCompleteInvoiceItem() {
