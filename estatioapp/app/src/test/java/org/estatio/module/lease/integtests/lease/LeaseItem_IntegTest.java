@@ -191,6 +191,26 @@ public class LeaseItem_IntegTest extends LeaseModuleIntegTestAbstract {
             assertThat(newLeaseItem.getEndDate()).isNull();
         }
 
+        @Test
+        public void when_start_date_on_original_start_date() throws Exception {
+
+            // given
+            LeaseItem leaseItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), LeaseAgreementRoleTypeEnum.LANDLORD);
+            final Charge charge = Charge_enum.GbServiceCharge.findUsing(serviceRegistry);
+
+            // expect
+            expectedExceptions.expect(InvalidException.class);
+            expectedExceptions.expectMessage("The start date of the copy should be after the start date of the current item");
+
+            // when
+            final LocalDate startDate = VT.ld(2010, 7, 15);
+            wrap(leaseItem).copy(startDate, InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT, charge);
+
+            // then
+            assertThat(leaseItem.getEndDate().isBefore(leaseItem.getStartDate())).isFalse();
+
+        }
+
     }
 
     public static class ChangeCharge extends LeaseItem_IntegTest {

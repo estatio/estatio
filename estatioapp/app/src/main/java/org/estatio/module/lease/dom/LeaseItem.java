@@ -402,6 +402,7 @@ public class LeaseItem
             final PaymentMethod paymentMethod,
             final Charge charge
     ) {
+        if (!startDate.isAfter(this.getStartDate())) return null; //EST-1899: extra safeguard because corrupts db
         final LeaseItem newItem = getLease().newItem(
                 this.getType(), LeaseAgreementRoleTypeEnum.LANDLORD, charge, invoicingFrequency, paymentMethod, startDate);
         this.copyTerms(startDate, newItem);
@@ -435,6 +436,7 @@ public class LeaseItem
             final PaymentMethod paymentMethod,
             final Charge charge
     ) {
+        if (!startDate.isAfter(this.getStartDate())) return "The start date of the copy should be after the start date of the current item";
         if (!choices3Copy().contains(charge)) {
             return "Charge (with app tenancy '%s') is not valid for this lease item";
         }
