@@ -80,6 +80,10 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
         return this;
     }
 
+    public boolean hideCollectAll(){
+        return !getAtPath().startsWith("/ITA");
+    }
+
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Object invoiceAll(final LocalDate invoiceDate) {
         for (Invoice invoice : getInvoices()) {

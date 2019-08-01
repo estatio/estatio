@@ -394,8 +394,8 @@ public class InvoiceForLease
         }
 
         public boolean hide$$() {
-            // only applies to direct debits
-            return !invoice.getPaymentMethod().isDirectDebit();
+            // only applies to Italian direct debits
+            return !invoice.getPaymentMethod().isDirectDebit() || !invoice.getAtPath().startsWith("/ITA");
         }
 
         public String disable$$() {
