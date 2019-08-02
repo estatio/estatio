@@ -85,7 +85,7 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public Object invoiceAll(final LocalDate invoiceDate) {
+    public Object invoiceAll(final LocalDate invoiceDate, final boolean allowInvoiceDateInFuture) {
         for (Invoice invoice : getInvoices()) {
             try {
                 wrap(mixin(InvoiceForLease._invoice.class, invoice)).$$(invoiceDate);
@@ -100,24 +100,10 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
         return this;
     }
 
-//    public String validate0InvoiceAll(final LocalDate invoiceDate) {
-//        for (Invoice invoice : getInvoices()) {
-//            try {
-//                final InvoiceForLease._invoice mixin = mixin(InvoiceForLease._invoice.class, invoice);
-//                wrapperFactory.wrapNoExecute(mixin).$$(invoiceDate);
-//            } catch (InvalidException ex) {
-//                final String reasonMessage =
-//                        ex.getInteractionEvent() != null
-//                                ? ex.getInteractionEvent().getReason()
-//                                : null;
-//                return titleService.titleOf(invoice) + ": " +
-//                        (reasonMessage != null ? reasonMessage : ex.getMessage());
-//            } catch (HiddenException | DisabledException ex) {
-//                // ignore
-//            }
-//        }
-//        return null;
-//    }
+    public String validateInvoiceAll(final LocalDate invoiceDate, final boolean allowInvoiceDateInFuture) {
+        if (invoiceDate.isAfter(clockService.now()) && !allowInvoiceDateInFuture) return "When you want to set the invoice date after today, please check the checkbox";
+        return null;
+    }
 
     /**
      * It doesn't harm to do this, but note that
