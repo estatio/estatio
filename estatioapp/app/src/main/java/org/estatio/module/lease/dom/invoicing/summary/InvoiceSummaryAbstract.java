@@ -101,7 +101,7 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
     }
 
     public String validateInvoiceAll(final LocalDate invoiceDate, final boolean allowInvoiceDateInFuture) {
-        if (invoiceDate.isAfter(clockService.now()) && !allowInvoiceDateInFuture) return "When you want to set the invoice date after today, please check the checkbox";
+        if (invoiceDate.isAfter(clockService.now()) && !allowInvoiceDateInFuture && !getAtPath().startsWith("/ITA")) return "When you want to set the invoice date after today, please check the checkbox";
         return null;
     }
 
