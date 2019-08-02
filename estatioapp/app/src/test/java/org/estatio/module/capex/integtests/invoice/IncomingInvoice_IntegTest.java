@@ -1,6 +1,7 @@
 package org.estatio.module.capex.integtests.invoice;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -16,6 +17,7 @@ import org.incode.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
+import org.estatio.module.capex.app.invoice.IncomingInvoiceTemplateViewModel;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;
@@ -34,6 +36,7 @@ import org.estatio.module.charge.fixtures.incoming.enums.IncomingCharge_enum;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
+import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
@@ -103,7 +106,7 @@ public class IncomingInvoice_IntegTest extends CapexModuleIntegTestAbstract {
 
         bankAccount = bankAccountRepository.findBankAccountByReference(seller, BankAccount_enum.TopModelFr.getIban());
 
-        incomingInvoice = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate("65432", seller, new LocalDate(2014,5,13));
+        incomingInvoice = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate("65432", seller, new LocalDate(2014, 5, 13));
         incomingInvoice.setBankAccount(bankAccount);
 
         assertThat(incomingInvoice).isNotNull();
@@ -117,18 +120,18 @@ public class IncomingInvoice_IntegTest extends CapexModuleIntegTestAbstract {
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
     }
 
-    private IncomingInvoiceItem firstItemIsReported(){
+    private IncomingInvoiceItem firstItemIsReported() {
         IncomingInvoiceItem reportedItem = (IncomingInvoiceItem) incomingInvoice.getItems().first();
         reportedItem.setReportedDate(LocalDate.now());
         return reportedItem;
     }
 
-    private void invoiceIsDiscarded(){
+    private void invoiceIsDiscarded() {
         mixin(IncomingInvoice_discard.class, incomingInvoice).act("some reason");
     }
 
     @Test
-    public void when_incoming_invoice_type_is_changed_reported_items_are_reversed(){
+    public void when_incoming_invoice_type_is_changed_reported_items_are_reversed() {
 
         // given
         incomingInvoiceSetup();
@@ -166,7 +169,83 @@ public class IncomingInvoice_IntegTest extends CapexModuleIntegTestAbstract {
         // then still
         assertThat(incomingInvoice.getItems().size()).isEqualTo(4);
         assertThat(incomingInvoice.getType()).isEqualTo(IncomingInvoiceType.PROPERTY_EXPENSES);
-        
+
+    }
+
+    @Test
+    public void complete_using_template() throws Exception {
+        // given
+        incomingInvoiceSetup();
+        incomingInvoice.setUseAsTemplate(Boolean.TRUE);
+
+        final IncomingInvoice newInvoice = incomingInvoiceRepository.create(
+                null,
+                null,
+                null,
+                "/FRA",
+                incomingInvoice.getBuyer(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                InvoiceStatus.NEW,
+                null,
+                null,
+                null,
+                false,
+                null);
+
+        // when
+        final List<IncomingInvoiceTemplateViewModel> templates = newInvoice.choices1CompleteUsingTemplate(incomingInvoice.getSeller());
+        assertThat(templates).hasSize(1);
+
+        IncomingInvoiceTemplateViewModel template = templates.get(0);
+        final LocalDate newDateReceived = LocalDate.parse("2019-01-01");
+        final LocalDate newInvoiceDate = LocalDate.parse("2019-01-01");
+        final LocalDate newDueDate = LocalDate.parse("2019-01-02");
+        newInvoice.completeUsingTemplate(
+                template.getSupplier(),
+                template,
+                newDateReceived,
+                newInvoiceDate,
+                newDueDate,
+                "New invoice number",
+                null,
+                "F2019");
+
+        final IncomingInvoiceItem invoiceItem = (IncomingInvoiceItem) incomingInvoice.getItems().first();
+        final IncomingInvoiceItem newItem = (IncomingInvoiceItem) newInvoice.getItems().first();
+
+        // then assert the same
+        assertThat(newInvoice.getType()).isEqualTo(incomingInvoice.getType());
+        assertThat(newInvoice.getSeller()).isEqualTo(incomingInvoice.getSeller());
+        assertThat(newInvoice.getBankAccount()).isEqualTo(incomingInvoice.getBankAccount());
+        assertThat(newInvoice.getPaymentMethod()).isEqualTo(incomingInvoice.getPaymentMethod());
+        assertThat(newInvoice.getProperty()).isEqualTo(incomingInvoice.getProperty());
+        assertThat(newInvoice.getNetAmount()).isEqualTo(incomingInvoice.getNetAmount());
+        assertThat(newInvoice.getGrossAmount()).isEqualTo(incomingInvoice.getGrossAmount());
+        assertThat(newInvoice.getCurrency()).isEqualTo(incomingInvoice.getCurrency());
+
+        assertThat(newItem.getDescription()).isEqualTo(invoiceItem.getDescription());
+        assertThat(newItem.getCharge()).isEqualTo(invoiceItem.getCharge());
+        assertThat(newItem.getNetAmount()).isEqualTo(invoiceItem.getNetAmount());
+        assertThat(newItem.getGrossAmount()).isEqualTo(invoiceItem.getGrossAmount());
+        assertThat(newItem.getVatAmount()).isEqualTo(invoiceItem.getVatAmount());
+        assertThat(newItem.getTax()).isEqualTo(invoiceItem.getTax());
+        assertThat(newItem.getFixedAsset()).isEqualTo(invoiceItem.getFixedAsset());
+
+        // and assert not the same
+        assertThat(newInvoice.getDateReceived()).isEqualTo(newDateReceived);
+        assertThat(newInvoice.getInvoiceDate()).isEqualTo(newInvoiceDate);
+        assertThat(newInvoice.getDueDate()).isEqualTo(newDueDate);
+        assertThat(newInvoice.getInvoiceNumber()).isEqualTo("New invoice number");
+
+        assertThat(newItem.getDueDate()).isEqualTo(newDueDate);
+        assertThat(newItem.getPeriod()).isEqualTo("F2019");
+        assertThat(newItem.getStartDate()).isEqualTo(LocalDate.parse("2018-07-01"));
+        assertThat(newItem.getEndDate()).isEqualTo(LocalDate.parse("2019-06-30"));
+        assertThat(newItem.getBudgetItem()).isEqualTo(null);
     }
 
     @Inject

@@ -2481,7 +2481,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         setProperty(templateInvoice.getProperty());
         setNetAmount(templateInvoice.getNetAmount());
         setGrossAmount(templateInvoice.getGrossAmount());
-
+        setBankAccount(templateInvoice.getBankAccount());
+        setPaymentMethod(templateInvoice.getPaymentMethod());
+        setType(templateInvoice.getType());
 
         // should not happen, but let's guard to be safe
         if (!templateInvoice.getItems().isEmpty()) {
@@ -2513,6 +2515,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final String invoiceNumber,
             final BudgetItem budgetItem,
             final String period) {
+        if (!supplier.getReference().equals(template.getIncomingInvoice().getSeller().getReference())) {
+            return "Supplier must be the same as on the template invoice";
+        }
+
         if (budgetItem == null && template.getType() == IncomingInvoiceType.SERVICE_CHARGES)
             return "Budget item is required for orders of type Service Charges";
 
