@@ -291,6 +291,11 @@ public class InvoiceForLease_Test {
                 @Override public ApplicationTenancy getApplicationTenancy() {
                     return applicationTenancy;
                 }
+
+                @Override
+                public String getAtPath() {
+                    return "/ITA/XXX";
+                }
             };
             invoice.setContainer(mockContainer);
             invoice.numeratorRepository = mockNumeratorForOutgoingInvoicesRepository;
