@@ -2515,6 +2515,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final String invoiceNumber,
             final BudgetItem budgetItem,
             final String period) {
+        if (template == null) {
+            return "Please select a template";
+        }
+
         if (!supplier.getReference().equals(template.getIncomingInvoice().getSeller().getReference())) {
             return "Supplier must be the same as on the template invoice";
         }
@@ -2559,7 +2563,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     public List<BudgetItem> choices6CompleteUsingTemplate(
             final Party supplier,
             final IncomingInvoiceTemplateViewModel template) {
-        return budgetItemChooser.choicesBudgetItemFor(getProperty(), template.getCharge());
+        return template != null ? budgetItemChooser.choicesBudgetItemFor(template.getProperty(), template.getCharge()) : Collections.emptyList();
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
