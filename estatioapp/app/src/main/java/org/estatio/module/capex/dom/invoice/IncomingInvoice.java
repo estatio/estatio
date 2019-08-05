@@ -2554,10 +2554,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     public List<BudgetItem> choices6CompleteUsingTemplate(
             final Party supplier,
-            final IncomingInvoiceTemplateViewModel template,
-            final LocalDate dateReceived,
-            final LocalDate invoiceDate,
-            final String invoiceNumber) {
+            final IncomingInvoiceTemplateViewModel template) {
         return budgetItemChooser.choicesBudgetItemFor(getProperty(), template.getCharge());
     }
 
