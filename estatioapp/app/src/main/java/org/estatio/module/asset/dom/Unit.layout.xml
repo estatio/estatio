@@ -23,6 +23,15 @@
                                         <ns2:property id="property"/>
                                         <ns2:property id="externalReference" promptStyle="INLINE"  hidden="ALL_TABLES"/>
                                     </ns2:fieldSet>
+                                    <ns2:fieldSet name="Dates" id="dates">
+                                        <ns2:property id="startDate"/>
+                                        <ns2:property id="endDate">
+                                            <ns2:action id="changeDates" position="BELOW"/>
+                                            <ns2:action id="resetDates" position="BELOW">
+                                                <ns2:named>Clear</ns2:named>
+                                            </ns2:action>
+                                        </ns2:property>
+                                    </ns2:fieldSet>
                                 </col>
                             </row>
                         </tab>
@@ -68,13 +77,6 @@
                 <col span="12">
                     <ns2:fieldSet name="Occupancy" id="occupancy">
                         <ns2:property id="occupiedBy"/>
-                        <ns2:property id="startDate"/>
-                        <ns2:property id="endDate">
-                            <ns2:action id="changeDates" position="BELOW"/>
-                            <ns2:action id="resetDates" position="BELOW">
-                                <ns2:named>Clear</ns2:named>
-                            </ns2:action>
-                        </ns2:property>
                     </ns2:fieldSet>
                 </col>
             </row>
