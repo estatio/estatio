@@ -1140,6 +1140,8 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         if (summaryLine != null) {
             if (summaryLine.getSupplierBankAccountValidationStatus() != ValidationStatus.NOT_CHECKED &&
                     otherSummaryLine.getSupplierBankAccountValidationStatus() != ValidationStatus.NOT_CHECKED &&
+                    other.getIncomingInvoice()!=null &&
+                    Arrays.asList(IncomingInvoiceApprovalState.PAYABLE, IncomingInvoiceApprovalState.PAID).contains(other.getIncomingInvoice().getApprovalState()) &&
                     !Objects.equals(summaryLine.getSupplierBankAccount(), otherSummaryLine.getSupplierBankAccount())) {
                 return Comparison.invalidatesApprovals("Line #%d (%s): %s",
                         summaryLine.getLineNum(), summaryLine.getLineType(), "Supplier bank account has changed");

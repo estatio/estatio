@@ -9,6 +9,8 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.financial.dom.BankAccount;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -109,13 +111,16 @@ public class CodaDocHead_compareWith_Test {
     }
 
     @Test
-    public void when_supplier_bank_account_differs() throws Exception {
+    public void when_supplier_bank_account_differs_and_incoming_invoice_in_state_of_payable_or_paid() throws Exception {
 
         // given
         summaryDocLine.setSupplierBankAccount(new BankAccount());
         summaryDocLine.setSupplierBankAccountValidationStatus(ValidationStatus.VALID);
         existingSummaryDocLine.setSupplierBankAccount(new BankAccount());
         existingSummaryDocLine.setSupplierBankAccountValidationStatus(ValidationStatus.VALID);
+        IncomingInvoice incomingInvoice = new IncomingInvoice();
+        incomingInvoice.setApprovalState(IncomingInvoiceApprovalState.PAYABLE);
+        existing.setIncomingInvoice(incomingInvoice);
 
         // when
         CodaDocHead.Comparison comparison = codaDocHead.compareWith(existing);
@@ -123,6 +128,19 @@ public class CodaDocHead_compareWith_Test {
         // then
         assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_INVALIDATING_APPROVALS);
         assertThat(comparison.getReason()).isEqualTo("Line #1 (SUMMARY): Supplier bank account has changed");
+
+        // and when
+        incomingInvoice.setApprovalState(IncomingInvoiceApprovalState.PAID);
+        comparison = codaDocHead.compareWith(existing);
+        // then also
+        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_INVALIDATING_APPROVALS);
+        assertThat(comparison.getReason()).isEqualTo("Line #1 (SUMMARY): Supplier bank account has changed");
+
+        // but when
+        incomingInvoice.setApprovalState(IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK); // last state before payable
+        comparison = codaDocHead.compareWith(existing);
+        // then
+        assertThat(comparison.getType()).isEqualTo(CodaDocHead.Comparison.Type.DIFFERS_RETAIN_APPROVALS);
     }
 
     @Test
