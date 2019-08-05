@@ -2525,6 +2525,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return PeriodUtil.reasonInvalidPeriod(period);
     }
 
+    public String disableCompleteUsingTemplate() {
+        return reasonDisabledDueToState(this);
+    }
+
     public Party default0CompleteUsingTemplate() {
         return getSeller();
     }
