@@ -1140,8 +1140,11 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         if (summaryLine != null) {
             if (summaryLine.getSupplierBankAccountValidationStatus() != ValidationStatus.NOT_CHECKED &&
                     otherSummaryLine.getSupplierBankAccountValidationStatus() != ValidationStatus.NOT_CHECKED &&
+                    // ECP-979: because payable invoices cannot be rejected (and paid invoice codadocheasd / lines are not evaluated anymore) this code in fact disables
+                    // every check on a different IBAN on the summary line
                     other.getIncomingInvoice()!=null &&
                     Arrays.asList(IncomingInvoiceApprovalState.PAYABLE, IncomingInvoiceApprovalState.PAID).contains(other.getIncomingInvoice().getApprovalState()) &&
+                    // end ECP-979
                     !Objects.equals(summaryLine.getSupplierBankAccount(), otherSummaryLine.getSupplierBankAccount())) {
                 return Comparison.invalidatesApprovals("Line #%d (%s): %s",
                         summaryLine.getLineNum(), summaryLine.getLineType(), "Supplier bank account has changed");
