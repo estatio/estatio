@@ -82,6 +82,7 @@
                             <cpt:action id="retrieveCodaDoc"/>
                             <cpt:action id="syncAllSuppliers"/>
                             <cpt:action id="syncAllCurrentCodaDocs"/>
+                            <cpt:action id="syncAllFrenchAndBelgianSuppliersToCoda"/>
                             <cpt:action id="reinitPublisherService"/>
                         </bs3:col>
                     </bs3:row>

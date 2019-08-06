@@ -36,8 +36,10 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.config.ConfigurationProperty;
 import org.apache.isis.applib.services.config.ConfigurationService;
 import org.apache.isis.applib.services.email.EmailService;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.apache.isis.applib.value.Markup;
 import org.apache.isis.core.metamodel.services.configinternal.ConfigurationServiceInternal;
 import org.apache.isis.core.metamodel.specloader.ServiceInitializer;
@@ -48,6 +50,10 @@ import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
 import org.incode.module.slack.impl.SlackService;
 
+import org.estatio.module.application.contributions.Organisation_syncToCoda;
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.coda.EstatioCodaModule;
 import org.estatio.module.coda.dom.hwm.CodaHwm;
 import org.estatio.module.coda.dom.hwm.CodaHwmRepository;
@@ -224,6 +230,24 @@ public class AdminDashboard {
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public AdminDashboard syncAllSuppliers() {
+        return this;
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public AdminDashboard syncAllFrenchAndBelgianSuppliersToCoda() {
+        final List<IncomingInvoice> invoicesToSync = incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(IncomingInvoiceRepository.AT_PATHS_FRA_OFFICE, IncomingInvoiceApprovalState.COMPLETED);
+        invoicesToSync.addAll(incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(IncomingInvoiceRepository.AT_PATHS_FRA_OFFICE, IncomingInvoiceApprovalState.APPROVED));
+        invoicesToSync.addAll(incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(IncomingInvoiceRepository.AT_PATHS_FRA_OFFICE, IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR));
+        invoicesToSync.addAll(incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(IncomingInvoiceRepository.AT_PATHS_FRA_OFFICE, IncomingInvoiceApprovalState.APPROVED_BY_CORPORATE_MANAGER));
+        invoicesToSync.addAll(incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(IncomingInvoiceRepository.AT_PATHS_FRA_OFFICE, IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK));
+        invoicesToSync.addAll(incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(IncomingInvoiceRepository.AT_PATHS_FRA_OFFICE, IncomingInvoiceApprovalState.PAYABLE));
+        invoicesToSync.addAll(incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(IncomingInvoiceRepository.AT_PATHS_FRA_OFFICE, IncomingInvoiceApprovalState.PAID));
+
+        invoicesToSync.stream()
+                .map(IncomingInvoice::getSeller)
+                .distinct()
+                .forEach(organisation -> wrapperFactory.wrap(factoryService.mixin(Organisation_syncToCoda.class, organisation)).act());
+
         return this;
     }
 
@@ -523,5 +547,17 @@ public class AdminDashboard {
     @Inject
     @XmlTransient
     MessageService messageService;
+
+    @Inject
+    @XmlTransient
+    IncomingInvoiceRepository incomingInvoiceRepository;
+
+    @Inject
+    @XmlTransient
+    WrapperFactory wrapperFactory;
+
+    @Inject
+    @XmlTransient
+    FactoryService factoryService;
 
 }
