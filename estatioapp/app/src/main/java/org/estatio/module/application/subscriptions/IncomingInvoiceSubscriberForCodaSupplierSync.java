@@ -2,6 +2,8 @@ package org.estatio.module.application.subscriptions;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
@@ -11,6 +13,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_complete;
 import org.estatio.module.party.dom.Organisation;
 
+@DomainService(nature = NatureOfService.DOMAIN)
 public class IncomingInvoiceSubscriberForCodaSupplierSync {
 
     @Programmatic
