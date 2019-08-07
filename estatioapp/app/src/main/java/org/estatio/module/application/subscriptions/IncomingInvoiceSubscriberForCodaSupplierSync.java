@@ -2,6 +2,7 @@ package org.estatio.module.application.subscriptions;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -14,7 +15,7 @@ import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_co
 import org.estatio.module.party.dom.Organisation;
 
 @DomainService(nature = NatureOfService.DOMAIN)
-public class IncomingInvoiceSubscriberForCodaSupplierSync {
+public class IncomingInvoiceSubscriberForCodaSupplierSync extends AbstractSubscriber {
 
     @Programmatic
     @com.google.common.eventbus.Subscribe
