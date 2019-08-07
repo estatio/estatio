@@ -21,17 +21,17 @@ public class IncomingInvoiceSubscriberForCodaSupplierSync extends AbstractSubscr
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void on(IncomingInvoice_complete.ActionDomainEvent ev) {
-        switch (ev.getEventPhase()) {
-            case HIDE:
-            case DISABLE:
-            case VALIDATE:
-            case EXECUTING:
-                break;
-            case EXECUTED:
-                final IncomingInvoice incomingInvoice = (IncomingInvoice) ev.getSubject();
-                final Organisation organisation = (Organisation) incomingInvoice.getSeller();
+        final IncomingInvoice incomingInvoice = (IncomingInvoice) ev.getMixedIn();
+        final Organisation organisation = (Organisation) incomingInvoice.getSeller();
 
-                wrapperFactory.wrap(factoryService.mixin(Organisation_syncToCoda.class, organisation)).act();
+        switch (ev.getEventPhase()) {
+            case EXECUTED:
+                final Organisation_syncToCoda mixin = factoryService.mixin(Organisation_syncToCoda.class, organisation);
+                if (!mixin.hideAct()) {
+                    wrapperFactory.wrap(mixin).act();
+                }
+                break;
+            default:
                 break;
         }
 
