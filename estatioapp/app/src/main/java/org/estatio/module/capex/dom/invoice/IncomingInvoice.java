@@ -2596,7 +2596,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return !getUseAsTemplate();
     }
 
-    @Column(allowsNull = "false", defaultValue = "false")
+    @Column(allowsNull = "false")
     @Getter @Setter
     private Boolean useAsTemplate;
 

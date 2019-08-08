@@ -6,12 +6,14 @@ import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.estatio.module.application.contributions.Organisation_syncToCoda;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_complete;
+import org.estatio.module.capex.dom.invoice.approval.triggers.Task_completeIncomingInvoice;
 import org.estatio.module.party.dom.Organisation;
 
 @DomainService(nature = NatureOfService.DOMAIN)
@@ -21,20 +23,30 @@ public class IncomingInvoiceSubscriberForCodaSupplierSync extends AbstractSubscr
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void on(IncomingInvoice_complete.ActionDomainEvent ev) {
-        final IncomingInvoice incomingInvoice = (IncomingInvoice) ev.getMixedIn();
-        final Organisation organisation = (Organisation) incomingInvoice.getSeller();
+        if (ev.getEventPhase() == AbstractDomainEvent.Phase.EXECUTED) {
+            final IncomingInvoice incomingInvoice = (IncomingInvoice) ev.getMixedIn();
+            syncToCodaIfNecessary(incomingInvoice);
+        }
+    }
 
-        switch (ev.getEventPhase()) {
-            case EXECUTED:
-                final Organisation_syncToCoda mixin = factoryService.mixin(Organisation_syncToCoda.class, organisation);
-                if (!mixin.hideAct()) {
-                    wrapperFactory.wrap(mixin).act();
-                }
-                break;
-            default:
-                break;
+    @Programmatic
+    @com.google.common.eventbus.Subscribe
+    @org.axonframework.eventhandling.annotation.EventHandler
+    public void on(Task_completeIncomingInvoice.ActionDomainEvent ev) {
+        if (ev.getEventPhase() == AbstractDomainEvent.Phase.EXECUTED) {
+            final IncomingInvoice incomingInvoice = (IncomingInvoice) ev.getMixedIn();
+            syncToCodaIfNecessary(incomingInvoice);
         }
 
+    }
+
+    private void syncToCodaIfNecessary(final IncomingInvoice incomingInvoice) {
+        final Organisation organisation = (Organisation) incomingInvoice.getSeller();
+        final Organisation_syncToCoda mixin = factoryService.mixin(Organisation_syncToCoda.class, organisation);
+
+        if (!mixin.hideAct()) {
+            wrapperFactory.wrap(mixin).act();
+        }
     }
 
     @Inject
