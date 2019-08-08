@@ -108,13 +108,19 @@ public class ProlongationOption
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Lease prolong(){
-        getLease().setEndDate(getBreakDate().plus(JodaPeriodUtils.asPeriod(getProlongationPeriod())));
+        LocalDate newDate = getBreakDate().plus(JodaPeriodUtils.asPeriod(getProlongationPeriod()));
+        if(getProlongationPeriod().toLowerCase().contains("m") && getBreakDate().isEqual(getBreakDate().dayOfMonth().withMaximumValue())) {
+            newDate = newDate.dayOfMonth().withMaximumValue();
+        }
+        getLease().setEndDate(newDate);
         prolongationOptionRepository.newProlongationOption(getLease(), getProlongationPeriod(), getNotificationPeriod(), getDescription());
         return getLease();
     }
 
     public String disableProlong(){
-        return getLease().getTenancyEndDate()!=null ? "The tenancy end date must be empty in order to prolong" : null;
+        if(getLease().getTenancyEndDate()!= null) { return "The tenancy end date must be empty in order to prolong"; }
+        if(getProlongationPeriod() == null) { return "The prolongation period must have a value in order to prolong"; }
+        return null;
     }
 
     @Inject

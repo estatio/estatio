@@ -146,6 +146,24 @@ public class ProlongationOptionRepository_IntegTest extends LeaseModuleIntegTest
 
         }
 
+        @Test
+        public void prolong_sets_end_of_next_month_correctly() throws Exception {
+            // given
+            Lease lease = ProlongationOption_enum.OxfTopModel001.getLease_d().findUsing(serviceRegistry);
+            lease.setEndDate(new LocalDate(2022, 6, 30));
+            lease.setTenancyEndDate(null); // needed since EST-1804
+
+            ProlongationOption option1 = prolongationOptionRepository.findByLease(lease).get(0);
+            option1.setProlongationPeriod("1m");
+            option1.setBreakDate(new LocalDate(2022, 6, 30));
+
+            // when
+            wrap(option1).prolong();
+
+            // then
+            assertThat(lease.getEndDate()).isEqualTo(new LocalDate(2022, 7, 31));
+        }
+
 
     }
 
