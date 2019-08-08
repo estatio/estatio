@@ -2568,7 +2568,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public IncomingInvoice addAsTemplate() {
-        setUseAsTemplate(true);
+        setUseAsTemplate(Boolean.TRUE);
         return this;
     }
 
@@ -2583,20 +2583,20 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public boolean hideAddAsTemplate() {
-        return getUseAsTemplate();
+        return getUseAsTemplate() == Boolean.TRUE;
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public IncomingInvoice removeAsTemplate() {
-        setUseAsTemplate(false);
+        setUseAsTemplate(Boolean.FALSE);
         return this;
     }
 
     public boolean hideRemoveAsTemplate() {
-        return !getUseAsTemplate();
+        return getUseAsTemplate() == Boolean.FALSE || getUseAsTemplate() == null;
     }
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "true")
     @Getter @Setter
     private Boolean useAsTemplate;
 
