@@ -168,4 +168,31 @@ public class OrderRepository_Test {
         assertThat(skipsOneIncrement).isEqualTo("0004"); // but orders with the next two increments already exist
     }
 
+    @Test
+    public void generateNextOrderNumber_works_for_nonItalian() throws Exception {
+        // given
+        final Organisation buyerParty = new Organisation();
+        final String atPath = "/BEL";
+
+        OrderRepository orderRepository = new OrderRepository();
+        orderRepository.numeratorForOrdersRepository = mockNumeratorForOrdersRepository;
+
+        final Numerator numerator = new Numerator();
+        numerator.setLastIncrement(new BigInteger("0"));
+        numerator.setFormat("BE%05d");
+
+        // expecting
+        context.checking(new Expectations() {{
+            // first generate call
+            oneOf(mockNumeratorForOrdersRepository).findOrCreateNumerator(atPath, null, "%05d");
+            will(returnValue(numerator));
+        }});
+
+        // when
+        final String nextIncrementIsAvailable = orderRepository.generateNextOrderNumber(buyerParty, atPath);
+
+        // then
+        assertThat(nextIncrementIsAvailable).isEqualTo("BE00001");
+    }
+
 }

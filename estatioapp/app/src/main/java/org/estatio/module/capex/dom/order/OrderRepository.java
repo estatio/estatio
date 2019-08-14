@@ -175,7 +175,7 @@ public class OrderRepository {
         order.setBuyerOrderNumber(new BigInteger(nextOrderNumber));
         order.addItem(charge, description, netAmount, null, null, tax, orderDate == null ? null : String.valueOf(orderDate.getYear()), property, project, null);
 
-        if(atPath.startsWith("/ITA")) {
+        if (atPath.startsWith("/ITA")) {
             orderAttributeRepository.initializeAttributes(order);
         }
 
@@ -223,13 +223,16 @@ public class OrderRepository {
     }
 
     String generateNextOrderNumber(final Organisation buyer, final String atPath) {
-        final String format = atPath.startsWith("/ITA") ? "%04d" : "%05d";
-        final Organisation buyerToUse = atPath.startsWith("/ITA") ? buyer : null;
+        final boolean isItalian = atPath.startsWith("/ITA");
+
+        final String format = isItalian ? "%04d" : "%05d";
+        final Organisation buyerToUse = isItalian ? buyer : null;
         final Numerator numerator = numeratorForOrdersRepository.findOrCreateNumerator(atPath, buyerToUse, format);
 
         // due to change of buyer on orders issued before the demerger, we need to safeguard that the numerator of the new buyer will not increment to an existing value. See ECP-1064
         String nextIncrement = numerator.nextIncrementStr();
-        while (!findByBuyerAndBuyerOrderNumber(buyer, new BigInteger(nextIncrement)).isEmpty()) {
+
+        while (isItalian && !findByBuyerAndBuyerOrderNumber(buyer, new BigInteger(nextIncrement)).isEmpty()) {
             nextIncrement = numerator.nextIncrementStr();
         }
 
@@ -242,8 +245,8 @@ public class OrderRepository {
             final String multiPropertyReference,
             final Project project,
             final Charge charge) {
-        final String projectNumber = project!=null ? project.getReference().replaceAll("[^0-9.]", "") : "";
-        final String chargeNumber = charge!=null ? charge.getReference().replaceAll("[^0-9.]", "") : "";
+        final String projectNumber = project != null ? project.getReference().replaceAll("[^0-9.]", "") : "";
+        final String chargeNumber = charge != null ? charge.getReference().replaceAll("[^0-9.]", "") : "";
         return String.format("%s/%s/%s/%s", nextIncrement, property != null ? property.getReference() : multiPropertyReference, projectNumber, chargeNumber);
     }
 
