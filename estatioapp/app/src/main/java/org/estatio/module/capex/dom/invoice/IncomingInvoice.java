@@ -2515,6 +2515,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     //region > template
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    @ActionLayout(promptStyle = PromptStyle.DIALOG_SIDEBAR)
     public IncomingInvoice completeUsingTemplate(
             final Party supplier,
             final IncomingInvoiceTemplateViewModel template,
