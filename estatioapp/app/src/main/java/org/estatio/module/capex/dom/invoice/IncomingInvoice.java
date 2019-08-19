@@ -586,8 +586,26 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return getInvoiceDate();
     }
 
-    public LocalDate default13CompleteInvoice() {
-        return getDueDate() == null && getInvoiceDate() != null ? getInvoiceDate().plusMonths(1) : getDueDate();
+    public LocalDate default13CompleteInvoice(
+            final IncomingInvoiceType incomingInvoiceType,
+            final boolean createNewSupplier,
+            final Party seller,
+            final Boolean createRoleIfRequired,
+            final BankAccount bankAccount,
+            final OrganisationNameNumberViewModel newSupplierCandidate,
+            final Country newSupplierCountry,
+            final String newSupplierChamberOfCommerceCode,
+            final String newSupplierIban,
+            final String invoiceNumber,
+            final String communicationNumber,
+            final LocalDate dateReceived,
+            final LocalDate invoiceDate) {
+        if (getDueDate() != null)
+            return getDueDate();
+        else if (getInvoiceDate() != null)
+            return getInvoiceDate().plusMonths(1);
+        else
+            return invoiceDate != null ? invoiceDate.plusMonths(1) : null;
     }
 
     public PaymentMethod default14CompleteInvoice() {
