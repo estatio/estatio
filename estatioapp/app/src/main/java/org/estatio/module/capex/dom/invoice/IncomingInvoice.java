@@ -751,6 +751,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String default1CompleteInvoiceItem(final OrderItem orderItem) {
+        String descriptionIfItem = ofFirstItem(IncomingInvoiceItem::getDescription);
+        if (descriptionIfItem != null)
+            return descriptionIfItem;
+
         if (default0CompleteInvoiceItem() == null && orderItem != null)
             return orderItem.getDescription();
 
@@ -763,6 +767,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final BigDecimal netAmount,
             final Tax tax,
             final BigDecimal vatAmount) {
+        BigDecimal netAmountIfItem = ofFirstItem(IncomingInvoiceItem::getNetAmount);
+        if (netAmountIfItem != null)
+            return netAmountIfItem;
+
         BigDecimal calculatedNetAmount = FinancialAmountUtil.determineNetAmount(vatAmount, grossAmount, tax, clockService.now());
 
         if (default0CompleteInvoiceItem() == null && orderItem == null)
@@ -775,6 +783,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public Tax default3CompleteInvoiceItem(final OrderItem orderItem) {
+        Tax taxIfItem = ofFirstItem(IncomingInvoiceItem::getTax);
+        if (taxIfItem != null)
+            return taxIfItem;
+
         if (default0CompleteInvoiceItem() == null && orderItem != null)
             return orderItem.getTax();
 
@@ -788,6 +800,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final Tax tax,
             final BigDecimal vatAmount,
             final BigDecimal grossAmount) {
+        BigDecimal vatAmountIfItem = ofFirstItem(IncomingInvoiceItem::getVatAmount);
+        if (vatAmountIfItem != null)
+            return vatAmountIfItem;
+
         BigDecimal calculatedVatAmount = FinancialAmountUtil.determineVatAmount(netAmount, grossAmount, tax, clockService.now());
 
         if (default0CompleteInvoiceItem() == null && orderItem == null)
@@ -805,6 +821,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final BigDecimal netAmount,
             final Tax tax,
             final BigDecimal vatAmount) {
+        BigDecimal grossAmountIfItem = ofFirstItem(IncomingInvoiceItem::getGrossAmount);
+        if (grossAmountIfItem != null)
+            return grossAmountIfItem;
+
         BigDecimal calculatedGrossAmount = FinancialAmountUtil.determineGrossAmount(netAmount, vatAmount, tax, clockService.now());
 
         if (default0CompleteInvoiceItem() == null && orderItem == null)
@@ -817,6 +837,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public Charge default6CompleteInvoiceItem(final OrderItem orderItem) {
+        Charge chargeIfItem = ofFirstItem(IncomingInvoiceItem::getCharge);
+        if (chargeIfItem != null)
+            return chargeIfItem;
+
         if (default0CompleteInvoiceItem() == null && orderItem != null)
             return orderItem.getCharge();
 
@@ -828,6 +852,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public Project default7CompleteInvoiceItem(final OrderItem orderItem) {
+        Project projectIfItem = ofFirstItem(IncomingInvoiceItem::getProject);
+        if (projectIfItem != null)
+            return projectIfItem;
+
         if (default0CompleteInvoiceItem() == null && orderItem != null)
             return orderItem.getProject();
 
@@ -859,6 +887,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public BudgetItem default8CompleteInvoiceItem(final OrderItem orderItem) {
+        BudgetItem budgetItemIfItem = ofFirstItem(IncomingInvoiceItem::getBudgetItem);
+        if (budgetItemIfItem != null)
+            return budgetItemIfItem;
+
         if (default0CompleteInvoiceItem() == null && orderItem != null)
             return orderItem.getBudgetItem();
 
@@ -881,6 +913,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String default9CompleteInvoiceItem(final OrderItem orderItem) {
+        String periodIfItem = ofFirstItem(IncomingInvoiceItem::getPeriod);
+        if (periodIfItem != null)
+            return periodIfItem;
+
         if (default0CompleteInvoiceItem() == null && orderItem != null)
             return orderItem.getPeriod();
 
