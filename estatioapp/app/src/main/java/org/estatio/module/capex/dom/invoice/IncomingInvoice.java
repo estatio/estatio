@@ -628,7 +628,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final @Nullable OrderItem orderItem,
             final String description,
             final BigDecimal netAmount,
-            final Tax tax,
+            final @Nullable Tax tax,
             final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Charge charge,
