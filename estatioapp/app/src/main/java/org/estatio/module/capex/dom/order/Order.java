@@ -299,7 +299,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     @ActionLayout(promptStyle = PromptStyle.DIALOG_SIDEBAR)
     public Order completeOrder(
             final IncomingInvoiceType orderType,
-            final org.estatio.module.asset.dom.Property property,
+            final @Nullable org.estatio.module.asset.dom.Property property,
             final String orderNumber,
             final @ParameterLayout(named = "Create new supplier?") boolean createNewSupplier,
             final @Nullable Party supplier,
@@ -463,6 +463,9 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         if ((createRoleIfRequired == null || !createRoleIfRequired) && sellerValidation != null) {
             return sellerValidation;
         }
+
+        if ((orderType == IncomingInvoiceType.CAPEX || orderType == IncomingInvoiceType.PROPERTY_EXPENSES) && property == null)
+            return String.format("Property is mandatory for order of type %s", orderType);
 
         return null;
     }
