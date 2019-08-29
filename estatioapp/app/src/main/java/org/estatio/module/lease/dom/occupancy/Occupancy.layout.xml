@@ -101,6 +101,7 @@
                 <ns2:action id="createTurnoverReportingConfig"/>
             </ns2:collection>
             <ns2:collection id="turnovers">
+                <ns2:action id="createEmptyTurnovers"/>
                 <ns2:action id="downloadTurnovers"/>
                 <ns2:action id="uploadTurnovers"/>
             </ns2:collection>
