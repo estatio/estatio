@@ -21,6 +21,7 @@ package org.estatio.module.turnover.app;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
@@ -55,9 +56,13 @@ import org.estatio.module.turnover.imports.TurnoverImportManager;
 public class TurnoverMenu  {
 
     @Action
-    public void createEmptyTurnoversForPeriod(final LocalDate startDate, final LocalDate endDate){
+    public void createEmptyTurnoversForPeriod(final LocalDate startDate, final LocalDate endDate, @Nullable final Property property){
         if (!endDate.isBefore(startDate)){
-            turnoverEntryService.produceEmptyTurnoversForPeriod(startDate, endDate);
+            if (property != null) {
+                turnoverEntryService.produceEmptyTurnoversForPropertyAndPeriod(startDate, endDate, property);
+            } else {
+                turnoverEntryService.produceEmptyTurnoversForPeriod(startDate, endDate);
+            }
         }
     }
 

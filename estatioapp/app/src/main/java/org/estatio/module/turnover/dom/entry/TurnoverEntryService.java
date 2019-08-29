@@ -39,6 +39,20 @@ public class TurnoverEntryService {
         );
     }
 
+    public void produceEmptyTurnoversForPropertyAndPeriod(final LocalDate startDate, final LocalDate endDate, final Property property) {
+        LocalDate date = startDate;
+        while (!date.isAfter(endDate)){
+            produceEmptyTurnoversFor(date, property);
+            date = date.plusDays(1);
+        }
+    }
+
+    private void produceEmptyTurnoversFor(final LocalDate date, final Property property) {
+        turnoverReportingConfigRepository.findByPropertyActiveOnDate(property, date).forEach(
+                c->c.produceEmptyTurnover(date)
+        );
+    }
+
     public Turnover nextNewForReporter(final Person reporter, final Turnover current) {
 
         // return a result only if the reporter is specified on the config
