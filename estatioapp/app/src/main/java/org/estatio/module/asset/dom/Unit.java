@@ -262,12 +262,12 @@ public class Unit
     // ///////////////////////////////////////
 
     public Unit changeAreas(
-            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal area,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal gla,
             final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal storageArea,
             final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal salesArea,
             final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal mezzanineArea,
             final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal dehorsArea) {
-        setArea(area);
+        setArea(gla);
         setStorageArea(storageArea);
         setSalesArea(salesArea);
         setMezzanineArea(mezzanineArea);

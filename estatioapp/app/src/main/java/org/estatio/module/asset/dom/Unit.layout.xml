@@ -107,7 +107,9 @@
                             <row>
                                 <col span="12">
                                     <ns2:fieldSet name="Areas" id="areas">
-                                        <ns2:property id="area"/>
+                                        <ns2:property id="area">
+                                            <ns2:named>area (GLA)</ns2:named>
+                                        </ns2:property>
                                         <ns2:property id="storageArea"/>
                                         <ns2:property id="salesArea"/>
                                         <ns2:property id="mezzanineArea"/>
