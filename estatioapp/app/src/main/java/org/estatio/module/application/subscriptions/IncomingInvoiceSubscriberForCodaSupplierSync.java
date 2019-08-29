@@ -14,6 +14,9 @@ import org.estatio.module.application.contributions.Organisation_syncToCoda;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_complete;
 import org.estatio.module.capex.dom.invoice.approval.triggers.Task_completeIncomingInvoice;
+import org.estatio.module.capex.dom.state.StateTransition;
+import org.estatio.module.capex.dom.state.StateTransitionService;
+import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.party.dom.Organisation;
 
 @DomainService(nature = NatureOfService.DOMAIN)
@@ -34,8 +37,12 @@ public class IncomingInvoiceSubscriberForCodaSupplierSync extends AbstractSubscr
     @org.axonframework.eventhandling.annotation.EventHandler
     public void on(Task_completeIncomingInvoice.ActionDomainEvent ev) {
         if (ev.getEventPhase() == AbstractDomainEvent.Phase.EXECUTED) {
-            final IncomingInvoice incomingInvoice = (IncomingInvoice) ev.getMixedIn();
-            syncToCodaIfNecessary(incomingInvoice);
+            final Task task = (Task) ev.getMixedIn();
+            // object on task has private access
+            final StateTransition stateTransition = stateTransitionService.findFor(task);
+
+            if (stateTransition != null)
+                syncToCodaIfNecessary((IncomingInvoice) stateTransition.getDomainObject());
         }
 
     }
@@ -54,5 +61,8 @@ public class IncomingInvoiceSubscriberForCodaSupplierSync extends AbstractSubscr
 
     @Inject
     WrapperFactory wrapperFactory;
+
+    @Inject
+    StateTransitionService stateTransitionService;
 
 }
