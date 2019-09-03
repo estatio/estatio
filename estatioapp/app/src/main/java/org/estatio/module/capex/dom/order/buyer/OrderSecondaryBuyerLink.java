@@ -33,7 +33,7 @@ import lombok.Setter;
                 name = "findByOrder", language = "JDOQL",
                 value = "SELECT " +
                         "FROM order.buyer.OrderSecondaryBuyerLink " +
-                        "WHERE order == :order")
+                        "WHERE ordr == :order")
 })
 @Uniques({
         @Unique(name = "OrderSecondaryBuyerLink_ordr_UNQ", members = { "ordr" })
