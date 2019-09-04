@@ -1,5 +1,7 @@
 package org.estatio.module.capex.dom.order.buyer;
 
+import java.math.BigInteger;
+
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -41,6 +43,19 @@ public class OrderSecondaryBuyerLinkRepository {
                         OrderSecondaryBuyerLink.class,
                         "findByOrder",
                         "order", order
+                ));
+    }
+
+    @Programmatic
+    public OrderSecondaryBuyerLink findBySecondaryBuyerAndBuyerOrderNumber(
+            final Party secondaryBuyer,
+            final BigInteger buyerOrderNumber) {
+        return repositoryService.uniqueMatch(
+                new QueryDefault<>(
+                        OrderSecondaryBuyerLink.class,
+                        "findBySecondaryBuyer",
+                        "secondaryBuyer", secondaryBuyer,
+                        "buyerOrderNumber", buyerOrderNumber
                 ));
     }
 

@@ -33,7 +33,13 @@ import lombok.Setter;
                 name = "findByOrder", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.module.capex.dom.order.buyer.OrderSecondaryBuyerLink " +
-                        "WHERE ordr == :order")
+                        "WHERE ordr == :order"),
+        @Query(
+                name = "findBySecondaryBuyerAndBuyerOrderNumber", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.order.buyer.OrderSecondaryBuyerLink "
+                        + "WHERE secondaryBuyer == :secondaryBuyer "
+                        + "&& ordr.buyerOrderNumber == :buyerOrderNumber")
 })
 @Uniques({
         @Unique(name = "OrderSecondaryBuyerLink_ordr_UNQ", members = { "ordr" })
