@@ -28,6 +28,13 @@ public class OrderSecondaryBuyerLinkRepository {
     }
 
     @Programmatic
+    public void removeLink(final Order order) {
+        final OrderSecondaryBuyerLink link = findByOrder(order);
+        if (link != null)
+            repositoryService.removeAndFlush(link);
+    }
+
+    @Programmatic
     public OrderSecondaryBuyerLink findByOrder(final Order order) {
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
