@@ -53,7 +53,7 @@ public class OrderSecondaryBuyerLinkRepository {
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
                         OrderSecondaryBuyerLink.class,
-                        "findBySecondaryBuyer",
+                        "findBySecondaryBuyerAndBuyerOrderNumber",
                         "secondaryBuyer", secondaryBuyer,
                         "buyerOrderNumber", buyerOrderNumber
                 ));
