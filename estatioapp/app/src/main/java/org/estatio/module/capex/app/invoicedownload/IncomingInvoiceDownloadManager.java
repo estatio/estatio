@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
@@ -19,6 +20,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import com.google.common.collect.Sets;
 
 import org.joda.time.LocalDate;
 
@@ -35,6 +38,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.message.MessageService2;
 import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
+import org.apache.isis.applib.services.wrapper.InteractionException;
+import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
@@ -177,11 +182,34 @@ public class IncomingInvoiceDownloadManager {
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     public IncomingInvoiceDownloadManager report() {
-        LocalDate reportedDate = clockService.now();
+//        LocalDate reportedDate = clockService.now();
         final List<IncomingInvoiceItem> invoiceItems = getInvoiceItems();
+        final Set<IncomingInvoice> invoicesToSync = Sets.newTreeSet();
+//        for (IncomingInvoiceItem invoiceItem : invoiceItems) {
+//            if(invoiceItem.getReportedDate() == null) {
+//                invoiceItem.setReportedDate(reportedDate);
+//                invoicesToSync.add((IncomingInvoice) invoiceItem.getInvoice());
+//            }
+//        }
+//
+//        for (final IncomingInvoice incomingInvoice : invoicesToSync) {
+//            try {
+//                wrapperFactory.wrap(incomingInvoice).sync();
+//            } catch(InteractionException ex) {
+//                // following a similar pattern to InvoiceForLease#invoice()
+//            }
+//        }
         for (IncomingInvoiceItem invoiceItem : invoiceItems) {
-            if (invoiceItem.getReportedDate() == null) {
-                invoiceItem.setReportedDate(reportedDate);
+            if(invoiceItem.getReportedDate() == null) {
+                invoicesToSync.add((IncomingInvoice) invoiceItem.getInvoice());
+            }
+        }
+
+        for (final IncomingInvoice incomingInvoice : invoicesToSync) {
+            try {
+                wrapperFactory.wrap(incomingInvoice).reportAndSync();
+            } catch(InteractionException ex) {
+                // following a similar pattern to InvoiceForLease#invoice()
             }
         }
         return new IncomingInvoiceDownloadManager(
@@ -194,6 +222,13 @@ public class IncomingInvoiceDownloadManager {
         buf.append(getInvoices().isEmpty(), "No invoices");
         return buf.getReason();
     }
+
+
+    @Inject
+    WrapperFactory wrapperFactory;
+
+
+
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_ACTION)

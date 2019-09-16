@@ -299,6 +299,17 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 : null;
     }
 
+    public void reportAndSync() {
+        final LocalDate reportedDate = clockService.now();
+        for (final InvoiceItem item : getItems()) {
+            IncomingInvoiceItem iii = (IncomingInvoiceItem) item;
+            // the invoice being sync'd could have some reversals; we don't want to touch any original items previously reported.
+            if (iii.getReportedDate() == null) {
+                iii.setReportedDate(reportedDate);
+            }
+        }
+    }
+
     public static class ApprovalInvalidatedEvent extends java.util.EventObject {
         public ApprovalInvalidatedEvent(final Object source) {
             super(source);
