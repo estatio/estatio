@@ -210,9 +210,9 @@ public class IncomingInvoiceDownloadManager {
 
 
     @Inject
+    @XmlTransient
     WrapperFactory wrapperFactory;
-
-
+    
 
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
