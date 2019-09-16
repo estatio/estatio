@@ -182,23 +182,8 @@ public class IncomingInvoiceDownloadManager {
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     public IncomingInvoiceDownloadManager report() {
-//        LocalDate reportedDate = clockService.now();
         final List<IncomingInvoiceItem> invoiceItems = getInvoiceItems();
         final Set<IncomingInvoice> invoicesToSync = Sets.newTreeSet();
-//        for (IncomingInvoiceItem invoiceItem : invoiceItems) {
-//            if(invoiceItem.getReportedDate() == null) {
-//                invoiceItem.setReportedDate(reportedDate);
-//                invoicesToSync.add((IncomingInvoice) invoiceItem.getInvoice());
-//            }
-//        }
-//
-//        for (final IncomingInvoice incomingInvoice : invoicesToSync) {
-//            try {
-//                wrapperFactory.wrap(incomingInvoice).sync();
-//            } catch(InteractionException ex) {
-//                // following a similar pattern to InvoiceForLease#invoice()
-//            }
-//        }
         for (IncomingInvoiceItem invoiceItem : invoiceItems) {
             if(invoiceItem.getReportedDate() == null) {
                 invoicesToSync.add((IncomingInvoice) invoiceItem.getInvoice());

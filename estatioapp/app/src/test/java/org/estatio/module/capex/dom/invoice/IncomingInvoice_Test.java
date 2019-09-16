@@ -22,6 +22,7 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.services.metamodel.MetaModelService2;
 import org.apache.isis.applib.services.metamodel.MetaModelService3;
@@ -1500,6 +1501,48 @@ public class IncomingInvoice_Test {
 
             // then
             assertThat(message).isEqualTo("Cannot modify because invoice is in state of COMPLETED");
+        }
+
+    }
+
+    public static class ReportAndSync_Test extends IncomingInvoice_Test {
+
+        @Mock
+        ClockService clockService;
+
+        @Test
+        public void reportAndSync_works() throws Exception {
+
+            // given
+            final LocalDate toDay = new LocalDate(2019, 5, 1);
+            final LocalDate previousReportedDate = new LocalDate(2019, 3, 1);
+
+
+            IncomingInvoice incomingInvoice = new IncomingInvoice();
+            incomingInvoice.clockService = clockService;
+            IncomingInvoiceItem unreportedInvoiceItem = new IncomingInvoiceItem();
+            unreportedInvoiceItem.setSequence(BigInteger.valueOf(1));
+            incomingInvoice.getItems().add(unreportedInvoiceItem);
+            IncomingInvoiceItem reportedInvoiceItem = new IncomingInvoiceItem();
+            reportedInvoiceItem.setSequence(BigInteger.valueOf(2));
+            reportedInvoiceItem.setReportedDate(previousReportedDate);
+            incomingInvoice.getItems().add(reportedInvoiceItem);
+
+            // expect
+            context.checking(new Expectations(){{
+                oneOf(clockService).now();
+                will(returnValue(toDay));
+            }});
+
+            // when
+            incomingInvoice.reportAndSync();
+
+            // then
+            final IncomingInvoiceItem first = (IncomingInvoiceItem) incomingInvoice.getItems().first();
+            final IncomingInvoiceItem last = (IncomingInvoiceItem) incomingInvoice.getItems().last();
+            assertThat(first.getReportedDate()).isEqualTo(toDay);
+            assertThat(last.getReportedDate()).isEqualTo(previousReportedDate);
+
         }
 
     }
