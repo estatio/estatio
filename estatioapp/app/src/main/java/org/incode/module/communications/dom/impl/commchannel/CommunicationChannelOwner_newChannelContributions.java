@@ -14,7 +14,6 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.country.dom.impl.Country;
@@ -175,7 +174,7 @@ public abstract class CommunicationChannelOwner_newChannelContributions  {
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE)
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public SortedSet<CommunicationChannel> communicationChannels(final CommunicationChannelOwner owner) {
         return communicationChannelRepository.findByOwner(owner);

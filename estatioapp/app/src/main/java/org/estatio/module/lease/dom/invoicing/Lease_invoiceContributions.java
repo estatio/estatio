@@ -4,23 +4,22 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.*;
 
 import org.estatio.module.lease.dom.Lease;
 
-@DomainService(
-        nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
-)
+@Mixin(method="coll")
 public class Lease_invoiceContributions {
+
+    private final Lease lease;
+
+    public Lease_invoiceContributions(final Lease lease) {
+        this.lease = lease;
+    }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<InvoiceForLease> invoices(final Lease lease) {
+    public List<InvoiceForLease> coll() {
         return invoiceRepository.findByLease(lease);
     }
 
@@ -28,3 +27,4 @@ public class Lease_invoiceContributions {
     InvoiceForLeaseRepository invoiceRepository;
 
 }
+

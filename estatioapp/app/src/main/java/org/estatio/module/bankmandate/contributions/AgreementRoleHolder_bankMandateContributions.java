@@ -34,7 +34,6 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.base.dom.UdoDomainService;
@@ -77,7 +76,7 @@ public class AgreementRoleHolder_bankMandateContributions
      */
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @Action(semantics = SemanticsOf.SAFE)
-    @CollectionLayout(render = RenderType.LAZILY)
+    @CollectionLayout(defaultView = "table")
     @MemberOrder(sequence = "80")
     public Collection<BankMandate> currentBankMandates(final AgreementRoleHolder agreementRoleHolder) {
         final AgreementType agreementType = agreementTypeRepository.find(

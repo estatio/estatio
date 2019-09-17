@@ -22,7 +22,6 @@ import org.apache.isis.applib.annotation.MemberGroupLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
@@ -86,7 +85,7 @@ public class DemoOrder implements Comparable<DemoOrder> {
 
 
 
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     @Getter @Setter
     @javax.jdo.annotations.Persistent(mappedBy = "order")
     private SortedSet<DemoOrderLine> orderLines = new TreeSet<DemoOrderLine>();

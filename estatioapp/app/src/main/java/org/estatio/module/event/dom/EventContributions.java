@@ -20,28 +20,25 @@ package org.estatio.module.event.dom;
 
 import java.util.List;
 import javax.inject.Inject;
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.SemanticsOf;
+
+import org.apache.isis.applib.annotation.*;
 import org.estatio.module.base.dom.UdoDomainService;
 
-@DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
+@Mixin(method="coll")
 public class EventContributions extends UdoDomainService<EventContributions> {
 
-    public EventContributions() {
+    private final EventSource eventSource;
+
+    public EventContributions(EventSource eventSource) {
         super(EventContributions.class);
+        this.eventSource = eventSource;
     }
 
     //region > events (contributed association)
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    @CollectionLayout(render = RenderType.EAGERLY)
-    public List<Event> events(final EventSource eventSource) {
+    @CollectionLayout(defaultView = "table")
+    public List<Event> coll() {
         return eventRepository.findBySource(eventSource);
     }
     //endregion

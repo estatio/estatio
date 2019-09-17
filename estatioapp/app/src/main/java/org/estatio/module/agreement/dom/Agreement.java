@@ -52,7 +52,6 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
@@ -411,7 +410,7 @@ public abstract class Agreement
 
     @javax.jdo.annotations.Persistent(mappedBy = "agreement", defaultFetchGroup = "true")
     @Collection(editing = Editing.DISABLED)
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     @Getter @Setter
     private SortedSet<AgreementRole> roles = new TreeSet<>();
 

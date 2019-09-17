@@ -54,7 +54,6 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -408,7 +407,7 @@ public class Lease
 
     // //////////////////////////////////////
 
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     @javax.jdo.annotations.Persistent(mappedBy = "lease")
     @Getter @Setter
     private SortedSet<Occupancy> occupancies = new TreeSet<>();
@@ -463,7 +462,7 @@ public class Lease
      * EST-233.
      */
     @javax.jdo.annotations.Persistent(mappedBy = "lease", defaultFetchGroup = "true")
-    @CollectionLayout(render = RenderType.EAGERLY, paged = 999)
+    @CollectionLayout(defaultView = "table", paged = 999)
     @Getter @Setter
     private SortedSet<LeaseItem> items = new TreeSet<>();
 
@@ -657,7 +656,7 @@ public class Lease
 
     // //////////////////////////////////////
 
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     @javax.jdo.annotations.Persistent(mappedBy = "lease")
     @Getter @Setter
     private SortedSet<BreakOption> breakOptions = new TreeSet<>();

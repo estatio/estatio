@@ -27,7 +27,6 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.budget.dom.keyitem.KeyItem;
@@ -47,7 +46,7 @@ public class KeyItem_occupancies {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     public List<Occupancy> occupancies(final KeyItem keyItem) {
 
         return occupancyRepository.occupanciesByUnitAndInterval(keyItem.getUnit(), keyItem.getPartitioningTable().getBudget().getInterval());

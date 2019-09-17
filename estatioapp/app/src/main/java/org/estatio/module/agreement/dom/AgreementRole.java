@@ -49,7 +49,6 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.i18n.TranslatableString;
@@ -280,7 +279,7 @@ public class AgreementRole
         return helper.getSuccessor(getAgreement().getRoles(), Predicates.matchingRole(this.getType()));
     }
 
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     @Override
     public SortedSet<AgreementRole> getTimeline() {
         return helper.getTimeline(getAgreement().getRoles(), Predicates.matchingRole(this.getType()));
@@ -367,7 +366,7 @@ public class AgreementRole
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(mappedBy = "role")
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     @Collection(editing = Editing.DISABLED)
     @Getter @Setter
     private SortedSet<AgreementRoleCommunicationChannel> communicationChannels = new TreeSet<>();

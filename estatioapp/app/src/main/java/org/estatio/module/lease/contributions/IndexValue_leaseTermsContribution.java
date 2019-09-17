@@ -22,28 +22,26 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.*;
 
 import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.index.dom.IndexValue;
 import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.lease.dom.LeaseTermForIndexableRepository;
 
-@DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
+@Mixin(method="act")
 public class IndexValue_leaseTermsContribution extends UdoDomainService<IndexValue_leaseTermsContribution> {
 
-    public IndexValue_leaseTermsContribution() {
+    private final IndexValue indexValue;
+
+    public IndexValue_leaseTermsContribution(IndexValue indexValue) {
         super(IndexValue_leaseTermsContribution.class);
+        this.indexValue = indexValue;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public List<LeaseTermForIndexable> showLeaseTerms(final IndexValue indexValue) {
+    public List<LeaseTermForIndexable> act() {
         return terms.findByIndexAndDate(indexValue.getIndexBase().getIndex(), indexValue.getStartDate());
     }
 
