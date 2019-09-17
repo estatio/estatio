@@ -8,13 +8,19 @@ import org.assertj.core.util.Lists;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.incode.module.document.dom.impl.docs.DocumentAbstract;
+import org.incode.module.document.dom.impl.paperclips.Paperclip;
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.canonical.financial.v2.PaymentMethod;
 import org.estatio.canonical.incominginvoice.v2.IncomingInvoiceDto;
 import org.estatio.canonical.incominginvoice.v2.IncomingInvoiceItemType;
 import org.estatio.canonical.incominginvoice.v2.IncomingInvoicePaymentStatus;
 import org.estatio.canonical.order.v2.IncomingInvoiceTypeType;
+import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.base.platform.applib.DtoFactoryAbstract;
+import org.estatio.module.capex.app.DocumentBarcodeService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
@@ -39,7 +45,7 @@ public class IncomingInvoiceDtoFactory extends DtoFactoryAbstract<IncomingInvoic
 
         final IncomingInvoiceDto dto = new IncomingInvoiceDto();
         dto.setMajorVersion("2");
-        dto.setMinorVersion("0");
+        dto.setMinorVersion("1");
 
         dto.setSelf(mappingHelper.oidDtoFor(incomingInvoice));
 
@@ -57,6 +63,8 @@ public class IncomingInvoiceDtoFactory extends DtoFactoryAbstract<IncomingInvoic
         dto.setInvoiceNumber(incomingInvoice.getInvoiceNumber());
         dto.setPaymentMethod(paymentMethodOf(incomingInvoice.getPaymentMethod()));
         dto.setPaymentStatus(paymentStatusOf(incomingInvoice));
+        dto.setDescriptionSummary(incomingInvoice.getDescriptionSummary());
+        dto.setBarcode(barcodeFor(incomingInvoice));
 
         final List<IncomingInvoiceItemType> itemDtos = Lists.newArrayList();
         for (final InvoiceItem invoiceItem : incomingInvoice.getItems()) {
@@ -71,7 +79,10 @@ public class IncomingInvoiceDtoFactory extends DtoFactoryAbstract<IncomingInvoic
             itemDto.setGrossAmount(incomingInvoiceItem.getGrossAmount());
             itemDto.setNetAmount(incomingInvoiceItem.getNetAmount());
             itemDto.setTax(mappingHelper.oidDtoFor(incomingInvoiceItem.getTax()));
-            itemDto.setVatAmount(null);
+
+            // previously this field was set to null, which seemed to be a mistake
+            // checked for usages in camel, seems to be unused.  Therefore think it's safe to populate it from item.
+            itemDto.setVatAmount(incomingInvoiceItem.getVatAmount());
 
             // can only set if there is precisely one link to an OrderItem.
             final List<OrderItemInvoiceItemLink> links = linkRepository.findLinksByInvoiceItem(incomingInvoiceItem);
@@ -82,12 +93,37 @@ public class IncomingInvoiceDtoFactory extends DtoFactoryAbstract<IncomingInvoic
                 itemDto.setCharge(mappingHelper.oidDtoFor(incomingInvoiceItem.getCharge()));
             }
 
+            final FixedAsset itemFixedAsset = incomingInvoiceItem.getFixedAsset();
+            if(itemFixedAsset != null) {
+                // this does always seem to be the case
+                if(itemFixedAsset instanceof Property) {
+                    Property property = (Property) itemFixedAsset;
+                    itemDto.setProperty(mappingHelper.oidDtoFor(property));
+                    itemDto.setPropertyExternalReference(property.getExternalReference());
+                }
+            }
+
             itemDtos.add(itemDto);
         }
         dto.setItems(itemDtos);
 
         return dto;
     }
+
+    private String barcodeFor(final IncomingInvoice incomingInvoice) {
+        List<Paperclip> paperclips = paperclipRepository.findByAttachedTo(incomingInvoice);
+        for (final Paperclip paperclip : paperclips) {
+            DocumentAbstract document = paperclip.getDocument();
+            String name = document.getName();
+            if(documentBarcodeService.isBarcode(name)) {
+                return documentBarcodeService.barcodeFrom(name);
+            }
+        }
+        return null;
+    }
+
+    @Inject
+    DocumentBarcodeService documentBarcodeService;
 
     /**
      * For Italy (as per <code>IncomingInvoiceTypeDerivationForItalyService</code>), can only be one of
@@ -182,6 +218,9 @@ public class IncomingInvoiceDtoFactory extends DtoFactoryAbstract<IncomingInvoic
 
     @Inject
     OrderItemInvoiceItemLinkRepository linkRepository;
+
+    @Inject
+    PaperclipRepository paperclipRepository;
 
     @Inject
     CodaDocHeadRepository codaDocHeadRepository;

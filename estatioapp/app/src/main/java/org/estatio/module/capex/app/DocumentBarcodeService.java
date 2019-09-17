@@ -64,9 +64,20 @@ public class DocumentBarcodeService {
         return deriveAtPathFromBarcode(documentName, atPath);
     }
 
-
-    boolean isBarcode(final String documentName) {
+    @Programmatic
+    public boolean isBarcode(final String documentName) {
+        if(documentName == null) {
+            return false;
+        }
         return documentName.replace(".pdf", "").matches("\\d+");
+    }
+
+    @Programmatic
+    public String barcodeFrom(final String documentName) {
+        if(documentName == null) {
+            return null;
+        }
+        return documentName.replace(".pdf", "");
     }
 
 }
