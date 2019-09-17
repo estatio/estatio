@@ -299,6 +299,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 : null;
     }
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     public void reportAndSync() {
         final LocalDate reportedDate = clockService.now();
         for (final InvoiceItem item : getItems()) {
