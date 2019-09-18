@@ -75,6 +75,7 @@ public class IncomingInvoiceDtoFactory extends DtoFactoryAbstract<IncomingInvoic
             itemDto.setDescription(incomingInvoiceItem.getDescription());
             itemDto.setType(typeFor(incomingInvoiceItem));
 
+            itemDto.setReportedDate(asXMLGregorianCalendar(incomingInvoiceItem.getReportedDate()));
             itemDto.setDueDate(asXMLGregorianCalendar(incomingInvoiceItem.getDueDate()));
             itemDto.setGrossAmount(incomingInvoiceItem.getGrossAmount());
             itemDto.setNetAmount(incomingInvoiceItem.getNetAmount());
