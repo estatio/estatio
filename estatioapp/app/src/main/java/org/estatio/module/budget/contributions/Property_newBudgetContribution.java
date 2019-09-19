@@ -12,7 +12,6 @@ import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 
 @Mixin(method="coll")
-@DomainServiceLayout()
 public class Property_newBudgetContribution {
 
     private final Property property;
