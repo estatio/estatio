@@ -5,17 +5,7 @@ import java.util.SortedSet;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.SemanticsOf;
-
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.dom.impl.State;
@@ -32,16 +22,16 @@ import org.incode.module.country.dom.impl.StateRepository;
  * {@link #communicationChannels(CommunicationChannelOwner) communication
  * channels} of a particular {@link CommunicationChannelOwner}.
  */
-public abstract class CommunicationChannelOwner_newChannelContributions  {
+public abstract class CommunicationChannelOwnerService {
 
-    private final Class<? extends CommunicationChannelOwner_newChannelContributions> serviceType;
+    private final Class<? extends CommunicationChannelOwnerService> serviceType;
 
-    protected CommunicationChannelOwner_newChannelContributions(final Class<? extends CommunicationChannelOwner_newChannelContributions> serviceType) {
+    protected CommunicationChannelOwnerService(final Class<? extends CommunicationChannelOwnerService> serviceType) {
         this.serviceType = serviceType;
     }
 
-    public CommunicationChannelOwner_newChannelContributions() {
-        this(CommunicationChannelOwner_newChannelContributions.class);
+    public CommunicationChannelOwnerService() {
+        this(CommunicationChannelOwnerService.class);
     }
 
 
@@ -59,25 +49,15 @@ public abstract class CommunicationChannelOwner_newChannelContributions  {
     // //////////////////////////////////////
 
 
-    @MemberOrder(name = "CommunicationChannels", sequence = "1")
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @ActionLayout(contributed = Contributed.AS_ACTION)
     public CommunicationChannelOwner newPostal(
             final CommunicationChannelOwner owner,
-            @ParameterLayout(named = "Type")
             final CommunicationChannelType type,
             final Country country,
-            @Parameter(optionality = Optionality.OPTIONAL)
             final State state,
-            @ParameterLayout(named = "Line 1")
             final String addressLine1,
-            @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Line 2")
             final String addressLine2,
-            @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(named = "Line 3")
             final String addressLine3,
-            @ParameterLayout(named = "Postal code")
             final String postalCode,
-            @ParameterLayout(named = "City")
             final String city
     ) {
         communicationChannelRepository.newPostal(owner, type, addressLine1, addressLine2, null, postalCode, city, state, country);
@@ -109,16 +89,13 @@ public abstract class CommunicationChannelOwner_newChannelContributions  {
         return statesInCountry.size() > 0 ? statesInCountry.get(0) : null;
     }
 
+
+
     // //////////////////////////////////////
 
-    @MemberOrder(name = "CommunicationChannels", sequence = "2")
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @ActionLayout(contributed = Contributed.AS_ACTION)
     public CommunicationChannelOwner newEmail(
             final CommunicationChannelOwner owner,
-            @ParameterLayout(named = "Type")
             final CommunicationChannelType type,
-            @ParameterLayout(named = "Address")
             final String address) {
         communicationChannelRepository.newEmail(owner, type, address);
         return owner;
@@ -142,14 +119,9 @@ public abstract class CommunicationChannelOwner_newChannelContributions  {
 
     // //////////////////////////////////////
 
-    @MemberOrder(name = "CommunicationChannels", sequence = "3")
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @ActionLayout(named = "New Phone/Fax", contributed = Contributed.AS_ACTION)
     public CommunicationChannelOwner newPhoneOrFax(
             final CommunicationChannelOwner owner,
-            @ParameterLayout(named = "Type")
             final CommunicationChannelType type,
-            @ParameterLayout(named = "Number")
             final String number) {
         communicationChannelRepository.newPhoneOrFax(owner, type, number);
         return owner;
@@ -171,11 +143,9 @@ public abstract class CommunicationChannelOwner_newChannelContributions  {
         return null;
     }
 
+
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @CollectionLayout(defaultView = "table")
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public SortedSet<CommunicationChannel> communicationChannels(final CommunicationChannelOwner owner) {
         return communicationChannelRepository.findByOwner(owner);
     }

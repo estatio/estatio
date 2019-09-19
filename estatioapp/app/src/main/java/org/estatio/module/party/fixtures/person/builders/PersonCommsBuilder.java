@@ -22,7 +22,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner_newChannelContributions;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerService;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
 import org.estatio.module.party.dom.Person;
@@ -69,7 +69,7 @@ public final class PersonCommsBuilder
     }
 
     @Inject
-    CommunicationChannelOwner_newChannelContributions communicationChannelContributedActions;
+    CommunicationChannelOwnerService communicationChannelContributedActions;
 
 
 }
