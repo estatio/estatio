@@ -43,7 +43,7 @@ import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
 
 @DomainService(
-        nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
+        nature = NatureOfService.DOMAIN
 )
 public class FixedAssetFinancialAccountContributions extends UdoDomainService<FixedAssetFinancialAccountContributions> {
 
@@ -51,11 +51,6 @@ public class FixedAssetFinancialAccountContributions extends UdoDomainService<Fi
         super(FixedAssetFinancialAccountContributions.class);
     }
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @MemberOrder(
-            name = "Accounts",
-            sequence = "13"
-    )
     public FixedAssetFinancialAccount newAccount(
             final FixedAsset fixedAsset,
             final FinancialAccount financialAccount) {
@@ -75,26 +70,14 @@ public class FixedAssetFinancialAccountContributions extends UdoDomainService<Fi
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    @MemberOrder(
-            name = "Accounts",
-            sequence = "13.5"
-    )
     public List<FixedAssetFinancialAccount> accounts(final FixedAsset fixedAsset) {
         return fixedAssetFinancialAccountRepository.findByFixedAsset(fixedAsset);
     }
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    @MemberOrder(
-            name = "FinancialAccounts",
-            sequence = "13.5"
-    )
-    public List<FixedAssetFinancialAccount> fixedAssets(final FinancialAccount fixedAsset) {
-        return fixedAssetFinancialAccountRepository.findByFinancialAccount(fixedAsset);
+    public List<FixedAssetFinancialAccount> fixedAssets(final FinancialAccount financialAccount) {
+        return fixedAssetFinancialAccountRepository.findByFinancialAccount(financialAccount);
     }
 
     // //////////////////////////////////////
