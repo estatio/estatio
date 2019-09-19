@@ -26,35 +26,29 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 
-// TODO: should refactor to Unit_occupancies and Brand_occupancies
-@DomainService(
-        nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
-)
-public class OccupancyContributions {
+@Mixin(method = "coll")
+public class Brand_occupancies {
 
-    @CollectionLayout(defaultView = "table")
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<Occupancy> occupancies(final Unit unit) {
-        return occupancyRepository.findByUnit(unit);
+    private final Brand brand;
+    public Brand_occupancies(final Brand brand) {
+        this.brand = brand;
     }
 
-    @CollectionLayout(defaultView = "table")
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<Occupancy> occupancies(final Brand brand) {
+    @CollectionLayout(defaultView = "table")
+    public List<Occupancy> coll() {
         return occupancyRepository.findByBrand(brand, true);
     }
 
-    @Inject private OccupancyRepository occupancyRepository;
+    @Inject
+    OccupancyRepository occupancyRepository;
 
 }
