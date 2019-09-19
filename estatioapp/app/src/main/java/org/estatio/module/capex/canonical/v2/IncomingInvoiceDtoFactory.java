@@ -14,6 +14,7 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.canonical.financial.v2.PaymentMethod;
 import org.estatio.canonical.incominginvoice.v2.IncomingInvoiceDto;
+import org.estatio.canonical.incominginvoice.v2.IncomingInvoiceItemReversalStatus;
 import org.estatio.canonical.incominginvoice.v2.IncomingInvoiceItemType;
 import org.estatio.canonical.incominginvoice.v2.IncomingInvoicePaymentStatus;
 import org.estatio.canonical.order.v2.IncomingInvoiceTypeType;
@@ -92,6 +93,7 @@ public class IncomingInvoiceDtoFactory extends DtoFactoryAbstract<IncomingInvoic
                 itemDto.setOrder(mappingHelper.oidDtoFor(link.getOrder()));
                 itemDto.setProject(mappingHelper.oidDtoFor(link.getProject()));
                 itemDto.setCharge(mappingHelper.oidDtoFor(incomingInvoiceItem.getCharge()));
+                itemDto.setReversalStatus(deriveReversalStatusOf(incomingInvoiceItem));
             }
 
             final FixedAsset itemFixedAsset = incomingInvoiceItem.getFixedAsset();
@@ -109,6 +111,20 @@ public class IncomingInvoiceDtoFactory extends DtoFactoryAbstract<IncomingInvoic
         dto.setItems(itemDtos);
 
         return dto;
+    }
+
+    static IncomingInvoiceItemReversalStatus deriveReversalStatusOf(final IncomingInvoiceItem incomingInvoiceItem) {
+        if(incomingInvoiceItem.isReversal()) {
+            return IncomingInvoiceItemReversalStatus.REVERSAL;
+        }
+        boolean b = incomingInvoiceItem.getInvoice().getItems().stream()
+                .filter(x -> x != incomingInvoiceItem)
+                .filter(IncomingInvoiceItem.class::isInstance)
+                .map(IncomingInvoiceItem.class::cast)
+                .anyMatch(x -> x.getReversalOf() == incomingInvoiceItem);
+        return b
+                    ? IncomingInvoiceItemReversalStatus.REVERSED
+                    : IncomingInvoiceItemReversalStatus.NOT_REVERSED;
     }
 
     private String barcodeFor(final IncomingInvoice incomingInvoice) {
