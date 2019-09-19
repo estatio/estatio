@@ -43,11 +43,9 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
-
 import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyEvaluator;
-
 import org.incode.module.base.dom.utils.JodaPeriodUtils;
 import org.incode.module.base.dom.utils.StringUtils;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
@@ -184,11 +182,18 @@ public class LeaseMenu {
         return null;
     }
 
-
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3")
-    public List<Lease> findLeases(
+    public ListOfLeases findLeases(
             final @ParameterLayout(describedAs = "May include wildcards '*' and '?'") String referenceOrName,
+            final boolean includeTerminated) {
+        return new ListOfLeases(
+                "Leases matching " + referenceOrName,
+                findLeasesInternal(referenceOrName, includeTerminated));
+    }
+
+    private List<Lease> findLeasesInternal(
+            @ParameterLayout(describedAs = "May include wildcards '*' and '?'") final String referenceOrName,
             final boolean includeTerminated) {
         String pattern = StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName);
         return leaseRepository.matchByReferenceOrName(referenceOrName, includeTerminated);

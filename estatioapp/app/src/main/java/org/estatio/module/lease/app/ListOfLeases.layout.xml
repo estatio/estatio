@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <row>
+        <col span="12" unreferencedActions="true">
+            <ns2:domainObject/>
+            <ns2:action id="downloadLayoutXml" hidden="EVERYWHERE"/>
+            <ns2:action id="downloadMetaModelXml" hidden="EVERYWHERE"/>
+            <ns2:action id="openRestApi" hidden="EVERYWHERE"/>
+            <ns2:action id="rebuildMetamodel" hidden="EVERYWHERE"/>
+            <ns2:action id="recentCommands" hidden="EVERYWHERE"/>
+        </col>
+    </row>
+    <row>
+        <col span="12">
+            <ns2:fieldSet name="Other" unreferencedProperties="true"/>
+        </col>
+        <col span="12">
+            <ns2:collection id="leases">
+                <ns2:action id="approveAllTermsOfThisLease"/>
+            </ns2:collection>
+        </col>
+        <col span="12">
+            <tabGroup  unreferencedCollections="true">
+            </tabGroup>
+        </col>
+    </row>
+</grid>
