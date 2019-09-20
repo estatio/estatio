@@ -12,6 +12,7 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.invoice.dom.Invoice;
 
 @DomainService(
@@ -62,6 +63,11 @@ public class CodaDocLinkRepository {
                         "invoice", invoice
                 )
         );
+    }
+
+    @Programmatic
+    public Optional<CodaDocLink> findMostRecentBy(final IncomingInvoice incomingInvoice) {
+        return findByInvoice(incomingInvoice).stream().findFirst();
     }
 
     @Programmatic

@@ -8,10 +8,12 @@ import org.assertj.core.util.Lists;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
+import org.estatio.canonical.common.v2.CodaDocKey;
 import org.estatio.canonical.financial.v2.PaymentMethod;
 import org.estatio.canonical.incominginvoice.v2.IncomingInvoiceDto;
 import org.estatio.canonical.incominginvoice.v2.IncomingInvoiceItemReversalStatus;
@@ -22,6 +24,7 @@ import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.base.platform.applib.DtoFactoryAbstract;
 import org.estatio.module.capex.app.DocumentBarcodeService;
+import org.estatio.module.capex.dom.codalink.CodaDocLinkRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
@@ -46,13 +49,15 @@ public class IncomingInvoiceDtoFactory extends DtoFactoryAbstract<IncomingInvoic
 
         final IncomingInvoiceDto dto = new IncomingInvoiceDto();
         dto.setMajorVersion("2");
-        dto.setMinorVersion("1");
+        dto.setMinorVersion("4");
 
         dto.setSelf(mappingHelper.oidDtoFor(incomingInvoice));
 
         final CodaDocHead codaDocHeadIfAny = codaDocHeadRepository.findByIncomingInvoice(incomingInvoice);
-
+        // populated for Italy, where CodaDocHead's are sync'd from Coda into Estatio
         dto.setCodaDocHead(mappingHelper.oidDtoFor(codaDocHeadIfAny));
+        // populated for France, where CodaDocLinks are populated after the invoice is reported/sync'd to Coda
+        dto.setCodaDocKey(mostRecentCodaDocLinkFor(incomingInvoice));
         dto.setAtPath(incomingInvoice.getAtPath());
         dto.setSellerBankAccount(mappingHelper.oidDtoFor(incomingInvoice.getBankAccount()));
         dto.setBuyerParty(mappingHelper.oidDtoFor(incomingInvoice.getBuyer()));
@@ -111,6 +116,18 @@ public class IncomingInvoiceDtoFactory extends DtoFactoryAbstract<IncomingInvoic
         dto.setItems(itemDtos);
 
         return dto;
+    }
+
+    private CodaDocKey mostRecentCodaDocLinkFor(final IncomingInvoice incomingInvoice) {
+        return codaDocLinkRepository.findMostRecentBy(incomingInvoice)
+                .map(x -> {
+                    final CodaDocKey codaDocKey = new CodaDocKey();
+                    codaDocKey.setCmpCode(x.getCmpCode());
+                    codaDocKey.setDocCode(x.getDocCode());
+                    codaDocKey.setDocNum(x.getDocNum().trim());
+                    return codaDocKey;
+                })
+                .orElse(null);
     }
 
     static IncomingInvoiceItemReversalStatus deriveReversalStatusOf(final IncomingInvoiceItem incomingInvoiceItem) {
@@ -241,5 +258,8 @@ public class IncomingInvoiceDtoFactory extends DtoFactoryAbstract<IncomingInvoic
 
     @Inject
     CodaDocHeadRepository codaDocHeadRepository;
+
+    @Inject
+    CodaDocLinkRepository codaDocLinkRepository;
 
 }

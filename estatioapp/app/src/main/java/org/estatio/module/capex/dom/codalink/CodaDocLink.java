@@ -46,7 +46,8 @@ import lombok.Setter;
                 name = "findByInvoice", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.codalink.CodaDocLink "
-                        + "WHERE invoice == :invoice "),
+                        + "WHERE invoice == :invoice "
+                        + "ORDER BY createdAt DESC "),
 })
 @Unique(name = "CodaDocLink_cmpCode_docCode_docNum_UNQ", members = { "cmpCode", "docCode", "docNum" })
 public class CodaDocLink {
