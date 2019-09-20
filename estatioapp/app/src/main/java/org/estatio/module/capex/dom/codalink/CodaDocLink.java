@@ -38,28 +38,28 @@ import lombok.Setter;
         @Query(
                 name = "findByCmpCodeAndDocCodeAndDocNum", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.capex.dom.codalink.InvoiceCodaDocLink "
+                        + "FROM org.estatio.module.capex.dom.codalink.CodaDocLink "
                         + "WHERE cmpCode == :cmpCode "
                         + "   && docCode == :docCode "
                         + "   && docNum  == :docNum "),
         @Query(
                 name = "findByInvoice", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.capex.dom.codalink.InvoiceCodaDocLink "
+                        + "FROM org.estatio.module.capex.dom.codalink.CodaDocLink "
                         + "WHERE invoice == :invoice "),
 })
-@Unique(name = "InvoiceCodaDocLink_cmpCode_docCode_docNum_UNQ", members = { "cmpCode", "docCode", "docNum" })
-public class InvoiceCodaDocLink {
+@Unique(name = "CodaDocLink_cmpCode_docCode_docNum_UNQ", members = { "cmpCode", "docCode", "docNum" })
+public class CodaDocLink {
 
-    public InvoiceCodaDocLink(){}
-    public InvoiceCodaDocLink(
+    public CodaDocLink(){}
+    public CodaDocLink(
             final String cmpCode, final String docCode, final String docNum,
             final Invoice invoice,
             final DateTime createdAt) {
-        this.invoice = invoice;
         this.cmpCode = cmpCode;
         this.docCode = docCode;
         this.docNum = docNum;
+        this.invoice = invoice;
         this.createdAt = createdAt;
     }
 

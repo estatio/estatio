@@ -16,28 +16,28 @@ import org.estatio.module.invoice.dom.Invoice;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
-        repositoryFor = InvoiceCodaDocLink.class,
+        repositoryFor = CodaDocLink.class,
         objectType = "codalink.InvoiceCodaDocLinkRepository"
 )
-public class InvoiceCodaDocLinkRepository {
+public class CodaDocLinkRepository {
 
     @Programmatic
-    public InvoiceCodaDocLink findOrCreate(
+    public CodaDocLink findOrCreate(
             final String cmpCode, final String docCode, final String docNum,
             final Invoice invoice) {
         return findByCmpCodeAndDocCodeAndDocNum(cmpCode, docCode, docNum)
                 .orElse(create(cmpCode, docCode,docNum, invoice));
     }
 
-    private InvoiceCodaDocLink create(
+    private CodaDocLink create(
             final String cmpCode, final String docCode, final String docNum,
             final Invoice invoice) {
         return repositoryService.persistAndFlush(
-                new InvoiceCodaDocLink(cmpCode, docCode, docNum, invoice, clockService.nowAsDateTime()));
+                new CodaDocLink(cmpCode, docCode, docNum, invoice, clockService.nowAsDateTime()));
     }
 
     @Programmatic
-    public Optional<InvoiceCodaDocLink> findByCmpCodeAndDocCodeAndDocNum(
+    public Optional<CodaDocLink> findByCmpCodeAndDocCodeAndDocNum(
             final String cmpCode,
             final String docCode,
             final String docNum
@@ -45,7 +45,7 @@ public class InvoiceCodaDocLinkRepository {
         return Optional.ofNullable(
                 repositoryService.uniqueMatch(
                     new QueryDefault<>(
-                            InvoiceCodaDocLink.class,
+                            CodaDocLink.class,
                             "findByCmpCodeAndDocCodeAndDocNum",
                             "cmpCode", cmpCode,
                             "docCode", docCode,
@@ -54,10 +54,10 @@ public class InvoiceCodaDocLinkRepository {
     }
 
     @Programmatic
-    public List<InvoiceCodaDocLink> findByInvoice(final Invoice invoice) {
+    public List<CodaDocLink> findByInvoice(final Invoice invoice) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
-                        InvoiceCodaDocLink.class,
+                        CodaDocLink.class,
                         "findByInvoice",
                         "invoice", invoice
                 )
@@ -65,8 +65,8 @@ public class InvoiceCodaDocLinkRepository {
     }
 
     @Programmatic
-    public List<InvoiceCodaDocLink> listAll() {
-        return repositoryService.allInstances(InvoiceCodaDocLink.class);
+    public List<CodaDocLink> listAll() {
+        return repositoryService.allInstances(CodaDocLink.class);
     }
 
 
