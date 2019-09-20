@@ -664,6 +664,15 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
 
 
 
+    /*
+    TODO: we could probably remove this action, since users tend to use the IncomingInvoice.
+     then need to add some more test coverage.
+
+    org.estatio.capex.dom.invoice.IncomingInvoiceItem#reverse()          2
+    org.estatio.module.capex.dom.invoice.IncomingInvoice#reverseItem()  50
+    org.estatio.module.capex.dom.invoice.IncomingInvoiceItem#reverse()   3
+
+     */
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     public IncomingInvoice reverse() {
@@ -685,6 +694,8 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
 
         buf.append(getReportedDate() == null, "item has not yet been reported");
         buf.append(getReversalOf() != null, "item is itself a reversal");
+
+        getIncomingInvoice().appendReasonReverseDisabledIfAny(buf);
 
         return buf.getReason();
     }

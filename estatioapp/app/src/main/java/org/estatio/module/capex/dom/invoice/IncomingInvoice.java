@@ -68,6 +68,8 @@ import org.estatio.module.capex.app.SupplierCreationService;
 import org.estatio.module.capex.app.invoice.IncomingInvoiceTemplateViewModel;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
+import org.estatio.module.capex.dom.codalink.CodaDocLink;
+import org.estatio.module.capex.dom.codalink.CodaDocLinkRepository;
 import org.estatio.module.capex.dom.documents.BudgetItemChooser;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
@@ -1194,6 +1196,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
         buf.append(choices0ReverseItem().isEmpty(), "no items to reverse");
 
+        appendReasonReverseDisabledIfAny(buf);
+
         return buf.getReason();
     }
 
@@ -2093,6 +2097,22 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                         approvalState != IncomingInvoiceApprovalState.COMPLETED,
                 "invoice is in state of " + getApprovalState());
     }
+
+
+    void appendReasonReverseDisabledIfAny(final ReasonBuffer2 buf) {
+
+        if(itemsToReverse().isEmpty()) {
+            return;
+        }
+
+        final List<CodaDocLink> codaDocLinks = codaDocLinkRepository.findByInvoice(this);
+        if(codaDocLinks.isEmpty()) {
+            buf.append("previous reporting/sync to CODA may have failed");
+        }
+    }
+
+    @Inject
+    CodaDocLinkRepository codaDocLinkRepository;
 
     @Programmatic
     public String reasonIncomplete() {
