@@ -39,16 +39,13 @@ import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.party.dom.Party;
 
-@DomainService(menuOrder = "40", nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
-public class Party_leaseContributions extends UdoDomainService<Party_leaseContributions> {
+@DomainService(menuOrder = "40", nature = NatureOfService.DOMAIN)
+public class PartyService extends UdoDomainService<PartyService> {
 
-    public Party_leaseContributions() {
-        super(Party_leaseContributions.class);
+    public PartyService() {
+        super(PartyService.class);
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @CollectionLayout(defaultView = "table")
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<Lease> currentLeases(final Party party) {
         return agreementRoleRepository.findByPartyAndTypeAndContainsDate(party, agreementRoleTypeRepository.findByTitle(
                 LeaseAgreementRoleTypeEnum.TENANT.getTitle()), getClockService().now())
@@ -58,9 +55,6 @@ public class Party_leaseContributions extends UdoDomainService<Party_leaseContri
                 .collect(Collectors.toList());
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(named = "List All", contributed = Contributed.AS_ACTION)
-    @MemberOrder(name = "currentLeases", sequence = "1")
     public List<Lease> allLeases(final Party party) {
         return agreementRoleRepository.findByPartyAndType(party, agreementRoleTypeRepository.findByTitle(
                 LeaseAgreementRoleTypeEnum.TENANT.getTitle()))
