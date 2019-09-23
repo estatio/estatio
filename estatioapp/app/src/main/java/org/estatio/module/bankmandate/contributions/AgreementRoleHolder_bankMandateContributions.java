@@ -58,7 +58,7 @@ import org.estatio.module.party.dom.Party;
  * {@link BankMandate} to {@link AgreementRole} to
  * {@link Party}.
  */
-@DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY, menuOrder = "30")
+@DomainService(nature = NatureOfService.DOMAIN, menuOrder = "30")
 public class AgreementRoleHolder_bankMandateContributions
         extends UdoDomainService<AgreementRoleHolder_bankMandateContributions> {
 
@@ -66,18 +66,7 @@ public class AgreementRoleHolder_bankMandateContributions
         super(AgreementRoleHolder_bankMandateContributions.class);
     }
 
-    /**
-     * A contributed collection of the current {@link BankMandate}s of the
-     * {@link AgreementRoleHolder}.
-     * <p/>
-     * <p/>
-     * All {@link BankMandate} are {@link #allBankMandate(AgreementRoleHolder)
-     * contributed} as an action.
-     */
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    @Action(semantics = SemanticsOf.SAFE)
-    @CollectionLayout(defaultView = "table")
-    @MemberOrder(sequence = "80")
+
     public Collection<BankMandate> currentBankMandates(final AgreementRoleHolder agreementRoleHolder) {
         final AgreementType agreementType = agreementTypeRepository.find(
                 BankMandateAgreementTypeEnum.MANDATE);

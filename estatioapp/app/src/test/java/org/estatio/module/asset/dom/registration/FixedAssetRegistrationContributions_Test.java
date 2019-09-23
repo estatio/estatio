@@ -53,7 +53,7 @@ public class FixedAssetRegistrationContributions_Test {
         private FixedAsset subject;
         private FixedAssetRegistrationType registrationType;
 
-        private FixedAsset_registrationContributions target;
+        private FixedAssetService target;
 
         @Programmatic
         public static class FoobarAssetRegistration extends FixedAssetRegistration {
@@ -91,7 +91,7 @@ public class FixedAssetRegistrationContributions_Test {
             registrationType = new FixedAssetRegistrationType();
             registrationType.setFullyQualifiedClassName(FoobarAssetRegistration.class.getName());
 
-            target = new FixedAsset_registrationContributions();
+            target = new FixedAssetService();
             target.fixedAssetRegistrationRepository = mockFixedAssetRegistrationRepository;
             target.setContainer(mockContainer);
             target.factoryService = mockFactoryService;
