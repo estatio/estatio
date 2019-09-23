@@ -36,22 +36,15 @@ import org.estatio.module.asset.dom.FixedAsset;
 
 // TODO: REVIEW - why not just a simple derived property since these are in the same module?
 @DomainService(
-        nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY,
+        nature = NatureOfService.DOMAIN,
         menuOrder = "10"
 )
-public class FixedAsset_registrationContributions extends UdoDomainService<FixedAsset_registrationContributions> {
+public class FixedAssetService extends UdoDomainService<FixedAssetService> {
 
-    public FixedAsset_registrationContributions() {
-        super(FixedAsset_registrationContributions.class);
+    public FixedAssetService() {
+        super(FixedAssetService.class);
     }
 
-    @Action(
-            semantics =  SemanticsOf.NON_IDEMPOTENT
-    )
-    @MemberOrder(
-            name = "Registrations",
-            sequence = "13"
-    )
     public FixedAssetRegistration newRegistration(
             final FixedAsset subject,
             final FixedAssetRegistrationType type) {
@@ -64,12 +57,6 @@ public class FixedAsset_registrationContributions extends UdoDomainService<Fixed
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    @MemberOrder(
-            name = "Registrations",
-            sequence = "13.5"
-    )
     public List<FixedAssetRegistration> registrations(final FixedAsset subject) {
         return fixedAssetRegistrationRepository.findBySubject(subject);
     }

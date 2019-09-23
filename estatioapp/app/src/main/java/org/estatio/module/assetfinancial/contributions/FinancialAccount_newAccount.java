@@ -27,9 +27,6 @@ import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccount;
 
-//@DomainService(
-//        nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
-//)
 @Mixin(method="act")
 public class FinancialAccount_newAccount {
 
