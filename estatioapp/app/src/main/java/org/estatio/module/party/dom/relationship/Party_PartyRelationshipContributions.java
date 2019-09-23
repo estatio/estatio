@@ -24,22 +24,20 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.*;
 
 import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.party.dom.Party;
 
 // TODO: REVIEW, should this be inlined as a derived collection on Party?
-@DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
+@Mixin(method = "coll")
 public class Party_PartyRelationshipContributions extends UdoDomainService<Party_PartyRelationshipContributions> {
 
-    public Party_PartyRelationshipContributions() {
+    private final Party party;
+
+    public Party_PartyRelationshipContributions(Party party) {
         super(Party_PartyRelationshipContributions.class);
+        this.party = party;
     }
 
     @PostConstruct
@@ -49,7 +47,7 @@ public class Party_PartyRelationshipContributions extends UdoDomainService<Party
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<PartyRelationshipView> relationships(Party party) {
+    public List<PartyRelationshipView> coll() {
         List<PartyRelationshipView> partyRelationshipViews = new ArrayList<>();
         final List<PartyRelationship> relationships = partyRelationshipRepository.findByParty(party);
         for (PartyRelationship partyRelationship : relationships) {
