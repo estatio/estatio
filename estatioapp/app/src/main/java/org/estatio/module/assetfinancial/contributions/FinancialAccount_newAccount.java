@@ -21,19 +21,16 @@ package org.estatio.module.assetfinancial.contributions;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.*;
 
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccount;
 
-@DomainService(
-        nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
-)
+//@DomainService(
+//        nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
+//)
+@Mixin(method="act")
 public class FinancialAccount_newAccount {
 
     private final FinancialAccount financialAccount;
@@ -47,7 +44,7 @@ public class FinancialAccount_newAccount {
             name = "Accounts",
             sequence = "13"
     )
-    public FixedAssetFinancialAccount newAccount(
+    public FixedAssetFinancialAccount act(
             final FixedAsset fixedAsset) {
         return fixedAssetFinancialAccountContributions.newAccount(fixedAsset, this.financialAccount);
     }
