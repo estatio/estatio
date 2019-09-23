@@ -21,7 +21,7 @@ public class Property_newBudget {
         return ccoNewBudgetContribution.newBudget(this.property, year);
     }
 
-    public String validateNewBudget(
+    public String validateAct(
             final int year) {
         return ccoNewBudgetContribution.validateNewBudget(this.property, year);
     }

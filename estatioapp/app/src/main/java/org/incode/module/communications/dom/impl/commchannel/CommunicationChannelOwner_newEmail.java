@@ -32,15 +32,15 @@ public class CommunicationChannelOwner_newEmail {
         return ccoNewChannelContributions.newEmail(this.owner, type, address);
     }
 
-    public List<CommunicationChannelType> choices0NewEmail() {
+    public List<CommunicationChannelType> choices0Act() {
         return ccoNewChannelContributions.choices1NewEmail();
     }
 
-    public CommunicationChannelType default0NewEmail() {
+    public CommunicationChannelType default0Act() {
         return ccoNewChannelContributions.default1NewEmail();
     }
 
-    public String validateNewEmail(
+    public String validateAct(
             final CommunicationChannelType type,
             final String address) {
         return ccoNewChannelContributions.validateNewEmail(this.owner, type, address);

@@ -48,25 +48,25 @@ public class CommunicationChannelOwner_newPostal {
         return ccoNewChannelContributions.newPostal(this.owner, type, country, state, addressLine1, addressLine2, addressLine3, postalCode, city);
     }
 
-    public List<CommunicationChannelType> choices0NewPostal() {
+    public List<CommunicationChannelType> choices0Act() {
         return ccoNewChannelContributions.choices1NewPostal();
     }
 
-    public CommunicationChannelType default0NewPostal() {
+    public CommunicationChannelType default0Act() {
         return ccoNewChannelContributions.default1NewPostal();
     }
 
-    public Country default1NewPostal() {
+    public Country default1Act() {
         return ccoNewChannelContributions.default2NewPostal();
     }
 
-    public List<State> choices2NewPostal(
+    public List<State> choices2Act(
             final CommunicationChannelType type,
             final Country country) {
         return ccoNewChannelContributions.choices3NewPostal(this.owner, type, country);
     }
 
-    public State default2NewPostal() {
+    public State default2Act() {
         return ccoNewChannelContributions.default3NewPostal();
     }
 

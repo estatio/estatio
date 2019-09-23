@@ -32,15 +32,15 @@ public class CommunicationChannelOwner_newPhoneOrFax {
         return ccoNewChannelContributions.newPhoneOrFax(this.owner, type, number);
     }
 
-    public List<CommunicationChannelType> choices0NewPhoneOrFax() {
+    public List<CommunicationChannelType> choices0Act() {
         return ccoNewChannelContributions.choices1NewPhoneOrFax();
     }
 
-    public CommunicationChannelType default0NewPhoneOrFax() {
+    public CommunicationChannelType default0Act() {
         return ccoNewChannelContributions.default1NewPhoneOrFax();
     }
 
-    public String validateNewPhoneOrFax(
+    public String validateAct(
             final CommunicationChannelType type,
             final String number) {
         return ccoNewChannelContributions.validateNewPhoneOrFax(this.owner, type, number);

@@ -51,7 +51,7 @@ public class Lease_newBreakOption extends UdoDomainService<Lease_newBreakOption>
         return ccoBreakOptionContributions.newBreakOption(this.lease, breakDate, notificationPeriod, breakType, breakExerciseType, description);
     }
 
-    public String validateNewBreakOption(
+    public String validateAct(
             final LocalDate breakDate,
             final String notificationPeriodStr,
             final BreakType breakType,
@@ -61,16 +61,16 @@ public class Lease_newBreakOption extends UdoDomainService<Lease_newBreakOption>
         return ccoBreakOptionContributions.validateNewBreakOption(this.lease, breakDate, notificationPeriodStr, breakType, breakExerciseType, description);
     }
 
-    public LocalDate default0NewBreakOption() {
+    public LocalDate default0Act() {
         // REVIEW: this is just a guess as to a reasonable default
         return ccoBreakOptionContributions.default1NewBreakOption();
     }
     
-    public BreakType default2NewBreakOption() {
+    public BreakType default2Act() {
         return ccoBreakOptionContributions.default3NewBreakOption();
     }
 
-    public BreakExerciseType default3NewBreakOption() {
+    public BreakExerciseType default3Act() {
         return ccoBreakOptionContributions.default4NewBreakOption();
     }
 

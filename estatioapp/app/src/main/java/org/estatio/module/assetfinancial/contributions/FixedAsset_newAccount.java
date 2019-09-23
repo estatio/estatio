@@ -51,7 +51,7 @@ public class FixedAsset_newAccount {
         return fixedAssetFinancialAccountContributions.newAccount(this.fixedAsset, financialAccount);
     }
 
-    public List<FinancialAccount> choices0NewAccount(
+    public List<FinancialAccount> choices0Act(
             final FinancialAccount financialAccount) {
         return fixedAssetFinancialAccountContributions.choices1NewAccount(this.fixedAsset, financialAccount);
     }

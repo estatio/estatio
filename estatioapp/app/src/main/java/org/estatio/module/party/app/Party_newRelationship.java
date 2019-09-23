@@ -50,13 +50,13 @@ public class Party_newRelationship {
         return partyRelationshipMenu.newRelationship(fromParty, toParty, relationshipType, description);
     }
 
-    public Set<String> choices1NewRelationship(
+    public Set<String> choices1Act(
             final Party to,
             final String type) {
         return partyRelationshipMenu.choices2NewRelationship(fromParty, to, type);
     }
 
-    public String validateNewRelationship(
+    public String validateAct(
             final Party to,
             final String relationshipType,
             final String description) {
