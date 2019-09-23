@@ -25,32 +25,26 @@ import javax.inject.Inject;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.base.dom.utils.JodaPeriodUtils;
 
 import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.lease.dom.Lease;
 
-@DomainService(repositoryFor = BreakOption.class, nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
-public class Lease_breakOptionContributions extends UdoDomainService<Lease_breakOptionContributions> {
+@DomainService(repositoryFor = BreakOption.class, nature = NatureOfService.DOMAIN)
+public class LeaseService extends UdoDomainService<LeaseService> {
 
-    public Lease_breakOptionContributions() {
-        super(Lease_breakOptionContributions.class);
+    public LeaseService() {
+        super(LeaseService.class);
     }
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @ActionLayout(contributed = Contributed.AS_ACTION)
     public Lease newBreakOption(
             final Lease lease,
             final LocalDate breakDate,

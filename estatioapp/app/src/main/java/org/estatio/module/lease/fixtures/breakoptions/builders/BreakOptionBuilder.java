@@ -30,7 +30,7 @@ import org.estatio.module.lease.dom.breaks.BreakExerciseType;
 import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.breaks.BreakType;
-import org.estatio.module.lease.dom.breaks.Lease_breakOptionContributions;
+import org.estatio.module.lease.dom.breaks.LeaseService;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -125,7 +125,7 @@ public class BreakOptionBuilder extends BuilderScriptAbstract<BreakOption, Break
     protected LeaseRepository leaseRepository;
 
     @Inject
-    Lease_breakOptionContributions breakOptionContributions;
+    LeaseService breakOptionContributions;
 
     @Inject
     BreakOptionRepository breakOptionRepository;
