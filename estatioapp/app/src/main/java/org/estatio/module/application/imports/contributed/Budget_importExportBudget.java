@@ -18,13 +18,7 @@ package org.estatio.module.application.imports.contributed;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Publishing;
-import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.actinvoc.ActionInvocationContext;
 
 import org.isisaddons.module.excel.dom.ExcelService;
@@ -33,10 +27,14 @@ import org.estatio.module.application.imports.BudgetImportExportManager;
 import org.estatio.module.budget.dom.budget.Budget;
 
 // TODO: need to untangle this and push back down to budget module
-@DomainService(
-        nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
-)
+@Mixin(method = "act")
 public class Budget_importExportBudget {
+
+    private final Budget budget;
+
+    public Budget_importExportBudget(Budget budget) {
+        this.budget = budget;
+    }
 
     @PostConstruct
     public void init() {
@@ -50,7 +48,7 @@ public class Budget_importExportBudget {
             publishing = Publishing.DISABLED
     )
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public BudgetImportExportManager importExportBudget(Budget budget) {
+    public BudgetImportExportManager act() {
 
         return new BudgetImportExportManager(budget);
 
