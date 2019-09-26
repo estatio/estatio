@@ -20,13 +20,14 @@ package org.estatio.module.asset.app;
 
 import java.util.List;
 
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
@@ -122,9 +123,12 @@ public class PropertyMenu2_Test {
         public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
 
         @Mock
-        private DomainObjectContainer mockContainer;
-        @Mock
         private EstatioApplicationTenancyRepositoryForProperty mockEstatioApplicationTenancyRepository;
+
+        @Mock
+        private RepositoryService mockRepositoryService;
+        @Mock
+        private FactoryService mockFactoryService;
 
         PropertyRepository propertyRepository;
         PropertyMenu propertyMenu;
@@ -132,7 +136,8 @@ public class PropertyMenu2_Test {
         @Before
         public void setup() {
             propertyRepository = new PropertyRepository();
-            propertyRepository.setContainer(mockContainer);
+            propertyRepository.repositoryService = mockRepositoryService;
+            propertyRepository.factoryService = mockFactoryService;
 
             propertyMenu = new PropertyMenu();
             propertyMenu.propertyRepository = propertyRepository;
@@ -158,10 +163,10 @@ public class PropertyMenu2_Test {
                     oneOf(mockEstatioApplicationTenancyRepository).findOrCreateTenancyFor(property);
                     will(returnValue(propertyApplicationTenancy));
 
-                    oneOf(mockContainer).newTransientInstance(Property.class);
+                    oneOf(mockFactoryService).instantiate(Property.class);
                     will(returnValue(property));
 
-                    oneOf(mockContainer).persistIfNotAlready(property);
+                    oneOf(mockRepositoryService).persist(property);
                 }
             });
 

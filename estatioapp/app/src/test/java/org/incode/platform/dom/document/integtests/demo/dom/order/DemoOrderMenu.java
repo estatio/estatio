@@ -3,10 +3,11 @@ package org.incode.platform.dom.document.integtests.demo.dom.order;
 import java.util.List;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -42,7 +43,7 @@ public class DemoOrderMenu {
     )
     @MemberOrder(sequence = "1")
     public List<DemoOrder> listAllDemoOrders() {
-        return container.allInstances(DemoOrder.class);
+        return repositoryService.allInstances(DemoOrder.class);
     }
 
     //endregion
@@ -58,7 +59,7 @@ public class DemoOrderMenu {
             @Nullable
             final String preferences) {
         final DemoOrder obj = new DemoOrder(orderNumber, customerName, orderDate, preferences);
-        container.persistIfNotAlready(obj);
+        repositoryService.persist(obj);
         return obj;
     }
 
@@ -67,8 +68,9 @@ public class DemoOrderMenu {
     //region > injected services
     // //////////////////////////////////////
 
-    @javax.inject.Inject 
-    DomainObjectContainer container;
+
+    @Inject
+    RepositoryService repositoryService;
 
     //endregion
 

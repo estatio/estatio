@@ -43,12 +43,12 @@ public class PartitioningRepository extends UdoDomainRepositoryAndFactory<Partit
             final LocalDate startDate,
             final LocalDate endDate,
             final BudgetCalculationType type) {
-        Partitioning partitioning = newTransientInstance(Partitioning.class);
+        Partitioning partitioning = factoryService.instantiate(Partitioning.class);
         partitioning.setBudget(budget);
         partitioning.setStartDate(startDate);
         partitioning.setEndDate(endDate);
         partitioning.setType(type);
-        persistIfNotAlready(partitioning);
+        repositoryService.persist(partitioning);
         return partitioning;
     }
 

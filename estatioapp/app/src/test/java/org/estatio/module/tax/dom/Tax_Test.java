@@ -21,6 +21,7 @@ package org.estatio.module.tax.dom;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Description;
 import org.jmock.Expectations;
@@ -33,7 +34,6 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
@@ -51,7 +51,7 @@ public class Tax_Test {
     public static class PercentageFor extends Tax_Test {
 
         @Mock
-        private DomainObjectContainer mockContainer;
+        private FactoryService mockFactoryService;
 
         @Mock
         private TaxRateRepository mockTaxRateRepository;
@@ -61,7 +61,7 @@ public class Tax_Test {
 
             context.checking(new Expectations() {
                 {
-                    allowing(mockContainer).newTransientInstance(with.is(IsisMatchers.classEqualTo(TaxRate.class)));
+                    allowing(mockFactoryService).instantiate(with.is(IsisMatchers.classEqualTo(TaxRate.class)));
                     will(returnNewTransientInstance(TaxRate.class));
                 }
 
@@ -86,8 +86,8 @@ public class Tax_Test {
                                     continue;
                                 }
                                 final Class<?> methodParameterType = method.getParameterTypes()[0];
-                                if (methodParameterType.isAssignableFrom(DomainObjectContainer.class)) {
-                                    method.invoke(obj, mockContainer);
+                                if (methodParameterType.isAssignableFrom(FactoryService.class)) {
+                                    method.invoke(obj, mockFactoryService);
                                     break;
                                 }
                             }

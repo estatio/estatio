@@ -26,7 +26,6 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.services.sudo.SudoService;
 import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.applib.services.wrapper.DisabledException;
@@ -67,9 +66,6 @@ public class GuaranteeIntegration_IntegTest extends GuaranteeModuleIntegTestAbst
 
     @Inject
     UserService userService;
-
-    @Inject
-    private DomainObjectContainer container;
 
     @Inject
     AgreementRoleRepository agreementRoleRepository;

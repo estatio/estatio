@@ -25,7 +25,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.ViewModel;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -43,6 +42,8 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 
+import org.apache.isis.applib.services.registry.ServiceRegistry;
+import org.apache.isis.applib.services.title.TitleService;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 
@@ -64,7 +65,9 @@ public class PropertyOrderingViewModel implements ViewModel {
     @Inject
     BookmarkService bookmarkService;
     @Inject
-    DomainObjectContainer container;
+    ServiceRegistry serviceRegistry;
+    @Inject
+    TitleService titleService;
 
     @Override
     public String viewModelMemento() {
@@ -116,7 +119,7 @@ public class PropertyOrderingViewModel implements ViewModel {
     )
     @MemberOrder(name="Ordering", sequence = "3")
     public String getName() {
-        return container.titleOf(property);
+        return titleService.titleOf(property);
     }
 
 
@@ -219,7 +222,7 @@ public class PropertyOrderingViewModel implements ViewModel {
                 final PropertyOrderingViewModel vm = PropertyOrderingViewModel.this;
                 return property == vm.property
                         ? vm // can't have two view models both representing the same contact group at same time
-                        : container.injectServicesInto(new PropertyOrderingViewModel(property));
+                        : serviceRegistry.injectServicesInto(new PropertyOrderingViewModel(property));
             }
         };
     }

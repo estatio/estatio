@@ -19,13 +19,14 @@ package org.estatio.module.budget.dom.keytable;
 
 import java.util.List;
 
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
@@ -118,14 +119,18 @@ public class KeytableRepository_Test {
         public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
 
         @Mock
-        private DomainObjectContainer mockContainer;
+        private FactoryService mockFactoryService;
+
+        @Mock
+        private RepositoryService mockRepositoryService;
 
         KeyTableRepository keyTableRepository;
 
         @Before
         public void setup() {
             keyTableRepository = new KeyTableRepository();
-            keyTableRepository.setContainer(mockContainer);
+            keyTableRepository.repositoryService = mockRepositoryService;
+            keyTableRepository.factoryService = mockFactoryService;
         }
 
         @Test
@@ -138,9 +143,9 @@ public class KeytableRepository_Test {
             // expect
             context.checking(new Expectations() {
                 {
-                    oneOf(mockContainer).newTransientInstance(KeyTable.class);
+                    oneOf(mockFactoryService).instantiate(KeyTable.class);
                     will(returnValue(keyTable));
-                    oneOf(mockContainer).persistIfNotAlready(keyTable);
+                    oneOf(mockRepositoryService).persist(keyTable);
                 }
 
             });

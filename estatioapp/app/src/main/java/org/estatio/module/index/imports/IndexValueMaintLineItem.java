@@ -22,9 +22,10 @@ import java.util.List;
 
 import com.google.common.base.Objects;
 
+import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.applib.services.xactn.TransactionService;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Bulk;
@@ -47,6 +48,8 @@ import org.estatio.module.index.dom.IndexBaseRepository;
 import org.estatio.module.index.dom.IndexRepository;
 import org.estatio.module.index.dom.IndexValue;
 import org.estatio.module.index.dom.IndexValueRepository;
+
+import javax.inject.Inject;
 
 @DomainObjectLayout(paged = Integer.MAX_VALUE)
 @MemberGroupLayout(
@@ -196,9 +199,9 @@ public class IndexValueMaintLineItem {
         if (bulkInteractionContext.isFirst()) {
             String error = check();
             if (error != null) {
-                getContainer().raiseError(error);
+                messageService.raiseError(error);
             } else {
-                getContainer().informUser("All ok");
+                messageService.informUser("All ok");
             }
         }
     }
@@ -213,7 +216,7 @@ public class IndexValueMaintLineItem {
         if (bulkInteractionContext.isFirst()) {
             String error = check();
             if (error != null) {
-                getContainer().raiseError(error);
+                messageService.raiseError(error);
                 return;
             }
         }
@@ -260,7 +263,7 @@ public class IndexValueMaintLineItem {
         setIndexValue(indexValue);
 
         // belt-n-braces so that subsequent queries succeed...
-        getContainer().flush();
+        transactionService.flushTransaction();
     }
 
     private String check() {
@@ -380,11 +383,10 @@ public class IndexValueMaintLineItem {
     @javax.inject.Inject
     private Scratchpad scratchpad;
 
-    @javax.inject.Inject
-    private DomainObjectContainer container;
+    @Inject
+    private MessageService messageService;
 
-    private DomainObjectContainer getContainer() {
-        return container;
-    }
+    @Inject
+    private TransactionService transactionService;
 
 }

@@ -22,9 +22,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.user.UserService;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
@@ -70,7 +71,7 @@ public class EstatioFixtureScripts {
                     named = "Nextdue date"
             )
             final LocalDate nextDueDate) {
-        final CreateRetroInvoices creator = container.newTransientInstance(CreateRetroInvoices.class);
+        final CreateRetroInvoices creator = factoryService.instantiate(CreateRetroInvoices.class);
         final FixtureScript.ExecutionContext executionContext = fixtureScripts.newExecutionContext(null);
         creator.createProperty(property, startDueDate, nextDueDate, executionContext);
         return executionContext.getResults();
@@ -93,14 +94,14 @@ public class EstatioFixtureScripts {
                     named = "Nextdue date"
             )
             final LocalDate nextDueDate) {
-        final CreateRetroInvoices creator = container.newTransientInstance(CreateRetroInvoices.class);
+        final CreateRetroInvoices creator = factoryService.instantiate(CreateRetroInvoices.class);
         final FixtureScript.ExecutionContext executionContext = fixtureScripts.newExecutionContext(null);
         creator.createLease(lease, startDueDate, nextDueDate, executionContext);
         return executionContext.getResults();
     }
 
     public boolean hideCreateRetroInvoicesForLease() {
-        return !container.getUser().hasRole("superuser_role");
+        return !userService.getUser().hasRole("superuser_role");
     }
 
 
@@ -109,6 +110,9 @@ public class EstatioFixtureScripts {
     @Inject
     FixtureScripts fixtureScripts;
     @Inject
-    DomainObjectContainer container;
+    UserService userService;
+    @Inject
+    FactoryService factoryService;
+
 
 }

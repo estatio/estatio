@@ -9,11 +9,11 @@ import javax.inject.Inject;
 import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.isis.applib.services.registry.ServiceRegistry;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -154,7 +154,7 @@ public class LeaseTermForDepositImport implements ExcelFixtureRowHandler, Import
                 itemStatus,
                 itemAtPath);
 
-        domainObjectContainer.injectServicesInto(leaseItemImport);
+        serviceRegistry.injectServicesInto(leaseItemImport);
         LeaseItem depositItem = leaseItemImport.importItem(false);
 
         // link to source item if sourceItemTypeName is given
@@ -194,6 +194,6 @@ public class LeaseTermForDepositImport implements ExcelFixtureRowHandler, Import
     LeaseRepository leaseRepository;
 
     @Inject
-    private DomainObjectContainer domainObjectContainer;
+    private ServiceRegistry serviceRegistry;
 
 }

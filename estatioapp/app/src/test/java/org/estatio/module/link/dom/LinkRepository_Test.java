@@ -26,7 +26,6 @@ import org.jmock.auto.Mock;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.events.system.FixturesInstallingEvent;
 import org.apache.isis.applib.services.fixturespec.FixtureScriptsDefault;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
@@ -45,9 +44,6 @@ public class LinkRepository_Test {
     }
 
     public static class FindAllForClassHierarchy extends LinkRepository_Test {
-
-        @Mock
-        private DomainObjectContainer mockContainer;
 
         private QueryResultsCache queryResultsCache;
         private LinkRepository linkRepository;

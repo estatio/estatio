@@ -182,9 +182,6 @@ public class LeaseImport implements ExcelFixtureRowHandler, Importable {
 
 
 //    @Inject
-//    private DomainObjectContainer container;
-
-//    @Inject
 //    WrapperFactory wrapperFactory;
 
 

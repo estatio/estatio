@@ -36,7 +36,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
@@ -111,9 +110,6 @@ public class Lease_Test {
     }
 
     public static class ChangeStatus extends Lease_Test {
-
-        @Mock
-        private DomainObjectContainer mockContainer;
 
         @Before
         public void setUp() throws Exception {
@@ -315,8 +311,7 @@ public class Lease_Test {
         private BankAccountRepository mockBankAccountRepository;
         @Mock
         private ClockService mockClockService;
-        @Mock
-        private DomainObjectContainer mockContainer;
+
         @Mock
         private BankMandateRepository mockBankMandateRepository;
 
@@ -427,7 +422,6 @@ public class Lease_Test {
             landlordAgreementRole.clockService = mockClockService;
 
             bankMandate = new BankMandate();
-            bankMandate.setContainer(mockContainer);
 
             bankAccount = new BankAccount();
             bankAccount.setReference("REF1");
@@ -593,9 +587,6 @@ public class Lease_Test {
         private AgreementRepository mockAgreementRepository;
         @Mock
         private ClockService mockClockService;
-
-        @Mock
-        private DomainObjectContainer mockContainer;
 
         private BankMandate bankMandate;
         private BankMandate someOtherBankMandate;
@@ -780,9 +771,6 @@ public class Lease_Test {
     }
 
     public static class TenancyDuration extends Lease_Test {
-
-        @Mock
-        private DomainObjectContainer mockContainer;
 
         @Before
         public void setUp() throws Exception {

@@ -19,9 +19,10 @@
 
 package org.estatio.module.settings.dom;
 
+import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -33,6 +34,8 @@ import org.estatio.module.settings.dom.SettingType;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.inject.Inject;
 
 /**
  * Factors out common implementation; however this is NOT annotated with 
@@ -144,19 +147,19 @@ public abstract class SettingAbstractForEstatio
     
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public SettingAbstractForEstatio delete() {
-        container.remove(this);
-        container.informUser("Setting deleted");
+        repositoryService.remove(this);
+        messageService.informUser("Setting deleted");
         return null;
     }
     
  
     // //////////////////////////////////////
-    
-    private DomainObjectContainer container;
 
-    public void setDomainObjectContainer(final DomainObjectContainer container) {
-        this.container = container;
-    }
+    @Inject
+    RepositoryService repositoryService;
+
+    @Inject
+    MessageService messageService;
 
 
 }

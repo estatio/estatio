@@ -28,7 +28,7 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
             final BigDecimal value,
             final BudgetCalculationType calculationType){
 
-        BudgetCalculation budgetCalculation = newTransientInstance(BudgetCalculation.class);
+        BudgetCalculation budgetCalculation = factoryService.instantiate(BudgetCalculation.class);
         budgetCalculation.setPartitionItem(partitionItem);
         budgetCalculation.setTableItem(tableItem);
         budgetCalculation.setValue(value);
@@ -38,7 +38,7 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
         budgetCalculation.setIncomingCharge(partitionItem.getBudgetItem().getCharge());
         budgetCalculation.setUnit(tableItem.getUnit());
 
-        persist(budgetCalculation);
+        repositoryService.persist(budgetCalculation);
 
         return budgetCalculation;
     }

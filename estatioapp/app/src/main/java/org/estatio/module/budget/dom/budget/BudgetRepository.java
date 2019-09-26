@@ -53,7 +53,7 @@ public class BudgetRepository extends UdoDomainRepositoryAndFactory<Budget> {
         budget.setProperty(property);
         budget.setStartDate(startDate);
         budget.setEndDate(endDate);
-        persistIfNotAlready(budget);
+        repositoryService.persist(budget);
 
         return budget;
     }

@@ -31,6 +31,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.factory.FactoryService;
 
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.asset.dom.FixedAsset;
 
@@ -50,7 +51,7 @@ public class FixedAssetService extends UdoDomainService<FixedAssetService> {
             final FixedAssetRegistrationType type) {
         final FixedAssetRegistration registration = type.create(factoryService);
         registration.setSubject(subject);
-        persistIfNotAlready(registration);
+        repositoryService.persist(registration);
         return registration;
     }
 
@@ -68,5 +69,6 @@ public class FixedAssetService extends UdoDomainService<FixedAssetService> {
 
     @Inject
     FactoryService factoryService;
-
+    @Inject
+    RepositoryService repositoryService;
 }

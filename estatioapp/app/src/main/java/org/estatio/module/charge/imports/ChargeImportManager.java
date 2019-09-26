@@ -20,7 +20,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
@@ -81,8 +80,6 @@ public class ChargeImportManager {
 
 
     //region > injected services
-    @Inject
-    private DomainObjectContainer container;
 
     @Inject
     private ExcelService excelService;

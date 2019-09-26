@@ -25,7 +25,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.ClassUnderTest;
@@ -57,8 +56,6 @@ public class LeaseInvoicingSettingsService_Test {
 
     @Mock
     private ApplicationSettingsServiceForEstatio mockApplicationSettingsService;
-    @Mock
-    private DomainObjectContainer mockDomainObjectContainer;
 
     @ClassUnderTest
     private EstatioSettingsServiceForTesting estatioSettingsService;

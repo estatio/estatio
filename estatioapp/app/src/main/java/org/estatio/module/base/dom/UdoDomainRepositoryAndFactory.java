@@ -20,9 +20,11 @@ package org.estatio.module.base.dom;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.jdo.Query;
 
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
@@ -56,7 +58,7 @@ public abstract class UdoDomainRepositoryAndFactory<T> extends UdoDomainService<
     // //////////////////////////////////////
 
     protected T newTransientInstance() {
-        return newTransientInstance(getEntityType());
+        return factoryService.instantiate(getEntityType());
     }
     
     protected T firstMatch(final String queryName, final Object... paramArgs) {
@@ -92,6 +94,9 @@ public abstract class UdoDomainRepositoryAndFactory<T> extends UdoDomainService<
 
 
     @javax.inject.Inject
-    protected RepositoryService repositoryService;
+    public RepositoryService repositoryService;
+
+    @Inject
+    public FactoryService factoryService;
 
 }

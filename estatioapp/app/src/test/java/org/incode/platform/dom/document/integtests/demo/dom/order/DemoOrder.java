@@ -5,15 +5,16 @@ import java.util.Collection;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.google.common.collect.Ordering;
 
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
@@ -108,7 +109,7 @@ public class DemoOrder implements Comparable<DemoOrder> {
         final DemoOrderLine orderLine = new DemoOrderLine(this, description, quantity, cost);
         getOrderLines().add(orderLine);
 
-        container.persistIfNotAlready(orderLine);
+        repositoryService.persist(orderLine);
 
         return this;
     }
@@ -131,9 +132,8 @@ public class DemoOrder implements Comparable<DemoOrder> {
         return Ordering.natural().onResultOf(DemoOrder::getNumber).compare(this, other);
     }
 
-
-    @javax.inject.Inject
-    DomainObjectContainer container;
+    @Inject
+    RepositoryService repositoryService;
 
 
 }

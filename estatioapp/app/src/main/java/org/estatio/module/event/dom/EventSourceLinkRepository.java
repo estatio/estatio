@@ -21,8 +21,8 @@ package org.estatio.module.event.dom;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -30,6 +30,8 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 
+import org.apache.isis.applib.services.registry.ServiceRegistry;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.isisaddons.module.poly.dom.PolymorphicAssociationLink;
 
 @DomainService(
@@ -43,7 +45,7 @@ public class EventSourceLinkRepository {
 
     @PostConstruct
     public void init() {
-        linkFactory = container.injectServicesInto(
+        linkFactory = serviceRegistry.injectServicesInto(
                 new PolymorphicAssociationLink.Factory<>(
                         this,
                         Event.class,
@@ -58,7 +60,7 @@ public class EventSourceLinkRepository {
     //region > findByEvent (programmatic)
     @Programmatic
     public EventSourceLink findByEvent(final Event event) {
-        return container.firstMatch(
+        return repositoryService.firstMatch(
                 new QueryDefault<>(EventSourceLink.class,
                         "findByEvent",
                         "event", event));
@@ -75,7 +77,7 @@ public class EventSourceLinkRepository {
         if(bookmark == null) {
             return null;
         }
-        return container.allMatches(
+        return repositoryService.allMatches(
                 new QueryDefault<>(EventSourceLink.class,
                         "findBySource",
                         "sourceObjectType", bookmark.getObjectType(),
@@ -98,7 +100,7 @@ public class EventSourceLinkRepository {
         if(bookmark == null) {
             return null;
         }
-        return container.firstMatch(
+        return repositoryService.firstMatch(
                 new QueryDefault<>(EventSourceLink.class,
                         "findBySourceAndCalendarName",
                         "sourceObjectType", bookmark.getObjectType(),
@@ -122,8 +124,11 @@ public class EventSourceLinkRepository {
 
     //region > injected services
 
-    @javax.inject.Inject
-    private DomainObjectContainer container;
+    @Inject
+    private ServiceRegistry serviceRegistry;
+
+    @Inject
+    private RepositoryService repositoryService;
 
     @javax.inject.Inject
     private BookmarkService bookmarkService;

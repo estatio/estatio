@@ -19,6 +19,8 @@ package org.estatio.module.budget.dom.budget;
 
 import java.util.List;
 
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -26,7 +28,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
@@ -115,14 +116,18 @@ public class BudgetRepository_Test {
         public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
 
         @Mock
-        private DomainObjectContainer mockContainer;
+        private FactoryService mockFactoryService;
+
+        @Mock
+        private RepositoryService mockRepositoryService;
 
         BudgetRepository budgetRepository;
 
         @Before
         public void setup() {
             budgetRepository = new BudgetRepository();
-            budgetRepository.setContainer(mockContainer);
+            budgetRepository.factoryService = mockFactoryService;
+            budgetRepository.repositoryService = mockRepositoryService;
         }
 
         @Test
@@ -139,9 +144,9 @@ public class BudgetRepository_Test {
             // expect
             context.checking(new Expectations() {
                 {
-                    oneOf(mockContainer).newTransientInstance(Budget.class);
+                    oneOf(mockFactoryService).instantiate(Budget.class);
                     will(returnValue(budget));
-                    oneOf(mockContainer).persistIfNotAlready(budget);
+                    oneOf(mockRepositoryService).persist(budget);
                 }
 
             });

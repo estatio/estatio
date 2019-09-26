@@ -53,7 +53,7 @@ public class PartitionItemRepository extends UdoDomainRepositoryAndFactory<Parti
             final BigDecimal percentage,
             final BigDecimal fixedBudgetedAmount,
             final BigDecimal fixedAuditedAmount) {
-        PartitionItem partitionItem = newTransientInstance(PartitionItem.class);
+        PartitionItem partitionItem = factoryService.instantiate(PartitionItem.class);
         partitionItem.setPartitioning(partitioning);
         partitionItem.setCharge(charge);
         partitionItem.setPartitioningTable(partitioningTable);
@@ -61,7 +61,7 @@ public class PartitionItemRepository extends UdoDomainRepositoryAndFactory<Parti
         partitionItem.setPercentage(percentage.setScale(6, BigDecimal.ROUND_HALF_UP));
         partitionItem.setFixedBudgetedAmount(fixedBudgetedAmount);
         partitionItem.setFixedAuditedAmount(fixedAuditedAmount);
-        persistIfNotAlready(partitionItem);
+        repositoryService.persist(partitionItem);
         return partitionItem;
     }
 
