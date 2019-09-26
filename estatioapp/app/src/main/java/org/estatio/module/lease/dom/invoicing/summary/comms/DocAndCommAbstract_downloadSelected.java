@@ -30,7 +30,6 @@ import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
 import org.apache.isis.applib.value.Blob;
 
-import org.estatio.module.lease.app.ListOfDocuments;
 import org.isisaddons.module.pdfbox.dom.service.PdfBoxService;
 
 import org.incode.module.base.dom.MimeTypeData;
