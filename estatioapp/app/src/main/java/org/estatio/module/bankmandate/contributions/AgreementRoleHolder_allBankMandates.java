@@ -7,7 +7,7 @@ import org.estatio.module.bankmandate.dom.BankMandate;
 import javax.inject.Inject;
 import java.util.Collection;
 
-@Mixin(method = "coll")
+@Mixin(method = "act")
 public class AgreementRoleHolder_allBankMandates {
 
     private final AgreementRoleHolder agreementRoleHolder;
@@ -18,7 +18,7 @@ public class AgreementRoleHolder_allBankMandates {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(named = "List All", contributed = Contributed.AS_ACTION)
-    public Collection<BankMandate> coll() {
+    public Collection<BankMandate> act() {
         return agreementRoleHolderBankMandateService.allBankMandates(this.agreementRoleHolder);
     }
 
