@@ -19,9 +19,9 @@ public class AgreementRoleHolder_allBankMandates {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(named = "List All", contributed = Contributed.AS_ACTION)
     public Collection<BankMandate> coll() {
-        return ccoBankMandateContributions.allBankMandates(this.agreementRoleHolder);
+        return agreementRoleHolderBankMandateService.allBankMandates(this.agreementRoleHolder);
     }
 
     @Inject
-    AgreementRoleHolder_bankMandateContributions ccoBankMandateContributions;
+    AgreementRoleHolderBankMandateService agreementRoleHolderBankMandateService;
 }

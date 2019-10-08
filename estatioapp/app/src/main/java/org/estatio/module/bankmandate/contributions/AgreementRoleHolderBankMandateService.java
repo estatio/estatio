@@ -27,14 +27,8 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.base.dom.UdoDomainService;
 import org.incode.module.base.dom.with.WithInterval;
@@ -59,11 +53,11 @@ import org.estatio.module.party.dom.Party;
  * {@link Party}.
  */
 @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "30")
-public class AgreementRoleHolder_bankMandateContributions
-        extends UdoDomainService<AgreementRoleHolder_bankMandateContributions> {
+public class AgreementRoleHolderBankMandateService
+        extends UdoDomainService<AgreementRoleHolderBankMandateService> {
 
-    public AgreementRoleHolder_bankMandateContributions() {
-        super(AgreementRoleHolder_bankMandateContributions.class);
+    public AgreementRoleHolderBankMandateService() {
+        super(AgreementRoleHolderBankMandateService.class);
     }
 
 
@@ -86,17 +80,6 @@ public class AgreementRoleHolder_bankMandateContributions
 
     // //////////////////////////////////////
 
-    /**
-     * A contributed action of all {@link BankMandate}s of the
-     * {@link AgreementRoleHolder}.
-     * <p/>
-     * <p/>
-     * The current {@link BankMandate}s are
-     * {@link #currentBankMandates(AgreementRoleHolder) contributed} as a
-     * collection.
-     */
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(named = "List All", contributed = Contributed.AS_ACTION)
     public Collection<BankMandate> allBankMandates(final AgreementRoleHolder agreementRoleHolder) {
         final AgreementType agreementType = agreementTypeRepository.find(
                 BankMandateAgreementTypeEnum.MANDATE);

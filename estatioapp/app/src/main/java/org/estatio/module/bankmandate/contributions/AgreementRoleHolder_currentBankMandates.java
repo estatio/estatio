@@ -21,9 +21,9 @@ public class AgreementRoleHolder_currentBankMandates {
     @CollectionLayout(defaultView = "table")
     @MemberOrder(sequence = "80")
     public Collection<BankMandate> coll() {
-        return ccoBankMandateContributions.currentBankMandates(this.agreementRoleHolder);
+        return agreementRoleHolderBankMandateService.currentBankMandates(this.agreementRoleHolder);
     }
 
     @Inject
-    AgreementRoleHolder_bankMandateContributions ccoBankMandateContributions;
+    AgreementRoleHolderBankMandateService agreementRoleHolderBankMandateService;
 }
