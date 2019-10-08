@@ -24,13 +24,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.asset.dom.FixedAsset;
@@ -45,10 +40,10 @@ import org.estatio.module.financial.dom.FinancialAccountRepository;
 @DomainService(
         nature = NatureOfService.DOMAIN
 )
-public class FixedAssetFinancialAccountContributions extends UdoDomainService<FixedAssetFinancialAccountContributions> {
+public class FixedAssetFinancialAccountService extends UdoDomainService<FixedAssetFinancialAccountService> {
 
-    public FixedAssetFinancialAccountContributions() {
-        super(FixedAssetFinancialAccountContributions.class);
+    public FixedAssetFinancialAccountService() {
+        super(FixedAssetFinancialAccountService.class);
     }
 
     public FixedAssetFinancialAccount newAccount(

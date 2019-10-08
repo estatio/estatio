@@ -49,10 +49,10 @@ public class FixedAsset_accounts {
             sequence = "13.5"
     )
     public List<FixedAssetFinancialAccount> coll() {
-        return fixedAssetFinancialAccountContributions.accounts(this.fixedAsset);
+        return fixedAssetFinancialAccountService.accounts(this.fixedAsset);
     }
 
 
     @Inject
-    FixedAssetFinancialAccountContributions fixedAssetFinancialAccountContributions;
+    FixedAssetFinancialAccountService fixedAssetFinancialAccountService;
 }

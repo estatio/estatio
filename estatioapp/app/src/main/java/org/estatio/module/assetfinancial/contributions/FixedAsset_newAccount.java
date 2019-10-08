@@ -48,14 +48,14 @@ public class FixedAsset_newAccount {
     )
     public FixedAssetFinancialAccount act(
             final FinancialAccount financialAccount) {
-        return fixedAssetFinancialAccountContributions.newAccount(this.fixedAsset, financialAccount);
+        return fixedAssetFinancialAccountService.newAccount(this.fixedAsset, financialAccount);
     }
 
     public List<FinancialAccount> choices0Act(
             final FinancialAccount financialAccount) {
-        return fixedAssetFinancialAccountContributions.choices1NewAccount(this.fixedAsset, financialAccount);
+        return fixedAssetFinancialAccountService.choices1NewAccount(this.fixedAsset, financialAccount);
     }
 
     @Inject
-    FixedAssetFinancialAccountContributions fixedAssetFinancialAccountContributions;
+    FixedAssetFinancialAccountService fixedAssetFinancialAccountService;
 }

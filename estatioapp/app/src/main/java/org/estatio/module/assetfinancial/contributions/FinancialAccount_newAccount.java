@@ -43,11 +43,11 @@ public class FinancialAccount_newAccount {
     )
     public FixedAssetFinancialAccount act(
             final FixedAsset fixedAsset) {
-        return fixedAssetFinancialAccountContributions.newAccount(fixedAsset, this.financialAccount);
+        return fixedAssetFinancialAccountService.newAccount(fixedAsset, this.financialAccount);
     }
 
 
     @Inject
-    FixedAssetFinancialAccountContributions fixedAssetFinancialAccountContributions;
+    FixedAssetFinancialAccountService fixedAssetFinancialAccountService;
 
 }
