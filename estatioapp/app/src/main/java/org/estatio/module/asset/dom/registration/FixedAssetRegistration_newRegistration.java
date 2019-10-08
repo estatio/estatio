@@ -26,9 +26,9 @@ public class FixedAssetRegistration_newRegistration {
     )
     public FixedAssetRegistration act(
             final FixedAssetRegistrationType type) {
-        return ccoRegistrationContributions.newRegistration(this.subject, type);
+        return fixedAssetService.newRegistration(this.subject, type);
     }
 
     @Inject
-    FixedAssetService ccoRegistrationContributions;
+    FixedAssetService fixedAssetService;
 }

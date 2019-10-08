@@ -22,9 +22,9 @@ public class FixedAssetRegistration_registrations {
             sequence = "13.5"
     )
     public List<FixedAssetRegistration> coll() {
-        return ccoRegistrationContributions.registrations(this.subject);
+        return fixedAssetService.registrations(this.subject);
     }
 
     @Inject
-    FixedAssetService ccoRegistrationContributions;
+    FixedAssetService fixedAssetService;
 }
