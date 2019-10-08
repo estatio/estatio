@@ -387,7 +387,7 @@ public class AgreementRoleCommunicationChannel
 
 
     private SortedSet<CommunicationChannel> communicationChannelsForRolesParty() {
-        return communicationChannelContributions.communicationChannels(getRole().getParty());
+        return communicationChannelOwnerService.communicationChannels(getRole().getParty());
     }
 
 
@@ -405,7 +405,7 @@ public class AgreementRoleCommunicationChannel
 
 
     @javax.inject.Inject
-    CommunicationChannelOwnerService communicationChannelContributions;
+    CommunicationChannelOwnerService communicationChannelOwnerService;
 
     @javax.inject.Inject
     TitleService titleService;
