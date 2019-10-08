@@ -29,12 +29,12 @@ import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannel;
 import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannelRepository;
 
 @Mixin(method="coll")
-public class AgreementRoleCommunicationChannelContributions extends UdoDomainRepositoryAndFactory<AgreementRoleCommunicationChannel> {
+public class CommunicationChannel_agreements extends UdoDomainRepositoryAndFactory<AgreementRoleCommunicationChannel> {
 
     private final CommunicationChannel communicationChannel;
 
-    public AgreementRoleCommunicationChannelContributions(CommunicationChannel communicationChannel) {
-        super(AgreementRoleCommunicationChannelContributions.class, AgreementRoleCommunicationChannel.class);
+    public CommunicationChannel_agreements(CommunicationChannel communicationChannel) {
+        super(CommunicationChannel_agreements.class, AgreementRoleCommunicationChannel.class);
         this.communicationChannel = communicationChannel;
     }
 
