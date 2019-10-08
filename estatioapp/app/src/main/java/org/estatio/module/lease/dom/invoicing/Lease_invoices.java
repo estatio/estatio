@@ -9,11 +9,11 @@ import org.apache.isis.applib.annotation.*;
 import org.estatio.module.lease.dom.Lease;
 
 @Mixin(method="coll")
-public class Lease_invoiceContributions {
+public class Lease_invoices {
 
     private final Lease lease;
 
-    public Lease_invoiceContributions(final Lease lease) {
+    public Lease_invoices(final Lease lease) {
         this.lease = lease;
     }
 
