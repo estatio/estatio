@@ -25,12 +25,12 @@ import org.apache.isis.applib.annotation.*;
 import org.estatio.module.base.dom.UdoDomainService;
 
 @Mixin(method="coll")
-public class EventContributions extends UdoDomainService<EventContributions> {
+public class EventSource_events extends UdoDomainService<EventSource_events> {
 
     private final EventSource eventSource;
 
-    public EventContributions(EventSource eventSource) {
-        super(EventContributions.class);
+    public EventSource_events(EventSource eventSource) {
+        super(EventSource_events.class);
         this.eventSource = eventSource;
     }
 
