@@ -30,12 +30,12 @@ import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.lease.dom.LeaseTermForIndexableRepository;
 
 @Mixin(method="act")
-public class IndexValue_leaseTermsContribution extends UdoDomainService<IndexValue_leaseTermsContribution> {
+public class IndexValue_showLeaseTerms extends UdoDomainService<IndexValue_showLeaseTerms> {
 
     private final IndexValue indexValue;
 
-    public IndexValue_leaseTermsContribution(IndexValue indexValue) {
-        super(IndexValue_leaseTermsContribution.class);
+    public IndexValue_showLeaseTerms(IndexValue indexValue) {
+        super(IndexValue_showLeaseTerms.class);
         this.indexValue = indexValue;
     }
 
