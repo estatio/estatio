@@ -29,24 +29,24 @@ public class CommunicationChannelOwner_newEmail {
             final CommunicationChannelType type,
             @ParameterLayout(named = "Address")
             final String address) {
-        return ccoNewChannelContributions.newEmail(this.owner, type, address);
+        return communicationChannelOwnerService.newEmail(this.owner, type, address);
     }
 
     public List<CommunicationChannelType> choices0Act() {
-        return ccoNewChannelContributions.choices1NewEmail();
+        return communicationChannelOwnerService.choices1NewEmail();
     }
 
     public CommunicationChannelType default0Act() {
-        return ccoNewChannelContributions.default1NewEmail();
+        return communicationChannelOwnerService.default1NewEmail();
     }
 
     public String validateAct(
             final CommunicationChannelType type,
             final String address) {
-        return ccoNewChannelContributions.validateNewEmail(this.owner, type, address);
+        return communicationChannelOwnerService.validateNewEmail(this.owner, type, address);
     }
 
 
     @Inject
-    CommunicationChannelOwnerService ccoNewChannelContributions;
+    CommunicationChannelOwnerService communicationChannelOwnerService;
 }

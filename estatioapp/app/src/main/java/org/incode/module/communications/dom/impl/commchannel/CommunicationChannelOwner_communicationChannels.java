@@ -24,10 +24,10 @@ public class CommunicationChannelOwner_communicationChannels {
     @CollectionLayout(defaultView = "table")
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public SortedSet<CommunicationChannel> coll() {
-        return ccoNewChannelContributions.communicationChannels(this.owner);
+        return communicationChannelOwnerService.communicationChannels(this.owner);
     }
 
 
     @Inject
-    CommunicationChannelOwnerService ccoNewChannelContributions;
+    CommunicationChannelOwnerService communicationChannelOwnerService;
 }

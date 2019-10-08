@@ -29,24 +29,24 @@ public class CommunicationChannelOwner_newPhoneOrFax {
             final CommunicationChannelType type,
             @ParameterLayout(named = "Number")
             final String number) {
-        return ccoNewChannelContributions.newPhoneOrFax(this.owner, type, number);
+        return communicationChannelOwnerService.newPhoneOrFax(this.owner, type, number);
     }
 
     public List<CommunicationChannelType> choices0Act() {
-        return ccoNewChannelContributions.choices1NewPhoneOrFax();
+        return communicationChannelOwnerService.choices1NewPhoneOrFax();
     }
 
     public CommunicationChannelType default0Act() {
-        return ccoNewChannelContributions.default1NewPhoneOrFax();
+        return communicationChannelOwnerService.default1NewPhoneOrFax();
     }
 
     public String validateAct(
             final CommunicationChannelType type,
             final String number) {
-        return ccoNewChannelContributions.validateNewPhoneOrFax(this.owner, type, number);
+        return communicationChannelOwnerService.validateNewPhoneOrFax(this.owner, type, number);
     }
 
 
     @Inject
-    CommunicationChannelOwnerService ccoNewChannelContributions;
+    CommunicationChannelOwnerService communicationChannelOwnerService;
 }

@@ -45,32 +45,32 @@ public class CommunicationChannelOwner_newPostal {
             @ParameterLayout(named = "City")
             final String city
     ) {
-        return ccoNewChannelContributions.newPostal(this.owner, type, country, state, addressLine1, addressLine2, addressLine3, postalCode, city);
+        return communicationChannelOwnerService.newPostal(this.owner, type, country, state, addressLine1, addressLine2, addressLine3, postalCode, city);
     }
 
     public List<CommunicationChannelType> choices0Act() {
-        return ccoNewChannelContributions.choices1NewPostal();
+        return communicationChannelOwnerService.choices1NewPostal();
     }
 
     public CommunicationChannelType default0Act() {
-        return ccoNewChannelContributions.default1NewPostal();
+        return communicationChannelOwnerService.default1NewPostal();
     }
 
     public Country default1Act() {
-        return ccoNewChannelContributions.default2NewPostal();
+        return communicationChannelOwnerService.default2NewPostal();
     }
 
     public List<State> choices2Act(
             final CommunicationChannelType type,
             final Country country) {
-        return ccoNewChannelContributions.choices3NewPostal(this.owner, type, country);
+        return communicationChannelOwnerService.choices3NewPostal(this.owner, type, country);
     }
 
     public State default2Act() {
-        return ccoNewChannelContributions.default3NewPostal();
+        return communicationChannelOwnerService.default3NewPostal();
     }
 
 
     @Inject
-    CommunicationChannelOwnerService ccoNewChannelContributions;
+    CommunicationChannelOwnerService communicationChannelOwnerService;
 }
