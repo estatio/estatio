@@ -19,9 +19,9 @@ public class Party_allLeases {
     @ActionLayout(named = "List All", contributed = Contributed.AS_ACTION)
     @MemberOrder(name = "currentLeases", sequence = "1")
     public List<Lease> act() {
-        return ccoLeaseContributions.allLeases(party);
+        return partyService.allLeases(party);
     }
 
     @Inject
-    PartyService ccoLeaseContributions;
+    PartyService partyService;
 }

@@ -19,9 +19,9 @@ public class Party_currentLeases {
     @CollectionLayout(defaultView = "table")
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<Lease> coll() {
-        return ccoLeaseContributions.currentLeases(party);
+        return partyService.currentLeases(party);
     }
 
     @Inject
-    PartyService ccoLeaseContributions;
+    PartyService partyService;
 }
