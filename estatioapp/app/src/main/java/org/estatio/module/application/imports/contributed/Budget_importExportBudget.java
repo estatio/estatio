@@ -36,13 +36,6 @@ public class Budget_importExportBudget {
         this.budget = budget;
     }
 
-    @PostConstruct
-    public void init() {
-        if (excelService == null) {
-            throw new IllegalStateException("Require ExcelService to be configured");
-        }
-    }
-
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
             publishing = Publishing.DISABLED
