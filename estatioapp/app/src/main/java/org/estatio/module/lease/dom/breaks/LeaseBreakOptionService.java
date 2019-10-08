@@ -37,10 +37,10 @@ import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.lease.dom.Lease;
 
 @DomainService(repositoryFor = BreakOption.class, nature = NatureOfService.DOMAIN)
-public class LeaseService extends UdoDomainService<LeaseService> {
+public class LeaseBreakOptionService extends UdoDomainService<LeaseBreakOptionService> {
 
-    public LeaseService() {
-        super(LeaseService.class);
+    public LeaseBreakOptionService() {
+        super(LeaseBreakOptionService.class);
     }
 
     // //////////////////////////////////////

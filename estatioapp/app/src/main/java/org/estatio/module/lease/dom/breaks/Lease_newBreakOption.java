@@ -27,12 +27,11 @@ import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.lease.dom.Lease;
 
 @Mixin(method = "act")
-public class Lease_newBreakOption extends UdoDomainService<Lease_newBreakOption> {
+public class Lease_newBreakOption {
 
     private final Lease lease;
 
     public Lease_newBreakOption(Lease lease) {
-        super(Lease_newBreakOption.class);
         this.lease = lease;
     }
 
@@ -48,7 +47,7 @@ public class Lease_newBreakOption extends UdoDomainService<Lease_newBreakOption>
             final BreakExerciseType breakExerciseType,
             final @Parameter(optionality = Optionality.OPTIONAL) String description
     ) {
-        return ccoBreakOptionContributions.newBreakOption(this.lease, breakDate, notificationPeriod, breakType, breakExerciseType, description);
+        return leaseBreakOptionService.newBreakOption(this.lease, breakDate, notificationPeriod, breakType, breakExerciseType, description);
     }
 
     public String validateAct(
@@ -58,22 +57,22 @@ public class Lease_newBreakOption extends UdoDomainService<Lease_newBreakOption>
             final BreakExerciseType breakExerciseType,
             final String description) {
 
-        return ccoBreakOptionContributions.validateNewBreakOption(this.lease, breakDate, notificationPeriodStr, breakType, breakExerciseType, description);
+        return leaseBreakOptionService.validateNewBreakOption(this.lease, breakDate, notificationPeriodStr, breakType, breakExerciseType, description);
     }
 
     public LocalDate default0Act() {
         // REVIEW: this is just a guess as to a reasonable default
-        return ccoBreakOptionContributions.default1NewBreakOption();
+        return leaseBreakOptionService.default1NewBreakOption();
     }
     
     public BreakType default2Act() {
-        return ccoBreakOptionContributions.default3NewBreakOption();
+        return leaseBreakOptionService.default3NewBreakOption();
     }
 
     public BreakExerciseType default3Act() {
-        return ccoBreakOptionContributions.default4NewBreakOption();
+        return leaseBreakOptionService.default4NewBreakOption();
     }
 
     @Inject
-    LeaseService ccoBreakOptionContributions;
+    LeaseBreakOptionService leaseBreakOptionService;
 }
