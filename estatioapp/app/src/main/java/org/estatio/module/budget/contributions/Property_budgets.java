@@ -20,9 +20,9 @@ public class Property_budgets {
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @CollectionLayout(defaultView = "table")
     public List<Budget> coll() {
-        return ccoNewBudgetContribution.budgets(this.property);
+        return propertyService.budgets(this.property);
     }
 
     @Inject
-    PropertyService ccoNewBudgetContribution;
+    PropertyService propertyService;
 }

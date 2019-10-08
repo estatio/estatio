@@ -18,14 +18,14 @@ public class Property_newBudget {
     @MemberOrder(name = "budgets", sequence = "1")
     public Budget act(
             final int year) {
-        return ccoNewBudgetContribution.newBudget(this.property, year);
+        return propertyService.newBudget(this.property, year);
     }
 
     public String validateAct(
             final int year) {
-        return ccoNewBudgetContribution.validateNewBudget(this.property, year);
+        return propertyService.validateNewBudget(this.property, year);
     }
 
     @Inject
-    PropertyService ccoNewBudgetContribution;
+    PropertyService propertyService;
 }
