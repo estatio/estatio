@@ -98,8 +98,8 @@ public class IncomingInvoiceDtoFactory extends DtoFactoryAbstract<IncomingInvoic
                 itemDto.setOrder(mappingHelper.oidDtoFor(link.getOrder()));
                 itemDto.setProject(mappingHelper.oidDtoFor(link.getProject()));
                 itemDto.setCharge(mappingHelper.oidDtoFor(incomingInvoiceItem.getCharge()));
-                itemDto.setReversalStatus(deriveReversalStatusOf(incomingInvoiceItem));
             }
+            itemDto.setReversalStatus(deriveReversalStatusOf(incomingInvoiceItem));
 
             final FixedAsset itemFixedAsset = incomingInvoiceItem.getFixedAsset();
             if(itemFixedAsset != null) {

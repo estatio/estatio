@@ -97,7 +97,7 @@ public abstract class DtoFactoryAbstract<DO,DTO> implements DtoFactory {
      * For convenience of subclasses.
      */
     @Inject
-    protected DtoMappingHelper mappingHelper;
+    public DtoMappingHelper mappingHelper;
 
 
 }
