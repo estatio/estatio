@@ -91,7 +91,7 @@ public class IncomingInvoiceDtoFactory_Test {
         // then
         assertThat(incomingInvoiceDto.getItems()).hasSize(4);
         // todo: test reversal status
-        
+
     }
 
 
