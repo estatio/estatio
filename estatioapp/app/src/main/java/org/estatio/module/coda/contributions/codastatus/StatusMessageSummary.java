@@ -3,7 +3,7 @@ package org.estatio.module.coda.contributions.codastatus;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-import org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage;
+import org.isisaddons.module.publishmq.dom.status.impl.StatusMessage;
 
 import lombok.Getter;
 import lombok.Setter;
