@@ -315,6 +315,24 @@ public class Lease
         return getComments();
     }
 
+    @Column(allowsNull = "true", length = NotesType.Meta.MAX_LEN)
+    @PropertyLayout(multiLine = 5, hidden = Where.ALL_TABLES)
+    @Getter @Setter
+    private String activityComments;
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Lease changeActivityComments(
+            @ParameterLayout(multiLine = 5)
+            final String comments
+    ) {
+        setActivityComments(comments);
+        return this;
+    }
+
+    public String default0ChangeActivityComments() {
+        return getActivityComments();
+    }
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent

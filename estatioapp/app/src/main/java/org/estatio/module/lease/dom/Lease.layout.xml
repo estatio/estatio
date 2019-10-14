@@ -85,6 +85,9 @@
                         <ns2:property id="comments">
                             <ns2:action id="changeComments" position="BELOW" promptStyle="INLINE_AS_IF_EDIT"/>
                         </ns2:property>
+                        <ns2:property id="activityComments">
+                            <ns2:action id="changeActivityComments" position="BELOW" promptStyle="INLINE_AS_IF_EDIT"/>
+                        </ns2:property>
                     </ns2:fieldSet>
                 </col>
             </row>
