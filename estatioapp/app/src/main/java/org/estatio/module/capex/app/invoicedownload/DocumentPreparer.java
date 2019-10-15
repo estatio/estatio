@@ -7,9 +7,15 @@ import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import com.google.common.collect.Lists;
 
+import org.apache.isis.applib.services.message.MessageService2;
+import org.apache.isis.applib.value.Blob;
+
 import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.spi.minio.ExternalUrlDownloadService;
 
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
@@ -73,7 +79,17 @@ class DocumentPreparer {
 
             final String hyperlink = null;
 
-            byte[] bytes = pdfManipulator.extractAndStamp(document.getBlobBytes(),
+            byte[] blobBytes = document.getBlobBytes();
+            if (blobBytes == null) {
+                final Blob archived = externalUrlDownloadService.downloadAsBlob(document);
+                if(archived != null) {
+                    blobBytes = archived.getBytes();
+                } else {
+                    messageService.raiseError(String.format("Failed to load bytes: Invoice %s has no cached bytes and unable to locate archived document", incomingInvoice.title()));
+                }
+            }
+
+            byte[] bytes = pdfManipulator.extractAndStamp(blobBytes,
                     new ExtractSpec(numFirstPages, numLastPages),
                     new Stamp(leftLineTexts, rightLineTexts, hyperlink));
 
@@ -104,4 +120,8 @@ class DocumentPreparer {
         }
     }
 
+    @Inject
+    ExternalUrlDownloadService externalUrlDownloadService;
+
+    @Inject MessageService2 messageService;
 }
