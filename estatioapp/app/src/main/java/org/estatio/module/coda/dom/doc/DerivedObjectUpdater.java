@@ -291,7 +291,7 @@ public class DerivedObjectUpdater {
 
                     final BigDecimal netAmount = elseZero(docLine.getDocValue());
 
-                    final IncomingInvoiceItem invoiceItem = addInvoiceItemFor(docLine, incomingInvoice);
+                    final IncomingInvoiceItem invoiceItem = addInvoiceItemFor(docLine, incomingInvoice); //TODO: live would be easier if this could be made idem potent ....?
                     createLinkIfPossible(orderIfAny, chargeIfAny, projectIfAny, invoiceItem, netAmount);
                 }
 
