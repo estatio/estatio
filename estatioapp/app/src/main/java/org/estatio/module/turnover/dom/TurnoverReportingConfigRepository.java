@@ -20,6 +20,7 @@ package org.estatio.module.turnover.dom;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -137,7 +138,8 @@ public class TurnoverReportingConfigRepository extends UdoDomainRepositoryAndFac
 
     public List<TurnoverReportingConfig> findByPropertyActiveOnDate(final Property property, final LocalDate date) {
         List<TurnoverReportingConfig> result = new ArrayList<>();
-        List<Occupancy> occupanciesActiveOnDate = occupancyRepository.occupanciesByPropertyAndInterval(property,LocalDateInterval.including(date,date));
+        LocalDate endOfMonth = date.dayOfMonth().withMaximumValue();
+        List<Occupancy> occupanciesActiveOnDate = occupancyRepository.occupanciesByPropertyAndInterval(property,LocalDateInterval.including(date,endOfMonth));
         for (Occupancy occupancy : occupanciesActiveOnDate){
             List<TurnoverReportingConfig> configs = findByOccupancy(occupancy);
             for (TurnoverReportingConfig config : configs){
@@ -148,15 +150,7 @@ public class TurnoverReportingConfigRepository extends UdoDomainRepositoryAndFac
     }
 
     public List<TurnoverReportingConfig> findByPropertyAndTypeActiveOnDate(final Property property, final Type type, final LocalDate date) {
-        List<TurnoverReportingConfig> result = new ArrayList<>();
-        List<Occupancy> occupanciesActiveOnDate = occupancyRepository.occupanciesByPropertyAndInterval(property,LocalDateInterval.including(date,date));
-        for (Occupancy occupancy : occupanciesActiveOnDate){
-            List<TurnoverReportingConfig> configs = findByOccupancyAndType(occupancy, type);
-            for (TurnoverReportingConfig config : configs){
-                if (config.isActiveOnDate(date)) result.add(config);
-            }
-        }
-        return result;
+        return findByPropertyActiveOnDate(property, date).stream().filter(t->t.getType()==type).collect(Collectors.toList());
     }
 
     public List<TurnoverReportingConfig> listAll() {

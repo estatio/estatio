@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.fixtures.enums.Currency_enum;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -98,6 +99,54 @@ public class TurnoverReportingConfigRepository_IntegTest extends TurnoverModuleI
             assertThat(turnoverReportingConfigRepository.findByReporter(personGino)).hasSize(1);
             assertThat(turnoverReportingConfigRepository.findByReporter(null)).isEmpty();
 
+
+        }
+
+
+    }
+
+    public static class FindByPropertyActiveOnDate extends TurnoverReportingConfigRepository_IntegTest {
+
+
+        @Before
+        public void setupData() {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfTopModel001GbPrelim.builder());
+                }
+            });
+        }
+
+        @Test
+        public void find_by_property_active_on_date_works() throws Exception {
+
+            // given
+            TurnoverReportingConfig config = turnoverReportingConfigRepository.listAll().get(0);
+            final LocalDate occupancyStartDate = new LocalDate(2010, 7, 15);
+            assertThat(config.getOccupancy().getStartDate()).isEqualTo(occupancyStartDate);
+            assertThat(config.getStartDate()).isEqualTo(new LocalDate(2014,1,2));
+
+            // when, then
+            final LocalDate firstDayOfOccupancyMonth = new LocalDate(2010, 7, 1);
+            assertThat(turnoverReportingConfigRepository.findByPropertyActiveOnDate(Property_enum.OxfGb.findUsing(serviceRegistry2), firstDayOfOccupancyMonth)).hasSize(0);
+
+            // and when
+            config.setStartDate(occupancyStartDate);
+            // then
+            assertThat(turnoverReportingConfigRepository.findByPropertyActiveOnDate(Property_enum.OxfGb.findUsing(serviceRegistry2), firstDayOfOccupancyMonth)).hasSize(1);
+            final LocalDate lastDayOfOccupancyMonth = new LocalDate(2010, 7, 31);
+            assertThat(turnoverReportingConfigRepository.findByPropertyActiveOnDate(Property_enum.OxfGb.findUsing(serviceRegistry2), lastDayOfOccupancyMonth)).hasSize(1);
+
+            // and when
+            final LocalDate lastDayOfPreviousOccupancyMonth = firstDayOfOccupancyMonth.minusDays(1);
+            // then
+            assertThat(turnoverReportingConfigRepository.findByPropertyActiveOnDate(Property_enum.OxfGb.findUsing(serviceRegistry2), lastDayOfPreviousOccupancyMonth)).hasSize(0);
+
+            // and when occupancy ends before next month
+            config.getOccupancy().setEndDate(lastDayOfOccupancyMonth);
+            final LocalDate firstDayOfNextOccupancyMonth = new LocalDate(2010, 8, 1);
+            assertThat(turnoverReportingConfigRepository.findByPropertyActiveOnDate(Property_enum.OxfGb.findUsing(serviceRegistry2), firstDayOfNextOccupancyMonth)).hasSize(0);
 
         }
 
