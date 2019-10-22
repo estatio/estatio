@@ -477,10 +477,10 @@ public class DerivedObjectUpdater {
                 if(userRef1.startsWith(CodaDocLine.USER_REF_SDI_ID_PREFIX)) {
 
                     // domestic Ita, search for a DocFlowZip
-                    final String sdiIdStr = userRef1.substring(1);
+                    final String sdiIdStr = userRef1.substring(1).replace(".pdf", "");
                     final long sdiId;
                     try {
-                        sdiId = Long.parseLong(userRef1);
+                        sdiId = Long.parseLong(sdiIdStr);
                     } catch(NumberFormatException ex) {
                         softErrors.add("Could not find a 'DocFlowZip', inferred SDI Id '%s' is not numeric", sdiIdStr);
                         return;
