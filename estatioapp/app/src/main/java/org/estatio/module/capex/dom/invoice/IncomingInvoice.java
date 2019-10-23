@@ -482,7 +482,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String disableCompleteInvoice() {
-        return reasonDisabledDueToState(this);
+        return reasonDisabledDueToStateStrict();
     }
 
     public IncomingInvoiceType default0CompleteInvoice() {
@@ -714,7 +714,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         switch (items.size()) {
             case 0:
             case 1:
-                return reasonDisabledDueToState(this);
+                return reasonDisabledDueToStateStrict();
             default:
                 return "Can only complete invoice item for invoices with a single item";
         }
@@ -2585,7 +2585,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String disableCompleteUsingTemplate() {
-        return reasonDisabledDueToState(this);
+        return reasonDisabledDueToStateStrict();
     }
 
     public Party default0CompleteUsingTemplate() {

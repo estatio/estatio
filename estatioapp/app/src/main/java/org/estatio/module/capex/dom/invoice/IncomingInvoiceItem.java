@@ -824,7 +824,8 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
         return appendReasonIfReversalOrReportedOrApprovalState(buf).getReason();
     }
 
-    private ReasonBuffer2 appendReasonIfReversalOrReportedOrApprovalState(final ReasonBuffer2 buf) {
+    @Programmatic
+    public ReasonBuffer2 appendReasonIfReversalOrReportedOrApprovalState(final ReasonBuffer2 buf) {
         appendReasonIfReversalOrReported(buf);
 
         final Object viewContext = getInvoice();

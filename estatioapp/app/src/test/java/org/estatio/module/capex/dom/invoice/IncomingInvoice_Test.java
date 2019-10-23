@@ -1378,6 +1378,28 @@ public class IncomingInvoice_Test {
             assertThat(incomingInvoice.getItems().first().getCharge()).isEqualTo(newCharge);
         }
 
+        @Test
+        public void completeInvoice_completeInvoiceItem_disabled_when_COMPLETED() throws Exception {
+            // given
+            IncomingInvoice invoice = new IncomingInvoice();
+            IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem();
+            invoiceItem.setInvoice(invoice);
+            invoice.getItems().add(invoiceItem);
+            invoice.setApprovalState(COMPLETED);
+
+            // when
+            String message = invoice.disableCompleteInvoice();
+
+            // then
+            assertThat(message).isEqualTo("Cannot modify because invoice is in state of COMPLETED");
+
+            // and when
+            message = invoice.disableCompleteInvoiceItem();
+
+            // then
+            assertThat(message).isEqualTo("Cannot modify because invoice is in state of COMPLETED");
+        }
+
     }
 
 }
