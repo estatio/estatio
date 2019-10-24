@@ -54,7 +54,6 @@ import org.apache.isis.applib.services.scratchpad.Scratchpad;
 import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
-
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
 import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
@@ -591,11 +590,18 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         //
         revalidateOnly();
 
-        final Memento existing = new Memento(this, derivedObjectLookup);
-        kickEstatioObjectsIfAny(
-                existing,
-                errors, createIfValid);
+        codaDocSynchronizationService.lock();
+        try {
+            final Memento existing = new Memento(this, derivedObjectLookup);
+            kickEstatioObjectsIfAny(
+                    existing,
+                    errors, createIfValid);
+
+        } finally {
+            codaDocSynchronizationService.unlock();
+        }
     }
+
 
     private transient Map<Integer, LineData> analysisLineDataByLineNumber;
     @Programmatic
@@ -1209,7 +1215,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
 
     @NotPersistent
     @Inject
-    CodaDocHeadRepository codaDocHeadRepository;
+    CodaDocSynchronizationService codaDocSynchronizationService;
 
     @NotPersistent
     @Inject

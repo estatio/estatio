@@ -18,4 +18,5 @@ public class CodaDocCodeService {
                 "FR-GEN", "RA-PROF", "MV-DIV", "FR-ART17", "NCR-GEN", "NCR-ART17"
         );
     }
+
 }
