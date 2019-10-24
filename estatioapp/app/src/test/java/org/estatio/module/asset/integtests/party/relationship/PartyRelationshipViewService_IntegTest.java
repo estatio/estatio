@@ -22,6 +22,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.estatio.module.party.dom.relationship.PartyRelationshipRepository;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -58,21 +60,18 @@ public class PartyRelationshipViewService_IntegTest extends AssetModuleIntegTest
     private Party person;
 
     @Inject
-    private Party_relationships service;
-
-    @Inject
     private PartyRepository partyRepository;
 
     @Test
     public void parentChild() throws Exception {
-        final List<PartyRelationshipView> relationships = service.relationships(org);
+        final List<PartyRelationshipView> relationships = wrap(mixin(Party_relationships.class, org)).coll();
         assertThat(relationships.size(), is(1));
         assertThat(relationships.get(0).getTo(), is(person));
     }
 
     @Test
     public void childParent() throws Exception {
-        final List<PartyRelationshipView> relationships = service.relationships(person);
+        final List<PartyRelationshipView> relationships = wrap(mixin(Party_relationships.class, person)).coll();
         assertThat(relationships.size(), is(1));
         assertThat(relationships.get(0).getTo(), is(org));
     }
