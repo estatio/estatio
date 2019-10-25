@@ -20,16 +20,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.RestrictTo;
-import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.fixturescripts.FixtureResult;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
@@ -64,7 +55,7 @@ public class EstatioSecurityModuleFixturesMenu {
     public List<FixtureResult> runFixtureScript(FixtureScript fixtureScript, @ParameterLayout(
             named = "Parameters",
             describedAs = "Script-specific parameters (if any).  The format depends on the script implementation (eg key=value, CSV, JSON, XML etc)",
-            multiLine = 10) @Optional String parameters) {
+            multiLine = 10) @Parameter(optionality = Optionality.OPTIONAL) String parameters) {
         return fixtureScripts.runFixtureScript(fixtureScript, parameters);
     }
 
