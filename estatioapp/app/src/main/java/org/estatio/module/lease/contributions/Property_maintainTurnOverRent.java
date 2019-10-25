@@ -4,12 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.annotation.*;
 import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.Named;
 
 import org.incode.module.country.dom.impl.CountryRepository;
 
@@ -29,7 +25,7 @@ public class Property_maintainTurnOverRent {
 
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public LeaseTermForTurnoverRentManager maintainTurnoverRent(
-            @Named("Start date") final LocalDate startDate) {
+            @ParameterLayout(named = "Start date") final LocalDate startDate) {
         return new LeaseTermForTurnoverRentManager(property, startDate);
     }
 
