@@ -22,18 +22,11 @@ import java.util.List;
 
 import com.google.common.base.Objects;
 
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.xactn.TransactionService;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Bulk;
-import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.MemberGroupLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
@@ -139,7 +132,7 @@ public class IndexValueMaintLineItem {
     private BigDecimal baseFactor;
 
     @javax.jdo.annotations.Column(scale = IndexBase.FACTOR_SCALE)
-    @Optional
+    @Property(optionality = Optionality.OPTIONAL)
     @MemberOrder(name = "Index Base", sequence = "3")
     public BigDecimal getBaseFactor() {
         return baseFactor;
@@ -193,7 +186,7 @@ public class IndexValueMaintLineItem {
     // //////////////////////////////////////
 
     @MemberOrder(sequence = "1")
-    @ActionSemantics(Of.SAFE)
+    @Action(semantics = SemanticsOf.SAFE)
     @Bulk
     public void verify() {
         if (bulkInteractionContext.isFirst()) {
@@ -209,7 +202,7 @@ public class IndexValueMaintLineItem {
     // //////////////////////////////////////
 
     @MemberOrder(sequence = "2")
-    @ActionSemantics(Of.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     @Bulk
     public void apply() {
 
