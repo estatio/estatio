@@ -37,6 +37,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
 
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -52,7 +54,6 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
@@ -411,7 +412,7 @@ public abstract class Agreement
 
     @javax.jdo.annotations.Persistent(mappedBy = "agreement", defaultFetchGroup = "true")
     @Collection(editing = Editing.DISABLED)
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     @Getter @Setter
     private SortedSet<AgreementRole> roles = new TreeSet<>();
 
@@ -475,7 +476,7 @@ public abstract class Agreement
             final Party party,
             final LocalDate startDate,
             final LocalDate endDate) {
-        final AgreementRole role = newTransientInstance(AgreementRole.class);
+        final AgreementRole role = factoryService.instantiate(AgreementRole.class);
         role.setStartDate(startDate);
         role.setEndDate(endDate);
         role.setType(type); // must do before associate with agreement, since
@@ -486,7 +487,7 @@ public abstract class Agreement
         role.setParty(party);
         role.setAgreement(this);
 
-        persistIfNotAlready(role);
+        repositoryService.persist(role);
 
         return role;
     }
@@ -517,5 +518,11 @@ public abstract class Agreement
 
     @Inject
     public AgreementTypeRepository agreementTypeRepository;
+
+    @Inject
+    public RepositoryService repositoryService;
+
+    @Inject
+    public FactoryService factoryService;
 
 }

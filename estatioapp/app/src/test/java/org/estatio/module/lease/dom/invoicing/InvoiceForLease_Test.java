@@ -30,13 +30,11 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Ignoring;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -100,10 +98,6 @@ public class InvoiceForLease_Test {
 
     @Mock
     InvoiceVatRoundingService mockInvoiceVatRoundingService;
-
-    @Mock
-    @Ignoring
-    DomainObjectContainer mockContainer;
 
     @Mock
     ApplicationTenancy stubApplicationTenancy;
@@ -186,7 +180,6 @@ public class InvoiceForLease_Test {
             }
         };
         invoice.setStatus(invoiceStatus);
-        invoice.setContainer(mockContainer);
         invoice.numeratorRepository = mockNumeratorForOutgoingInvoicesRepository;
         invoice.clockService = mockClockService;
         return invoice;
@@ -297,7 +290,6 @@ public class InvoiceForLease_Test {
                     return "/ITA/XXX";
                 }
             };
-            invoice.setContainer(mockContainer);
             invoice.numeratorRepository = mockNumeratorForOutgoingInvoicesRepository;
             return invoice;
         }

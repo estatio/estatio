@@ -1,8 +1,9 @@
 package org.estatio.module.base.dom.apptenancy;
 
 import javax.inject.Inject;
+
+import org.apache.isis.applib.services.registry.ServiceRegistry;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.estatio.module.base.dom.UdoDomainObject2;
 
@@ -69,7 +70,7 @@ public class ApplicationTenancySubscriberAlgorithm<S, E extends ApplicationTenan
         }
 
         @Inject
-        DomainObjectContainer container;
+        ServiceRegistry serviceRegistry;
 
         public static class Hide<S> extends OnChanged<S> {
 
@@ -129,7 +130,7 @@ public class ApplicationTenancySubscriberAlgorithm<S, E extends ApplicationTenan
 
             @Override
             public void executed(final ApplicationTenancyEventChanged ev, final S source) {
-                container.injectServicesInto(accessMany);
+                serviceRegistry.injectServicesInto(accessMany);
                 sync((UdoDomainObject2<?>)source, accessMany.get(source));
             }
         }
@@ -141,7 +142,7 @@ public class ApplicationTenancySubscriberAlgorithm<S, E extends ApplicationTenan
         }
 
         @Inject
-        DomainObjectContainer container;
+        ServiceRegistry serviceRegistry;
 
         public static class Hide<S> extends OnMovedDown<S> {
 
@@ -209,7 +210,7 @@ public class ApplicationTenancySubscriberAlgorithm<S, E extends ApplicationTenan
                 final ApplicationTenancy proposed = (ApplicationTenancy) ev.getArguments().get(0);
                 final ApplicationTenancyLevel proposedLevel = ApplicationTenancyLevel.of(proposed);
                 if(relatedAccessOne != null) {
-                    container.injectServicesInto(relatedAccessOne);
+                    serviceRegistry.injectServicesInto(relatedAccessOne);
 
                     final ApplicationTenancyLevel relatedLevel = ApplicationTenancyLevel.of(relatedAccessOne.get(source));
 
@@ -218,7 +219,7 @@ public class ApplicationTenancySubscriberAlgorithm<S, E extends ApplicationTenan
                         return;
                     }
                 } else {
-                    container.injectServicesInto(relatedAccessMany);
+                    serviceRegistry.injectServicesInto(relatedAccessMany);
 
                     for (final UdoDomainObject2<?> udoDomainObject2 : relatedAccessMany.get(source)) {
                         final ApplicationTenancyLevel relatedLevel = ApplicationTenancyLevel.of(udoDomainObject2);
@@ -237,9 +238,6 @@ public class ApplicationTenancySubscriberAlgorithm<S, E extends ApplicationTenan
         public OnMovedUp(final Class<S> sourceClass) {
             super(sourceClass, ApplicationTenancyEventMovedUp.class);
         }
-
-        @Inject
-        DomainObjectContainer container;
 
         public static class Hide<S extends UdoDomainObject2<S>> extends OnMovedUp<S> {
 

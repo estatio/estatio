@@ -60,7 +60,6 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
@@ -617,7 +616,7 @@ public class LeaseItem
 
 
     @Persistent(mappedBy = "leaseItem")
-    @CollectionLayout(render = RenderType.EAGERLY, paged = PAGE_SIZE)
+    @CollectionLayout(defaultView = "table", paged = PAGE_SIZE)
     @Getter @Setter
     private SortedSet<LeaseTerm> terms = new TreeSet<>();
 

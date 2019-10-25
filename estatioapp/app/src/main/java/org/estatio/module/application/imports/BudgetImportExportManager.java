@@ -34,7 +34,6 @@ import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Publishing;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.ViewModelLayout;
 import org.apache.isis.applib.services.factory.FactoryService;
@@ -116,7 +115,7 @@ public class BudgetImportExportManager {
     @SuppressWarnings("unchecked")
     @Collection()
     @CollectionLayout(
-            render = RenderType.EAGERLY
+            defaultView = "table"
     )
     public List<BudgetImportExport> getLines() {
         return budgetImportExportService.lines(this);

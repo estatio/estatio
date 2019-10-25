@@ -31,24 +31,9 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.isis.applib.annotation.*;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.InvokeOn;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -155,7 +140,7 @@ public abstract class InvoiceItem<P extends Invoice<P>, T extends InvoiceItem<P,
     @javax.jdo.annotations.Column(name = "invoiceId", allowsNull = "false")
     @javax.jdo.annotations.Persistent(defaultFetchGroup = "true") // eagerly load
     @Property(hidden = Where.REFERENCES_PARENT)
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     @Getter @Setter
     private Invoice<?> invoice;
 
@@ -347,6 +332,7 @@ public abstract class InvoiceItem<P extends Invoice<P>, T extends InvoiceItem<P,
     }
 
     // //////////////////////////////////////
+
 
     @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION)
     public InvoiceItem verify() {

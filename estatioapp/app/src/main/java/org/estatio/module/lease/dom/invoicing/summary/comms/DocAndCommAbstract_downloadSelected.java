@@ -25,12 +25,7 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Bulk;
-import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.InvokeOn;
-import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
 import org.apache.isis.applib.value.Blob;

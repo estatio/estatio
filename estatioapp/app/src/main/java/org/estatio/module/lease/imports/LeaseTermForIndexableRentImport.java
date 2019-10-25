@@ -8,12 +8,12 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
+import org.apache.isis.applib.services.registry.ServiceRegistry;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -183,7 +183,7 @@ public class LeaseTermForIndexableRentImport implements ExcelFixtureRowHandler, 
                 itemStatus,
                 itemAtPath);
 
-        domainObjectContainer.injectServicesInto(leaseItemImport);
+        serviceRegistry.injectServicesInto(leaseItemImport);
         LeaseItem item = leaseItemImport.importItem(false);
 
         //create term
@@ -265,5 +265,5 @@ public class LeaseTermForIndexableRentImport implements ExcelFixtureRowHandler, 
     private IndexRepository indexRepository;
 
     @Inject
-    private DomainObjectContainer domainObjectContainer;
+    private ServiceRegistry serviceRegistry;
 }

@@ -9,7 +9,6 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.guarantee.dom.Guarantee;
@@ -29,7 +28,7 @@ public class Lease_guarantees {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    @CollectionLayout(render = RenderType.LAZILY)
+    @CollectionLayout(defaultView = "table")
     public List<Guarantee> guarantees() {
         return leaseGuaranteeService.guarantees(lease);
     }

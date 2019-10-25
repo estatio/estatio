@@ -20,15 +20,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.RenderType;
-import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.*;
 
 import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -37,18 +29,19 @@ import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 /**
  * TODO: this could move to budgetassignment, and be a regular derived collection rather than a mixin
  */
-@DomainService(
-        nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
-)
-@DomainServiceLayout()
+@Mixin(method = "coll")
 public class KeyItem_occupancies {
 
-    // //////////////////////////////////////
+    private final KeyItem keyItem;
+
+    public KeyItem_occupancies(KeyItem keyItem) {
+        this.keyItem = keyItem;
+    }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    @CollectionLayout(render = RenderType.EAGERLY)
-    public List<Occupancy> occupancies(final KeyItem keyItem) {
+    @CollectionLayout(defaultView = "table")
+    public List<Occupancy> coll() {
 
         return occupancyRepository.occupanciesByUnitAndInterval(keyItem.getUnit(), keyItem.getPartitioningTable().getBudget().getInterval());
 

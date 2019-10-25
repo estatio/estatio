@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.module.asset.dom.Property;
@@ -42,9 +41,6 @@ public class BudgetMenu_Test {
 
         @Rule
         public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
-
-        @Mock
-        private DomainObjectContainer mockContainer;
 
         @Mock
         BudgetRepository mockBudgetRepository;

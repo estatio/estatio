@@ -23,7 +23,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
@@ -39,17 +38,13 @@ public class UnitMenu_Test {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
-
-    @Mock
-    private DomainObjectContainer mockContainer;
-
+    
     private UnitMenu unitMenu;
     private UnitRepository unitRepository;
 
     @Before
     public void setup() {
         unitRepository = new UnitRepository();
-        unitRepository.setContainer(mockContainer);
         unitMenu = new UnitMenu();
         unitMenu.unitRepository = unitRepository;
     }

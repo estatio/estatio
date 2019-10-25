@@ -16,28 +16,26 @@
  */
 package org.estatio.module.budgetassignment.imports.contributions;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.*;
 
 import org.estatio.module.budget.dom.keytable.DirectCostTable;
 import org.estatio.module.budgetassignment.imports.DirectCostImportExportManager;
 
-@DomainService(
-        nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
-)
+@Mixin(method="act")
 public class DirectCostTable_importExportItems {
+
+    private final DirectCostTable directCostTable;
+
+    public DirectCostTable_importExportItems(final DirectCostTable directCostTable) {
+        this.directCostTable = directCostTable;
+    }
 
     @Action(
             semantics = SemanticsOf.NON_IDEMPOTENT
     )
     @ActionLayout(contributed = Contributed.AS_ACTION)
     @MemberOrder(name = "items", sequence = "5")
-    public DirectCostImportExportManager importExportItems(DirectCostTable directCostTable) {
+    public DirectCostImportExportManager act() {
 
         return new DirectCostImportExportManager(directCostTable);
 

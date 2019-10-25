@@ -23,6 +23,8 @@ import java.util.List;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -35,7 +37,6 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
@@ -53,6 +54,7 @@ import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyForTesting;
 import org.estatio.module.party.dom.Person;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -414,9 +416,6 @@ public class Agreement_Test {
 
         public static class ActionExecution extends NewRole {
 
-            @Mock
-            private DomainObjectContainer mockContainer;
-
             private AgreementRoleType art;
             private Party party;
 
@@ -424,6 +423,12 @@ public class Agreement_Test {
 
             private LocalDate startDate;
             private LocalDate endDate;
+
+            @Mock
+            private FactoryService mockFactoryService;
+//
+            @Mock
+            private RepositoryService mockRepositoryService;
 
             @Before
             public void setUp() throws Exception {
@@ -434,7 +439,8 @@ public class Agreement_Test {
                 endDate = new LocalDate(2023, 3, 30);
 
                 agreement = new AgreementForTesting();
-                agreement.setContainer(mockContainer);
+                agreement.factoryService = mockFactoryService;
+                agreement.repositoryService = mockRepositoryService;
             }
 
             @Test
@@ -444,11 +450,11 @@ public class Agreement_Test {
                 final Sequence sequence = context.sequence("newRole");
                 context.checking(new Expectations() {
                     {
-                        oneOf(mockContainer).newTransientInstance(AgreementRole.class);
+                        oneOf(mockFactoryService).instantiate(AgreementRole.class);
                         inSequence(sequence);
                         will(returnValue(agreementRole));
 
-                        oneOf(mockContainer).persistIfNotAlready(with(initialized(agreementRole)));
+                        oneOf(mockRepositoryService).persist(with(initialized(agreementRole)));
 
                     }
 
@@ -554,8 +560,6 @@ public class Agreement_Test {
 
         public static class ValidateNewRole extends NewRole {
 
-            @Mock
-            private DomainObjectContainer mockContainer;
 
             @Mock
             private ClockService mockClockService;
@@ -584,7 +588,6 @@ public class Agreement_Test {
                 endDate = new LocalDate(2023, 3, 30);
 
                 agreement = new AgreementForTesting();
-                agreement.setContainer(mockContainer);
             }
 
             @Test

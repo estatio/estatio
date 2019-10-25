@@ -16,36 +16,43 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.event.dom;
+
+package org.estatio.module.assetfinancial.contributions;
 
 import java.util.List;
+
 import javax.inject.Inject;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.RenderType;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.estatio.module.base.dom.UdoDomainService;
 
-@DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
-public class EventContributions extends UdoDomainService<EventContributions> {
+import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 
-    public EventContributions() {
-        super(EventContributions.class);
+@Mixin(method = "coll")
+public class FixedAsset_accounts {
+
+    private final FixedAsset fixedAsset;
+    public FixedAsset_accounts(final FixedAsset fixedAsset) {
+        this.fixedAsset = fixedAsset;
     }
 
-    //region > events (contributed association)
+
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    @CollectionLayout(render = RenderType.EAGERLY)
-    public List<Event> events(final EventSource eventSource) {
-        return eventRepository.findBySource(eventSource);
+    @MemberOrder(
+            name = "Accounts",
+            sequence = "13.5"
+    )
+    public List<FixedAssetFinancialAccount> coll() {
+        return fixedAssetFinancialAccountService.accounts(this.fixedAsset);
     }
-    //endregion
+
 
     @Inject
-    private EventRepository eventRepository;
+    FixedAssetFinancialAccountService fixedAssetFinancialAccountService;
 }

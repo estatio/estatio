@@ -16,28 +16,26 @@
  */
 package org.estatio.module.budgetassignment.imports.contributions;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.*;
 
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budgetassignment.imports.KeyItemImportExportManager;
 
-@DomainService(
-        nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
-)
+@Mixin(method="act")
 public class KeyTable_importExportItems {
+
+    private final KeyTable keyTable;
+
+    public KeyTable_importExportItems(KeyTable keyTable) {
+        this.keyTable = keyTable;
+    }
 
     @Action(
             semantics = SemanticsOf.NON_IDEMPOTENT
     )
     @ActionLayout(contributed = Contributed.AS_ACTION)
     @MemberOrder(name = "items", sequence = "5")
-    public KeyItemImportExportManager importExportItems(KeyTable keyTable) {
+    public KeyItemImportExportManager act() {
 
         return new KeyItemImportExportManager(keyTable);
 

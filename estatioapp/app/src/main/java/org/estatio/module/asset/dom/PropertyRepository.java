@@ -74,7 +74,7 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
         final ApplicationTenancy propertyApplicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(property);
         property.setApplicationTenancyPath(propertyApplicationTenancy.getPath());
 
-        persistIfNotAlready(property);
+        repositoryService.persist(property);
         return property;
     }
 

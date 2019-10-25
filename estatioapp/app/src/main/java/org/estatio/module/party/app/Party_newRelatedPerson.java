@@ -19,84 +19,32 @@
 
 package org.estatio.module.party.app;
 
-import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
-
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.party.dom.relationship.PartyRelationship;
-import org.estatio.module.party.dom.relationship.PartyRelationshipRepository;
-import org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum;
 
-@DomainService(
-        nature = NatureOfService.VIEW,
-        objectType = "org.estatio.app.menus.party.PartyRelationshipMenuAndContributions"
-)
-@DomainServiceLayout(
-        named = "Parties",
-        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "20.4"
-)
-public class PartyRelationshipMenuAndContributions {
+@Mixin(method = "act")
+public class Party_newRelatedPerson {
 
-
-
-    // seemingly also contributed to Party...
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @MemberOrder(sequence = "1")
-    public PartyRelationship newRelationship(
-            final Party fromParty,
-            final Party toParty,
-            final String relationshipType,
-            final @Parameter(optionality = Optionality.OPTIONAL) String description) {
-        return partyRelationshipRepository.newRelationship(fromParty, toParty, relationshipType, description);
+    private final Party party;
+    public Party_newRelatedPerson(final Party party) {
+        this.party = party;
     }
 
-    public Set<String> choices2NewRelationship(
-            final Party from,
-            final Party to,
-            final String type) {
-        return PartyRelationshipTypeEnum.toTitlesFor(
-                from == null ? null : from.getClass(),
-                to == null ? null : to.getClass());
-    }
-
-    public String validateNewRelationship(
-            final Party from,
-            final Party to,
-            final String relationshipType,
-            final String description) {
-        if (from.equals(to)) {
-            return "Cannot create relationship to itself";
-        }
-        return null;
-    }
-
-
-
-    // //////////////////////////////////////
-
-
-
-    // seemingly also contributed to Party...
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public PartyRelationship newRelatedPerson(
-            final Party party,
             @Parameter(
                     optionality = Optionality.OPTIONAL,
                     regexPattern = Person.ReferenceType.Meta.REGEX,
@@ -129,11 +77,11 @@ public class PartyRelationshipMenuAndContributions {
             )
             final String emailAddress
     ) {
-        return partyRelationshipRepository.newRelatedPerson(party, reference, initials, firstName, lastName, gender, relationshipType, description, phoneNumber, emailAddress);
+        return partyRelationshipMenu
+                .newRelatedPerson(this.party, reference, initials, firstName, lastName, gender, relationshipType, description, phoneNumber, emailAddress);
     }
 
-    public Set<String> choices6NewRelatedPerson(
-            final Party from,
+    public Set<String> choices5NewRelatedPerson(
             final String reference,
             final String initials,
             final String firstName,
@@ -143,20 +91,10 @@ public class PartyRelationshipMenuAndContributions {
             final String description,
             final String phoneNumber,
             final String emailAddress) {
-        return PartyRelationshipTypeEnum.toTitlesFor(from.getClass(), Person.class);
+        return partyRelationshipMenu
+                .choices6NewRelatedPerson(this.party, reference, initials, firstName, lastName, gender, type,description, phoneNumber, emailAddress);
     }
-
-    // //////////////////////////////////////
-
-    @MemberOrder(sequence = "99")
-    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
-    public List<PartyRelationship> allRelationships() {
-        return partyRelationshipRepository.allRelationships();
-    }
-
-    // //////////////////////////////////////
 
     @Inject
-    PartyRelationshipRepository partyRelationshipRepository;
-
+    PartyRelationshipMenu partyRelationshipMenu;
 }

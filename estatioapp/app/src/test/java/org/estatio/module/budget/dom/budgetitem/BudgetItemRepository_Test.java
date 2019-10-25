@@ -25,7 +25,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
@@ -98,9 +97,6 @@ public class BudgetItemRepository_Test {
         public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
 
         @Mock
-        private DomainObjectContainer mockContainer;
-
-        @Mock
         private RepositoryService mockRepositoryService;
 
         BudgetItemRepository budgetItemRepository1;
@@ -113,7 +109,6 @@ public class BudgetItemRepository_Test {
                     return null;
                 }
             };
-            budgetItemRepository1.setContainer(mockContainer);
             budgetItemRepository1.repositoryService = mockRepositoryService;
         }
 

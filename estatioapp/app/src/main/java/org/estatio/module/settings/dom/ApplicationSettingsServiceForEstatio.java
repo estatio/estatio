@@ -54,7 +54,7 @@ public class ApplicationSettingsServiceForEstatio extends UdoDomainRepositoryAnd
     @Override
     public ApplicationSetting find(final String key) {
         return queryResultsCache.execute(
-                () -> firstMatch(
+                () -> repositoryService.firstMatch(
                         new QueryDefault<>(ApplicationSettingForEstatio.class,
                             "findByKey",
                             "key", key)
@@ -70,7 +70,7 @@ public class ApplicationSettingsServiceForEstatio extends UdoDomainRepositoryAnd
     @Override
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public List<ApplicationSetting> listAll() {
-        return (List)allMatches(
+        return (List)repositoryService.allMatches(
                 new QueryDefault<>(ApplicationSettingForEstatio.class,
                         "findAll"));
     }
@@ -126,12 +126,12 @@ public class ApplicationSettingsServiceForEstatio extends UdoDomainRepositoryAnd
 
     private ApplicationSettingForEstatio newSetting(
             final String key, final String description, final SettingType settingType, final String valueRaw) {
-        final ApplicationSettingForEstatio setting = newTransientInstance(ApplicationSettingForEstatio.class);
+        final ApplicationSettingForEstatio setting = factoryService.instantiate(ApplicationSettingForEstatio.class);
         setting.setKey(key);
         setting.setDescription(description);
         setting.setValueRaw(valueRaw);
         setting.setType(settingType);
-        persist(setting);
+        repositoryService.persist(setting);
         return setting;
     }
 

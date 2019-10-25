@@ -21,17 +21,17 @@ package org.estatio.module.application.contributions.commchannels;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner_newChannelContributions;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerService;
 
-@DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
-public class CommunicationChannelOwner_newChannelContributionsForEstatioImplementations extends CommunicationChannelOwner_newChannelContributions {
+@DomainService(nature = NatureOfService.DOMAIN)
+public class CommunicationChannelOwnerServiceForEstatioImplementations extends CommunicationChannelOwnerService {
 
     public String getId() {
         return "estatio.CommunicationChannelOwner_newChannelContributionsForEstatioImplementations";
     }
 
-    public CommunicationChannelOwner_newChannelContributionsForEstatioImplementations() {
-        super(CommunicationChannelOwner_newChannelContributionsForEstatioImplementations.class);
+    public CommunicationChannelOwnerServiceForEstatioImplementations() {
+        super(CommunicationChannelOwnerServiceForEstatioImplementations.class);
     }
 
 

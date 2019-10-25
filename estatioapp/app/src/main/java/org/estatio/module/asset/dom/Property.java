@@ -45,7 +45,6 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
@@ -228,7 +227,7 @@ public class Property
 
 
     @javax.jdo.annotations.Persistent(mappedBy = "property")
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     @Deprecated
     @Getter @Setter
     private SortedSet<Unit> units = new TreeSet<>();

@@ -16,6 +16,7 @@
  */
 package org.estatio.module.asset.dom.registration;
 
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -23,7 +24,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
@@ -46,14 +46,14 @@ public class FixedAssetRegistrationContributions_Test {
         @Mock
         private FactoryService mockFactoryService;
         @Mock
-        private DomainObjectContainer mockContainer;
+        private RepositoryService mockRepositoryService;
         @Mock
         private FixedAssetRegistrationRepository mockFixedAssetRegistrationRepository;
 
         private FixedAsset subject;
         private FixedAssetRegistrationType registrationType;
 
-        private FixedAsset_registrationContributions target;
+        private FixedAssetService target;
 
         @Programmatic
         public static class FoobarAssetRegistration extends FixedAssetRegistration {
@@ -91,9 +91,9 @@ public class FixedAssetRegistrationContributions_Test {
             registrationType = new FixedAssetRegistrationType();
             registrationType.setFullyQualifiedClassName(FoobarAssetRegistration.class.getName());
 
-            target = new FixedAsset_registrationContributions();
+            target = new FixedAssetService();
             target.fixedAssetRegistrationRepository = mockFixedAssetRegistrationRepository;
-            target.setContainer(mockContainer);
+            target.repositoryService = mockRepositoryService;
             target.factoryService = mockFactoryService;
         }
 
@@ -105,7 +105,7 @@ public class FixedAssetRegistrationContributions_Test {
                     oneOf(mockFactoryService).instantiate(FoobarAssetRegistration.class);
                     will(returnValue(created));
 
-                    oneOf(mockContainer).persistIfNotAlready(created);
+                    oneOf(mockRepositoryService).persist(created);
                 }
             });
             final FixedAssetRegistration far = target.newRegistration(subject, registrationType);

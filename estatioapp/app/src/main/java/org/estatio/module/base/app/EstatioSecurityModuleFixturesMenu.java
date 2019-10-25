@@ -20,7 +20,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
@@ -35,6 +34,7 @@ import org.apache.isis.applib.fixturescripts.FixtureResult;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 
+import org.apache.isis.applib.services.message.MessageService;
 import org.isisaddons.module.security.dom.role.ApplicationRole;
 
 import org.estatio.module.base.seed.EstatioSecurityModuleSeedFixture;
@@ -99,7 +99,7 @@ public class EstatioSecurityModuleFixturesMenu {
                 return object;
             }
         }
-        container.warnUser("No rules found in fixture; returning all results");
+        messageService.warnUser("No rules found in fixture; returning all results");
         return fixtureResultList;
     }
 
@@ -110,6 +110,5 @@ public class EstatioSecurityModuleFixturesMenu {
     @Inject
     FixtureScripts fixtureScripts;
     @Inject
-    DomainObjectContainer container;
-
+    MessageService messageService;
 }

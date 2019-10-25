@@ -6,11 +6,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Optionality;
@@ -140,7 +140,7 @@ public class LandRegisterImport implements ExcelFixtureRowHandler, Importable {
 
         if (landRegister == null) {
             landRegister = (LandRegister) fixedAssetRegistrationTypeRepository.findByTitle("LandRegister").create(factoryService);
-            container.persistIfNotAlready(landRegister);
+            repositoryService.persist(landRegister);
         }
 
         landRegister.setSubject(unit);
@@ -176,7 +176,7 @@ public class LandRegisterImport implements ExcelFixtureRowHandler, Importable {
     LandRegisters landRegisterRepository;
 
     @Inject
-    DomainObjectContainer container;
+    RepositoryService repositoryService;
 
     @Inject
     FactoryService factoryService;

@@ -31,7 +31,6 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -123,7 +122,7 @@ public class ChargeGroup
 
     // //////////////////////////////////////
 
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     @javax.jdo.annotations.Persistent(mappedBy = "group")
     @Getter @Setter
     private SortedSet<Charge> charges = new TreeSet<>();

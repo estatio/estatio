@@ -23,7 +23,7 @@ import org.incode.platform.dom.communications.integtests.demo.dom.demowithnotes.
 import org.incode.platform.dom.communications.integtests.demo.dom.demowithnotes.DemoObjectWithNotesMenu;
 import org.incode.platform.dom.communications.integtests.demo.dom.invoice.DemoInvoice;
 import org.incode.platform.dom.communications.integtests.demo.dom.invoice.DemoInvoiceRepository;
-import org.incode.platform.dom.communications.integtests.dom.communications.dom.apiimpl.DemoAppCommunicationChannelOwner_newChannelContributions;
+import org.incode.platform.dom.communications.integtests.dom.communications.dom.apiimpl.DemoAppCommunicationChannelOwnerService;
 import org.incode.platform.dom.communications.integtests.dom.communications.dom.invoice.DemoInvoice_simulateRenderAsDoc;
 
 public class DemoObjectWithNote_and_DemoInvoice_create3 extends FixtureScript {
@@ -144,6 +144,6 @@ public class DemoObjectWithNote_and_DemoInvoice_create3 extends FixtureScript {
     DemoInvoiceRepository demoInvoiceRepository;
 
     @Inject
-    DemoAppCommunicationChannelOwner_newChannelContributions demoAppCommunicationChannelOwner_newChannelContributions;
+    DemoAppCommunicationChannelOwnerService demoAppCommunicationChannelOwner_newChannelContributions;
 
 }

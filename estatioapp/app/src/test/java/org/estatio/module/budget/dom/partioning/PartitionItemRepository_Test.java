@@ -20,13 +20,14 @@ package org.estatio.module.budget.dom.partioning;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
@@ -121,7 +122,10 @@ public class PartitionItemRepository_Test {
         public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
 
         @Mock
-        private DomainObjectContainer mockContainer;
+        private FactoryService mockFactoryService;
+
+        @Mock
+        private RepositoryService mockRepositoryService;
 
         PartitionItemRepository partitionItemRepository1;
 
@@ -133,7 +137,8 @@ public class PartitionItemRepository_Test {
                     return null;
                 }
             };
-            partitionItemRepository1.setContainer(mockContainer);
+            partitionItemRepository1.factoryService = mockFactoryService;
+            partitionItemRepository1.repositoryService = mockRepositoryService;
         }
 
         @Test
@@ -151,9 +156,9 @@ public class PartitionItemRepository_Test {
             // expect
             context.checking(new Expectations() {
                 {
-                    oneOf(mockContainer).newTransientInstance(PartitionItem.class);
+                    oneOf(mockFactoryService).instantiate(PartitionItem.class);
                     will(returnValue(partitionItem));
-                    oneOf(mockContainer).persistIfNotAlready(partitionItem);
+                    oneOf(mockRepositoryService).persist(partitionItem);
                 }
 
             });

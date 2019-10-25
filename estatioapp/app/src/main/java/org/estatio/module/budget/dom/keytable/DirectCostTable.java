@@ -41,7 +41,6 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -75,7 +74,7 @@ import lombok.Setter;
 )
 public class DirectCostTable extends PartitioningTable {
 
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     @Persistent(mappedBy = "partitioningTable", dependentElement = "true")
     @Getter @Setter
     private SortedSet<DirectCost> items = new TreeSet<>();

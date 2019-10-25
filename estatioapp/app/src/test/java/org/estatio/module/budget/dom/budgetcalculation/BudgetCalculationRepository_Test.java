@@ -20,13 +20,14 @@ package org.estatio.module.budget.dom.budgetcalculation;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
@@ -146,7 +147,10 @@ public class BudgetCalculationRepository_Test {
     public static class UpdateOrCreateWithoutExisting extends BudgetCalculationRepository_Test {
 
         @Mock
-        private DomainObjectContainer mockContainer;
+        private FactoryService mockFactoryService;
+
+        @Mock
+        private RepositoryService mockRepositoryService;
 
         @Before
         public void setup() {
@@ -160,7 +164,8 @@ public class BudgetCalculationRepository_Test {
                     return null;
                 }
             };
-            budgetCalculationRepository.setContainer(mockContainer);
+            budgetCalculationRepository.factoryService = mockFactoryService;
+            budgetCalculationRepository.repositoryService = mockRepositoryService;
         }
 
         @Test
@@ -193,9 +198,9 @@ public class BudgetCalculationRepository_Test {
             // expect
             context.checking(new Expectations() {
                 {
-                    oneOf(mockContainer).newTransientInstance(BudgetCalculation.class);
+                    oneOf(mockFactoryService).instantiate(BudgetCalculation.class);
                     will(returnValue(budgetCalculation));
-                    oneOf(mockContainer).persist(budgetCalculation);
+                    oneOf(mockRepositoryService).persist(budgetCalculation);
                 }
             });
 

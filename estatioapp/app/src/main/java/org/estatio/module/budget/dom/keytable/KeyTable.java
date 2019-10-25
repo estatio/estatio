@@ -42,7 +42,6 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -158,7 +157,7 @@ public class KeyTable extends PartitioningTable {
         return isAssignedReason();
     }
 
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     @Persistent(mappedBy = "partitioningTable", dependentElement = "true")
     @Getter @Setter
     private SortedSet<KeyItem> items = new TreeSet<>();

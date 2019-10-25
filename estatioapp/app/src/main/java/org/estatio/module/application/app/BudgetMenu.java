@@ -12,7 +12,6 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -37,7 +36,7 @@ import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculati
 public class BudgetMenu {
 
     @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.SAFE)
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     public List<Budget> allBudgets() {
         return budgetRepository.allBudgets();
     }
@@ -58,7 +57,7 @@ public class BudgetMenu {
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     public Budget findBudget(
             final Property property,
             final Budget budget) {
@@ -72,7 +71,7 @@ public class BudgetMenu {
     }
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     public List<BudgetCalculationResult> allBudgetCalculationResults(){
         return budgetCalculationResultRepository.allBudgetCalculationResults();
     }

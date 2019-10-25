@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -13,6 +13,8 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 
+import org.apache.isis.applib.services.registry.ServiceRegistry;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.isisaddons.module.poly.dom.PolymorphicAssociationLink;
 
 @DomainService(
@@ -30,7 +32,7 @@ public class CommunicationChannelOwnerLinkRepository {
 
     @PostConstruct
     public void init() {
-        linkFactory = container.injectServicesInto(
+        linkFactory = serviceRegistry.injectServicesInto(
                 new PolymorphicAssociationLink.Factory<>(
                         this,
                         CommunicationChannel.class,
@@ -45,7 +47,7 @@ public class CommunicationChannelOwnerLinkRepository {
     //region > findByCommunicationChannel (programmatic)
     @Programmatic
     public CommunicationChannelOwnerLink findByCommunicationChannel(final CommunicationChannel communicationChannel) {
-        return container.firstMatch(
+        return repositoryService.firstMatch(
                 new QueryDefault<>(CommunicationChannelOwnerLink.class,
                         "findByCommunicationChannel",
                         "communicationChannel", communicationChannel));
@@ -62,7 +64,7 @@ public class CommunicationChannelOwnerLinkRepository {
         if(bookmark == null) {
             return null;
         }
-        return container.allMatches(
+        return repositoryService.allMatches(
                 new QueryDefault<>(CommunicationChannelOwnerLink.class,
                         "findByOwner",
                         "ownerObjectType", bookmark.getObjectType(),
@@ -85,7 +87,7 @@ public class CommunicationChannelOwnerLinkRepository {
         if(bookmark == null) {
             return null;
         }
-        return container.allMatches(
+        return repositoryService.allMatches(
                 new QueryDefault<>(CommunicationChannelOwnerLink.class,
                         "findByOwnerAndCommunicationChannelType",
                         "ownerObjectType", bookmark.getObjectType(),
@@ -127,10 +129,13 @@ public class CommunicationChannelOwnerLinkRepository {
     //region > injected services
 
     @javax.inject.Inject
-    private DomainObjectContainer container;
-
-    @javax.inject.Inject
     private BookmarkService bookmarkService;
+
+    @Inject
+    private RepositoryService repositoryService;
+
+    @Inject
+    private ServiceRegistry serviceRegistry;
 
     //endregion
 

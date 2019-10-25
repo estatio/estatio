@@ -27,7 +27,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner_newChannelContributions;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerService;
 
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -39,7 +39,7 @@ import static org.hamcrest.CoreMatchers.is;
 public class CommunicationChannelContributions_IntegTest extends PartyModuleIntegTestAbstract {
 
     @Inject
-    CommunicationChannelOwner_newChannelContributions communicationChannelContributions;
+    CommunicationChannelOwnerService communicationChannelContributions;
 
     @Inject
     PartyRepository partyRepository;

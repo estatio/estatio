@@ -54,7 +54,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.dom.with.WithIntervalContiguous;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner_newChannelContributions;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerService;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
@@ -387,7 +387,7 @@ public class AgreementRoleCommunicationChannel
 
 
     private SortedSet<CommunicationChannel> communicationChannelsForRolesParty() {
-        return communicationChannelContributions.communicationChannels(getRole().getParty());
+        return communicationChannelOwnerService.communicationChannels(getRole().getParty());
     }
 
 
@@ -405,7 +405,7 @@ public class AgreementRoleCommunicationChannel
 
 
     @javax.inject.Inject
-    CommunicationChannelOwner_newChannelContributions communicationChannelContributions;
+    CommunicationChannelOwnerService communicationChannelOwnerService;
 
     @javax.inject.Inject
     TitleService titleService;

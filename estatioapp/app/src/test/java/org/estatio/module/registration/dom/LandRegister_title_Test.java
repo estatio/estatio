@@ -24,12 +24,10 @@ import static org.junit.Assert.assertThat;
 import org.estatio.module.asset.dom.FixedAssetForTesting;
 import org.estatio.module.asset.dom.registration.FixedAssetRegistrationType;
 
-import org.jmock.auto.Mock;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
@@ -37,9 +35,6 @@ public class LandRegister_title_Test {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
-
-    @Mock
-    private DomainObjectContainer mockContainer;
 
     private LandRegister cr;
     private FixedAssetForTesting subject;
@@ -49,7 +44,6 @@ public class LandRegister_title_Test {
     @Before
     public void setUp() throws Exception {
         cr = new LandRegister();
-        cr.setContainer(mockContainer);
 
         subject = new FixedAssetForTesting();
         type = new FixedAssetRegistrationType();

@@ -50,7 +50,6 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -369,7 +368,7 @@ public abstract class LeaseTerm
     // //////////////////////////////////////
 
     @Persistent(mappedBy = "leaseTerm")
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     @Getter @Setter
     private SortedSet<InvoiceItemForLease> invoiceItems = new TreeSet<>();
 

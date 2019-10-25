@@ -28,6 +28,8 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.budget.dom.budget.Budget;
 
@@ -52,7 +54,7 @@ public class KeyTableRepository extends UdoDomainRepositoryAndFactory<KeyTable> 
         keyTable.setFoundationValueType(foundationValueType);
         keyTable.setKeyValueMethod(keyValueMethod);
         keyTable.setPrecision(numberOfDigits);
-        persistIfNotAlready(keyTable);
+        repositoryService.persist(keyTable);
 
         return keyTable;
     }

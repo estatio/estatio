@@ -44,7 +44,6 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -159,7 +158,7 @@ public class IndexBase
     private IndexBase next;
 
     @Persistent(mappedBy = "indexBase")
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     @Getter @Setter
     private SortedSet<IndexValue> values = new TreeSet<>();
 

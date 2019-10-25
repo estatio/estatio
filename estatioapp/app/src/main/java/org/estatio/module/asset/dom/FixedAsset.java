@@ -45,7 +45,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
@@ -231,7 +230,7 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
 
     // //////////////////////////////////////
 
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     @javax.jdo.annotations.Persistent(mappedBy = "asset")
     @Getter @Setter
     private SortedSet<FixedAssetRole> roles = new TreeSet<>();
