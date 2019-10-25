@@ -8,13 +8,8 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import com.google.common.base.Joiner;
 
+import org.apache.isis.applib.annotation.*;
 import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Property;
 
 import org.incode.module.base.dom.types.DescriptionType;
 import org.incode.module.base.dom.types.NameType;
@@ -141,18 +136,18 @@ public class LandRegister extends FixedAssetRegistration {
     // //////////////////////////////////////
 
     public LandRegister changeRegistration(
-            final @Named("Comune amministrativo") @Optional String comuneAmministrativo,
-            final @Named("Comune catastale") @Optional String comuneCatastale,
-            final @Named("Codice comuneCatastale") @Optional String codiceComuneCatastale,
-            final @Named("Rendita") @Optional BigDecimal rendita,
-            final @Named("Foglio") @Optional String foglio,
-            final @Named("Particella") @Optional String particella,
-            final @Named("Subalterno") @Optional String subalterno,
-            final @Named("Categoria") @Optional String categoria,
-            final @Named("Classe") @Optional String classe,
-            final @Named("Consistenza") @Optional String consistenza,
-            final @Named("Change start date") @Optional LocalDate changeStartDate,
-            final @Named("Change description") @Optional String changeDescription) {
+            final @ParameterLayout(named = "Comune amministrativo") @Parameter(optionality = Optionality.OPTIONAL) String comuneAmministrativo,
+            final @ParameterLayout(named = "Comune catastale") @Parameter(optionality = Optionality.OPTIONAL) String comuneCatastale,
+            final @ParameterLayout(named = "Codice comuneCatastale") @Parameter(optionality = Optionality.OPTIONAL) String codiceComuneCatastale,
+            final @ParameterLayout(named = "Rendita") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal rendita,
+            final @ParameterLayout(named = "Foglio") @Parameter(optionality = Optionality.OPTIONAL) String foglio,
+            final @ParameterLayout(named = "Particella") @Parameter(optionality = Optionality.OPTIONAL) String particella,
+            final @ParameterLayout(named = "Subalterno") @Parameter(optionality = Optionality.OPTIONAL) String subalterno,
+            final @ParameterLayout(named = "Categoria") @Parameter(optionality = Optionality.OPTIONAL) String categoria,
+            final @ParameterLayout(named = "Classe") @Parameter(optionality = Optionality.OPTIONAL) String classe,
+            final @ParameterLayout(named = "Consistenza") @Parameter(optionality = Optionality.OPTIONAL) String consistenza,
+            final @ParameterLayout(named = "Change start date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate changeStartDate,
+            final @ParameterLayout(named = "Change description") @Parameter(optionality = Optionality.OPTIONAL) String changeDescription) {
         if (changeStartDate != null) {
             LandRegister landRegister = landRegisters.newRegistration(
                     getSubject(),

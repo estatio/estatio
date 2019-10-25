@@ -22,11 +22,9 @@ import java.math.BigDecimal;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+
+import org.apache.isis.applib.annotation.*;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
@@ -55,18 +53,18 @@ public class LandRegisters extends UdoDomainRepositoryAndFactory<LandRegister> {
     public LandRegister newRegistration(
             final FixedAsset subject,
             final LandRegister previous,
-            final @Named("Comune amministrativo") @Optional String comuneAmministrativo,
-            final @Named("Comune catastale") @Optional String comuneCatastale,
-            final @Named("Codice comuneCatastale") @Optional String codiceComuneCatastale,
-            final @Named("Rendita") @Optional BigDecimal rendita,
-            final @Named("Foglio") @Optional String foglio,
-            final @Named("Particella") @Optional String particella,
-            final @Named("Subalterno") @Optional String subalterno,
-            final @Named("Categoria") @Optional String categoria,
-            final @Named("Classe") @Optional String classe,
-            final @Named("Consistenza") @Optional String consistenza,
-            final @Named("Start date") @Optional LocalDate startDate,
-            final @Named("Description") @Optional String description) {
+            final @ParameterLayout(named = "Comune amministrativo") @Parameter(optionality = Optionality.OPTIONAL) String comuneAmministrativo,
+            final @ParameterLayout(named = "Comune catastale") @Parameter(optionality = Optionality.OPTIONAL) String comuneCatastale,
+            final @ParameterLayout(named = "Codice comuneCatastale") @Parameter(optionality = Optionality.OPTIONAL) String codiceComuneCatastale,
+            final @ParameterLayout(named = "Rendita") @Parameter(optionality = Optionality.OPTIONAL) BigDecimal rendita,
+            final @ParameterLayout(named = "Foglio") @Parameter(optionality = Optionality.OPTIONAL) String foglio,
+            final @ParameterLayout(named = "Particella") @Parameter(optionality = Optionality.OPTIONAL) String particella,
+            final @ParameterLayout(named = "Subalterno") @Parameter(optionality = Optionality.OPTIONAL) String subalterno,
+            final @ParameterLayout(named = "Categoria") @Parameter(optionality = Optionality.OPTIONAL) String categoria,
+            final @ParameterLayout(named = "Classe") @Parameter(optionality = Optionality.OPTIONAL) String classe,
+            final @ParameterLayout(named = "Consistenza") @Parameter(optionality = Optionality.OPTIONAL) String consistenza,
+            final @ParameterLayout(named = "Start date") @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
+            final @ParameterLayout(named = "Description") @Parameter(optionality = Optionality.OPTIONAL) String description) {
         LandRegister obj = (LandRegister) fixedAssetRegistrationTypeRepository.findByTitle(LandRegisterConstants.FART_LAND_REGISTER).create(factoryService);
         obj.setSubject(subject);
         obj.setComuneAmministrativo(comuneAmministrativo);
