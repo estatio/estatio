@@ -28,7 +28,6 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
@@ -103,7 +102,7 @@ public class LeaseTermForTurnoverRentManager {
 
     //region > selectStartDate (action)
     public LeaseTermForTurnoverRentManager selectStartDate(
-            @Named("Start date") final LocalDate startDate) {
+            @ParameterLayout(named = "Start date") final LocalDate startDate) {
         setStartDate(startDate);
         return this;
     }
