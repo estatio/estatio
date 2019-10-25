@@ -24,13 +24,10 @@ import javax.annotation.PostConstruct;
 
 import com.google.common.collect.Lists;
 
+import org.apache.isis.applib.annotation.*;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 
 import org.isisaddons.module.excel.dom.ExcelService;
@@ -45,7 +42,7 @@ import org.estatio.module.lease.dom.LeaseTermRepository;
         menuOrder = "00",
         objectType = "org.estatio.app.services.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditService"
 )
-@Immutable
+@DomainObject(editing = Editing.ENABLED)
 public class LeaseTermForServiceChargeBudgetAuditService extends UdoDomainService<LeaseTermForServiceChargeBudgetAuditService> {
 
     public LeaseTermForServiceChargeBudgetAuditService() {
