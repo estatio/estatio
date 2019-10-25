@@ -74,7 +74,7 @@ public abstract class UdoDomainRepositoryAndFactory<T> extends UdoDomainService<
     }
 
     protected List<T> allInstances() {
-        return allInstances(getEntityType());
+        return repositoryService.allInstances(getEntityType());
     }
 
     // //////////////////////////////////////
