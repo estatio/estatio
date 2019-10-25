@@ -22,12 +22,12 @@ import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.integtests.VT;
