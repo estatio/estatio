@@ -33,6 +33,7 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.message.MessageService2;
 import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
@@ -46,6 +47,7 @@ import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
+import org.incode.module.document.spi.minio.ExternalUrlDownloadService;
 import org.incode.module.zip.impl.ZipService;
 
 import org.estatio.module.asset.dom.FixedAsset;
@@ -484,7 +486,7 @@ public class IncomingInvoiceDownloadManager {
 
     private List<ZipService.FileAndName> fileAndNamesFrom(final List<DocumentPreparer> preparers) {
         return preparers.stream()
-                .map(preparer -> new ZipService.FileAndName(preparer.getDocumentName(), preparer.stampUsing(pdfManipulator).getTempFile()))
+                .map(preparer -> new ZipService.FileAndName(preparer.getDocumentName(), preparer.stampUsing(pdfManipulator, externalUrlDownloadService, messageService).getTempFile()))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
@@ -492,7 +494,7 @@ public class IncomingInvoiceDownloadManager {
 
     private List<File> filesFrom(final List<DocumentPreparer> preparers) {
         return preparers.stream()
-                .map(preparer -> preparer.stampUsing(pdfManipulator).getTempFile())
+                .map(preparer -> preparer.stampUsing(pdfManipulator, externalUrlDownloadService, messageService).getTempFile())
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
@@ -647,6 +649,11 @@ public class IncomingInvoiceDownloadManager {
     @javax.inject.Inject
     @XmlTransient
     CountryServiceForCurrentUser countryServiceForCurrentUser;
+
+    @Inject
+    ExternalUrlDownloadService externalUrlDownloadService;
+
+    @Inject MessageService2 messageService;
 
 
 }

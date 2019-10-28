@@ -7,8 +7,6 @@ import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.services.message.MessageService2;
@@ -17,8 +15,8 @@ import org.apache.isis.applib.value.Blob;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.spi.minio.ExternalUrlDownloadService;
 
-import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.platform.pdfmanipulator.ExtractSpec;
 import org.estatio.module.capex.platform.pdfmanipulator.PdfManipulator;
 import org.estatio.module.capex.platform.pdfmanipulator.Stamp;
@@ -56,14 +54,17 @@ class DocumentPreparer {
         return document != null ? document.getName() : null;
     }
 
-    DocumentPreparer stampUsing(final PdfManipulator pdfManipulator) {
+    DocumentPreparer stampUsing(
+            final PdfManipulator pdfManipulator,
+            final ExternalUrlDownloadService externalUrlDownloadService,
+            final MessageService2 messageService) {
         try {
             final String documentName = document.getName();
 
             final List<String> leftLineTexts = Lists.newArrayList();
 
             leftLineTexts.add(documentName);
-            if(transitionIfAny != null) {
+            if (transitionIfAny != null) {
                 final String completedBy = transitionIfAny.getCompletedBy();
                 leftLineTexts.add(String.format(
                         "approved by: %s",
@@ -82,7 +83,7 @@ class DocumentPreparer {
             byte[] blobBytes = document.getBlobBytes();
             if (blobBytes == null) {
                 final Blob archived = externalUrlDownloadService.downloadAsBlob(document);
-                if(archived != null) {
+                if (archived != null) {
                     blobBytes = archived.getBytes();
                 } else {
                     messageService.raiseError(String.format("Failed to load bytes: Invoice %s has no cached bytes and unable to locate archived document", incomingInvoice.title()));
@@ -119,9 +120,4 @@ class DocumentPreparer {
             }
         }
     }
-
-    @Inject
-    ExternalUrlDownloadService externalUrlDownloadService;
-
-    @Inject MessageService2 messageService;
 }
