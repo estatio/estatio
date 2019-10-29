@@ -28,10 +28,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 import org.estatio.module.asset.dom.Property;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
@@ -39,76 +37,6 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BudgetRepository_Test {
-
-    FinderInteraction finderInteraction;
-
-    BudgetRepository budgetRepository;
-
-    @Before
-    public void setup() {
-        budgetRepository = new BudgetRepository() {
-
-            @Override
-            protected <T> T firstMatch(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderInteraction.FinderMethod.FIRST_MATCH);
-                return null;
-            }
-
-            @Override
-            protected <T> T uniqueMatch(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderInteraction.FinderMethod.UNIQUE_MATCH);
-                return null;
-            }
-
-            @Override
-            protected List<Budget> allInstances() {
-                finderInteraction = new FinderInteraction(null, FinderInteraction.FinderMethod.ALL_INSTANCES);
-                return null;
-            }
-
-            @Override
-            protected <T> List<T> allMatches(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderInteraction.FinderMethod.ALL_MATCHES);
-                return null;
-            }
-        };
-    }
-
-    public static class FindByProperty extends BudgetRepository_Test {
-
-        @Test
-        public void happyCase() {
-
-            Property property = new Property();
-            budgetRepository.findByProperty(property);
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
-            assertThat(finderInteraction.getResultType()).isEqualTo(Budget.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByProperty");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("property")).isEqualTo((Object) property);
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
-        }
-
-    }
-
-    public static class FindByPropertyAndDates extends BudgetRepository_Test {
-
-        @Test
-        public void happyCase() {
-
-            Property property = new Property();
-            LocalDate startDate = new LocalDate();
-            budgetRepository.findByPropertyAndStartDate(property, startDate);
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.UNIQUE_MATCH);
-            assertThat(finderInteraction.getResultType()).isEqualTo(Budget.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByPropertyAndStartDate");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("property")).isEqualTo((Object) property);
-            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate")).isEqualTo((Object) startDate);
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
-        }
-
-    }
 
     public static class NewBudget extends BudgetRepository_Test {
 

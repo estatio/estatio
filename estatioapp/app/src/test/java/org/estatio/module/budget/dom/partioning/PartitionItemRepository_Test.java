@@ -18,7 +18,6 @@
 package org.estatio.module.budget.dom.partioning;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.repository.RepositoryService;
@@ -28,10 +27,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-
-import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.KeyTable;
@@ -41,80 +37,6 @@ import org.estatio.module.charge.dom.Charge;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PartitionItemRepository_Test {
-
-    FinderInteraction finderInteraction;
-
-    PartitionItemRepository partitionItemRepository;
-
-    @Before
-    public void setup() {
-        partitionItemRepository = new PartitionItemRepository() {
-
-            @Override
-            protected <T> T firstMatch(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderInteraction.FinderMethod.FIRST_MATCH);
-                return null;
-            }
-
-            @Override
-            protected <T> T uniqueMatch(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderInteraction.FinderMethod.UNIQUE_MATCH);
-                return null;
-            }
-
-            @Override
-            protected List<PartitionItem> allInstances() {
-                finderInteraction = new FinderInteraction(null, FinderInteraction.FinderMethod.ALL_INSTANCES);
-                return null;
-            }
-
-            @Override
-            protected <T> List<T> allMatches(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderInteraction.FinderMethod.ALL_MATCHES);
-                return null;
-            }
-        };
-    }
-
-    public static class FindByPartitionItem extends PartitionItemRepository_Test {
-
-        @Test
-        public void happyCase() {
-
-            BudgetItem budgetItem = new BudgetItem();
-            partitionItemRepository.findByBudgetItem(budgetItem);
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
-            assertThat(finderInteraction.getResultType()).isEqualTo(PartitionItem.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByBudgetItem");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("budgetItem")).isEqualTo((Object) budgetItem);
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
-        }
-
-    }
-
-    public static class FindUnique extends PartitionItemRepository_Test {
-
-        @Test
-        public void happyCase() {
-
-            Partitioning partitioning = new Partitioning();
-            Charge charge = new Charge();
-            BudgetItem budgetItem = new BudgetItem();
-            KeyTable keyTable = new KeyTable();
-            partitionItemRepository.findUnique(partitioning, charge, budgetItem, keyTable);
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.UNIQUE_MATCH);
-            assertThat(finderInteraction.getResultType()).isEqualTo(PartitionItem.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findUnique");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("partitioning")).isEqualTo((Object) partitioning);
-            assertThat(finderInteraction.getArgumentsByParameterName().get("charge")).isEqualTo((Object) charge);
-            assertThat(finderInteraction.getArgumentsByParameterName().get("budgetItem")).isEqualTo((Object) budgetItem);
-            assertThat(finderInteraction.getArgumentsByParameterName().get("partitioningTable")).isEqualTo((Object) keyTable);
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(4);
-        }
-
-    }
 
     public static class FindOrCreatePartitionItemNew extends PartitionItemRepository_Test {
 

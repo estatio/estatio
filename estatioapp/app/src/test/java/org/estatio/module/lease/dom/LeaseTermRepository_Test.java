@@ -18,105 +18,21 @@
  */
 package org.estatio.module.lease.dom;
 
-import java.math.BigInteger;
-import java.util.List;
-
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
-
-import org.apache.isis.applib.query.Query;
-
-import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
-import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class LeaseTermRepository_Test {
 
-    FinderInteraction finderInteraction;
-
     LeaseTermRepository leaseTermRepository;
-
     LeaseItem leaseItem;
-    BigInteger sequence = BigInteger.TEN;
-
-    LocalDate date = new LocalDate(2013, 4, 1);
-    ;
 
     @Before
     public void setup() {
-
         leaseItem = new LeaseItem();
-
-        leaseTermRepository = new LeaseTermRepository() {
-
-            @Override
-            protected <T> T firstMatch(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
-                return null;
-            }
-
-            @Override
-            protected List<LeaseTerm> allInstances() {
-                finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
-                return null;
-            }
-
-            @Override
-            protected <T> List<T> allMatches(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
-                return null;
-            }
-        };
-    }
-
-    public static class FindByLeaseItemAndSequence extends LeaseTermRepository_Test {
-
-        @Test
-        public void happyCase() {
-
-            leaseTermRepository.findByLeaseItemAndSequence(leaseItem, sequence);
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.FIRST_MATCH);
-
-            assertThat(finderInteraction.getResultType()).isEqualTo(LeaseTerm.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByLeaseItemAndSequence");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("leaseItem")).isEqualTo((Object) leaseItem);
-            assertThat(finderInteraction.getArgumentsByParameterName().get("sequence")).isEqualTo((Object) sequence);
-
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
-        }
-    }
-
-    public static class LeaseTermsToBeApproved extends LeaseTermRepository_Test {
-
-        @Test
-        public void happyCase() {
-
-            leaseTermRepository.allLeaseTermsToBeApproved(date);
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
-
-            assertThat(finderInteraction.getResultType()).isEqualTo(LeaseTerm.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByStatusAndActiveDate");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("status")).isEqualTo((Object) LeaseTermStatus.NEW);
-            assertThat(finderInteraction.getArgumentsByParameterName().get("date")).isEqualTo((Object) date);
-
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
-        }
-
-    }
-
-    public static class AllInvoices extends LeaseTermRepository_Test {
-
-        @Test
-        public void allInvoices() {
-
-            leaseTermRepository.allLeaseTerms();
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_INSTANCES);
-        }
+        leaseTermRepository = new LeaseTermRepository();
     }
 
     public static class ValidateNewLeaseTerm extends LeaseTermRepository_Test {

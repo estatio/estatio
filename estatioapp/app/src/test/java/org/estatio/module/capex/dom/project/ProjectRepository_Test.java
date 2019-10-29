@@ -23,13 +23,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import org.junit.Before;
 import org.junit.Test;
-
-import org.apache.isis.applib.query.Query;
-
-import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
-import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.Unit;
@@ -38,51 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProjectRepository_Test {
 
-    FinderInteraction finderInteraction;
-
     ProjectRepository projectRepository;
-
-    @Before
-    public void setup() {
-    	projectRepository = new ProjectRepository() {
-
-            @Override
-            protected <T> T firstMatch(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
-                return null;
-            }
-
-            @Override
-            protected List<Project> allInstances() {
-                finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
-                return null;
-            }
-
-            @Override
-            protected <T> List<T> allMatches(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
-                return null;
-            }
-        };
-    }
-
-
-
-    public static class FindProject extends ProjectRepository_Test {
-
-        @Test
-        public void happyCase() {
-
-        	projectRepository.findProject("some?search*Phrase");
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
-            assertThat(finderInteraction.getResultType()).isEqualTo(Project.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("matchByReferenceOrName");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("matcher")).isEqualTo((Object) "(?i)some.search.*Phrase");
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
-        }
-
-    }
 
     public static class FindByFixedAsset extends ProjectRepository_Test {
 

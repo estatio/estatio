@@ -18,7 +18,6 @@
 package org.estatio.module.budget.dom.budgetcalculation;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.repository.RepositoryService;
@@ -28,12 +27,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
-
-import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
@@ -45,101 +40,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class BudgetCalculationRepository_Test {
 
-    FinderInteraction finderInteraction;
-
     BudgetCalculationRepository budgetCalculationRepository;
-
-    @Before
-    public void setup() {
-        budgetCalculationRepository = new BudgetCalculationRepository() {
-
-            @Override
-            protected <T> T firstMatch(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderInteraction.FinderMethod.FIRST_MATCH);
-                return null;
-            }
-
-            @Override
-            protected <T> T uniqueMatch(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderInteraction.FinderMethod.UNIQUE_MATCH);
-                return null;
-            }
-
-            @Override
-            protected List<BudgetCalculation> allInstances() {
-                finderInteraction = new FinderInteraction(null, FinderInteraction.FinderMethod.ALL_INSTANCES);
-                return null;
-            }
-
-            @Override
-            protected <T> List<T> allMatches(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderInteraction.FinderMethod.ALL_MATCHES);
-                return null;
-            }
-        };
-    }
-
-    public static class FindByPartitionItemAndKeyItemAndCalculationType extends BudgetCalculationRepository_Test {
-
-        @Test
-        public void happyCase() {
-
-            PartitionItem partitionItem = new PartitionItem();
-            KeyItem keyItem = new KeyItem();
-            BudgetCalculationType calculationType = BudgetCalculationType.BUDGETED;
-            budgetCalculationRepository.findUnique(partitionItem, keyItem, calculationType);
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.UNIQUE_MATCH);
-            assertThat(finderInteraction.getResultType()).isEqualTo(BudgetCalculation.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findUnique");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("partitionItem")).isEqualTo((Object) partitionItem);
-            assertThat(finderInteraction.getArgumentsByParameterName().get("tableItem")).isEqualTo((Object) keyItem);
-            assertThat(finderInteraction.getArgumentsByParameterName().get("calculationType")).isEqualTo((Object) calculationType);
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(3);
-        }
-
-    }
-
-    public static class FindByPartitionItemAndCalculationType extends BudgetCalculationRepository_Test {
-
-        @Test
-        public void happyCase() {
-
-            PartitionItem partitionItem = new PartitionItem();
-            BudgetCalculationType calculationType = BudgetCalculationType.BUDGETED;
-            budgetCalculationRepository.findByPartitionItemAndCalculationType(partitionItem, calculationType);
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
-            assertThat(finderInteraction.getResultType()).isEqualTo(BudgetCalculation.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByPartitionItemAndCalculationType");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("partitionItem")).isEqualTo((Object) partitionItem);
-            assertThat(finderInteraction.getArgumentsByParameterName().get("calculationType")).isEqualTo((Object) calculationType);
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
-        }
-
-    }
-
-    public static class FindByBudgetAndInvoiceChargeAndType extends BudgetCalculationRepository_Test {
-
-        @Test
-        public void happyCase() {
-
-            Budget budget = new Budget();
-            Charge invoiceCharge = new Charge();
-            Unit unit = new Unit();
-            budgetCalculationRepository.findByBudgetAndUnitAndInvoiceChargeAndType(budget, unit, invoiceCharge, BudgetCalculationType.BUDGETED);
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
-            assertThat(finderInteraction.getResultType()).isEqualTo(BudgetCalculation.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByBudgetAndUnitAndInvoiceChargeAndType");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("budget")).isEqualTo((Object) budget);
-            assertThat(finderInteraction.getArgumentsByParameterName().get("unit")).isEqualTo((Object) unit);
-            assertThat(finderInteraction.getArgumentsByParameterName().get("invoiceCharge")).isEqualTo((Object) invoiceCharge);
-            assertThat(finderInteraction.getArgumentsByParameterName().get("type")).isEqualTo((Object) BudgetCalculationType.BUDGETED);
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(4);
-        }
-
-    }
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);

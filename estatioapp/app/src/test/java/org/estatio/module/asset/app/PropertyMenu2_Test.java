@@ -18,8 +18,6 @@
  */
 package org.estatio.module.asset.app;
 
-import java.util.List;
-
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.jmock.Expectations;
@@ -28,13 +26,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
-import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
-import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
 
 import org.estatio.module.asset.dom.EstatioApplicationTenancyRepositoryForProperty;
 import org.estatio.module.asset.dom.Property;
@@ -44,78 +38,6 @@ import org.estatio.module.asset.dom.PropertyType;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PropertyMenu2_Test {
-
-    FinderInteraction finderInteraction;
-    PropertyMenu propertyMenu;
-    PropertyRepository propertyRepository;
-
-    @Before
-    public void setup() {
-        propertyRepository = new PropertyRepository() {
-
-            @Override
-            protected <T> T uniqueMatch(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderMethod.UNIQUE_MATCH);
-                return (T) new Property();
-            }
-            @Override
-            protected List<Property> allInstances() {
-                finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
-                return null;
-            }
-            @Override
-            protected <T> List<T> allMatches(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
-                return null;
-            }
-        };
-        propertyMenu = new PropertyMenu();
-        propertyMenu.propertyRepository = propertyRepository;
-    }
-
-    public static class FindPropertyMenu extends PropertyMenu2_Test {
-
-        @Test
-        public void happyCase() {
-
-            propertyMenu.findProperties("*REF?1*");
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
-            assertThat(finderInteraction.getResultType()).isEqualTo(Property.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByReferenceOrName");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("referenceOrName")).isEqualTo((Object)"(?i).*REF.1.*");
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
-        }
-
-    }
-
-    public static class FindPropertyByReference extends PropertyMenu2_Test {
-
-        @Test
-        public void happyCase() {
-
-            propertyRepository.findPropertyByReference("*REF?1*");
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.UNIQUE_MATCH);
-            assertThat(finderInteraction.getResultType()).isEqualTo(Property.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByReference");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("reference")).isEqualTo((Object)"*REF?1*");
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
-        }
-
-    }
-
-    public static class AllPropertyMenu extends PropertyMenu2_Test {
-
-        @Test
-        public void happyCase() {
-
-            propertyMenu.allProperties();
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_INSTANCES);
-        }
-    }
-
 
     public static class NewProperty extends PropertyMenu2_Test {
 

@@ -29,10 +29,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-
-import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
@@ -40,81 +37,6 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PartitioningRepository_Test {
-
-    FinderInteraction finderInteraction;
-
-    PartitioningRepository partitioningRepository;
-
-    @Before
-    public void setup() {
-        partitioningRepository = new PartitioningRepository() {
-
-            @Override
-            protected <T> T firstMatch(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderInteraction.FinderMethod.FIRST_MATCH);
-                return null;
-            }
-
-            @Override
-            protected <T> T uniqueMatch(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderInteraction.FinderMethod.UNIQUE_MATCH);
-                return null;
-            }
-
-            @Override
-            protected List<Partitioning> allInstances() {
-                finderInteraction = new FinderInteraction(null, FinderInteraction.FinderMethod.ALL_INSTANCES);
-                return null;
-            }
-
-            @Override
-            protected <T> List<T> allMatches(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderInteraction.FinderMethod.ALL_MATCHES);
-                return null;
-            }
-        };
-    }
-
-    public static class FindUnique extends PartitioningRepository_Test {
-
-        @Test
-        public void happyCase() {
-
-            Budget budget = new Budget();
-            BudgetCalculationType type = BudgetCalculationType.BUDGETED;
-            LocalDate date = new LocalDate();
-            partitioningRepository.findUnique(budget, type, date);
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.UNIQUE_MATCH);
-            assertThat(finderInteraction.getResultType()).isEqualTo(Partitioning.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findUnique");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("budget")).isEqualTo((Object) budget);
-            assertThat(finderInteraction.getArgumentsByParameterName().get("type")).isEqualTo((Object) type);
-            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate")).isEqualTo((Object) date);
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(3);
-        }
-
-    }
-
-    public static class FindByBudgetAndType extends PartitioningRepository_Test {
-
-        @Test
-        public void happyCase() {
-
-            Budget budget = new Budget();
-            BudgetCalculationType type = BudgetCalculationType.BUDGETED;
-            LocalDate date = new LocalDate();
-            partitioningRepository.findByBudgetAndType(budget, type);
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
-            assertThat(finderInteraction.getResultType()).isEqualTo(Partitioning.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByBudgetAndType");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("budget")).isEqualTo((Object) budget);
-            assertThat(finderInteraction.getArgumentsByParameterName().get("type")).isEqualTo((Object) type);
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
-        }
-
-    }
 
     public static class NewPartitioning extends PartitioningRepository_Test {
 

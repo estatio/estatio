@@ -18,93 +18,15 @@
  */
 package org.estatio.module.party.dom;
 
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import org.apache.isis.applib.query.Query;
-
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
-import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
-import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 
 public class PartyRepository_Test {
-
-    FinderInteraction finderInteraction;
-
-    PartyRepository partyRepository;
-
-    @Before
-    public void setup() {
-
-        partyRepository = new PartyRepository() {
-
-            @Override
-            protected <T> T firstMatch(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
-                return null;
-            }
-
-            @Override
-            protected List<Party> allInstances() {
-                finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
-                return null;
-            }
-
-            @Override
-            protected <T> List<T> allMatches(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
-                return null;
-            }
-        };
-    }
-
-    public static class MatchPartyByReferenceOrName extends PartyRepository_Test {
-        @Test
-        public void byReferenceWildcard() {
-
-            partyRepository.matchPartyByReferenceOrName("*REF?1*");
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.FIRST_MATCH);
-            assertThat(finderInteraction.getResultType()).isEqualTo(Party.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("matchByReferenceOrName");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("referenceOrName")).isEqualTo((Object) "(?i).*REF.1.*");
-
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
-        }
-    }
-
-    public static class FindParties extends PartyRepository_Test {
-
-        @Test
-        public void findParties() {
-
-            partyRepository.findParties("*REF?1*");
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
-            assertThat(finderInteraction.getResultType()).isEqualTo(Party.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("matchByReferenceOrName");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("referenceOrName")).isEqualTo((Object) "(?i).*REF.1.*");
-
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
-        }
-    }
-
-    public static class AllParties extends PartyRepository_Test {
-
-        @Test
-        public void allParties() {
-
-            partyRepository.allParties();
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_INSTANCES);
-        }
-    }
 
     public static class ValidateNewParty extends OrganisationRepository_Test {
 

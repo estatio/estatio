@@ -18,8 +18,6 @@
  */
 package org.estatio.module.capex.dom.project;
 
-import java.util.List;
-
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -27,12 +25,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.query.Query;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-
-import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
-import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
 
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.Person;
@@ -41,51 +35,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProjectRoleRepository_Test {
 
-    FinderInteraction finderInteraction;
 
     ProjectRoleRepository projectRoleRepository;
 
     @Before
     public void setup() {
-    	projectRoleRepository = new ProjectRoleRepository() {
-
-            @Override
-            protected <T> T firstMatch(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
-                return null;
-            }
-
-            @Override
-            protected List<ProjectRole> allInstances() {
-                finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
-                return null;
-            }
-
-            @Override
-            protected <T> List<T> allMatches(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
-                return null;
-            }
-        };
-    }
-
-
-    public static class FindByProject extends ProjectRoleRepository_Test {
-
-        @Test
-        public void happyCase() {
-
-            final Project project = new Project();
-
-            projectRoleRepository.findByProject(project);
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
-            assertThat(finderInteraction.getResultType()).isEqualTo(ProjectRole.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByProject");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("project")).isEqualTo((Object) project);
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
-        }
-
+    	projectRoleRepository = new ProjectRoleRepository();
     }
 
     public static class CreateProjectRole extends ProjectRoleRepository_Test {

@@ -19,6 +19,8 @@ package org.estatio.module.budget.dom.budgetitem;
 
 import java.util.List;
 
+import org.apache.isis.applib.query.QueryDefault;
+import org.apache.poi.ss.formula.functions.T;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
@@ -37,59 +39,6 @@ import org.estatio.module.charge.dom.Charge;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BudgetItemRepository_Test {
-
-    FinderInteraction finderInteraction;
-
-    BudgetItemRepository budgetItemRepository;
-
-    @Before
-    public void setup() {
-        budgetItemRepository = new BudgetItemRepository() {
-
-            @Override
-            protected <T> T firstMatch(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderInteraction.FinderMethod.FIRST_MATCH);
-                return null;
-            }
-
-            @Override
-            protected <T> T uniqueMatch(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderInteraction.FinderMethod.UNIQUE_MATCH);
-                return null;
-            }
-
-            @Override
-            protected List<BudgetItem> allInstances() {
-                finderInteraction = new FinderInteraction(null, FinderInteraction.FinderMethod.ALL_INSTANCES);
-                return null;
-            }
-
-            @Override
-            protected <T> List<T> allMatches(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderInteraction.FinderMethod.ALL_MATCHES);
-                return null;
-            }
-        };
-    }
-
-    public static class FindByBudgetAndCharge extends BudgetItemRepository_Test {
-
-        @Test
-        public void happyCase() {
-
-            Budget budget = new Budget();
-            Charge charge = new Charge();
-            budgetItemRepository.findByBudgetAndCharge(budget, charge);
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.UNIQUE_MATCH);
-            assertThat(finderInteraction.getResultType()).isEqualTo(BudgetItem.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByBudgetAndCharge");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("budget")).isEqualTo((Object) budget);
-            assertThat(finderInteraction.getArgumentsByParameterName().get("charge")).isEqualTo((Object) charge);
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
-        }
-
-    }
 
     public static class FindOrCreateBudgetItemCreatingNewItem extends BudgetItemRepository_Test {
 
