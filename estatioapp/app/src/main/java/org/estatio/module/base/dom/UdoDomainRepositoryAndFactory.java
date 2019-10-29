@@ -60,17 +60,25 @@ public abstract class UdoDomainRepositoryAndFactory<T> extends UdoDomainService<
     protected T newTransientInstance() {
         return factoryService.instantiate(getEntityType());
     }
-    
+
+    /**
+     *TODO: refactor to use commented part instead
+     */
     protected T firstMatch(final String queryName, final Object... paramArgs) {
+        //        List<T> matches = allMatches(queryName, paramArgs);
+        //        if (!matches.isEmpty()) {
+        //            return matches.get(0);
+        //        }
+        //        return null;
         return firstMatch(newQueryDefault(queryName, paramArgs));
     }
     
     protected T uniqueMatch(final String queryName, final Object... paramArgs) {
-        return uniqueMatch(newQueryDefault(queryName, paramArgs));
+        return repositoryService.uniqueMatch(newQueryDefault(queryName, paramArgs));
     }
     
     protected List<T> allMatches(final String queryName, final Object... paramArgs) {
-        return allMatches(newQueryDefault(queryName, paramArgs));
+        return repositoryService.allMatches(newQueryDefault(queryName, paramArgs));
     }
 
     protected List<T> allInstances() {
