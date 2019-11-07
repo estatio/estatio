@@ -7,11 +7,9 @@ import org.junit.Test;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 
-public class BankAccount_TitleSubscriber_Test {
+public class BankAccount_friendlyName_Test {
 
     private BankAccount bankAccount;
-    private BankAccount.TitleSubscriber target;
-    private BankAccount.TitleUiEvent ev;
     private Party stubParty = new Organisation("OWNER");
 
     @Before
@@ -19,11 +17,6 @@ public class BankAccount_TitleSubscriber_Test {
 
         bankAccount = new BankAccount();
         bankAccount.setOwner(stubParty);
-
-        ev = new BankAccount.TitleUiEvent();
-        ev.setSource(bankAccount);
-
-        target = new BankAccount.TitleSubscriber();
     }
 
     @Test
@@ -64,10 +57,10 @@ public class BankAccount_TitleSubscriber_Test {
         bankAccount.setIban("FR7630004029990001016450273");
 
         // when
-        target.titleOf(ev);
+        final String friendlyName = bankAccount.friendlyName();
 
         // then
-        Assertions.assertThat(ev.getTitle()).isEqualTo("ne plus utilier: FR7630004029990001016450273 - OWNER");
+        Assertions.assertThat(friendlyName).isEqualTo("ne plus utilier: FR7630004029990001016450273 - OWNER");
     }
 
     private void assertThatWhenNameUnchangedThen(final String iban, final String expected) {
@@ -77,10 +70,10 @@ public class BankAccount_TitleSubscriber_Test {
         bankAccount.setIban(iban);
 
         // when
-        target.titleOf(ev);
+        final String friendlyName = bankAccount.friendlyName();
 
         // then
-        Assertions.assertThat(ev.getTitle()).isEqualTo(expected);
+        Assertions.assertThat(friendlyName).isEqualTo(expected);
     }
 
 

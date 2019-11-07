@@ -347,26 +347,31 @@ public class BankAccount
             final BankAccount bankAccount = ev.getSource();
 
             if(ev.getTitle() == null) {
-                final TitleBuilder builder = TitleBuilder.start();
-                final String name = bankAccount.getName();
-                if(Objects.equals(name, bankAccount.getIban())) {
-                    // courtesy of https://stackoverflow.com/a/3761521/56880
-                    final String[] parts = name.split("(?<=\\G.{4})");
-                    for (final String part : parts) {
-                        builder.withName(part);
-                    }
-                } else {
-                    builder.withName(name);
-                }
-                String title = builder
-                        .withName("-")
-                        .withName(bankAccount.getOwner().getReference())
-                        .toString();
+                String title = bankAccount.friendlyName();
                 ev.setTitle(title);
             }
         }
     }
 
+    @Programmatic
+    public String friendlyName() {
+        final BankAccount bankAccount = this;
+        final TitleBuilder builder = TitleBuilder.start();
+        final String name = bankAccount.getName();
+        if(Objects.equals(name, bankAccount.getIban())) {
+            // courtesy of https://stackoverflow.com/a/3761521/56880
+            final String[] parts = name.split("(?<=\\G.{4})");
+            for (final String part : parts) {
+                builder.withName(part);
+            }
+        } else {
+            builder.withName(name);
+        }
+        return builder
+                .withName("-")
+                .withName(bankAccount.getOwner().getReference())
+                .toString();
+    }
 
     @Mixin(method="act")
     public static class BankAccount_lookupBic {
