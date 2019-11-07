@@ -18,6 +18,9 @@
  */
 package org.estatio.module.application.app;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
@@ -26,7 +29,11 @@ import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.registry.ServiceRegistry;
+import org.apache.isis.core.metamodel.spec.ObjectSpecId;
+import org.apache.isis.core.metamodel.spec.ObjectSpecification;
+import org.apache.isis.core.metamodel.specloader.SpecificationLoader;
 
 import org.estatio.module.base.dom.UdoDomainService;
 
@@ -40,7 +47,6 @@ import org.estatio.module.base.dom.UdoDomainService;
 )
 public class AdministrationMenu extends UdoDomainService<AdministrationMenu> {
 
-
     public AdministrationMenu() {
         super(AdministrationMenu.class);
     }
@@ -52,7 +58,30 @@ public class AdministrationMenu extends UdoDomainService<AdministrationMenu> {
         return serviceRegistry.injectServicesInto(new AdminDashboard());
     }
 
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @MemberOrder(sequence = "3.6")
+    public Object lookupObject(
+            final String objectType,
+            final String identifier) {
+        return bookmarkService.lookup(new Bookmark(objectType, identifier));
+    }
+    public List<String> choices0LookupObject() {
+        return specificationLookup.allSpecifications().stream()
+                .filter(ObjectSpecification::isPersistenceCapable)
+                .map(ObjectSpecification::getSpecId)
+                .map(ObjectSpecId::asString)
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+
     @Inject
     ServiceRegistry serviceRegistry;
+
+    @javax.inject.Inject
+    SpecificationLoader specificationLookup;
+
+
 
 }
