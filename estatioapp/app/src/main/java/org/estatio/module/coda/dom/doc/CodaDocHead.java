@@ -1015,7 +1015,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     }
 
     @Programmatic
-    public void scheduleSyncInBackgroundIfNewAndValid() {
+    public void saveAndThenSyncInIfNewAndValid() {
         if (!isAutosync()) {
             return;
         }
@@ -1027,12 +1027,14 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
             return;
         }
 
-        // TODO: this really ought to be a responsibility of backgroundService, because
-        //       otherwise the target bookmark will be invalid
         if (!repositoryService.isPersistent(this)) {
             transactionService.flushTransaction();
         }
-        backgroundService.execute(this).syncIfValid();
+
+        // instead of queuing a background command, we simply complete this transaction and continue on.
+        transactionService.nextTransaction();
+
+        syncIfValid();
     }
 
     @Property
@@ -1053,8 +1055,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         return docLine != null ? docLine.getExtRef5() : null;
     }
 
-    @Action(hidden = Where.EVERYWHERE) // just so can invoke through background service
-    public void syncIfValid() {
+    private void syncIfValid() {
         kick();
     }
 
