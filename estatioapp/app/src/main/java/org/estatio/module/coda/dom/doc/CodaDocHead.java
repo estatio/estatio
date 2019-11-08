@@ -626,13 +626,12 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
             }
 
             return analysisLineDataByLineNumber;
-        } else {
-            Map<Integer, LineData> analysisLineDataByLineNumber = null;
-            // create memento for existing analysis lines so can compare with their replacement.
-            analysisLineDataByLineNumber = getAnalysisLines().stream()
-                .collect(Collectors.toMap(CodaDocLine::getLineNum, LineData::new));
-            return analysisLineDataByLineNumber;
         }
+        Map<Integer, LineData> analysisLineDataByLineNumber = null;
+        // create memento for existing analysis lines so can compare with their replacement.
+        analysisLineDataByLineNumber = getAnalysisLines().stream()
+            .collect(Collectors.toMap(CodaDocLine::getLineNum, LineData::new));
+        return analysisLineDataByLineNumber;
     }
 
     /**
