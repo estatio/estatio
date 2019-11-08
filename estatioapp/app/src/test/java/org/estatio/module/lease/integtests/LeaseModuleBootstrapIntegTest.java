@@ -33,8 +33,8 @@ public class LeaseModuleBootstrapIntegTest extends LeaseModuleIntegTestAbstract 
 
         final Module module = metaModelService4.getAppManifest2().getModule();
 
-        final String s = jaxbService.toXml(module);
-        System.out.println(s);
+        // final String s = jaxbService.toXml(module);
+        // System.out.println(s);
     }
 
     @Inject
