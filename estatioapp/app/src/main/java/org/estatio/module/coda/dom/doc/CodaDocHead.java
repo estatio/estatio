@@ -598,10 +598,10 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     }
 
 
-    private transient Map<Integer, LineData> analysisLineDataByLineNumber;
     @Programmatic
     public Map<Integer, LineData> getAnalysisLineDataByLineNumber() {
 
+        Map<Integer, LineData> analysisLineDataByLineNumber = null;
         if(analysisLineDataByLineNumber == null) {
             if(isLegacyAnalysisLineWithNullDocValue()) {
                 analysisLineDataByLineNumber = Maps.newHashMap();
