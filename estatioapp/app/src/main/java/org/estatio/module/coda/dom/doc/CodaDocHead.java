@@ -590,16 +590,11 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         //
         revalidateOnly();
 
-        codaDocSynchronizationService.lock();
-        try {
-            final Memento existing = new Memento(this, derivedObjectLookup);
-            kickEstatioObjectsIfAny(
-                    existing,
-                    errors, createIfValid);
+        final Memento existing = new Memento(this, derivedObjectLookup);
+        kickEstatioObjectsIfAny(
+                existing,
+                errors, createIfValid);
 
-        } finally {
-            codaDocSynchronizationService.unlock();
-        }
     }
 
 
@@ -1213,10 +1208,6 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     }
 
     //endregion
-
-    @NotPersistent
-    @Inject
-    CodaDocSynchronizationService codaDocSynchronizationService;
 
     @NotPersistent
     @Inject
