@@ -602,35 +602,33 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     public Map<Integer, LineData> getAnalysisLineDataByLineNumber() {
 
         Map<Integer, LineData> analysisLineDataByLineNumber = null;
-        if(analysisLineDataByLineNumber == null) {
-            if(isLegacyAnalysisLineWithNullDocValue()) {
-                analysisLineDataByLineNumber = Maps.newHashMap();
+        if(isLegacyAnalysisLineWithNullDocValue()) {
+            analysisLineDataByLineNumber = Maps.newHashMap();
 
-                // get hold of the summary line and extract its project and charge
-                final CodaDocLine summaryDocLine = summaryDocLine(LineCache.DEFAULT);
+            // get hold of the summary line and extract its project and charge
+            final CodaDocLine summaryDocLine = summaryDocLine(LineCache.DEFAULT);
 
-                if(summaryDocLine != null) {
+            if(summaryDocLine != null) {
 
-                    final Optional<Project> projectIfAny = Optional.ofNullable(
-                            summaryDocLine.getExtRefProject());
-                    final Optional<Charge> chargeIfAny = Optional.ofNullable(
-                            summaryDocLine.getExtRefWorkTypeCharge());
+                final Optional<Project> projectIfAny = Optional.ofNullable(
+                        summaryDocLine.getExtRefProject());
+                final Optional<Charge> chargeIfAny = Optional.ofNullable(
+                        summaryDocLine.getExtRefWorkTypeCharge());
 
-                    // we also need to get hold of the invoice item from the parent invoice
-                    final IncomingInvoice incomingInvoice = getIncomingInvoice();
-                    final Optional<IncomingInvoiceItem> incomingInvoiceItemIfAny =
-                            incomingInvoice != null ? incomingInvoice.firstItemIfAny() : Optional.empty();
+                // we also need to get hold of the invoice item from the parent invoice
+                final IncomingInvoice incomingInvoice = getIncomingInvoice();
+                final Optional<IncomingInvoiceItem> incomingInvoiceItemIfAny =
+                        incomingInvoice != null ? incomingInvoice.firstItemIfAny() : Optional.empty();
 
-                    // ... and treat the summary line as if it's the analysisLine = 2
-                    analysisLineDataByLineNumber.put(2,
-                            new LineData(incomingInvoiceItemIfAny, projectIfAny, chargeIfAny));
-                }
-
-            } else {
-                // create memento for existing analysis lines so can compare with their replacement.
-                analysisLineDataByLineNumber = getAnalysisLines().stream()
-                    .collect(Collectors.toMap(CodaDocLine::getLineNum, LineData::new));
+                // ... and treat the summary line as if it's the analysisLine = 2
+                analysisLineDataByLineNumber.put(2,
+                        new LineData(incomingInvoiceItemIfAny, projectIfAny, chargeIfAny));
             }
+
+        } else {
+            // create memento for existing analysis lines so can compare with their replacement.
+            analysisLineDataByLineNumber = getAnalysisLines().stream()
+                .collect(Collectors.toMap(CodaDocLine::getLineNum, LineData::new));
         }
         return analysisLineDataByLineNumber;
     }
