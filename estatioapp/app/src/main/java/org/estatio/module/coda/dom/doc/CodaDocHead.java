@@ -54,6 +54,7 @@ import org.apache.isis.applib.services.scratchpad.Scratchpad;
 import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
+
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
 import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
@@ -86,6 +87,7 @@ import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.val;
 
 @PersistenceCapable(
         // TODO: REVIEW: EST-1862: an alternative design would be to use the cmpCode/docCode/docNum as the unique (application) key.
@@ -602,8 +604,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     public Map<Integer, LineData> getAnalysisLineDataByLineNumber() {
 
         if(isLegacyAnalysisLineWithNullDocValue()) {
-            Map<Integer, LineData> analysisLineDataByLineNumber = null;
-            analysisLineDataByLineNumber = Maps.newHashMap();
+            val analysisLineDataByLineNumber = Maps.<Integer, LineData>newHashMap();
 
             // get hold of the summary line and extract its project and charge
             final CodaDocLine summaryDocLine = summaryDocLine(LineCache.DEFAULT);
@@ -627,11 +628,10 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
 
             return analysisLineDataByLineNumber;
         }
-        Map<Integer, LineData> analysisLineDataByLineNumber = null;
+        
         // create memento for existing analysis lines so can compare with their replacement.
-        analysisLineDataByLineNumber = getAnalysisLines().stream()
-            .collect(Collectors.toMap(CodaDocLine::getLineNum, LineData::new));
-        return analysisLineDataByLineNumber;
+        return getAnalysisLines().stream()
+                .collect(Collectors.toMap(CodaDocLine::getLineNum, LineData::new));
     }
 
     /**
