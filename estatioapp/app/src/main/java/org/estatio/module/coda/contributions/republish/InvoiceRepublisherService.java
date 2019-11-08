@@ -72,7 +72,7 @@ public class InvoiceRepublisherService {
 
     private void publish(final PublishedEvent publishedEvent) {
         final PublishedEvent_republish mixin = factoryService.mixin(PublishedEvent_republish.class, publishedEvent);
-        wrapperFactory.wrap(mixin).$$();
+        wrapperFactory.wrap(mixin).act();
     }
 
 

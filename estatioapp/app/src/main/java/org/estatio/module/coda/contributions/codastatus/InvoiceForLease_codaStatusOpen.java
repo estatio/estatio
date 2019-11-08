@@ -13,9 +13,8 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.linking.DeepLinkService;
-
-import org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage;
-import org.isisaddons.module.publishmq.dom.jdo.status.StatusMessageRepository;
+import org.isisaddons.module.publishmq.dom.status.impl.StatusMessage;
+import org.isisaddons.module.publishmq.dom.status.impl.StatusMessageRepository;
 
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 

@@ -216,6 +216,10 @@ language governing permissions and limitations under the License.
             <artifactId>isis-module-publishmq-dom-jdo</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.isisaddons.module.publishmq</groupId>
+            <artifactId>isis-module-publishmq-dom-status</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.isisaddons.module.security</groupId>
             <artifactId>isis-module-security-dom</artifactId>
         </dependency>

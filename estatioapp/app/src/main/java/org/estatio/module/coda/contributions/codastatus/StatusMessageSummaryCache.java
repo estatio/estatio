@@ -26,7 +26,7 @@ import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.core.metamodel.services.jdosupport.Persistable_datanucleusIdLong;
 
-import org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage;
+import org.isisaddons.module.publishmq.dom.status.impl.StatusMessage;
 
 import org.estatio.module.coda.dom.DatabaseInferrerService;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
