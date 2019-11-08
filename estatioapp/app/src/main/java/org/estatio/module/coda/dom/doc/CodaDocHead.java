@@ -601,8 +601,8 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     @Programmatic
     public Map<Integer, LineData> getAnalysisLineDataByLineNumber() {
 
-        Map<Integer, LineData> analysisLineDataByLineNumber = null;
         if(isLegacyAnalysisLineWithNullDocValue()) {
+            Map<Integer, LineData> analysisLineDataByLineNumber = null;
             analysisLineDataByLineNumber = Maps.newHashMap();
 
             // get hold of the summary line and extract its project and charge
@@ -625,12 +625,14 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
                         new LineData(incomingInvoiceItemIfAny, projectIfAny, chargeIfAny));
             }
 
+            return analysisLineDataByLineNumber;
         } else {
+            Map<Integer, LineData> analysisLineDataByLineNumber = null;
             // create memento for existing analysis lines so can compare with their replacement.
             analysisLineDataByLineNumber = getAnalysisLines().stream()
                 .collect(Collectors.toMap(CodaDocLine::getLineNum, LineData::new));
+            return analysisLineDataByLineNumber;
         }
-        return analysisLineDataByLineNumber;
     }
 
     /**
