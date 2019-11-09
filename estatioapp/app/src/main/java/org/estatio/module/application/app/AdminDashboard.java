@@ -12,13 +12,11 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
+import org.apache.isis.applib.ViewModel;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Collection;
@@ -68,19 +66,21 @@ import lombok.Setter;
         // WORKAROUND: using fqcn as objectType because Isis' invalidation of cache in prototyping mode causing NPEs in some situations
         objectType = "org.estatio.module.application.app.AdminDashboard"
 )
-@XmlRootElement(name = "adminDashboard")
-@XmlType(
-        propOrder = {
-        }
-)
-@XmlAccessorType(XmlAccessType.FIELD)
-public class AdminDashboard {
+public class AdminDashboard implements ViewModel {
 
     public static final String KEY_ESTATIO_MOTD = "estatio.motd";
     public static final String KEY_MINIO_ARCHIVE_FOR_CALLER = "docBlobServer.caller";
 
     public String title() { return "Admin Dashboard"; }
 
+    @Override
+    public String viewModelMemento() {
+        return "1";
+    }
+
+    @Override
+    public void viewModelInit(final String s) {
+    }
 
     public enum DocBlobArchiveCaller {
         CAMEL("camel"),
@@ -113,7 +113,6 @@ public class AdminDashboard {
             editing = Editing.ENABLED,
             optionality = Optionality.OPTIONAL
     )
-    @XmlTransient
     public DocBlobArchiveCaller getDocBlobServerCaller() {
         ApplicationSettingForEstatio applicationSetting =
                 (ApplicationSettingForEstatio) applicationSettingsServiceRW.find(KEY_MINIO_ARCHIVE_FOR_CALLER);
@@ -142,7 +141,6 @@ public class AdminDashboard {
             optionality = Optionality.OPTIONAL,
             hidden = Where.EVERYWHERE // for now...
     )
-    @XmlTransient
     public String getMotd() {
         ApplicationSettingForEstatio applicationSetting =
                 (ApplicationSettingForEstatio) applicationSettingsServiceRW.find(KEY_ESTATIO_MOTD);
@@ -166,7 +164,6 @@ public class AdminDashboard {
 
 
     @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
-    @XmlTransient
     public LocalDate getEpochDate() {
         return settingsService.fetchEpochDate();
     }
@@ -186,7 +183,6 @@ public class AdminDashboard {
 
     @Property()
     @MemberOrder(sequence = "3")
-    @XmlTransient
     public Integer getHttpSessionTimeout() {
         return httpSessionProvider.getHttpSession().map(HttpSession::getMaxInactiveInterval).orElse(null);
     }
@@ -501,63 +497,48 @@ public class AdminDashboard {
     ClockService clockService;
 
     @Inject
-    @XmlTransient
     CodaHwmRepository codaHwmRepository;
 
     @Inject
-    @XmlTransient
     PublisherServiceUsingActiveMq publisherServiceUsingActiveMq;
 
     @Inject
-    @XmlTransient
     ConfigurationServiceInternal isisConfiguration;
 
     @Inject
-    @XmlTransient
     ConfigurationService configurationService;
 
     @Inject
-    @XmlTransient
     StringInterpolatorService stringInterpolatorService;
 
     @Inject
-    @XmlTransient
     SlackService slackService;
 
     @Inject
-    @XmlTransient
     EmailService emailService;
 
     @Inject
-    @XmlTransient
     LeaseInvoicingSettingsService settingsService;
 
     @Inject
-    @XmlTransient
     ApplicationSettingsServiceRW applicationSettingsServiceRW;
 
     @Inject
-    @XmlTransient
     HttpSessionProvider httpSessionProvider;
 
     @Inject
-    @XmlTransient
     IsisJdoSupport isisJdoSupport;
 
     @Inject
-    @XmlTransient
     MessageService messageService;
 
     @Inject
-    @XmlTransient
     IncomingInvoiceRepository incomingInvoiceRepository;
 
     @Inject
-    @XmlTransient
     WrapperFactory wrapperFactory;
 
     @Inject
-    @XmlTransient
     FactoryService factoryService;
 
 }

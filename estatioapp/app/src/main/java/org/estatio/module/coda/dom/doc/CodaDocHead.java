@@ -54,6 +54,7 @@ import org.apache.isis.applib.services.scratchpad.Scratchpad;
 import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
+
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
 import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
@@ -86,6 +87,7 @@ import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.val;
 
 @PersistenceCapable(
         // TODO: REVIEW: EST-1862: an alternative design would be to use the cmpCode/docCode/docNum as the unique (application) key.
@@ -590,54 +592,46 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         //
         revalidateOnly();
 
-        codaDocSynchronizationService.lock();
-        try {
-            final Memento existing = new Memento(this, derivedObjectLookup);
-            kickEstatioObjectsIfAny(
-                    existing,
-                    errors, createIfValid);
+        final Memento existing = new Memento(this, derivedObjectLookup);
+        kickEstatioObjectsIfAny(
+                existing,
+                errors, createIfValid);
 
-        } finally {
-            codaDocSynchronizationService.unlock();
-        }
     }
 
 
-    private transient Map<Integer, LineData> analysisLineDataByLineNumber;
     @Programmatic
     public Map<Integer, LineData> getAnalysisLineDataByLineNumber() {
 
-        if(analysisLineDataByLineNumber == null) {
-            if(isLegacyAnalysisLineWithNullDocValue()) {
-                analysisLineDataByLineNumber = Maps.newHashMap();
+        if(isLegacyAnalysisLineWithNullDocValue()) {
+            val analysisLineDataByLineNumber = Maps.<Integer, LineData>newHashMap();
 
-                // get hold of the summary line and extract its project and charge
-                final CodaDocLine summaryDocLine = summaryDocLine(LineCache.DEFAULT);
+            // get hold of the summary line and extract its project and charge
+            final CodaDocLine summaryDocLine = summaryDocLine(LineCache.DEFAULT);
 
-                if(summaryDocLine != null) {
+            if(summaryDocLine != null) {
 
-                    final Optional<Project> projectIfAny = Optional.ofNullable(
-                            summaryDocLine.getExtRefProject());
-                    final Optional<Charge> chargeIfAny = Optional.ofNullable(
-                            summaryDocLine.getExtRefWorkTypeCharge());
+                final Optional<Project> projectIfAny = Optional.ofNullable(
+                        summaryDocLine.getExtRefProject());
+                final Optional<Charge> chargeIfAny = Optional.ofNullable(
+                        summaryDocLine.getExtRefWorkTypeCharge());
 
-                    // we also need to get hold of the invoice item from the parent invoice
-                    final IncomingInvoice incomingInvoice = getIncomingInvoice();
-                    final Optional<IncomingInvoiceItem> incomingInvoiceItemIfAny =
-                            incomingInvoice != null ? incomingInvoice.firstItemIfAny() : Optional.empty();
+                // we also need to get hold of the invoice item from the parent invoice
+                final IncomingInvoice incomingInvoice = getIncomingInvoice();
+                final Optional<IncomingInvoiceItem> incomingInvoiceItemIfAny =
+                        incomingInvoice != null ? incomingInvoice.firstItemIfAny() : Optional.empty();
 
-                    // ... and treat the summary line as if it's the analysisLine = 2
-                    analysisLineDataByLineNumber.put(2,
-                            new LineData(incomingInvoiceItemIfAny, projectIfAny, chargeIfAny));
-                }
-
-            } else {
-                // create memento for existing analysis lines so can compare with their replacement.
-                analysisLineDataByLineNumber = getAnalysisLines().stream()
-                    .collect(Collectors.toMap(CodaDocLine::getLineNum, LineData::new));
+                // ... and treat the summary line as if it's the analysisLine = 2
+                analysisLineDataByLineNumber.put(2,
+                        new LineData(incomingInvoiceItemIfAny, projectIfAny, chargeIfAny));
             }
+
+            return analysisLineDataByLineNumber;
         }
-        return analysisLineDataByLineNumber;
+        
+        // create memento for existing analysis lines so can compare with their replacement.
+        return getAnalysisLines().stream()
+                .collect(Collectors.toMap(CodaDocLine::getLineNum, LineData::new));
     }
 
     /**
@@ -1015,7 +1009,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     }
 
     @Programmatic
-    public void scheduleSyncInBackgroundIfNewAndValid() {
+    public void saveAndThenSyncInIfNewAndValid() {
         if (!isAutosync()) {
             return;
         }
@@ -1027,12 +1021,14 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
             return;
         }
 
-        // TODO: this really ought to be a responsibility of backgroundService, because
-        //       otherwise the target bookmark will be invalid
         if (!repositoryService.isPersistent(this)) {
             transactionService.flushTransaction();
         }
-        backgroundService.execute(this).syncIfValid();
+
+        // instead of queuing a background command, we simply complete this transaction and continue on.
+        transactionService.nextTransaction();
+
+        syncIfValid();
     }
 
     @Property
@@ -1053,8 +1049,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         return docLine != null ? docLine.getExtRef5() : null;
     }
 
-    @Action(hidden = Where.EVERYWHERE) // just so can invoke through background service
-    public void syncIfValid() {
+    private void syncIfValid() {
         kick();
     }
 
@@ -1212,10 +1207,6 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     }
 
     //endregion
-
-    @NotPersistent
-    @Inject
-    CodaDocSynchronizationService codaDocSynchronizationService;
 
     @NotPersistent
     @Inject
