@@ -52,8 +52,10 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
@@ -65,6 +67,7 @@ import org.apache.isis.applib.services.jaxb.JaxbService;
 import org.apache.isis.applib.services.linking.DeepLinkService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
+import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.apache.isis.applib.value.Blob;
@@ -82,6 +85,7 @@ import org.incode.module.base.dom.MimeTypeData;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.capex.app.credittransfer.CreditTransferExportLine;
 import org.estatio.module.capex.app.credittransfer.CreditTransferExportService;
+import org.estatio.module.capex.app.paymentbatch.PaymentBatchFraManager;
 import org.estatio.module.capex.app.paymentline.PaymentLineForExcelExportV1;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
@@ -973,6 +977,34 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         return getDebtorBankAccount().getOwner().getReference() + "-" + userName;
     }
     //endregion
+
+
+    @DomainService(nature = NatureOfService.DOMAIN)
+    public static class TableColumnOrderServiceForPaymentBatch implements TableColumnOrderService {
+
+        @Programmatic
+        @Override
+        public List<String> orderParented(
+                final Object parent,
+                final String collectionId,
+                final Class<?> collectionType,
+                final List<String> propertyIds) {
+            if( parent instanceof PaymentBatchFraManager &&
+                PaymentBatch.class.isAssignableFrom(collectionType) &&
+                Objects.equals(collectionId, "completedBatches")) {
+
+                final List<String> ids = new ArrayList<>(propertyIds);
+                ids.remove("upstreamCreditNoteFound");
+                return ids;
+            }
+            return null;
+        }
+
+        @Override
+        public List<String> orderStandalone(final Class<?> collectionType, final List<String> propertyIds) {
+            return null;
+        }
+    }
 
     @Inject
     ServiceRegistry2 serviceRegistry2;
