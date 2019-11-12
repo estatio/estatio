@@ -234,28 +234,83 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
     @Property(notPersisted = true)
     public BigDecimal getTotalNetAmount() {
-        return sum(IncomingInvoice::getNetAmount);
+        return  getTotalNetAmountOnComplete() != null
+                ? getTotalNetAmountOnComplete()
+                : sum(IncomingInvoice::getNetAmount);
     }
+
+    /**
+     * Introduced for performance tuning - saves expensive recalculation on completed batches
+     * in the PaymentBatchManager.  Snapshotted in the PaymentBatch_complete mixin
+     */
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @Property
+    @Getter @Setter
+    private BigDecimal totalNetAmountOnComplete;
 
     @Property(notPersisted = true, hidden = Where.ALL_TABLES)
     public BigDecimal getTotalVatAmount() {
-        return sum(IncomingInvoice::getVatAmount);
+        return getTotalVatAmountOnComplete() != null
+                    ? getTotalVatAmountOnComplete()
+                    : sum(IncomingInvoice::getVatAmount);
     }
+
+    /**
+     * Introduced for performance tuning - saves expensive recalculation on completed batches
+     * in the PaymentBatchManager.  Snapshotted in the PaymentBatch_complete mixin
+     */
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @Property(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private BigDecimal totalVatAmountOnComplete;
 
     @Property(notPersisted = true)
     public BigDecimal getTotalGrossAmount() {
-        return sum(IncomingInvoice::getGrossAmount);
+        return getTotalGrossAmountOnComplete() != null
+                ? getTotalGrossAmountOnComplete()
+                : sum(IncomingInvoice::getGrossAmount);
     }
+
+    /**
+     * Introduced for performance tuning - saves expensive recalculation on completed batches
+     * in the PaymentBatchManager.  Snapshotted in the PaymentBatch_complete mixin
+     */
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @Property(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private BigDecimal totalGrossAmountOnComplete;
 
     @Property(notPersisted = true)
     public int getNumTransfers() {
-        return getTransfers().size();
+        return getNumTransfersOnComplete() != null
+                ? getNumTransfersOnComplete()
+                : getTransfers().size();
     }
+
+    /**
+     * Introduced for performance tuning - saves expensive recalculation on completed batches
+     * in the PaymentBatchManager.  Snapshotted in the PaymentBatch_complete mixin
+     */
+    @javax.jdo.annotations.Column(allowsNull = "true")
+    @Property(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private Integer numTransfersOnComplete;
 
     @Property(notPersisted = true)
     public int getNumInvoices() {
-        return getLines().size();
+        return getNumInvoicesOnComplete() != null
+                ? getNumInvoicesOnComplete()
+                : getLines().size();
     }
+
+    /**
+     * Introduced for performance tuning - saves expensive recalculation on completed batches
+     * in the PaymentBatchManager.  Snapshotted in the PaymentBatch_complete mixin
+     */
+    @javax.jdo.annotations.Column(allowsNull = "true")
+    @Property(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private Integer numInvoicesOnComplete;
 
     private BigDecimal sum(final Function<IncomingInvoice, BigDecimal> functionToObtainAmount) {
         return Lists.newArrayList(getLines()).stream()
@@ -994,6 +1049,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                 Objects.equals(collectionId, "completedBatches")) {
 
                 final List<String> ids = new ArrayList<>(propertyIds);
+                ids.remove("numTransfers"); // because during migration too difficult to calculate.
                 ids.remove("upstreamCreditNoteFound");
                 return ids;
             }
