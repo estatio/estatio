@@ -19,7 +19,6 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
-
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
@@ -120,6 +119,11 @@ public class IncomingInvoiceRepository {
     List<IncomingInvoice> findByApprovalStateAndPaymentMethod(
             final IncomingInvoiceApprovalState approvalState,
             final PaymentMethod paymentMethod) {
+//        final Query query = isisJdoSupport.getJdoPersistenceManager()
+//                .newNamedQuery(IncomingInvoice.class, "findByApprovalStateAndPaymentMethod");
+//        query.getFetchPlan().setGroup("seller");
+//
+//        return query.executeWithMap();
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         IncomingInvoice.class,

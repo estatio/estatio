@@ -20,6 +20,7 @@ import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
@@ -156,6 +157,21 @@ import lombok.val;
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
                         + "WHERE incomingInvoice == :incomingInvoice "
+        ),
+        @Query(
+                name = "findByIncomingInvoiceAtPathPrefixAndApprovalState", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
+                        + "WHERE incomingInvoice.approvalState == :approvalState "
+                        + "   && incomingInvoice.applicationTenancyPath.startsWith(:atPathPrefix) "
+        ),
+        @Query(
+                name = "findByIncomingInvoiceAtPathPrefixAndApprovalStateAndPaymentMethod", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
+                        + "WHERE incomingInvoice.approvalState == :approvalState "
+                        + "   && incomingInvoice.paymentMethod == :paymentMethod "
+                        + "   && incomingInvoice.applicationTenancyPath.startsWith(:atPathPrefix) "
         )
 })
 @Unique(name = "CodaDocHead_cmpCode_docCode_docNum_UNQ", members = { "cmpCode", "docCode", "docNum" })
@@ -325,11 +341,13 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         return getCmpCodeBuyer() != null;
     }
 
+    @Persistent(defaultFetchGroup = "true")
     @Column(allowsNull = "true", name = "cmpCodeBuyerId")
     @Property()
     @Getter @Setter
     private Organisation cmpCodeBuyer;
 
+    @Persistent(defaultFetchGroup = "true")
     @Column(allowsNull = "true", name = "incomingInvoiceId")
     @Property
     @Getter @Setter
@@ -341,6 +359,10 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     @CollectionLayout(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private SortedSet<CodaDocLine> lines = new TreeSet<>();
+    public SortedSet<CodaDocLine> getLines() {
+        return lines;
+    }
+
 
     @javax.jdo.annotations.NotPersistent
     @CollectionLayout(defaultView = "table", paged = 999)

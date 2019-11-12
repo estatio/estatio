@@ -50,6 +50,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.metamodel.MetaModelService2;
 import org.apache.isis.applib.services.metamodel.MetaModelService3;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.apache.isis.applib.util.TitleBuffer;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
@@ -357,7 +358,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     public String title() {
         final TitleBuffer buf = new TitleBuffer();
 
-        buf.append(getBarcode());
+        // buf.append(getBarcode());
 
         final Party seller = getSeller();
         if (seller != null) {
@@ -1573,6 +1574,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
      */
     @javax.jdo.annotations.Column(name = "propertyId", allowsNull = "true")
     @org.apache.isis.applib.annotation.Property(hidden = Where.REFERENCES_PARENT)
+    @Persistent(defaultFetchGroup = "true")
     @Getter @Setter
     private Property property;
 
@@ -2268,6 +2270,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Programmatic
     public List<ApprovalString> getApprovals() {
+        return queryResultsCache.execute(this::doGetApprovals, getClass(), "getApprovals");
+    }
+
+    private List<ApprovalString> doGetApprovals() {
         // TODO: as of EST-1824 temporarily we will inspect the transition instead of the task on the transition
         return stateTransitionRepository.findByDomainObject(this)
                 .stream()
@@ -2277,6 +2283,16 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .map(x -> new ApprovalString(x.getCompletedBy(), x.getCompletedOn().toString("dd-MMM-yyyy HH:mm"), x.getCompletedOn().toLocalDate()))
                 .collect(Collectors.toList());
     }
+
+    @Programmatic
+    public Optional<ApprovalString> getMostRecentApproval() {
+        final List<IncomingInvoice.ApprovalString> approvals = getApprovals();
+        Collections.reverse(approvals);
+        return Optional.ofNullable(approvals.isEmpty() ? null : approvals.get(0));
+    }
+
+    @Inject
+    QueryResultsCache queryResultsCache;
 
     @AllArgsConstructor
     @Getter @Setter

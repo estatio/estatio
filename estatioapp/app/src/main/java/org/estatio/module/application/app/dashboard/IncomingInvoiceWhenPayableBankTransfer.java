@@ -1,8 +1,6 @@
 package org.estatio.module.application.app.dashboard;
 
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
 
 import javax.annotation.Nullable;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -10,18 +8,15 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.coda.dom.doc.CodaDocHead;
-import org.estatio.module.coda.dom.doc.LineCache;
 import org.estatio.module.party.dom.Party;
 
 import lombok.Getter;
@@ -33,8 +28,6 @@ import static org.apache.isis.applib.annotation.Projecting.PROJECTED;
 @XmlType(
     propOrder = {
             "incomingInvoice",
-            "lastApprovedBy",
-            "lastApprovedOn",
             "codaDocHead",
             "userStatus",
     }
@@ -44,18 +37,15 @@ import static org.apache.isis.applib.annotation.Projecting.PROJECTED;
 @NoArgsConstructor
 public class IncomingInvoiceWhenPayableBankTransfer {
 
+    public IncomingInvoiceWhenPayableBankTransfer(final CodaDocHead codaDocHead) {
+        this(codaDocHead.getIncomingInvoice(), codaDocHead);
+    }
+
     public IncomingInvoiceWhenPayableBankTransfer(final IncomingInvoice incomingInvoice, final CodaDocHead codaDocHead) {
-        final List<IncomingInvoice.ApprovalString> approvals = incomingInvoice.getApprovals();
-        Collections.reverse(approvals);
-        if(!approvals.isEmpty()) {
-            final IncomingInvoice.ApprovalString approval = approvals.get(0);
-            this.lastApprovedOn = approval.getCompletedOnAsDate();
-            this.lastApprovedBy = approval.getCompletedBy();
-        }
         this.codaDocHead = codaDocHead;
         this.incomingInvoice = incomingInvoice;
 
-        this.userStatus = codaDocHead.getSummaryLineUserStatus(LineCache.DEFAULT);
+        this.userStatus = 'X';  // TODO: hacking this for now .... codaDocHead.getSummaryLineUserStatus(LineCache.DEFAULT);
     }
 
     @org.apache.isis.applib.annotation.Property(projecting = PROJECTED)
@@ -84,12 +74,19 @@ public class IncomingInvoiceWhenPayableBankTransfer {
         return getIncomingInvoice().getDateReceived();
     }
 
-    @Getter @Setter @Nullable
-    @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
-    private LocalDate lastApprovedOn;
+    @XmlTransient
+    public LocalDate getLastApprovedOn() {
+        return incomingInvoice.getMostRecentApproval()
+                .map(IncomingInvoice.ApprovalString::getCompletedOnAsDate)
+                .orElse(null);
+    }
 
-    @Getter @Setter @Nullable
-    private String lastApprovedBy;
+    @XmlTransient
+    public String getLastApprovedBy() {
+        return incomingInvoice.getMostRecentApproval()
+                .map(IncomingInvoice.ApprovalString::getCompletedBy)
+                .orElse(null);
+    }
 
     @Getter @Setter @Nullable
     private Character userStatus;
