@@ -28,17 +28,14 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.IsisApplibModule.ActionDomainEvent;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -49,12 +46,17 @@ import org.apache.isis.applib.services.eventbus.ObjectPersistedEvent;
 import org.apache.isis.applib.services.eventbus.ObjectRemovingEvent;
 import org.apache.isis.applib.services.eventbus.ObjectUpdatedEvent;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
-
 import org.incode.module.base.dom.Titled;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.base.dom.EstatioRole;
+import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
+import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
+import org.estatio.module.capex.dom.state.State;
+import org.estatio.module.capex.dom.state.StateTransition;
+import org.estatio.module.capex.dom.state.StateTransitionType;
+import org.estatio.module.capex.dom.state.Stateful;
 import org.estatio.module.financial.dom.utils.IBANHelper;
 import org.estatio.module.financial.dom.utils.IBANValidator;
 import org.estatio.module.party.dom.Party;
@@ -100,16 +102,14 @@ import lombok.Setter;
 )
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
-        , titleUiEvent = BankAccount.TitleUiEvent.class
 )
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class BankAccount
-        extends FinancialAccount {
+        extends FinancialAccount implements Stateful {
 
     public static class PersistedLifecycleEvent extends ObjectPersistedEvent<BankAccount> {}
     public static class UpdatedLifecycleEvent extends ObjectUpdatedEvent<BankAccount> {}
     public static class RemovingLifecycleEvent extends ObjectRemovingEvent<BankAccount> {}
-    public static class TitleUiEvent extends org.apache.isis.applib.services.eventbus.TitleUiEvent <BankAccount> {}
 
     @Column(name = "bankPartyId", allowsNull = "true")
     @Getter @Setter
@@ -237,6 +237,39 @@ public class BankAccount
         return;
     }
 
+    @Override
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>>
+    S getStateOf(
+            final Class<ST> stateTransitionClass) {
+            if (stateTransitionClass == BankAccountVerificationStateTransition.class) {
+            return (S) getVerificationState();
+        }
+        return null;
+    }
+
+    @Override
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+            > void setStateOf(
+            final Class<ST> stateTransitionClass, final S newState) {
+        if (stateTransitionClass == BankAccountVerificationStateTransition.class) {
+            setVerificationState((BankAccountVerificationState) newState);
+        }
+    }
+
+    @Getter @Setter
+    @javax.jdo.annotations.Column(allowsNull = "false")
+    private BankAccountVerificationState verificationState;
+
+
+
     public static class RemoveEvent extends ActionDomainEvent<BankAccount> {
         private static final long serialVersionUID = 1L;
     }
@@ -337,20 +370,13 @@ public class BankAccount
 
     }
 
-    @DomainService(nature = NatureOfService.DOMAIN)
-    public static class TitleSubscriber extends AbstractSubscriber {
 
-        @Programmatic
-        @com.google.common.eventbus.Subscribe
-        @org.axonframework.eventhandling.annotation.EventHandler
-        public void titleOf(TitleUiEvent ev) {
-            final BankAccount bankAccount = ev.getSource();
-
-            if(ev.getTitle() == null) {
-                String title = bankAccount.friendlyName();
-                ev.setTitle(title);
-            }
-        }
+    public String title() {
+        final BankAccountVerificationState verificationState = getVerificationState();
+        final String friendlyName = friendlyName();
+        return verificationState != null
+                ? String.format("%s (%s)", friendlyName, verificationState)
+                : friendlyName;
     }
 
     @Programmatic
