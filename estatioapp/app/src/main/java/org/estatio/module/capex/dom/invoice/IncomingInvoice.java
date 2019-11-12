@@ -54,11 +54,9 @@ import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.apache.isis.applib.util.TitleBuffer;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
-
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.document.dom.impl.docs.Document;
-import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
@@ -358,7 +356,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     public String title() {
         final TitleBuffer buf = new TitleBuffer();
 
-        // buf.append(getBarcode());
+        buf.append(getBarcode());
 
         final Party seller = getSeller();
         if (seller != null) {
@@ -2371,8 +2369,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @PropertyLayout(hidden = Where.OBJECT_FORMS)
     public String getBarcode() {
-        final Optional<Document> document = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(this);
-        return document.map(DocumentAbstract::getName).orElse(null);
+        // TODO: store this...
+//        final Optional<Document> document = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(this);
+//        return document.map(DocumentAbstract::getName).orElse(null);
+        return "12345678.pdf";
     }
 
     //region > notification

@@ -210,6 +210,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
      * Document > PmtInf > DbtrAgt > FinInstnId > BIC
      */
     @Column(allowsNull = "false", name = "debtorBankAccountId")
+    @Persistent(defaultFetchGroup = "true")
     @Getter @Setter
     private BankAccount debtorBankAccount;
 

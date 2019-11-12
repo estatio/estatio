@@ -10,8 +10,6 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
-import org.apache.isis.applib.util.Enums;
-
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
@@ -31,12 +29,15 @@ public class BankAccountVerificationStateSubscriber extends AbstractSubscriber {
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void titleOf(BankAccount.TitleUiEvent ev) {
-        final BankAccount bankAccount = ev.getSource();
-        final BankAccountVerificationState state = stateTransitionService
-                .currentStateOf(bankAccount, BankAccountVerificationStateTransition.class);
 
-        final String title = String.format("%s (%s)", bankAccount.friendlyName(), Enums.getFriendlyNameOf(state));
-        ev.setTitle(title);
+        // TODO: to remove, instead BankAccount will implement Stateful and so will know its state already.
+
+//        final BankAccount bankAccount = ev.getSource();
+//        final BankAccountVerificationState state = stateTransitionService
+//                .currentStateOf(bankAccount, BankAccountVerificationStateTransition.class);
+//
+//        final String title = String.format("%s (%s)", bankAccount.friendlyName(), Enums.getFriendlyNameOf(state));
+//        ev.setTitle(title);
     }
 
     @Programmatic
