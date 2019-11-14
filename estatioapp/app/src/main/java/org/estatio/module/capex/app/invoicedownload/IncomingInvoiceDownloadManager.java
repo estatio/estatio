@@ -88,7 +88,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class IncomingInvoiceDownloadManager {
 
-
     public static class DownloadException extends RuntimeException {
         public DownloadException(final String message, final Throwable cause) {
             super(message, cause);
@@ -137,16 +136,15 @@ public class IncomingInvoiceDownloadManager {
     @Getter @Setter
     private IncomingInvoiceType incomingInvoiceType;
 
-
     @XmlTransient
     public int getNumberOfInvoices() {
         return getInvoices().size();
     }
+
     @XmlTransient
     public int getNumberOfInvoiceItems() {
         return getInvoiceItems().size();
     }
-
 
     @CollectionLayout(defaultView = "table")
     public List<IncomingInvoice> getInvoices() {
@@ -159,7 +157,7 @@ public class IncomingInvoiceDownloadManager {
 
     List<IncomingInvoiceItem> getInvoiceItems() {
         List<IncomingInvoiceItem> result = new ArrayList<>();
-        if(getIncomingInvoiceType() == null) {
+        if (getIncomingInvoiceType() == null) {
             result.addAll(incomingInvoiceItemRepository.findCompletedOrLaterByFixedAssetAndReportedDate(
                     getProperty(), getReportedDate()));
         } else {
@@ -169,27 +167,27 @@ public class IncomingInvoiceDownloadManager {
         return filterInvoiceItemsByCountryOfBuyer(getCountry(), result);
     }
 
-    List<IncomingInvoiceItem> filterInvoiceItemsByCountryOfBuyer(final Country country, final List<IncomingInvoiceItem> invoiceItems){
+    List<IncomingInvoiceItem> filterInvoiceItemsByCountryOfBuyer(final Country country, final List<IncomingInvoiceItem> invoiceItems) {
         return country == null
-                    ? invoiceItems
-                    : invoiceItems.stream()
-                .filter(x->x.getInvoice().getBuyer().getApplicationTenancyPath().contains(country.getReference()))
+                ? invoiceItems
+                : invoiceItems.stream()
+                .filter(x -> x.getInvoice().getBuyer().getApplicationTenancyPath().contains(country.getReference()))
                 .collect(Collectors.toList());
     }
-
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     public IncomingInvoiceDownloadManager report() {
         LocalDate reportedDate = clockService.now();
         final List<IncomingInvoiceItem> invoiceItems = getInvoiceItems();
         for (IncomingInvoiceItem invoiceItem : invoiceItems) {
-            if(invoiceItem.getReportedDate() == null) {
+            if (invoiceItem.getReportedDate() == null) {
                 invoiceItem.setReportedDate(reportedDate);
             }
         }
         return new IncomingInvoiceDownloadManager(
                 property, country, reportedDate, incomingInvoiceType);
     }
+
     public String disableReport() {
         ReasonBuffer2 buf = ReasonBuffer2.forSingle();
         buf.append(getReportedDate() != null, "Clear 'report date' in order to report on all items currently unreported.");
@@ -197,13 +195,10 @@ public class IncomingInvoiceDownloadManager {
         return buf.getReason();
     }
 
-
-
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @ActionLayout(contributed= Contributed.AS_ACTION)
+    @ActionLayout(contributed = Contributed.AS_ACTION)
     public IncomingInvoiceDownloadManager changeReportedDate(
-            @Nullable
-            final LocalDate reportedDate){
+            @Nullable final LocalDate reportedDate) {
         return new IncomingInvoiceDownloadManager(
                 property, country, reportedDate, incomingInvoiceType);
     }
@@ -216,16 +211,12 @@ public class IncomingInvoiceDownloadManager {
         return incomingInvoiceItemRepository.findDistinctReportDates();
     }
 
-
-
-
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @ActionLayout(contributed= Contributed.AS_ACTION)
+    @ActionLayout(contributed = Contributed.AS_ACTION)
     public IncomingInvoiceDownloadManager changeProperty(
-            @Nullable
-            final Property property){
+            @Nullable final Property property) {
         return new IncomingInvoiceDownloadManager(
-                property, property!=null ? property.getCountry() : null, reportedDate, incomingInvoiceType);
+                property, property != null ? property.getCountry() : null, reportedDate, incomingInvoiceType);
     }
 
     public Property default0ChangeProperty() {
@@ -237,10 +228,9 @@ public class IncomingInvoiceDownloadManager {
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @ActionLayout(contributed= Contributed.AS_ACTION)
+    @ActionLayout(contributed = Contributed.AS_ACTION)
     public IncomingInvoiceDownloadManager changeCountry(
-            @Nullable
-            final Country country){
+            @Nullable final Country country) {
         return new IncomingInvoiceDownloadManager(
                 property, country, reportedDate, incomingInvoiceType);
     }
@@ -253,13 +243,10 @@ public class IncomingInvoiceDownloadManager {
         return getCountry();
     }
 
-
-
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @ActionLayout(contributed= Contributed.AS_ACTION)
+    @ActionLayout(contributed = Contributed.AS_ACTION)
     public IncomingInvoiceDownloadManager changeType(
-            @Nullable
-            final IncomingInvoiceType incomingInvoiceType){
+            @Nullable final IncomingInvoiceType incomingInvoiceType) {
         return new IncomingInvoiceDownloadManager(
                 property, country, reportedDate, incomingInvoiceType);
     }
@@ -267,10 +254,6 @@ public class IncomingInvoiceDownloadManager {
     public IncomingInvoiceType default0ChangeType() {
         return getIncomingInvoiceType();
     }
-
-
-
-
 
     @Action(semantics = SemanticsOf.SAFE)
     public Blob downloadToExcel(final String fileName) {
@@ -281,7 +264,7 @@ public class IncomingInvoiceDownloadManager {
                         documentNumberFor(item),
                         codaElementFor(item),
                         commentsFor(item)))
-                .sorted(Comparator.comparing(x -> x.getDocumentNumber()!=null ? x.getDocumentNumber() : "_No_Document")) // guard only for (demo)fixtures because in production a document can be expected
+                .sorted(Comparator.comparing(x -> x.getDocumentNumber() != null ? x.getDocumentNumber() : "_No_Document")) // guard only for (demo)fixtures because in production a document can be expected
                 .collect(Collectors.toList());
 
         WorksheetSpec spec = new WorksheetSpec(IncomingInvoiceDownloadManager.exportClass, "invoiceExport");
@@ -294,7 +277,7 @@ public class IncomingInvoiceDownloadManager {
     }
 
     public String disableDownloadToExcel() {
-        return getInvoiceItems().isEmpty() ? "No invoice items to download": null;
+        return getInvoiceItems().isEmpty() ? "No invoice items to download" : null;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
@@ -306,12 +289,12 @@ public class IncomingInvoiceDownloadManager {
                         documentNumberFor(item),
                         codaElementFor(item),
                         commentsFor(item)))
-                .sorted(Comparator.comparing(x -> x.getDocumentNumber()!=null ? x.getDocumentNumber() : "_No_Document")) // guard only for (demo)fixtures because in production a document can be expected
+                .sorted(Comparator.comparing(x -> x.getDocumentNumber() != null ? x.getDocumentNumber() : "_No_Document")) // guard only for (demo)fixtures because in production a document can be expected
                 .collect(Collectors.toList());
 
         WorksheetSpec spec = new WorksheetSpec(IncomingInvoiceDownloadManager.exportClass, "invoiceExport");
         WorksheetContent worksheetContent = new WorksheetContent(exports, spec);
-        return excelService.toExcel(worksheetContent, fileName!=null ? fileName.concat(".xlsx") : fileNameAllProperties(startDate, endDate));
+        return excelService.toExcel(worksheetContent, fileName != null ? fileName.concat(".xlsx") : fileNameAllProperties(startDate, endDate));
     }
 
     public List<LocalDate> choices0DownloadToExcelForAllProperties() {
@@ -319,15 +302,16 @@ public class IncomingInvoiceDownloadManager {
     }
 
     public List<LocalDate> choices1DownloadToExcelForAllProperties(final LocalDate startDate) {
-        return startDate!=null ? incomingInvoiceItemRepository.findDistinctReportDates().stream().filter(x->!x.isBefore(startDate)).collect(Collectors.toList()) : null;
+        return startDate != null ? incomingInvoiceItemRepository.findDistinctReportDates().stream().filter(x -> !x.isBefore(startDate)).collect(Collectors.toList()) : null;
     }
 
-    public List<Country> choices2DownloadToExcelForAllProperties(){
+    public List<Country> choices2DownloadToExcelForAllProperties() {
         return countryServiceForCurrentUser.countriesForCurrentUser();
     }
 
-    public String validateDownloadToExcelForAllProperties(final LocalDate startDate, final LocalDate endDate, final Country country, final String fileName){
-        if (endDate.isBefore(startDate)) return "End date cannot be before start date";
+    public String validateDownloadToExcelForAllProperties(final LocalDate startDate, final LocalDate endDate, final Country country, final String fileName) {
+        if (endDate.isBefore(startDate))
+            return "End date cannot be before start date";
         return null;
     }
 
@@ -343,37 +327,34 @@ public class IncomingInvoiceDownloadManager {
     }
 
     @Programmatic
-    List<IncomingInvoiceItem> getReportedInvoiceItemsWithPropertyForPeriodAndCountry(final LocalDate startDate, final LocalDate endDate, final Country country){
+    List<IncomingInvoiceItem> getReportedInvoiceItemsWithPropertyForPeriodAndCountry(final LocalDate startDate, final LocalDate endDate, final Country country) {
         List<IncomingInvoiceItem> result = new ArrayList<>();
-        List<LocalDate> reportedDatesInRange = incomingInvoiceItemRepository.findDistinctReportDates().stream().filter(x->!x.isBefore(startDate) && !x.isAfter(endDate)).collect(Collectors.toList());
-        for (LocalDate reportedDate : reportedDatesInRange){
+        List<LocalDate> reportedDatesInRange = incomingInvoiceItemRepository.findDistinctReportDates().stream().filter(x -> !x.isBefore(startDate) && !x.isAfter(endDate)).collect(Collectors.toList());
+        for (LocalDate reportedDate : reportedDatesInRange) {
             result.addAll(incomingInvoiceItemRepository.findCompletedOrLaterByReportedDate(reportedDate).stream()
-                    .filter(x->x.getFixedAsset()!=null)
-                    .filter(x->hasCountry(x.getFixedAsset(), country))
+                    .filter(x -> x.getFixedAsset() != null)
+                    .filter(x -> hasCountry(x.getFixedAsset(), country))
                     .collect(Collectors.toList()));
         }
         return result;
     }
 
-    private boolean hasCountry(final FixedAsset fixedAsset, final Country country){
-        if (fixedAsset!=null && fixedAsset.getClass().isAssignableFrom(Property.class)){
+    private boolean hasCountry(final FixedAsset fixedAsset, final Country country) {
+        if (fixedAsset != null && fixedAsset.getClass().isAssignableFrom(Property.class)) {
             Property castedFa = (Property) fixedAsset;
-            if (castedFa.getCountry()!=null && castedFa.getCountry()==country){
+            if (castedFa.getCountry() != null && castedFa.getCountry() == country) {
                 return true;
             }
         }
         return false;
     }
 
-
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(named = "Download single PDF")
     public Blob downloadToPdfSingle(
             final String fileName,
-            @ParameterLayout(named = "How many first pages of each invoice's PDF?")
-            final Integer numFirstPages,
-            @ParameterLayout(named = "How many final pages of each invoice's PDF?")
-            final Integer numLastPages) throws IOException {
+            @ParameterLayout(named = "How many first pages of each invoice's PDF?") final Integer numFirstPages,
+            @ParameterLayout(named = "How many final pages of each invoice's PDF?") final Integer numLastPages) throws IOException {
 
         final List<DocumentPreparer> preparers = documentPreparersForInvoices(numFirstPages, numLastPages);
         final List<File> fileList = filesFrom(preparers);
@@ -386,27 +367,28 @@ public class IncomingInvoiceDownloadManager {
     }
 
     public String disableDownloadToPdfSingle() {
-        return getInvoiceItems().isEmpty() ? "No invoice items to download": null;
+        return getInvoiceItems().isEmpty() ? "No invoice items to download" : null;
     }
 
     public String default0DownloadToPdfSingle() {
         return defaultFileNameWithSuffix(".pdf");
     }
+
     public Integer default1DownloadToPdfSingle() {
         return 3;
     }
+
     public List<Integer> choices1DownloadToPdfSingle() {
         return InvoicePageRange.firstPageChoices();
     }
+
     public Integer default2DownloadToPdfSingle() {
         return 1;
     }
+
     public List<Integer> choices2DownloadToPdfSingle() {
         return InvoicePageRange.lastPageChoices();
     }
-
-
-
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(named = "Download all PDFs (zipped)")
@@ -423,16 +405,12 @@ public class IncomingInvoiceDownloadManager {
     }
 
     public String disableDownloadToPdfZipped() {
-        return getInvoiceItems().isEmpty() ? "No invoice items to download": null;
+        return getInvoiceItems().isEmpty() ? "No invoice items to download" : null;
     }
 
     public String default0DownloadToPdfZipped() {
         return defaultFileNameWithSuffix(".zip");
     }
-
-
-
-
 
     private List<DocumentPreparer> documentPreparersForInvoices() {
         return documentPreparersForInvoices(Integer.MAX_VALUE, Integer.MAX_VALUE);
@@ -451,28 +429,28 @@ public class IncomingInvoiceDownloadManager {
 
                     final IncomingInvoiceApprovalState approvalState = invoice.getApprovalState();
                     switch (approvalState) {
-                    case NEW:
-                    case COMPLETED:
-                    case DISCARDED:
-                    case APPROVED:
-                        // these states all imply that the invoice hasn't yet been approved
-                        // (or it might have once been approved, but since been rejected and not yet re-completed).
-                        break;
-                    case APPROVED_BY_COUNTRY_DIRECTOR:
-                    case APPROVED_BY_CORPORATE_MANAGER:
-                    case PENDING_BANK_ACCOUNT_CHECK:
-                    case PAYABLE:
-                    case PAID:
-                        // all of these states imply that the invoice has been approved.
-                        approvalTransitionIfAny = stateTransitionRepository.findByDomainObjectAndToState(invoice,
-                                IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
-                                NatureOfTransition.EXPLICIT);
-                        if(approvalTransitionIfAny == null) {
+                        case NEW:
+                        case COMPLETED:
+                        case DISCARDED:
+                        case APPROVED:
+                            // these states all imply that the invoice hasn't yet been approved
+                            // (or it might have once been approved, but since been rejected and not yet re-completed).
+                            break;
+                        case APPROVED_BY_COUNTRY_DIRECTOR:
+                        case APPROVED_BY_CORPORATE_MANAGER:
+                        case PENDING_BANK_ACCOUNT_CHECK:
+                        case PAYABLE:
+                        case PAID:
+                            // all of these states imply that the invoice has been approved.
                             approvalTransitionIfAny = stateTransitionRepository.findByDomainObjectAndToState(invoice,
-                                IncomingInvoiceApprovalState.APPROVED_BY_CORPORATE_MANAGER,
-                                NatureOfTransition.EXPLICIT);
-                        }
-                        break;
+                                    IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+                                    NatureOfTransition.EXPLICIT);
+                            if (approvalTransitionIfAny == null) {
+                                approvalTransitionIfAny = stateTransitionRepository.findByDomainObjectAndToState(invoice,
+                                        IncomingInvoiceApprovalState.APPROVED_BY_CORPORATE_MANAGER,
+                                        NatureOfTransition.EXPLICIT);
+                            }
+                            break;
                     }
 
                     return new DocumentPreparer(invoice, approvalTransitionIfAny,
@@ -483,7 +461,6 @@ public class IncomingInvoiceDownloadManager {
                 .collect(Collectors.toList());
     }
 
-
     private List<ZipService.FileAndName> fileAndNamesFrom(final List<DocumentPreparer> preparers) {
         return preparers.stream()
                 .map(preparer -> new ZipService.FileAndName(preparer.getDocumentName(), preparer.stampUsing(pdfManipulator, externalUrlDownloadService, messageService).getTempFile()))
@@ -491,16 +468,12 @@ public class IncomingInvoiceDownloadManager {
                 .collect(Collectors.toList());
     }
 
-
     private List<File> filesFrom(final List<DocumentPreparer> preparers) {
         return preparers.stream()
                 .map(preparer -> preparer.stampUsing(pdfManipulator, externalUrlDownloadService, messageService).getTempFile())
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
-
-
-
 
     CodaElement codaElementFor(final IncomingInvoiceItem x) {
         final List<CodaMapping> codaMappings = codaMappingRepository.findMatching(x.getIncomingInvoiceType(), x.getCharge());
@@ -513,19 +486,18 @@ public class IncomingInvoiceDownloadManager {
         return documentIfAny.map(DocumentAbstract::getName).orElse(null);
     }
 
-    String commentsFor(final IncomingInvoiceItem invoiceItem){
+    String commentsFor(final IncomingInvoiceItem invoiceItem) {
         StringBuffer result = new StringBuffer();
         final IncomingInvoice invoice = (IncomingInvoice) invoiceItem.getInvoice();
         List<IncomingInvoiceApprovalStateTransition> transitions = stateTransitionRepositoryGeneric.findByDomainObject(invoice, IncomingInvoiceApprovalStateTransition.class);
-        for (IncomingInvoiceApprovalStateTransition transition : transitions){
-            if (transition.getTask()!=null && transition.getTask().getComment() !=null){
+        for (IncomingInvoiceApprovalStateTransition transition : transitions) {
+            if (transition.getTask() != null && transition.getTask().getComment() != null) {
                 result.append(transition.getTask().getComment());
                 result.append(" | ");
             }
         }
         return result.toString();
     }
-
 
     final static Class exportClass = IncomingInvoiceExport.class;
 
@@ -556,45 +528,41 @@ public class IncomingInvoiceDownloadManager {
         return fileName.concat(suffix);
     }
 
-
-
     @DomainService(nature = NatureOfService.DOMAIN)
-    public static class TableColumnOrderServiceForDownloadManager implements TableColumnOrderService
- {
+    public static class TableColumnOrderServiceForDownloadManager implements TableColumnOrderService {
 
-     @Override
-     public List<String> orderParented(
-             final Object parent,
-             final String collectionId,
-             final Class<?> collectionType,
-             final List<String> propertyIds) {
-         if (!(parent instanceof IncomingInvoiceDownloadManager)) {
-             return null;
-         }
+        @Override
+        public List<String> orderParented(
+                final Object parent,
+                final String collectionId,
+                final Class<?> collectionType,
+                final List<String> propertyIds) {
+            if (!(parent instanceof IncomingInvoiceDownloadManager)) {
+                return null;
+            }
 
-         return Arrays.asList(
-                 "buyer",
-                 "seller",
-                 "type",
-                 //"property",
-                 //"atPath",
-                 //"number",
-                 "grossAmount",
-                 //"bankAccount",
-                 "paymentMethod",
-                 "dateReceived",
-                 "invoiceDate",
-                 "dueDate",
-                 "approvalState"
-         );
-     }
+            return Arrays.asList(
+                    "buyer",
+                    "seller",
+                    "type",
+                    //"property",
+                    //"atPath",
+                    //"number",
+                    "grossAmount",
+                    //"bankAccount",
+                    "paymentMethod",
+                    "dateReceived",
+                    "invoiceDate",
+                    "dueDate",
+                    "approvalState"
+            );
+        }
 
-     @Override
-     public List<String> orderStandalone(final Class<?> collectionType, final List<String> propertyIds) {
-         return null;
-     }
- }
-
+        @Override
+        public List<String> orderStandalone(final Class<?> collectionType, final List<String> propertyIds) {
+            return null;
+        }
+    }
 
     @Inject
     @XmlTransient
@@ -620,40 +588,40 @@ public class IncomingInvoiceDownloadManager {
     @XmlTransient
     IncomingInvoiceApprovalStateTransition.Repository stateTransitionRepository;
 
-    @javax.inject.Inject
+    @Inject
     @XmlTransient
     ExcelService excelService;
 
-
-    @javax.inject.Inject
+    @Inject
     @XmlTransient
     PdfManipulator pdfManipulator;
 
-    @javax.inject.Inject
+    @Inject
     @XmlTransient
     LookupAttachedPdfService lookupAttachedPdfService;
 
-
-    @javax.inject.Inject
+    @Inject
     @XmlTransient
     PdfBoxService pdfBoxService;
 
-    @javax.inject.Inject
+    @Inject
     @XmlTransient
     ZipService zipService;
 
-    @javax.inject.Inject
+    @Inject
     @XmlTransient
     ClockService clockService;
 
-    @javax.inject.Inject
+    @Inject
     @XmlTransient
     CountryServiceForCurrentUser countryServiceForCurrentUser;
 
     @Inject
+    @XmlTransient
     ExternalUrlDownloadService externalUrlDownloadService;
 
-    @Inject MessageService2 messageService;
-
+    @Inject
+    @XmlTransient
+    MessageService2 messageService;
 
 }
