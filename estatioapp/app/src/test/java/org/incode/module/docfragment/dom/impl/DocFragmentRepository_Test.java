@@ -50,7 +50,7 @@ public class DocFragmentRepository_Test {
                     oneOf(mockServiceRegistry).injectServicesInto(with(any(DocFragment.class)));
                     inSequence(seq);
 
-                    oneOf(mockRepositoryService).persist(with(any(DocFragment.class)));
+                    oneOf(mockRepositoryService).persistAndFlush(with(any(DocFragment.class)));
                     inSequence(seq);
                 }
 
