@@ -45,12 +45,12 @@ public class KeyItemRepository extends UdoDomainRepositoryAndFactory<KeyItem> {
             final Unit unit,
             final BigDecimal sourceValue,
             final BigDecimal keyValue) {
-        KeyItem keyItem = newTransientInstance();
+        KeyItem keyItem = factoryService.instantiate(KeyItem.class);
         keyItem.setPartitioningTable(keyTable);
         keyItem.setUnit(unit);
         keyItem.setSourceValue(sourceValue);
         keyItem.setValue(keyValue);
-        persistIfNotAlready(keyItem);
+        repositoryService.persist(keyItem);
 
         return keyItem;
     }

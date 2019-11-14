@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
@@ -57,23 +58,27 @@ public class BudgetCalculationResultRepository extends UdoDomainRepositoryAndFac
             final Occupancy occupancy,
             final Charge invoiceCharge,
             final BudgetCalculationType type) {
-        return uniqueMatch("findUnique", "budget", budget, "occupancy", occupancy, "invoiceCharge", invoiceCharge, "type", type);
+        return repositoryService.uniqueMatch(new QueryDefault<>(BudgetCalculationResult.class,"findUnique",
+                "budget", budget, "occupancy", occupancy, "invoiceCharge", invoiceCharge, "type", type));
     }
 
     public List<BudgetCalculationResult> findByLeaseTerm(final LeaseTermForServiceCharge leaseTerm){
-        return allMatches("findByLeaseTerm", "leaseTerm", leaseTerm);
+        return repositoryService.allMatches(new QueryDefault<>(BudgetCalculationResult.class,
+                "findByLeaseTerm", "leaseTerm", leaseTerm));
     }
 
     public List<BudgetCalculationResult> findByBudget(final Budget budget) {
-        return allMatches("findByBudget", "budget", budget);
+        return repositoryService.allMatches(new QueryDefault<>(BudgetCalculationResult.class,
+                "findByBudget", "budget", budget));
     }
 
     public List<BudgetCalculationResult> findByLeaseTermAndBudgetAndType(final LeaseTermForServiceCharge term, final Budget budget, final BudgetCalculationType type) {
-        return allMatches("findByLeaseTermAndBudgetAndType", "leaseTerm", term, "budget", budget, "type", type);
+        return repositoryService.allMatches(new QueryDefault<>(BudgetCalculationResult.class,
+                "findByLeaseTermAndBudgetAndType", "leaseTerm", term, "budget", budget, "type", type));
     }
 
     public List<BudgetCalculationResult> allBudgetCalculationResults(){
-        return allInstances();
+        return repositoryService.allInstances(BudgetCalculationResult.class);
     }
 
     @Inject private RepositoryService repositoryService;

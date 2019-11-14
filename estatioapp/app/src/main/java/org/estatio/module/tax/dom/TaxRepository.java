@@ -47,11 +47,11 @@ public class TaxRepository extends UdoDomainRepositoryAndFactory<Tax> {
             // TODO: should probably be asking for the country here, but Tax has no dependency on country module at the moment.
             final ApplicationTenancy applicationTenancy) {
 
-        final Tax tax = newTransientInstance();
+        final Tax tax = factoryService.instantiate(Tax.class);
         tax.setReference(reference);
         tax.setName(name);
         tax.setApplicationTenancyPath(applicationTenancy.getPath());
-        persist(tax);
+        repositoryService.persist(tax);
         return tax;
     }
 

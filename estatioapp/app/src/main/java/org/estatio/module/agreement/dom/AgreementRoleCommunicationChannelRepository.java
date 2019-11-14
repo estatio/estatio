@@ -20,6 +20,9 @@ package org.estatio.module.agreement.dom;
 
 import java.util.List;
 
+import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -28,6 +31,8 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
+
+import javax.inject.Inject;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -47,30 +52,38 @@ public class AgreementRoleCommunicationChannelRepository
         if (date == null){
             return findByRoleAndType(role, type);
         }
-        return firstMatch("findByRoleAndTypeAndContainsDate",
+        List<AgreementRoleCommunicationChannel> list = repositoryService.allMatches(
+                new QueryDefault<>(AgreementRoleCommunicationChannel.class, "findByRoleAndTypeAndContainsDate",
                 "role", role,
                 "type", type,
-                "date", date);
+                "date", date));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     public AgreementRoleCommunicationChannel findByRoleAndType(
             final AgreementRole role,
             final AgreementRoleCommunicationChannelType type) {
-        return firstMatch("findByRoleAndType",
+        List<AgreementRoleCommunicationChannel> list = repositoryService.allMatches(
+                new QueryDefault<>(AgreementRoleCommunicationChannel.class,"findByRoleAndType",
                 "role", role,
-                "type", type);
+                "type", type));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     public List<AgreementRoleCommunicationChannel> findByCommunicationChannel(
             final CommunicationChannel communicationChannel) {
-        return allMatches("findByCommunicationChannel",
-                "communicationChannel", communicationChannel);
+        return repositoryService.allMatches(new QueryDefault<>(AgreementRoleCommunicationChannel.class,
+                "findByCommunicationChannel",
+                "communicationChannel", communicationChannel));
     }
 
     public Iterable<? extends UdoDomainObject2<?>> findByAgreement(final Agreement agreement) {
-        return allMatches("findByAgreement",
-                "agreement", agreement);
+        return repositoryService.allMatches(new QueryDefault<>(AgreementRoleCommunicationChannel.class,
+                "findByAgreement",
+                "agreement", agreement));
     }
 
+    @javax.inject.Inject
+    public RepositoryService repositoryService;
 
 }

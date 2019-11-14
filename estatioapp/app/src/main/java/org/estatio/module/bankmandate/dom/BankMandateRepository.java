@@ -59,7 +59,7 @@ public class BankMandateRepository extends UdoDomainRepositoryAndFactory<BankMan
             final Scheme scheme,
             final LocalDate signatureDate
     ) {
-        BankMandate mandate = newTransientInstance();
+        BankMandate mandate = factoryService.instantiate(BankMandate.class);
         mandate.setType(agreementTypeRepository.find(BankMandateAgreementTypeEnum.MANDATE));
         mandate.setReference(reference);
         mandate.setName(name);
@@ -73,7 +73,7 @@ public class BankMandateRepository extends UdoDomainRepositoryAndFactory<BankMan
         // app tenancy derived from the debtor
         mandate.setApplicationTenancyPath(debtor.getApplicationTenancy().getPath());
 
-        persistIfNotAlready(mandate);
+        repositoryService.persist(mandate);
 
         final AgreementRoleType artCreditor = agreementRoleTypeRepository
                 .find(BankMandateAgreementRoleTypeEnum.CREDITOR);

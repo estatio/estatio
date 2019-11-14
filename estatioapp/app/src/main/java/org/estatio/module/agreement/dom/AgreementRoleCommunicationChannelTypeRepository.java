@@ -25,8 +25,11 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.agreement.dom.commchantype.IAgreementRoleCommunicationChannelType;
 import org.estatio.module.agreement.dom.type.AgreementType;
@@ -53,7 +56,10 @@ public class AgreementRoleCommunicationChannelTypeRepository
         return queryResultsCache.execute(new Callable<AgreementRoleCommunicationChannelType>() {
             @Override
             public AgreementRoleCommunicationChannelType call() throws Exception {
-                return firstMatch("findByTitle", "title", title);
+                List<AgreementRoleCommunicationChannelType> list = repositoryService.allMatches(
+                        new QueryDefault<>(AgreementRoleCommunicationChannelType.class,"findByTitle",
+                                "title", title));
+                return list.isEmpty() ? null : list.get(0);
             }
         }, AgreementRoleCommunicationChannelTypeRepository.class, "findByTitle", title);
     }
@@ -62,7 +68,10 @@ public class AgreementRoleCommunicationChannelTypeRepository
         return queryResultsCache.execute(new Callable<AgreementRoleCommunicationChannelType>() {
             @Override
             public AgreementRoleCommunicationChannelType call() throws Exception {
-                return firstMatch("findByAgreementTypeAndTitle", "agreementType", agreementType, "title", title);
+                List<AgreementRoleCommunicationChannelType> list = repositoryService.allMatches(
+                        new QueryDefault<>(AgreementRoleCommunicationChannelType.class,"findByAgreementTypeAndTitle",
+                                "agreementType", agreementType, "title", title));
+                        return list.isEmpty() ? null : list.get(0);
             }
         }, AgreementRoleCommunicationChannelTypeRepository.class, "findByAgreementTypeAndTitle", agreementType, title);
     }
@@ -71,7 +80,8 @@ public class AgreementRoleCommunicationChannelTypeRepository
         return queryResultsCache.execute(new Callable<List<AgreementRoleCommunicationChannelType>>() {
             @Override
             public List<AgreementRoleCommunicationChannelType> call() throws Exception {
-                return allMatches("findByAgreementType", "agreementType", agreementType);
+                return repositoryService.allMatches(new QueryDefault<>(AgreementRoleCommunicationChannelType.class,
+                        "findByAgreementType", "agreementType", agreementType));
             }
         }, AgreementRoleCommunicationChannelTypeRepository.class, "findApplicableTo", agreementType);
     }
@@ -95,5 +105,7 @@ public class AgreementRoleCommunicationChannelTypeRepository
     @Inject
     AgreementTypeRepository agreementTypeRepository;
 
+    @javax.inject.Inject
+    public RepositoryService repositoryService;
 
 }

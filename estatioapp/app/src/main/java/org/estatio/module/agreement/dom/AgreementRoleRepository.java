@@ -20,6 +20,10 @@ package org.estatio.module.agreement.dom;
 
 import java.util.List;
 
+import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
+import org.estatio.module.index.dom.Index;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -30,6 +34,8 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.agreement.dom.role.AgreementRoleType;
 import org.estatio.module.party.dom.Party;
+
+import javax.inject.Inject;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -49,8 +55,8 @@ public class AgreementRoleRepository extends UdoDomainRepositoryAndFactory<Agree
             final AgreementRoleType type,
             final LocalDate startDate,
             final LocalDate endDate) {
-        AgreementRole agreementRole = newTransientInstance();
-        persistIfNotAlready(agreementRole);
+        AgreementRole agreementRole = factoryService.instantiate(AgreementRole.class);
+        repositoryService.persist(agreementRole);
         agreementRole.setStartDate(startDate);
         agreementRole.setEndDate(endDate);
         agreementRole.setType(type); // must do before associate with agreement,
@@ -69,13 +75,14 @@ public class AgreementRoleRepository extends UdoDomainRepositoryAndFactory<Agree
             final AgreementRoleType type,
             final LocalDate date) {
         final LocalDate queryDate = date == null ? new LocalDate(1980, 1, 1) : date;
-        return firstMatch(
+        List<AgreementRole> list = repositoryService.allMatches(new QueryDefault<>(AgreementRole.class,
                 "findByAgreementAndPartyAndTypeAndContainsDate",
                 "agreement", agreement,
                 "party", party,
                 "type", type,
                 "startDate", queryDate,
-                "endDate", LocalDateInterval.endDateFromStartDate(queryDate));
+                "endDate", LocalDateInterval.endDateFromStartDate(queryDate)));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     // //////////////////////////////////////
@@ -85,29 +92,30 @@ public class AgreementRoleRepository extends UdoDomainRepositoryAndFactory<Agree
             final AgreementRoleType type,
             final LocalDate date) {
         final LocalDate queryDate = date == null ? new LocalDate(1980, 1, 1) : date;
-        return firstMatch(
+        List<AgreementRole> list = repositoryService.allMatches(new QueryDefault<>(AgreementRole.class,
                 "findByAgreementAndTypeAndContainsDate",
                 "agreement", agreement,
                 "type", type,
                 "startDate", queryDate,
-                "endDate", LocalDateInterval.endDateFromStartDate(queryDate));
+                "endDate", LocalDateInterval.endDateFromStartDate(queryDate)));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     // //////////////////////////////////////
 
     public List<AgreementRole> findByParty(
             final Party party) {
-        return allMatches(
+        return repositoryService.allMatches(new QueryDefault<>(AgreementRole.class,
                 "findByParty",
-                "party", party);
+                "party", party));
     }
 
     // //////////////////////////////////////
 
     public List<AgreementRole> findByAgreement(final Agreement agreement) {
-        return allMatches(
+        return repositoryService.allMatches(new QueryDefault<>(AgreementRole.class,
                 "findByAgreement",
-                "agreement", agreement);
+                "agreement", agreement));
     }
 
     // //////////////////////////////////////
@@ -117,23 +125,24 @@ public class AgreementRoleRepository extends UdoDomainRepositoryAndFactory<Agree
             final AgreementRoleType type,
             final LocalDate date) {
         final LocalDate queryDate = date == null ? new LocalDate(1980, 1, 1) : date;
-        return allMatches(
+        return repositoryService.allMatches(new QueryDefault<>(AgreementRole.class,
                 "findByPartyAndTypeAndContainsDate",
                 "party", party,
                 "type", type,
                 "startDate", queryDate,
-                "endDate", LocalDateInterval.endDateFromStartDate(queryDate));
+                "endDate", LocalDateInterval.endDateFromStartDate(queryDate)));
     }
 
     public List<AgreementRole> findByPartyAndType(
             final Party party,
             final AgreementRoleType type) {
-        return allMatches(
+        return repositoryService.allMatches(new QueryDefault<>(AgreementRole.class,
                 "findByPartyAndType",
                 "party", party,
-                "type", type);
+                "type", type));
     }
 
-
+    @javax.inject.Inject
+    public RepositoryService repositoryService;
 
 }

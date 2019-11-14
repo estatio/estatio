@@ -75,12 +75,12 @@ public class OrderAttributeRepository extends UdoDomainRepositoryAndFactory<Orde
             final String value
             //,final boolean overridden
     ) {
-        OrderAttribute orderAttribute = newTransientInstance();
+        OrderAttribute orderAttribute = factoryService.instantiate(OrderAttribute.class);
         orderAttribute.setOrdr(order);
         orderAttribute.setName(name);
         orderAttribute.setValue(value);
         //orderAttribute.setOverridden(overridden);
-        persistIfNotAlready(orderAttribute);
+        repositoryService.persist(orderAttribute);
         return orderAttribute;
     }
 

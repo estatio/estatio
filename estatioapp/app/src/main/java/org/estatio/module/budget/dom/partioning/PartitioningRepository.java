@@ -20,6 +20,7 @@ package org.estatio.module.budget.dom.partioning;
 
 import java.util.List;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -67,15 +68,17 @@ public class PartitioningRepository extends UdoDomainRepositoryAndFactory<Partit
     }
 
     public Partitioning findUnique(final Budget budget, final BudgetCalculationType type, final LocalDate startDate){
-        return uniqueMatch("findUnique", "budget", budget, "type", type, "startDate", startDate);
+        return repositoryService.uniqueMatch(new QueryDefault<>(Partitioning.class,
+                "findUnique", "budget", budget, "type", type, "startDate", startDate));
     }
 
     public List<Partitioning> findByBudgetAndType(final Budget budget, final BudgetCalculationType type){
-        return allMatches("findByBudgetAndType", "budget", budget, "type", type);
+        return repositoryService.allMatches(new QueryDefault<>(Partitioning.class,
+                "findByBudgetAndType", "budget", budget, "type", type));
     }
 
     public List<Partitioning> allPartitionings() {
-        return allInstances();
+        return repositoryService.allInstances(Partitioning.class);
     }
 
 

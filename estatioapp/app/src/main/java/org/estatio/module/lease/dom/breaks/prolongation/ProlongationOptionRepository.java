@@ -51,7 +51,7 @@ public class ProlongationOptionRepository extends UdoDomainRepositoryAndFactory<
             final String notificationPeriod,
             final String description
     ) {
-        final ProlongationOption prolongationOption = newTransientInstance();
+        final ProlongationOption prolongationOption = factoryService.instantiate(ProlongationOption.class);
         prolongationOption.setType(BreakType.PROLONGATION);
         prolongationOption.setLease(lease);
         prolongationOption.setExerciseType(BreakExerciseType.TENANT);
@@ -65,7 +65,7 @@ public class ProlongationOptionRepository extends UdoDomainRepositoryAndFactory<
             prolongationOption.setExerciseDate(lease.getEndDate());
         }
         prolongationOption.setDescription(description);
-        persist(prolongationOption);
+        repositoryService.persist(prolongationOption);
 
         return prolongationOption;
     }

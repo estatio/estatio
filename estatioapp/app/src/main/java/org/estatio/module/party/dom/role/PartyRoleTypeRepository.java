@@ -58,10 +58,10 @@ public class PartyRoleTypeRepository extends UdoDomainRepositoryAndFactory<Party
     }
 
     private PartyRoleType create(final IPartyRoleType IPartyRoleType) {
-        PartyRoleType partyRoleType = newTransientInstance();
+        PartyRoleType partyRoleType = factoryService.instantiate(PartyRoleType.class);
         partyRoleType.setKey(IPartyRoleType.getKey());
         partyRoleType.setTitle(IPartyRoleType.getTitle());
-        persistIfNotAlready(partyRoleType);
+        repositoryService.persist(partyRoleType);
         return partyRoleType;
     }
 

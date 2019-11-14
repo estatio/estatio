@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.PartitioningTable;
@@ -68,19 +69,21 @@ public class PartitionItemRepository extends UdoDomainRepositoryAndFactory<Parti
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @ActionLayout()
     public List<PartitionItem> allPartitionItems() {
-        return allInstances();
+        return repositoryService.allInstances(PartitionItem.class);
     }
 
     // //////////////////////////////////////
 
     @Programmatic
     public List<PartitionItem> findByBudgetItem(final BudgetItem budgetItem) {
-        return allMatches("findByBudgetItem", "budgetItem", budgetItem);
+        return repositoryService.allMatches(new QueryDefault<>(PartitionItem.class,
+                "findByBudgetItem", "budgetItem", budgetItem));
     }
 
     @Programmatic
     public PartitionItem findUnique(final Partitioning partitioning, final Charge charge, final BudgetItem budgetItem, final PartitioningTable partitioningTable) {
-        return uniqueMatch("findUnique", "partitioning", partitioning, "charge", charge, "budgetItem", budgetItem, "partitioningTable", partitioningTable);
+        return repositoryService.uniqueMatch(new QueryDefault<>(PartitionItem.class,"findUnique",
+                "partitioning", partitioning, "charge", charge, "budgetItem", budgetItem, "partitioningTable", partitioningTable));
     }
 
     @Programmatic
@@ -108,7 +111,8 @@ public class PartitionItemRepository extends UdoDomainRepositoryAndFactory<Parti
     }
 
     public List<PartitionItem> findByPartitioningTable(final PartitioningTable partitioningTable){
-        return allMatches("findByPartitioningTable", "partitioningTable", partitioningTable);
+        return repositoryService.allMatches(new QueryDefault<>(PartitionItem.class,
+                "findByPartitioningTable", "partitioningTable", partitioningTable));
     }
 
 }

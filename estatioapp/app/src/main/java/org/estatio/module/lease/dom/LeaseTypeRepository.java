@@ -45,11 +45,11 @@ public class LeaseTypeRepository extends UdoDomainRepositoryAndFactory<LeaseType
             final @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION) String reference,
             final String name,
             final ApplicationTenancy applicationTenancy) {
-        final LeaseType leaseType = newTransientInstance();
+        final LeaseType leaseType = factoryService.instantiate(LeaseType.class);
         leaseType.setReference(reference);
         leaseType.setName(name);
         leaseType.setApplicationTenancyPath(applicationTenancy.getPath());
-        persistIfNotAlready(leaseType);
+        repositoryService.persist(leaseType);
         return leaseType;
     }
 

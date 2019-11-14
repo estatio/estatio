@@ -41,12 +41,12 @@ public class IndexBaseRepository
             final IndexBase previousBase,
             final LocalDate startDate,
             final BigDecimal factor) {
-        IndexBase indexBase = newTransientInstance();
+        IndexBase indexBase = factoryService.instantiate(IndexBase.class);
         indexBase.setPrevious(previousBase);
         indexBase.setStartDate(startDate);
         indexBase.setFactor(factor);
         indexBase.setIndex(index);
-        persistIfNotAlready(indexBase);
+        repositoryService.persist(indexBase);
         return indexBase;
     }
 

@@ -73,11 +73,11 @@ public class IndexValueRepository
             final LocalDate startDate,
             final BigDecimal value) {
         final IndexValue indexValue;
-        indexValue = newTransientInstance();
+        indexValue = factoryService.instantiate(IndexValue.class);
         indexValue.setStartDate(startDate);
         indexValue.setIndexBase(indexBase);
         indexValue.setValue(value);
-        persistIfNotAlready(indexValue);
+        repositoryService.persist(indexValue);
         return indexValue;
     }
 

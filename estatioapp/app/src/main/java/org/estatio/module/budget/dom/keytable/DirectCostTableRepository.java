@@ -43,10 +43,10 @@ public class DirectCostTableRepository extends UdoDomainRepositoryAndFactory<Dir
     public DirectCostTable newDirectCostTable(
             final Budget budget,
             final String name) {
-        DirectCostTable directCostTable = newTransientInstance();
+        DirectCostTable directCostTable = factoryService.instantiate(DirectCostTable.class);
         directCostTable.setBudget(budget);
         directCostTable.setName(name);
-        persistIfNotAlready(directCostTable);
+        repositoryService.persist(directCostTable);
 
         return directCostTable;
     }

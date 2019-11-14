@@ -25,6 +25,9 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
+import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.agreement.dom.role.AgreementRoleType;
 import org.estatio.module.agreement.dom.type.AgreementType;
@@ -44,27 +47,28 @@ public class AgreementRepository extends UdoDomainRepositoryAndFactory<Agreement
     // //////////////////////////////////////
 
     public Agreement findAgreementByTypeAndReference(final AgreementType agreementType, final String reference) {
-        return firstMatch("findByTypeAndReference",
+        List<Agreement> list = repositoryService.allMatches(new QueryDefault<>(Agreement.class,"findByTypeAndReference",
                 "agreementType", agreementType,
-                "reference", reference);
+                "reference", reference));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     public List<Agreement> findByTypeAndReferenceOrName(
             final AgreementType agreementType,
             final String regex) {
-        return allMatches("findByTypeAndReferenceOrName",
+        return repositoryService.allMatches(new QueryDefault<>(Agreement.class,"findByTypeAndReferenceOrName",
                 "agreementType", agreementType,
-                "regex", regex);
+                "regex", regex));
     }
 
     public List<Agreement> findByAgreementTypeAndRoleTypeAndParty(
             final AgreementType agreementType,
             final AgreementRoleType agreementRoleType,
             final Party party) {
-        return allMatches("findByAgreementTypeAndRoleTypeAndParty",
+        return repositoryService.allMatches(new QueryDefault<>(Agreement.class,"findByAgreementTypeAndRoleTypeAndParty",
                 "agreementType", agreementType,
                 "roleType", agreementRoleType,
-                "party", party);
+                "party", party));
     }
 
     public List<Agreement> findByTypeTitleAndReferenceOrName(
@@ -76,5 +80,8 @@ public class AgreementRepository extends UdoDomainRepositoryAndFactory<Agreement
 
     @Inject
     AgreementTypeRepository agreementTypeRepository;
+
+    @javax.inject.Inject
+    public RepositoryService repositoryService;
 
 }

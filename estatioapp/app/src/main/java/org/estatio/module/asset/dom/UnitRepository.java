@@ -54,12 +54,12 @@ public class UnitRepository extends UdoDomainRepositoryAndFactory<Unit> {
             final String reference,
             final String name,
             final UnitType type) {
-        final Unit unit = newTransientInstance();
+        final Unit unit = factoryService.instantiate(Unit.class);
         unit.setReference(reference);
         unit.setName(name);
         unit.setType(type);
         unit.setProperty(property);
-        persist(unit);
+        repositoryService.persist(unit);
         return unit;
     }
 

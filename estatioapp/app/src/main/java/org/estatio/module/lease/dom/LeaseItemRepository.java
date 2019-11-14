@@ -58,7 +58,7 @@ public class LeaseItemRepository extends UdoDomainRepositoryAndFactory<LeaseItem
             final PaymentMethod paymentMethod,
             final LocalDate startDate) {
         BigInteger nextSequence = nextSequenceFor(lease, type);
-        LeaseItem leaseItem = newTransientInstance();
+        LeaseItem leaseItem = factoryService.instantiate(LeaseItem.class);
         leaseItem.setType(type);
         leaseItem.setCharge(charge);
         leaseItem.setPaymentMethod(paymentMethod);
@@ -68,7 +68,7 @@ public class LeaseItemRepository extends UdoDomainRepositoryAndFactory<LeaseItem
         leaseItem.setStatus(LeaseItemStatus.ACTIVE);
         leaseItem.setSequence(nextSequence);
         leaseItem.setInvoicedBy(invoicedBy);
-        persistIfNotAlready(leaseItem);
+        repositoryService.persist(leaseItem);
         return leaseItem;
     }
 

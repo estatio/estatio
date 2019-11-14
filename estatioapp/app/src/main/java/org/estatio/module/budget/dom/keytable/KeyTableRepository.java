@@ -48,7 +48,7 @@ public class KeyTableRepository extends UdoDomainRepositoryAndFactory<KeyTable> 
             final FoundationValueType foundationValueType,
             final KeyValueMethod keyValueMethod,
             final Integer numberOfDigits) {
-        KeyTable keyTable = newTransientInstance();
+        KeyTable keyTable = factoryService.instantiate(KeyTable.class);
         keyTable.setBudget(budget);
         keyTable.setName(name);
         keyTable.setFoundationValueType(foundationValueType);

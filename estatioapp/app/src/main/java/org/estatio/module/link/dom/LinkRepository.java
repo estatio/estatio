@@ -126,12 +126,12 @@ public class LinkRepository extends UdoDomainRepositoryAndFactory<Link> {
             final Class<?> cls,
             final String name,
             final String urlTemplate) {
-        final Link link = newTransientInstance();
+        final Link link = factoryService.instantiate(Link.class);
         link.setName(name);
         link.setUrlTemplate(urlTemplate);
         link.setClassName(cls.getName());
         link.setApplicationTenancyPath(applicationTenancy.getPath());
-        persist(link);
+        repositoryService.persist(link);
         return link;
     }
 

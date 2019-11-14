@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -42,7 +43,7 @@ public class ProjectItemTermRepository extends UdoDomainRepositoryAndFactory<Pro
 
     @Programmatic
     public List<ProjectItemTerm> listAll() {
-        return allInstances();
+        return repositoryService.allInstances(ProjectItemTerm.class);
     }
 
     @Programmatic
@@ -52,7 +53,8 @@ public class ProjectItemTermRepository extends UdoDomainRepositoryAndFactory<Pro
 
     @Programmatic
     public ProjectItemTerm findUnique(final ProjectItem projectItem, final LocalDate startDate) {
-        return uniqueMatch("findByProjectItemAndStartDate", "projectItem", projectItem, "startDate", startDate);
+        return repositoryService.uniqueMatch(new QueryDefault<>(ProjectItemTerm.class,
+                "findByProjectItemAndStartDate", "projectItem", projectItem, "startDate", startDate));
     }
 
     @Programmatic

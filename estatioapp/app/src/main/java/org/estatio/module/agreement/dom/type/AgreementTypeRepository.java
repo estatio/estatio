@@ -21,7 +21,13 @@ package org.estatio.module.agreement.dom.type;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
+import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
+
+import javax.inject.Inject;
+import java.util.List;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -39,7 +45,9 @@ public class AgreementTypeRepository extends UdoDomainRepositoryAndFactory<Agree
 
     @Deprecated
     public AgreementType find(final String title) {
-        return firstMatch("findByTitle", "title", title);
+        List<AgreementType> list = repositoryService.allMatches(new QueryDefault<>(AgreementType.class,
+                "findByTitle", "title", title));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     public AgreementType findOrCreate(final IAgreementType data) {
@@ -50,11 +58,16 @@ public class AgreementTypeRepository extends UdoDomainRepositoryAndFactory<Agree
     public AgreementType findOrCreate(final String title) {
         AgreementType agreementType = find(title);
         if (agreementType == null) {
-            agreementType = getContainer().newTransientInstance(AgreementType.class);
+            agreementType = factoryService.instantiate(AgreementType.class);
             agreementType.setTitle(title);
-            getContainer().persist(agreementType);
+            repositoryService.persist(agreementType);
         }
         return agreementType;
     }
 
+    @javax.inject.Inject
+    public RepositoryService repositoryService;
+
+    @Inject
+    public FactoryService factoryService;
 }

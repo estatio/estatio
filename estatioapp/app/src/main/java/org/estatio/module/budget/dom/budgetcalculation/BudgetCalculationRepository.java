@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.budget.dom.budget.Budget;
@@ -58,23 +59,24 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
             final PartitioningTableItem tableItem,
             final BudgetCalculationType calculationType
             ){
-        return uniqueMatch(
+        return repositoryService.uniqueMatch(new QueryDefault<>(BudgetCalculation.class,
                 "findUnique",
                 "partitionItem", partitionItem,
                 "tableItem", tableItem,
-                "calculationType", calculationType);
+                "calculationType", calculationType));
     }
 
     public List<BudgetCalculation> findByPartitionItemAndCalculationType(PartitionItem partitionItem, BudgetCalculationType calculationType) {
-        return allMatches("findByPartitionItemAndCalculationType", "partitionItem", partitionItem, "calculationType", calculationType);
+        return repositoryService.allMatches(new QueryDefault<>(BudgetCalculation.class,"findByPartitionItemAndCalculationType",
+                "partitionItem", partitionItem, "calculationType", calculationType));
     }
 
     public List<BudgetCalculation> allBudgetCalculations() {
-        return allInstances();
+        return repositoryService.allInstances(BudgetCalculation.class);
     }
 
     public List<BudgetCalculation> findByBudget(final Budget budget) {
-        return allMatches("findByBudget", "budget", budget);
+        return repositoryService.allMatches(new QueryDefault<>(BudgetCalculation.class,"findByBudget", "budget", budget));
     }
 
     public List<BudgetCalculation> findByBudgetItemAndCalculationType(final BudgetItem budgetItem, final BudgetCalculationType calculationType) {
@@ -89,19 +91,23 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
     }
 
     public List<BudgetCalculation> findByBudgetAndTypeAndStatus(final Budget budget, final BudgetCalculationType type, final Status status){
-        return allMatches("findByBudgetAndTypeAndStatus", "budget", budget, "type", type, "status", status);
+        return repositoryService.allMatches(new QueryDefault<>(BudgetCalculation.class,"findByBudgetAndTypeAndStatus",
+                "budget", budget, "type", type, "status", status));
     }
 
     public List<BudgetCalculation> findByBudgetAndUnitAndType(final Budget budget, final Unit unit, final BudgetCalculationType type) {
-        return allMatches("findByBudgetAndUnitAndType", "budget", budget, "unit", unit, "type", type);
+        return repositoryService.allMatches(new QueryDefault<>(BudgetCalculation.class,"findByBudgetAndUnitAndType",
+                "budget", budget, "unit", unit, "type", type));
     }
 
     public List<BudgetCalculation> findByBudgetAndUnitAndInvoiceChargeAndType(final Budget budget, final Unit unit, final Charge invoiceCharge, final BudgetCalculationType type) {
-        return allMatches("findByBudgetAndUnitAndInvoiceChargeAndType", "budget", budget, "unit", unit, "invoiceCharge", invoiceCharge, "type", type);
+        return repositoryService.allMatches(new QueryDefault<>(BudgetCalculation.class,"findByBudgetAndUnitAndInvoiceChargeAndType",
+                "budget", budget, "unit", unit, "invoiceCharge", invoiceCharge, "type", type));
     }
 
     public List<BudgetCalculation> findByBudgetAndUnitAndInvoiceChargeAndIncomingChargeAndType(final Budget budget, final Unit unit, final Charge invoiceCharge, final Charge incomingCharge, final BudgetCalculationType type) {
-        return allMatches("findByBudgetAndUnitAndInvoiceChargeAndIncomingChargeAndType", "budget", budget, "unit", unit, "invoiceCharge", invoiceCharge, "incomingCharge", incomingCharge, "type", type);
+        return repositoryService.allMatches(new QueryDefault<>(BudgetCalculation.class,"findByBudgetAndUnitAndInvoiceChargeAndIncomingChargeAndType",
+                "budget", budget, "unit", unit, "invoiceCharge", invoiceCharge, "incomingCharge", incomingCharge, "type", type));
     }
 
     public void delete(final BudgetCalculation calc) {

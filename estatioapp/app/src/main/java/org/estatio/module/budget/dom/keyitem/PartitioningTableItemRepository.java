@@ -21,6 +21,7 @@ import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.budget.dom.keytable.PartitioningTable;
@@ -35,7 +36,8 @@ public class PartitioningTableItemRepository extends UdoDomainRepositoryAndFacto
 
     @Programmatic
     public PartitioningTableItem findByPartitioningTableAndUnit(PartitioningTable keyTable, Unit unit){
-        return uniqueMatch("findByPartitioningTableAndUnit", "partitioningTable", keyTable, "unit", unit);
+        return repositoryService.uniqueMatch(new QueryDefault<>(PartitioningTableItem.class,
+                "findByPartitioningTableAndUnit", "partitioningTable", keyTable, "unit", unit));
     }
 
 

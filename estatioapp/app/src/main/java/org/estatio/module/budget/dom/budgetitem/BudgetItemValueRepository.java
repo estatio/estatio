@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -67,15 +68,17 @@ public class BudgetItemValueRepository extends UdoDomainRepositoryAndFactory<Bud
     }
 
     public List<BudgetItemValue> findByBudgetItemAndType(final BudgetItem budgetItem, final BudgetCalculationType type) {
-        return allMatches("findByBudgetItemAndType", "budgetItem", budgetItem, "type", type);
+        return repositoryService.allMatches(new QueryDefault<>(BudgetItemValue.class,"findByBudgetItemAndType",
+                "budgetItem", budgetItem, "type", type));
     }
 
     public BudgetItemValue findUnique(final BudgetItem budgetItem, final LocalDate date, final BudgetCalculationType type){
-        return uniqueMatch("findUnique", "budgetItem", budgetItem, "date", date, "type", type);
+        return repositoryService.uniqueMatch(new QueryDefault<>(BudgetItemValue.class,"findUnique",
+                "budgetItem", budgetItem, "date", date, "type", type));
     }
 
     public List<BudgetItemValue> allBudgetItemValues() {
-        return allInstances();
+        return repositoryService.allInstances(BudgetItemValue.class);
     }
 
     public BudgetItemValue updateOrCreateBudgetItemValue(final BigDecimal value, final BudgetItem budgetItem, final LocalDate date, final BudgetCalculationType type) {

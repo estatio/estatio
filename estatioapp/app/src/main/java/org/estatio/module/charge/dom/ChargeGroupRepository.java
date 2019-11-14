@@ -47,10 +47,10 @@ public class ChargeGroupRepository extends UdoDomainRepositoryAndFactory<ChargeG
 
     @Programmatic
     public ChargeGroup createChargeGroup(final String reference, final String description) {
-        final ChargeGroup chargeGroup = newTransientInstance();
+        final ChargeGroup chargeGroup = factoryService.instantiate(ChargeGroup.class);
         chargeGroup.setReference(reference);
         chargeGroup.setName(description != null ? description : reference);
-        persist(chargeGroup);
+        repositoryService.persist(chargeGroup);
         return chargeGroup;
     }
 

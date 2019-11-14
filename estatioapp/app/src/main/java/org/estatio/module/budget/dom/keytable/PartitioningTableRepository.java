@@ -25,6 +25,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Where;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.budget.dom.budget.Budget;
 
@@ -38,18 +39,21 @@ public class PartitioningTableRepository extends UdoDomainRepositoryAndFactory<P
 
     @Programmatic
     public PartitioningTable findByBudgetAndName(final Budget budget, final String name) {
-        return uniqueMatch("findByBudgetAndName", "budget", budget, "name", name);
+        return repositoryService.uniqueMatch(new QueryDefault<>(PartitioningTable.class,
+                "findByBudgetAndName", "budget", budget, "name", name));
     }
 
 
     public List<PartitioningTable> findByBudget(Budget budget) {
-        return allMatches("findByBudget", "budget", budget);
+        return repositoryService.allMatches(new QueryDefault<>(PartitioningTable.class,
+                "findByBudget", "budget", budget));
     }
 
 
     @ActionLayout(hidden = Where.EVERYWHERE)
     public List<PartitioningTable> autoComplete(final String search) {
-        return allMatches("findKeyTableByNameMatches", "name", search.toLowerCase());
+        return repositoryService.allMatches(new QueryDefault<>(PartitioningTable.class,
+                "findKeyTableByNameMatches", "name", search.toLowerCase()));
     }
 
 }

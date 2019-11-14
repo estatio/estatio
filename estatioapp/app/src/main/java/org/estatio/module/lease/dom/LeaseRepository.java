@@ -96,7 +96,7 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
             final LocalDate tenancyEndDate,
             final Party landlord,
             final Party tenant) {
-        Lease lease = newTransientInstance();
+        Lease lease = factoryService.instantiate(Lease.class);
         final AgreementType at = agreementTypeRepository.find(LeaseAgreementTypeEnum.LEASE.getTitle());
         lease.setType(at);
         lease.setApplicationTenancyPath(applicationTenancy.getPath());
@@ -107,7 +107,7 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
         lease.setTenancyStartDate(tenancyStartDate);
         lease.setTenancyEndDate(tenancyEndDate);
         lease.setLeaseType(leaseType);
-        persistIfNotAlready(lease);
+        repositoryService.persist(lease);
 
         if (tenant != null) {
             final AgreementRoleType artTenant = agreementRoleTypeRepository.find(LeaseAgreementRoleTypeEnum.TENANT);

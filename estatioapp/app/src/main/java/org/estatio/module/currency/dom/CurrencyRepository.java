@@ -56,10 +56,10 @@ public class CurrencyRepository extends UdoDomainRepositoryAndFactory<Currency> 
     public Currency findOrCreateCurrency(final String reference, final String name) {
         Currency currency = findCurrency(reference);
         if (currency == null) {
-            currency = newTransientInstance();
+            currency = factoryService.instantiate(Currency.class);
             currency.setReference(reference);
             currency.setName(name);
-            persist(currency);
+            repositoryService.persist(currency);
         }
         return currency;
     }

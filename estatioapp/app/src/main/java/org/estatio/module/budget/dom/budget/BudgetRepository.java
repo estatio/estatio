@@ -20,6 +20,7 @@ package org.estatio.module.budget.dom.budget;
 
 import java.util.List;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -49,7 +50,7 @@ public class BudgetRepository extends UdoDomainRepositoryAndFactory<Budget> {
             final Property property,
             final LocalDate startDate,
             final LocalDate endDate) {
-        Budget budget = newTransientInstance();
+        Budget budget = factoryService.instantiate(Budget.class);
         budget.setProperty(property);
         budget.setStartDate(startDate);
         budget.setEndDate(endDate);
@@ -111,12 +112,12 @@ public class BudgetRepository extends UdoDomainRepositoryAndFactory<Budget> {
 
     @Programmatic
     public List<Budget> allBudgets() {
-        return allInstances();
+        return repositoryService.allInstances(Budget.class);
     }
 
     @Programmatic
     public List<Budget> findByProperty(Property property){
-        return allMatches("findByProperty", "property", property);
+        return repositoryService.allMatches(new QueryDefault<>(Budget.class,"findByProperty", "property", property));
     }
 
     /*
@@ -124,7 +125,8 @@ public class BudgetRepository extends UdoDomainRepositoryAndFactory<Budget> {
      */
     @Programmatic
     public Budget findByPropertyAndDate(Property property, LocalDate date){
-        List<Budget> allBudgetsOfProperty = allMatches("findByProperty", "property", property);
+        List<Budget> allBudgetsOfProperty = repositoryService.allMatches(new QueryDefault<>(Budget.class,
+                "findByProperty", "property", property));
         for (Budget budget : allBudgetsOfProperty) {
             LocalDateInterval budgetInterval = new LocalDateInterval(budget.getStartDate(), budget.getEndDate());
             if (budgetInterval.contains(date)) {
@@ -136,6 +138,7 @@ public class BudgetRepository extends UdoDomainRepositoryAndFactory<Budget> {
 
     @Programmatic
     public Budget findByPropertyAndStartDate(Property property, LocalDate startDate){
-        return uniqueMatch("findByPropertyAndStartDate", "property", property, "startDate", startDate);
+        return repositoryService.uniqueMatch(new QueryDefault<>(Budget.class,"findByPropertyAndStartDate",
+                "property", property, "startDate", startDate));
     }
 }

@@ -109,7 +109,7 @@ public class CodaMappingRepository extends UdoDomainRepositoryAndFactory<CodaMap
             final LocalDate endDate,
             final CodaElement codaElement
     ) {
-        CodaMapping codaMapping = newTransientInstance();
+        CodaMapping codaMapping = factoryService.instantiate(CodaMapping.class);
         codaMapping.setAtPath(atPath);
         codaMapping.setDocumentType(documentType);
         codaMapping.setIncomingInvoiceType(incomingInvoiceType);
@@ -121,7 +121,7 @@ public class CodaMappingRepository extends UdoDomainRepositoryAndFactory<CodaMap
         codaMapping.setCodaElement(codaElement);
         codaMapping.setStartDate(startDate);
         codaMapping.setEndDate(endDate);
-        persistIfNotAlready(codaMapping);
+        repositoryService.persist(codaMapping);
         return null;
     }
 

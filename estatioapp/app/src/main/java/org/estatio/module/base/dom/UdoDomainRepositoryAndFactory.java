@@ -74,15 +74,15 @@ public abstract class UdoDomainRepositoryAndFactory<T> extends UdoDomainService<
     }
     
     protected T uniqueMatch(final String queryName, final Object... paramArgs) {
-        return repositoryService.uniqueMatch(newQueryDefault(queryName, paramArgs));
+        return uniqueMatch(newQueryDefault(queryName, paramArgs));
     }
     
     protected List<T> allMatches(final String queryName, final Object... paramArgs) {
-        return repositoryService.allMatches(newQueryDefault(queryName, paramArgs));
+        return allMatches(newQueryDefault(queryName, paramArgs));
     }
 
     protected List<T> allInstances() {
-        return repositoryService.allInstances(getEntityType());
+        return allInstances(getEntityType());
     }
 
     // //////////////////////////////////////

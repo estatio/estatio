@@ -132,7 +132,7 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
             final Lease lease,
             final String interactionId
     ) {
-        InvoiceForLease invoice = newTransientInstance();
+        InvoiceForLease invoice = factoryService.instantiate(InvoiceForLease.class);
         invoice.setApplicationTenancyPath(applicationTenancy.getPath());
         invoice.setBuyer(buyer);
         invoice.setSeller(seller);
@@ -154,8 +154,7 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
 
         invoice.updateDescriptions();
 
-        persistIfNotAlready(invoice);
-        getContainer().flush();
+        repositoryService.persistAndFlush(invoice);
         return invoice;
     }
 

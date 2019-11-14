@@ -31,6 +31,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
@@ -94,7 +95,8 @@ public class BudgetItemRepository extends UdoDomainRepositoryAndFactory<BudgetIt
             final Budget budget,
             final Charge charge
     ){
-        return uniqueMatch("findByBudgetAndCharge", "budget", budget, "charge", charge);
+        return repositoryService.uniqueMatch(new QueryDefault<>(BudgetItem.class,"findByBudgetAndCharge",
+                "budget", budget, "charge", charge));
     }
 
     @Programmatic
@@ -107,7 +109,8 @@ public class BudgetItemRepository extends UdoDomainRepositoryAndFactory<BudgetIt
     }
 
     public List<BudgetItem> findByProperty(final Property property) {
-        return allMatches("findByProperty", "property", property);
+        return repositoryService.allMatches(new QueryDefault<>(BudgetItem.class,"findByProperty",
+                "property", property));
     }
 
 

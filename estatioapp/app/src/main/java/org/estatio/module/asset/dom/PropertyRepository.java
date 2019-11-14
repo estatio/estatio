@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.datanucleus.query.typesafe.TypesafeQuery;
 import org.joda.time.LocalDate;
 
@@ -57,7 +58,7 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
             final String city,
             final Country country,
             final LocalDate acquireDate) {
-        final Property property = newTransientInstance();
+        final Property property = factoryService.instantiate(Property.class);
 
         property.setReference(propertyReference);
         property.setName(name);
@@ -93,14 +94,14 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
 
     public List<Property> findProperties(
             final String referenceOrName) {
-        return allMatches("findByReferenceOrName",
-                "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
+        return repositoryService.allMatches(new QueryDefault<>(Property.class,"findByReferenceOrName",
+                "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName)));
     }
 
     // //////////////////////////////////////
 
     public List<Property> allProperties() {
-        List<Property> properties = allInstances();
+        List<Property> properties = repositoryService.allInstances(Property.class);
         if(properties != null) Collections.sort(properties);
         return properties;
     }
@@ -108,7 +109,8 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
     // //////////////////////////////////////
 
     public Property findPropertyByReference(final String reference) {
-        return uniqueMatch("findByReference", "reference", reference);
+        return repositoryService.uniqueMatch(new QueryDefault<>(Property.class,"findByReference",
+                "reference", reference));
     }
 
     /**
@@ -117,9 +119,8 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
     public List<Property> autoComplete(final String searchPhrase) {
 
         final String refRegex = StringUtils.wildcardToCaseInsensitiveRegex("*".concat(searchPhrase).concat("*"));
-        return allMatches("findByReferenceOrName",
-                "referenceOrName", refRegex
-                );
+        return repositoryService.allMatches(new QueryDefault<>(Property.class, "findByReferenceOrName",
+                "referenceOrName", refRegex));
     }
 
     // //////////////////////////////////////
