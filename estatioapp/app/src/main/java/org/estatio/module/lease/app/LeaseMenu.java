@@ -184,15 +184,7 @@ public class LeaseMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3")
-    public ListOfLeases findLeases(
-            final @ParameterLayout(describedAs = "May include wildcards '*' and '?'") String referenceOrName,
-            final boolean includeTerminated) {
-        return new ListOfLeases(
-                "Leases matching " + referenceOrName,
-                findLeasesInternal(referenceOrName, includeTerminated));
-    }
-
-    private List<Lease> findLeasesInternal(
+    public List<Lease> findLeases(
             @ParameterLayout(describedAs = "May include wildcards '*' and '?'") final String referenceOrName,
             final boolean includeTerminated) {
         String pattern = StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName);

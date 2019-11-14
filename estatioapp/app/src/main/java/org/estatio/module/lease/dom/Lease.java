@@ -48,13 +48,11 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
@@ -62,7 +60,9 @@ import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.incode.module.base.dom.types.NotesType;
 import org.incode.module.base.dom.utils.JodaPeriodUtils;
 import org.incode.module.base.dom.utils.StringUtils;
@@ -91,7 +91,6 @@ import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.invoice.dom.PaymentMethod;
-import org.estatio.module.lease.app.ListOfLeases;
 import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -833,36 +832,6 @@ public class Lease
     private AgreementType bankMandateAgreementType() {
         return agreementTypeRepository.find(BankMandateAgreementTypeEnum.MANDATE);
     }
-
-    // //////////////////////////////////////
-
-
-    @Mixin(method = "act")
-    public static class ListOfLeases_approveAllTermsOfThisLease {
-
-        private final ListOfLeases listOfLeases;
-
-        public ListOfLeases_approveAllTermsOfThisLease(final ListOfLeases listOfLeases) {
-            this.listOfLeases = listOfLeases;
-        }
-
-        @Action(
-                semantics = SemanticsOf.NON_IDEMPOTENT, restrictTo = RestrictTo.PROTOTYPING,
-                associateWith = "leases"
-        )
-        public ListOfLeases act(final List<Lease> selectedLeases) {
-            for (final Lease lease : selectedLeases) {
-                for (LeaseItem item : lease.getItems()) {
-                    for (LeaseTerm term : item.getTerms()) {
-                        term.approve();
-                    }
-                }
-            }
-            return this.listOfLeases;
-        }
-    }
-
-
 
     // //////////////////////////////////////
 
