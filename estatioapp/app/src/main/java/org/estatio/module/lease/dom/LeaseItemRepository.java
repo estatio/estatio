@@ -25,6 +25,7 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Iterables;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -88,20 +89,23 @@ public class LeaseItemRepository extends UdoDomainRepositoryAndFactory<LeaseItem
             final LeaseItemType type,
             final LocalDate startDate,
             final BigInteger sequence) {
-        return firstMatch("findByLeaseAndTypeAndStartDateAndSequence",
+        List<LeaseItem> list = repositoryService.allMatches(new QueryDefault<>(LeaseItem.class,
+                "findByLeaseAndTypeAndStartDateAndSequence",
                 "lease", lease,
                 "type", type,
                 "startDate", startDate,
-                "sequence", sequence);
+                "sequence", sequence));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Programmatic
     public List<LeaseItem> findLeaseItemsByType(
             final Lease lease,
             final LeaseItemType type) {
-        return allMatches("findByLeaseAndType",
+        return repositoryService.allMatches(new QueryDefault<>(LeaseItem.class,
+                "findByLeaseAndType",
                 "lease", lease,
-                "type", type);
+                "type", type));
     }
 
     @Programmatic
@@ -109,10 +113,12 @@ public class LeaseItemRepository extends UdoDomainRepositoryAndFactory<LeaseItem
             final Lease lease,
             final LeaseItemType type,
             final Charge charge) {
-        return firstMatch("findByLeaseAndTypeAndCharge",
+        List<LeaseItem> list = repositoryService.allMatches(new QueryDefault<>(LeaseItem.class,
+                "findByLeaseAndTypeAndCharge",
                 "lease", lease,
                 "type", type,
-                "charge", charge);
+                "charge", charge));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Programmatic
@@ -122,12 +128,14 @@ public class LeaseItemRepository extends UdoDomainRepositoryAndFactory<LeaseItem
             final Charge charge,
             final LocalDate startDate,
             final LeaseAgreementRoleTypeEnum invoicedBy) {
-        return firstMatch("findByLeaseAndTypeAndChargeAndStartDateAndInvoicedBy",
+        List<LeaseItem> list = repositoryService.allMatches(new QueryDefault<>(LeaseItem.class,
+                "findByLeaseAndTypeAndChargeAndStartDateAndInvoicedBy",
                 "lease", lease,
                 "type", type,
                 "charge", charge,
                 "startDate", startDate,
-                "invoicedBy", invoicedBy);
+                "invoicedBy", invoicedBy));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Programmatic
@@ -136,19 +144,22 @@ public class LeaseItemRepository extends UdoDomainRepositoryAndFactory<LeaseItem
             final LeaseItemType type,
             final LocalDate startDate,
             final LeaseAgreementRoleTypeEnum invoicedBy) {
-        return firstMatch("findByLeaseAndTypeAndStartDateAndInvoicedBy",
+        List<LeaseItem> list = repositoryService.allMatches(new QueryDefault<>(LeaseItem.class,
+                "findByLeaseAndTypeAndStartDateAndInvoicedBy",
                 "lease", lease,
                 "type", type,
                 "startDate", startDate,
-                "invoicedBy", invoicedBy);
+                "invoicedBy", invoicedBy));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Programmatic
     public LeaseItem findByLeaseAndTypeAndInvoicedBy(final Lease lease, final LeaseItemType leaseItemType, final LeaseAgreementRoleTypeEnum invoicedBy) {
-        return firstMatch("findByLeaseAndTypeAndInvoicedBy",
+        List<LeaseItem> list = repositoryService.allMatches(new QueryDefault<>(LeaseItem.class,"findByLeaseAndTypeAndInvoicedBy",
                 "lease", lease,
                 "type", leaseItemType,
-                "invoicedBy", invoicedBy);
+                "invoicedBy", invoicedBy));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     // //////////////////////////////////////
@@ -156,7 +167,7 @@ public class LeaseItemRepository extends UdoDomainRepositoryAndFactory<LeaseItem
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "99")
     public List<LeaseItem> allLeaseItems() {
-        return allInstances();
+        return repositoryService.allInstances(LeaseItem.class);
     }
 
     // //////////////////////////////////////

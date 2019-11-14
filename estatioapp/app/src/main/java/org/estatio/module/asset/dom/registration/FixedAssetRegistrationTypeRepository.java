@@ -21,7 +21,10 @@ package org.estatio.module.asset.dom.registration;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
+
+import java.util.List;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -34,15 +37,17 @@ public class FixedAssetRegistrationTypeRepository extends UdoDomainRepositoryAnd
     }
 
     public FixedAssetRegistrationType create(String title, Class<? extends FixedAssetRegistration> cls) {
-        FixedAssetRegistrationType fixedAssetRegistrationType = newTransientInstance(FixedAssetRegistrationType.class);
+        FixedAssetRegistrationType fixedAssetRegistrationType = factoryService.instantiate(FixedAssetRegistrationType.class);
         fixedAssetRegistrationType.setTitle(title);
         fixedAssetRegistrationType.setFullyQualifiedClassName(cls.getName());
-        persist(fixedAssetRegistrationType);
+        repositoryService.persistAndFlush(fixedAssetRegistrationType);
         return fixedAssetRegistrationType;
     }
 
     public FixedAssetRegistrationType findByTitle(final String title) {
-        return firstMatch("findByTitle", "title", title);
+        List<FixedAssetRegistrationType> list = repositoryService.allMatches(new QueryDefault<>(FixedAssetRegistrationType.class,
+                "findByTitle", "title", title));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     public FixedAssetRegistrationType findOrCreate(String title, Class<? extends FixedAssetRegistration> cls) {

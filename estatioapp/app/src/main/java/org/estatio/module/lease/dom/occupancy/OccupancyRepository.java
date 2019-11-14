@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -56,11 +57,11 @@ public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy
             final Lease lease,
             final Unit unit,
             final LocalDate startDate) {
-        Occupancy occupancy = newTransientInstance(Occupancy.class);
+        Occupancy occupancy = factoryService.instantiate(Occupancy.class);
         occupancy.setLease(lease);
         occupancy.setUnit(unit);
         occupancy.setStartDate(startDate);
-        persistIfNotAlready(occupancy);
+        repositoryService.persistAndFlush(occupancy);
         return occupancy;
     }
 
@@ -81,33 +82,34 @@ public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy
             final Lease lease,
             final Unit unit,
             final LocalDate startDate) {
-        return firstMatch(
+        List<Occupancy> list = repositoryService.allMatches(new QueryDefault<>(Occupancy.class,
                 "findByLeaseAndUnitAndStartDate",
                 "lease", lease,
                 "unit", unit,
-                "startDate", startDate);
+                "startDate", startDate));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Programmatic
     public List<Occupancy> findByLeaseAndDate(
             final Lease lease,
             final LocalDate date) {
-        return allMatches(
+        return repositoryService.allMatches(new QueryDefault<>(Occupancy.class,
                 "findByLeaseAndDate",
                 "lease", lease,
                 "date", date,
-                "dateAsEndDate", LocalDateInterval.endDateFromStartDate(date));
+                "dateAsEndDate", LocalDateInterval.endDateFromStartDate(date)));
     }
 
     @Programmatic
     public List<Occupancy> findByBrand(
             final Brand brand,
             final boolean includeTerminated) {
-        return allMatches(
+        return repositoryService.allMatches(new QueryDefault<>(Occupancy.class,
                 "findByBrand",
                 "brand", brand,
                 "includeTerminated", includeTerminated,
-                "date", clockService.now());
+                "date", clockService.now()));
     }
 
     @Programmatic
@@ -126,7 +128,8 @@ public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy
 
     @Programmatic
     public List<Occupancy> findByProperty(final Property property) {
-        return allMatches("findByProperty", "property", property);
+        return repositoryService.allMatches(new QueryDefault<>(Occupancy.class,
+                "findByProperty", "property", property));
     }
 
     // //////////////////////////////////////

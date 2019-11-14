@@ -23,6 +23,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(nature = NatureOfService.DOMAIN)
@@ -35,12 +36,14 @@ public class InvoiceSummaryForInvoiceRunRepository extends UdoDomainRepositoryAn
     @Programmatic
     public InvoiceSummaryForInvoiceRun findByRunId(
             final String runId) {
-        return firstMatch("findByRunId",
-                "runId", runId);
+        List<InvoiceSummaryForInvoiceRun> list = repositoryService.allMatches(new QueryDefault<>(InvoiceSummaryForInvoiceRun.class,
+                "findByRunId",
+                "runId", runId));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Programmatic
     public List<InvoiceSummaryForInvoiceRun> allInvoiceRuns() {
-        return allInstances();
+        return repositoryService.allInstances(InvoiceSummaryForInvoiceRun.class);
     }
 }

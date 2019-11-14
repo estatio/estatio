@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
@@ -49,7 +50,7 @@ public class FinancialAccountRepository extends UdoDomainRepositoryAndFactory<Fi
         financialAccount.setReference(reference);
         financialAccount.setName(name);
         financialAccount.setOwner(owner);
-        persistIfNotAlready(financialAccount);
+        repositoryService.persistAndFlush(financialAccount);
         return financialAccount;
     }
 
@@ -57,30 +58,33 @@ public class FinancialAccountRepository extends UdoDomainRepositoryAndFactory<Fi
 
     @Programmatic
     public FinancialAccount findByOwnerAndReference(final Party owner, final String reference) {
-        return firstMatch("findByOwnerAndReference", "owner", owner, "reference", reference);
+        List<FinancialAccount> list = repositoryService.allMatches(new QueryDefault<>(FinancialAccount.class,
+                "findByOwnerAndReference", "owner", owner, "reference", reference));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     // //////////////////////////////////////
 
     @Programmatic
     public List<FinancialAccount> findAccountsByOwner(final Party party) {
-        return allMatches("findByOwner", "owner", party);
+        return repositoryService.allMatches(new QueryDefault<>(FinancialAccount.class,
+                "findByOwner", "owner", party));
     }
 
     // //////////////////////////////////////
 
     @Programmatic
     public List<FinancialAccount> findAccountsByTypeOwner(final FinancialAccountType accountType, final Party party) {
-        return allMatches("findByTypeAndOwner",
+        return repositoryService.allMatches(new QueryDefault<>(FinancialAccount.class,"findByTypeAndOwner",
                 "type", accountType,
-                "owner", party);
+                "owner", party));
     }
 
     // //////////////////////////////////////
 
     @Programmatic
     public List<FinancialAccount> allAccounts() {
-        return allInstances();
+        return repositoryService.allInstances(FinancialAccount.class);
     }
 
     @Inject

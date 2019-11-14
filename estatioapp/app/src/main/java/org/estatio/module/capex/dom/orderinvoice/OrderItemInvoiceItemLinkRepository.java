@@ -11,6 +11,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
@@ -31,12 +32,12 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
             final IncomingInvoiceItem invoiceItem,
             final BigDecimal netAmount){
 
-        OrderItemInvoiceItemLink orderItemInvoiceItemLink = newTransientInstance(OrderItemInvoiceItemLink.class);
+        OrderItemInvoiceItemLink orderItemInvoiceItemLink = factoryService.instantiate(OrderItemInvoiceItemLink.class);
         orderItemInvoiceItemLink.setOrderItem(orderItem);
         orderItemInvoiceItemLink.setInvoiceItem(invoiceItem);
         orderItemInvoiceItemLink.setNetAmount(netAmount);
 
-        persist(orderItemInvoiceItemLink);
+        repositoryService.persistAndFlush(orderItemInvoiceItemLink);
 
     }
 
@@ -58,23 +59,28 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
     public OrderItemInvoiceItemLink findUnique(
             final OrderItem orderItem,
             final IncomingInvoiceItem invoiceItem) {
-        return firstMatch("findUnique", "orderItem", orderItem, "invoiceItem", invoiceItem);
+        List<OrderItemInvoiceItemLink> list = repositoryService.allMatches(new QueryDefault<>(OrderItemInvoiceItemLink.class,
+                "findUnique", "orderItem", orderItem, "invoiceItem", invoiceItem));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Programmatic
     public List<OrderItemInvoiceItemLink> findByInvoice(final IncomingInvoice incomingInvoice) {
-        return allMatches("findByInvoice", "invoice", incomingInvoice);
+        return repositoryService.allMatches(new QueryDefault<>(OrderItemInvoiceItemLink.class,
+                "findByInvoice", "invoice", incomingInvoice));
     }
 
     @Programmatic
     public List<OrderItemInvoiceItemLink> findByOrder(final Order order) {
-        return allMatches("findByOrder", "order", order);
+        return repositoryService.allMatches(new QueryDefault<>(OrderItemInvoiceItemLink.class,
+                "findByOrder", "order", order));
     }
 
     @Programmatic
     public List<OrderItemInvoiceItemLink> findByOrderItem(
             final OrderItem orderItem) {
-        return allMatches("findByOrderItem", "orderItem", orderItem);
+        return repositoryService.allMatches(new QueryDefault<>(OrderItemInvoiceItemLink.class,
+                "findByOrderItem", "orderItem", orderItem));
     }
 
     @Programmatic
@@ -92,12 +98,15 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
     @Programmatic
     public Optional<OrderItemInvoiceItemLink> findByInvoiceItem(
             final IncomingInvoiceItem invoiceItem) {
-        return Optional.ofNullable(firstMatch("findByInvoiceItem", "invoiceItem", invoiceItem));
+        List<OrderItemInvoiceItemLink> list = repositoryService.allMatches(new QueryDefault<>(OrderItemInvoiceItemLink.class,
+                "findByInvoiceItem", "invoiceItem", invoiceItem));
+        return list.isEmpty() ? Optional.ofNullable(null) : Optional.of(list.get(0));
     }
 
     @Programmatic
     public List<OrderItemInvoiceItemLink> findLinksByInvoiceItem(final IncomingInvoiceItem invoiceItem) {
-        return allMatches("findByInvoiceItem", "invoiceItem", invoiceItem);
+        return repositoryService.allMatches(new QueryDefault<>(OrderItemInvoiceItemLink.class,
+                "findByInvoiceItem", "invoiceItem", invoiceItem));
     }
 
 
@@ -109,7 +118,7 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
 
     @Programmatic
     public List<OrderItemInvoiceItemLink> listAll(){
-        return allInstances();
+        return repositoryService.allInstances(OrderItemInvoiceItemLink.class);
     }
 
 
@@ -159,7 +168,7 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
 
     @Programmatic
     public void removeLink(final OrderItemInvoiceItemLink link) {
-        remove(link);
+        repositoryService.removeAndFlush(link);
     }
 
 }

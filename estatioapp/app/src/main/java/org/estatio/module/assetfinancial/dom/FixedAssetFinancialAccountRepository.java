@@ -23,6 +23,7 @@ import java.util.List;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.financial.dom.FinancialAccount;
@@ -40,31 +41,32 @@ public class FixedAssetFinancialAccountRepository extends UdoDomainRepositoryAnd
     public FixedAssetFinancialAccount newFixedAssetFinancialAccount(
             final FixedAsset fixedAsset,
             final FinancialAccount financialAccount) {
-        FixedAssetFinancialAccount instance = newTransientInstance(FixedAssetFinancialAccount.class);
+        FixedAssetFinancialAccount instance = factoryService.instantiate(FixedAssetFinancialAccount.class);
         instance.setFinancialAccount(financialAccount);
         instance.setFixedAsset(fixedAsset);
-        persistIfNotAlready(instance);
+        repositoryService.persistAndFlush(instance);
         return instance;
     }
 
     public List<FixedAssetFinancialAccount> findByFixedAsset(
             final FixedAsset fixedAsset) {
-        return allMatches("findByFixedAsset",
-                "fixedAsset", fixedAsset);
+        return repositoryService.allMatches(new QueryDefault<>(FixedAssetFinancialAccount.class,"findByFixedAsset",
+                "fixedAsset", fixedAsset));
     }
 
     public List<FixedAssetFinancialAccount> findByFinancialAccount(
             final FinancialAccount financialAccount) {
-        return allMatches("findByFinancialAccount",
-                "financialAccount", financialAccount);
+        return repositoryService.allMatches(new QueryDefault<>(FixedAssetFinancialAccount.class,"findByFinancialAccount",
+                "financialAccount", financialAccount));
     }
 
     public FixedAssetFinancialAccount find(
             final FixedAsset fixedAsset,
             final FinancialAccount financialAccount) {
-        return firstMatch("findByFixedAssetAndFinancialAccount",
-                "fixedAsset", fixedAsset,
-                "financialAccount", financialAccount);
+        List<FixedAssetFinancialAccount> list = repositoryService.allMatches(new QueryDefault<>(FixedAssetFinancialAccount.class,
+                "findByFixedAssetAndFinancialAccount", "fixedAsset", fixedAsset,
+                "financialAccount", financialAccount));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     public FixedAssetFinancialAccount findOrCreate(

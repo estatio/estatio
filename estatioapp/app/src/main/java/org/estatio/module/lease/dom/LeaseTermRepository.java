@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -90,8 +91,7 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
         // TOFIX: without this flush and refresh, the collection of terms on the
         // item is not updated. Removing code below will fail integration tests
         // too.
-        persistIfNotAlready(leaseTerm);
-        getContainer().flush();
+        repositoryService.persistAndFlush(leaseTerm);
 //        getIsisJdoSupport().getJdoPersistenceManager().flush();
         getIsisJdoSupport().refresh(leaseItem);
         return leaseTerm;
@@ -121,7 +121,8 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "20")
     public List<LeaseTerm> allLeaseTermsToBeApproved(final LocalDate date) {
-        return allMatches("findByStatusAndActiveDate", "status", LeaseTermStatus.NEW, "date", date);
+        return repositoryService.allMatches(new QueryDefault<>(LeaseTerm.class,
+                "findByStatusAndActiveDate", "status", LeaseTermStatus.NEW, "date", date));
     }
 
     public LocalDate default0AllLeaseTermsToBeApproved() {
@@ -130,8 +131,8 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
 
     @Programmatic
     public List<LeaseTerm> findByLeaseItem(final LeaseItem leaseItem) {
-        return allMatches("findByLeaseItem",
-                "leaseItem", leaseItem);
+        return repositoryService.allMatches(new QueryDefault<>(LeaseTerm.class,"findByLeaseItem",
+                "leaseItem", leaseItem));
     }
 
     /**
@@ -139,18 +140,22 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
      */
     @Action(hidden = Where.EVERYWHERE)
     public LeaseTerm findByLeaseItemAndSequence(final LeaseItem leaseItem, final BigInteger sequence) {
-        return firstMatch("findByLeaseItemAndSequence", "leaseItem", leaseItem, "sequence", sequence);
+        List<LeaseTerm> list = repositoryService.allMatches(new QueryDefault<>(LeaseTerm.class,
+                "findByLeaseItemAndSequence", "leaseItem", leaseItem, "sequence", sequence));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Programmatic
     public LeaseTerm findByLeaseItemAndStartDate(final LeaseItem leaseItem, final LocalDate startDate) {
-        return firstMatch("findByLeaseItemAndStartDate", "leaseItem", leaseItem, "startDate", startDate);
+        List<LeaseTerm> list = repositoryService.allMatches(new QueryDefault<>(LeaseTerm.class,
+                "findByLeaseItemAndStartDate", "leaseItem", leaseItem, "startDate", startDate));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "99")
     public List<LeaseTerm> allLeaseTerms() {
-        return allInstances();
+        return repositoryService.allInstances(LeaseTerm.class);
     }
 
     // //////////////////////////////////////
@@ -160,10 +165,10 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
             final Property property,
             final LeaseItemType leaseItemType,
             final LocalDate startDate) {
-        return allMatches("findByPropertyAndTypeAndStartDate",
+        return repositoryService.allMatches(new QueryDefault<>(LeaseTerm.class,"findByPropertyAndTypeAndStartDate",
                 "property", property,
                 "leaseItemType", leaseItemType,
-                "startDate", startDate);
+                "startDate", startDate));
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -184,13 +189,14 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
     public List<LeaseTerm> findByPropertyAndType(
             final Property property,
             final LeaseItemType leaseItemType) {
-        return allMatches("findByPropertyAndType",
+        return repositoryService.allMatches(new QueryDefault<>(LeaseTerm.class,"findByPropertyAndType",
                 "property", property,
-                "leaseItemType", leaseItemType);
+                "leaseItemType", leaseItemType));
     }
 
     // //////////////////////////////////////
 
+    /* TODO: refactor allMatches to use RepositoryService.allMatches() */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
     public List<LocalDate> findStartDatesByPropertyAndType(
@@ -203,6 +209,7 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
         return startDates;
     }
 
+    /* TODO: refactor allMatches to use RepositoryService.allMatches() */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
     public List<LocalDate> findStartDatesByPropertyAndTypeAndInvoicedBy(

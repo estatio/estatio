@@ -29,6 +29,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(menuOrder = "99", repositoryFor = Activity.class, nature = NatureOfService.DOMAIN)
@@ -57,7 +58,9 @@ public class ActivityRepository extends UdoDomainRepositoryAndFactory<Activity> 
     }
 
     public Activity findBySectorAndName(final Sector sector, final String name) {
-        return firstMatch("findBySectorAndName", "sector", sector, "name", name);
+        List<Activity> list = repositoryService.allMatches(new QueryDefault<>(Activity.class,
+                "findBySectorAndName", "sector", sector, "name", name));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Programmatic
@@ -67,7 +70,7 @@ public class ActivityRepository extends UdoDomainRepositoryAndFactory<Activity> 
         }
         Activity activity = findBySectorAndName(sector, name);
         if (activity == null) {
-            activity = newTransientInstance(Activity.class);
+            activity = factoryService.instantiate(Activity.class);
             activity.setSector(sector);
             activity.setName(name);
         }

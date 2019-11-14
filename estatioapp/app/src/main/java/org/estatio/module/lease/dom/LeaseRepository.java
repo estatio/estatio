@@ -27,6 +27,7 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 
@@ -121,16 +122,18 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
     }
 
     public List<Lease> allLeases() {
-        return allInstances();
+        return repositoryService.allInstances(Lease.class);
     }
 
     public List<Lease> matchByReferenceOrName(
             final String referenceOrName,
             final boolean includeTerminated) {
         String pattern = StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName);
-        return allMatches("matchByReferenceOrName", "referenceOrName", pattern, "includeTerminated", includeTerminated, "date", clockService.now());
+        return repositoryService.allMatches(new QueryDefault<>(Lease.class,
+                "matchByReferenceOrName", "referenceOrName", pattern, "includeTerminated", includeTerminated, "date", clockService.now()));
     }
 
+    /* TODO: refactor to use repositoryService.allMatches() */
     public List<Lease> matchByTenantName(final String tenantName, final Property property) {
         String pattern = StringUtils.wildcardToCaseInsensitiveRegex(tenantName);
         return allMatches("findByProperty", "property", property)
@@ -142,19 +145,24 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
     public List<Lease> findByAssetAndActiveOnDate(
             final FixedAsset fixedAsset,
             final LocalDate activeOnDate) {
-        return allMatches("findByAssetAndActiveOnDate", "asset", fixedAsset, "activeOnDate", activeOnDate);
+        return repositoryService.allMatches(new QueryDefault<>(Lease.class,
+                "findByAssetAndActiveOnDate", "asset", fixedAsset, "activeOnDate", activeOnDate));
     }
 
     @Programmatic
     public Lease findLeaseByReference(final String reference) {
-        return uniqueMatch("findByReference", "reference", reference);
+        return repositoryService.uniqueMatch(new QueryDefault<>(Lease.class,
+                "findByReference", "reference", reference));
     }
 
     @Programmatic
     public Lease findLeaseByReferenceElseNull(final String reference) {
-        return firstMatch("findByReference", "reference", reference);
+        List<Lease> list = repositoryService.allMatches(new QueryDefault<>(Lease.class,
+                "findByReference", "reference", reference));
+        return list.isEmpty() ? null : list.get(0);
     }
 
+    /* TODO: refactor to use repositoryService.allMatches() */
     @Programmatic
     public List<Lease> matchLeaseByExternalReference(final String externalReference) {
         return allMatches("matchByExternalReference", "externalReference", externalReference)
@@ -165,24 +173,25 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
 
     @Programmatic
     public List<Lease> findLeasesByProperty(final Property property) {
-        return allMatches("findByProperty", "property", property);
+        return repositoryService.allMatches(new QueryDefault<>(Lease.class,
+                "findByProperty", "property", property));
     }
 
     @Programmatic
     public List<Lease> findExpireInDateRange(final LocalDate rangeStartDate, final LocalDate rangeEndDate) {
-        return allMatches(
+        return repositoryService.allMatches(new QueryDefault<>(Lease.class,
                 "findExpireInDateRange",
                 "rangeStartDate", rangeStartDate,
-                "rangeEndDate", rangeEndDate);
+                "rangeEndDate", rangeEndDate));
     }
 
     @Programmatic
     public List<Lease> findByBrand(final Brand brand, final boolean includeTerminated) {
-        return allMatches(
+        return repositoryService.allMatches(new QueryDefault<>(Lease.class,
                 "findByBrand",
                 "brand", brand,
                 "includeTerminated", includeTerminated,
-                "date", clockService.now());
+                "date", clockService.now()));
     }
 
     @Programmatic

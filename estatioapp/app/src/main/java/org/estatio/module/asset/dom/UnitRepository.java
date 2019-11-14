@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainObject;
@@ -68,22 +69,26 @@ public class UnitRepository extends UdoDomainRepositoryAndFactory<Unit> {
     public List<Unit> findUnits(
             final String referenceOrName,
             final boolean includeTerminated) {
-        return allMatches("findByReferenceOrName",
+        return repositoryService.allMatches(new QueryDefault<>(Unit.class,"findByReferenceOrName",
                 "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName),
                 "includeTerminated", includeTerminated,
-                "date", clockService.now());
+                "date", clockService.now()));
     }
 
     public Unit findUnitByReference(final String reference) {
-        return firstMatch("findByReference", "reference", reference);
+        List<Unit> list = repositoryService.allMatches(new QueryDefault<>(Unit.class,
+                "findByReference", "reference", reference));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     public List<Unit> findByProperty(final Property property) {
-        return allMatches("findByProperty", "property", property);
+        return repositoryService.allMatches(new QueryDefault<>(Unit.class,
+                "findByProperty", "property", property));
     }
 
     public List<Unit> findByActiveOnDate(LocalDate date) {
-        return allMatches("findByActiveOnDate", "startDate", date, "endDate", LocalDateInterval.endDateFromStartDate(date));
+        return repositoryService.allMatches(new QueryDefault<>(Unit.class,"findByActiveOnDate",
+                "startDate", date, "endDate", LocalDateInterval.endDateFromStartDate(date)));
     }
 
     public List<Unit> findByPropertyAndActiveNow(final Property property) {
@@ -92,7 +97,8 @@ public class UnitRepository extends UdoDomainRepositoryAndFactory<Unit> {
     }
 
     public List<Unit> findByPropertyAndActiveOnDate(final Property property, LocalDate date) {
-        return allMatches("findByPropertyAndActiveOnDate", "property", property, "date", date);
+        return repositoryService.allMatches(new QueryDefault<>(Unit.class,"findByPropertyAndActiveOnDate",
+                "property", property, "date", date));
     }
 
     /**

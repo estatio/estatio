@@ -21,6 +21,7 @@ package org.estatio.module.index.dom;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -73,15 +74,18 @@ public class IndexBaseRepository
 
     public IndexBase findByIndexAndActiveOnDate(final Index index, final LocalDate date) {
         // The is deliberately a firstmatch
-        return firstMatch("findByIndexAndActiveOnDate", "index", index, "date", date);
+        List<IndexBase> list = repositoryService.allMatches(new QueryDefault<>(IndexBase.class,
+                "findByIndexAndActiveOnDate", "index", index, "date", date));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     public IndexBase findByIndexAndDate(final Index index, final LocalDate date) {
-        return uniqueMatch("findByIndexAndDate", "index", index, "date", date);
+        return repositoryService.uniqueMatch(new QueryDefault<>(IndexBase.class,
+                "findByIndexAndDate", "index", index, "date", date));
     }
 
     public List<IndexBase> allIndexBases() {
-        return allInstances();
+        return repositoryService.allInstances(IndexBase.class);
     }
 
 }

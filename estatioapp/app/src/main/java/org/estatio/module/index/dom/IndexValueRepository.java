@@ -24,6 +24,7 @@ import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -88,9 +89,11 @@ public class IndexValueRepository
                 new Callable<IndexValue>() {
                     @Override
                     public IndexValue call() throws Exception {
-                        return firstMatch("findByIndexAndStartDate",
+                        List<IndexValue> list = repositoryService.allMatches(new QueryDefault<>(IndexValue.class,
+                                "findByIndexAndStartDate",
                                 "index", index,
-                                "startDate", startDate);
+                                "startDate", startDate));
+                        return list.isEmpty() ? null : list.get(0);
                     }
                 },
                 IndexValueRepository.class, "findIndexValueByIndexAndStartDate", index, startDate);
@@ -98,12 +101,14 @@ public class IndexValueRepository
 
     public IndexValue findLastByIndex(
             final Index index) {
-        return firstMatch("findLastByIndex",
-                "index", index);
+        List<IndexValue> list = repositoryService.allMatches(new QueryDefault<>(IndexValue.class,
+                "findLastByIndex",
+                "index", index));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     public List<IndexValue> all() {
-        return allInstances();
+        return repositoryService.allInstances(IndexValue.class);
     }
 
     @Inject

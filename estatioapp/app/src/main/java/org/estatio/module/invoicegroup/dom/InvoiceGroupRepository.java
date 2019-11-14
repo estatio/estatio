@@ -26,6 +26,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
@@ -46,16 +47,20 @@ public class InvoiceGroupRepository extends UdoDomainRepositoryAndFactory<Invoic
     }
 
     public Optional<InvoiceGroup> findByReference(final String reference) {
-        return Optional.ofNullable(firstMatch("findByReference", "reference", reference));
+        List<InvoiceGroup> list = repositoryService.allMatches(new QueryDefault<>(InvoiceGroup.class,
+                "findByReference", "reference", reference));
+        return list.isEmpty() ? Optional.ofNullable(null) : Optional.of(list.get(0));
     }
 
     public Optional<InvoiceGroup> findContainingProperty(final Property property) {
-        return Optional.ofNullable(firstMatch("findContainingProperty", "property", property));
+        List<InvoiceGroup> list = repositoryService.allMatches(new QueryDefault<>(InvoiceGroup.class,
+                "findContainingProperty", "property", property));
+        return list.isEmpty() ? Optional.ofNullable(null) : Optional.of(list.get(0));
     }
 
     @Programmatic
     public List<InvoiceGroup> allInvoiceGroups() {
-        return allInstances();
+        return repositoryService.allInstances(InvoiceGroup.class);
     }
 
 }

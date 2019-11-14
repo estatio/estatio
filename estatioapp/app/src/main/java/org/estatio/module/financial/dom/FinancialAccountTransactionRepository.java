@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -52,12 +53,12 @@ public class FinancialAccountTransactionRepository extends UdoDomainRepositoryAn
             final BigDecimal amount
     ) {
 
-        final FinancialAccountTransaction transaction = newTransientInstance(FinancialAccountTransaction.class);
+        final FinancialAccountTransaction transaction = factoryService.instantiate(FinancialAccountTransaction.class);
         transaction.setFinancialAccount(financialAccount);
         transaction.setTransactionDate(transactionDate);
         transaction.setDescription(description);
         transaction.setAmount(amount);
-        persistIfNotAlready(transaction);
+        repositoryService.persistAndFlush(transaction);
         return transaction;
     }
 
@@ -65,7 +66,7 @@ public class FinancialAccountTransactionRepository extends UdoDomainRepositoryAn
 
     @Programmatic
     public List<FinancialAccountTransaction> allTransactions() {
-        return allInstances();
+        return repositoryService.allInstances(FinancialAccountTransaction.class);
     }
 
     // //////////////////////////////////////
@@ -75,19 +76,23 @@ public class FinancialAccountTransactionRepository extends UdoDomainRepositoryAn
             final FinancialAccount financialAccount,
             final LocalDate transactionDate,
             final BigInteger sequence) {
-        return firstMatch("findByFinancialAccountAndTransactionDateAndSequence",
+        List<FinancialAccountTransaction> list = repositoryService.allMatches(new QueryDefault<>(FinancialAccountTransaction.class,
+                "findByFinancialAccountAndTransactionDateAndSequence",
                 "financialAccount", financialAccount,
                 "transactionDate", transactionDate,
-                "sequence", sequence);
+                "sequence", sequence));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Programmatic
     public FinancialAccountTransaction findTransaction(
             final FinancialAccount financialAccount,
             final LocalDate transactionDate) {
-        return firstMatch("findByFinancialAccountAndTransactionDate",
+        List<FinancialAccountTransaction> list = repositoryService.allMatches(new QueryDefault<>(FinancialAccountTransaction.class,
+                "findByFinancialAccountAndTransactionDate",
                 "financialAccount", financialAccount,
-                "transactionDate", transactionDate);
+                "transactionDate", transactionDate));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     // //////////////////////////////////////
@@ -95,7 +100,8 @@ public class FinancialAccountTransactionRepository extends UdoDomainRepositoryAn
     @Programmatic
     public List<FinancialAccountTransaction> transactions(
             final FinancialAccount financialAccount) {
-        return allMatches("findByFinancialAccount", "financialAccount", financialAccount);
+        return repositoryService.allMatches(new QueryDefault<>(FinancialAccountTransaction.class,
+                "findByFinancialAccount", "financialAccount", financialAccount));
     }
 
     // //////////////////////////////////////

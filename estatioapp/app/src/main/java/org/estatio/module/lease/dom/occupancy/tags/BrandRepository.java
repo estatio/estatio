@@ -31,6 +31,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.utils.StringUtils;
@@ -46,6 +47,7 @@ public class BrandRepository extends UdoDomainRepositoryAndFactory<Brand> {
         super(BrandRepository.class, Brand.class);
     }
 
+    /* TODO: refactor allMatches to use RepositoryService.allMatches() */
     @SuppressWarnings({ "unchecked" })
     @Programmatic
     public List<String> findUniqueNames() {
@@ -53,6 +55,7 @@ public class BrandRepository extends UdoDomainRepositoryAndFactory<Brand> {
         return names;
     }
 
+    /* TODO: refactor allMatches to use RepositoryService.allMatches() */
     @SuppressWarnings({ "unchecked" })
     @Programmatic
     public List<String> findUniqueGroups(final String search) {
@@ -74,21 +77,25 @@ public class BrandRepository extends UdoDomainRepositoryAndFactory<Brand> {
 
     @Programmatic
     public Brand findByName(final String name) {
-        return firstMatch("findByName", "name", name);
+        List<Brand> list = repositoryService.allMatches(new QueryDefault<>(Brand.class,"findByName", "name", name));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     public Brand findUnique(final String name, final ApplicationTenancy applicationTenancy) {
-        return uniqueMatch("findByNameAndAtPath", "name", name, "atPath", applicationTenancy.getPath());
+        return repositoryService.uniqueMatch(new QueryDefault<>(Brand.class,
+                "findByNameAndAtPath", "name", name, "atPath", applicationTenancy.getPath()));
     }
 
     @Programmatic
     public List<Brand> matchByName(final String name) {
-        return allMatches("matchByName", "name", StringUtils.wildcardToCaseInsensitiveRegex(name));
+        return repositoryService.allMatches(new QueryDefault<>(Brand.class,
+                "matchByName", "name", StringUtils.wildcardToCaseInsensitiveRegex(name)));
     }
 
     @Programmatic
     public List<Brand> findByNameLowerCaseAndAppTenancy(final String name, final ApplicationTenancy applicationTenancy) {
-        return allMatches("findByNameLowerCaseAndAppTenancy", "name", name.toLowerCase(), "atPath", applicationTenancy.getPath());
+        return repositoryService.allMatches(new QueryDefault<>(Brand.class,
+                "findByNameLowerCaseAndAppTenancy", "name", name.toLowerCase(), "atPath", applicationTenancy.getPath()));
     }
 
     public List<Brand> autoComplete(final String searchPhrase) {
@@ -117,13 +124,13 @@ public class BrandRepository extends UdoDomainRepositoryAndFactory<Brand> {
             final Country countryOfOrigin,
             final String group,
             final ApplicationTenancy applicationTenancy) {
-        Brand brand = newTransientInstance(Brand.class);
+        Brand brand = factoryService.instantiate(Brand.class);
         brand.setName(name);
         brand.setCoverage(coverage);
         brand.setCountryOfOrigin(countryOfOrigin);
         brand.setGroup(group);
         brand.setApplicationTenancyPath(applicationTenancy.getPath());
-        persist(brand);
+        repositoryService.persistAndFlush(brand);
         return brand;
     }
 
@@ -145,7 +152,7 @@ public class BrandRepository extends UdoDomainRepositoryAndFactory<Brand> {
 
     @Programmatic
     public List<Brand> allBrands() {
-        return allInstances();
+        return repositoryService.allInstances(Brand.class);
     }
 
     @Inject

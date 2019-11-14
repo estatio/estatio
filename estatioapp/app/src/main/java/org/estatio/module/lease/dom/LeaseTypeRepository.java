@@ -25,6 +25,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.ReferenceType;
@@ -57,14 +58,16 @@ public class LeaseTypeRepository extends UdoDomainRepositoryAndFactory<LeaseType
 
     @Programmatic
     public List<LeaseType> allLeaseTypes() {
-        return allInstances();
+        return repositoryService.allInstances(LeaseType.class);
     }
 
     // //////////////////////////////////////
 
     @Programmatic
     public LeaseType findByReference(final String reference) {
-        return firstMatch("findByReference", "reference", reference);
+        List<LeaseType> list = repositoryService.allMatches(new QueryDefault<>(LeaseType.class,
+                "findByReference", "reference", reference));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     // //////////////////////////////////////

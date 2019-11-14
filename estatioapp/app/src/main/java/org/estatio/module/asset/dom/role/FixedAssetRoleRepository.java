@@ -20,6 +20,7 @@ package org.estatio.module.asset.dom.role;
 
 import java.util.List;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -39,30 +40,30 @@ public class FixedAssetRoleRepository extends UdoDomainRepositoryAndFactory<Fixe
 
     public List<FixedAssetRole> findByAsset(
             final FixedAsset asset) {
-        return allMatches("findByAsset",
-                "asset", asset);
+        return repositoryService.allMatches(new QueryDefault<>(FixedAssetRole.class,"findByAsset",
+                "asset", asset));
     }
 
     public List<FixedAssetRole> findByType(
             final FixedAssetRoleTypeEnum type) {
-        return allMatches("findByType",
-                "type", type);
+        return repositoryService.allMatches(new QueryDefault<>(FixedAssetRole.class,"findByType",
+                "type", type));
     }
 
     public List<FixedAssetRole> findByAssetAndType(
             final FixedAsset asset,
             final FixedAssetRoleTypeEnum type) {
-        return allMatches("findByAssetAndType",
+        return repositoryService.allMatches(new QueryDefault<>(FixedAssetRole.class,"findByAssetAndType",
                 "asset", asset,
-                "type", type);
+                "type", type));
     }
 
     public FixedAssetRole findRole(
             final FixedAsset asset,
             final FixedAssetRoleTypeEnum type) {
-        return firstMatch("findByAssetAndType",
-                "asset", asset,
-                "type", type);
+        List<FixedAssetRole> list = repositoryService.allMatches(new QueryDefault<>(FixedAssetRole.class,
+                "findByAssetAndType", "asset", asset, "type", type));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     public FixedAssetRole findRole(
@@ -71,38 +72,37 @@ public class FixedAssetRoleRepository extends UdoDomainRepositoryAndFactory<Fixe
             final FixedAssetRoleTypeEnum type,
             final LocalDate startDate,
             final LocalDate endDate) {
-        return firstMatch("findByAssetAndPartyAndType",
-                "asset", asset,
-                "party", party,
-                "type", type);
+        List<FixedAssetRole> list = repositoryService.allMatches(new QueryDefault<>(FixedAssetRole.class,"findByAssetAndPartyAndType",
+                "asset", asset, "party", party, "type", type));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     public List<FixedAssetRole> findAllForProperty(
             final Property property) {
-        return allMatches("findAllForProperty",
-                "asset", property);
+        return repositoryService.allMatches(new QueryDefault<>(FixedAssetRole.class,"findAllForProperty",
+                "asset", property));
     }
 
     public List<FixedAssetRole> findAllForPropertyAndPartyAndType(
             final FixedAsset asset,
             final Party party,
             final FixedAssetRoleTypeEnum type) {
-        return allMatches("findByAssetAndPartyAndType",
+        return repositoryService.allMatches(new QueryDefault<>(FixedAssetRole.class,"findByAssetAndPartyAndType",
                 "asset", asset,
                 "party", party,
-                "type", type);
+                "type", type));
     }
 
     public List<FixedAssetRole> findByPartyAndType(
             final Party party,
             final FixedAssetRoleTypeEnum type) {
-        return allMatches("findByPartyAndType",
+        return repositoryService.allMatches(new QueryDefault<>(FixedAssetRole.class,"findByPartyAndType",
                 "party", party,
-                "type", type);
+                "type", type));
     }
 
     public List<FixedAssetRole> findByParty(final Party party) {
-        return allMatches("findByParty",
-                "party", party);
+        return repositoryService.allMatches(new QueryDefault<>(FixedAssetRole.class,"findByParty",
+                "party", party));
     }
 }

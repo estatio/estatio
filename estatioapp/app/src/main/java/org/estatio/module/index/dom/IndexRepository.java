@@ -27,6 +27,8 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.registry.ServiceRegistry;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.ReferenceType;
@@ -34,6 +36,8 @@ import org.incode.module.base.dom.types.ReferenceType;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.index.dom.api.IndexCreator;
 import org.estatio.module.index.dom.api.IndexFinder;
+
+import javax.inject.Inject;
 
 @DomainService(repositoryFor = Index.class, nature = NatureOfService.DOMAIN)
 public class IndexRepository extends UdoDomainRepositoryAndFactory<Index> implements IndexFinder, IndexCreator{
@@ -48,21 +52,24 @@ public class IndexRepository extends UdoDomainRepositoryAndFactory<Index> implem
             final String name,
             final ApplicationTenancy applicationTenancy) {
         final Index index = new Index(reference, name, applicationTenancy);
-        getContainer().injectServicesInto(index);
-        persist(index);
+//        getContainer().injectServicesInto(index);
+        serviceRegistry.injectServicesInto(index);
+        repositoryService.persistAndFlush(index);
         return index;
     }
 
 
     @Action(semantics = SemanticsOf.SAFE)
     public List<Index> all() {
-        return allInstances();
+        return repositoryService.allInstances(Index.class);
     }
 
     @Programmatic
     @Override
     public Index findByReference(final String reference) {
-        return firstMatch("findByReference", "reference", reference);
+        List<Index> list = repositoryService.allMatches(new QueryDefault<>(Index.class,
+                "findByReference", "reference", reference));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Programmatic
@@ -77,5 +84,8 @@ public class IndexRepository extends UdoDomainRepositoryAndFactory<Index> implem
         }
         return index;
     }
+
+    @Inject
+    ServiceRegistry serviceRegistry;
 
 }

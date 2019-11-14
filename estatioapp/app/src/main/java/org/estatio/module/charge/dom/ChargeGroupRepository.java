@@ -25,6 +25,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = ChargeGroup.class)
@@ -59,14 +60,16 @@ public class ChargeGroupRepository extends UdoDomainRepositoryAndFactory<ChargeG
     @Programmatic
     public ChargeGroup findChargeGroup(
             final String reference) {
-        return firstMatch("findByReference", "reference", reference);
+        List<ChargeGroup> list = repositoryService.allMatches(new QueryDefault<>(ChargeGroup.class,
+                "findByReference", "reference", reference));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     // //////////////////////////////////////
 
     @Programmatic
     public List<ChargeGroup> allChargeGroups() {
-        return allInstances();
+        return repositoryService.allInstances(ChargeGroup.class);
     }
 
 }

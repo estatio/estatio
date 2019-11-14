@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.CollectionLayout;
@@ -81,7 +82,7 @@ public class GuaranteeRepository extends UdoDomainRepositoryAndFactory<Guarantee
         AgreementRoleType artGuarantor = agreementRoleTypeRepository.find(GuaranteeAgreementRoleTypeEnum.GUARANTOR);
         Party leaseSecondaryParty = lease.secondaryPartyAsOfElseCurrent(startDate);
 
-        Guarantee guarantee = newTransientInstance(Guarantee.class);
+        Guarantee guarantee = factoryService.instantiate(Guarantee.class);
         final AgreementType at = agreementTypeRepository.find(GuaranteeAgreementTypeEnum.GUARANTEE);
         guarantee.setType(at);
         guarantee.setReference(reference);
@@ -113,7 +114,7 @@ public class GuaranteeRepository extends UdoDomainRepositoryAndFactory<Guarantee
             }
         }
 
-        persistIfNotAlready(guarantee);
+        repositoryService.persistAndFlush(guarantee);
         return guarantee;
     }
 
@@ -123,35 +124,41 @@ public class GuaranteeRepository extends UdoDomainRepositoryAndFactory<Guarantee
     public List<Guarantee> findGuarantees(
             final String refOrNameOrComments) {
         String pattern = StringUtils.wildcardToCaseInsensitiveRegex(refOrNameOrComments);
-        return allMatches("matchByReferenceOrNameOrComments", "referenceOrNameOrComments", pattern);
+        return repositoryService.allMatches(new QueryDefault<>(Guarantee.class,
+                "matchByReferenceOrNameOrComments", "referenceOrNameOrComments", pattern));
     }
 
     // //////////////////////////////////////
 
     @Programmatic
     public Guarantee findByReference(final String reference) {
-        return firstMatch("findByReference", "reference", reference);
+        List<Guarantee> list = repositoryService.allMatches(new QueryDefault<>(Guarantee.class,
+                "findByReference", "reference", reference));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     // //////////////////////////////////////
 
     @Programmatic
     public List<Guarantee> allGuarantees() {
-        return allInstances();
+        return repositoryService.allInstances(Guarantee.class);
     }
 
     // //////////////////////////////////////
 
     @Programmatic
     public List<Guarantee> findByLease(final Lease lease) {
-        return allMatches("findByLease", "lease", lease);
+        return repositoryService.allMatches(new QueryDefault<>(Guarantee.class,
+                "findByLease", "lease", lease));
     }
 
     // //////////////////////////////////////
 
     @Programmatic
     public Guarantee findbyFinancialAccount(FinancialAccount financialAccount) {
-        return firstMatch("findByFinancialAccount", "financialAccount", financialAccount);
+        List<Guarantee> list = repositoryService.allMatches(new QueryDefault<>(Guarantee.class,
+                "findByFinancialAccount", "financialAccount", financialAccount));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     // //////////////////////////////////////
