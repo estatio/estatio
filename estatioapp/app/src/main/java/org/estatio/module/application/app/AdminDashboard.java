@@ -53,6 +53,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.coda.EstatioCodaModule;
+import org.estatio.module.coda.app.codadochead.CodaDocHeadSyncService;
 import org.estatio.module.coda.dom.hwm.CodaHwm;
 import org.estatio.module.coda.dom.hwm.CodaHwmRepository;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
@@ -210,6 +211,7 @@ public class AdminDashboard implements ViewModel {
             final String cmpCode,
             final String docCode,
             final int docNum) {
+        codaDocHeadSyncService.retrieveCodaDoc(cmpCode, docCode, docNum);
         return this;
     }
     public List<String> choices0RetrieveCodaDoc() {
@@ -540,5 +542,8 @@ public class AdminDashboard implements ViewModel {
 
     @Inject
     FactoryService factoryService;
+
+    @Inject
+    CodaDocHeadSyncService codaDocHeadSyncService;
 
 }
