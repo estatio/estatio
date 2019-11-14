@@ -131,7 +131,7 @@ public class ApplicationSettingsServiceForEstatio extends UdoDomainRepositoryAnd
         setting.setDescription(description);
         setting.setValueRaw(valueRaw);
         setting.setType(settingType);
-        repositoryService.persist(setting);
+        repositoryService.persistAndFlush(setting);
         return setting;
     }
 

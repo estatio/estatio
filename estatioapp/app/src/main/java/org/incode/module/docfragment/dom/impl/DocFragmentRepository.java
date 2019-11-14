@@ -82,7 +82,7 @@ public class DocFragmentRepository {
     public DocFragment create(final String objectType, final String name, final String atPath, final String templateText) {
         final DocFragment object = new DocFragment(objectType, name, atPath, templateText);
         serviceRegistry.injectServicesInto(object);
-        repositoryService.persist(object);
+        repositoryService.persistAndFlush(object);
         return object;
     }
 

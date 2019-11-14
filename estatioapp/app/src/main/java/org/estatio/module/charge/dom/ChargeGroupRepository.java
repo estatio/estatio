@@ -50,7 +50,7 @@ public class ChargeGroupRepository extends UdoDomainRepositoryAndFactory<ChargeG
         final ChargeGroup chargeGroup = factoryService.instantiate(ChargeGroup.class);
         chargeGroup.setReference(reference);
         chargeGroup.setName(description != null ? description : reference);
-        repositoryService.persist(chargeGroup);
+        repositoryService.persistAndFlush(chargeGroup);
         return chargeGroup;
     }
 

@@ -49,7 +49,7 @@ public class LeaseTypeRepository extends UdoDomainRepositoryAndFactory<LeaseType
         leaseType.setReference(reference);
         leaseType.setName(name);
         leaseType.setApplicationTenancyPath(applicationTenancy.getPath());
-        repositoryService.persist(leaseType);
+        repositoryService.persistAndFlush(leaseType);
         return leaseType;
     }
 

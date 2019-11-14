@@ -59,7 +59,7 @@ public class UnitRepository extends UdoDomainRepositoryAndFactory<Unit> {
         unit.setName(name);
         unit.setType(type);
         unit.setProperty(property);
-        repositoryService.persist(unit);
+        repositoryService.persistAndFlush(unit);
         return unit;
     }
 

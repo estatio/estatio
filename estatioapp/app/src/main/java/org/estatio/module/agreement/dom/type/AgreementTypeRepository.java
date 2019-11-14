@@ -60,7 +60,7 @@ public class AgreementTypeRepository extends UdoDomainRepositoryAndFactory<Agree
         if (agreementType == null) {
             agreementType = factoryService.instantiate(AgreementType.class);
             agreementType.setTitle(title);
-            repositoryService.persist(agreementType);
+            repositoryService.persistAndFlush(agreementType);
         }
         return agreementType;
     }

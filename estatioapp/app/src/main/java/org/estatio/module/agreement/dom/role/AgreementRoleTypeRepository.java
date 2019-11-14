@@ -94,7 +94,7 @@ public class AgreementRoleTypeRepository extends UdoDomainRepositoryAndFactory<A
             agreementRoleType = getContainer().newTransientInstance(AgreementRoleType.class);
             agreementRoleType.setTitle(title);
             agreementRoleType.setAppliesTo(appliesTo);
-            getContainer().persist(agreementRoleType);
+            repositoryService.persistAndFlush(agreementRoleType);
         }
         return agreementRoleType;
     }

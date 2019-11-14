@@ -42,7 +42,7 @@ public class InvoiceGroupRepository extends UdoDomainRepositoryAndFactory<Invoic
     }
 
     public InvoiceGroup createInvoiceGroup(final String reference, final String name) {
-        return repositoryService.persist(new InvoiceGroup(reference, name));
+        return repositoryService.persistAndFlush(new InvoiceGroup(reference, name));
     }
 
     public Optional<InvoiceGroup> findByReference(final String reference) {

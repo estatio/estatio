@@ -20,7 +20,7 @@ public class StateRepository {
             final String name,
             final Country country) {
         final State state = new State(reference, name, country);
-        repositoryService.persist(state);
+        repositoryService.persistAndFlush(state);
         return state;
     }
 

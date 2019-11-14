@@ -107,7 +107,7 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
         lease.setTenancyStartDate(tenancyStartDate);
         lease.setTenancyEndDate(tenancyEndDate);
         lease.setLeaseType(leaseType);
-        repositoryService.persist(lease);
+        repositoryService.persistAndFlush(lease);
 
         if (tenant != null) {
             final AgreementRoleType artTenant = agreementRoleTypeRepository.find(LeaseAgreementRoleTypeEnum.TENANT);

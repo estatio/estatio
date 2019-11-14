@@ -52,7 +52,7 @@ public class TaxRateRepository extends UdoDomainRepositoryAndFactory<TaxRate> {
             rate.setTax(tax);
             rate.setStartDate(startDate);
             if(repositoryService.isPersistent(tax)) {
-                repositoryService.persist(rate);
+                repositoryService.persistAndFlush(rate);
             }
         } else {
             rate = currentRate;

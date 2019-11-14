@@ -56,7 +56,7 @@ public class AgreementRoleRepository extends UdoDomainRepositoryAndFactory<Agree
             final LocalDate startDate,
             final LocalDate endDate) {
         AgreementRole agreementRole = factoryService.instantiate(AgreementRole.class);
-        repositoryService.persist(agreementRole);
+        repositoryService.persistAndFlush(agreementRole);
         agreementRole.setStartDate(startDate);
         agreementRole.setEndDate(endDate);
         agreementRole.setType(type); // must do before associate with agreement,

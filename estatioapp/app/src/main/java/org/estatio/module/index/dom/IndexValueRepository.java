@@ -77,7 +77,7 @@ public class IndexValueRepository
         indexValue.setStartDate(startDate);
         indexValue.setIndexBase(indexBase);
         indexValue.setValue(value);
-        repositoryService.persist(indexValue);
+        repositoryService.persistAndFlush(indexValue);
         return indexValue;
     }
 

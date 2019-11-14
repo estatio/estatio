@@ -46,7 +46,7 @@ public class IndexBaseRepository
         indexBase.setStartDate(startDate);
         indexBase.setFactor(factor);
         indexBase.setIndex(index);
-        repositoryService.persist(indexBase);
+        repositoryService.persistAndFlush(indexBase);
         return indexBase;
     }
 

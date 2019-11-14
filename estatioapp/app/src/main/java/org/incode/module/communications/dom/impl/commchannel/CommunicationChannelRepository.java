@@ -58,7 +58,7 @@ public class CommunicationChannelRepository {
         pa.setState(state);
         pa.setCountry(country);
         pa.setOwner(owner);
-        repositoryService.persist(pa);
+        repositoryService.persistAndFlush(pa);
         return pa;
     }
 
@@ -73,7 +73,7 @@ public class CommunicationChannelRepository {
         ea.setType(type);
         ea.setEmailAddress(address);
         ea.setOwner(owner);
-        repositoryService.persist(ea);
+        repositoryService.persistAndFlush(ea);
         return ea;
     }
 
@@ -89,7 +89,7 @@ public class CommunicationChannelRepository {
         pn.setType(type);
         pn.setPhoneNumber(number);
         pn.setOwner(owner);
-        repositoryService.persist(pn);
+        repositoryService.persistAndFlush(pn);
         return pn;
     }
 

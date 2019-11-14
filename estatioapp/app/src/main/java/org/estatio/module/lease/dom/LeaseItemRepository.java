@@ -68,7 +68,7 @@ public class LeaseItemRepository extends UdoDomainRepositoryAndFactory<LeaseItem
         leaseItem.setStatus(LeaseItemStatus.ACTIVE);
         leaseItem.setSequence(nextSequence);
         leaseItem.setInvoicedBy(invoicedBy);
-        repositoryService.persist(leaseItem);
+        repositoryService.persistAndFlush(leaseItem);
         return leaseItem;
     }
 

@@ -73,7 +73,7 @@ public class BankMandateRepository extends UdoDomainRepositoryAndFactory<BankMan
         // app tenancy derived from the debtor
         mandate.setApplicationTenancyPath(debtor.getApplicationTenancy().getPath());
 
-        repositoryService.persist(mandate);
+        repositoryService.persistAndFlush(mandate);
 
         final AgreementRoleType artCreditor = agreementRoleTypeRepository
                 .find(BankMandateAgreementRoleTypeEnum.CREDITOR);
