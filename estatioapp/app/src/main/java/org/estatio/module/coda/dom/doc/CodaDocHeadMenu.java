@@ -5,10 +5,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.message.MessageService;
 
 import org.estatio.module.application.app.CodaCmpCodeService;
@@ -53,6 +55,15 @@ public class CodaDocHeadMenu {
         return codaDocCodeService.listAll().get(0);
     }
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(hidden = Where.EVERYWHERE)
+    public void retrieveCodaDoc(
+            final String cmpCode,
+            final String docCode,
+            final int docNum) {
+        // no-op, just for the interaction to be picked up by camel
+        // needs to live in a service other than of type DOMAIN in order for the wrapperFactory to find the method
+    }
 
     @Inject
     CodaDocHeadRepository codaDocHeadRepository;
