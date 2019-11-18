@@ -65,14 +65,12 @@ public class DocFlowZipService {
                 xmlFatturaElettronica.getName(), xmlFatturaElettronica,
                 null, docFlowZip);
 
-
-        // TODO: what should the name be of this?
-        //  how do we match to it from CodaDocHead/IncomingInvoice
         final DocumentType docTypeIncomingInvoice =
                 DocumentTypeData.INCOMING_INVOICE.findUsing(documentTypeRepository);
+        final String documentNameToUseForDerived = "S".concat(String.valueOf(sdId)).concat(".pdf"); //ECP-1101: we give the filename the sdId (prefixed by S) in order to be recognized in the title on an italian incoming invoice
         documentService.createAndAttachDocumentForBlob(
                 docTypeIncomingInvoice, atPath,
-                pdfFatturaElettronica.getName(), pdfFatturaElettronica,
+                documentNameToUseForDerived, pdfFatturaElettronica,
                 PAPERCLIP_ROLE_NAME_GENERATED, docFlowZip);
 
         if(p7mFatturaElettronicaIfAny != null) {

@@ -15,9 +15,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.title.TitleService;
-import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.document.dom.impl.docs.Document;
@@ -600,13 +598,7 @@ public class DerivedObjectUpdater {
 
     @Inject
     StateTransitionService stateTransitionService;
-
-    @Inject
-    WrapperFactory wrapperFactory;
-
-    @Inject
-    FactoryService factoryService;
-
+    
     @Inject
     DerivedObjectLookup derivedObjectLookup;
 }
