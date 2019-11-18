@@ -9,6 +9,7 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.message.MessageService;
@@ -55,7 +56,7 @@ public class CodaDocHeadMenu {
         return codaDocCodeService.listAll().get(0);
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT, publishing = Publishing.ENABLED)
     @ActionLayout(hidden = Where.EVERYWHERE)
     public void retrieveCodaDoc(
             final String cmpCode,
