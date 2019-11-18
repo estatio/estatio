@@ -25,6 +25,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -207,7 +208,7 @@ public class AdminDashboard implements ViewModel {
         return this;
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT, publishing = Publishing.DISABLED)
     public AdminDashboard retrieveCodaDoc(
             final String cmpCode,
             final String docCode,
