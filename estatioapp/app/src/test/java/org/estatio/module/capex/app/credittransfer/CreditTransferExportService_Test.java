@@ -1,11 +1,12 @@
 package org.estatio.module.capex.app.credittransfer;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
-import org.joda.time.LocalDateTime;
+import org.joda.time.LocalDate;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -13,8 +14,6 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
-import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
-import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.payment.CreditTransfer;
 import org.estatio.module.capex.dom.payment.PaymentLine;
 
@@ -108,26 +107,17 @@ public class CreditTransferExportService_Test {
 
     }
 
-    @Mock
-    IncomingInvoiceApprovalStateTransition.Repository mockStateTransitionRepo;
-
     @Test
     public void getApprovalStateTransitionSummary_works() throws Exception {
 
         // given
         CreditTransferExportService service = new CreditTransferExportService();
-        IncomingInvoice invoice = new IncomingInvoice();
-        invoice.stateTransitionRepository = mockStateTransitionRepo;
-        IncomingInvoiceApprovalStateTransition transition1 = new IncomingInvoiceApprovalStateTransition();
-        transition1.setCompletedBy("some manager");
-        transition1.setCompletedOn(LocalDateTime.parse("2017-01-01"));
-        transition1.setToState(IncomingInvoiceApprovalState.APPROVED);
-
-        // expect
-        context.checking(new Expectations(){{
-            oneOf(mockStateTransitionRepo).findByDomainObject(invoice);
-            will(returnValue(Arrays.asList(transition1)));
-        }});
+        IncomingInvoice invoice = new IncomingInvoice(){
+            @Override
+            public List<ApprovalString> getApprovals() {
+                return Arrays.asList(new ApprovalString("some manager", "2017-01-01", LocalDate.parse("2017-01-01")));
+            }
+        };
 
         // when
         String result = service.getApprovalStateTransitionSummary(invoice);

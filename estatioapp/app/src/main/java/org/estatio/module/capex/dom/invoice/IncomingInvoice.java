@@ -2271,7 +2271,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return queryResultsCache.execute(this::doGetApprovals, getClass(), "getApprovals");
     }
 
-    private List<ApprovalString> doGetApprovals() {
+    List<ApprovalString> doGetApprovals() {
         // TODO: as of EST-1824 temporarily we will inspect the transition instead of the task on the transition
         return stateTransitionRepository.findByDomainObject(this)
                 .stream()

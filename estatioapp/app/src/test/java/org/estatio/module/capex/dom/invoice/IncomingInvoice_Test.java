@@ -932,7 +932,13 @@ public class IncomingInvoice_Test {
         public void get_approvals_works() throws Exception {
 
             // given
-            IncomingInvoice invoice = new IncomingInvoice();
+            IncomingInvoice invoice = new IncomingInvoice(){
+                @Override
+                public List<ApprovalString> getApprovals() {
+                    // delegates to underlying method now that we use org.apache.isis.applib.services.queryresultscache.QueryResultsCache
+                    return doGetApprovals();
+                }
+            };
             invoice.stateTransitionRepository = mockStateTransitionRepository;
 
             IncomingInvoiceApprovalStateTransition tr1 = new IncomingInvoiceApprovalStateTransition();
