@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.isis.applib.RecoverableException;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -40,7 +41,7 @@ public class NumeratorRepository extends UdoDomainRepositoryAndFactory<Numerator
     }
 
     public List<Numerator> allNumerators() {
-        return allInstances();
+        return repositoryService.allInstances(Numerator.class);
     }
 
     public Numerator find(
@@ -62,18 +63,20 @@ public class NumeratorRepository extends UdoDomainRepositoryAndFactory<Numerator
     }
 
     private Numerator findByName(final String name) {
-        return firstMatch(
+        List<Numerator> list = repositoryService.allMatches(new QueryDefault<>(Numerator.class,
                 "findByName",
-                "name", name);
+                "name", name));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     private Numerator findByNameAndCountry(
             final String name,
             final Country country) {
-        return firstMatch(
+        List<Numerator> list = repositoryService.allMatches(new QueryDefault<>(Numerator.class,
                 "findByNameAndCountry",
                 "name", name,
-                "country", country);
+                "country", country));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     private Numerator findByNameAndCountryAndObject(
@@ -85,11 +88,12 @@ public class NumeratorRepository extends UdoDomainRepositoryAndFactory<Numerator
         final String objectType = bookmark.getObjectType();
         final String objectIdentifier = bookmark.getIdentifier();
 
-        return firstMatch("findByNameAndCountryAndObject",
-                "name", name,
+        List<Numerator> list = repositoryService.allMatches(new QueryDefault<>(Numerator.class,
+                "findByNameAndCountryAndObject", "name", name,
                 "country", country,
                 "objectType", objectType,
-                "objectIdentifier", objectIdentifier);
+                "objectIdentifier", objectIdentifier));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     private Numerator findByNameAndCountryAndObjectAndObject2(
@@ -106,13 +110,14 @@ public class NumeratorRepository extends UdoDomainRepositoryAndFactory<Numerator
         final String objectType2 = bookmark2.getObjectType();
         final String objectIdentifier2 = bookmark2.getIdentifier();
 
-        return firstMatch("findByNameAndCountryAndObjectAndObject2",
-                "name", name,
+        List<Numerator> list = repositoryService.allMatches(new QueryDefault<>(Numerator.class,
+                "findByNameAndCountryAndObjectAndObject2", "name", name,
                 "country", country,
                 "objectType", objectType,
                 "objectIdentifier", objectIdentifier,
                 "objectType2", objectType2,
-                "objectIdentifier2", objectIdentifier2);
+                "objectIdentifier2", objectIdentifier2));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     public Numerator findOrCreate(
@@ -160,7 +165,7 @@ public class NumeratorRepository extends UdoDomainRepositoryAndFactory<Numerator
             numerator.setObjectIdentifier2(bookmark2.getIdentifier());
         }
 
-        return persist(numerator);
+        return repositoryService.persistAndFlush(numerator);
     }
 
 

@@ -19,9 +19,11 @@
 package org.estatio.module.tax.dom;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -68,7 +70,9 @@ public class TaxRateRepository extends UdoDomainRepositoryAndFactory<TaxRate> {
 
     @Programmatic
     public TaxRate findTaxRateByTaxAndDate(final Tax tax, final LocalDate date) {
-        return firstMatch("findByTaxAndDate", "tax", tax, "date", date);
+        List<TaxRate> list = repositoryService.allMatches(new QueryDefault<>(TaxRate.class,
+                "findByTaxAndDate", "tax", tax, "date", date));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Inject

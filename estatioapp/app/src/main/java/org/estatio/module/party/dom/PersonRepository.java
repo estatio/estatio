@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.user.ApplicationUser;
@@ -83,11 +84,11 @@ public class PersonRepository extends UdoDomainRepositoryAndFactory<Person> {
             final String lastName,
             final PersonGenderType gender,
             final String atPath) {
-        final Person person = newTransientInstance(Person.class);
+        final Person person = factoryService.instantiate(Person.class);
         person.setApplicationTenancyPath(atPath);
         person.setReference(reference);
         person.change(gender, initials, firstName, lastName);
-        persist(person);
+        repositoryService.persistAndFlush(person);
         return person;
     }
 
@@ -95,23 +96,25 @@ public class PersonRepository extends UdoDomainRepositoryAndFactory<Person> {
 
     @Programmatic
     public Person findByUsername(final String username) {
-        return firstMatch("findByUsername", "username", username);
+        List<Person> list = repositoryService.allMatches(new QueryDefault<>(Person.class,
+                "findByUsername", "username", username));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Programmatic
     public List<Person> findWithUsername() {
-        return allMatches("findWithUsername");
+        return repositoryService.allMatches(new QueryDefault<>(Person.class,"findWithUsername"));
     }
 
 
     @Programmatic
     public List<Person> allPersons() {
-        return allInstances();
+        return repositoryService.allInstances(Person.class);
     }
 
     @Programmatic
     public List<Person> allPersonsWithUsername() {
-        return allInstances();
+        return repositoryService.allInstances(Person.class);
     }
 
     @Programmatic
