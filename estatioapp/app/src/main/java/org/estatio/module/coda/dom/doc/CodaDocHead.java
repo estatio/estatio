@@ -353,6 +353,14 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     @Getter @Setter
     private IncomingInvoice incomingInvoice;
 
+    /**
+     * Derived persisted property in order to speed up homepage rendering.
+     */
+    @Column(allowsNull = "true")
+    @PropertyLayout(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private Character userStatus;
+
     @javax.jdo.annotations.Persistent(
             mappedBy = "docHead", defaultFetchGroup = "false", dependentElement = "true"
     )
@@ -873,16 +881,16 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         return getSummaryLinePaymentMethod(LineCache.DEFAULT);
     }
 
-    @NotPersistent
-    @Property(notPersisted = true)
-    @PropertyLayout(hidden = Where.OBJECT_FORMS)
-    public Character getUserStatus() {
-        final LineCache lineCache = (LineCache) scratchpad.get(LineCache.class);
-        if (lineCache == null) {
-            return null;
-        }
-        return getSummaryLineUserStatus(lineCache);
-    }
+//    @NotPersistent
+//    @Property(notPersisted = true)
+//    @PropertyLayout(hidden = Where.OBJECT_FORMS)
+//    public Character getUserStatus() {
+//        final LineCache lineCache = (LineCache) scratchpad.get(LineCache.class);
+//        if (lineCache == null) {
+//            return null;
+//        }
+//        return getSummaryLineUserStatus(lineCache);
+//    }
 
     @Programmatic
     public String getSummaryLineAccountCode(final LineCache lineCache) {
@@ -936,12 +944,6 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     public BankAccount getSummaryLineSupplierBankAccount(final LineCache lineCache) {
         final CodaDocLine docLine = summaryDocLine(lineCache);
         return docLine != null ? docLine.getSupplierBankAccount() : null;
-    }
-
-    @Programmatic
-    public Character getSummaryLineUserStatus(final LineCache lineCache) {
-        final CodaDocLine docLine = summaryDocLine(lineCache);
-        return docLine != null ? docLine.getUserStatus() : null;
     }
 
     @Programmatic
@@ -1087,6 +1089,12 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         return Optional.ofNullable(line)
                        .map(CodaDocLine::getIncomingInvoiceType)
                        .orElse(null);
+    }
+
+    @Programmatic
+    public void updateDerivedUserStatus() {
+        final CodaDocLine docLine = summaryDocLine(LineCache.DEFAULT);
+        setUserStatus(docLine != null ? docLine.getUserStatus() : null);
     }
 
     @Data

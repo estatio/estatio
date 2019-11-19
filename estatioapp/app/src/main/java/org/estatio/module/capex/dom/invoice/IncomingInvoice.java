@@ -58,7 +58,6 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.document.dom.impl.docs.Document;
-import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
@@ -2374,7 +2373,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Column(allowsNull = "true")
     @PropertyLayout(hidden = Where.OBJECT_FORMS)
     private String barcode;
-    
+
     //region > notification
 
     @org.apache.isis.applib.annotation.Property(editing = Editing.DISABLED)

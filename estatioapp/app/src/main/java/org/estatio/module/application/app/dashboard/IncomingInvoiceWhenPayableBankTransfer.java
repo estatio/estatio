@@ -44,8 +44,7 @@ public class IncomingInvoiceWhenPayableBankTransfer {
     public IncomingInvoiceWhenPayableBankTransfer(final IncomingInvoice incomingInvoice, final CodaDocHead codaDocHead) {
         this.codaDocHead = codaDocHead;
         this.incomingInvoice = incomingInvoice;
-
-        this.userStatus = 'X';  // TODO: hacking this for now .... codaDocHead.getSummaryLineUserStatus(LineCache.DEFAULT);
+        this.userStatus = codaDocHead.getUserStatus();
     }
 
     @org.apache.isis.applib.annotation.Property(projecting = PROJECTED)
