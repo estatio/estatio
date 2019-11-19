@@ -2,6 +2,7 @@ package org.estatio.module.numerator.dom;
 
 import java.math.BigInteger;
 
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
@@ -28,6 +29,9 @@ public class NumeratorRepository_create_Test {
     @Mock
     BookmarkService mockBookmarkService;
 
+    @Mock
+    RepositoryService mockRepositoryService;
+
     Country stubCountry = new Country();
 
     ApplicationTenancy stubApplicationTenancy = new ApplicationTenancy() {{
@@ -48,6 +52,7 @@ public class NumeratorRepository_create_Test {
             }
         };
 
+        numeratorRepository.repositoryService = mockRepositoryService;
         numeratorRepository.bookmarkService = mockBookmarkService;
         object1 = new Object();
         object2 = new Object();
@@ -56,9 +61,13 @@ public class NumeratorRepository_create_Test {
     @Test
     public void when_null_country() throws Exception {
 
+        Numerator numeratorTest = new Numerator("ABC", null, stubApplicationTenancy.getPath(), FORMAT, BigInteger.ZERO);
+
         // expecting
         context.checking(new Expectations() {{
             never(mockBookmarkService);
+            oneOf(mockRepositoryService).persistAndFlush(with(any(Numerator.class)));
+            will(returnValue(numeratorTest));
         }});
 
         // when
@@ -75,9 +84,13 @@ public class NumeratorRepository_create_Test {
     @Test
     public void when_null_objects() throws Exception {
 
+        Numerator numeratorTest = new Numerator("ABC", stubCountry, stubApplicationTenancy.getPath(), FORMAT, BigInteger.ZERO);
+
         // expecting
         context.checking(new Expectations() {{
             never(mockBookmarkService);
+            oneOf(mockRepositoryService).persistAndFlush(with(any(Numerator.class)));
+            will(returnValue(numeratorTest));
         }});
 
         // when
@@ -96,10 +109,16 @@ public class NumeratorRepository_create_Test {
     @Test
     public void when_non_null_object1() throws Exception {
 
+        Numerator numeratorTest = new Numerator("ABC", stubCountry, stubApplicationTenancy.getPath(), FORMAT, BigInteger.ZERO);
+        numeratorTest.setObjectType("PROP");
+        numeratorTest.setObjectIdentifier("123");
+
         // expecting
         context.checking(new Expectations() {{
             allowing(mockBookmarkService).bookmarkFor(object1);
             will(returnValue(new Bookmark("PROP", "123")));
+            oneOf(mockRepositoryService).persistAndFlush(with(any(Numerator.class)));
+            will(returnValue(numeratorTest));
         }});
 
 
@@ -117,6 +136,12 @@ public class NumeratorRepository_create_Test {
     @Test
     public void when_non_null_object1_and_non_null_object2() throws Exception {
 
+        Numerator numeratorTest = new Numerator("ABC", stubCountry, stubApplicationTenancy.getPath(), FORMAT, BigInteger.ZERO);
+        numeratorTest.setObjectType("PROP");
+        numeratorTest.setObjectIdentifier("123");
+        numeratorTest.setObjectType2("ORG");
+        numeratorTest.setObjectIdentifier2("456");
+
         // expecting
         context.checking(new Expectations() {{
             allowing(mockBookmarkService).bookmarkFor(object1);
@@ -124,6 +149,9 @@ public class NumeratorRepository_create_Test {
 
             allowing(mockBookmarkService).bookmarkFor(object2);
             will(returnValue(new Bookmark("ORG", "456")));
+
+            oneOf(mockRepositoryService).persistAndFlush(with(any(Numerator.class)));
+            will(returnValue(numeratorTest));
         }});
 
         // when
