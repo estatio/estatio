@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(menuOrder = "99", repositoryFor = Activity.class, nature = NatureOfService.DOMAIN)
@@ -45,7 +46,8 @@ public class ActivityRepository extends UdoDomainRepositoryAndFactory<Activity> 
         if(sector == null) {
             return Collections.emptyList();
         }
-        final Query query = newQuery("SELECT name FROM org.estatio.module.lease.dom.occupancy.tags.Activity WHERE sector == :sector");
+        final Query query = isisJdoSupport.getJdoPersistenceManager().newQuery(
+                "SELECT name FROM org.estatio.module.lease.dom.occupancy.tags.Activity WHERE sector == :sector");
         return (List<String>) query.executeWithMap(ImmutableMap.of("sector", sector));
     }
 
@@ -53,7 +55,8 @@ public class ActivityRepository extends UdoDomainRepositoryAndFactory<Activity> 
         if(sector == null) {
             return Collections.emptyList();
         }
-        final Query query = newQuery("SELECT FROM org.estatio.module.lease.dom.occupancy.tags.Activity WHERE sector == :sector");
+        final Query query = isisJdoSupport.getJdoPersistenceManager().newQuery(
+                "SELECT FROM org.estatio.module.lease.dom.occupancy.tags.Activity WHERE sector == :sector");
         return (List<Activity>) query.executeWithMap(ImmutableMap.of("sector", sector));
     }
 
@@ -77,5 +80,7 @@ public class ActivityRepository extends UdoDomainRepositoryAndFactory<Activity> 
         return activity;
     }
 
-    
+    @javax.inject.Inject
+    IsisJdoSupport isisJdoSupport;
+
 }

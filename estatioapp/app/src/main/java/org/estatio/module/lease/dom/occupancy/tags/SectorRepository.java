@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(menuOrder = "99", repositoryFor = Sector.class, nature = NatureOfService.DOMAIN)
@@ -38,7 +39,7 @@ public class SectorRepository extends UdoDomainRepositoryAndFactory<Sector> {
 
     public List<String> findUniqueNames() {
 
-        final Query query = newQuery("SELECT name FROM " + getEntityType().getName());
+        final Query query = isisJdoSupport.getJdoPersistenceManager().newQuery("SELECT name FROM " + getEntityType().getName());
         return (List<String>) query.execute();
     }
 
@@ -58,5 +59,8 @@ public class SectorRepository extends UdoDomainRepositoryAndFactory<Sector> {
         }
         return sector;
     }
+
+    @javax.inject.Inject
+    IsisJdoSupport isisJdoSupport;
 
 }
