@@ -19,10 +19,7 @@ import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
-
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.capex.dom.state.StateTransitionService;
@@ -492,10 +489,6 @@ public class IncomingInvoiceRepository {
 
     @Inject
     StateTransitionService stateTransitionService;
-    @Inject
-    IncomingDocumentRepository incomingDocumentRepository;
-    @Inject
-    PaperclipRepository paperclipRepository;
     @Inject
     RepositoryService repositoryService;
     @Inject

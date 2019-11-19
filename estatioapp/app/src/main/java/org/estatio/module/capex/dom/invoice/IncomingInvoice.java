@@ -2373,15 +2373,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Getter @Setter
     @Column(allowsNull = "true")
     @PropertyLayout(hidden = Where.OBJECT_FORMS)
-    public String barcode;
-
-
-    @PropertyLayout(hidden = Where.EVERYWHERE)
-    public String getBarcodeOld() {
-        final Optional<Document> document = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(this);
-        return document.map(DocumentAbstract::getName).orElse(null);
-    }
-
+    private String barcode;
+    
     //region > notification
 
     @org.apache.isis.applib.annotation.Property(editing = Editing.DISABLED)
