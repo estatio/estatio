@@ -54,7 +54,7 @@ public class SectorRepository extends UdoDomainRepositoryAndFactory<Sector> {
         }
         Sector sector = findByName(name);
         if (sector == null) {
-            sector = newTransientInstance(Sector.class);
+            sector = factoryService.instantiate(Sector.class);
             sector.setName(name);
         }
         return sector;

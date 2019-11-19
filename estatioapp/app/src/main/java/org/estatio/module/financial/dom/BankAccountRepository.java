@@ -51,7 +51,7 @@ public class BankAccountRepository extends UdoDomainRepositoryAndFactory<BankAcc
             final Party owner,
             final String iban,
             final String bic) {
-        final BankAccount bankAccount = newTransientInstance(BankAccount.class);
+        final BankAccount bankAccount = factoryService.instantiate(BankAccount.class);
         bankAccount.setOwner(owner);
         bankAccount.setReference(iban);
         bankAccount.setName(iban);

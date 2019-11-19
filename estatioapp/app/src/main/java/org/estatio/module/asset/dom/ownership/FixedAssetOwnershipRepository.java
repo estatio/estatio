@@ -38,7 +38,7 @@ public class FixedAssetOwnershipRepository extends UdoDomainRepositoryAndFactory
             final Party newOwner,
             final OwnershipType type,
             final FixedAsset fixedAsset) {
-        FixedAssetOwnership fixedAssetOwnership = newTransientInstance(FixedAssetOwnership.class);
+        FixedAssetOwnership fixedAssetOwnership = factoryService.instantiate(FixedAssetOwnership.class);
         fixedAssetOwnership.setOwner(newOwner);
         fixedAssetOwnership.setOwnershipType(type);
         persistIfNotAlready(fixedAssetOwnership);

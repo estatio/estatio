@@ -20,6 +20,7 @@ package org.estatio.module.settings.dom;
 
 import java.util.List;
 
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractService;
@@ -30,6 +31,8 @@ import org.estatio.module.settings.dom.SettingAbstract;
 import org.estatio.module.settings.dom.SettingType;
 import org.estatio.module.settings.dom.UserSetting;
 import org.estatio.module.settings.dom.UserSettingsServiceRW;
+
+import javax.inject.Inject;
 
 /**
  * An implementation of {@link org.estatio.module.settings.dom.UserSettingsService} that
@@ -130,7 +133,7 @@ public class UserSettingsServiceForEstatio extends AbstractService implements Us
     private UserSettingForEstatio newSetting(
             final String user, final String key, final String description, 
             final SettingType settingType, final String valueRaw) {
-        final UserSettingForEstatio setting = newTransientInstance(UserSettingForEstatio.class);
+        final UserSettingForEstatio setting = factoryService.instantiate(UserSettingForEstatio.class);
         setting.setUser(user);
         setting.setKey(key);
         setting.setType(settingType);
@@ -139,5 +142,8 @@ public class UserSettingsServiceForEstatio extends AbstractService implements Us
         persist(setting);
         return setting;
     }
+
+    @Inject
+    private FactoryService factoryService;
 
 }

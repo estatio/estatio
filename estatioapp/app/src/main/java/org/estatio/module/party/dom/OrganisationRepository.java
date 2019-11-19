@@ -87,7 +87,7 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
             final String chamberOfCommerceCode,
             final ApplicationTenancy applicationTenancy) {
 
-        final Organisation organisation = newTransientInstance(Organisation.class);
+        final Organisation organisation = factoryService.instantiate(Organisation.class);
         organisation.setApplicationTenancyPath(applicationTenancy.getPath());
 
         String refToUse = reference;

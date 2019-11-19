@@ -47,7 +47,7 @@ public class UnitSizeMenu extends UdoDomainRepositoryAndFactory<UnitSize> {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public UnitSize newUnitSize(final String unitSizeName) {
-        UnitSize unitSize = newTransientInstance(UnitSize.class);
+        UnitSize unitSize = factoryService.instantiate(UnitSize.class);
         unitSize.setName(unitSizeName);
         persist(unitSize);
         return unitSize;

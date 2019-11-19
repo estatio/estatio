@@ -31,6 +31,7 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -270,7 +271,7 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
     @Programmatic
     public FixedAssetRole createRole(
             final FixedAssetRoleTypeEnum type, final Party party, final LocalDate startDate, final LocalDate endDate) {
-        final FixedAssetRole role = newTransientInstance(FixedAssetRole.class);
+        final FixedAssetRole role = factoryService.instantiate(FixedAssetRole.class);
         role.setStartDate(startDate);
         role.setEndDate(endDate);
         role.setType(type); // must do before associate with agreement, since
@@ -286,6 +287,9 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
 
         return role;
     }
+
+    @Inject
+    private FactoryService factoryService;
 
     @Inject
     FixedAssetOwnershipRepository fixedAssetOwnershipRepository;

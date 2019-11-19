@@ -55,7 +55,7 @@ public class EventRepository extends UdoDomainRepositoryAndFactory<Event> {
 
     @Programmatic
     public Event newEvent(final LocalDate date, final EventSource eventSource, final String calendarName) {
-        final Event event = newTransientInstance(Event.class);
+        final Event event = factoryService.instantiate(Event.class);
         event.setDate(date);
         event.setCalendarName(calendarName);
         event.setSource(eventSource);

@@ -38,7 +38,7 @@ public class OrganisationPreviousNameRepository extends UdoDomainRepositoryAndFa
     public OrganisationPreviousName newOrganisationPreviousName(
             final String name,
             final LocalDate endDate) {
-        OrganisationPreviousName organisationPreviousName = newTransientInstance(OrganisationPreviousName.class);
+        OrganisationPreviousName organisationPreviousName = factoryService.instantiate(OrganisationPreviousName.class);
         organisationPreviousName.setName(name);
         organisationPreviousName.setEndDate(endDate);
         persistIfNotAlready(organisationPreviousName);

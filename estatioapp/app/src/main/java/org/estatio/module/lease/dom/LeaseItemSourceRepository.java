@@ -20,7 +20,7 @@ public class LeaseItemSourceRepository extends UdoDomainRepositoryAndFactory<Lea
     }
 
     public LeaseItemSource newSource(final LeaseItem item, final LeaseItem sourceItem){
-        final LeaseItemSource leaseItemSource = newTransientInstance(LeaseItemSource.class);
+        final LeaseItemSource leaseItemSource = factoryService.instantiate(LeaseItemSource.class);
         leaseItemSource.setItem(item);
         leaseItemSource.setSourceItem(sourceItem);
         persist(leaseItemSource);

@@ -58,7 +58,7 @@ public class UnitSizeRepository extends UdoDomainRepositoryAndFactory<UnitSize> 
         }
         UnitSize unitSize = findByName(name);
         if (unitSize == null) {
-            unitSize = newTransientInstance(UnitSize.class);
+            unitSize = factoryService.instantiate(UnitSize.class);
             unitSize.setName(name);
         }
         return unitSize;

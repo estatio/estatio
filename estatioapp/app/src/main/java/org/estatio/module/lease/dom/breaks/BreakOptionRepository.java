@@ -53,7 +53,7 @@ public class BreakOptionRepository extends UdoDomainRepositoryAndFactory<BreakOp
             final BreakExerciseType breakExerciseType,
             final @Parameter(optionality = Optionality.OPTIONAL) String description
     ) {
-        final BreakOption breakOption = newTransientInstance(breakType.getFactoryClass());
+        final BreakOption breakOption = factoryService.instantiate(breakType.getFactoryClass());
         breakOption.setType(breakType);
         breakOption.setLease(lease);
         breakOption.setExerciseType(breakExerciseType);

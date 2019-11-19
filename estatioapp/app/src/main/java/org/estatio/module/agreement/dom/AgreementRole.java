@@ -35,6 +35,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -421,7 +422,7 @@ public class AgreementRole
             final CommunicationChannel cc,
             final LocalDate startDate,
             final LocalDate endDate) {
-        final AgreementRoleCommunicationChannel arcc = newTransientInstance(AgreementRoleCommunicationChannel.class);
+        final AgreementRoleCommunicationChannel arcc = factoryService.instantiate(AgreementRoleCommunicationChannel.class);
         arcc.setType(type);
         arcc.setStartDate(startDate);
         arcc.setEndDate(endDate);
@@ -568,6 +569,9 @@ public class AgreementRole
 
     @Inject
     private AgreementRoleCommunicationChannelRepository agreementRoleCommunicationChannelRepository;
+
+    @Inject
+    private FactoryService factoryService;
 
     @Inject
     TitleService titleService;

@@ -66,7 +66,7 @@ public class CodaElementRepository extends UdoDomainRepositoryAndFactory<CodaEle
             final CodaElementLevel level,
             final String code,
             final String name) {
-        final CodaElement instance = newTransientInstance(CodaElement.class);
+        final CodaElement instance = factoryService.instantiate(CodaElement.class);
         instance.setCode(code);
         instance.setLevel(level);
         instance.setName(name);
