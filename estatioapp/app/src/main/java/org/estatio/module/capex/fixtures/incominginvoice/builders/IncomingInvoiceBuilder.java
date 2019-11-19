@@ -189,7 +189,7 @@ public class IncomingInvoiceBuilder extends BuilderScriptAbstract<IncomingInvoic
 
         final String documentName = document.getName();
 
-        IncomingInvoice invoice = incomingInvoiceRepository.findIncomingInvoiceByDocumentName(documentName).get(0);
+        IncomingInvoice invoice = incomingInvoiceRepository.matchIncomingInvoiceByBarcode(documentName).get(0);
         invoice.setDateReceived(dateReceived);
         invoice.setSeller(seller);
         invoice.setBankAccount(sellerBankAccount);

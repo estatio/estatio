@@ -102,7 +102,7 @@ public class IncomingInvoiceMenu {
                 return this;
 
             // the query itself already matches on substrings, so user wildcards act as a 'placebo' and are removed
-            List<IncomingInvoice> resultsForBarcode = incomingInvoiceRepository.findIncomingInvoiceByDocumentName(barcode.replace("*", ""));
+            List<IncomingInvoice> resultsForBarcode = incomingInvoiceRepository.matchIncomingInvoiceByBarcode(barcode.replace("*", ""));
             if (!this.result.isEmpty()) {
                 filterByDocumentNameResults(resultsForBarcode);
             } else {

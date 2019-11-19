@@ -9,6 +9,7 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.util.DocumentNameUtil;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -29,13 +30,10 @@ public class IncomingInvoiceAttachPaperclipSubscriber extends AbstractSubscriber
             final Paperclip paperclip = ev.getSource();
             if (paperclip.getAttachedTo().getClass().isAssignableFrom(IncomingInvoice.class)){
                 IncomingInvoice invoice = (IncomingInvoice) paperclip.getAttachedTo();
-                final String barcode = deriveBarcodeFromDocumentName(paperclip.getDocument().getName());
+                final String barcode = DocumentNameUtil.stripPdfSuffixFromDocumentName(paperclip.getDocument().getName());
                 invoice.setBarcode(barcode);
             }
         }
     }
 
-    String deriveBarcodeFromDocumentName(final String documentName){
-        return documentName.replaceAll("(?i)\\.pdf", "");
-    }
 }

@@ -13,7 +13,6 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.estatio.module.capex.app.IncomingInvoiceMenu;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceRepository;
@@ -45,7 +44,7 @@ public class IncomingInvoiceMenu_Test {
 
         // expect
         context.checking(new Expectations() {{
-            oneOf(mockIncomingInvoiceRepository).findIncomingInvoiceByDocumentName("123");
+            oneOf(mockIncomingInvoiceRepository).matchIncomingInvoiceByBarcode("123");
         }});
 
         // when
@@ -66,7 +65,7 @@ public class IncomingInvoiceMenu_Test {
 
         // expect
         context.checking(new Expectations() {{
-            oneOf(mockIncomingInvoiceRepository).findIncomingInvoiceByDocumentName("123");
+            oneOf(mockIncomingInvoiceRepository).matchIncomingInvoiceByBarcode("123");
             will(returnValue(Arrays.asList(invoice1)));
         }});
 

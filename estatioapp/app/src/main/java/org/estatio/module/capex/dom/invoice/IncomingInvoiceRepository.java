@@ -1,6 +1,5 @@
 package org.estatio.module.capex.dom.invoice;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,8 +18,7 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
-import org.incode.module.document.dom.impl.docs.Document;
-import org.incode.module.document.dom.impl.paperclips.Paperclip;
+
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.module.asset.dom.Property;
@@ -29,6 +27,7 @@ import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStat
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.util.CountryUtil;
+import org.estatio.module.capex.dom.util.DocumentNameUtil;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.dom.CurrencyRepository;
 import org.estatio.module.financial.dom.BankAccount;
@@ -321,6 +320,15 @@ public class IncomingInvoiceRepository {
     }
 
     @Programmatic
+    public List<IncomingInvoice> matchIncomingInvoiceByBarcode(final String searchPhrase) {
+        String barcodePart = DocumentNameUtil.stripPdfSuffixFromDocumentName(searchPhrase);
+        final QIncomingInvoice q = QIncomingInvoice.candidate();
+        return isisJdoSupport.executeQuery(IncomingInvoice.class,
+                q.barcode.toLowerCase().indexOf(barcodePart.toLowerCase()).gt(-1)
+        );
+    }
+
+    @Programmatic
     public List<IncomingInvoice> findTemplatesForSeller(final Party seller) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
@@ -387,8 +395,8 @@ public class IncomingInvoiceRepository {
 
         return invoice;
     }
-
     // Note: this method uses a first match on invoicenumber, seller and invoicedate
+
     // which in practice can be assumed to be unique, though technically is not
     @Programmatic
     public IncomingInvoice upsert(
@@ -480,23 +488,6 @@ public class IncomingInvoiceRepository {
     @Programmatic
     public void delete(final IncomingInvoice incomingInvoice) {
         repositoryService.removeAndFlush(incomingInvoice);
-    }
-
-    @Programmatic
-    public List<IncomingInvoice> findIncomingInvoiceByDocumentName(final String name) {
-        List<IncomingInvoice> result = new ArrayList<>();
-        for (Document doc : incomingDocumentRepository.matchAllIncomingDocumentsByName(name)) {
-            for (Paperclip paperclip : paperclipRepository.findByDocument(doc)) {
-                if (paperclip.getAttachedTo().getClass().isAssignableFrom(IncomingInvoice.class)) {
-                    final IncomingInvoice attachedTo = (IncomingInvoice) paperclip.getAttachedTo();
-                    // check presence because there may be multiple scans attached to the same invoice
-                    if (!result.contains(attachedTo)) {
-                        result.add(attachedTo);
-                    }
-                }
-            }
-        }
-        return result;
     }
 
     @Inject
