@@ -24,6 +24,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.invoice.dom.Invoice;
 
@@ -45,8 +46,8 @@ public class InvoiceAttributeRepository extends UdoDomainRepositoryAndFactory<In
     public InvoiceAttribute findByInvoiceAndName(
             final Invoice invoice,
             final InvoiceAttributeName name) {
-        return uniqueMatch("findByInvoiceAndName",
-                "invoice", invoice, "name", name);
+        return repositoryService.uniqueMatch(new QueryDefault<>(InvoiceAttribute.class,"findByInvoiceAndName",
+                "invoice", invoice, "name", name));
     }
 
     @Programmatic

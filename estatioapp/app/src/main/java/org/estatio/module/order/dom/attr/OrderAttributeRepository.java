@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.estatio.module.base.dom.CurrencyUtil;
@@ -51,9 +52,9 @@ public class OrderAttributeRepository extends UdoDomainRepositoryAndFactory<Orde
     public OrderAttribute findByOrderAndName(
             final Order order,
             final OrderAttributeName name) {
-        return uniqueMatch("findByOrderAndName",
+        return repositoryService.uniqueMatch(new QueryDefault<>(OrderAttribute.class,"findByOrderAndName",
                 "order", order,
-                "name", name);
+                "name", name));
     }
 
     @Programmatic

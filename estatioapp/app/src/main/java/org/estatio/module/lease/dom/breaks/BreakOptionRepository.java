@@ -23,6 +23,7 @@ import java.util.List;
 
 import com.google.common.collect.Iterables;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -99,12 +100,13 @@ public class BreakOptionRepository extends UdoDomainRepositoryAndFactory<BreakOp
             final BreakType type,
             final LocalDate breakDate,
             final BreakExerciseType exerciseType) {
-        return uniqueMatch("findByLeaseAndTypeAndBreakDateAndExerciseType",
+        return repositoryService.uniqueMatch(new QueryDefault<>(BreakOption.class,
+                "findByLeaseAndTypeAndBreakDateAndExerciseType",
                 "lease", lease,
                 "type", type,
                 "breakDate", breakDate,
                 "exerciseType", exerciseType
-        );
+        ));
     }
 
     @Programmatic

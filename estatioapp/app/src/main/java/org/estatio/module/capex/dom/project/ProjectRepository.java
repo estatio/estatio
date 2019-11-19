@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.assertj.core.util.Lists;
 import org.joda.time.LocalDate;
 
@@ -64,7 +65,7 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
 
     @Programmatic
     public Project findByReference(final String reference) {
-        return uniqueMatch("findByReference", "reference", reference);
+        return repositoryService.uniqueMatch(new QueryDefault<>(Project.class,"findByReference", "reference", reference));
     }
 
     @Programmatic

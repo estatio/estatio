@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -83,7 +84,7 @@ public class CodaMappingRepository extends UdoDomainRepositoryAndFactory<CodaMap
             final LocalDate endDate,
             final CodaElement codaElement
     ) {
-        return uniqueMatch("findByAll",
+        return repositoryService.uniqueMatch(new QueryDefault<>(CodaMapping.class,"findByAll",
                 "atPath", atPath,
                 "documentType", documentType,
                 "incomingInvoiceType", incomingInvoiceType,
@@ -94,7 +95,7 @@ public class CodaMappingRepository extends UdoDomainRepositoryAndFactory<CodaMap
                 "periodEndDate", periodEndDate,
                 "startDate", startDate,
                 "endDate", endDate,
-                "codaElement", codaElement);
+                "codaElement", codaElement));
     }
 
     private CodaMapping create(

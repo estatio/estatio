@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Where;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Currency.class)
@@ -47,7 +48,8 @@ public class CurrencyRepository extends UdoDomainRepositoryAndFactory<Currency> 
 
     @Programmatic
     public Currency findCurrency(final String reference) {
-        return uniqueMatch("findByReference", "reference", reference);
+        return repositoryService.uniqueMatch(new QueryDefault<>(Currency.class,
+                "findByReference", "reference", reference));
     }
 
     // //////////////////////////////////////

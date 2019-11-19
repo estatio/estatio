@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(repositoryFor = UnitSize.class, nature = NatureOfService.DOMAIN)
@@ -45,7 +46,7 @@ public class UnitSizeRepository extends UdoDomainRepositoryAndFactory<UnitSize> 
 
     @Programmatic
     public UnitSize findByName(final String name) {
-        return uniqueMatch("findByName", "name", name);
+        return repositoryService.uniqueMatch(new QueryDefault<>(UnitSize.class,"findByName", "name", name));
     }
 
     @Programmatic

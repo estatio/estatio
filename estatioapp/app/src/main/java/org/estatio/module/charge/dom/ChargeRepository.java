@@ -182,9 +182,9 @@ public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
     @Programmatic
     public Charge findByReference(
             final String reference) {
-        return uniqueMatch(
+        return repositoryService.uniqueMatch(new QueryDefault<>(Charge.class,
                 "findByReference",
-                "reference", reference);
+                "reference", reference));
     }
 
     @Programmatic

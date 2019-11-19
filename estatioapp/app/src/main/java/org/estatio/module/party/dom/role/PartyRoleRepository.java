@@ -26,6 +26,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.party.dom.Party;
 
@@ -61,8 +62,8 @@ public class PartyRoleRepository extends UdoDomainRepositoryAndFactory<PartyRole
     public PartyRole findByPartyAndRoleType(
             final Party party,
             final PartyRoleType roleType) {
-        return uniqueMatch("findByPartyAndRoleType",
-                "party", party, "roleType", roleType);
+        return repositoryService.uniqueMatch(new QueryDefault<>(PartyRole.class,"findByPartyAndRoleType",
+                "party", party, "roleType", roleType));
     }
 
     public PartyRole findOrCreate(

@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
@@ -62,7 +63,7 @@ public class TaxRepository extends UdoDomainRepositoryAndFactory<Tax> {
 
     @Programmatic
     public Tax findByReference(final String reference) {
-        return uniqueMatch("findByReference", "reference", reference);
+        return repositoryService.uniqueMatch(new QueryDefault<>(Tax.class,"findByReference", "reference", reference));
     }
 
     @Programmatic

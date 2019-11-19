@@ -26,6 +26,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(menuOrder = "99", repositoryFor = Sector.class, nature = NatureOfService.DOMAIN)
@@ -42,7 +43,7 @@ public class SectorRepository extends UdoDomainRepositoryAndFactory<Sector> {
     }
 
     public Sector findByName(final String name) {
-        return uniqueMatch("findByName", "name", name);
+        return repositoryService.uniqueMatch(new QueryDefault<>(Sector.class,"findByName", "name", name));
     }
 
     @Programmatic

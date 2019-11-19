@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
@@ -42,7 +43,8 @@ public class LeaseItemSourceRepository extends UdoDomainRepositoryAndFactory<Lea
     }
 
     public LeaseItemSource findUnique(final LeaseItem item, final LeaseItem sourceItem) {
-        return uniqueMatch("findByItemAndSourceItem", "item", item, "sourceItem", sourceItem);
+        return repositoryService.uniqueMatch(new QueryDefault<>(LeaseItemSource.class,
+                "findByItemAndSourceItem", "item", item, "sourceItem", sourceItem));
     }
 
     @Inject
