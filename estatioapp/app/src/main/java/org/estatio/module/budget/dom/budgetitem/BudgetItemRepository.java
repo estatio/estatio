@@ -85,7 +85,7 @@ public class BudgetItemRepository extends UdoDomainRepositoryAndFactory<BudgetIt
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @ActionLayout()
     public List<BudgetItem> allBudgetItems() {
-        return allInstances();
+        return repositoryService.allInstances(BudgetItem.class);
     }
 
     // //////////////////////////////////////

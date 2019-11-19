@@ -160,7 +160,7 @@ public class TurnoverReportingConfigRepository extends UdoDomainRepositoryAndFac
     }
 
     public List<TurnoverReportingConfig> listAll() {
-        return allInstances();
+        return repositoryService.allInstances(TurnoverReportingConfig.class);
     }
 
     @Inject

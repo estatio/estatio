@@ -41,7 +41,7 @@ public class CurrencyRepository extends UdoDomainRepositoryAndFactory<Currency> 
 
     @Programmatic
     public List<Currency> allCurrencies() {
-        return allInstances();
+        return repositoryService.allInstances(Currency.class);
     }
 
     // //////////////////////////////////////

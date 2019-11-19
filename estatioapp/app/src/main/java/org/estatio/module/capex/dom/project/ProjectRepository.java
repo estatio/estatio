@@ -50,7 +50,7 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
 
     @Programmatic
     public List<Project> listAll() {
-        return allInstances();
+        return repositoryService.allInstances(Project.class);
     }
 
     @Programmatic

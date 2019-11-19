@@ -28,7 +28,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class PartyRepository_Test {
 
-    public static class ValidateNewParty extends OrganisationRepository_Test {
+    public static class ValidateNewParty {
 
         PartyRepository partyRepository;
 

@@ -88,7 +88,7 @@ public class BankMandateRepository extends UdoDomainRepositoryAndFactory<BankMan
     // //////////////////////////////////////
 
     public List<BankMandate> allBankMandates() {
-        return allInstances();
+        return repositoryService.allInstances(BankMandate.class);
     }
 
     public List<BankMandate> findBankMandatesFor(final BankAccount bankAccount) {

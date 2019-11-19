@@ -83,7 +83,7 @@ public class EventRepository extends UdoDomainRepositoryAndFactory<Event> {
 
     @Programmatic
     public List<Event> allEvents() {
-        return allInstances();
+        return repositoryService.allInstances(Event.class);
     }
 
 

@@ -49,7 +49,7 @@ public class TaxRateMenu extends UdoDomainRepositoryAndFactory<TaxRate> {
     @MemberOrder(sequence = "1")
     @Action(semantics = SemanticsOf.SAFE)
     public List<TaxRate> allTaxRates() {
-        return allInstances();
+        return repositoryService.allInstances(TaxRate.class);
     }
 
 }

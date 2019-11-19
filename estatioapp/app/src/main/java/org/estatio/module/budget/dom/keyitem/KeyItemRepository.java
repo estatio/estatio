@@ -89,7 +89,7 @@ public class KeyItemRepository extends UdoDomainRepositoryAndFactory<KeyItem> {
 
     @Programmatic
     public List<KeyItem> allBudgetKeyItems() {
-        return allInstances();
+        return repositoryService.allInstances(KeyItem.class);
     }
 
     @Inject

@@ -116,7 +116,7 @@ public class LinkRepository extends UdoDomainRepositoryAndFactory<Link> {
 
     @Programmatic
     public List<Link> allLinks() {
-        return allInstances();
+        return repositoryService.allInstances(Link.class);
     }
 
     // //////////////////////////////////////

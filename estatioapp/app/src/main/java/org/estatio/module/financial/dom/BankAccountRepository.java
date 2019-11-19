@@ -91,7 +91,7 @@ public class BankAccountRepository extends UdoDomainRepositoryAndFactory<BankAcc
 
     @Programmatic
     public List<BankAccount> allBankAccounts() {
-        return allInstances();
+        return repositoryService.allInstances(BankAccount.class);
     }
 
     @Programmatic

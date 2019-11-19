@@ -58,7 +58,7 @@ public class UnitSizeMenu extends UdoDomainRepositoryAndFactory<UnitSize> {
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
     public List<UnitSize> allUnitSizes() {
-        return allInstances();
+        return repositoryService.allInstances(UnitSize.class);
     }
 
 }

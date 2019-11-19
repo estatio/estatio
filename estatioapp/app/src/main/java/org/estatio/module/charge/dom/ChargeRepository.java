@@ -116,7 +116,7 @@ public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
 
     @Programmatic
     public List<Charge> listAll() {
-        return allInstances();
+        return repositoryService.allInstances(Charge.class);
     }
 
     @Programmatic
@@ -159,7 +159,7 @@ public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
         // assert the path (must not be root)
         final String countryPath = ApplicationTenancyLevel.of(applicationTenancyPath).getCountryPath();
 
-        final List<Charge> charges = allInstances();
+        final List<Charge> charges = repositoryService.allInstances(Charge.class);
         return Lists.newArrayList(
                 Iterables.filter(charges, new Predicate<Charge>() {
                     @Override

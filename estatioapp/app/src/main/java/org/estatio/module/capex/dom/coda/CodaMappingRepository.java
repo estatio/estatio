@@ -27,7 +27,7 @@ public class CodaMappingRepository extends UdoDomainRepositoryAndFactory<CodaMap
     }
 
     List<CodaMapping> allMappings() {
-        return allInstances();
+        return repositoryService.allInstances(CodaMapping.class);
     }
 
     @Programmatic
@@ -157,6 +157,6 @@ public class CodaMappingRepository extends UdoDomainRepositoryAndFactory<CodaMap
     @Inject IsisJdoSupport isisJdoSupport;
 
     public List<CodaMapping> all() {
-        return allInstances();
+        return repositoryService.allInstances(CodaMapping.class);
     }
 }

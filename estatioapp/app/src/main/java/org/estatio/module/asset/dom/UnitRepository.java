@@ -109,7 +109,7 @@ public class UnitRepository extends UdoDomainRepositoryAndFactory<Unit> {
     }
 
     public List<Unit> allUnits() {
-        return allInstances();
+        return repositoryService.allInstances(Unit.class);
     }
 
 

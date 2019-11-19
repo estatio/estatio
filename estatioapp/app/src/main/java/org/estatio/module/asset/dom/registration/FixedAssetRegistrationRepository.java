@@ -52,7 +52,7 @@ public class FixedAssetRegistrationRepository extends UdoDomainRepositoryAndFact
     }
 
     public List<FixedAssetRegistration> allRegistrations() {
-        return allInstances();
+        return repositoryService.allInstances(FixedAssetRegistration.class);
     }
 
 }

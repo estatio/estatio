@@ -42,7 +42,7 @@ public class ProjectRoleRepository extends UdoDomainRepositoryAndFactory<Project
 
     @Programmatic
     public List<ProjectRole> listAll() {
-        return allInstances();
+        return repositoryService.allInstances(ProjectRole.class);
     }
 
     @Programmatic

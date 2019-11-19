@@ -101,7 +101,7 @@ public class PartyRelationshipRepository extends UdoDomainRepositoryAndFactory<P
 
     @Programmatic
     public List<PartyRelationship> allRelationships() {
-        return allInstances();
+        return repositoryService.allInstances(PartyRelationship.class);
     }
 
     // //////////////////////////////////////

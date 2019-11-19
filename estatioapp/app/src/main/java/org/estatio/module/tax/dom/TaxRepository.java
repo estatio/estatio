@@ -58,7 +58,7 @@ public class TaxRepository extends UdoDomainRepositoryAndFactory<Tax> {
 
     @Programmatic
     public List<Tax> allTaxes() {
-        return allInstances();
+        return repositoryService.allInstances(Tax.class);
     }
 
     @Programmatic
@@ -77,7 +77,7 @@ public class TaxRepository extends UdoDomainRepositoryAndFactory<Tax> {
 
     @Programmatic
     public Collection<Tax> findByApplicationTenancy(final ApplicationTenancy applicationTenancy) {
-        return Collections2.filter(allInstances(), tax -> tax.getApplicationTenancy().equals(applicationTenancy));
+        return Collections2.filter(repositoryService.allInstances(Tax.class), tax -> tax.getApplicationTenancy().equals(applicationTenancy));
     }
 
 

@@ -99,7 +99,7 @@ public class KeyTableRepository extends UdoDomainRepositoryAndFactory<KeyTable> 
 
     @Programmatic
     public List<KeyTable> allKeyTables() {
-        return allInstances();
+        return repositoryService.allInstances(KeyTable.class);
     }
 
     @Inject PartitioningTableRepository partitioningTableRepository;

@@ -112,7 +112,7 @@ public class ProjectItemRepository extends UdoDomainRepositoryAndFactory<Project
 
     @Programmatic
     public List<ProjectItem> listAll(){
-        return allInstances();
+        return repositoryService.allInstances(ProjectItem.class);
     }
 
     @Inject

@@ -80,7 +80,7 @@ public class InvoiceRepository extends UdoDomainRepositoryAndFactory<Invoice> {
 
     @Programmatic
     public List<Invoice> allInvoices() {
-        return allInstances();
+        return repositoryService.allInstances(Invoice.class);
     }
 
     @Programmatic

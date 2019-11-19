@@ -85,7 +85,7 @@ public class TaxMenu extends UdoDomainRepositoryAndFactory<Tax> {
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
     public List<Tax> allTaxes() {
-        return allInstances();
+        return repositoryService.allInstances(Tax.class);
     }
 
 

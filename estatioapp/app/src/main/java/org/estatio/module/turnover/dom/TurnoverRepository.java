@@ -216,7 +216,7 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
     }
 
     public List<Turnover> listAll() {
-        return allInstances();
+        return repositoryService.allInstances(Turnover.class);
     }
 
     @Inject

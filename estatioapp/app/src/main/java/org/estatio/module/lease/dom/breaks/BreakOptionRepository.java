@@ -111,6 +111,6 @@ public class BreakOptionRepository extends UdoDomainRepositoryAndFactory<BreakOp
 
     @Programmatic
     public List<BreakOption> allBreakOptions() {
-        return allInstances();
+        return repositoryService.allInstances(BreakOption.class);
     }
 }

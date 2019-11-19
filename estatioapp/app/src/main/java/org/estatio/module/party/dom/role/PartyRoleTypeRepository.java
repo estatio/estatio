@@ -55,7 +55,7 @@ public class PartyRoleTypeRepository extends UdoDomainRepositoryAndFactory<Party
     }
 
     public List<PartyRoleType> listAll() {
-        return allInstances();
+        return repositoryService.allInstances(PartyRoleType.class);
     }
 
     private PartyRoleType create(final IPartyRoleType IPartyRoleType) {

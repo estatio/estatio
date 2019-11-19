@@ -124,7 +124,7 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
 
     @Programmatic
     public List<Organisation> allOrganisations() {
-        return allInstances();
+        return repositoryService.allInstances(Organisation.class);
     }
 
     // //////////////////////////////////////
