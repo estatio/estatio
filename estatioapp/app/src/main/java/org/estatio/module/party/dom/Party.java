@@ -49,6 +49,7 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -208,7 +209,7 @@ public abstract class Party
         for (PartyRole partyRole: getRoles()){
             partyRole.remove();
         }
-        remove(this);
+        repositoryService.remove(this);
         if (replaceWith!=null) replaceWith.fix(); // adds missing party roles where needed for instance when merging supplier to tenant
         return replaceWith;
     }
@@ -302,6 +303,9 @@ public abstract class Party
 
     @Inject
     PartyRoleTypeRepository partyRoleTypeRepository;
+
+    @Inject
+    RepositoryService repositoryService;
 
     public static class NameType {
 
