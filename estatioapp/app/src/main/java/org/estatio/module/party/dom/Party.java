@@ -50,6 +50,7 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -215,7 +216,7 @@ public abstract class Party
     }
 
     public boolean hideDelete() {
-        return !EstatioRole.SUPERUSER.isApplicableFor(getUser());
+        return !EstatioRole.SUPERUSER.isApplicableFor(userService.getUser());
     }
 
     public String validateDelete(final Party replacementParty) {
@@ -297,6 +298,8 @@ public abstract class Party
                 .result();
     }
 
+    @Inject
+    private UserService userService;
 
     @Inject
     PartyRoleRepository partyRoleRepository;

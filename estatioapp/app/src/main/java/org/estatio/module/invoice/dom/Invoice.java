@@ -39,6 +39,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.isis.applib.services.user.UserService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -473,7 +474,7 @@ public abstract class Invoice<T extends Invoice<T>>
     }
 
     public boolean hideVerify() {
-        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
     }
 
     public static class InvoiceNumberType {
@@ -509,5 +510,8 @@ public abstract class Invoice<T extends Invoice<T>>
             }
         }
     }
+
+    @Inject
+    private UserService userService;
 
 }

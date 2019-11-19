@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -47,6 +48,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ObjectPersistedEvent;
 import org.apache.isis.applib.services.eventbus.ObjectRemovingEvent;
 import org.apache.isis.applib.services.eventbus.ObjectUpdatedEvent;
+import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.incode.module.base.dom.Titled;
@@ -220,7 +222,7 @@ public class BankAccount
 
     public String disableChangeIban(){
         // This is a temporary measure to prevent user errors:
-        return EstatioRole.ADMINISTRATOR.isApplicableFor(getUser()) ? null : "Only administrators can change an IBAN";
+        return EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser()) ? null : "Only administrators can change an IBAN";
     }
 
 
@@ -405,4 +407,7 @@ public class BankAccount
         public String default1Act() { return bankAccount.getIban(); }
 
     }
+
+    @Inject
+    private UserService userService;
 }

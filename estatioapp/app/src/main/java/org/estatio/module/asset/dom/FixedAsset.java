@@ -32,6 +32,7 @@ import javax.jdo.annotations.VersionStrategy;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.user.UserService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -179,7 +180,7 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
     }
 
     public String disableExternalReference(){
-        return !EstatioRole.SUPERUSER.isApplicableFor(getUser()) ? "Only Superusers can change existing external references" : null ;
+        return !EstatioRole.SUPERUSER.isApplicableFor(userService.getUser()) ? "Only Superusers can change existing external references" : null ;
     }
 
     // //////////////////////////////////////
@@ -290,6 +291,9 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
 
     @Inject
     private FactoryService factoryService;
+
+    @Inject
+    private UserService userService;
 
     @Inject
     FixedAssetOwnershipRepository fixedAssetOwnershipRepository;

@@ -25,6 +25,7 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
+import org.apache.isis.applib.services.user.UserService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -151,7 +152,7 @@ public class Guarantee
     }
 
     public String disableChangeGuaranteeType() {
-        return getGuaranteeType().isMutable() || EstatioRole.ADMINISTRATOR.isApplicableFor(getUser()) ? null : "Bank guarantees and deposits cannot be changed";
+        return getGuaranteeType().isMutable() || EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser()) ? null : "Bank guarantees and deposits cannot be changed";
     }
 
     // //////////////////////////////////////
@@ -243,12 +244,15 @@ public class Guarantee
     }
 
     public boolean hideRemove() {
-        final boolean userIsAdmin = EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
+        final boolean userIsAdmin = EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
         return !userIsAdmin;
     }
 
     @Inject
     FinancialAccountRepository financialAccountRepository;
+
+    @Inject
+    private UserService userService;
 
 
 

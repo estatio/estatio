@@ -23,6 +23,7 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -32,6 +33,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.services.user.UserService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.services.repository.RepositoryService;
@@ -341,7 +343,7 @@ public abstract class InvoiceItem<P extends Invoice<P>, T extends InvoiceItem<P,
     }
 
     public boolean hideVerify(){
-        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
     }
 
     // //////////////////////////////////////
@@ -441,5 +443,8 @@ public abstract class InvoiceItem<P extends Invoice<P>, T extends InvoiceItem<P,
         }
 
     }
+
+    @Inject
+    private UserService userService;
 
 }

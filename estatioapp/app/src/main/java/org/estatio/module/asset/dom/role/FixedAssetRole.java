@@ -26,6 +26,7 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.services.user.UserService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -340,10 +341,11 @@ public class FixedAssetRole
     }
 
     public boolean hideDelete() {
-        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
     }
 
-
+    @Inject
+    private UserService userService;
 
     @Inject
     TitleService titleService;

@@ -38,6 +38,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.isis.applib.services.user.UserService;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
@@ -386,7 +387,7 @@ public class Lease
 
     @Override
     public String disableChangeDates() {
-        return !EstatioRole.SUPERUSER.isApplicableFor(getUser()) ? "You need super user rights to change the dates" : null;
+        return !EstatioRole.SUPERUSER.isApplicableFor(userService.getUser()) ? "You need super user rights to change the dates" : null;
     }
 
     @Programmatic
@@ -1102,7 +1103,7 @@ public class Lease
     }
 
     public boolean hideRemove() {
-        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
     }
 
     public String disableRemove() {
@@ -1152,6 +1153,9 @@ public class Lease
     }
 
     // //////////////////////////////////////
+
+    @Inject
+    private UserService userService;
 
     @Inject
     LeaseItemRepository leaseItemRepository;

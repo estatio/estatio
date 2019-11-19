@@ -27,6 +27,7 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.isis.applib.services.user.UserService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -230,7 +231,7 @@ public class Occupancy
         return lease;
     }
     public String disableRemove() {
-        return !EstatioRole.SUPERUSER.isApplicableFor(getUser()) ? "You need Superuser rights to remove an occupancy" : null;
+        return !EstatioRole.SUPERUSER.isApplicableFor(userService.getUser()) ? "You need Superuser rights to remove an occupancy" : null;
     }
 
 
@@ -428,4 +429,7 @@ public class Occupancy
 
     @Inject
     UnitSizeRepository unitSizeRepository;
+
+    @Inject
+    private UserService userService;
 }

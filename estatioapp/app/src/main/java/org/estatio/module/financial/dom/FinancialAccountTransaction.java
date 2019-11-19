@@ -3,6 +3,7 @@ package org.estatio.module.financial.dom;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -14,6 +15,7 @@ import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.services.user.UserService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -148,7 +150,7 @@ public class FinancialAccountTransaction
     }
 
     public boolean hideChangeTransactionDetails(){
-        return !EstatioRole.SUPERUSER.isApplicableFor(getUser());
+        return !EstatioRole.SUPERUSER.isApplicableFor(userService.getUser());
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -157,7 +159,7 @@ public class FinancialAccountTransaction
     }
 
     public boolean hideRemove() {
-        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
     }
 
 
@@ -172,6 +174,9 @@ public class FinancialAccountTransaction
     public String default2ChangeTransactionDetails(){
         return getDescription();
     }
+
+    @Inject
+    private UserService userService;
 
 
 }

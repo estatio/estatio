@@ -36,6 +36,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.isis.applib.services.user.UserService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -268,7 +269,7 @@ public abstract class LeaseTerm
             if (valueType() == LeaseTermValueType.FIXED) {
                 return "Cannot change dates when used in invoice and value type is fixed";
             }
-            if(!EstatioRole.ADMINISTRATOR.isApplicableFor(getUser())){
+            if(!EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser())){
                 return "Cannot change dates when used in invoice and user does not have administor role";
             }
         }
@@ -614,7 +615,7 @@ public abstract class LeaseTerm
     }
 
     public boolean hideChangeStatus() {
-        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
     }
 
     // //////////////////////////////////////
@@ -655,5 +656,8 @@ public abstract class LeaseTerm
 
     @Inject
     public LeaseTermRepository leaseTermRepository;
+
+    @Inject
+    private UserService userService;
 
 }

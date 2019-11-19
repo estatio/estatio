@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.user.UserService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -285,7 +286,7 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
 
     public boolean hideFindTermsWithInvalidInterval() {
         final UserMemento user = getContainer().getUser();
-        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
     }
 
     @Programmatic
@@ -304,4 +305,7 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
 
     @Inject
     FactoryService factoryService;
+
+    @Inject
+    private UserService userService;
 }

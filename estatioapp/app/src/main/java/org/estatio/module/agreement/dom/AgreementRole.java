@@ -36,6 +36,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.user.UserService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -441,7 +442,7 @@ public class AgreementRole
     }
 
     public boolean hideRemove() {
-        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
     }
 
     // //////////////////////////////////////
@@ -575,5 +576,8 @@ public class AgreementRole
 
     @Inject
     TitleService titleService;
+
+    @Inject
+    private UserService userService;
 
 }
