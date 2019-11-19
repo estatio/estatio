@@ -171,6 +171,11 @@ public class DerivedObjectUpdater {
                             chargeInSync = true;
                             invoiceItem.setCharge(chargeIfAny);
                         }
+                        // case where charge was not present on previous, but is present on this one
+                        if(!previousChargeIfAny.isPresent() && chargeIfAny != null && invoiceItem.getCharge()==null){
+                            chargeInSync = true;
+                            invoiceItem.setCharge(chargeIfAny);
+                        }
 
                         // only overwrite project if value hasn't been modified in Estatio since originally sync'd
                         boolean projectInSync = false;
@@ -179,6 +184,11 @@ public class DerivedObjectUpdater {
                                 projectIfAny != null &&
                                 previousProjectIfAny.get() == invoiceItem.getProject()) {
 
+                            projectInSync = true;
+                            invoiceItem.setProject(projectIfAny);
+                        }
+                        // case where project was not present on previous, but is present on this one
+                        if(!previousProjectIfAny.isPresent() && projectIfAny != null && invoiceItem.getProject()==null){
                             projectInSync = true;
                             invoiceItem.setProject(projectIfAny);
                         }
