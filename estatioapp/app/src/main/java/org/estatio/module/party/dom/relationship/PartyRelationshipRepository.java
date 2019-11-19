@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -34,7 +35,8 @@ public class PartyRelationshipRepository extends UdoDomainRepositoryAndFactory<P
 
     @Programmatic
     public List<PartyRelationship> findByParty(Party party) {
-        return allMatches("findByParty", "party", party);
+        return repositoryService.allMatches(new QueryDefault<>(PartyRelationship.class,
+                "findByParty", "party", party));
     }
 
     @Programmatic
@@ -42,10 +44,11 @@ public class PartyRelationshipRepository extends UdoDomainRepositoryAndFactory<P
             final Organisation from,
             final PartyRelationshipTypeEnum relationshipType) {
         LocalDate now = clockService.now();
-        return allMatches("findByFromAndTypeAndBetweenStartDateAndEndDate",
+        return repositoryService.allMatches(new QueryDefault<>(PartyRelationship.class,
+                "findByFromAndTypeAndBetweenStartDateAndEndDate",
                 "from", from,
                 "relationshipType", relationshipType,
-                "date", now);
+                "date", now));
     }
 
 

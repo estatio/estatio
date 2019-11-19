@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -65,12 +66,12 @@ public class ProjectRoleRepository extends UdoDomainRepositoryAndFactory<Project
 
     @Programmatic
     public List<ProjectRole> findByProject(final Project project){
-        return allMatches("findByProject", "project", project);
+        return repositoryService.allMatches(new QueryDefault<>(ProjectRole.class,"findByProject", "project", project));
     }
 
     @Programmatic
     public List<ProjectRole> findByParty(final Party party) {
-        return allMatches("findByParty", "party", party);
+        return repositoryService.allMatches(new QueryDefault<>(ProjectRole.class,"findByParty", "party", party));
     }
 
 

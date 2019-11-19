@@ -34,12 +34,14 @@ public class LeaseItemSourceRepository extends UdoDomainRepositoryAndFactory<Lea
 
     @Programmatic
     public List<LeaseItemSource> findByItem(final LeaseItem item) {
-        return allMatches("findByItem", "item", item);
+        return repositoryService.allMatches(new QueryDefault<>(LeaseItemSource.class,
+                "findByItem", "item", item));
     }
 
     @Programmatic
     public List<LeaseItemSource> findBySourceItem(final LeaseItem sourceItem) {
-        return allMatches("findBySourceItem", "sourceItem", sourceItem);
+        return repositoryService.allMatches(new QueryDefault<>(LeaseItemSource.class,
+                "findBySourceItem", "sourceItem", sourceItem));
     }
 
     public LeaseItemSource findUnique(final LeaseItem item, final LeaseItem sourceItem) {

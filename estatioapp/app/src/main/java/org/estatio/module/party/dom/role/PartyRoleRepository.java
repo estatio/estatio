@@ -38,8 +38,8 @@ public class PartyRoleRepository extends UdoDomainRepositoryAndFactory<PartyRole
     }
 
     public List<PartyRole> findByParty(final Party party) {
-        return allMatches("findByParty",
-                "party", party);
+        return repositoryService.allMatches(new QueryDefault<>(PartyRole.class,"findByParty",
+                "party", party));
     }
 
     public List<PartyRole> findByRoleType(final IPartyRoleType iPartyRoleType) {
@@ -48,8 +48,8 @@ public class PartyRoleRepository extends UdoDomainRepositoryAndFactory<PartyRole
     }
 
     public List<PartyRole> findByRoleType(final PartyRoleType roleType) {
-        return allMatches("findByRoleType",
-                "roleType", roleType);
+        return repositoryService.allMatches(new QueryDefault<>(PartyRole.class,"findByRoleType",
+                "roleType", roleType));
     }
 
     public PartyRole findByPartyAndRoleType(

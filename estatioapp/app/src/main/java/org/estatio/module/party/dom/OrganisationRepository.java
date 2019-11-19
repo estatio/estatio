@@ -26,6 +26,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.country.dom.impl.Country;
@@ -110,13 +111,13 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
     NumeratorForOrganisationsRepository numeratorForOrganisationsRepository;
 
     public List<Organisation> findByChamberOfCommerceCode(final String chamberOfCommerceCode) {
-        return allMatches("findByChamberOfCommerceCode",
-                "chamberOfCommerceCode", chamberOfCommerceCode);
+        return repositoryService.allMatches(new QueryDefault<>(Organisation.class,"findByChamberOfCommerceCode",
+                "chamberOfCommerceCode", chamberOfCommerceCode));
     }
 
     public List<Organisation> findByAtPathMissingChamberOfCommerceCode(final String atPath) {
-        return allMatches("findByAtPathMissingChamberOfCommerceCode",
-                "atPath", atPath);
+        return repositoryService.allMatches(new QueryDefault<>(Organisation.class,"findByAtPathMissingChamberOfCommerceCode",
+                "atPath", atPath));
     }
 
     // //////////////////////////////////////

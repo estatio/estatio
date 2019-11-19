@@ -19,6 +19,7 @@ package org.estatio.module.fastnet.dom;
 
 import java.util.List;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -37,30 +38,34 @@ public class FastNetRentRollOnLeaseDataLineRepo extends UdoDomainRepositoryAndFa
     @Programmatic
     public List<FastNetRentRollOnLeaseDataLine> findByExportDate(
             final LocalDate exportDate) {
-        return allMatches("findByExportDate",
-                "exportDate", exportDate);
+        return repositoryService.allMatches(new QueryDefault<>(FastNetRentRollOnLeaseDataLine.class,
+                "findByExportDate",
+                "exportDate", exportDate));
     }
 
     @Programmatic
     public List<FastNetRentRollOnLeaseDataLine> findByExternalReferenceAndExportDate(
             final String externalReference,
             final LocalDate exportDate) {
-        return allMatches("findByExternalReferenceAndExportDate",
-                "externalReference", externalReference, "exportDate", exportDate);
+        return repositoryService.allMatches(new QueryDefault<>(FastNetRentRollOnLeaseDataLine.class,
+                "findByExternalReferenceAndExportDate",
+                "externalReference", externalReference, "exportDate", exportDate));
     }
 
     @Programmatic
     public List<FastNetRentRollOnLeaseDataLine> nonMatchingRentRollLinesForExportDate(
             final LocalDate exportDate) {
-        return allMatches("nonMatchingRentRollLinesForExportDate",
-                "exportDate", exportDate);
+        return repositoryService.allMatches(new QueryDefault<>(FastNetRentRollOnLeaseDataLine.class,
+                "nonMatchingRentRollLinesForExportDate",
+                "exportDate", exportDate));
     }
 
     @Programmatic
     public List<FastNetRentRollOnLeaseDataLine> matchingRentRollLinesForExportDate(
             final LocalDate exportDate) {
-        return allMatches("matchingRentRollLinesForExportDate",
-                "exportDate", exportDate);
+        return repositoryService.allMatches(new QueryDefault<>(FastNetRentRollOnLeaseDataLine.class,
+                "matchingRentRollLinesForExportDate",
+                "exportDate", exportDate));
     }
 
 }

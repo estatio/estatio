@@ -20,6 +20,7 @@ package org.estatio.module.invoice.dom;
 
 import java.util.List;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.datanucleus.query.typesafe.TypesafeQuery;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -44,20 +45,20 @@ public class InvoiceRepository extends UdoDomainRepositoryAndFactory<Invoice> {
     @Programmatic
     public List<Invoice> findByStatus(
             final InvoiceStatus status) {
-        return allMatches("findByStatus",
-                "status", status);
+        return repositoryService.allMatches(new QueryDefault<>(Invoice.class,"findByStatus",
+                "status", status));
     }
 
     @Programmatic
     public List<Invoice> findByBuyer(final Party party) {
-        return allMatches("findByBuyer",
-                "buyer", party);
+        return repositoryService.allMatches(new QueryDefault<>(Invoice.class,"findByBuyer",
+                "buyer", party));
     }
 
     @Programmatic
     public List<Invoice> findBySeller(final Party party) {
-        return allMatches("findBySeller",
-                "seller", party);
+        return repositoryService.allMatches(new QueryDefault<>(Invoice.class,"findBySeller",
+                "seller", party));
     }
 
     /**
@@ -69,8 +70,8 @@ public class InvoiceRepository extends UdoDomainRepositoryAndFactory<Invoice> {
      */
     @Programmatic
     public List<Invoice> findMatchingInvoiceNumber(final String invoiceNumber) {
-        return allMatches("findMatchingInvoiceNumber",
-                "invoiceNumber", invoiceNumber);
+        return repositoryService.allMatches(new QueryDefault<>(Invoice.class,"findMatchingInvoiceNumber",
+                "invoiceNumber", invoiceNumber));
     }
 
 

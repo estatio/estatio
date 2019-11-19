@@ -69,12 +69,12 @@ public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy
 
     @Programmatic
     public List<Occupancy> findByUnit(Unit unit) {
-        return allMatches("findByUnit", "unit", unit);
+        return repositoryService.allMatches(new QueryDefault<>(Occupancy.class,"findByUnit", "unit", unit));
     }
 
     @Programmatic
     public List<Occupancy> findByLease(Lease lease) {
-        return allMatches("findByLease", "lease", lease);
+        return repositoryService.allMatches(new QueryDefault<>(Occupancy.class,"findByLease", "lease", lease));
     }
 
     @Programmatic

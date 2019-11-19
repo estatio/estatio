@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.Period;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -97,9 +98,9 @@ public class ProlongationOptionRepository extends UdoDomainRepositoryAndFactory<
     @Programmatic
     public List<ProlongationOption> findByLease(
             final Lease lease) {
-        return allMatches("findByLease",
+        return repositoryService.allMatches(new QueryDefault<>(ProlongationOption.class,"findByLease",
                 "lease", lease
-        );
+        ));
     }
 
     @Inject

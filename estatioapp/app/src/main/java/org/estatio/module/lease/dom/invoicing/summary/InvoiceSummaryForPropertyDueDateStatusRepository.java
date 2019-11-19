@@ -19,6 +19,7 @@ package org.estatio.module.lease.dom.invoicing.summary;
 
 import java.util.List;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -39,17 +40,19 @@ public class InvoiceSummaryForPropertyDueDateStatusRepository
     @Programmatic
     public List<InvoiceSummaryForPropertyDueDateStatus> findInvoicesByStatus(
             final InvoiceStatus status) {
-        return allMatches("findByStatus",
-                "status", status);
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceSummaryForPropertyDueDateStatus.class,
+                "findByStatus",
+                "status", status));
     }
 
     @Programmatic
     public List<InvoiceSummaryForPropertyDueDateStatus> findInvoicesByStatusAndDueDateAfter(
             final InvoiceStatus status,
             final LocalDate fromDate) {
-        return allMatches("findByStatusAndDueDateAfter",
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceSummaryForPropertyDueDateStatus.class,
+                "findByStatusAndDueDateAfter",
                 "status", status,
-                "dueDateAfter", fromDate);
+                "dueDateAfter", fromDate));
     }
 
     @Programmatic
@@ -57,10 +60,11 @@ public class InvoiceSummaryForPropertyDueDateStatusRepository
                 final String atPath,
                 final String sellerReference,
                 final InvoiceStatus status) {
-        return allMatches("findByAtPathAndSellerReferenceAndStatus",
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceSummaryForPropertyDueDateStatus.class,
+                "findByAtPathAndSellerReferenceAndStatus",
                 "atPath", atPath,
                 "sellerReference", sellerReference,
-                "status", status);
+                "status", status));
     }
 
     @Programmatic
@@ -69,11 +73,12 @@ public class InvoiceSummaryForPropertyDueDateStatusRepository
                 final String sellerReference,
                 final InvoiceStatus status,
                 final LocalDate dueDate) {
-        return allMatches("findByAtPathAndSellerReferenceAndStatusAndDueDate",
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceSummaryForPropertyDueDateStatus.class,
+                "findByAtPathAndSellerReferenceAndStatusAndDueDate",
                 "atPath", atPath,
                 "sellerReference", sellerReference,
                 "status", status,
-                "dueDate", dueDate);
+                "dueDate", dueDate));
     }
 
 }

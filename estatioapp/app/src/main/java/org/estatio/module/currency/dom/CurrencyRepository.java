@@ -70,7 +70,8 @@ public class CurrencyRepository extends UdoDomainRepositoryAndFactory<Currency> 
 
     @ActionLayout(hidden = Where.EVERYWHERE)
     public List<Currency> autoComplete(final String searchArg) {
-        return allMatches("matchByReferenceOrDescription", "searchArg", searchArg);
+        return repositoryService.allMatches(new QueryDefault<>(Currency.class,
+                "matchByReferenceOrDescription", "searchArg", searchArg));
     }
 
 }

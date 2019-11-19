@@ -22,6 +22,7 @@ import java.util.List;
 import javax.inject.Inject;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -76,7 +77,8 @@ public class EventRepository extends UdoDomainRepositoryAndFactory<Event> {
 
     @Programmatic
     public List<Event> findEventsInDateRange(final LocalDate rangeStartDate, final LocalDate rangeEndDate) {
-        return allMatches("findInDateRange", "rangeStartDate", rangeStartDate, "rangeEndDate", rangeEndDate);
+        return repositoryService.allMatches(new QueryDefault<>(Event.class,
+                "findInDateRange", "rangeStartDate", rangeStartDate, "rangeEndDate", rangeEndDate));
     }
 
     @Programmatic

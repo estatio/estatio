@@ -189,16 +189,16 @@ public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
 
     @Programmatic
     public List<Charge> matchOnReferenceOrName(final String regex) {
-        return allMatches("matchOnReferenceOrName",
-                "regex", regex);
+        return repositoryService.allMatches(new QueryDefault<>(Charge.class,"matchOnReferenceOrName",
+                "regex", regex));
     }
 
     @Programmatic
     public List<Charge> findByApplicabilityAndMatchOnReferenceOrName(final String regex, Applicability applicability) {
-        return allMatches("findByApplicabilityAndMatchOnReferenceOrName",
+        return repositoryService.allMatches(new QueryDefault<>(Charge.class,"findByApplicabilityAndMatchOnReferenceOrName",
                 "applicability1", applicability,
                 "applicability2", Applicability.IN_AND_OUT,
-                "regex", StringUtils.wildcardToCaseInsensitiveRegex("*" + regex + "*"));
+                "regex", StringUtils.wildcardToCaseInsensitiveRegex("*" + regex + "*")));
     }
 
     @Programmatic

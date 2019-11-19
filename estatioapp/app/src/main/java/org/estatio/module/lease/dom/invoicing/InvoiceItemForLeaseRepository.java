@@ -24,6 +24,7 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.ApplicationException;
@@ -111,7 +112,8 @@ public class InvoiceItemForLeaseRepository extends UdoDomainRepositoryAndFactory
 
     @Programmatic
     public List<InvoiceItemForLease> findByLeaseTerm(final LeaseTerm leaseTerm){
-        return allMatches("findByLeaseTerm", "leaseTerm", leaseTerm);
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceItemForLease.class,
+                "findByLeaseTerm", "leaseTerm", leaseTerm));
     }
 
 
@@ -119,22 +121,22 @@ public class InvoiceItemForLeaseRepository extends UdoDomainRepositoryAndFactory
     public List<InvoiceItemForLease> findByLeaseTermAndInterval(
             final LeaseTerm leaseTerm,
             final LocalDateInterval interval) {
-        return allMatches(
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceItemForLease.class,
                 "findByLeaseTermAndInterval",
                 "leaseTerm", leaseTerm,
                 "startDate", interval.startDate(),
-                "endDate", interval.endDate());
+                "endDate", interval.endDate()));
     }
 
     @Programmatic
     public List<InvoiceItemForLease> findByLeaseTermAndEffectiveInterval(
             final LeaseTerm leaseTerm,
             final LocalDateInterval effectiveInterval) {
-        return allMatches(
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceItemForLease.class,
                 "findByLeaseTermAndEffectiveInterval",
                 "leaseTerm", leaseTerm,
                 "effectiveStartDate", effectiveInterval.startDate(),
-                "effectiveEndDate", effectiveInterval.endDate());
+                "effectiveEndDate", effectiveInterval.endDate()));
     }
 
     @Programmatic
@@ -142,42 +144,42 @@ public class InvoiceItemForLeaseRepository extends UdoDomainRepositoryAndFactory
             final LeaseTerm leaseTerm,
             final LocalDateInterval interval,
             final InvoiceStatus invoiceStatus) {
-        return allMatches(
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceItemForLease.class,
                 "findByLeaseTermAndIntervalAndInvoiceStatus",
                 "leaseTerm", leaseTerm,
                 "startDate", interval.startDate(),
                 "endDate", interval.endDate(),
-                "invoiceStatus", invoiceStatus);
+                "invoiceStatus", invoiceStatus));
     }
 
     @Programmatic
     public List<InvoiceItemForLease> findByLeaseAndInvoiceStatus(
             final Lease lease,
             final InvoiceStatus invoiceStatus) {
-        return allMatches(
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceItemForLease.class,
                 "findByLeaseAndInvoiceStatus",
                 "lease", lease,
-                "invoiceStatus", invoiceStatus);
+                "invoiceStatus", invoiceStatus));
     }
 
     @Programmatic
     public List<InvoiceItemForLease> findByLeaseItemAndInvoiceStatus(
             final LeaseItem leaseItem,
             final InvoiceStatus invoiceStatus) {
-        return allMatches(
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceItemForLease.class,
                 "findByLeaseItemAndInvoiceStatus",
                 "leaseItem", leaseItem,
-                "invoiceStatus", invoiceStatus);
+                "invoiceStatus", invoiceStatus));
     }
 
     @Programmatic
     public List<InvoiceItemForLease> findByLeaseTermAndInvoiceStatus(
             final LeaseTerm leaseTerm,
             final InvoiceStatus invoiceStatus) {
-        return allMatches(
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceItemForLease.class,
                 "findByLeaseTermAndInvoiceStatus",
                 "leaseTerm", leaseTerm,
-                "invoiceStatus", invoiceStatus);
+                "invoiceStatus", invoiceStatus));
     }
 
     // //////////////////////////////////////

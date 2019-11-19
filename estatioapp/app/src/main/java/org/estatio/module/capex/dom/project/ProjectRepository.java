@@ -60,7 +60,8 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
 
     @Programmatic
     public List<Project> findProject(String searchStr) {
-        return allMatches("matchByReferenceOrName", "matcher", StringUtils.wildcardToCaseInsensitiveRegex(searchStr));
+        return repositoryService.allMatches(new QueryDefault<>(Project.class,
+                "matchByReferenceOrName", "matcher", StringUtils.wildcardToCaseInsensitiveRegex(searchStr)));
     }
 
     @Programmatic
@@ -153,7 +154,8 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
     }
 
     public List<Project> findReviewDateInInterval(final LocalDateInterval range){
-        return allMatches("findReviewDateInInterval", "intervalStartDate", range.startDate(), "intervalEndDate", range.endDate());
+        return repositoryService.allMatches(new QueryDefault<>(Project.class,"findReviewDateInInterval",
+                "intervalStartDate", range.startDate(), "intervalEndDate", range.endDate()));
     }
 
     @Inject

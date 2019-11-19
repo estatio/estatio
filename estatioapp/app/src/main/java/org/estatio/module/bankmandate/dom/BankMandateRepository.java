@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -91,7 +92,8 @@ public class BankMandateRepository extends UdoDomainRepositoryAndFactory<BankMan
     }
 
     public List<BankMandate> findBankMandatesFor(final BankAccount bankAccount) {
-        return allMatches("findBankMandatesFor", "bankAccount", bankAccount);
+        return repositoryService.allMatches(new QueryDefault<>(BankMandate.class,
+                "findBankMandatesFor", "bankAccount", bankAccount));
     }
 
     public BankMandate findByReference(final String reference){

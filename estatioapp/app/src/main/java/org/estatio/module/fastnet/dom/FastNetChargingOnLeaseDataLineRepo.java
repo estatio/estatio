@@ -19,6 +19,7 @@ package org.estatio.module.fastnet.dom;
 
 import java.util.List;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -37,15 +38,17 @@ public class FastNetChargingOnLeaseDataLineRepo extends UdoDomainRepositoryAndFa
     @Programmatic
     public List<FastNetChargingOnLeaseDataLine> findByExportDate(
             final LocalDate exportDate) {
-        return allMatches("findByExportDate",
-                "exportDate", exportDate);
+        return repositoryService.allMatches(new QueryDefault<>(FastNetChargingOnLeaseDataLine.class,
+                "findByExportDate",
+                "exportDate", exportDate));
     }
 
     @Programmatic
     public List<FastNetChargingOnLeaseDataLine> findNonDiscardedAndNonAppliedByExportDate(
             final LocalDate exportDate) {
-        return allMatches("findNonDiscardedAndNonAppliedByExportDate",
-                "exportDate", exportDate);
+        return repositoryService.allMatches(new QueryDefault<>(FastNetChargingOnLeaseDataLine.class,
+                "findNonDiscardedAndNonAppliedByExportDate",
+                "exportDate", exportDate));
     }
 
 }

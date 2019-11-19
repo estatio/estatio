@@ -20,6 +20,7 @@ package org.estatio.module.lease.dom;
 
 import java.util.List;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -38,7 +39,8 @@ public class LeaseTermForIndexableRepository extends UdoDomainRepositoryAndFacto
     // //////////////////////////////////////
 
     public List<LeaseTermForIndexable> findByIndexAndDate(final Index index, final LocalDate date) {
-        return allMatches("findByIndexAndDate", "index", index, "date", date);
+        return repositoryService.allMatches(new QueryDefault<>(LeaseTermForIndexable.class,
+                "findByIndexAndDate", "index", index, "date", date));
     }
 
 

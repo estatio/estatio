@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
 import org.incode.module.base.dom.utils.StringUtils;
@@ -55,9 +56,9 @@ public class CodaElementRepository extends UdoDomainRepositoryAndFactory<CodaEle
 
     @Programmatic
     public List<CodaElement> searchByCodeOrName(final String regex){
-        return allMatches(
+        return repositoryService.allMatches(new QueryDefault<>(CodaElement.class,
                 "searchByCodeOrName",
-                "regex", regex);
+                "regex", regex));
     }
 
     @Programmatic

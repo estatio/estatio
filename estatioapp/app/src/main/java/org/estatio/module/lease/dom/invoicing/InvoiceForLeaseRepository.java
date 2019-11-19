@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -62,14 +63,14 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
             final Lease lease,
             final InvoiceStatus invoiceStatus,
             final LocalDate dueDate) {
-        return allMatches(
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceForLease.class,
                 "findMatchingInvoices",
                 "seller", seller,
                 "buyer", buyer,
                 "paymentMethod", paymentMethod,
                 "lease", lease,
                 "status", invoiceStatus,
-                "dueDate", dueDate);
+                "dueDate", dueDate));
     }
 
     public InvoiceForLease findOrCreateMatchingInvoice(
@@ -119,7 +120,7 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
     }
 
     public List<InvoiceForLease> findByLease(final Lease lease) {
-        return allMatches("findByLease", "lease", lease);
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceForLease.class,"findByLease", "lease", lease));
     }
 
     public InvoiceForLease newInvoice(
@@ -174,27 +175,27 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
     public List<InvoiceForLease> findByFixedAssetAndStatus(
             final FixedAsset fixedAsset,
             final InvoiceStatus status) {
-        return allMatches("findByFixedAssetAndStatus",
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceForLease.class,"findByFixedAssetAndStatus",
                 "fixedAsset", fixedAsset,
-                "status", status);
+                "status", status));
     }
 
     public List<InvoiceForLease> findByFixedAssetAndDueDate(
             final FixedAsset fixedAsset,
             final LocalDate dueDate) {
-        return allMatches("findByFixedAssetAndDueDate",
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceForLease.class,"findByFixedAssetAndDueDate",
                 "fixedAsset", fixedAsset,
-                "dueDate", dueDate);
+                "dueDate", dueDate));
     }
 
     public List<InvoiceForLease> findByFixedAssetAndDueDateAndStatus(
             final FixedAsset fixedAsset,
             final LocalDate dueDate,
             final InvoiceStatus status) {
-        return allMatches("findByFixedAssetAndDueDateAndStatus",
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceForLease.class,"findByFixedAssetAndDueDateAndStatus",
                 "fixedAsset", fixedAsset,
                 "dueDate", dueDate,
-                "status", status);
+                "status", status));
     }
 
 
@@ -204,34 +205,37 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
             final Party seller,
             final LocalDate dueDate,
             final InvoiceStatus status) {
-        return allMatches("findByApplicationTenancyPathAndSellerAndDueDateAndStatus",
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceForLease.class,
+                "findByApplicationTenancyPathAndSellerAndDueDateAndStatus",
                 "applicationTenancyPath", applicationTenancyPath,
                 "seller", seller,
                 "dueDate", dueDate,
-                "status", status);
+                "status", status));
     }
     public List<InvoiceForLease> findByApplicationTenancyPathAndSellerAndInvoiceDate(
             final String applicationTenancyPath,
             final Party seller,
             final LocalDate invoiceDate) {
-        return allMatches("findByApplicationTenancyPathAndSellerAndInvoiceDate",
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceForLease.class,
+                "findByApplicationTenancyPathAndSellerAndInvoiceDate",
                 "applicationTenancyPath", applicationTenancyPath,
                 "seller", seller,
-                "invoiceDate", invoiceDate);
+                "invoiceDate", invoiceDate));
     }
 
 
 
 
     public List<InvoiceForLease> findInvoicesByRunId(final String runId) {
-        return allMatches("findByRunId",
-                "runId", runId);
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceForLease.class,"findByRunId",
+                "runId", runId));
     }
 
     public List<InvoiceForLease> findByRunIdAndApplicationTenancyPath(final String runId, final String applicationTenancyPath) {
-        return allMatches("findByRunIdAndApplicationTenancyPath",
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceForLease.class,
+                "findByRunIdAndApplicationTenancyPath",
                 "runId", runId,
-                "applicationTenancyPath", applicationTenancyPath);
+                "applicationTenancyPath", applicationTenancyPath));
     }
 
 

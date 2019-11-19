@@ -44,8 +44,8 @@ public class OrderAttributeRepository extends UdoDomainRepositoryAndFactory<Orde
     @Programmatic
     public List<OrderAttribute> findByOrder(
             final Order order) {
-        return allMatches("findByOrder",
-                "order", order);
+        return repositoryService.allMatches(new QueryDefault<>(OrderAttribute.class,"findByOrder",
+                "order", order));
     }
 
     @Programmatic

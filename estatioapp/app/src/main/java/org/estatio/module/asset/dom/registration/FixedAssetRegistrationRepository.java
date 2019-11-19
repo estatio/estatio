@@ -23,6 +23,7 @@ import java.util.List;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.asset.dom.FixedAsset;
 
@@ -38,16 +39,16 @@ public class FixedAssetRegistrationRepository extends UdoDomainRepositoryAndFact
 
     public List<FixedAssetRegistration> findBySubject(
             final FixedAsset asset) {
-        return allMatches("findBySubject",
-                "subject", asset);
+        return repositoryService.allMatches(new QueryDefault<>(FixedAssetRegistration.class,"findBySubject",
+                "subject", asset));
     }
 
     public List<FixedAssetRegistration> findBySubjectAndType(
             final FixedAsset asset,
             final FixedAssetRegistrationType type) {
-        return allMatches("findBySubject",
+        return repositoryService.allMatches(new QueryDefault<>(FixedAssetRegistration.class,"findBySubject",
                 "subject", asset,
-                "type", type);
+                "type", type));
     }
 
     public List<FixedAssetRegistration> allRegistrations() {

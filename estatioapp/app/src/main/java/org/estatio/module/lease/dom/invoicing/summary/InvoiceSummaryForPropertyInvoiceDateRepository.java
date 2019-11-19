@@ -19,6 +19,7 @@ package org.estatio.module.lease.dom.invoicing.summary;
 
 import java.util.List;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -37,12 +38,13 @@ public class InvoiceSummaryForPropertyInvoiceDateRepository
 
     @Programmatic
     public List<InvoiceSummaryForPropertyInvoiceDate> allInvoices() {
-        return allMatches("all");
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceSummaryForPropertyInvoiceDate.class,"all"));
     }
 
     @Programmatic
     public List<InvoiceSummaryForPropertyInvoiceDate> byInvoiceDate(final LocalDate date) {
-        return allMatches("byInvoiceDate", "date", date);
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceSummaryForPropertyInvoiceDate.class,
+                "byInvoiceDate", "date", date));
     }
 
 }

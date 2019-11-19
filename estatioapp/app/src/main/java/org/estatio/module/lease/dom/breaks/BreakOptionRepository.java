@@ -76,7 +76,7 @@ public class BreakOptionRepository extends UdoDomainRepositoryAndFactory<BreakOp
 
     @Programmatic
     public List<BreakOption> findByLease(final Lease lease) {
-        return allMatches("findByLease", "lease", lease);
+        return repositoryService.allMatches(new QueryDefault<>(BreakOption.class,"findByLease", "lease", lease));
     }
 
     @Programmatic

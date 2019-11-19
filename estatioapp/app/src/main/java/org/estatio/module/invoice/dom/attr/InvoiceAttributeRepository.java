@@ -38,8 +38,8 @@ public class InvoiceAttributeRepository extends UdoDomainRepositoryAndFactory<In
     @Programmatic
     public List<InvoiceAttribute> findByInvoice(
             final Invoice invoice) {
-        return allMatches("findByInvoice",
-                "invoice", invoice);
+        return repositoryService.allMatches(new QueryDefault<>(InvoiceAttribute.class,"findByInvoice",
+                "invoice", invoice));
     }
 
     @Programmatic

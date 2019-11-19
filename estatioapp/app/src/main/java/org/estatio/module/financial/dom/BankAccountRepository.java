@@ -32,6 +32,7 @@ import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.apache.isis.applib.query.QueryDefault;
 import org.incode.module.base.dom.utils.StringUtils;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
@@ -95,14 +96,14 @@ public class BankAccountRepository extends UdoDomainRepositoryAndFactory<BankAcc
 
     @Programmatic
     public List<BankAccount> findByReference(final String reference) {
-        return allMatches("findByReference",
-                "reference", reference);
+        return repositoryService.allMatches(new QueryDefault<>(BankAccount.class,"findByReference",
+                "reference", reference));
     }
 
     @Programmatic
     public List<BankAccount> findByReferenceMatches(final String regex) {
-        return allMatches("matchOnReference",
-                "regex", regex);
+        return repositoryService.allMatches(new QueryDefault<>(BankAccount.class,"matchOnReference",
+                "regex", regex));
     }
 
     public List<BankAccount> autoComplete(@MinLength(3) final String search){
