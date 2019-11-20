@@ -358,6 +358,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     public String title() {
         final TitleBuffer buf = new TitleBuffer();
 
+        if (isItalian() && getBuyer() != null) {
+            buf.append(String.format("[%s]", getBuyer().getReference()));
+        }
+
         buf.append(getBarcode());
 
         final Party seller = getSeller();

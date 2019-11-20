@@ -881,17 +881,6 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
         return getSummaryLinePaymentMethod(LineCache.DEFAULT);
     }
 
-//    @NotPersistent
-//    @Property(notPersisted = true)
-//    @PropertyLayout(hidden = Where.OBJECT_FORMS)
-//    public Character getUserStatus() {
-//        final LineCache lineCache = (LineCache) scratchpad.get(LineCache.class);
-//        if (lineCache == null) {
-//            return null;
-//        }
-//        return getSummaryLineUserStatus(lineCache);
-//    }
-
     @Programmatic
     public String getSummaryLineAccountCode(final LineCache lineCache) {
         final CodaDocLine docLine = summaryDocLine(lineCache);

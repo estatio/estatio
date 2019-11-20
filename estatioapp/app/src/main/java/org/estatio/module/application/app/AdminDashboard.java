@@ -10,8 +10,6 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -27,6 +25,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -53,6 +52,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.coda.EstatioCodaModule;
+import org.estatio.module.coda.dom.doc.CodaDocHeadMenu;
 import org.estatio.module.coda.dom.hwm.CodaHwm;
 import org.estatio.module.coda.dom.hwm.CodaHwmRepository;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
@@ -71,7 +71,9 @@ public class AdminDashboard implements ViewModel {
     public static final String KEY_ESTATIO_MOTD = "estatio.motd";
     public static final String KEY_MINIO_ARCHIVE_FOR_CALLER = "docBlobServer.caller";
 
-    public String title() { return "Admin Dashboard"; }
+    public String title() {
+        return "Admin Dashboard";
+    }
 
     @Override
     public String viewModelMemento() {
@@ -89,6 +91,7 @@ public class AdminDashboard implements ViewModel {
         NONE("none");
 
         private final String title;
+
         DocBlobArchiveCaller(final String title) {
             this.title = title;
         }
@@ -100,7 +103,7 @@ public class AdminDashboard implements ViewModel {
         public static DocBlobArchiveCaller lookup(final String title) {
             final DocBlobArchiveCaller[] values = values();
             for (final DocBlobArchiveCaller value : values) {
-                if(value.title().equalsIgnoreCase(title)) {
+                if (value.title().equalsIgnoreCase(title)) {
                     return value;
                 }
             }
@@ -120,17 +123,18 @@ public class AdminDashboard implements ViewModel {
                 ? DocBlobArchiveCaller.lookup(applicationSetting.valueAsString())
                 : null;
     }
+
     public void setDocBlobServerCaller(DocBlobArchiveCaller caller) {
         ApplicationSettingForEstatio applicationSetting =
                 (ApplicationSettingForEstatio) applicationSettingsServiceRW.find(KEY_MINIO_ARCHIVE_FOR_CALLER);
-        if(applicationSetting != null) {
-            if(caller != null) {
+        if (applicationSetting != null) {
+            if (caller != null) {
                 applicationSetting.setValueRaw(caller.title());
             } else {
                 applicationSettingsServiceRW.delete(applicationSetting);
             }
         } else {
-            if(caller != null) {
+            if (caller != null) {
                 applicationSettingsServiceRW.newString(KEY_MINIO_ARCHIVE_FOR_CALLER, "Which caller(s) to enable the archive of document blobs to Minio", caller.title());
             }
         }
@@ -146,27 +150,28 @@ public class AdminDashboard implements ViewModel {
                 (ApplicationSettingForEstatio) applicationSettingsServiceRW.find(KEY_ESTATIO_MOTD);
         return applicationSetting != null ? applicationSetting.valueAsString() : null;
     }
+
     public void setMotd(String motd) {
         ApplicationSettingForEstatio applicationSetting =
                 (ApplicationSettingForEstatio) applicationSettingsServiceRW.find(KEY_ESTATIO_MOTD);
-        if(applicationSetting != null) {
-            if(motd != null) {
+        if (applicationSetting != null) {
+            if (motd != null) {
                 applicationSetting.setValueRaw(motd);
             } else {
                 applicationSettingsServiceRW.delete(applicationSetting);
             }
         } else {
-            if(motd != null) {
+            if (motd != null) {
                 applicationSettingsServiceRW.newString(KEY_ESTATIO_MOTD, "Message of the Day", motd);
             }
         }
     }
 
-
     @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
     public LocalDate getEpochDate() {
         return settingsService.fetchEpochDate();
     }
+
     public void setEpochDate(final LocalDate epochDate) {
         settingsService.updateEpochDate(epochDate);
     }
@@ -176,17 +181,16 @@ public class AdminDashboard implements ViewModel {
         setEpochDate(epochDate);
         return this;
     }
+
     public LocalDate default0UpdateEpochDate() {
         return getEpochDate();
     }
-
 
     @Property()
     @MemberOrder(sequence = "3")
     public Integer getHttpSessionTimeout() {
         return httpSessionProvider.getHttpSession().map(HttpSession::getMaxInactiveInterval).orElse(null);
     }
-
 
     @Collection()
     @MemberOrder(sequence = "2")
@@ -198,23 +202,25 @@ public class AdminDashboard implements ViewModel {
                 .collect(Collectors.toList());
     }
 
-
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public AdminDashboard retrieveCodaSupplier(
             final String supplierReference) {
         return this;
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT, publishing = Publishing.DISABLED)
     public AdminDashboard retrieveCodaDoc(
             final String cmpCode,
             final String docCode,
             final int docNum) {
+        codaDocHeadMenu.retrieveCodaDoc(cmpCode, docCode, docNum);
         return this;
     }
+
     public List<String> choices0RetrieveCodaDoc() {
         return codaCmpCodeService.listAll();
     }
+
     public List<String> choices1RetrieveCodaDoc() {
         return codaDocCodeService.listAll();
     }
@@ -250,23 +256,21 @@ public class AdminDashboard implements ViewModel {
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3.1")
     public AdminDashboard testEmail(
-            @ParameterLayout(named = "To")
-            final String to,
-            @ParameterLayout(named = "Subject")
-            final String subject,
+            @ParameterLayout(named = "To") final String to,
+            @ParameterLayout(named = "Subject") final String subject,
             @ParameterLayout(
                     named = "Body",
                     multiLine = 5
-            )
-            final String body) {
+            ) final String body) {
         final List<String> toList = Collections.singletonList(to);
         final List<String> ccList = Collections.emptyList();
         final List<String> bccList = Collections.emptyList();
         emailService.send(toList, ccList, bccList, subject, body);
         return this;
     }
+
     public String disableTestEmail() {
-        if(emailService == null) {
+        if (emailService == null) {
             return "No EmailService defined";
         }
         if (!emailService.isConfigured()) {
@@ -283,6 +287,7 @@ public class AdminDashboard implements ViewModel {
         slackService.sendMessage(channel, message);
         return this;
     }
+
     public String disableTestSlack() {
         if (slackService == null) {
             return "No SlackService defined";
@@ -293,18 +298,15 @@ public class AdminDashboard implements ViewModel {
         return null;
     }
 
-
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     @MemberOrder(sequence = "3.4")
     public AdminDashboard patchDatabase(
             @ParameterLayout(multiLine = 10)
-            String sql) {
+                    String sql) {
         final Integer integer = isisJdoSupport.executeUpdate(sql);
         messageService.informUser("executeUpdate(sql) returned: " + integer);
         return this;
     }
-
-
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "3.5")
@@ -341,14 +343,18 @@ public class AdminDashboard implements ViewModel {
         level.raise(messageService, message);
         return this;
     }
-    public Level default0TestMessageService() { return Level.INFO; }
-    public String default1TestMessageService() { return "test message"; }
 
+    public Level default0TestMessageService() {
+        return Level.INFO;
+    }
 
+    public String default1TestMessageService() {
+        return "test message";
+    }
 
     @Collection
     @CollectionLayout(defaultView = "table")
-    public Set<ConfigurationProperty> getConnections(){
+    public Set<ConfigurationProperty> getConnections() {
         return configurationService.allProperties().stream()
                 .filter(this::match)
                 .collect(Collectors.toSet());
@@ -370,6 +376,7 @@ public class AdminDashboard implements ViewModel {
         return new Markup(stringInterpolatorService.interpolate(
                 this, "<iframe src=\"${properties['estatio.application.kibanaEmbeddedLogUrl']}?embed=true\" height=\"${this.kibanaLogHeight}\" width=\"${this.kibanaLogWidth}\"></iframe>"));
     }
+
     public boolean hideKibanaLog() {
         return interpolateOpenLogUrl() == null;
     }
@@ -389,12 +396,15 @@ public class AdminDashboard implements ViewModel {
         this.setKibanaLogHeight(height);
         return this;
     }
+
     public boolean hideUpdateKibanaLogDimensions() {
         return interpolateOpenLogUrl() == null;
     }
+
     public int default0UpdateKibanaLogDimensions() {
         return getKibanaLogWidth();
     }
+
     public int default1UpdateKibanaLogDimensions() {
         return getKibanaLogHeight();
     }
@@ -403,18 +413,18 @@ public class AdminDashboard implements ViewModel {
     public URL openKibanaLog() throws MalformedURLException {
         return interpolateOpenLogUrl();
     }
+
     public boolean hideOpenKibanaLog() {
         return interpolateOpenLogUrl() == null;
     }
 
-    private URL interpolateOpenLogUrl()  {
+    private URL interpolateOpenLogUrl() {
         try {
             return new URL(stringInterpolatorService.interpolate(this, "${properties['estatio.application.kibanaOpenLogUrl']}"));
         } catch (MalformedURLException e) {
             return null;
         }
     }
-
 
     @Collection
     @CollectionLayout(defaultView = "table")
@@ -423,9 +433,9 @@ public class AdminDashboard implements ViewModel {
     }
 
     @Action(
-        semantics = SemanticsOf.NON_IDEMPOTENT,
-        associateWith = "codaHwms",
-        associateWithSequence = "1"
+            semantics = SemanticsOf.NON_IDEMPOTENT,
+            associateWith = "codaHwms",
+            associateWithSequence = "1"
     )
     @ActionLayout(named = "Create")
     public AdminDashboard createCodaHwm(
@@ -433,7 +443,7 @@ public class AdminDashboard implements ViewModel {
             final String cmpCode,
             final LocalDateTime lastRan) {
         CodaHwm codaHwm = codaHwmRepository.findByFeedNameAndCmpCode(feedName.name(), cmpCode);
-        if(codaHwm != null) {
+        if (codaHwm != null) {
             messageService.warnUser("That feed already exists");
             return this;
         }
@@ -441,17 +451,19 @@ public class AdminDashboard implements ViewModel {
         codaHwm.setLastRan(lastRan);
         return this;
     }
+
     public List<String> choices1CreateCodaHwm() {
         return codaCmpCodeService.listAll();
     }
+
     public LocalDateTime default2CreateCodaHwm() {
         return clockService.nowAsLocalDateTime();
     }
 
     @Action(
-        semantics = SemanticsOf.IDEMPOTENT,
-        associateWith = "codaHwms",
-        associateWithSequence = "2"
+            semantics = SemanticsOf.IDEMPOTENT,
+            associateWith = "codaHwms",
+            associateWithSequence = "2"
     )
     @ActionLayout(named = "Update")
     public AdminDashboard updateCodaHwm(
@@ -460,9 +472,11 @@ public class AdminDashboard implements ViewModel {
         codaHwm.setLastRan(lastRan);
         return this;
     }
+
     public String disableUpdateCodaHwm() {
-        return getCodaHwms().isEmpty() ? "No HWMs to update": null;
+        return getCodaHwms().isEmpty() ? "No HWMs to update" : null;
     }
+
     public List<CodaHwm> choices0UpdateCodaHwm() {
         return getCodaHwms();
     }
@@ -470,8 +484,6 @@ public class AdminDashboard implements ViewModel {
     //public LocalDateTime default1UpdateCodaHwm(CodaHwm codaHwm) {
     //    return codaHwm.getLastRan();
     //}
-
-
 
     /**
      * Allows Camel to be restarted without having to restart the application.
@@ -481,7 +493,7 @@ public class AdminDashboard implements ViewModel {
 
         final ServiceInitializer serviceInitializer =
                 new ServiceInitializer(
-                    isisConfiguration, Arrays.asList(publisherServiceUsingActiveMq));
+                        isisConfiguration, Arrays.asList(publisherServiceUsingActiveMq));
         serviceInitializer.validate();
         serviceInitializer.preDestroy();
         serviceInitializer.postConstruct();
@@ -540,5 +552,8 @@ public class AdminDashboard implements ViewModel {
 
     @Inject
     FactoryService factoryService;
+
+    @Inject
+    CodaDocHeadMenu codaDocHeadMenu;
 
 }

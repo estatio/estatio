@@ -47,6 +47,7 @@ import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyForTesting;
 import org.estatio.module.party.dom.role.PartyRoleRepository;
 import org.estatio.module.tax.dom.Tax;
 
@@ -87,6 +88,101 @@ public class IncomingInvoice_Test {
             ignoring(mockEventBusService);
             when(eventBusInteractions.isNot("recognised"));
         }});
+    }
+
+    public static class title_Test extends IncomingInvoice_Test {
+
+        @Test
+        public void when_Italian() throws Exception {
+            // given
+            Party buyerParty = new Organisation();
+            buyerParty.setReference("IT01");
+
+            Party sellerParty = new Organisation();
+            sellerParty.setName("Acme");
+            sellerParty.setReference("ACME");
+
+            IncomingInvoice invoiceForTitle = new IncomingInvoice() {
+                @Override
+                protected EventBusService getEventBusService() {
+                    return mockEventBusService;
+                }
+
+                @Override
+                public String getAtPath() {
+                    return "/ITA";
+                }
+
+                @Override
+                public Party getBuyer() {
+                    return buyerParty;
+                }
+
+                @Override
+                public Party getSeller() {
+                    return sellerParty;
+                }
+
+                @Override
+                public String getBarcode() {
+                    return "12345";
+                }
+            };
+
+            invoiceForTitle.setInvoiceNumber("INVOICE0123");
+
+            // when
+            final String title = invoiceForTitle.title();
+
+            // then
+            assertThat(title).isEqualTo("[IT01] 12345:  Acme [ACME],  INVOICE0123");
+        }
+
+        @Test
+        public void when_French() throws Exception {
+            // given
+            Party buyerParty = new Organisation();
+            buyerParty.setReference("FR01");
+
+            Party sellerParty = new Organisation();
+            sellerParty.setName("Acme");
+            sellerParty.setReference("ACME");
+
+            IncomingInvoice invoiceForTitle = new IncomingInvoice() {
+                @Override
+                protected EventBusService getEventBusService() {
+                    return mockEventBusService;
+                }
+
+                @Override
+                public String getAtPath() {
+                    return "/FRA";
+                }
+
+                @Override
+                public Party getBuyer() {
+                    return buyerParty;
+                }
+
+                @Override
+                public Party getSeller() {
+                    return sellerParty;
+                }
+
+                @Override
+                public String getBarcode() {
+                    return "12345";
+                }
+            };
+
+            invoiceForTitle.setInvoiceNumber("INVOICE0123");
+
+            // when
+            final String title = invoiceForTitle.title();
+
+            // then
+            assertThat(title).isEqualTo("12345:  Acme [ACME],  INVOICE0123");
+        }
     }
 
     public static class reasonIncomplete_Test extends IncomingInvoice_Test {
