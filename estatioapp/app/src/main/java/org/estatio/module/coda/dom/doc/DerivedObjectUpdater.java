@@ -165,7 +165,6 @@ public class DerivedObjectUpdater {
                         // only overwrite charge if value hasn't been modified in Estatio since originally sync'd
                         final Optional<Charge> previousChargeIfAny = previousLineDatum.getChargeIfAny();
                         if(previousChargeIfAny.isPresent() &&
-                                chargeIfAny != null &&
                                 previousChargeIfAny.get() == invoiceItem.getCharge()) {
 
                             chargeInSync = true;
@@ -181,7 +180,6 @@ public class DerivedObjectUpdater {
                         boolean projectInSync = false;
                         final Optional<Project> previousProjectIfAny = previousLineDatum.getProjectIfAny();
                         if(previousProjectIfAny.isPresent() &&
-                                projectIfAny != null &&
                                 previousProjectIfAny.get() == invoiceItem.getProject()) {
 
                             projectInSync = true;
