@@ -263,6 +263,7 @@ public class IncomingDocumentRepository_UpsertAndArchive_IntegTest extends Capex
         assertThat(paperclipsBefore).hasSize(1);
         final Paperclip paperclipForInvoiceBefore = paperclipsBefore.get(0);
         incomingInvoice = (IncomingInvoice) paperclipForInvoiceBefore.getAttachedTo();
+        assertThat(incomingInvoice.getBarcode()).isEqualTo("3020100123");
 
         assertThat(paperclipForInvoiceBefore.getRoleName()).isNull();
         assertThat(paperclipForInvoiceBefore.getDocument()).isSameAs(documentOrig);

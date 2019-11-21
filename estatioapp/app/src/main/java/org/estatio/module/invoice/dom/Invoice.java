@@ -63,9 +63,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ObjectUpdatingEvent;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
-
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
 import org.incode.module.base.dom.types.NotesType;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
@@ -198,6 +196,7 @@ public abstract class Invoice<T extends Invoice<T>>
     private Party buyer;
 
     @javax.jdo.annotations.Column(name = "sellerPartyId", allowsNull = "true")
+    @Persistent(loadFetchGroup = "seller") // TODO: a sketch of how we could enable selectively in the repo.
     @Property(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
     private Party seller;

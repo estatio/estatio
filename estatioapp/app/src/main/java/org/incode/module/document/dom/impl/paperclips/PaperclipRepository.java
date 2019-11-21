@@ -10,6 +10,9 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
+import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.xactn.TransactionService;
 
@@ -118,8 +121,12 @@ public class PaperclipRepository {
 
     //region > attach (programmatic)
 
+
+    public static class PaperclipAttachDomainEvent
+            extends ActionDomainEvent<Paperclip> {}
     /**
      * This is an idempotent operation.
+     * Also fires domain event in order to update derived persisted property {@Link IncomingInvoice#barcode} when a new paperclip is attached
      */
     @Programmatic
     public Paperclip attach(
@@ -152,6 +159,12 @@ public class PaperclipRepository {
         paperclip.setAttachedToStr(bookmark.toString());
 
         repositoryService.persistAndFlush(paperclip);
+
+        // fire domain event
+        final PaperclipAttachDomainEvent event = new PaperclipAttachDomainEvent();
+        event.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
+        event.setSource(paperclip);
+        eventBusService.post(event);
 
         return paperclip;
     }
@@ -295,6 +308,9 @@ public class PaperclipRepository {
 
     @Inject
     List<SubtypeProvider> subtypeProviders;
+
+    @Inject
+    EventBusService eventBusService;
     //endregion
 
 }

@@ -39,6 +39,13 @@ public class PaymentBatch_complete extends PaymentBatch_triggerAbstract {
             final DateTime requestedExecutionDate,
             @Nullable final String comment) {
         paymentBatch.setRequestedExecutionDate(requestedExecutionDate);
+
+        paymentBatch.setTotalNetAmountOnComplete(paymentBatch.getTotalNetAmount());
+        paymentBatch.setTotalVatAmountOnComplete(paymentBatch.getTotalVatAmount());
+        paymentBatch.setTotalGrossAmountOnComplete(paymentBatch.getTotalGrossAmount());
+        paymentBatch.setNumTransfersOnComplete(paymentBatch.getNumTransfers());
+        paymentBatch.setNumInvoicesOnComplete(paymentBatch.getNumInvoices());
+
         trigger(comment, null);
         return getDomainObject();
     }

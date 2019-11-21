@@ -60,7 +60,6 @@ import org.estatio.module.capex.dom.payment.PaymentLine;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.dom.task.TaskRepository;
 import org.estatio.module.capex.dom.task.Task_checkState;
-import org.estatio.module.coda.contributions.IncomingInvoice_codaDocHead;
 import org.estatio.module.coda.dom.doc.CodaDocHead;
 import org.estatio.module.coda.dom.doc.CodaDocHeadRepository;
 import org.estatio.module.event.dom.Event;
@@ -162,24 +161,24 @@ public class EstatioAppHomePage {
 
     @Collection(notPersisted = true)
     public List<IncomingInvoice> getIncomingInvoicesFraNew() {
-        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+        return findByAtPathPrefixesAndApprovalState(
                 AT_PATHS_FRA_OFFICE,IncomingInvoiceApprovalState.NEW);
     }
 
     @Collection(notPersisted = true)
     public List<IncomingInvoice> getIncomingInvoicesFraCompleted() {
-        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+        return findByAtPathPrefixesAndApprovalState(
                 AT_PATHS_FRA_OFFICE,IncomingInvoiceApprovalState.COMPLETED);
     }
 
     @Collection(notPersisted = true)
     public List<IncomingInvoice> getIncomingInvoicesFraApproved() {
-        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+        return findByAtPathPrefixesAndApprovalState(
                 AT_PATHS_FRA_OFFICE, IncomingInvoiceApprovalState.APPROVED);
     }
 
     public List<IncomingInvoice> getIncomingInvoicesFraPendingBankAccountCheck() {
-        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+        return findByAtPathPrefixesAndApprovalState(
                 AT_PATHS_FRA_OFFICE, IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK);
     }
 
@@ -204,7 +203,7 @@ public class EstatioAppHomePage {
     @Collection(notPersisted = true)
     public List<IncomingInvoice> getIncomingInvoicesFraPayableByOther() {
         final List<IncomingInvoice> invoices = Lists.newArrayList(
-                incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+                findByAtPathPrefixesAndApprovalState(
                         AT_PATHS_FRA_OFFICE, IncomingInvoiceApprovalState.PAYABLE));
 
         final List<IncomingInvoice> byDirectDebit = getIncomingInvoicesFraPayableByDirectDebit();
@@ -252,39 +251,56 @@ public class EstatioAppHomePage {
 
     @Collection(notPersisted = true)
     public List<IncomingInvoice> getIncomingInvoicesItaNew() {
-        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+        return findByAtPathPrefixesAndApprovalState(
                 AT_PATHS_ITA_OFFICE, IncomingInvoiceApprovalState.NEW);
     }
 
     @Collection(notPersisted = true)
     public List<IncomingInvoice> getIncomingInvoicesItaCompleted() {
-        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+        return findByAtPathPrefixesAndApprovalState(
                 AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.COMPLETED);
     }
 
     @Collection(notPersisted = true)
     public List<IncomingInvoice> getIncomingInvoicesItaPendingAdvise() {
-        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+        return findByAtPathPrefixesAndApprovalState(
                 AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PENDING_ADVISE);
     }
 
     @Collection(notPersisted = true)
     public List<IncomingInvoice> getIncomingInvoicesItaApprovedByCenterManager() {
-        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+        return findByAtPathPrefixesAndApprovalState(
                 AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER);
     }
 
     @Collection(notPersisted = true)
     public List<IncomingInvoice> getIncomingInvoicesItaApproved() {
-        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+        return findByAtPathPrefixesAndApprovalState(
                 AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.APPROVED);
     }
 
     @Collection(notPersisted = true)
     public List<IncomingInvoice> getIncomingInvoicesItaPendingCodaBooks() {
-        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+        return findByAtPathPrefixesAndApprovalState(
                 AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK);
     }
+
+    private List<IncomingInvoice> findByAtPathPrefixesAndApprovalState(
+            final List<String> atPathPrefixes,
+            final IncomingInvoiceApprovalState approvalState) {
+
+        final List<IncomingInvoice> incomingInvoices =
+                incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+                        atPathPrefixes, approvalState);
+
+        // don't need the results, just want the side-effect of pre-populating the QueryResultsCache
+        for (final String atPathPrefix : atPathPrefixes) {
+            codaDocHeadRepository.findByIncomingInvoiceAtPathPrefixAndApprovalState(atPathPrefix, approvalState);
+        }
+
+        return incomingInvoices;
+    }
+
 
     @Collection(notPersisted = true)
     public List<IncomingInvoiceWhenPayableBankTransfer> getIncomingInvoicesItaPayableBankTransfer() {
@@ -316,13 +332,11 @@ public class EstatioAppHomePage {
     }
 
     private List<IncomingInvoiceWhenPayableBankTransfer> doGetIncomingInvoicesItaPayableBankTransfer() {
-        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalStateAndPaymentMethod(
-                AT_PATHS_ITA_OFFICE, IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.BANK_TRANSFER).stream()
-                .map(incomingInvoice -> {
-                    final CodaDocHead codaDocHead = factoryService.mixin(
-                            IncomingInvoice_codaDocHead.class, incomingInvoice).prop();
-                    return new IncomingInvoiceWhenPayableBankTransfer(incomingInvoice, codaDocHead);
-                })
+
+            List<CodaDocHead> codaDocHeads =
+                codaDocHeadRepository.findByIncomingInvoiceAtPathPrefixAndApprovalStateAndPaymentMethod(AT_PATHS_ITA_OFFICE.get(0), IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.BANK_TRANSFER);
+        return codaDocHeads.stream()
+                .map(IncomingInvoiceWhenPayableBankTransfer::new)
                 .collect(Collectors.toList());
     }
 
@@ -350,7 +364,7 @@ public class EstatioAppHomePage {
 
     @Collection(notPersisted = true)
     public List<IncomingInvoice> getIncomingInvoicesItaSuspended() {
-        return incomingInvoiceRepository.findByAtPathPrefixesAndApprovalState(
+        return findByAtPathPrefixesAndApprovalState(
                 AT_PATHS_ITA_OFFICE,IncomingInvoiceApprovalState.SUSPENDED);
     }
 

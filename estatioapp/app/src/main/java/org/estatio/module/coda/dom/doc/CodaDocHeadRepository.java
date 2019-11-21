@@ -11,10 +11,14 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.title.TitleService;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.module.coda.contributions.IncomingInvoice_codaDocHead;
+import org.estatio.module.invoice.dom.PaymentMethod;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -158,6 +162,59 @@ public class CodaDocHeadRepository {
                 )
         );
     }
+
+    public List<CodaDocHead> findByIncomingInvoiceAtPathPrefixAndApprovalState(
+            final String atPathPrefix, final IncomingInvoiceApprovalState approvalState) {
+
+        final List<CodaDocHead> codaDocHeads = repositoryService.allMatches(
+                new QueryDefault<>(
+                        CodaDocHead.class,
+                        "findByIncomingInvoiceAtPathPrefixAndApprovalState",
+                        "atPathPrefix", atPathPrefix,
+                        "approvalState", approvalState));
+
+        prepopulateQueryResultsCacheForMixin(codaDocHeads);
+
+        return codaDocHeads;
+    }
+
+    public List<CodaDocHead> findByIncomingInvoiceAtPathPrefixAndApprovalStateAndPaymentMethod(
+            final String atPathPrefix,
+            final IncomingInvoiceApprovalState approvalState,
+            final PaymentMethod paymentMethod) {
+
+        final List<CodaDocHead> codaDocHeads = repositoryService.allMatches(
+                new QueryDefault<>(
+                        CodaDocHead.class,
+                        "findByIncomingInvoiceAtPathPrefixAndApprovalStateAndPaymentMethod",
+                        "atPathPrefix", atPathPrefix,
+                        "approvalState", approvalState,
+                        "paymentMethod", paymentMethod));
+
+        prepopulateQueryResultsCacheForMixin(codaDocHeads);
+
+        return codaDocHeads;
+    }
+
+    /**
+     * populate the cache, so that IncomingInvoice_codaDocHead
+     * (which will be called soon) doesn't need to run a query.
+     *
+     * @param codaDocHeads
+     */
+    private void prepopulateQueryResultsCacheForMixin(final List<CodaDocHead> codaDocHeads) {
+        for (final CodaDocHead codaDocHead : codaDocHeads) {
+            queryResultsCache.put(keyFor(codaDocHead.getIncomingInvoice()), codaDocHead);
+        }
+    }
+
+    private QueryResultsCache.Key keyFor(final IncomingInvoice incomingInvoice) {
+        return new QueryResultsCache.Key(IncomingInvoice_codaDocHead.class, "prop", incomingInvoice);
+    }
+
+
+    @Inject
+    QueryResultsCache queryResultsCache;
 
     @Programmatic
     public boolean deleteIfNoInvoiceAttached(final CodaDocHead codaDocHead) {

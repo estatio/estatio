@@ -225,6 +225,8 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
         setMediaCodeValidationStatus(ValidationStatus.NOT_CHECKED);
 
         setReasonInvalid(null);
+
+        getDocHead().updateDerivedUserStatus();
     }
 
     public String title() {

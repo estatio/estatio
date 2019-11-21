@@ -50,6 +50,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.metamodel.MetaModelService2;
 import org.apache.isis.applib.services.metamodel.MetaModelService3;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.apache.isis.applib.util.TitleBuffer;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
@@ -57,7 +58,6 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.document.dom.impl.docs.Document;
-import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
@@ -273,7 +273,8 @@ import lombok.Setter;
 @Indices({
         @Index(name = "IncomingInvoice_approvalState_IDX", members = { "approvalState" }),
         @Index(name = "IncomingInvoice_atPath_approvalState_IDX", members = { "applicationTenancyPath", "approvalState" }),
-        @Index(name = "IncomingInvoice_approvalState_atPath_IDX", members = { "approvalState", "applicationTenancyPath" })
+        @Index(name = "IncomingInvoice_approvalState_atPath_IDX", members = { "approvalState", "applicationTenancyPath" }),
+        @Index(name = "IncomingInvoice_barcode_IDX", members = { "barcode" })
 })
 // unused, since rolled-up
 //@Unique(name = "IncomingInvoice_invoiceNumber_UNQ", members = { "invoiceNumber" })
@@ -1577,6 +1578,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
      */
     @javax.jdo.annotations.Column(name = "propertyId", allowsNull = "true")
     @org.apache.isis.applib.annotation.Property(hidden = Where.REFERENCES_PARENT)
+    @Persistent(defaultFetchGroup = "true")
     @Getter @Setter
     private Property property;
 
@@ -2272,6 +2274,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Programmatic
     public List<ApprovalString> getApprovals() {
+        return queryResultsCache.execute(this::doGetApprovals, getClass(), "getApprovals");
+    }
+
+    List<ApprovalString> doGetApprovals() {
         // TODO: as of EST-1824 temporarily we will inspect the transition instead of the task on the transition
         return stateTransitionRepository.findByDomainObject(this)
                 .stream()
@@ -2281,6 +2287,16 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .map(x -> new ApprovalString(x.getCompletedBy(), x.getCompletedOn().toString("dd-MMM-yyyy HH:mm"), x.getCompletedOn().toLocalDate()))
                 .collect(Collectors.toList());
     }
+
+    @Programmatic
+    public Optional<ApprovalString> getMostRecentApproval() {
+        final List<IncomingInvoice.ApprovalString> approvals = getApprovals();
+        Collections.reverse(approvals);
+        return Optional.ofNullable(approvals.isEmpty() ? null : approvals.get(0));
+    }
+
+    @Inject
+    QueryResultsCache queryResultsCache;
 
     @AllArgsConstructor
     @Getter @Setter
@@ -2357,11 +2373,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .result();
     }
 
+    @Getter @Setter
+    @Column(allowsNull = "true")
     @PropertyLayout(hidden = Where.OBJECT_FORMS)
-    public String getBarcode() {
-        final Optional<Document> document = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(this);
-        return document.map(DocumentAbstract::getName).orElse(null);
-    }
+    private String barcode;
 
     //region > notification
 
