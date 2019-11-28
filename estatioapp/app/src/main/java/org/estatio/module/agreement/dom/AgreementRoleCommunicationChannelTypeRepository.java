@@ -94,7 +94,7 @@ public class AgreementRoleCommunicationChannelTypeRepository
             arcct = factoryService.instantiate(AgreementRoleCommunicationChannelType.class);
             arcct.setTitle(title);
             arcct.setAppliesTo(agreementType);
-            getContainer().persist(arcct);
+            repositoryService.persistAndFlush(arcct);
         }
         return arcct;
     }
