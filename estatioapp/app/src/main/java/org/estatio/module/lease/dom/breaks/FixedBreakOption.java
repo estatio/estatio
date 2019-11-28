@@ -20,10 +20,12 @@ package org.estatio.module.lease.dom.breaks;
 
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import com.google.common.collect.Sets;
 
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -126,7 +128,7 @@ public class FixedBreakOption
         } else {
             if (reminderEvent != null) {
                 // delete...
-                removeIfNotAlready(reminderEvent);
+                repositoryService.remove(reminderEvent);
             }
         }
         return this;
@@ -161,5 +163,8 @@ public class FixedBreakOption
         createEvent(getBreakDate(), this, CALENDAR_NAME_FIXED_BREAK);
         createEvent(getExerciseDate(), this, CALENDAR_NAME_FIXED_BREAK_EXERCISE);
     }
+
+    @Inject
+    private RepositoryService repositoryService;
 
 }

@@ -68,11 +68,8 @@ public class EventRepository extends UdoDomainRepositoryAndFactory<Event> {
     @Programmatic
     public void remove(Event event) {
         final EventSourceLink link = eventSourceLinkRepository.findByEvent(event);
-
-        removeIfNotAlready(link);
-        getContainer().flush();
-        removeIfNotAlready(event);
-        getContainer().flush();
+        repositoryService.removeAndFlush(link);
+        repositoryService.removeAndFlush(event);
     }
 
 

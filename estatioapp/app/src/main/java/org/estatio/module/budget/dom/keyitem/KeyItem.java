@@ -21,6 +21,7 @@ package org.estatio.module.budget.dom.keyitem;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -35,6 +36,7 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
@@ -149,7 +151,7 @@ public class KeyItem extends PartitioningTableItem
 
     @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public void deleteBudgetKeyItem() {
-        removeIfNotAlready(this);
+        repositoryService.remove(this);
     }
 
     @Override
@@ -172,4 +174,7 @@ public class KeyItem extends PartitioningTableItem
         KeyTable keyTable = (KeyTable) getPartitioningTable();
         return keyTable.getFoundationValueType()!= FoundationValueType.AREA;
     }
+
+    @Inject
+    private RepositoryService repositoryService;
 }
