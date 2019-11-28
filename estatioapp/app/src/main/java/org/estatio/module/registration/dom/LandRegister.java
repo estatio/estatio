@@ -9,6 +9,7 @@ import javax.jdo.annotations.InheritanceStrategy;
 import com.google.common.base.Joiner;
 
 import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.services.title.TitleService;
 import org.joda.time.LocalDate;
 
 import org.incode.module.base.dom.types.DescriptionType;
@@ -40,7 +41,7 @@ public class LandRegister extends FixedAssetRegistration {
                         getParticella(),
                         getSubalterno()));
         if (title == ""){
-            return getContainer().titleOf(getType()).concat(": ").concat(getContainer().titleOf(getSubject()));
+            return titleService.titleOf(getType()).concat(": ").concat(titleService.titleOf(getSubject()));
         }
         return title;
     }
@@ -224,6 +225,9 @@ public class LandRegister extends FixedAssetRegistration {
     }
 
     // //////////////////////////////////////
+
+    @Inject
+    private TitleService titleService;
 
     @Inject
     LandRegisters landRegisters;

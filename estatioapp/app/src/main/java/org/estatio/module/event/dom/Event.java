@@ -26,6 +26,7 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.base.Function;
 
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.services.title.TitleService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainObject;
@@ -180,7 +181,7 @@ public class Event
 
     @Programmatic
     public CalendarEvent toCalendarEvent() {
-        final String eventTitle = getContainer().titleOf(getSource()) + " " + getCalendarName();
+        final String eventTitle = titleService.titleOf(getSource()) + " " + getCalendarName();
         return new CalendarEvent(getDate().toDateTimeAtStartOfDay(), getCalendarName(), eventTitle);
     }
 
@@ -219,6 +220,9 @@ public class Event
         // TODO: have (temporarily?) removed source from this, cos hitting an infinite loop :-(
         return UDO_OBJECT_CONTRACTS.toStringOf(this, "date, calendarName");
     }
+
+    @Inject
+    private TitleService titleService;
 
     @Inject
     private RepositoryService repositoryService;
