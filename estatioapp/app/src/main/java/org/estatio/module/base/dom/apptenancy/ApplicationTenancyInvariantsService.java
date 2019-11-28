@@ -21,9 +21,12 @@ package org.estatio.module.base.dom.apptenancy;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.registry.ServiceRegistry;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.UdoDomainService;
 
@@ -83,7 +86,7 @@ public class ApplicationTenancyInvariantsService extends UdoDomainService<Applic
         final List<ApplicationTenancySubscriberAlgorithm> algorithms = algorithmRegistry.lookup(source, eventClass);
 
         for (final ApplicationTenancySubscriberAlgorithm algorithm : algorithms) {
-            getContainer().injectServicesInto(algorithm);
+            serviceRegistry.injectServicesInto(algorithm);
 
             switch (ev.getEventPhase()) {
                 case HIDE:
@@ -104,5 +107,8 @@ public class ApplicationTenancyInvariantsService extends UdoDomainService<Applic
             }
         }
     }
+
+    @Inject
+    private ServiceRegistry serviceRegistry;
 
 }

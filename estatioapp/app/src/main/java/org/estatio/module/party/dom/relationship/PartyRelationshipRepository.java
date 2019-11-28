@@ -5,6 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.registry.ServiceRegistry;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -58,7 +59,7 @@ public class PartyRelationshipRepository extends UdoDomainRepositoryAndFactory<P
             final Party toParty,
             final String relationshipType,
             final @Parameter(optionality = Optionality.OPTIONAL) String description) {
-        PartyRelationship relationship = getContainer().injectServicesInto(
+        PartyRelationship relationship = serviceRegistry.injectServicesInto(
                 PartyRelationshipTypeEnum.createWithToTitle(fromParty, toParty, relationshipType));
         relationship.setFrom(fromParty);
         relationship.setTo(toParty);
@@ -159,6 +160,9 @@ public class PartyRelationshipRepository extends UdoDomainRepositoryAndFactory<P
     }
 
     // //////////////////////////////////////
+
+    @Inject
+    private ServiceRegistry serviceRegistry;
 
     @Inject
     PersonRepository personRepository;
