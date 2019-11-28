@@ -139,7 +139,7 @@ public class Event
     }
 
     private EventSourceLink getSourceLink() {
-        if (!getContainer().isPersistent(this)) {
+        if (!repositoryService.isPersistent(this)) {
             return null;
         }
         return eventSourceLinkRepository.findByEvent(this);
