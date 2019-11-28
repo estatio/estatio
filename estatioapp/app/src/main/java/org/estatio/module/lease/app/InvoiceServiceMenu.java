@@ -3,6 +3,7 @@ package org.estatio.module.lease.app;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.isis.applib.services.message.MessageService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -32,6 +33,8 @@ import org.estatio.module.lease.dom.invoicing.InvoiceCalculationSelection;
 import org.estatio.module.lease.dom.invoicing.InvoiceCalculationService;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForInvoiceRun;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForInvoiceRunRepository;
+
+import javax.inject.Inject;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -412,7 +415,7 @@ public class InvoiceServiceMenu extends UdoDomainService<InvoiceServiceMenu> {
         if (runId != null) {
             return invoiceSummaries.findByRunId(runId);
         }
-        getContainer().informUser("No invoices created");
+        messageService.informUser("No invoices created");
         return lease;
     }
 
@@ -464,6 +467,9 @@ public class InvoiceServiceMenu extends UdoDomainService<InvoiceServiceMenu> {
     }
 
     // //////////////////////////////////////
+
+    @Inject
+    private MessageService messageService;
 
     @javax.inject.Inject
     private LeaseRepository leaseRepository;
