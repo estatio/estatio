@@ -98,8 +98,7 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
         organisation.setReference(refToUse);
         organisation.setName(name);
         organisation.setChamberOfCommerceCode(chamberOfCommerceCode);
-        persist(organisation);
-        getContainer().flush();
+        repositoryService.persistAndFlush(organisation);
         return organisation;
     }
 
