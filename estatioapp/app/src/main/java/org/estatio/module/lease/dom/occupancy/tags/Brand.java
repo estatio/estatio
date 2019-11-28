@@ -38,6 +38,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.NameType;
@@ -207,8 +208,7 @@ public class Brand
     @Action(domainEvent = Brand.RemoveEvent.class, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Object removeAndReplace(
             final @Parameter(optionality = Optionality.OPTIONAL) Brand replaceWith) {
-        getContainer().remove(this);
-        getContainer().flush();
+        repositoryService.removeAndFlush(this);
 
         return replaceWith;
     }
@@ -220,6 +220,9 @@ public class Brand
             return null;
         }
     }
+
+    @Inject
+    private RepositoryService repositoryService;
 
     @Inject
     BrandRepository brandRepository;

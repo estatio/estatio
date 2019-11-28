@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.util.TitleBuffer;
 
@@ -127,9 +128,11 @@ public class FixedAssetFinancialAccount
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public void remove() {
-        getContainer().remove(this);
-        getContainer().flush();
+        repositoryService.removeAndFlush(this);
     }
+
+    @Inject
+    private RepositoryService repositoryService;
 
     @Inject
     TitleService titleService;

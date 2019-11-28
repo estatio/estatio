@@ -36,6 +36,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.user.UserService;
 import org.joda.time.LocalDate;
 
@@ -396,8 +397,7 @@ public abstract class LeaseTerm
                 getPrevious().setNext(null);
             }
             this.setPrevious(null);
-            getContainer().remove(this);
-            getContainer().flush();
+            repositoryService.removeAndFlush(this);
         }
         return success;
     }
@@ -650,6 +650,9 @@ public abstract class LeaseTerm
     }
 
     // //////////////////////////////////////
+
+    @Inject
+    private RepositoryService repositoryService;
 
     @Inject
     private InvoiceCalculationService invoiceCalculationService;

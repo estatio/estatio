@@ -48,6 +48,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ObjectPersistedEvent;
 import org.apache.isis.applib.services.eventbus.ObjectRemovingEvent;
 import org.apache.isis.applib.services.eventbus.ObjectUpdatedEvent;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
@@ -233,8 +234,7 @@ public class BankAccount
 
     @Action(domainEvent = BankAccount.RemoveEvent.class, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public void remove(final String reason) {
-        getContainer().remove(this);
-        getContainer().flush();
+        repositoryService.removeAndFlush(this);
         return;
     }
 
@@ -407,6 +407,9 @@ public class BankAccount
         public String default1Act() { return bankAccount.getIban(); }
 
     }
+
+    @Inject
+    private RepositoryService repositoryService;
 
     @Inject
     private UserService userService;

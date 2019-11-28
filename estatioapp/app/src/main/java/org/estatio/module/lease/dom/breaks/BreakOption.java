@@ -31,6 +31,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
@@ -310,9 +311,7 @@ public abstract class BreakOption
         for (Event event : findEvents()) {
             eventRepository.remove(event);
         }
-
-        getContainer().remove(this);
-        getContainer().flush();
+        repositoryService.removeAndFlush(this);
 
         return;
     }
@@ -424,4 +423,7 @@ public abstract class BreakOption
         }
 
     }
+
+    @Inject
+    private RepositoryService repositoryService;
 }

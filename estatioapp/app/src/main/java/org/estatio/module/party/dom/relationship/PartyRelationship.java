@@ -12,6 +12,7 @@ import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
@@ -152,10 +153,13 @@ public class PartyRelationship extends AbstractDomainObject implements WithInter
 
     @Programmatic
     public void doRemove() {
-        getContainer().remove(this);
+        repositoryService.remove(this);
     }
 
     // //////////////////////////////////////
+
+    @Inject
+    private RepositoryService repositoryService;
 
     @Inject
     private ClockService clockService;

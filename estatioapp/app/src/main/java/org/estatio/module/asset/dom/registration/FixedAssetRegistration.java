@@ -18,6 +18,7 @@
  */
 package org.estatio.module.asset.dom.registration;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -26,6 +27,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -207,9 +209,11 @@ public abstract class FixedAssetRegistration
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public FixedAsset remove() {
         FixedAsset fixedAsset = getSubject();
-        getContainer().remove(this);
-        getContainer().flush();
+        repositoryService.removeAndFlush(this);
         return fixedAsset;
     }
+
+    @Inject
+    private RepositoryService repositoryService;
 
 }
