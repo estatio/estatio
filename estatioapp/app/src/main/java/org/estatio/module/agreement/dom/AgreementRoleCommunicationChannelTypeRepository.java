@@ -91,7 +91,7 @@ public class AgreementRoleCommunicationChannelTypeRepository
         final AgreementType agreementType = agreementTypeRepository.findOrCreate(IAgreementType);
         AgreementRoleCommunicationChannelType arcct = findByAgreementTypeAndTitle(agreementType, title);
         if (arcct == null) {
-            arcct = getContainer().newTransientInstance(AgreementRoleCommunicationChannelType.class);
+            arcct = factoryService.instantiate(AgreementRoleCommunicationChannelType.class);
             arcct.setTitle(title);
             arcct.setAppliesTo(agreementType);
             getContainer().persist(arcct);
