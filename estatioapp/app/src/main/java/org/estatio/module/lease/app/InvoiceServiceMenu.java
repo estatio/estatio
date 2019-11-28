@@ -283,7 +283,7 @@ public class InvoiceServiceMenu extends UdoDomainService<InvoiceServiceMenu> {
                         if (summaryForInvoiceRun != null) {
                             summaryForInvoiceRun.saveAllAsHistoric();
                         } else {
-                            getContainer().warnUser(String.format("Run Id [%s] not found", runId));
+                            messageService.warnUser(String.format("Run Id [%s] not found", runId));
                         }
                     }
                 }
