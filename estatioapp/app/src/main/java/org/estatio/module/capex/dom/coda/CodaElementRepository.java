@@ -70,7 +70,8 @@ public class CodaElementRepository extends UdoDomainRepositoryAndFactory<CodaEle
         instance.setCode(code);
         instance.setLevel(level);
         instance.setName(name);
-        persistIfNotAlready(instance);
+        repositoryService.persist(instance);
+
         return instance;
     }
 

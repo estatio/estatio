@@ -96,7 +96,7 @@ public class PartyRoleRepository extends UdoDomainRepositoryAndFactory<PartyRole
             final Party party,
             final PartyRoleType roleType) {
         final PartyRole partyRole = new PartyRole(party, roleType);
-        persistIfNotAlready(partyRole);
+        repositoryService.persist(partyRole);
         return partyRole;
     }
 

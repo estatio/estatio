@@ -63,7 +63,7 @@ public class PartyRelationshipRepository extends UdoDomainRepositoryAndFactory<P
         relationship.setFrom(fromParty);
         relationship.setTo(toParty);
         relationship.setDescription(description);
-        persistIfNotAlready(relationship);
+        repositoryService.persist(relationship);
         return relationship;
     }
 

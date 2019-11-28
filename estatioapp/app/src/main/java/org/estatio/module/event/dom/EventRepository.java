@@ -59,7 +59,7 @@ public class EventRepository extends UdoDomainRepositoryAndFactory<Event> {
         event.setDate(date);
         event.setCalendarName(calendarName);
         event.setSource(eventSource);
-        persistIfNotAlready(event);
+        repositoryService.persist(event);
 
         return event;
     }
@@ -68,6 +68,7 @@ public class EventRepository extends UdoDomainRepositoryAndFactory<Event> {
     @Programmatic
     public void remove(Event event) {
         final EventSourceLink link = eventSourceLinkRepository.findByEvent(event);
+
         removeIfNotAlready(link);
         getContainer().flush();
         removeIfNotAlready(event);

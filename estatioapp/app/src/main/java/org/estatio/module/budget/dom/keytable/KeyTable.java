@@ -210,7 +210,8 @@ public class KeyTable extends PartitioningTable {
                 newItem.setValue(BigDecimal.ZERO);
                 newItem.setUnit(unit);
                 newItem.setPartitioningTable(this);
-                persistIfNotAlready(newItem);
+                repositoryService.persist(newItem);
+
                 input.add(newItem);
             }
         }

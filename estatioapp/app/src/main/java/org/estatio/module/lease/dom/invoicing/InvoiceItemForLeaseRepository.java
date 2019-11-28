@@ -59,7 +59,7 @@ public class InvoiceItemForLeaseRepository extends UdoDomainRepositoryAndFactory
 
         final InvoiceItemForLease invoiceItem = newItem(invoice, dueDate);
 
-        persistIfNotAlready(invoiceItem);
+        repositoryService.persist(invoiceItem);
         return invoiceItem;
     }
 
@@ -100,7 +100,7 @@ public class InvoiceItemForLeaseRepository extends UdoDomainRepositoryAndFactory
             invoiceItem.setFixedAsset(unit);
         });
 
-        persistIfNotAlready(invoiceItem);
+        repositoryService.persist(invoiceItem);
         return invoiceItem;
     }
 

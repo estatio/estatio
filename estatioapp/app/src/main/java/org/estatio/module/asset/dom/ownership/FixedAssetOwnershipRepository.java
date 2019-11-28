@@ -41,7 +41,8 @@ public class FixedAssetOwnershipRepository extends UdoDomainRepositoryAndFactory
         FixedAssetOwnership fixedAssetOwnership = factoryService.instantiate(FixedAssetOwnership.class);
         fixedAssetOwnership.setOwner(newOwner);
         fixedAssetOwnership.setOwnershipType(type);
-        persistIfNotAlready(fixedAssetOwnership);
+        repositoryService.persist(fixedAssetOwnership);
+
         return fixedAssetOwnership;
     }
 }

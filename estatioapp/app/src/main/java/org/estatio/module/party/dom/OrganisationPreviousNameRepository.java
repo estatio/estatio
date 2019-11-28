@@ -41,7 +41,7 @@ public class OrganisationPreviousNameRepository extends UdoDomainRepositoryAndFa
         OrganisationPreviousName organisationPreviousName = factoryService.instantiate(OrganisationPreviousName.class);
         organisationPreviousName.setName(name);
         organisationPreviousName.setEndDate(endDate);
-        persistIfNotAlready(organisationPreviousName);
+        repositoryService.persist(organisationPreviousName);
         return organisationPreviousName;
     }
 }
