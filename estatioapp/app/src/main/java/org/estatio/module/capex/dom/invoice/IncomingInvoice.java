@@ -2274,7 +2274,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Programmatic
     public List<ApprovalString> getApprovals() {
-        return queryResultsCache.execute(this::doGetApprovals, getClass(), "getApprovals");
+        return queryResultsCache.execute(this::doGetApprovals, getClass(), "getApprovals", this);
     }
 
     List<ApprovalString> doGetApprovals() {
