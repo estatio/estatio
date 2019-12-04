@@ -213,7 +213,7 @@ public class AdminDashboard implements ViewModel {
             final String cmpCode,
             final String docCode,
             final int docNum) {
-        codaDocHeadMenu.retrieveCodaDoc(cmpCode, docCode, docNum);
+        wrapperFactory.wrapSkipRules(codaDocHeadMenu).retrieveCodaDoc(cmpCode, docCode, docNum);
         return this;
     }
 
