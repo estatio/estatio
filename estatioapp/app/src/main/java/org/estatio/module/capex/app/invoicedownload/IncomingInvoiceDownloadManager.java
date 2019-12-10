@@ -159,10 +159,10 @@ public class IncomingInvoiceDownloadManager {
         List<IncomingInvoiceItem> result = new ArrayList<>();
         if (getIncomingInvoiceType() == null) {
             result.addAll(incomingInvoiceItemRepository.findCompletedOrLaterByFixedAssetAndReportedDate(
-                    getProperty(), getReportedDate(), getCountry()));
+                    getProperty(), getReportedDate()));
         } else {
             result.addAll(incomingInvoiceItemRepository.findCompletedOrLaterByFixedAssetAndIncomingInvoiceTypeAndReportedDate(
-                    getProperty(), getIncomingInvoiceType(), getReportedDate(), getCountry()));
+                    getProperty(), getIncomingInvoiceType(), getReportedDate()));
         }
         return filterInvoiceItemsByCountryOfBuyer(getCountry(), result);
     }
@@ -329,7 +329,7 @@ public class IncomingInvoiceDownloadManager {
         List<IncomingInvoiceItem> result = new ArrayList<>();
         List<LocalDate> reportedDatesInRange = incomingInvoiceItemRepository.findDistinctReportDates().stream().filter(x -> !x.isBefore(startDate) && !x.isAfter(endDate)).collect(Collectors.toList());
         for (LocalDate reportedDate : reportedDatesInRange) {
-            result.addAll(incomingInvoiceItemRepository.findCompletedOrLaterByReportedDate(reportedDate, getCountry()).stream()
+            result.addAll(incomingInvoiceItemRepository.findCompletedOrLaterByReportedDate(reportedDate).stream()
                     .filter(x -> x.getFixedAsset() != null)
                     .filter(x -> hasCountry(x.getFixedAsset(), country))
                     .collect(Collectors.toList()));

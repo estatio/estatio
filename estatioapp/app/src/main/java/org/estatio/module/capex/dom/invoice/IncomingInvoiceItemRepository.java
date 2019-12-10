@@ -21,8 +21,6 @@ import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.incode.module.country.dom.impl.Country;
-
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectItem;
@@ -267,8 +265,7 @@ public class IncomingInvoiceItemRepository {
     @Programmatic
     public List<IncomingInvoiceItem> findCompletedOrLaterByFixedAssetAndReportedDate(
             final Property property,
-            final LocalDate reportedDate,
-            final Country country) {
+            final LocalDate reportedDate) {
 
         final List<IncomingInvoiceItem> items = repositoryService.allMatches(
                 new QueryDefault<>(
@@ -278,15 +275,14 @@ public class IncomingInvoiceItemRepository {
                         "reportedDate", reportedDate
                 ));
 
-        return filterByCompletedOrLaterInvoices(items, reportedDate, country);
+        return filterByCompletedOrLaterInvoices(items, reportedDate);
     }
 
     @Programmatic
     public List<IncomingInvoiceItem> findCompletedOrLaterByFixedAssetAndIncomingInvoiceTypeAndReportedDate(
             final Property property,
             final IncomingInvoiceType incomingInvoiceType,
-            final LocalDate reportedDate,
-            final Country country) {
+            final LocalDate reportedDate) {
 
         final List<IncomingInvoiceItem> items = repositoryService.allMatches(
                 new QueryDefault<>(
@@ -297,13 +293,12 @@ public class IncomingInvoiceItemRepository {
                         "reportedDate", reportedDate
                 ));
 
-        return filterByCompletedOrLaterInvoices(items, reportedDate, country);
+        return filterByCompletedOrLaterInvoices(items, reportedDate);
     }
 
     @Programmatic
     public List<IncomingInvoiceItem> findCompletedOrLaterByReportedDate(
-            final LocalDate reportedDate,
-            final Country country) {
+            final LocalDate reportedDate) {
 
         final List<IncomingInvoiceItem> items = repositoryService.allMatches(
                 new QueryDefault<>(
@@ -312,21 +307,18 @@ public class IncomingInvoiceItemRepository {
                         "reportedDate", reportedDate
                 ));
 
-        return filterByCompletedOrLaterInvoices(items, reportedDate, country);
+        return filterByCompletedOrLaterInvoices(items, reportedDate);
     }
 
 
     List<IncomingInvoiceItem> filterByCompletedOrLaterInvoices(
             final List<IncomingInvoiceItem> items,
-            final LocalDate reportedDate,
-            final Country country) {
+            final LocalDate reportedDate) {
 
         // we can't filter by property or incoming invoice type to filter here
         // because individual invoice items can override
-        final String atPathPrefix = country==null ? "/FRA" : "/".concat(country.getReference());
         final List<? extends Invoice> incomingInvoices =
-                incomingInvoiceRepository.findCompletedOrLaterWithItemsByReportedDate(reportedDate,
-                        atPathPrefix);
+                incomingInvoiceRepository.findCompletedOrLaterWithItemsByReportedDate(reportedDate);
 
         // client-side join :-(
         return items.stream()
