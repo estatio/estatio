@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import javax.annotation.Nullable;
 
+import org.estatio.module.party.dom.Party;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainObject;
@@ -11,7 +12,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 
 import org.estatio.module.asset.dom.FixedAsset;
-import org.estatio.module.capex.dom.coda.CodaElement;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
@@ -72,26 +72,21 @@ public class IncomingInvoiceExport {
     @MemberOrder(sequence = "22") @Nullable
     private final String vatCode;
     @MemberOrder(sequence = "23") @Nullable
-    private final String codaElement5;
-    @MemberOrder(sequence = "24") @Nullable
-    private final String codaElementName;
-    @MemberOrder(sequence = "25") @Nullable
     private final String documentNumber;
-    @MemberOrder(sequence = "26") @Nullable
+    @MemberOrder(sequence = "24") @Nullable
     private final String comments;
 
 
     public IncomingInvoiceExport(
             final IncomingInvoiceItem item,
             final String documentNumber,
-            final CodaElement codaElement,
             final String comments
     ){
         IncomingInvoice invoice = (IncomingInvoice) item.getInvoice();
         this.codaElement2 = "STAT";
         this.buyerReference = invoice.getBuyer().getReference();
         this.buyerName = invoice.getBuyer().getName();
-        this.codaElement1 = invoice.getBuyer().getReference().concat("EUR");
+        this.codaElement1 = deriveCodaElement1FromBuyer(invoice.getBuyer());
         this.sellerReference = invoice.getSeller().getReference();
         this.sellerName = invoice.getSeller().getName();
         this.codaElement6 = getCodaElement6FromSellerReference(invoice.getSeller().getReference());
@@ -107,7 +102,7 @@ public class IncomingInvoiceExport {
         final FixedAsset property = item.getFixedAsset();
         this.propertyReference = property == null ? "" :property.getReference();
         this.propertyName = property == null ? "" :property.getName();
-        this.codaElement3 = deriveCodaElement3FromPropertyAndIncomingInvoiceType(property, incomingInvoiceType);
+        this.codaElement3 = deriveCodaElement3FromPropertyAndIncomingInvoiceType(property, incomingInvoiceType, invoice.getAtPath());
 
         final Project project = item.getProject();
         this.projectReference = project == null ? "" : project.getReference();
@@ -120,10 +115,19 @@ public class IncomingInvoiceExport {
         this.grossAmount = item.getGrossAmount();
         this.documentNumber = documentNumber;
 
-        this.codaElement5 = codaElement == null ? "" : codaElement.getCode();
-        this.codaElementName = codaElement == null ? "": codaElement.getName();
-
         this.comments = comments == null ? "" : comments;
+    }
+
+    public static String deriveCodaElement1FromBuyer(Party buyer) {
+        // should not happen
+        if (buyer==null) return null;
+        // exception for EUROCOMMERCIAL PROPERTIES BELGIUM S.A. which has BE00 as reference in Estatio data and BE01EUR in Coda
+        // this is ugly but since this export will be temporary it is better then changing the reference
+        if (buyer.getReference().equals("BE00")){
+            return "BE01EUR";
+        }
+        // this is the 'general' rule by convention
+        return buyer.getReference().concat("EUR");
     }
 
     public static String getCodaElement6FromSellerReference(final String sellerReference){
@@ -136,8 +140,11 @@ public class IncomingInvoiceExport {
         return null;
     }
 
-    public static String deriveCodaElement3FromPropertyAndIncomingInvoiceType(final FixedAsset property, final IncomingInvoiceType incomingInvoiceType){
+    public static String deriveCodaElement3FromPropertyAndIncomingInvoiceType(final FixedAsset property, final IncomingInvoiceType incomingInvoiceType, final String atPath){
         if (incomingInvoiceType==IncomingInvoiceType.CORPORATE_EXPENSES){
+            if (atPath!=null && atPath.startsWith("/BEL")){
+                return "BEGGEN0";
+            }
             return "FRGGEN0";
         }
         if (incomingInvoiceType==IncomingInvoiceType.LOCAL_EXPENSES){

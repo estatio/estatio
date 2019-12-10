@@ -262,7 +262,6 @@ public class IncomingInvoiceDownloadManager {
                 .map(item -> new IncomingInvoiceExport(
                         item,
                         documentNumberFor(item),
-                        codaElementFor(item),
                         commentsFor(item)))
                 .sorted(Comparator.comparing(x -> x.getDocumentNumber() != null ? x.getDocumentNumber() : "_No_Document")) // guard only for (demo)fixtures because in production a document can be expected
                 .collect(Collectors.toList());
@@ -287,7 +286,6 @@ public class IncomingInvoiceDownloadManager {
                 .map(item -> new IncomingInvoiceExport(
                         item,
                         documentNumberFor(item),
-                        codaElementFor(item),
                         commentsFor(item)))
                 .sorted(Comparator.comparing(x -> x.getDocumentNumber() != null ? x.getDocumentNumber() : "_No_Document")) // guard only for (demo)fixtures because in production a document can be expected
                 .collect(Collectors.toList());
@@ -473,11 +471,6 @@ public class IncomingInvoiceDownloadManager {
                 .map(preparer -> preparer.stampUsing(pdfManipulator, externalUrlDownloadService, messageService).getTempFile())
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-    }
-
-    CodaElement codaElementFor(final IncomingInvoiceItem x) {
-        final List<CodaMapping> codaMappings = codaMappingRepository.findMatching(x.getIncomingInvoiceType(), x.getCharge());
-        return codaMappings.size() == 0 ? null : codaMappings.get(0).getCodaElement();
     }
 
     String documentNumberFor(final IncomingInvoiceItem invoiceItem) {
