@@ -190,12 +190,12 @@ public class IncomingInvoiceItemRepository_Test {
 
         // expect
         context.checking(new Expectations(){{
-            oneOf(mockIncomingInvoiceRepository).findCompletedOrLaterWithItemsByReportedDate(reportedDate);
+            oneOf(mockIncomingInvoiceRepository).findCompletedOrLaterWithItemsByReportedDate(reportedDate, "/FRA");
             will(returnValue(Arrays.asList(invoice)));
         }});
 
         // when
-        List<IncomingInvoiceItem> result = incomingInvoiceItemRepository.filterByCompletedOrLaterInvoices(items, reportedDate);
+        List<IncomingInvoiceItem> result = incomingInvoiceItemRepository.filterByCompletedOrLaterInvoices(items, reportedDate, null);
         // then
         Assertions.assertThat(result.size()).isEqualTo(1);
         Assertions.assertThat(result).contains(itemNotToBefilteredOut);

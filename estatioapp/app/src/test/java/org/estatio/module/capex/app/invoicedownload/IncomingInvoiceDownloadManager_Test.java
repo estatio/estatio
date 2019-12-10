@@ -76,11 +76,11 @@ public class IncomingInvoiceDownloadManager_Test {
         context.checking(new Expectations(){{
             allowing(mockIncomingInvoiceItemRepository).findDistinctReportDates();
             will(returnValue(distinctLocalDates));
-            oneOf(mockIncomingInvoiceItemRepository).findCompletedOrLaterByReportedDate(new LocalDate(2017,1,2));
+            oneOf(mockIncomingInvoiceItemRepository).findCompletedOrLaterByReportedDate(new LocalDate(2017,1,2), null);
             will(returnValue(Arrays.asList(item1, item2)));
-            oneOf(mockIncomingInvoiceItemRepository).findCompletedOrLaterByReportedDate(startDate);
+            oneOf(mockIncomingInvoiceItemRepository).findCompletedOrLaterByReportedDate(startDate, null);
             will(returnValue(Arrays.asList(item3)));
-            oneOf(mockIncomingInvoiceItemRepository).findCompletedOrLaterByReportedDate(endDate);
+            oneOf(mockIncomingInvoiceItemRepository).findCompletedOrLaterByReportedDate(endDate, null);
             will(returnValue(Lists.emptyList()));
         }});
 
