@@ -23,7 +23,7 @@ public class LeaseItemSourceRepository extends UdoDomainRepositoryAndFactory<Lea
         final LeaseItemSource leaseItemSource = factoryService.instantiate(LeaseItemSource.class);
         leaseItemSource.setItem(item);
         leaseItemSource.setSourceItem(sourceItem);
-        persist(leaseItemSource);
+        repositoryService.persist(leaseItemSource);
         return leaseItemSource;
     }
 

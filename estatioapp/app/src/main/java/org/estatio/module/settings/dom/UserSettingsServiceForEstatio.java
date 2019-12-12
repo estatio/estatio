@@ -21,6 +21,7 @@ package org.estatio.module.settings.dom;
 import java.util.List;
 
 import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractService;
@@ -45,11 +46,12 @@ public class UserSettingsServiceForEstatio extends AbstractService implements Us
     public UserSetting find(
             final String user, 
             final String key) {
-        return firstMatch(
+        List<UserSettingForEstatio> list = repositoryService.allMatches(
                 new QueryDefault<>(UserSettingForEstatio.class,
                         "findByUserAndKey",
                         "user", user,
                         "key", key));
+        return list.isEmpty() ? null : list.get(0);
     }
 
 
@@ -59,7 +61,7 @@ public class UserSettingsServiceForEstatio extends AbstractService implements Us
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public List<UserSetting> listAllFor(final String user) {
-        return (List)allMatches(
+        return (List)repositoryService.allMatches(
                 new QueryDefault<>(UserSettingForEstatio.class,
                         "findByUser",
                         "user", user));
@@ -71,7 +73,7 @@ public class UserSettingsServiceForEstatio extends AbstractService implements Us
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public List<UserSetting> listAll() {
-        return (List)allMatches(
+        return (List)repositoryService.allMatches(
                 new QueryDefault<>(UserSettingForEstatio.class,
                         "findAll"));
     }
@@ -139,9 +141,12 @@ public class UserSettingsServiceForEstatio extends AbstractService implements Us
         setting.setType(settingType);
         setting.setDescription(description);
         setting.setValueRaw(valueRaw);
-        persist(setting);
+        repositoryService.persistAndFlush(setting);
         return setting;
     }
+
+    @Inject
+    private RepositoryService repositoryService;
 
     @Inject
     private FactoryService factoryService;

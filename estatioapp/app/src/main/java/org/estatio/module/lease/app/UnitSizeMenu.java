@@ -49,7 +49,7 @@ public class UnitSizeMenu extends UdoDomainRepositoryAndFactory<UnitSize> {
     public UnitSize newUnitSize(final String unitSizeName) {
         UnitSize unitSize = factoryService.instantiate(UnitSize.class);
         unitSize.setName(unitSizeName);
-        persist(unitSize);
+        repositoryService.persist(unitSize);
         return unitSize;
     }
 

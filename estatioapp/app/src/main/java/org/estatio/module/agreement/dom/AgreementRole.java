@@ -36,6 +36,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.user.UserService;
 import org.joda.time.LocalDate;
 
@@ -429,7 +430,7 @@ public class AgreementRole
         arcc.setEndDate(endDate);
         arcc.setCommunicationChannel(cc);
         arcc.setRole(this);
-        persistIfNotAlready(arcc);
+        repositoryService.persist(arcc);
         return arcc;
     }
 
@@ -437,7 +438,7 @@ public class AgreementRole
         for (AgreementRoleCommunicationChannel agreementRoleCommunicationChannel : getCommunicationChannels()) {
             agreementRoleCommunicationChannel.remove();
         }
-        remove(this);
+        repositoryService.remove(this);
         return getAgreement();
     }
 
@@ -579,5 +580,8 @@ public class AgreementRole
 
     @Inject
     private UserService userService;
+
+    @Inject
+    private RepositoryService repositoryService;
 
 }

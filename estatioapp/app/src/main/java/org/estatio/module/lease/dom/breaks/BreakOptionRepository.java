@@ -61,7 +61,7 @@ public class BreakOptionRepository extends UdoDomainRepositoryAndFactory<BreakOp
         breakOption.setNotificationPeriod(notificationPeriod);
         breakOption.setExerciseDate(breakDate.minus(JodaPeriodUtils.asPeriod(notificationPeriod)));
         breakOption.setDescription(description);
-        persist(breakOption);
+        repositoryService.persist(breakOption);
         return breakOption;
     }
 
