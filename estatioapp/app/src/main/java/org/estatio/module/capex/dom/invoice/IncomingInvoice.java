@@ -314,6 +314,14 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return this;
     }
 
+    public String disableReportAndSync(){
+        return Lists.newArrayList(getItems()).stream()
+                .filter(IncomingInvoiceItem.class::isInstance)
+                .map(IncomingInvoiceItem.class::cast)
+                .filter(ii -> !ii.isReported())
+                .findFirst().isPresent() ? null : "No items to report";
+    }
+
     public static class ApprovalInvalidatedEvent extends java.util.EventObject {
         public ApprovalInvalidatedEvent(final Object source) {
             super(source);
