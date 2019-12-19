@@ -27,7 +27,6 @@ import com.google.common.collect.Lists;
 import org.apache.isis.applib.annotation.*;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 
 import org.isisaddons.module.excel.dom.ExcelService;
@@ -38,6 +37,7 @@ import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseTermRepository;
 
+/* TODO: check if maintainServiceCharges() is contributed correctly as a mixin in LeaseTermForServiceChargeBudgetAudit_maintainServiceCharges */
 @DomainService(
         nature = NatureOfService.DOMAIN,
         menuOrder = "00",
@@ -66,7 +66,7 @@ public class LeaseTermForServiceChargeBudgetAuditService extends UdoDomainServic
 
 
     // //////////////////////////////////////
-    
+
     public LeaseTermForServiceChargeBudgetAuditManager maintainServiceCharges(
             final Property property,
             final List<LeaseItemType> leaseItemTypes,
