@@ -29,7 +29,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.eventbus.EventBusService;
-import org.apache.isis.applib.services.memento.MementoService;
 
 import org.incode.module.base.services.calendar.CalendarService;
 
@@ -91,13 +90,6 @@ public abstract class UdoDomainService<T> extends AbstractService {
 
     protected EventBusService getEventBusService() {
         return eventBusService;
-    }
-
-    @javax.inject.Inject
-    private MementoService mementoService;
-
-    protected MementoService getMementoService() {
-        return mementoService;
     }
 
     @Inject public BookmarkService bookmarkService;

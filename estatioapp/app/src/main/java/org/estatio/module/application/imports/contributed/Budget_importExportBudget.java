@@ -16,10 +16,7 @@
  */
 package org.estatio.module.application.imports.contributed;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.services.actinvoc.ActionInvocationContext;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
@@ -49,8 +46,5 @@ public class Budget_importExportBudget {
 
     @javax.inject.Inject
     private ExcelService excelService;
-
-    @javax.inject.Inject
-    private ActionInvocationContext actionInvocationContext;
 
 }
