@@ -47,20 +47,18 @@ public class BrandRepository extends UdoDomainRepositoryAndFactory<Brand> {
         super(BrandRepository.class, Brand.class);
     }
 
-    /* TODO: refactor allMatches to use RepositoryService.allMatches() */
     @SuppressWarnings({ "unchecked" })
     @Programmatic
     public List<String> findUniqueNames() {
-        List names = allMatches("findUniqueNames");
+        List names = repositoryService.allMatches(new QueryDefault<>(Brand.class,"findUniqueNames"));
         return names;
     }
 
-    /* TODO: refactor allMatches to use RepositoryService.allMatches() */
     @SuppressWarnings({ "unchecked" })
     @Programmatic
     public List<String> findUniqueGroups(final String search) {
         if (search == null) return Collections.emptyList();
-        List groups = allMatches("findUniqueGroups", "search", search);
+        List groups = repositoryService.allMatches(new QueryDefault<>(Brand.class,"findUniqueGroups", "search", search));
         return groups;
     }
 

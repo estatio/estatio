@@ -197,20 +197,18 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
 
     // //////////////////////////////////////
 
-    /* TODO: refactor allMatches to use RepositoryService.allMatches() */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
     public List<LocalDate> findStartDatesByPropertyAndType(
             final Property property,
             final LeaseItemType leaseItemType) {
-        List startDates = allMatches(
+        List startDates = repositoryService.allMatches(new QueryDefault<>(LeaseTerm.class,
                 "findStartDatesByPropertyAndType",
                 "property", property,
-                "leaseItemType", leaseItemType);
+                "leaseItemType", leaseItemType));
         return startDates;
     }
 
-    /* TODO: refactor allMatches to use RepositoryService.allMatches() */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
     public List<LocalDate> findStartDatesByPropertyAndTypeAndInvoicedBy(
@@ -219,11 +217,11 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
             final List<LeaseAgreementRoleTypeEnum> invoicedByList) {
         List<LocalDate> result = new ArrayList<>();
         for (LeaseAgreementRoleTypeEnum invoicedBy : invoicedByList) {
-            result.addAll((List) allMatches(
+            result.addAll((List) repositoryService.allMatches(new QueryDefault<>(LeaseTerm.class,
                     "findStartDatesByPropertyAndTypeAndInvoicedBy",
                     "property", property,
                     "leaseItemType", leaseItemType,
-                    "invoicedBy", invoicedBy));
+                    "invoicedBy", invoicedBy)));
         }
         return result;
     }
