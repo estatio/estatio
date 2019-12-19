@@ -121,7 +121,7 @@ public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
 
     @Programmatic
     public List<Charge> allOutgoing() {
-        return allMatches(
+        return repositoryService.allMatches(
                 new QueryDefault<>(Charge.class,
                         "findByApplicabilities",
                         "applicability1", Applicability.IN_AND_OUT,
@@ -130,7 +130,7 @@ public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
 
     @Programmatic
     public List<Charge> allIncoming() {
-        return allMatches(
+        return repositoryService.allMatches(
                 new QueryDefault<>(Charge.class,
                         "findByApplicabilities",
                         "applicability1", Applicability.IN_AND_OUT,

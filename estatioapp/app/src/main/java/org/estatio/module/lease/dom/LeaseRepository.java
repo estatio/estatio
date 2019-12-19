@@ -136,7 +136,8 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
     /* TODO: refactor to use repositoryService.allMatches() */
     public List<Lease> matchByTenantName(final String tenantName, final Property property) {
         String pattern = StringUtils.wildcardToCaseInsensitiveRegex(tenantName);
-        return allMatches("findByProperty", "property", property)
+        return repositoryService.allMatches(new QueryDefault<>(Lease.class,"findByProperty",
+                "property", property))
                 .stream()
                 .filter(x -> x.getSecondaryParty().getName().matches(pattern))
                 .collect(Collectors.toList());
@@ -165,7 +166,8 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
     /* TODO: refactor to use repositoryService.allMatches() */
     @Programmatic
     public List<Lease> matchLeaseByExternalReference(final String externalReference) {
-        return allMatches("matchByExternalReference", "externalReference", externalReference)
+        return repositoryService.allMatches(new QueryDefault<>(Lease.class,"matchByExternalReference",
+                "externalReference", externalReference))
                 .stream()
                 .sorted(Comparator.comparing(Lease::getExternalReference).reversed())// somehow DESCENDING in JDOQL does not yield the expected results http://etutorials.org/Programming/Java+data+objects/Chapter+9.+The+JDO+Query+Language/9.6+The+Query+Filter/
                 .collect(Collectors.toList());

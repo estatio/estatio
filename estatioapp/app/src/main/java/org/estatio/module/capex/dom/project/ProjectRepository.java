@@ -109,9 +109,9 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
     public List<Project> autoComplete(final String searchPhrase) {
 
         final String refRegex = StringUtils.wildcardToCaseInsensitiveRegex("*".concat(searchPhrase).concat("*"));
-        return allMatches("matchByReferenceOrName",
+        return repositoryService.allMatches(new QueryDefault<>(Project.class,"matchByReferenceOrName",
                 "matcher", refRegex
-        ).stream().filter(p->!p.isArchived()).collect(Collectors.toList());
+        )).stream().filter(p->!p.isArchived()).collect(Collectors.toList());
     }
 
     public List<Project> findByFixedAsset(final FixedAsset fixedAsset){

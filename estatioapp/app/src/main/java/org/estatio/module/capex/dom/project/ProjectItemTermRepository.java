@@ -48,7 +48,8 @@ public class ProjectItemTermRepository extends UdoDomainRepositoryAndFactory<Pro
 
     @Programmatic
     public List<ProjectItemTerm> findByProjectItem(final ProjectItem projectItem) {
-        return allMatches("findByProjectItem", "projectItem", projectItem).stream().sorted().collect(Collectors.toList());
+        return repositoryService.allMatches(new QueryDefault<>(ProjectItemTerm.class,"findByProjectItem",
+                "projectItem", projectItem)).stream().sorted().collect(Collectors.toList());
     }
 
     @Programmatic
