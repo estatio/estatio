@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.SortedSet;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -30,6 +31,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Lists;
 
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -187,7 +189,7 @@ public class AgreementRoleCommunicationChannel
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public AgreementRole remove() {
-        remove(this);
+        repositoryService.remove(this);
         return getRole();
     }
 
@@ -402,7 +404,8 @@ public class AgreementRoleCommunicationChannel
         return getType();
     }
 
-
+    @Inject
+    private RepositoryService repositoryService;
 
     @javax.inject.Inject
     CommunicationChannelOwnerService communicationChannelOwnerService;

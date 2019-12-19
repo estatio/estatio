@@ -1,5 +1,6 @@
 package org.estatio.module.lease.dom;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -12,6 +13,7 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
@@ -68,7 +70,7 @@ public class LeaseItemSource extends UdoDomainObject2<LeaseItemSource> implement
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public void remove(){
-        remove(this);
+        repositoryService.remove(this);
     }
 
     @Override
@@ -85,5 +87,8 @@ public class LeaseItemSource extends UdoDomainObject2<LeaseItemSource> implement
     @Getter @Setter
     @Column(allowsNull = "false")
     private LeaseItem sourceItem;
+
+    @Inject
+    private RepositoryService repositoryService;
 
 }

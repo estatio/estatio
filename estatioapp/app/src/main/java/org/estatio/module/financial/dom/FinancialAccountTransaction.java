@@ -15,6 +15,7 @@ import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.user.UserService;
 import org.joda.time.LocalDate;
 
@@ -155,7 +156,7 @@ public class FinancialAccountTransaction
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public void remove(final String reason) {
-        remove(this);
+        repositoryService.remove(this);
     }
 
     public boolean hideRemove() {
@@ -174,6 +175,9 @@ public class FinancialAccountTransaction
     public String default2ChangeTransactionDetails(){
         return getDescription();
     }
+
+    @Inject
+    private RepositoryService repositoryService;
 
     @Inject
     private UserService userService;
