@@ -92,9 +92,7 @@ public class BankAccount_Test {
 
         @Before
         public void setup() {
-            country = new Country();
-            country.setAlpha2Code("IT");
-            country.setReference("ITA");
+            country = new Country("ITA", "IT", "Italy");
         }
 
         /**

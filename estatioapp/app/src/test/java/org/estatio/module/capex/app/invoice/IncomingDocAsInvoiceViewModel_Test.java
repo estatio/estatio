@@ -178,7 +178,7 @@ public class IncomingDocAsInvoiceViewModel_Test {
         viewModel.bankAccountRepository = mockBankAccountRepository;
         viewModel.partyRoleRepository = mockPartyRoleRepository;
 
-        Country country = new Country();
+        Country country = new Country("ITA", "IT", "Italy");
         Organisation seller = new Organisation();
         BankAccount bankAccount = new BankAccount();
         String sellerName = "some name";
