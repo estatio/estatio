@@ -39,6 +39,7 @@ import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseTermRepository;
 
 @DomainService(
+        nature = NatureOfService.DOMAIN,
         menuOrder = "00",
         objectType = "org.estatio.app.services.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditService"
 )
@@ -62,11 +63,10 @@ public class LeaseTermForServiceChargeBudgetAuditService extends UdoDomainServic
         }
     }
 
-    // //////////////////////////////////////
 
-    @NotContributed(As.ASSOCIATION)
-    // ie *is* contributed as action
-    @NotInServiceMenu
+
+    // //////////////////////////////////////
+    
     public LeaseTermForServiceChargeBudgetAuditManager maintainServiceCharges(
             final Property property,
             final List<LeaseItemType> leaseItemTypes,
