@@ -19,10 +19,9 @@
 package org.estatio.module.application.dom;
 
 import org.incode.module.base.dom.with.WithDescriptionUnique;
-import org.incode.module.unittestsupport.dom.with.WithFieldUniqueContractTestAllAbstract;
 
 public class WithDescriptionUniqueContractForEstatio_hasJdoUniqueIndexAnnotation_Test extends
-        WithFieldUniqueContractTestAllAbstract<WithDescriptionUnique> {
+        org.incode.module.base.dom.with.WithFieldUniqueContractTestAllAbstract<WithDescriptionUnique> {
 
     public WithDescriptionUniqueContractForEstatio_hasJdoUniqueIndexAnnotation_Test() {
         super("org.estatio", "description", WithDescriptionUnique.class);

@@ -29,11 +29,11 @@ import org.incode.module.base.dom.with.WithDescriptionComparable;
 import org.incode.module.base.dom.with.WithNameComparable;
 import org.incode.module.base.dom.with.WithReferenceComparable;
 import org.incode.module.base.dom.with.WithStartDate;
-import org.incode.module.unittestsupport.dom.with.InstantiatorForComparableByCode;
-import org.incode.module.unittestsupport.dom.with.InstantiatorForComparableByDescription;
-import org.incode.module.unittestsupport.dom.with.InstantiatorForComparableByName;
-import org.incode.module.unittestsupport.dom.with.InstantiatorForComparableByReference;
-import org.incode.module.unittestsupport.dom.with.InstantiatorForWithStartDate;
+import org.incode.module.base.dom.with.InstantiatorForComparableByCode;
+import org.incode.module.base.dom.with.InstantiatorForComparableByDescription;
+import org.incode.module.base.dom.with.InstantiatorForComparableByName;
+import org.incode.module.base.dom.with.InstantiatorForComparableByReference;
+import org.incode.module.base.dom.with.InstantiatorForWithStartDate;
 
 import org.estatio.module.agreement.dom.Agreement;
 import org.estatio.module.agreement.dom.AgreementForTesting;

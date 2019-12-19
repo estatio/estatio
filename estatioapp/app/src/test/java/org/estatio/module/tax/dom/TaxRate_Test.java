@@ -30,7 +30,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
-import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -48,7 +47,7 @@ public class TaxRate_Test {
         }
     }
 
-    public static class ChangeDates extends WithIntervalMutableContractTestAbstract_changeDates<TaxRate> {
+    public static class ChangeDates extends org.incode.module.base.dom.with.WithIntervalMutableContractTestAbstract_changeDates<TaxRate> {
 
         private TaxRate taxRate;
 

@@ -21,7 +21,6 @@ package org.estatio.module.application.dom;
 import com.google.common.collect.ImmutableMap;
 
 import org.incode.module.base.dom.with.WithNameComparable;
-import org.incode.module.unittestsupport.dom.with.ComparableByNameContractTestAbstract_compareTo;
 
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.FixedAssetForTesting;
@@ -32,7 +31,7 @@ import org.estatio.module.party.dom.PartyForTesting;
  * Automatically tests all domain objects implementing
  * {@link WithNameComparable}.
  */
-public class WithNameComparableContractForEstatio_compareTo_Test extends ComparableByNameContractTestAbstract_compareTo {
+public class WithNameComparableContractForEstatio_compareTo_Test extends org.incode.module.base.dom.with.ComparableByNameContractTestAbstract_compareTo {
 
     public WithNameComparableContractForEstatio_compareTo_Test() {
         super("org.estatio", noninstantiableSubstitutes());

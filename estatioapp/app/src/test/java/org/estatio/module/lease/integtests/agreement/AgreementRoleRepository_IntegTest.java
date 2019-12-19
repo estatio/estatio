@@ -30,8 +30,6 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.clock.ClockService;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
-
 import org.estatio.module.agreement.dom.Agreement;
 import org.estatio.module.agreement.dom.AgreementRepository;
 import org.estatio.module.agreement.dom.AgreementRole;
@@ -77,9 +75,6 @@ public class AgreementRoleRepository_IntegTest extends LeaseModuleIntegTestAbstr
 
     @Inject
     AgreementRoleTypeRepository agreementRoleTypeRepository;
-
-    @Inject
-    ApplicationTenancies applicationTenancies;
 
     Party party;
     Agreement agreement;

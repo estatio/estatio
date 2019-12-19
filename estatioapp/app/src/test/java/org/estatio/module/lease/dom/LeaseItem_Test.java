@@ -43,7 +43,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.incode.module.unittestsupport.dom.bean.PojoTester.FixtureDatumFactory;
-import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 
 import org.estatio.module.agreement.dom.type.AgreementType;
 import org.estatio.module.charge.dom.Charge;
@@ -142,7 +141,7 @@ public class LeaseItem_Test {
         }
     }
 
-    public static class ChangeDates extends WithIntervalMutableContractTestAbstract_changeDates<LeaseItem> {
+    public static class ChangeDates extends org.incode.module.base.dom.with.WithIntervalMutableContractTestAbstract_changeDates<LeaseItem> {
 
         private LeaseItem leaseItem;
 

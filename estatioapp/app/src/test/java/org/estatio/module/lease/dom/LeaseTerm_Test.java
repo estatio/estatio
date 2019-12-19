@@ -47,7 +47,6 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.incode.module.unittestsupport.dom.bean.PojoTester;
-import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
@@ -382,7 +381,7 @@ public class LeaseTerm_Test {
 
     }
 
-    public static class ChangeDatesDelegate extends WithIntervalMutableContractTestAbstract_changeDates<LeaseTerm> {
+    public static class ChangeDatesDelegate extends org.incode.module.base.dom.with.WithIntervalMutableContractTestAbstract_changeDates<LeaseTerm> {
 
         private LeaseTerm leaseTerm;
 

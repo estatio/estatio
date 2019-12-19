@@ -24,13 +24,12 @@ import org.junit.Test;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.base.dom.with.WithIntervalMutable;
-import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PartyRegistration_Test {
 
-    public static class ChangeDates extends WithIntervalMutableContractTestAbstract_changeDates<PartyRegistration> {
+    public static class ChangeDates extends org.incode.module.base.dom.with.WithIntervalMutableContractTestAbstract_changeDates<PartyRegistration> {
 
         private PartyRegistration partyRegistration;
 

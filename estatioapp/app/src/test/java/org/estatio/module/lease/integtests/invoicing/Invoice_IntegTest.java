@@ -25,6 +25,7 @@ import javax.inject.Inject;
 
 import org.assertj.core.api.Assertions;
 import org.hamcrest.core.Is;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
@@ -35,7 +36,6 @@ import org.junit.rules.ExpectedException;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.HiddenException;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
@@ -94,7 +94,8 @@ public class Invoice_IntegTest extends LeaseModuleIntegTestAbstract {
     @Inject
     ChargeRepository chargeRepository;
     @Inject
-    ApplicationTenancies applicationTenancies;
+    ApplicationTenancyRepository applicationTenancyRepository;
+
 
     Party seller;
     Party buyer;
@@ -120,7 +121,7 @@ public class Invoice_IntegTest extends LeaseModuleIntegTestAbstract {
 
         @Before
         public void setUp() throws Exception {
-            applicationTenancy = applicationTenancies.findTenancyByPath(ApplicationTenancy_enum.Gb.getPath());
+            applicationTenancy = applicationTenancyRepository.findByPath(ApplicationTenancy_enum.Gb.getPath());
             seller = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
             buyer = OrganisationAndComms_enum.PoisonGb.findUsing(serviceRegistry);
             lease = Lease_enum.OxfPoison003Gb.findUsing(serviceRegistry);

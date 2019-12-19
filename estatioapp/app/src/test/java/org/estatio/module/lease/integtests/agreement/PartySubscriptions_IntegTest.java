@@ -22,6 +22,7 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,7 +34,6 @@ import org.apache.isis.applib.services.sudo.SudoService;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.isisaddons.module.security.dom.role.ApplicationRoleRepository;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.agreement.dom.AgreementRoleRepository;
@@ -59,7 +59,7 @@ public class PartySubscriptions_IntegTest extends LeaseModuleIntegTestAbstract {
     AgreementRoleRepository agreementRoleRepository;
 
     @Inject
-    ApplicationTenancies applicationTenancies;
+    ApplicationTenancyRepository applicationTenancyRepository;
 
     @Inject
     PersonRepository personRepository;
@@ -100,7 +100,7 @@ public class PartySubscriptions_IntegTest extends LeaseModuleIntegTestAbstract {
 
             oldParty = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
             // EST-467: shouldn't be using global here.
-            ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath("/");
+            ApplicationTenancy applicationTenancy = applicationTenancyRepository.findByPath("/");
             newParty = organisationRepository.newOrganisation("TEST", false, "Test", null, applicationTenancy);
         }
 
