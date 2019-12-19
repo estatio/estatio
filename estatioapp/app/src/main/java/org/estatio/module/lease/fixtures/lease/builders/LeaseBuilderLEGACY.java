@@ -20,13 +20,13 @@ package org.estatio.module.lease.fixtures.lease.builders;
 
 import javax.inject.Inject;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.fakedata.dom.FakeDataService;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
@@ -148,7 +148,7 @@ public class LeaseBuilderLEGACY extends FixtureScript {
         if (getDuration() == null && getEndDate() == null) {
             defaultParam("endDate", executionContext, getStartDate().plus(fakeDataService2.periods().years(10, 20)));
         }
-        final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(getAtPath());
+        final ApplicationTenancy applicationTenancy = applicationTenancyRepository.findByPath(getAtPath());
 
         this.lease = leaseRepository.newLease(applicationTenancy, getReference(), getName(), getLeaseType(), getStartDate(), getDuration(), getEndDate(), getLandlord(), getTenant());
     }
@@ -171,7 +171,7 @@ public class LeaseBuilderLEGACY extends FixtureScript {
     AgreementRoleTypeRepository agreementRoleTypeRepository;
 
     @Inject
-    ApplicationTenancies applicationTenancies;
+    ApplicationTenancyRepository applicationTenancyRepository;
 
     @Inject
     CountryRepository countryRepository;

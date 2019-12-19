@@ -25,11 +25,11 @@ import com.google.common.base.Objects;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.xactn.TransactionService;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.ReferenceType;
@@ -218,7 +218,7 @@ public class IndexValueMaintLineItem {
         ApplicationTenancy applicationTenancy = (ApplicationTenancy) scratchpad.get("applicationTenancy");
         if(applicationTenancy == null) {
             final String atPath = getAtPath();
-            applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
+            applicationTenancy = applicationTenancyRepository.findByPath(atPath);
             scratchpad.put("applicationTenancy", applicationTenancy);
         }
 
@@ -358,8 +358,8 @@ public class IndexValueMaintLineItem {
 
     // //////////////////////////////////////
 
-    @javax.inject.Inject
-    private ApplicationTenancies applicationTenancies;
+    @Inject
+    private ApplicationTenancyRepository applicationTenancyRepository;
 
     @javax.inject.Inject
     private IndexRepository indexRepository;

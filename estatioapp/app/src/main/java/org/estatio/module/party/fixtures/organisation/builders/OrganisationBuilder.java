@@ -22,7 +22,6 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.party.dom.Organisation;
@@ -33,6 +32,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 @EqualsAndHashCode(of={"reference"}, callSuper = false)
 @ToString(of={"reference"})
@@ -67,7 +67,7 @@ public final class OrganisationBuilder
 
         defaultParam("useNumeratorForReference", executionContext, false);
 
-        ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
+        ApplicationTenancy applicationTenancy = applicationTenancyRepository.findByPath(atPath);
 
         this.object = organisationRepository.findOrCreateOrganisation(reference, useNumeratorForReference, name, chamberOfCommerceCode, applicationTenancy);
 
@@ -84,6 +84,6 @@ public final class OrganisationBuilder
     OrganisationRepository organisationRepository;
 
     @Inject
-    ApplicationTenancies applicationTenancies;
+    ApplicationTenancyRepository applicationTenancyRepository;
 
 }
