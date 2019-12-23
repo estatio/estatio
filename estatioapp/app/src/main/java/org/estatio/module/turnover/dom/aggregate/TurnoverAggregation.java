@@ -20,7 +20,6 @@ import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Type;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -50,7 +49,6 @@ import lombok.Setter;
         editing = Editing.DISABLED,
         objectType = "org.estatio.module.turnover.dom.aggregate.TurnoverAggregation"
 )
-@NoArgsConstructor
 public class TurnoverAggregation {
 
     public TurnoverAggregation(final Occupancy occupancy, final LocalDate date, final Type type, final Frequency frequency, final Currency currency){
@@ -101,7 +99,7 @@ public class TurnoverAggregation {
 
     @Getter @Setter
     @Column(name = "aggregate1MonthId", allowsNull = "true")
-    private TurnoverAggregateForPeriod Aggregate1Month;
+    private TurnoverAggregateForPeriod aggregate1Month;
 
     /*
      * TurnoverGrossAmount2MCY
@@ -117,7 +115,7 @@ public class TurnoverAggregation {
 
     @Getter @Setter
     @Column(name = "aggregate2MonthId", allowsNull = "true")
-    private TurnoverAggregateForPeriod Aggregate2Month;
+    private TurnoverAggregateForPeriod aggregate2Month;
 
     /*
      * TurnoverGrossAmount3MCY
@@ -133,7 +131,7 @@ public class TurnoverAggregation {
 
     @Getter @Setter
     @Column(name = "aggregate3MonthId", allowsNull = "true")
-    private TurnoverAggregateForPeriod Aggregate3Month;
+    private TurnoverAggregateForPeriod aggregate3Month;
 
     /*
      * TurnoverGrossAmount6MCY
@@ -149,7 +147,7 @@ public class TurnoverAggregation {
 
     @Getter @Setter
     @Column(name = "aggregate6MonthId", allowsNull = "true")
-    private TurnoverAggregateForPeriod Aggregate6Month;
+    private TurnoverAggregateForPeriod aggregate6Month;
 
     /*
      * TurnoverGrossAmount9MCY
@@ -165,7 +163,7 @@ public class TurnoverAggregation {
 
     @Getter @Setter
     @Column(name = "aggregate9MonthId", allowsNull = "true")
-    private TurnoverAggregateForPeriod Aggregate9Month;
+    private TurnoverAggregateForPeriod aggregate9Month;
 
     /*
      * TurnoverGrossAmount12MCY
@@ -181,7 +179,7 @@ public class TurnoverAggregation {
 
     @Getter @Setter
     @Column(name = "aggregate12MonthId", allowsNull = "true")
-    private TurnoverAggregateForPeriod Aggregate12Month;
+    private TurnoverAggregateForPeriod aggregate12Month;
 
     /*
      * TurnoverGrossAmountYTDCY
@@ -242,7 +240,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "purchaseCountAggregate1MonthId", allowsNull = "true")
+    @Column(name = "purchaseCountAggregate1MonthId")
     private PurchaseCountAggregateForPeriod purchaseCountAggregate1Month;
 
     /*
@@ -252,7 +250,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "purchaseCountAggregate3MonthId", allowsNull = "true")
+    @Column(name = "purchaseCountAggregate3MonthId")
     private PurchaseCountAggregateForPeriod purchaseCountAggregate3Month;
 
     /*
@@ -262,7 +260,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "purchaseCountAggregate6MonthId", allowsNull = "true")
+    @Column(name = "purchaseCountAggregate6MonthId")
     private PurchaseCountAggregateForPeriod purchaseCountAggregate6Month;
 
     /*
@@ -272,7 +270,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "purchaseCountAggregate12MonthId", allowsNull = "true")
+    @Column(name = "purchaseCountAggregate12MonthId")
     private PurchaseCountAggregateForPeriod purchaseCountAggregate12Month;
 
 }

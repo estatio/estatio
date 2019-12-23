@@ -64,6 +64,7 @@ public class PurchaseCountAggregateForPeriod {
     private BigInteger countPreviousYear;
 
     @Getter @Setter
+    @Column(allowsNull = "true")
     private boolean comparable;
 
 }

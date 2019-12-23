@@ -58,9 +58,11 @@ public class TurnoverAggregateForPeriod {
     private BigDecimal netAmount;
 
     @Getter @Setter
+    @Column(allowsNull = "true")
     private boolean nonComparableThisYear;
 
     @Getter @Setter
+    @Column(allowsNull = "true")
     private int turnoverCount;
 
     @Getter @Setter
@@ -72,12 +74,15 @@ public class TurnoverAggregateForPeriod {
     private BigDecimal netAmountPreviousYear;
 
     @Getter @Setter
+    @Column(allowsNull = "true")
     private boolean nonComparablePreviousYear;
 
     @Getter @Setter
+    @Column(allowsNull = "true")
     private int turnoverCountPreviousYear;
 
     @Getter @Setter
+    @Column(allowsNull = "true")
     private boolean comparable;
 
 }
