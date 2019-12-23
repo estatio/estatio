@@ -76,14 +76,20 @@ public class TurnoverAggregate_IntegTest extends TurnoverModuleIntegTestAbstract
         // occ1 ends on 2017,4,16
         // occ2 starts the day after on 2017,4,17
         // turnovers 2019,5,1 and later are on occ2
+        // occ3 runs parallel to occ2 and has turnovers on it as well starting 2019,4,1
         final LocalDate endDateOcc1 = new LocalDate(2017, 4, 16);
         final Lease oxfTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2);
         final Occupancy occ1 = oxfTopModel.getOccupancies().first();
         occ1.terminate(endDateOcc1);
         final Property oxf = Property_enum.OxfGb.findUsing(serviceRegistry2);
-        final Unit new_unit_for_topmodel = oxf.newUnit("OXF-TOPM2", "Unit 2 for Topmodel", UnitType.BOUTIQUE);
+
+        final Unit new_unit_for_topmodel = oxf.newUnit("OXF-001A", "New unit 1 for Topmodel", UnitType.BOUTIQUE);
         final Occupancy occ2 = oxfTopModel.newOccupancy(endDateOcc1.plusDays(1), new_unit_for_topmodel);
         mixin(Occupancy_createTurnoverReportingConfig.class,occ2).createTurnoverReportingConfig(Type.PRELIMINARY, occ2.getStartDate(), Frequency.MONTHLY, Currency_enum.EUR.findUsing(serviceRegistry2));
+
+        final Unit par_unit_for_topmodel = oxf.newUnit("OXF-001A-PAR", "Parallel unit 1 for Topmodel", UnitType.BOUTIQUE);
+        final Occupancy occ3 = oxfTopModel.newOccupancy(endDateOcc1.plusDays(1), par_unit_for_topmodel);
+        mixin(Occupancy_createTurnoverReportingConfig.class,occ3).createTurnoverReportingConfig(Type.PRELIMINARY, occ3.getStartDate(), Frequency.MONTHLY, Currency_enum.EUR.findUsing(serviceRegistry2));
 
         runFixtureScript(new FixtureScript() {
             @Override
@@ -93,17 +99,24 @@ public class TurnoverAggregate_IntegTest extends TurnoverModuleIntegTestAbstract
         });
 
         final List<Turnover> turnovers = turnoverRepository.listAll();
-        assertThat(turnovers).hasSize(59);
+        assertThat(turnovers).hasSize(67);
         final List<Turnover> turnoversOnOcc1 = mixin(Occupancy_turnovers.class, occ1).turnovers();
         final List<Turnover> turnoversOnOcc2 = mixin(Occupancy_turnovers.class, occ2).turnovers();
+        final List<Turnover> turnoversOnOcc3 = mixin(Occupancy_turnovers.class, occ3).turnovers();
         assertThat(turnoversOnOcc1).hasSize(52);
         final LocalDate maxDateOcc1 = turnoversOnOcc1.stream().max(Comparator.comparing(Turnover::getDate))
                 .map(Turnover::getDate).get();
         assertThat(maxDateOcc1).isEqualTo(new LocalDate(2019, 4,1));
+
         assertThat(turnoversOnOcc2).hasSize(7);
         final LocalDate minDateOcc2 = turnoversOnOcc2.stream().min(Comparator.comparing(Turnover::getDate))
                 .map(Turnover::getDate).get();
         assertThat(minDateOcc2).isEqualTo(new LocalDate(2019, 5,1));
+
+        assertThat(turnoversOnOcc3).hasSize(8);
+        final LocalDate minDateOcc3 = turnoversOnOcc3.stream().min(Comparator.comparing(Turnover::getDate))
+                .map(Turnover::getDate).get();
+        assertThat(minDateOcc3).isEqualTo(new LocalDate(2019, 4,1));
 
         // when (aggregate)
 
