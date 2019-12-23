@@ -105,7 +105,7 @@ public class TurnoverAggregate_IntegTest extends TurnoverModuleIntegTestAbstract
                 startDateLease3, startDateLease3.plusYears(1));
         final Occupancy occ5 = oxfTopModelLease3.getOccupancies().first();
         mixin(Occupancy_createTurnoverReportingConfig.class,occ5).createTurnoverReportingConfig(Type.PRELIMINARY, occ5.getStartDate(), Frequency.MONTHLY, Currency_enum.EUR.findUsing(serviceRegistry2));
-        
+
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
