@@ -3,6 +3,12 @@ package org.estatio.module.turnover.dom.aggregate;
 import java.math.BigDecimal;
 
 import javax.jdo.annotations.Column;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Queries;
+import javax.jdo.annotations.Query;
+import javax.jdo.annotations.Unique;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
@@ -14,14 +20,46 @@ import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Type;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE
+        ,schema = "dbo"
+)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER,
+        column = "version")
+@Queries({
+        @Query(
+                name = "findUnique", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.turnover.dom.aggregate.TurnoverAggregation "
+                        + "WHERE occupancy == :occupancy "
+                        + "&& date == :date "
+                        + "&& type == :type "
+                        + "&& frequency == :frequency "),
+})
+@Unique(name = "TurnoverAggregation_occupancy_date_type_frequency_UNQ", members = { "occupancy", "date", "type", "frequency" })
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "org.estatio.module.turnover.dom.aggregate.TurnoverAggregation"
 )
+@NoArgsConstructor
 public class TurnoverAggregation {
+
+    public TurnoverAggregation(final Occupancy occupancy, final LocalDate date, final Type type, final Frequency frequency, final Currency currency){
+        this.occupancy = occupancy;
+        this.date = date;
+        this.type = type;
+        this.frequency = frequency;
+        this.currency = currency;
+    }
 
     /*
     * Date
@@ -62,7 +100,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "aggregate1MonthId", allowsNull = "false")
+    @Column(name = "aggregate1MonthId", allowsNull = "true")
     private TurnoverAggregateForPeriod Aggregate1Month;
 
     /*
@@ -78,7 +116,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "aggregate2MonthId", allowsNull = "false")
+    @Column(name = "aggregate2MonthId", allowsNull = "true")
     private TurnoverAggregateForPeriod Aggregate2Month;
 
     /*
@@ -94,7 +132,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "aggregate3MonthId", allowsNull = "false")
+    @Column(name = "aggregate3MonthId", allowsNull = "true")
     private TurnoverAggregateForPeriod Aggregate3Month;
 
     /*
@@ -110,7 +148,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "aggregate6MonthId", allowsNull = "false")
+    @Column(name = "aggregate6MonthId", allowsNull = "true")
     private TurnoverAggregateForPeriod Aggregate6Month;
 
     /*
@@ -126,7 +164,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "aggregate9MonthId", allowsNull = "false")
+    @Column(name = "aggregate9MonthId", allowsNull = "true")
     private TurnoverAggregateForPeriod Aggregate9Month;
 
     /*
@@ -142,7 +180,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "aggregate12MonthId", allowsNull = "false")
+    @Column(name = "aggregate12MonthId", allowsNull = "true")
     private TurnoverAggregateForPeriod Aggregate12Month;
 
     /*
@@ -158,7 +196,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "turnoverAggregateToDateId", allowsNull = "false")
+    @Column(name = "turnoverAggregateToDateId", allowsNull = "true")
     private TurnoverAggregateToDate aggregateToDate;
 
     /*
@@ -204,7 +242,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "purchaseCountAggregate1MonthId", allowsNull = "false")
+    @Column(name = "purchaseCountAggregate1MonthId", allowsNull = "true")
     private PurchaseCountAggregateForPeriod purchaseCountAggregate1Month;
 
     /*
@@ -214,7 +252,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "purchaseCountAggregate3MonthId", allowsNull = "false")
+    @Column(name = "purchaseCountAggregate3MonthId", allowsNull = "true")
     private PurchaseCountAggregateForPeriod purchaseCountAggregate3Month;
 
     /*
@@ -224,7 +262,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "purchaseCountAggregate6MonthId", allowsNull = "false")
+    @Column(name = "purchaseCountAggregate6MonthId", allowsNull = "true")
     private PurchaseCountAggregateForPeriod purchaseCountAggregate6Month;
 
     /*
@@ -234,7 +272,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "purchaseCountAggregate12MonthId", allowsNull = "false")
+    @Column(name = "purchaseCountAggregate12MonthId", allowsNull = "true")
     private PurchaseCountAggregateForPeriod purchaseCountAggregate12Month;
 
 }
