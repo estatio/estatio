@@ -5,6 +5,9 @@ import java.math.BigDecimal;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Queries;
+import javax.jdo.annotations.Query;
+import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.DomainObject;
@@ -23,6 +26,14 @@ import lombok.Setter;
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
+@Queries({
+        @Query(
+                name = "findUnique", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.turnover.dom.aggregate.TurnoverAggregateToDate "
+                        + "WHERE aggregation == :aggregation "),
+})
+@Unique(name = "TurnoverAggregateToDate_aggregation_UNQ", members = { "aggregation" })
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "org.estatio.module.turnover.dom.aggregate.TurnoverAggregateToDate"
