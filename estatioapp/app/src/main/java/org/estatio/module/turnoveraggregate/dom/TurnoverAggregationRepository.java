@@ -4,10 +4,8 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
@@ -18,11 +16,9 @@ import org.estatio.module.turnover.dom.Type;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
-        repositoryFor = TurnoverAggregation.class
-)
+        repositoryFor = TurnoverAggregation.class)
 public class TurnoverAggregationRepository {
 
-    @Action(restrictTo = RestrictTo.PROTOTYPING)
     public java.util.List<TurnoverAggregation> listAll() {
         return repositoryService.allInstances(TurnoverAggregation.class);
     }
@@ -43,15 +39,6 @@ public class TurnoverAggregationRepository {
                         "frequency", frequency));
     }
 
-
-    public TurnoverAggregation create(final Occupancy occupancy, final LocalDate date, final Type type, final Frequency frequency, final
-            Currency currency) {
-        final TurnoverAggregation turnoverAggregation = new TurnoverAggregation(occupancy, date, type, frequency, currency);
-        serviceRegistry.injectServicesInto(turnoverAggregation);
-        repositoryService.persistAndFlush(turnoverAggregation);
-        return turnoverAggregation;
-    }
-
     public TurnoverAggregation findOrCreate(
             final Occupancy occupancy,
             final LocalDate date,
@@ -66,7 +53,17 @@ public class TurnoverAggregationRepository {
         return turnoverAggregation;
     }
 
+    public TurnoverAggregation create(final Occupancy occupancy, final LocalDate date, final Type type, final Frequency frequency, final
+    Currency currency) {
+        final TurnoverAggregation turnoverAggregation = new TurnoverAggregation(occupancy, date, type, frequency, currency);
+        serviceRegistry.injectServicesInto(turnoverAggregation);
+        repositoryService.persistAndFlush(turnoverAggregation);
+        return turnoverAggregation;
+    }
+
+
     @Inject RepositoryService repositoryService;
 
     @Inject ServiceRegistry2 serviceRegistry;
+
 }

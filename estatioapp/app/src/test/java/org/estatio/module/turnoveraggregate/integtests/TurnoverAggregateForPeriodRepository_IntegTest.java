@@ -33,7 +33,6 @@ import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Type;
-import org.estatio.module.turnover.integtests.TurnoverModuleIntegTestAbstract;
 import org.estatio.module.turnoveraggregate.dom.AggregationPeriod;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregateForPeriod;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregateForPeriodRepository;

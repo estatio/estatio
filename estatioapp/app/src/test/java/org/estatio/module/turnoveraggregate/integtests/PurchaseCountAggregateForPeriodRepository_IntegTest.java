@@ -23,6 +23,8 @@ import javax.inject.Inject;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
@@ -33,7 +35,6 @@ import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Type;
-import org.estatio.module.turnover.integtests.TurnoverModuleIntegTestAbstract;
 import org.estatio.module.turnoveraggregate.dom.AggregationPeriod;
 import org.estatio.module.turnoveraggregate.dom.PurchaseCountAggregateForPeriod;
 import org.estatio.module.turnoveraggregate.dom.PurchaseCountAggregateForPeriodRepository;
@@ -43,6 +44,8 @@ import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationRepository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PurchaseCountAggregateForPeriodRepository_IntegTest extends TurnoverAggregateModuleIntegTestAbstract {
+
+    Logger LOG = LoggerFactory.getLogger(PurchaseCountAggregateForPeriodRepository_IntegTest.class);
 
     @Before
     public void setupData() {
@@ -59,11 +62,16 @@ public class PurchaseCountAggregateForPeriodRepository_IntegTest extends Turnove
     public void find_or_create_works() throws Exception {
 
         // given
+        LOG.info(">>>>>YODO TEST DEBUG START<<<<<<");
         final Occupancy occupancy = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2).getOccupancies().first();
         final LocalDate date = new LocalDate(2019, 1, 1);
         final Type type = Type.PRELIMINARY;
         final Frequency frequency = Frequency.MONTHLY;
         final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
+        if (turnoverAggregationRepository==null){
+            LOG.warn(">>>>>NULL<<<<<<");
+        }
+        LOG.info(">>>>>YODO DEBUG END<<<<<<");
         TurnoverAggregation aggregation = turnoverAggregationRepository
                 .findOrCreate(occupancy, date, type, frequency, euro);
         final AggregationPeriod period = AggregationPeriod.P_1M;

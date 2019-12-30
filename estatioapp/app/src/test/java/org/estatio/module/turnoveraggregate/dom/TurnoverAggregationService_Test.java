@@ -1,6 +1,7 @@
 package org.estatio.module.turnoveraggregate.dom;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,7 +13,9 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.currency.dom.Currency;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
@@ -113,5 +116,85 @@ public class TurnoverAggregationService_Test {
         Assertions.assertThat(service.isComparable(AggregationPeriod.P_2M, 2, 2, false, true)).isFalse();
 
         Assertions.assertThat(service.isComparable(AggregationPeriod.P_2M, 0, 2, false, true)).isFalse();
+    }
+
+    @Test
+    public void leasesToExamine_works() throws Exception {
+        //given
+        TurnoverAggregationService service = new TurnoverAggregationService();
+
+        // when
+        Lease l1 = new Lease();
+        Lease l2 = new Lease();
+        Lease l3 = new Lease();
+        l2.setPrevious(l3);
+        l1.setPrevious(l2);
+
+        // then
+        Assertions.assertThat(service.leasesToExamine(l3)).hasSize(1);
+        Assertions.assertThat(service.leasesToExamine(l3)).contains(l3);
+        Assertions.assertThat(service.leasesToExamine(l2)).hasSize(2);
+        Assertions.assertThat(service.leasesToExamine(l3)).doesNotContain(l1);
+        Assertions.assertThat(service.leasesToExamine(l1)).hasSize(3);
+    }
+
+    @Test
+    public void occupanciesToExamine_works() throws Exception {
+
+        List<Lease> leases;
+
+        //given
+        TurnoverAggregationService service = new TurnoverAggregationService();
+        Unit sameUnit = new Unit();
+        Unit otherUnit = new Unit();
+
+        // when
+        leases = new ArrayList<>();
+        // then
+        Assertions.assertThat(service.occupanciesToExamine(sameUnit, leases)).hasSize(0);
+
+        // when
+        Lease l1 = new Lease();
+        Occupancy occOnSameUnit1 = new Occupancy();
+        occOnSameUnit1.setUnit(sameUnit);
+        Occupancy occOnSameUnit2 = new Occupancy();
+        occOnSameUnit2.setUnit(sameUnit);
+        occOnSameUnit2.setStartDate(new LocalDate(2019,1,1)); // to differentiate in sorted set
+        Occupancy occOnOtherUnit1 = new Occupancy();
+        occOnOtherUnit1.setUnit(otherUnit);
+        l1.getOccupancies().addAll(Arrays.asList(occOnSameUnit1, occOnSameUnit2, occOnOtherUnit1));
+        leases = Arrays.asList(l1);
+        // then
+        Assertions.assertThat(service.occupanciesToExamine(sameUnit, leases)).hasSize(2);
+        Assertions.assertThat(service.occupanciesToExamine(sameUnit, leases)).doesNotContain(occOnOtherUnit1);
+
+        // when no occupancies on same sameUnit and exactly one occupancy on other sameUnit
+        Lease l2 = new Lease();
+        Occupancy occOnOtherUnit2 = new Occupancy();
+        occOnOtherUnit2.setUnit(otherUnit);
+        l2.getOccupancies().add(occOnOtherUnit2);
+        leases = Arrays.asList(l2);
+        // then
+        Assertions.assertThat(service.occupanciesToExamine(sameUnit, leases)).hasSize(1);
+
+        // when multiple leases
+        leases = Arrays.asList(l1, l2);
+        // then
+        Assertions.assertThat(service.occupanciesToExamine(sameUnit, leases)).hasSize(3);
+        Assertions.assertThat(service.occupanciesToExamine(sameUnit, leases)).doesNotContain(occOnOtherUnit1);
+
+        // when no occupancies on same sameUnit and multiple occupancies on other sameUnit
+        Lease l3 = new Lease();
+        Occupancy occOnOtherUnit3 = new Occupancy();
+        occOnOtherUnit3.setUnit(otherUnit);
+        Occupancy occOnOtherUnit4 = new Occupancy();
+        occOnOtherUnit4.setUnit(otherUnit);
+        occOnOtherUnit4.setStartDate(new LocalDate(2019,1,1)); // to differentiate in sorted set
+        l3.getOccupancies().addAll(Arrays.asList(occOnOtherUnit3, occOnOtherUnit4));
+        leases = Arrays.asList(l3);
+        // then
+        Assertions.assertThat(leases.get(0).getOccupancies()).hasSize(2);
+        Assertions.assertThat(service.occupanciesToExamine(sameUnit, leases)).hasSize(0);
+
     }
 }

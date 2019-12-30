@@ -1,9 +1,13 @@
 package org.estatio.module.turnoveraggregate.dom;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+
+import com.google.api.client.util.Lists;
 
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -12,6 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
+import org.estatio.module.agreement.dom.Agreement;
+import org.estatio.module.asset.dom.Unit;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
@@ -76,20 +83,64 @@ public class TurnoverAggregationService {
         return turnoverAggregateForPeriod;
     }
 
-    // TODO: handle previous occupancies / leases
     List<Turnover> turnoversToAggregate(final TurnoverAggregateForPeriod turnoverAggregateForPeriod, boolean prevYear){
+
         final Occupancy occupancy = turnoverAggregateForPeriod.getAggregation().getOccupancy();
+        final Lease lease = occupancy.getLease();
+        final Unit unit = occupancy.getUnit();
         final Type type = turnoverAggregateForPeriod.getAggregation().getType();
         final Frequency frequency = turnoverAggregateForPeriod.getAggregation().getFrequency();
-
         final LocalDate periodEndDate = prevYear ? turnoverAggregateForPeriod.getAggregation().getDate().minusYears(1) : turnoverAggregateForPeriod.getAggregation().getDate();
         final LocalDate periodStartDate = turnoverAggregateForPeriod.getAggregationPeriod().periodStartDateFor(periodEndDate);
-        return turnoverRepository.findApprovedByOccupancyAndTypeAndFrequencyAndPeriod(
-                occupancy,
-                type,
-                frequency,
-                periodStartDate,
-                periodEndDate);
+
+        final List<Lease> leasesToExamine = leasesToExamine(lease);
+        final List<Occupancy> occupanciesToExamine = occupanciesToExamine(unit, leasesToExamine);
+
+        List<Turnover> result = new ArrayList<>();
+        occupanciesToExamine.forEach(o->{
+            result.addAll(
+                    turnoverRepository.findApprovedByOccupancyAndTypeAndFrequencyAndPeriod(
+                                    o,
+                                    type,
+                                    frequency,
+                                    periodStartDate,
+                                    periodEndDate)
+            );
+        });
+        return result;
+    }
+
+    List<Occupancy> occupanciesToExamine(final Unit unit, final List<Lease> leasesToExamine) {
+        List<Occupancy> occupanciesToExamine = new ArrayList<>();
+        leasesToExamine.forEach(l->{
+            final List<Occupancy> occupanciesOfSameUnit = Lists.newArrayList(l.getOccupancies()).stream()
+                    .filter(o -> o.getUnit() == unit)
+                    .collect(Collectors.toList());
+            final List<Occupancy> occupanciesOfDifferentUnit = Lists.newArrayList(l.getOccupancies()).stream()
+                    .filter(o -> o.getUnit() != unit)
+                    .collect(Collectors.toList());
+            if (occupanciesOfSameUnit.size()>=1){
+                occupanciesToExamine.addAll(occupanciesOfSameUnit);
+            }
+            if (occupanciesOfSameUnit.isEmpty() && occupanciesOfDifferentUnit.size()==1){
+                occupanciesToExamine.addAll(occupanciesOfDifferentUnit);
+            }
+            if (occupanciesOfSameUnit.isEmpty() && occupanciesOfDifferentUnit.size()>1){
+                LOG.warn(String.format("No occupancy found for lease %s with unit %s and multiple occupancies found for other unit - HOW TO HANDLE?", l.getReference(), unit.getReference()));
+            }
+        });
+        return occupanciesToExamine;
+    }
+
+    List<Lease> leasesToExamine(final Lease lease) {
+        List<Lease> leases = new ArrayList<>();
+        Agreement previous = lease.getPrevious();
+        leases.add(lease);
+        while (previous!=null) {
+            leases.add((Lease) previous);
+            previous = previous.getPrevious();
+        }
+        return leases;
     }
 
     boolean containsNonComparableTurnover(final List<Turnover> turnoverList){

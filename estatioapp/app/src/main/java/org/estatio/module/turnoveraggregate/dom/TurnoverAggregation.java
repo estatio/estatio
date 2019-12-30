@@ -50,6 +50,8 @@ import lombok.Setter;
 )
 public class TurnoverAggregation {
 
+    public TurnoverAggregation(){}
+
     public TurnoverAggregation(final Occupancy occupancy, final LocalDate date, final Type type, final Frequency frequency, final Currency currency){
         this.occupancy = occupancy;
         this.date = date;
@@ -97,7 +99,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "aggregate1MonthId", allowsNull = "true")
+    @Column(name = "turnoverAggregate1MonthId", allowsNull = "true")
     private TurnoverAggregateForPeriod aggregate1Month;
 
     /*
@@ -113,7 +115,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "aggregate2MonthId", allowsNull = "true")
+    @Column(name = "turnoverAggregate2MonthId", allowsNull = "true")
     private TurnoverAggregateForPeriod aggregate2Month;
 
     /*
@@ -129,7 +131,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "aggregate3MonthId", allowsNull = "true")
+    @Column(name = "turnoverAggregate3MonthId", allowsNull = "true")
     private TurnoverAggregateForPeriod aggregate3Month;
 
     /*
@@ -145,7 +147,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "aggregate6MonthId", allowsNull = "true")
+    @Column(name = "turnoverAggregate6MonthId", allowsNull = "true")
     private TurnoverAggregateForPeriod aggregate6Month;
 
     /*
@@ -161,7 +163,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "aggregate9MonthId", allowsNull = "true")
+    @Column(name = "turnoverAggregate9MonthId", allowsNull = "true")
     private TurnoverAggregateForPeriod aggregate9Month;
 
     /*
@@ -177,7 +179,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "aggregate12MonthId", allowsNull = "true")
+    @Column(name = "turnoverAggregate12MonthId", allowsNull = "true")
     private TurnoverAggregateForPeriod aggregate12Month;
 
     /*

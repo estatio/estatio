@@ -15,7 +15,6 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 )
 public class TurnoverAggregateToDateRepository {
 
-    @Action(restrictTo = RestrictTo.PROTOTYPING)
     public java.util.List<TurnoverAggregateToDate> listAll() {
         return repositoryService.allInstances(TurnoverAggregateToDate.class);
     }

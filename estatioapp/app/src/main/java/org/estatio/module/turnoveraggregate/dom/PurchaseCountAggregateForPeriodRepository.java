@@ -15,7 +15,6 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 )
 public class PurchaseCountAggregateForPeriodRepository {
 
-    @Action(restrictTo = RestrictTo.PROTOTYPING)
     public java.util.List<PurchaseCountAggregateForPeriod> listAll() {
         return repositoryService.allInstances(PurchaseCountAggregateForPeriod.class);
     }
