@@ -16,9 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.turnover.integtests;
-
-import java.math.BigDecimal;
+package org.estatio.module.turnoveraggregate.integtests;
 
 import javax.inject.Inject;
 
@@ -34,15 +32,17 @@ import org.estatio.module.currency.fixtures.enums.Currency_enum;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.turnover.dom.Frequency;
-import org.estatio.module.turnover.dom.Status;
-import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.Type;
-import org.estatio.module.turnover.dom.aggregate.TurnoverAggregation;
-import org.estatio.module.turnover.dom.aggregate.TurnoverAggregationRepository;
+import org.estatio.module.turnover.integtests.TurnoverModuleIntegTestAbstract;
+import org.estatio.module.turnoveraggregate.dom.AggregationPeriod;
+import org.estatio.module.turnoveraggregate.dom.PurchaseCountAggregateForPeriod;
+import org.estatio.module.turnoveraggregate.dom.PurchaseCountAggregateForPeriodRepository;
+import org.estatio.module.turnoveraggregate.dom.TurnoverAggregation;
+import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TurnoverAggregationRepository_IntegTest extends TurnoverModuleIntegTestAbstract {
+public class PurchaseCountAggregateForPeriodRepository_IntegTest extends TurnoverAggregateModuleIntegTestAbstract {
 
     @Before
     public void setupData() {
@@ -64,35 +64,37 @@ public class TurnoverAggregationRepository_IntegTest extends TurnoverModuleInteg
         final Type type = Type.PRELIMINARY;
         final Frequency frequency = Frequency.MONTHLY;
         final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
-
-        // when
         TurnoverAggregation aggregation = turnoverAggregationRepository
                 .findOrCreate(occupancy, date, type, frequency, euro);
+        final AggregationPeriod period = AggregationPeriod.P_1M;
+
+        // when
+        final PurchaseCountAggregateForPeriod aggregate = purchaseCountAggregateForPeriodRepository
+                .findOrCreate(aggregation, period);
 
         // then
-        assertThat(turnoverAggregationRepository.listAll()).hasSize(1);
-        assertThat(aggregation.getOccupancy()).isEqualTo(occupancy);
-        assertThat(aggregation.getDate()).isEqualTo(date);
-        assertThat(aggregation.getType()).isEqualTo(type);
-        assertThat(aggregation.getFrequency()).isEqualTo(frequency);
-        assertThat(aggregation.getCurrency()).isEqualTo(euro);
+        assertThat(purchaseCountAggregateForPeriodRepository.listAll()).hasSize(1);
+        assertThat(aggregate.getAggregation()).isEqualTo(aggregation);
+        assertThat(aggregate.getAggregationPeriod()).isEqualTo(period);
 
         // and when (again)
-        TurnoverAggregation aggregation2 = turnoverAggregationRepository
-                .findOrCreate(occupancy, date, type, frequency, euro);
+        final PurchaseCountAggregateForPeriod aggregate2 = purchaseCountAggregateForPeriodRepository
+                .findOrCreate(aggregation, period);
 
         // then still
-        assertThat(turnoverAggregationRepository.listAll()).hasSize(1);
-        assertThat(aggregation2).isEqualTo(aggregation);
+        assertThat(purchaseCountAggregateForPeriodRepository.listAll()).hasSize(1);
+        assertThat(aggregate2).isEqualTo(aggregate);
 
         // and when
-        TurnoverAggregation aggregation3 = turnoverAggregationRepository
-                .findOrCreate(occupancy, date.plusMonths(1), type, frequency, euro);
+        final PurchaseCountAggregateForPeriod aggregate3 = purchaseCountAggregateForPeriodRepository
+                .findOrCreate(aggregation, AggregationPeriod.P_2M);
 
         // then
-        assertThat(turnoverAggregationRepository.listAll()).hasSize(2);
-        assertThat(aggregation3).isNotEqualTo(aggregation);
+        assertThat(purchaseCountAggregateForPeriodRepository.listAll()).hasSize(2);
+        assertThat(aggregate3).isNotEqualTo(aggregate);
     }
+
+    @Inject PurchaseCountAggregateForPeriodRepository purchaseCountAggregateForPeriodRepository;
 
     @Inject TurnoverAggregationRepository turnoverAggregationRepository;
 

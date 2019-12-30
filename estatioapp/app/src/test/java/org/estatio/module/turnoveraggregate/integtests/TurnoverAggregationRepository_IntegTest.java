@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.turnover.integtests;
+package org.estatio.module.turnoveraggregate.integtests;
 
 import javax.inject.Inject;
 
@@ -33,15 +33,13 @@ import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Type;
-import org.estatio.module.turnover.dom.aggregate.AggregationPeriod;
-import org.estatio.module.turnover.dom.aggregate.TurnoverAggregateForPeriod;
-import org.estatio.module.turnover.dom.aggregate.TurnoverAggregateForPeriodRepository;
-import org.estatio.module.turnover.dom.aggregate.TurnoverAggregation;
-import org.estatio.module.turnover.dom.aggregate.TurnoverAggregationRepository;
+import org.estatio.module.turnover.integtests.TurnoverModuleIntegTestAbstract;
+import org.estatio.module.turnoveraggregate.dom.TurnoverAggregation;
+import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TurnoverAggregateForPeriodRepository_IntegTest extends TurnoverModuleIntegTestAbstract {
+public class TurnoverAggregationRepository_IntegTest extends TurnoverAggregateModuleIntegTestAbstract {
 
     @Before
     public void setupData() {
@@ -63,37 +61,35 @@ public class TurnoverAggregateForPeriodRepository_IntegTest extends TurnoverModu
         final Type type = Type.PRELIMINARY;
         final Frequency frequency = Frequency.MONTHLY;
         final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
-        TurnoverAggregation aggregation = turnoverAggregationRepository
-                .findOrCreate(occupancy, date, type, frequency, euro);
-        final AggregationPeriod period = AggregationPeriod.P_1M;
 
         // when
-        final TurnoverAggregateForPeriod aggregate = turnoverAggregateForPeriodRepository
-                .findOrCreate(aggregation, period);
+        TurnoverAggregation aggregation = turnoverAggregationRepository
+                .findOrCreate(occupancy, date, type, frequency, euro);
 
         // then
-        assertThat(turnoverAggregateForPeriodRepository.listAll()).hasSize(1);
-        assertThat(aggregate.getAggregation()).isEqualTo(aggregation);
-        assertThat(aggregate.getAggregationPeriod()).isEqualTo(period);
+        assertThat(turnoverAggregationRepository.listAll()).hasSize(1);
+        assertThat(aggregation.getOccupancy()).isEqualTo(occupancy);
+        assertThat(aggregation.getDate()).isEqualTo(date);
+        assertThat(aggregation.getType()).isEqualTo(type);
+        assertThat(aggregation.getFrequency()).isEqualTo(frequency);
+        assertThat(aggregation.getCurrency()).isEqualTo(euro);
 
         // and when (again)
-        final TurnoverAggregateForPeriod aggregate2 = turnoverAggregateForPeriodRepository
-                .findOrCreate(aggregation, period);
+        TurnoverAggregation aggregation2 = turnoverAggregationRepository
+                .findOrCreate(occupancy, date, type, frequency, euro);
 
         // then still
-        assertThat(turnoverAggregateForPeriodRepository.listAll()).hasSize(1);
-        assertThat(aggregate2).isEqualTo(aggregate);
+        assertThat(turnoverAggregationRepository.listAll()).hasSize(1);
+        assertThat(aggregation2).isEqualTo(aggregation);
 
         // and when
-        final TurnoverAggregateForPeriod aggregate3 = turnoverAggregateForPeriodRepository
-                .findOrCreate(aggregation, AggregationPeriod.P_2M);
+        TurnoverAggregation aggregation3 = turnoverAggregationRepository
+                .findOrCreate(occupancy, date.plusMonths(1), type, frequency, euro);
 
         // then
-        assertThat(turnoverAggregateForPeriodRepository.listAll()).hasSize(2);
-        assertThat(aggregate3).isNotEqualTo(aggregate);
+        assertThat(turnoverAggregationRepository.listAll()).hasSize(2);
+        assertThat(aggregation3).isNotEqualTo(aggregation);
     }
-
-    @Inject TurnoverAggregateForPeriodRepository turnoverAggregateForPeriodRepository;
 
     @Inject TurnoverAggregationRepository turnoverAggregationRepository;
 

@@ -1,4 +1,4 @@
-package org.estatio.module.turnover.fixtures;
+package org.estatio.module.turnoveraggregate.fixtures;
 
 import com.google.common.io.Resources;
 
@@ -12,7 +12,7 @@ import org.isisaddons.module.excel.dom.util.Mode;
 import org.estatio.module.turnover.imports.TurnoverImport;
 
 @DomainObject(
-        objectType = "org.estatio.module.turnover.fixtures.TurnoverImportXlsxFixture"
+        objectType = "org.estatio.module.turnoveraggregate.fixtures.TurnoverImportXlsxFixture"
 )
 public class TurnoverImportXlsxFixtureForAggregated extends ExcelFixture2 {
 

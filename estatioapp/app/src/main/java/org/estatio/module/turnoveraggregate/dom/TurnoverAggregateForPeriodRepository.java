@@ -1,4 +1,4 @@
-package org.estatio.module.turnover.dom.aggregate;
+package org.estatio.module.turnoveraggregate.dom;
 
 import javax.inject.Inject;
 
@@ -11,30 +11,30 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
-        repositoryFor = PurchaseCountAggregateForPeriod.class
+        repositoryFor = TurnoverAggregateForPeriod.class
 )
-public class PurchaseCountAggregateForPeriodRepository {
+public class TurnoverAggregateForPeriodRepository {
 
     @Action(restrictTo = RestrictTo.PROTOTYPING)
-    public java.util.List<PurchaseCountAggregateForPeriod> listAll() {
-        return repositoryService.allInstances(PurchaseCountAggregateForPeriod.class);
+    public java.util.List<TurnoverAggregateForPeriod> listAll() {
+        return repositoryService.allInstances(TurnoverAggregateForPeriod.class);
     }
 
-    public PurchaseCountAggregateForPeriod findUnique(
+    public TurnoverAggregateForPeriod findUnique(
             final TurnoverAggregation aggregation,
             final AggregationPeriod period
     ) {
         return repositoryService.uniqueMatch(
                 new org.apache.isis.applib.query.QueryDefault<>(
-                        PurchaseCountAggregateForPeriod.class,
+                        TurnoverAggregateForPeriod.class,
                         "findUnique",
                         "aggregation", aggregation,
                         "period", period));
     }
 
 
-    public PurchaseCountAggregateForPeriod create(final TurnoverAggregation aggregation, final AggregationPeriod period) {
-        final PurchaseCountAggregateForPeriod aggregate = new PurchaseCountAggregateForPeriod();
+    public TurnoverAggregateForPeriod create(final TurnoverAggregation aggregation, final AggregationPeriod period) {
+        final TurnoverAggregateForPeriod aggregate = new TurnoverAggregateForPeriod();
         aggregate.setAggregation(aggregation);
         aggregate.setAggregationPeriod(period);
         serviceRegistry.injectServicesInto(aggregate);
@@ -42,10 +42,10 @@ public class PurchaseCountAggregateForPeriodRepository {
         return aggregate;
     }
 
-    public PurchaseCountAggregateForPeriod findOrCreate(
+    public TurnoverAggregateForPeriod findOrCreate(
             final TurnoverAggregation aggregation, final AggregationPeriod period
     ) {
-        PurchaseCountAggregateForPeriod aggregate = findUnique(aggregation, period);
+        TurnoverAggregateForPeriod aggregate = findUnique(aggregation, period);
         if (aggregate == null) {
             aggregate = create(aggregation, period);
         }

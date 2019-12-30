@@ -1,6 +1,6 @@
-package org.estatio.module.turnover.dom.aggregate;
+package org.estatio.module.turnoveraggregate.dom;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -30,38 +30,51 @@ import lombok.Setter;
         @Query(
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.turnover.dom.aggregate.PurchaseCountAggregateForPeriod "
-                        + "WHERE aggregation == :aggregation "
-                        + "&& aggregationPeriod == :period "),
+                        + "FROM org.estatio.module.turnoveraggregate.dom.TurnoverAggregateToDate "
+                        + "WHERE aggregation == :aggregation "),
 })
-@Unique(name = "PurchaseCountAggregateForPeriod_aggregation_period_UNQ", members = { "aggregation", "aggregationPeriod" })
+@Unique(name = "TurnoverAggregateToDate_aggregation_UNQ", members = { "aggregation" })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.module.turnover.dom.aggregate.PurchaseCountAggregateForPeriod"
+        objectType = "org.estatio.module.turnoveraggregate.dom.TurnoverAggregateToDate"
 )
-public class PurchaseCountAggregateForPeriod {
+public class TurnoverAggregateToDate {
 
     @Getter @Setter
     @Column(name = "turnoverAggregationId", allowsNull = "false")
     private TurnoverAggregation aggregation;
 
     @Getter @Setter
-    @Column(allowsNull = "false")
-    private AggregationPeriod aggregationPeriod;
-
-     /*
-      * TurnoverPurchaseCount1MCY
-      * TurnoverPurchaseCount1MPY
-      * IsComparableTPC1M
-      */
+    @Column(allowsNull = "true")
+    private BigDecimal grossAmount;
 
     @Getter @Setter
     @Column(allowsNull = "true")
-    private BigInteger count;
+    private BigDecimal netAmount;
 
     @Getter @Setter
     @Column(allowsNull = "true")
-    private BigInteger countPreviousYear;
+    private boolean nonComparableThisYear;
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private int turnoverCount;
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private BigDecimal grossAmountPreviousYear;
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private BigDecimal netAmountPreviousYear;
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private boolean nonComparablePreviousYear;
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private int turnoverCountPreviousYear;
 
     @Getter @Setter
     @Column(allowsNull = "true")

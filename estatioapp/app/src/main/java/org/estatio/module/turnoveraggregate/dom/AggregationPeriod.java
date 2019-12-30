@@ -1,4 +1,4 @@
-package org.estatio.module.turnover.dom.aggregate;
+package org.estatio.module.turnoveraggregate.dom;
 
 public enum AggregationPeriod {
 

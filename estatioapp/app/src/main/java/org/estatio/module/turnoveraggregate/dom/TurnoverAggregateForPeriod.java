@@ -1,4 +1,4 @@
-package org.estatio.module.turnover.dom.aggregate;
+package org.estatio.module.turnoveraggregate.dom;
 
 import java.math.BigDecimal;
 
@@ -30,14 +30,14 @@ import lombok.Setter;
         @Query(
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.turnover.dom.aggregate.TurnoverAggregateForPeriod "
+                        + "FROM org.estatio.module.turnoveraggregate.dom.TurnoverAggregateForPeriod "
                         + "WHERE aggregation == :aggregation "
                         + "&& aggregationPeriod == :period "),
 })
 @Unique(name = "TurnoverAggregateForPeriod_aggregation_period_UNQ", members = { "aggregation", "aggregationPeriod" })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.module.turnover.dom.aggregate.TurnoverAggregateForPeriod"
+        objectType = "org.estatio.module.turnoveraggregate.dom.TurnoverAggregateForPeriod"
 )
 public class TurnoverAggregateForPeriod {
 

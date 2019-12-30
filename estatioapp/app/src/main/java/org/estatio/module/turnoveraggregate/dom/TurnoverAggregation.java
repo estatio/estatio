@@ -1,4 +1,4 @@
-package org.estatio.module.turnover.dom.aggregate;
+package org.estatio.module.turnoveraggregate.dom;
 
 import java.math.BigDecimal;
 
@@ -21,7 +21,6 @@ import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Type;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
@@ -38,7 +37,7 @@ import lombok.Setter;
         @Query(
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.turnover.dom.aggregate.TurnoverAggregation "
+                        + "FROM org.estatio.module.turnoveraggregate.dom.TurnoverAggregation "
                         + "WHERE occupancy == :occupancy "
                         + "&& date == :date "
                         + "&& type == :type "
@@ -47,7 +46,7 @@ import lombok.Setter;
 @Unique(name = "TurnoverAggregation_occupancy_date_type_frequency_UNQ", members = { "occupancy", "date", "type", "frequency" })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.module.turnover.dom.aggregate.TurnoverAggregation"
+        objectType = "org.estatio.module.turnoveraggregate.dom.TurnoverAggregation"
 )
 public class TurnoverAggregation {
 

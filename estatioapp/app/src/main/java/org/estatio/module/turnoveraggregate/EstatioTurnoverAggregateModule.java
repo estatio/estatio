@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.turnover;
+package org.estatio.module.turnoveraggregate;
 
 import java.util.Set;
 
@@ -30,18 +30,20 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
-import org.estatio.module.lease.EstatioLeaseModule;
-import org.estatio.module.turnover.dom.Turnover;
-import org.estatio.module.turnover.dom.TurnoverReportingConfig;
+import org.estatio.module.turnover.EstatioTurnoverModule;
+import org.estatio.module.turnoveraggregate.dom.PurchaseCountAggregateForPeriod;
+import org.estatio.module.turnoveraggregate.dom.TurnoverAggregateForPeriod;
+import org.estatio.module.turnoveraggregate.dom.TurnoverAggregateToDate;
+import org.estatio.module.turnoveraggregate.dom.TurnoverAggregation;
 
 @XmlRootElement(name = "module")
-public final class EstatioTurnoverModule extends ModuleAbstract {
+public final class EstatioTurnoverAggregateModule extends ModuleAbstract {
 
-    public EstatioTurnoverModule(){}
+    public EstatioTurnoverAggregateModule(){}
 
     @Override
     public Set<Module> getDependencies() {
-        return Sets.newHashSet(new EstatioLeaseModule());
+        return Sets.newHashSet(new EstatioTurnoverModule());
     }
 
     @Override
@@ -49,8 +51,10 @@ public final class EstatioTurnoverModule extends ModuleAbstract {
         return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                deleteFrom(Turnover.class);
-                deleteFrom(TurnoverReportingConfig.class);
+                deleteFrom(TurnoverAggregateForPeriod.class);
+                deleteFrom(TurnoverAggregateToDate.class);
+                deleteFrom(PurchaseCountAggregateForPeriod.class);
+                deleteFrom(TurnoverAggregation.class);
             }
         };
     }

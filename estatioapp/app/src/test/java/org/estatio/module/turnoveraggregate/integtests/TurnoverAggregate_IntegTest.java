@@ -16,17 +16,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.turnover.integtests;
+package org.estatio.module.turnoveraggregate.integtests;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,21 +38,19 @@ import org.estatio.module.currency.fixtures.enums.Currency_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.turnover.app.TurnoverMenu;
 import org.estatio.module.turnover.contributions.Occupancy_createTurnoverReportingConfig;
 import org.estatio.module.turnover.contributions.Occupancy_turnovers;
 import org.estatio.module.turnover.dom.Frequency;
-import org.estatio.module.turnover.dom.Status;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
-import org.estatio.module.turnover.fixtures.TurnoverImportXlsxFixture;
-import org.estatio.module.turnover.fixtures.TurnoverImportXlsxFixtureForAggregated;
+import org.estatio.module.turnover.integtests.TurnoverModuleIntegTestAbstract;
+import org.estatio.module.turnoveraggregate.fixtures.TurnoverImportXlsxFixtureForAggregated;
 import org.estatio.module.turnover.fixtures.data.TurnoverReportingConfig_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TurnoverAggregate_IntegTest extends TurnoverModuleIntegTestAbstract {
+public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTestAbstract {
 
     @Before
     public void setupData() {
