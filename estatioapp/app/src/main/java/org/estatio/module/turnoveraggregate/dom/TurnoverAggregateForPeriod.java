@@ -2,6 +2,7 @@ package org.estatio.module.turnoveraggregate.dom;
 
 import java.math.BigDecimal;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -10,8 +11,17 @@ import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
+import org.estatio.module.lease.dom.occupancy.Occupancy;
+import org.estatio.module.turnover.dom.Frequency;
+import org.estatio.module.turnover.dom.Type;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -84,5 +94,12 @@ public class TurnoverAggregateForPeriod {
     @Getter @Setter
     @Column(allowsNull = "true")
     private boolean comparable;
+
+    @Programmatic
+    public void aggregate(){
+        turnoverAggregationService.aggregateForPeriod(this);
+    }
+
+    @Inject TurnoverAggregationService turnoverAggregationService;
 
 }

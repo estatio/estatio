@@ -8,6 +8,8 @@ import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Index;
+import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
@@ -48,6 +50,11 @@ import lombok.Setter;
         @javax.jdo.annotations.Unique(
                 name = "TurnoverReportingConfig_occupancy_type_UNQ", members = { "occupancy", "type" })
 })
+@Indices({
+        @Index(
+                name = "TurnoverReportingConfig_occupancy_type_frequency_IDX",
+                members = {"occupancy", "type", "frequency"}),
+})
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findUnique", language = "JDOQL",
@@ -75,6 +82,13 @@ import lombok.Setter;
                         + "FROM org.estatio.module.turnover.dom.TurnoverReportingConfig "
                         + "WHERE occupancy == :occupancy && "
                         + "type == :type"),
+        @javax.jdo.annotations.Query(
+                name = "findByOccupancyAndTypeAndFrequency", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.turnover.dom.TurnoverReportingConfig "
+                        + "WHERE occupancy == :occupancy && "
+                        + "type == :type && "
+                        + "frequency == :frequency"),
 })
 @DomainObject(
         editing = Editing.DISABLED,

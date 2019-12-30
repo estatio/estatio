@@ -104,6 +104,16 @@ import lombok.Setter;
                         + "WHERE config == :config "
                         + "&& type == :type "
                         + "&& date == :date "),
+        @javax.jdo.annotations.Query(
+                name = "findByConfigAndTypeAndFrequencyAndStatusInPeriod", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.turnover.dom.Turnover "
+                        + "WHERE config == :config "
+                        + "&& type == :type "
+                        + "&& frequency == :frequency "
+                        + "&& status == :status "
+                        + "&& date >= :startDate "
+                        +  "&& date <= :endDate "),
 })
 @DomainObject(
         editing = Editing.DISABLED,

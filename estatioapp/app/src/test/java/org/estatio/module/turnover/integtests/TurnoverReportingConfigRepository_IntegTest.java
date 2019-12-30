@@ -150,6 +150,51 @@ public class TurnoverReportingConfigRepository_IntegTest extends TurnoverModuleI
 
         }
 
+        public static class FindByOccupancyTests extends TurnoverReportingConfigRepository_IntegTest {
+
+
+            @Before
+            public void setupData() {
+                runFixtureScript(new FixtureScript() {
+                    @Override
+                    protected void execute(ExecutionContext executionContext) {
+                        executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfTopModel001GbPrelim.builder());
+                    }
+                });
+            }
+
+            @Test
+            public void find_by_occupancy_and_type_and_frequency_works() throws Exception {
+
+                // given
+                assertThat(turnoverReportingConfigRepository.listAll()).hasSize(1);
+                final Occupancy occupancy = turnoverReportingConfigRepository.listAll()
+                        .get(0).getOccupancy();
+
+                // when, then
+                assertThat(turnoverReportingConfigRepository.findByOccupancyAndTypeAndFrequency(occupancy, Type.PRELIMINARY, Frequency.MONTHLY)).hasSize(1);
+                assertThat(turnoverReportingConfigRepository.findByOccupancyAndTypeAndFrequency(occupancy, Type.AUDITED, Frequency.MONTHLY)).hasSize(0);
+                assertThat(turnoverReportingConfigRepository.findByOccupancyAndTypeAndFrequency(occupancy, Type.PRELIMINARY, Frequency.DAILY)).hasSize(0);
+                assertThat(turnoverReportingConfigRepository.findByOccupancyAndTypeAndFrequency(occupancy, Type.PRELIMINARY, Frequency.YEARLY)).hasSize(0);
+            }
+
+            @Test
+            public void find_by_occupancy_works() throws Exception {
+
+                // given
+                assertThat(turnoverReportingConfigRepository.listAll()).hasSize(1);
+                final Occupancy occupancy = turnoverReportingConfigRepository.listAll()
+                        .get(0).getOccupancy();
+                final Occupancy someOtherOcc = new Occupancy();
+
+                // when, then
+                assertThat(turnoverReportingConfigRepository.findByOccupancy(occupancy)).hasSize(1);
+                assertThat(turnoverReportingConfigRepository.findByOccupancy(someOtherOcc)).hasSize(0);
+
+            }
+
+        }
+
 
     }
 

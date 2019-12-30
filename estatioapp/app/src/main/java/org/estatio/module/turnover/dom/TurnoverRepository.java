@@ -215,6 +215,30 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
                         "date", date ));
     }
 
+    public List<Turnover> findApprovedByOccupancyAndTypeAndFrequencyAndPeriod(final Occupancy occupancy, final Type type, final Frequency frequency, final LocalDate periodStartDate, final LocalDate periodEndDate){
+        final List<TurnoverReportingConfig> configs = turnoverReportingConfigRepository
+                .findByOccupancyAndTypeAndFrequency(occupancy, type, frequency);
+        List<Turnover> result = new ArrayList<>();
+        configs.forEach(
+                c->{
+                    result.addAll(findByConfigAndTypeAndFrequencyAndStatusInPeriod(c, type, frequency, Status.APPROVED, periodStartDate, periodEndDate));
+                });
+        return result;
+    }
+
+    public List<Turnover> findByConfigAndTypeAndFrequencyAndStatusInPeriod(final TurnoverReportingConfig config, final Type type, final Frequency frequency, final Status status, final LocalDate startDate, final LocalDate endDate){
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Turnover.class,
+                        "findByConfigAndTypeAndFrequencyAndStatusInPeriod",
+                        "config", config,
+                        "type", type,
+                        "frequency", frequency,
+                        "status", status,
+                        "startDate", startDate,
+                        "endDate", endDate));
+    }
+
     public List<Turnover> listAll() {
         return allInstances();
     }
