@@ -2,6 +2,7 @@ package org.estatio.module.turnoveraggregate.dom;
 
 import java.math.BigDecimal;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -14,6 +15,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -273,5 +275,29 @@ public class TurnoverAggregation {
     @Getter @Setter
     @Column(name = "purchaseCountAggregate12MonthId")
     private PurchaseCountAggregateForPeriod purchaseCountAggregate12Month;
+
+    @Programmatic
+    public TurnoverAggregation aggregate(){
+        this.setAggregationValuesIfNotAlready();
+        getAggregate1Month().aggregate();
+        getAggregate2Month().aggregate();
+        getAggregate3Month().aggregate();
+        getAggregate6Month().aggregate();
+        getAggregate9Month().aggregate();
+        getAggregate12Month().aggregate();
+        return this;
+    }
+
+    private void setAggregationValuesIfNotAlready(){
+        if (getAggregate1Month()==null) setAggregate1Month(turnoverAggregateForPeriodRepository.findOrCreate(this, AggregationPeriod.P_1M));
+        if (getAggregate2Month()==null) setAggregate2Month(turnoverAggregateForPeriodRepository.findOrCreate(this, AggregationPeriod.P_2M));
+        if (getAggregate3Month()==null) setAggregate3Month(turnoverAggregateForPeriodRepository.findOrCreate(this,AggregationPeriod.P_3M));
+        if (getAggregate6Month()==null) setAggregate6Month(turnoverAggregateForPeriodRepository.findOrCreate(this,AggregationPeriod.P_6M));
+        if (getAggregate9Month()==null) setAggregate9Month(turnoverAggregateForPeriodRepository.findOrCreate(this,AggregationPeriod.P_9M));
+        if (getAggregate12Month()==null) setAggregate12Month(turnoverAggregateForPeriodRepository.findOrCreate(this,AggregationPeriod.P_12M));
+    }
+
+    @Inject
+    TurnoverAggregateForPeriodRepository turnoverAggregateForPeriodRepository;
 
 }

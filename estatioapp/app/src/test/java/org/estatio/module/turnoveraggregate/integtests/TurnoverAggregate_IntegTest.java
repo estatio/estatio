@@ -18,12 +18,15 @@
  */
 package org.estatio.module.turnoveraggregate.integtests;
 
+import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,6 +37,7 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitType;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
+import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.fixtures.enums.Currency_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -45,6 +49,8 @@ import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
 import org.estatio.module.turnover.integtests.TurnoverModuleIntegTestAbstract;
+import org.estatio.module.turnoveraggregate.dom.TurnoverAggregation;
+import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationRepository;
 import org.estatio.module.turnoveraggregate.fixtures.TurnoverImportXlsxFixtureForAggregated;
 import org.estatio.module.turnover.fixtures.data.TurnoverReportingConfig_enum;
 
@@ -64,6 +70,18 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         });
     }
 
+    @After
+    public void teardown(){
+        turnoverAggregationRepository.listAll().forEach(t->{
+            t.setAggregate1Month(null);
+            t.setAggregate2Month(null);
+            t.setAggregate3Month(null);
+            t.setAggregate6Month(null);
+            t.setAggregate9Month(null);
+            t.setAggregate12Month(null);
+        });
+    }
+
     @Test
     public void import_scenario_1_succeeded() throws Exception {
 
@@ -79,14 +97,17 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         final Occupancy occ1 = oxfTopModelLease1.getOccupancies().first();
         occ1.terminate(endDateOcc1);
         final Property oxf = Property_enum.OxfGb.findUsing(serviceRegistry2);
+        final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
 
         final Unit new_unit_for_topmodel = oxf.newUnit("OXF-001A", "New unit 1 for Topmodel", UnitType.BOUTIQUE);
         final Occupancy occ2 = oxfTopModelLease1.newOccupancy(endDateOcc1.plusDays(1), new_unit_for_topmodel);
-        mixin(Occupancy_createTurnoverReportingConfig.class,occ2).createTurnoverReportingConfig(Type.PRELIMINARY, occ2.getStartDate(), Frequency.MONTHLY, Currency_enum.EUR.findUsing(serviceRegistry2));
+        mixin(Occupancy_createTurnoverReportingConfig.class,occ2).createTurnoverReportingConfig(Type.PRELIMINARY, occ2.getStartDate(), Frequency.MONTHLY,
+                euro);
 
         final Unit par_unit_for_topmodel = oxf.newUnit("OXF-001A-PAR", "Parallel unit 1 for Topmodel", UnitType.BOUTIQUE);
         final Occupancy occ3 = oxfTopModelLease1.newOccupancy(endDateOcc1.plusDays(1), par_unit_for_topmodel);
-        mixin(Occupancy_createTurnoverReportingConfig.class,occ3).createTurnoverReportingConfig(Type.PRELIMINARY, occ3.getStartDate(), Frequency.MONTHLY, Currency_enum.EUR.findUsing(serviceRegistry2));
+        mixin(Occupancy_createTurnoverReportingConfig.class,occ3).createTurnoverReportingConfig(Type.PRELIMINARY, occ3.getStartDate(), Frequency.MONTHLY,
+                euro);
 
         final LocalDate startDateLease2 = new LocalDate(2019, 11, 10);
         final LocalDate startDateLease3 = new LocalDate(2020, 5, 20);
@@ -94,12 +115,14 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         final Lease oxfTopModelLease2 = wrap(oxfTopModelLease1).renew("OXF-TOPMODEL-2", "Lease 2",
                 startDateLease2, startDateLease3.minusDays(1));
         final Occupancy occ4 = oxfTopModelLease2.getOccupancies().first();
-        mixin(Occupancy_createTurnoverReportingConfig.class,occ4).createTurnoverReportingConfig(Type.PRELIMINARY, occ4.getStartDate(), Frequency.MONTHLY, Currency_enum.EUR.findUsing(serviceRegistry2));
+        mixin(Occupancy_createTurnoverReportingConfig.class,occ4).createTurnoverReportingConfig(Type.PRELIMINARY, occ4.getStartDate(), Frequency.MONTHLY,
+                euro);
 
         final Lease oxfTopModelLease3 = wrap(oxfTopModelLease2).renew("OXF-TOPMODEL-3", "Lease 3",
                 startDateLease3, startDateLease3.plusYears(1));
         final Occupancy occ5 = oxfTopModelLease3.getOccupancies().first();
-        mixin(Occupancy_createTurnoverReportingConfig.class,occ5).createTurnoverReportingConfig(Type.PRELIMINARY, occ5.getStartDate(), Frequency.MONTHLY, Currency_enum.EUR.findUsing(serviceRegistry2));
+        mixin(Occupancy_createTurnoverReportingConfig.class,occ5).createTurnoverReportingConfig(Type.PRELIMINARY, occ5.getStartDate(), Frequency.MONTHLY,
+                euro);
 
         runFixtureScript(new FixtureScript() {
             @Override
@@ -141,10 +164,33 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         assertThat(minDateOcc5).isEqualTo(new LocalDate(2020, 5,1));
 
         // when (aggregate)
+        final TurnoverAggregation agg1 = turnoverAggregationRepository
+                .findOrCreate(occ1, new LocalDate(2019, 4, 1), Type.PRELIMINARY, Frequency.MONTHLY, euro);
+        agg1.aggregate();
 
         // then
+        Assertions.assertThat(agg1.getAggregate1Month().getGrossAmount()).isEqualTo(new BigDecimal("52775.00"));
+        Assertions.assertThat(agg1.getAggregate1Month().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("68878.00"));
+        Assertions.assertThat(agg1.getAggregate1Month().isComparable()).isTrue();
+        Assertions.assertThat(agg1.getAggregate2Month().getGrossAmount()).isEqualTo(new BigDecimal("110971.00"));
+        Assertions.assertThat(agg1.getAggregate2Month().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("136651.00"));
+        Assertions.assertThat(agg1.getAggregate2Month().isComparable()).isTrue();
+        Assertions.assertThat(agg1.getAggregate3Month().getGrossAmount()).isEqualTo(new BigDecimal("177935.00"));
+        Assertions.assertThat(agg1.getAggregate3Month().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("197351.00"));
+        Assertions.assertThat(agg1.getAggregate3Month().isComparable()).isTrue();
+        Assertions.assertThat(agg1.getAggregate6Month().getGrossAmount()).isEqualTo(new BigDecimal("454501.00"));
+        Assertions.assertThat(agg1.getAggregate6Month().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("469051.00"));
+        Assertions.assertThat(agg1.getAggregate6Month().isComparable()).isTrue();
+        Assertions.assertThat(agg1.getAggregate9Month().getGrossAmount()).isEqualTo(new BigDecimal("657250.00"));
+        Assertions.assertThat(agg1.getAggregate9Month().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("689764.00"));
+        Assertions.assertThat(agg1.getAggregate9Month().isComparable()).isTrue();
+        Assertions.assertThat(agg1.getAggregate12Month().getGrossAmount()).isEqualTo(new BigDecimal("880724.00"));
+        Assertions.assertThat(agg1.getAggregate12Month().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("903262.00"));
+        Assertions.assertThat(agg1.getAggregate12Month().isComparable()).isTrue();
 
     }
+
+    @Inject TurnoverAggregationRepository turnoverAggregationRepository;
 
     @Inject TurnoverRepository turnoverRepository;
 
