@@ -278,17 +278,17 @@ public class TurnoverAggregation {
 
     @Programmatic
     public TurnoverAggregation aggregate(){
-        getAggregate1Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
-        getAggregate2Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
-        getAggregate3Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
-        getAggregate6Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
-        getAggregate9Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
-        getAggregate12Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
-        getAggregateToDate().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
-        getPurchaseCountAggregate1Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
-        getPurchaseCountAggregate3Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
-        getPurchaseCountAggregate6Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
-        getPurchaseCountAggregate12Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
+        getAggregate1Month().aggregate(this);
+        getAggregate2Month().aggregate(this);
+        getAggregate3Month().aggregate(this);
+        getAggregate6Month().aggregate(this);
+        getAggregate9Month().aggregate(this);
+        getAggregate12Month().aggregate(this);
+        getAggregateToDate().aggregate(this);
+        getPurchaseCountAggregate1Month().aggregate(this);
+        getPurchaseCountAggregate3Month().aggregate(this);
+        getPurchaseCountAggregate6Month().aggregate(this);
+        getPurchaseCountAggregate12Month().aggregate(this);
         turnoverAggregationService.aggregateOtherAggregationProperties(this);
         return this;
     }

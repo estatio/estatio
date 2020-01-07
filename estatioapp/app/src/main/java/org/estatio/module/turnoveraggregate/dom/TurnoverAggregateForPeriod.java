@@ -83,8 +83,8 @@ public class TurnoverAggregateForPeriod {
     private boolean comparable;
 
     @Programmatic
-    public void aggregate(final Occupancy occupancy, final LocalDate aggregationDate, final Type type, final Frequency frequency){
-        turnoverAggregationService.aggregateForPeriod(this, occupancy, aggregationDate, type, frequency);
+    public void aggregate(final TurnoverAggregation aggregation){
+        turnoverAggregationService.aggregateForPeriod(this, aggregation.getOccupancy(), aggregation.getDate(), aggregation.getType(), aggregation.getFrequency());
     }
 
     @Inject TurnoverAggregationService turnoverAggregationService;
