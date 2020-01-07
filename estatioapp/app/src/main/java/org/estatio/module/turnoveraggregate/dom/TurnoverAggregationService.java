@@ -3,6 +3,7 @@ package org.estatio.module.turnoveraggregate.dom;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -204,12 +205,14 @@ public class TurnoverAggregationService {
         final List<Turnover> turnoversToAggregateForComments = turnoversToAggregateForPeriod(turnoverAggregation.getOccupancy(), turnoverAggregation.getDate(), AggregationPeriod.P_12M, turnoverAggregation.getType(), turnoverAggregation.getFrequency(), false);
         final String comments12M = turnoversToAggregateForComments.stream()
                 .filter(t->t.getComments()!=null && t.getComments()!="")
+                .sorted(Comparator.reverseOrder())
                 .map(t->t.getComments())
                 .reduce("", String::concat);
         final List<Turnover> turnoversToAggregateForCommentsPY = turnoversToAggregateForPeriod(turnoverAggregation.getOccupancy(), turnoverAggregation.getDate(), AggregationPeriod.P_12M, turnoverAggregation.getType(), turnoverAggregation.getFrequency(), true);
         final String comments12MPY = turnoversToAggregateForCommentsPY.stream()
                 .filter(t->t.getComments()!=null && t.getComments()!="")
                 .map(t->t.getComments())
+                .sorted(Comparator.reverseOrder())
                 .reduce("", String::concat);;
 
         turnoverAggregation.setGrossAmount1MCY_1(totalGrossMinM1);
