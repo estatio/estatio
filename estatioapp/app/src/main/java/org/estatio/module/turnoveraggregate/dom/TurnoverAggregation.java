@@ -101,7 +101,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "turnoverAggregate1MonthId", allowsNull = "true")
+    @Column(name = "turnoverAggregate1MonthId", allowsNull = "false")
     private TurnoverAggregateForPeriod aggregate1Month;
 
     /*
@@ -117,7 +117,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "turnoverAggregate2MonthId", allowsNull = "true")
+    @Column(name = "turnoverAggregate2MonthId", allowsNull = "false")
     private TurnoverAggregateForPeriod aggregate2Month;
 
     /*
@@ -133,7 +133,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "turnoverAggregate3MonthId", allowsNull = "true")
+    @Column(name = "turnoverAggregate3MonthId", allowsNull = "false")
     private TurnoverAggregateForPeriod aggregate3Month;
 
     /*
@@ -149,7 +149,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "turnoverAggregate6MonthId", allowsNull = "true")
+    @Column(name = "turnoverAggregate6MonthId", allowsNull = "false")
     private TurnoverAggregateForPeriod aggregate6Month;
 
     /*
@@ -165,7 +165,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "turnoverAggregate9MonthId", allowsNull = "true")
+    @Column(name = "turnoverAggregate9MonthId", allowsNull = "false")
     private TurnoverAggregateForPeriod aggregate9Month;
 
     /*
@@ -181,7 +181,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "turnoverAggregate12MonthId", allowsNull = "true")
+    @Column(name = "turnoverAggregate12MonthId", allowsNull = "false")
     private TurnoverAggregateForPeriod aggregate12Month;
 
     /*
@@ -197,7 +197,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "turnoverAggregateToDateId", allowsNull = "true")
+    @Column(name = "turnoverAggregateToDateId", allowsNull = "false")
     private TurnoverAggregateToDate aggregateToDate;
 
     /*
@@ -243,7 +243,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "purchaseCountAggregate1MonthId")
+    @Column(name = "purchaseCountAggregate1MonthId", allowsNull = "false")
     private PurchaseCountAggregateForPeriod purchaseCountAggregate1Month;
 
     /*
@@ -253,7 +253,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "purchaseCountAggregate3MonthId")
+    @Column(name = "purchaseCountAggregate3MonthId", allowsNull = "false")
     private PurchaseCountAggregateForPeriod purchaseCountAggregate3Month;
 
     /*
@@ -263,7 +263,7 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "purchaseCountAggregate6MonthId")
+    @Column(name = "purchaseCountAggregate6MonthId", allowsNull = "false")
     private PurchaseCountAggregateForPeriod purchaseCountAggregate6Month;
 
     /*
@@ -273,12 +273,11 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(name = "purchaseCountAggregate12MonthId")
+    @Column(name = "purchaseCountAggregate12MonthId", allowsNull = "false")
     private PurchaseCountAggregateForPeriod purchaseCountAggregate12Month;
 
     @Programmatic
     public TurnoverAggregation aggregate(){
-        this.setAggregationValuesIfNotAlready();
         getAggregate1Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
         getAggregate2Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
         getAggregate3Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
@@ -286,15 +285,6 @@ public class TurnoverAggregation {
         getAggregate9Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
         getAggregate12Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
         return this;
-    }
-
-    private void setAggregationValuesIfNotAlready(){
-        if (getAggregate1Month()==null) setAggregate1Month(turnoverAggregateForPeriodRepository.create(AggregationPeriod.P_1M));
-        if (getAggregate2Month()==null) setAggregate2Month(turnoverAggregateForPeriodRepository.create(AggregationPeriod.P_2M));
-        if (getAggregate3Month()==null) setAggregate3Month(turnoverAggregateForPeriodRepository.create(AggregationPeriod.P_3M));
-        if (getAggregate6Month()==null) setAggregate6Month(turnoverAggregateForPeriodRepository.create(AggregationPeriod.P_6M));
-        if (getAggregate9Month()==null) setAggregate9Month(turnoverAggregateForPeriodRepository.create(AggregationPeriod.P_9M));
-        if (getAggregate12Month()==null) setAggregate12Month(turnoverAggregateForPeriodRepository.create(AggregationPeriod.P_12M));
     }
 
     @Inject
