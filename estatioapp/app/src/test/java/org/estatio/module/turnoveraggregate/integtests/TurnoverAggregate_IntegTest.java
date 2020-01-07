@@ -230,6 +230,60 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         );
     }
 
+    @Test
+    public void scenario_parent_leases() throws Exception {
+
+        // given
+        setupScenario_and_validate_import();
+
+        // when
+        final TurnoverAggregation aggOcc4 = turnoverAggregationRepository
+                .findOrCreate(occ4, new LocalDate(2019, 11, 1), Type.PRELIMINARY, Frequency.MONTHLY, euro);
+        aggOcc4.aggregate();
+
+        // then
+        assertTurnoverAggregation(
+                aggOcc4,
+                new BigDecimal("72053.00"), BigDecimal.ZERO, false,  // 65264 + 6789
+                new BigDecimal("148282.00"), BigDecimal.ZERO, false,
+                new BigDecimal("210282.00"), BigDecimal.ZERO, false,
+                new BigDecimal("376212.00"), BigDecimal.ZERO, false,
+                new BigDecimal("446235.00"), BigDecimal.ZERO, false,
+                new BigDecimal("446235.00"), BigDecimal.ZERO, false,
+                new BigDecimal("446235.00"), BigDecimal.ZERO, false,
+                new BigInteger("567"), new BigInteger("0"), false,
+                new BigInteger("1129"), new BigInteger("0"), false,
+                new BigInteger("1482"), new BigInteger("0"), false,
+                new BigInteger("1482"), new BigInteger("0"), false,
+                "", "",
+                new BigDecimal("76229.00"), new BigDecimal("62000.00")
+        );
+
+        // and when 2 parent leases
+        final TurnoverAggregation aggOcc5 = turnoverAggregationRepository
+                .findOrCreate(occ5, new LocalDate(2020, 6, 1), Type.PRELIMINARY, Frequency.MONTHLY, euro);
+        aggOcc5.aggregate();
+
+        // then
+        assertTurnoverAggregation(
+                aggOcc5,
+                new BigDecimal("12345.00"), new BigDecimal("76342.00"), true,
+                new BigDecimal("25905.00"), new BigDecimal("146365.00"), true,
+                new BigDecimal("38253.00"), new BigDecimal("146365.00"), false,
+                new BigDecimal("75381.00"), new BigDecimal("146365.00"), false,
+                new BigDecimal("236007.00"), new BigDecimal("146365.00"), false,
+                new BigDecimal("387595.00"), new BigDecimal("146365.00"), false,
+                new BigDecimal("75381.00"), new BigDecimal("146365.00"), false,
+                new BigInteger("0"), new BigInteger("0"), true,
+                new BigInteger("0"), new BigInteger("0"), false,
+                new BigInteger("0"), new BigInteger("0"), false,
+                new BigInteger("1605"), new BigInteger("0"), false,
+                "", "",
+                new BigDecimal("13560.00"), new BigDecimal("12348.00")
+        );
+
+    }
+
     private void assertTurnoverAggregation(final TurnoverAggregation aggOnOcc1,
             final BigDecimal A1mGross,
             final BigDecimal A1mGPY,
