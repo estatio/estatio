@@ -191,6 +191,10 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         Assertions.assertThat(agg1.getPurchaseCountAggregate12Month().getCount()).isEqualTo(new BigInteger("7463"));
         Assertions.assertThat(agg1.getPurchaseCountAggregate12Month().getCountPreviousYear()).isEqualTo(new BigInteger("6338"));
         Assertions.assertThat(agg1.getPurchaseCountAggregate12Month().isComparable()).isTrue();
+        Assertions.assertThat(agg1.getComments12MCY()).isEqualTo("xxxyyy");
+        Assertions.assertThat(agg1.getComments12MPY()).isEqualTo("zzz");
+        Assertions.assertThat(agg1.getGrossAmount1MCY_1()).isEqualTo(new BigDecimal("58196.00"));
+        Assertions.assertThat(agg1.getGrossAmount1MCY_2()).isEqualTo(new BigDecimal("66964.00"));
     }
 
     @Inject TurnoverAggregationRepository turnoverAggregationRepository;

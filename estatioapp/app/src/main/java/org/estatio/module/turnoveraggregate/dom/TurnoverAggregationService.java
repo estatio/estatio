@@ -170,6 +170,58 @@ public class TurnoverAggregationService {
         return purchaseCountAggregateForPeriod;
     }
 
+    public TurnoverAggregation aggregateOtherAggregationProperties(final TurnoverAggregation turnoverAggregation) {
+        if (turnoverAggregation.getType() != Type.PRELIMINARY ) {
+            LOG.warn(String.format("No aggregate-other-aggregation-properties implementation for type %s found.",
+                    turnoverAggregation.getType()));
+            return turnoverAggregation;
+        }
+        if (turnoverAggregation.getFrequency() != Frequency.MONTHLY) {
+            LOG.warn(String.format("No aggregate-other-aggregation-properties for frequency %s found.",
+                    turnoverAggregation.getFrequency()));
+            return turnoverAggregation;
+        }
+        final List<Turnover> turnoversToAggregateForMinusMonth1 = turnoversToAggregate(turnoverAggregation.getOccupancy(), turnoverAggregation.getDate(),
+                turnoverAggregation.getDate().minusMonths(1), turnoverAggregation.getDate().minusMonths(1), turnoverAggregation.getType(), turnoverAggregation.getFrequency());
+        final BigDecimal totalGrossMinM1 = turnoversToAggregateForMinusMonth1.stream()
+                .filter(t->t.getGrossAmount()!=null)
+                .map(t -> t.getGrossAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        final BigDecimal totalNetMinM1 = turnoversToAggregateForMinusMonth1.stream()
+                .filter(t->t.getNetAmount()!=null)
+                .map(t -> t.getNetAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        final List<Turnover> turnoversToAggregateForMinusMonth2 = turnoversToAggregate(turnoverAggregation.getOccupancy(), turnoverAggregation.getDate(),
+                turnoverAggregation.getDate().minusMonths(2), turnoverAggregation.getDate().minusMonths(2), turnoverAggregation.getType(), turnoverAggregation.getFrequency());
+        final BigDecimal totalGrossMinM2 = turnoversToAggregateForMinusMonth2.stream()
+                .filter(t->t.getGrossAmount()!=null)
+                .map(t -> t.getGrossAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        final BigDecimal totalNetMinM2 = turnoversToAggregateForMinusMonth2.stream()
+                .filter(t->t.getNetAmount()!=null)
+                .map(t -> t.getNetAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        final List<Turnover> turnoversToAggregateForComments = turnoversToAggregateForPeriod(turnoverAggregation.getOccupancy(), turnoverAggregation.getDate(), AggregationPeriod.P_12M, turnoverAggregation.getType(), turnoverAggregation.getFrequency(), false);
+        final String comments12M = turnoversToAggregateForComments.stream()
+                .filter(t->t.getComments()!=null && t.getComments()!="")
+                .map(t->t.getComments())
+                .reduce("", String::concat);
+        final List<Turnover> turnoversToAggregateForCommentsPY = turnoversToAggregateForPeriod(turnoverAggregation.getOccupancy(), turnoverAggregation.getDate(), AggregationPeriod.P_12M, turnoverAggregation.getType(), turnoverAggregation.getFrequency(), true);
+        final String comments12MPY = turnoversToAggregateForCommentsPY.stream()
+                .filter(t->t.getComments()!=null && t.getComments()!="")
+                .map(t->t.getComments())
+                .reduce("", String::concat);;
+
+        turnoverAggregation.setGrossAmount1MCY_1(totalGrossMinM1);
+        turnoverAggregation.setNetAmount1MCY_1(totalNetMinM1);
+        turnoverAggregation.setGrossAmount1MCY_2(totalGrossMinM2);
+        turnoverAggregation.setNetAmount1MCY_2(totalNetMinM2);
+        turnoverAggregation.setComments12MCY(comments12M);
+        turnoverAggregation.setComments12MPY(comments12MPY);
+
+        return turnoverAggregation;
+    }
+
     List<Turnover> turnoversToAggregateForPeriod(final Occupancy occupancy, final LocalDate date, final AggregationPeriod aggregationPeriod, final Type type, final Frequency frequency, boolean prevYear){
         final LocalDate periodEndDate = prevYear ? date.minusYears(1) : date;
         final LocalDate periodStartDate = aggregationPeriod.periodStartDateFor(periodEndDate);
@@ -248,5 +300,4 @@ public class TurnoverAggregationService {
     }
 
     @Inject TurnoverRepository turnoverRepository;
-
 }

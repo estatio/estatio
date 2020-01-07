@@ -289,10 +289,11 @@ public class TurnoverAggregation {
         getPurchaseCountAggregate3Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
         getPurchaseCountAggregate6Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
         getPurchaseCountAggregate12Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
+        turnoverAggregationService.aggregateOtherAggregationProperties(this);
         return this;
     }
 
     @Inject
-    TurnoverAggregateForPeriodRepository turnoverAggregateForPeriodRepository;
+    TurnoverAggregationService turnoverAggregationService;
 
 }

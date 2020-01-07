@@ -155,6 +155,60 @@ public class TurnoverAggregationService_Test {
     }
 
     @Test
+    public void aggregate_works() throws Exception {
+
+        // given
+        final LocalDate aggregationDateM1 = new LocalDate(2019, 2, 1);
+        Turnover tM1_1 = new Turnover();
+        tM1_1.setGrossAmount(new BigDecimal("123.00"));
+        tM1_1.setNetAmount(new BigDecimal("111.11"));
+        Turnover tM1_2 = new Turnover();
+        tM1_2.setGrossAmount(new BigDecimal("0.45"));
+        Turnover tM2_1 = new Turnover();
+        tM2_1.setGrossAmount(new BigDecimal("100.23"));
+        tM2_1.setNetAmount(new BigDecimal("99.99"));
+        Turnover t1 = new Turnover();
+        t1.setComments("xxx");
+        Turnover t2 = new Turnover();
+        t2.setComments("yyy");
+        Turnover tpy1 = new Turnover();
+        tpy1.setComments("zzz");
+
+        TurnoverAggregationService service = new TurnoverAggregationService(){
+            @Override
+            List<Turnover> turnoversToAggregate(
+                    final Occupancy occupancy,
+                    final LocalDate date,
+                    final LocalDate periodStartDate,
+                    final LocalDate periodEndDate,
+                    final Type type,
+                    final Frequency frequency) {
+                return periodEndDate.equals(aggregationDateM1) ? Arrays.asList(tM1_1, tM1_2) : Arrays.asList(tM2_1);
+            }
+
+            @Override List<Turnover> turnoversToAggregateForPeriod(
+                    final Occupancy occupancy, final LocalDate date, final AggregationPeriod aggregationPeriod, final Type type, final Frequency frequency, boolean prevYear) {
+                return prevYear ? Arrays.asList(tpy1) : Arrays.asList(t1, t2);
+            }
+        };
+
+        // when
+        TurnoverAggregation aggregation = new TurnoverAggregation();
+        aggregation.setType(Type.PRELIMINARY);
+        aggregation.setFrequency(Frequency.MONTHLY);
+        aggregation.setDate(aggregationDateM1.plusMonths(1));
+        service.aggregateOtherAggregationProperties(aggregation);
+
+        // then
+        Assertions.assertThat(aggregation.getGrossAmount1MCY_1()).isEqualTo(new BigDecimal("123.45"));
+        Assertions.assertThat(aggregation.getNetAmount1MCY_1()).isEqualTo(new BigDecimal("111.11"));
+        Assertions.assertThat(aggregation.getGrossAmount1MCY_2()).isEqualTo(new BigDecimal("100.23"));
+        Assertions.assertThat(aggregation.getNetAmount1MCY_2()).isEqualTo(new BigDecimal("99.99"));
+        Assertions.assertThat(aggregation.getComments12MCY()).isEqualTo("xxxyyy");
+        Assertions.assertThat(aggregation.getComments12MPY()).isEqualTo("zzz");
+    }
+
+    @Test
     public void containsNonComparableTurnover_works() throws Exception {
 
         // given
