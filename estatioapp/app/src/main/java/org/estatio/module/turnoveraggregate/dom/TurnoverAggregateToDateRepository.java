@@ -19,32 +19,10 @@ public class TurnoverAggregateToDateRepository {
         return repositoryService.allInstances(TurnoverAggregateToDate.class);
     }
 
-    public TurnoverAggregateToDate findUnique(
-            final TurnoverAggregation aggregation
-    ) {
-        return repositoryService.uniqueMatch(
-                new org.apache.isis.applib.query.QueryDefault<>(
-                        TurnoverAggregateToDate.class,
-                        "findUnique",
-                        "aggregation", aggregation));
-    }
-
-
-    public TurnoverAggregateToDate create(final TurnoverAggregation aggregation) {
+    public TurnoverAggregateToDate create() {
         final TurnoverAggregateToDate aggregate = new TurnoverAggregateToDate();
-        aggregate.setAggregation(aggregation);
         serviceRegistry.injectServicesInto(aggregate);
         repositoryService.persistAndFlush(aggregate);
-        return aggregate;
-    }
-
-    public TurnoverAggregateToDate findOrCreate(
-            final TurnoverAggregation aggregation
-    ) {
-        TurnoverAggregateToDate aggregate = findUnique(aggregation);
-        if (aggregate == null) {
-            aggregate = create(aggregation);
-        }
         return aggregate;
     }
 

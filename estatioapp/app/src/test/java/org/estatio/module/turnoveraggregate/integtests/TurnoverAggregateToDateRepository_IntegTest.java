@@ -42,54 +42,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class TurnoverAggregateToDateRepository_IntegTest extends TurnoverAggregateModuleIntegTestAbstract {
 
-    @Before
-    public void setupData() {
-        runFixtureScript(new FixtureScript() {
-            @Override
-            protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, Currency_enum.EUR.builder());
-                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
-            }
-        });
-    }
-
     @Test
-    public void find_or_create_works() throws Exception {
+    public void create_works() throws Exception {
 
         // given
-        final Occupancy occupancy = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2).getOccupancies().first();
-        final LocalDate date = new LocalDate(2019, 1, 1);
-        final Type type = Type.PRELIMINARY;
-        final Frequency frequency = Frequency.MONTHLY;
-        final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
-        TurnoverAggregation aggregation = turnoverAggregationRepository
-                .findOrCreate(occupancy, date, type, frequency, euro);
+        assertThat(turnoverAggregateToDateRepository.listAll()).hasSize(0);
 
         // when
         final TurnoverAggregateToDate aggregate = turnoverAggregateToDateRepository
-                .findOrCreate(aggregation);
+                .create();
 
         // then
         assertThat(turnoverAggregateToDateRepository.listAll()).hasSize(1);
-        assertThat(aggregate.getAggregation()).isEqualTo(aggregation);
-
-        // and when (again)
-        final TurnoverAggregateToDate aggregate2 = turnoverAggregateToDateRepository
-                .findOrCreate(aggregation);
-
-        // then still
-        assertThat(turnoverAggregateToDateRepository.listAll()).hasSize(1);
-        assertThat(aggregate2).isEqualTo(aggregate);
-
-        // and when
-        TurnoverAggregation aggregation2 = turnoverAggregationRepository
-                .findOrCreate(occupancy, date.plusMonths(1), type, frequency, euro);
-        final TurnoverAggregateToDate aggregate3 = turnoverAggregateToDateRepository
-                .findOrCreate(aggregation2);
-
-        // then
-        assertThat(turnoverAggregateToDateRepository.listAll()).hasSize(2);
-        assertThat(aggregate3).isNotEqualTo(aggregate);
     }
 
     @Inject TurnoverAggregateToDateRepository turnoverAggregateToDateRepository;

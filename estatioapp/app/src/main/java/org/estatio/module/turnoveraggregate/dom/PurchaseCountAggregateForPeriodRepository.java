@@ -19,35 +19,11 @@ public class PurchaseCountAggregateForPeriodRepository {
         return repositoryService.allInstances(PurchaseCountAggregateForPeriod.class);
     }
 
-    public PurchaseCountAggregateForPeriod findUnique(
-            final TurnoverAggregation aggregation,
-            final AggregationPeriod period
-    ) {
-        return repositoryService.uniqueMatch(
-                new org.apache.isis.applib.query.QueryDefault<>(
-                        PurchaseCountAggregateForPeriod.class,
-                        "findUnique",
-                        "aggregation", aggregation,
-                        "period", period));
-    }
-
-
-    public PurchaseCountAggregateForPeriod create(final TurnoverAggregation aggregation, final AggregationPeriod period) {
+    public PurchaseCountAggregateForPeriod create(final AggregationPeriod period) {
         final PurchaseCountAggregateForPeriod aggregate = new PurchaseCountAggregateForPeriod();
-        aggregate.setAggregation(aggregation);
         aggregate.setAggregationPeriod(period);
         serviceRegistry.injectServicesInto(aggregate);
         repositoryService.persistAndFlush(aggregate);
-        return aggregate;
-    }
-
-    public PurchaseCountAggregateForPeriod findOrCreate(
-            final TurnoverAggregation aggregation, final AggregationPeriod period
-    ) {
-        PurchaseCountAggregateForPeriod aggregate = findUnique(aggregation, period);
-        if (aggregate == null) {
-            aggregate = create(aggregation, period);
-        }
         return aggregate;
     }
 

@@ -44,7 +44,7 @@ public class TurnoverAggregationService_Test {
 
         TurnoverAggregationService service = new TurnoverAggregationService(){
             @Override List<Turnover> turnoversToAggregate(
-                    final TurnoverAggregateForPeriod turnoverAggregateForPeriod, final boolean prevYear) {
+                    final Occupancy occupancy, final LocalDate date, final AggregationPeriod aggregationPeriod, final Type type, final Frequency frequency, boolean prevYear) {
                 return prevYear ? Arrays.asList(tpy1) : Arrays.asList(t1, t2);
             }
         };
@@ -52,12 +52,10 @@ public class TurnoverAggregationService_Test {
         TurnoverAggregateForPeriod aggregateForPeriod = new TurnoverAggregateForPeriod();
         final Occupancy occupancy = new Occupancy();
         final LocalDate aggregationDate = new LocalDate(2019, 1, 1);
-        TurnoverAggregation aggregation = new TurnoverAggregation(occupancy, aggregationDate, Type.PRELIMINARY, Frequency.MONTHLY, new Currency());
-        aggregateForPeriod.setAggregation(aggregation);
         aggregateForPeriod.setAggregationPeriod(AggregationPeriod.P_2M);
 
         // when
-        service.aggregateForPeriod(aggregateForPeriod);
+        service.aggregateForPeriod(aggregateForPeriod, occupancy, aggregationDate, Type.PRELIMINARY, Frequency.MONTHLY);
 
         // then
         Assertions.assertThat(aggregateForPeriod.getTurnoverCount()).isEqualTo(2);

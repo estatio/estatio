@@ -32,9 +32,7 @@ public class TurnoverAggregationService {
 
     public static Logger LOG = LoggerFactory.getLogger(TurnoverAggregationService.class);
 
-    public TurnoverAggregateForPeriod aggregateForPeriod(final TurnoverAggregateForPeriod turnoverAggregateForPeriod){
-        final Type type = turnoverAggregateForPeriod.getAggregation().getType();
-        final Frequency frequency = turnoverAggregateForPeriod.getAggregation().getFrequency();
+    public TurnoverAggregateForPeriod aggregateForPeriod(final TurnoverAggregateForPeriod turnoverAggregateForPeriod, final Occupancy occupancy, final LocalDate date, final Type type, final Frequency frequency){
         if (type != Type.PRELIMINARY ) {
             LOG.warn(String.format("No aggregate-for-period implementation for type %s found.",
                     type));
@@ -46,7 +44,7 @@ public class TurnoverAggregationService {
             return turnoverAggregateForPeriod;
         }
 
-        final List<Turnover> turnoversToAggregate = turnoversToAggregate(turnoverAggregateForPeriod, false);
+        final List<Turnover> turnoversToAggregate = turnoversToAggregate(occupancy, date, turnoverAggregateForPeriod.getAggregationPeriod(), type, frequency, false);
         final BigDecimal totalGross = turnoversToAggregate.stream()
                 .filter(t->t.getGrossAmount()!=null)
                 .map(t -> t.getGrossAmount())
@@ -56,7 +54,7 @@ public class TurnoverAggregationService {
                 .map(t -> t.getNetAmount())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        final List<Turnover> turnoversToAggregatePrevYear = turnoversToAggregate(turnoverAggregateForPeriod, true);
+        final List<Turnover> turnoversToAggregatePrevYear = turnoversToAggregate(occupancy, date, turnoverAggregateForPeriod.getAggregationPeriod(), type, frequency, true);
         final BigDecimal totalGrossPY = turnoversToAggregatePrevYear.stream()
                 .filter(t->t.getGrossAmount()!=null)
                 .map(t -> t.getGrossAmount())
@@ -83,15 +81,11 @@ public class TurnoverAggregationService {
         return turnoverAggregateForPeriod;
     }
 
-    List<Turnover> turnoversToAggregate(final TurnoverAggregateForPeriod turnoverAggregateForPeriod, boolean prevYear){
-
-        final Occupancy occupancy = turnoverAggregateForPeriod.getAggregation().getOccupancy();
+    List<Turnover> turnoversToAggregate(final Occupancy occupancy, final LocalDate date, final AggregationPeriod aggregationPeriod, final Type type, final Frequency frequency, boolean prevYear){
         final Lease lease = occupancy.getLease();
         final Unit unit = occupancy.getUnit();
-        final Type type = turnoverAggregateForPeriod.getAggregation().getType();
-        final Frequency frequency = turnoverAggregateForPeriod.getAggregation().getFrequency();
-        final LocalDate periodEndDate = prevYear ? turnoverAggregateForPeriod.getAggregation().getDate().minusYears(1) : turnoverAggregateForPeriod.getAggregation().getDate();
-        final LocalDate periodStartDate = turnoverAggregateForPeriod.getAggregationPeriod().periodStartDateFor(periodEndDate);
+        final LocalDate periodEndDate = prevYear ? date.minusYears(1) : date;
+        final LocalDate periodStartDate = aggregationPeriod.periodStartDateFor(periodEndDate);
 
         final List<Lease> leasesToExamine = leasesToExamine(lease);
         final List<Occupancy> occupanciesToExamine = occupanciesToExamine(unit, leasesToExamine);

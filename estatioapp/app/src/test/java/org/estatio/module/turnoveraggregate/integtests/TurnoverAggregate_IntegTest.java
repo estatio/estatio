@@ -70,18 +70,6 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         });
     }
 
-    @After
-    public void teardown(){
-        turnoverAggregationRepository.listAll().forEach(t->{
-            t.setAggregate1Month(null);
-            t.setAggregate2Month(null);
-            t.setAggregate3Month(null);
-            t.setAggregate6Month(null);
-            t.setAggregate9Month(null);
-            t.setAggregate12Month(null);
-        });
-    }
-
     @Test
     public void import_scenario_1_succeeded() throws Exception {
 

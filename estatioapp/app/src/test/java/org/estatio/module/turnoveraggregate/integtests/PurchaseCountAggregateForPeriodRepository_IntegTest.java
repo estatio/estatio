@@ -45,67 +45,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class PurchaseCountAggregateForPeriodRepository_IntegTest extends TurnoverAggregateModuleIntegTestAbstract {
 
-    Logger LOG = LoggerFactory.getLogger(PurchaseCountAggregateForPeriodRepository_IntegTest.class);
-
-    @Before
-    public void setupData() {
-        runFixtureScript(new FixtureScript() {
-            @Override
-            protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, Currency_enum.EUR.builder());
-                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
-            }
-        });
-    }
-
     @Test
-    public void find_or_create_works() throws Exception {
+    public void create_works() throws Exception {
 
         // given
-        LOG.info(">>>>>YODO TEST DEBUG START<<<<<<");
-        final Occupancy occupancy = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2).getOccupancies().first();
-        final LocalDate date = new LocalDate(2019, 1, 1);
-        final Type type = Type.PRELIMINARY;
-        final Frequency frequency = Frequency.MONTHLY;
-        final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
-        if (turnoverAggregationRepository==null){
-            LOG.warn(">>>>>NULL<<<<<<");
-        }
-        LOG.info(">>>>>YODO DEBUG END<<<<<<");
-        TurnoverAggregation aggregation = turnoverAggregationRepository
-                .findOrCreate(occupancy, date, type, frequency, euro);
+        assertThat(purchaseCountAggregateForPeriodRepository.listAll()).hasSize(0);
         final AggregationPeriod period = AggregationPeriod.P_1M;
 
         // when
         final PurchaseCountAggregateForPeriod aggregate = purchaseCountAggregateForPeriodRepository
-                .findOrCreate(aggregation, period);
+                .create(period);
 
         // then
         assertThat(purchaseCountAggregateForPeriodRepository.listAll()).hasSize(1);
-        assertThat(aggregate.getAggregation()).isEqualTo(aggregation);
         assertThat(aggregate.getAggregationPeriod()).isEqualTo(period);
 
-        // and when (again)
-        final PurchaseCountAggregateForPeriod aggregate2 = purchaseCountAggregateForPeriodRepository
-                .findOrCreate(aggregation, period);
-
-        // then still
-        assertThat(purchaseCountAggregateForPeriodRepository.listAll()).hasSize(1);
-        assertThat(aggregate2).isEqualTo(aggregate);
-
-        // and when
-        final PurchaseCountAggregateForPeriod aggregate3 = purchaseCountAggregateForPeriodRepository
-                .findOrCreate(aggregation, AggregationPeriod.P_2M);
-
-        // then
-        assertThat(purchaseCountAggregateForPeriodRepository.listAll()).hasSize(2);
-        assertThat(aggregate3).isNotEqualTo(aggregate);
     }
 
     @Inject PurchaseCountAggregateForPeriodRepository purchaseCountAggregateForPeriodRepository;
 
-    @Inject TurnoverAggregationRepository turnoverAggregationRepository;
-
-    @Inject ServiceRegistry2 serviceRegistry2;
-    
 }

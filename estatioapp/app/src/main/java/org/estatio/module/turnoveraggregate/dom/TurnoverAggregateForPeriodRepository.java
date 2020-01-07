@@ -19,35 +19,11 @@ public class TurnoverAggregateForPeriodRepository {
         return repositoryService.allInstances(TurnoverAggregateForPeriod.class);
     }
 
-    public TurnoverAggregateForPeriod findUnique(
-            final TurnoverAggregation aggregation,
-            final AggregationPeriod period
-    ) {
-        return repositoryService.uniqueMatch(
-                new org.apache.isis.applib.query.QueryDefault<>(
-                        TurnoverAggregateForPeriod.class,
-                        "findUnique",
-                        "aggregation", aggregation,
-                        "period", period));
-    }
-
-
-    public TurnoverAggregateForPeriod create(final TurnoverAggregation aggregation, final AggregationPeriod period) {
+    public TurnoverAggregateForPeriod create(final AggregationPeriod period) {
         final TurnoverAggregateForPeriod aggregate = new TurnoverAggregateForPeriod();
-        aggregate.setAggregation(aggregation);
         aggregate.setAggregationPeriod(period);
         serviceRegistry.injectServicesInto(aggregate);
         repositoryService.persistAndFlush(aggregate);
-        return aggregate;
-    }
-
-    public TurnoverAggregateForPeriod findOrCreate(
-            final TurnoverAggregation aggregation, final AggregationPeriod period
-    ) {
-        TurnoverAggregateForPeriod aggregate = findUnique(aggregation, period);
-        if (aggregate == null) {
-            aggregate = create(aggregation, period);
-        }
         return aggregate;
     }
 

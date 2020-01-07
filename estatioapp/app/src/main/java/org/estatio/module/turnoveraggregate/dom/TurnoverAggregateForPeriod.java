@@ -36,24 +36,11 @@ import lombok.Setter;
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
-@Queries({
-        @Query(
-                name = "findUnique", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.turnoveraggregate.dom.TurnoverAggregateForPeriod "
-                        + "WHERE aggregation == :aggregation "
-                        + "&& aggregationPeriod == :period "),
-})
-@Unique(name = "TurnoverAggregateForPeriod_aggregation_period_UNQ", members = { "aggregation", "aggregationPeriod" })
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "org.estatio.module.turnoveraggregate.dom.TurnoverAggregateForPeriod"
 )
 public class TurnoverAggregateForPeriod {
-
-    @Getter @Setter
-    @Column(name = "turnoverAggregationId", allowsNull = "false")
-    private TurnoverAggregation aggregation;
 
     @Getter @Setter
     @Column(allowsNull = "false")
@@ -96,8 +83,8 @@ public class TurnoverAggregateForPeriod {
     private boolean comparable;
 
     @Programmatic
-    public void aggregate(){
-        turnoverAggregationService.aggregateForPeriod(this);
+    public void aggregate(final Occupancy occupancy, final LocalDate date, final Type type, final Frequency frequency){
+        turnoverAggregationService.aggregateForPeriod(this, occupancy, date, type, frequency);
     }
 
     @Inject TurnoverAggregationService turnoverAggregationService;

@@ -26,24 +26,11 @@ import lombok.Setter;
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
-@Queries({
-        @Query(
-                name = "findUnique", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.turnoveraggregate.dom.PurchaseCountAggregateForPeriod "
-                        + "WHERE aggregation == :aggregation "
-                        + "&& aggregationPeriod == :period "),
-})
-@Unique(name = "PurchaseCountAggregateForPeriod_aggregation_period_UNQ", members = { "aggregation", "aggregationPeriod" })
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "org.estatio.module.turnoveraggregate.dom.PurchaseCountAggregateForPeriod"
 )
 public class PurchaseCountAggregateForPeriod {
-
-    @Getter @Setter
-    @Column(name = "turnoverAggregationId", allowsNull = "false")
-    private TurnoverAggregation aggregation;
 
     @Getter @Setter
     @Column(allowsNull = "false")

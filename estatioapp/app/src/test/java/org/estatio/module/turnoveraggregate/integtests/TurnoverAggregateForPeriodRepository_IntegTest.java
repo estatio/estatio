@@ -43,60 +43,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class TurnoverAggregateForPeriodRepository_IntegTest extends TurnoverAggregateModuleIntegTestAbstract {
 
-    @Before
-    public void setupData() {
-        runFixtureScript(new FixtureScript() {
-            @Override
-            protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, Currency_enum.EUR.builder());
-                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
-            }
-        });
-    }
-
     @Test
-    public void find_or_create_works() throws Exception {
+    public void create_works() throws Exception {
 
         // given
-        final Occupancy occupancy = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2).getOccupancies().first();
-        final LocalDate date = new LocalDate(2019, 1, 1);
-        final Type type = Type.PRELIMINARY;
-        final Frequency frequency = Frequency.MONTHLY;
-        final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
-        TurnoverAggregation aggregation = turnoverAggregationRepository
-                .findOrCreate(occupancy, date, type, frequency, euro);
+        assertThat(turnoverAggregateForPeriodRepository.listAll()).hasSize(0);
         final AggregationPeriod period = AggregationPeriod.P_1M;
 
         // when
         final TurnoverAggregateForPeriod aggregate = turnoverAggregateForPeriodRepository
-                .findOrCreate(aggregation, period);
+                .create(period);
 
         // then
         assertThat(turnoverAggregateForPeriodRepository.listAll()).hasSize(1);
-        assertThat(aggregate.getAggregation()).isEqualTo(aggregation);
         assertThat(aggregate.getAggregationPeriod()).isEqualTo(period);
 
-        // and when (again)
-        final TurnoverAggregateForPeriod aggregate2 = turnoverAggregateForPeriodRepository
-                .findOrCreate(aggregation, period);
-
-        // then still
-        assertThat(turnoverAggregateForPeriodRepository.listAll()).hasSize(1);
-        assertThat(aggregate2).isEqualTo(aggregate);
-
-        // and when
-        final TurnoverAggregateForPeriod aggregate3 = turnoverAggregateForPeriodRepository
-                .findOrCreate(aggregation, AggregationPeriod.P_2M);
-
-        // then
-        assertThat(turnoverAggregateForPeriodRepository.listAll()).hasSize(2);
-        assertThat(aggregate3).isNotEqualTo(aggregate);
     }
 
     @Inject TurnoverAggregateForPeriodRepository turnoverAggregateForPeriodRepository;
 
-    @Inject TurnoverAggregationRepository turnoverAggregationRepository;
-
-    @Inject ServiceRegistry2 serviceRegistry2;
-    
 }

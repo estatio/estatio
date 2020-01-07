@@ -279,22 +279,22 @@ public class TurnoverAggregation {
     @Programmatic
     public TurnoverAggregation aggregate(){
         this.setAggregationValuesIfNotAlready();
-        getAggregate1Month().aggregate();
-        getAggregate2Month().aggregate();
-        getAggregate3Month().aggregate();
-        getAggregate6Month().aggregate();
-        getAggregate9Month().aggregate();
-        getAggregate12Month().aggregate();
+        getAggregate1Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
+        getAggregate2Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
+        getAggregate3Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
+        getAggregate6Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
+        getAggregate9Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
+        getAggregate12Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
         return this;
     }
 
     private void setAggregationValuesIfNotAlready(){
-        if (getAggregate1Month()==null) setAggregate1Month(turnoverAggregateForPeriodRepository.findOrCreate(this, AggregationPeriod.P_1M));
-        if (getAggregate2Month()==null) setAggregate2Month(turnoverAggregateForPeriodRepository.findOrCreate(this, AggregationPeriod.P_2M));
-        if (getAggregate3Month()==null) setAggregate3Month(turnoverAggregateForPeriodRepository.findOrCreate(this,AggregationPeriod.P_3M));
-        if (getAggregate6Month()==null) setAggregate6Month(turnoverAggregateForPeriodRepository.findOrCreate(this,AggregationPeriod.P_6M));
-        if (getAggregate9Month()==null) setAggregate9Month(turnoverAggregateForPeriodRepository.findOrCreate(this,AggregationPeriod.P_9M));
-        if (getAggregate12Month()==null) setAggregate12Month(turnoverAggregateForPeriodRepository.findOrCreate(this,AggregationPeriod.P_12M));
+        if (getAggregate1Month()==null) setAggregate1Month(turnoverAggregateForPeriodRepository.create(AggregationPeriod.P_1M));
+        if (getAggregate2Month()==null) setAggregate2Month(turnoverAggregateForPeriodRepository.create(AggregationPeriod.P_2M));
+        if (getAggregate3Month()==null) setAggregate3Month(turnoverAggregateForPeriodRepository.create(AggregationPeriod.P_3M));
+        if (getAggregate6Month()==null) setAggregate6Month(turnoverAggregateForPeriodRepository.create(AggregationPeriod.P_6M));
+        if (getAggregate9Month()==null) setAggregate9Month(turnoverAggregateForPeriodRepository.create(AggregationPeriod.P_9M));
+        if (getAggregate12Month()==null) setAggregate12Month(turnoverAggregateForPeriodRepository.create(AggregationPeriod.P_12M));
     }
 
     @Inject

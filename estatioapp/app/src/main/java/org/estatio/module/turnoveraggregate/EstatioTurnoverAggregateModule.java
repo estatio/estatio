@@ -51,10 +51,10 @@ public final class EstatioTurnoverAggregateModule extends ModuleAbstract {
         return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
+                deleteFrom(TurnoverAggregation.class);
                 deleteFrom(TurnoverAggregateForPeriod.class);
                 deleteFrom(TurnoverAggregateToDate.class);
                 deleteFrom(PurchaseCountAggregateForPeriod.class);
-                deleteFrom(TurnoverAggregation.class);
             }
         };
     }
