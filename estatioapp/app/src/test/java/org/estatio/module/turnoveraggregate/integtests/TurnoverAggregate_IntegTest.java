@@ -19,6 +19,7 @@
 package org.estatio.module.turnoveraggregate.integtests;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.List;
 
@@ -175,7 +176,21 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         Assertions.assertThat(agg1.getAggregate12Month().getGrossAmount()).isEqualTo(new BigDecimal("880724.00"));
         Assertions.assertThat(agg1.getAggregate12Month().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("903262.00"));
         Assertions.assertThat(agg1.getAggregate12Month().isComparable()).isTrue();
-
+        Assertions.assertThat(agg1.getAggregateToDate().getGrossAmount()).isEqualTo(new BigDecimal("271771.00"));
+        Assertions.assertThat(agg1.getAggregateToDate().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("288759.00"));
+        Assertions.assertThat(agg1.getAggregateToDate().isComparable()).isTrue();
+        Assertions.assertThat(agg1.getPurchaseCountAggregate1Month().getCount()).isEqualTo(new BigInteger("0"));
+        Assertions.assertThat(agg1.getPurchaseCountAggregate1Month().getCountPreviousYear()).isEqualTo(new BigInteger("0"));
+        Assertions.assertThat(agg1.getPurchaseCountAggregate1Month().isComparable()).isTrue();
+        Assertions.assertThat(agg1.getPurchaseCountAggregate3Month().getCount()).isEqualTo(new BigInteger("1130"));
+        Assertions.assertThat(agg1.getPurchaseCountAggregate3Month().getCountPreviousYear()).isEqualTo(new BigInteger("532"));
+        Assertions.assertThat(agg1.getPurchaseCountAggregate3Month().isComparable()).isTrue();
+        Assertions.assertThat(agg1.getPurchaseCountAggregate6Month().getCount()).isEqualTo(new BigInteger("3590"));
+        Assertions.assertThat(agg1.getPurchaseCountAggregate6Month().getCountPreviousYear()).isEqualTo(new BigInteger("2918"));
+        Assertions.assertThat(agg1.getPurchaseCountAggregate6Month().isComparable()).isTrue();
+        Assertions.assertThat(agg1.getPurchaseCountAggregate12Month().getCount()).isEqualTo(new BigInteger("7463"));
+        Assertions.assertThat(agg1.getPurchaseCountAggregate12Month().getCountPreviousYear()).isEqualTo(new BigInteger("6338"));
+        Assertions.assertThat(agg1.getPurchaseCountAggregate12Month().isComparable()).isTrue();
     }
 
     @Inject TurnoverAggregationRepository turnoverAggregationRepository;

@@ -1,6 +1,7 @@
 package org.estatio.module.turnoveraggregate.dom;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,7 +15,6 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.module.asset.dom.Unit;
-import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.turnover.dom.Frequency;
@@ -43,7 +43,7 @@ public class TurnoverAggregationService_Test {
         tpy1.setNetAmount(new BigDecimal("99.99"));
 
         TurnoverAggregationService service = new TurnoverAggregationService(){
-            @Override List<Turnover> turnoversToAggregate(
+            @Override List<Turnover> turnoversToAggregateForPeriod(
                     final Occupancy occupancy, final LocalDate date, final AggregationPeriod aggregationPeriod, final Type type, final Frequency frequency, boolean prevYear) {
                 return prevYear ? Arrays.asList(tpy1) : Arrays.asList(t1, t2);
             }
@@ -69,6 +69,88 @@ public class TurnoverAggregationService_Test {
         Assertions.assertThat(aggregateForPeriod.isNonComparableThisYear()).isEqualTo(false);
         Assertions.assertThat(aggregateForPeriod.isNonComparablePreviousYear()).isEqualTo(false);
         Assertions.assertThat(aggregateForPeriod.isComparable()).isEqualTo(false);
+
+    }
+
+    @Test
+    public void aggregateToDate_works() {
+
+        // given
+        final LocalDate aggregationDate = new LocalDate(2019, 2, 1);
+        Turnover t1 = new Turnover();
+        t1.setGrossAmount(new BigDecimal("123.00"));
+        t1.setNetAmount(new BigDecimal("111.11"));
+        Turnover t2 = new Turnover();
+        t2.setGrossAmount(new BigDecimal("0.45"));
+        Turnover tpy1 = new Turnover();
+        tpy1.setGrossAmount(new BigDecimal("100.23"));
+        tpy1.setNetAmount(new BigDecimal("99.99"));
+
+        TurnoverAggregationService service = new TurnoverAggregationService(){
+            @Override
+            List<Turnover> turnoversToAggregate(
+                    final Occupancy occupancy,
+                    final LocalDate date,
+                    final LocalDate periodStartDate,
+                    final LocalDate periodEndDate,
+                    final Type type,
+                    final Frequency frequency) {
+                // this year returns t1, t2, previous year tpy1
+                return periodEndDate.equals(aggregationDate) ? Arrays.asList(t1, t2) : Arrays.asList(tpy1);
+            }
+        };
+
+        TurnoverAggregateToDate turnoverAggregateToDate = new TurnoverAggregateToDate();
+        final Occupancy occupancy = new Occupancy();
+
+        // when
+        service.aggregateToDate(turnoverAggregateToDate, occupancy, aggregationDate, Type.PRELIMINARY, Frequency.MONTHLY);
+
+        // then
+        Assertions.assertThat(turnoverAggregateToDate.getTurnoverCount()).isEqualTo(2);
+        Assertions.assertThat(turnoverAggregateToDate.getTurnoverCountPreviousYear()).isEqualTo(1);
+
+        Assertions.assertThat(turnoverAggregateToDate.getGrossAmount()).isEqualTo(new BigDecimal("123.45"));
+        Assertions.assertThat(turnoverAggregateToDate.getNetAmount()).isEqualTo(new BigDecimal("111.11"));
+        Assertions.assertThat(turnoverAggregateToDate.getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("100.23"));
+        Assertions.assertThat(turnoverAggregateToDate.getNetAmountPreviousYear()).isEqualTo(new BigDecimal("99.99"));
+
+        Assertions.assertThat(turnoverAggregateToDate.isNonComparableThisYear()).isEqualTo(false);
+        Assertions.assertThat(turnoverAggregateToDate.isNonComparablePreviousYear()).isEqualTo(false);
+        Assertions.assertThat(turnoverAggregateToDate.isComparable()).isEqualTo(false);
+
+    }
+
+    @Test
+    public void aggregateForPurchaseCount_works() {
+
+        // given
+        Turnover t1 = new Turnover();
+        t1.setPurchaseCount(new BigInteger("123"));
+        Turnover t2 = new Turnover();
+        t2.setPurchaseCount(new BigInteger("234"));
+        Turnover tpy1 = new Turnover();
+        tpy1.setPurchaseCount(new BigInteger("345"));
+
+        TurnoverAggregationService service = new TurnoverAggregationService(){
+            @Override List<Turnover> turnoversToAggregateForPeriod(
+                    final Occupancy occupancy, final LocalDate date, final AggregationPeriod aggregationPeriod, final Type type, final Frequency frequency, boolean prevYear) {
+                return prevYear ? Arrays.asList(tpy1) : Arrays.asList(t1, t2);
+            }
+        };
+
+        PurchaseCountAggregateForPeriod purchaseCountAggregateForPeriod = new PurchaseCountAggregateForPeriod();
+        final Occupancy occupancy = new Occupancy();
+        final LocalDate aggregationDate = new LocalDate(2019, 1, 1);
+        purchaseCountAggregateForPeriod.setAggregationPeriod(AggregationPeriod.P_2M);
+
+        // when
+        service.aggregateForPurchaseCount(purchaseCountAggregateForPeriod, occupancy, aggregationDate, Type.PRELIMINARY, Frequency.MONTHLY);
+
+        // then
+        Assertions.assertThat(purchaseCountAggregateForPeriod.getCount()).isEqualTo(new BigInteger("357"));
+        Assertions.assertThat(purchaseCountAggregateForPeriod.getCountPreviousYear()).isEqualTo(new BigInteger("345"));
+        Assertions.assertThat(purchaseCountAggregateForPeriod.isComparable()).isEqualTo(false);
 
     }
 
@@ -114,6 +196,38 @@ public class TurnoverAggregationService_Test {
         Assertions.assertThat(service.isComparable(AggregationPeriod.P_2M, 2, 2, false, true)).isFalse();
 
         Assertions.assertThat(service.isComparable(AggregationPeriod.P_2M, 0, 2, false, true)).isFalse();
+    }
+
+    @Test
+    public void isComparableToDate_works() throws Exception {
+
+        //given
+        TurnoverAggregationService service = new TurnoverAggregationService();
+        final LocalDate aggregationDate = new LocalDate(2019, 2, 1);
+
+        // when, then
+        Assertions.assertThat(service.isComparableToDate(aggregationDate, 2, 2, false, false)).isTrue();
+        Assertions.assertThat(service.isComparableToDate(aggregationDate, 3, 2, false, false)).isTrue();
+        Assertions.assertThat(service.isComparableToDate(aggregationDate, 1, 2, false, false)).isFalse();
+        Assertions.assertThat(service.isComparableToDate(aggregationDate, 2, 1, false, false)).isFalse();
+        Assertions.assertThat(service.isComparableToDate(aggregationDate, 2, 2, true, false)).isFalse();
+        Assertions.assertThat(service.isComparableToDate(aggregationDate, 2, 2, false, true)).isFalse();
+
+        Assertions.assertThat(service.isComparableToDate(aggregationDate, 0, 2, false, true)).isFalse();
+    }
+
+    @Test
+    public void getMinNumberOfTurnoversToDate_works() throws Exception {
+
+        //given
+        TurnoverAggregationService service = new TurnoverAggregationService();
+
+        // when, then
+        Assertions.assertThat(service.getMinNumberOfTurnoversToDate(new LocalDate(2019,1,1))).isEqualTo(1);
+        Assertions.assertThat(service.getMinNumberOfTurnoversToDate(new LocalDate(2019,2,1))).isEqualTo(2);
+        //etc
+        Assertions.assertThat(service.getMinNumberOfTurnoversToDate(new LocalDate(2019,12,1))).isEqualTo(12);
+
     }
 
     @Test

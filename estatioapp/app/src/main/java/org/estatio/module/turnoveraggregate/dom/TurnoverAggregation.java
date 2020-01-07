@@ -284,6 +284,11 @@ public class TurnoverAggregation {
         getAggregate6Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
         getAggregate9Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
         getAggregate12Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
+        getAggregateToDate().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
+        getPurchaseCountAggregate1Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
+        getPurchaseCountAggregate3Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
+        getPurchaseCountAggregate6Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
+        getPurchaseCountAggregate12Month().aggregate(getOccupancy(), getDate(), getType(), getFrequency());
         return this;
     }
 
