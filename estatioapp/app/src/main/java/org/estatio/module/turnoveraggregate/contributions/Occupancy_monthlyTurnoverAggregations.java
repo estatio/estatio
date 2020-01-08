@@ -5,14 +5,15 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.Collection;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.services.factory.FactoryService;
-import org.apache.isis.applib.services.wrapper.WrapperFactory;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.turnover.dom.Frequency;
-import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
 import org.estatio.module.turnover.dom.Type;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregation;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationRepository;
@@ -26,11 +27,15 @@ public class Occupancy_monthlyTurnoverAggregations {
         this.occupancy = occupancy;
     }
 
-    @Collection()
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    @CollectionLayout(defaultView = "hide")
     public List<TurnoverAggregation> $$() {
-        return turnoverAggregationRepository.findByOccupancyAndTypeAndFrequency(occupancy, Type.PRELIMINARY, Frequency.MONTHLY);
+        return turnoverAggregationRepository.findByOccupancyAndTypeAndFrequencyOnOrBeforeDate(occupancy, Type.PRELIMINARY, Frequency.MONTHLY, clockService.now());
     }
 
    @Inject TurnoverAggregationRepository turnoverAggregationRepository;
+
+   @Inject ClockService clockService;
 
 }

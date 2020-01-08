@@ -45,12 +45,13 @@ import lombok.Setter;
                         + "&& type == :type "
                         + "&& frequency == :frequency "),
         @Query(
-                name = "findByOccupancyAndTypeAndFrequency", language = "JDOQL",
+                name = "findByOccupancyAndTypeAndFrequencyOnOrBeforeDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.turnoveraggregate.dom.TurnoverAggregation "
                         + "WHERE occupancy == :occupancy "
                         + "&& type == :type "
-                        + "&& frequency == :frequency "),
+                        + "&& frequency == :frequency "
+                        + "&& date <= :date"),
 })
 @Unique(name = "TurnoverAggregation_occupancy_date_type_frequency_UNQ", members = { "occupancy", "date", "type", "frequency" })
 @DomainObject(

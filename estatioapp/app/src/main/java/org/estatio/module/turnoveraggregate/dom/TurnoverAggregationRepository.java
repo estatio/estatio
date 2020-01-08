@@ -55,14 +55,16 @@ public class TurnoverAggregationRepository {
         return turnoverAggregation;
     }
 
-    public List<TurnoverAggregation> findByOccupancyAndTypeAndFrequency(final Occupancy occupancy, final Type type, final Frequency frequency) {
+    public List<TurnoverAggregation> findByOccupancyAndTypeAndFrequencyOnOrBeforeDate(final Occupancy occupancy, final Type type, final Frequency frequency, final LocalDate date) {
         return repositoryService.allMatches(
                 new org.apache.isis.applib.query.QueryDefault<>(
                         TurnoverAggregation.class,
-                        "findByOccupancyAndTypeAndFrequency",
+                        "findByOccupancyAndTypeAndFrequencyOnOrBeforeDate",
                         "occupancy", occupancy,
                         "type", type,
-                        "frequency", frequency));
+                        "frequency", frequency,
+                        "date", date
+                ));
     }
 
     public TurnoverAggregation create(final Occupancy occupancy, final LocalDate date, final Type type, final Frequency frequency, final

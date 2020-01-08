@@ -91,7 +91,7 @@ public class TurnoverAggregationRepository_IntegTest extends TurnoverAggregateMo
     }
 
     @Test
-    public void findByOccupancyAndTypeAndFrequency_works() throws Exception {
+    public void findByOccupancyAndTypeAndFrequencyOnOrBeforeDate_works() throws Exception {
 
         // given
         final Occupancy occupancy = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2).getOccupancies().first();
@@ -105,9 +105,9 @@ public class TurnoverAggregationRepository_IntegTest extends TurnoverAggregateMo
                 .create(occupancy, date, type, frequency, euro);
 
         // then
-        assertThat(turnoverAggregationRepository.findByOccupancyAndTypeAndFrequency(occupancy, Type.PRELIMINARY, Frequency.MONTHLY)).hasSize(1);
-        assertThat(turnoverAggregationRepository.findByOccupancyAndTypeAndFrequency(occupancy, Type.PRELIMINARY, Frequency.MONTHLY)).contains(aggregation);
-
+        assertThat(turnoverAggregationRepository.findByOccupancyAndTypeAndFrequencyOnOrBeforeDate(occupancy, Type.PRELIMINARY, Frequency.MONTHLY, date)).hasSize(1);
+        assertThat(turnoverAggregationRepository.findByOccupancyAndTypeAndFrequencyOnOrBeforeDate(occupancy, Type.PRELIMINARY, Frequency.MONTHLY, date)).contains(aggregation);
+        assertThat(turnoverAggregationRepository.findByOccupancyAndTypeAndFrequencyOnOrBeforeDate(occupancy, Type.PRELIMINARY, Frequency.MONTHLY, date.minusDays(1))).hasSize(0);
     }
 
     @Inject TurnoverAggregationRepository turnoverAggregationRepository;
