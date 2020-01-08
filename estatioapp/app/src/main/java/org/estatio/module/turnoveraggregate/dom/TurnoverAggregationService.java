@@ -3,6 +3,8 @@ package org.estatio.module.turnoveraggregate.dom;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,6 +12,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import com.google.api.client.util.Lists;
+import com.google.inject.internal.cglib.core.$ReflectUtils;
 
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -17,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.module.agreement.dom.Agreement;
 import org.estatio.module.asset.dom.Unit;
@@ -24,6 +28,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
+import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
 
@@ -302,5 +307,39 @@ public class TurnoverAggregationService {
         return aggregationDate.getMonthOfYear();
     }
 
+    public void aggregateForConfig(final TurnoverReportingConfig config) {
+        // TODO: bring actual aggregation to background service?
+        List<LocalDate> aggregationDates = aggregationDatesForTurnoverReportingConfig(config);
+        aggregationDates.forEach(ad->{
+            final TurnoverAggregation aggregation = turnoverAggregationRepository.findOrCreate(
+                    config.getOccupancy(),
+                    ad,
+                    config.getType(),
+                    config.getFrequency(),
+                    config.getCurrency());
+            aggregation.aggregate();
+        });
+    }
+
+    List<LocalDate> aggregationDatesForTurnoverReportingConfig(final TurnoverReportingConfig config){
+        if (config.getFrequency()!=Frequency.MONTHLY) return Collections.emptyList();
+
+        final LocalDate startDate = config.getEffectiveStartDate().withDayOfMonth(1); // withDayOfMonth(1) should be redundant here
+        final LocalDate endDate = config.getEndDate()!=null ? config.getEndDate().withDayOfMonth(1).plusMonths(24) : clockService.now().withDayOfMonth(1).plusMonths(24);
+        if (endDate.isBefore(startDate)) return Collections.emptyList();
+
+        List<LocalDate> result = new ArrayList<>();
+        LocalDate d = startDate;
+        while (!d.isAfter(endDate)){
+            result.add(d);
+            d = d.plusMonths(1);
+        }
+        return result.stream().sorted().collect(Collectors.toList());
+    }
+
     @Inject TurnoverRepository turnoverRepository;
+
+    @Inject TurnoverAggregationRepository turnoverAggregationRepository;
+
+    @Inject ClockService clockService;
 }

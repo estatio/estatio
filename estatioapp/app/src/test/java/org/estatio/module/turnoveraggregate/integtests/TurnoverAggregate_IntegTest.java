@@ -47,9 +47,13 @@ import org.estatio.module.turnover.contributions.Occupancy_createTurnoverReporti
 import org.estatio.module.turnover.contributions.Occupancy_turnovers;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
+import org.estatio.module.turnover.dom.TurnoverReportingConfig;
+import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
 import org.estatio.module.turnover.integtests.TurnoverModuleIntegTestAbstract;
+import org.estatio.module.turnoveraggregate.contributions.Occupancy_aggregateTurnovers;
+import org.estatio.module.turnoveraggregate.contributions.TurnoverReportingConfig_aggregateTurnovers;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregation;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationRepository;
 import org.estatio.module.turnoveraggregate.fixtures.TurnoverImportXlsxFixtureForAggregated;
@@ -362,9 +366,32 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         Assertions.assertThat(aggOnOcc1.getGrossAmount1MCY_2()).isEqualTo(Gross1m_2);
     }
 
+    @Test
+    public void aggregate_for_turnover_config_works() throws Exception {
+
+        // given
+        setupScenario_and_validate_import();
+
+        TurnoverReportingConfig configForOcc1 = turnoverReportingConfigRepository
+                .findByOccupancyAndTypeAndFrequency(occ1, Type.PRELIMINARY, Frequency.MONTHLY).get(0);
+        Assertions.assertThat(turnoverAggregationRepository.listAll()).isEmpty();
+
+        // when
+        mixin(TurnoverReportingConfig_aggregateTurnovers.class, configForOcc1).$$();
+
+        // then
+        final List<TurnoverAggregation> aggregations = turnoverAggregationRepository.listAll();
+        Assertions.assertThat(aggregations).hasSize(95);
+        Assertions.assertThat(aggregations.get(0).getDate()).isEqualTo(configForOcc1.getEffectiveStartDate().withDayOfMonth(1));
+        Assertions.assertThat(aggregations.get(94).getDate()).isEqualTo(occ1.getEffectiveEndDate().withDayOfMonth(1).plusMonths(24));
+
+    }
+
     @Inject TurnoverAggregationRepository turnoverAggregationRepository;
 
     @Inject TurnoverRepository turnoverRepository;
+
+    @Inject TurnoverReportingConfigRepository turnoverReportingConfigRepository;
 
     @Inject ServiceRegistry2 serviceRegistry2;
     

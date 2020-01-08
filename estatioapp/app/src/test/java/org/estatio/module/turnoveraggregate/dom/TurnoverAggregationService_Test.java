@@ -7,11 +7,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Rule;
 import org.junit.Test;
 
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.module.asset.dom.Unit;
@@ -19,6 +21,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
+import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
 
@@ -362,5 +365,71 @@ public class TurnoverAggregationService_Test {
         Assertions.assertThat(leases.get(0).getOccupancies()).hasSize(2);
         Assertions.assertThat(service.occupanciesToExamine(sameUnit, leases)).hasSize(0);
 
+    }
+
+    @Test
+    public void aggregationDatesForTurnoverReportingConfig_works() throws Exception {
+
+        // given
+        TurnoverAggregationService service = new TurnoverAggregationService();
+        final LocalDate occEffectiveEndDate = new LocalDate(2019, 2, 3);
+
+        final TurnoverReportingConfig config = new TurnoverReportingConfig();
+        final Occupancy occupancy = new Occupancy(){
+            @Override public LocalDate getEffectiveEndDate() {
+                return occEffectiveEndDate;
+            }
+        };
+        config.setOccupancy(occupancy);
+
+        // when
+        config.setFrequency(Frequency.MONTHLY);
+        config.setStartDate(new LocalDate(2018,12,2));
+
+        // then
+        final List<LocalDate> dates = service.aggregationDatesForTurnoverReportingConfig(config);
+        Assertions.assertThat(dates).hasSize(27);
+        Assertions.assertThat(dates.get(0)).isEqualTo(new LocalDate(2018,12,1));
+        Assertions.assertThat(dates.get(1)).isEqualTo(new LocalDate(2019,1,1));
+        Assertions.assertThat(dates.get(2)).isEqualTo(new LocalDate(2019,2,1));
+        Assertions.assertThat(dates.get(26)).isEqualTo(new LocalDate(2021,2,1));
+
+    }
+
+    @Mock ClockService mockClockService;
+
+    @Test
+    public void aggregationDatesForTurnoverReportingConfig_works_when_no_occupancy_effective_endDate() throws Exception {
+
+        // given
+        TurnoverAggregationService service = new TurnoverAggregationService();
+        service.clockService = mockClockService;
+        final LocalDate now = new LocalDate(2019, 2, 3);
+
+        final TurnoverReportingConfig config = new TurnoverReportingConfig();
+        final Occupancy occupancy = new Occupancy(){
+            @Override public LocalDate getEffectiveEndDate() {
+                return null;
+            }
+        };
+        config.setOccupancy(occupancy);
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockClockService).now();
+            will(returnValue(now));
+        }});
+
+        // when
+        config.setFrequency(Frequency.MONTHLY);
+        config.setStartDate(new LocalDate(2018,12,2));
+
+        // then
+        final List<LocalDate> dates = service.aggregationDatesForTurnoverReportingConfig(config);
+        Assertions.assertThat(dates).hasSize(27);
+        Assertions.assertThat(dates.get(0)).isEqualTo(new LocalDate(2018,12,1));
+        Assertions.assertThat(dates.get(1)).isEqualTo(new LocalDate(2019,1,1));
+        Assertions.assertThat(dates.get(2)).isEqualTo(new LocalDate(2019,2,1));
+        Assertions.assertThat(dates.get(26)).isEqualTo(new LocalDate(2021,2,1));
     }
 }

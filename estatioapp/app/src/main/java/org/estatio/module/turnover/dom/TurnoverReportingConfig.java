@@ -144,7 +144,7 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
     @Action(semantics = SemanticsOf.SAFE)
     public LocalDate getEndDate(){
 
-        LocalDate endDateToUse = ArrayExtensions.coalesce(occupancy.getEndDate(), occupancy.getLease().getTenancyEndDate());
+        LocalDate endDateToUse = occupancy.getEffectiveEndDate();
         if (endDateToUse==null) return null;
 
         return endDateToUse.isAfter(getStartDate()) ? endDateToUse : getStartDate(); // ECP-962: prevents bad occupancy and / or lease data to produce wrong illegal interval on turnover reporting config
@@ -185,7 +185,13 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
 
     @Programmatic
     public boolean isActiveOnDate(final LocalDate date){
+        LocalDate startDateToUse = getEffectiveStartDate();
+        LocalDateInterval interval = LocalDateInterval.including(startDateToUse, getEndDate());
+        return interval.contains(date);
+    }
 
+    @Programmatic
+    public LocalDate getEffectiveStartDate() {
         LocalDate startDateToUse;
         switch (getFrequency()){
 
@@ -200,8 +206,7 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
             default:
                 startDateToUse = getStartDate();
         }
-        LocalDateInterval interval = LocalDateInterval.including(startDateToUse, getEndDate());
-        return interval.contains(date);
+        return startDateToUse;
     }
 
     @Programmatic

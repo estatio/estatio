@@ -248,8 +248,10 @@ public class Occupancy
         return getInterval().overlap(this.getLease().getEffectiveInterval());
     }
 
-
-
+    @Programmatic
+    public LocalDate getEffectiveEndDate(){
+        return getEndDate()==null ? getEffectiveInterval().endDate() : getEndDate();
+    }
 
     public boolean isCurrent() {
         return isActiveOn(getClockService().now());

@@ -90,6 +90,26 @@ public class TurnoverAggregationRepository_IntegTest extends TurnoverAggregateMo
         assertThat(aggregation3).isNotEqualTo(aggregation);
     }
 
+    @Test
+    public void findByOccupancyAndTypeAndFrequency_works() throws Exception {
+
+        // given
+        final Occupancy occupancy = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2).getOccupancies().first();
+        final LocalDate date = new LocalDate(2019, 1, 1);
+        final Type type = Type.PRELIMINARY;
+        final Frequency frequency = Frequency.MONTHLY;
+        final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
+
+        // when
+        TurnoverAggregation aggregation = turnoverAggregationRepository
+                .create(occupancy, date, type, frequency, euro);
+
+        // then
+        assertThat(turnoverAggregationRepository.findByOccupancyAndTypeAndFrequency(occupancy, Type.PRELIMINARY, Frequency.MONTHLY)).hasSize(1);
+        assertThat(turnoverAggregationRepository.findByOccupancyAndTypeAndFrequency(occupancy, Type.PRELIMINARY, Frequency.MONTHLY)).contains(aggregation);
+
+    }
+
     @Inject TurnoverAggregationRepository turnoverAggregationRepository;
 
     @Inject ServiceRegistry2 serviceRegistry2;
