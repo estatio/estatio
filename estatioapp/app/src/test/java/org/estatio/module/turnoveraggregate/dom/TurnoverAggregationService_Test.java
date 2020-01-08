@@ -367,6 +367,8 @@ public class TurnoverAggregationService_Test {
 
     }
 
+    @Mock ClockService mockClockService;
+
     @Test
     public void aggregationDatesForTurnoverReportingConfig_works() throws Exception {
 
@@ -381,6 +383,9 @@ public class TurnoverAggregationService_Test {
                 return occEffectiveEndDate;
             }
         };
+        final Lease lease = new Lease();
+        lease.setTenancyEndDate(now); // lease is ended on aggregationDate
+        occupancy.setLease(lease);
         config.setOccupancy(occupancy);
 
         // when
@@ -388,16 +393,23 @@ public class TurnoverAggregationService_Test {
         config.setStartDate(new LocalDate(2018,12,2));
 
         // then
-        final List<LocalDate> dates = service.aggregationDatesForTurnoverReportingConfig(config, now);
+        List<LocalDate> dates = service.aggregationDatesForTurnoverReportingConfig(config, now);
         Assertions.assertThat(dates).hasSize(27);
         Assertions.assertThat(dates.get(0)).isEqualTo(new LocalDate(2018,12,1));
         Assertions.assertThat(dates.get(1)).isEqualTo(new LocalDate(2019,1,1));
         Assertions.assertThat(dates.get(2)).isEqualTo(new LocalDate(2019,2,1));
         Assertions.assertThat(dates.get(26)).isEqualTo(new LocalDate(2021,2,1));
 
-    }
+        // and when lease is active
+        lease.setTenancyEndDate(null);
+        dates = service.aggregationDatesForTurnoverReportingConfig(config, now);
+        // then
+        Assertions.assertThat(dates).hasSize(3);
+        Assertions.assertThat(dates.get(0)).isEqualTo(new LocalDate(2018,12,1));
+        Assertions.assertThat(dates.get(1)).isEqualTo(new LocalDate(2019,1,1));
+        Assertions.assertThat(dates.get(2)).isEqualTo(new LocalDate(2019,2,1));
 
-    @Mock ClockService mockClockService;
+    }
 
     @Test
     public void aggregationDatesForTurnoverReportingConfig_works_when_no_occupancy_effective_endDate() throws Exception {

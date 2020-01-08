@@ -55,9 +55,11 @@ import org.estatio.module.coda.EstatioCodaModule;
 import org.estatio.module.coda.dom.doc.CodaDocHeadMenu;
 import org.estatio.module.coda.dom.hwm.CodaHwm;
 import org.estatio.module.coda.dom.hwm.CodaHwmRepository;
+import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.settings.dom.ApplicationSettingForEstatio;
 import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
+import org.estatio.module.turnoveraggregate.contributions.Lease_aggregateTurnovers;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -498,6 +500,16 @@ public class AdminDashboard implements ViewModel {
         serviceInitializer.preDestroy();
         serviceInitializer.postConstruct();
     }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void aggregateAllTurnovers(){
+        leaseRepository.allLeases().forEach(l->{
+            final Lease_aggregateTurnovers mixin = factoryService.mixin(Lease_aggregateTurnovers.class, l);
+            wrapperFactory.wrap(mixin).$$();
+        });
+    }
+
+    @Inject LeaseRepository leaseRepository;
 
     @Inject
     CodaCmpCodeService codaCmpCodeService;

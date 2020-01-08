@@ -18,8 +18,6 @@ import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationService;
 @Mixin
 public class TurnoverReportingConfig_aggregateTurnovers {
 
-
-
     private final TurnoverReportingConfig turnoverReportingConfig;
 
     public TurnoverReportingConfig_aggregateTurnovers(TurnoverReportingConfig turnoverReportingConfig) {
