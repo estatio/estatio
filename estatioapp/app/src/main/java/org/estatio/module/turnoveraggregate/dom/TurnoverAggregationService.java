@@ -309,7 +309,7 @@ public class TurnoverAggregationService {
 
     public void aggregateForConfig(final TurnoverReportingConfig config) {
         // TODO: bring actual aggregation to background service?
-        List<LocalDate> aggregationDates = aggregationDatesForTurnoverReportingConfig(config);
+        List<LocalDate> aggregationDates = aggregationDatesForTurnoverReportingConfig(config, clockService.now());
         aggregationDates.forEach(ad->{
             final TurnoverAggregation aggregation = turnoverAggregationRepository.findOrCreate(
                     config.getOccupancy(),
@@ -321,11 +321,11 @@ public class TurnoverAggregationService {
         });
     }
 
-    List<LocalDate> aggregationDatesForTurnoverReportingConfig(final TurnoverReportingConfig config){
+    List<LocalDate> aggregationDatesForTurnoverReportingConfig(final TurnoverReportingConfig config, final LocalDate aggregationDate){
         if (config.getFrequency()!=Frequency.MONTHLY) return Collections.emptyList();
 
         final LocalDate startDate = config.getEffectiveStartDate().withDayOfMonth(1); // withDayOfMonth(1) should be redundant here
-        final LocalDate endDate = config.getEndDate()!=null ? config.getEndDate().withDayOfMonth(1).plusMonths(24) : clockService.now().withDayOfMonth(1).plusMonths(24);
+        final LocalDate endDate = determineEndDate(config, aggregationDate);
         if (endDate.isBefore(startDate)) return Collections.emptyList();
 
         List<LocalDate> result = new ArrayList<>();
@@ -335,6 +335,21 @@ public class TurnoverAggregationService {
             d = d.plusMonths(1);
         }
         return result.stream().sorted().collect(Collectors.toList());
+    }
+
+    LocalDate determineEndDate(final TurnoverReportingConfig config, final LocalDate aggregationDate) {
+
+        final LocalDate endDate = config.getEndDate() != null ?
+                config.getEndDate().withDayOfMonth(1) :
+                clockService.now().withDayOfMonth(1);
+        return isConfigForLastExpiredLease(config, aggregationDate) ? endDate.plusMonths(24) : endDate;
+    }
+
+    boolean isConfigForLastExpiredLease(final TurnoverReportingConfig config, final LocalDate aggregationDate){
+        Lease lease = config.getOccupancy().getLease();
+        if (lease.getEffectiveInterval().contains(aggregationDate.plusDays(1))) return false;
+        if (lease.getNext()!=null) return false;
+        return true;
     }
 
     @Inject TurnoverRepository turnoverRepository;

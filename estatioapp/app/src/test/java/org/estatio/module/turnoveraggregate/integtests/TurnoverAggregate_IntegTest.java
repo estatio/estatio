@@ -381,9 +381,9 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
 
         // then
         final List<TurnoverAggregation> aggregations = turnoverAggregationRepository.listAll();
-        Assertions.assertThat(aggregations).hasSize(95);
+        Assertions.assertThat(aggregations).hasSize(71);
         Assertions.assertThat(aggregations.get(0).getDate()).isEqualTo(configForOcc1.getEffectiveStartDate().withDayOfMonth(1));
-        Assertions.assertThat(aggregations.get(94).getDate()).isEqualTo(occ1.getEffectiveEndDate().withDayOfMonth(1).plusMonths(24));
+        Assertions.assertThat(aggregations.get(70).getDate()).isEqualTo(occ1.getEffectiveEndDate().withDayOfMonth(1));
 
     }
 

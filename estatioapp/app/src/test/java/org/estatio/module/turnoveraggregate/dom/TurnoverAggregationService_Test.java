@@ -371,6 +371,7 @@ public class TurnoverAggregationService_Test {
     public void aggregationDatesForTurnoverReportingConfig_works() throws Exception {
 
         // given
+        final LocalDate now = new LocalDate(2019, 2, 3);
         TurnoverAggregationService service = new TurnoverAggregationService();
         final LocalDate occEffectiveEndDate = new LocalDate(2019, 2, 3);
 
@@ -387,7 +388,7 @@ public class TurnoverAggregationService_Test {
         config.setStartDate(new LocalDate(2018,12,2));
 
         // then
-        final List<LocalDate> dates = service.aggregationDatesForTurnoverReportingConfig(config);
+        final List<LocalDate> dates = service.aggregationDatesForTurnoverReportingConfig(config, now);
         Assertions.assertThat(dates).hasSize(27);
         Assertions.assertThat(dates.get(0)).isEqualTo(new LocalDate(2018,12,1));
         Assertions.assertThat(dates.get(1)).isEqualTo(new LocalDate(2019,1,1));
@@ -412,24 +413,37 @@ public class TurnoverAggregationService_Test {
                 return null;
             }
         };
+        final Lease lease = new Lease();
+        lease.setTenancyEndDate(now); // lease is ended on aggregationDate
+        occupancy.setLease(lease);
         config.setOccupancy(occupancy);
 
         // expect
         context.checking(new Expectations(){{
-            oneOf(mockClockService).now();
+            allowing(mockClockService).now();
             will(returnValue(now));
         }});
 
-        // when
+        // when lease is ended on aggregationDate
         config.setFrequency(Frequency.MONTHLY);
         config.setStartDate(new LocalDate(2018,12,2));
 
         // then
-        final List<LocalDate> dates = service.aggregationDatesForTurnoverReportingConfig(config);
+        List<LocalDate> dates = service.aggregationDatesForTurnoverReportingConfig(config, now);
         Assertions.assertThat(dates).hasSize(27);
         Assertions.assertThat(dates.get(0)).isEqualTo(new LocalDate(2018,12,1));
         Assertions.assertThat(dates.get(1)).isEqualTo(new LocalDate(2019,1,1));
         Assertions.assertThat(dates.get(2)).isEqualTo(new LocalDate(2019,2,1));
         Assertions.assertThat(dates.get(26)).isEqualTo(new LocalDate(2021,2,1));
+
+        // and when lease is active
+        lease.setTenancyEndDate(null);
+        dates = service.aggregationDatesForTurnoverReportingConfig(config, now);
+        // then
+        Assertions.assertThat(dates).hasSize(3);
+        Assertions.assertThat(dates.get(0)).isEqualTo(new LocalDate(2018,12,1));
+        Assertions.assertThat(dates.get(1)).isEqualTo(new LocalDate(2019,1,1));
+        Assertions.assertThat(dates.get(2)).isEqualTo(new LocalDate(2019,2,1));
+
     }
 }
