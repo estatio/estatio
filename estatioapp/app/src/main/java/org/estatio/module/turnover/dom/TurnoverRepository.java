@@ -21,6 +21,7 @@ package org.estatio.module.turnover.dom;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -224,6 +225,31 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
                     result.addAll(findByConfigAndTypeAndFrequencyAndStatusInPeriod(c, type, frequency, Status.APPROVED, periodStartDate, periodEndDate));
                 });
         return result;
+    }
+
+    public List<Turnover> findApprovedByOccupancyAndTypeAndFrequency(
+            final Occupancy occupancy,
+            final Type type,
+            final Frequency frequency) {
+        final List<TurnoverReportingConfig> configs = turnoverReportingConfigRepository
+                .findByOccupancyAndTypeAndFrequency(occupancy, type, frequency);
+        List<Turnover> result = new ArrayList<>();
+        configs.forEach(
+                c->{
+                    result.addAll(findApprovedByConfigAndTypeAndFrequency(c, type, frequency));
+                });
+        return result;
+    }
+
+    public List<Turnover> findApprovedByConfigAndTypeAndFrequency(final TurnoverReportingConfig config, final Type type, final Frequency frequency) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Turnover.class,
+                        "findByConfigAndTypeAndFrequencyAndStatus",
+                        "config", config,
+                        "type", type,
+                        "frequency", frequency,
+                        "status", Status.APPROVED));
     }
 
     public List<Turnover> findByConfigAndTypeAndFrequencyAndStatusInPeriod(final TurnoverReportingConfig config, final Type type, final Frequency frequency, final Status status, final LocalDate startDate, final LocalDate endDate){

@@ -1,6 +1,7 @@
 package org.estatio.module.turnoveraggregate.dom;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -298,6 +299,12 @@ public class TurnoverAggregation {
         getPurchaseCountAggregate6Month().aggregate(this);
         getPurchaseCountAggregate12Month().aggregate(this);
         turnoverAggregationService.aggregateOtherAggregationProperties(this);
+        return this;
+    }
+
+    @Programmatic
+    public TurnoverAggregation calculate(final List<TurnoverValueObject> turnoverValueObjects){
+        turnoverAggregationService.calculateTurnoverAggregation(this, turnoverValueObjects);
         return this;
     }
 

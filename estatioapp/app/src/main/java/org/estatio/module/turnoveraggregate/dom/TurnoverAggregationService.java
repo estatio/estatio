@@ -3,19 +3,18 @@ package org.estatio.module.turnoveraggregate.dom;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.SortedSet;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
 import com.google.api.client.util.Lists;
-import com.google.inject.internal.cglib.core.$ReflectUtils;
 
 import org.joda.time.LocalDate;
+import org.joda.time.Period;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,13 +22,17 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.clock.ClockService;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
 import org.estatio.module.agreement.dom.Agreement;
 import org.estatio.module.asset.dom.Unit;
+import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
+import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
 
@@ -39,6 +42,8 @@ import org.estatio.module.turnover.dom.Type;
 public class TurnoverAggregationService {
 
     public static Logger LOG = LoggerFactory.getLogger(TurnoverAggregationService.class);
+
+    public static LocalDate MIN_AGGREGATION_DATE = new LocalDate(2010, 1,1);
 
     public TurnoverAggregateForPeriod aggregateForPeriod(final TurnoverAggregateForPeriod turnoverAggregateForPeriod, final Occupancy occupancy, final LocalDate aggregationDate, final Type type, final Frequency frequency){
         if (type != Type.PRELIMINARY ) {
@@ -364,16 +369,360 @@ public class TurnoverAggregationService {
         return true;
     }
 
-    public List<Turnover> turnoversToAggregateForOccupancy(final Occupancy occupancy){
+    public List<TurnoverValueObject> turnoversToAggregateForOccupancySortedAsc(final Occupancy occupancy, final Type type, final Frequency frequency, final LocalDate aggregationDate){
         final Lease lease = occupancy.getLease();
         final Unit unit = occupancy.getUnit();
         final List<Lease> leasesToExamine = leasesToExamine(lease);
         final List<Occupancy> occupanciesToExamine = occupanciesToExamine(unit, leasesToExamine);
-        // TODO implement
+        List<Turnover> turnovers = new ArrayList<>();
+        occupanciesToExamine.forEach(o->{
+            turnovers.addAll(
+                    turnoverRepository.findApprovedByOccupancyAndTypeAndFrequency(
+                            o,
+                            type,
+                            frequency)
+            );
+        });
+        final List<Turnover> turnoversSorted = turnovers.stream()
+                .filter(t->!t.getDate().isBefore(aggregationDate.minusMonths(24))) // efficiency reasons
+                .sorted(Comparator.comparing(t -> t.getDate()))
+                .collect(Collectors.toList());
 
+        List<TurnoverValueObject> result = new ArrayList<>();
 
-        return Collections.EMPTY_LIST;
+        TurnoverValueObject previous = null;
+        for (Turnover t : turnoversSorted){
+            TurnoverValueObject tov = new TurnoverValueObject(t);
+            if (previous!=null && previous.getDate().equals(tov.getDate())){
+                previous.add(tov);
+            } else {
+                result.add(tov);
+            }
+            previous = tov;
+        }
+
+        return result.stream().sorted().collect(Collectors.toList());
     }
+
+    public void aggregateTurnoversForLease(final Lease lease, final Type type, final Frequency frequency, final LocalDate aggregationDate){
+        for (Occupancy o : lease.getOccupancies()){
+            aggregateTurnoversForOccupancy(o, type, frequency, aggregationDate);
+        }
+    }
+
+    public void aggregateTurnoversForOccupancy(final Occupancy occupancy, final Type type, final Frequency frequency, final LocalDate aggregationDate){
+        if (type != Type.PRELIMINARY ) {
+            LOG.warn(String.format("No aggregate-turnovers-for-occupancy implementation for type %s found.",
+                    type));
+            return;
+        }
+        if (frequency != Frequency.MONTHLY) {
+            LOG.warn(String.format("No aggregate-turnovers-for-occupancy for frequency %s found.",
+                    frequency));
+            return;
+        }
+
+        final TurnoverReportingConfig config = turnoverReportingConfigRepository
+                .findUnique(occupancy, type);
+        // for efficiency reasons
+        if (config == null) return;
+
+        LocalDate effectiveAggregationDate = aggregationDate==null ? MIN_AGGREGATION_DATE : aggregationDate;
+
+        final List<TurnoverValueObject> turnoverValueObjects = turnoversToAggregateForOccupancySortedAsc(occupancy, Type.PRELIMINARY,
+                Frequency.MONTHLY, effectiveAggregationDate);
+
+        // for efficiency reasons - currently we never look back more than 24 months
+        final  List<TurnoverValueObject> turnoverValueObjectsFiltered = turnoverValueObjects.stream().filter(t->!t.getDate().isBefore(effectiveAggregationDate.minusMonths(24))).collect(
+                    Collectors.toList());
+
+        // guard and efficiency
+        if (turnoverValueObjectsFiltered.isEmpty()) return;
+
+        Currency currency = config.getCurrency();
+
+        final List<TurnoverAggregation> aggregationsToCalculate = findOrCreateAggregationsForMonthly(occupancy, turnoverValueObjectsFiltered, aggregationDate, currency, type, frequency);
+
+        aggregationsToCalculate.forEach(a->a.calculate(turnoverValueObjectsFiltered));
+
+    }
+
+    List<TurnoverAggregation> findOrCreateAggregationsForMonthly(final Occupancy occupancy, final List<TurnoverValueObject> turnoverValueObjects, final LocalDate aggregationDate, final Currency currency, final Type type, final Frequency frequency){
+
+        LocalDate startDate = determineStartDate(aggregationDate, turnoverValueObjects.get(0).getDate());
+        LocalDate endDate = determineEndDate(occupancy, aggregationDate);
+        List<TurnoverAggregation> result = new ArrayList<>();
+
+        LocalDate date = startDate.withDayOfMonth(1); // extra safeguard; should not be needed for Monthly turnovers
+        while (!date.isAfter(endDate)){
+            result.add(turnoverAggregationRepository.findOrCreate(occupancy, date, type, frequency, currency));
+            date = date.plusMonths(1);
+        }
+        return result;
+    }
+
+    LocalDate determineStartDate(final LocalDate aggregationDate, final LocalDate minTurnoverDate) {
+        if (minTurnoverDate==null) return MIN_AGGREGATION_DATE; // should not happen
+        if (aggregationDate==null) return MIN_AGGREGATION_DATE.minusMonths(24);
+        final LocalDate dateMin24M = aggregationDate.minusMonths(24);
+        return dateMin24M.isAfter(minTurnoverDate) ? dateMin24M : minTurnoverDate;
+    }
+
+    LocalDate determineEndDate(final Occupancy occupancy, final LocalDate aggregationDate) {
+        return isOccupancyForLastExpiredLease(occupancy, aggregationDate) ? occupancy.getEffectiveEndDate().withDayOfMonth(1).plusMonths(24) : aggregationDate.plusMonths(24);
+    }
+
+    boolean isOccupancyForLastExpiredLease(final Occupancy occupancy, final LocalDate aggregationDate){
+        Lease lease = occupancy.getLease();
+        if (lease.getEffectiveInterval().contains(aggregationDate.plusDays(1))) return false;
+        if (lease.getNext()!=null) return false;
+        return true;
+    }
+
+    public void calculateTurnoverAggregation(final TurnoverAggregation aggregation, final List<TurnoverValueObject> turnoverValueObjects) {
+
+        calculateAggregationForOther(aggregation, turnoverValueObjects);
+
+        aggregation.getAggregate1Month().calculate(aggregation, turnoverValueObjects);
+        aggregation.getAggregate2Month().calculate(aggregation, turnoverValueObjects);
+        aggregation.getAggregate3Month().calculate(aggregation, turnoverValueObjects);
+        aggregation.getAggregate6Month().calculate(aggregation, turnoverValueObjects);
+        aggregation.getAggregate9Month().calculate(aggregation, turnoverValueObjects);
+        aggregation.getAggregate12Month().calculate(aggregation, turnoverValueObjects);
+
+        aggregation.getAggregateToDate().calculate(aggregation, turnoverValueObjects);
+
+        aggregation.getPurchaseCountAggregate1Month().calculate(aggregation, turnoverValueObjects);
+        aggregation.getPurchaseCountAggregate3Month().calculate(aggregation, turnoverValueObjects);
+        aggregation.getPurchaseCountAggregate6Month().calculate(aggregation, turnoverValueObjects);
+        aggregation.getPurchaseCountAggregate12Month().calculate(aggregation, turnoverValueObjects);
+
+    }
+
+    void calculateAggregationForOther(final TurnoverAggregation aggregation, final List<TurnoverValueObject> turnoverValueObjects){
+        LocalDate aggDate = aggregation.getDate();
+        TurnoverValueObject tvo = turnoverValueObjects.stream()
+                .filter(t -> t.getDate().equals(aggDate.minusMonths(1))).findFirst().orElse(null);
+        if (tvo!=null){
+            aggregation.setGrossAmount1MCY_1(tvo.getGrossAmount());
+            aggregation.setNetAmount1MCY_1(tvo.getNetAmount());
+        }
+        tvo = turnoverValueObjects.stream()
+                .filter(t -> t.getDate().equals(aggDate.minusMonths(2))).findFirst().orElse(null);
+        if (tvo!=null ) {
+            aggregation.setGrossAmount1MCY_2(tvo.getGrossAmount());
+            aggregation.setNetAmount1MCY_2(tvo.getNetAmount());
+        }
+
+        LocalDateInterval I12MCY = LocalDateInterval.including(aggDate.minusMonths(11), aggDate);
+        LocalDateInterval I12MPY = LocalDateInterval.including(aggDate.minusYears(1).minusMonths(11), aggDate.minusYears(1));
+        String ccy = null;
+        String cpy = null;
+        for (TurnoverValueObject to : turnoverValueObjects){
+            if (to.getComments()!=null && I12MCY.contains(to.getDate())){
+                if (ccy==null ){
+                    ccy = to.getComments();
+                } else {
+                    ccy = ccy.concat(" | ").concat(to.getComments());
+                }
+            }
+            if (to.getComments()!=null && I12MPY.contains(to.getDate())){
+                if (cpy==null ){
+                    cpy = to.getComments();
+                } else {
+                    cpy = cpy.concat(" | ").concat(to.getComments());
+                }
+            }
+        }
+        aggregation.setComments12MCY(ccy);
+        aggregation.setComments12MPY(cpy);
+    }
+
+    public void calculateTurnoverAggregateForPeriod(
+            final TurnoverAggregateForPeriod turnoverAggregateForPeriod,
+            final LocalDate aggregationDate,
+            final List<TurnoverValueObject> turnoverValueObjects) {
+        final LocalDate periodStartDate = turnoverAggregateForPeriod.getAggregationPeriod()
+                .periodStartDateFor(aggregationDate);
+        final LocalDate periodEndDate = aggregationDate;
+        if (periodStartDate.isAfter(periodEndDate)) return;
+
+        final LocalDateInterval intervalCY = LocalDateInterval.including(periodStartDate, periodEndDate);
+        final List<TurnoverValueObject> valuesCurrentYear = getTurnoverValueObjectsForInterval(turnoverValueObjects,
+                intervalCY);
+
+        final LocalDateInterval intervalPY = LocalDateInterval.including(periodStartDate.minusYears(1), periodEndDate.minusYears(1));
+        final List<TurnoverValueObject> valuesPreviousYear = getTurnoverValueObjectsForInterval(turnoverValueObjects,
+                intervalPY);
+
+        if (valuesCurrentYear.isEmpty() && valuesPreviousYear.isEmpty()) return;
+
+        resetTurnoverAggregateForPeriod(turnoverAggregateForPeriod);
+
+        final Optional<TurnoverValueObject> aggCY = valuesCurrentYear.stream()
+                .reduce(TurnoverValueObject::addIgnoringDate);
+
+        final Optional<TurnoverValueObject> aggPY = valuesPreviousYear.stream()
+                .reduce(TurnoverValueObject::addIgnoringDate);
+
+        if (aggCY.isPresent()) {
+            turnoverAggregateForPeriod.setGrossAmount(aggCY.get().getGrossAmount());
+            turnoverAggregateForPeriod.setNetAmount(aggCY.get().getNetAmount());
+            turnoverAggregateForPeriod.setTurnoverCount(aggCY.get().getTurnoverCount());
+            turnoverAggregateForPeriod.setNonComparableThisYear(aggCY.get().isNonComparable());
+        }
+        if (aggPY.isPresent()) {
+            turnoverAggregateForPeriod.setGrossAmountPreviousYear(aggPY.get().getGrossAmount());
+            turnoverAggregateForPeriod.setNetAmountPreviousYear(aggPY.get().getNetAmount());
+            turnoverAggregateForPeriod.setTurnoverCountPreviousYear(aggPY.get().getTurnoverCount());
+            turnoverAggregateForPeriod.setNonComparablePreviousYear(aggPY.get().isNonComparable());
+        }
+
+        final boolean comparable = isComparable(
+                turnoverAggregateForPeriod.getAggregationPeriod(),
+                turnoverAggregateForPeriod.getTurnoverCount(),
+                turnoverAggregateForPeriod.getTurnoverCountPreviousYear(),
+                turnoverAggregateForPeriod.isNonComparableThisYear(),
+                turnoverAggregateForPeriod.isNonComparablePreviousYear()
+                );
+        turnoverAggregateForPeriod.setComparable(comparable);
+
+    }
+
+    private List<TurnoverValueObject> getTurnoverValueObjectsForInterval(
+            final List<TurnoverValueObject> turnoverValueObjects,
+            final LocalDateInterval intervalCY) {
+        return turnoverValueObjects.stream()
+                .map(t -> new TurnoverValueObject(
+                        t)) // NOTE: we make copies in order to preserve the values in turnoverValueObjects List
+                .filter(t -> intervalCY.contains(t.getDate()))
+                .collect(Collectors.toList());
+    }
+
+    public void calculatePurchaseCountAggregateForPeriod(
+            final PurchaseCountAggregateForPeriod purchaseCountAggregateForPeriod,
+            final LocalDate aggregationDate,
+            final List<TurnoverValueObject> turnoverValueObjects) {
+        final LocalDate periodStartDate = purchaseCountAggregateForPeriod.getAggregationPeriod()
+                .periodStartDateFor(aggregationDate);
+        final LocalDate periodEndDate = aggregationDate;
+        if (periodStartDate.isAfter(periodEndDate)) return;
+
+        final LocalDateInterval intervalCY = LocalDateInterval.including(periodStartDate, periodEndDate);
+        final List<TurnoverValueObject> valuesCurrentYear = getTurnoverValueObjectsForInterval(turnoverValueObjects,
+                intervalCY);
+
+        final LocalDateInterval intervalPY = LocalDateInterval.including(periodStartDate.minusYears(1), periodEndDate.minusYears(1));
+        final List<TurnoverValueObject> valuesPreviousYear = getTurnoverValueObjectsForInterval(turnoverValueObjects,
+                intervalPY);
+
+        if (valuesCurrentYear.isEmpty() && valuesPreviousYear.isEmpty()) return;
+
+        resetPurchaseCountAggregateForPeriod(purchaseCountAggregateForPeriod);
+
+        final Optional<TurnoverValueObject> aggCY = valuesCurrentYear.stream()
+                .reduce(TurnoverValueObject::addIgnoringDate);
+
+        final Optional<TurnoverValueObject> aggPY = valuesPreviousYear.stream()
+                .reduce(TurnoverValueObject::addIgnoringDate);
+
+        if (aggCY.isPresent()) {
+            purchaseCountAggregateForPeriod.setCount(aggCY.get().getPurchaseCount());
+        }
+        if (aggPY.isPresent()) {
+            purchaseCountAggregateForPeriod.setCountPreviousYear(aggPY.get().getPurchaseCount());
+        }
+
+        final boolean comparable = isComparable(
+                purchaseCountAggregateForPeriod.getAggregationPeriod(),
+                aggCY.isPresent() ? aggCY.get().getTurnoverCount() : 0,
+                aggPY.isPresent() ? aggPY.get().getTurnoverCount() : 0,
+                aggCY.isPresent() ? aggCY.get().isNonComparable() : false,
+                aggPY.isPresent() ? aggPY.get().isNonComparable() : false);
+        purchaseCountAggregateForPeriod.setComparable(comparable);
+
+    }
+
+    public void calculateTurnoverAggregateToDate(
+            final TurnoverAggregateToDate turnoverAggregateToDate,
+            final LocalDate aggregationDate,
+            final List<TurnoverValueObject> turnoverValueObjects){
+
+        final LocalDate startOfTheYear = new LocalDate(aggregationDate.getYear(), 1, 1);
+        final LocalDateInterval intervalCY = LocalDateInterval.including(startOfTheYear, aggregationDate);
+        final List<TurnoverValueObject> valuesCurrentYear = getTurnoverValueObjectsForInterval(turnoverValueObjects,
+                intervalCY);
+
+        final LocalDateInterval intervalPY = LocalDateInterval.including(startOfTheYear.minusYears(1), aggregationDate.minusYears(1));
+        final List<TurnoverValueObject> valuesPreviousYear = getTurnoverValueObjectsForInterval(turnoverValueObjects,
+                intervalPY);
+
+        if (valuesCurrentYear.isEmpty() && valuesPreviousYear.isEmpty()) return;
+
+        resetTurnoverAggregateToDate(turnoverAggregateToDate);
+
+        final Optional<TurnoverValueObject> aggCY = valuesCurrentYear.stream()
+                .reduce(TurnoverValueObject::addIgnoringDate);
+
+        final Optional<TurnoverValueObject> aggPY = valuesPreviousYear.stream()
+                .reduce(TurnoverValueObject::addIgnoringDate);
+
+        if (aggCY.isPresent()) {
+            turnoverAggregateToDate.setGrossAmount(aggCY.get().getGrossAmount());
+            turnoverAggregateToDate.setNetAmount(aggCY.get().getNetAmount());
+            turnoverAggregateToDate.setTurnoverCount(aggCY.get().getTurnoverCount());
+            turnoverAggregateToDate.setNonComparableThisYear(aggCY.get().isNonComparable());
+        }
+        if (aggPY.isPresent()) {
+            turnoverAggregateToDate.setGrossAmountPreviousYear(aggPY.get().getGrossAmount());
+            turnoverAggregateToDate.setNetAmountPreviousYear(aggPY.get().getNetAmount());
+            turnoverAggregateToDate.setTurnoverCountPreviousYear(aggPY.get().getTurnoverCount());
+            turnoverAggregateToDate.setNonComparablePreviousYear(aggPY.get().isNonComparable());
+        }
+
+        final boolean comparable = isComparableToDate(
+                aggregationDate,
+                turnoverAggregateToDate.getTurnoverCount(),
+                turnoverAggregateToDate.getTurnoverCountPreviousYear(),
+                turnoverAggregateToDate.isNonComparableThisYear(),
+                turnoverAggregateToDate.isNonComparablePreviousYear()
+        );
+        turnoverAggregateToDate.setComparable(comparable);
+
+    }
+
+    private void resetTurnoverAggregateToDate(final TurnoverAggregateToDate agg) {
+        agg.setGrossAmount(null);
+        agg.setNetAmount(null);
+        agg.setTurnoverCount(0);
+        agg.setNonComparableThisYear(false);
+        agg.setGrossAmountPreviousYear(null);
+        agg.setNetAmountPreviousYear(null);
+        agg.setTurnoverCountPreviousYear(0);
+        agg.setNonComparablePreviousYear(false);
+        agg.setComparable(false);
+    }
+
+    private void resetTurnoverAggregateForPeriod(final TurnoverAggregateForPeriod agg){
+        agg.setGrossAmount(null);
+        agg.setNetAmount(null);
+        agg.setTurnoverCount(0);
+        agg.setNonComparableThisYear(false);
+        agg.setGrossAmountPreviousYear(null);
+        agg.setNetAmountPreviousYear(null);
+        agg.setTurnoverCountPreviousYear(0);
+        agg.setNonComparablePreviousYear(false);
+        agg.setComparable(false);
+    }
+
+    private void resetPurchaseCountAggregateForPeriod(final PurchaseCountAggregateForPeriod agg){
+        agg.setCount(null);
+        agg.setCountPreviousYear(null);
+        agg.setComparable(false);
+    }
+
+
+    @Inject TurnoverReportingConfigRepository turnoverReportingConfigRepository;
 
     @Inject TurnoverRepository turnoverRepository;
 

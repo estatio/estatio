@@ -16,6 +16,8 @@ import org.junit.Test;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -24,6 +26,8 @@ import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
+
+import cucumber.api.java.cs.A;
 
 public class TurnoverAggregationService_Test {
 
@@ -481,4 +485,435 @@ public class TurnoverAggregationService_Test {
         Assertions.assertThat(dates.get(2)).isEqualTo(new LocalDate(2019,2,1));
 
     }
+
+    @Test
+    public void turnoversToAggregateForOccupancySortedAsc_works() throws Exception {
+
+        // setup
+        Occupancy occupancy = new Occupancy();
+
+        TurnoverAggregationService service = new TurnoverAggregationService(){
+            @Override
+            List<Occupancy> occupanciesToExamine(
+                    final Unit unit, final List<Lease> leasesToExamine) {
+                return Arrays.asList(occupancy);
+            }
+
+            @Override List<Lease> leasesToExamine(final Lease lease) {
+                return Arrays.asList();
+            }
+        };
+        service.turnoverRepository = mockTurnoverRepo;
+
+        // given
+        Turnover t1 = new Turnover();
+        t1.setDate(new LocalDate(2020,3,1));
+        Turnover t2 = new Turnover();
+        t2.setDate(new LocalDate(2020, 2, 1));
+        t2.setComments("t2 comment");
+        Turnover t3 = new Turnover();
+        t3.setDate(new LocalDate(2020, 2, 1));
+        t3.setConfig(new TurnoverReportingConfig());
+        t3.setComments("t3 comment");
+        Turnover t4 = new Turnover();
+        t4.setDate(new LocalDate(2020, 1, 1));
+
+        List<Turnover> result = Arrays.asList(t4, t3, t1, t2);
+
+        // expect
+        context.checking(new Expectations(){{
+            allowing(mockTurnoverRepo).findApprovedByOccupancyAndTypeAndFrequency(occupancy, Type.PRELIMINARY, Frequency.MONTHLY);
+            will(returnValue(result));
+        }});
+
+        // when
+        LocalDate aggregationDate = new LocalDate(2021, 1, 1);
+        List<TurnoverValueObject> turnoverValueObjects = service
+                .turnoversToAggregateForOccupancySortedAsc(occupancy, Type.PRELIMINARY, Frequency.MONTHLY, aggregationDate);
+        // then
+        Assertions.assertThat(turnoverValueObjects.size()).isEqualTo(3);
+        TurnoverValueObject tov1 = turnoverValueObjects.get(0);
+        TurnoverValueObject tov2 = turnoverValueObjects.get(1);
+        TurnoverValueObject tov3 = turnoverValueObjects.get(2);
+        Assertions.assertThat(tov1.getDate()).isEqualTo(t4.getDate());
+        Assertions.assertThat(tov2.getDate()).isEqualTo(t3.getDate());
+        Assertions.assertThat(tov2.getDate()).isEqualTo(t2.getDate());
+        Assertions.assertThat(tov3.getDate()).isEqualTo(t1.getDate());
+
+        Assertions.assertThat(tov2.getComments()).isEqualTo("t3 comment | t2 comment");
+
+        // and when
+        aggregationDate = new LocalDate(2022, 3, 1);
+        turnoverValueObjects = service
+                .turnoversToAggregateForOccupancySortedAsc(occupancy, Type.PRELIMINARY, Frequency.MONTHLY, aggregationDate);
+        // then
+        Assertions.assertThat(turnoverValueObjects.size()).isEqualTo(1);
+        Assertions.assertThat(turnoverValueObjects.get(0).getDate()).isEqualTo(t1.getDate());
+
+        // and when
+        aggregationDate = new LocalDate(2022, 3, 2);
+        turnoverValueObjects = service
+                .turnoversToAggregateForOccupancySortedAsc(occupancy, Type.PRELIMINARY, Frequency.MONTHLY, aggregationDate);
+        // then
+        Assertions.assertThat(turnoverValueObjects.size()).isEqualTo(0);
+    }
+
+    @Test
+    public void determineStartDate_works() throws Exception {
+
+        // given
+        TurnoverAggregationService service = new TurnoverAggregationService();
+
+        // when
+        LocalDate aggregationDate = null;
+        LocalDate minStartDateOnTurnovers = null;
+        // then
+        Assertions.assertThat(service.determineStartDate(aggregationDate, minStartDateOnTurnovers)).isEqualTo(service.MIN_AGGREGATION_DATE);
+
+        // and when
+        minStartDateOnTurnovers = new LocalDate(2012, 1, 1);
+        Assertions.assertThat(service.determineStartDate(aggregationDate, minStartDateOnTurnovers)).isEqualTo(service.MIN_AGGREGATION_DATE.minusMonths(24));
+
+        // and when
+        aggregationDate = new LocalDate(2013, 12, 31);
+        Assertions.assertThat(service.determineStartDate(aggregationDate, minStartDateOnTurnovers)).isEqualTo(minStartDateOnTurnovers);
+
+        // and when
+        aggregationDate = new LocalDate(2014, 1, 1);
+        Assertions.assertThat(service.determineStartDate(aggregationDate, minStartDateOnTurnovers)).isEqualTo(aggregationDate.minusMonths(24));
+        Assertions.assertThat(service.determineStartDate(aggregationDate, minStartDateOnTurnovers)).isEqualTo(minStartDateOnTurnovers);
+
+        // and when
+        aggregationDate = new LocalDate(2014, 1, 2);
+        Assertions.assertThat(service.determineStartDate(aggregationDate, minStartDateOnTurnovers)).isEqualTo(aggregationDate.minusMonths(24));
+
+    }
+
+    @Test
+    public void determineEndDate_works() throws Exception {
+
+        // given
+        TurnoverAggregationService service = new TurnoverAggregationService(){
+            @Override boolean isOccupancyForLastExpiredLease(
+                    final Occupancy occupancy,
+                    final LocalDate aggregationDate) {
+                return true;
+            }
+        };
+        LocalDate occEffectiveEndDate = new LocalDate(2010,1 ,1);
+        Occupancy occupancy = new Occupancy(){
+            @Override public LocalDate getEffectiveEndDate() {
+                return occEffectiveEndDate;
+            }
+        };
+
+        // when
+        LocalDate aggregationDate = new LocalDate(2010, 1, 1);
+        Assertions.assertThat(service.determineEndDate(occupancy, aggregationDate)).isEqualTo(aggregationDate.plusMonths(24));
+
+        // and when
+        aggregationDate = new LocalDate(2010, 1, 2);
+        Assertions.assertThat(service.determineEndDate(occupancy, aggregationDate)).isEqualTo(occEffectiveEndDate.plusMonths(24));
+
+    }
+
+    @Test
+    public void findOrCreateAggregationsForMonthly_works() throws Exception {
+
+        TurnoverAggregationService service = new TurnoverAggregationService();
+
+//        TODO: finish
+//        service.findOrCreateAggregationsForMonthly(occupancy, turnoverValueObjects, aggregationDate, currency, type, frequency);
+
+    }
+
+    @Test
+    public void aggregateTurnoversForOccupancy_works() throws Exception {
+
+        TurnoverAggregationService service = new TurnoverAggregationService();
+
+        //        TODO: finish
+//                service.aggregateTurnoversForOccupancy(occupancy, turnoverValueObjects, aggregationDate, currency, type, frequency);
+
+    }
+
+    @Test
+    public void calculateAggregationForOther_works() throws Exception {
+
+        // given
+        TurnoverAggregationService service = new TurnoverAggregationService();
+        TurnoverAggregation aggregation = new TurnoverAggregation();
+        final LocalDate date = new LocalDate(2020, 1, 1);
+        aggregation.setDate(date);
+
+        List<TurnoverValueObject> turnoverValueObjects = new ArrayList<>();
+
+        // when
+        Turnover t1 = new Turnover();
+        t1.setComments("t1 comment");
+        t1.setDate(date.minusMonths(1));
+        t1.setGrossAmount(new BigDecimal("1.23"));
+        t1.setNetAmount(new BigDecimal("1.00"));
+        TurnoverValueObject o1 = new TurnoverValueObject(t1);
+        turnoverValueObjects.add(o1);
+
+        Turnover t2 = new Turnover();
+        t2.setComments("t2 comment");
+        t2.setDate(date.minusMonths(2));
+        t2.setGrossAmount(new BigDecimal("2.34"));
+        TurnoverValueObject o2 = new TurnoverValueObject(t2);
+        turnoverValueObjects.add(o2);
+
+        Turnover t3 = new Turnover();
+        t3.setComments("t3 comment");
+        t3.setDate(date.minusMonths(11));
+        TurnoverValueObject o3 = new TurnoverValueObject(t3);
+        turnoverValueObjects.add(o3);
+
+        Turnover t4 = new Turnover();
+        t4.setComments("t4 comment");
+        t4.setDate(date.minusMonths(12));
+        TurnoverValueObject o4 = new TurnoverValueObject(t4);
+        turnoverValueObjects.add(o4);
+
+        Assertions.assertThat(turnoverValueObjects).hasSize(4);
+
+        service.calculateAggregationForOther(aggregation, turnoverValueObjects);
+
+        // then
+        Assertions.assertThat(aggregation.getGrossAmount1MCY_1()).isEqualTo(t1.getGrossAmount());
+        Assertions.assertThat(aggregation.getNetAmount1MCY_1()).isEqualTo(t1.getNetAmount());
+        Assertions.assertThat(aggregation.getGrossAmount1MCY_2()).isEqualTo(t2.getGrossAmount());
+        Assertions.assertThat(aggregation.getNetAmount1MCY_2()).isNull();
+        Assertions.assertThat(aggregation.getComments12MCY()).isEqualTo("t1 comment | t2 comment | t3 comment");
+        Assertions.assertThat(aggregation.getComments12MPY()).isEqualTo("t4 comment");
+
+    }
+
+    @Test
+    public void calculateTurnoverAggregateForPeriod_works() throws Exception {
+
+        // given
+        TurnoverAggregationService service = new TurnoverAggregationService();
+        final LocalDate aggregationDate = new LocalDate(2020, 1, 1);
+        final TurnoverAggregateForPeriod afp = new TurnoverAggregateForPeriod();
+
+        // when
+        afp.setAggregationPeriod(AggregationPeriod.P_2M);
+        List<TurnoverValueObject> objects = prepareTestObjects(LocalDateInterval.including(aggregationDate, aggregationDate));
+        service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, objects);
+
+        // then
+        assertAggregateForPeriod(afp, new BigDecimal("1"), new BigDecimal("0.50"),1,false,
+                null,null,0, false, false);
+
+        // and when only this year
+        List<TurnoverValueObject> objectsCurYear = prepareTestObjects(LocalDateInterval.including(aggregationDate.minusMonths(11), aggregationDate));
+        service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, objectsCurYear);
+        // then
+        assertAggregateForPeriod(afp, new BigDecimal("23"), new BigDecimal("22.00"),2,false,
+                null,null,0, false, false);
+
+        // and when only last year
+        List<TurnoverValueObject> objectsPreviousYear = prepareTestObjects(LocalDateInterval.including(aggregationDate.minusYears(1).minusMonths(11), aggregationDate.minusYears(1)));
+        service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, objectsPreviousYear);
+        // then
+        assertAggregateForPeriod(afp, null, null,0,false,
+                new BigDecimal("23"),new BigDecimal("22.00"),2, false, false);
+
+        // and when both this and last year
+        List<TurnoverValueObject> currentAndPrevYear = new ArrayList<>();
+        currentAndPrevYear.addAll(objectsPreviousYear);
+        currentAndPrevYear.addAll(objectsCurYear);
+        service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, currentAndPrevYear);
+        // then
+        assertAggregateForPeriod(afp, new BigDecimal("23"), new BigDecimal("22.00"),2,false,
+                new BigDecimal("23"),new BigDecimal("22.00"),2, false, true);
+
+        // and when for 12 M
+        afp.setAggregationPeriod(AggregationPeriod.P_12M);
+        service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, currentAndPrevYear);
+        // then
+        assertAggregateForPeriod(afp, new BigDecimal("78"), new BigDecimal("72.00"),12,false,
+                new BigDecimal("78"),new BigDecimal("72.00"),12, false, true);
+
+    }
+
+    private void assertAggregateForPeriod(
+            final TurnoverAggregateForPeriod afp,
+            final BigDecimal g,
+            final BigDecimal n,
+            final Integer tc,
+            final boolean cC,
+            final BigDecimal gP,
+            final BigDecimal nP,
+            final Integer tcP,
+            final boolean cP,
+            final boolean c
+    ){
+        Assertions.assertThat(afp.getGrossAmount()).isEqualTo(g);
+        Assertions.assertThat(afp.getNetAmount()).isEqualTo(n);
+        Assertions.assertThat(afp.getTurnoverCount()).isEqualTo(tc);
+        Assertions.assertThat(afp.isNonComparableThisYear()).isEqualTo(cC);
+        Assertions.assertThat(afp.getGrossAmountPreviousYear()).isEqualTo(gP);
+        Assertions.assertThat(afp.getNetAmountPreviousYear()).isEqualTo(nP);
+        Assertions.assertThat(afp.getTurnoverCountPreviousYear()).isEqualTo(tcP);
+        Assertions.assertThat(afp.isNonComparablePreviousYear()).isEqualTo(cP);
+        Assertions.assertThat(afp.isComparable()).isEqualTo(c);
+    }
+
+    @Test
+    public void calculatePurchaseCountAggregateForPeriod_works() throws Exception {
+
+        // given
+        TurnoverAggregationService service = new TurnoverAggregationService();
+        final LocalDate aggregationDate = new LocalDate(2020, 1, 1);
+        final PurchaseCountAggregateForPeriod pafp = new PurchaseCountAggregateForPeriod();
+
+        // when
+        pafp.setAggregationPeriod(AggregationPeriod.P_2M);
+        List<TurnoverValueObject> objects = prepareTestObjects(LocalDateInterval.including(aggregationDate, aggregationDate));
+        service.calculatePurchaseCountAggregateForPeriod(pafp, aggregationDate, objects);
+
+        // then
+        assertPurchaseCountAggregateForPeriod(pafp, new BigInteger("1"), null, false);
+
+        // and when only this year
+        List<TurnoverValueObject> objectsCurYear = prepareTestObjects(LocalDateInterval.including(aggregationDate.minusMonths(11), aggregationDate));
+        service.calculatePurchaseCountAggregateForPeriod(pafp, aggregationDate, objectsCurYear);
+        // then
+        assertPurchaseCountAggregateForPeriod(pafp, new BigInteger("23"), null, false);
+
+        // and when only last year
+        List<TurnoverValueObject> objectsPreviousYear = prepareTestObjects(LocalDateInterval.including(aggregationDate.minusYears(1).minusMonths(11), aggregationDate.minusYears(1)));
+        service.calculatePurchaseCountAggregateForPeriod(pafp, aggregationDate, objectsPreviousYear);
+        // then
+        assertPurchaseCountAggregateForPeriod(pafp, null, new BigInteger("23"), false);
+
+        // and when both this and last year
+        List<TurnoverValueObject> currentAndPrevYear = new ArrayList<>();
+        currentAndPrevYear.addAll(objectsPreviousYear);
+        currentAndPrevYear.addAll(objectsCurYear);
+        service.calculatePurchaseCountAggregateForPeriod(pafp, aggregationDate, currentAndPrevYear);
+        // then
+        assertPurchaseCountAggregateForPeriod(pafp, new BigInteger("23"), new BigInteger("23"), true);
+
+        // and when for 12 M
+        pafp.setAggregationPeriod(AggregationPeriod.P_12M);
+        service.calculatePurchaseCountAggregateForPeriod(pafp, aggregationDate, currentAndPrevYear);
+        // then
+        assertPurchaseCountAggregateForPeriod(pafp, new BigInteger("78"), new BigInteger("78"), true);
+
+    }
+
+    private void assertPurchaseCountAggregateForPeriod(
+            final PurchaseCountAggregateForPeriod pafp,
+            final BigInteger cnt,
+            final BigInteger cntPY,
+            final boolean c
+    ){
+        Assertions.assertThat(pafp.getCount()).isEqualTo(cnt);
+        Assertions.assertThat(pafp.getCountPreviousYear()).isEqualTo(cntPY);
+        Assertions.assertThat(pafp.isComparable()).isEqualTo(c);
+    }
+
+    @Test
+    public void calculateTurnoverAggregateToDate_works() throws Exception {
+
+        // given
+        TurnoverAggregationService service = new TurnoverAggregationService();
+        final LocalDate aggregationDate = new LocalDate(2020, 1, 1);
+        final TurnoverAggregateToDate tad = new TurnoverAggregateToDate();
+
+        // when
+        List<TurnoverValueObject> objects = prepareTestObjects(LocalDateInterval.including(aggregationDate, aggregationDate));
+        service.calculateTurnoverAggregateToDate(tad, aggregationDate, objects);
+
+        // then
+        assertAggregateToDate(tad, new BigDecimal("1"), new BigDecimal("0.50"),1,false,
+                null,null,0, false, false);
+
+        // and when 2 M only this year
+        final LocalDate aggregationDate2M = new LocalDate(2020, 2, 1);
+        List<TurnoverValueObject> objectsCurYear = prepareTestObjects(LocalDateInterval.including(aggregationDate2M.minusMonths(11), aggregationDate2M));
+        service.calculateTurnoverAggregateToDate(tad, aggregationDate2M, objectsCurYear);
+        // then
+        assertAggregateToDate(tad, new BigDecimal("23"), new BigDecimal("22.00"),2,false,
+                null,null,0, false, false);
+
+        // and when 2 M only last year
+        List<TurnoverValueObject> objectsLastYear = prepareTestObjects(LocalDateInterval.including(aggregationDate2M.minusYears(1).minusMonths(11), aggregationDate2M.minusYears(1)));
+        service.calculateTurnoverAggregateToDate(tad, aggregationDate2M, objectsLastYear);
+        // then
+        assertAggregateToDate(tad, null, null, 0,false,
+                new BigDecimal("23"), new BigDecimal("22.00"),2, false, false);
+
+        // and when 2M both this and last year
+        List<TurnoverValueObject> currentAndPrevYear = new ArrayList<>();
+        currentAndPrevYear.addAll(objectsLastYear);
+        currentAndPrevYear.addAll(objectsCurYear);
+        service.calculateTurnoverAggregateToDate(tad, aggregationDate2M, currentAndPrevYear);
+        // then
+        assertAggregateToDate(tad, new BigDecimal("23"), new BigDecimal("22.00"),2,false,
+                new BigDecimal("23"),new BigDecimal("22.00"),2, false, true);
+
+        // and when for 12 M
+        final LocalDate aggregationDate12M = new LocalDate(2020, 12, 1);
+        List<TurnoverValueObject> currentAndPrevYearAll = new ArrayList<>();
+        List<TurnoverValueObject> objectsLastYearAll = prepareTestObjects(LocalDateInterval.including(aggregationDate12M.minusYears(1).minusMonths(11), aggregationDate12M.minusYears(1)));
+        List<TurnoverValueObject> objectsCurrentYearAll = prepareTestObjects(LocalDateInterval.including(aggregationDate12M.minusMonths(11), aggregationDate12M));
+        currentAndPrevYearAll.addAll(objectsLastYearAll);
+        currentAndPrevYearAll.addAll(objectsCurrentYearAll);
+        service.calculateTurnoverAggregateToDate(tad, aggregationDate12M, currentAndPrevYearAll);
+        // then
+        assertAggregateToDate(tad, new BigDecimal("78"), new BigDecimal("72.00"),12,false,
+                new BigDecimal("78"),new BigDecimal("72.00"),12, false, true);
+
+    }
+
+    private void assertAggregateToDate(
+            final TurnoverAggregateToDate afp,
+            final BigDecimal g,
+            final BigDecimal n,
+            final Integer tc,
+            final boolean cC,
+            final BigDecimal gP,
+            final BigDecimal nP,
+            final Integer tcP,
+            final boolean cP,
+            final boolean c
+    ){
+        Assertions.assertThat(afp.getGrossAmount()).isEqualTo(g);
+        Assertions.assertThat(afp.getNetAmount()).isEqualTo(n);
+        Assertions.assertThat(afp.getTurnoverCount()).isEqualTo(tc);
+        Assertions.assertThat(afp.isNonComparableThisYear()).isEqualTo(cC);
+        Assertions.assertThat(afp.getGrossAmountPreviousYear()).isEqualTo(gP);
+        Assertions.assertThat(afp.getNetAmountPreviousYear()).isEqualTo(nP);
+        Assertions.assertThat(afp.getTurnoverCountPreviousYear()).isEqualTo(tcP);
+        Assertions.assertThat(afp.isNonComparablePreviousYear()).isEqualTo(cP);
+        Assertions.assertThat(afp.isComparable()).isEqualTo(c);
+    }
+
+    private List<TurnoverValueObject> prepareTestObjects(final LocalDateInterval interval){
+        List<TurnoverValueObject> result = new ArrayList<>();
+        LocalDate date = interval.startDate();
+        int cnt = 1;
+        while (!date.isAfter(interval.endDate())){
+            Turnover t = new Turnover();
+            t.setDate(date);
+            t.setGrossAmount(BigDecimal.valueOf(cnt));
+            t.setNetAmount(BigDecimal.valueOf(cnt).subtract(new BigDecimal("0.50")));
+            t.setNonComparable(false);
+            t.setPurchaseCount(BigInteger.valueOf(cnt));
+            TurnoverValueObject val = new TurnoverValueObject(t);
+            result.add(val);
+
+            date = date.plusMonths(1);
+            cnt++;
+        }
+        return result;
+    }
+
+
+
 }
