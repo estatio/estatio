@@ -500,6 +500,15 @@ public class TurnoverAggregationService {
     }
 
     void calculateAggregationForOther(final TurnoverAggregation aggregation, final List<TurnoverValueObject> turnoverValueObjects){
+
+        // reset
+        aggregation.setGrossAmount1MCY_1(BigDecimal.ZERO);
+        aggregation.setNetAmount1MCY_1(BigDecimal.ZERO);
+        aggregation.setGrossAmount1MCY_2(BigDecimal.ZERO);
+        aggregation.setNetAmount1MCY_2(BigDecimal.ZERO);
+        aggregation.setComments12MCY(null);
+        aggregation.setComments12MPY(null);
+
         LocalDate aggDate = aggregation.getDate();
         TurnoverValueObject tvo = turnoverValueObjects.stream()
                 .filter(t -> t.getDate().equals(aggDate.minusMonths(1))).findFirst().orElse(null);
@@ -692,32 +701,32 @@ public class TurnoverAggregationService {
     }
 
     private void resetTurnoverAggregateToDate(final TurnoverAggregateToDate agg) {
-        agg.setGrossAmount(null);
-        agg.setNetAmount(null);
+        agg.setGrossAmount(BigDecimal.ZERO);
+        agg.setNetAmount(BigDecimal.ZERO);
         agg.setTurnoverCount(0);
         agg.setNonComparableThisYear(false);
-        agg.setGrossAmountPreviousYear(null);
-        agg.setNetAmountPreviousYear(null);
+        agg.setGrossAmountPreviousYear(BigDecimal.ZERO);
+        agg.setNetAmountPreviousYear(BigDecimal.ZERO);
         agg.setTurnoverCountPreviousYear(0);
         agg.setNonComparablePreviousYear(false);
         agg.setComparable(false);
     }
 
     private void resetTurnoverAggregateForPeriod(final TurnoverAggregateForPeriod agg){
-        agg.setGrossAmount(null);
-        agg.setNetAmount(null);
+        agg.setGrossAmount(BigDecimal.ZERO);
+        agg.setNetAmount(BigDecimal.ZERO);
         agg.setTurnoverCount(0);
         agg.setNonComparableThisYear(false);
-        agg.setGrossAmountPreviousYear(null);
-        agg.setNetAmountPreviousYear(null);
+        agg.setGrossAmountPreviousYear(BigDecimal.ZERO);
+        agg.setNetAmountPreviousYear(BigDecimal.ZERO);
         agg.setTurnoverCountPreviousYear(0);
         agg.setNonComparablePreviousYear(false);
         agg.setComparable(false);
     }
 
     private void resetPurchaseCountAggregateForPeriod(final PurchaseCountAggregateForPeriod agg){
-        agg.setCount(null);
-        agg.setCountPreviousYear(null);
+        agg.setCount(BigInteger.ZERO);
+        agg.setCountPreviousYear(BigInteger.ZERO);
         agg.setComparable(false);
     }
 

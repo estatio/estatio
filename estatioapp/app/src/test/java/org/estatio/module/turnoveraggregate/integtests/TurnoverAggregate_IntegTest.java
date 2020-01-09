@@ -53,9 +53,11 @@ import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
 import org.estatio.module.turnover.integtests.TurnoverModuleIntegTestAbstract;
 import org.estatio.module.turnoveraggregate.contributions.Occupancy_aggregateTurnovers;
+import org.estatio.module.turnoveraggregate.contributions.Occupancy_aggregateTurnoversNew;
 import org.estatio.module.turnoveraggregate.contributions.TurnoverReportingConfig_aggregateTurnovers;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregation;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationRepository;
+import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationService;
 import org.estatio.module.turnoveraggregate.fixtures.TurnoverImportXlsxFixtureForAggregated;
 import org.estatio.module.turnover.fixtures.data.TurnoverReportingConfig_enum;
 
@@ -179,10 +181,11 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         // given
         setupScenario_and_validate_import();
 
-        // when (aggregate)
+        // when (calculate occ1)
+        final LocalDate aggregationDate = new LocalDate(2019, 4, 1);
+        mixin(Occupancy_aggregateTurnoversNew.class, occ1).$$(aggregationDate);
         final TurnoverAggregation aggOnOcc1 = turnoverAggregationRepository
-                .findOrCreate(occ1, new LocalDate(2019, 4, 1), Type.PRELIMINARY, Frequency.MONTHLY, euro);
-        aggOnOcc1.aggregate();
+                .findOrCreate(occ1, aggregationDate, Type.PRELIMINARY, Frequency.MONTHLY, euro);
 
         // then
         assertTurnoverAggregation(
@@ -194,13 +197,13 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
                 new BigDecimal("657250.00"), new BigDecimal("689764.00"), true,
                 new BigDecimal("880724.00"), new BigDecimal("903262.00"), true,
                 new BigDecimal("271771.00"), new BigDecimal("288759.00"), true,
-                new BigInteger("0"), new BigInteger("0"), true,
+                null, null, true,
                 new BigInteger("1130"), new BigInteger("532"), true,
                 new BigInteger("3590"), new BigInteger("2918"), true,
                 new BigInteger("7463"), new BigInteger("6338"), true,
-                "xxxyyy", "zzz",
+                "yyy | xxx", "zzz",
                 new BigDecimal("58196.00"), new BigDecimal("66964.00")
-                );
+        );
     }
 
     @Test
@@ -211,9 +214,10 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         Occupancy occPar = occ3;
 
         // when
+        final LocalDate aggregationDate = new LocalDate(2019, 4, 1);
+        mixin(Occupancy_aggregateTurnoversNew.class, occ3).$$(aggregationDate);
         final TurnoverAggregation aggOccPar = turnoverAggregationRepository
                 .findOrCreate(occPar, new LocalDate(2019, 4, 1), Type.PRELIMINARY, Frequency.MONTHLY, euro);
-        aggOccPar.aggregate();
 
         // then
         assertTurnoverAggregation(
@@ -229,7 +233,7 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
                 new BigInteger("120"), new BigInteger("0"), false,
                 new BigInteger("120"), new BigInteger("0"), false,
                 new BigInteger("120"), new BigInteger("0"), false,
-                "abc", "",
+                "abc", null,
                 BigDecimal.ZERO, BigDecimal.ZERO
         );
     }
@@ -241,9 +245,10 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         setupScenario_and_validate_import();
 
         // when
+        final LocalDate aggregationDate = new LocalDate(2019, 11, 1);
+        mixin(Occupancy_aggregateTurnoversNew.class, occ4).$$(aggregationDate);
         final TurnoverAggregation aggOcc4 = turnoverAggregationRepository
-                .findOrCreate(occ4, new LocalDate(2019, 11, 1), Type.PRELIMINARY, Frequency.MONTHLY, euro);
-        aggOcc4.aggregate();
+                .findOrCreate(occ4, aggregationDate, Type.PRELIMINARY, Frequency.MONTHLY, euro);
 
         // then
         assertTurnoverAggregation(
@@ -259,14 +264,15 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
                 new BigInteger("1129"), new BigInteger("0"), false,
                 new BigInteger("1482"), new BigInteger("0"), false,
                 new BigInteger("1482"), new BigInteger("0"), false,
-                "", "",
+                null, null,
                 new BigDecimal("76229.00"), new BigDecimal("62000.00")
         );
 
         // and when 2 parent leases
+        final LocalDate aggregationDate2 = new LocalDate(2020, 6, 1);
+        mixin(Occupancy_aggregateTurnoversNew.class, occ5).$$(aggregationDate2);
         final TurnoverAggregation aggOcc5 = turnoverAggregationRepository
-                .findOrCreate(occ5, new LocalDate(2020, 6, 1), Type.PRELIMINARY, Frequency.MONTHLY, euro);
-        aggOcc5.aggregate();
+                .findOrCreate(occ5, aggregationDate2, Type.PRELIMINARY, Frequency.MONTHLY, euro);
 
         // then
         assertTurnoverAggregation(
@@ -278,11 +284,11 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
                 new BigDecimal("236007.00"), new BigDecimal("146365.00"), false,
                 new BigDecimal("387595.00"), new BigDecimal("146365.00"), false,
                 new BigDecimal("75381.00"), new BigDecimal("146365.00"), false,
-                new BigInteger("0"), new BigInteger("0"), true,
-                new BigInteger("0"), new BigInteger("0"), false,
-                new BigInteger("0"), new BigInteger("0"), false,
-                new BigInteger("1605"), new BigInteger("0"), false,
-                "", "",
+                null, null, true,
+                null, null, false,
+                null, null, false,
+                new BigInteger("1605"), null, false,
+                null, null,
                 new BigDecimal("13560.00"), new BigDecimal("12348.00")
         );
 
@@ -394,5 +400,120 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
     @Inject TurnoverReportingConfigRepository turnoverReportingConfigRepository;
 
     @Inject ServiceRegistry2 serviceRegistry2;
-    
+
+
+    @Test
+    public void import_and_simple_scenario_succeeded_old() throws Exception {
+
+        // given
+        setupScenario_and_validate_import();
+
+        // when (aggregate)
+        final TurnoverAggregation aggOnOcc1 = turnoverAggregationRepository
+                .findOrCreate(occ1, new LocalDate(2019, 4, 1), Type.PRELIMINARY, Frequency.MONTHLY, euro);
+        aggOnOcc1.aggregate();
+
+        // then
+        assertTurnoverAggregation(
+                aggOnOcc1,
+                new BigDecimal("52775.00"), new BigDecimal("68878.00"), true,
+                new BigDecimal("110971.00"), new BigDecimal("136651.00"), true,
+                new BigDecimal("177935.00"), new BigDecimal("197351.00"), true,
+                new BigDecimal("454501.00"), new BigDecimal("469051.00"), true,
+                new BigDecimal("657250.00"), new BigDecimal("689764.00"), true,
+                new BigDecimal("880724.00"), new BigDecimal("903262.00"), true,
+                new BigDecimal("271771.00"), new BigDecimal("288759.00"), true,
+                new BigInteger("0"), new BigInteger("0"), true,
+                new BigInteger("1130"), new BigInteger("532"), true,
+                new BigInteger("3590"), new BigInteger("2918"), true,
+                new BigInteger("7463"), new BigInteger("6338"), true,
+                "xxxyyy", "zzz",
+                new BigDecimal("58196.00"), new BigDecimal("66964.00")
+        );
+    }
+
+    @Test
+    public void scenario_parallel_occupancy_old() throws Exception {
+
+        // given
+        setupScenario_and_validate_import();
+        Occupancy occPar = occ3;
+
+        // when
+        final TurnoverAggregation aggOccPar = turnoverAggregationRepository
+                .findOrCreate(occPar, new LocalDate(2019, 4, 1), Type.PRELIMINARY, Frequency.MONTHLY, euro);
+        aggOccPar.aggregate();
+
+        // then
+        assertTurnoverAggregation(
+                aggOccPar,
+                new BigDecimal("12342.00"), BigDecimal.ZERO, false,
+                new BigDecimal("12342.00"), BigDecimal.ZERO, false,
+                new BigDecimal("12342.00"), BigDecimal.ZERO, false,
+                new BigDecimal("12342.00"), BigDecimal.ZERO, false,
+                new BigDecimal("12342.00"), BigDecimal.ZERO, false,
+                new BigDecimal("12342.00"), BigDecimal.ZERO, false,
+                new BigDecimal("12342.00"), BigDecimal.ZERO, false,
+                new BigInteger("120"), new BigInteger("0"), false,
+                new BigInteger("120"), new BigInteger("0"), false,
+                new BigInteger("120"), new BigInteger("0"), false,
+                new BigInteger("120"), new BigInteger("0"), false,
+                "abc", "",
+                BigDecimal.ZERO, BigDecimal.ZERO
+        );
+    }
+
+    @Test
+    public void scenario_parent_leases_old() throws Exception {
+
+        // given
+        setupScenario_and_validate_import();
+
+        // when
+        final TurnoverAggregation aggOcc4 = turnoverAggregationRepository
+                .findOrCreate(occ4, new LocalDate(2019, 11, 1), Type.PRELIMINARY, Frequency.MONTHLY, euro);
+        aggOcc4.aggregate();
+
+        // then
+        assertTurnoverAggregation(
+                aggOcc4,
+                new BigDecimal("72053.00"), BigDecimal.ZERO, false,  // 65264 + 6789
+                new BigDecimal("148282.00"), BigDecimal.ZERO, false,
+                new BigDecimal("210282.00"), BigDecimal.ZERO, false,
+                new BigDecimal("376212.00"), BigDecimal.ZERO, false,
+                new BigDecimal("446235.00"), BigDecimal.ZERO, false,
+                new BigDecimal("446235.00"), BigDecimal.ZERO, false,
+                new BigDecimal("446235.00"), BigDecimal.ZERO, false,
+                new BigInteger("567"), new BigInteger("0"), false,
+                new BigInteger("1129"), new BigInteger("0"), false,
+                new BigInteger("1482"), new BigInteger("0"), false,
+                new BigInteger("1482"), new BigInteger("0"), false,
+                "", "",
+                new BigDecimal("76229.00"), new BigDecimal("62000.00")
+        );
+
+        // and when 2 parent leases
+        final TurnoverAggregation aggOcc5 = turnoverAggregationRepository
+                .findOrCreate(occ5, new LocalDate(2020, 6, 1), Type.PRELIMINARY, Frequency.MONTHLY, euro);
+        aggOcc5.aggregate();
+
+        // then
+        assertTurnoverAggregation(
+                aggOcc5,
+                new BigDecimal("12345.00"), new BigDecimal("76342.00"), true,
+                new BigDecimal("25905.00"), new BigDecimal("146365.00"), true,
+                new BigDecimal("38253.00"), new BigDecimal("146365.00"), false,
+                new BigDecimal("75381.00"), new BigDecimal("146365.00"), false,
+                new BigDecimal("236007.00"), new BigDecimal("146365.00"), false,
+                new BigDecimal("387595.00"), new BigDecimal("146365.00"), false,
+                new BigDecimal("75381.00"), new BigDecimal("146365.00"), false,
+                new BigInteger("0"), new BigInteger("0"), true,
+                new BigInteger("0"), new BigInteger("0"), false,
+                new BigInteger("0"), new BigInteger("0"), false,
+                new BigInteger("1605"), new BigInteger("0"), false,
+                "", "",
+                new BigDecimal("13560.00"), new BigDecimal("12348.00")
+        );
+
+    }
 }

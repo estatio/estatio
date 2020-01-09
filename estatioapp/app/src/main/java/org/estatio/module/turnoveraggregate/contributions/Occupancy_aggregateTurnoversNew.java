@@ -9,32 +9,35 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
-import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
 import org.estatio.module.turnover.dom.Type;
+import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationService;
 
 @Mixin
-public class Lease_aggregateTurnovers {
+public class Occupancy_aggregateTurnoversNew {
 
-    private final Lease lease;
 
-    public Lease_aggregateTurnovers(Lease lease) {
-        this.lease = lease;
+
+    private final Occupancy occupancy;
+
+    public Occupancy_aggregateTurnoversNew(Occupancy occupancy) {
+        this.occupancy = occupancy;
     }
 
     @Action()
-    public Lease $$(final LocalDate aggregationDate) {
-        for (Occupancy o : lease.getOccupancies()) {
-            final Occupancy_aggregateTurnoversNew mixin = factoryService.mixin(Occupancy_aggregateTurnoversNew.class, o);
-            wrapperFactory.wrap(mixin).$$(aggregationDate);
-        }
-        return lease;
+    public Occupancy $$(final LocalDate aggregationDate) {
+        turnoverAggregationService.aggregateTurnoversForOccupancy(occupancy, Type.PRELIMINARY, Frequency.MONTHLY, aggregationDate);
+        return occupancy;
     }
+
+    @Inject
+    TurnoverAggregationService turnoverAggregationService;
 
     @Inject WrapperFactory wrapperFactory;
 
     @Inject FactoryService factoryService;
+
 
 }

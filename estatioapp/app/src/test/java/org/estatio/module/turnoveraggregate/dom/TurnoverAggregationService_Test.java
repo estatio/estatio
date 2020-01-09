@@ -705,20 +705,20 @@ public class TurnoverAggregationService_Test {
 
         // then
         assertAggregateForPeriod(afp, new BigDecimal("1"), new BigDecimal("0.50"),1,false,
-                null,null,0, false, false);
+                BigDecimal.ZERO, BigDecimal.ZERO,0, false, false);
 
         // and when only this year
         List<TurnoverValueObject> objectsCurYear = prepareTestObjects(LocalDateInterval.including(aggregationDate.minusMonths(11), aggregationDate));
         service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, objectsCurYear);
         // then
         assertAggregateForPeriod(afp, new BigDecimal("23"), new BigDecimal("22.00"),2,false,
-                null,null,0, false, false);
+                BigDecimal.ZERO, BigDecimal.ZERO,0, false, false);
 
         // and when only last year
         List<TurnoverValueObject> objectsPreviousYear = prepareTestObjects(LocalDateInterval.including(aggregationDate.minusYears(1).minusMonths(11), aggregationDate.minusYears(1)));
         service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, objectsPreviousYear);
         // then
-        assertAggregateForPeriod(afp, null, null,0,false,
+        assertAggregateForPeriod(afp,  BigDecimal.ZERO,  BigDecimal.ZERO,0,false,
                 new BigDecimal("23"),new BigDecimal("22.00"),2, false, false);
 
         // and when both this and last year
@@ -776,19 +776,19 @@ public class TurnoverAggregationService_Test {
         service.calculatePurchaseCountAggregateForPeriod(pafp, aggregationDate, objects);
 
         // then
-        assertPurchaseCountAggregateForPeriod(pafp, new BigInteger("1"), null, false);
+        assertPurchaseCountAggregateForPeriod(pafp, new BigInteger("1"), BigInteger.ZERO, false);
 
         // and when only this year
         List<TurnoverValueObject> objectsCurYear = prepareTestObjects(LocalDateInterval.including(aggregationDate.minusMonths(11), aggregationDate));
         service.calculatePurchaseCountAggregateForPeriod(pafp, aggregationDate, objectsCurYear);
         // then
-        assertPurchaseCountAggregateForPeriod(pafp, new BigInteger("23"), null, false);
+        assertPurchaseCountAggregateForPeriod(pafp, new BigInteger("23"), BigInteger.ZERO, false);
 
         // and when only last year
         List<TurnoverValueObject> objectsPreviousYear = prepareTestObjects(LocalDateInterval.including(aggregationDate.minusYears(1).minusMonths(11), aggregationDate.minusYears(1)));
         service.calculatePurchaseCountAggregateForPeriod(pafp, aggregationDate, objectsPreviousYear);
         // then
-        assertPurchaseCountAggregateForPeriod(pafp, null, new BigInteger("23"), false);
+        assertPurchaseCountAggregateForPeriod(pafp, BigInteger.ZERO, new BigInteger("23"), false);
 
         // and when both this and last year
         List<TurnoverValueObject> currentAndPrevYear = new ArrayList<>();
@@ -831,7 +831,7 @@ public class TurnoverAggregationService_Test {
 
         // then
         assertAggregateToDate(tad, new BigDecimal("1"), new BigDecimal("0.50"),1,false,
-                null,null,0, false, false);
+                BigDecimal.ZERO, BigDecimal.ZERO,0, false, false);
 
         // and when 2 M only this year
         final LocalDate aggregationDate2M = new LocalDate(2020, 2, 1);
@@ -839,13 +839,13 @@ public class TurnoverAggregationService_Test {
         service.calculateTurnoverAggregateToDate(tad, aggregationDate2M, objectsCurYear);
         // then
         assertAggregateToDate(tad, new BigDecimal("23"), new BigDecimal("22.00"),2,false,
-                null,null,0, false, false);
+                BigDecimal.ZERO, BigDecimal.ZERO,0, false, false);
 
         // and when 2 M only last year
         List<TurnoverValueObject> objectsLastYear = prepareTestObjects(LocalDateInterval.including(aggregationDate2M.minusYears(1).minusMonths(11), aggregationDate2M.minusYears(1)));
         service.calculateTurnoverAggregateToDate(tad, aggregationDate2M, objectsLastYear);
         // then
-        assertAggregateToDate(tad, null, null, 0,false,
+        assertAggregateToDate(tad,  BigDecimal.ZERO,  BigDecimal.ZERO, 0,false,
                 new BigDecimal("23"), new BigDecimal("22.00"),2, false, false);
 
         // and when 2M both this and last year
