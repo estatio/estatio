@@ -428,6 +428,16 @@ public class Lease
     @Getter @Setter
     private SortedSet<Occupancy> occupancies = new TreeSet<>();
 
+    @Programmatic
+    public boolean hasOverlappingOccupancies(){
+        for (Occupancy O : this.getOccupancies()){
+            for (Occupancy O2 : this.getOccupancies() ){
+                if (O!=O2 && O.getInterval().overlaps(O2.getInterval())) return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * The action to relate a lease to a unit. A lease can occupy unlimited
      * units.

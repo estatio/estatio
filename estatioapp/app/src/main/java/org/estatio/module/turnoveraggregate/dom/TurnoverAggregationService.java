@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.SortedSet;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -267,17 +268,28 @@ public class TurnoverAggregationService {
             final List<Occupancy> occupanciesOfDifferentUnit = Lists.newArrayList(l.getOccupancies()).stream()
                     .filter(o -> o.getUnit() != unit)
                     .collect(Collectors.toList());
-            if (occupanciesOfSameUnit.size()>=1){
-                occupanciesToExamine.addAll(occupanciesOfSameUnit);
-            }
-            if (occupanciesOfSameUnit.isEmpty() && occupanciesOfDifferentUnit.size()==1){
-                occupanciesToExamine.addAll(occupanciesOfDifferentUnit);
-            }
-            if (occupanciesOfSameUnit.isEmpty() && occupanciesOfDifferentUnit.size()>1){
-                LOG.warn(String.format("No occupancy found for lease %s with unit %s and multiple occupancies found for other unit - HOW TO HANDLE?", l.getReference(), unit.getReference()));
+            if (noOverlapOccupanciesOnLease(l)) {
+                occupanciesToExamine.addAll(l.getOccupancies());
+            } else {
+                if (occupanciesOfSameUnit.size()>=1){
+                    occupanciesToExamine.addAll(occupanciesOfSameUnit);
+                }
+                if (occupanciesOfSameUnit.isEmpty() && occupanciesOfDifferentUnit.size() == 1) {
+                    occupanciesToExamine.addAll(occupanciesOfDifferentUnit);
+                }
+                // TODO: hopefully not too many cases ...
+                if (occupanciesOfSameUnit.isEmpty() && occupanciesOfDifferentUnit.size() > 1) {
+                    LOG.warn(String.format(
+                            "No occupancy found for lease %s with unit %s and multiple occupancies found for other unit - HOW TO HANDLE?",
+                            l.getReference(), unit.getReference()));
+                }
             }
         });
         return occupanciesToExamine;
+    }
+
+    boolean noOverlapOccupanciesOnLease(final Lease l){
+        return !l.hasOverlappingOccupancies();
     }
 
     List<Lease> leasesToExamine(final Lease lease) {
@@ -350,6 +362,17 @@ public class TurnoverAggregationService {
         if (lease.getEffectiveInterval().contains(aggregationDate.plusDays(1))) return false;
         if (lease.getNext()!=null) return false;
         return true;
+    }
+
+    public List<Turnover> turnoversToAggregateForOccupancy(final Occupancy occupancy){
+        final Lease lease = occupancy.getLease();
+        final Unit unit = occupancy.getUnit();
+        final List<Lease> leasesToExamine = leasesToExamine(lease);
+        final List<Occupancy> occupanciesToExamine = occupanciesToExamine(unit, leasesToExamine);
+        // TODO implement
+
+
+        return Collections.EMPTY_LIST;
     }
 
     @Inject TurnoverRepository turnoverRepository;

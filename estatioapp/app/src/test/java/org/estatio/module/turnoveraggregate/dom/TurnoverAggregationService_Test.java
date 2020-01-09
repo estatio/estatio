@@ -316,13 +316,14 @@ public class TurnoverAggregationService_Test {
         TurnoverAggregationService service = new TurnoverAggregationService();
         Unit sameUnit = new Unit();
         Unit otherUnit = new Unit();
+        otherUnit.setName("other");
 
         // when
         leases = new ArrayList<>();
         // then
         Assertions.assertThat(service.occupanciesToExamine(sameUnit, leases)).hasSize(0);
 
-        // when
+        // when overlap, 2 on same unit, 1 on other unit
         Lease l1 = new Lease();
         Occupancy occOnSameUnit1 = new Occupancy();
         occOnSameUnit1.setUnit(sameUnit);
@@ -332,16 +333,31 @@ public class TurnoverAggregationService_Test {
         Occupancy occOnOtherUnit1 = new Occupancy();
         occOnOtherUnit1.setUnit(otherUnit);
         l1.getOccupancies().addAll(Arrays.asList(occOnSameUnit1, occOnSameUnit2, occOnOtherUnit1));
+        Assertions.assertThat(l1.getOccupancies()).hasSize(3);
+        Assertions.assertThat(service.noOverlapOccupanciesOnLease(l1)).isFalse();
         leases = Arrays.asList(l1);
         // then
         Assertions.assertThat(service.occupanciesToExamine(sameUnit, leases)).hasSize(2);
         Assertions.assertThat(service.occupanciesToExamine(sameUnit, leases)).doesNotContain(occOnOtherUnit1);
+
+        // when no overlap, 2 on same unit, 1 on other unit
+        occOnOtherUnit1.setEndDate(new LocalDate(2018,12, 1));
+        occOnSameUnit1.setStartDate(new LocalDate(2018, 12, 2));
+        occOnSameUnit1.setEndDate(new LocalDate(2018, 12, 31));
+        Assertions.assertThat(l1.getOccupancies()).hasSize(3);
+        Assertions.assertThat(service.noOverlapOccupanciesOnLease(l1)).isTrue();
+        leases = Arrays.asList(l1);
+        // then
+        Assertions.assertThat(service.occupanciesToExamine(sameUnit, leases)).hasSize(3);
+        Assertions.assertThat(service.occupanciesToExamine(sameUnit, leases)).contains(occOnOtherUnit1);
 
         // when no occupancies on same sameUnit and exactly one occupancy on other sameUnit
         Lease l2 = new Lease();
         Occupancy occOnOtherUnit2 = new Occupancy();
         occOnOtherUnit2.setUnit(otherUnit);
         l2.getOccupancies().add(occOnOtherUnit2);
+        Assertions.assertThat(l2.getOccupancies()).hasSize(1);
+        Assertions.assertThat(service.noOverlapOccupanciesOnLease(l2)).isTrue();
         leases = Arrays.asList(l2);
         // then
         Assertions.assertThat(service.occupanciesToExamine(sameUnit, leases)).hasSize(1);
@@ -349,10 +365,9 @@ public class TurnoverAggregationService_Test {
         // when multiple leases
         leases = Arrays.asList(l1, l2);
         // then
-        Assertions.assertThat(service.occupanciesToExamine(sameUnit, leases)).hasSize(3);
-        Assertions.assertThat(service.occupanciesToExamine(sameUnit, leases)).doesNotContain(occOnOtherUnit1);
+        Assertions.assertThat(service.occupanciesToExamine(sameUnit, leases)).hasSize(4);
 
-        // when no occupancies on same sameUnit and multiple occupancies on other sameUnit
+        // when no occupancies on same sameUnit and multiple occupancies on other sameUnit and overlap
         Lease l3 = new Lease();
         Occupancy occOnOtherUnit3 = new Occupancy();
         occOnOtherUnit3.setUnit(otherUnit);
@@ -360,10 +375,18 @@ public class TurnoverAggregationService_Test {
         occOnOtherUnit4.setUnit(otherUnit);
         occOnOtherUnit4.setStartDate(new LocalDate(2019,1,1)); // to differentiate in sorted set
         l3.getOccupancies().addAll(Arrays.asList(occOnOtherUnit3, occOnOtherUnit4));
+        Assertions.assertThat(l3.getOccupancies()).hasSize(2);
+        Assertions.assertThat(service.noOverlapOccupanciesOnLease(l3)).isFalse();
         leases = Arrays.asList(l3);
         // then
-        Assertions.assertThat(leases.get(0).getOccupancies()).hasSize(2);
         Assertions.assertThat(service.occupanciesToExamine(sameUnit, leases)).hasSize(0);
+
+        // when no occupancies on same sameUnit and multiple occupancies on other sameUnit and no overlap
+        occOnOtherUnit3.setEndDate(new LocalDate(2018,12,31));
+        Assertions.assertThat(l3.getOccupancies()).hasSize(2);
+        Assertions.assertThat(service.noOverlapOccupanciesOnLease(l3)).isTrue();
+        // then
+        Assertions.assertThat(service.occupanciesToExamine(sameUnit, leases)).hasSize(2);
 
     }
 
