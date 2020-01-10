@@ -3,6 +3,7 @@ package org.estatio.module.turnoveraggregate.dom;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -14,7 +15,6 @@ import javax.inject.Inject;
 import com.google.api.client.util.Lists;
 
 import org.joda.time.LocalDate;
-import org.joda.time.Period;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,227 +43,235 @@ public class TurnoverAggregationService {
 
     public static Logger LOG = LoggerFactory.getLogger(TurnoverAggregationService.class);
 
+    // TODO: candidate for configuration property?
     public static LocalDate MIN_AGGREGATION_DATE = new LocalDate(2010, 1,1);
 
-    public TurnoverAggregateForPeriod aggregateForPeriod(final TurnoverAggregateForPeriod turnoverAggregateForPeriod, final Occupancy occupancy, final LocalDate aggregationDate, final Type type, final Frequency frequency){
-        if (type != Type.PRELIMINARY ) {
-            LOG.warn(String.format("No aggregate-for-period implementation for type %s found.",
-                    type));
-            return turnoverAggregateForPeriod;
-        }
+    /**
+     * This method returns a collection of reports on occupancy level intended for aggregation maintenance, calculation and userfeedback
+     * From the occupancy point of view it tries to find the toplevel parent lease and 'walk the graph' over all previous leases
+     *
+     * @param lease
+     * @param frequency
+     * @return
+     */
+    public List<AggregationReportForOccupancy> createAggregationReports(final Lease lease, final Frequency frequency){
+
         if (frequency != Frequency.MONTHLY) {
-            LOG.warn(String.format("No aggregate-for-period implementation for frequency %s found.",
+            LOG.warn(String.format("No create-aggregation-reports for frequency %s found.",
                     frequency));
-            return turnoverAggregateForPeriod;
+            return Collections.EMPTY_LIST;
         }
 
-        final List<Turnover> turnoversToAggregate = turnoversToAggregateForPeriod(occupancy, aggregationDate, turnoverAggregateForPeriod.getAggregationPeriod(), type, frequency, false);
-        final BigDecimal totalGross = turnoversToAggregate.stream()
-                .filter(t->t.getGrossAmount()!=null)
-                .map(t -> t.getGrossAmount())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        final BigDecimal totalNet = turnoversToAggregate.stream()
-                .filter(t->t.getNetAmount()!=null)
-                .map(t -> t.getNetAmount())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        List<AggregationReportForOccupancy> result = new ArrayList<>();
 
-        final List<Turnover> turnoversToAggregatePrevYear = turnoversToAggregateForPeriod(occupancy, aggregationDate, turnoverAggregateForPeriod.getAggregationPeriod(), type, frequency, true);
-        final BigDecimal totalGrossPY = turnoversToAggregatePrevYear.stream()
-                .filter(t->t.getGrossAmount()!=null)
-                .map(t -> t.getGrossAmount())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        final BigDecimal totalNetPY = turnoversToAggregatePrevYear.stream()
-                .filter(t->t.getNetAmount()!=null)
-                .map(t -> t.getNetAmount())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        final boolean nonComparableThisYear = containsNonComparableTurnover(turnoversToAggregate);
-        final boolean nonComparablePreviousYear = containsNonComparableTurnover(turnoversToAggregatePrevYear);
-        final int numberOfTurnoversThisYear = turnoversToAggregate.size();
-        final int numberOfTurnoversPreviousYear = turnoversToAggregatePrevYear.size();
-
-        turnoverAggregateForPeriod.setGrossAmount(totalGross);
-        turnoverAggregateForPeriod.setNetAmount(totalNet);
-        turnoverAggregateForPeriod.setTurnoverCount(numberOfTurnoversThisYear);
-        turnoverAggregateForPeriod.setGrossAmountPreviousYear(totalGrossPY);
-        turnoverAggregateForPeriod.setNetAmountPreviousYear(totalNetPY);
-        turnoverAggregateForPeriod.setTurnoverCountPreviousYear(numberOfTurnoversPreviousYear);
-        turnoverAggregateForPeriod.setNonComparableThisYear(nonComparableThisYear);
-        turnoverAggregateForPeriod.setNonComparablePreviousYear(nonComparablePreviousYear);
-        turnoverAggregateForPeriod.setComparable(isComparable(turnoverAggregateForPeriod.getAggregationPeriod(), numberOfTurnoversThisYear, numberOfTurnoversPreviousYear, nonComparableThisYear, nonComparablePreviousYear));
-
-        return turnoverAggregateForPeriod;
-    }
-
-    public TurnoverAggregateToDate aggregateToDate(final TurnoverAggregateToDate turnoverAggregateToDate, final Occupancy occupancy, final LocalDate aggregationDate, final Type type, final Frequency frequency){
-        if (type != Type.PRELIMINARY ) {
-            LOG.warn(String.format("No aggregate-to-aggregateToDate implementation for type %s found.",
-                    type));
-            return turnoverAggregateToDate;
-        }
-        if (frequency != Frequency.MONTHLY) {
-            LOG.warn(String.format("No aggregate-to-aggregateToDate implementation for frequency %s found.",
-                    frequency));
-            return turnoverAggregateToDate;
-        }
-        final LocalDate startOfTheYear = new LocalDate(aggregationDate.getYear(), 1, 1);
-
-        final List<Turnover> turnoversToAggregate = turnoversToAggregate(occupancy, aggregationDate,
-                startOfTheYear, aggregationDate, type, frequency);
-        final BigDecimal totalGross = turnoversToAggregate.stream()
-                .filter(t->t.getGrossAmount()!=null)
-                .map(t -> t.getGrossAmount())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        final BigDecimal totalNet = turnoversToAggregate.stream()
-                .filter(t->t.getNetAmount()!=null)
-                .map(t -> t.getNetAmount())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        final List<Turnover> turnoversToAggregatePrevYear = turnoversToAggregate(occupancy, aggregationDate,
-                startOfTheYear.minusYears(1), aggregationDate.minusYears(1), type, frequency);
-        final BigDecimal totalGrossPY = turnoversToAggregatePrevYear.stream()
-                .filter(t->t.getGrossAmount()!=null)
-                .map(t -> t.getGrossAmount())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        final BigDecimal totalNetPY = turnoversToAggregatePrevYear.stream()
-                .filter(t->t.getNetAmount()!=null)
-                .map(t -> t.getNetAmount())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        final boolean nonComparableThisYear = containsNonComparableTurnover(turnoversToAggregate);
-        final boolean nonComparablePreviousYear = containsNonComparableTurnover(turnoversToAggregatePrevYear);
-        final int numberOfTurnoversThisYear = turnoversToAggregate.size();
-        final int numberOfTurnoversPreviousYear = turnoversToAggregatePrevYear.size();
-
-        turnoverAggregateToDate.setGrossAmount(totalGross);
-        turnoverAggregateToDate.setNetAmount(totalNet);
-        turnoverAggregateToDate.setTurnoverCount(numberOfTurnoversThisYear);
-        turnoverAggregateToDate.setGrossAmountPreviousYear(totalGrossPY);
-        turnoverAggregateToDate.setNetAmountPreviousYear(totalNetPY);
-        turnoverAggregateToDate.setTurnoverCountPreviousYear(numberOfTurnoversPreviousYear);
-        turnoverAggregateToDate.setNonComparableThisYear(nonComparableThisYear);
-        turnoverAggregateToDate.setNonComparablePreviousYear(nonComparablePreviousYear);
-        turnoverAggregateToDate.setComparable(isComparableToDate(aggregationDate, numberOfTurnoversThisYear, numberOfTurnoversPreviousYear, nonComparableThisYear, nonComparablePreviousYear));
-
-        return turnoverAggregateToDate;
-    }
-
-    public PurchaseCountAggregateForPeriod aggregateForPurchaseCount(final PurchaseCountAggregateForPeriod purchaseCountAggregateForPeriod, final Occupancy occupancy, final LocalDate aggregationDate, final Type type, final Frequency frequency){
-        if (type != Type.PRELIMINARY ) {
-            LOG.warn(String.format("No purchase-count-aggregate-for-period implementation for type %s found.",
-                    type));
-            return purchaseCountAggregateForPeriod;
-        }
-        if (frequency != Frequency.MONTHLY) {
-            LOG.warn(String.format("No purchase-count-aggregate-for-period implementation for frequency %s found.",
-                    frequency));
-            return purchaseCountAggregateForPeriod;
+        // find top level lease
+        Lease l = lease;
+        while (l.getNext() != null){
+            l = (Lease) l.getNext();
         }
 
-        final List<Turnover> turnoversToAggregate = turnoversToAggregateForPeriod(occupancy, aggregationDate, purchaseCountAggregateForPeriod.getAggregationPeriod(), type, frequency, false);
-        final BigInteger count = turnoversToAggregate.stream()
-                .filter(t->t.getPurchaseCount()!=null)
-                .map(t -> t.getPurchaseCount())
-                .reduce(BigInteger.ZERO, BigInteger::add);
+        result.addAll(reportsForOccupancy(l, true));
 
-        final List<Turnover> turnoversToAggregatePrevYear = turnoversToAggregateForPeriod(occupancy, aggregationDate, purchaseCountAggregateForPeriod.getAggregationPeriod(), type, frequency, true);
-        final BigInteger countPY = turnoversToAggregatePrevYear.stream()
-                .filter(t->t.getPurchaseCount()!=null)
-                .map(t -> t.getPurchaseCount())
-                .reduce(BigInteger.ZERO, BigInteger::add);
-        final boolean nonComparableThisYear = containsNonComparableTurnover(turnoversToAggregate);
-        final boolean nonComparablePreviousYear = containsNonComparableTurnover(turnoversToAggregatePrevYear);
-        final int numberOfTurnoversThisYear = turnoversToAggregate.size();
-        final int numberOfTurnoversPreviousYear = turnoversToAggregatePrevYear.size();
-
-        purchaseCountAggregateForPeriod.setCount(count);
-        purchaseCountAggregateForPeriod.setCountPreviousYear(countPY);
-        purchaseCountAggregateForPeriod.setComparable(isComparable(purchaseCountAggregateForPeriod.getAggregationPeriod(), numberOfTurnoversThisYear, numberOfTurnoversPreviousYear, nonComparableThisYear, nonComparablePreviousYear));
-
-        return purchaseCountAggregateForPeriod;
-    }
-
-    public TurnoverAggregation aggregateOtherAggregationProperties(final TurnoverAggregation turnoverAggregation) {
-        if (turnoverAggregation.getType() != Type.PRELIMINARY ) {
-            LOG.warn(String.format("No aggregate-other-aggregation-properties implementation for type %s found.",
-                    turnoverAggregation.getType()));
-            return turnoverAggregation;
+        l = (Lease) l.getPrevious();
+        while (l!=null){
+            result.addAll(reportsForOccupancy(l, false));
+            l = (Lease) l.getPrevious();
         }
-        if (turnoverAggregation.getFrequency() != Frequency.MONTHLY) {
-            LOG.warn(String.format("No aggregate-other-aggregation-properties for frequency %s found.",
-                    turnoverAggregation.getFrequency()));
-            return turnoverAggregation;
-        }
-        final List<Turnover> turnoversToAggregateForMinusMonth1 = turnoversToAggregate(turnoverAggregation.getOccupancy(), turnoverAggregation.getDate(),
-                turnoverAggregation.getDate().minusMonths(1), turnoverAggregation.getDate().minusMonths(1), turnoverAggregation.getType(), turnoverAggregation.getFrequency());
-        final BigDecimal totalGrossMinM1 = turnoversToAggregateForMinusMonth1.stream()
-                .filter(t->t.getGrossAmount()!=null)
-                .map(t -> t.getGrossAmount())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        final BigDecimal totalNetMinM1 = turnoversToAggregateForMinusMonth1.stream()
-                .filter(t->t.getNetAmount()!=null)
-                .map(t -> t.getNetAmount())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        final List<Turnover> turnoversToAggregateForMinusMonth2 = turnoversToAggregate(turnoverAggregation.getOccupancy(), turnoverAggregation.getDate(),
-                turnoverAggregation.getDate().minusMonths(2), turnoverAggregation.getDate().minusMonths(2), turnoverAggregation.getType(), turnoverAggregation.getFrequency());
-        final BigDecimal totalGrossMinM2 = turnoversToAggregateForMinusMonth2.stream()
-                .filter(t->t.getGrossAmount()!=null)
-                .map(t -> t.getGrossAmount())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        final BigDecimal totalNetMinM2 = turnoversToAggregateForMinusMonth2.stream()
-                .filter(t->t.getNetAmount()!=null)
-                .map(t -> t.getNetAmount())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        final List<Turnover> turnoversToAggregateForComments = turnoversToAggregateForPeriod(turnoverAggregation.getOccupancy(), turnoverAggregation.getDate(), AggregationPeriod.P_12M, turnoverAggregation.getType(), turnoverAggregation.getFrequency(), false);
-        final String comments12M = turnoversToAggregateForComments.stream()
-                .filter(t->t.getComments()!=null && t.getComments()!="")
-                .sorted(Comparator.reverseOrder())
-                .map(t->t.getComments())
-                .reduce("", String::concat);
-        final List<Turnover> turnoversToAggregateForCommentsPY = turnoversToAggregateForPeriod(turnoverAggregation.getOccupancy(), turnoverAggregation.getDate(), AggregationPeriod.P_12M, turnoverAggregation.getType(), turnoverAggregation.getFrequency(), true);
-        final String comments12MPY = turnoversToAggregateForCommentsPY.stream()
-                .filter(t->t.getComments()!=null && t.getComments()!="")
-                .map(t->t.getComments())
-                .sorted(Comparator.reverseOrder())
-                .reduce("", String::concat);;
 
-        turnoverAggregation.setGrossAmount1MCY_1(totalGrossMinM1);
-        turnoverAggregation.setNetAmount1MCY_1(totalNetMinM1);
-        turnoverAggregation.setGrossAmount1MCY_2(totalGrossMinM2);
-        turnoverAggregation.setNetAmount1MCY_2(totalNetMinM2);
-        turnoverAggregation.setComments12MCY(comments12M);
-        turnoverAggregation.setComments12MPY(comments12MPY);
-
-        return turnoverAggregation;
-    }
-
-    List<Turnover> turnoversToAggregateForPeriod(final Occupancy occupancy, final LocalDate date, final AggregationPeriod aggregationPeriod, final Type type, final Frequency frequency, boolean prevYear){
-        final LocalDate periodEndDate = prevYear ? date.minusYears(1) : date;
-        final LocalDate periodStartDate = aggregationPeriod.periodStartDateFor(periodEndDate);
-        return turnoversToAggregate(occupancy, date, periodStartDate, periodEndDate, type, frequency);
-    }
-
-    List<Turnover> turnoversToAggregate(final Occupancy occupancy, final LocalDate date, final LocalDate periodStartDate, final LocalDate periodEndDate, final Type type, final Frequency frequency){
-        final Lease lease = occupancy.getLease();
-        final Unit unit = occupancy.getUnit();
-        final List<Lease> leasesToExamine = leasesToExamine(lease);
-        final List<Occupancy> occupanciesToExamine = occupanciesToExamine(unit, leasesToExamine);
-
-        List<Turnover> result = new ArrayList<>();
-        occupanciesToExamine.forEach(o->{
-            result.addAll(
-                    turnoverRepository.findApprovedByOccupancyAndTypeAndFrequencyAndPeriod(
-                            o,
-                            type,
-                            frequency,
-                            periodStartDate,
-                            periodEndDate)
-            );
-        });
         return result;
     }
 
+    List<AggregationReportForOccupancy> reportsForOccupancy(final Lease l, final boolean isToplevelLease) {
+        List<AggregationReportForOccupancy> result = new ArrayList<>();
+        for (Occupancy o : l.getOccupancies()){
 
+            AggregationReportForOccupancy report = new AggregationReportForOccupancy(o);
 
+            // find parallel occs
+            if (l.hasOverlappingOccupancies()){
+                List<Occupancy> parOccs = new ArrayList<>();
+                for (Occupancy oc : l.getOccupancies()){
+                    if ((!oc.equals(o)) && oc.getEffectiveInterval().overlaps(o.getEffectiveInterval())){
+                        report.getParallelOccupancies().add(oc);
+                        if (o.getUnit().equals(oc.getUnit())){
+                            report.getParallelOnSameUnit().add(oc);
+                        }
+                    }
+                }
+            }
+
+            // find previous
+            if (o.getStartDate()!=null && o.getStartDate().isAfter(l.getEffectiveInterval().startDate())){
+                final Optional<Occupancy> prev = Lists.newArrayList(l.getOccupancies()).stream()
+                        .filter(occ->!occ.equals(o))
+                        .filter(occ -> occ.getUnit().equals(o.getUnit()))
+                        .filter(occ->occ.getEndDate()!=null)
+                        .filter(occ -> occ.getEndDate().isBefore(o.getStartDate())).findFirst();
+                if (prev.isPresent()) report.setPreviousOnSameUnit(prev.get());
+            }
+            // find next
+            if (o.getEndDate()!=null){
+                final Optional<Occupancy> next = Lists.newArrayList(l.getOccupancies()).stream()
+                        .filter(occ->!occ.equals(o))
+                        .filter(occ -> occ.getUnit().equals(o.getUnit()))
+                        .filter(occ->occ.getStartDate()!=null)
+                        .filter(occ->occ.getStartDate().isAfter(o.getEndDate()))
+                        .findFirst();
+                if (next.isPresent()) report.setNextOnSameUnit(next.get());
+            }
+
+            // determine dates for aggregations
+            boolean isToplevelOccupancy = isToplevelLease && report.getNextOnSameUnit()==null;
+            report.getAggregationDates().addAll(aggregationDatesForOccupancy(o, isToplevelOccupancy));
+
+            result.add(report);
+
+        }
+
+        return result;
+    }
+
+    /**
+     * this method returns the dates that aggregations should be made which can be used in aggregation maintenance process
+     *
+     * @param occupancy
+     * @param toplevel
+     * @return
+     */
+    List<LocalDate> aggregationDatesForOccupancy(final Occupancy occupancy, final boolean toplevel){
+
+        LocalDate date = occupancy.getEffectiveInterval().startDate().withDayOfMonth(1);
+        if (date.isBefore(MIN_AGGREGATION_DATE)) date = MIN_AGGREGATION_DATE;
+
+        LocalDate endDate = toplevel ? occupancy.getEffectiveEndDate().withDayOfMonth(1).plusMonths(24) : occupancy.getEffectiveEndDate().withDayOfMonth(1);
+
+        List<LocalDate> result = new ArrayList<>();
+
+        while (!date.isAfter(endDate)){
+            result.add(date);
+            date = date.plusMonths(1);
+        }
+        return result;
+    }
+
+    public void aggregateTurnoversForLease(final Lease lease, final Type type, final Frequency frequency, final LocalDate aggregationDate){
+        for (Occupancy o : lease.getOccupancies()){
+            aggregateTurnoversForOccupancy(o, type, frequency, aggregationDate);
+        }
+    }
+
+    /**
+     * Aggregates turnovers on a property
+     *
+     * Note that: since the aggregation also takes other occupancies on the lease and previous/next leases into account, this method also affect the aggregation of other occupancies
+     *
+     * @param occupancy
+     * @param type
+     * @param frequency
+     * @param calculationDate Date in time from where the algorithm looks back (and forward) 24 months.
+     */
+    public void aggregateTurnoversForOccupancy(final Occupancy occupancy, final Type type, final Frequency frequency, final LocalDate calculationDate){
+        if (type != Type.PRELIMINARY ) {
+            LOG.warn(String.format("No aggregate-turnovers-for-occupancy implementation for type %s found.",
+                    type));
+            return;
+        }
+        if (frequency != Frequency.MONTHLY) {
+            LOG.warn(String.format("No aggregate-turnovers-for-occupancy for frequency %s found.",
+                    frequency));
+            return;
+        }
+
+        final TurnoverReportingConfig config = turnoverReportingConfigRepository
+                .findUnique(occupancy, type);
+        // for efficiency reasons
+        if (config == null) return;
+
+        LocalDate effectiveAggregationDate = calculationDate==null ? MIN_AGGREGATION_DATE : calculationDate; //TODO: this is meant to aggregate everything ... (Check)
+
+        final List<TurnoverValueObject> turnoverValueObjects = turnoversToAggregateForOccupancySortedAsc(occupancy, Type.PRELIMINARY,
+                Frequency.MONTHLY, effectiveAggregationDate);
+
+        // for efficiency reasons - currently we never look back more than 24 months
+        final  List<TurnoverValueObject> turnoverValueObjectsFiltered = turnoverValueObjects.stream().filter(t->!t.getDate().isBefore(effectiveAggregationDate.minusMonths(24))).collect(
+                Collectors.toList());
+
+        // guard and efficiency
+        if (turnoverValueObjectsFiltered.isEmpty()) return;
+
+        Currency currency = config.getCurrency();
+
+        final List<TurnoverAggregation> aggregationsToCalculate = findOrCreateAggregationsForMonthly(occupancy, turnoverValueObjectsFiltered, calculationDate, currency, type, frequency);
+
+        aggregationsToCalculate.forEach(a->a.calculate(turnoverValueObjectsFiltered));
+
+    }
+
+    /**
+     *
+     * @param occupancy
+     * @param type
+     * @param frequency
+     * @param aggregationDate
+     * @return
+     */
+    List<TurnoverValueObject> turnoversToAggregateForOccupancySortedAsc(final Occupancy occupancy, final Type type, final Frequency frequency, final LocalDate aggregationDate){
+        final Lease lease = occupancy.getLease();
+        final Unit unit = occupancy.getUnit();
+        final List<Lease> leasesToExamine = leasesToExamine(lease); // looks to the past only
+        final List<Occupancy> occupanciesToExamine = occupanciesToExamine(unit, leasesToExamine);
+        List<Turnover> turnovers = new ArrayList<>();
+        occupanciesToExamine.forEach(o->{
+            turnovers.addAll(
+                    turnoverRepository.findApprovedByOccupancyAndTypeAndFrequency(
+                            o,
+                            type,
+                            frequency)
+            );
+        });
+        final List<Turnover> turnoversSorted = turnovers.stream()
+                .filter(t->!t.getDate().isBefore(aggregationDate.minusMonths(24))) // efficiency reasons
+                .sorted(Comparator.comparing(t -> t.getDate()))
+                .collect(Collectors.toList());
+
+        List<TurnoverValueObject> result = new ArrayList<>();
+
+        TurnoverValueObject previous = null;
+        for (Turnover t : turnoversSorted){
+            TurnoverValueObject tov = new TurnoverValueObject(t);
+            if (previous!=null && previous.getDate().equals(tov.getDate())){
+                previous.add(tov);
+            } else {
+                result.add(tov);
+            }
+            previous = tov;
+        }
+
+        return result.stream().sorted().collect(Collectors.toList());
+    }
+
+    /**
+     * Currently looks to the past only TODO: may also look at parents ...?
+     * @param lease
+     * @return
+     */
+    List<Lease> leasesToExamine(final Lease lease) {
+        List<Lease> leases = new ArrayList<>();
+        Agreement previous = lease.getPrevious();
+        leases.add(lease);
+        while (previous!=null) {
+            leases.add((Lease) previous);
+            previous = previous.getPrevious();
+        }
+        return leases;
+    }
+
+    /**
+     *
+     * @param unit
+     * @param leasesToExamine
+     * @return
+     */
     List<Occupancy> occupanciesToExamine(final Unit unit, final List<Lease> leasesToExamine) {
         List<Occupancy> occupanciesToExamine = new ArrayList<>();
         leasesToExamine.forEach(l->{
@@ -295,17 +303,6 @@ public class TurnoverAggregationService {
 
     boolean noOverlapOccupanciesOnLease(final Lease l){
         return !l.hasOverlappingOccupancies();
-    }
-
-    List<Lease> leasesToExamine(final Lease lease) {
-        List<Lease> leases = new ArrayList<>();
-        Agreement previous = lease.getPrevious();
-        leases.add(lease);
-        while (previous!=null) {
-            leases.add((Lease) previous);
-            previous = previous.getPrevious();
-        }
-        return leases;
     }
 
     boolean containsNonComparableTurnover(final List<Turnover> turnoverList){
@@ -367,84 +364,6 @@ public class TurnoverAggregationService {
         if (lease.getEffectiveInterval().contains(aggregationDate.plusDays(1))) return false;
         if (lease.getNext()!=null) return false;
         return true;
-    }
-
-    public List<TurnoverValueObject> turnoversToAggregateForOccupancySortedAsc(final Occupancy occupancy, final Type type, final Frequency frequency, final LocalDate aggregationDate){
-        final Lease lease = occupancy.getLease();
-        final Unit unit = occupancy.getUnit();
-        final List<Lease> leasesToExamine = leasesToExamine(lease);
-        final List<Occupancy> occupanciesToExamine = occupanciesToExamine(unit, leasesToExamine);
-        List<Turnover> turnovers = new ArrayList<>();
-        occupanciesToExamine.forEach(o->{
-            turnovers.addAll(
-                    turnoverRepository.findApprovedByOccupancyAndTypeAndFrequency(
-                            o,
-                            type,
-                            frequency)
-            );
-        });
-        final List<Turnover> turnoversSorted = turnovers.stream()
-                .filter(t->!t.getDate().isBefore(aggregationDate.minusMonths(24))) // efficiency reasons
-                .sorted(Comparator.comparing(t -> t.getDate()))
-                .collect(Collectors.toList());
-
-        List<TurnoverValueObject> result = new ArrayList<>();
-
-        TurnoverValueObject previous = null;
-        for (Turnover t : turnoversSorted){
-            TurnoverValueObject tov = new TurnoverValueObject(t);
-            if (previous!=null && previous.getDate().equals(tov.getDate())){
-                previous.add(tov);
-            } else {
-                result.add(tov);
-            }
-            previous = tov;
-        }
-
-        return result.stream().sorted().collect(Collectors.toList());
-    }
-
-    public void aggregateTurnoversForLease(final Lease lease, final Type type, final Frequency frequency, final LocalDate aggregationDate){
-        for (Occupancy o : lease.getOccupancies()){
-            aggregateTurnoversForOccupancy(o, type, frequency, aggregationDate);
-        }
-    }
-
-    public void aggregateTurnoversForOccupancy(final Occupancy occupancy, final Type type, final Frequency frequency, final LocalDate aggregationDate){
-        if (type != Type.PRELIMINARY ) {
-            LOG.warn(String.format("No aggregate-turnovers-for-occupancy implementation for type %s found.",
-                    type));
-            return;
-        }
-        if (frequency != Frequency.MONTHLY) {
-            LOG.warn(String.format("No aggregate-turnovers-for-occupancy for frequency %s found.",
-                    frequency));
-            return;
-        }
-
-        final TurnoverReportingConfig config = turnoverReportingConfigRepository
-                .findUnique(occupancy, type);
-        // for efficiency reasons
-        if (config == null) return;
-
-        LocalDate effectiveAggregationDate = aggregationDate==null ? MIN_AGGREGATION_DATE : aggregationDate;
-
-        final List<TurnoverValueObject> turnoverValueObjects = turnoversToAggregateForOccupancySortedAsc(occupancy, Type.PRELIMINARY,
-                Frequency.MONTHLY, effectiveAggregationDate);
-
-        // for efficiency reasons - currently we never look back more than 24 months
-        final  List<TurnoverValueObject> turnoverValueObjectsFiltered = turnoverValueObjects.stream().filter(t->!t.getDate().isBefore(effectiveAggregationDate.minusMonths(24))).collect(
-                    Collectors.toList());
-
-        // guard and efficiency
-        if (turnoverValueObjectsFiltered.isEmpty()) return;
-
-        Currency currency = config.getCurrency();
-
-        final List<TurnoverAggregation> aggregationsToCalculate = findOrCreateAggregationsForMonthly(occupancy, turnoverValueObjectsFiltered, aggregationDate, currency, type, frequency);
-
-        aggregationsToCalculate.forEach(a->a.calculate(turnoverValueObjectsFiltered));
-
     }
 
     List<TurnoverAggregation> findOrCreateAggregationsForMonthly(final Occupancy occupancy, final List<TurnoverValueObject> turnoverValueObjects, final LocalDate aggregationDate, final Currency currency, final Type type, final Frequency frequency){
@@ -738,4 +657,224 @@ public class TurnoverAggregationService {
     @Inject TurnoverAggregationRepository turnoverAggregationRepository;
 
     @Inject ClockService clockService;
+
+
+    //////////////////// CANDIDATES FOR DEPRECATION \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+    public TurnoverAggregateForPeriod aggregateForPeriod(final TurnoverAggregateForPeriod turnoverAggregateForPeriod, final Occupancy occupancy, final LocalDate aggregationDate, final Type type, final Frequency frequency){
+        if (type != Type.PRELIMINARY ) {
+            LOG.warn(String.format("No aggregate-for-period implementation for type %s found.",
+                    type));
+            return turnoverAggregateForPeriod;
+        }
+        if (frequency != Frequency.MONTHLY) {
+            LOG.warn(String.format("No aggregate-for-period implementation for frequency %s found.",
+                    frequency));
+            return turnoverAggregateForPeriod;
+        }
+
+        final List<Turnover> turnoversToAggregate = turnoversToAggregateForPeriod(occupancy, aggregationDate, turnoverAggregateForPeriod.getAggregationPeriod(), type, frequency, false);
+        final BigDecimal totalGross = turnoversToAggregate.stream()
+                .filter(t->t.getGrossAmount()!=null)
+                .map(t -> t.getGrossAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        final BigDecimal totalNet = turnoversToAggregate.stream()
+                .filter(t->t.getNetAmount()!=null)
+                .map(t -> t.getNetAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        final List<Turnover> turnoversToAggregatePrevYear = turnoversToAggregateForPeriod(occupancy, aggregationDate, turnoverAggregateForPeriod.getAggregationPeriod(), type, frequency, true);
+        final BigDecimal totalGrossPY = turnoversToAggregatePrevYear.stream()
+                .filter(t->t.getGrossAmount()!=null)
+                .map(t -> t.getGrossAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        final BigDecimal totalNetPY = turnoversToAggregatePrevYear.stream()
+                .filter(t->t.getNetAmount()!=null)
+                .map(t -> t.getNetAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        final boolean nonComparableThisYear = containsNonComparableTurnover(turnoversToAggregate);
+        final boolean nonComparablePreviousYear = containsNonComparableTurnover(turnoversToAggregatePrevYear);
+        final int numberOfTurnoversThisYear = turnoversToAggregate.size();
+        final int numberOfTurnoversPreviousYear = turnoversToAggregatePrevYear.size();
+
+        turnoverAggregateForPeriod.setGrossAmount(totalGross);
+        turnoverAggregateForPeriod.setNetAmount(totalNet);
+        turnoverAggregateForPeriod.setTurnoverCount(numberOfTurnoversThisYear);
+        turnoverAggregateForPeriod.setGrossAmountPreviousYear(totalGrossPY);
+        turnoverAggregateForPeriod.setNetAmountPreviousYear(totalNetPY);
+        turnoverAggregateForPeriod.setTurnoverCountPreviousYear(numberOfTurnoversPreviousYear);
+        turnoverAggregateForPeriod.setNonComparableThisYear(nonComparableThisYear);
+        turnoverAggregateForPeriod.setNonComparablePreviousYear(nonComparablePreviousYear);
+        turnoverAggregateForPeriod.setComparable(isComparable(turnoverAggregateForPeriod.getAggregationPeriod(), numberOfTurnoversThisYear, numberOfTurnoversPreviousYear, nonComparableThisYear, nonComparablePreviousYear));
+
+        return turnoverAggregateForPeriod;
+    }
+
+    public TurnoverAggregateToDate aggregateToDate(final TurnoverAggregateToDate turnoverAggregateToDate, final Occupancy occupancy, final LocalDate aggregationDate, final Type type, final Frequency frequency){
+        if (type != Type.PRELIMINARY ) {
+            LOG.warn(String.format("No aggregate-to-aggregateToDate implementation for type %s found.",
+                    type));
+            return turnoverAggregateToDate;
+        }
+        if (frequency != Frequency.MONTHLY) {
+            LOG.warn(String.format("No aggregate-to-aggregateToDate implementation for frequency %s found.",
+                    frequency));
+            return turnoverAggregateToDate;
+        }
+        final LocalDate startOfTheYear = new LocalDate(aggregationDate.getYear(), 1, 1);
+
+        final List<Turnover> turnoversToAggregate = turnoversToAggregate(occupancy, aggregationDate,
+                startOfTheYear, aggregationDate, type, frequency);
+        final BigDecimal totalGross = turnoversToAggregate.stream()
+                .filter(t->t.getGrossAmount()!=null)
+                .map(t -> t.getGrossAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        final BigDecimal totalNet = turnoversToAggregate.stream()
+                .filter(t->t.getNetAmount()!=null)
+                .map(t -> t.getNetAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        final List<Turnover> turnoversToAggregatePrevYear = turnoversToAggregate(occupancy, aggregationDate,
+                startOfTheYear.minusYears(1), aggregationDate.minusYears(1), type, frequency);
+        final BigDecimal totalGrossPY = turnoversToAggregatePrevYear.stream()
+                .filter(t->t.getGrossAmount()!=null)
+                .map(t -> t.getGrossAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        final BigDecimal totalNetPY = turnoversToAggregatePrevYear.stream()
+                .filter(t->t.getNetAmount()!=null)
+                .map(t -> t.getNetAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        final boolean nonComparableThisYear = containsNonComparableTurnover(turnoversToAggregate);
+        final boolean nonComparablePreviousYear = containsNonComparableTurnover(turnoversToAggregatePrevYear);
+        final int numberOfTurnoversThisYear = turnoversToAggregate.size();
+        final int numberOfTurnoversPreviousYear = turnoversToAggregatePrevYear.size();
+
+        turnoverAggregateToDate.setGrossAmount(totalGross);
+        turnoverAggregateToDate.setNetAmount(totalNet);
+        turnoverAggregateToDate.setTurnoverCount(numberOfTurnoversThisYear);
+        turnoverAggregateToDate.setGrossAmountPreviousYear(totalGrossPY);
+        turnoverAggregateToDate.setNetAmountPreviousYear(totalNetPY);
+        turnoverAggregateToDate.setTurnoverCountPreviousYear(numberOfTurnoversPreviousYear);
+        turnoverAggregateToDate.setNonComparableThisYear(nonComparableThisYear);
+        turnoverAggregateToDate.setNonComparablePreviousYear(nonComparablePreviousYear);
+        turnoverAggregateToDate.setComparable(isComparableToDate(aggregationDate, numberOfTurnoversThisYear, numberOfTurnoversPreviousYear, nonComparableThisYear, nonComparablePreviousYear));
+
+        return turnoverAggregateToDate;
+    }
+
+    public PurchaseCountAggregateForPeriod aggregateForPurchaseCount(final PurchaseCountAggregateForPeriod purchaseCountAggregateForPeriod, final Occupancy occupancy, final LocalDate aggregationDate, final Type type, final Frequency frequency){
+        if (type != Type.PRELIMINARY ) {
+            LOG.warn(String.format("No purchase-count-aggregate-for-period implementation for type %s found.",
+                    type));
+            return purchaseCountAggregateForPeriod;
+        }
+        if (frequency != Frequency.MONTHLY) {
+            LOG.warn(String.format("No purchase-count-aggregate-for-period implementation for frequency %s found.",
+                    frequency));
+            return purchaseCountAggregateForPeriod;
+        }
+
+        final List<Turnover> turnoversToAggregate = turnoversToAggregateForPeriod(occupancy, aggregationDate, purchaseCountAggregateForPeriod.getAggregationPeriod(), type, frequency, false);
+        final BigInteger count = turnoversToAggregate.stream()
+                .filter(t->t.getPurchaseCount()!=null)
+                .map(t -> t.getPurchaseCount())
+                .reduce(BigInteger.ZERO, BigInteger::add);
+
+        final List<Turnover> turnoversToAggregatePrevYear = turnoversToAggregateForPeriod(occupancy, aggregationDate, purchaseCountAggregateForPeriod.getAggregationPeriod(), type, frequency, true);
+        final BigInteger countPY = turnoversToAggregatePrevYear.stream()
+                .filter(t->t.getPurchaseCount()!=null)
+                .map(t -> t.getPurchaseCount())
+                .reduce(BigInteger.ZERO, BigInteger::add);
+        final boolean nonComparableThisYear = containsNonComparableTurnover(turnoversToAggregate);
+        final boolean nonComparablePreviousYear = containsNonComparableTurnover(turnoversToAggregatePrevYear);
+        final int numberOfTurnoversThisYear = turnoversToAggregate.size();
+        final int numberOfTurnoversPreviousYear = turnoversToAggregatePrevYear.size();
+
+        purchaseCountAggregateForPeriod.setCount(count);
+        purchaseCountAggregateForPeriod.setCountPreviousYear(countPY);
+        purchaseCountAggregateForPeriod.setComparable(isComparable(purchaseCountAggregateForPeriod.getAggregationPeriod(), numberOfTurnoversThisYear, numberOfTurnoversPreviousYear, nonComparableThisYear, nonComparablePreviousYear));
+
+        return purchaseCountAggregateForPeriod;
+    }
+
+    public TurnoverAggregation aggregateOtherAggregationProperties(final TurnoverAggregation turnoverAggregation) {
+        if (turnoverAggregation.getType() != Type.PRELIMINARY ) {
+            LOG.warn(String.format("No aggregate-other-aggregation-properties implementation for type %s found.",
+                    turnoverAggregation.getType()));
+            return turnoverAggregation;
+        }
+        if (turnoverAggregation.getFrequency() != Frequency.MONTHLY) {
+            LOG.warn(String.format("No aggregate-other-aggregation-properties for frequency %s found.",
+                    turnoverAggregation.getFrequency()));
+            return turnoverAggregation;
+        }
+        final List<Turnover> turnoversToAggregateForMinusMonth1 = turnoversToAggregate(turnoverAggregation.getOccupancy(), turnoverAggregation.getDate(),
+                turnoverAggregation.getDate().minusMonths(1), turnoverAggregation.getDate().minusMonths(1), turnoverAggregation.getType(), turnoverAggregation.getFrequency());
+        final BigDecimal totalGrossMinM1 = turnoversToAggregateForMinusMonth1.stream()
+                .filter(t->t.getGrossAmount()!=null)
+                .map(t -> t.getGrossAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        final BigDecimal totalNetMinM1 = turnoversToAggregateForMinusMonth1.stream()
+                .filter(t->t.getNetAmount()!=null)
+                .map(t -> t.getNetAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        final List<Turnover> turnoversToAggregateForMinusMonth2 = turnoversToAggregate(turnoverAggregation.getOccupancy(), turnoverAggregation.getDate(),
+                turnoverAggregation.getDate().minusMonths(2), turnoverAggregation.getDate().minusMonths(2), turnoverAggregation.getType(), turnoverAggregation.getFrequency());
+        final BigDecimal totalGrossMinM2 = turnoversToAggregateForMinusMonth2.stream()
+                .filter(t->t.getGrossAmount()!=null)
+                .map(t -> t.getGrossAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        final BigDecimal totalNetMinM2 = turnoversToAggregateForMinusMonth2.stream()
+                .filter(t->t.getNetAmount()!=null)
+                .map(t -> t.getNetAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        final List<Turnover> turnoversToAggregateForComments = turnoversToAggregateForPeriod(turnoverAggregation.getOccupancy(), turnoverAggregation.getDate(), AggregationPeriod.P_12M, turnoverAggregation.getType(), turnoverAggregation.getFrequency(), false);
+        final String comments12M = turnoversToAggregateForComments.stream()
+                .filter(t->t.getComments()!=null && t.getComments()!="")
+                .sorted(Comparator.reverseOrder())
+                .map(t->t.getComments())
+                .reduce("", String::concat);
+        final List<Turnover> turnoversToAggregateForCommentsPY = turnoversToAggregateForPeriod(turnoverAggregation.getOccupancy(), turnoverAggregation.getDate(), AggregationPeriod.P_12M, turnoverAggregation.getType(), turnoverAggregation.getFrequency(), true);
+        final String comments12MPY = turnoversToAggregateForCommentsPY.stream()
+                .filter(t->t.getComments()!=null && t.getComments()!="")
+                .map(t->t.getComments())
+                .sorted(Comparator.reverseOrder())
+                .reduce("", String::concat);;
+
+        turnoverAggregation.setGrossAmount1MCY_1(totalGrossMinM1);
+        turnoverAggregation.setNetAmount1MCY_1(totalNetMinM1);
+        turnoverAggregation.setGrossAmount1MCY_2(totalGrossMinM2);
+        turnoverAggregation.setNetAmount1MCY_2(totalNetMinM2);
+        turnoverAggregation.setComments12MCY(comments12M);
+        turnoverAggregation.setComments12MPY(comments12MPY);
+
+        return turnoverAggregation;
+    }
+
+    List<Turnover> turnoversToAggregateForPeriod(final Occupancy occupancy, final LocalDate date, final AggregationPeriod aggregationPeriod, final Type type, final Frequency frequency, boolean prevYear){
+        final LocalDate periodEndDate = prevYear ? date.minusYears(1) : date;
+        final LocalDate periodStartDate = aggregationPeriod.periodStartDateFor(periodEndDate);
+        return turnoversToAggregate(occupancy, date, periodStartDate, periodEndDate, type, frequency);
+    }
+
+    List<Turnover> turnoversToAggregate(final Occupancy occupancy, final LocalDate date, final LocalDate periodStartDate, final LocalDate periodEndDate, final Type type, final Frequency frequency){
+        final Lease lease = occupancy.getLease();
+        final Unit unit = occupancy.getUnit();
+        final List<Lease> leasesToExamine = leasesToExamine(lease);
+        final List<Occupancy> occupanciesToExamine = occupanciesToExamine(unit, leasesToExamine);
+
+        List<Turnover> result = new ArrayList<>();
+        occupanciesToExamine.forEach(o->{
+            result.addAll(
+                    turnoverRepository.findApprovedByOccupancyAndTypeAndFrequencyAndPeriod(
+                            o,
+                            type,
+                            frequency,
+                            periodStartDate,
+                            periodEndDate)
+            );
+        });
+        return result;
+    }
 }
