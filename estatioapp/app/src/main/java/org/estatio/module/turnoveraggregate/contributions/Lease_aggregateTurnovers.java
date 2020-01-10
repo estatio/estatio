@@ -14,6 +14,7 @@ import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
 import org.estatio.module.turnover.dom.Type;
+import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationService;
 
 @Mixin
 public class Lease_aggregateTurnovers {
@@ -26,15 +27,10 @@ public class Lease_aggregateTurnovers {
 
     @Action()
     public Lease $$(final LocalDate aggregationDate) {
-        for (Occupancy o : lease.getOccupancies()) {
-            final Occupancy_aggregateTurnoversNew mixin = factoryService.mixin(Occupancy_aggregateTurnoversNew.class, o);
-            wrapperFactory.wrap(mixin).$$(aggregationDate);
-        }
+        turnoverAggregationService.aggregateTurnoversForLease(lease, Type.PRELIMINARY, Frequency.MONTHLY, aggregationDate);
         return lease;
     }
 
-    @Inject WrapperFactory wrapperFactory;
-
-    @Inject FactoryService factoryService;
+    @Inject TurnoverAggregationService turnoverAggregationService;
 
 }
