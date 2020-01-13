@@ -21,6 +21,8 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.turnover.dom.Frequency;
+import org.estatio.module.turnover.dom.Turnover;
+import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.Type;
 
 import lombok.Getter;
@@ -41,20 +43,16 @@ import lombok.Setter;
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.turnoveraggregate.dom.TurnoverAggregation "
-                        + "WHERE occupancy == :occupancy "
-                        + "&& date == :date "
-                        + "&& type == :type "
-                        + "&& frequency == :frequency "),
+                        + "WHERE turnoverReportingConfig == :turnoverReportingConfig "
+                        + "&& date == :date "),
         @Query(
                 name = "findByOccupancyAndTypeAndFrequencyOnOrBeforeDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.turnoveraggregate.dom.TurnoverAggregation "
-                        + "WHERE occupancy == :occupancy "
-                        + "&& type == :type "
-                        + "&& frequency == :frequency "
-                        + "&& date <= :date"),
+                        + "WHERE turnoverReportingConfig == :turnoverReportingConfig "
+                        + "&& type == :type "),
 })
-@Unique(name = "TurnoverAggregation_occupancy_date_type_frequency_UNQ", members = { "occupancy", "date", "type", "frequency" })
+@Unique(name = "TurnoverAggregation_turnoverReportingConfig_date_UNQ", members = { "turnoverReportingConfig", "date" })
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "org.estatio.module.turnoveraggregate.dom.TurnoverAggregation"
@@ -63,12 +61,11 @@ public class TurnoverAggregation {
 
     public TurnoverAggregation(){}
 
-    public TurnoverAggregation(final Occupancy occupancy, final LocalDate date, final Type type, final Frequency frequency, final Currency currency){
-        this.occupancy = occupancy;
+    public TurnoverAggregation(final TurnoverReportingConfig turnoverReportingConfig, final LocalDate date, final Currency currency){
+        this.turnoverReportingConfig = turnoverReportingConfig;
         this.date = date;
-        this.type = type;
-        this.frequency = frequency;
         this.currency = currency;
+        this.calculated = false;
     }
 
     /*
@@ -78,20 +75,12 @@ public class TurnoverAggregation {
     */
 
     @Getter @Setter
-    @Column(name = "occupancyId", allowsNull = "false")
-    private Occupancy occupancy;
+    @Column(name = "turnoverReportingConfigId", allowsNull = "false")
+    private TurnoverReportingConfig turnoverReportingConfig;
 
     @Getter @Setter
     @Column(allowsNull = "false")
     private LocalDate date;
-
-    @Getter @Setter
-    @Column(allowsNull = "false")
-    private Type type;
-
-    @Getter @Setter
-    @Column(allowsNull = "false")
-    private Frequency frequency;
 
     @Getter @Setter
     @Column(name = "currencyId", allowsNull = "false")
@@ -285,26 +274,13 @@ public class TurnoverAggregation {
     @Column(name = "purchaseCountAggregate12MonthId", allowsNull = "false")
     private PurchaseCountAggregateForPeriod purchaseCountAggregate12Month;
 
-    @Programmatic
-    public TurnoverAggregation aggregate(){
-        getAggregate1Month().aggregate(this);
-        getAggregate2Month().aggregate(this);
-        getAggregate3Month().aggregate(this);
-        getAggregate6Month().aggregate(this);
-        getAggregate9Month().aggregate(this);
-        getAggregate12Month().aggregate(this);
-        getAggregateToDate().aggregate(this);
-        getPurchaseCountAggregate1Month().aggregate(this);
-        getPurchaseCountAggregate3Month().aggregate(this);
-        getPurchaseCountAggregate6Month().aggregate(this);
-        getPurchaseCountAggregate12Month().aggregate(this);
-        turnoverAggregationService.aggregateOtherAggregationProperties(this);
-        return this;
-    }
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    private boolean calculated;
 
     @Programmatic
-    public TurnoverAggregation calculate(final List<TurnoverValueObject> turnoverValueObjects){
-        turnoverAggregationService.calculateTurnoverAggregation(this, turnoverValueObjects);
+    public TurnoverAggregation calculate(final List<Turnover> turnovers){
+        turnoverAggregationService.calculateTurnoverAggregation(this, turnovers);
         return this;
     }
 

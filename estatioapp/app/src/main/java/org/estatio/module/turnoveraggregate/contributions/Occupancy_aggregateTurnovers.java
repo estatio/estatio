@@ -30,12 +30,12 @@ public class Occupancy_aggregateTurnovers {
     }
 
     @Action()
-    public Occupancy $$() {
+    public Occupancy $$(final LocalDate calculationDate) {
         turnoverReportingConfigRepository.findByOccupancyAndTypeAndFrequency(occupancy, Type.PRELIMINARY, Frequency.MONTHLY).forEach(
                 trc-> {
                     final TurnoverReportingConfig_aggregateTurnovers mixin = factoryService
                             .mixin(TurnoverReportingConfig_aggregateTurnovers.class, trc);
-                    wrapperFactory.wrap(mixin).$$();
+                    wrapperFactory.wrap(mixin).$$(calculationDate);
                 }
         );
         return occupancy;

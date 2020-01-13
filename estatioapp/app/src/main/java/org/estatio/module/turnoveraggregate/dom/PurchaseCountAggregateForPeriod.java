@@ -13,6 +13,8 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.estatio.module.turnover.dom.Turnover;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -55,13 +57,8 @@ public class PurchaseCountAggregateForPeriod {
     private boolean comparable;
 
     @Programmatic
-    public void aggregate(final TurnoverAggregation aggregation){
-        turnoverAggregationService.aggregateForPurchaseCount(this, aggregation.getOccupancy(), aggregation.getDate(), aggregation.getType(), aggregation.getFrequency());
-    }
-
-    @Programmatic
-    public void calculate(final TurnoverAggregation aggregation, final List<TurnoverValueObject> turnoverValueObjects) {
-        turnoverAggregationService.calculatePurchaseCountAggregateForPeriod(this, aggregation.getDate(), turnoverValueObjects);
+    public void calculate(final TurnoverAggregation aggregation, final List<Turnover> turnovers) {
+        turnoverAggregationService.calculatePurchaseCountAggregateForPeriod(this, aggregation.getDate(), turnovers);
     }
 
     @Inject TurnoverAggregationService turnoverAggregationService;

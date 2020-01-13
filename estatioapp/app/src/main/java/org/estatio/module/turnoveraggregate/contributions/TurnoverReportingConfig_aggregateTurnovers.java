@@ -25,8 +25,8 @@ public class TurnoverReportingConfig_aggregateTurnovers {
     }
 
     @Action()
-    public TurnoverReportingConfig $$() {
-        turnoverAggregationService.aggregateForConfig(turnoverReportingConfig);
+    public TurnoverReportingConfig $$(final LocalDate date) {
+        turnoverAggregationService.calculateForConfig(turnoverReportingConfig, date);
         return turnoverReportingConfig;
     }
 

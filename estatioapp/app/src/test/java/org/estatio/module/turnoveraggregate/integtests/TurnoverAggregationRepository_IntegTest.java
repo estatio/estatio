@@ -32,7 +32,9 @@ import org.estatio.module.currency.fixtures.enums.Currency_enum;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.turnover.dom.Frequency;
+import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.Type;
+import org.estatio.module.turnover.fixtures.data.TurnoverReportingConfig_enum;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregation;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationRepository;
 
@@ -46,7 +48,8 @@ public class TurnoverAggregationRepository_IntegTest extends TurnoverAggregateMo
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, Currency_enum.EUR.builder());
-                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
+//                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
+                executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfTopModel001GbPrelim.builder());
             }
         });
     }
@@ -56,26 +59,24 @@ public class TurnoverAggregationRepository_IntegTest extends TurnoverAggregateMo
 
         // given
         final Occupancy occupancy = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2).getOccupancies().first();
+        final TurnoverReportingConfig config = TurnoverReportingConfig_enum.OxfTopModel001GbPrelim
+                .findUsing(serviceRegistry2);
         final LocalDate date = new LocalDate(2019, 1, 1);
-        final Type type = Type.PRELIMINARY;
-        final Frequency frequency = Frequency.MONTHLY;
         final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
 
         // when
         TurnoverAggregation aggregation = turnoverAggregationRepository
-                .findOrCreate(occupancy, date, type, frequency, euro);
+                .findOrCreate(config, date, euro);
 
         // then
         assertThat(turnoverAggregationRepository.listAll()).hasSize(1);
-        assertThat(aggregation.getOccupancy()).isEqualTo(occupancy);
+        assertThat(aggregation.getTurnoverReportingConfig()).isEqualTo(config);
         assertThat(aggregation.getDate()).isEqualTo(date);
-        assertThat(aggregation.getType()).isEqualTo(type);
-        assertThat(aggregation.getFrequency()).isEqualTo(frequency);
         assertThat(aggregation.getCurrency()).isEqualTo(euro);
 
         // and when (again)
         TurnoverAggregation aggregation2 = turnoverAggregationRepository
-                .findOrCreate(occupancy, date, type, frequency, euro);
+                .findOrCreate(config, date, euro);
 
         // then still
         assertThat(turnoverAggregationRepository.listAll()).hasSize(1);
@@ -83,31 +84,11 @@ public class TurnoverAggregationRepository_IntegTest extends TurnoverAggregateMo
 
         // and when
         TurnoverAggregation aggregation3 = turnoverAggregationRepository
-                .findOrCreate(occupancy, date.plusMonths(1), type, frequency, euro);
+                .findOrCreate(config, date.plusMonths(1), euro);
 
         // then
         assertThat(turnoverAggregationRepository.listAll()).hasSize(2);
         assertThat(aggregation3).isNotEqualTo(aggregation);
-    }
-
-    @Test
-    public void findByOccupancyAndTypeAndFrequencyOnOrBeforeDate_works() throws Exception {
-
-        // given
-        final Occupancy occupancy = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2).getOccupancies().first();
-        final LocalDate date = new LocalDate(2019, 1, 1);
-        final Type type = Type.PRELIMINARY;
-        final Frequency frequency = Frequency.MONTHLY;
-        final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
-
-        // when
-        TurnoverAggregation aggregation = turnoverAggregationRepository
-                .create(occupancy, date, type, frequency, euro);
-
-        // then
-        assertThat(turnoverAggregationRepository.findByOccupancyAndTypeAndFrequencyOnOrBeforeDate(occupancy, Type.PRELIMINARY, Frequency.MONTHLY, date)).hasSize(1);
-        assertThat(turnoverAggregationRepository.findByOccupancyAndTypeAndFrequencyOnOrBeforeDate(occupancy, Type.PRELIMINARY, Frequency.MONTHLY, date)).contains(aggregation);
-        assertThat(turnoverAggregationRepository.findByOccupancyAndTypeAndFrequencyOnOrBeforeDate(occupancy, Type.PRELIMINARY, Frequency.MONTHLY, date.minusDays(1))).hasSize(0);
     }
 
     @Inject TurnoverAggregationRepository turnoverAggregationRepository;

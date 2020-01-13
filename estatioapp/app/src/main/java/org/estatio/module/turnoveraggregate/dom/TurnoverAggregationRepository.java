@@ -14,6 +14,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.turnover.dom.Frequency;
+import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.Type;
 
 @DomainService(
@@ -26,50 +27,31 @@ public class TurnoverAggregationRepository {
     }
 
     public TurnoverAggregation findUnique(
-            final Occupancy occupancy,
-            final LocalDate date,
-            final Type type,
-            final Frequency frequency
+            final TurnoverReportingConfig config,
+            final LocalDate date
     ) {
         return repositoryService.uniqueMatch(
                 new org.apache.isis.applib.query.QueryDefault<>(
                         TurnoverAggregation.class,
                         "findUnique",
-                        "occupancy", occupancy,
-                        "date", date,
-                        "type", type,
-                        "frequency", frequency));
+                        "turnoverReportingConfig", config,
+                        "date", date));
     }
 
     public TurnoverAggregation findOrCreate(
-            final Occupancy occupancy,
+            final TurnoverReportingConfig config,
             final LocalDate date,
-            final Type type,
-            final Frequency frequency,
             final Currency currency
     ) {
-        TurnoverAggregation turnoverAggregation = findUnique(occupancy, date, type, frequency);
+        TurnoverAggregation turnoverAggregation = findUnique(config, date);
         if (turnoverAggregation == null) {
-            turnoverAggregation = create(occupancy, date, type, frequency, currency);
+            turnoverAggregation = create(config, date, currency);
         }
         return turnoverAggregation;
     }
 
-    public List<TurnoverAggregation> findByOccupancyAndTypeAndFrequencyOnOrBeforeDate(final Occupancy occupancy, final Type type, final Frequency frequency, final LocalDate date) {
-        return repositoryService.allMatches(
-                new org.apache.isis.applib.query.QueryDefault<>(
-                        TurnoverAggregation.class,
-                        "findByOccupancyAndTypeAndFrequencyOnOrBeforeDate",
-                        "occupancy", occupancy,
-                        "type", type,
-                        "frequency", frequency,
-                        "date", date
-                ));
-    }
-
-    public TurnoverAggregation create(final Occupancy occupancy, final LocalDate date, final Type type, final Frequency frequency, final
-    Currency currency) {
-        final TurnoverAggregation turnoverAggregation = new TurnoverAggregation(occupancy, date, type, frequency, currency);
+    public TurnoverAggregation create(final TurnoverReportingConfig config, final LocalDate date, final Currency currency) {
+        final TurnoverAggregation turnoverAggregation = new TurnoverAggregation(config, date, currency);
         initialize(turnoverAggregation);
         serviceRegistry.injectServicesInto(turnoverAggregation);
         repositoryService.persistAndFlush(turnoverAggregation);

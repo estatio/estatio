@@ -141,6 +141,10 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
     @Column(name = "currencyId", allowsNull = "false")
     private Currency currency;
 
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private AggregationStrategy aggregationStrategy;
+
     @Action(semantics = SemanticsOf.SAFE)
     public LocalDate getEndDate(){
 
