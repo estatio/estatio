@@ -12,10 +12,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.currency.dom.Currency;
-import org.estatio.module.lease.dom.occupancy.Occupancy;
-import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
-import org.estatio.module.turnover.dom.Type;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -36,6 +33,15 @@ public class TurnoverAggregationRepository {
                         "findUnique",
                         "turnoverReportingConfig", config,
                         "date", date));
+    }
+
+    public List<TurnoverAggregation> findByTurnoverReportingConfig(final TurnoverReportingConfig config) {
+        return repositoryService.allMatches(
+                new org.apache.isis.applib.query.QueryDefault<>(
+                        TurnoverAggregation.class,
+                        "findByTurnoverReportingConfig",
+                        "turnoverReportingConfig", config)
+        );
     }
 
     public TurnoverAggregation findOrCreate(

@@ -17,6 +17,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -46,11 +47,10 @@ import lombok.Setter;
                         + "WHERE turnoverReportingConfig == :turnoverReportingConfig "
                         + "&& date == :date "),
         @Query(
-                name = "findByOccupancyAndTypeAndFrequencyOnOrBeforeDate", language = "JDOQL",
+                name = "findByTurnoverReportingConfig", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.turnoveraggregate.dom.TurnoverAggregation "
-                        + "WHERE turnoverReportingConfig == :turnoverReportingConfig "
-                        + "&& type == :type "),
+                        + "WHERE turnoverReportingConfig == :turnoverReportingConfig "),
 })
 @Unique(name = "TurnoverAggregation_turnoverReportingConfig_date_UNQ", members = { "turnoverReportingConfig", "date" })
 @DomainObject(
@@ -284,7 +284,26 @@ public class TurnoverAggregation {
         return this;
     }
 
+    @Programmatic
+    public void remove() {
+        // clean up
+        if (getAggregate1Month()!=null) getAggregate1Month().remove();
+        if (getAggregate2Month()!=null) getAggregate2Month().remove();
+        if (getAggregate3Month()!=null) getAggregate3Month().remove();
+        if (getAggregate6Month()!=null) getAggregate6Month().remove();
+        if (getAggregate9Month()!=null) getAggregate9Month().remove();
+        if (getAggregate12Month()!=null) getAggregate12Month().remove();
+        if (getAggregateToDate()!=null) getAggregateToDate().remove();
+        if (getPurchaseCountAggregate1Month()!=null) getPurchaseCountAggregate1Month().remove();
+        if (getPurchaseCountAggregate3Month()!=null) getPurchaseCountAggregate3Month().remove();
+        if (getPurchaseCountAggregate6Month()!=null) getPurchaseCountAggregate6Month().remove();
+        if (getPurchaseCountAggregate12Month()!=null) getPurchaseCountAggregate12Month().remove();
+        // remove
+        repositoryService.removeAndFlush(this);
+    }
+
     @Inject
     TurnoverAggregationService turnoverAggregationService;
 
+    @Inject RepositoryService repositoryService;
 }

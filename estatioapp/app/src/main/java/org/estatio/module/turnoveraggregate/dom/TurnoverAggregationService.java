@@ -57,18 +57,74 @@ public class TurnoverAggregationService {
 
             // create / delete aggregations
             maintainTurnoverAggregationsForConfig(r);
-
         });
 
     }
 
     public AggregationStrategy determineApplicationStrategyForConfig(final List<AggregationReportForConfig> reports, final TurnoverReportingConfig turnoverReportingConfig){
-        // TODO: implement
-        return null;
+
+        final AggregationReportForConfig reportForConfig = reports.stream()
+                .filter(r -> r.getTurnoverReportingConfig().equals(turnoverReportingConfig)).findFirst().orElse(null);
+
+        if (reportForConfig==null){
+            // should not happen
+            return null;
+        }
+
+        final Lease previous = (Lease) reportForConfig.getTurnoverReportingConfig().getOccupancy().getLease().getPrevious();
+        final AggregationReportForConfig reportForPrevious = reports.stream()
+                .filter(r -> r.getTurnoverReportingConfig().getOccupancy().getLease().equals(previous))
+                .findFirst().orElse(null);
+        if (previous ==null || reportForPrevious ==null){
+            // no previous lease or no prev occs on prev lease
+            return AggregationStrategy.SIMPLE;
+        }
+
+        if (reportForConfig.getParallelOccupancies().isEmpty()){
+            // no multiple par occs on this lease
+
+            if (reportForPrevious.getParallelOccupancies().isEmpty()){
+                // no par occs on prev lease
+                return AggregationStrategy.SIMPLE;
+            } else {
+                // par occs on prev lease
+                return AggregationStrategy.PREVIOUS_MANY_OCCS_TO_ONE;
+            }
+
+        } else {
+            // multiple par occs on this lease
+            if (reportForPrevious.getParallelOccupancies().isEmpty()){
+                // no par occs on prev lease
+                return AggregationStrategy.PREVIOUS_ONE_OCC_TO_MANY;
+            } else {
+                // par occs on prev lease
+                return AggregationStrategy.PREVIOUS_MANY_OCCS_TO_MANY;
+            }
+
+        }
+
     }
 
     public void maintainTurnoverAggregationsForConfig(final AggregationReportForConfig report){
-        // TODO: implement
+
+        final TurnoverReportingConfig config = report.getTurnoverReportingConfig();
+        final List<TurnoverAggregation> aggregations = turnoverAggregationRepository
+                .findByTurnoverReportingConfig(config);
+        final List<LocalDate> currentAggDates = aggregations.stream().map(a -> a.getDate()).collect(Collectors.toList());
+
+        // create if needed
+        report.getAggregationDates().stream().forEach(d->{
+            if (!currentAggDates.contains(d)) {
+                turnoverAggregationRepository.findOrCreate(config, d, config.getCurrency());
+            }
+        });
+        // remove if needed
+        currentAggDates.stream().forEach(d->{
+            if (!report.getAggregationDates().contains(d)){
+                turnoverAggregationRepository.findUnique(config, d).remove();
+            }
+        });
+
     }
 
     /**
@@ -147,12 +203,12 @@ public class TurnoverAggregationService {
 
                         if ((!oc.equals(occupancy)) && oc.getEffectiveInterval().overlaps(
                                 occupancy.getEffectiveInterval())) {
-                            final TurnoverReportingConfig configIfAny = turnoverReportingConfigRepository
-                                    .findByOccupancyAndTypeAndFrequency(oc, type, frequency).get(0);
-                            if (configIfAny!=null) {
-                                report.getParallelOccupancies().add(configIfAny);
-                                if (configIfAny.getOccupancy().getUnit().equals(occupancy.getUnit())) {
-                                    report.getParallelOnSameUnit().add(configIfAny);
+                            final List<TurnoverReportingConfig> configs = turnoverReportingConfigRepository
+                                    .findByOccupancyAndTypeAndFrequency(oc, type, frequency);
+                            if (!configs.isEmpty()) {
+                                report.getParallelOccupancies().add(configs.get(0));
+                                if (configs.get(0).getOccupancy().getUnit().equals(occupancy.getUnit())) {
+                                    report.getParallelOnSameUnit().add(configs.get(0));
                                 }
                             }
                         }
@@ -168,9 +224,9 @@ public class TurnoverAggregationService {
                             .filter(occ -> occ.getEndDate() != null)
                             .filter(occ -> occ.getEndDate().isBefore(occupancy.getStartDate())).findFirst();
                     if (prev.isPresent()) {
-                        final TurnoverReportingConfig config1IfAny = turnoverReportingConfigRepository
-                                .findByOccupancyAndTypeAndFrequency(prev.get(), type, frequency).get(0);
-                        if (config1IfAny != null) report.setPreviousOnSameUnit(config1IfAny);
+                        final List<TurnoverReportingConfig> configs2 = turnoverReportingConfigRepository
+                                .findByOccupancyAndTypeAndFrequency(prev.get(), type, frequency);
+                        if (!configs2.isEmpty()) report.setPreviousOnSameUnit(configs2.get(0));
                     }
                 }
                 // find next
@@ -182,9 +238,9 @@ public class TurnoverAggregationService {
                             .filter(occ -> occ.getStartDate().isAfter(occupancy.getEndDate()))
                             .findFirst();
                     if (next.isPresent()){
-                        final TurnoverReportingConfig config1IfAny = turnoverReportingConfigRepository
-                                .findByOccupancyAndTypeAndFrequency(next.get(), type, frequency).get(0);
-                        if (config1IfAny != null) report.setNextOnSameUnit(config1IfAny);
+                        final List<TurnoverReportingConfig> configs3 = turnoverReportingConfigRepository
+                                .findByOccupancyAndTypeAndFrequency(next.get(), type, frequency);
+                        if (!configs3.isEmpty()) report.setNextOnSameUnit(configs3.get(0));
                     }
                 }
 
@@ -215,16 +271,18 @@ public class TurnoverAggregationService {
      */
     List<LocalDate> aggregationDatesForTurnoverReportingConfig(final TurnoverReportingConfig config, final boolean toplevel){
 
-        LocalDate date = config.getOccupancy().getEffectiveInterval().startDate().withDayOfMonth(1);
-        if (date.isBefore(MIN_AGGREGATION_DATE)) date = MIN_AGGREGATION_DATE;
+        LocalDate startDate = config.getOccupancy().getEffectiveInterval().startDate().withDayOfMonth(1);
+        if (startDate.isBefore(MIN_AGGREGATION_DATE)) startDate = MIN_AGGREGATION_DATE;
 
-        LocalDate endDate = toplevel ? config.getOccupancy().getEffectiveEndDate().withDayOfMonth(1).plusMonths(24) : config.getOccupancy().getEffectiveEndDate().withDayOfMonth(1);
+        LocalDate effectiveEndDateOcc = config.getOccupancy().getEffectiveEndDate();
+        if (effectiveEndDateOcc==null) effectiveEndDateOcc = clockService.now();
+        LocalDate endDate = toplevel ? effectiveEndDateOcc.withDayOfMonth(1).plusMonths(24) : effectiveEndDateOcc.withDayOfMonth(1);
 
         List<LocalDate> result = new ArrayList<>();
 
-        while (!date.isAfter(endDate)){
-            result.add(date);
-            date = date.plusMonths(1);
+        while (!startDate.isAfter(endDate)){
+            result.add(startDate);
+            startDate = startDate.plusMonths(1);
         }
         return result;
     }

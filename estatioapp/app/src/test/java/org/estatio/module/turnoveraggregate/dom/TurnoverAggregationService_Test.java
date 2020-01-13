@@ -20,8 +20,10 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.asset.dom.Unit;
+import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
+import org.estatio.module.turnover.dom.AggregationStrategy;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
@@ -308,6 +310,106 @@ public class TurnoverAggregationService_Test {
         final List<LocalDate> forTopLevel = service.aggregationDatesForTurnoverReportingConfig(config, true);
         assertThat(forTopLevel).hasSize(38);
         assertThat(forTopLevel.get(37)).isEqualTo(endDate.plusMonths(24));
+    }
+
+    @Test
+    public void determineApplicationStrategyForConfig_works() throws Exception {
+
+        // given
+        TurnoverAggregationService service = new TurnoverAggregationService();
+        TurnoverReportingConfig config = new TurnoverReportingConfig();
+        List<AggregationReportForConfig> reports = new ArrayList<>();
+
+        // when, then
+        assertThat(service.determineApplicationStrategyForConfig(reports , config)).isNull();
+
+        // and when
+        Occupancy occupancy = new Occupancy();
+        Lease lease = new Lease();
+        occupancy.setLease(lease);
+        config.setOccupancy(occupancy);
+        AggregationReportForConfig rep = new AggregationReportForConfig(config);
+        reports.add(rep);
+
+        // then no previous lease
+        assertThat(service.determineApplicationStrategyForConfig(reports , config)).isEqualTo(AggregationStrategy.SIMPLE);
+
+        // and when prev without
+        Lease prev = new Lease();
+        lease.setPrevious(prev);
+        // then still
+        assertThat(service.determineApplicationStrategyForConfig(reports , config)).isEqualTo(AggregationStrategy.SIMPLE);
+
+        // and when prev with one then still
+        TurnoverReportingConfig prevOcc1Cfg = new TurnoverReportingConfig();
+        Occupancy prevOcc1 = new Occupancy();
+        prevOcc1.setLease(prev);
+        prevOcc1Cfg.setOccupancy(prevOcc1);
+        AggregationReportForConfig repForPrev = new AggregationReportForConfig(prevOcc1Cfg);
+        reports.add(repForPrev);
+        // then
+        assertThat(service.determineApplicationStrategyForConfig(reports , config)).isEqualTo(AggregationStrategy.SIMPLE);
+
+        // and when prev with many then
+        repForPrev.getParallelOccupancies().add(new TurnoverReportingConfig());
+        // then
+        assertThat(service.determineApplicationStrategyForConfig(reports , config)).isEqualTo(AggregationStrategy.PREVIOUS_MANY_OCCS_TO_ONE);
+
+        // and when current has many and prev as well
+        rep.getParallelOccupancies().add(new TurnoverReportingConfig());
+        // then
+        assertThat(service.determineApplicationStrategyForConfig(reports , config)).isEqualTo(AggregationStrategy.PREVIOUS_MANY_OCCS_TO_MANY);
+
+        // and case current has many and prev has one
+        List<AggregationReportForConfig> reports2 = new ArrayList<>();
+        Lease prev2 = new Lease();
+        Occupancy occForPrev = new Occupancy();
+        occForPrev.setLease(prev2);
+        TurnoverReportingConfig configPrev2 = new TurnoverReportingConfig();
+        configPrev2.setOccupancy(occForPrev);
+        AggregationReportForConfig repForPrev2 = new AggregationReportForConfig(configPrev2);
+        lease.setPrevious(prev2);
+        reports2.add(rep);
+        reports2.add(repForPrev2);
+        // then
+        assertThat(service.determineApplicationStrategyForConfig(reports2 , config)).isEqualTo(AggregationStrategy.PREVIOUS_ONE_OCC_TO_MANY);
+
+    }
+
+    @Mock TurnoverAggregationRepository mockturnoverAggregationRepository;
+
+    @Mock TurnoverAggregation mockAggregation;
+
+    @Test
+    public void maintainTurnoverAggregationsForConfig_works() throws Exception {
+
+        // when
+        TurnoverAggregationService service = new TurnoverAggregationService();
+        service.turnoverAggregationRepository = mockturnoverAggregationRepository;
+        TurnoverReportingConfig config = new TurnoverReportingConfig();
+        AggregationReportForConfig report = new AggregationReportForConfig(config);
+        final LocalDate removalDate = new LocalDate(2010, 1, 1);
+        final LocalDate additionDate = new LocalDate(2020, 1, 1);
+        final Currency currency = new Currency();
+        config.setCurrency(currency);
+
+        TurnoverAggregation aggregationToBeRemoved = new TurnoverAggregation();
+        aggregationToBeRemoved.setDate(removalDate);
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockturnoverAggregationRepository).findByTurnoverReportingConfig(config);
+            will(returnValue(Arrays.asList(aggregationToBeRemoved)));
+            oneOf(mockturnoverAggregationRepository).findOrCreate(config, additionDate, currency);
+            oneOf(mockturnoverAggregationRepository).findUnique(config, removalDate);
+            will(returnValue(mockAggregation));
+            oneOf(mockAggregation).remove();
+        }});
+
+        // when
+        report.getAggregationDates().add(additionDate);
+        service.maintainTurnoverAggregationsForConfig(report);
+
     }
 
     @Rule

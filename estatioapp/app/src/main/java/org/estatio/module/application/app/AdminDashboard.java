@@ -60,6 +60,7 @@ import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.settings.dom.ApplicationSettingForEstatio;
 import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
 import org.estatio.module.turnoveraggregate.contributions.Lease_aggregateTurnovers;
+import org.estatio.module.turnoveraggregate.contributions.Lease_maintainTurnoverAggregations;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -506,6 +507,14 @@ public class AdminDashboard implements ViewModel {
         leaseRepository.allLeases().forEach(l->{
             final Lease_aggregateTurnovers mixin = factoryService.mixin(Lease_aggregateTurnovers.class, l);
             wrapperFactory.wrap(mixin).$$(aggregationDate);
+        });
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void maintainAllTurnovers(){
+        leaseRepository.allLeases().forEach(l->{
+            final Lease_maintainTurnoverAggregations mixin = factoryService.mixin(Lease_maintainTurnoverAggregations.class, l);
+            wrapperFactory.wrap(mixin).$$();
         });
     }
 

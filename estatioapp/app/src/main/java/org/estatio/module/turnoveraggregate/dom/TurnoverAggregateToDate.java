@@ -12,6 +12,7 @@ import javax.jdo.annotations.VersionStrategy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
@@ -77,6 +78,13 @@ public class TurnoverAggregateToDate {
         turnoverAggregationService.calculateTurnoverAggregateToDate(this, aggregation.getDate(), turnovers);
     }
 
+    @Programmatic
+    public void remove() {
+        repositoryService.removeAndFlush(this);
+    }
+
     @Inject
     TurnoverAggregationService turnoverAggregationService;
+
+    @Inject RepositoryService repositoryService;
 }

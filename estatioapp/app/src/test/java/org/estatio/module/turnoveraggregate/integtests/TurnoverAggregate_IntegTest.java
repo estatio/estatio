@@ -45,16 +45,19 @@ import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.turnover.contributions.Occupancy_createTurnoverReportingConfig;
 import org.estatio.module.turnover.contributions.Occupancy_turnovers;
+import org.estatio.module.turnover.dom.AggregationStrategy;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
+import org.estatio.module.turnoveraggregate.contributions.Lease_maintainTurnoverAggregations;
 import org.estatio.module.turnoveraggregate.contributions.Occupancy_aggregateTurnovers;
 import org.estatio.module.turnoveraggregate.contributions.TurnoverReportingConfig_aggregateTurnovers;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregation;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationRepository;
+import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationService;
 import org.estatio.module.turnoveraggregate.fixtures.TurnoverImportXlsxFixtureForAggregated;
 import org.estatio.module.turnover.fixtures.data.TurnoverReportingConfig_enum;
 
@@ -173,6 +176,46 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
                 .map(Turnover::getDate).get();
         assertThat(minDateOcc5).isEqualTo(new LocalDate(2020, 5,1));
 
+    }
+
+    @Test
+    public void maintain_turnover_aggregations_works() throws Exception {
+
+        // given
+        setupScenario_and_validate_import();
+        assertThat(turnoverAggregationRepository.listAll()).isEmpty();
+
+        // when
+        mixin(Lease_maintainTurnoverAggregations.class, oxfTopModelLease1).$$();
+
+        // then
+        final List<TurnoverAggregation> aggregations = turnoverAggregationRepository.listAll();
+        assertThat(aggregations).isNotEmpty();
+        assertThat(aggregations.get(0).getTurnoverReportingConfig()).isEqualTo(occ5Cfg);
+        assertThat(aggregations.get(0).getDate()).isEqualTo(occ5.getStartDate().withDayOfMonth(1));
+        assertThat(occ5Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.SIMPLE);
+        assertThat(aggregations.get(36).getTurnoverReportingConfig()).isEqualTo(occ5Cfg);
+        assertThat(aggregations.get(36).getDate()).isEqualTo(oxfTopModelLease3.tenancyEndDate.plusMonths(24).withDayOfMonth(1));
+        assertThat(aggregations.get(37).getTurnoverReportingConfig()).isEqualTo(occ4Cfg);
+        assertThat(aggregations.get(37).getDate()).isEqualTo(occ4Cfg.getStartDate().withDayOfMonth(1));
+        assertThat(aggregations.get(43).getTurnoverReportingConfig()).isEqualTo(occ4Cfg);
+        assertThat(aggregations.get(43).getDate()).isEqualTo(occ4.getEffectiveEndDate().withDayOfMonth(1));
+        assertThat(occ4Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.PREVIOUS_MANY_OCCS_TO_ONE);
+        assertThat(aggregations.get(44).getTurnoverReportingConfig()).isEqualTo(occ2Cfg);
+        assertThat(occ2Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.SIMPLE);
+        assertThat(aggregations.get(44).getDate()).isEqualTo(occ2.getStartDate().withDayOfMonth(1));
+        assertThat(aggregations.get(75).getTurnoverReportingConfig()).isEqualTo(occ2Cfg);
+        assertThat(aggregations.get(75).getDate()).isEqualTo(occ2.getEffectiveEndDate().withDayOfMonth(1));
+        assertThat(aggregations.get(76).getTurnoverReportingConfig()).isEqualTo(occ3Cfg);
+        assertThat(aggregations.get(76).getDate()).isEqualTo(occ3.getStartDate().withDayOfMonth(1));
+        assertThat(aggregations.get(76).getDate()).isEqualTo(new LocalDate(2017,4,1));
+        assertThat(occ3Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.SIMPLE);
+        assertThat(aggregations.get(107).getTurnoverReportingConfig()).isEqualTo(occ3Cfg);
+        assertThat(aggregations.get(107).getDate()).isEqualTo(occ3.getEffectiveEndDate().withDayOfMonth(1));
+        assertThat(aggregations.get(108).getTurnoverReportingConfig()).isEqualTo(occ1Cfg);
+        assertThat(occ1Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.SIMPLE);
+        assertThat(aggregations.get(108).getDate()).isEqualTo(occ1.getStartDate().withDayOfMonth(1));
+        assertThat(aggregations.get(220).getDate()).isEqualTo(occ1.getEffectiveEndDate().withDayOfMonth(1));
     }
 
     @Test

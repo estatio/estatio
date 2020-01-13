@@ -2,7 +2,7 @@ package org.estatio.module.turnover.dom;
 
 public enum AggregationStrategy {
     SIMPLE,
-    MULTIPLE_PREVIOUS_TO_ONE,
-    SINGLE_PREVIOUS_TO_MANY,
-    MULTIPLE_PREVIOUS_TO_MANY
+    PREVIOUS_MANY_OCCS_TO_ONE,
+    PREVIOUS_ONE_OCC_TO_MANY,
+    PREVIOUS_MANY_OCCS_TO_MANY
 }

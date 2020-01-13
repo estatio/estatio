@@ -48,7 +48,6 @@ public class TurnoverAggregationRepository_IntegTest extends TurnoverAggregateMo
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, Currency_enum.EUR.builder());
-//                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
                 executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfTopModel001GbPrelim.builder());
             }
         });
@@ -58,7 +57,6 @@ public class TurnoverAggregationRepository_IntegTest extends TurnoverAggregateMo
     public void find_or_create_works() throws Exception {
 
         // given
-        final Occupancy occupancy = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2).getOccupancies().first();
         final TurnoverReportingConfig config = TurnoverReportingConfig_enum.OxfTopModel001GbPrelim
                 .findUsing(serviceRegistry2);
         final LocalDate date = new LocalDate(2019, 1, 1);
@@ -89,6 +87,26 @@ public class TurnoverAggregationRepository_IntegTest extends TurnoverAggregateMo
         // then
         assertThat(turnoverAggregationRepository.listAll()).hasSize(2);
         assertThat(aggregation3).isNotEqualTo(aggregation);
+    }
+
+    @Test
+    public void findByTurnoverReportingConfig_works() throws Exception {
+
+        final TurnoverReportingConfig config = TurnoverReportingConfig_enum.OxfTopModel001GbPrelim
+                .findUsing(serviceRegistry2);
+        final LocalDate date = new LocalDate(2019, 1, 1);
+        final LocalDate date2 = new LocalDate(2019, 2, 1);
+        final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
+
+        // when
+        turnoverAggregationRepository
+                .findOrCreate(config, date, euro);
+        turnoverAggregationRepository
+                .findOrCreate(config, date2, euro);
+
+        // then
+        assertThat(turnoverAggregationRepository.findByTurnoverReportingConfig(config)).hasSize(2);
+
     }
 
     @Inject TurnoverAggregationRepository turnoverAggregationRepository;
