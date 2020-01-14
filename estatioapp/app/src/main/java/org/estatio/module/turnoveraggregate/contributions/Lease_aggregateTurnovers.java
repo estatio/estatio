@@ -6,13 +6,9 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.services.factory.FactoryService;
-import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.turnover.dom.Frequency;
-import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
 import org.estatio.module.turnover.dom.Type;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationService;
 
@@ -26,8 +22,8 @@ public class Lease_aggregateTurnovers {
     }
 
     @Action()
-    public Lease $$(final LocalDate aggregationDate) {
-        turnoverAggregationService.aggregateTurnoversForLease(lease, Type.PRELIMINARY, Frequency.MONTHLY, aggregationDate);
+    public Lease $$(final LocalDate aggregationDate, final boolean maintainOnly) {
+        turnoverAggregationService.aggregateTurnoversForLease(lease, Type.PRELIMINARY, Frequency.MONTHLY, aggregationDate, maintainOnly);
         return lease;
     }
 

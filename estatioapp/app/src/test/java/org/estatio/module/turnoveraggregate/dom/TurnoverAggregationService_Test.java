@@ -20,6 +20,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.asset.dom.Unit;
+import org.estatio.module.capex.app.orderinvoice.LinkedOrderItemViewModel;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -451,14 +452,14 @@ public class TurnoverAggregationService_Test {
         TurnoverAggregationService service = new TurnoverAggregationService();
 
         // when, then
-        assertThat(service.isComparable(AggregationPeriod.P_2M, 2, 2, false, false)).isTrue();
-        assertThat(service.isComparable(AggregationPeriod.P_2M, 3, 2, false, false)).isTrue();
-        assertThat(service.isComparable(AggregationPeriod.P_2M, 1, 2, false, false)).isFalse();
-        assertThat(service.isComparable(AggregationPeriod.P_2M, 2, 1, false, false)).isFalse();
-        assertThat(service.isComparable(AggregationPeriod.P_2M, 2, 2, true, false)).isFalse();
-        assertThat(service.isComparable(AggregationPeriod.P_2M, 2, 2, false, true)).isFalse();
+        assertThat(service.isComparableForPeriod(AggregationPeriod.P_2M, 2, 2, false, false)).isTrue();
+        assertThat(service.isComparableForPeriod(AggregationPeriod.P_2M, 3, 2, false, false)).isTrue();
+        assertThat(service.isComparableForPeriod(AggregationPeriod.P_2M, 1, 2, false, false)).isFalse();
+        assertThat(service.isComparableForPeriod(AggregationPeriod.P_2M, 2, 1, false, false)).isFalse();
+        assertThat(service.isComparableForPeriod(AggregationPeriod.P_2M, 2, 2, true, false)).isFalse();
+        assertThat(service.isComparableForPeriod(AggregationPeriod.P_2M, 2, 2, false, true)).isFalse();
 
-        assertThat(service.isComparable(AggregationPeriod.P_2M, 0, 2, false, true)).isFalse();
+        assertThat(service.isComparableForPeriod(AggregationPeriod.P_2M, 0, 2, false, true)).isFalse();
     }
 
     @Test
@@ -493,109 +494,6 @@ public class TurnoverAggregationService_Test {
 
     }
 
-    @Test
-    public void leasesToExamine_works() throws Exception {
-        //given
-        TurnoverAggregationService service = new TurnoverAggregationService();
-
-        // when
-        Lease l1 = new Lease();
-        Lease l2 = new Lease();
-        Lease l3 = new Lease();
-        l2.setPrevious(l3);
-        l1.setPrevious(l2);
-
-        // then
-        assertThat(service.leasesToExamine(l3)).hasSize(1);
-        assertThat(service.leasesToExamine(l3)).contains(l3);
-        assertThat(service.leasesToExamine(l2)).hasSize(2);
-        assertThat(service.leasesToExamine(l3)).doesNotContain(l1);
-        assertThat(service.leasesToExamine(l1)).hasSize(3);
-    }
-
-    @Test
-    public void occupanciesToExamine_works() throws Exception {
-
-        List<Lease> leases;
-
-        //given
-        TurnoverAggregationService service = new TurnoverAggregationService();
-        Unit sameUnit = new Unit();
-        Unit otherUnit = new Unit();
-        otherUnit.setName("other");
-
-        // when
-        leases = new ArrayList<>();
-        // then
-        assertThat(service.occupanciesToExamine(sameUnit, leases)).hasSize(0);
-
-        // when overlap, 2 on same unit, 1 on other unit
-        Lease l1 = new Lease();
-        Occupancy occOnSameUnit1 = new Occupancy();
-        occOnSameUnit1.setUnit(sameUnit);
-        Occupancy occOnSameUnit2 = new Occupancy();
-        occOnSameUnit2.setUnit(sameUnit);
-        occOnSameUnit2.setStartDate(new LocalDate(2019,1,1)); // to differentiate in sorted set
-        Occupancy occOnOtherUnit1 = new Occupancy();
-        occOnOtherUnit1.setUnit(otherUnit);
-        l1.getOccupancies().addAll(Arrays.asList(occOnSameUnit1, occOnSameUnit2, occOnOtherUnit1));
-        assertThat(l1.getOccupancies()).hasSize(3);
-        assertThat(service.noOverlapOccupanciesOnLease(l1)).isFalse();
-        leases = Arrays.asList(l1);
-        // then
-        assertThat(service.occupanciesToExamine(sameUnit, leases)).hasSize(2);
-        assertThat(service.occupanciesToExamine(sameUnit, leases)).doesNotContain(occOnOtherUnit1);
-
-        // when no overlap, 2 on same unit, 1 on other unit
-        occOnOtherUnit1.setEndDate(new LocalDate(2018,12, 1));
-        occOnSameUnit1.setStartDate(new LocalDate(2018, 12, 2));
-        occOnSameUnit1.setEndDate(new LocalDate(2018, 12, 31));
-        assertThat(l1.getOccupancies()).hasSize(3);
-        assertThat(service.noOverlapOccupanciesOnLease(l1)).isTrue();
-        leases = Arrays.asList(l1);
-        // then
-        assertThat(service.occupanciesToExamine(sameUnit, leases)).hasSize(3);
-        assertThat(service.occupanciesToExamine(sameUnit, leases)).contains(occOnOtherUnit1);
-
-        // when no occupancies on same sameUnit and exactly one occupancy on other sameUnit
-        Lease l2 = new Lease();
-        Occupancy occOnOtherUnit2 = new Occupancy();
-        occOnOtherUnit2.setUnit(otherUnit);
-        l2.getOccupancies().add(occOnOtherUnit2);
-        assertThat(l2.getOccupancies()).hasSize(1);
-        assertThat(service.noOverlapOccupanciesOnLease(l2)).isTrue();
-        leases = Arrays.asList(l2);
-        // then
-        assertThat(service.occupanciesToExamine(sameUnit, leases)).hasSize(1);
-
-        // when multiple leases
-        leases = Arrays.asList(l1, l2);
-        // then
-        assertThat(service.occupanciesToExamine(sameUnit, leases)).hasSize(4);
-
-        // when no occupancies on same sameUnit and multiple occupancies on other sameUnit and overlap
-        Lease l3 = new Lease();
-        Occupancy occOnOtherUnit3 = new Occupancy();
-        occOnOtherUnit3.setUnit(otherUnit);
-        Occupancy occOnOtherUnit4 = new Occupancy();
-        occOnOtherUnit4.setUnit(otherUnit);
-        occOnOtherUnit4.setStartDate(new LocalDate(2019,1,1)); // to differentiate in sorted set
-        l3.getOccupancies().addAll(Arrays.asList(occOnOtherUnit3, occOnOtherUnit4));
-        assertThat(l3.getOccupancies()).hasSize(2);
-        assertThat(service.noOverlapOccupanciesOnLease(l3)).isFalse();
-        leases = Arrays.asList(l3);
-        // then
-        assertThat(service.occupanciesToExamine(sameUnit, leases)).hasSize(0);
-
-        // when no occupancies on same sameUnit and multiple occupancies on other sameUnit and no overlap
-        occOnOtherUnit3.setEndDate(new LocalDate(2018,12,31));
-        assertThat(l3.getOccupancies()).hasSize(2);
-        assertThat(service.noOverlapOccupanciesOnLease(l3)).isTrue();
-        // then
-        assertThat(service.occupanciesToExamine(sameUnit, leases)).hasSize(2);
-
-    }
-
     @Mock ClockService mockClockService;
 
     @Test
@@ -605,11 +503,12 @@ public class TurnoverAggregationService_Test {
         final LocalDate now = new LocalDate(2019, 2, 3);
         TurnoverAggregationService service = new TurnoverAggregationService();
         final LocalDate occEffectiveEndDate = new LocalDate(2019, 2, 3);
+        final LocalDate occStartDate = new LocalDate(2018,12,2);
 
         final TurnoverReportingConfig config = new TurnoverReportingConfig();
         final Occupancy occupancy = new Occupancy(){
-            @Override public LocalDate getEffectiveEndDate() {
-                return occEffectiveEndDate;
+            @Override public LocalDateInterval getEffectiveInterval() {
+                return LocalDateInterval.including(occStartDate, occEffectiveEndDate);
             }
         };
         final Lease lease = new Lease();
@@ -619,19 +518,17 @@ public class TurnoverAggregationService_Test {
 
         // when
         config.setFrequency(Frequency.MONTHLY);
-        config.setStartDate(new LocalDate(2018,12,2));
 
-        // then
-        List<LocalDate> dates = service.aggregationDatesForTurnoverReportingConfig(config, now);
+        // then when config is toplevel
+        List<LocalDate> dates = service.aggregationDatesForTurnoverReportingConfig(config, true);
         assertThat(dates).hasSize(27);
         assertThat(dates.get(0)).isEqualTo(new LocalDate(2018,12,1));
         assertThat(dates.get(1)).isEqualTo(new LocalDate(2019,1,1));
         assertThat(dates.get(2)).isEqualTo(new LocalDate(2019,2,1));
         assertThat(dates.get(26)).isEqualTo(new LocalDate(2021,2,1));
 
-        // and when lease is active
-        lease.setTenancyEndDate(null);
-        dates = service.aggregationDatesForTurnoverReportingConfig(config, now);
+        // and when config is not toplevel
+        dates = service.aggregationDatesForTurnoverReportingConfig(config, false);
         // then
         assertThat(dates).hasSize(3);
         assertThat(dates.get(0)).isEqualTo(new LocalDate(2018,12,1));
@@ -647,11 +544,12 @@ public class TurnoverAggregationService_Test {
         TurnoverAggregationService service = new TurnoverAggregationService();
         service.clockService = mockClockService;
         final LocalDate now = new LocalDate(2019, 2, 3);
+        final LocalDate occStartDate = new LocalDate(2018,12,2);
 
         final TurnoverReportingConfig config = new TurnoverReportingConfig();
         final Occupancy occupancy = new Occupancy(){
-            @Override public LocalDate getEffectiveEndDate() {
-                return null;
+            @Override public LocalDateInterval getEffectiveInterval() {
+                return LocalDateInterval.including(occStartDate, null);
             }
         };
         final Lease lease = new Lease();
@@ -667,176 +565,22 @@ public class TurnoverAggregationService_Test {
 
         // when lease is ended on aggregationDate
         config.setFrequency(Frequency.MONTHLY);
-        config.setStartDate(new LocalDate(2018,12,2));
 
         // then
-        List<LocalDate> dates = service.aggregationDatesForTurnoverReportingConfig(config, now);
+        List<LocalDate> dates = service.aggregationDatesForTurnoverReportingConfig(config, true);
         assertThat(dates).hasSize(27);
         assertThat(dates.get(0)).isEqualTo(new LocalDate(2018,12,1));
         assertThat(dates.get(1)).isEqualTo(new LocalDate(2019,1,1));
         assertThat(dates.get(2)).isEqualTo(new LocalDate(2019,2,1));
         assertThat(dates.get(26)).isEqualTo(new LocalDate(2021,2,1));
 
-        // and when lease is active
-        lease.setTenancyEndDate(null);
-        dates = service.aggregationDatesForTurnoverReportingConfig(config, now);
+        // and when
+        dates = service.aggregationDatesForTurnoverReportingConfig(config, false);
         // then
         assertThat(dates).hasSize(3);
         assertThat(dates.get(0)).isEqualTo(new LocalDate(2018,12,1));
         assertThat(dates.get(1)).isEqualTo(new LocalDate(2019,1,1));
         assertThat(dates.get(2)).isEqualTo(new LocalDate(2019,2,1));
-
-    }
-
-    @Test
-    @Ignore
-    public void turnoversToAggregateForOccupancySortedAsc_works() throws Exception {
-
-        // setup
-        Occupancy occupancy = new Occupancy();
-
-        TurnoverAggregationService service = new TurnoverAggregationService(){
-            @Override
-            List<Occupancy> occupanciesToExamine(
-                    final Unit unit, final List<Lease> leasesToExamine) {
-                return Arrays.asList(occupancy);
-            }
-
-            @Override List<Lease> leasesToExamine(final Lease lease) {
-                return Arrays.asList();
-            }
-        };
-        service.turnoverRepository = mockTurnoverRepo;
-
-        // given
-        Turnover t1 = new Turnover();
-        t1.setDate(new LocalDate(2020,3,1));
-        Turnover t2 = new Turnover();
-        t2.setDate(new LocalDate(2020, 2, 1));
-        t2.setComments("t2 comment");
-        Turnover t3 = new Turnover();
-        t3.setDate(new LocalDate(2020, 2, 1));
-        t3.setConfig(new TurnoverReportingConfig());
-        t3.setComments("t3 comment");
-        Turnover t4 = new Turnover();
-        t4.setDate(new LocalDate(2020, 1, 1));
-
-        List<Turnover> result = Arrays.asList(t4, t3, t1, t2);
-
-        // expect
-        context.checking(new Expectations(){{
-            allowing(mockTurnoverRepo).findApprovedByOccupancyAndTypeAndFrequency(occupancy, Type.PRELIMINARY, Frequency.MONTHLY);
-            will(returnValue(result));
-        }});
-
-        // when
-        LocalDate aggregationDate = new LocalDate(2021, 1, 1);
-        List<Turnover> turnoverValueObjects = service
-                .turnoversToAggregateForOccupancySortedAsc(occupancy, Type.PRELIMINARY, Frequency.MONTHLY, aggregationDate);
-        // then
-        assertThat(turnoverValueObjects.size()).isEqualTo(3);
-        Turnover tov1 = turnoverValueObjects.get(0);
-        Turnover tov2 = turnoverValueObjects.get(1);
-        Turnover tov3 = turnoverValueObjects.get(2);
-        assertThat(tov1.getDate()).isEqualTo(t4.getDate());
-        assertThat(tov2.getDate()).isEqualTo(t3.getDate());
-        assertThat(tov2.getDate()).isEqualTo(t2.getDate());
-        assertThat(tov3.getDate()).isEqualTo(t1.getDate());
-
-        assertThat(tov2.getComments()).isEqualTo("t3 comment | t2 comment");
-
-        // and when
-        aggregationDate = new LocalDate(2022, 3, 1);
-        turnoverValueObjects = service
-                .turnoversToAggregateForOccupancySortedAsc(occupancy, Type.PRELIMINARY, Frequency.MONTHLY, aggregationDate);
-        // then
-        assertThat(turnoverValueObjects.size()).isEqualTo(1);
-        assertThat(turnoverValueObjects.get(0).getDate()).isEqualTo(t1.getDate());
-
-        // and when
-        aggregationDate = new LocalDate(2022, 3, 2);
-        turnoverValueObjects = service
-                .turnoversToAggregateForOccupancySortedAsc(occupancy, Type.PRELIMINARY, Frequency.MONTHLY, aggregationDate);
-        // then
-        assertThat(turnoverValueObjects.size()).isEqualTo(0);
-    }
-
-    @Test
-    public void determineStartDate_works() throws Exception {
-
-        // given
-        TurnoverAggregationService service = new TurnoverAggregationService();
-
-        // when
-        LocalDate aggregationDate = null;
-        LocalDate minStartDateOnTurnovers = null;
-        // then
-        assertThat(service.determineStartDate(aggregationDate, minStartDateOnTurnovers)).isEqualTo(service.MIN_AGGREGATION_DATE);
-
-        // and when
-        minStartDateOnTurnovers = new LocalDate(2012, 1, 1);
-        assertThat(service.determineStartDate(aggregationDate, minStartDateOnTurnovers)).isEqualTo(service.MIN_AGGREGATION_DATE.minusMonths(24));
-
-        // and when
-        aggregationDate = new LocalDate(2013, 12, 31);
-        assertThat(service.determineStartDate(aggregationDate, minStartDateOnTurnovers)).isEqualTo(minStartDateOnTurnovers);
-
-        // and when
-        aggregationDate = new LocalDate(2014, 1, 1);
-        assertThat(service.determineStartDate(aggregationDate, minStartDateOnTurnovers)).isEqualTo(aggregationDate.minusMonths(24));
-        assertThat(service.determineStartDate(aggregationDate, minStartDateOnTurnovers)).isEqualTo(minStartDateOnTurnovers);
-
-        // and when
-        aggregationDate = new LocalDate(2014, 1, 2);
-        assertThat(service.determineStartDate(aggregationDate, minStartDateOnTurnovers)).isEqualTo(aggregationDate.minusMonths(24));
-
-    }
-
-    @Test
-    public void determineEndDate_works() throws Exception {
-
-        // given
-        TurnoverAggregationService service = new TurnoverAggregationService(){
-            @Override boolean isOccupancyForLastExpiredLease(
-                    final Occupancy occupancy,
-                    final LocalDate aggregationDate) {
-                return true;
-            }
-        };
-        LocalDate occEffectiveEndDate = new LocalDate(2010,1 ,1);
-        Occupancy occupancy = new Occupancy(){
-            @Override public LocalDate getEffectiveEndDate() {
-                return occEffectiveEndDate;
-            }
-        };
-
-        // when
-        LocalDate aggregationDate = new LocalDate(2010, 1, 1);
-        assertThat(service.determineEndDate(occupancy, aggregationDate)).isEqualTo(aggregationDate.plusMonths(24));
-
-        // and when
-        aggregationDate = new LocalDate(2010, 1, 2);
-        assertThat(service.determineEndDate(occupancy, aggregationDate)).isEqualTo(occEffectiveEndDate.plusMonths(24));
-
-    }
-
-    @Test
-    public void findOrCreateAggregationsForMonthly_works() throws Exception {
-
-        TurnoverAggregationService service = new TurnoverAggregationService();
-
-//        TODO: finish
-//        service.findOrCreateAggregationsForMonthly(occupancy, turnoverValueObjects, aggregationDate, currency, type, frequency);
-
-    }
-
-    @Test
-    public void aggregateTurnoversForOccupancy_works() throws Exception {
-
-        TurnoverAggregationService service = new TurnoverAggregationService();
-
-        //        TODO: finish
-//                service.aggregateTurnoversForOccupancy(occupancy, turnoverValueObjects, aggregationDate, currency, type, frequency);
 
     }
 
@@ -890,7 +634,6 @@ public class TurnoverAggregationService_Test {
     }
 
     @Test
-    @Ignore
     public void calculateTurnoverAggregateForPeriod_works() throws Exception {
 
         // given
@@ -905,20 +648,20 @@ public class TurnoverAggregationService_Test {
 
         // then
         assertAggregateForPeriod(afp, new BigDecimal("1"), new BigDecimal("0.50"),1,false,
-                BigDecimal.ZERO, BigDecimal.ZERO,0, false, false);
+                null, null,0, false, false);
 
         // and when only this year
         List<Turnover> objectsCurYear = prepareTestObjects(LocalDateInterval.including(aggregationDate.minusMonths(11), aggregationDate));
         service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, objectsCurYear);
         // then
         assertAggregateForPeriod(afp, new BigDecimal("23"), new BigDecimal("22.00"),2,false,
-                BigDecimal.ZERO, BigDecimal.ZERO,0, false, false);
+                null, null,0, false, false);
 
         // and when only last year
         List<Turnover> objectsPreviousYear = prepareTestObjects(LocalDateInterval.including(aggregationDate.minusYears(1).minusMonths(11), aggregationDate.minusYears(1)));
         service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, objectsPreviousYear);
         // then
-        assertAggregateForPeriod(afp,  BigDecimal.ZERO,  BigDecimal.ZERO,0,false,
+        assertAggregateForPeriod(afp,  null,  null,0,false,
                 new BigDecimal("23"),new BigDecimal("22.00"),2, false, false);
 
         // and when both this and last year
@@ -963,7 +706,6 @@ public class TurnoverAggregationService_Test {
     }
 
     @Test
-    @Ignore
     public void calculatePurchaseCountAggregateForPeriod_works() throws Exception {
 
         // given
@@ -977,19 +719,19 @@ public class TurnoverAggregationService_Test {
         service.calculatePurchaseCountAggregateForPeriod(pafp, aggregationDate, objects);
 
         // then
-        assertPurchaseCountAggregateForPeriod(pafp, new BigInteger("1"), BigInteger.ZERO, false);
+        assertPurchaseCountAggregateForPeriod(pafp, new BigInteger("1"), null, false);
 
         // and when only this year
         List<Turnover> objectsCurYear = prepareTestObjects(LocalDateInterval.including(aggregationDate.minusMonths(11), aggregationDate));
         service.calculatePurchaseCountAggregateForPeriod(pafp, aggregationDate, objectsCurYear);
         // then
-        assertPurchaseCountAggregateForPeriod(pafp, new BigInteger("23"), BigInteger.ZERO, false);
+        assertPurchaseCountAggregateForPeriod(pafp, new BigInteger("23"), null, false);
 
         // and when only last year
         List<Turnover> objectsPreviousYear = prepareTestObjects(LocalDateInterval.including(aggregationDate.minusYears(1).minusMonths(11), aggregationDate.minusYears(1)));
         service.calculatePurchaseCountAggregateForPeriod(pafp, aggregationDate, objectsPreviousYear);
         // then
-        assertPurchaseCountAggregateForPeriod(pafp, BigInteger.ZERO, new BigInteger("23"), false);
+        assertPurchaseCountAggregateForPeriod(pafp, null, new BigInteger("23"), false);
 
         // and when both this and last year
         List<Turnover> currentAndPrevYear = new ArrayList<>();
@@ -1019,7 +761,6 @@ public class TurnoverAggregationService_Test {
     }
 
     @Test
-    @Ignore
     public void calculateTurnoverAggregateToDate_works() throws Exception {
 
         // given
@@ -1033,7 +774,7 @@ public class TurnoverAggregationService_Test {
 
         // then
         assertAggregateToDate(tad, new BigDecimal("1"), new BigDecimal("0.50"),1,false,
-                BigDecimal.ZERO, BigDecimal.ZERO,0, false, false);
+                null, null,0, false, false);
 
         // and when 2 M only this year
         final LocalDate aggregationDate2M = new LocalDate(2020, 2, 1);
@@ -1041,13 +782,13 @@ public class TurnoverAggregationService_Test {
         service.calculateTurnoverAggregateToDate(tad, aggregationDate2M, objectsCurYear);
         // then
         assertAggregateToDate(tad, new BigDecimal("23"), new BigDecimal("22.00"),2,false,
-                BigDecimal.ZERO, BigDecimal.ZERO,0, false, false);
+                null, null,0, false, false);
 
         // and when 2 M only last year
         List<Turnover> objectsLastYear = prepareTestObjects(LocalDateInterval.including(aggregationDate2M.minusYears(1).minusMonths(11), aggregationDate2M.minusYears(1)));
         service.calculateTurnoverAggregateToDate(tad, aggregationDate2M, objectsLastYear);
         // then
-        assertAggregateToDate(tad,  BigDecimal.ZERO,  BigDecimal.ZERO, 0,false,
+        assertAggregateToDate(tad,  null,  null, 0,false,
                 new BigDecimal("23"), new BigDecimal("22.00"),2, false, false);
 
         // and when 2M both this and last year

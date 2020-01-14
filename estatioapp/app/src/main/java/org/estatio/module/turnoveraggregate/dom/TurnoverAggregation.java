@@ -20,11 +20,8 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.currency.dom.Currency;
-import org.estatio.module.lease.dom.occupancy.Occupancy;
-import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
-import org.estatio.module.turnover.dom.Type;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -65,7 +62,6 @@ public class TurnoverAggregation {
         this.turnoverReportingConfig = turnoverReportingConfig;
         this.date = date;
         this.currency = currency;
-        this.calculated = false;
     }
 
     /*
@@ -275,14 +271,8 @@ public class TurnoverAggregation {
     private PurchaseCountAggregateForPeriod purchaseCountAggregate12Month;
 
     @Getter @Setter
-    @Column(allowsNull = "false")
-    private boolean calculated;
-
-    @Programmatic
-    public TurnoverAggregation calculate(final List<Turnover> turnovers){
-        turnoverAggregationService.calculateTurnoverAggregation(this, turnovers);
-        return this;
-    }
+    @Column(allowsNull = "true")
+    private LocalDate calculatedOn;
 
     @Programmatic
     public void remove() {

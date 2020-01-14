@@ -2,8 +2,6 @@ package org.estatio.module.turnoveraggregate.contributions;
 
 import javax.inject.Inject;
 
-import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
 
@@ -23,7 +21,7 @@ public class Lease_maintainTurnoverAggregations {
 
     @Action()
     public Lease $$() {
-        turnoverAggregationService.maintainTurnoverAggregationsForLease(lease, Type.PRELIMINARY, Frequency.MONTHLY);
+        turnoverAggregationService.aggregateTurnoversForLease(lease, Type.PRELIMINARY, Frequency.MONTHLY, null, true);
         return lease;
     }
 

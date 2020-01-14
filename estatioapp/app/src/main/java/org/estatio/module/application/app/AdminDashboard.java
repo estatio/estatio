@@ -503,18 +503,10 @@ public class AdminDashboard implements ViewModel {
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public void aggregateAllTurnovers(final LocalDate aggregationDate){
+    public void aggregateAllTurnovers(final LocalDate aggregationDate, final boolean maintainOnly){
         leaseRepository.allLeases().forEach(l->{
             final Lease_aggregateTurnovers mixin = factoryService.mixin(Lease_aggregateTurnovers.class, l);
-            wrapperFactory.wrap(mixin).$$(aggregationDate);
-        });
-    }
-
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public void maintainAllTurnovers(){
-        leaseRepository.allLeases().forEach(l->{
-            final Lease_maintainTurnoverAggregations mixin = factoryService.mixin(Lease_maintainTurnoverAggregations.class, l);
-            wrapperFactory.wrap(mixin).$$();
+            wrapperFactory.wrap(mixin).$$(aggregationDate, maintainOnly);
         });
     }
 
