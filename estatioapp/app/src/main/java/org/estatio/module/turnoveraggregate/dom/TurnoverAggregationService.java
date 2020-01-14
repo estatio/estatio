@@ -133,12 +133,15 @@ public class TurnoverAggregationService {
     class ConfigReportTuple {
 
         private TurnoverReportingConfig config;
+
         private AggregationReportForConfig report;
     }
-
     public void calculateAggregation(final TurnoverAggregation aggregation, final List<Turnover> turnovers, final List<ConfigReportTuple> configReportTuples) {
 
-        if (!STRATEGIES_IMPLEMENTED.contains(aggregation.getTurnoverReportingConfig().getAggregationStrategy())) return;
+        if (aggregation.getTurnoverReportingConfig().getAggregationStrategy()==null || !STRATEGIES_IMPLEMENTED.contains(aggregation.getTurnoverReportingConfig().getAggregationStrategy())) return;
+
+        ////////////////////////////////////////////////TODO///////////////////////////////////////////////////////////////
+        // TODO: Implement logic for strategies - filter turnovers !!!
 
         // we need to filter turnovers on 'parent' configs
         Lease l = aggregation.getTurnoverReportingConfig().getOccupancy().getLease();
@@ -170,6 +173,8 @@ public class TurnoverAggregationService {
                 .filter(t->configsToAggregateTurnoversFor.contains(t.getConfig()))
                 .sorted(Comparator.comparing(t->t.getDate(), Comparator.reverseOrder()))
                 .collect(Collectors.toList());
+
+        ////////////////////////////////////////////////TODO///////////////////////////////////////////////////////////////
 
         calculateAggregationForOther(aggregation, turnoversToAggregate);
 
@@ -442,10 +447,13 @@ public class TurnoverAggregationService {
             if (!list.isEmpty()) {
 
                 final TurnoverReportingConfig config = list.get(0);
+                final Occupancy occupancy = config.getOccupancy();
+                final Lease previousLease = (Lease) config.getOccupancy().getLease().getPrevious();
+
                 AggregationReportForConfig report = new AggregationReportForConfig(config);
+                report.setPreviousLease(previousLease);
 
                 // find parallel occs
-                final Occupancy occupancy = config.getOccupancy();
                 if (l.hasOverlappingOccupancies()) {
                     for (Occupancy oc : l.getOccupancies()) {
 
@@ -508,7 +516,19 @@ public class TurnoverAggregationService {
 
     List<LocalDate> aggregationDatesForTurnoverReportingConfig(final TurnoverReportingConfig config, final boolean toplevel){
 
-        LocalDate startDate = config.getOccupancy().getEffectiveInterval().startDate().withDayOfMonth(1);
+        LocalDate startDate;
+        LocalDate startDateOrNull = null;
+        try {
+            startDateOrNull = config.getOccupancy().getEffectiveInterval().startDate();
+        } catch (Exception e){
+            LOG.warn(String.format("Problem with config %s", config.toString()));
+            LOG.warn(e.getMessage());
+        }
+        if (startDateOrNull==null) {
+            startDate = MIN_AGGREGATION_DATE;
+        } else {
+            startDate = startDateOrNull.withDayOfMonth(1);
+        }
         if (startDate.isBefore(MIN_AGGREGATION_DATE)) startDate = MIN_AGGREGATION_DATE;
 
         LocalDate effectiveEndDateOcc = config.getOccupancy().getEffectiveEndDate();
@@ -534,7 +554,7 @@ public class TurnoverAggregationService {
             return null;
         }
 
-        final Lease previous = (Lease) reportForConfig.getTurnoverReportingConfig().getOccupancy().getLease().getPrevious();
+        final Lease previous = (Lease) reportForConfig.getPreviousLease();
         final AggregationReportForConfig reportForPrevious = reports.stream()
                 .filter(r -> r.getTurnoverReportingConfig().getOccupancy().getLease().equals(previous))
                 .findFirst().orElse(null);
@@ -629,6 +649,18 @@ public class TurnoverAggregationService {
         agg.setComparable(false);
     }
 
+    public List<TurnoverReportingConfig> choicesForChildConfig(final TurnoverReportingConfig config) {
+        Lease lease = config.getOccupancy().getLease();
+        List<TurnoverReportingConfig> result = new ArrayList<>();
+        if (lease.getPrevious()!=null) {
+            lease = (Lease) lease.getPrevious();
+            Lists.newArrayList(lease.getOccupancies()).stream()
+                    .forEach(o->{
+                        result.addAll(turnoverReportingConfigRepository.findByOccupancyAndTypeAndFrequency(o, Type.PRELIMINARY, Frequency.MONTHLY));
+                    });
+        }
+        return result;
+    }
 
     @Inject TurnoverReportingConfigRepository turnoverReportingConfigRepository;
 

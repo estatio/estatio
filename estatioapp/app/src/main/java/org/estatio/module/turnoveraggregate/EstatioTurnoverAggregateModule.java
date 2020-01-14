@@ -35,6 +35,7 @@ import org.estatio.module.turnoveraggregate.dom.PurchaseCountAggregateForPeriod;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregateForPeriod;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregateToDate;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregation;
+import org.estatio.module.turnoveraggregate.dom.TurnoverReportingConfigLink;
 
 @XmlRootElement(name = "module")
 public final class EstatioTurnoverAggregateModule extends ModuleAbstract {
@@ -55,6 +56,7 @@ public final class EstatioTurnoverAggregateModule extends ModuleAbstract {
                 deleteFrom(TurnoverAggregateForPeriod.class);
                 deleteFrom(TurnoverAggregateToDate.class);
                 deleteFrom(PurchaseCountAggregateForPeriod.class);
+                deleteFrom(TurnoverReportingConfigLink.class);
             }
         };
     }

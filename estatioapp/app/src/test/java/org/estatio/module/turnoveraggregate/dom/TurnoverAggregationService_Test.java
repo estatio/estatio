@@ -346,6 +346,7 @@ public class TurnoverAggregationService_Test {
         Occupancy prevOcc1 = new Occupancy();
         prevOcc1.setLease(prev);
         prevOcc1Cfg.setOccupancy(prevOcc1);
+        rep.setPreviousLease(prev);
         AggregationReportForConfig repForPrev = new AggregationReportForConfig(prevOcc1Cfg);
         reports.add(repForPrev);
         // then
@@ -370,6 +371,7 @@ public class TurnoverAggregationService_Test {
         configPrev2.setOccupancy(occForPrev);
         AggregationReportForConfig repForPrev2 = new AggregationReportForConfig(configPrev2);
         lease.setPrevious(prev2);
+        rep.setPreviousLease(prev2);
         reports2.add(rep);
         reports2.add(repForPrev2);
         // then

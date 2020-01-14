@@ -13,6 +13,8 @@ import javax.servlet.http.HttpSession;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.ViewModel;
 import org.apache.isis.applib.annotation.Action;
@@ -60,7 +62,7 @@ import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.settings.dom.ApplicationSettingForEstatio;
 import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
 import org.estatio.module.turnoveraggregate.contributions.Lease_aggregateTurnovers;
-import org.estatio.module.turnoveraggregate.contributions.Lease_maintainTurnoverAggregations;
+import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationService;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -70,6 +72,8 @@ import lombok.Setter;
         objectType = "org.estatio.module.application.app.AdminDashboard"
 )
 public class AdminDashboard implements ViewModel {
+
+    public static Logger LOG = LoggerFactory.getLogger(AdminDashboard.class);
 
     public static final String KEY_ESTATIO_MOTD = "estatio.motd";
     public static final String KEY_MINIO_ARCHIVE_FOR_CALLER = "docBlobServer.caller";
@@ -505,8 +509,13 @@ public class AdminDashboard implements ViewModel {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public void aggregateAllTurnovers(final LocalDate aggregationDate, final boolean maintainOnly){
         leaseRepository.allLeases().forEach(l->{
-            final Lease_aggregateTurnovers mixin = factoryService.mixin(Lease_aggregateTurnovers.class, l);
-            wrapperFactory.wrap(mixin).$$(aggregationDate, maintainOnly);
+            try {
+                final Lease_aggregateTurnovers mixin = factoryService.mixin(Lease_aggregateTurnovers.class, l);
+                wrapperFactory.wrap(mixin).$$(aggregationDate, maintainOnly);
+            } catch (Exception e){
+               LOG.warn(String.format("Problem with aggregation for lease %s", l.getReference()));
+               LOG.warn(e.getMessage());
+            }
         });
     }
 

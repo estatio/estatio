@@ -223,11 +223,11 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", length = 1024)
     private String comments12MCY;
 
     @Getter @Setter
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", length = 1024)
     private String comments12MPY;
 
     /*

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 
@@ -33,10 +34,13 @@ public class AggregationReportForConfig {
     @Setter
     private boolean toplevel;
 
+
     @Setter
     private TurnoverReportingConfig previousOnSameUnit;
 
     @Setter
     private TurnoverReportingConfig nextOnSameUnit;
 
+    @Setter
+    private Lease previousLease;
 }
