@@ -13,13 +13,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-public class AggregationReportForConfig {
+public class AggregationAnalysisReportForConfig {
 
-    public AggregationReportForConfig(final TurnoverReportingConfig turnoverReportingConfig){
+    public AggregationAnalysisReportForConfig(final TurnoverReportingConfig turnoverReportingConfig){
         this.turnoverReportingConfig = turnoverReportingConfig;
         this.aggregationDates = new ArrayList<>();
         this.parallelOccupancies = new ArrayList<>();
         this.parallelOnSameUnit = new ArrayList<>();
+        this.previousOnOtherUnit = new ArrayList<>();
+        this.nextOnOtherUnit = new ArrayList<>();
         this.toplevel = false;
     }
 
@@ -34,12 +36,15 @@ public class AggregationReportForConfig {
     @Setter
     private boolean toplevel;
 
-
     @Setter
     private TurnoverReportingConfig previousOnSameUnit;
 
+    private List<TurnoverReportingConfig> previousOnOtherUnit;
+
     @Setter
     private TurnoverReportingConfig nextOnSameUnit;
+
+    private List<TurnoverReportingConfig> nextOnOtherUnit;
 
     @Setter
     private Lease previousLease;

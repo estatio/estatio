@@ -253,6 +253,15 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             Person_enum.RonRondelliIt,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
+    Oxf123("OXF-123", null, "123 Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
+            ld(2017, 1, 1), ld(2026, 12, 31),
+            new OccupancySpec[] {
+                    new OccupancySpec("001", "123", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2005, 10, 28), ld(2017, 4, 16)),
+                    new OccupancySpec("002", "123", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2017, 4, 17), null)
+            },
+            Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE)
     ;
 
     @AllArgsConstructor

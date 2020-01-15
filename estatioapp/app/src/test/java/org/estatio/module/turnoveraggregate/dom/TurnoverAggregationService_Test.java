@@ -10,7 +10,6 @@ import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -20,7 +19,6 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.asset.dom.Unit;
-import org.estatio.module.capex.app.orderinvoice.LinkedOrderItemViewModel;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -98,19 +96,19 @@ public class TurnoverAggregationService_Test {
             }});
 
             // when 2 occs on different units
-            List<AggregationReportForConfig> reps = service
+            List<AggregationAnalysisReportForConfig> reps = service
                     .reportsForOccupancyTypeAndFrequency(l, Type.PRELIMINARY, Frequency.MONTHLY, false);
 
             // then
             assertThat(l.getOccupancies()).hasSize(2);
             assertThat(reps).hasSize(2);
-            validateReport(reps.get(0), o2cfg, 4, 0, 0, null, null, false);
-            validateReport(reps.get(1), o1cfg, 3, 0, 0, null, null, false);
+            validateReport(reps.get(0), o2cfg, 3, 0, 0, null, 0,null, 1,false);
+            validateReport(reps.get(1), o1cfg, 2, 0, 0, null, 1, null, 0, false);
 
             // when toplevel lease
             reps = service.reportsForOccupancyTypeAndFrequency(l, Type.PRELIMINARY, Frequency.MONTHLY, true);
-            validateReport(reps.get(0), o2cfg, 28, 0, 0, null, null, true);
-            validateReport(reps.get(1), o1cfg, 27, 0, 0, null, null, true);
+            validateReport(reps.get(0), o2cfg, 27, 0, 0, null, 0, null, 1, true);
+            validateReport(reps.get(1), o1cfg, 2, 0, 0, null, 1, null, 0, false);
 
         }
 
@@ -148,12 +146,12 @@ public class TurnoverAggregationService_Test {
 
             // when pararallel occs but not on same unit
             assertThat(l.getOccupancies()).hasSize(3);
-            List<AggregationReportForConfig> reps = service.reportsForOccupancyTypeAndFrequency(l, Type.PRELIMINARY, Frequency.MONTHLY, false);
+            List<AggregationAnalysisReportForConfig> reps = service.reportsForOccupancyTypeAndFrequency(l, Type.PRELIMINARY, Frequency.MONTHLY, false);
             //then
             assertThat(reps).hasSize(3);
-            validateReport(reps.get(0), o3cfg, 4, 1, 0, null, o1cfg, false);
-            validateReport(reps.get(1), o2cfg, 4, 1, 0, null, null, false);
-            validateReport(reps.get(2), o1cfg, 3, 0, 0, o3cfg, null, false);
+            validateReport(reps.get(0), o3cfg, 3, 1, 0,  null,0, o1cfg, 0, false);
+            validateReport(reps.get(1), o2cfg, 3, 1, 0, null, 0, null, 1, false);
+            validateReport(reps.get(2), o1cfg, 2, 0, 0, o3cfg, 1, null, 0, false);
         }
 
         @Test
@@ -197,30 +195,32 @@ public class TurnoverAggregationService_Test {
 
             //when pararallel occs on same unit
             assertThat(l.getOccupancies()).hasSize(4);
-            List<AggregationReportForConfig> reps = service.reportsForOccupancyTypeAndFrequency(l, Type.PRELIMINARY, Frequency.MONTHLY,false);
+            List<AggregationAnalysisReportForConfig> reps = service.reportsForOccupancyTypeAndFrequency(l, Type.PRELIMINARY, Frequency.MONTHLY,false);
             // then
             assertThat(reps).hasSize(4);
-            validateReport(reps.get(0), o3cfg, 4, 2, 1, null, o1cfg, false);
-            validateReport(reps.get(1), o2cfg, 4, 2, 0, null, null, false);
-            validateReport(reps.get(2), o4cfg, 7, 3, 2, null, null, false);
-            validateReport(reps.get(3), o1cfg, 3, 1, 1, o3cfg, null, false);
+            validateReport(reps.get(0), o3cfg, 3, 2, 1, null,0, o1cfg, 0,false);
+            validateReport(reps.get(1), o2cfg, 3, 2, 0, null, 0,null, 1,false);
+            validateReport(reps.get(2), o4cfg, 6, 3, 2, null, 0,null, 0,false);
+            validateReport(reps.get(3), o1cfg, 2, 1, 1, o3cfg, 1,null, 0,false);
 
             // and when same for toplevel lease
             reps = service.reportsForOccupancyTypeAndFrequency(l, Type.PRELIMINARY, Frequency.MONTHLY,true);
             assertThat(reps).hasSize(4);
-            validateReport(reps.get(0), o3cfg, 28, 2, 1, null, o1cfg, true);
-            validateReport(reps.get(1), o2cfg, 28, 2, 0, null, null, true);
-            validateReport(reps.get(2), o4cfg, 31, 3, 2, null, null, true);
-            validateReport(reps.get(3), o1cfg, 3, 1, 1, o3cfg, null, false);
+            validateReport(reps.get(0), o3cfg, 27, 2, 1, null, 0,o1cfg, 0,true);
+            validateReport(reps.get(1), o2cfg, 27, 2, 0, null, 0,null, 1,true);
+            validateReport(reps.get(2), o4cfg, 30, 3, 2, null, 0,null, 0,true);
+            validateReport(reps.get(3), o1cfg, 2, 1, 1, o3cfg, 1,null, 0,false);
         }
 
-        private void validateReport(final AggregationReportForConfig r, final TurnoverReportingConfig cfg, int datSize, int parSize, int parSameUnit, TurnoverReportingConfig next, TurnoverReportingConfig prev, final boolean toplevel){
+        private void validateReport(final AggregationAnalysisReportForConfig r, final TurnoverReportingConfig cfg, int datSize, int parSize, int parSameUnit, TurnoverReportingConfig next, int nextSize, TurnoverReportingConfig prev, int prevSize, final boolean toplevel){
             assertThat(r.getTurnoverReportingConfig()).isEqualTo(cfg);
             assertThat(r.getAggregationDates().size()).isEqualTo(datSize);
             assertThat(r.getParallelOccupancies().size()).isEqualTo(parSize);
             assertThat(r.getParallelOnSameUnit().size()).isEqualTo(parSameUnit);
             assertThat(r.getNextOnSameUnit()).isEqualTo(next);
+            assertThat(r.getNextOnOtherUnit().size()).isEqualTo(nextSize);
             assertThat(r.getPreviousOnSameUnit()).isEqualTo(prev);
+            assertThat(r.getPreviousOnOtherUnit().size()).isEqualTo(prevSize);
             assertThat(r.isToplevel()).isEqualTo(toplevel);
         }
 
@@ -247,7 +247,7 @@ public class TurnoverAggregationService_Test {
         // given
         TurnoverAggregationService service = new TurnoverAggregationService(){
             @Override
-            List<AggregationReportForConfig> reportsForOccupancyTypeAndFrequency(
+            List<AggregationAnalysisReportForConfig> reportsForOccupancyTypeAndFrequency(
                     final Lease l,
                     final Type type,
                     final Frequency frequency,
@@ -256,7 +256,7 @@ public class TurnoverAggregationService_Test {
                 o.setLease(l);
                 TurnoverReportingConfig config = new TurnoverReportingConfig();
                 config.setOccupancy(o);
-                final AggregationReportForConfig report = new AggregationReportForConfig(config);
+                final AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
                 if (isToplevelLease) report.setToplevel(true);
                 return Arrays.asList(report);
             }
@@ -274,17 +274,17 @@ public class TurnoverAggregationService_Test {
         prev.setNext(lease);
 
         // when
-        final List<AggregationReportForConfig> aggregationReports = service
-                .createAggregationReports(lease, Type.PRELIMINARY, Frequency.MONTHLY);
+        final List<AggregationAnalysisReportForConfig> aggregationReports = service
+                .analyze(lease, Type.PRELIMINARY, Frequency.MONTHLY);
         // then
         assertThat(aggregationReports).hasSize(3);
-        final AggregationReportForConfig r1 = aggregationReports.get(0);
+        final AggregationAnalysisReportForConfig r1 = aggregationReports.get(0);
         assertThat(r1.getTurnoverReportingConfig().getOccupancy().getLease()).isEqualTo(next);
         assertThat(r1.isToplevel()).isTrue();
-        final AggregationReportForConfig r2 = aggregationReports.get(1);
+        final AggregationAnalysisReportForConfig r2 = aggregationReports.get(1);
         assertThat(r2.getTurnoverReportingConfig().getOccupancy().getLease()).isEqualTo(lease);
         assertThat(r2.isToplevel()).isFalse();
-        final AggregationReportForConfig r3 = aggregationReports.get(2);
+        final AggregationAnalysisReportForConfig r3 = aggregationReports.get(2);
         assertThat(r3.getTurnoverReportingConfig().getOccupancy().getLease()).isEqualTo(prev);
         assertThat(r3.isToplevel()).isFalse();
     }
@@ -305,12 +305,12 @@ public class TurnoverAggregationService_Test {
         config.setOccupancy(occupancy);
         // when, then
         final List<LocalDate> noToplevel = service.aggregationDatesForTurnoverReportingConfig(config, false);
-        assertThat(noToplevel).hasSize(14);
+        assertThat(noToplevel).hasSize(13);
         assertThat(noToplevel.get(0)).isEqualTo(startDate.withDayOfMonth(1));
-        assertThat(noToplevel.get(13)).isEqualTo(endDate);
+        assertThat(noToplevel.get(12)).isEqualTo(endDate.minusMonths(1).withDayOfMonth(1));
         final List<LocalDate> forTopLevel = service.aggregationDatesForTurnoverReportingConfig(config, true);
-        assertThat(forTopLevel).hasSize(38);
-        assertThat(forTopLevel.get(37)).isEqualTo(endDate.plusMonths(24));
+        assertThat(forTopLevel).hasSize(37);
+        assertThat(forTopLevel.get(36)).isEqualTo(endDate.plusMonths(23).withDayOfMonth(1));
     }
 
     @Test
@@ -319,7 +319,7 @@ public class TurnoverAggregationService_Test {
         // given
         TurnoverAggregationService service = new TurnoverAggregationService();
         TurnoverReportingConfig config = new TurnoverReportingConfig();
-        List<AggregationReportForConfig> reports = new ArrayList<>();
+        List<AggregationAnalysisReportForConfig> reports = new ArrayList<>();
 
         // when, then
         assertThat(service.determineApplicationStrategyForConfig(reports , config)).isNull();
@@ -329,7 +329,7 @@ public class TurnoverAggregationService_Test {
         Lease lease = new Lease();
         occupancy.setLease(lease);
         config.setOccupancy(occupancy);
-        AggregationReportForConfig rep = new AggregationReportForConfig(config);
+        AggregationAnalysisReportForConfig rep = new AggregationAnalysisReportForConfig(config);
         reports.add(rep);
 
         // then no previous lease
@@ -347,7 +347,7 @@ public class TurnoverAggregationService_Test {
         prevOcc1.setLease(prev);
         prevOcc1Cfg.setOccupancy(prevOcc1);
         rep.setPreviousLease(prev);
-        AggregationReportForConfig repForPrev = new AggregationReportForConfig(prevOcc1Cfg);
+        AggregationAnalysisReportForConfig repForPrev = new AggregationAnalysisReportForConfig(prevOcc1Cfg);
         reports.add(repForPrev);
         // then
         assertThat(service.determineApplicationStrategyForConfig(reports , config)).isEqualTo(AggregationStrategy.SIMPLE);
@@ -363,13 +363,13 @@ public class TurnoverAggregationService_Test {
         assertThat(service.determineApplicationStrategyForConfig(reports , config)).isEqualTo(AggregationStrategy.PREVIOUS_MANY_OCCS_TO_MANY);
 
         // and case current has many and prev has one
-        List<AggregationReportForConfig> reports2 = new ArrayList<>();
+        List<AggregationAnalysisReportForConfig> reports2 = new ArrayList<>();
         Lease prev2 = new Lease();
         Occupancy occForPrev = new Occupancy();
         occForPrev.setLease(prev2);
         TurnoverReportingConfig configPrev2 = new TurnoverReportingConfig();
         configPrev2.setOccupancy(occForPrev);
-        AggregationReportForConfig repForPrev2 = new AggregationReportForConfig(configPrev2);
+        AggregationAnalysisReportForConfig repForPrev2 = new AggregationAnalysisReportForConfig(configPrev2);
         lease.setPrevious(prev2);
         rep.setPreviousLease(prev2);
         reports2.add(rep);
@@ -390,7 +390,7 @@ public class TurnoverAggregationService_Test {
         TurnoverAggregationService service = new TurnoverAggregationService();
         service.turnoverAggregationRepository = mockturnoverAggregationRepository;
         TurnoverReportingConfig config = new TurnoverReportingConfig();
-        AggregationReportForConfig report = new AggregationReportForConfig(config);
+        AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
         final LocalDate removalDate = new LocalDate(2010, 1, 1);
         final LocalDate additionDate = new LocalDate(2020, 1, 1);
         final Currency currency = new Currency();
@@ -523,19 +523,18 @@ public class TurnoverAggregationService_Test {
 
         // then when config is toplevel
         List<LocalDate> dates = service.aggregationDatesForTurnoverReportingConfig(config, true);
-        assertThat(dates).hasSize(27);
+        assertThat(dates).hasSize(26);
         assertThat(dates.get(0)).isEqualTo(new LocalDate(2018,12,1));
         assertThat(dates.get(1)).isEqualTo(new LocalDate(2019,1,1));
         assertThat(dates.get(2)).isEqualTo(new LocalDate(2019,2,1));
-        assertThat(dates.get(26)).isEqualTo(new LocalDate(2021,2,1));
+        assertThat(dates.get(25)).isEqualTo(new LocalDate(2021,1,1));
 
         // and when config is not toplevel
         dates = service.aggregationDatesForTurnoverReportingConfig(config, false);
         // then
-        assertThat(dates).hasSize(3);
+        assertThat(dates).hasSize(2);
         assertThat(dates.get(0)).isEqualTo(new LocalDate(2018,12,1));
         assertThat(dates.get(1)).isEqualTo(new LocalDate(2019,1,1));
-        assertThat(dates.get(2)).isEqualTo(new LocalDate(2019,2,1));
 
     }
 
@@ -570,19 +569,18 @@ public class TurnoverAggregationService_Test {
 
         // then
         List<LocalDate> dates = service.aggregationDatesForTurnoverReportingConfig(config, true);
-        assertThat(dates).hasSize(27);
+        assertThat(dates).hasSize(26);
         assertThat(dates.get(0)).isEqualTo(new LocalDate(2018,12,1));
         assertThat(dates.get(1)).isEqualTo(new LocalDate(2019,1,1));
         assertThat(dates.get(2)).isEqualTo(new LocalDate(2019,2,1));
-        assertThat(dates.get(26)).isEqualTo(new LocalDate(2021,2,1));
+        assertThat(dates.get(25)).isEqualTo(new LocalDate(2021,1,1));
 
         // and when
         dates = service.aggregationDatesForTurnoverReportingConfig(config, false);
         // then
-        assertThat(dates).hasSize(3);
+        assertThat(dates).hasSize(2);
         assertThat(dates.get(0)).isEqualTo(new LocalDate(2018,12,1));
         assertThat(dates.get(1)).isEqualTo(new LocalDate(2019,1,1));
-        assertThat(dates.get(2)).isEqualTo(new LocalDate(2019,2,1));
 
     }
 

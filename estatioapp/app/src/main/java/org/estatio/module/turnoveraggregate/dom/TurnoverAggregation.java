@@ -276,20 +276,39 @@ public class TurnoverAggregation {
 
     @Programmatic
     public void remove() {
-        // clean up
-        if (getAggregate1Month()!=null) getAggregate1Month().remove();
-        if (getAggregate2Month()!=null) getAggregate2Month().remove();
-        if (getAggregate3Month()!=null) getAggregate3Month().remove();
-        if (getAggregate6Month()!=null) getAggregate6Month().remove();
-        if (getAggregate9Month()!=null) getAggregate9Month().remove();
-        if (getAggregate12Month()!=null) getAggregate12Month().remove();
-        if (getAggregateToDate()!=null) getAggregateToDate().remove();
-        if (getPurchaseCountAggregate1Month()!=null) getPurchaseCountAggregate1Month().remove();
-        if (getPurchaseCountAggregate3Month()!=null) getPurchaseCountAggregate3Month().remove();
-        if (getPurchaseCountAggregate6Month()!=null) getPurchaseCountAggregate6Month().remove();
-        if (getPurchaseCountAggregate12Month()!=null) getPurchaseCountAggregate12Month().remove();
+
         // remove
+        TurnoverAggregateForPeriod p1 = getAggregate1Month();
+        TurnoverAggregateForPeriod p2 = getAggregate2Month();
+        TurnoverAggregateForPeriod p3 = getAggregate3Month();
+        TurnoverAggregateForPeriod p4 = getAggregate6Month();
+        TurnoverAggregateForPeriod p5 = getAggregate9Month();
+        TurnoverAggregateForPeriod p6 = getAggregate12Month();
+
+        TurnoverAggregateToDate td = getAggregateToDate();
+
+        PurchaseCountAggregateForPeriod c1 = getPurchaseCountAggregate1Month();
+        PurchaseCountAggregateForPeriod c2 = getPurchaseCountAggregate3Month();
+        PurchaseCountAggregateForPeriod c3 = getPurchaseCountAggregate6Month();
+        PurchaseCountAggregateForPeriod c4 = getPurchaseCountAggregate12Month();
+
         repositoryService.removeAndFlush(this);
+
+        // clean up
+        if (p1!=null) p1.remove();
+        if (p2!=null) p2.remove();
+        if (p3!=null) p3.remove();
+        if (p4!=null) p4.remove();
+        if (p5!=null) p5.remove();
+        if (p6!=null) p6.remove();
+
+        if (td!=null) td.remove();
+
+        if (c1!=null) c1.remove();
+        if (c2!=null) c2.remove();
+        if (c3!=null) c3.remove();
+        if (c4!=null) c4.remove();
+
     }
 
     @Inject

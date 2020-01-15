@@ -82,13 +82,13 @@ public class TurnoverAggregationService {
 
         try {
 
-            final List<AggregationReportForConfig> aggregationReports = createAggregationReports(lease, type,
+            final List<AggregationAnalysisReportForConfig> analysisReports = analyze(lease, type,
                     frequency);
 
-            aggregationReports.stream().forEach(r -> {
+            analysisReports.stream().forEach(r -> {
                 // determine and set strategy
                 final TurnoverReportingConfig config = r.getTurnoverReportingConfig();
-                config.setAggregationStrategy(determineApplicationStrategyForConfig(aggregationReports, config));
+                config.setAggregationStrategy(determineApplicationStrategyForConfig(analysisReports, config));
 
                 // create / delete aggregations
                 maintainTurnoverAggregationsForConfig(r);
@@ -104,12 +104,28 @@ public class TurnoverAggregationService {
                     .excluding(minTurnoverDate, minTurnoverDate.plusMonths(24));
 
             List<ConfigReportTuple> configReportTuplesForCalculationPeriod = new ArrayList<>();
-            aggregationReports.stream().forEach(r -> {
+            analysisReports.stream().forEach(r -> {
                 final List<LocalDate> datesIfAny = r.getAggregationDates().stream()
-                        .filter(d -> calculationPeriodForAggregations.contains(d)).collect(Collectors.toList());
+                        .filter(d -> calculationPeriodForAggregations.contains(d))
+                        .collect(Collectors.toList());
                 if (!datesIfAny.isEmpty()) {
-                    configReportTuplesForCalculationPeriod
-                            .add(new ConfigReportTuple(r.getTurnoverReportingConfig(), r));
+                    final List<TurnoverReportingConfig> configs = configReportTuplesForCalculationPeriod.stream()
+                            .map(t -> t.getConfig())
+                            .filter(c -> c.equals(r.getTurnoverReportingConfig())).collect(Collectors.toList());
+                    if (configs.isEmpty()) {
+                        configReportTuplesForCalculationPeriod
+                                .add(new ConfigReportTuple(r.getTurnoverReportingConfig(), r));
+                    }
+                }
+                // ALSO ADD ALL CONFIGS THAT ARE PREVIOUS ON THE SAME LEASE TODO: this should not be needed ...
+                if (!r.getPreviousOnOtherUnit().isEmpty() || r.getPreviousOnSameUnit()!=null){
+                    r.getPreviousOnOtherUnit().forEach(prevConfig->{
+                        final List<TurnoverReportingConfig> configs = configReportTuplesForCalculationPeriod.stream()
+                                .map(t -> t.getConfig())
+                                .filter(c -> c.equals(prevConfig)).collect(Collectors.toList());
+                        final AggregationAnalysisReportForConfig reportForPrevConfig = analysisReports.stream().filter(ar->ar.getTurnoverReportingConfig().equals(prevConfig)).findFirst().orElse(null);
+                        if (reportForPrevConfig!=null && configs.isEmpty()) configReportTuplesForCalculationPeriod.add(new ConfigReportTuple(prevConfig, reportForPrevConfig));
+                    });
                 }
             });
 
@@ -147,7 +163,7 @@ public class TurnoverAggregationService {
 
         private TurnoverReportingConfig config;
 
-        private AggregationReportForConfig report;
+        private AggregationAnalysisReportForConfig report;
     }
     public void calculateAggregation(final TurnoverAggregation aggregation, final List<Turnover> turnovers, final List<ConfigReportTuple> configReportTuples) {
 
@@ -164,7 +180,7 @@ public class TurnoverAggregationService {
             previousLeasesToExamineForCalculation.add(l);
         }
 
-        final AggregationReportForConfig report = configReportTuples.stream()
+        final AggregationAnalysisReportForConfig report = configReportTuples.stream()
                 .filter(t -> t.getConfig().equals(aggregation.getTurnoverReportingConfig()))
                 .map(t->t.getReport()).findFirst().orElse(null);
 
@@ -184,7 +200,7 @@ public class TurnoverAggregationService {
 
         List<Turnover> turnoversToAggregate = turnovers.stream()
                 .filter(t->configsToAggregateTurnoversFor.contains(t.getConfig()))
-                .sorted(Comparator.comparing(t->t.getDate(), Comparator.reverseOrder()))
+                .sorted()
                 .collect(Collectors.toList());
 
         ////////////////////////////////////////////////TODO///////////////////////////////////////////////////////////////
@@ -412,14 +428,14 @@ public class TurnoverAggregationService {
     }
 
     /**
-     * This method returns a collection of reports on occupancy level intended for aggregation maintenance
-     * From the occupancy point of view it tries to find the toplevel parent lease and 'walk the graph' over all previous leases
+     * This method returns a collection of reports on turnover config level intended for aggregation maintenance and calculation
+     * From the config (t.i. occupancy) point of view it tries to find the toplevel parent lease and 'walk the graph' over all previous child leases
      *
      * @param lease
      * @param frequency
      * @return
      */
-     List<AggregationReportForConfig> createAggregationReports(final Lease lease, final Type type, final Frequency frequency){
+     List<AggregationAnalysisReportForConfig> analyze(final Lease lease, final Type type, final Frequency frequency){
         if (type != Type.PRELIMINARY ) {
             LOG.warn(String.format("No create-aggregation-reports implementation for type %s found.",
                     type));
@@ -431,7 +447,7 @@ public class TurnoverAggregationService {
             return Collections.EMPTY_LIST;
         }
 
-        List<AggregationReportForConfig> result = new ArrayList<>();
+        List<AggregationAnalysisReportForConfig> result = new ArrayList<>();
 
         // find top level lease
         Lease l = lease;
@@ -450,8 +466,8 @@ public class TurnoverAggregationService {
         return result;
     }
 
-    List<AggregationReportForConfig> reportsForOccupancyTypeAndFrequency(final Lease l, final Type type, final Frequency frequency, final boolean isToplevelLease) {
-        List<AggregationReportForConfig> result = new ArrayList<>();
+    List<AggregationAnalysisReportForConfig> reportsForOccupancyTypeAndFrequency(final Lease l, final Type type, final Frequency frequency, final boolean isToplevelLease) {
+        List<AggregationAnalysisReportForConfig> result = new ArrayList<>();
         final List<List<TurnoverReportingConfig>> collect = Lists.newArrayList(l.getOccupancies()).stream()
                 .map(o -> turnoverReportingConfigRepository.findByOccupancyAndTypeAndFrequency(o, type, frequency))
                 .collect(Collectors.toList());
@@ -463,7 +479,7 @@ public class TurnoverAggregationService {
                 final Occupancy occupancy = config.getOccupancy();
                 final Lease previousLease = (Lease) config.getOccupancy().getLease().getPrevious();
 
-                AggregationReportForConfig report = new AggregationReportForConfig(config);
+                AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
                 report.setPreviousLease(previousLease);
 
                 // find parallel occs
@@ -487,19 +503,41 @@ public class TurnoverAggregationService {
                 // find previous
                 if (occupancy.getStartDate() != null && occupancy
                         .getStartDate().isAfter(l.getEffectiveInterval().startDate())) {
-                    final Optional<Occupancy> prev = Lists.newArrayList(l.getOccupancies()).stream()
+                    final List<Occupancy> prevOnOtherUnit = Lists.newArrayList(l.getOccupancies()).stream()
+                            .filter(occ -> !occ.equals(occupancy))
+                            .filter(occ -> !occ.getUnit().equals(occupancy.getUnit()))
+                            .filter(occ -> occ.getEndDate() != null)
+                            .filter(occ -> occ.getEndDate().isBefore(occupancy.getStartDate()))
+                            .collect(Collectors.toList());
+                    prevOnOtherUnit.forEach(o->{
+                        final List<TurnoverReportingConfig> configsForO = turnoverReportingConfigRepository
+                                .findByOccupancyAndTypeAndFrequency(o, type, frequency);
+                        if (!configsForO.isEmpty()) report.getPreviousOnOtherUnit().addAll(configsForO);
+                    });
+                    final Optional<Occupancy> prevOnSameUnit = Lists.newArrayList(l.getOccupancies()).stream()
                             .filter(occ -> !occ.equals(occupancy))
                             .filter(occ -> occ.getUnit().equals(occupancy.getUnit()))
                             .filter(occ -> occ.getEndDate() != null)
                             .filter(occ -> occ.getEndDate().isBefore(occupancy.getStartDate())).findFirst();
-                    if (prev.isPresent()) {
+                    if (prevOnSameUnit.isPresent()) {
                         final List<TurnoverReportingConfig> configs2 = turnoverReportingConfigRepository
-                                .findByOccupancyAndTypeAndFrequency(prev.get(), type, frequency);
+                                .findByOccupancyAndTypeAndFrequency(prevOnSameUnit.get(), type, frequency);
                         if (!configs2.isEmpty()) report.setPreviousOnSameUnit(configs2.get(0));
                     }
                 }
                 // find next
                 if (occupancy.getEndDate() != null) {
+                    final List<Occupancy> nextOnOtherUnit = Lists.newArrayList(l.getOccupancies()).stream()
+                            .filter(occ -> !occ.equals(occupancy))
+                            .filter(occ -> !occ.getUnit().equals(occupancy.getUnit()))
+                            .filter(occ -> occ.getStartDate() != null)
+                            .filter(occ -> occ.getStartDate().isAfter(occupancy.getEndDate()))
+                            .collect(Collectors.toList());
+                    nextOnOtherUnit.forEach(o->{
+                        final List<TurnoverReportingConfig> configsForO = turnoverReportingConfigRepository
+                                .findByOccupancyAndTypeAndFrequency(o, type, frequency);
+                        if (!configsForO.isEmpty()) report.getNextOnOtherUnit().addAll(configsForO);
+                    });
                     final Optional<Occupancy> next = Lists.newArrayList(l.getOccupancies()).stream()
                             .filter(occ -> !occ.equals(occupancy))
                             .filter(occ -> occ.getUnit().equals(occupancy.getUnit()))
@@ -514,7 +552,7 @@ public class TurnoverAggregationService {
                 }
 
                 // determine dates for aggregations
-                boolean isToplevelOccupancy = isToplevelLease && report.getNextOnSameUnit() == null;
+                boolean isToplevelOccupancy = isToplevelLease && report.getNextOnSameUnit() == null && report.getNextOnOtherUnit().isEmpty();
                 report.setToplevel(isToplevelOccupancy);
                 report.getAggregationDates().addAll(
                         aggregationDatesForTurnoverReportingConfig(config, isToplevelOccupancy));
@@ -546,7 +584,7 @@ public class TurnoverAggregationService {
 
         LocalDate effectiveEndDateOcc = config.getOccupancy().getEffectiveEndDate();
         if (effectiveEndDateOcc==null) effectiveEndDateOcc = clockService.now();
-        LocalDate endDate = toplevel ? effectiveEndDateOcc.withDayOfMonth(1).plusMonths(24) : effectiveEndDateOcc.withDayOfMonth(1);
+        LocalDate endDate = toplevel ? effectiveEndDateOcc.withDayOfMonth(1).plusMonths(23) : effectiveEndDateOcc.withDayOfMonth(1).minusMonths(1);
 
         List<LocalDate> result = new ArrayList<>();
 
@@ -557,9 +595,9 @@ public class TurnoverAggregationService {
         return result;
     }
 
-    AggregationStrategy determineApplicationStrategyForConfig(final List<AggregationReportForConfig> reports, final TurnoverReportingConfig turnoverReportingConfig){
+    AggregationStrategy determineApplicationStrategyForConfig(final List<AggregationAnalysisReportForConfig> reports, final TurnoverReportingConfig turnoverReportingConfig){
 
-        final AggregationReportForConfig reportForConfig = reports.stream()
+        final AggregationAnalysisReportForConfig reportForConfig = reports.stream()
                 .filter(r -> r.getTurnoverReportingConfig().equals(turnoverReportingConfig)).findFirst().orElse(null);
 
         if (reportForConfig==null){
@@ -568,7 +606,7 @@ public class TurnoverAggregationService {
         }
 
         final Lease previous = (Lease) reportForConfig.getPreviousLease();
-        final AggregationReportForConfig reportForPrevious = reports.stream()
+        final AggregationAnalysisReportForConfig reportForPrevious = reports.stream()
                 .filter(r -> r.getTurnoverReportingConfig().getOccupancy().getLease().equals(previous))
                 .findFirst().orElse(null);
         if (previous ==null || reportForPrevious ==null){
@@ -601,7 +639,7 @@ public class TurnoverAggregationService {
 
     }
 
-    void maintainTurnoverAggregationsForConfig(final AggregationReportForConfig report){
+    void maintainTurnoverAggregationsForConfig(final AggregationAnalysisReportForConfig report){
 
         try {
             final TurnoverReportingConfig config = report.getTurnoverReportingConfig();

@@ -35,6 +35,9 @@ import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.Type;
 import org.estatio.module.turnover.fixtures.data.TurnoverReportingConfig_enum;
+import org.estatio.module.turnoveraggregate.dom.AggregationPeriod;
+import org.estatio.module.turnoveraggregate.dom.TurnoverAggregateForPeriod;
+import org.estatio.module.turnoveraggregate.dom.TurnoverAggregateForPeriodRepository;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregation;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationRepository;
 
@@ -108,6 +111,32 @@ public class TurnoverAggregationRepository_IntegTest extends TurnoverAggregateMo
         assertThat(turnoverAggregationRepository.findByTurnoverReportingConfig(config)).hasSize(2);
 
     }
+
+    @Test
+    public void removeWorks() throws Exception {
+
+        final TurnoverReportingConfig config = TurnoverReportingConfig_enum.OxfTopModel001GbPrelim
+                .findUsing(serviceRegistry2);
+        final LocalDate date = new LocalDate(2019, 1, 1);
+        final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
+
+        final TurnoverAggregation agg = turnoverAggregationRepository
+                .findOrCreate(config, date, euro);
+        transactionService.nextTransaction();
+        assertThat(turnoverAggregationRepository.listAll()).hasSize(1);
+        assertThat(turnoverAggregateForPeriodRepository.listAll()).hasSize(6);
+
+        // when
+        agg.remove();
+
+        // then
+        assertThat(turnoverAggregationRepository.listAll()).hasSize(0);
+        assertThat(turnoverAggregateForPeriodRepository.listAll()).hasSize(0);
+
+
+    }
+
+    @Inject TurnoverAggregateForPeriodRepository turnoverAggregateForPeriodRepository;
 
     @Inject TurnoverAggregationRepository turnoverAggregationRepository;
 
