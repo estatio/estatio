@@ -31,6 +31,7 @@ import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.background.BackgroundService2;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.config.ConfigurationProperty;
 import org.apache.isis.applib.services.config.ConfigurationService;
@@ -510,8 +511,7 @@ public class AdminDashboard implements ViewModel {
     public void aggregateAllTurnovers(final LocalDate aggregationDate, final boolean maintainOnly){
         leaseRepository.allLeases().forEach(l->{
             try {
-                final Lease_aggregateTurnovers mixin = factoryService.mixin(Lease_aggregateTurnovers.class, l);
-                wrapperFactory.wrap(mixin).$$(aggregationDate, maintainOnly);
+                backgroundService2.executeMixin(Lease_aggregateTurnovers.class, l).$$(aggregationDate, maintainOnly);
             } catch (Exception e){
                LOG.warn(String.format("Problem with aggregation for lease %s", l.getReference()));
                LOG.warn(e.getMessage());
@@ -577,5 +577,8 @@ public class AdminDashboard implements ViewModel {
 
     @Inject
     CodaDocHeadMenu codaDocHeadMenu;
+
+    @Inject
+    BackgroundService2 backgroundService2;
 
 }

@@ -80,50 +80,63 @@ public class TurnoverAggregationService {
             return;
         }
 
-        final List<AggregationReportForConfig> aggregationReports = createAggregationReports(lease, type, frequency);
+        try {
 
-        aggregationReports.stream().forEach(r->{
-            // determine and set strategy
-            final TurnoverReportingConfig config = r.getTurnoverReportingConfig();
-            config.setAggregationStrategy(determineApplicationStrategyForConfig(aggregationReports, config));
+            final List<AggregationReportForConfig> aggregationReports = createAggregationReports(lease, type,
+                    frequency);
 
-            // create / delete aggregations
-            maintainTurnoverAggregationsForConfig(r);
-        });
+            aggregationReports.stream().forEach(r -> {
+                // determine and set strategy
+                final TurnoverReportingConfig config = r.getTurnoverReportingConfig();
+                config.setAggregationStrategy(determineApplicationStrategyForConfig(aggregationReports, config));
 
-        if (maintainOnly) return;
-
-        LocalDate minTurnoverDate = turnoverDate.withDayOfMonth(1).isBefore(MIN_AGGREGATION_DATE.minusMonths(23)) ? MIN_AGGREGATION_DATE.minusMonths(23) : turnoverDate.withDayOfMonth(1);
-        LocalDateInterval calculationPeriodForAggregations = LocalDateInterval.excluding(minTurnoverDate, minTurnoverDate.plusMonths(24));
-
-        List<ConfigReportTuple> configReportTuplesForCalculationPeriod = new ArrayList<>();
-        aggregationReports.stream().forEach(r->{
-            final List<LocalDate> datesIfAny = r.getAggregationDates().stream()
-                    .filter(d -> calculationPeriodForAggregations.contains(d)).collect(Collectors.toList());
-            if (!datesIfAny.isEmpty()) {
-                configReportTuplesForCalculationPeriod.add(new ConfigReportTuple(r.getTurnoverReportingConfig(), r));
-            }
-        });
-
-        List<TurnoverReportingConfig> configsToCalculate = configReportTuplesForCalculationPeriod.stream()
-                .map(c->c.getConfig())
-                .collect(Collectors.toList());
-
-        List<Turnover> turnoversToAggregate = new ArrayList<>();
-        configsToCalculate.forEach(c->{
-            final List<Turnover> turnoversInCalculationPeriod = turnoverRepository
-                    .findApprovedByConfigAndTypeAndFrequency(c, c.getType(), c.getFrequency()).stream()
-                    .filter(t -> calculationPeriodForAggregations.contains(t.getDate())).collect(Collectors.toList());
-            turnoversToAggregate.addAll(turnoversInCalculationPeriod);
-        });
-
-        configsToCalculate.forEach(c->{
-            turnoverAggregationRepository.findByTurnoverReportingConfig(c).stream()
-            .filter(a->calculationPeriodForAggregations.contains(a.getDate()))
-            .forEach(a->{
-                calculateAggregation(a, turnoversToAggregate, configReportTuplesForCalculationPeriod);
+                // create / delete aggregations
+                maintainTurnoverAggregationsForConfig(r);
             });
-        });
+
+            if (maintainOnly)
+                return;
+
+            LocalDate minTurnoverDate = turnoverDate.withDayOfMonth(1).isBefore(MIN_AGGREGATION_DATE.minusMonths(23)) ?
+                    MIN_AGGREGATION_DATE.minusMonths(23) :
+                    turnoverDate.withDayOfMonth(1);
+            LocalDateInterval calculationPeriodForAggregations = LocalDateInterval
+                    .excluding(minTurnoverDate, minTurnoverDate.plusMonths(24));
+
+            List<ConfigReportTuple> configReportTuplesForCalculationPeriod = new ArrayList<>();
+            aggregationReports.stream().forEach(r -> {
+                final List<LocalDate> datesIfAny = r.getAggregationDates().stream()
+                        .filter(d -> calculationPeriodForAggregations.contains(d)).collect(Collectors.toList());
+                if (!datesIfAny.isEmpty()) {
+                    configReportTuplesForCalculationPeriod
+                            .add(new ConfigReportTuple(r.getTurnoverReportingConfig(), r));
+                }
+            });
+
+            List<TurnoverReportingConfig> configsToCalculate = configReportTuplesForCalculationPeriod.stream()
+                    .map(c -> c.getConfig())
+                    .collect(Collectors.toList());
+
+            List<Turnover> turnoversToAggregate = new ArrayList<>();
+            configsToCalculate.forEach(c -> {
+                final List<Turnover> turnoversInCalculationPeriod = turnoverRepository
+                        .findApprovedByConfigAndTypeAndFrequency(c, c.getType(), c.getFrequency()).stream()
+                        .filter(t -> calculationPeriodForAggregations.contains(t.getDate()))
+                        .collect(Collectors.toList());
+                turnoversToAggregate.addAll(turnoversInCalculationPeriod);
+            });
+
+            configsToCalculate.forEach(c -> {
+                turnoverAggregationRepository.findByTurnoverReportingConfig(c).stream()
+                        .filter(a -> calculationPeriodForAggregations.contains(a.getDate()))
+                        .forEach(a -> {
+                            calculateAggregation(a, turnoversToAggregate, configReportTuplesForCalculationPeriod);
+                        });
+            });
+        } catch (Exception e){
+            LOG.warn(String.format("Problem with aggregation for lease %s", lease));
+            LOG.warn(e.getMessage());
+        }
 
     }
 
@@ -590,23 +603,31 @@ public class TurnoverAggregationService {
 
     void maintainTurnoverAggregationsForConfig(final AggregationReportForConfig report){
 
-        final TurnoverReportingConfig config = report.getTurnoverReportingConfig();
-        final List<TurnoverAggregation> aggregations = turnoverAggregationRepository
-                .findByTurnoverReportingConfig(config);
-        final List<LocalDate> currentAggDates = aggregations.stream().map(a -> a.getDate()).collect(Collectors.toList());
+        try {
+            final TurnoverReportingConfig config = report.getTurnoverReportingConfig();
+            final List<TurnoverAggregation> aggregations = turnoverAggregationRepository
+                    .findByTurnoverReportingConfig(config);
+            final List<LocalDate> currentAggDates = aggregations.stream().map(a -> a.getDate())
+                    .collect(Collectors.toList());
 
-        // create if needed
-        report.getAggregationDates().stream().forEach(d->{
-            if (!currentAggDates.contains(d)) {
-                turnoverAggregationRepository.findOrCreate(config, d, config.getCurrency());
-            }
-        });
-        // remove if needed
-        currentAggDates.stream().forEach(d->{
-            if (!report.getAggregationDates().contains(d)){
-                turnoverAggregationRepository.findUnique(config, d).remove();
-            }
-        });
+            // create if needed
+            report.getAggregationDates().stream().forEach(d -> {
+                if (!currentAggDates.contains(d)) {
+                    turnoverAggregationRepository.findOrCreate(config, d, config.getCurrency());
+                }
+            });
+            // remove if needed
+            currentAggDates.stream().forEach(d -> {
+                if (!report.getAggregationDates().contains(d)) {
+                    turnoverAggregationRepository.findUnique(config, d).remove();
+                }
+            });
+        } catch (Exception e){
+            LOG.warn(String.format("Problem with aggregation for lease %s and occ %s",
+                    report.getTurnoverReportingConfig().getOccupancy().getLease().getReference(),
+                    report.getTurnoverReportingConfig().getOccupancy()));
+            LOG.warn(e.getMessage());
+        }
 
     }
 
