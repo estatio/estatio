@@ -14,6 +14,8 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.incode.module.base.dom.types.MoneyType;
+
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.Type;
@@ -38,11 +40,11 @@ import lombok.Setter;
 public class TurnoverAggregateToDate {
 
     @Getter @Setter
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
     private BigDecimal grossAmount;
 
     @Getter @Setter
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
     private BigDecimal netAmount;
 
     @Getter @Setter
@@ -54,11 +56,11 @@ public class TurnoverAggregateToDate {
     private Integer turnoverCount;
 
     @Getter @Setter
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
     private BigDecimal grossAmountPreviousYear;
 
     @Getter @Setter
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
     private BigDecimal netAmountPreviousYear;
 
     @Getter @Setter

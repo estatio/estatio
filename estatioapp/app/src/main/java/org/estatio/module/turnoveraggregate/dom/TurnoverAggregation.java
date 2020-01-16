@@ -19,6 +19,8 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.incode.module.base.dom.types.MoneyType;
+
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
@@ -202,19 +204,19 @@ public class TurnoverAggregation {
      */
 
     @Getter @Setter
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
     private BigDecimal grossAmount1MCY_1;
 
     @Getter @Setter
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
     private BigDecimal netAmount1MCY_1;
 
     @Getter @Setter
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
     private BigDecimal grossAmount1MCY_2;
 
     @Getter @Setter
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
     private BigDecimal netAmount1MCY_2;
 
     /*

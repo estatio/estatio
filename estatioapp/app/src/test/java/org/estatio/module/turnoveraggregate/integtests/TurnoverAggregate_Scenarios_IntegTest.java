@@ -118,24 +118,33 @@ public class TurnoverAggregate_Scenarios_IntegTest extends TurnoverAggregateModu
     public void calculate_turnover_aggregations_works() throws Exception {
 
         // given
-        setFixtureClockDate(new LocalDate(2020,2,1));
+        setFixtureClockDate(new LocalDate(2020,2,16));
         setupScenario_and_validate_import();
         assertThat(turnoverAggregationRepository.listAll()).isEmpty();
 
         // when
         mixin(Lease_aggregateTurnovers.class, oxf123Lease).$$(new LocalDate(2018,2,1), false);
+        transactionService.nextTransaction();
 
         // then
         final List<TurnoverAggregation> aggregations = turnoverAggregationRepository.listAll();
         final List<TurnoverAggregation> aggsOcc2 = turnoverAggregationRepository
                 .findByTurnoverReportingConfig(occ2Cfg);
-        final TurnoverAggregation agg20100101 = turnoverAggregationRepository.findUnique(occ2Cfg, new LocalDate(2020,1,1));
+        TurnoverAggregation agg20100101 = turnoverAggregationRepository.findUnique(occ2Cfg, new LocalDate(2020,1,1));
         assertThat(agg20100101).isNotNull();
 
         assertThat(agg20100101.getAggregate1Month().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("93836.00"));
         assertThat(agg20100101.getAggregate1Month().getTurnoverCountPreviousYear()).isEqualTo(1);
         assertThat(agg20100101.getAggregate1Month().getNetAmountPreviousYear()).isEqualTo(new BigDecimal("0.00"));
         assertThat(agg20100101.getAggregate1Month().getTurnoverCount()).isNull();
+
+
+        // when
+        mixin(Lease_aggregateTurnovers.class, oxf123Lease).$$(new LocalDate(2020,1,1), false);
+        transactionService.nextTransaction();
+        // then still
+        agg20100101 = turnoverAggregationRepository.findUnique(occ2Cfg, new LocalDate(2020,1,1));
+        assertThat(agg20100101.getAggregate1Month().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("93836.00"));
 
         // TODO: finish
 
