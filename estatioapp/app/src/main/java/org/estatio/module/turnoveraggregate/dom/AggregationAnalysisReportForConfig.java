@@ -6,7 +6,6 @@ import java.util.List;
 import org.joda.time.LocalDate;
 
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 
 import lombok.Getter;
@@ -18,7 +17,7 @@ public class AggregationAnalysisReportForConfig {
     public AggregationAnalysisReportForConfig(final TurnoverReportingConfig turnoverReportingConfig){
         this.turnoverReportingConfig = turnoverReportingConfig;
         this.aggregationDates = new ArrayList<>();
-        this.parallelOccupancies = new ArrayList<>();
+        this.parallelConfigs = new ArrayList<>();
         this.parallelOnSameUnit = new ArrayList<>();
         this.previousOnOtherUnit = new ArrayList<>();
         this.nextOnOtherUnit = new ArrayList<>();
@@ -31,7 +30,7 @@ public class AggregationAnalysisReportForConfig {
 
     private List<TurnoverReportingConfig> parallelOnSameUnit;
 
-    private List<TurnoverReportingConfig> parallelOccupancies;
+    private List<TurnoverReportingConfig> parallelConfigs;
 
     @Setter
     private boolean toplevel;

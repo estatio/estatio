@@ -55,7 +55,7 @@ public class TurnoverAggregateForPeriod {
 
     @Getter @Setter
     @Column(allowsNull = "true")
-    private int turnoverCount;
+    private Integer turnoverCount;
 
     @Getter @Setter
     @Column(allowsNull = "true")
@@ -71,7 +71,7 @@ public class TurnoverAggregateForPeriod {
 
     @Getter @Setter
     @Column(allowsNull = "true")
-    private int turnoverCountPreviousYear;
+    private Integer turnoverCountPreviousYear;
 
     @Getter @Setter
     @Column(allowsNull = "true")

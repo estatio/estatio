@@ -55,7 +55,7 @@ public final class EstatioApplicationModule extends ModuleAbstract {
                 new EstatioLinkModule(),
                 new EstatioCodaModule(),
                 new EstatioDocFlowModule(),
-                new EstatioTurnoverModule(),
+//                new EstatioTurnoverModule(),
                 new EstatioTurnoverAggregateModule()
         );
     }

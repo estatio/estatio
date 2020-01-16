@@ -48,6 +48,7 @@ import org.isisaddons.module.publishmq.dom.servicespi.PublisherServiceUsingActiv
 import org.isisaddons.module.servletapi.dom.HttpSessionProvider;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.slack.impl.SlackService;
 
 import org.estatio.module.application.contributions.Organisation_syncToCoda;
@@ -58,10 +59,14 @@ import org.estatio.module.coda.EstatioCodaModule;
 import org.estatio.module.coda.dom.doc.CodaDocHeadMenu;
 import org.estatio.module.coda.dom.hwm.CodaHwm;
 import org.estatio.module.coda.dom.hwm.CodaHwmRepository;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.settings.dom.ApplicationSettingForEstatio;
 import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
+import org.estatio.module.turnover.dom.Frequency;
+import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
+import org.estatio.module.turnover.dom.Type;
 import org.estatio.module.turnoveraggregate.contributions.Lease_aggregateTurnovers;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationService;
 
@@ -508,10 +513,15 @@ public class AdminDashboard implements ViewModel {
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public void aggregateAllTurnovers(final LocalDate aggregationDate, final boolean maintainOnly){
-        leaseRepository.allLeases().forEach(l->{
+    public void aggregateAllTurnovers(final LocalDate calculationDate, final boolean maintainOnly){
+        final List<Lease> leaseSelection = turnoverReportingConfigRepository.listAll().stream()
+                .filter(c -> c.getType() == Type.PRELIMINARY && c.getFrequency() == Frequency.MONTHLY)
+                .map(c -> c.getOccupancy().getLease())
+                .filter(l -> l.getEffectiveInterval().overlaps(LocalDateInterval.including(calculationDate, null)))
+                .collect(Collectors.toList());
+        leaseSelection.forEach(l->{
             try {
-                backgroundService2.executeMixin(Lease_aggregateTurnovers.class, l).$$(aggregationDate, maintainOnly);
+                backgroundService2.executeMixin(Lease_aggregateTurnovers.class, l).$$(calculationDate, maintainOnly);
             } catch (Exception e){
                LOG.warn(String.format("Problem with aggregation for lease %s", l.getReference()));
                LOG.warn(e.getMessage());
@@ -580,5 +590,7 @@ public class AdminDashboard implements ViewModel {
 
     @Inject
     BackgroundService2 backgroundService2;
+
+    @Inject TurnoverReportingConfigRepository turnoverReportingConfigRepository;
 
 }

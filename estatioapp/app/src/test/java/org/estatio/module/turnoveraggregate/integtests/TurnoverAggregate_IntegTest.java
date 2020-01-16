@@ -204,14 +204,14 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         assertThat(aggregations.get(41).getDate()).isEqualTo(occ4.getEffectiveEndDate().withDayOfMonth(1).minusMonths(1));
         assertThat(occ4Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.PREVIOUS_MANY_OCCS_TO_ONE);
         assertThat(aggregations.get(42).getTurnoverReportingConfig()).isEqualTo(occ2Cfg);
-        assertThat(occ2Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.SIMPLE);
+        assertThat(occ2Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.ONE_OCC_TO_MANY_SAME_LEASE);
         assertThat(aggregations.get(42).getDate()).isEqualTo(occ2.getStartDate().withDayOfMonth(1));
         assertThat(aggregations.get(72).getTurnoverReportingConfig()).isEqualTo(occ2Cfg);
         assertThat(aggregations.get(72).getDate()).isEqualTo(occ2.getEffectiveEndDate().withDayOfMonth(1).minusMonths(1));
         assertThat(aggregations.get(73).getTurnoverReportingConfig()).isEqualTo(occ3Cfg);
         assertThat(aggregations.get(73).getDate()).isEqualTo(occ3.getStartDate().withDayOfMonth(1));
         assertThat(aggregations.get(73).getDate()).isEqualTo(new LocalDate(2017,4,1));
-        assertThat(occ3Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.SIMPLE);
+        assertThat(occ3Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.ONE_OCC_TO_MANY_SAME_LEASE);
         assertThat(aggregations.get(103).getTurnoverReportingConfig()).isEqualTo(occ3Cfg);
         assertThat(aggregations.get(103).getDate()).isEqualTo(occ3.getEffectiveEndDate().withDayOfMonth(1).minusMonths(1));
         assertThat(aggregations.get(104).getTurnoverReportingConfig()).isEqualTo(occ1Cfg);
@@ -265,23 +265,7 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
                 .findOrCreate(occ3Cfg, aggregationDate, euro);
 
         // then
-        assertThat(occ3Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.SIMPLE);
-        assertTurnoverAggregation(
-                aggOccPar,
-                new BigDecimal("12342.00"), null, false,
-                new BigDecimal("12342.00"), null, false,
-                new BigDecimal("12342.00"), null, false,
-                new BigDecimal("12342.00"), null, false,
-                new BigDecimal("12342.00"), null, false,
-                new BigDecimal("12342.00"), null, false,
-                new BigDecimal("12342.00"), null, false,
-                new BigInteger("120"), null, false,
-                new BigInteger("120"), null, false,
-                new BigInteger("120"), null, false,
-                new BigInteger("120"), null, false,
-                "abc", null,
-               null,null
-        );
+        assertThat(occ3Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.ONE_OCC_TO_MANY_SAME_LEASE);
     }
 
     @Test

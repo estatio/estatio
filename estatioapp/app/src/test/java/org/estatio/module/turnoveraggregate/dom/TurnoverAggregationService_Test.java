@@ -215,7 +215,7 @@ public class TurnoverAggregationService_Test {
         private void validateReport(final AggregationAnalysisReportForConfig r, final TurnoverReportingConfig cfg, int datSize, int parSize, int parSameUnit, TurnoverReportingConfig next, int nextSize, TurnoverReportingConfig prev, int prevSize, final boolean toplevel){
             assertThat(r.getTurnoverReportingConfig()).isEqualTo(cfg);
             assertThat(r.getAggregationDates().size()).isEqualTo(datSize);
-            assertThat(r.getParallelOccupancies().size()).isEqualTo(parSize);
+            assertThat(r.getParallelConfigs().size()).isEqualTo(parSize);
             assertThat(r.getParallelOnSameUnit().size()).isEqualTo(parSameUnit);
             assertThat(r.getNextOnSameUnit()).isEqualTo(next);
             assertThat(r.getNextOnOtherUnit().size()).isEqualTo(nextSize);
@@ -353,12 +353,12 @@ public class TurnoverAggregationService_Test {
         assertThat(service.determineApplicationStrategyForConfig(reports , config)).isEqualTo(AggregationStrategy.SIMPLE);
 
         // and when prev with many then
-        repForPrev.getParallelOccupancies().add(new TurnoverReportingConfig());
+        repForPrev.getParallelConfigs().add(new TurnoverReportingConfig());
         // then
         assertThat(service.determineApplicationStrategyForConfig(reports , config)).isEqualTo(AggregationStrategy.PREVIOUS_MANY_OCCS_TO_ONE);
 
         // and when current has many and prev as well
-        rep.getParallelOccupancies().add(new TurnoverReportingConfig());
+        rep.getParallelConfigs().add(new TurnoverReportingConfig());
         // then
         assertThat(service.determineApplicationStrategyForConfig(reports , config)).isEqualTo(AggregationStrategy.PREVIOUS_MANY_OCCS_TO_MANY);
 
@@ -462,6 +462,10 @@ public class TurnoverAggregationService_Test {
         assertThat(service.isComparableForPeriod(AggregationPeriod.P_2M, 2, 2, false, true)).isFalse();
 
         assertThat(service.isComparableForPeriod(AggregationPeriod.P_2M, 0, 2, false, true)).isFalse();
+
+        assertThat(service.isComparableForPeriod(AggregationPeriod.P_2M, null, 2, false, true)).isFalse();
+        assertThat(service.isComparableForPeriod(AggregationPeriod.P_2M, 0, null, false, true)).isFalse();
+
     }
 
     @Test
@@ -480,6 +484,9 @@ public class TurnoverAggregationService_Test {
         assertThat(service.isComparableToDate(aggregationDate, 2, 2, false, true)).isFalse();
 
         assertThat(service.isComparableToDate(aggregationDate, 0, 2, false, true)).isFalse();
+
+        assertThat(service.isComparableToDate(aggregationDate, null, 2, false, true)).isFalse();
+        assertThat(service.isComparableToDate(aggregationDate, 0, null, false, true)).isFalse();
     }
 
     @Test
@@ -648,20 +655,20 @@ public class TurnoverAggregationService_Test {
 
         // then
         assertAggregateForPeriod(afp, new BigDecimal("1"), new BigDecimal("0.50"),1,false,
-                null, null,0, false, false);
+                null, null,null, false, false);
 
         // and when only this year
         List<Turnover> objectsCurYear = prepareTestObjects(LocalDateInterval.including(aggregationDate.minusMonths(11), aggregationDate));
         service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, objectsCurYear);
         // then
         assertAggregateForPeriod(afp, new BigDecimal("23"), new BigDecimal("22.00"),2,false,
-                null, null,0, false, false);
+                null, null,null, false, false);
 
         // and when only last year
         List<Turnover> objectsPreviousYear = prepareTestObjects(LocalDateInterval.including(aggregationDate.minusYears(1).minusMonths(11), aggregationDate.minusYears(1)));
         service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, objectsPreviousYear);
         // then
-        assertAggregateForPeriod(afp,  null,  null,0,false,
+        assertAggregateForPeriod(afp,  null,  null,null,false,
                 new BigDecimal("23"),new BigDecimal("22.00"),2, false, false);
 
         // and when both this and last year
@@ -774,7 +781,7 @@ public class TurnoverAggregationService_Test {
 
         // then
         assertAggregateToDate(tad, new BigDecimal("1"), new BigDecimal("0.50"),1,false,
-                null, null,0, false, false);
+                null, null,null, false, false);
 
         // and when 2 M only this year
         final LocalDate aggregationDate2M = new LocalDate(2020, 2, 1);
@@ -782,13 +789,13 @@ public class TurnoverAggregationService_Test {
         service.calculateTurnoverAggregateToDate(tad, aggregationDate2M, objectsCurYear);
         // then
         assertAggregateToDate(tad, new BigDecimal("23"), new BigDecimal("22.00"),2,false,
-                null, null,0, false, false);
+                null, null,null, false, false);
 
         // and when 2 M only last year
         List<Turnover> objectsLastYear = prepareTestObjects(LocalDateInterval.including(aggregationDate2M.minusYears(1).minusMonths(11), aggregationDate2M.minusYears(1)));
         service.calculateTurnoverAggregateToDate(tad, aggregationDate2M, objectsLastYear);
         // then
-        assertAggregateToDate(tad,  null,  null, 0,false,
+        assertAggregateToDate(tad,  null,  null, null,false,
                 new BigDecimal("23"), new BigDecimal("22.00"),2, false, false);
 
         // and when 2M both this and last year

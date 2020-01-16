@@ -311,8 +311,5 @@ public class TurnoverAggregation {
 
     }
 
-    @Inject
-    TurnoverAggregationService turnoverAggregationService;
-
     @Inject RepositoryService repositoryService;
 }
