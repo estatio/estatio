@@ -429,7 +429,7 @@ public class TurnoverAggregationService_Test {
         // when
         List<Turnover> turnoverList = Arrays.asList();
         // then
-        assertThat(service.containsNonComparableTurnover(turnoverList)).isFalse();
+        assertThat(service.containsNonComparableTurnover(turnoverList)).isNull();
 
         // when
         Turnover t1 = new Turnover();
@@ -655,20 +655,20 @@ public class TurnoverAggregationService_Test {
 
         // then
         assertAggregateForPeriod(afp, new BigDecimal("1"), new BigDecimal("0.50"),1,false,
-                null, null,null, false, false);
+                null, null,null, null, false);
 
         // and when only this year
         List<Turnover> objectsCurYear = prepareTestObjects(LocalDateInterval.including(aggregationDate.minusMonths(11), aggregationDate));
         service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, objectsCurYear);
         // then
         assertAggregateForPeriod(afp, new BigDecimal("23"), new BigDecimal("22.00"),2,false,
-                null, null,null, false, false);
+                null, null,null, null, false);
 
         // and when only last year
         List<Turnover> objectsPreviousYear = prepareTestObjects(LocalDateInterval.including(aggregationDate.minusYears(1).minusMonths(11), aggregationDate.minusYears(1)));
         service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, objectsPreviousYear);
         // then
-        assertAggregateForPeriod(afp,  null,  null,null,false,
+        assertAggregateForPeriod(afp,  null,  null,null,null,
                 new BigDecimal("23"),new BigDecimal("22.00"),2, false, false);
 
         // and when both this and last year
@@ -694,21 +694,21 @@ public class TurnoverAggregationService_Test {
             final BigDecimal g,
             final BigDecimal n,
             final Integer tc,
-            final boolean cC,
+            final Boolean cC,
             final BigDecimal gP,
             final BigDecimal nP,
             final Integer tcP,
-            final boolean cP,
+            final Boolean cP,
             final boolean c
     ){
         assertThat(afp.getGrossAmount()).isEqualTo(g);
         assertThat(afp.getNetAmount()).isEqualTo(n);
         assertThat(afp.getTurnoverCount()).isEqualTo(tc);
-        assertThat(afp.isNonComparableThisYear()).isEqualTo(cC);
+        assertThat(afp.getNonComparableThisYear()).isEqualTo(cC);
         assertThat(afp.getGrossAmountPreviousYear()).isEqualTo(gP);
         assertThat(afp.getNetAmountPreviousYear()).isEqualTo(nP);
         assertThat(afp.getTurnoverCountPreviousYear()).isEqualTo(tcP);
-        assertThat(afp.isNonComparablePreviousYear()).isEqualTo(cP);
+        assertThat(afp.getNonComparablePreviousYear()).isEqualTo(cP);
         assertThat(afp.isComparable()).isEqualTo(c);
     }
 
@@ -781,7 +781,7 @@ public class TurnoverAggregationService_Test {
 
         // then
         assertAggregateToDate(tad, new BigDecimal("1"), new BigDecimal("0.50"),1,false,
-                null, null,null, false, false);
+                null, null,null, null, false);
 
         // and when 2 M only this year
         final LocalDate aggregationDate2M = new LocalDate(2020, 2, 1);
@@ -789,13 +789,13 @@ public class TurnoverAggregationService_Test {
         service.calculateTurnoverAggregateToDate(tad, aggregationDate2M, objectsCurYear);
         // then
         assertAggregateToDate(tad, new BigDecimal("23"), new BigDecimal("22.00"),2,false,
-                null, null,null, false, false);
+                null, null,null, null, false);
 
         // and when 2 M only last year
         List<Turnover> objectsLastYear = prepareTestObjects(LocalDateInterval.including(aggregationDate2M.minusYears(1).minusMonths(11), aggregationDate2M.minusYears(1)));
         service.calculateTurnoverAggregateToDate(tad, aggregationDate2M, objectsLastYear);
         // then
-        assertAggregateToDate(tad,  null,  null, null,false,
+        assertAggregateToDate(tad,  null,  null, null,null,
                 new BigDecimal("23"), new BigDecimal("22.00"),2, false, false);
 
         // and when 2M both this and last year
@@ -826,21 +826,21 @@ public class TurnoverAggregationService_Test {
             final BigDecimal g,
             final BigDecimal n,
             final Integer tc,
-            final boolean cC,
+            final Boolean cC,
             final BigDecimal gP,
             final BigDecimal nP,
             final Integer tcP,
-            final boolean cP,
+            final Boolean cP,
             final boolean c
     ){
         assertThat(afp.getGrossAmount()).isEqualTo(g);
         assertThat(afp.getNetAmount()).isEqualTo(n);
         assertThat(afp.getTurnoverCount()).isEqualTo(tc);
-        assertThat(afp.isNonComparableThisYear()).isEqualTo(cC);
+        assertThat(afp.getNonComparableThisYear()).isEqualTo(cC);
         assertThat(afp.getGrossAmountPreviousYear()).isEqualTo(gP);
         assertThat(afp.getNetAmountPreviousYear()).isEqualTo(nP);
         assertThat(afp.getTurnoverCountPreviousYear()).isEqualTo(tcP);
-        assertThat(afp.isNonComparablePreviousYear()).isEqualTo(cP);
+        assertThat(afp.getNonComparablePreviousYear()).isEqualTo(cP);
         assertThat(afp.isComparable()).isEqualTo(c);
     }
 

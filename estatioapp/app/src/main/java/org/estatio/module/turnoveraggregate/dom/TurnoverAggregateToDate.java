@@ -49,7 +49,7 @@ public class TurnoverAggregateToDate {
 
     @Getter @Setter
     @Column(allowsNull = "true")
-    private boolean nonComparableThisYear;
+    private Boolean nonComparableThisYear;
 
     @Getter @Setter
     @Column(allowsNull = "true")
@@ -65,7 +65,7 @@ public class TurnoverAggregateToDate {
 
     @Getter @Setter
     @Column(allowsNull = "true")
-    private boolean nonComparablePreviousYear;
+    private Boolean nonComparablePreviousYear;
 
     @Getter @Setter
     @Column(allowsNull = "true")

@@ -80,20 +80,25 @@ public class TurnoverAggregationService {
             return;
         }
 
+        // Process step 1: analyze  ////////////////////////////////////////////////////////////////////////////////////
         final List<AggregationAnalysisReportForConfig> analysisReports = analyze(lease, type,
                 frequency);
 
+
+        // Process step 2: maintain  ///////////////////////////////////////////////////////////////////////////////////
         analysisReports.stream().forEach(r -> {
-            // determine and set strategy
+            // 2a: determine and set strategy
             final TurnoverReportingConfig config = r.getTurnoverReportingConfig();
             config.setAggregationStrategy(determineApplicationStrategyForConfig(analysisReports, config));
 
-            // create / delete aggregations
+            // 2b: create / delete aggregations
             maintainTurnoverAggregationsForConfig(r);
         });
 
         if (maintainOnly)
             return;
+
+        // Process step 3: calculate  //////////////////////////////////////////////////////////////////////////////////
 
         LocalDate minTurnoverDate = turnoverDate.withDayOfMonth(1).isBefore(MIN_AGGREGATION_DATE.minusMonths(23)) ?
                 MIN_AGGREGATION_DATE.minusMonths(23) :
@@ -320,10 +325,10 @@ public class TurnoverAggregationService {
 
         turnoverAggregateForPeriod.setComparable(isComparableForPeriod(
                 turnoverAggregateForPeriod.getAggregationPeriod(),
-                turnoverAggregateForPeriod.getTurnoverCount()!=null ? turnoverAggregateForPeriod.getTurnoverCount() : null,
-                turnoverAggregateForPeriod.getTurnoverCountPreviousYear() != null ? turnoverAggregateForPeriod.getTurnoverCountPreviousYear() : null,
-                turnoverAggregateForPeriod.isNonComparableThisYear(),
-                turnoverAggregateForPeriod.isNonComparablePreviousYear()
+                turnoverAggregateForPeriod.getTurnoverCount(),
+                turnoverAggregateForPeriod.getTurnoverCountPreviousYear(),
+                turnoverAggregateForPeriod.getNonComparableThisYear(),
+                turnoverAggregateForPeriod.getNonComparablePreviousYear()
                 ));
 
     }
@@ -362,10 +367,10 @@ public class TurnoverAggregationService {
 
         turnoverAggregateToDate.setComparable(isComparableToDate(
                 aggregationDate,
-                turnoverAggregateToDate.getTurnoverCount()!=null ? turnoverAggregateToDate.getTurnoverCount() : null,
-                turnoverAggregateToDate.getTurnoverCountPreviousYear()!=null ? turnoverAggregateToDate.getTurnoverCountPreviousYear() : null,
-                turnoverAggregateToDate.isNonComparableThisYear(),
-                turnoverAggregateToDate.isNonComparablePreviousYear()
+                turnoverAggregateToDate.getTurnoverCount(),
+                turnoverAggregateToDate.getTurnoverCountPreviousYear(),
+                turnoverAggregateToDate.getNonComparableThisYear(),
+                turnoverAggregateToDate.getNonComparablePreviousYear()
         ));
     }
 
@@ -408,27 +413,6 @@ public class TurnoverAggregationService {
         if (toCY.size()==toPY.size()){
             purchaseCountAggregateForPeriod.setComparable(true);
         }
-    }
-
-    boolean containsNonComparableTurnover(final List<Turnover> turnoverList){
-        return turnoverList.stream().anyMatch(t->t.isNonComparable());
-    }
-
-    boolean isComparableForPeriod(final AggregationPeriod period, final Integer numberOfTurnoversThisYear, final Integer numberOfTurnoversPreviousYear, final boolean nonComparableThisYear, final boolean nonComparablePreviousYear){
-        if (numberOfTurnoversThisYear==null || numberOfTurnoversPreviousYear==null) return false;
-        return !nonComparableThisYear && !nonComparablePreviousYear && numberOfTurnoversThisYear >= period.getMinNumberOfTurnovers() && numberOfTurnoversPreviousYear >=period.getMinNumberOfTurnovers();
-    }
-
-    private BigDecimal aggAmount(final BigDecimal curAmount, final BigDecimal amountToAdd) {
-        if (amountToAdd==null) return curAmount;
-        if (curAmount==null)   return amountToAdd;
-        return curAmount.add(amountToAdd);
-    }
-
-    private BigInteger aggCount(final BigInteger curCount, final BigInteger countToAdd) {
-        if (countToAdd==null) return curCount;
-        if (curCount==null)   return countToAdd;
-        return curCount.add(countToAdd);
     }
 
     /**
@@ -690,9 +674,31 @@ public class TurnoverAggregationService {
     }
 
 
-    boolean isComparableToDate(final LocalDate aggregationDate, final Integer numberOfTurnoversThisYear, final Integer numberOfTurnoversPreviousYear, final boolean nonComparableThisYear, final boolean nonComparablePreviousYear ){
+    Boolean isComparableToDate(final LocalDate aggregationDate, final Integer numberOfTurnoversThisYear, final Integer numberOfTurnoversPreviousYear, final Boolean nonComparableThisYear, final Boolean nonComparablePreviousYear ){
          if (numberOfTurnoversThisYear==null || numberOfTurnoversPreviousYear == null) return false;
          return !nonComparableThisYear && !nonComparablePreviousYear && numberOfTurnoversThisYear >= getMinNumberOfTurnoversToDate(aggregationDate) && numberOfTurnoversPreviousYear >= getMinNumberOfTurnoversToDate(aggregationDate);
+    }
+
+    Boolean containsNonComparableTurnover(final List<Turnover> turnoverList){
+        if (turnoverList.isEmpty()) return null;
+        return turnoverList.stream().anyMatch(t->t.isNonComparable());
+    }
+
+    Boolean isComparableForPeriod(final AggregationPeriod period, final Integer numberOfTurnoversThisYear, final Integer numberOfTurnoversPreviousYear, final Boolean nonComparableThisYear, final Boolean nonComparablePreviousYear){
+        if (numberOfTurnoversThisYear==null || numberOfTurnoversPreviousYear==null) return false;
+        return !nonComparableThisYear && !nonComparablePreviousYear && numberOfTurnoversThisYear >= period.getMinNumberOfTurnovers() && numberOfTurnoversPreviousYear >=period.getMinNumberOfTurnovers();
+    }
+
+    private BigDecimal aggAmount(final BigDecimal curAmount, final BigDecimal amountToAdd) {
+        if (amountToAdd==null) return curAmount;
+        if (curAmount==null)   return amountToAdd;
+        return curAmount.add(amountToAdd);
+    }
+
+    private BigInteger aggCount(final BigInteger curCount, final BigInteger countToAdd) {
+        if (countToAdd==null) return curCount;
+        if (curCount==null)   return countToAdd;
+        return curCount.add(countToAdd);
     }
 
     int getMinNumberOfTurnoversToDate(final LocalDate aggregationDate){
@@ -703,11 +709,11 @@ public class TurnoverAggregationService {
         agg.setGrossAmount(null);
         agg.setNetAmount(null);
         agg.setTurnoverCount(null);
-        agg.setNonComparableThisYear(false);
+        agg.setNonComparableThisYear(null);
         agg.setGrossAmountPreviousYear(null);
         agg.setNetAmountPreviousYear(null);
         agg.setTurnoverCountPreviousYear(null);
-        agg.setNonComparablePreviousYear(false);
+        agg.setNonComparablePreviousYear(null);
         agg.setComparable(false);
     }
 
@@ -715,11 +721,11 @@ public class TurnoverAggregationService {
         agg.setGrossAmount(null);
         agg.setNetAmount(null);
         agg.setTurnoverCount(null);
-        agg.setNonComparableThisYear(false);
+        agg.setNonComparableThisYear(null);
         agg.setGrossAmountPreviousYear(null);
         agg.setNetAmountPreviousYear(null);
         agg.setTurnoverCountPreviousYear(null);
-        agg.setNonComparablePreviousYear(false);
+        agg.setNonComparablePreviousYear(null);
         agg.setComparable(false);
     }
 

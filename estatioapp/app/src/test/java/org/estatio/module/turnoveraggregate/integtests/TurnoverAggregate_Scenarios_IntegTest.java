@@ -137,6 +137,17 @@ public class TurnoverAggregate_Scenarios_IntegTest extends TurnoverAggregateModu
         assertThat(agg20100101.getAggregate1Month().getTurnoverCountPreviousYear()).isEqualTo(1);
         assertThat(agg20100101.getAggregate1Month().getNetAmountPreviousYear()).isEqualTo(new BigDecimal("0.00"));
         assertThat(agg20100101.getAggregate1Month().getTurnoverCount()).isNull();
+        assertThat(agg20100101.getAggregate1Month().getNonComparableThisYear()).isNull();
+        assertThat(agg20100101.getAggregate1Month().getNonComparablePreviousYear()).isEqualTo(false);
+        assertThat(agg20100101.getAggregate2Month().getGrossAmount()).isNull();
+        assertThat(agg20100101.getAggregate2Month().getNonComparableThisYear()).isNull();
+        assertThat(agg20100101.getAggregate2Month().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("176524.00"));
+        assertThat(agg20100101.getAggregate2Month().getTurnoverCountPreviousYear()).isEqualTo(2);
+        assertThat(agg20100101.getAggregate3Month().getNonComparableThisYear()).isFalse();
+        assertThat(agg20100101.getAggregate3Month().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("276566.00"));
+        assertThat(agg20100101.getAggregate3Month().getTurnoverCountPreviousYear()).isEqualTo(3);
+
+
 
 
         // when
