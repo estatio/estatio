@@ -34,6 +34,7 @@ import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
 
+import jdk.nashorn.internal.objects.NativeUint8Array;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -412,16 +413,29 @@ public class TurnoverAggregationService {
 
         resetPurchaseCountAggregateForPeriod(purchaseCountAggregateForPeriod);
 
-        toCY.forEach(t->{
+        Integer numberOfCountsCY = null;
+        for (Turnover t : toCY){
             purchaseCountAggregateForPeriod.setCount(aggCount(purchaseCountAggregateForPeriod.getCount(), t.getPurchaseCount()));
-        });
-        toPY.forEach(t->{
-            purchaseCountAggregateForPeriod.setCountPreviousYear(aggCount(purchaseCountAggregateForPeriod.getCountPreviousYear(), t.getPurchaseCount()));
-        });
-
-        if (toCY.size()==toPY.size()){
-            purchaseCountAggregateForPeriod.setComparable(true);
+            if (t.getPurchaseCount()!=null){
+                numberOfCountsCY = numberOfCountsCY==null ? 1 : numberOfCountsCY+1;
+            }
         }
+        Integer numberOfCountsPY = null;
+        for (Turnover t : toPY){
+            purchaseCountAggregateForPeriod.setCountPreviousYear(aggCount(purchaseCountAggregateForPeriod.getCountPreviousYear(), t.getPurchaseCount()));
+            if (t.getPurchaseCount()!=null){
+                numberOfCountsPY = numberOfCountsPY==null ? 1 : numberOfCountsPY+1;
+            }
+        }
+
+        purchaseCountAggregateForPeriod.setComparable(
+                isComparableForPeriod(purchaseCountAggregateForPeriod.getAggregationPeriod()
+                , numberOfCountsCY
+                , numberOfCountsPY
+                , false
+                , false
+        ));
+
     }
 
     /**
