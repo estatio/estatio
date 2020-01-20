@@ -513,23 +513,21 @@ public class AdminDashboard implements ViewModel {
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public void aggregateAllTurnovers(final LocalDate calculationDate, final boolean maintainOnly){
+    public void aggregateAllTurnovers(final LocalDate startDate, final LocalDate endDate, final boolean maintainOnly){
         final List<Lease> leaseSelection = turnoverReportingConfigRepository.listAll().stream()
                 .filter(c -> c.getType() == Type.PRELIMINARY && c.getFrequency() == Frequency.MONTHLY)
                 .map(c -> c.getOccupancy().getLease())
-                .filter(l -> l.getEffectiveInterval().overlaps(LocalDateInterval.including(calculationDate, null)))
+                .filter(l -> l.getEffectiveInterval().overlaps(LocalDateInterval.including(startDate, null)))
                 .collect(Collectors.toList());
         leaseSelection.forEach(l->{
             try {
-                backgroundService2.executeMixin(Lease_aggregateTurnovers.class, l).$$(calculationDate, maintainOnly);
+                backgroundService2.executeMixin(Lease_aggregateTurnovers.class, l).$$(startDate, endDate, maintainOnly);
             } catch (Exception e){
                LOG.warn(String.format("Problem with aggregation for lease %s", l.getReference()));
                LOG.warn(e.getMessage());
             }
         });
     }
-
-    @Inject LeaseRepository leaseRepository;
 
     @Inject
     CodaCmpCodeService codaCmpCodeService;

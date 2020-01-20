@@ -188,7 +188,7 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         assertThat(turnoverAggregationRepository.listAll()).isEmpty();
 
         // when
-        mixin(Lease_aggregateTurnovers.class, oxfTopModelLease1).$$(null, true);
+        mixin(Lease_aggregateTurnovers.class, oxfTopModelLease1).$$(null, null, true);
 
         // then
         final List<TurnoverAggregation> aggregations = turnoverAggregationRepository.listAll();
@@ -227,10 +227,10 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         setupScenario_and_validate_import();
 
         // when
-        final LocalDate aggregationDate = new LocalDate(2017, 3, 1);
-        mixin(Lease_aggregateTurnovers.class, oxfTopModelLease1).$$(aggregationDate.minusMonths(23), false);
+        final LocalDate endDate = new LocalDate(2017, 3, 1);
+        mixin(Lease_aggregateTurnovers.class, oxfTopModelLease1).$$(endDate.minusMonths(23), endDate,false);
         final TurnoverAggregation aggOnOcc1 = turnoverAggregationRepository
-                .findOrCreate(occ1Cfg, aggregationDate, euro);
+                .findOrCreate(occ1Cfg, endDate, euro);
 
         // then
         assertThat(occ1Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.SIMPLE);
@@ -259,10 +259,10 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         setupScenario_and_validate_import();
 
         // when
-        final LocalDate aggregationDate = new LocalDate(2019, 4, 1);
-        mixin(Lease_aggregateTurnovers.class, oxfTopModelLease1).$$(aggregationDate.minusMonths(23), false);
+        final LocalDate endDate = new LocalDate(2019, 4, 1);
+        mixin(Lease_aggregateTurnovers.class, oxfTopModelLease1).$$(endDate.minusMonths(23), endDate,false);
         final TurnoverAggregation aggOccPar = turnoverAggregationRepository
-                .findOrCreate(occ3Cfg, aggregationDate, euro);
+                .findOrCreate(occ3Cfg, endDate, euro);
 
         // then
         assertThat(occ3Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.ONE_OCC_TO_MANY_SAME_LEASE);
@@ -275,10 +275,10 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         setupScenario_and_validate_import();
 
         // when
-        final LocalDate aggregationDate = new LocalDate(2019, 11, 1);
-        mixin(Lease_aggregateTurnovers.class, oxfTopModelLease1).$$(aggregationDate.minusMonths(23), false);
+        final LocalDate endDate = new LocalDate(2019, 11, 1);
+        mixin(Lease_aggregateTurnovers.class, oxfTopModelLease1).$$(endDate.minusMonths(23), endDate,false);
         final TurnoverAggregation aggOcc4 = turnoverAggregationRepository
-                .findOrCreate(occ4Cfg, aggregationDate, euro);
+                .findOrCreate(occ4Cfg, endDate, euro);
 
         // then
         assertThat(occ4Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.PREVIOUS_MANY_OCCS_TO_ONE);
@@ -300,10 +300,10 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         );
 
         // and when 2 parent leases
-        final LocalDate aggregationDate2 = new LocalDate(2020, 6, 1);
-        mixin(Lease_aggregateTurnovers.class, oxfTopModelLease1).$$(aggregationDate2.minusMonths(23), false);
+        final LocalDate endDate2 = new LocalDate(2020, 6, 1);
+        mixin(Lease_aggregateTurnovers.class, oxfTopModelLease1).$$(endDate2.minusMonths(23), endDate2,false);
         final TurnoverAggregation aggOcc5 = turnoverAggregationRepository
-                .findOrCreate(occ5Cfg, aggregationDate2, euro);
+                .findOrCreate(occ5Cfg, endDate2, euro);
 
         // then
         assertThat(occ5Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.SIMPLE);

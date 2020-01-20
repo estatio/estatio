@@ -863,6 +863,49 @@ public class TurnoverAggregationService_Test {
         return result;
     }
 
+    @Test
+    public void getCalculationPeriodForAggregations_works() throws Exception {
 
+        LocalDate startDate;
+        LocalDate endDate;
+
+        // given
+        TurnoverAggregationService service = new TurnoverAggregationService();
+        service.clockService = mockClockService;
+
+        // when
+        startDate = new LocalDate(2020, 1, 2);
+        endDate = new LocalDate(2020, 3, 10);
+        // then
+        assertThat(service.getCalculationPeriodForAggregations(startDate, endDate).toString()).isEqualTo("2020-01-01/2020-03-02");
+
+        // when
+        startDate=null;
+        // then
+        assertThat(service.getCalculationPeriodForAggregations(startDate, endDate)).isEqualTo(LocalDateInterval.including(TurnoverAggregationService.MIN_AGGREGATION_DATE, endDate.withDayOfMonth(1)));
+
+        // expect
+        final LocalDate now = new LocalDate(2020, 2, 10);
+        context.checking(new Expectations(){{
+            allowing(mockClockService).now();
+            will(returnValue(now));
+        }});
+
+        // when
+        startDate=new LocalDate(2020, 1, 2);
+        endDate=null;
+        // then
+        assertThat(service.getCalculationPeriodForAggregations(startDate, endDate).toString()).isEqualTo("2020-01-01/2022-01-02");
+
+        // when
+        startDate = null;
+        // then
+        assertThat(service.getCalculationPeriodForAggregations(startDate, endDate)).isEqualTo(LocalDateInterval.including(TurnoverAggregationService.MIN_AGGREGATION_DATE, now.plusMonths(23).withDayOfMonth(1)));
+
+        // when
+        endDate = TurnoverAggregationService.MIN_AGGREGATION_DATE.minusMonths(1);
+        // then
+        assertThat(service.getCalculationPeriodForAggregations(startDate, endDate)).isEqualTo(LocalDateInterval.including(TurnoverAggregationService.MIN_AGGREGATION_DATE, TurnoverAggregationService.MIN_AGGREGATION_DATE));
+    }
 
 }

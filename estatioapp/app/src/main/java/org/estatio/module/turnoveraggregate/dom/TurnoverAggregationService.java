@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import com.google.api.client.util.Lists;
-import com.google.inject.internal.cglib.core.$ReflectUtils;
 
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -53,21 +53,23 @@ public class TurnoverAggregationService {
     /**
      * This method analyzes the reporting configs involved for the lease, determines and sets the aggregation strategy on each of them
      * Then maintains the aggregations on each of them
-     * Then (re-)calculates the aggregations with respect to a turnover date. This comprises every aggregation with a date in the period
-     * from turnover date to turnover-date-plus-23-months.
+     * Then (re-)calculates the aggregations with a date between start date and end date (both included)
      *
-     *
-     * @param lease
+     *  @param lease
      * @param type
      * @param frequency
-     * @param turnoverDate
+     * @param startDate
+     * @param endDate
      * @param maintainOnly
      */
     public void aggregateTurnoversForLease(
             final Lease lease,
             final Type type,
             final Frequency frequency,
-            final LocalDate turnoverDate,
+            @Nullable
+            final LocalDate startDate,
+            @Nullable
+            final LocalDate endDate,
             final boolean maintainOnly){
         if (type != Type.PRELIMINARY ) {
             LOG.warn(String.format("No aggregate-turnovers-for-lease implementation for type %s found.",
@@ -100,11 +102,11 @@ public class TurnoverAggregationService {
 
         // Process step 3: calculate  //////////////////////////////////////////////////////////////////////////////////
 
-        LocalDate minTurnoverDate = turnoverDate.withDayOfMonth(1).isBefore(MIN_AGGREGATION_DATE.minusMonths(23)) ?
-                MIN_AGGREGATION_DATE.minusMonths(23) :
-                turnoverDate.withDayOfMonth(1);
-        LocalDateInterval calculationPeriodForAggregations = LocalDateInterval
-                .excluding(minTurnoverDate, minTurnoverDate.plusMonths(24));
+        final LocalDateInterval calculationPeriodForAggregations = getCalculationPeriodForAggregations(startDate, endDate);
+        final LocalDateInterval periodForTurnoverSelection = LocalDateInterval.including(
+                calculationPeriodForAggregations.startDate().minusMonths(23),
+                calculationPeriodForAggregations.endDate()
+        );
 
         List<ConfigReportTuple> configReportTuplesForCalculationPeriod = new ArrayList<>();
         analysisReports.stream().forEach(r -> {
@@ -140,7 +142,7 @@ public class TurnoverAggregationService {
         configsToCalculate.forEach(c -> {
             final List<Turnover> turnoversInCalculationPeriod = turnoverRepository
                     .findApprovedByConfigAndTypeAndFrequency(c, c.getType(), c.getFrequency()).stream()
-                    .filter(t -> calculationPeriodForAggregations.contains(t.getDate()))
+                    .filter(t -> periodForTurnoverSelection.contains(t.getDate()))
                     .collect(Collectors.toList());
             turnoversToAggregate.addAll(turnoversInCalculationPeriod);
         });
@@ -158,6 +160,13 @@ public class TurnoverAggregationService {
 
         }
 
+    }
+
+    final LocalDateInterval getCalculationPeriodForAggregations(final LocalDate startDate, final LocalDate endDate){
+        final LocalDate startDateToUse = startDate == null || startDate.isBefore(MIN_AGGREGATION_DATE) ? MIN_AGGREGATION_DATE : startDate.withDayOfMonth(1);
+        final LocalDate endDateToUse = endDate == null ? clockService.now().withDayOfMonth(1).plusMonths(23): endDate.withDayOfMonth(1);
+        if (endDateToUse.isBefore(startDateToUse)) return LocalDateInterval.including(startDateToUse, startDateToUse); // Safety net in case end date is before min aggregation date while start date is null
+        return LocalDateInterval.including(startDateToUse, endDateToUse);
     }
 
     @Getter

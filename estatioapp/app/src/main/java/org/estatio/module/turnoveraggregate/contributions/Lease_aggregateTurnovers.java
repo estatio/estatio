@@ -1,5 +1,6 @@
 package org.estatio.module.turnoveraggregate.contributions;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
@@ -22,9 +23,17 @@ public class Lease_aggregateTurnovers {
     }
 
     @Action()
-    public Lease $$(final LocalDate aggregationDate, final boolean maintainOnly) {
-        turnoverAggregationService.aggregateTurnoversForLease(lease, Type.PRELIMINARY, Frequency.MONTHLY, aggregationDate, maintainOnly);
+    public Lease $$(@Nullable final LocalDate startDate, @Nullable final LocalDate endDate, final boolean maintainOnly) {
+        turnoverAggregationService.aggregateTurnoversForLease(lease, Type.PRELIMINARY, Frequency.MONTHLY, startDate, endDate,
+                maintainOnly);
         return lease;
+    }
+
+    public String validate$$(final LocalDate startDate, final LocalDate endDate, final boolean maintainOnly){
+        if (startDate!=null && endDate!=null){
+            if (endDate.isBefore(startDate)) return "The end date cannot be before the start date";
+        }
+        return null;
     }
 
     @Inject TurnoverAggregationService turnoverAggregationService;
