@@ -102,13 +102,13 @@ public class TurnoverAggregationService_Test {
             // then
             assertThat(l.getOccupancies()).hasSize(2);
             assertThat(reps).hasSize(2);
-            validateReport(reps.get(0), o2cfg, 3, 0, 0, null, 0,null, 1,false);
-            validateReport(reps.get(1), o1cfg, 2, 0, 0, null, 1, null, 0, false);
+            validateReport(reps.get(0), o2cfg, 4, 0, 0, null, 0,null, 1,false);
+            validateReport(reps.get(1), o1cfg, 3, 0, 0, null, 1, null, 0, false);
 
             // when toplevel lease
             reps = service.reportsForOccupancyTypeAndFrequency(l, Type.PRELIMINARY, Frequency.MONTHLY, true);
             validateReport(reps.get(0), o2cfg, 27, 0, 0, null, 0, null, 1, true);
-            validateReport(reps.get(1), o1cfg, 2, 0, 0, null, 1, null, 0, false);
+            validateReport(reps.get(1), o1cfg, 3, 0, 0, null, 1, null, 0, false);
 
         }
 
@@ -149,9 +149,9 @@ public class TurnoverAggregationService_Test {
             List<AggregationAnalysisReportForConfig> reps = service.reportsForOccupancyTypeAndFrequency(l, Type.PRELIMINARY, Frequency.MONTHLY, false);
             //then
             assertThat(reps).hasSize(3);
-            validateReport(reps.get(0), o3cfg, 3, 1, 0,  null,0, o1cfg, 0, false);
-            validateReport(reps.get(1), o2cfg, 3, 1, 0, null, 0, null, 1, false);
-            validateReport(reps.get(2), o1cfg, 2, 0, 0, o3cfg, 1, null, 0, false);
+            validateReport(reps.get(0), o3cfg, 4, 1, 0,  null,0, o1cfg, 0, false);
+            validateReport(reps.get(1), o2cfg, 4, 1, 0, null, 0, null, 1, false);
+            validateReport(reps.get(2), o1cfg, 3, 0, 0, o3cfg, 1, null, 0, false);
         }
 
         @Test
@@ -198,10 +198,10 @@ public class TurnoverAggregationService_Test {
             List<AggregationAnalysisReportForConfig> reps = service.reportsForOccupancyTypeAndFrequency(l, Type.PRELIMINARY, Frequency.MONTHLY,false);
             // then
             assertThat(reps).hasSize(4);
-            validateReport(reps.get(0), o3cfg, 3, 2, 1, null,0, o1cfg, 0,false);
-            validateReport(reps.get(1), o2cfg, 3, 2, 0, null, 0,null, 1,false);
-            validateReport(reps.get(2), o4cfg, 6, 3, 2, null, 0,null, 0,false);
-            validateReport(reps.get(3), o1cfg, 2, 1, 1, o3cfg, 1,null, 0,false);
+            validateReport(reps.get(0), o3cfg, 4, 2, 1, null,0, o1cfg, 0,false);
+            validateReport(reps.get(1), o2cfg, 4, 2, 0, null, 0,null, 1,false);
+            validateReport(reps.get(2), o4cfg, 7, 3, 2, null, 0,null, 0,false);
+            validateReport(reps.get(3), o1cfg, 3, 1, 1, o3cfg, 1,null, 0,false);
 
             // and when same for toplevel lease
             reps = service.reportsForOccupancyTypeAndFrequency(l, Type.PRELIMINARY, Frequency.MONTHLY,true);
@@ -209,7 +209,7 @@ public class TurnoverAggregationService_Test {
             validateReport(reps.get(0), o3cfg, 27, 2, 1, null, 0,o1cfg, 0,true);
             validateReport(reps.get(1), o2cfg, 27, 2, 0, null, 0,null, 1,true);
             validateReport(reps.get(2), o4cfg, 30, 3, 2, null, 0,null, 0,true);
-            validateReport(reps.get(3), o1cfg, 2, 1, 1, o3cfg, 1,null, 0,false);
+            validateReport(reps.get(3), o1cfg, 3, 1, 1, o3cfg, 1,null, 0,false);
         }
 
         private void validateReport(final AggregationAnalysisReportForConfig r, final TurnoverReportingConfig cfg, int datSize, int parSize, int parSameUnit, TurnoverReportingConfig next, int nextSize, TurnoverReportingConfig prev, int prevSize, final boolean toplevel){
@@ -301,16 +301,132 @@ public class TurnoverAggregationService_Test {
                 return LocalDateInterval.including(startDate, endDate);
             }
         };
+        Lease lease = new Lease();
+        occupancy.setLease(lease);
+        TurnoverReportingConfig config = new TurnoverReportingConfig();
+        config.setOccupancy(occupancy);
+        // when, then
+        final List<LocalDate> noToplevel = service.aggregationDatesForTurnoverReportingConfig(config, false);
+        assertThat(noToplevel).hasSize(14);
+        assertThat(noToplevel.get(0)).isEqualTo(startDate.withDayOfMonth(1));
+        assertThat(noToplevel.get(13)).isEqualTo(endDate.withDayOfMonth(1));
+        final List<LocalDate> forTopLevel = service.aggregationDatesForTurnoverReportingConfig(config, true);
+        assertThat(forTopLevel).hasSize(37);
+        assertThat(forTopLevel.get(36)).isEqualTo(endDate.plusMonths(23).withDayOfMonth(1));
+    }
+
+    @Test
+    public void aggregationDatesForOccupancy_works_with_previous_lease_not_ending_on_last_day_of_previous_month() throws Exception {
+
+        // given
+        final LocalDate startDate = new LocalDate(2019, 1, 5);
+        final LocalDate endDate = new LocalDate(2020, 2, 1);
+        TurnoverAggregationService service = new TurnoverAggregationService();
+        Occupancy occupancy = new Occupancy(){
+            @Override public LocalDateInterval getEffectiveInterval() {
+                return LocalDateInterval.including(startDate, endDate);
+            }
+        };
+        Lease lease = new Lease();
+        Lease previous = new Lease(){
+            @Override public LocalDateInterval getEffectiveInterval() {
+                return LocalDateInterval.including(null, new LocalDate(2018,11,30));
+            }
+        };
+        lease.setPrevious(previous);
+        occupancy.setLease(lease);
+        TurnoverReportingConfig config = new TurnoverReportingConfig();
+        config.setOccupancy(occupancy);
+        // when, then
+        final List<LocalDate> noToplevel = service.aggregationDatesForTurnoverReportingConfig(config, false);
+        assertThat(noToplevel).hasSize(13);
+        assertThat(noToplevel.get(0)).isEqualTo(startDate.withDayOfMonth(1).plusMonths(1));
+        assertThat(noToplevel.get(12)).isEqualTo(endDate.withDayOfMonth(1));
+        final List<LocalDate> forTopLevel = service.aggregationDatesForTurnoverReportingConfig(config, true);
+        assertThat(forTopLevel).hasSize(36);
+        assertThat(forTopLevel.get(35)).isEqualTo(endDate.plusMonths(23).withDayOfMonth(1));
+    }
+
+    @Test
+    public void aggregationDatesForOccupancy_works_with_previous_lease_ending_on_last_day_of_previous_month() throws Exception {
+
+        // given
+        final LocalDate startDate = new LocalDate(2019, 1, 5);
+        final LocalDate endDate = new LocalDate(2020, 2, 1);
+        TurnoverAggregationService service = new TurnoverAggregationService();
+        Occupancy occupancy = new Occupancy(){
+            @Override public LocalDateInterval getEffectiveInterval() {
+                return LocalDateInterval.including(startDate, endDate);
+            }
+        };
+        Lease lease = new Lease();
+        Lease previous = new Lease(){
+            @Override public LocalDateInterval getEffectiveInterval() {
+                return LocalDateInterval.including(null, new LocalDate(2018,12,31));
+            }
+        };
+        lease.setPrevious(previous);
+        occupancy.setLease(lease);
+        TurnoverReportingConfig config = new TurnoverReportingConfig();
+        config.setOccupancy(occupancy);
+        // when, then
+        final List<LocalDate> noToplevel = service.aggregationDatesForTurnoverReportingConfig(config, false);
+        assertThat(noToplevel).hasSize(14);
+        assertThat(noToplevel.get(0)).isEqualTo(startDate.withDayOfMonth(1));
+        assertThat(noToplevel.get(13)).isEqualTo(endDate.withDayOfMonth(1));
+        final List<LocalDate> forTopLevel = service.aggregationDatesForTurnoverReportingConfig(config, true);
+        assertThat(forTopLevel).hasSize(37);
+        assertThat(forTopLevel.get(36)).isEqualTo(endDate.plusMonths(23).withDayOfMonth(1));
+    }
+
+    @Test
+    public void aggregationDatesForOccupancy_works_with_next_lease_and_current_occ_not_ending_on_last_day_of_month() throws Exception {
+
+        // given
+        final LocalDate startDate = new LocalDate(2019, 1, 5);
+        final LocalDate endDate = new LocalDate(2020, 2, 1);
+        TurnoverAggregationService service = new TurnoverAggregationService();
+        Occupancy occupancy = new Occupancy(){
+            @Override public LocalDateInterval getEffectiveInterval() {
+                return LocalDateInterval.including(startDate, endDate);
+            }
+        };
+        Lease lease = new Lease();
+        Lease next = new Lease();
+        lease.setNext(next);
+        occupancy.setLease(lease);
+        TurnoverReportingConfig config = new TurnoverReportingConfig();
+        config.setOccupancy(occupancy);
+        // when, then
+        final List<LocalDate> noToplevel = service.aggregationDatesForTurnoverReportingConfig(config, false);
+        assertThat(noToplevel).hasSize(14);
+        assertThat(noToplevel.get(0)).isEqualTo(startDate.withDayOfMonth(1));
+        assertThat(noToplevel.get(13)).isEqualTo(endDate.withDayOfMonth(1));
+    }
+
+    @Test
+    public void aggregationDatesForOccupancy_works_with_next_lease_and_occ_ending_on_last_day_of_month() throws Exception {
+
+        // given
+        final LocalDate startDate = new LocalDate(2019, 1, 5);
+        final LocalDate endDate = new LocalDate(2020, 2, 29);
+        TurnoverAggregationService service = new TurnoverAggregationService();
+        Occupancy occupancy = new Occupancy(){
+            @Override public LocalDateInterval getEffectiveInterval() {
+                return LocalDateInterval.including(startDate, endDate);
+            }
+        };
+        Lease lease = new Lease();
+        Lease next = new Lease();
+        lease.setNext(next);
+        occupancy.setLease(lease);
         TurnoverReportingConfig config = new TurnoverReportingConfig();
         config.setOccupancy(occupancy);
         // when, then
         final List<LocalDate> noToplevel = service.aggregationDatesForTurnoverReportingConfig(config, false);
         assertThat(noToplevel).hasSize(13);
         assertThat(noToplevel.get(0)).isEqualTo(startDate.withDayOfMonth(1));
-        assertThat(noToplevel.get(12)).isEqualTo(endDate.minusMonths(1).withDayOfMonth(1));
-        final List<LocalDate> forTopLevel = service.aggregationDatesForTurnoverReportingConfig(config, true);
-        assertThat(forTopLevel).hasSize(37);
-        assertThat(forTopLevel.get(36)).isEqualTo(endDate.plusMonths(23).withDayOfMonth(1));
+        assertThat(noToplevel.get(12)).isEqualTo(endDate.withDayOfMonth(1).minusMonths(1));
     }
 
     @Test
@@ -539,9 +655,10 @@ public class TurnoverAggregationService_Test {
         // and when config is not toplevel
         dates = service.aggregationDatesForTurnoverReportingConfig(config, false);
         // then
-        assertThat(dates).hasSize(2);
+        assertThat(dates).hasSize(3);
         assertThat(dates.get(0)).isEqualTo(new LocalDate(2018,12,1));
         assertThat(dates.get(1)).isEqualTo(new LocalDate(2019,1,1));
+        assertThat(dates.get(2)).isEqualTo(new LocalDate(2019,2,1));
 
     }
 
@@ -585,9 +702,10 @@ public class TurnoverAggregationService_Test {
         // and when
         dates = service.aggregationDatesForTurnoverReportingConfig(config, false);
         // then
-        assertThat(dates).hasSize(2);
+        assertThat(dates).hasSize(3);
         assertThat(dates.get(0)).isEqualTo(new LocalDate(2018,12,1));
         assertThat(dates.get(1)).isEqualTo(new LocalDate(2019,1,1));
+        assertThat(dates.get(2)).isEqualTo(new LocalDate(2019,2,1));
 
     }
 

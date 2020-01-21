@@ -322,14 +322,23 @@ public class TurnoverAggregationService {
         toCY.forEach(t->{
             turnoverAggregateForPeriod.setGrossAmount(aggAmount(turnoverAggregateForPeriod.getGrossAmount(), t.getGrossAmount()));
             turnoverAggregateForPeriod.setNetAmount(aggAmount(turnoverAggregateForPeriod.getNetAmount(), t.getNetAmount()));
-            turnoverAggregateForPeriod.setTurnoverCount(turnoverAggregateForPeriod.getTurnoverCount() != null ? turnoverAggregateForPeriod.getTurnoverCount()+1 : 1);
+            if (t.getGrossAmount()!=null || t.getNetAmount()!=null) {
+                turnoverAggregateForPeriod.setTurnoverCount(turnoverAggregateForPeriod.getTurnoverCount() != null ?
+                        turnoverAggregateForPeriod.getTurnoverCount() + 1 :
+                        1);
+            }
         });
         turnoverAggregateForPeriod.setNonComparableThisYear(containsNonComparableTurnover(toCY));
 
         toPY.forEach(t->{
             turnoverAggregateForPeriod.setGrossAmountPreviousYear(aggAmount(turnoverAggregateForPeriod.getGrossAmountPreviousYear(), t.getGrossAmount()));
             turnoverAggregateForPeriod.setNetAmountPreviousYear(aggAmount(turnoverAggregateForPeriod.getNetAmountPreviousYear(), t.getNetAmount()));
-            turnoverAggregateForPeriod.setTurnoverCountPreviousYear(turnoverAggregateForPeriod.getTurnoverCountPreviousYear() !=null ? turnoverAggregateForPeriod.getTurnoverCountPreviousYear()+1 : 1);
+            if (t.getGrossAmount()!=null || t.getNetAmount()!=null) {
+                turnoverAggregateForPeriod.setTurnoverCountPreviousYear(
+                        turnoverAggregateForPeriod.getTurnoverCountPreviousYear() != null ?
+                                turnoverAggregateForPeriod.getTurnoverCountPreviousYear() + 1 :
+                                1);
+            }
         });
         turnoverAggregateForPeriod.setNonComparablePreviousYear(containsNonComparableTurnover(toPY));
 
@@ -364,14 +373,23 @@ public class TurnoverAggregationService {
         toCY.forEach(t->{
             turnoverAggregateToDate.setGrossAmount(aggAmount(turnoverAggregateToDate.getGrossAmount(), t.getGrossAmount()));
             turnoverAggregateToDate.setNetAmount(aggAmount(turnoverAggregateToDate.getNetAmount(), t.getNetAmount()));
-            turnoverAggregateToDate.setTurnoverCount(turnoverAggregateToDate.getTurnoverCount()!= null ? turnoverAggregateToDate.getTurnoverCount()+1 : 1);
+            if (t.getGrossAmount()!=null || t.getNetAmount()!=null) {
+                turnoverAggregateToDate.setTurnoverCount(turnoverAggregateToDate.getTurnoverCount() != null ?
+                        turnoverAggregateToDate.getTurnoverCount() + 1 :
+                        1);
+            }
         });
         turnoverAggregateToDate.setNonComparableThisYear(containsNonComparableTurnover(toCY));
 
         toPY.forEach(t->{
             turnoverAggregateToDate.setGrossAmountPreviousYear(aggAmount(turnoverAggregateToDate.getGrossAmountPreviousYear(), t.getGrossAmount()));
             turnoverAggregateToDate.setNetAmountPreviousYear(aggAmount(turnoverAggregateToDate.getNetAmountPreviousYear(), t.getNetAmount()));
-            turnoverAggregateToDate.setTurnoverCountPreviousYear(turnoverAggregateToDate.getTurnoverCountPreviousYear()!=null ? turnoverAggregateToDate.getTurnoverCountPreviousYear()+1 : 1);
+            if (t.getGrossAmount()!=null || t.getNetAmount()!=null) {
+                turnoverAggregateToDate.setTurnoverCountPreviousYear(
+                        turnoverAggregateToDate.getTurnoverCountPreviousYear() != null ?
+                                turnoverAggregateToDate.getTurnoverCountPreviousYear() + 1 :
+                                1);
+            }
         });
         turnoverAggregateToDate.setNonComparablePreviousYear(containsNonComparableTurnover(toPY));
 
@@ -563,6 +581,12 @@ public class TurnoverAggregationService {
                 }
 
                 // determine dates for aggregations
+                // TODO: check with users! Currently within a lease, we check the effective enddate of the occupancy. If the occupancy end date is on or later than the first of the next month we include
+                // However: when checking with a previous lease, the current SQL agent logic is different: when a lease terminates in the month we examine, then the date is included (Actially there is a mistake in de sql
+                // that makes a lease ending on the last day of the month not to include the date
+                // The SQL is in fn_GetLeaseDetailForTurnover; de selectie in de code WHEN l.LeaseTerminationDate < DATEADD(d,-1,DATEADD(mm,1,@Date)) --Terminate date is before
+                // @DATE is the calculation date, so in our case the first of the month
+                // example: @Date = 1-8-2019 Then lease with a next ending before 31-8-2019 get 1-8-2019 aggregation; lease ending on 31-8-2019 'hands it over' to the parent lease
                 boolean isToplevelOccupancy = isToplevelLease && report.getNextOnSameUnit() == null && report.getNextOnOtherUnit().isEmpty();
                 report.setToplevel(isToplevelOccupancy);
                 report.getAggregationDates().addAll(
@@ -576,32 +600,70 @@ public class TurnoverAggregationService {
         return result;
     }
 
-    List<LocalDate> aggregationDatesForTurnoverReportingConfig(final TurnoverReportingConfig config, final boolean toplevel){
+    List<LocalDate> aggregationDatesForTurnoverReportingConfig(
+            final TurnoverReportingConfig config,
+            final boolean toplevel) {
 
-        LocalDate startDate;
+         //TODO: also check the aggegration strategy of the config!!! (Especially in case previous lease...)
+
+        LocalDate startDateToUse;
         LocalDate startDateOrNull = null;
         try {
             startDateOrNull = config.getOccupancy().getEffectiveInterval().startDate();
-        } catch (Exception e){
+        } catch (Exception e) {
             LOG.warn(String.format("Problem with config %s", config.toString()));
             LOG.warn(e.getMessage());
         }
-        if (startDateOrNull==null) {
-            startDate = MIN_AGGREGATION_DATE;
+        if (startDateOrNull == null) {
+            startDateToUse = MIN_AGGREGATION_DATE;
         } else {
-            startDate = startDateOrNull.withDayOfMonth(1);
+            Lease previousLease = (Lease) config.getOccupancy().getLease().getPrevious();
+            LocalDate effectiveEndPreviousLease = previousLease!=null ? previousLease.getEffectiveInterval().endDate() : null;
+            if (config.getOccupancy().getLease().getPrevious() != null && effectiveEndPreviousLease != null){  // second check should not be needed!!
+                // we may need to exclude an aggregation date unless the previous lease ends on the last of the month
+                LocalDate endOfPreviousMonth = startDateOrNull.withDayOfMonth(1).minusDays(1);
+                if (effectiveEndPreviousLease.equals(endOfPreviousMonth)){
+                    startDateToUse = startDateOrNull.withDayOfMonth(1);
+                } else {
+                    startDateToUse = startDateOrNull.withDayOfMonth(1).plusMonths(1);
+                }
+            } else {
+                startDateToUse = startDateOrNull.withDayOfMonth(1);
+            }
         }
-        if (startDate.isBefore(MIN_AGGREGATION_DATE)) startDate = MIN_AGGREGATION_DATE;
+        if (startDateToUse.isBefore(MIN_AGGREGATION_DATE)) {
+            startDateToUse = MIN_AGGREGATION_DATE;
+        }
 
         LocalDate effectiveEndDateOcc = config.getOccupancy().getEffectiveEndDate();
-        if (effectiveEndDateOcc==null) effectiveEndDateOcc = clockService.now();
-        LocalDate endDate = toplevel ? effectiveEndDateOcc.withDayOfMonth(1).plusMonths(23) : effectiveEndDateOcc.withDayOfMonth(1).minusMonths(1);
+
+        LocalDate endDateToUse;
+        if (config.getOccupancy().getLease().getNext() != null
+                && effectiveEndDateOcc != null) { // second check should not be needed!!
+            // We need to check the effective enddate of the lease for a 'handover' to the next lease
+
+            // if effectiveEndDateOcc is on the last of the month or later, do not include (the next lease should pick it up)
+            // f.e.
+            // end date to use for 31-8-2019 should be 31-7-2019
+            // end date to use for 30-8-2019 should be any date this month (we pick effectiveEndDateOcc)
+            LocalDate endOfTheMonth = effectiveEndDateOcc.withDayOfMonth(1).plusMonths(1).minusDays(1);
+            if (effectiveEndDateOcc.equals(endOfTheMonth)) {
+                endDateToUse = effectiveEndDateOcc.minusMonths(1);
+            } else {
+                endDateToUse = effectiveEndDateOcc;
+            }
+
+        } else {
+
+            if (effectiveEndDateOcc == null)
+                effectiveEndDateOcc = clockService.now();
+            endDateToUse = toplevel ? effectiveEndDateOcc.plusMonths(23) : effectiveEndDateOcc;
+        }
 
         List<LocalDate> result = new ArrayList<>();
-
-        while (!startDate.isAfter(endDate)){
-            result.add(startDate);
-            startDate = startDate.plusMonths(1);
+        while (!endDateToUse.isBefore(startDateToUse)) {
+            result.add(startDateToUse);
+            startDateToUse = startDateToUse.plusMonths(1);
         }
         return result;
     }

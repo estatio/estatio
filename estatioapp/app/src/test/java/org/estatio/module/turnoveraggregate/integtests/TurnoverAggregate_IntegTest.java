@@ -200,30 +200,30 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         final List<TurnoverAggregation> aggregations = turnoverAggregationRepository.listAll();
         assertThat(aggregations).isNotEmpty();
         assertThat(aggregations.get(0).getTurnoverReportingConfig()).isEqualTo(occ5Cfg);
-        assertThat(aggregations.get(0).getDate()).isEqualTo(occ5.getStartDate().withDayOfMonth(1));
+        assertThat(aggregations.get(0).getDate()).isEqualTo(occ5.getStartDate().withDayOfMonth(1).plusMonths(1)); // the agg of 2020-05-01 is on a previous occ: occ4
         assertThat(occ5Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.SIMPLE);
-        assertThat(aggregations.get(35).getTurnoverReportingConfig()).isEqualTo(occ5Cfg);
-        assertThat(aggregations.get(35).getDate()).isEqualTo(oxfTopModelLease3.tenancyEndDate.plusMonths(23).withDayOfMonth(1));
-        assertThat(aggregations.get(36).getTurnoverReportingConfig()).isEqualTo(occ4Cfg);
-        assertThat(aggregations.get(36).getDate()).isEqualTo(occ4Cfg.getStartDate().withDayOfMonth(1));
-        assertThat(aggregations.get(41).getTurnoverReportingConfig()).isEqualTo(occ4Cfg);
-        assertThat(aggregations.get(41).getDate()).isEqualTo(occ4.getEffectiveEndDate().withDayOfMonth(1).minusMonths(1));
+        assertThat(aggregations.get(34).getTurnoverReportingConfig()).isEqualTo(occ5Cfg);
+        assertThat(aggregations.get(34).getDate()).isEqualTo(oxfTopModelLease3.tenancyEndDate.plusMonths(23).withDayOfMonth(1));
+        assertThat(aggregations.get(35).getTurnoverReportingConfig()).isEqualTo(occ4Cfg);
+        assertThat(aggregations.get(35).getDate()).isEqualTo(occ4Cfg.getStartDate().withDayOfMonth(1).plusMonths(1)); // the agg of 2019-11-01 is on a previous occ
+        assertThat(aggregations.get(40).getTurnoverReportingConfig()).isEqualTo(occ4Cfg);
+        assertThat(aggregations.get(40).getDate()).isEqualTo(occ4.getEffectiveEndDate().withDayOfMonth(1));
         assertThat(occ4Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.PREVIOUS_MANY_OCCS_TO_ONE);
-        assertThat(aggregations.get(42).getTurnoverReportingConfig()).isEqualTo(occ2Cfg);
+        assertThat(aggregations.get(41).getTurnoverReportingConfig()).isEqualTo(occ2Cfg);
         assertThat(occ2Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.ONE_OCC_TO_MANY_SAME_LEASE);
-        assertThat(aggregations.get(42).getDate()).isEqualTo(occ2.getStartDate().withDayOfMonth(1));
+        assertThat(aggregations.get(41).getDate()).isEqualTo(occ2.getStartDate().withDayOfMonth(1));
         assertThat(aggregations.get(72).getTurnoverReportingConfig()).isEqualTo(occ2Cfg);
-        assertThat(aggregations.get(72).getDate()).isEqualTo(occ2.getEffectiveEndDate().withDayOfMonth(1).minusMonths(1));
+        assertThat(aggregations.get(72).getDate()).isEqualTo(occ2.getEffectiveEndDate().withDayOfMonth(1));
         assertThat(aggregations.get(73).getTurnoverReportingConfig()).isEqualTo(occ3Cfg);
         assertThat(aggregations.get(73).getDate()).isEqualTo(occ3.getStartDate().withDayOfMonth(1));
         assertThat(aggregations.get(73).getDate()).isEqualTo(new LocalDate(2017,4,1));
         assertThat(occ3Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.ONE_OCC_TO_MANY_SAME_LEASE);
-        assertThat(aggregations.get(103).getTurnoverReportingConfig()).isEqualTo(occ3Cfg);
-        assertThat(aggregations.get(103).getDate()).isEqualTo(occ3.getEffectiveEndDate().withDayOfMonth(1).minusMonths(1));
-        assertThat(aggregations.get(104).getTurnoverReportingConfig()).isEqualTo(occ1Cfg);
+        assertThat(aggregations.get(104).getTurnoverReportingConfig()).isEqualTo(occ3Cfg);
+        assertThat(aggregations.get(104).getDate()).isEqualTo(occ3.getEffectiveEndDate().withDayOfMonth(1));
+        assertThat(aggregations.get(105).getTurnoverReportingConfig()).isEqualTo(occ1Cfg);
         assertThat(occ1Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.SIMPLE);
-        assertThat(aggregations.get(104).getDate()).isEqualTo(occ1.getStartDate().withDayOfMonth(1));
-        assertThat(aggregations.get(184).getDate()).isEqualTo(occ1.getEffectiveEndDate().withDayOfMonth(1).minusMonths(1));
+        assertThat(aggregations.get(105).getDate()).isEqualTo(occ1.getStartDate().withDayOfMonth(1));
+        assertThat(aggregations.get(186).getDate()).isEqualTo(occ1.getEffectiveEndDate().withDayOfMonth(1));
     }
 
     @Test
@@ -236,7 +236,7 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         final LocalDate endDate = new LocalDate(2017, 3, 1);
         mixin(Lease_aggregateTurnovers.class, oxfTopModelLease1).$$(endDate.minusMonths(23), endDate,false);
         final TurnoverAggregation aggOnOcc1 = turnoverAggregationRepository
-                .findOrCreate(occ1Cfg, endDate, euro);
+                .findUnique(occ1Cfg, endDate);
 
         // then
         assertThat(occ1Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.SIMPLE);
@@ -268,7 +268,7 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         final LocalDate endDate = new LocalDate(2019, 4, 1);
         mixin(Lease_aggregateTurnovers.class, oxfTopModelLease1).$$(endDate.minusMonths(23), endDate,false);
         final TurnoverAggregation aggOccPar = turnoverAggregationRepository
-                .findOrCreate(occ3Cfg, endDate, euro);
+                .findUnique(occ3Cfg, endDate);
 
         // then
         assertThat(occ3Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.ONE_OCC_TO_MANY_SAME_LEASE);
@@ -281,35 +281,39 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         setupScenario_and_validate_import();
 
         // when
-        final LocalDate endDate = new LocalDate(2019, 11, 1);
+        final LocalDate endDate = new LocalDate(2019, 12, 1);
         mixin(Lease_aggregateTurnovers.class, oxfTopModelLease1).$$(endDate.minusMonths(23), endDate,false);
-        final TurnoverAggregation aggOcc4 = turnoverAggregationRepository
-                .findOrCreate(occ4Cfg, endDate, euro);
+        TurnoverAggregation aggOcc4 = turnoverAggregationRepository
+                .findUnique(occ4Cfg, endDate.minusMonths(1));
+        assertThat(aggOcc4).isNull();
+        aggOcc4 = turnoverAggregationRepository
+                .findUnique(occ4Cfg, endDate);
+        assertThat(aggOcc4).isNotNull();
 
         // then
         assertThat(occ4Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.PREVIOUS_MANY_OCCS_TO_ONE);
         assertTurnoverAggregation(
                 aggOcc4,
-                new BigDecimal("77731.00"), new BigDecimal("100042.00"), true,  // 65264 + 6789 + 5678
-                new BigDecimal("166306.00"), new BigDecimal("178688.00"), true,
-                new BigDecimal("240653.00"), new BigDecimal("252073.00"), true,
-                new BigDecimal("443620.00"), new BigDecimal("445331.00"), true,
-                new BigDecimal("649297.00"), new BigDecimal("662916.00"), true,
-                new BigDecimal("892785.00"), new BigDecimal("900470.00"), true,
-                new BigDecimal("810097.00"), new BigDecimal("815024.00"), true,
-                new BigInteger("633"), new BigInteger("746"), true,
-                new BigInteger("1444"), new BigInteger("1939"), true,
-                new BigInteger("2178"), new BigInteger("3937"), true,
-                new BigInteger("5271"), new BigInteger("6849"), false,
+                new BigDecimal("12344.00"), new BigDecimal("82688.00"), true,  // 65264 + 6789 + 5678
+                new BigDecimal("90075.00"), new BigDecimal("182730.00"), true,
+                new BigDecimal("178650.00"), new BigDecimal("261376.00"), true,
+                new BigDecimal("367282.00"), new BigDecimal("448985.00"), true,
+                new BigDecimal("603445.00"), new BigDecimal("677831.00"), true,
+                new BigDecimal("822441.00"), new BigDecimal("897712.00"), true,
+                new BigDecimal("822441.00"), new BigDecimal("897712.00"), true,
+                new BigInteger("123"), new BigInteger("744"), true,
+                new BigInteger("1442"), new BigInteger("2104"), true,
+                new BigInteger("2173"), new BigInteger("3877"), true,
+                new BigInteger("4650"), new BigInteger("6908"), false,
                 "abc | yyy", "zzz",
-                new BigDecimal("88575.00"), new BigDecimal("74347.00")
+                new BigDecimal("77731.00"), new BigDecimal("88575.00")
         );
 
         // and when 2 parent leases
         final LocalDate endDate2 = new LocalDate(2020, 6, 1);
         mixin(Lease_aggregateTurnovers.class, oxfTopModelLease1).$$(endDate2.minusMonths(23), endDate2,false);
         final TurnoverAggregation aggOcc5 = turnoverAggregationRepository
-                .findOrCreate(occ5Cfg, endDate2, euro);
+                .findUnique(occ5Cfg, endDate2);
 
         // then
         assertThat(occ5Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.SIMPLE);
