@@ -775,6 +775,19 @@ public class TurnoverAggregationService_Test {
         assertAggregateForPeriod(afp, new BigDecimal("1"), new BigDecimal("0.50"),1,false,
                 null, null,null, null, false);
 
+        // when turnover values 0
+        afp.setAggregationPeriod(AggregationPeriod.P_2M);
+        objects = prepareTestObjects(LocalDateInterval.including(aggregationDate, aggregationDate));
+        objects.forEach(t->{
+            t.setGrossAmount(BigDecimal.ZERO);
+            t.setNetAmount(BigDecimal.ZERO);
+        });
+        service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, objects);
+
+        // then
+        assertAggregateForPeriod(afp, new BigDecimal("0"), new BigDecimal("0"),null,false,
+                null, null,null, null, false);
+
         // and when only this year
         List<Turnover> objectsCurYear = prepareTestObjects(LocalDateInterval.including(aggregationDate.minusMonths(11), aggregationDate));
         service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, objectsCurYear);

@@ -322,7 +322,7 @@ public class TurnoverAggregationService {
         toCY.forEach(t->{
             turnoverAggregateForPeriod.setGrossAmount(aggAmount(turnoverAggregateForPeriod.getGrossAmount(), t.getGrossAmount()));
             turnoverAggregateForPeriod.setNetAmount(aggAmount(turnoverAggregateForPeriod.getNetAmount(), t.getNetAmount()));
-            if (t.getGrossAmount()!=null || t.getNetAmount()!=null) {
+            if ((t.getGrossAmount()!=null && t.getGrossAmount().compareTo(BigDecimal.ZERO) > 0) || (t.getNetAmount()!=null && t.getNetAmount().compareTo(BigDecimal.ZERO) > 0)) {
                 turnoverAggregateForPeriod.setTurnoverCount(turnoverAggregateForPeriod.getTurnoverCount() != null ?
                         turnoverAggregateForPeriod.getTurnoverCount() + 1 :
                         1);
@@ -333,7 +333,7 @@ public class TurnoverAggregationService {
         toPY.forEach(t->{
             turnoverAggregateForPeriod.setGrossAmountPreviousYear(aggAmount(turnoverAggregateForPeriod.getGrossAmountPreviousYear(), t.getGrossAmount()));
             turnoverAggregateForPeriod.setNetAmountPreviousYear(aggAmount(turnoverAggregateForPeriod.getNetAmountPreviousYear(), t.getNetAmount()));
-            if (t.getGrossAmount()!=null || t.getNetAmount()!=null) {
+            if ((t.getGrossAmount()!=null && t.getGrossAmount().compareTo(BigDecimal.ZERO) > 0) || (t.getNetAmount()!=null && t.getNetAmount().compareTo(BigDecimal.ZERO) > 0)) {
                 turnoverAggregateForPeriod.setTurnoverCountPreviousYear(
                         turnoverAggregateForPeriod.getTurnoverCountPreviousYear() != null ?
                                 turnoverAggregateForPeriod.getTurnoverCountPreviousYear() + 1 :
@@ -373,7 +373,7 @@ public class TurnoverAggregationService {
         toCY.forEach(t->{
             turnoverAggregateToDate.setGrossAmount(aggAmount(turnoverAggregateToDate.getGrossAmount(), t.getGrossAmount()));
             turnoverAggregateToDate.setNetAmount(aggAmount(turnoverAggregateToDate.getNetAmount(), t.getNetAmount()));
-            if (t.getGrossAmount()!=null || t.getNetAmount()!=null) {
+            if ((t.getGrossAmount()!=null && t.getGrossAmount().compareTo(BigDecimal.ZERO) > 0) || (t.getNetAmount()!=null && t.getNetAmount().compareTo(BigDecimal.ZERO) > 0)) {
                 turnoverAggregateToDate.setTurnoverCount(turnoverAggregateToDate.getTurnoverCount() != null ?
                         turnoverAggregateToDate.getTurnoverCount() + 1 :
                         1);
@@ -384,7 +384,7 @@ public class TurnoverAggregationService {
         toPY.forEach(t->{
             turnoverAggregateToDate.setGrossAmountPreviousYear(aggAmount(turnoverAggregateToDate.getGrossAmountPreviousYear(), t.getGrossAmount()));
             turnoverAggregateToDate.setNetAmountPreviousYear(aggAmount(turnoverAggregateToDate.getNetAmountPreviousYear(), t.getNetAmount()));
-            if (t.getGrossAmount()!=null || t.getNetAmount()!=null) {
+            if ((t.getGrossAmount()!=null && t.getGrossAmount().compareTo(BigDecimal.ZERO) > 0) || (t.getNetAmount()!=null && t.getNetAmount().compareTo(BigDecimal.ZERO) > 0)) {
                 turnoverAggregateToDate.setTurnoverCountPreviousYear(
                         turnoverAggregateToDate.getTurnoverCountPreviousYear() != null ?
                                 turnoverAggregateToDate.getTurnoverCountPreviousYear() + 1 :
@@ -434,14 +434,14 @@ public class TurnoverAggregationService {
         Integer numberOfCountsCY = null;
         for (Turnover t : toCY){
             purchaseCountAggregateForPeriod.setCount(aggCount(purchaseCountAggregateForPeriod.getCount(), t.getPurchaseCount()));
-            if (t.getPurchaseCount()!=null){
+            if (t.getPurchaseCount()!=null && t.getPurchaseCount().intValue() > 0){
                 numberOfCountsCY = numberOfCountsCY==null ? 1 : numberOfCountsCY+1;
             }
         }
         Integer numberOfCountsPY = null;
-        for (Turnover t : toPY){
+        for (Turnover t : toPY ){
             purchaseCountAggregateForPeriod.setCountPreviousYear(aggCount(purchaseCountAggregateForPeriod.getCountPreviousYear(), t.getPurchaseCount()));
-            if (t.getPurchaseCount()!=null){
+            if (t.getPurchaseCount()!=null  && t.getPurchaseCount().intValue() > 0){
                 numberOfCountsPY = numberOfCountsPY==null ? 1 : numberOfCountsPY+1;
             }
         }
