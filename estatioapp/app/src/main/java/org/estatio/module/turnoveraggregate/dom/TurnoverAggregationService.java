@@ -273,14 +273,14 @@ public class TurnoverAggregationService {
         String ccy = null;
         String cpy = null;
         for (Turnover t : turnovers){
-            if (t.getComments()!=null && I12MCY.contains(t.getDate())){
+            if (t.getComments()!=null && !t.getComments().equals("") && I12MCY.contains(t.getDate())){
                 if (ccy==null ){
                     ccy = t.getComments();
                 } else {
                     ccy = ccy.concat(" | ").concat(t.getComments());
                 }
             }
-            if (t.getComments()!=null && I12MPY.contains(t.getDate())){
+            if (t.getComments()!=null && !t.getComments().equals("") && I12MPY.contains(t.getDate())){
                 if (cpy==null ){
                     cpy = t.getComments();
                 } else {
