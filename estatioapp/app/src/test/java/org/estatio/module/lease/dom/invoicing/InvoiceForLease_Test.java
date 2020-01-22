@@ -313,6 +313,7 @@ public class InvoiceForLease_Test {
 
                         ;
                     }));
+                    allowing(mockInvoiceVatRoundingService).distributeVatRoundingByVatPercentage(with(any(InvoiceForLease.class)));
                 }
             });
 
@@ -321,6 +322,7 @@ public class InvoiceForLease_Test {
 
             final InvoiceForLease._collect invoice_collect = new InvoiceForLease._collect(invoice);
             invoice_collect.numeratorRepository = mockNumeratorForOutgoingInvoicesRepository;
+            invoice_collect.invoiceVatRoundingService = mockInvoiceVatRoundingService;
 
 
             assertThat(invoice_collect.hide$$()).isFalse();

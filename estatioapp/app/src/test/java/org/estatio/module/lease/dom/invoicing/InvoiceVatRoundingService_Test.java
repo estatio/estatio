@@ -124,6 +124,15 @@ public class InvoiceVatRoundingService_Test {
         assertThat(itemsAsList.get(3).getVatAmount()).isEqualTo(new BigDecimal("0.03"));
         assertThat(itemsAsList.get(3).getGrossAmount()).isEqualTo(new BigDecimal("0.19"));
 
+        // and when again
+        itaInvoice = invoiceVatRoundingService.distributeVatRoundingByVatPercentage(itaInvoice);
+        // then still (idempotent)
+        assertThat(vatAmountTotalForPercentage(itaInvoice, taxRate22.getPercentage())).isEqualTo(new BigDecimal("0.10"));
+        assertThat(itemsAsList.get(2).getVatAmount()).isEqualTo(new BigDecimal("0.03"));
+        assertThat(itemsAsList.get(2).getGrossAmount()).isEqualTo(new BigDecimal("0.19"));
+        assertThat(itemsAsList.get(3).getVatAmount()).isEqualTo(new BigDecimal("0.03"));
+        assertThat(itemsAsList.get(3).getGrossAmount()).isEqualTo(new BigDecimal("0.19"));
+
     }
 
     @Test
@@ -156,6 +165,14 @@ public class InvoiceVatRoundingService_Test {
         assertThat(itemsAsList.get(0).getVatAmount()).isEqualTo(new BigDecimal("-0.03"));
         assertThat(itemsAsList.get(0).getGrossAmount()).isEqualTo(new BigDecimal("-0.19"));
 
+        // and when again
+        itaInvoice = invoiceVatRoundingService.distributeVatRoundingByVatPercentage(itaInvoice);
+        // then still
+        assertThat(vatAmountTotalForPercentage(itaInvoice, taxRate22.getPercentage())).isEqualTo(new BigDecimal("-0.09"));
+        assertThat(itemsAsList.get(0).getVatAmount()).isEqualTo(new BigDecimal("-0.03"));
+        assertThat(itemsAsList.get(0).getGrossAmount()).isEqualTo(new BigDecimal("-0.19"));
+
+
     }
 
 
@@ -184,6 +201,13 @@ public class InvoiceVatRoundingService_Test {
         // then
         assertThat(vatAmountTotalForPercentage(itaInvoice, taxRate10.getPercentage())).isEqualTo("0.01");
         assertThat(vatAmountTotalForPercentage(itaInvoice, taxRate22.getPercentage())).isEqualTo(new BigDecimal("-0.03"));
+
+        // when again
+        itaInvoice = invoiceVatRoundingService.distributeVatRoundingByVatPercentage(itaInvoice);
+        // then still
+        assertThat(vatAmountTotalForPercentage(itaInvoice, taxRate10.getPercentage())).isEqualTo("0.01");
+        assertThat(vatAmountTotalForPercentage(itaInvoice, taxRate22.getPercentage())).isEqualTo(new BigDecimal("-0.03"));
+
 
     }
 
