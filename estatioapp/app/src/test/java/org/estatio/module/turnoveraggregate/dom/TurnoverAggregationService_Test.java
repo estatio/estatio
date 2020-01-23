@@ -22,7 +22,7 @@ import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
-import org.estatio.module.turnover.dom.AggregationStrategy;
+import org.estatio.module.turnover.dom.aggregation.AggregationStrategy;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;

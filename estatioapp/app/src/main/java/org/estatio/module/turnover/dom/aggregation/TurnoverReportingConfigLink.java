@@ -1,4 +1,4 @@
-package org.estatio.module.turnoveraggregate.dom;
+package org.estatio.module.turnover.dom.aggregation;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -30,19 +30,19 @@ import lombok.Setter;
         @Query(
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.turnoveraggregate.dom.TurnoverReportingConfigLink "
+                        + "FROM org.estatio.module.turnover.dom.aggregation.TurnoverReportingConfigLink "
                         + "WHERE turnoverReportingConfig == :turnoverReportingConfig "
                         + "&& aggregationChild == :aggregationChild "),
         @Query(
                 name = "findByTurnoverReportingConfig", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.turnoveraggregate.dom.TurnoverReportingConfigLink "
+                        + "FROM org.estatio.module.turnover.dom.aggregation.TurnoverReportingConfigLink "
                         + "WHERE turnoverReportingConfig == :turnoverReportingConfig "),
 })
 @Unique(name = "TurnoverReportingConfigLink_turnoverReportingConfig_aggregationChild_UNQ", members = { "turnoverReportingConfig", "aggregationChild" })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.module.turnoveraggregate.dom.TurnoverReportingConfigLink"
+        objectType = "org.estatio.module.turnover.dom.aggregation.TurnoverReportingConfigLink"
 )
 public class TurnoverReportingConfigLink {
 

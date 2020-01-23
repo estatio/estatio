@@ -28,7 +28,6 @@ import javax.inject.Inject;
 import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -44,7 +43,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.turnover.contributions.Occupancy_turnovers;
-import org.estatio.module.turnover.dom.AggregationStrategy;
+import org.estatio.module.turnover.dom.aggregation.AggregationStrategy;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;

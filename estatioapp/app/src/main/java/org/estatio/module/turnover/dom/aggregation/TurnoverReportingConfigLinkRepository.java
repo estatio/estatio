@@ -1,17 +1,14 @@
-package org.estatio.module.turnoveraggregate.dom;
+package org.estatio.module.turnover.dom.aggregation;
 
 import java.util.List;
 
 import javax.inject.Inject;
-
-import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 
 @DomainService(

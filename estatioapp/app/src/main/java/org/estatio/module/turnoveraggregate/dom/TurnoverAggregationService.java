@@ -26,7 +26,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
-import org.estatio.module.turnover.dom.AggregationStrategy;
+import org.estatio.module.turnover.dom.aggregation.AggregationStrategy;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
@@ -34,7 +34,6 @@ import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
 
-import jdk.nashorn.internal.objects.NativeUint8Array;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -123,7 +122,7 @@ public class TurnoverAggregationService {
                             .add(new ConfigReportTuple(r.getTurnoverReportingConfig(), r));
                 }
             }
-            // ALSO ADD ALL CONFIGS THAT ARE PREVIOUS ON THE SAME LEASE TODO: this should not be needed ...
+            // ALSO ADD ALL CONFIGS THAT ARE PREVIOUS ON THE SAME LEASE
             if (!r.getPreviousOnOtherUnit().isEmpty() || r.getPreviousOnSameUnit()!=null){
                 r.getPreviousOnOtherUnit().forEach(prevConfig->{
                     final List<TurnoverReportingConfig> configs = configReportTuplesForCalculationPeriod.stream()
@@ -179,6 +178,7 @@ public class TurnoverAggregationService {
 
         private AggregationAnalysisReportForConfig report;
     }
+
     public void calculateAggregation(final TurnoverAggregation aggregation, final List<Turnover> turnovers, final List<ConfigReportTuple> configReportTuples) {
 
         if (aggregation.getTurnoverReportingConfig().getAggregationStrategy()==null || !STRATEGIES_IMPLEMENTED.contains(aggregation.getTurnoverReportingConfig().getAggregationStrategy())) return;

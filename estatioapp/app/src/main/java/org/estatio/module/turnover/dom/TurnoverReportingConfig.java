@@ -19,7 +19,6 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.core.commons.lang.ArrayExtensions;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -32,6 +31,7 @@ import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.party.dom.Person;
+import org.estatio.module.turnover.dom.aggregation.AggregationStrategy;
 
 import lombok.Getter;
 import lombok.Setter;

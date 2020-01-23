@@ -16,32 +16,28 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.turnoveraggregate.integtests;
+package org.estatio.module.turnover.integtests;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.fixtures.enums.Currency_enum;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
-import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
 import org.estatio.module.turnover.fixtures.data.TurnoverReportingConfig_enum;
-import org.estatio.module.turnoveraggregate.dom.TurnoverAggregation;
-import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationRepository;
-import org.estatio.module.turnoveraggregate.dom.TurnoverReportingConfigLink;
-import org.estatio.module.turnoveraggregate.dom.TurnoverReportingConfigLinkRepository;
+import org.estatio.module.turnover.dom.aggregation.TurnoverReportingConfigLink;
+import org.estatio.module.turnover.dom.aggregation.TurnoverReportingConfigLinkRepository;
+import org.estatio.module.turnoveraggregate.integtests.TurnoverAggregateModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TurnoverReportingConfigLinkRepository_IntegTest extends TurnoverAggregateModuleIntegTestAbstract {
+public class TurnoverReportingConfigLinkRepository_IntegTest extends TurnoverModuleIntegTestAbstract {
 
     @Before
     public void setupData() {

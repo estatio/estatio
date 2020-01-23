@@ -35,6 +35,7 @@ import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.Type;
 import org.estatio.module.turnover.fixtures.data.TurnoverReportingConfig_enum;
+import org.estatio.module.turnover.integtests.TurnoverModuleIntegTestAbstract;
 import org.estatio.module.turnoveraggregate.dom.AggregationPeriod;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregateForPeriod;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregateForPeriodRepository;

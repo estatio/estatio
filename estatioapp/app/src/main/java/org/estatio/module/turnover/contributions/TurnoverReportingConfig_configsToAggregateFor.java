@@ -1,4 +1,4 @@
-package org.estatio.module.turnoveraggregate.contributions;
+package org.estatio.module.turnover.contributions;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,8 +12,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
-import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationService;
-import org.estatio.module.turnoveraggregate.dom.TurnoverReportingConfigLinkRepository;
+import org.estatio.module.turnover.dom.aggregation.TurnoverReportingConfigLinkRepository;
 
 @Mixin
 public class TurnoverReportingConfig_configsToAggregateFor {

@@ -1,4 +1,4 @@
-package org.estatio.module.turnover.dom;
+package org.estatio.module.turnover.dom.aggregation;
 
 public enum AggregationStrategy {
     SIMPLE,
