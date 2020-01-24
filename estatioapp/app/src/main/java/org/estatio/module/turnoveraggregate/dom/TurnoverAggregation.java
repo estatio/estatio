@@ -1,12 +1,17 @@
 package org.estatio.module.turnoveraggregate.dom;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
+import javax.jdo.annotations.Element;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Join;
+import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
@@ -275,6 +280,13 @@ public class TurnoverAggregation {
     @Getter @Setter
     @Column(allowsNull = "true")
     private LocalDate calculatedOn;
+
+    @Persistent(table="AggregationsTurnovers")
+    @Join(column="aggregationId")
+    @Element(column="turnoverId")
+    @Getter
+    @Setter
+    public Set<Turnover> turnovers = new HashSet<>();
 
     @Programmatic
     public void remove() {

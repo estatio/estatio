@@ -25,6 +25,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -67,6 +68,17 @@ public class TurnoverAggregate_Scenarios_IntegTest extends TurnoverAggregateModu
 
             }
         });
+    }
+
+    @After
+    //TODO: this is a bit ugly... Could we somehow delegate to teardown fixture in module?
+    public void cleanJoinTable(){
+
+        turnoverAggregationRepository.listAll().forEach(ta->{
+            ta.getTurnovers().clear();
+            transactionService.nextTransaction();
+        });
+
     }
 
     LocalDate endDateOcc1;

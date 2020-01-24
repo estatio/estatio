@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
@@ -513,10 +514,11 @@ public class AdminDashboard implements ViewModel {
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public void aggregateAllTurnovers(final LocalDate startDate, final LocalDate endDate, final boolean maintainOnly){
+    public void aggregateAllTurnovers(@Nullable final LocalDate startDate, @Nullable final LocalDate endDate, final boolean maintainOnly){
         final List<Lease> leaseSelection = turnoverReportingConfigRepository.listAll().stream()
                 .filter(c -> c.getType() == Type.PRELIMINARY && c.getFrequency() == Frequency.MONTHLY)
                 .map(c -> c.getOccupancy().getLease())
+                .filter(l->l.getNext()==null)
                 .filter(l -> l.getEffectiveInterval().overlaps(LocalDateInterval.including(startDate, null)))
                 .collect(Collectors.toList());
         leaseSelection.forEach(l->{

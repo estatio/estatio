@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
@@ -216,10 +217,16 @@ public class TurnoverAggregationService {
             configsToAggregateTurnoversFor.addAll(prevConfigs);
         });
 
+        LocalDateInterval intervalForTurnovers = LocalDateInterval.including(aggregation.getDate().minusMonths(23), aggregation.getDate());
+
         List<Turnover> turnoversToAggregate = turnovers.stream()
                 .filter(t->configsToAggregateTurnoversFor.contains(t.getConfig()))
+                .filter(t->intervalForTurnovers.contains(t.getDate()))
                 .sorted()
                 .collect(Collectors.toList());
+
+        aggregation.getTurnovers().clear();
+        aggregation.getTurnovers().addAll(turnoversToAggregate);
 
         ////////////////////////////////////////////////TODO///////////////////////////////////////////////////////////////
 
@@ -840,4 +847,6 @@ public class TurnoverAggregationService {
     @Inject TurnoverAggregationRepository turnoverAggregationRepository;
 
     @Inject ClockService clockService;
+
+    @Inject RepositoryService repositoryService;
 }

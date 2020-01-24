@@ -20,6 +20,7 @@ package org.estatio.module.turnoveraggregate.integtests;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -27,6 +28,7 @@ import javax.inject.Inject;
 
 import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -70,6 +72,17 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
                 executionContext.executeChild(this, TurnoverReportingConfig_enum.OxfTopModel001GbPrelim);
             }
         });
+    }
+
+    @After
+    //TODO: this is a bit ugly... Could we somehow delegate to teardown fixture in module?
+    public void cleanJoinTable(){
+
+        turnoverAggregationRepository.listAll().forEach(ta->{
+            ta.getTurnovers().clear();
+            transactionService.nextTransaction();
+        });
+
     }
 
     LocalDate endDateOcc1;
@@ -239,6 +252,7 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
 
         // then
         assertThat(occ1Cfg.getAggregationStrategy()).isEqualTo(AggregationStrategy.SIMPLE);
+        assertThat(aggOnOcc1.getTurnovers()).hasSize(24);
         assertTurnoverAggregation(
                 aggOnOcc1,
                 new BigDecimal("61362.00"), new BigDecimal("80452.00"), true,
