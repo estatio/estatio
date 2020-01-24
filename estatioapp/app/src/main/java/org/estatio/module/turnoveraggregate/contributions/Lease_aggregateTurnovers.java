@@ -4,6 +4,8 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
@@ -16,6 +18,8 @@ import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationService;
 @Mixin
 public class Lease_aggregateTurnovers {
 
+    public static Logger LOG = LoggerFactory.getLogger(Lease_aggregateTurnovers.class);
+
     private final Lease lease;
 
     public Lease_aggregateTurnovers(Lease lease) {
@@ -24,6 +28,7 @@ public class Lease_aggregateTurnovers {
 
     @Action()
     public Lease $$(@Nullable final LocalDate startDate, @Nullable final LocalDate endDate, final boolean maintainOnly) {
+        LOG.info("Aggregating: " + lease.getReference());
         turnoverAggregationService.aggregateTurnoversForLease(lease, Type.PRELIMINARY, Frequency.MONTHLY, startDate, endDate,
                 maintainOnly);
         return lease;
