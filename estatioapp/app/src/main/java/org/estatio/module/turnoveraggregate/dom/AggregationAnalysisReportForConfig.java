@@ -7,6 +7,7 @@ import org.joda.time.LocalDate;
 
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
+import org.estatio.module.turnover.dom.aggregation.AggregationPattern;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -47,4 +48,7 @@ public class AggregationAnalysisReportForConfig {
 
     @Setter
     private Lease previousLease;
+
+    @Setter
+    private AggregationPattern aggregationPattern;
 }

@@ -31,7 +31,7 @@ import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.party.dom.Person;
-import org.estatio.module.turnover.dom.aggregation.AggregationStrategy;
+import org.estatio.module.turnover.dom.aggregation.AggregationPattern;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -143,7 +143,7 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
 
     @Getter @Setter
     @Column(allowsNull = "true")
-    private AggregationStrategy aggregationStrategy;
+    private AggregationPattern aggregationPattern;
 
     @Action(semantics = SemanticsOf.SAFE)
     public LocalDate getEndDate(){

@@ -22,7 +22,7 @@ import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
-import org.estatio.module.turnover.dom.aggregation.AggregationStrategy;
+import org.estatio.module.turnover.dom.aggregation.AggregationPattern;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
@@ -438,7 +438,7 @@ public class TurnoverAggregationService_Test {
         List<AggregationAnalysisReportForConfig> reports = new ArrayList<>();
 
         // when, then
-        assertThat(service.determineApplicationStrategyForConfig(reports , config)).isNull();
+        assertThat(service.determineAggregationPatternForConfig(reports , config)).isNull();
 
         // and when
         Occupancy occupancy = new Occupancy();
@@ -449,13 +449,13 @@ public class TurnoverAggregationService_Test {
         reports.add(rep);
 
         // then no previous lease
-        assertThat(service.determineApplicationStrategyForConfig(reports , config)).isEqualTo(AggregationStrategy.SIMPLE);
+        assertThat(service.determineAggregationPatternForConfig(reports , config)).isEqualTo(AggregationPattern.ONE_TO_ONE);
 
         // and when prev without
         Lease prev = new Lease();
         lease.setPrevious(prev);
         // then still
-        assertThat(service.determineApplicationStrategyForConfig(reports , config)).isEqualTo(AggregationStrategy.SIMPLE);
+        assertThat(service.determineAggregationPatternForConfig(reports , config)).isEqualTo(AggregationPattern.ONE_TO_ONE);
 
         // and when prev with one then still
         TurnoverReportingConfig prevOcc1Cfg = new TurnoverReportingConfig();
@@ -466,17 +466,17 @@ public class TurnoverAggregationService_Test {
         AggregationAnalysisReportForConfig repForPrev = new AggregationAnalysisReportForConfig(prevOcc1Cfg);
         reports.add(repForPrev);
         // then
-        assertThat(service.determineApplicationStrategyForConfig(reports , config)).isEqualTo(AggregationStrategy.SIMPLE);
+        assertThat(service.determineAggregationPatternForConfig(reports , config)).isEqualTo(AggregationPattern.ONE_TO_ONE);
 
         // and when prev with many then
         repForPrev.getParallelConfigs().add(new TurnoverReportingConfig());
         // then
-        assertThat(service.determineApplicationStrategyForConfig(reports , config)).isEqualTo(AggregationStrategy.PREVIOUS_MANY_OCCS_TO_ONE);
+        assertThat(service.determineAggregationPatternForConfig(reports , config)).isEqualTo(AggregationPattern.MANY_TO_ONE);
 
         // and when current has many and prev as well
         rep.getParallelConfigs().add(new TurnoverReportingConfig());
         // then
-        assertThat(service.determineApplicationStrategyForConfig(reports , config)).isEqualTo(AggregationStrategy.PREVIOUS_MANY_OCCS_TO_MANY);
+        assertThat(service.determineAggregationPatternForConfig(reports , config)).isEqualTo(AggregationPattern.MANY_TO_MANY);
 
         // and case current has many and prev has one
         List<AggregationAnalysisReportForConfig> reports2 = new ArrayList<>();
@@ -491,7 +491,7 @@ public class TurnoverAggregationService_Test {
         reports2.add(rep);
         reports2.add(repForPrev2);
         // then
-        assertThat(service.determineApplicationStrategyForConfig(reports2 , config)).isEqualTo(AggregationStrategy.PREVIOUS_ONE_OCC_TO_MANY);
+        assertThat(service.determineAggregationPatternForConfig(reports2 , config)).isEqualTo(AggregationPattern.ONE_TO_MANY);
 
     }
 

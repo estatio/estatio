@@ -29,7 +29,7 @@ public class Lease_aggregateTurnovers {
     @Action()
     public Lease $$(@Nullable final LocalDate startDate, @Nullable final LocalDate endDate, final boolean maintainOnly) {
         LOG.info("Aggregating: " + lease.getReference());
-        turnoverAggregationService.aggregateTurnoversForLease(lease, Type.PRELIMINARY, Frequency.MONTHLY, startDate, endDate,
+        turnoverAggregationService.aggregateTurnoversForLease(lease, startDate, endDate,
                 maintainOnly);
         return lease;
     }

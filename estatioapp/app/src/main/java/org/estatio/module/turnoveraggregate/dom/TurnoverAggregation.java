@@ -18,6 +18,7 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
@@ -25,6 +26,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.base.dom.types.MoneyType;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.turnover.dom.Turnover;
@@ -279,7 +281,7 @@ public class TurnoverAggregation {
 
     @Getter @Setter
     @Column(allowsNull = "true")
-    private LocalDate calculatedOn;
+    private LocalDateTime calculatedOn;
 
     @Persistent(table="AggregationsTurnovers")
     @Join(column="aggregationId")
@@ -323,6 +325,11 @@ public class TurnoverAggregation {
         if (c3!=null) c3.remove();
         if (c4!=null) c4.remove();
 
+    }
+
+    @Programmatic
+    public LocalDateInterval calculationPeriod(){
+        return LocalDateInterval.including(getDate().minusMonths(23), getDate());
     }
 
     @Inject RepositoryService repositoryService;
