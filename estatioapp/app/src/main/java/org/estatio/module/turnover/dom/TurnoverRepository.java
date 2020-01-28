@@ -34,8 +34,16 @@ import org.slf4j.LoggerFactory;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+import org.apache.isis.applib.services.eventbus.EventBusService;
+import org.apache.isis.applib.services.message.MessageService2;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
+
+import org.isisaddons.module.security.app.user.MeService;
+
+import org.incode.module.document.dom.impl.paperclips.Paperclip;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.currency.dom.Currency;
@@ -69,6 +77,9 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
         return turnover;
     }
 
+    public static class TurnoverUpsertEvent
+            extends ActionDomainEvent<Turnover> {}
+
     public Turnover upsert(
             final TurnoverReportingConfig config,
             final LocalDate turnoverDate,
@@ -97,6 +108,15 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
         turnover.setPurchaseCount(purchaseCount);
         turnover.setComments(comments);
         turnover.setNonComparable(nonComparable);
+
+        // fire upsert event
+        if (meService.me().getUsername()!="tester") {   // an ugly guard to prevent firing this event when integration testing
+            final TurnoverUpsertEvent event = new TurnoverUpsertEvent();
+            event.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
+            event.setSource(turnover);
+            eventBusService.post(event);
+        }
+
         return turnover;
     }
 
@@ -277,4 +297,9 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
 
     @Inject
     TurnoverReportingConfigRepository turnoverReportingConfigRepository;
+
+    @Inject
+    EventBusService eventBusService;
+
+    @Inject MeService meService;
 }

@@ -90,15 +90,6 @@ public class TurnoverAggregate_Scenarios_IntegTest extends TurnoverAggregateModu
     Property oxf;
     Currency euro;
 
-    Lease oxfMin2Lease;
-    Lease oxfMin3Lease;
-    Occupancy occ1_min2;
-    TurnoverReportingConfig occ1Cfg_min2;
-    Occupancy occ2_min2;
-    TurnoverReportingConfig occ2Cfg_min2;
-    Occupancy occ_min3;
-    TurnoverReportingConfig occCfg_min3;
-
     void setupScenario_and_validate_import_123() {
 
         oxf = Property_enum.OxfGb.findUsing(serviceRegistry2);
@@ -211,6 +202,15 @@ public class TurnoverAggregate_Scenarios_IntegTest extends TurnoverAggregateModu
 
     }
 
+    Lease oxfMin2Lease;
+    Lease oxfMin3Lease;
+    Occupancy occ1_min2;
+    TurnoverReportingConfig occ1Cfg_min2;
+    Occupancy occ2_min2;
+    TurnoverReportingConfig occ2Cfg_min2;
+    Occupancy occ_min3;
+    TurnoverReportingConfig occCfg_min3;
+
 
     void setupScenario_and_validate_import_minute() {
 
@@ -282,6 +282,18 @@ public class TurnoverAggregate_Scenarios_IntegTest extends TurnoverAggregateModu
         // then
         final TurnoverAggregation agg20190801Min2 = turnoverAggregationRepository.findUnique(
                 occ1Cfg_min2, new LocalDate(2019,8,1));
+        assertThat(occ1_min2.getUnit().getName()).isEqualTo("Unit 1");
+        assertThat(agg20190801Min2.getAggregateToDate().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("293793.00"));
+        assertThat(agg20190801Min2.getAggregateToDate().getTurnoverCount()).isEqualTo(8);
+        assertThat(agg20190801Min2.getAggregateToDate().isComparable()).isTrue();
+
+        final TurnoverAggregation agg20190801Min2_2 = turnoverAggregationRepository.findUnique(
+                occ2Cfg_min2, new LocalDate(2019,8,1));
+        assertThat(occ2_min2.getUnit().getName()).isEqualTo("Unit 2");
+        assertThat(agg20190801Min2_2.getAggregate9Month().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("38678.00"));
+//        assertThat(agg20190801Min2_2.getAggregate1Month().getGrossAmount()).isNull(); Does not work with excel fixtures
+
+
 
         final TurnoverAggregation agg20190801Min3 = turnoverAggregationRepository.findUnique(
                 occCfg_min3, new LocalDate(2019,8,1));
@@ -291,9 +303,12 @@ public class TurnoverAggregate_Scenarios_IntegTest extends TurnoverAggregateModu
 
 
         final TurnoverAggregation agg20200101 = turnoverAggregationRepository.findUnique(
-                occCfg_min3, new LocalDate(2020,1,1));
+                occCfg_min3, new LocalDate(2019,12,1));
 
-//        assertThat(agg20200101.getAggregate6Month().getTurnoverCount()).isEqualTo(4); //TODO: check if current aggregation through agent is OK??
+        assertThat(agg20200101.getAggregate12Month().getTurnoverCountPreviousYear()).isEqualTo(12);
+        assertThat(agg20200101.getAggregate12Month().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("410000.00"));
+        assertThat(agg20200101.getAggregate1Month().getNonComparableThisYear()).isEqualTo(null);
+
 
     }
 

@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import com.google.api.client.util.Lists;
@@ -28,6 +27,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
+import org.estatio.module.turnover.dom.Status;
 import org.estatio.module.turnover.dom.aggregation.AggregationPattern;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
@@ -47,7 +47,22 @@ public class TurnoverAggregationService {
 
     public static Logger LOG = LoggerFactory.getLogger(TurnoverAggregationService.class);
 
+    public static boolean guard(final Type type, final Frequency frequency, final String msgType, final String msgFreq) {
+        if (type != Type.PRELIMINARY) {
+            LOG.warn(String.format(msgType,
+                    type));
+            return true;
+        }
+        if (frequency != Frequency.MONTHLY) {
+            LOG.warn(String.format(msgFreq,
+                    frequency));
+            return true;
+        }
+        return false;
+    }
+
     // TODO: candidate for configuration property?
+
     public static LocalDate MIN_AGGREGATION_DATE = new LocalDate(2010, 1,1);
 
     public static List<AggregationPattern> STRATEGIES_IMPLEMENTED = Arrays.asList(AggregationPattern.ONE_TO_ONE, AggregationPattern.MANY_TO_ONE);
@@ -106,15 +121,17 @@ public class TurnoverAggregationService {
 
         LocalDate turnoverDateToUse = turnoverDate==null ? MIN_AGGREGATION_DATE.minusMonths(23): turnoverDate;
 
-        // a changed turnover has impact on aggregations of it's month and the next 23 months; an aggregation looks back 23 months
+        // a changed turnover has impact on aggregations of it's month and the next 23 months; an aggregation looks back 24 months
         final LocalDateInterval turnoverSelectionPeriod = LocalDateInterval.excluding(
-                turnoverDateToUse.withDayOfMonth(1).minusMonths(23),
+                turnoverDateToUse.withDayOfMonth(1).minusMonths(24),
                 turnoverDateToUse.withDayOfMonth(1).plusMonths(24)
         );
+        // this is the period we calculate aggregations for
+        final LocalDateInterval calculationPeriod = LocalDateInterval.excluding(turnoverDateToUse.withDayOfMonth(1), turnoverDateToUse.withDayOfMonth(1).plusMonths(24));
 
         // Process step 1: analyze  ////////////////////////////////////////////////////////////////////////////////////
         config.getOccupancy().getLease();
-        final List<AggregationAnalysisReportForConfig> analysisReports = analyze(config.getOccupancy().getLease(), config.getType(),
+        final List<AggregationAnalysisReportForConfig> analysisReports = turnoverAnalysisService.analyze(config.getOccupancy().getLease(), config.getType(),
                 config.getFrequency());
 
 
@@ -133,21 +150,22 @@ public class TurnoverAggregationService {
 
         // Proces step 3: calculate
         List<TurnoverReportingConfig> configsToCalculate = selectConfigsWithDateInOrBeforeSelectionPeriod(analysisReports, turnoverSelectionPeriod);
-        List<Turnover> turnoverSelectionForCalculation = new ArrayList<>();
+        List<Turnover> turnoverSelectionForCalculations = new ArrayList<>();
         configsToCalculate.forEach(c->{
-            turnoverSelectionForCalculation.addAll(
+            turnoverSelectionForCalculations.addAll(
                     c.getTurnovers()
                             .stream()
+                            .filter(t->t.getStatus() == Status.APPROVED)
                             .filter(t -> turnoverSelectionPeriod.contains(t.getDate()))
                             .collect(Collectors.toList())
             );
 
         });
-        List<TurnoverAggregation> aggregationsToCalculate = selectAggregationsToCalculate(analysisReports, turnoverSelectionPeriod);
+        List<TurnoverAggregation> aggregationsToCalculate = selectAggregationsToCalculate(analysisReports, calculationPeriod);
         aggregationsToCalculate.forEach(a->{
             // dirty checking
             if (a.getCalculatedOn()==null || changedAt==null || changedAt.isAfter(a.getCalculatedOn())) {
-                calculateAggregation2(a, turnoverSelectionForCalculation, analysisReports);
+                calculateAggregation2(a, turnoverSelectionForCalculations, analysisReports);
             }
         });
 
@@ -181,25 +199,10 @@ public class TurnoverAggregationService {
         return result;
     }
 
-    private boolean guard(final Type type, final Frequency frequency, final String msgType, final String msgFreq) {
-        if (type != Type.PRELIMINARY) {
-            LOG.warn(String.format(msgType,
-                    type));
-            return true;
-        }
-        if (frequency != Frequency.MONTHLY) {
-            LOG.warn(String.format(msgFreq,
-                    frequency));
-            return true;
-        }
-        return false;
-    }
-
-    final LocalDateInterval getCalculationPeriodForAggregations(final LocalDate startDate, final LocalDate endDate){
-        final LocalDate startDateToUse = startDate == null || startDate.isBefore(MIN_AGGREGATION_DATE) ? MIN_AGGREGATION_DATE : startDate.withDayOfMonth(1);
-        final LocalDate endDateToUse = endDate == null ? clockService.now().withDayOfMonth(1).plusMonths(23): endDate.withDayOfMonth(1);
-        if (endDateToUse.isBefore(startDateToUse)) return LocalDateInterval.including(startDateToUse, startDateToUse); // Safety net in case end date is before min aggregation date while start date is null
-        return LocalDateInterval.including(startDateToUse, endDateToUse);
+    public List<AggregationAnalysisReportForConfig> reportsForLease(final Lease lease, final List<AggregationAnalysisReportForConfig> reports){
+        return reports.stream()
+                .filter(r -> r.getTurnoverReportingConfig().getOccupancy().getLease().equals(lease))
+                .collect(Collectors.toList());
     }
 
     public void calculateAggregation2(final TurnoverAggregation aggregation, final List<Turnover> turnovers, final List<AggregationAnalysisReportForConfig> reports){
@@ -209,60 +212,41 @@ public class TurnoverAggregationService {
                 .findFirst().orElse(null);
         if (report==null) return; // Should not happen
 
-        switch (report.getAggregationPattern()){
+        // from turnovers offered, select those that are within the calculation period for the aggregation and are on a config that we aggregate for
+        final List<Turnover> toSelection = turnovers.stream()
+                .filter(t-> report.getConfigsToIncludeInAggregation().contains(t.getConfig()))
+                .filter(t -> aggregation.calculationPeriod().contains(t.getDate()))
+                .collect(Collectors.toList());
 
-        case ONE_TO_ONE:
-        case MANY_TO_ONE:
-            // from turnovers offered, select those that are within the calculation period for the aggregation
-            final List<Turnover> toSelection = turnovers.stream()
-                    .filter(t -> aggregation.calculationPeriod().contains(t.getDate())).collect(Collectors.toList());
+        aggregation.getTurnovers().clear();
+        aggregation.getTurnovers().addAll(toSelection);
 
-            aggregation.getTurnovers().clear();
-            aggregation.getTurnovers().addAll(toSelection);
+        calculateAggregationForOther(aggregation, toSelection);
 
-            calculateAggregationForOther(aggregation, toSelection);
+        aggregation.getAggregate1Month().calculate(aggregation, toSelection);
+        aggregation.getAggregate2Month().calculate(aggregation, toSelection);
+        aggregation.getAggregate3Month().calculate(aggregation, toSelection);
+        aggregation.getAggregate6Month().calculate(aggregation, toSelection);
+        aggregation.getAggregate9Month().calculate(aggregation, toSelection);
+        aggregation.getAggregate12Month().calculate(aggregation, toSelection);
 
-            aggregation.getAggregate1Month().calculate(aggregation, toSelection);
-            aggregation.getAggregate2Month().calculate(aggregation, toSelection);
-            aggregation.getAggregate3Month().calculate(aggregation, toSelection);
-            aggregation.getAggregate6Month().calculate(aggregation, toSelection);
-            aggregation.getAggregate9Month().calculate(aggregation, toSelection);
-            aggregation.getAggregate12Month().calculate(aggregation, toSelection);
+        aggregation.getAggregateToDate().calculate(aggregation, toSelection);
 
-            aggregation.getAggregateToDate().calculate(aggregation, toSelection);
+        aggregation.getPurchaseCountAggregate1Month().calculate(aggregation, toSelection);
+        aggregation.getPurchaseCountAggregate3Month().calculate(aggregation, toSelection);
+        aggregation.getPurchaseCountAggregate6Month().calculate(aggregation, toSelection);
+        aggregation.getPurchaseCountAggregate12Month().calculate(aggregation, toSelection);
 
-            aggregation.getPurchaseCountAggregate1Month().calculate(aggregation, toSelection);
-            aggregation.getPurchaseCountAggregate3Month().calculate(aggregation, toSelection);
-            aggregation.getPurchaseCountAggregate6Month().calculate(aggregation, toSelection);
-            aggregation.getPurchaseCountAggregate12Month().calculate(aggregation, toSelection);
+        aggregation.setCalculatedOn(clockService.nowAsLocalDateTime());
 
-            aggregation.setCalculatedOn(clockService.nowAsLocalDateTime());
 
-            break;
-
-        case ONE_TO_MANY:
-
-            break;
-
-        case MANY_TO_MANY:
-
-            break;
-
-        case ONE_TO_MANY_SAME_LEASE:
-
-            break;
-
-        default:
-            return; // should not happen
-
-        }
 
     }
-
     @Getter
     @Setter
     @AllArgsConstructor
     class ConfigReportTuple {
+
 
         private TurnoverReportingConfig config;
 
@@ -552,272 +536,6 @@ public class TurnoverAggregationService {
 
     }
 
-    /**
-     * This method returns a collection of reports on turnover config level intended for aggregation maintenance and calculation
-     * From the config (t.i. occupancy) point of view it tries to find the toplevel parent lease and 'walk the graph' over all previous child leases
-     *
-     * @param lease
-     * @param frequency
-     * @return
-     */
-     List<AggregationAnalysisReportForConfig> analyze(final Lease lease, final Type type, final Frequency frequency){
-         if (guard(type, frequency, "No create-aggregation-reports implementation for type %s found.",
-                 "No create-aggregation-reports for frequency %s found."))
-             return Collections.EMPTY_LIST;
-
-         List<AggregationAnalysisReportForConfig> result = new ArrayList<>();
-
-        // find top level lease
-        Lease l = lease;
-        while (l.getNext() != null){
-            l = (Lease) l.getNext();
-        }
-
-        result.addAll(reportsForOccupancyTypeAndFrequency(l, type, frequency, true));
-
-        l = (Lease) l.getPrevious();
-        while (l!=null){
-            result.addAll(reportsForOccupancyTypeAndFrequency(l, type, frequency,false));
-            l = (Lease) l.getPrevious();
-        }
-
-        for (AggregationAnalysisReportForConfig report : result){
-            final AggregationPattern aggregationPattern = determineAggregationPatternForConfig(result,
-                    report.getTurnoverReportingConfig());
-            report.setAggregationPattern(aggregationPattern);
-        }
-
-        return result;
-    }
-
-    List<AggregationAnalysisReportForConfig> reportsForOccupancyTypeAndFrequency(final Lease l, final Type type, final Frequency frequency, final boolean isToplevelLease) {
-        List<AggregationAnalysisReportForConfig> result = new ArrayList<>();
-        final List<List<TurnoverReportingConfig>> collect = Lists.newArrayList(l.getOccupancies()).stream()
-                .map(o -> turnoverReportingConfigRepository.findByOccupancyAndTypeAndFrequency(o, type, frequency))
-                .collect(Collectors.toList());
-        for (List<TurnoverReportingConfig> list : collect) {
-
-            if (!list.isEmpty()) {
-
-                final TurnoverReportingConfig config = list.get(0);
-                final Occupancy occupancy = config.getOccupancy();
-                final Lease previousLease = (Lease) config.getOccupancy().getLease().getPrevious();
-
-                AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
-                report.setPreviousLease(previousLease);
-
-                // find parallel occs
-                if (l.hasOverlappingOccupancies()) {
-                    for (Occupancy oc : l.getOccupancies()) {
-
-                        if ((!oc.equals(occupancy)) && oc.getEffectiveInterval().overlaps(
-                                occupancy.getEffectiveInterval())) {
-                            final List<TurnoverReportingConfig> configs = turnoverReportingConfigRepository
-                                    .findByOccupancyAndTypeAndFrequency(oc, type, frequency);
-                            if (!configs.isEmpty()) {
-                                report.getParallelConfigs().add(configs.get(0));
-                                if (configs.get(0).getOccupancy().getUnit().equals(occupancy.getUnit())) {
-                                    report.getParallelOnSameUnit().add(configs.get(0));
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // find previous
-                if (occupancy.getStartDate() != null && occupancy
-                        .getStartDate().isAfter(l.getEffectiveInterval().startDate())) {
-                    final List<Occupancy> prevOnOtherUnit = Lists.newArrayList(l.getOccupancies()).stream()
-                            .filter(occ -> !occ.equals(occupancy))
-                            .filter(occ -> !occ.getUnit().equals(occupancy.getUnit()))
-                            .filter(occ -> occ.getEndDate() != null)
-                            .filter(occ -> occ.getEndDate().isBefore(occupancy.getStartDate()))
-                            .collect(Collectors.toList());
-                    prevOnOtherUnit.forEach(o->{
-                        final List<TurnoverReportingConfig> configsForO = turnoverReportingConfigRepository
-                                .findByOccupancyAndTypeAndFrequency(o, type, frequency);
-                        if (!configsForO.isEmpty()) report.getPreviousOnOtherUnit().addAll(configsForO);
-                    });
-                    final Optional<Occupancy> prevOnSameUnit = Lists.newArrayList(l.getOccupancies()).stream()
-                            .filter(occ -> !occ.equals(occupancy))
-                            .filter(occ -> occ.getUnit().equals(occupancy.getUnit()))
-                            .filter(occ -> occ.getEndDate() != null)
-                            .filter(occ -> occ.getEndDate().isBefore(occupancy.getStartDate())).findFirst();
-                    if (prevOnSameUnit.isPresent()) {
-                        final List<TurnoverReportingConfig> configs2 = turnoverReportingConfigRepository
-                                .findByOccupancyAndTypeAndFrequency(prevOnSameUnit.get(), type, frequency);
-                        if (!configs2.isEmpty()) report.setPreviousOnSameUnit(configs2.get(0));
-                    }
-                }
-                // find next
-                if (occupancy.getEndDate() != null) {
-                    final List<Occupancy> nextOnOtherUnit = Lists.newArrayList(l.getOccupancies()).stream()
-                            .filter(occ -> !occ.equals(occupancy))
-                            .filter(occ -> !occ.getUnit().equals(occupancy.getUnit()))
-                            .filter(occ -> occ.getStartDate() != null)
-                            .filter(occ -> occ.getStartDate().isAfter(occupancy.getEndDate()))
-                            .collect(Collectors.toList());
-                    nextOnOtherUnit.forEach(o->{
-                        final List<TurnoverReportingConfig> configsForO = turnoverReportingConfigRepository
-                                .findByOccupancyAndTypeAndFrequency(o, type, frequency);
-                        if (!configsForO.isEmpty()) report.getNextOnOtherUnit().addAll(configsForO);
-                    });
-                    final Optional<Occupancy> next = Lists.newArrayList(l.getOccupancies()).stream()
-                            .filter(occ -> !occ.equals(occupancy))
-                            .filter(occ -> occ.getUnit().equals(occupancy.getUnit()))
-                            .filter(occ -> occ.getStartDate() != null)
-                            .filter(occ -> occ.getStartDate().isAfter(occupancy.getEndDate()))
-                            .findFirst();
-                    if (next.isPresent()){
-                        final List<TurnoverReportingConfig> configs3 = turnoverReportingConfigRepository
-                                .findByOccupancyAndTypeAndFrequency(next.get(), type, frequency);
-                        if (!configs3.isEmpty()) report.setNextOnSameUnit(configs3.get(0));
-                    }
-                }
-
-                // determine dates for aggregations
-                // TODO: check with users! Currently within a lease, we check the effective enddate of the occupancy. If the occupancy end date is on or later than the first of the next month we include
-                // However: when checking with a previous lease, the current SQL agent logic is different: when a lease terminates in the month we examine, then the date is included (Actially there is a mistake in de sql
-                // that makes a lease ending on the last day of the month not to include the date
-                // The SQL is in fn_GetLeaseDetailForTurnover; de selectie in de code WHEN l.LeaseTerminationDate < DATEADD(d,-1,DATEADD(mm,1,@Date)) --Terminate date is before
-                // @DATE is the calculation date, so in our case the first of the month
-                // example: @Date = 1-8-2019 Then lease with a next ending before 31-8-2019 get 1-8-2019 aggregation; lease ending on 31-8-2019 'hands it over' to the parent lease
-                boolean isToplevelOccupancy = isToplevelLease && report.getNextOnSameUnit() == null && report.getNextOnOtherUnit().isEmpty();
-                report.setToplevel(isToplevelOccupancy);
-                report.getAggregationDates().addAll(
-                        aggregationDatesForTurnoverReportingConfig(config, isToplevelOccupancy));
-
-                result.add(report);
-
-            }
-        }
-
-        return result;
-    }
-
-    List<LocalDate> aggregationDatesForTurnoverReportingConfig(
-            final TurnoverReportingConfig config,
-            final boolean toplevel) {
-
-         //TODO: also check the aggegration strategy of the config!!! (Especially in case previous lease...)
-
-        LocalDate startDateToUse;
-        LocalDate startDateOrNull = null;
-        try {
-            startDateOrNull = config.getOccupancy().getEffectiveInterval().startDate();
-        } catch (Exception e) {
-            LOG.warn(String.format("Problem with config %s", config.toString()));
-            LOG.warn(e.getMessage());
-        }
-        if (startDateOrNull == null) {
-            startDateToUse = MIN_AGGREGATION_DATE;
-        } else {
-            Lease previousLease = (Lease) config.getOccupancy().getLease().getPrevious();
-            LocalDate effectiveEndPreviousLease = previousLease!=null ? previousLease.getEffectiveInterval().endDate() : null;
-            if (config.getOccupancy().getLease().getPrevious() != null && effectiveEndPreviousLease != null){  // second check should not be needed!!
-                // we may need to exclude an aggregation date unless the previous lease ends on the last of the month
-                LocalDate endOfPreviousMonth = startDateOrNull.withDayOfMonth(1).minusDays(1);
-                if (effectiveEndPreviousLease.equals(endOfPreviousMonth)){
-                    startDateToUse = startDateOrNull.withDayOfMonth(1);
-                } else {
-                    startDateToUse = startDateOrNull.withDayOfMonth(1).plusMonths(1);
-                }
-            } else {
-                startDateToUse = startDateOrNull.withDayOfMonth(1);
-            }
-        }
-        if (startDateToUse.isBefore(MIN_AGGREGATION_DATE)) {
-            startDateToUse = MIN_AGGREGATION_DATE;
-        }
-
-        LocalDate effectiveEndDateOcc = config.getOccupancy().getEffectiveEndDate();
-
-        LocalDate endDateToUse;
-        if (config.getOccupancy().getLease().getNext() != null
-                && effectiveEndDateOcc != null) { // second check should not be needed!!
-            // We need to check the effective enddate of the lease for a 'handover' to the next lease
-
-            // if effectiveEndDateOcc is on the last of the month or later, do not include (the next lease should pick it up)
-            // f.e.
-            // end date to use for 31-8-2019 should be 31-7-2019
-            // end date to use for 30-8-2019 should be any date this month (we pick effectiveEndDateOcc)
-            LocalDate endOfTheMonth = effectiveEndDateOcc.withDayOfMonth(1).plusMonths(1).minusDays(1);
-            if (effectiveEndDateOcc.equals(endOfTheMonth)) {
-                endDateToUse = effectiveEndDateOcc.minusMonths(1);
-            } else {
-                endDateToUse = effectiveEndDateOcc;
-            }
-
-        } else {
-
-            if (effectiveEndDateOcc == null)
-                effectiveEndDateOcc = clockService.now();
-            endDateToUse = toplevel ? effectiveEndDateOcc.plusMonths(23) : effectiveEndDateOcc;
-        }
-
-        List<LocalDate> result = new ArrayList<>();
-        while (!endDateToUse.isBefore(startDateToUse)) {
-            result.add(startDateToUse);
-            startDateToUse = startDateToUse.plusMonths(1);
-        }
-        return result;
-    }
-
-    AggregationPattern determineAggregationPatternForConfig(final List<AggregationAnalysisReportForConfig> reports, final TurnoverReportingConfig turnoverReportingConfig){
-
-        final AggregationAnalysisReportForConfig reportForConfig = reports.stream()
-                .filter(r -> r.getTurnoverReportingConfig().equals(turnoverReportingConfig)).findFirst().orElse(null);
-
-        if (reportForConfig==null){
-            // should not happen
-            return null;
-        }
-
-        final Lease previous = (Lease) reportForConfig.getPreviousLease();
-        final AggregationAnalysisReportForConfig reportForPrevious = reports.stream()
-                .filter(r -> r.getTurnoverReportingConfig().getOccupancy().getLease().equals(previous))
-                .findFirst().orElse(null);
-
-        if (reportForConfig.getParallelConfigs().isEmpty()){
-
-            // no par configs on this lease
-
-            if (previous ==null || reportForPrevious ==null){
-                            // no previous lease or no prev occs on prev lease
-                            return AggregationPattern.ONE_TO_ONE;
-            }
-            if (reportForPrevious.getParallelConfigs().isEmpty()){
-                // no par configs (occs) on prev lease
-                return AggregationPattern.ONE_TO_ONE;
-            } else {
-                // par configs (occs) on prev lease
-                return AggregationPattern.MANY_TO_ONE;
-            }
-
-        } else {
-            if (previous ==null || reportForPrevious ==null){
-                // check if there is a  previous config (occ) on the same lease for both this and the parallel one
-                if (!reportForConfig.getPreviousOnOtherUnit().isEmpty()){
-                    //TODO: refine this
-                    // Check if at least 1 occ ends before at least two start
-                    return AggregationPattern.ONE_TO_MANY_SAME_LEASE;
-                } else {
-                    return AggregationPattern.ONE_TO_ONE;
-                }
-            }
-            // multiple par occs on this lease
-            if (reportForPrevious.getParallelConfigs().isEmpty()){
-                // no par occs on prev lease
-                return AggregationPattern.ONE_TO_MANY;
-            } else {
-                // par occs on prev lease
-                return AggregationPattern.MANY_TO_MANY;
-            }
-
-        }
-
-    }
-
     void maintainTurnoverAggregationsForConfig(final AggregationAnalysisReportForConfig report){
 
         try {
@@ -932,4 +650,6 @@ public class TurnoverAggregationService {
     @Inject ClockService clockService;
 
     @Inject RepositoryService repositoryService;
+
+    @Inject TurnoverAnalysisService turnoverAnalysisService;
 }

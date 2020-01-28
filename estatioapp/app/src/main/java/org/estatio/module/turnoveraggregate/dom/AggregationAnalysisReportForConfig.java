@@ -22,6 +22,7 @@ public class AggregationAnalysisReportForConfig {
         this.parallelOnSameUnit = new ArrayList<>();
         this.previousOnOtherUnit = new ArrayList<>();
         this.nextOnOtherUnit = new ArrayList<>();
+        this.configsToIncludeInAggregation = new ArrayList<>();
         this.toplevel = false;
     }
 
@@ -51,4 +52,6 @@ public class AggregationAnalysisReportForConfig {
 
     @Setter
     private AggregationPattern aggregationPattern;
+
+    private List<TurnoverReportingConfig> configsToIncludeInAggregation;
 }

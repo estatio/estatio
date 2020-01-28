@@ -201,9 +201,8 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
     @Test
     public void maintain_turnover_aggregations_works() throws Exception {
 
-        // given
+        // given, when
         setupScenario_and_validate_import();
-        assertThat(turnoverAggregationRepository.listAll()).isEmpty();
 
         // when
         mixin(Lease_aggregateTurnovers.class, oxfTopModelLease1).$$(null, null, true);
