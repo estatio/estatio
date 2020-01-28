@@ -16,6 +16,8 @@ import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.services.user.UserService;
 
+import org.isisaddons.module.security.app.user.MeService;
+
 import org.estatio.module.turnover.dom.Status;
 import org.estatio.module.turnover.dom.Turnover;
 
@@ -81,5 +83,7 @@ public class Turnover_enter {
     @Inject ClockService clockService;
 
     @Inject EventBusService eventBusService;
+
+    @Inject MeService meService;
 
 }

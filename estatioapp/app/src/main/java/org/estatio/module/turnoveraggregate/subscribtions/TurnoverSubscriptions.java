@@ -18,10 +18,10 @@ import org.estatio.module.lease.dom.LeaseTermForIndexableRepository;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.entry.Turnover_enter;
+import org.estatio.module.turnoveraggregate.contributions.Turnover_aggregate;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationService;
 
 @DomainService(nature = NatureOfService.DOMAIN)
-@DomainServiceLayout(menuOrder = "1")
 public class TurnoverSubscriptions extends org.apache.isis.applib.AbstractSubscriber {
 
     @Programmatic
@@ -31,7 +31,7 @@ public class TurnoverSubscriptions extends org.apache.isis.applib.AbstractSubscr
             switch (ev.getEventPhase()) {
             case EXECUTED:
                 Turnover turnoverChanged = (Turnover) ev.getSource();
-                backgroundService2.execute(turnoverAggregationService).aggregate(turnoverChanged);
+                backgroundService2.executeMixin(Turnover_aggregate.class, turnoverChanged).$$();
                 break;
             default:
                 break;
@@ -45,7 +45,7 @@ public class TurnoverSubscriptions extends org.apache.isis.applib.AbstractSubscr
         switch (ev.getEventPhase()) {
         case EXECUTED:
             Turnover turnoverChanged = (Turnover) ev.getSource();
-            backgroundService2.execute(turnoverAggregationService).aggregate(turnoverChanged);
+            backgroundService2.executeMixin(Turnover_aggregate.class, turnoverChanged).$$();
             break;
         default:
             break;
@@ -53,10 +53,6 @@ public class TurnoverSubscriptions extends org.apache.isis.applib.AbstractSubscr
     }
 
     @Inject
-    TurnoverAggregationService turnoverAggregationService;
-
-    @Inject
     BackgroundService2 backgroundService2;
-
 
 }

@@ -110,12 +110,11 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
         turnover.setNonComparable(nonComparable);
 
         // fire upsert event
-        if (meService.me().getUsername()!="tester") {   // an ugly guard to prevent firing this event when integration testing
-            final TurnoverUpsertEvent event = new TurnoverUpsertEvent();
-            event.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
-            event.setSource(turnover);
-            eventBusService.post(event);
-        }
+
+        final TurnoverUpsertEvent event = new TurnoverUpsertEvent();
+        event.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
+        event.setSource(turnover);
+        eventBusService.post(event);
 
         return turnover;
     }

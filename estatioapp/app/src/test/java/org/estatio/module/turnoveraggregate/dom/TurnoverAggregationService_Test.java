@@ -290,6 +290,30 @@ public class TurnoverAggregationService_Test {
     }
 
     @Test
+    public void null_and_0_handling_aggregate_for_period() throws Exception {
+
+        // given
+        TurnoverAggregationService service = new TurnoverAggregationService();
+        final TurnoverAggregateForPeriod aggregateForPeriod = new TurnoverAggregateForPeriod();
+        aggregateForPeriod.setAggregationPeriod(AggregationPeriod.P_1M);
+        final LocalDate aggregationDate = new LocalDate(2020, 1, 1);
+        List<Turnover> turnovers = new ArrayList<>();
+
+        // when
+        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregationDate, turnovers);
+
+        // then
+        assertThat(aggregateForPeriod.getGrossAmount()).isNull();
+        assertThat(aggregateForPeriod.getNetAmount()).isNull();
+        assertThat(aggregateForPeriod.getGrossAmountPreviousYear()).isNull();
+        assertThat(aggregateForPeriod.getNetAmountPreviousYear()).isNull();
+        assertThat(aggregateForPeriod.getNonComparableThisYear()).isNull();
+        assertThat(aggregateForPeriod.getNonComparablePreviousYear()).isNull();
+        assertThat(aggregateForPeriod.isComparable()).isFalse();
+
+    }
+
+    @Test
     public void calculatePurchaseCountAggregateForPeriod_works() throws Exception {
 
         // given

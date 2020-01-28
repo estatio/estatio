@@ -269,7 +269,7 @@ public class TurnoverAggregate_Scenarios_IntegTest extends TurnoverAggregateModu
     }
 
     @Test
-    public void xxx() throws Exception {
+    public void scenario_minute() throws Exception {
 
         // given
         setFixtureClockDate(new LocalDate(2020,2,16));
@@ -291,9 +291,7 @@ public class TurnoverAggregate_Scenarios_IntegTest extends TurnoverAggregateModu
                 occ2Cfg_min2, new LocalDate(2019,8,1));
         assertThat(occ2_min2.getUnit().getName()).isEqualTo("Unit 2");
         assertThat(agg20190801Min2_2.getAggregate9Month().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("38678.00"));
-//        assertThat(agg20190801Min2_2.getAggregate1Month().getGrossAmount()).isNull(); Does not work with excel fixtures
-
-
+        // assertThat(agg20190801Min2_2.getAggregate1Month().getGrossAmount()).isNull(); // Does not work with excel fixtures ??
 
         final TurnoverAggregation agg20190801Min3 = turnoverAggregationRepository.findUnique(
                 occCfg_min3, new LocalDate(2019,8,1));
@@ -311,9 +309,6 @@ public class TurnoverAggregate_Scenarios_IntegTest extends TurnoverAggregateModu
 
 
     }
-
-
-
 
     @Inject TurnoverAggregationRepository turnoverAggregationRepository;
 
