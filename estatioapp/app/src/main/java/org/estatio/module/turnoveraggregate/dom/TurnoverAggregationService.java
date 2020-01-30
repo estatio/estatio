@@ -312,21 +312,42 @@ public class TurnoverAggregationService {
                 turnoverAggregateForPeriod.setTurnoverCount(turnoverAggregateForPeriod.getTurnoverCount() != null ?
                         turnoverAggregateForPeriod.getTurnoverCount() + 1 :
                         1);
+            } else {
+                if ((t.getGrossAmount()!=null && t.getGrossAmount().compareTo(BigDecimal.ZERO) == 0) || (t.getNetAmount()!=null && t.getNetAmount().compareTo(BigDecimal.ZERO) == 0)){
+                    turnoverAggregateForPeriod.setTurnoverCount(turnoverAggregateForPeriod.getTurnoverCount() != null ?
+                            turnoverAggregateForPeriod.getTurnoverCount() + 0 :
+                            0);
+                }
             }
         });
-        turnoverAggregateForPeriod.setNonComparableThisYear(containsNonComparableTurnover(toCY));
+        // null gross && null net has to return null for nonComparable. Currently can return 0???
+        if (turnoverAggregateForPeriod.getGrossAmount()==null && turnoverAggregateForPeriod.getNetAmount()==null){
+            turnoverAggregateForPeriod.setNonComparableThisYear(null);
+        } else {
+            turnoverAggregateForPeriod.setNonComparableThisYear(containsNonComparableTurnover(toCY));
+        }
 
         toPY.forEach(t->{
             turnoverAggregateForPeriod.setGrossAmountPreviousYear(aggAmount(turnoverAggregateForPeriod.getGrossAmountPreviousYear(), t.getGrossAmount()));
             turnoverAggregateForPeriod.setNetAmountPreviousYear(aggAmount(turnoverAggregateForPeriod.getNetAmountPreviousYear(), t.getNetAmount()));
             if ((t.getGrossAmount()!=null && t.getGrossAmount().compareTo(BigDecimal.ZERO) > 0) || (t.getNetAmount()!=null && t.getNetAmount().compareTo(BigDecimal.ZERO) > 0)) {
-                turnoverAggregateForPeriod.setTurnoverCountPreviousYear(
-                        turnoverAggregateForPeriod.getTurnoverCountPreviousYear() != null ?
-                                turnoverAggregateForPeriod.getTurnoverCountPreviousYear() + 1 :
-                                1);
+                turnoverAggregateForPeriod.setTurnoverCountPreviousYear(turnoverAggregateForPeriod.getTurnoverCountPreviousYear() != null ?
+                        turnoverAggregateForPeriod.getTurnoverCountPreviousYear() + 1 :
+                        1);
+            } else {
+                if ((t.getGrossAmount()!=null && t.getGrossAmount().compareTo(BigDecimal.ZERO) == 0) || (t.getNetAmount()!=null && t.getNetAmount().compareTo(BigDecimal.ZERO) == 0)){
+                    turnoverAggregateForPeriod.setTurnoverCountPreviousYear(turnoverAggregateForPeriod.getTurnoverCountPreviousYear() != null ?
+                            turnoverAggregateForPeriod.getTurnoverCountPreviousYear() + 0 :
+                            0);
+                }
             }
         });
-        turnoverAggregateForPeriod.setNonComparablePreviousYear(containsNonComparableTurnover(toPY));
+        // null gross && null net has to return null for nonComparable. Currently can return 0???
+        if (turnoverAggregateForPeriod.getGrossAmountPreviousYear()==null && turnoverAggregateForPeriod.getNetAmountPreviousYear()==null){
+            turnoverAggregateForPeriod.setNonComparablePreviousYear(null);
+        } else {
+            turnoverAggregateForPeriod.setNonComparablePreviousYear(containsNonComparableTurnover(toPY));
+        }
 
         turnoverAggregateForPeriod.setComparable(isComparableForPeriod(
                 turnoverAggregateForPeriod.getAggregationPeriod(),
@@ -363,21 +384,43 @@ public class TurnoverAggregationService {
                 turnoverAggregateToDate.setTurnoverCount(turnoverAggregateToDate.getTurnoverCount() != null ?
                         turnoverAggregateToDate.getTurnoverCount() + 1 :
                         1);
+            } else {
+                if ((t.getGrossAmount()!=null && t.getGrossAmount().compareTo(BigDecimal.ZERO) == 0) || (t.getNetAmount()!=null && t.getNetAmount().compareTo(BigDecimal.ZERO) == 0)){
+                    turnoverAggregateToDate.setTurnoverCount(turnoverAggregateToDate.getTurnoverCount() != null ?
+                            turnoverAggregateToDate.getTurnoverCount() + 0 :
+                            0);
+                }
             }
         });
-        turnoverAggregateToDate.setNonComparableThisYear(containsNonComparableTurnover(toCY));
+        // null gross && null net has to return null for nonComparable. Currently can return 0???
+        if (turnoverAggregateToDate.getGrossAmount()==null && turnoverAggregateToDate.getNetAmount()==null){
+            turnoverAggregateToDate.setNonComparableThisYear(null);
+        } else {
+            turnoverAggregateToDate.setNonComparableThisYear(containsNonComparableTurnover(toCY));
+        }
 
         toPY.forEach(t->{
             turnoverAggregateToDate.setGrossAmountPreviousYear(aggAmount(turnoverAggregateToDate.getGrossAmountPreviousYear(), t.getGrossAmount()));
             turnoverAggregateToDate.setNetAmountPreviousYear(aggAmount(turnoverAggregateToDate.getNetAmountPreviousYear(), t.getNetAmount()));
             if ((t.getGrossAmount()!=null && t.getGrossAmount().compareTo(BigDecimal.ZERO) > 0) || (t.getNetAmount()!=null && t.getNetAmount().compareTo(BigDecimal.ZERO) > 0)) {
-                turnoverAggregateToDate.setTurnoverCountPreviousYear(
-                        turnoverAggregateToDate.getTurnoverCountPreviousYear() != null ?
-                                turnoverAggregateToDate.getTurnoverCountPreviousYear() + 1 :
-                                1);
+                turnoverAggregateToDate.setTurnoverCountPreviousYear(turnoverAggregateToDate.getTurnoverCountPreviousYear() != null ?
+                        turnoverAggregateToDate.getTurnoverCountPreviousYear() + 1 :
+                        1);
+            } else {
+                if ((t.getGrossAmount()!=null && t.getGrossAmount().compareTo(BigDecimal.ZERO) == 0) || (t.getNetAmount()!=null && t.getNetAmount().compareTo(BigDecimal.ZERO) == 0)){
+                    turnoverAggregateToDate.setTurnoverCountPreviousYear(turnoverAggregateToDate.getTurnoverCountPreviousYear() != null ?
+                            turnoverAggregateToDate.getTurnoverCountPreviousYear() + 0 :
+                            0);
+                }
             }
+
         });
-        turnoverAggregateToDate.setNonComparablePreviousYear(containsNonComparableTurnover(toPY));
+        // null gross && null net has to return null for nonComparable. Currently can return 0???
+        if (turnoverAggregateToDate.getGrossAmountPreviousYear()==null && turnoverAggregateToDate.getNetAmountPreviousYear()==null){
+            turnoverAggregateToDate.setNonComparablePreviousYear(null);
+        } else {
+            turnoverAggregateToDate.setNonComparablePreviousYear(containsNonComparableTurnover(toPY));
+        }
 
         turnoverAggregateToDate.setComparable(isComparableToDate(
                 aggregationDate,

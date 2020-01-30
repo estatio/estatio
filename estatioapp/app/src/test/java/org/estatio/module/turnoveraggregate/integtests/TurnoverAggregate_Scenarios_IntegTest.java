@@ -297,8 +297,7 @@ public class TurnoverAggregate_Scenarios_IntegTest extends TurnoverAggregateModu
                 occCfg_min3, new LocalDate(2019,8,1));
 
         assertThat(agg20190801Min2).isNotNull();
-        assertThat(agg20190801Min3).isNull();
-
+        assertThat(agg20190801Min3).isNotNull();
 
         final TurnoverAggregation agg20200101 = turnoverAggregationRepository.findUnique(
                 occCfg_min3, new LocalDate(2019,12,1));

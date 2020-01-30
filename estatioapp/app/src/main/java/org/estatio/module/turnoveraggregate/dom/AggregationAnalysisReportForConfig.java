@@ -51,6 +51,9 @@ public class AggregationAnalysisReportForConfig {
     private Lease previousLease;
 
     @Setter
+    private Lease nextLease;
+
+    @Setter
     private AggregationPattern aggregationPattern;
 
     private List<TurnoverReportingConfig> configsToIncludeInAggregation;
