@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import com.google.api.client.util.Lists;
@@ -16,8 +17,12 @@ import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.background.BackgroundService2;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
@@ -33,6 +38,7 @@ import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
 import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
+import org.estatio.module.turnoveraggregate.contributions.Lease_aggregateTurnovers;
 
 @DomainService(
         nature = NatureOfService.DOMAIN
@@ -138,6 +144,8 @@ public class TurnoverAggregationService {
             // 2b: create / delete aggregations
             maintainTurnoverAggregationsForConfig(r);
         });
+
+        config.setAggregationInitialized(true);
 
         if (maintainOnly)
             return;
@@ -592,6 +600,32 @@ public class TurnoverAggregationService {
         return result;
     }
 
+    @Programmatic
+    public void aggregateAllTurnovers(@Nullable final LocalDate startDate, @Nullable final LocalDate endDate, final boolean maintainOnly) {
+        final Lease lease = turnoverReportingConfigRepository.listAll().stream()
+                .filter(c -> c.getType() == Type.PRELIMINARY && c.getFrequency() == Frequency.MONTHLY && !c
+                        .getAggregationInitialized())
+                .map(c -> c.getOccupancy().getLease())
+                .filter(l -> l.getNext() == null)
+                .filter(l -> l.getEffectiveInterval().overlaps(LocalDateInterval.including(startDate, null)))
+                .findFirst().orElse(null);
+        if (lease != null) {
+            try {
+                backgroundService2.executeMixin(Lease_aggregateTurnovers.class, lease)
+                        .$$(startDate, endDate, maintainOnly);
+            } catch (Exception e) {
+                LOG.warn(String.format("Problem with aggregation for lease %s", lease.getReference()));
+                LOG.warn(e.getMessage());
+                for (Occupancy o : lease.getOccupancies()) {
+                    turnoverReportingConfigRepository
+                            .findByOccupancyAndTypeAndFrequency(o, Type.PRELIMINARY, Frequency.MONTHLY).forEach(c -> {
+                        c.setAggregationInitialized(true);
+                    });
+                }
+            }
+        }
+    }
+
     @Inject TurnoverReportingConfigRepository turnoverReportingConfigRepository;
 
     @Inject TurnoverRepository turnoverRepository;
@@ -603,4 +637,6 @@ public class TurnoverAggregationService {
     @Inject RepositoryService repositoryService;
 
     @Inject TurnoverAnalysisService turnoverAnalysisService;
+
+    @Inject BackgroundService2 backgroundService2;
 }

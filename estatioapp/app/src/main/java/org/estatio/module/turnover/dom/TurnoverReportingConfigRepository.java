@@ -89,6 +89,7 @@ public class TurnoverReportingConfigRepository extends UdoDomainRepositoryAndFac
             final Frequency frequency,
             final Currency currency) {
         TurnoverReportingConfig config = new TurnoverReportingConfig(occupancy, type, reporter, startDate, frequency, currency);
+        config.setAggregationInitialized(false);
         serviceRegistry2.injectServicesInto(config);
         repositoryService.persistAndFlush(config);
         return config;

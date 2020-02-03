@@ -18,7 +18,9 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -144,6 +146,11 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
     @Getter @Setter
     @Column(allowsNull = "true")
     private AggregationPattern aggregationPattern;
+
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    @PropertyLayout(hidden = Where.EVERYWHERE)
+    private Boolean aggregationInitialized;
 
     @Action(semantics = SemanticsOf.SAFE)
     public LocalDate getEndDate(){

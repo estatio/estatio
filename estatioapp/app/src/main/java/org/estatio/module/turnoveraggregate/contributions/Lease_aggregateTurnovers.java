@@ -31,6 +31,7 @@ public class Lease_aggregateTurnovers {
         LOG.info("Aggregating: " + lease.getReference());
         turnoverAggregationService.aggregateTurnoversForLease(lease, startDate, endDate,
                 maintainOnly);
+        turnoverAggregationService.aggregateAllTurnovers(startDate, endDate, maintainOnly);
         return lease;
     }
 
