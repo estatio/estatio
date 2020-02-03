@@ -600,43 +600,13 @@ public class TurnoverAggregationService {
         return result;
     }
 
-    @Programmatic
-    public void aggregateAllTurnovers(@Nullable final LocalDate startDate, @Nullable final LocalDate endDate, final boolean maintainOnly) {
-        final Lease lease = turnoverReportingConfigRepository.listAll().stream()
-                .filter(c -> c.getType() == Type.PRELIMINARY && c.getFrequency() == Frequency.MONTHLY && !c
-                        .getAggregationInitialized())
-                .map(c -> c.getOccupancy().getLease())
-                .filter(l -> l.getNext() == null)
-                .filter(l -> l.getEffectiveInterval().overlaps(LocalDateInterval.including(startDate, null)))
-                .findFirst().orElse(null);
-        if (lease != null) {
-            try {
-                backgroundService2.executeMixin(Lease_aggregateTurnovers.class, lease)
-                        .$$(startDate, endDate, maintainOnly);
-            } catch (Exception e) {
-                LOG.warn(String.format("Problem with aggregation for lease %s", lease.getReference()));
-                LOG.warn(e.getMessage());
-                for (Occupancy o : lease.getOccupancies()) {
-                    turnoverReportingConfigRepository
-                            .findByOccupancyAndTypeAndFrequency(o, Type.PRELIMINARY, Frequency.MONTHLY).forEach(c -> {
-                        c.setAggregationInitialized(true);
-                    });
-                }
-            }
-        }
-    }
 
     @Inject TurnoverReportingConfigRepository turnoverReportingConfigRepository;
-
-    @Inject TurnoverRepository turnoverRepository;
 
     @Inject TurnoverAggregationRepository turnoverAggregationRepository;
 
     @Inject ClockService clockService;
 
-    @Inject RepositoryService repositoryService;
-
     @Inject TurnoverAnalysisService turnoverAnalysisService;
 
-    @Inject BackgroundService2 backgroundService2;
 }
