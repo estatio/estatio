@@ -306,6 +306,15 @@ public class TurnoverAggregate_Scenarios_IntegTest extends TurnoverAggregateModu
         assertThat(agg20200101.getAggregate12Month().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("410000.00"));
         assertThat(agg20200101.getAggregate1Month().getNonComparableThisYear()).isEqualTo(null);
 
+        final TurnoverAggregation agg20190401Min = turnoverAggregationRepository.findUnique(
+                occ1Cfg_min2, new LocalDate(2019,4,1));
+        assertThat(occ1_min2.getUnit().getName()).isEqualTo("Unit 1");
+        assertThat(agg20190401Min.getAggregate1Month().getGrossAmount()).isEqualTo("37806.00");
+
+        final TurnoverAggregation agg20190401Min2_2 = turnoverAggregationRepository.findUnique(
+                occ2Cfg_min2, new LocalDate(2019,4,1));
+        assertThat(occ2_min2.getUnit().getName()).isEqualTo("Unit 2");
+        assertThat(agg20190401Min2_2.getAggregate1Month().getGrossAmount()).isNull();
 
     }
 
