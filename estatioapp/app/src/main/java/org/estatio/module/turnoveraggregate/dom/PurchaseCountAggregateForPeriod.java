@@ -9,9 +9,11 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.Auditing;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.turnover.dom.Turnover;
@@ -31,7 +33,9 @@ import lombok.Setter;
         column = "version")
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.module.turnoveraggregate.dom.PurchaseCountAggregateForPeriod"
+        objectType = "org.estatio.module.turnoveraggregate.dom.PurchaseCountAggregateForPeriod",
+        publishing = Publishing.DISABLED,
+        auditing = Auditing.DISABLED
 )
 public class PurchaseCountAggregateForPeriod {
 

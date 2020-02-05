@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.Publishing;
 
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.turnover.dom.Frequency;
@@ -26,7 +27,7 @@ public class Lease_aggregateTurnovers {
         this.lease = lease;
     }
 
-    @Action()
+    @Action(publishing = Publishing.DISABLED)
     public Lease $$(@Nullable final LocalDate startDate, @Nullable final LocalDate endDate, final boolean maintainOnly) {
         LOG.info("Aggregating: " + lease.getReference());
         turnoverAggregationService.aggregateTurnoversForLease(lease, startDate, endDate,

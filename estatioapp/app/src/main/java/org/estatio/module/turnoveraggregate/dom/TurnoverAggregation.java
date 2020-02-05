@@ -20,9 +20,11 @@ import javax.jdo.annotations.VersionStrategy;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
+import org.apache.isis.applib.annotation.Auditing;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.base.dom.types.MoneyType;
@@ -61,7 +63,9 @@ import lombok.Setter;
 @Unique(name = "TurnoverAggregation_turnoverReportingConfig_date_UNQ", members = { "turnoverReportingConfig", "date" })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.module.turnoveraggregate.dom.TurnoverAggregation"
+        objectType = "org.estatio.module.turnoveraggregate.dom.TurnoverAggregation",
+        publishing = Publishing.DISABLED,
+        auditing = Auditing.DISABLED
 )
 public class TurnoverAggregation {
 
