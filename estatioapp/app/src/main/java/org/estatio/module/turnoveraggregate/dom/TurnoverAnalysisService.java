@@ -328,6 +328,7 @@ public class TurnoverAnalysisService {
             }
         } else {
             if (report.isToplevel()) {
+                // TODO: what about turnovers reported after the occupancy effective end date? F.e. AM-J RIU B2
                 endDateToUse = occupancy.getEffectiveInterval().endDate() == null ? clockService.now().plusMonths(23) : occupancy.getEffectiveInterval().endDate().plusMonths(23);
             } else {
                 final LocalDate lastAggregationDate = occupancy.getEffectiveEndDate().withDayOfMonth(1);

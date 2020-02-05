@@ -279,6 +279,14 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
+    Oxfriu("OXF-RIU", null, "riu Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
+            ld(2011, 1, 16), ld(2021, 1, 15),
+            new OccupancySpec[] {
+                    new OccupancySpec("008", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2016, 11, 10), ld(2017,8,31)),
+            },
+            Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
     ;
 
     @AllArgsConstructor

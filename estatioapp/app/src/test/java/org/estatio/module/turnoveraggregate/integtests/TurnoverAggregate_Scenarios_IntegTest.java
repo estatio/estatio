@@ -51,6 +51,7 @@ import org.estatio.module.turnoveraggregate.dom.TurnoverAggregation;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationRepository;
 import org.estatio.module.turnoveraggregate.fixtures.TurnoverImportXlsxFixtureForAggregated123;
 import org.estatio.module.turnoveraggregate.fixtures.TurnoverImportXlsxFixtureForAggregatedMinute;
+import org.estatio.module.turnoveraggregate.fixtures.TurnoverImportXlsxFixtureForAggregatedRiu;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -65,7 +66,7 @@ public class TurnoverAggregate_Scenarios_IntegTest extends TurnoverAggregateModu
                 executionContext.executeChild(this, Lease_enum.Oxf123.builder());
                 executionContext.executeChild(this, Lease_enum.Oxfmin2.builder());
                 executionContext.executeChild(this, Lease_enum.Oxfmin3.builder());
-
+                executionContext.executeChild(this, Lease_enum.Oxfriu.builder());
             }
         });
     }
@@ -315,6 +316,61 @@ public class TurnoverAggregate_Scenarios_IntegTest extends TurnoverAggregateModu
                 occ2Cfg_min2, new LocalDate(2019,4,1));
         assertThat(occ2_min2.getUnit().getName()).isEqualTo("Unit 2");
         assertThat(agg20190401Min2_2.getAggregate1Month().getGrossAmount()).isNull();
+
+    }
+
+    Lease oxfRiuLease;
+    Occupancy occ_riu;
+    TurnoverReportingConfig occCfg_riu;
+
+    void setupScenario_and_validate_import_riu() {
+
+        transactionService.nextTransaction();
+        oxf = Property_enum.OxfGb.findUsing(serviceRegistry2);
+        euro = Currency_enum.EUR.findUsing(serviceRegistry2);
+        oxfRiuLease = Lease_enum.Oxfriu.findUsing(serviceRegistry2);
+        oxfRiuLease.setTenancyStartDate(new LocalDate(2016, 11, 10));
+        oxfRiuLease.setTenancyEndDate(new LocalDate(2017,8,31));
+
+        occ_riu = oxfRiuLease.getOccupancies().first();
+        occCfg_riu = turnoverReportingConfigRepository.findOrCreate(occ_riu, Type.PRELIMINARY,null, occ_riu.getStartDate(), Frequency.MONTHLY, euro);
+
+        runFixtureScript(new FixtureScript() {
+            @Override
+            protected void execute(ExecutionContext executionContext) {
+                executionContext.executeChild(this, new TurnoverImportXlsxFixtureForAggregatedRiu());
+            }
+        });
+
+        final List<Turnover> turnovers = turnoverRepository.listAll();
+        assertThat(turnovers).hasSize(10);
+
+    }
+
+    @Test
+    public void scenario_riu() throws Exception {
+
+        // given
+        setFixtureClockDate(new LocalDate(2020,2,16));
+        setupScenario_and_validate_import_riu();
+
+        // when
+        mixin(Lease_aggregateTurnovers.class, oxfRiuLease).$$(null, null, false);
+        transactionService.nextTransaction();
+
+        // then we have just aggregations for riu
+        final List<TurnoverAggregation> aggregations = turnoverAggregationRepository.listAll();
+        assertThat(aggregations).hasSize(33);
+        assertThat(aggregations.get(0).getTurnoverReportingConfig()).isEqualTo(occCfg_riu);
+        assertThat(aggregations.get(32).getTurnoverReportingConfig()).isEqualTo(occCfg_riu);
+
+        // new only, but harmless, because no turnovers
+        TurnoverAggregation agg20161101 = turnoverAggregationRepository.findUnique(occCfg_riu, new LocalDate(2016,11,01));
+        assertThat(agg20161101.getTurnovers()).hasSize(0);
+
+        // was in "old only"; should be created here as well
+        TurnoverAggregation agg20190801 = turnoverAggregationRepository.findUnique(occCfg_riu, new LocalDate(2019,8,1));
+//        assertThat(agg20190801).isNotNull();  //TODO: make this work??? Ask users? See AM-RIU 2B
 
     }
 

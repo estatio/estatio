@@ -287,35 +287,35 @@ public class TurnoverAggregationService_Test {
         turnovers.add(turnoverWithNUlls);
         service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregationDate, turnovers);
         // then
-        assertAggregateForPeriod(aggregateForPeriod, null, null,null,null, null,null,null, null,false);
+        assertAggregateForPeriod(aggregateForPeriod, null, null,0,false, null,null,null, null,false);
 
         // and when
         Turnover turnoverWithNUllsPY = setUpTurnover(null, null, null, aggregationDate.minusYears(1));
         turnovers.add(turnoverWithNUllsPY);
         service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregationDate, turnovers);
         // then
-        assertAggregateForPeriod(aggregateForPeriod, null, null,null,null, null,null,null, null,false);
+        assertAggregateForPeriod(aggregateForPeriod, null, null,0,false, null,null,0, false,false);
 
         // and when
         Turnover turnoverWithZeroCount = setUpTurnover(null, null, BigInteger.valueOf(0), aggregationDate);
         turnovers.add(turnoverWithZeroCount);
         service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregationDate, turnovers);
         // then
-        assertAggregateForPeriod(aggregateForPeriod, null, null,null,null, null,null,null, null,false);
+        assertAggregateForPeriod(aggregateForPeriod, null, null,0,false, null,null,0, false,false);
 
         // and when
         Turnover turnoverWithZeroCountPY = setUpTurnover(null, null, BigInteger.valueOf(0), aggregationDate.minusYears(1));
         turnovers.add(turnoverWithZeroCountPY);
         service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregationDate, turnovers);
         // then
-        assertAggregateForPeriod(aggregateForPeriod, null, null,null,null, null,null,null, null,false);
+        assertAggregateForPeriod(aggregateForPeriod, null, null,0,false, null,null,0, false,false);
 
         // and when
         Turnover turnoverWithZeroGross = setUpTurnover(new BigDecimal("0.00"), null, null, aggregationDate);
         turnovers.add(turnoverWithZeroGross);
         service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregationDate, turnovers);
         // then
-        assertAggregateForPeriod(aggregateForPeriod, new BigDecimal("0.00"), null,0,false, null,null,null, null,false);
+        assertAggregateForPeriod(aggregateForPeriod, new BigDecimal("0.00"), null,0,false, null,null,0, false,false);
 
         // and when
         Turnover turnoverWithZeroNetPY = setUpTurnover(null, new BigDecimal("0.00"), null, aggregationDate.minusYears(1));
@@ -577,14 +577,14 @@ public class TurnoverAggregationService_Test {
         turnovers.add(turnoverWithNUlls);
         service.calculateTurnoverAggregateToDate(aggregateToDate, aggregationDate, turnovers);
         // then
-        assertAggregateToDate(aggregateToDate, null, null,null,null, null,null,null, null,false);
+        assertAggregateToDate(aggregateToDate, null, null,0,false, null,null,null, null,false);
 
         // and when
         Turnover turnoverWithNUllsPY = setUpTurnover(null, null, null, aggregationDate.minusYears(1));
         turnovers.add(turnoverWithNUllsPY);
         service.calculateTurnoverAggregateToDate(aggregateToDate, aggregationDate, turnovers);
         // then
-        assertAggregateToDate(aggregateToDate, null, null,null,null, null,null,null, null,false);
+        assertAggregateToDate(aggregateToDate, null, null,0,false, null,null,0, false,false);
 
 
         // and when
@@ -592,21 +592,21 @@ public class TurnoverAggregationService_Test {
         turnovers.add(turnoverWithZeroCount);
         service.calculateTurnoverAggregateToDate(aggregateToDate, aggregationDate, turnovers);
         // then
-        assertAggregateToDate(aggregateToDate, null, null,null,null, null,null,null, null,false);
+        assertAggregateToDate(aggregateToDate, null, null,0,false, null,null,0, false,false);
 
         // and when
         Turnover turnoverWithZeroCountPY = setUpTurnover(null, null, BigInteger.valueOf(0), aggregationDate.minusYears(1));
         turnovers.add(turnoverWithZeroCountPY);
         service.calculateTurnoverAggregateToDate(aggregateToDate, aggregationDate, turnovers);
         // then
-        assertAggregateToDate(aggregateToDate, null, null,null,null, null,null,null, null,false);
+        assertAggregateToDate(aggregateToDate, null, null,0,false, null,null,0, false,false);
 
         // and when
         Turnover turnoverWithZeroGross = setUpTurnover(new BigDecimal("0.00"), null, null, aggregationDate);
         turnovers.add(turnoverWithZeroGross);
         service.calculateTurnoverAggregateToDate(aggregateToDate, aggregationDate, turnovers);
         // then
-        assertAggregateToDate(aggregateToDate, new BigDecimal("0.00"), null,0,false, null,null,null, null,false);
+        assertAggregateToDate(aggregateToDate, new BigDecimal("0.00"), null,0,false, null,null,0, false,false);
 
         // and when
         Turnover turnoverWithZeroNetPY = setUpTurnover(null, new BigDecimal("0.00"), null, aggregationDate.minusYears(1));
