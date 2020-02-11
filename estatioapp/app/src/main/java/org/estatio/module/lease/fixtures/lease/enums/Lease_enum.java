@@ -311,6 +311,22 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
+    OxfLif("OXF-LIF", null, "lif Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
+            ld(2010, 8, 1), ld(2016, 4, 10),
+            new OccupancySpec[] {
+                    new OccupancySpec("010", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2010, 8, 1), ld(2016,4,10)),
+            },
+            Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
+    OxfLif1("OXF-LIF1", null, "lif Lease 1", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
+            ld(2016, 4, 11), ld(2022, 6, 30),
+            new OccupancySpec[] {
+                    new OccupancySpec("010", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2016, 4, 11), null),
+            },
+            Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
     ;
 
     @AllArgsConstructor
