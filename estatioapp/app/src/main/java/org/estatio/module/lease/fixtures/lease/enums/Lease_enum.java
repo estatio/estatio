@@ -287,6 +287,30 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
+    OxfLek("OXF-LEK", null, "lek Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
+            ld(1997, 9, 25), ld(2008, 9, 30),
+            new OccupancySpec[] {
+                    new OccupancySpec("009", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(1997, 9, 25), ld(2008,9,30)),
+            },
+            Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
+    OxfLek1("OXF-LEK1", null, "lek Lease 1", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
+            ld(2008, 9, 22), ld(2013, 12, 31),
+            new OccupancySpec[] {
+                    new OccupancySpec("009", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2008, 9, 22), ld(2013,12,31)),
+            },
+            Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
+    OxfLek2("OXF-LEK2", null, "lek Lease 2", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
+            ld(2014, 1, 1), ld(2021, 12, 31),
+            new OccupancySpec[] {
+                    new OccupancySpec("009", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2014, 1, 1), ld(2019,1,29)),
+            },
+            Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
     ;
 
     @AllArgsConstructor

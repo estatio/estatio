@@ -50,6 +50,7 @@ import org.estatio.module.turnoveraggregate.contributions.Lease_aggregateTurnove
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregation;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationRepository;
 import org.estatio.module.turnoveraggregate.fixtures.TurnoverImportXlsxFixtureForAggregated123;
+import org.estatio.module.turnoveraggregate.fixtures.TurnoverImportXlsxFixtureForAggregatedLek;
 import org.estatio.module.turnoveraggregate.fixtures.TurnoverImportXlsxFixtureForAggregatedMinute;
 import org.estatio.module.turnoveraggregate.fixtures.TurnoverImportXlsxFixtureForAggregatedRiu;
 
@@ -67,6 +68,9 @@ public class TurnoverAggregate_Scenarios_IntegTest extends TurnoverAggregateModu
                 executionContext.executeChild(this, Lease_enum.Oxfmin2.builder());
                 executionContext.executeChild(this, Lease_enum.Oxfmin3.builder());
                 executionContext.executeChild(this, Lease_enum.Oxfriu.builder());
+                executionContext.executeChild(this, Lease_enum.OxfLek.builder());
+                executionContext.executeChild(this, Lease_enum.OxfLek1.builder());
+                executionContext.executeChild(this, Lease_enum.OxfLek2.builder());
             }
         });
     }
@@ -371,6 +375,72 @@ public class TurnoverAggregate_Scenarios_IntegTest extends TurnoverAggregateModu
         // was in "old only"; should be created here as well
         TurnoverAggregation agg20190801 = turnoverAggregationRepository.findUnique(occCfg_riu, new LocalDate(2019,8,1));
 //        assertThat(agg20190801).isNotNull();  //TODO: make this work??? Ask users? See AM-RIU 2B
+
+    }
+
+    Lease oxfLek2Lease;
+    Lease oxfLek1Lease;
+    Lease oxfLekLease;
+    Occupancy occ_lek;
+    Occupancy occ_lek1;
+    Occupancy occ_lek2;
+    TurnoverReportingConfig occCfg_lek;
+    TurnoverReportingConfig occCfg_lek1;
+    TurnoverReportingConfig occCfg_lek2;
+    Currency sek;
+
+    void setupScenario_and_validate_import_lek() {
+
+        transactionService.nextTransaction();
+        oxf = Property_enum.OxfGb.findUsing(serviceRegistry2);
+        sek = Currency_enum.SEK.findUsing(serviceRegistry2);
+        oxfLekLease = Lease_enum.OxfLek.findUsing(serviceRegistry2);
+        oxfLek1Lease = Lease_enum.OxfLek1.findUsing(serviceRegistry2);
+        oxfLek2Lease = Lease_enum.OxfLek2.findUsing(serviceRegistry2);
+        oxfLekLease.setNext(oxfLek1Lease);
+        oxfLek1Lease.setNext(oxfLek2Lease);
+
+        oxfLekLease.setTenancyEndDate(new LocalDate(2008,9,30));
+        oxfLek1Lease.setTenancyEndDate(new LocalDate(2013,12,31));
+        oxfLek2Lease.setTenancyStartDate(new LocalDate(2014, 1, 1));
+        oxfLek2Lease.setTenancyEndDate(new LocalDate(2019,1,29));
+
+        occ_lek = oxfLekLease.getOccupancies().first();
+        occCfg_lek = turnoverReportingConfigRepository.findOrCreate(occ_lek, Type.PRELIMINARY,null, occ_lek.getStartDate(), Frequency.MONTHLY, sek);
+        occ_lek1 = oxfLek1Lease.getOccupancies().first();
+        occCfg_lek1 = turnoverReportingConfigRepository.findOrCreate(occ_lek1, Type.PRELIMINARY,null, occ_lek1.getStartDate(), Frequency.MONTHLY, sek);
+        occ_lek2 = oxfLek2Lease.getOccupancies().first();
+        occCfg_lek2 = turnoverReportingConfigRepository.findOrCreate(occ_lek2, Type.PRELIMINARY,null, occ_lek2.getStartDate(), Frequency.MONTHLY, sek);
+
+        runFixtureScript(new FixtureScript() {
+            @Override
+            protected void execute(ExecutionContext executionContext) {
+                executionContext.executeChild(this, new TurnoverImportXlsxFixtureForAggregatedLek());
+            }
+        });
+
+        final List<Turnover> turnovers = turnoverRepository.listAll();
+        assertThat(turnovers).hasSize(121);
+
+    }
+
+    @Test
+    public void scenario_lek() throws Exception {
+
+        // given
+        setFixtureClockDate(new LocalDate(2020,2,16));
+        setupScenario_and_validate_import_lek();
+
+        // when
+        mixin(Lease_aggregateTurnovers.class, oxfLek2Lease).$$(null, null, false);
+        transactionService.nextTransaction();
+
+        // then
+        final List<TurnoverAggregation> aggregations = turnoverAggregationRepository.listAll();
+        assertThat(aggregations).isNotEmpty();
+
+        TurnoverAggregation agg20101201 = turnoverAggregationRepository.findUnique(occCfg_lek1, new LocalDate(2010,12,01));
+        assertThat(agg20101201.getAggregateToDate().getTurnoverCountPreviousYear()).isEqualTo(12);
 
     }
 
