@@ -271,6 +271,7 @@ import lombok.Setter;
                 @Persistent(name = "bankAccount")
         })
 @Indices({
+        @Index(name = "IncomingInvoice_bankAccount_IDX", members = { "bankAccount" }),
         @Index(name = "IncomingInvoice_approvalState_IDX", members = { "approvalState" }),
         @Index(name = "IncomingInvoice_atPath_approvalState_IDX", members = { "applicationTenancyPath", "approvalState" }),
         @Index(name = "IncomingInvoice_approvalState_atPath_IDX", members = { "approvalState", "applicationTenancyPath" }),

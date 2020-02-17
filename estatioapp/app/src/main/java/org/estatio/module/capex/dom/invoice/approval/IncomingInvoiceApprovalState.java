@@ -1,5 +1,8 @@
 package org.estatio.module.capex.dom.invoice.approval;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.estatio.module.capex.dom.state.State;
 
 import lombok.Getter;
@@ -34,5 +37,14 @@ public enum IncomingInvoiceApprovalState implements State<IncomingInvoiceApprova
     }
 
     public boolean isNotFinal() { return ! isFinalState(); }
+
+    public static List<IncomingInvoiceApprovalState> upstreamStates() {
+        return Arrays.asList(
+                IncomingInvoiceApprovalState.COMPLETED,
+                IncomingInvoiceApprovalState.APPROVED,
+                IncomingInvoiceApprovalState.APPROVED_BY_CORPORATE_MANAGER,
+                IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+                IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK);
+    }
 
 }

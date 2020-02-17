@@ -190,25 +190,7 @@ public class PaymentLine extends UdoDomainObject2<PaymentLine> {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public boolean getUpstreamCreditNoteFound(){
-        return !getUpstreamCreditNotesForCreditorBankAccount().isEmpty();
-    }
-
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<IncomingInvoice> getUpstreamCreditNotesForCreditorBankAccount(){
-        List<IncomingInvoiceApprovalState> upstreamStates = Arrays.asList(
-                IncomingInvoiceApprovalState.COMPLETED,
-                IncomingInvoiceApprovalState.APPROVED,
-                IncomingInvoiceApprovalState.APPROVED_BY_CORPORATE_MANAGER,
-                IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
-                IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK);
-        return incomingInvoiceRepository.findByBankAccount(getCreditorBankAccount())
-                .stream()
-                .filter(x->x.getApprovalState()!=null)
-                .filter(x->x.getNetAmount()!=null)
-                .filter(x->x.getNetAmount().compareTo(BigDecimal.ZERO)<0)
-                .filter(x->upstreamStates.contains(x.getApprovalState()))
-                .collect(Collectors.toList());
+        return incomingInvoiceRepository.findCreditNotesInStateOf(getCreditorBankAccount(), IncomingInvoiceApprovalState.upstreamStates());
     }
 
     @Programmatic
