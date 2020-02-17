@@ -456,10 +456,11 @@ public class PaymentBatchFraManager {
             publishing = Publishing.DISABLED
     )
     public PaymentBatchFraManager addInvoiceToPayByBankAccount(
-            final IncomingInvoice incomingInvoice,
-            final BankAccount debtorBankAccount) {
+            final IncomingInvoice incomingInvoice) {
+        final BankAccount uniqueBankAccountIfAny = debtorBankAccountService.uniqueDebtorAccountToPay(incomingInvoice);
+        if (uniqueBankAccountIfAny==null) return this; // extra guard although validate should do the job ...
 
-        PaymentBatch paymentBatch = paymentBatchRepository.findOrCreateNewByDebtorBankAccount(debtorBankAccount);
+        PaymentBatch paymentBatch = paymentBatchRepository.findOrCreateNewByDebtorBankAccount(uniqueBankAccountIfAny);
         paymentBatch.addLineIfRequired(incomingInvoice);
 
         return new PaymentBatchFraManager();
@@ -469,27 +470,21 @@ public class PaymentBatchFraManager {
         return this.getPayableInvoicesNotInAnyBatch();
     }
 
-    public List<BankAccount> choices1AddInvoiceToPayByBankAccount(final IncomingInvoice incomingInvoice) {
-        if (incomingInvoice == null) {
-            return Lists.newArrayList();
-        }
-        return bankAccountRepository.findBankAccountsByOwner(incomingInvoice.getBuyer());
-    }
-
     public String validateAddInvoiceToPayByBankAccount(
-            final IncomingInvoice incomingInvoice,
-            final BankAccount debtorBankAccount) {
+            final IncomingInvoice incomingInvoice) {
         if (incomingInvoice.getBankAccount() == null) {
             return "No creditor bank account on invoice";
         }
         if (incomingInvoice.getBankAccount().getBic() == null) {
             return "Creditor bank account has no BIC";
         }
-        if (debtorBankAccount == null) {
-            return null;
-        }
-        if (debtorBankAccount.getBic() == null) {
-            return "Bank account has no BIC";
+        final BankAccount uniqueBankAccountIfAny = debtorBankAccountService.uniqueDebtorAccountToPay(incomingInvoice);
+        if (uniqueBankAccountIfAny == null) {
+            return "No unique bank account for buyer (ecp) could be found";
+        } else {
+            if (uniqueBankAccountIfAny.getBic() == null) {
+                return "Buyer (ecp) bank account has no BIC";
+            }
         }
         return null;
     }
