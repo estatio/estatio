@@ -130,13 +130,11 @@ public class PaymentBatchFraManager {
             semantics = SemanticsOf.IDEMPOTENT,
             publishing = Publishing.DISABLED
     )
-    public PaymentBatchFraManager autoCreateBatches(
-            @Nullable final List<IncomingInvoice> payableInvoices) {
+    public PaymentBatchFraManager autoCreateBatches() {
 
-        for (final IncomingInvoice payableInvoice : payableInvoices) {
+        for (final IncomingInvoice payableInvoice : getPayableInvoicesNotInAnyBatchWithBankAccountAndBic()) {
             final BankAccount uniqueBankAccountIfAny = debtorBankAccountService.uniqueDebtorAccountToPay(payableInvoice);
             if (uniqueBankAccountIfAny != null && uniqueBankAccountIfAny.getBic() != null) {
-                // should be true, because those that don't pass this are filtered out in choicesXxx anyway.
                 PaymentBatch paymentBatch = paymentBatchRepository.findOrCreateNewByDebtorBankAccount(uniqueBankAccountIfAny);
                 paymentBatch.addLineIfRequired(payableInvoice);
             }
@@ -177,25 +175,6 @@ public class PaymentBatchFraManager {
         if(paymentBatch.getLines().isEmpty()) {
             paymentBatch.remove();
         }
-    }
-
-
-    public List<IncomingInvoice> default0AutoCreateBatches() {
-        return getPayableInvoicesNotInAnyBatchWithBankAccountAndBic();
-    }
-
-    public List<IncomingInvoice> choices0AutoCreateBatches() {
-        List<IncomingInvoice> choices = Lists.newArrayList();
-
-        final List<IncomingInvoice> invoices = getPayableInvoicesNotInAnyBatchWithBankAccountAndBic();
-        for (final IncomingInvoice payableInvoice : invoices) {
-            final BankAccount uniqueBankAccountIfAny = debtorBankAccountService.uniqueDebtorAccountToPay(payableInvoice);
-            if (uniqueBankAccountIfAny != null && uniqueBankAccountIfAny.getBic() != null) {
-                choices.add(payableInvoice);
-            }
-        }
-
-        return choices;
     }
 
     private List<IncomingInvoice> getPayableInvoicesNotInAnyBatchWithBankAccountAndBic() {
