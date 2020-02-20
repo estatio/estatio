@@ -168,7 +168,7 @@ public class Project extends UdoDomainObject<Project> implements
     @PropertyLayout(
             named = "Application Level",
             describedAs = "Determines those users for whom this object is available to view and/or modify.",
-            hidden = Where.PARENTED_TABLES
+            hidden = Where.ALL_TABLES
     )
     public ApplicationTenancy getApplicationTenancy() {
         return applicationTenancyRepository.findByPath(getAtPath());
@@ -350,7 +350,7 @@ public class Project extends UdoDomainObject<Project> implements
         return this;
     }
 
-    @Property(notPersisted = true)
+    @Property(notPersisted = true, hidden = Where.ALL_TABLES)
     public BigDecimal getBudgetedAmount() {
         return isParentProject() ? budgetedAmountWhenParentProject() : sum(ProjectItem::getBudgetedAmount);
     }
