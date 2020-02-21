@@ -11,16 +11,21 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.VersionStrategy;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.util.TitleBuffer;
+import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -96,10 +101,20 @@ import lombok.Setter;
         editing = Editing.DISABLED,
         objectType = "org.estatio.module.turnover.dom.TurnoverReportingConfig"
 )
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
+@XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
 
     public TurnoverReportingConfig(){
         super("occupancy, type");
+    }
+
+    public String title(){
+        TitleBuffer buffer = new TitleBuffer();
+        buffer.append(getOccupancy());
+        buffer.append(getType());
+        buffer.append(getFrequency());
+        return buffer.toString();
     }
 
     public TurnoverReportingConfig(

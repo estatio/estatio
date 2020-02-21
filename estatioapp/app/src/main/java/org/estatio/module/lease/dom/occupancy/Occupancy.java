@@ -31,7 +31,9 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -125,6 +127,7 @@ import lombok.experimental.UtilityClass;
 @DomainObject(
         objectType = "org.estatio.dom.lease.Occupancy"
 )
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class Occupancy
         extends UdoDomainObject2<Occupancy>
         implements WithIntervalMutable<Occupancy>, WithApplicationTenancyProperty {

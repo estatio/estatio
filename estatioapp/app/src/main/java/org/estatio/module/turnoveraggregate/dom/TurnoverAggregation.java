@@ -1,8 +1,11 @@
 package org.estatio.module.turnoveraggregate.dom;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -16,6 +19,7 @@ import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -26,6 +30,8 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.util.TitleBuffer;
+import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.incode.module.base.dom.types.MoneyType;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
@@ -67,7 +73,15 @@ import lombok.Setter;
         publishing = Publishing.DISABLED,
         auditing = Auditing.DISABLED
 )
+@XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class TurnoverAggregation {
+
+    public String title(){
+        TitleBuffer buffer = new TitleBuffer();
+        buffer.append(getDate());
+        buffer.append(getTurnoverReportingConfig());
+        return buffer.toString();
+    }
 
     public TurnoverAggregation(){}
 
@@ -334,6 +348,16 @@ public class TurnoverAggregation {
     @Programmatic
     public LocalDateInterval calculationPeriod(){
         return LocalDateInterval.including(getDate().minusMonths(23), getDate());
+    }
+
+    @Programmatic
+    public List<TurnoverAggregateForPeriod> aggregatesForPeriod(){
+        return Arrays.asList(getAggregate1Month(), getAggregate2Month(), getAggregate3Month(), getAggregate6Month(), getAggregate9Month(), getAggregate12Month());
+    }
+
+    @Programmatic
+    public List<PurchaseCountAggregateForPeriod> purchaseCountAggregatesForPeriod(){
+        return Arrays.asList(getPurchaseCountAggregate1Month(), getPurchaseCountAggregate3Month(), getPurchaseCountAggregate6Month(), getPurchaseCountAggregate12Month());
     }
 
     @Inject RepositoryService repositoryService;

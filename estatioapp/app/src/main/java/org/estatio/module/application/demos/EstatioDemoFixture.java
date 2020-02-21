@@ -74,6 +74,7 @@ import org.estatio.module.party.fixtures.numerator.enums.NumeratorForOrganisatio
 import org.estatio.module.party.fixtures.roles.enums.PartyRole_enum;
 import org.estatio.module.tax.EstatioTaxModule;
 import org.estatio.module.turnover.fixtures.data.TurnoverReportingConfig_enum;
+import org.estatio.module.turnover.fixtures.data.Turnover_enum;
 
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Global;
 
@@ -246,6 +247,10 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 TurnoverReportingConfig_enum.BudPoison001NlAudit,
                 TurnoverReportingConfig_enum.BudMiracle002NlAudit,
                 TurnoverReportingConfig_enum.BudDago004NlAudit);
+
+        ec.executeChildren(this,
+                Turnover_enum.OxfTopModel001Gb202001,
+                Turnover_enum.OxfTopModel001Gb201901);
 
         ec.executeChildren(this,
                 Budget_enum.OxfBudget2015,
