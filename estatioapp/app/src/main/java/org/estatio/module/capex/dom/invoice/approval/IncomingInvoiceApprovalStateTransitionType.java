@@ -242,7 +242,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 // guard since EST-1508 type can be not set
                 if (incomingInvoice.getType() == null)
                     return null;
-                
+
                 if (isItalian(incomingInvoice))
                     return Arrays.asList(FixedAssetRoleTypeEnum.ASSET_MANAGER, PartyRoleTypeEnum.TECHNICIAN);
 

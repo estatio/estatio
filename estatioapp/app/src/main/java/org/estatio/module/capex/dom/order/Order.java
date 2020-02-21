@@ -108,6 +108,7 @@ import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyReposit
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.financial.dom.utils.IBANValidator;
 import org.estatio.module.invoice.dom.DocumentTypeData;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.order.dom.attr.OrderAttribute;
 import org.estatio.module.order.dom.attr.OrderAttributeName;
 import org.estatio.module.order.dom.attr.OrderAttributeRepository;
@@ -1362,6 +1363,29 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         if (stateTransitionClass == OrderApprovalStateTransition.class) {
             setApprovalState((OrderApprovalState) newState);
         }
+    }
+
+    @Column(allowsNull = "true", length = NotesType.Meta.MAX_LEN)
+    @PropertyLayout(multiLine = 5, hidden = Where.ALL_TABLES)
+    @Getter @Setter
+    private String comments;
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Order editComments(
+            @ParameterLayout(multiLine = 5)
+            final String comments
+    ) {
+        setComments(comments);
+        return this;
+    }
+
+    public String default0EditComments() {
+        return getComments();
+    }
+
+    public boolean hideComments(){
+        if (isItalian(this)) return false;
+        return true;
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
