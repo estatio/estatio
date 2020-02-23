@@ -883,6 +883,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final Project project,
             final BudgetItem budgetItem,
             final String period) {
+        if (hide7CompleteInvoiceItem()) return null; // increases speed when not capex ...
         return getProperty() == null ?
                 projectRepository.listAll()
                 : projectRepository.findByFixedAsset(getProperty())
@@ -915,6 +916,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Charge charge) {
+        if (hide8CompleteInvoiceItem()) return null; // increases speed when not capex ...
         return budgetItemChooser.choicesBudgetItemFor(getProperty(), charge);
     }
 
