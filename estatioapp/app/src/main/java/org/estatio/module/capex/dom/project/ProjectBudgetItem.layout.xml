@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd"
+      xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <row>
+        <col span="12" unreferencedActions="true">
+            <ns2:domainObject/>
+        </col>
+    </row>
+    <row>
+        <col span="4">
+            <tabGroup>
+                <tab name="Project budget item">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="budget item" id="budgetItem">
+                                <ns2:property id="projectBudget"/>
+                                <ns2:property id="projectItem"/>
+                            </ns2:fieldSet>
+                            <ns2:fieldSet name="Amount" id="amount">
+                                <ns2:property id="amount"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Other">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Application Tenancy" id="general">
+                                <ns2:property id="applicationTenancy"/>
+                                <ns2:property id="atPath" hidden="ALL_TABLES"/>
+                            </ns2:fieldSet>
+                            <ns2:fieldSet name="Metadata" id="metadata">
+                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <ns2:property id="datanucleusVersionLong"/>
+                                <ns2:property id="datanucleusVersionTimestamp"/>
+                            </ns2:fieldSet>
+                            <ns2:fieldSet name="Other" unreferencedProperties="true"></ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
+        </col>
+        <col span="8">
+        </col>
+    </row>
+    <row>
+        <col span="12">
+            <tabGroup unreferencedCollections="true">
+                <tab name="_">
+                    <row>
+                        <col span="12"></col>
+                    </row>
+                </tab>
+            </tabGroup>
+
+        </col>
+    </row>
+</grid>

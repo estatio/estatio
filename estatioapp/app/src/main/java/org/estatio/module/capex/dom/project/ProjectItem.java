@@ -33,10 +33,14 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.inject.internal.cglib.core.$ReflectUtils;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
@@ -111,6 +115,14 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> implements Financi
 	@Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
 	@Getter @Setter
 	private BigDecimal budgetedAmount;
+
+	@Action(semantics = SemanticsOf.SAFE)
+	@ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+	public BigDecimal getBudgetedAmountNw(){
+		final ProjectBudget projectBudget = getProject().getProjectBudget();
+		if (projectBudget==null) return null;
+		return projectBudget.getAmountFor(projectBudget, this);
+	}
 
 	@Getter @Setter
 	@Column(allowsNull = "true")

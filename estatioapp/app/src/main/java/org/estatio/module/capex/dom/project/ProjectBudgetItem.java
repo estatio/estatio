@@ -38,6 +38,8 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -83,6 +85,7 @@ public class ProjectBudgetItem extends UdoDomainObject2<ProjectBudgetItem> {
         return TitleBuilder.start().withParent(getProjectBudget()).withName(getProjectItem()).toString();
     }
 
+    @Property(hidden = Where.REFERENCES_PARENT)
     @Column(allowsNull = "false", name = "projectBudgetId")
     @Getter @Setter
     private ProjectBudget projectBudget;
@@ -96,6 +99,7 @@ public class ProjectBudgetItem extends UdoDomainObject2<ProjectBudgetItem> {
     private BigDecimal amount;
 
     @Override
+    @Property(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return getProjectBudget().getApplicationTenancy();
     }

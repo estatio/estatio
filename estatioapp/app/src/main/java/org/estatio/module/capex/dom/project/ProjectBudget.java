@@ -119,7 +119,7 @@ public class ProjectBudget extends UdoDomainObject2<ProjectBudget> {
     }
 
     public String title() {
-        return TitleBuilder.start().withParent(getProject()).withName(getBudgetVersion()).toString();
+        return TitleBuilder.start().withParent(getProject()).withName("version").withName(getBudgetVersion()).toString();
     }
 
     @Column(allowsNull = "false", name = "projectId")
@@ -132,7 +132,7 @@ public class ProjectBudget extends UdoDomainObject2<ProjectBudget> {
 
     @Column(allowsNull = "true")
     @Getter @Setter
-    private LocalDate approvalDate;
+    private LocalDate approvedOn;
 
     @Column(allowsNull = "true")
     @Getter @Setter
@@ -140,7 +140,7 @@ public class ProjectBudget extends UdoDomainObject2<ProjectBudget> {
 
     @Column(allowsNull = "true")
     @Getter @Setter
-    private LocalDate commitmentDate;
+    private LocalDate committedOn;
 
     @Persistent(mappedBy = "projectBudget", dependentElement = "true")
     @Getter @Setter
@@ -157,6 +157,28 @@ public class ProjectBudget extends UdoDomainObject2<ProjectBudget> {
         return projectBudgetRepository.findUnique(getProject(), getBudgetVersion()+1);
     }
 
+    @Programmatic
+    public ProjectBudget createItem(final Charge charge, final BigDecimal amount){
+        final ProjectItem projectItem = Lists.newArrayList(getProject().getItems()).stream()
+                .filter(i -> i.getCharge().equals(charge)).findFirst().orElse(null);
+        if (projectItem!=null) {
+            projectBudgetItemRepository.findOrCreate(this, projectItem, amount);
+        }
+        return this;
+    }
+
+    @Programmatic
+    public ProjectBudget findOrCreateBudgetItem(final ProjectItem item){
+        projectBudgetItemRepository.findOrCreate(this, item, null);
+        return this;
+    }
+
+    @Programmatic
+    public BigDecimal getAmountFor(final ProjectBudget budget, final ProjectItem projectItem) {
+        final ProjectBudgetItem budgetItem = projectBudgetItemRepository.findUnique(budget, projectItem);
+        return budgetItem != null ? budgetItem.getAmount() : null;
+    }
+
 
     @Override
     public ApplicationTenancy getApplicationTenancy() {
@@ -165,4 +187,7 @@ public class ProjectBudget extends UdoDomainObject2<ProjectBudget> {
 
     @Inject
     ProjectBudgetRepository projectBudgetRepository;
+
+    @Inject
+    ProjectBudgetItemRepository projectBudgetItemRepository;
 }

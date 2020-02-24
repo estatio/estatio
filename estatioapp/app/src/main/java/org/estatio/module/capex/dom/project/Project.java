@@ -41,11 +41,14 @@ import javax.jdo.annotations.VersionStrategy;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.google.common.collect.Lists;
+import com.google.inject.internal.cglib.core.$ReflectUtils;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
@@ -57,11 +60,13 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
+import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
@@ -404,6 +409,93 @@ public class Project extends UdoDomainObject<Project> implements
         return !isArchived();
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    public ProjectBudget getProjectBudget(){
+        return projectBudgetRepository.findByProject(this).stream().filter(b->b.getNext()==null).findFirst().orElse(null);
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public boolean isApproved(){
+        final ProjectBudget approvedBudget = projectBudgetRepository.findByProject(this).stream()
+                .filter(b -> b.getApprovedOn() != null).findFirst().orElse(null);
+        return approvedBudget!=null ? true : false;
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public boolean isCommitted(){
+        final ProjectBudget commitedBudget = projectBudgetRepository.findByProject(this).stream()
+                .filter(b -> b.getCommittedOn() != null).findFirst().orElse(null);
+        return commitedBudget!=null ? true : false;
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @ActionLayout(contributed = Contributed.AS_ACTION)
+    public BudgetCreationManager editOrCreateBudget(){
+        return new BudgetCreationManager(this);
+    }
+
+    public String disableEditOrCreateBudget(){
+        if (getProjectBudget()!=null && getProjectBudget().getApprovedOn()!=null) return "This project has an approved budget already";
+        return null;
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @ActionLayout(contributed = Contributed.AS_ACTION)
+    public Project amendBudget(){
+        // TODO: implement
+        return null;
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @ActionLayout(contributed = Contributed.AS_ACTION)
+    public Project approveBudget(final LocalDate approvalDate){
+        final ProjectBudget unApprovedBudget = projectBudgetRepository.findByProject(this).stream()
+                .filter(b -> b.getApprovedOn() == null).findFirst().orElse(null);
+        if (unApprovedBudget!=null){
+            unApprovedBudget.setApprovedOn(approvalDate);
+            unApprovedBudget.setApprovedBy(meService.me().getUsername());
+        }
+        return this;
+    }
+
+    public String disableApproveBudget(){
+        final ProjectBudget unApprovedBudget = projectBudgetRepository.findByProject(this).stream()
+                .filter(b -> b.getApprovedOn() == null).findFirst().orElse(null);
+        if (unApprovedBudget==null) return "No budget to approve";
+        return null;
+    }
+
+    public LocalDate default0ApproveBudget(){
+        return clockService.now();
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @ActionLayout(contributed = Contributed.AS_ACTION)
+    public Project commitBudget(final LocalDate commitmentDate){
+        final ProjectBudget approvedButUnCommittedBudget = projectBudgetRepository.findByProject(this).stream()
+                .filter(b -> b.getApprovedOn() != null)
+                .filter(b->b.getCommittedOn() == null)
+                .findFirst().orElse(null);
+        if (approvedButUnCommittedBudget!=null){
+            approvedButUnCommittedBudget.setCommittedOn(commitmentDate);
+        }
+        return this;
+    }
+
+    public String disableCommitBudget(){
+        final ProjectBudget approvedButUnCommittedBudget = projectBudgetRepository.findByProject(this).stream()
+                .filter(b -> b.getApprovedOn() != null)
+                .filter(b->b.getCommittedOn() == null)
+                .findFirst().orElse(null);
+        if (approvedButUnCommittedBudget==null) return "No budget to commit";
+        return null;
+    }
+
+    public LocalDate default0CommitBudget(){
+        return clockService.now();
+    }
+
+
     @Inject
     ApplicationTenancyRepository applicationTenancyRepository;
 
@@ -424,5 +516,12 @@ public class Project extends UdoDomainObject<Project> implements
 
 	@Inject
     FactoryService factoryService;
+
+	@Inject
+    ProjectBudgetRepository projectBudgetRepository;
+
+	@Inject MeService meService;
+
+	@Inject ClockService clockService;
 
 }

@@ -9,40 +9,19 @@
     <row>
         <col span="4">
             <tabGroup>
-                <tab name="Project">
+                <tab name="Project Budget">
                     <row>
                         <col span="12">
-                            <ns2:fieldSet name="Project" id="project">
-                                <ns2:action id="changeProject" position="PANEL"/>
-                                <ns2:action id="createParentProject" position="PANEL"/>
-                                <ns2:property id="reference"/>
-                                <ns2:property id="name"/>
-                                <ns2:property id="parent"/>
-                            </ns2:fieldSet>
-                            <ns2:fieldSet name="Dates" id="dates">
-                                <ns2:action id="changeDates" position="PANEL"/>
-                                <ns2:property id="startDate"/>
-                                <ns2:property id="endDate"/>
-                                <ns2:property id="reviewDate">
-                                    <ns2:action id="nextReviewOn" position="BELOW"/>
-                                </ns2:property>
-                            </ns2:fieldSet>
                             <ns2:fieldSet name="Budget" id="budget">
-                                <ns2:action id="editOrCreateBudget" position="PANEL"/>
-                                <ns2:action id="amendBudget" position="PANEL"/>
-                                <ns2:action id="approveBudget" position="PANEL"/>
-                                <ns2:action id="commitBudget" position="PANEL"/>
-                                <ns2:property id="projectBudget"/>
-                                <ns2:property id="approved"/>
-                                <ns2:property id="committed"/>
+                                <ns2:property id="project"/>
+                                <ns2:property id="budgetVersion"/>
                             </ns2:fieldSet>
-                            <ns2:fieldSet name="Amounts" id="amounts">
-                                <ns2:property id="budgetedAmount"/>
-                                <ns2:property id="orderedAmount"/>
-                                <ns2:property id="orderedAmountNotOnProjectItems"/>
-                                <ns2:property id="invoicedAmount"/>
-                                <ns2:property id="invoicedAmountNotOnProjectItems"/>
-                                <ns2:property id="paidAmount"/>
+                            <ns2:fieldSet name="Approval" id="approval">
+                                <ns2:property id="approvedOn"/>
+                                <ns2:property id="approvedBy"/>
+                            </ns2:fieldSet>
+                            <ns2:fieldSet name="Commitment" id="commitment">
+                                <ns2:property id="committedOn"/>
                             </ns2:fieldSet>
                         </col>
                     </row>
@@ -81,7 +60,6 @@
                     <row>
                         <col span="12">
                             <ns2:collection id="items" defaultView="table" />
-                            <ns2:collection id="roles" defaultView="table" />
                         </col>
                     </row>
                 </tab>
