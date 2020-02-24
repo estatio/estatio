@@ -91,7 +91,7 @@ import static org.apache.cxf.version.Version.getName;
 )
 @DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
-@Unique(members = { "project", "budgetVersion" })
+@Unique(name = "ProjectBudget_project_budgetVersion_UNQ", members = { "project", "budgetVersion" })
 @Queries({
         @Query(name = "findByProject", language = "JDOQL", value = "SELECT "
                 + "FROM org.estatio.module.capex.dom.project.ProjectBudget "

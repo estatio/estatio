@@ -18,27 +18,30 @@
  */
 package org.estatio.module.capex.dom.project;
 
-import java.math.BigDecimal;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -55,48 +58,74 @@ import lombok.Setter;
 )
 @DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
-@Unique(name = "ProjectBudgetItem_projectBudget_projectItem_UNQ", members = { "projectBudget", "projectItem" })
+@Unique(name = "BudgetForecast_project_date_UNQ", members = { "project", "date" })
 @Queries({
+        @Query(name = "findByProject", language = "JDOQL", value = "SELECT "
+                + "FROM org.estatio.module.capex.dom.project.BudgetForecast "
+                + "WHERE project == :project "),
         @Query(name = "findUnique", language = "JDOQL",
                 value = "SELECT "
-                + "FROM org.estatio.module.capex.dom.project.ProjectBudgetItem "
-                + "WHERE projectBudget == :projectBudget && projectItem == :projectItem ")
+                + "FROM org.estatio.module.capex.dom.project.BudgetForecast "
+                + "WHERE project == :project && date == :date ")
 })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.capex.dom.project.ProjectBudgetItem"
+        objectType = "org.estatio.capex.dom.project.BudgetForecast"
 )
-public class ProjectBudgetItem extends UdoDomainObject2<ProjectBudgetItem> {
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+public class BudgetForecast extends UdoDomainObject2<BudgetForecast> {
 
-    public ProjectBudgetItem() {
-        super("projectBudget, projectItem");
+    public BudgetForecast() {
+        super("project, date");
+        this.frequency = ForecastFrequency.QUARTERLY; // Until other frequencies are asked for
     }
 
-    public ProjectBudgetItem(final ProjectBudget budget, final ProjectItem projectItem, final BigDecimal amount) {
+    public BudgetForecast(final Project project, final LocalDate date) {
         this();
-        this.projectBudget = budget;
-        this.projectItem = projectItem;
-        this.amount = amount;
+        this.project = project;
+        this.date = date;
+        this.frequency = ForecastFrequency.QUARTERLY; // Until other frequencies are asked for
     }
 
     public String title() {
-        return TitleBuilder.start().withParent(getProjectBudget()).withName(getProjectItem()).toString();
+        return TitleBuilder.start().withParent(getProject()).withName(getDate()).toString();
     }
 
-    @Column(allowsNull = "false", name = "projectBudgetId")
+    @Column(allowsNull = "false", name = "projectId")
     @Getter @Setter
-    private ProjectBudget projectBudget;
+    private Project project;
 
-    @Column(allowsNull = "false", name = "projectItemId")
+    @Column(allowsNull = "false")
     @Getter @Setter
-    private ProjectItem projectItem;
+    private LocalDate date;
 
-    @Column(allowsNull = "true", scale = 2)
+    @Column(allowsNull = "false", length = ForecastFrequency.Meta.MAX_LEN)
     @Getter @Setter
-    private BigDecimal amount;
+    private ForecastFrequency frequency;
+
+    @Persistent(mappedBy = "forecast", dependentElement = "true")
+    @Getter @Setter
+    private SortedSet<BudgetForecastItem> items = new TreeSet<>();
+
+    @Column(allowsNull = "true", name = "nextId")
+    @Getter @Setter
+    private BudgetForecast next;
+
+    @Column(allowsNull = "true", name = "previousId")
+    @Getter @Setter
+    private BudgetForecast previous;
+
+    @Column(allowsNull = "true")
+    @Getter @Setter
+    private LocalDate createdOn;
+
+    @Column(allowsNull = "true")
+    @Getter @Setter
+    private String createdBy;
 
     @Override
     public ApplicationTenancy getApplicationTenancy() {
-        return getProjectBudget().getApplicationTenancy();
+        return getProject().getApplicationTenancy();
     }
+
 }

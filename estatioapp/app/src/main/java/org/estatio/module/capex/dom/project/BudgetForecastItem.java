@@ -19,26 +19,25 @@
 package org.estatio.module.capex.dom.project;
 
 import java.math.BigDecimal;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -55,48 +54,64 @@ import lombok.Setter;
 )
 @DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
-@Unique(name = "ProjectBudgetItem_projectBudget_projectItem_UNQ", members = { "projectBudget", "projectItem" })
+@Unique(members = { "forecast", "projectItem" })
 @Queries({
         @Query(name = "findUnique", language = "JDOQL",
                 value = "SELECT "
-                + "FROM org.estatio.module.capex.dom.project.ProjectBudgetItem "
-                + "WHERE projectBudget == :projectBudget && projectItem == :projectItem ")
+                + "FROM org.estatio.module.capex.dom.project.BudgetForecastItem "
+                + "WHERE forecast == :forecast && projectItem == :projectItem ")
 })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.capex.dom.project.ProjectBudgetItem"
+        objectType = "org.estatio.capex.dom.project.BudgetForecastItem"
 )
-public class ProjectBudgetItem extends UdoDomainObject2<ProjectBudgetItem> {
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+public class BudgetForecastItem extends UdoDomainObject2<BudgetForecastItem> {
 
-    public ProjectBudgetItem() {
-        super("projectBudget, projectItem");
+    public BudgetForecastItem() {
+        super("forecast, projectItem");
     }
 
-    public ProjectBudgetItem(final ProjectBudget budget, final ProjectItem projectItem, final BigDecimal amount) {
+    public BudgetForecastItem(final BudgetForecast forecast, final ProjectItem projectItem, final BigDecimal amount, final BigDecimal budgetedAmountUntilForecastDate, final BigDecimal invoicedAmountUntilForecastDate){
         this();
-        this.projectBudget = budget;
+        this.forecast = forecast;
         this.projectItem = projectItem;
         this.amount = amount;
+        this.budgetedAmountUntilForecastDate = budgetedAmountUntilForecastDate;
+        this.invoicedAmountUntilForecastDate = invoicedAmountUntilForecastDate;
     }
 
     public String title() {
-        return TitleBuilder.start().withParent(getProjectBudget()).withName(getProjectItem()).toString();
+        return TitleBuilder.start().withParent(getForecast()).withName(getProjectItem()).toString();
     }
 
-    @Column(allowsNull = "false", name = "projectBudgetId")
+    @Column(allowsNull = "false", name = "budgetForecastId")
     @Getter @Setter
-    private ProjectBudget projectBudget;
+    private BudgetForecast forecast;
 
     @Column(allowsNull = "false", name = "projectItemId")
     @Getter @Setter
     private ProjectItem projectItem;
 
-    @Column(allowsNull = "true", scale = 2)
+    @Column(allowsNull = "false", scale = 2)
     @Getter @Setter
     private BigDecimal amount;
 
+    @Column(allowsNull = "false", scale = 2)
+    @Getter @Setter
+    private BigDecimal budgetedAmountUntilForecastDate;
+
+    @Column(allowsNull = "false", scale = 2)
+    @Getter @Setter
+    private BigDecimal invoicedAmountUntilForecastDate;
+
+    @Persistent(mappedBy = "forecastItem", dependentElement = "true")
+    @Getter @Setter
+    private SortedSet<BudgetForecastItemTerm> terms = new TreeSet<BudgetForecastItemTerm>();
+
     @Override
     public ApplicationTenancy getApplicationTenancy() {
-        return getProjectBudget().getApplicationTenancy();
+        return getForecast().getApplicationTenancy();
     }
+
 }
