@@ -29,7 +29,19 @@ public class Organisation_syncFromCoda {
     }
 
     public boolean hideAct() {
-        return ! organisation.hasPartyRoleType(IncomingInvoiceRoleTypeEnum.SUPPLIER);
+        return !isItalianSupplier();
+    }
+
+    protected boolean isItalianSupplier() {
+        return isItalian() && isSupplier();
+    }
+
+    private boolean isItalian() {
+        return organisation.getAtPath().startsWith("/ITA");
+    }
+
+    protected boolean isSupplier() {
+        return organisation.hasPartyRoleType(IncomingInvoiceRoleTypeEnum.SUPPLIER);
     }
 
     @Inject
