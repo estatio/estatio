@@ -27,14 +27,19 @@ public class BudgetLine {
     public  BudgetLine(final ProjectBudgetItem budgetItem){
         this.chargeReference = budgetItem.getProjectItem().getCharge().getReference();
         this.amount = budgetItem.getAmount();
+        this.projectReference = budgetItem.getProjectBudget().getProject().getReference();
     }
 
     @Getter @Setter
     @MemberOrder(sequence = "1")
-    private String chargeReference;
+    private String projectReference;
 
     @Getter @Setter
     @MemberOrder(sequence = "2")
+    private String chargeReference;
+
+    @Getter @Setter
+    @MemberOrder(sequence = "3")
     private BigDecimal amount;
 
     public void importData(final Project project) {

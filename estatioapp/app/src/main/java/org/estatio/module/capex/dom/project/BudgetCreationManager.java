@@ -2,7 +2,9 @@ package org.estatio.module.capex.dom.project;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -54,7 +56,7 @@ public class BudgetCreationManager {
         Lists.newArrayList(budget.getItems()).forEach(bi->{
             result.add(new BudgetLine(bi));
         });
-        return result;
+        return result.stream().sorted(Comparator.comparing(BudgetLine::getChargeReference)).collect(Collectors.toList());
     }
 
     @Action(semantics = SemanticsOf.SAFE)

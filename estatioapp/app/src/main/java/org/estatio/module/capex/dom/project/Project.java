@@ -434,9 +434,9 @@ public class Project extends UdoDomainObject<Project> implements
         return new BudgetCreationManager(this);
     }
 
-    public String disableEditOrCreateBudget(){
-        if (getProjectBudget()!=null && getProjectBudget().getApprovedOn()!=null) return "This project has an approved budget already";
-        return null;
+    public boolean hideEditOrCreateBudget(){
+        if (getProjectBudget()!=null && getProjectBudget().getApprovedOn()!=null) return true;
+        return false;
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
@@ -444,6 +444,10 @@ public class Project extends UdoDomainObject<Project> implements
     public Project amendBudget(){
         // TODO: implement
         return null;
+    }
+
+    public boolean hideAmendBudget(){
+        return !hideEditOrCreateBudget();
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
@@ -478,17 +482,18 @@ public class Project extends UdoDomainObject<Project> implements
                 .findFirst().orElse(null);
         if (approvedButUnCommittedBudget!=null){
             approvedButUnCommittedBudget.setCommittedOn(commitmentDate);
+            approvedButUnCommittedBudget.setCommittedBy(meService.me().getUsername());
         }
         return this;
     }
 
-    public String disableCommitBudget(){
+    public boolean hideCommitBudget(){
         final ProjectBudget approvedButUnCommittedBudget = projectBudgetRepository.findByProject(this).stream()
                 .filter(b -> b.getApprovedOn() != null)
                 .filter(b->b.getCommittedOn() == null)
                 .findFirst().orElse(null);
-        if (approvedButUnCommittedBudget==null) return "No budget to commit";
-        return null;
+        if (approvedButUnCommittedBudget==null) return true;
+        return false;
     }
 
     public LocalDate default0CommitBudget(){

@@ -119,7 +119,7 @@ public class ProjectBudget extends UdoDomainObject2<ProjectBudget> {
     }
 
     public String title() {
-        return TitleBuilder.start().withParent(getProject()).withName("version").withName(getBudgetVersion()).toString();
+        return TitleBuilder.start().withParent(getProject()).withName("budget version").withName(getBudgetVersion()).toString();
     }
 
     @Column(allowsNull = "false", name = "projectId")
@@ -141,6 +141,10 @@ public class ProjectBudget extends UdoDomainObject2<ProjectBudget> {
     @Column(allowsNull = "true")
     @Getter @Setter
     private LocalDate committedOn;
+
+    @Column(allowsNull = "true")
+    @Getter @Setter
+    private String committedBy;
 
     @Persistent(mappedBy = "projectBudget", dependentElement = "true")
     @Getter @Setter

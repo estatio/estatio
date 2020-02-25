@@ -22,6 +22,11 @@
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Commitment" id="commitment">
                                 <ns2:property id="committedOn"/>
+                                <ns2:property id="committedBy"/>
+                            </ns2:fieldSet>
+                            <ns2:fieldSet name="Budget development" id="development">
+                                <ns2:property id="previous"/>
+                                <ns2:property id="next"/>
                             </ns2:fieldSet>
                         </col>
                     </row>
