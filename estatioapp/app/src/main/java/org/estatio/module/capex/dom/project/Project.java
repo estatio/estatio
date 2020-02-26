@@ -500,6 +500,16 @@ public class Project extends UdoDomainObject<Project> implements
         return clockService.now();
     }
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @ActionLayout(contributed = Contributed.AS_ACTION)
+    public ForecastCreationManager createBudgetForecast(final LocalDate date){
+        return new ForecastCreationManager(this, date);
+    }
+
+    public LocalDate default0CreateBudgetForecast(){
+        return ForecastFrequency.QUARTERLY.getStartDateFor(clockService.now());
+    }
+
 
     @Inject
     ApplicationTenancyRepository applicationTenancyRepository;

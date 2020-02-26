@@ -1,6 +1,5 @@
 package org.estatio.module.capex.dom.project;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
@@ -12,8 +11,6 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.module.charge.dom.Charge;
-
-import static org.junit.Assert.*;
 
 public class BudgetCreationManager_Test {
 
@@ -40,7 +37,7 @@ public class BudgetCreationManager_Test {
         }});
 
         // when
-        final List<BudgetLine> budgetLines = manager.getBudgetLines();
+        final List<BudgetLineViewmodel> budgetLines = manager.getBudgetLines();
 
         // then
         Assertions.assertThat(budgetLines).isEmpty();
@@ -90,7 +87,7 @@ public class BudgetCreationManager_Test {
         }});
 
         // when
-        final List<BudgetLine> budgetLines = manager.getBudgetLines();
+        final List<BudgetLineViewmodel> budgetLines = manager.getBudgetLines();
 
         // then
         Assertions.assertThat(budgetLines).hasSize(3);

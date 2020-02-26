@@ -14,7 +14,6 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Blob;
 
@@ -22,10 +21,6 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 import org.isisaddons.module.excel.dom.util.Mode;
-
-import org.estatio.module.capex.imports.ProjectImport;
-import org.estatio.module.capex.imports.ProjectImportManager;
-import org.estatio.module.capex.imports.ProjectItemTermImport;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -45,23 +40,23 @@ public class BudgetCreationManager {
     @Getter @Setter
     private Project project;
 
-    public List<BudgetLine> getBudgetLines(){
+    public List<BudgetLineViewmodel> getBudgetLines(){
 
         // find or create budget and budget items
         final ProjectBudget budget = projectBudgetRepository.findOrCreate(getProject(), 1);
         Lists.newArrayList(project.getItems()).forEach(i->{
             budget.findOrCreateBudgetItem(i);
         });
-        List<BudgetLine> result = new ArrayList<>();
+        List<BudgetLineViewmodel> result = new ArrayList<>();
         Lists.newArrayList(budget.getItems()).forEach(bi->{
-            result.add(new BudgetLine(bi));
+            result.add(new BudgetLineViewmodel(bi));
         });
-        return result.stream().sorted(Comparator.comparing(BudgetLine::getChargeReference)).collect(Collectors.toList());
+        return result.stream().sorted(Comparator.comparing(BudgetLineViewmodel::getChargeReference)).collect(Collectors.toList());
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     public Blob download(final String filename){
-        WorksheetSpec budgetLineSpec = new WorksheetSpec(BudgetLine.class, "budgetLines");
+        WorksheetSpec budgetLineSpec = new WorksheetSpec(BudgetLineViewmodel.class, "budgetLines");
         WorksheetContent budgetLineContent = new WorksheetContent(getBudgetLines(), budgetLineSpec);
         return excelService.toExcel(Arrays.asList(budgetLineContent), filename);
     }
@@ -72,7 +67,7 @@ public class BudgetCreationManager {
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public BudgetCreationManager upload(final Blob spreadSheet){
-        excelService.fromExcel(spreadSheet, BudgetLine.class, "budgetLines", Mode.RELAXED).forEach(imp->imp.importData(getProject()));
+        excelService.fromExcel(spreadSheet, BudgetLineViewmodel.class, "budgetLines", Mode.RELAXED).forEach(imp->imp.importData(getProject()));
         return new BudgetCreationManager(getProject());
     }
 

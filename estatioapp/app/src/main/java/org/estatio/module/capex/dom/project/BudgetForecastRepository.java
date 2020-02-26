@@ -86,6 +86,19 @@ public class BudgetForecastRepository extends UdoDomainRepositoryAndFactory<Budg
         return forecast;
     }
 
+    /*
+    final BudgetForecast newForecast = budgetForecastRepository.findOrCreate(getProject(), getDate());
+            Lists.newArrayList(project.getProjectBudget().getItems()).forEach(bi->{
+                // TODO: calculate amounts and bring responsibility to repository (treat it as factory)
+                final BudgetForecastItem newForecastItem = budgetForecastRepository
+                        .findOrCreateItem(newForecast, bi.getProjectItem(), BigDecimal.ZERO, BigDecimal.ZERO,
+                                BigDecimal.ZERO);
+                final BudgetForecastItemTerm newTerm = budgetForecastRepository.findOrCreateTerm(newForecastItem,
+                getFrequency().getIntervalFor(getDate()), BigDecimal.ZERO);
+                result.add(new ForecastLineViewmodel(newTerm));
+            });
+    */
+
     // SECTION forecast item
 
     public List<BudgetForecastItem> allForecastItems(){

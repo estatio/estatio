@@ -77,14 +77,14 @@ public class BudgetForecast extends UdoDomainObject2<BudgetForecast> {
 
     public BudgetForecast() {
         super("project, date");
-        this.frequency = ForecastFrequency.QUARTERLY; // Until other frequencies are asked for
+        this.frequency = ForecastFrequency.QUARTERLY; // Currently the only implementation
     }
 
     public BudgetForecast(final Project project, final LocalDate date) {
         this();
         this.project = project;
         this.date = date;
-        this.frequency = ForecastFrequency.QUARTERLY; // Until other frequencies are asked for
+        this.frequency = ForecastFrequency.QUARTERLY; // Currently the only implementation
     }
 
     public String title() {
@@ -122,6 +122,14 @@ public class BudgetForecast extends UdoDomainObject2<BudgetForecast> {
     @Column(allowsNull = "true")
     @Getter @Setter
     private String createdBy;
+
+    @Column(allowsNull = "true")
+    @Getter @Setter
+    private LocalDate approvedOn;
+
+    @Column(allowsNull = "true")
+    @Getter @Setter
+    private String approvedBy;
 
     @Override
     public ApplicationTenancy getApplicationTenancy() {

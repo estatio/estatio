@@ -22,9 +22,9 @@ import lombok.Setter;
 
 @ViewModel
 @NoArgsConstructor
-public class BudgetLine {
+public class BudgetLineViewmodel {
 
-    public  BudgetLine(final ProjectBudgetItem budgetItem){
+    public BudgetLineViewmodel(final ProjectBudgetItem budgetItem){
         this.chargeReference = budgetItem.getProjectItem().getCharge().getReference();
         this.amount = budgetItem.getAmount();
         this.projectReference = budgetItem.getProjectBudget().getProject().getReference();
