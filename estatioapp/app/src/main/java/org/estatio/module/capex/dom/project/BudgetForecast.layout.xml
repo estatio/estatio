@@ -9,27 +9,22 @@
     <row>
         <col span="4">
             <tabGroup>
-                <tab name="Project item">
+                <tab name="Budget forecast">
                     <row>
                         <col span="12">
-                            <ns2:fieldSet name="Project item" id="projectItem">
+                            <ns2:fieldSet name="Forecast" id="forecast">
+                                <ns2:property id="date"/>
                                 <ns2:property id="project"/>
-                                <ns2:property id="description"/>
+                                <ns2:property id="frequency"/>
                             </ns2:fieldSet>
-                            <ns2:fieldSet name="Amount" id="amount">
-                                <ns2:action id="amendAmount" position="PANEL"/>
-                                <ns2:property id="budgetedAmount"/>
-                                <ns2:property id="orderedAmount"/>
-                                <ns2:property id="invoicedAmount"/>
-                                <ns2:property id="paidAmount"/>
-                                <ns2:property id="tax"/>
+                            <ns2:fieldSet name="Status" id="status">
+                                <ns2:property id="createdOn"/>
+                                <ns2:property id="approvedOn"/>
+                                <ns2:property id="approvedBy"/>
                             </ns2:fieldSet>
-                            <ns2:fieldSet name="Dimensions" id="dimensions">
-                                <ns2:property id="charge"/>
-                                <ns2:property id="property"/>
-                                <ns2:property id="startDate"/>
-                                <ns2:property id="endDate"/>
-                                <ns2:property id="type"/>
+                            <ns2:fieldSet name="Forecast development" id="development">
+                                <ns2:property id="previous"/>
+                                <ns2:property id="next"/>
                             </ns2:fieldSet>
                         </col>
                     </row>
@@ -58,8 +53,7 @@
                 <tab name="Items">
                     <row>
                         <col span="12">
-                            <ns2:collection id="budgetForecastItems" defaultView="table" />
-                            <ns2:collection id="projectItemTerms" defaultView="table" />
+                            <ns2:collection id="items" defaultView="table" />
                         </col>
                     </row>
                 </tab>

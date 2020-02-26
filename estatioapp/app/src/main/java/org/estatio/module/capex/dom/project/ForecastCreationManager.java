@@ -28,6 +28,7 @@ import org.apache.isis.applib.value.Blob;
 import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
+import org.isisaddons.module.excel.dom.util.Mode;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
@@ -58,6 +59,7 @@ public class ForecastCreationManager {
         List<ForecastLineViewmodel> result = new ArrayList<>();
         final BudgetForecast forecastIfAny = budgetForecastRepositoryAndFactory.findUnique(getProject(), getDate());
         if (forecastIfAny!=null){
+            forecastIfAny.calculateAmounts(); //TODO: this is prone to error!! Change!
             if (forecastIfAny.getApprovedOn()!=null) return null; // Extra guard
             Lists.newArrayList(forecastIfAny.getItems()).forEach(fi->{
                 Lists.newArrayList(fi.getTerms()).forEach(ft->{
@@ -67,7 +69,7 @@ public class ForecastCreationManager {
         } else {
             // create new forecast
             final BudgetForecast newForecast = budgetForecastRepositoryAndFactory.findOrCreate(getProject(), getDate());
-            newForecast.calculateAmounts();
+            newForecast.calculateAmounts(); //TODO: this is prone to error!! Change!
             Lists.newArrayList(newForecast.getItems()).forEach(fi->{
                 Lists.newArrayList(fi.getTerms()).forEach(ft->{
                     result.add(new ForecastLineViewmodel(ft));
@@ -97,6 +99,12 @@ public class ForecastCreationManager {
 
     public String default0Download(){
         return "Budget forecast" + getProject().getReference() + " " + clockService.now().toString("dd-MM-yyyy") + ".xlsx";
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public ForecastCreationManager upload(final Blob spreadSheet){
+        excelService.fromExcel(spreadSheet, ForecastLineViewmodel.class, "forecastLines", Mode.RELAXED).forEach(imp->imp.importData(getProject(), getDate()));
+        return new ForecastCreationManager(getProject(), getDate());
     }
 
     @Inject

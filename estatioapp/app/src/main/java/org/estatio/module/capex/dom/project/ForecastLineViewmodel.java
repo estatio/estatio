@@ -11,6 +11,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.services.message.MessageService2;
 
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 
 import lombok.Getter;
@@ -75,12 +76,33 @@ public class ForecastLineViewmodel {
     @MemberOrder(sequence = "8")
     private BigDecimal sumTerms;
 
-    public void importData(final Project project) {
+    public void importData(final Project project, final LocalDate forecastDate) {
 
+        final BudgetForecast forecast = budgetForecastRepositoryAndFactory.findOrCreate(project, forecastDate);
+        final Charge charge = chargeRepository.findByReference(chargeReference);
+        if (charge==null) {
+            messageService2.raiseError(String.format("Charge with reference %s not found", getChargeReference()));
+            return;
+        }
+        final ProjectItem itemForCharge = project.findItemForCharge(charge);
+        if (itemForCharge==null){
+            messageService2.raiseError(String.format("Project item with charge %s not found for project %s", getChargeReference(), project.getReference()));
+            return;
+        }
+        final BudgetForecastItem forecastItem = forecast.findItemFor(itemForCharge);
+        if (forecastItem==null){
+            messageService2.raiseError(String.format("Forecast item with charge %s not found for project %s and date %s", getChargeReference(), project.getReference(), forecastDate));
+            return;
+        }
+        final BudgetForecastItemTerm termForDate = forecastItem.findTermForDate(getTermStartDate());
+        if (termForDate==null){
+            // TODO: What do we do?? Do we allow lines to be added in the sheet that were not in the manager?
+        }
+        termForDate.setAmount(getTermAmount());
     }
 
     @Inject
-    private ProjectBudgetRepository projectBudgetRepository;
+    private BudgetForecastRepositoryAndFactory budgetForecastRepositoryAndFactory;
 
     @Inject
     private ChargeRepository chargeRepository;

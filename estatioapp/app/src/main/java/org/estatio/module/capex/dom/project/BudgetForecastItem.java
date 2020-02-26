@@ -19,6 +19,7 @@
 package org.estatio.module.capex.dom.project;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -39,13 +40,17 @@ import javax.validation.constraints.Digits;
 
 import com.google.common.collect.Lists;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
@@ -97,10 +102,12 @@ public class BudgetForecastItem extends UdoDomainObject2<BudgetForecastItem> {
     }
 
     @Column(allowsNull = "false", name = "budgetForecastId")
+    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
     private BudgetForecast forecast;
 
     @Column(allowsNull = "false", name = "projectItemId")
+    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
     private ProjectItem projectItem;
 
@@ -161,12 +168,19 @@ public class BudgetForecastItem extends UdoDomainObject2<BudgetForecastItem> {
 
     }
 
+    @Programmatic
+    public BudgetForecastItemTerm findTermForDate(final LocalDate termStartDate) {
+        return Lists.newArrayList(getTerms()).stream()
+                .filter(t->t.getStartDate().equals(termStartDate))
+                .findFirst().orElse(null);
+    }
+
     @Override
+    @PropertyLayout(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return getForecast().getApplicationTenancy();
     }
 
     @Inject
     FactoryService factoryService;
-
 }

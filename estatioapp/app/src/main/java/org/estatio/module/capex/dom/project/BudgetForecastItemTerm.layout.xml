@@ -9,27 +9,14 @@
     <row>
         <col span="4">
             <tabGroup>
-                <tab name="Project item">
+                <tab name="Budget forecast item term">
                     <row>
                         <col span="12">
-                            <ns2:fieldSet name="Project item" id="projectItem">
-                                <ns2:property id="project"/>
-                                <ns2:property id="description"/>
-                            </ns2:fieldSet>
-                            <ns2:fieldSet name="Amount" id="amount">
-                                <ns2:action id="amendAmount" position="PANEL"/>
-                                <ns2:property id="budgetedAmount"/>
-                                <ns2:property id="orderedAmount"/>
-                                <ns2:property id="invoicedAmount"/>
-                                <ns2:property id="paidAmount"/>
-                                <ns2:property id="tax"/>
-                            </ns2:fieldSet>
-                            <ns2:fieldSet name="Dimensions" id="dimensions">
-                                <ns2:property id="charge"/>
-                                <ns2:property id="property"/>
+                            <ns2:fieldSet name="Forecast item" id="forecastitem">
+                                <ns2:property id="forecastItem"/>
+                                <ns2:property id="amount"/>
                                 <ns2:property id="startDate"/>
                                 <ns2:property id="endDate"/>
-                                <ns2:property id="type"/>
                             </ns2:fieldSet>
                         </col>
                     </row>
@@ -54,16 +41,6 @@
             </tabGroup>
         </col>
         <col span="8">
-            <tabGroup>
-                <tab name="Items">
-                    <row>
-                        <col span="12">
-                            <ns2:collection id="budgetForecastItems" defaultView="table" />
-                            <ns2:collection id="projectItemTerms" defaultView="table" />
-                        </col>
-                    </row>
-                </tab>
-            </tabGroup>
         </col>
     </row>
     <row>

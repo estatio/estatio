@@ -83,6 +83,7 @@ public class BudgetForecastRepositoryAndFactory extends UdoDomainRepositoryAndFa
                 throw new IllegalArgumentException(String.format("Budget for %s is not committed", project.getReference()));
             }
             forecast = new BudgetForecast(project, date);
+            forecast.setCreatedOn(getClockService().now());
             serviceRegistry2.injectServicesInto(forecast);
             repositoryService.persistAndFlush(forecast);
 

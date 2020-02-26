@@ -81,6 +81,9 @@
                     <row>
                         <col span="12">
                             <ns2:collection id="items" defaultView="table" />
+                            <ns2:collection id="budgetForecasts" defaultView="table" >
+                                <ns2:action id="createBudgetForecast" position="PANEL"/>
+                            </ns2:collection>
                             <ns2:collection id="roles" defaultView="table" />
                         </col>
                     </row>

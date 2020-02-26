@@ -343,6 +343,14 @@ public class Project extends UdoDomainObject<Project> implements
         return isParentProject() ? "This project is a parent" : null;
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<BudgetForecast> getBudgetForecasts(){
+        return budgetForecastRepositoryAndFactory.findByProject(this)
+                .stream()
+                .sorted(Comparator.comparing(BudgetForecast::getDate).reversed())
+                .collect(Collectors.toList());
+    }
+
     @Persistent(mappedBy = "project")
     @Getter @Setter
     private SortedSet<ProjectRole> roles = new TreeSet<>();
@@ -520,6 +528,11 @@ public class Project extends UdoDomainObject<Project> implements
     }
 
 
+    @Programmatic
+    public ProjectItem findItemForCharge(final Charge charge) {
+        return projectItemRepository.findByProjectAndCharge(this, charge);
+    }
+
     @Inject
     ApplicationTenancyRepository applicationTenancyRepository;
 
@@ -548,4 +561,6 @@ public class Project extends UdoDomainObject<Project> implements
 
 	@Inject ClockService clockService;
 
+	@Inject
+    BudgetForecastRepositoryAndFactory budgetForecastRepositoryAndFactory;
 }

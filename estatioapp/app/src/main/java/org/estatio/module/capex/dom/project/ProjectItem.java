@@ -19,7 +19,10 @@
 package org.estatio.module.capex.dom.project;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -170,6 +173,17 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> implements Financi
 		return true;
 	}
 
+	public List<BudgetForecastItem> getBudgetForecastItems(){
+		List<BudgetForecastItem> result = new ArrayList<>();
+		final List<BudgetForecast> forecasts = budgetForecastRepositoryAndFactory.findByProject(getProject());
+
+		forecasts.forEach(f->{
+			result.add(f.findItemFor(this));
+		});
+		return result.stream().sorted(Comparator.comparing(BudgetForecastItem::getForecast).reversed()).collect(
+				Collectors.toList());
+	}
+
 	public List<ProjectItemTerm> getProjectItemTerms(){
 		return projectTermRepository.findByProjectItem(this);
 	}
@@ -212,4 +226,7 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> implements Financi
 
 	@Inject
 	ProjectItemTermRepository projectTermRepository;
+
+	@Inject
+	BudgetForecastRepositoryAndFactory budgetForecastRepositoryAndFactory;
 }

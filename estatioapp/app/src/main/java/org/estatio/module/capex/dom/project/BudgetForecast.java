@@ -44,7 +44,9 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -91,10 +93,11 @@ public class BudgetForecast extends UdoDomainObject2<BudgetForecast> {
     }
 
     public String title() {
-        return TitleBuilder.start().withParent(getProject()).withName(getDate()).toString();
+        return TitleBuilder.start().withParent(getProject()).withName("forecast").withName(getDate()).toString();
     }
 
     @Column(allowsNull = "false", name = "projectId")
+    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
     private Project project;
 
@@ -118,7 +121,7 @@ public class BudgetForecast extends UdoDomainObject2<BudgetForecast> {
     @Getter @Setter
     private BudgetForecast previous;
 
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "false")
     @Getter @Setter
     private LocalDate createdOn;
 
@@ -137,7 +140,13 @@ public class BudgetForecast extends UdoDomainObject2<BudgetForecast> {
         });
     }
 
+    @Programmatic
+    public BudgetForecastItem findItemFor(final ProjectItem projectItem) {
+        return Lists.newArrayList(getItems()).stream().filter(fi->fi.getProjectItem().equals(projectItem)).findFirst().orElse(null);
+    }
+
     @Override
+    @PropertyLayout(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return getProject().getApplicationTenancy();
     }

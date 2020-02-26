@@ -37,6 +37,8 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -69,6 +71,8 @@ import lombok.Setter;
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class BudgetForecastItemTerm extends UdoDomainObject2<BudgetForecastItemTerm> {
 
+    // TODO: persist next / previous ? Derive? Of just leave it like this ...
+
     public BudgetForecastItemTerm() {
         super("forecastItem, startDate");
     }
@@ -86,6 +90,7 @@ public class BudgetForecastItemTerm extends UdoDomainObject2<BudgetForecastItemT
     }
 
     @Column(allowsNull = "false", name = "budgetForecastItemId")
+    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
     private BudgetForecastItem forecastItem;
 
@@ -102,6 +107,7 @@ public class BudgetForecastItemTerm extends UdoDomainObject2<BudgetForecastItemT
     private BigDecimal amount;
 
     @Override
+    @PropertyLayout(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
         return getForecastItem().getApplicationTenancy();
     }
