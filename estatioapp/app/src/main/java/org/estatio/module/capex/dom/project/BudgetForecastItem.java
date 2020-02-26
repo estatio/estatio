@@ -19,9 +19,11 @@
 package org.estatio.module.capex.dom.project;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -33,17 +35,26 @@ import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
+import javax.validation.constraints.Digits;
 
+import com.google.common.collect.Lists;
+
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
+import org.estatio.module.capex.dom.invoice.contributions.ProjectItem_IncomingInvoiceItems;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -109,9 +120,53 @@ public class BudgetForecastItem extends UdoDomainObject2<BudgetForecastItem> {
     @Getter @Setter
     private SortedSet<BudgetForecastItemTerm> terms = new TreeSet<BudgetForecastItemTerm>();
 
+    @Action(semantics = SemanticsOf.SAFE)
+    public boolean getForecastedAmountCovered() {
+        if (getSumTerms()==null) return false;
+        return getSumTerms().compareTo(amount)>=0;
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @Digits(integer = 13, fraction = 2)
+    public BigDecimal getSumTerms() {
+        final Optional<BigDecimal> sumTermsIfAny = Lists.newArrayList(getTerms()).stream().map(t -> t.getAmount())
+                .reduce(BigDecimal::add);
+        if (!sumTermsIfAny.isPresent()) return null;
+        return sumTermsIfAny.get();
+    }
+
+    @Programmatic
+    public void calculateAmounts() {
+
+        final BigDecimal sumInvoiceBeforeForecastDate = factoryService.mixin(ProjectItem_IncomingInvoiceItems.class, getProjectItem())
+                .invoiceItems()
+                .stream()
+                .filter(ii -> ii.getInvoice().getInvoiceDate().isBefore(getForecast().getDate()))
+                .map(ii -> ii.getNetAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        setInvoicedAmountUntilForecastDate(sumInvoiceBeforeForecastDate);
+
+        final ProjectBudget latestCommittedBudget = getForecast().getProject().getLatestCommittedBudget();
+        if (latestCommittedBudget==null) return; // should not happen
+        final ProjectBudgetItem projectBudgetItem = Lists.newArrayList(latestCommittedBudget.getItems()).stream()
+                .filter(bi -> bi.getProjectItem().equals(this.getProjectItem()))
+                .findFirst().orElse(null);
+        if (projectBudgetItem!=null){
+            setBudgetedAmountUntilForecastDate(projectBudgetItem.getAmount());
+        } else {
+            // should not happen!!
+        }
+
+        setAmount(getBudgetedAmountUntilForecastDate().subtract(getInvoicedAmountUntilForecastDate()));
+
+    }
+
     @Override
     public ApplicationTenancy getApplicationTenancy() {
         return getForecast().getApplicationTenancy();
     }
+
+    @Inject
+    FactoryService factoryService;
 
 }

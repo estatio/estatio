@@ -34,6 +34,8 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.collect.Lists;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -122,15 +124,18 @@ public class BudgetForecast extends UdoDomainObject2<BudgetForecast> {
 
     @Column(allowsNull = "true")
     @Getter @Setter
-    private String createdBy;
-
-    @Column(allowsNull = "true")
-    @Getter @Setter
     private LocalDate approvedOn;
 
     @Column(allowsNull = "true")
     @Getter @Setter
     private String approvedBy;
+
+    @Programmatic
+    public void calculateAmounts() {
+        Lists.newArrayList(getItems()).forEach(fi->{
+            fi.calculateAmounts();
+        });
+    }
 
     @Override
     public ApplicationTenancy getApplicationTenancy() {

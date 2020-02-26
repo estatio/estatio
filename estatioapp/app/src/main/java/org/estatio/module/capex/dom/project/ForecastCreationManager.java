@@ -67,6 +67,7 @@ public class ForecastCreationManager {
         } else {
             // create new forecast
             final BudgetForecast newForecast = budgetForecastRepositoryAndFactory.findOrCreate(getProject(), getDate());
+            newForecast.calculateAmounts();
             Lists.newArrayList(newForecast.getItems()).forEach(fi->{
                 Lists.newArrayList(fi.getTerms()).forEach(ft->{
                     result.add(new ForecastLineViewmodel(ft));

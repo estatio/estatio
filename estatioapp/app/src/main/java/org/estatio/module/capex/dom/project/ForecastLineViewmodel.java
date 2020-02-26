@@ -3,24 +3,14 @@ package org.estatio.module.capex.dom.project;
 import java.math.BigDecimal;
 
 import javax.inject.Inject;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
-import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.services.message.MessageService2;
-import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
-import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 
 import lombok.Getter;
@@ -41,6 +31,8 @@ public class ForecastLineViewmodel {
         this.termEndDate = term.getEndDate();
         this.forecastedAmount = term.getForecastItem().getAmount();
         this.termAmount = term.getAmount();
+        this.forecastedAmountCovered = term.getForecastItem().getForecastedAmountCovered();
+        this.sumTerms = term.getForecastItem().getSumTerms();
     }
 
     public ForecastLineViewmodel(final ProjectBudgetItem budgetItem, final LocalDate startDate, final BigDecimal forecastedAmount){
@@ -74,6 +66,14 @@ public class ForecastLineViewmodel {
     @Getter @Setter
     @MemberOrder(sequence = "6")
     private BigDecimal termAmount;
+
+    @Getter @Setter
+    @MemberOrder(sequence = "7")
+    private boolean forecastedAmountCovered;
+
+    @Getter @Setter
+    @MemberOrder(sequence = "8")
+    private BigDecimal sumTerms;
 
     public void importData(final Project project) {
 
