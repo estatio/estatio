@@ -61,7 +61,7 @@ public class ProjectBudgetRepository_IntegTest extends CapexModuleIntegTestAbstr
     ProjectBudgetRepository projectBudgetRepository;
 
     @Test
-    public void find_or_create_works() throws Exception {
+    public void find_or_create_and_find_committed_works() throws Exception {
 
         // given
         Project project = Project_enum.RonProjectIt.findUsing(serviceRegistry2);
@@ -75,6 +75,14 @@ public class ProjectBudgetRepository_IntegTest extends CapexModuleIntegTestAbstr
         Assertions.assertThat(projectBudgetRepository.listAll()).hasSize(1);
         Assertions.assertThat(projectBudgetRepository.findByProject(project)).contains(budget);
         Assertions.assertThat(projectBudgetRepository.findUnique(project, 1)).isEqualTo(budget);
+        Assertions.assertThat(projectBudgetRepository.findCommittedByProject(project)).isEmpty();
+
+        // and when
+        budget.setCommittedOn(new LocalDate(2020,1,1));
+        // then
+        Assertions.assertThat(projectBudgetRepository.findCommittedByProject(project)).hasSize(1);
+        Assertions.assertThat(projectBudgetRepository.findCommittedByProject(project)).contains(budget);
+
 
     }
 

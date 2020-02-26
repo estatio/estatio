@@ -19,8 +19,10 @@
 package org.estatio.module.capex.dom.project;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.Function;
@@ -412,6 +414,13 @@ public class Project extends UdoDomainObject<Project> implements
     @Action(semantics = SemanticsOf.SAFE)
     public ProjectBudget getProjectBudget(){
         return projectBudgetRepository.findByProject(this).stream().filter(b->b.getNext()==null).findFirst().orElse(null);
+    }
+
+    @Programmatic
+    public ProjectBudget getLatestCommittedBudget(){
+        final Optional<ProjectBudget> budgetIfAny = projectBudgetRepository.findCommittedByProject(this).stream()
+                .max(Comparator.comparing(ProjectBudget::getBudgetVersion));
+        return budgetIfAny.isPresent() ? budgetIfAny.get() : null;
     }
 
     @Action(semantics = SemanticsOf.SAFE)

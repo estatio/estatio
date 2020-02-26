@@ -96,6 +96,10 @@ import static org.apache.cxf.version.Version.getName;
         @Query(name = "findByProject", language = "JDOQL", value = "SELECT "
                 + "FROM org.estatio.module.capex.dom.project.ProjectBudget "
                 + "WHERE project == :project "),
+        @Query(name = "findCommittedByProject", language = "JDOQL", value = "SELECT "
+                + "FROM org.estatio.module.capex.dom.project.ProjectBudget "
+                + "WHERE project == :project && "
+                + "committedOn != null"),
         @Query(name = "findUnique", language = "JDOQL",
                 value = "SELECT "
                 + "FROM org.estatio.module.capex.dom.project.ProjectBudget "
@@ -162,12 +166,8 @@ public class ProjectBudget extends UdoDomainObject2<ProjectBudget> {
     }
 
     @Programmatic
-    public ProjectBudget createItem(final Charge charge, final BigDecimal amount){
-        final ProjectItem projectItem = Lists.newArrayList(getProject().getItems()).stream()
-                .filter(i -> i.getCharge().equals(charge)).findFirst().orElse(null);
-        if (projectItem!=null) {
-            projectBudgetItemRepository.findOrCreate(this, projectItem, amount);
-        }
+    public ProjectBudget createItem(final ProjectItem projectItem, final BigDecimal amount){
+        projectBudgetItemRepository.findOrCreate(this, projectItem, amount);
         return this;
     }
 

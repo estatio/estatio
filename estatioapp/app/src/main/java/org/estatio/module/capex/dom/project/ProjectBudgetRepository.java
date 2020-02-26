@@ -70,6 +70,14 @@ public class ProjectBudgetRepository extends UdoDomainRepositoryAndFactory<Proje
                         "project", project));
     }
 
+    public List<ProjectBudget> findCommittedByProject(final Project project) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        ProjectBudget.class,
+                        "findCommittedByProject",
+                        "project", project));
+    }
+
     public ProjectBudget create(
             final Project project,
             final int version) {

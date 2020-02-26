@@ -8,11 +8,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.google.common.collect.Lists;
 
@@ -29,13 +24,10 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Blob;
-import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
-import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
-import org.isisaddons.module.excel.dom.util.Mode;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
@@ -53,7 +45,6 @@ public class ForecastCreationManager {
     public ForecastCreationManager(final Project project, final LocalDate date){
         this.project = project;
         this.date = date;
-        this.frequency = ForecastFrequency.QUARTERLY; // Currently the only implementation
     }
 
     @Getter @Setter
@@ -62,14 +53,10 @@ public class ForecastCreationManager {
     @Getter @Setter
     private LocalDate date;
 
-    @Getter @Setter
-    @PropertyLayout(hidden = Where.EVERYWHERE)
-    private ForecastFrequency frequency;
-
     @CollectionLayout(defaultView = "table")
     public List<ForecastLineViewmodel> getForecastLines(){
         List<ForecastLineViewmodel> result = new ArrayList<>();
-        final BudgetForecast forecastIfAny = budgetForecastRepository.findUnique(getProject(), getDate());
+        final BudgetForecast forecastIfAny = budgetForecastRepositoryAndFactory.findUnique(getProject(), getDate());
         if (forecastIfAny!=null){
             if (forecastIfAny.getApprovedOn()!=null) return null; // Extra guard
             Lists.newArrayList(forecastIfAny.getItems()).forEach(fi->{
@@ -78,16 +65,12 @@ public class ForecastCreationManager {
                 });
             });
         } else {
-            // create and initialize new forecast
-            final BudgetForecast newForecast = budgetForecastRepository.findOrCreate(getProject(), getDate());
-            Lists.newArrayList(project.getProjectBudget().getItems()).forEach(bi->{
-                // TODO: calculate amounts and bring responsibility to repository (treat it as factory)
-                final BudgetForecastItem newForecastItem = budgetForecastRepository
-                        .findOrCreateItem(newForecast, bi.getProjectItem(), BigDecimal.ZERO, BigDecimal.ZERO,
-                                BigDecimal.ZERO);
-                final BudgetForecastItemTerm newTerm = budgetForecastRepository.findOrCreateTerm(newForecastItem,
-                getFrequency().getIntervalFor(getDate()), BigDecimal.ZERO);
-                result.add(new ForecastLineViewmodel(newTerm));
+            // create new forecast
+            final BudgetForecast newForecast = budgetForecastRepositoryAndFactory.findOrCreate(getProject(), getDate());
+            Lists.newArrayList(newForecast.getItems()).forEach(fi->{
+                Lists.newArrayList(fi.getTerms()).forEach(ft->{
+                    result.add(new ForecastLineViewmodel(ft));
+                });
             });
         }
         return result.stream().sorted(Comparator.comparing(ForecastLineViewmodel::getChargeReference).thenComparing(ForecastLineViewmodel::getTermStartDate)).collect(
@@ -98,17 +81,9 @@ public class ForecastCreationManager {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public ForecastCreationManager addTermsUntil(final LocalDate date){
-        final LocalDate startDateToUse = ForecastFrequency.QUARTERLY.getStartDateFor(date);
-        final BudgetForecast forecastIfAny = budgetForecastRepository.findUnique(getProject(), getDate());
+        final BudgetForecast forecastIfAny = budgetForecastRepositoryAndFactory.findUnique(getProject(), getDate());
         if (forecastIfAny==null) return new ForecastCreationManager(getProject(), getDate()); // THIS SHOULD NOT HAPPEN
-        Lists.newArrayList(forecastIfAny.getItems()).forEach(fi->{
-            LocalDate d = getDate();
-            while (!d.isAfter(startDateToUse)){
-                final LocalDateInterval interval = getFrequency().getIntervalFor(d);
-                budgetForecastRepository.findOrCreateTerm(fi, interval, BigDecimal.ZERO);
-                d = interval.endDateExcluding();
-            }
-        });
+        budgetForecastRepositoryAndFactory.addTermsUntil(forecastIfAny, date);
         return new ForecastCreationManager(getProject(), getDate());
     }
 
@@ -124,7 +99,7 @@ public class ForecastCreationManager {
     }
 
     @Inject
-    BudgetForecastRepository budgetForecastRepository;
+    BudgetForecastRepositoryAndFactory budgetForecastRepositoryAndFactory;
 
     @Inject
     ExcelService excelService;

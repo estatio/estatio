@@ -41,6 +41,7 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -135,5 +136,4 @@ public class BudgetForecast extends UdoDomainObject2<BudgetForecast> {
     public ApplicationTenancy getApplicationTenancy() {
         return getProject().getApplicationTenancy();
     }
-
 }
