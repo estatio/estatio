@@ -23,7 +23,6 @@ import org.isisaddons.module.excel.dom.util.Mode;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.capex.dom.project.Project;
-import org.estatio.module.capex.dom.project.ProjectItemTermRepository;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 
 import lombok.Getter;
@@ -79,7 +78,6 @@ public class ProjectImportManager {
             imp.setParentReference(p.getParent()!=null ? p.getParent().getReference() : null);
             imp.setItemWorkTypeReference(pi.getCharge()!=null ? pi.getCharge().getReference() : null);
             imp.setItemDescription(pi.getDescription());
-            imp.setItemBudgetedAmount(pi.getBudgetedAmount());
             imp.setItemStartDate(pi.getStartDate());
             imp.setItemEndDate(pi.getEndDate());
             imp.setItemPropertyReference(pi.getProperty()!=null ? pi.getProperty().getReference() : null);
@@ -100,25 +98,6 @@ public class ProjectImportManager {
         return imp;
     }
 
-    public List<ProjectItemTermImport> getProjectTermLines() {
-        List<ProjectItemTermImport> result = new ArrayList<>();
-        selectProjects().forEach(p->{
-            Lists.newArrayList(p.getItems()).forEach(pi -> {
-                projectItemTermRepository.findByProjectItem(pi).forEach(term->{
-                    ProjectItemTermImport imp = new ProjectItemTermImport();
-                    imp.setProjectReference(pi.getProject().getReference());
-                    imp.setItemWorkTypeReference(pi.getCharge().getReference());
-                    imp.setBudgetedAmount(term.getBudgetedAmount());
-                    imp.setStartDate(term.getStartDate());
-                    imp.setEndDate(term.getEndDate());
-                    result.add(imp);
-                });
-
-            });
-        });
-        return result;
-    }
-
     List<Project> selectProjects() {
         if (this.project!=null) return Arrays.asList(project);
         if (this.country!=null) return projectRepository.findUsingAtPath(deriveAtPathFromCountry());
@@ -129,9 +108,7 @@ public class ProjectImportManager {
     public Blob download(final String filename){
         WorksheetSpec projectLineSpec = new WorksheetSpec(ProjectImport.class, "projects");
         WorksheetContent projectLineContent = new WorksheetContent(getProjectLines(), projectLineSpec);
-        WorksheetSpec projectTermSpec = new WorksheetSpec(ProjectItemTermImport.class, "terms");
-        WorksheetContent projectTermContent = new WorksheetContent(getProjectTermLines(), projectTermSpec);
-        return excelService.toExcel(Arrays.asList(projectLineContent, projectTermContent), filename);
+        return excelService.toExcel(Arrays.asList(projectLineContent), filename);
     }
 
     public String default0Download(){
@@ -141,7 +118,6 @@ public class ProjectImportManager {
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public ProjectImportManager upload(final Blob spreadSheet){
         excelService.fromExcel(spreadSheet, ProjectImport.class, "projects", Mode.RELAXED).forEach(imp->imp.importData(null));
-        excelService.fromExcel(spreadSheet, ProjectItemTermImport.class, "terms", Mode.RELAXED).forEach(imp->imp.importData(null));
         return new ProjectImportManager(getCountry(), getProject());
     }
 
@@ -151,9 +127,6 @@ public class ProjectImportManager {
 
     @Inject
     ProjectRepository projectRepository;
-
-    @Inject
-    ProjectItemTermRepository projectItemTermRepository;
 
     @Inject
     ExcelService excelService;

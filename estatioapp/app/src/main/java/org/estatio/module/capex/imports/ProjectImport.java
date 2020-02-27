@@ -69,9 +69,6 @@ public class ProjectImport implements Importable, ExcelFixtureRowHandler, Fixtur
     private String itemDescription;
 
     @Getter @Setter
-    private BigDecimal itemBudgetedAmount;
-
-    @Getter @Setter
     private LocalDate itemStartDate;
 
     @Getter @Setter
@@ -114,7 +111,7 @@ public class ProjectImport implements Importable, ExcelFixtureRowHandler, Fixtur
             Property property = propertyRepository.findPropertyByReference(getItemPropertyReference());
             Tax tax = taxRepository.findByReference(getItemTaxReference());
 
-            projectItemRepository.upsert(project, charge, getItemDescription(), getItemBudgetedAmount(), getItemStartDate(), getItemEndDate(), property, tax);
+            projectItemRepository.upsert(project, charge, getItemDescription(), getItemStartDate(), getItemEndDate(), property, tax);
         }
         return Lists.newArrayList(project);
     }

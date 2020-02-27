@@ -78,19 +78,9 @@ public enum Project_enum implements PersonaWithBuilderScript<Project, ProjectBui
     RonProjectIt    ("ITPR001", "New extension", ld(2018, 1, 1), ld(2021, 7, 1), It,
             new ItemSpec[]{
                     new ItemSpec(IncomingCharge_enum.ItConstruction, "construction (costruzione)", bd("90000.00"), null, null, RonIt, null
-//                            new TermSpec[]{
-//                                    new TermSpec(bd("450000.00"), new LocalDate(2018,1,1), new LocalDate(2018,3,31)),
-//                                    new TermSpec(bd("450000.00"), new LocalDate(2018,4,1), new LocalDate(2018,6,30)),
-//                            }
                     ),
                     new ItemSpec(IncomingCharge_enum.ItAcquisition, "purchase (acquisto)", bd("3000000.00"), null, null, RonIt, null
-//                            new TermSpec[]{
-//                                    new TermSpec(bd("50000.00"), new LocalDate(2018,1,1), new LocalDate(2018,3,31)),
-//                                    new TermSpec(bd("100000.00"), new LocalDate(2018,4,1), new LocalDate(2018,6,30)),
-//                                    new TermSpec(bd("100000.00"), new LocalDate(2018,7,1), new LocalDate(2018,9,30)),
-//                                    new TermSpec(bd("50000.00"), new LocalDate(2018,10,1), new LocalDate(2018,12,31))
-//                            }
-                            ),
+                    ),
 
             }
     ),

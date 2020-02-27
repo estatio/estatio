@@ -40,9 +40,7 @@ import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.capex.app.ProjectMenu;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectItem;
-import org.estatio.module.capex.dom.project.ProjectItemTerm;
 import org.estatio.module.capex.dom.project.ProjectRepository;
-import org.estatio.module.capex.dom.project.ProjectItemTermRepository;
 import org.estatio.module.capex.imports.ProjectImportManager;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.charge.EstatioChargeModule;
@@ -111,7 +109,8 @@ public class ProjectImport_IntegTest extends CapexModuleIntegTestAbstract {
         ProjectItem project1item1 = project1.getItems().first();
         assertThat(project1item1.getCharge()).isEqualTo(other);
         assertThat(project1item1.getDescription()).isEqualTo("other stuff");
-        assertThat(project1item1.getBudgetedAmount()).isEqualTo(new BigDecimal("100000.5"));
+        //TODO: restore using new budgeting mechanism
+//        assertThat(project1item1.getBudgetedAmount()).isEqualTo(new BigDecimal("100000.5"));
         assertThat(project1item1.getStartDate()).isEqualTo(new LocalDate(2018,1,1));
         assertThat(project1item1.getEndDate()).isNull();
         assertThat(project1item1.getProperty()).isEqualTo(oxf);
@@ -120,7 +119,8 @@ public class ProjectImport_IntegTest extends CapexModuleIntegTestAbstract {
         ProjectItem project1item2 = project1.getItems().last();
         assertThat(project1item2.getCharge()).isEqualTo(works);
         assertThat(project1item2.getDescription()).isEqualTo("some works");
-        assertThat(project1item2.getBudgetedAmount()).isEqualTo(new BigDecimal("20000.0"));
+        //TODO: restore using new budgeting mechanism
+//        assertThat(project1item2.getBudgetedAmount()).isEqualTo(new BigDecimal("20000.0"));
         assertThat(project1item2.getStartDate()).isEqualTo(new LocalDate(2018,1,1));
         assertThat(project1item2.getEndDate()).isEqualTo(new LocalDate(2018,12,31));
         assertThat(project1item2.getProperty()).isEqualTo(oxf);
@@ -137,19 +137,12 @@ public class ProjectImport_IntegTest extends CapexModuleIntegTestAbstract {
         ProjectItem project2item1 = project2.getItems().first();
         assertThat(project2item1.getCharge()).isEqualTo(legal);
         assertThat(project2item1.getDescription()).isEqualTo("legal stuff");
-        assertThat(project2item1.getBudgetedAmount()).isEqualTo(new BigDecimal("50123.12"));
+        //TODO: restore using new budgeting mechanism
+//        assertThat(project2item1.getBudgetedAmount()).isEqualTo(new BigDecimal("50123.12"));
         assertThat(project2item1.getStartDate()).isNull();
         assertThat(project2item1.getEndDate()).isNull();
         assertThat(project2item1.getProperty()).isEqualTo(oxf);
         assertThat(project2item1.getTax()).isNull();
-
-        assertThat(projectItemTermRepository.listAll()).hasSize(4);
-        assertThat(project1item1.getProjectItemTerms()).hasSize(2);
-        final ProjectItemTerm projectItemTerm = project1item1.getProjectItemTerms().get(0);
-        assertThat(projectItemTerm.getProjectItem()).isEqualTo(project1item1);
-        assertThat(projectItemTerm.getBudgetedAmount()).isEqualTo(new BigDecimal("40000.0"));
-        assertThat(projectItemTerm.getStartDate()).isEqualTo(new LocalDate(2018,1,1));
-        assertThat(projectItemTerm.getEndDate()).isEqualTo(new LocalDate(2018,3,31));
 
     }
 
@@ -158,7 +151,6 @@ public class ProjectImport_IntegTest extends CapexModuleIntegTestAbstract {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                projectItemTermRepository.listAll().forEach(t->repositoryService.remove(t));
                 projectRepository.listAll().forEach(p->p.delete());
                 transactionService.flushTransaction();
                 executionContext.executeChild(this, new EstatioChargeModule().getRefDataTeardown());
@@ -170,7 +162,6 @@ public class ProjectImport_IntegTest extends CapexModuleIntegTestAbstract {
 
     @Inject ProjectRepository projectRepository;
 
-    @Inject ProjectItemTermRepository projectItemTermRepository;
 
     @Inject RepositoryService repositoryService;
 

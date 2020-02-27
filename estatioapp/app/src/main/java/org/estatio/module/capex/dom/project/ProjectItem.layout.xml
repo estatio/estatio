@@ -59,7 +59,6 @@
                     <row>
                         <col span="12">
                             <ns2:collection id="budgetForecastItems" defaultView="table" />
-                            <ns2:collection id="projectItemTerms" defaultView="table" />
                         </col>
                     </row>
                 </tab>

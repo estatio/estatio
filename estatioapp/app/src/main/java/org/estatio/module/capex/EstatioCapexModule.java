@@ -38,7 +38,6 @@ import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectBudget;
 import org.estatio.module.capex.dom.project.ProjectBudgetItem;
 import org.estatio.module.capex.dom.project.ProjectItem;
-import org.estatio.module.capex.dom.project.ProjectItemTerm;
 import org.estatio.module.capex.dom.project.ProjectRole;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.seed.DocumentTypeFSForIbanProof;
@@ -167,7 +166,6 @@ public class EstatioCapexModule extends ModuleAbstract {
                 deleteFrom(BudgetForecast.class);
                 deleteFrom(ProjectBudgetItem.class);
                 deleteFrom(ProjectBudget.class);
-                deleteFrom(ProjectItemTerm.class);
                 deleteFrom(ProjectRole.class);
                 deleteFrom(ProjectItem.class);
                 deleteFrom(Project.class);

@@ -45,7 +45,6 @@ public class ProjectItemRepository extends UdoDomainRepositoryAndFactory<Project
             final Project project,
             final Charge charge,
             final String description,
-            final BigDecimal budgetedAmount,
             final LocalDate startDate,
             final LocalDate endDate,
             final Property property,
@@ -54,7 +53,6 @@ public class ProjectItemRepository extends UdoDomainRepositoryAndFactory<Project
         projectItem.setProject(project);
         projectItem.setCharge(charge);
         projectItem.setDescription(description);
-        projectItem.setBudgetedAmount(budgetedAmount);
         projectItem.setStartDate(startDate);
         projectItem.setEndDate(endDate);
         projectItem.setProperty(property);
@@ -76,7 +74,7 @@ public class ProjectItemRepository extends UdoDomainRepositoryAndFactory<Project
     ) {
         ProjectItem projectItem = findByProjectAndCharge(project, charge);
         if (projectItem == null) {
-            projectItem = create(project, charge, description, budgetedAmount, startDate, endDate,
+            projectItem = create(project, charge, description, startDate, endDate,
                     property, tax);
         }
         return projectItem;
@@ -87,7 +85,6 @@ public class ProjectItemRepository extends UdoDomainRepositoryAndFactory<Project
             final Project project,
             final Charge charge,
             final String description,
-            final BigDecimal budgetedAmount,
             final LocalDate startDate,
             final LocalDate endDate,
             final Property property,
@@ -96,12 +93,11 @@ public class ProjectItemRepository extends UdoDomainRepositoryAndFactory<Project
         ProjectItem projectItem = findByProjectAndCharge(project, charge);
 
         if (projectItem == null) {
-            return create(project, charge, description, budgetedAmount, startDate, endDate,
+            return create(project, charge, description, startDate, endDate,
                     property, tax);
         }
 
         projectItem.setDescription(description);
-        projectItem.setBudgetedAmount(budgetedAmount);
         projectItem.setStartDate(startDate);
         projectItem.setEndDate(endDate);
         projectItem.setProperty(property);

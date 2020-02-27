@@ -115,13 +115,9 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> implements Financi
 	@Getter @Setter
 	private String description;
 
-	@Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
-	@Getter @Setter
-	private BigDecimal budgetedAmount;
-
 	@Action(semantics = SemanticsOf.SAFE)
 	@ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-	public BigDecimal getBudgetedAmountNw(){
+	public BigDecimal getBudgetedAmount(){
 		final ProjectBudget projectBudget = getProject().getProjectBudget();
 		if (projectBudget==null) return null;
 		return projectBudget.getAmountFor(projectBudget, this);
@@ -144,23 +140,6 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> implements Financi
 	@Getter @Setter
 	private Tax tax;
 
-	@Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
-	public ProjectItem amendAmount(
-			@Parameter(optionality = Optionality.OPTIONAL)
-			final BigDecimal add,
-			@Parameter(optionality = Optionality.OPTIONAL)
-			final BigDecimal subtract){
-		BigDecimal newAmount = getBudgetedAmount()!=null ? getBudgetedAmount() : BigDecimal.ZERO;
-		if (add!=null){
-			newAmount = newAmount.add(add);
-		}
-		if (subtract!=null){
-			newAmount = newAmount.subtract(subtract);
-		}
-		setBudgetedAmount(newAmount);
-		return this;
-	}
-
 	@Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
 	public void delete(){
 		repositoryService.remove(this);
@@ -182,16 +161,6 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> implements Financi
 		});
 		return result.stream().sorted(Comparator.comparing(BudgetForecastItem::getForecast).reversed()).collect(
 				Collectors.toList());
-	}
-
-	public List<ProjectItemTerm> getProjectItemTerms(){
-		return projectTermRepository.findByProjectItem(this);
-	}
-
-	@Action(associateWith="projectItemTerms", associateWithSequence="1")
-	public ProjectItem newProjectItemTerm(final BigDecimal amount, final LocalDate startDate, final LocalDate endDate){
-		projectTermRepository.findOrCreate(this, amount, startDate, endDate);
-		return this;
 	}
 
 	@Override
@@ -223,9 +192,6 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> implements Financi
 
 	@Inject
 	FactoryService factoryService;
-
-	@Inject
-	ProjectItemTermRepository projectTermRepository;
 
 	@Inject
 	BudgetForecastRepositoryAndFactory budgetForecastRepositoryAndFactory;

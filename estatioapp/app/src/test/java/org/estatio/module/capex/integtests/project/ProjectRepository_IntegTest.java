@@ -103,40 +103,5 @@ public class ProjectRepository_IntegTest extends CapexModuleIntegTestAbstract {
         }
     }
 
-    public static class FindReviewDateInDateRange extends ProjectRepository_IntegTest {
-
-        @Test
-        public void when_no_review_dates() throws Exception {
-            // given
-            LocalDateInterval interval = LocalDateInterval.including(new LocalDate(2018,1, 1), new LocalDate(2018, 1, 31));
-            // when, then
-            Assertions.assertThat(projectRepository.findReviewDateInInterval(interval)).isEmpty();
-        }
-
-        @Test
-        public void when_review_date_in_range() throws Exception {
-            // given
-            final LocalDate endDate = new LocalDate(2018, 1, 31);
-            LocalDateInterval interval = LocalDateInterval.including(new LocalDate(2018,1, 1), endDate);
-            // when
-            Project_enum.KalProject1.findUsing(serviceRegistry).setReviewDate(endDate);
-            // then
-            Assertions.assertThat(projectRepository.findReviewDateInInterval(interval)).hasSize(1);
-        }
-
-        @Test
-        public void when_no_review_date_in_range() throws Exception {
-            // given
-            final LocalDate endDate = new LocalDate(2018, 1, 31);
-            LocalDateInterval interval = LocalDateInterval.including(new LocalDate(2018,1, 1), endDate);
-            // when
-            Project_enum.KalProject1.findUsing(serviceRegistry).setReviewDate(endDate.plusDays(1));
-            // then
-            Assertions.assertThat(projectRepository.findReviewDateInInterval(interval)).isEmpty();
-        }
-
-
-    }
-
 
 }
