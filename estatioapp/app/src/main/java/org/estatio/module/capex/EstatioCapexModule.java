@@ -33,7 +33,7 @@ import org.estatio.module.capex.dom.payment.PaymentLine;
 import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalStateTransition;
 import org.estatio.module.capex.dom.project.BudgetForecast;
 import org.estatio.module.capex.dom.project.BudgetForecastItem;
-import org.estatio.module.capex.dom.project.BudgetForecastItemTerm;
+import org.estatio.module.capex.dom.project.BudgetForecastTerm;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectBudget;
 import org.estatio.module.capex.dom.project.ProjectBudgetItem;
@@ -161,7 +161,7 @@ public class EstatioCapexModule extends ModuleAbstract {
                 deleteFrom(OrderItem.class);
                 deleteFrom(Order.class);
 
-                deleteFrom(BudgetForecastItemTerm.class);
+                deleteFrom(BudgetForecastTerm.class);
                 deleteFrom(BudgetForecastItem.class);
                 deleteFrom(BudgetForecast.class);
                 deleteFrom(ProjectBudgetItem.class);

@@ -30,6 +30,7 @@ import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 import org.isisaddons.module.excel.dom.util.Mode;
 
+import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
@@ -48,6 +49,10 @@ public class ForecastCreationManager {
         this.date = date;
     }
 
+    public String title(){
+        return TitleBuilder.start().withName("Forecast creation for ").withParent(getProject()).withName(getDate()).toString();
+    }
+
     @Getter @Setter
     private Project project;
 
@@ -60,7 +65,7 @@ public class ForecastCreationManager {
         final BudgetForecast forecastIfAny = budgetForecastRepositoryAndFactory.findUnique(getProject(), getDate());
         if (forecastIfAny!=null){
             forecastIfAny.calculateAmounts(); //TODO: this is prone to error!! Change!
-            if (forecastIfAny.getApprovedOn()!=null) return null; // Extra guard
+            if (forecastIfAny.getSubmittedBy()!=null) return null; // Extra guard
             Lists.newArrayList(forecastIfAny.getItems()).forEach(fi->{
                 Lists.newArrayList(fi.getTerms()).forEach(ft->{
                     result.add(new ForecastLineViewmodel(ft));

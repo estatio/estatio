@@ -25,7 +25,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ForecastLineViewmodel {
 
-    public ForecastLineViewmodel(final BudgetForecastItemTerm term){
+    public ForecastLineViewmodel(final BudgetForecastTerm term){
         this.chargeReference = term.getForecastItem().getProjectItem().getCharge().getReference();
         this.projectReference = term.getForecastItem().getForecast().getProject().getReference();
         this.termStartDate = term.getStartDate();
@@ -94,7 +94,7 @@ public class ForecastLineViewmodel {
             messageService2.raiseError(String.format("Forecast item with charge %s not found for project %s and date %s", getChargeReference(), project.getReference(), forecastDate));
             return;
         }
-        final BudgetForecastItemTerm termForDate = forecastItem.findTermForDate(getTermStartDate());
+        final BudgetForecastTerm termForDate = forecastItem.findTermForDate(getTermStartDate());
         if (termForDate==null){
             // TODO: What do we do?? Do we allow lines to be added in the sheet that were not in the manager?
         }

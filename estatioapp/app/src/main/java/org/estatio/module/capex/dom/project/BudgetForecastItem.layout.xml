@@ -18,8 +18,8 @@
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Amounts" id="amounts">
                                 <ns2:property id="amount"/>
-                                <ns2:property id="budgetedAmountUntilForecastDate"/>
-                                <ns2:property id="invoicedAmountUntilForecastDate"/>
+                                <ns2:property id="budgetedAmountOnDate"/>
+                                <ns2:property id="invoicedAmountToDate"/>
                                 <ns2:property id="sumTerms"/>
                                 <ns2:property id="forecastedAmountCovered"/>
                             </ns2:fieldSet>

@@ -113,25 +113,29 @@ public class BudgetForecast extends UdoDomainObject2<BudgetForecast> {
     @Getter @Setter
     private SortedSet<BudgetForecastItem> items = new TreeSet<>();
 
-    @Column(allowsNull = "true", name = "nextId")
-    @Getter @Setter
-    private BudgetForecast next;
-
-    @Column(allowsNull = "true", name = "previousId")
-    @Getter @Setter
-    private BudgetForecast previous;
-
     @Column(allowsNull = "false")
     @Getter @Setter
     private LocalDate createdOn;
 
     @Column(allowsNull = "true")
     @Getter @Setter
-    private LocalDate approvedOn;
+    private LocalDate submittedOn;
 
     @Column(allowsNull = "true")
     @Getter @Setter
-    private String approvedBy;
+    private String submittedBy;
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public BudgetForecast getNext(){
+        //TODO: implement
+        return null;
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public BudgetForecast getPrevious(){
+        //TODO: implement
+        return null;
+    }
 
     @Programmatic
     public void calculateAmounts() {

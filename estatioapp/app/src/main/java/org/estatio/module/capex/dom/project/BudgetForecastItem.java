@@ -19,7 +19,6 @@
 package org.estatio.module.capex.dom.project;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -52,7 +51,6 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.factory.FactoryService;
-import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -88,13 +86,13 @@ public class BudgetForecastItem extends UdoDomainObject2<BudgetForecastItem> {
         super("forecast, projectItem");
     }
 
-    public BudgetForecastItem(final BudgetForecast forecast, final ProjectItem projectItem, final BigDecimal amount, final BigDecimal budgetedAmountUntilForecastDate, final BigDecimal invoicedAmountUntilForecastDate){
+    public BudgetForecastItem(final BudgetForecast forecast, final ProjectItem projectItem, final BigDecimal amount, final BigDecimal budgetedAmountOnDate, final BigDecimal invoicedAmountToDate){
         this();
         this.forecast = forecast;
         this.projectItem = projectItem;
         this.amount = amount;
-        this.budgetedAmountUntilForecastDate = budgetedAmountUntilForecastDate;
-        this.invoicedAmountUntilForecastDate = invoicedAmountUntilForecastDate;
+        this.budgetedAmountOnDate = budgetedAmountOnDate;
+        this.invoicedAmountToDate = invoicedAmountToDate;
     }
 
     public String title() {
@@ -117,15 +115,15 @@ public class BudgetForecastItem extends UdoDomainObject2<BudgetForecastItem> {
 
     @Column(allowsNull = "false", scale = 2)
     @Getter @Setter
-    private BigDecimal budgetedAmountUntilForecastDate;
+    private BigDecimal budgetedAmountOnDate;
 
     @Column(allowsNull = "false", scale = 2)
     @Getter @Setter
-    private BigDecimal invoicedAmountUntilForecastDate;
+    private BigDecimal invoicedAmountToDate;
 
     @Persistent(mappedBy = "forecastItem", dependentElement = "true")
     @Getter @Setter
-    private SortedSet<BudgetForecastItemTerm> terms = new TreeSet<BudgetForecastItemTerm>();
+    private SortedSet<BudgetForecastTerm> terms = new TreeSet<BudgetForecastTerm>();
 
     @Action(semantics = SemanticsOf.SAFE)
     public boolean getForecastedAmountCovered() {
@@ -151,7 +149,7 @@ public class BudgetForecastItem extends UdoDomainObject2<BudgetForecastItem> {
                 .filter(ii -> ii.getInvoice().getInvoiceDate().isBefore(getForecast().getDate()))
                 .map(ii -> ii.getNetAmount())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        setInvoicedAmountUntilForecastDate(sumInvoiceBeforeForecastDate);
+        setInvoicedAmountToDate(sumInvoiceBeforeForecastDate);
 
         final ProjectBudget latestCommittedBudget = getForecast().getProject().getLatestCommittedBudget();
         if (latestCommittedBudget==null) return; // should not happen
@@ -159,17 +157,18 @@ public class BudgetForecastItem extends UdoDomainObject2<BudgetForecastItem> {
                 .filter(bi -> bi.getProjectItem().equals(this.getProjectItem()))
                 .findFirst().orElse(null);
         if (projectBudgetItem!=null){
-            setBudgetedAmountUntilForecastDate(projectBudgetItem.getAmount());
+            final BigDecimal amount = projectBudgetItem.getAmount();
+            setBudgetedAmountOnDate(amount == null ? BigDecimal.ZERO : amount);
         } else {
             // should not happen!!
         }
 
-        setAmount(getBudgetedAmountUntilForecastDate().subtract(getInvoicedAmountUntilForecastDate()));
+        setAmount(getBudgetedAmountOnDate().subtract(getInvoicedAmountToDate()));
 
     }
 
     @Programmatic
-    public BudgetForecastItemTerm findTermForDate(final LocalDate termStartDate) {
+    public BudgetForecastTerm findTermForDate(final LocalDate termStartDate) {
         return Lists.newArrayList(getTerms()).stream()
                 .filter(t->t.getStartDate().equals(termStartDate))
                 .findFirst().orElse(null);

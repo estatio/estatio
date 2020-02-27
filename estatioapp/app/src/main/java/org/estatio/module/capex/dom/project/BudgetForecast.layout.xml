@@ -19,10 +19,10 @@
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Status" id="status">
                                 <ns2:property id="createdOn"/>
-                                <ns2:property id="approvedOn"/>
-                                <ns2:property id="approvedBy"/>
+                                <ns2:property id="submittedOn"/>
+                                <ns2:property id="submittedBy"/>
                             </ns2:fieldSet>
-                            <ns2:fieldSet name="Forecast development" id="development">
+                            <ns2:fieldSet name="Related" id="related">
                                 <ns2:property id="previous"/>
                                 <ns2:property id="next"/>
                             </ns2:fieldSet>

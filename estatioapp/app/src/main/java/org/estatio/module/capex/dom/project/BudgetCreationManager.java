@@ -22,6 +22,8 @@ import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 import org.isisaddons.module.excel.dom.util.Mode;
 
+import org.incode.module.base.dom.utils.TitleBuilder;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,6 +37,10 @@ public class BudgetCreationManager {
 
     public BudgetCreationManager(final Project project){
         this.project = project;
+    }
+
+    public String title(){
+        return TitleBuilder.start().withName("Budget creation for ").withParent(getProject()).toString();
     }
 
     @Getter @Setter

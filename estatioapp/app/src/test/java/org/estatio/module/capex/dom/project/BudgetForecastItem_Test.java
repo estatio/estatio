@@ -2,7 +2,6 @@ package org.estatio.module.capex.dom.project;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
@@ -31,7 +30,7 @@ public class BudgetForecastItem_Test {
         Assertions.assertThat(item.getSumTerms()).isNull();
 
         // when
-        final BudgetForecastItemTerm term1 = new BudgetForecastItemTerm();
+        final BudgetForecastTerm term1 = new BudgetForecastTerm();
         final BigDecimal amount = BigDecimal.valueOf(123);
         term1.setAmount(amount);
         term1.setStartDate(new LocalDate(2020,1,1));
@@ -40,7 +39,7 @@ public class BudgetForecastItem_Test {
         Assertions.assertThat(item.getSumTerms()).isEqualTo(amount);
 
         // when
-        final BudgetForecastItemTerm term2 = new BudgetForecastItemTerm();
+        final BudgetForecastTerm term2 = new BudgetForecastTerm();
         final BigDecimal amount2 = BigDecimal.valueOf(0.45);
         term2.setAmount(amount2);
         term2.setStartDate(new LocalDate(2020,4,1));
@@ -67,7 +66,7 @@ public class BudgetForecastItem_Test {
         Assertions.assertThat(item.getForecastedAmountCovered()).isFalse();
 
         // when
-        final BudgetForecastItemTerm term1 = new BudgetForecastItemTerm();
+        final BudgetForecastTerm term1 = new BudgetForecastTerm();
         term1.setAmount(BigDecimal.valueOf(123));
         term1.setStartDate(new LocalDate(2020,1,1));
         item.getTerms().add(term1);
@@ -75,7 +74,7 @@ public class BudgetForecastItem_Test {
         Assertions.assertThat(item.getForecastedAmountCovered()).isFalse();
 
         // when
-        final BudgetForecastItemTerm term2 = new BudgetForecastItemTerm();
+        final BudgetForecastTerm term2 = new BudgetForecastTerm();
         term2.setAmount(BigDecimal.valueOf(0.45));
         term2.setStartDate(new LocalDate(2020,4,1));
         item.getTerms().add(term2);
@@ -89,7 +88,7 @@ public class BudgetForecastItem_Test {
         Assertions.assertThat(item.getForecastedAmountCovered()).isFalse();
 
         // when
-        final BudgetForecastItemTerm term3 = new BudgetForecastItemTerm();
+        final BudgetForecastTerm term3 = new BudgetForecastTerm();
         term3.setAmount(BigDecimal.valueOf(0.55));
         term3.setStartDate(new LocalDate(2020,7,1));
         item.getTerms().add(term3);
@@ -159,8 +158,8 @@ public class BudgetForecastItem_Test {
         // when no invoices
         item.calculateAmounts();
         // then
-        Assertions.assertThat(item.getInvoicedAmountUntilForecastDate()).isEqualTo(BigDecimal.ZERO);
-        Assertions.assertThat(item.getBudgetedAmountUntilForecastDate()).isEqualTo(budgetedAmount);
+        Assertions.assertThat(item.getInvoicedAmountToDate()).isEqualTo(BigDecimal.ZERO);
+        Assertions.assertThat(item.getBudgetedAmountOnDate()).isEqualTo(budgetedAmount);
         Assertions.assertThat(item.getAmount()).isEqualTo(budgetedAmount);
 
         // and when there are invoices but on forecast date or later
@@ -173,8 +172,8 @@ public class BudgetForecastItem_Test {
 
         item.calculateAmounts();
         // then still
-        Assertions.assertThat(item.getInvoicedAmountUntilForecastDate()).isEqualTo(BigDecimal.ZERO);
-        Assertions.assertThat(item.getBudgetedAmountUntilForecastDate()).isEqualTo(budgetedAmount);
+        Assertions.assertThat(item.getInvoicedAmountToDate()).isEqualTo(BigDecimal.ZERO);
+        Assertions.assertThat(item.getBudgetedAmountOnDate()).isEqualTo(budgetedAmount);
         Assertions.assertThat(item.getAmount()).isEqualTo(budgetedAmount);
 
         // and when there are invoices but before forecast date
@@ -194,8 +193,8 @@ public class BudgetForecastItem_Test {
 
         item.calculateAmounts();
         //then
-        Assertions.assertThat(item.getInvoicedAmountUntilForecastDate()).isEqualTo(invoicedAmount);
-        Assertions.assertThat(item.getBudgetedAmountUntilForecastDate()).isEqualTo(budgetedAmount);
+        Assertions.assertThat(item.getInvoicedAmountToDate()).isEqualTo(invoicedAmount);
+        Assertions.assertThat(item.getBudgetedAmountOnDate()).isEqualTo(budgetedAmount);
         Assertions.assertThat(item.getAmount()).isEqualTo(BigDecimal.valueOf(234.56));
         Assertions.assertThat(item.getAmount()).isEqualTo(budgetedAmount.subtract(invoicedAmount));
 
@@ -209,8 +208,8 @@ public class BudgetForecastItem_Test {
 
         item.calculateAmounts();
         //then
-        Assertions.assertThat(item.getInvoicedAmountUntilForecastDate()).isEqualTo(budgetedAmount.add(BigDecimal.valueOf(0.01)));
-        Assertions.assertThat(item.getBudgetedAmountUntilForecastDate()).isEqualTo(budgetedAmount);
+        Assertions.assertThat(item.getInvoicedAmountToDate()).isEqualTo(budgetedAmount.add(BigDecimal.valueOf(0.01)));
+        Assertions.assertThat(item.getBudgetedAmountOnDate()).isEqualTo(budgetedAmount);
         Assertions.assertThat(item.getAmount()).isEqualTo(BigDecimal.valueOf(-0.01));
 
     }

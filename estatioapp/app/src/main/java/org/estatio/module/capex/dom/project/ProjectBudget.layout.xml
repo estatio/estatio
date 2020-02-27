@@ -24,7 +24,7 @@
                                 <ns2:property id="committedOn"/>
                                 <ns2:property id="committedBy"/>
                             </ns2:fieldSet>
-                            <ns2:fieldSet name="Budget development" id="development">
+                            <ns2:fieldSet name="Related" id="related">
                                 <ns2:property id="previous"/>
                                 <ns2:property id="next"/>
                             </ns2:fieldSet>

@@ -7,16 +7,26 @@
         </col>
     </row>
     <row>
-        <col span="4">
+        <col span="12">
             <tabGroup>
-                <tab name="Budget forecast item term">
+                <tab name="Budget forecast term">
                     <row>
-                        <col span="12">
+                        <col span="6">
                             <ns2:fieldSet name="Forecast item" id="forecastitem">
                                 <ns2:property id="forecastItem"/>
-                                <ns2:property id="amount"/>
+                            </ns2:fieldSet>
+                            <ns2:fieldSet name="Dates" id="dates">
                                 <ns2:property id="startDate"/>
                                 <ns2:property id="endDate"/>
+                            </ns2:fieldSet>
+                        </col>
+                        <col span="6">
+                            <ns2:fieldSet name="Amount" id="amount">
+                                <ns2:property id="amount"/>
+                            </ns2:fieldSet>
+                            <ns2:fieldSet name="Related" id="related">
+                                <ns2:property id="previous"/>
+                                <ns2:property id="next"/>
                             </ns2:fieldSet>
                         </col>
                     </row>
@@ -29,18 +39,16 @@
                                 <ns2:property id="atPath" hidden="ALL_TABLES"/>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Metadata" id="metadata">
-                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                                <ns2:property id="datanucleusVersionLong"/>
-                                <ns2:property id="datanucleusVersionTimestamp"/>
+                                <ns2:action id="downloadlayoutxml" position="panel_dropdown"/>
+                                <ns2:action id="downloadjdometadata" position="panel_dropdown"/>
+                                <ns2:property id="datanucleusversionlong"/>
+                                <ns2:property id="datanucleusversiontimestamp"/>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Other" unreferencedProperties="true"></ns2:fieldSet>
                         </col>
                     </row>
                 </tab>
             </tabGroup>
-        </col>
-        <col span="8">
         </col>
     </row>
     <row>

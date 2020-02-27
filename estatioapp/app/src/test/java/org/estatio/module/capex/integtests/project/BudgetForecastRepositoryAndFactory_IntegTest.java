@@ -34,7 +34,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.capex.dom.project.BudgetForecast;
 import org.estatio.module.capex.dom.project.BudgetForecastItem;
-import org.estatio.module.capex.dom.project.BudgetForecastItemTerm;
+import org.estatio.module.capex.dom.project.BudgetForecastTerm;
 import org.estatio.module.capex.dom.project.BudgetForecastRepositoryAndFactory;
 import org.estatio.module.capex.dom.project.ForecastFrequency;
 import org.estatio.module.capex.dom.project.Project;
@@ -103,25 +103,25 @@ public class BudgetForecastRepositoryAndFactory_IntegTest extends CapexModuleInt
         Assertions.assertThat(firstForecastItem.getForecast()).isEqualTo(forecast);
         Assertions.assertThat(firstForecastItem.getProjectItem()).isEqualTo(project.getItems().first());
         Assertions.assertThat(firstForecastItem.getAmount()).isEqualTo(BigDecimal.ZERO);
-        Assertions.assertThat(firstForecastItem.getInvoicedAmountUntilForecastDate()).isEqualTo(BigDecimal.ZERO);
-        Assertions.assertThat(firstForecastItem.getBudgetedAmountUntilForecastDate()).isEqualTo(BigDecimal.ZERO);
+        Assertions.assertThat(firstForecastItem.getInvoicedAmountToDate()).isEqualTo(BigDecimal.ZERO);
+        Assertions.assertThat(firstForecastItem.getBudgetedAmountOnDate()).isEqualTo(BigDecimal.ZERO);
 
         final BudgetForecastItem lastForecastItem = forecast.getItems().last();
         Assertions.assertThat(lastForecastItem.getForecast()).isEqualTo(forecast);
         Assertions.assertThat(lastForecastItem.getProjectItem()).isEqualTo(project.getItems().last());
         Assertions.assertThat(lastForecastItem.getAmount()).isEqualTo(BigDecimal.ZERO);
-        Assertions.assertThat(lastForecastItem.getInvoicedAmountUntilForecastDate()).isEqualTo(BigDecimal.ZERO);
-        Assertions.assertThat(lastForecastItem.getBudgetedAmountUntilForecastDate()).isEqualTo(BigDecimal.ZERO);
+        Assertions.assertThat(lastForecastItem.getInvoicedAmountToDate()).isEqualTo(BigDecimal.ZERO);
+        Assertions.assertThat(lastForecastItem.getBudgetedAmountOnDate()).isEqualTo(BigDecimal.ZERO);
 
         Assertions.assertThat(firstForecastItem.getTerms()).hasSize(1);
-        final BudgetForecastItemTerm firstTermOfForecastItem1 = firstForecastItem.getTerms().first();
+        final BudgetForecastTerm firstTermOfForecastItem1 = firstForecastItem.getTerms().first();
         Assertions.assertThat(firstTermOfForecastItem1.getForecastItem()).isEqualTo(firstForecastItem);
         Assertions.assertThat(firstTermOfForecastItem1.getStartDate()).isEqualTo(ForecastFrequency.QUARTERLY.getIntervalFor(forecastDate).startDate());
         Assertions.assertThat(firstTermOfForecastItem1.getEndDate()).isEqualTo(ForecastFrequency.QUARTERLY.getIntervalFor(forecastDate).endDate());
         Assertions.assertThat(firstTermOfForecastItem1.getAmount()).isEqualTo(BigDecimal.ZERO);
 
         Assertions.assertThat(lastForecastItem.getTerms()).hasSize(1);
-        final BudgetForecastItemTerm firstTermOfForecastItem2 = lastForecastItem.getTerms().first();
+        final BudgetForecastTerm firstTermOfForecastItem2 = lastForecastItem.getTerms().first();
         Assertions.assertThat(firstTermOfForecastItem2.getForecastItem()).isEqualTo(lastForecastItem);
         Assertions.assertThat(firstTermOfForecastItem2.getStartDate()).isEqualTo(ForecastFrequency.QUARTERLY.getIntervalFor(forecastDate).startDate());
         Assertions.assertThat(firstTermOfForecastItem2.getEndDate()).isEqualTo(ForecastFrequency.QUARTERLY.getIntervalFor(forecastDate).endDate());
@@ -135,36 +135,48 @@ public class BudgetForecastRepositoryAndFactory_IntegTest extends CapexModuleInt
         // given
         final LocalDate forecastDate = new LocalDate(2020, 1, 1);
         final BudgetForecast forecast = budgetForecastRepositoryAndFactory.findOrCreate(project, forecastDate);
-        assetNumberOfTerms(forecast, 1);
+        assetNumberOfTermsAndZeroAmount(forecast, 1);
 
         // when
         budgetForecastRepositoryAndFactory.addTermsUntil(forecast, new LocalDate(2020,3,31));
         // then still
-        assetNumberOfTerms(forecast, 1);
+        assetNumberOfTermsAndZeroAmount(forecast, 1);
 
         // and when
         final LocalDate nextQuarterStart = new LocalDate(2020, 4, 1);
         budgetForecastRepositoryAndFactory.addTermsUntil(forecast, nextQuarterStart);
         // then
-        assetNumberOfTerms(forecast, 2);
-        final BudgetForecastItemTerm lastTermSample = forecast.getItems().first().getTerms().last();
+        assetNumberOfTermsAndZeroAmount(forecast, 2);
+        final BudgetForecastTerm lastTermSample = forecast.getItems().first().getTerms().last();
         Assertions.assertThat(lastTermSample.getStartDate()).isEqualTo(nextQuarterStart);
         Assertions.assertThat(lastTermSample.getEndDate()).isEqualTo(nextQuarterStart.plusMonths(3).minusDays(1));
+        // chain check
+        Assertions.assertThat(lastTermSample.getPrevious()).isEqualTo(forecast.getItems().first().getTerms().first());
+        Assertions.assertThat(forecast.getItems().first().getTerms().first().getNext()).isEqualTo(lastTermSample);
 
         // and when
         final LocalDate middleThirdQuarter = new LocalDate(2020, 8, 15);
         final LocalDate thirdQuarterStart = new LocalDate(2020, 7, 1);
         budgetForecastRepositoryAndFactory.addTermsUntil(forecast, middleThirdQuarter);
         // then
-        assetNumberOfTerms(forecast, 3);
-        final BudgetForecastItemTerm lastTermSample2 = forecast.getItems().first().getTerms().last();
+        assetNumberOfTermsAndZeroAmount(forecast, 3);
+        final BudgetForecastTerm lastTermSample2 = forecast.getItems().first().getTerms().last();
         Assertions.assertThat(lastTermSample2.getStartDate()).isEqualTo(thirdQuarterStart);
         Assertions.assertThat(lastTermSample2.getEndDate()).isEqualTo(thirdQuarterStart.plusMonths(3).minusDays(1));
+        // chain check
+        BudgetForecastTerm secondTerm = lastTermSample2.getPrevious();
+        BudgetForecastTerm firstTerm = secondTerm.getPrevious();
+        Assertions.assertThat(forecast.getItems().first().getTerms().first()).isEqualTo(firstTerm);
+        Assertions.assertThat(firstTerm.getNext()).isEqualTo(secondTerm);
+        Assertions.assertThat(secondTerm.getNext()).isEqualTo(lastTermSample2);
     }
 
-    private void assetNumberOfTerms(final BudgetForecast forecast, final int numberOfTerms) {
+    private void assetNumberOfTermsAndZeroAmount(final BudgetForecast forecast, final int numberOfTerms) {
         Lists.newArrayList(forecast.getItems()).forEach(fi->{
             Assertions.assertThat(fi.getTerms()).hasSize(numberOfTerms);
+            Lists.newArrayList(fi.getTerms()).forEach(ft->{
+                Assertions.assertThat(ft.getAmount()).isEqualTo(BigDecimal.ZERO);
+            });
         });
     }
 

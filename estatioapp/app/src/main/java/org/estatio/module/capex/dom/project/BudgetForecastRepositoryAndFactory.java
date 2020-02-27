@@ -34,6 +34,7 @@ import org.apache.isis.applib.services.message.MessageService2;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.incode.module.base.dom.valuetypes.AbstractInterval;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
@@ -90,7 +91,7 @@ public class BudgetForecastRepositoryAndFactory extends UdoDomainRepositoryAndFa
             for (ProjectBudgetItem item : latestCommittedBudget.getItems()){
                 final BudgetForecastItem newForecastItem = findOrCreateItem(forecast, item.getProjectItem(), BigDecimal.ZERO,
                         BigDecimal.ZERO, BigDecimal.ZERO);
-                findOrCreateTerm(newForecastItem, newForecastItem.getForecast().getFrequency().getIntervalFor(date), BigDecimal.ZERO);
+                findOrCreateFirstTerm(newForecastItem);
             }
         } catch (IllegalArgumentException e) {
             messageService2.raiseError(e.getMessage());
@@ -109,15 +110,42 @@ public class BudgetForecastRepositoryAndFactory extends UdoDomainRepositoryAndFa
     }
 
     public void addTermsUntil(final BudgetForecast forecast, final LocalDate date) {
-        final LocalDate startDateToUse = forecast.getFrequency().getStartDateFor(date);
         Lists.newArrayList(forecast.getItems()).forEach(fi->{
-            LocalDate d = forecast.getDate();
-            while (!d.isAfter(startDateToUse)){
-                final LocalDateInterval interval = forecast.getFrequency().getIntervalFor(d);
-                findOrCreateTerm(fi, interval, BigDecimal.ZERO);
-                d = interval.endDateExcluding();
-            }
+            addTermsUntil(fi, date);
         });
+    }
+
+    private void addTermsUntil(final BudgetForecastItem forecastItem, final LocalDate date){
+        final LocalDate lastTermStartDate = forecastItem.getForecast().getFrequency().getStartDateFor(date);
+        final BudgetForecastTerm term = findOrCreateFirstTerm(forecastItem);
+        LocalDate d = term.getEndDate().plusDays(1);
+        while (!d.isAfter(lastTermStartDate)){
+            BudgetForecastTerm nextTerm = findOrCreateNext(forecastItem, d);
+            d = nextTerm.getEndDate().plusDays(1);
+        }
+    }
+
+    private BudgetForecastTerm findOrCreateNext(final BudgetForecastItem item, final LocalDate nextStartDate){
+        BudgetForecastTerm term = findUniqueTerm(item, nextStartDate);
+        if (term != null){
+            return term;
+        } else {
+            final LocalDate previousStartDate = item.getForecast().getFrequency()
+                    .getStartDateFor(nextStartDate.minusDays(1));
+            BudgetForecastTerm previousIfAny = findUniqueTerm(item, previousStartDate);
+            LocalDateInterval nextInterval = item.getForecast().getFrequency().getIntervalFor(nextStartDate);
+            BudgetForecastTerm nextTerm = new BudgetForecastTerm();
+            nextTerm.setForecastItem(item);
+            nextTerm.setStartDate(nextInterval.startDate());
+            nextTerm.setEndDate(nextInterval.endDate(AbstractInterval.IntervalEnding.INCLUDING_END_DATE));
+            nextTerm.setAmount(BigDecimal.ZERO);
+            serviceRegistry2.injectServicesInto(nextTerm);
+            repositoryService.persistAndFlush(nextTerm);
+            // the following is done after injecting serves and persisting in order for datanucleus to manage next/prev relation
+            nextTerm.setPrevious(previousIfAny);
+            if (previousIfAny != null) previousIfAny.setNext(nextTerm);
+            return nextTerm;
+        }
     }
 
     // SECTION forecast item
@@ -158,32 +186,23 @@ public class BudgetForecastRepositoryAndFactory extends UdoDomainRepositoryAndFa
 
     // SECTION forecast term
 
-    private BudgetForecastItemTerm findUniqueTerm(final BudgetForecastItem item, final LocalDate startDate) {
+    private BudgetForecastTerm findUniqueTerm(final BudgetForecastItem item, final LocalDate startDate) {
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
-                        BudgetForecastItemTerm.class,
+                        BudgetForecastTerm.class,
                         "findUnique",
                         "forecastItem", item,
                         "startDate", startDate));
     }
 
-    private BudgetForecastItemTerm createTerm(
-            final BudgetForecastItem item,
-            final LocalDateInterval interval,
-            final BigDecimal amount) {
-        BudgetForecastItemTerm term = new BudgetForecastItemTerm(item, interval, amount);
-        serviceRegistry2.injectServicesInto(term);
-        repositoryService.persistAndFlush(term);
-        return term;
-    }
-
-    private BudgetForecastItemTerm findOrCreateTerm(
-            final BudgetForecastItem item,
-            final LocalDateInterval interval,
-            final BigDecimal amount) {
-        BudgetForecastItemTerm term = findUniqueTerm(item, interval.startDate());
+    private BudgetForecastTerm findOrCreateFirstTerm(
+            final BudgetForecastItem item) {
+        final LocalDate forecastDate = item.getForecast().getDate();
+        BudgetForecastTerm term = findUniqueTerm(item, forecastDate);
         if(term == null) {
-            term = createTerm(item, interval, amount);
+            term = new BudgetForecastTerm(item, item.getForecast().getFrequency().getIntervalFor(forecastDate), BigDecimal.ZERO);
+            serviceRegistry2.injectServicesInto(term);
+            repositoryService.persistAndFlush(term);
         }
         return term;
     }

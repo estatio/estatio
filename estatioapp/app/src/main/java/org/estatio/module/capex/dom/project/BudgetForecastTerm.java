@@ -25,6 +25,7 @@ import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
@@ -61,23 +62,23 @@ import lombok.Setter;
 @Queries({
         @Query(name = "findUnique", language = "JDOQL",
                 value = "SELECT "
-                + "FROM org.estatio.module.capex.dom.project.BudgetForecastItemTerm "
+                + "FROM org.estatio.module.capex.dom.project.BudgetForecastTerm "
                 + "WHERE forecastItem == :forecastItem && startDate == :startDate ")
 })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.capex.dom.project.BudgetForecastItemTerm"
+        objectType = "org.estatio.capex.dom.project.BudgetForecastTerm"
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
-public class BudgetForecastItemTerm extends UdoDomainObject2<BudgetForecastItemTerm> {
+public class BudgetForecastTerm extends UdoDomainObject2<BudgetForecastTerm> {
 
     // TODO: persist next / previous ? Derive? Of just leave it like this ...
 
-    public BudgetForecastItemTerm() {
+    public BudgetForecastTerm() {
         super("forecastItem, startDate");
     }
 
-    public BudgetForecastItemTerm(final BudgetForecastItem forecastItem, final LocalDateInterval interval, final BigDecimal amount){
+    public BudgetForecastTerm(final BudgetForecastItem forecastItem, final LocalDateInterval interval, final BigDecimal amount){
         this();
         this.forecastItem = forecastItem;
         this.startDate = interval.startDate();
@@ -105,6 +106,17 @@ public class BudgetForecastItemTerm extends UdoDomainObject2<BudgetForecastItemT
     @Column(allowsNull = "false", scale = 2)
     @Getter @Setter
     private BigDecimal amount;
+
+    @Column(allowsNull = "true", name = "nextTermId")
+    @PropertyLayout(hidden = Where.ALL_TABLES)
+    @Getter @Setter
+    private BudgetForecastTerm next;
+
+    @Column(allowsNull = "true", name = "previousTermId")
+    @PropertyLayout(hidden = Where.ALL_TABLES)
+    @Persistent(mappedBy = "next")
+    @Getter @Setter
+    private BudgetForecastTerm previous;
 
     @Override
     @PropertyLayout(hidden = Where.EVERYWHERE)
