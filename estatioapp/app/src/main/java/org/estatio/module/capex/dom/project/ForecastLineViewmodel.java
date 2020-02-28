@@ -25,25 +25,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ForecastLineViewmodel {
 
-    public ForecastLineViewmodel(final BudgetForecastTerm term){
-        this.chargeReference = term.getForecastItem().getProjectItem().getCharge().getReference();
-        this.projectReference = term.getForecastItem().getForecast().getProject().getReference();
-        this.termStartDate = term.getStartDate();
-        this.termEndDate = term.getEndDate();
-        this.forecastedAmount = term.getForecastItem().getAmount();
-        this.termAmount = term.getAmount();
-        this.forecastedAmountCovered = term.getForecastItem().getForecastedAmountCovered();
-        this.sumTerms = term.getForecastItem().getSumTerms();
-    }
-
-    public ForecastLineViewmodel(final ProjectBudgetItem budgetItem, final LocalDate startDate, final BigDecimal forecastedAmount){
-        this.chargeReference = budgetItem.getProjectItem().getCharge().getReference();
-        this.projectReference = budgetItem.getProjectBudget().getProject().getReference();
-        this.termStartDate = startDate;
-        this.termEndDate = startDate.plusMonths(3).minusDays(1);
-        this.forecastedAmount = forecastedAmount;
-    }
-
     @Getter @Setter
     @MemberOrder(sequence = "1")
     private String projectReference;
@@ -58,22 +39,30 @@ public class ForecastLineViewmodel {
 
     @Getter @Setter
     @MemberOrder(sequence = "4")
-    private LocalDate termStartDate;
+    private int year;
 
     @Getter @Setter
     @MemberOrder(sequence = "5")
-    private LocalDate termEndDate;
+    private BigDecimal amountQ1;
 
     @Getter @Setter
     @MemberOrder(sequence = "6")
-    private BigDecimal termAmount;
+    private BigDecimal amountQ2;
 
     @Getter @Setter
     @MemberOrder(sequence = "7")
-    private boolean forecastedAmountCovered;
+    private BigDecimal amountQ3;
 
     @Getter @Setter
     @MemberOrder(sequence = "8")
+    private BigDecimal amountQ4;
+
+    @Getter @Setter
+    @MemberOrder(sequence = "9")
+    private boolean forecastedAmountCovered;
+
+    @Getter @Setter
+    @MemberOrder(sequence = "10")
     private BigDecimal sumTerms;
 
     public void importData(final Project project, final LocalDate forecastDate) {
@@ -94,11 +83,41 @@ public class ForecastLineViewmodel {
             messageService2.raiseError(String.format("Forecast item with charge %s not found for project %s and date %s", getChargeReference(), project.getReference(), forecastDate));
             return;
         }
-        final BudgetForecastTerm termForDate = forecastItem.findTermForDate(getTermStartDate());
-        if (termForDate==null){
+
+        final BudgetForecastTerm termForQ1 = getTermForQ(forecastItem, ForecastFrequency.Quarter.Q1);
+        if (termForQ1==null){
             // TODO: What do we do?? Do we allow lines to be added in the sheet that were not in the manager?
+        } else {
+            termForQ1.setAmount(getAmountQ1());
         }
-        termForDate.setAmount(getTermAmount());
+
+        final BudgetForecastTerm termForQ2 = getTermForQ(forecastItem, ForecastFrequency.Quarter.Q2);
+        if (termForQ2==null){
+            // TODO: What do we do?? Do we allow lines to be added in the sheet that were not in the manager?
+        } else {
+            termForQ2.setAmount(getAmountQ2());
+        }
+
+        final BudgetForecastTerm termForQ3 = getTermForQ(forecastItem, ForecastFrequency.Quarter.Q3);
+        if (termForQ3==null){
+            // TODO: What do we do?? Do we allow lines to be added in the sheet that were not in the manager?
+        } else {
+            termForQ3.setAmount(getAmountQ3());
+        }
+
+        final BudgetForecastTerm termForQ4 = getTermForQ(forecastItem, ForecastFrequency.Quarter.Q4);
+        if (termForQ4==null){
+            // TODO: What do we do?? Do we allow lines to be added in the sheet that were not in the manager?
+        } else {
+            termForQ4.setAmount(getAmountQ4());
+        }
+
+    }
+
+    private BudgetForecastTerm getTermForQ(final BudgetForecastItem forecastItem, final ForecastFrequency.Quarter q) {
+        final BudgetForecastTerm term = forecastItem
+                .findTermForDate(ForecastFrequency.getStartDateForQuarter(getYear(), q));
+        return term;
     }
 
     @Inject

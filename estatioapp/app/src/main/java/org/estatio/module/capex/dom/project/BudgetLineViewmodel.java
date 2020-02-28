@@ -43,8 +43,18 @@ public class BudgetLineViewmodel {
     private BigDecimal amount;
 
     public void importData(final Project project) {
+        Project projectFromRef = null;
+        if (project==null){
+            projectFromRef = projectRepository.findByReference(getProjectReference());
+            if (projectFromRef==null){
+                messageService2.raiseError(String.format("Project not found for reference", getProjectReference()));
+                return;
+            }
+        }
 
-        final ProjectBudget unapprovedFirstBudget = projectBudgetRepository.findOrCreate(project, 1);
+        Project projectToUse = project!=null ? project : projectFromRef;
+
+        final ProjectBudget unapprovedFirstBudget = projectBudgetRepository.findOrCreate(projectToUse, 1);
         if (unapprovedFirstBudget.getApprovedOn()!=null){
             messageService2.raiseError("You are trying to modify an approved budget");
             return;
@@ -68,6 +78,9 @@ public class BudgetLineViewmodel {
         }
 
     }
+
+    @Inject
+    private ProjectRepository projectRepository;
 
     @Inject
     private ProjectBudgetRepository projectBudgetRepository;

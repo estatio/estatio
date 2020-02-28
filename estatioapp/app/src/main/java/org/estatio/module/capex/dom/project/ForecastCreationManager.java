@@ -19,9 +19,7 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
-import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Blob;
 
@@ -31,7 +29,6 @@ import org.isisaddons.module.excel.dom.WorksheetSpec;
 import org.isisaddons.module.excel.dom.util.Mode;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -60,16 +57,14 @@ public class ForecastCreationManager {
     private LocalDate date;
 
     @CollectionLayout(defaultView = "table")
-    public List<ForecastLineViewmodel> getForecastLines(){
+    public List<ForecastLineViewmodel> getForecastLines2(){
         List<ForecastLineViewmodel> result = new ArrayList<>();
         final BudgetForecast forecastIfAny = budgetForecastRepositoryAndFactory.findUnique(getProject(), getDate());
         if (forecastIfAny!=null){
             forecastIfAny.calculateAmounts(); //TODO: this is prone to error!! Change!
             if (forecastIfAny.getSubmittedBy()!=null) return null; // Extra guard
             Lists.newArrayList(forecastIfAny.getItems()).forEach(fi->{
-                Lists.newArrayList(fi.getTerms()).forEach(ft->{
-                    result.add(new ForecastLineViewmodel(ft));
-                });
+                result.addAll(linesForForecastItem(fi));
             });
         } else {
             // create new forecast
@@ -77,28 +72,75 @@ public class ForecastCreationManager {
             newForecast.calculateAmounts(); //TODO: this is prone to error!! Change!
             Lists.newArrayList(newForecast.getItems()).forEach(fi->{
                 Lists.newArrayList(fi.getTerms()).forEach(ft->{
-                    result.add(new ForecastLineViewmodel(ft));
+                    result.addAll(linesForForecastItem(fi));
                 });
             });
         }
-        return result.stream().sorted(Comparator.comparing(ForecastLineViewmodel::getChargeReference).thenComparing(ForecastLineViewmodel::getTermStartDate)).collect(
+        return result.stream().sorted(Comparator.comparing(ForecastLineViewmodel::getChargeReference).thenComparing(
+                ForecastLineViewmodel::getYear)).collect(
                 Collectors.toList());
     }
 
+    List<ForecastLineViewmodel> linesForForecastItem(final BudgetForecastItem item){
+        List<ForecastLineViewmodel> result = new ArrayList<>();
+        if (item.getTerms().isEmpty()) return result;
+
+        final Integer minYear = Lists.newArrayList(item.getTerms()).stream()
+                .map(BudgetForecastTerm::getStartDate).min(Comparator.comparing(LocalDate::getYear)).map(LocalDate::getYear).get();
+        final Integer maxYear = Lists.newArrayList(item.getTerms()).stream()
+                .map(BudgetForecastTerm::getStartDate).max(Comparator.comparing(LocalDate::getYear)).map(LocalDate::getYear).get();
+
+        int i = minYear;
+        while (i <= maxYear){
+            ForecastLineViewmodel line = new ForecastLineViewmodel();
+            line.setProjectReference(item.getForecast().getProject().getReference());
+            line.setChargeReference(item.getProjectItem().getCharge().getReference());
+            line.setYear(i);
+            line.setForecastedAmount(item.getAmount());
+            line.setForecastedAmountCovered(item.getForecastedAmountCovered());
+            line.setSumTerms(item.getSumTerms());
+
+            final int year = i;
+            line.setAmountQ1(getAmountForQuarter(item, year, ForecastFrequency.Quarter.Q1));
+            line.setAmountQ2(getAmountForQuarter(item, year, ForecastFrequency.Quarter.Q2));
+            line.setAmountQ3(getAmountForQuarter(item, year, ForecastFrequency.Quarter.Q3));
+            line.setAmountQ4(getAmountForQuarter(item, year, ForecastFrequency.Quarter.Q4));
+
+            result.add(line);
+
+            i++;
+        }
+
+        return result;
+    }
+
+    private BigDecimal getAmountForQuarter(final BudgetForecastItem item, final int year, final ForecastFrequency.Quarter q1) {
+        return Lists.newArrayList(item.getTerms()).stream()
+                .filter(t -> (t.getStartDate().getYear()) == year)
+                .filter(t -> t.getForecastItem().getForecast().getFrequency().getQuarterFor(t.getStartDate())
+                        .equals(q1))
+                .map(t -> t.getAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public ForecastCreationManager addTermsUntil(final LocalDate date){
+    public ForecastCreationManager addTermsUntil(final int year){
         final BudgetForecast forecastIfAny = budgetForecastRepositoryAndFactory.findUnique(getProject(), getDate());
         if (forecastIfAny==null) return new ForecastCreationManager(getProject(), getDate()); // THIS SHOULD NOT HAPPEN
-        budgetForecastRepositoryAndFactory.addTermsUntil(forecastIfAny, date);
+        budgetForecastRepositoryAndFactory.addTermsUntil(forecastIfAny, new LocalDate(year, 12, 31));
         return new ForecastCreationManager(getProject(), getDate());
     }
+
+    public int default0AddTermsUntil(){
+        return clockService.now().getYear() + 1;
+    }
+
 
     @Action(semantics = SemanticsOf.SAFE)
     public Blob download(final String filename){
         WorksheetSpec forecastLineSpec = new WorksheetSpec(ForecastLineViewmodel.class, "forecastLines");
-        WorksheetContent forecastLineContent = new WorksheetContent(getForecastLines(), forecastLineSpec);
+        WorksheetContent forecastLineContent = new WorksheetContent(getForecastLines2(), forecastLineSpec);
         return excelService.toExcel(Arrays.asList(forecastLineContent), filename);
     }
 
