@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
+import org.estatio.module.lease.dom.occupancy.Occupancy;
+
 @DomainService(
         nature = NatureOfService.DOMAIN
 )
@@ -41,6 +43,10 @@ public class AggregationViewModelHelperService {
             final List<String> cntCom = aggregation.purchaseCountAggregatesForPeriod().stream().map(p -> helperComparable(p))
                     .collect(Collectors.toList());
             result.add(new AggregationViewModelLine("purchase count comparable", cntCom.get(0), "", cntCom.get(1), cntCom.get(2), "", cntCom.get(3)));
+
+            final List<String> leasesInvolved = aggregation.aggregatesForPeriod().stream().map(p -> helperLeaseInvolved(aggregation, p))
+                    .collect(Collectors.toList());
+            result.add(new AggregationViewModelLine("leases involved", leasesInvolved.get(0), leasesInvolved.get(1), leasesInvolved.get(2), leasesInvolved.get(3), leasesInvolved.get(4), leasesInvolved.get(5)));
         }
 
         return result;
@@ -87,6 +93,29 @@ public class AggregationViewModelHelperService {
         } else {
             return "---";
         }
+    }
+
+    public String helperLeaseInvolved(final TurnoverAggregation aggregation, final TurnoverAggregateForPeriod aggregateForPeriod){
+        if (aggregateForPeriod==null) return "---";
+        final List<Occupancy> occupancies = aggregateForPeriod.distinctOccupanciesThisYear(aggregation);
+        occupancies.addAll(aggregateForPeriod.distinctOccupanciesPreviousYear(aggregation));
+        final List<String> leaseRefs = occupancies.stream()
+                .map(o->o.getLease())
+                .distinct().map(l -> l.getReference())
+                .collect(Collectors.toList());
+
+        StringBuilder builder = new StringBuilder();
+        if (leaseRefs.isEmpty()){
+            return "---";
+        } else {
+            boolean first = true;
+            for (String leaseRef : leaseRefs){
+                if (!first) builder.append(" | ");
+                builder.append(leaseRef);
+                first = false;
+            }
+        }
+        return builder.toString();
     }
 
 }

@@ -53,17 +53,17 @@
             <bs3:row>
                 <bs3:col span="4">
                     <cpt:fieldSet id="toDate1">
-                        <cpt:property id="toDateThisYear"/>
+                        <cpt:property id="yearToDate"/>
                     </cpt:fieldSet>
                 </bs3:col>
                 <bs3:col span="4">
                     <cpt:fieldSet id="toDate2">
-                        <cpt:property id="toDatePreviousYear"/>
+                        <cpt:property id="yearToDatePreviousYear"/>
                     </cpt:fieldSet>
                 </bs3:col>
                 <bs3:col span="4">
                     <cpt:fieldSet id="toDate3">
-                        <cpt:property id="toDateComparable"/>
+                        <cpt:property id="yearToDateComparable"/>
                     </cpt:fieldSet>
                 </bs3:col>
             </bs3:row>

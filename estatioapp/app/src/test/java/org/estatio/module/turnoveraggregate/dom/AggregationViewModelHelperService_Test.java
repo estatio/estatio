@@ -2,10 +2,16 @@ package org.estatio.module.turnoveraggregate.dom;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
+
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.occupancy.Occupancy;
+import org.estatio.module.turnover.dom.Turnover;
+import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 
 public class AggregationViewModelHelperService_Test {
 
@@ -130,17 +136,145 @@ public class AggregationViewModelHelperService_Test {
     }
 
     @Test
+    public void helperLeaseInvolved() throws Exception {
+
+        // given
+        AggregationViewModelHelperService service = new AggregationViewModelHelperService();
+        TurnoverAggregation aggregation = new TurnoverAggregation();
+
+        // when
+        String resultString = service.helperLeaseInvolved(aggregation, null);
+        // then
+        Assertions.assertThat(resultString).isEqualTo("---");
+
+        // and when (no turnovers)
+        TurnoverAggregateForPeriod aggregateForPeriod = new TurnoverAggregateForPeriod(){
+            @Override public List<Turnover> getTurnovers(final TurnoverAggregation aggregation) {
+                return Arrays.asList();
+            }
+
+            @Override
+            public List<Turnover> getTurnoversPreviousYear(final TurnoverAggregation aggregation) {
+                return Arrays.asList();
+            }
+        };
+        resultString = service.helperLeaseInvolved(aggregation, aggregateForPeriod);
+        // then
+        Assertions.assertThat(resultString).isEqualTo("---");
+
+        // and when (turnovers, 1 occ)
+        final String leasRef123 = "LeasRef123";
+        TurnoverReportingConfig config = new TurnoverReportingConfig();
+        final Occupancy occupancy = new Occupancy();
+        final Lease lease = new Lease();
+        lease.setReference(leasRef123);
+        occupancy.setLease(lease);
+        config.setOccupancy(occupancy);
+        Turnover turnover = new Turnover(config, null, null, null, null, null);
+        TurnoverAggregateForPeriod aggregateForPeriodWithTo1 = new TurnoverAggregateForPeriod(){
+            @Override public List<Turnover> getTurnovers(final TurnoverAggregation aggregation) {
+                return Arrays.asList(turnover);
+            }
+
+            @Override
+            public List<Turnover> getTurnoversPreviousYear(final TurnoverAggregation aggregation) {
+                return Arrays.asList();
+            }
+        };
+        resultString = service.helperLeaseInvolved(aggregation, aggregateForPeriodWithTo1);
+        // then
+        Assertions.assertThat(resultString).isEqualTo("LeasRef123");
+
+        // and when (turnovers, 2 occs)
+        final String leasRef234 = "LeasRef234";
+        TurnoverReportingConfig config2 = new TurnoverReportingConfig();
+        final Occupancy occupancy2 = new Occupancy();
+        final Lease lease2 = new Lease();
+        lease2.setReference(leasRef234);
+        occupancy2.setLease(lease2);
+        config2.setOccupancy(occupancy2);
+        Turnover turnover2 = new Turnover(config2, null, null, null, null, null);
+        TurnoverAggregateForPeriod aggregateForPeriodWithTo2 = new TurnoverAggregateForPeriod(){
+            @Override public List<Turnover> getTurnovers(final TurnoverAggregation aggregation) {
+                return Arrays.asList(turnover2);
+            }
+
+            @Override
+            public List<Turnover> getTurnoversPreviousYear(final TurnoverAggregation aggregation) {
+                return Arrays.asList(turnover);
+            }
+        };
+        resultString = service.helperLeaseInvolved(aggregation, aggregateForPeriodWithTo2);
+        // then
+        Assertions.assertThat(resultString).isEqualTo("LeasRef234 | LeasRef123");
+    }
+
+    @Test
     public void getLines() {
 
         // given
         AggregationViewModelHelperService service = new AggregationViewModelHelperService();
         TurnoverAggregation aggregation = new TurnoverAggregation();
-        TurnoverAggregateForPeriod A1M = new TurnoverAggregateForPeriod();
-        TurnoverAggregateForPeriod A2M = new TurnoverAggregateForPeriod();
-        TurnoverAggregateForPeriod A3M = new TurnoverAggregateForPeriod();
-        TurnoverAggregateForPeriod A6M = new TurnoverAggregateForPeriod();
-        TurnoverAggregateForPeriod A9M = new TurnoverAggregateForPeriod();
-        TurnoverAggregateForPeriod A12M = new TurnoverAggregateForPeriod();
+        TurnoverAggregateForPeriod A1M = new TurnoverAggregateForPeriod(){
+            @Override public List<Turnover> getTurnovers(final TurnoverAggregation aggregation) {
+                return Arrays.asList();
+            }
+
+            @Override
+            public List<Turnover> getTurnoversPreviousYear(final TurnoverAggregation aggregation) {
+                return Arrays.asList();
+            }
+        };
+        TurnoverAggregateForPeriod A2M = new TurnoverAggregateForPeriod(){
+            @Override public List<Turnover> getTurnovers(final TurnoverAggregation aggregation) {
+                return Arrays.asList();
+            }
+
+            @Override
+            public List<Turnover> getTurnoversPreviousYear(final TurnoverAggregation aggregation) {
+                return Arrays.asList();
+            }
+        };
+        TurnoverAggregateForPeriod A3M = new TurnoverAggregateForPeriod(){
+            @Override public List<Turnover> getTurnovers(final TurnoverAggregation aggregation) {
+                return Arrays.asList();
+            }
+
+            @Override
+            public List<Turnover> getTurnoversPreviousYear(final TurnoverAggregation aggregation) {
+                return Arrays.asList();
+            }
+        };
+        TurnoverAggregateForPeriod A6M = new TurnoverAggregateForPeriod(){
+            @Override public List<Turnover> getTurnovers(final TurnoverAggregation aggregation) {
+                return Arrays.asList();
+            }
+
+            @Override
+            public List<Turnover> getTurnoversPreviousYear(final TurnoverAggregation aggregation) {
+                return Arrays.asList();
+            }
+        };
+        TurnoverAggregateForPeriod A9M = new TurnoverAggregateForPeriod(){
+            @Override public List<Turnover> getTurnovers(final TurnoverAggregation aggregation) {
+                return Arrays.asList();
+            }
+
+            @Override
+            public List<Turnover> getTurnoversPreviousYear(final TurnoverAggregation aggregation) {
+                return Arrays.asList();
+            }
+        };
+        TurnoverAggregateForPeriod A12M = new TurnoverAggregateForPeriod(){
+            @Override public List<Turnover> getTurnovers(final TurnoverAggregation aggregation) {
+                return Arrays.asList();
+            }
+
+            @Override
+            public List<Turnover> getTurnoversPreviousYear(final TurnoverAggregation aggregation) {
+                return Arrays.asList();
+            }
+        };
         PurchaseCountAggregateForPeriod P1M = new PurchaseCountAggregateForPeriod();
         PurchaseCountAggregateForPeriod P3M = new PurchaseCountAggregateForPeriod();
         PurchaseCountAggregateForPeriod P6M = new PurchaseCountAggregateForPeriod();
@@ -161,14 +295,17 @@ public class AggregationViewModelHelperService_Test {
         List<AggregationViewModelLine> lines = service.getLines(aggregation);
 
         // then
-        Assertions.assertThat(lines).hasSize(6);
-        String defaultAmount = "Gross --- | Net ---";
-        assertLine(lines.get(0), "turnover", defaultAmount, defaultAmount, defaultAmount, defaultAmount, defaultAmount, defaultAmount);
-        assertLine(lines.get(1), "turnover previous year", defaultAmount, defaultAmount, defaultAmount, defaultAmount, defaultAmount, defaultAmount);
+        Assertions.assertThat(lines).hasSize(7);
+        final String emptyAmount = "Gross --- | Net ---";
+        final String emptyString = "---";
+
+        assertLine(lines.get(0), "turnover", emptyAmount, emptyAmount, emptyAmount, emptyAmount, emptyAmount, emptyAmount);
+        assertLine(lines.get(1), "turnover previous year", emptyAmount, emptyAmount, emptyAmount, emptyAmount, emptyAmount, emptyAmount);
         assertLine(lines.get(2), "turnover comparable", "non comparable", "non comparable", "non comparable", "non comparable", "non comparable", "non comparable");
-        assertLine(lines.get(3), "purchase count", "---", "", "---", "---", "", "---");
-        assertLine(lines.get(4), "purchase count previous year", "---", "", "---", "---", "", "---");
+        assertLine(lines.get(3), "purchase count", emptyString, "", emptyString, emptyString, "", emptyString);
+        assertLine(lines.get(4), "purchase count previous year", emptyString, "", emptyString, emptyString, "", emptyString);
         assertLine(lines.get(5), "purchase count comparable", "non comparable", "", "non comparable", "non comparable", "", "non comparable");
+        assertLine(lines.get(6), "leases involved", emptyString, emptyString, emptyString, emptyString, emptyString, emptyString);
 
         // and when
         String a1m = expectedAmountString(A1M, "1.23", "1.00");
@@ -179,11 +316,11 @@ public class AggregationViewModelHelperService_Test {
         lines = service.getLines(aggregation);
 
         // then
-        assertLine(lines.get(0), "turnover", a1m, defaultAmount, defaultAmount, defaultAmount, defaultAmount, defaultAmount);
-        assertLine(lines.get(1), "turnover previous year", a1mP, defaultAmount, defaultAmount, defaultAmount, defaultAmount, defaultAmount);
+        assertLine(lines.get(0), "turnover", a1m, emptyAmount, emptyAmount, emptyAmount, emptyAmount, emptyAmount);
+        assertLine(lines.get(1), "turnover previous year", a1mP, emptyAmount, emptyAmount, emptyAmount, emptyAmount, emptyAmount);
         assertLine(lines.get(2), "turnover comparable", "comparable", "non comparable", "non comparable", "non comparable", "non comparable", "non comparable");
-        assertLine(lines.get(3), "purchase count", "123", "", "---", "---", "", "---");
-        assertLine(lines.get(4), "purchase count previous year", "234", "", "---", "---", "", "---");
+        assertLine(lines.get(3), "purchase count", "123", "", emptyString, emptyString, "", emptyString);
+        assertLine(lines.get(4), "purchase count previous year", "234", "", emptyString, emptyString, "", emptyString);
         assertLine(lines.get(5), "purchase count comparable", "comparable", "", "non comparable", "non comparable", "", "non comparable");
 
         // and when
