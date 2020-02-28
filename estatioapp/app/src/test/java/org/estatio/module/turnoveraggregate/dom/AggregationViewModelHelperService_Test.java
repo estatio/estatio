@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class AggregationViewModelHelperService_Test {
 
@@ -18,13 +17,13 @@ public class AggregationViewModelHelperService_Test {
         TurnoverAggregateForPeriod aggregateForPeriod = new TurnoverAggregateForPeriod();
 
         // when
-        String resultString = service.helperCurrentYear(aggregateForPeriod);
+        String resultString = service.helperAggregateForPeriod(aggregateForPeriod, false);
         // then
-        Assertions.assertThat(resultString).isEqualTo("Gross 0.00 | Net 0.00");
+        Assertions.assertThat(resultString).isEqualTo("Gross --- | Net ---");
 
         // and when
         final String string = expectedAmountString(aggregateForPeriod, "1.23", "1.01");
-        resultString = service.helperCurrentYear(aggregateForPeriod);
+        resultString = service.helperAggregateForPeriod(aggregateForPeriod, false);
         // then
         Assertions.assertThat(resultString).isEqualTo(string);
 
@@ -38,13 +37,13 @@ public class AggregationViewModelHelperService_Test {
         TurnoverAggregateForPeriod aggregateForPeriod = new TurnoverAggregateForPeriod();
 
         // when
-        String resultString = service.helperPreviousYear(aggregateForPeriod);
+        String resultString = service.helperAggregateForPeriod(aggregateForPeriod, true);
         // then
-        Assertions.assertThat(resultString).isEqualTo("Gross 0.00 | Net 0.00");
+        Assertions.assertThat(resultString).isEqualTo("Gross --- | Net ---");
 
         // and when
         final String string = expectedAmountStringPY(aggregateForPeriod, "1.24", "1.02");
-        resultString = service.helperPreviousYear(aggregateForPeriod);
+        resultString = service.helperAggregateForPeriod(aggregateForPeriod, true);
         // then
         Assertions.assertThat(resultString).isEqualTo(string);
 
@@ -78,13 +77,13 @@ public class AggregationViewModelHelperService_Test {
         PurchaseCountAggregateForPeriod purchaseCountAggregateForPeriod = new PurchaseCountAggregateForPeriod();
 
         // when
-        String resultString = service.helperCountCurrentYear(purchaseCountAggregateForPeriod);
+        String resultString = service.helperCount(purchaseCountAggregateForPeriod, false);
         // then
-        Assertions.assertThat(resultString).isEqualTo("0");
+        Assertions.assertThat(resultString).isEqualTo("---");
 
         // and when
         purchaseCountAggregateForPeriod.setCount(BigInteger.valueOf(123));
-        resultString = service.helperCountCurrentYear(purchaseCountAggregateForPeriod);
+        resultString = service.helperCount(purchaseCountAggregateForPeriod, false);
         // then
         Assertions.assertThat(resultString).isEqualTo("123");
 
@@ -98,13 +97,13 @@ public class AggregationViewModelHelperService_Test {
         PurchaseCountAggregateForPeriod purchaseCountAggregateForPeriod = new PurchaseCountAggregateForPeriod();
 
         // when
-        String resultString = service.helperCountPreviousYear(purchaseCountAggregateForPeriod);
+        String resultString = service.helperCount(purchaseCountAggregateForPeriod, true);
         // then
-        Assertions.assertThat(resultString).isEqualTo("0");
+        Assertions.assertThat(resultString).isEqualTo("---");
 
         // and when
         purchaseCountAggregateForPeriod.setCountPreviousYear(BigInteger.valueOf(234));
-        resultString = service.helperCountPreviousYear(purchaseCountAggregateForPeriod);
+        resultString = service.helperCount(purchaseCountAggregateForPeriod, true);
         // then
         Assertions.assertThat(resultString).isEqualTo("234");
 
@@ -163,13 +162,13 @@ public class AggregationViewModelHelperService_Test {
 
         // then
         Assertions.assertThat(lines).hasSize(6);
-        String defaultAmount = "Gross 0.00 | Net 0.00";
-        assertLine(lines.get(0), "amount current year", defaultAmount, defaultAmount, defaultAmount, defaultAmount, defaultAmount, defaultAmount);
-        assertLine(lines.get(1), "amount previous year", defaultAmount, defaultAmount, defaultAmount, defaultAmount, defaultAmount, defaultAmount);
-        assertLine(lines.get(2), "amount", "non comparable", "non comparable", "non comparable", "non comparable", "non comparable", "non comparable");
-        assertLine(lines.get(3), "count current year", "0", "", "0", "0", "", "0");
-        assertLine(lines.get(4), "count previous year", "0", "", "0", "0", "", "0");
-        assertLine(lines.get(5), "count", "non comparable", "", "non comparable", "non comparable", "", "non comparable");
+        String defaultAmount = "Gross --- | Net ---";
+        assertLine(lines.get(0), "turnover", defaultAmount, defaultAmount, defaultAmount, defaultAmount, defaultAmount, defaultAmount);
+        assertLine(lines.get(1), "turnover previous year", defaultAmount, defaultAmount, defaultAmount, defaultAmount, defaultAmount, defaultAmount);
+        assertLine(lines.get(2), "turnover comparable", "non comparable", "non comparable", "non comparable", "non comparable", "non comparable", "non comparable");
+        assertLine(lines.get(3), "purchase count", "---", "", "---", "---", "", "---");
+        assertLine(lines.get(4), "purchase count previous year", "---", "", "---", "---", "", "---");
+        assertLine(lines.get(5), "purchase count comparable", "non comparable", "", "non comparable", "non comparable", "", "non comparable");
 
         // and when
         String a1m = expectedAmountString(A1M, "1.23", "1.00");
@@ -180,44 +179,44 @@ public class AggregationViewModelHelperService_Test {
         lines = service.getLines(aggregation);
 
         // then
-        assertLine(lines.get(0), "amount current year", a1m, defaultAmount, defaultAmount, defaultAmount, defaultAmount, defaultAmount);
-        assertLine(lines.get(1), "amount previous year", a1mP, defaultAmount, defaultAmount, defaultAmount, defaultAmount, defaultAmount);
-        assertLine(lines.get(2), "amount", "comparable", "non comparable", "non comparable", "non comparable", "non comparable", "non comparable");
-        assertLine(lines.get(3), "count current year", "123", "", "0", "0", "", "0");
-        assertLine(lines.get(4), "count previous year", "234", "", "0", "0", "", "0");
-        assertLine(lines.get(5), "count", "comparable", "", "non comparable", "non comparable", "", "non comparable");
+        assertLine(lines.get(0), "turnover", a1m, defaultAmount, defaultAmount, defaultAmount, defaultAmount, defaultAmount);
+        assertLine(lines.get(1), "turnover previous year", a1mP, defaultAmount, defaultAmount, defaultAmount, defaultAmount, defaultAmount);
+        assertLine(lines.get(2), "turnover comparable", "comparable", "non comparable", "non comparable", "non comparable", "non comparable", "non comparable");
+        assertLine(lines.get(3), "purchase count", "123", "", "---", "---", "", "---");
+        assertLine(lines.get(4), "purchase count previous year", "234", "", "---", "---", "", "---");
+        assertLine(lines.get(5), "purchase count comparable", "comparable", "", "non comparable", "non comparable", "", "non comparable");
 
         // and when
         A2M.setComparable(true);
         lines = service.getLines(aggregation);
-        assertLine(lines.get(2), "amount", "comparable", "comparable", "non comparable", "non comparable", "non comparable", "non comparable");
+        assertLine(lines.get(2), "turnover comparable", "comparable", "comparable", "non comparable", "non comparable", "non comparable", "non comparable");
 
         // and when
         A3M.setComparable(true);
         P3M.setComparable(true);
         lines = service.getLines(aggregation);
-        assertLine(lines.get(2), "amount", "comparable", "comparable", "comparable", "non comparable", "non comparable", "non comparable");
-        assertLine(lines.get(5), "count", "comparable", "", "comparable", "non comparable", "", "non comparable");
+        assertLine(lines.get(2), "turnover comparable", "comparable", "comparable", "comparable", "non comparable", "non comparable", "non comparable");
+        assertLine(lines.get(5), "purchase count comparable", "comparable", "", "comparable", "non comparable", "", "non comparable");
 
         // and when
         A6M.setComparable(true);
         P6M.setComparable(true);
         lines = service.getLines(aggregation);
-        assertLine(lines.get(2), "amount", "comparable", "comparable", "comparable", "comparable", "non comparable", "non comparable");
-        assertLine(lines.get(5), "count", "comparable", "", "comparable", "comparable", "", "non comparable");
+        assertLine(lines.get(2), "turnover comparable", "comparable", "comparable", "comparable", "comparable", "non comparable", "non comparable");
+        assertLine(lines.get(5), "purchase count comparable", "comparable", "", "comparable", "comparable", "", "non comparable");
 
         // and when
         A9M.setComparable(true);
         lines = service.getLines(aggregation);
-        assertLine(lines.get(2), "amount", "comparable", "comparable", "comparable", "comparable", "comparable", "non comparable");
-        assertLine(lines.get(5), "count", "comparable", "", "comparable", "comparable", "", "non comparable");
+        assertLine(lines.get(2), "turnover comparable", "comparable", "comparable", "comparable", "comparable", "comparable", "non comparable");
+        assertLine(lines.get(5), "purchase count comparable", "comparable", "", "comparable", "comparable", "", "non comparable");
 
         // and when
         A12M.setComparable(true);
         P12M.setComparable(true);
         lines = service.getLines(aggregation);
-        assertLine(lines.get(2), "amount", "comparable", "comparable", "comparable", "comparable", "comparable", "comparable");
-        assertLine(lines.get(5), "count", "comparable", "", "comparable", "comparable", "", "comparable");
+        assertLine(lines.get(2), "turnover comparable", "comparable", "comparable", "comparable", "comparable", "comparable", "comparable");
+        assertLine(lines.get(5), "purchase count comparable", "comparable", "", "comparable", "comparable", "", "comparable");
 
     }
 

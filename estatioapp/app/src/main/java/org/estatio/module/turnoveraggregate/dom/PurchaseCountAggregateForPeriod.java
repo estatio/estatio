@@ -2,6 +2,7 @@ package org.estatio.module.turnoveraggregate.dom;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -16,6 +17,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.turnover.dom.Turnover;
 
 import lombok.Getter;
@@ -69,6 +71,26 @@ public class PurchaseCountAggregateForPeriod {
     @Programmatic
     public void calculate(final TurnoverAggregation aggregation, final List<Turnover> turnovers) {
         turnoverAggregationService.calculatePurchaseCountAggregateForPeriod(this, aggregation.getDate(), turnovers);
+    }
+
+    @Programmatic
+    public List<Turnover> getTurnovers(final TurnoverAggregation aggregation){
+        return turnoverAggregationService.getTurnoversForPurchaseCountAggregateForPeriod(this, aggregation, false);
+    }
+
+    @Programmatic
+    public List<Turnover> getTurnoversPreviousYear(final TurnoverAggregation aggregation){
+        return turnoverAggregationService.getTurnoversForPurchaseCountAggregateForPeriod(this, aggregation, true);
+    }
+
+    @Programmatic
+    public List<Occupancy> distinctOccupanciesThisYear(final TurnoverAggregation aggregation){
+        return getTurnovers(aggregation).stream().map(t->t.getConfig().getOccupancy()).distinct().collect(Collectors.toList());
+    }
+
+    @Programmatic
+    public List<Occupancy> distinctOccupanciesPreviousYear(final TurnoverAggregation aggregation){
+        return getTurnoversPreviousYear(aggregation).stream().map(t->t.getConfig().getOccupancy()).distinct().collect(Collectors.toList());
     }
 
     @Inject TurnoverAggregationService turnoverAggregationService;

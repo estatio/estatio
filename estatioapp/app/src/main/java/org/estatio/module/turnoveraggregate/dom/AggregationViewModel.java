@@ -1,32 +1,21 @@
 package org.estatio.module.turnoveraggregate.dom;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.Nature;
-import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.util.TitleBuffer;
 import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
-import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
-import org.incode.module.base.dom.utils.TitleBuilder;
-
-import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 
 import lombok.Getter;
@@ -82,17 +71,17 @@ public class AggregationViewModel {
         return aggregationViewModelHelperService.getLines(getTurnoverAggregation());
     }
 
-    public String getToDateThisYear(){
+    public String getYearToDate(){
         if (getTurnoverAggregation()==null) return null;
-        return aggregationViewModelHelperService.helperCurrentYear(getTurnoverAggregation().getAggregateToDate());
+        return aggregationViewModelHelperService.helperAggregateToDate(getTurnoverAggregation().getAggregateToDate(), false);
     }
 
-    public String getToDatePreviousYear(){
+    public String getYearToDatePreviousYear(){
         if (getTurnoverAggregation()==null) return null;
-        return aggregationViewModelHelperService.helperPreviousYear(getTurnoverAggregation().getAggregateToDate());
+        return aggregationViewModelHelperService.helperAggregateToDate(getTurnoverAggregation().getAggregateToDate(), true);
     }
 
-    public String getToDateComparable(){
+    public String getYearToDateComparable(){
         if (getTurnoverAggregation()==null) return null;
         return getTurnoverAggregation().getAggregateToDate().isComparable() ? "comparable" : "non comparable";
     }

@@ -6,29 +6,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.currency.dom.Currency;
-import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.lease.dom.occupancy.Occupancy;
-import org.estatio.module.turnover.dom.aggregation.AggregationPattern;
-import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
-import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
-import org.estatio.module.turnover.dom.TurnoverRepository;
-import org.estatio.module.turnover.dom.Type;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -214,7 +205,7 @@ public class TurnoverAggregationService_Test {
 
         // when
         afp.setAggregationPeriod(AggregationPeriod.P_2M);
-        List<Turnover> objects = prepareTestObjects(LocalDateInterval.including(aggregationDate, aggregationDate));
+        List<Turnover> objects = prepareTestTurnovers(LocalDateInterval.including(aggregationDate, aggregationDate));
         service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, objects);
 
         // then
@@ -223,7 +214,7 @@ public class TurnoverAggregationService_Test {
 
         // when turnover values 0
         afp.setAggregationPeriod(AggregationPeriod.P_2M);
-        objects = prepareTestObjects(LocalDateInterval.including(aggregationDate, aggregationDate));
+        objects = prepareTestTurnovers(LocalDateInterval.including(aggregationDate, aggregationDate));
         objects.forEach(t->{
             t.setGrossAmount(BigDecimal.ZERO);
             t.setNetAmount(BigDecimal.ZERO);
@@ -235,14 +226,14 @@ public class TurnoverAggregationService_Test {
                 null, null,null, null, false);
 
         // and when only this year
-        List<Turnover> objectsCurYear = prepareTestObjects(LocalDateInterval.including(aggregationDate.minusMonths(11), aggregationDate));
+        List<Turnover> objectsCurYear = prepareTestTurnovers(LocalDateInterval.including(aggregationDate.minusMonths(11), aggregationDate));
         service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, objectsCurYear);
         // then
         assertAggregateForPeriod(afp, new BigDecimal("23"), new BigDecimal("22.00"),2,false,
                 null, null,null, null, false);
 
         // and when only last year
-        List<Turnover> objectsPreviousYear = prepareTestObjects(LocalDateInterval.including(aggregationDate.minusYears(1).minusMonths(11), aggregationDate.minusYears(1)));
+        List<Turnover> objectsPreviousYear = prepareTestTurnovers(LocalDateInterval.including(aggregationDate.minusYears(1).minusMonths(11), aggregationDate.minusYears(1)));
         service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, objectsPreviousYear);
         // then
         assertAggregateForPeriod(afp,  null,  null,null,null,
@@ -387,6 +378,50 @@ public class TurnoverAggregationService_Test {
         return turnover;
     }
 
+    @Test
+    public void getTurnoversForAggregationPeriod_works() throws Exception {
+
+        // given
+        TurnoverAggregationService service = new TurnoverAggregationService();
+        final LocalDate aggregationDate = new LocalDate(2020, 1, 1);
+        final AggregationPeriod aggregationPeriod = AggregationPeriod.P_2M;
+        List<Turnover> turnovers = new ArrayList<>();
+
+        // when
+        final Turnover turnoverThisYear = new Turnover(null, aggregationDate, null, null, null, null);
+        final Turnover turnoverPlus1Month = new Turnover(null, aggregationDate.plusMonths(1), null, null, null, null);
+        final Turnover turnoverMinus1Month = new Turnover(null, aggregationDate.minusMonths(1), null, null, null, null);
+        turnovers.add(turnoverThisYear);
+        turnovers.add(turnoverPlus1Month);
+        turnovers.add(turnoverMinus1Month);
+
+        // then
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, false)).hasSize(2);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, false)).contains(turnoverThisYear);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, false)).contains(turnoverMinus1Month);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, false)).doesNotContain(turnoverPlus1Month);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, true)).isEmpty();
+
+        // and when
+        final Turnover turnoverPreviousYear = new Turnover(null, aggregationDate.minusYears(1), null, null, null, null);
+        final Turnover turnoverPYPlus1Month = new Turnover(null, aggregationDate.minusYears(1).plusMonths(1), null, null, null, null);
+        final Turnover turnoverPYMinus1Month = new Turnover(null, aggregationDate.minusYears(1).minusMonths(1), null, null, null, null);
+        turnovers.add(turnoverPreviousYear);
+        turnovers.add(turnoverPYPlus1Month);
+        turnovers.add(turnoverPYMinus1Month);
+
+        // then
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, false)).hasSize(2);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, false)).contains(turnoverThisYear);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, false)).contains(turnoverMinus1Month);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, false)).doesNotContain(turnoverPlus1Month);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, true)).hasSize(2);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, true)).contains(turnoverPreviousYear);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, true)).contains(turnoverPYMinus1Month);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, true)).doesNotContain(turnoverPYPlus1Month);
+
+    }
+
 
     @Test
     public void calculatePurchaseCountAggregateForPeriod_works() throws Exception {
@@ -398,20 +433,20 @@ public class TurnoverAggregationService_Test {
 
         // when
         pafp.setAggregationPeriod(AggregationPeriod.P_2M);
-        List<Turnover> objects = prepareTestObjects(LocalDateInterval.including(aggregationDate, aggregationDate));
+        List<Turnover> objects = prepareTestTurnovers(LocalDateInterval.including(aggregationDate, aggregationDate));
         service.calculatePurchaseCountAggregateForPeriod(pafp, aggregationDate, objects);
 
         // then
         assertPurchaseCountAggregateForPeriod(pafp, new BigInteger("1"), null, false);
 
         // and when only this year
-        List<Turnover> objectsCurYear = prepareTestObjects(LocalDateInterval.including(aggregationDate.minusMonths(11), aggregationDate));
+        List<Turnover> objectsCurYear = prepareTestTurnovers(LocalDateInterval.including(aggregationDate.minusMonths(11), aggregationDate));
         service.calculatePurchaseCountAggregateForPeriod(pafp, aggregationDate, objectsCurYear);
         // then
         assertPurchaseCountAggregateForPeriod(pafp, new BigInteger("23"), null, false);
 
         // and when only last year
-        List<Turnover> objectsPreviousYear = prepareTestObjects(LocalDateInterval.including(aggregationDate.minusYears(1).minusMonths(11), aggregationDate.minusYears(1)));
+        List<Turnover> objectsPreviousYear = prepareTestTurnovers(LocalDateInterval.including(aggregationDate.minusYears(1).minusMonths(11), aggregationDate.minusYears(1)));
         service.calculatePurchaseCountAggregateForPeriod(pafp, aggregationDate, objectsPreviousYear);
         // then
         assertPurchaseCountAggregateForPeriod(pafp, null, new BigInteger("23"), false);
@@ -512,7 +547,7 @@ public class TurnoverAggregationService_Test {
         final TurnoverAggregateToDate tad = new TurnoverAggregateToDate();
 
         // when
-        List<Turnover> objects = prepareTestObjects(LocalDateInterval.including(aggregationDate, aggregationDate));
+        List<Turnover> objects = prepareTestTurnovers(LocalDateInterval.including(aggregationDate, aggregationDate));
         service.calculateTurnoverAggregateToDate(tad, aggregationDate, objects);
 
         // then
@@ -521,14 +556,14 @@ public class TurnoverAggregationService_Test {
 
         // and when 2 M only this year
         final LocalDate aggregationDate2M = new LocalDate(2020, 2, 1);
-        List<Turnover> objectsCurYear = prepareTestObjects(LocalDateInterval.including(aggregationDate2M.minusMonths(11), aggregationDate2M));
+        List<Turnover> objectsCurYear = prepareTestTurnovers(LocalDateInterval.including(aggregationDate2M.minusMonths(11), aggregationDate2M));
         service.calculateTurnoverAggregateToDate(tad, aggregationDate2M, objectsCurYear);
         // then
         assertAggregateToDate(tad, new BigDecimal("23"), new BigDecimal("22.00"),2,false,
                 null, null,null, null, false);
 
         // and when 2 M only last year
-        List<Turnover> objectsLastYear = prepareTestObjects(LocalDateInterval.including(aggregationDate2M.minusYears(1).minusMonths(11), aggregationDate2M.minusYears(1)));
+        List<Turnover> objectsLastYear = prepareTestTurnovers(LocalDateInterval.including(aggregationDate2M.minusYears(1).minusMonths(11), aggregationDate2M.minusYears(1)));
         service.calculateTurnoverAggregateToDate(tad, aggregationDate2M, objectsLastYear);
         // then
         assertAggregateToDate(tad,  null,  null, null,null,
@@ -546,8 +581,8 @@ public class TurnoverAggregationService_Test {
         // and when for 12 M
         final LocalDate aggregationDate12M = new LocalDate(2020, 12, 1);
         List<Turnover> currentAndPrevYearAll = new ArrayList<>();
-        List<Turnover> objectsLastYearAll = prepareTestObjects(LocalDateInterval.including(aggregationDate12M.minusYears(1).minusMonths(11), aggregationDate12M.minusYears(1)));
-        List<Turnover> objectsCurrentYearAll = prepareTestObjects(LocalDateInterval.including(aggregationDate12M.minusMonths(11), aggregationDate12M));
+        List<Turnover> objectsLastYearAll = prepareTestTurnovers(LocalDateInterval.including(aggregationDate12M.minusYears(1).minusMonths(11), aggregationDate12M.minusYears(1)));
+        List<Turnover> objectsCurrentYearAll = prepareTestTurnovers(LocalDateInterval.including(aggregationDate12M.minusMonths(11), aggregationDate12M));
         currentAndPrevYearAll.addAll(objectsLastYearAll);
         currentAndPrevYearAll.addAll(objectsCurrentYearAll);
         service.calculateTurnoverAggregateToDate(tad, aggregationDate12M, currentAndPrevYearAll);
@@ -671,7 +706,7 @@ public class TurnoverAggregationService_Test {
         assertThat(afp.isComparable()).isEqualTo(c);
     }
 
-    private List<Turnover> prepareTestObjects(final LocalDateInterval interval){
+    private List<Turnover> prepareTestTurnovers(final LocalDateInterval interval){
         List<Turnover> result = new ArrayList<>();
         LocalDate date = interval.startDate();
         int cnt = 1;

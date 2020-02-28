@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import com.google.api.client.util.Lists;
@@ -17,28 +16,20 @@ import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.services.background.BackgroundService2;
 import org.apache.isis.applib.services.clock.ClockService;
-import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.turnover.dom.Status;
-import org.estatio.module.turnover.dom.aggregation.AggregationPattern;
 import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
-import org.estatio.module.turnover.dom.TurnoverRepository;
 import org.estatio.module.turnover.dom.Type;
-import org.estatio.module.turnoveraggregate.contributions.Lease_aggregateTurnovers;
 
 @DomainService(
         nature = NatureOfService.DOMAIN
@@ -288,27 +279,13 @@ public class TurnoverAggregationService {
             final TurnoverAggregateForPeriod turnoverAggregateForPeriod,
             final LocalDate aggregationDate,
             final List<Turnover> turnovers) {
-        final LocalDate periodStartDate = turnoverAggregateForPeriod.getAggregationPeriod()
-                .periodStartDateFor(aggregationDate);
-        final LocalDate periodEndDate = aggregationDate;
-        if (periodStartDate.isAfter(periodEndDate)) return;
 
-        final LocalDateInterval intervalCY = LocalDateInterval.including(periodStartDate, periodEndDate);
-        final List<Turnover> valuesCurrentYear = getTurnoversForInterval(turnovers,
-                intervalCY);
+        final List<Turnover> toCY = getTurnoversForAggregateForPeriod(turnoverAggregateForPeriod, aggregationDate, turnovers, false);
+        final List<Turnover> toPY = getTurnoversForAggregateForPeriod(turnoverAggregateForPeriod, aggregationDate, turnovers, true);
 
-        final LocalDateInterval intervalPY = LocalDateInterval.including(periodStartDate.minusYears(1), periodEndDate.minusYears(1));
-        final List<Turnover> valuesPreviousYear = getTurnoversForInterval(turnovers,
-                intervalPY);
-
-        if (valuesCurrentYear.isEmpty() && valuesPreviousYear.isEmpty()) return;
+        if (toCY.isEmpty() && toPY.isEmpty()) return;
 
         resetTurnoverAggregateForPeriod(turnoverAggregateForPeriod);
-
-        final List<Turnover> toCY = turnovers.stream().filter(t -> intervalCY.contains(t.getDate()))
-                .collect(Collectors.toList());
-        final List<Turnover> toPY = turnovers.stream().filter(t -> intervalPY.contains(t.getDate()))
-                .collect(Collectors.toList());
 
         List<LocalDate> datesCounted = new ArrayList<>();
         toCY.forEach(t->{
@@ -363,20 +340,29 @@ public class TurnoverAggregationService {
 
     }
 
+    List<Turnover> getTurnoversForAggregateForPeriod(
+            final TurnoverAggregateForPeriod turnoverAggregateForPeriod,
+            final TurnoverAggregation aggregation,
+            final boolean previousYear) {
+        return getTurnoversForAggregateForPeriod(turnoverAggregateForPeriod, aggregation.getDate(), aggregation.getTurnovers().stream().collect(
+                Collectors.toList()), previousYear);
+    }
+
+    List<Turnover> getTurnoversForAggregateForPeriod(
+            final TurnoverAggregateForPeriod turnoverAggregateForPeriod,
+            final LocalDate aggregationDate,
+            final List<Turnover> turnovers,
+            final boolean previousYear){
+        return getTurnoversForAggregationPeriod(turnoverAggregateForPeriod.getAggregationPeriod(), aggregationDate, turnovers, previousYear);
+    }
+
     public void calculateTurnoverAggregateToDate(
             final TurnoverAggregateToDate turnoverAggregateToDate,
             final LocalDate aggregationDate,
             final List<Turnover> turnovers){
 
-        final LocalDate startOfTheYear = new LocalDate(aggregationDate.getYear(), 1, 1);
-        final LocalDateInterval intervalCY = LocalDateInterval.including(startOfTheYear, aggregationDate);
-        final List<Turnover> toCY = getTurnoversForInterval(turnovers,
-                intervalCY);
-
-        final LocalDateInterval intervalPY = LocalDateInterval.including(startOfTheYear.minusYears(1), aggregationDate.minusYears(1));
-        final List<Turnover> toPY = getTurnoversForInterval(turnovers,
-                intervalPY);
-
+        final List<Turnover> toCY = getTurnoversForAggregateToDate(aggregationDate, turnovers, false);
+        final List<Turnover> toPY = getTurnoversForAggregateToDate(aggregationDate, turnovers, true);
         if (toCY.isEmpty() && toPY.isEmpty()) return;
 
         resetTurnoverAggregateToDate(turnoverAggregateToDate);
@@ -433,30 +419,37 @@ public class TurnoverAggregationService {
         ));
     }
 
-    private List<Turnover> getTurnoversForInterval(
-            final List<Turnover> turnovers,
-            final LocalDateInterval interval) {
-        return turnovers.stream()
-                .filter(t -> interval.contains(t.getDate()))
-                .collect(Collectors.toList());
+    List<Turnover> getTurnoversForAggregateToDate(
+            final TurnoverAggregation aggregation,
+            final boolean previousYear) {
+        return getTurnoversForAggregateToDate(aggregation.getDate(), aggregation.getTurnovers().stream().collect(
+                Collectors.toList()), previousYear);
     }
+
+    List<Turnover> getTurnoversForAggregateToDate(
+            final LocalDate aggregationDate,
+            final List<Turnover> turnovers,
+            final boolean previousYear){
+        final LocalDate startOfTheYear = new LocalDate(aggregationDate.getYear(), 1, 1);
+        final LocalDateInterval interval = LocalDateInterval.including(previousYear ? startOfTheYear.minusYears(1) : startOfTheYear, previousYear ? aggregationDate.minusYears(1) : aggregationDate);
+        return turnovers.stream().filter(t->interval.contains(t.getDate())).collect(Collectors.toList());
+    }
+
+//    private List<Turnover> getTurnoversForInterval(
+//            final List<Turnover> turnovers,
+//            final LocalDateInterval interval) {
+//        return turnovers.stream()
+//                .filter(t -> interval.contains(t.getDate()))
+//                .collect(Collectors.toList());
+//    }
 
     public void calculatePurchaseCountAggregateForPeriod(
             final PurchaseCountAggregateForPeriod purchaseCountAggregateForPeriod,
             final LocalDate aggregationDate,
             final List<Turnover> turnovers) {
-        final LocalDate periodStartDate = purchaseCountAggregateForPeriod.getAggregationPeriod()
-                .periodStartDateFor(aggregationDate);
-        final LocalDate periodEndDate = aggregationDate;
-        if (periodStartDate.isAfter(periodEndDate)) return;
 
-        final LocalDateInterval intervalCY = LocalDateInterval.including(periodStartDate, periodEndDate);
-        final List<Turnover> toCY = getTurnoversForInterval(turnovers,
-                intervalCY);
-
-        final LocalDateInterval intervalPY = LocalDateInterval.including(periodStartDate.minusYears(1), periodEndDate.minusYears(1));
-        final List<Turnover> toPY = getTurnoversForInterval(turnovers,
-                intervalPY);
+        final List<Turnover> toCY = getTurnoversForPurchaseCountAggregateForPeriod(purchaseCountAggregateForPeriod, aggregationDate, turnovers, false);
+        final List<Turnover> toPY = getTurnoversForPurchaseCountAggregateForPeriod(purchaseCountAggregateForPeriod, aggregationDate, turnovers, true);
 
         if (toCY.isEmpty() && toPY.isEmpty()) return;
 
@@ -493,6 +486,34 @@ public class TurnoverAggregationService {
                 , false
         ));
 
+    }
+
+    List<Turnover> getTurnoversForPurchaseCountAggregateForPeriod(
+            final PurchaseCountAggregateForPeriod purchaseCountAggregateForPeriod,
+            final TurnoverAggregation aggregation,
+            final boolean previousYear) {
+        return getTurnoversForPurchaseCountAggregateForPeriod(purchaseCountAggregateForPeriod, aggregation.getDate(), aggregation.getTurnovers().stream().collect(
+                Collectors.toList()), previousYear);
+    }
+
+    List<Turnover> getTurnoversForPurchaseCountAggregateForPeriod(
+            final PurchaseCountAggregateForPeriod purchaseCountAggregateForPeriod,
+            final LocalDate aggregationDate,
+            final List<Turnover> turnovers,
+            final boolean previousYear){
+        return getTurnoversForAggregationPeriod(purchaseCountAggregateForPeriod.getAggregationPeriod(), aggregationDate, turnovers, previousYear);
+    }
+
+    List<Turnover> getTurnoversForAggregationPeriod(
+            final AggregationPeriod aggregationPeriod,
+            final LocalDate aggregationDate,
+            final List<Turnover> turnovers,
+            final boolean previousYear){
+        final LocalDate periodStartDate = aggregationPeriod.periodStartDateFor(aggregationDate);
+        final LocalDate periodEndDate = aggregationDate;
+        if (periodStartDate.isAfter(periodEndDate)) Arrays.asList();
+        final LocalDateInterval interval = LocalDateInterval.including(previousYear ? periodStartDate.minusYears(1) : periodStartDate, previousYear ? periodEndDate.minusYears(1) : periodEndDate);
+        return turnovers.stream().filter(t->interval.contains(t.getDate())).collect(Collectors.toList());
     }
 
     void maintainTurnoverAggregationsForConfig(final AggregationAnalysisReportForConfig report){
@@ -610,5 +631,4 @@ public class TurnoverAggregationService {
     @Inject ClockService clockService;
 
     @Inject TurnoverAnalysisService turnoverAnalysisService;
-
 }
