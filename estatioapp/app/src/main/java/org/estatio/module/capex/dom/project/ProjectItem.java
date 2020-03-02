@@ -134,10 +134,12 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> {
 
 	@Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
 	public void delete(){
+		if (getProject().isApproved()) return;
 		repositoryService.remove(this);
 	}
 
 	public boolean hideDelete() {
+		if (getProject().isApproved()) return true;
 		// TODO: use events when decoupling in the future
 		if (factoryService.mixin(ProjectItem_OrderItems.class, this).orderItems().isEmpty() &&
 			factoryService.mixin(ProjectItem_IncomingInvoiceItems.class, this).invoiceItems().isEmpty()) return false;

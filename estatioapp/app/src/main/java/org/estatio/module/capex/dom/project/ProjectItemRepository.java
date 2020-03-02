@@ -82,6 +82,9 @@ public class ProjectItemRepository extends UdoDomainRepositoryAndFactory<Project
     ) {
         ProjectItem projectItem = findByProjectAndCharge(project, charge);
 
+        // extra safe guard
+        if (project.isApproved()) return projectItem;
+
         if (projectItem == null) {
             return create(project, charge, description, property, tax);
         }

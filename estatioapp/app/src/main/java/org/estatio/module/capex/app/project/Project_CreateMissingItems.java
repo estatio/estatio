@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.user.UserService;
+import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.base.dom.EstatioRole;
@@ -33,7 +34,7 @@ public class Project_CreateMissingItems {
     @MemberOrder(name="items", sequence = "2")
     public Project $$(final Property property, final List<Charge> charges) {
         charges.forEach(x->{
-            project.addItem(x, x.getDescription(), property, null);
+            wrapperFactory.wrap(project).addItem(x, x.getDescription(), property, null);
         });
         return project;
     }
@@ -47,6 +48,7 @@ public class Project_CreateMissingItems {
     }
 
     public String disable$$(){
+        if (project.isApproved()) return "This project is approved and therefore cannot be changed";
         if (!EstatioRole.SUPERUSER.isApplicableFor(userService.getUser())) return "You need super user rights for this action";
         if (project.isParentProject()) return "This is a parent project";
         if (chargesLinkedNotOnItems().isEmpty()) return "No unmapped charges found on linked order or invoice items";
@@ -81,5 +83,7 @@ public class Project_CreateMissingItems {
 
     @Inject
     UserService userService;
+
+    @Inject WrapperFactory wrapperFactory;
 
 }

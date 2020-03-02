@@ -325,8 +325,8 @@ public class Project extends UdoDomainObject<Project> implements
         return this;
     }
 
-    // TODO: (ECP-438) until we find out more about the process
     public String disableAddItem() {
+        if (isApproved()) return "This project is approved and therefore cannot be changed";
         return isParentProject() ? "This project is a parent" : null;
     }
 
@@ -512,6 +512,17 @@ public class Project extends UdoDomainObject<Project> implements
 
     public LocalDate default0CreateBudgetForecast(){
         return ForecastFrequency.QUARTERLY.getStartDateFor(clockService.now());
+    }
+
+    public String disableCreateBudgetForecast(){
+        if (!isCommitted()) return "Project is not committed";
+        return null;
+    }
+
+    public String validateCreateBudgetForecast(final LocalDate date){
+        final BudgetForecast forecastIfAny = budgetForecastRepositoryAndFactory.findUnique(this, date);
+        if (forecastIfAny!=null && forecastIfAny.getSubmittedOn()!=null) return String.format("Forecast for %s is submitted already", date.toString());
+        return null;
     }
 
 

@@ -119,6 +119,11 @@ public class ProjectImportManager {
         return new ProjectImportManager(getCountry(), getProject());
     }
 
+    public String disableUpload(){
+        if (getProject().isApproved()) return "This project is approved and therefore cannot be changed";
+        return null;
+    }
+
     private String deriveAtPathFromCountry(){
         return "/" + country.getReference();
     }

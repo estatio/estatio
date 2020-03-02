@@ -1,6 +1,7 @@
 package org.estatio.module.capex.imports;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -162,6 +163,4 @@ public class ProjectImport implements Importable, ExcelFixtureRowHandler, Fixtur
     @Inject PropertyRepository propertyRepository;
 
     @Inject TaxRepository taxRepository;
-
-    @Inject WrapperFactory wrapperFactory;
 }

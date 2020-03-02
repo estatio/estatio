@@ -48,6 +48,7 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
+import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
@@ -125,16 +126,22 @@ public class BudgetForecast extends UdoDomainObject2<BudgetForecast> {
     @Getter @Setter
     private String submittedBy;
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public BudgetForecast submit(){
+        setSubmittedOn(clockService.now());
+        setSubmittedBy(meService.me().getUsername());
+        return this;
+    }
+
     @Action(semantics = SemanticsOf.SAFE)
     public BudgetForecast getNext(){
-        //TODO: implement
-        return null;
+        return  budgetForecastRepositoryAndFactory.findUnique(getProject(), getFrequency().getStartDateFor(getDate().minusDays(1)));
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     public BudgetForecast getPrevious(){
-        //TODO: implement
-        return null;
+        final LocalDate endDate = getFrequency().getIntervalFor(getDate()).endDate();
+        return budgetForecastRepositoryAndFactory.findUnique(getProject(), getFrequency().getStartDateFor(endDate.plusDays(1)));
     }
 
     @Programmatic
@@ -154,4 +161,10 @@ public class BudgetForecast extends UdoDomainObject2<BudgetForecast> {
     public ApplicationTenancy getApplicationTenancy() {
         return getProject().getApplicationTenancy();
     }
+
+    @Inject
+    private MeService meService;
+
+    @Inject
+    private BudgetForecastRepositoryAndFactory budgetForecastRepositoryAndFactory;
 }

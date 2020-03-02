@@ -18,6 +18,7 @@
                                 <ns2:property id="frequency"/>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Status" id="status">
+                                <ns2:action id="submit" position="PANEL"/>
                                 <ns2:property id="createdOn"/>
                                 <ns2:property id="submittedOn"/>
                                 <ns2:property id="submittedBy"/>
