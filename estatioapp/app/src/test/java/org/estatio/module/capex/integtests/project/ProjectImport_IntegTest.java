@@ -111,8 +111,6 @@ public class ProjectImport_IntegTest extends CapexModuleIntegTestAbstract {
         assertThat(project1item1.getDescription()).isEqualTo("other stuff");
         //TODO: restore using new budgeting mechanism
 //        assertThat(project1item1.getBudgetedAmount()).isEqualTo(new BigDecimal("100000.5"));
-        assertThat(project1item1.getStartDate()).isEqualTo(new LocalDate(2018,1,1));
-        assertThat(project1item1.getEndDate()).isNull();
         assertThat(project1item1.getProperty()).isEqualTo(oxf);
         assertThat(project1item1.getTax()).isNull();
 
@@ -121,8 +119,6 @@ public class ProjectImport_IntegTest extends CapexModuleIntegTestAbstract {
         assertThat(project1item2.getDescription()).isEqualTo("some works");
         //TODO: restore using new budgeting mechanism
 //        assertThat(project1item2.getBudgetedAmount()).isEqualTo(new BigDecimal("20000.0"));
-        assertThat(project1item2.getStartDate()).isEqualTo(new LocalDate(2018,1,1));
-        assertThat(project1item2.getEndDate()).isEqualTo(new LocalDate(2018,12,31));
         assertThat(project1item2.getProperty()).isEqualTo(oxf);
         assertThat(project1item2.getTax()).isNull();
 
@@ -139,8 +135,6 @@ public class ProjectImport_IntegTest extends CapexModuleIntegTestAbstract {
         assertThat(project2item1.getDescription()).isEqualTo("legal stuff");
         //TODO: restore using new budgeting mechanism
 //        assertThat(project2item1.getBudgetedAmount()).isEqualTo(new BigDecimal("50123.12"));
-        assertThat(project2item1.getStartDate()).isNull();
-        assertThat(project2item1.getEndDate()).isNull();
         assertThat(project2item1.getProperty()).isEqualTo(oxf);
         assertThat(project2item1.getTax()).isNull();
 

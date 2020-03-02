@@ -92,7 +92,7 @@ import lombok.Setter;
 		objectType = "org.estatio.capex.dom.project.ProjectItem"
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
-public class ProjectItem extends UdoDomainObject<ProjectItem> implements FinancialItem {
+public class ProjectItem extends UdoDomainObject<ProjectItem> {
 
 	public String title(){
 		return TitleBuilder.start().withParent(getProject()).withName(getCharge()).toString();
@@ -122,14 +122,6 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> implements Financi
 		if (projectBudget==null) return null;
 		return projectBudget.getAmountFor(projectBudget, this);
 	}
-
-	@Getter @Setter
-	@Column(allowsNull = "true")
-	private LocalDate startDate;
-
-	@Getter @Setter
-	@Column(allowsNull = "true")
-	private LocalDate endDate;
 
 	@Column(allowsNull = "true", name = "propertyId")
 	@Getter @Setter
@@ -167,24 +159,6 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> implements Financi
 	@Programmatic
 	public ApplicationTenancy getApplicationTenancy() {
 		return getProject().getApplicationTenancy();
-	}
-
-	@Override
-	@Programmatic
-	public BigDecimal value() {
-		return getBudgetedAmount();
-	}
-
-	@Override
-	@Programmatic
-	public FinancialItemType getType() {
-		return FinancialItemType.BUDGETED;
-	}
-
-	@Override
-	@Programmatic
-	public FixedAsset<?> getFixedAsset() {
-		return getProperty();
 	}
 
 	@Inject

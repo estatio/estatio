@@ -317,14 +317,11 @@ public class Project extends UdoDomainObject<Project> implements
     public Project addItem(
             final Charge charge,
             final String description,
-            @Parameter(optionality = Optionality.OPTIONAL) final BigDecimal budgetedAmount,
-            @Parameter(optionality = Optionality.OPTIONAL) final LocalDate startDate,
-            @Parameter(optionality = Optionality.OPTIONAL) final LocalDate endDate,
             @Parameter(optionality = Optionality.OPTIONAL) final org.estatio.module.asset.dom.Property property,
             @Parameter(optionality = Optionality.OPTIONAL) final Tax tax
     ) {
         projectItemRepository.findOrCreate(
-                this, charge, description, budgetedAmount, startDate, endDate, property, tax);
+                this, charge, description, property, tax);
         return this;
     }
 

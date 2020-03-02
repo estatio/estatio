@@ -58,7 +58,7 @@ public enum Project_enum implements PersonaWithBuilderScript<Project, ProjectBui
 
     OxfProject  ("OXF-02", "New extension", ld(2016, 1, 1), ld(2019, 7, 1), Gb,
             new ItemSpec[]{
-                new ItemSpec(IncomingCharge_enum.FrWorks, "works", bd("40000.00"), null, null, OxfGb, null)
+                new ItemSpec(IncomingCharge_enum.FrWorks, "works", bd("40000.00"), OxfGb, null)
             }
     ),
     GraProject  ("PR3", "Place commercial signs", ld(1999, 1, 1), ld(1999, 7, 1), Nl,
@@ -72,29 +72,29 @@ public enum Project_enum implements PersonaWithBuilderScript<Project, ProjectBui
     ),
     VivProjectFr  ("VIV-01", "New extension", ld(2016, 1, 1), ld(2019, 7, 1), Fr,
             new ItemSpec[]{
-                    new ItemSpec(IncomingCharge_enum.FrWorks, "works", bd("40000.00"), null, null, VivFr, null)
+                    new ItemSpec(IncomingCharge_enum.FrWorks, "works", bd("40000.00"), VivFr, null)
             }
     ),
     RonProjectIt    ("ITPR001", "New extension", ld(2018, 1, 1), ld(2021, 7, 1), It,
             new ItemSpec[]{
-                    new ItemSpec(IncomingCharge_enum.ItConstruction, "construction (costruzione)", bd("90000.00"), null, null, RonIt, null
+                    new ItemSpec(IncomingCharge_enum.ItConstruction, "construction (costruzione)", bd("90000.00"), RonIt, null
                     ),
-                    new ItemSpec(IncomingCharge_enum.ItAcquisition, "purchase (acquisto)", bd("3000000.00"), null, null, RonIt, null
+                    new ItemSpec(IncomingCharge_enum.ItAcquisition, "purchase (acquisto)", bd("3000000.00"), RonIt, null
                     ),
 
             }
     ),
     RonProject2It    ("ITPR002", "Another new extension", ld(2018, 1, 1), ld(2021, 7, 1), It,
             new ItemSpec[]{
-                    new ItemSpec(IncomingCharge_enum.ItConstruction, "construction (costruzione)", bd("120000.00"), null, null, RonIt, null
+                    new ItemSpec(IncomingCharge_enum.ItConstruction, "construction (costruzione)", bd("120000.00"), RonIt, null
                     ),
-                    new ItemSpec(IncomingCharge_enum.ItInternalConsultantCosts, "consultancy", bd("10000.00"), null, null, RonIt, null
+                    new ItemSpec(IncomingCharge_enum.ItInternalConsultantCosts, "consultancy", bd("10000.00"), RonIt, null
                     )
             }
     ),
     RonProject3It    ("ITPR003", "Resurface car park", ld(2018, 1, 1), ld(2021, 7, 1), It,
             new ItemSpec[]{
-                    new ItemSpec(IncomingCharge_enum.ItConstruction, "construction (costruzione)", bd("120000.00"), null, null, RonIt, null
+                    new ItemSpec(IncomingCharge_enum.ItConstruction, "construction (costruzione)", bd("120000.00"), RonIt, null
                     )
             }
     ),
@@ -106,8 +106,6 @@ public enum Project_enum implements PersonaWithBuilderScript<Project, ProjectBui
         private final IncomingCharge_enum charge_d;
         private final String description;
         private final BigDecimal budgetedAmount;
-        private final LocalDate startDate;
-        private final LocalDate endDate;
         private final Property_enum property_d;
         private final Tax_enum tax_d;
     }
@@ -139,8 +137,6 @@ public enum Project_enum implements PersonaWithBuilderScript<Project, ProjectBui
                                 f.findUsing(x.charge_d),
                                 x.description,
                                 x.budgetedAmount,
-                                x.startDate,
-                                x.endDate,
                                 f.objectFor(x.property_d, ec),
                                 f.objectFor(x.tax_d, ec)))
                         .collect(Collectors.toList())))

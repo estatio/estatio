@@ -33,7 +33,7 @@ public class Project_CreateMissingItems {
     @MemberOrder(name="items", sequence = "2")
     public Project $$(final Property property, final List<Charge> charges) {
         charges.forEach(x->{
-            project.addItem(x, x.getDescription(), null, null, null, property, null);
+            project.addItem(x, x.getDescription(), property, null);
         });
         return project;
     }

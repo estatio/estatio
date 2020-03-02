@@ -199,7 +199,7 @@ public class OrderProjectImportAdapter implements FixtureAwareRowHandler<OrderPr
             LOG.error(String.format("Charge not found for order number %s and charge reference %s", getNumero().toString(), deriveChargeReference()));
             return;
         }
-        projectItemRepository.findOrCreate(project, charge, charge.getName(), null, null, null, null, null);
+        projectItemRepository.findOrCreate(project, charge, charge.getName(),null, null);
     }
 
     private void correctCodiceFornitoreIfNecessary() {

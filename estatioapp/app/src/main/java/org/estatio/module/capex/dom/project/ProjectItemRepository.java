@@ -45,16 +45,12 @@ public class ProjectItemRepository extends UdoDomainRepositoryAndFactory<Project
             final Project project,
             final Charge charge,
             final String description,
-            final LocalDate startDate,
-            final LocalDate endDate,
             final Property property,
             final Tax tax) {
         final ProjectItem projectItem = repositoryService.instantiate(ProjectItem.class);
         projectItem.setProject(project);
         projectItem.setCharge(charge);
         projectItem.setDescription(description);
-        projectItem.setStartDate(startDate);
-        projectItem.setEndDate(endDate);
         projectItem.setProperty(property);
         projectItem.setTax(tax);
         repositoryService.persistAndFlush(projectItem);
@@ -66,16 +62,12 @@ public class ProjectItemRepository extends UdoDomainRepositoryAndFactory<Project
             final Project project,
             final Charge charge,
             final String description,
-            final BigDecimal budgetedAmount,
-            final LocalDate startDate,
-            final LocalDate endDate,
             final Property property,
             final Tax tax
     ) {
         ProjectItem projectItem = findByProjectAndCharge(project, charge);
         if (projectItem == null) {
-            projectItem = create(project, charge, description, startDate, endDate,
-                    property, tax);
+            projectItem = create(project, charge, description, property, tax);
         }
         return projectItem;
     }
@@ -85,21 +77,16 @@ public class ProjectItemRepository extends UdoDomainRepositoryAndFactory<Project
             final Project project,
             final Charge charge,
             final String description,
-            final LocalDate startDate,
-            final LocalDate endDate,
             final Property property,
             final Tax tax
     ) {
         ProjectItem projectItem = findByProjectAndCharge(project, charge);
 
         if (projectItem == null) {
-            return create(project, charge, description, startDate, endDate,
-                    property, tax);
+            return create(project, charge, description, property, tax);
         }
 
         projectItem.setDescription(description);
-        projectItem.setStartDate(startDate);
-        projectItem.setEndDate(endDate);
         projectItem.setProperty(property);
         projectItem.setTax(tax);
 

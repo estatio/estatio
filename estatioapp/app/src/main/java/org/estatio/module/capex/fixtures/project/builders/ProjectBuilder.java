@@ -74,18 +74,8 @@ public final class ProjectBuilder extends BuilderScriptAbstract<Project, Project
         private final Charge charge;
         private final String description;
         private final BigDecimal budgetedAmount;
-        private final LocalDate startDate;
-        private final LocalDate endDate;
         private final Property property;
         private final Tax tax;
-    }
-
-    @AllArgsConstructor
-    @Data
-    public static class TermSpec {
-        private final BigDecimal budgetedAmount;
-        private final LocalDate startDate;
-        private final LocalDate endDate;
     }
 
     @Override
@@ -98,7 +88,7 @@ public final class ProjectBuilder extends BuilderScriptAbstract<Project, Project
         ec.addResult(this, reference, project);
 
         for (ItemSpec i : itemSpecs) {
-            project.addItem(i.charge, i.description, i.budgetedAmount, i.startDate, i.endDate, i.property, i.tax );
+            project.addItem(i.charge, i.description, i.property, i.tax );
         }
 
         object = project;

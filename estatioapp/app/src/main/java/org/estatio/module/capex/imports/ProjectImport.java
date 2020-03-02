@@ -111,7 +111,7 @@ public class ProjectImport implements Importable, ExcelFixtureRowHandler, Fixtur
             Property property = propertyRepository.findPropertyByReference(getItemPropertyReference());
             Tax tax = taxRepository.findByReference(getItemTaxReference());
 
-            projectItemRepository.upsert(project, charge, getItemDescription(), getItemStartDate(), getItemEndDate(), property, tax);
+            projectItemRepository.upsert(project, charge, getItemDescription(), property, tax);
         }
         return Lists.newArrayList(project);
     }

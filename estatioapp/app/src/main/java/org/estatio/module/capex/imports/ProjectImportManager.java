@@ -78,8 +78,6 @@ public class ProjectImportManager {
             imp.setParentReference(p.getParent()!=null ? p.getParent().getReference() : null);
             imp.setItemWorkTypeReference(pi.getCharge()!=null ? pi.getCharge().getReference() : null);
             imp.setItemDescription(pi.getDescription());
-            imp.setItemStartDate(pi.getStartDate());
-            imp.setItemEndDate(pi.getEndDate());
             imp.setItemPropertyReference(pi.getProperty()!=null ? pi.getProperty().getReference() : null);
             imp.setItemTaxReference(pi.getTax()!=null ? pi.getTax().getReference() : null);
             result.add(imp);

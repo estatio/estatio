@@ -115,7 +115,7 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
     public List<Project> findByFixedAsset(final FixedAsset fixedAsset){
         List<Project> result = new ArrayList<>();
         for (Project project : allUnarchivedProjects()){
-            List<ProjectItem> itemsFound = project.getItems().stream().filter(x->x.getFixedAsset()==fixedAsset).collect(Collectors.toList());
+            List<ProjectItem> itemsFound = project.getItems().stream().filter(x->x.getProperty()==fixedAsset).collect(Collectors.toList());
             if (itemsFound.size()>0){
                 result.add(project);
                 continue;
@@ -127,7 +127,7 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
     public List<Project> findWithoutFixedAsset(){
         List<Project> result = new ArrayList<>();
         for (Project project : allUnarchivedProjects()){
-            List<ProjectItem> itemsFound = project.getItems().stream().filter(x->x.getFixedAsset()==null).collect(Collectors.toList());
+            List<ProjectItem> itemsFound = project.getItems().stream().filter(x->x.getProperty()==null).collect(Collectors.toList());
             if (itemsFound.size()>0){
                 result.add(project);
                 continue;
