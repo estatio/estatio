@@ -84,34 +84,24 @@ public class ForecastLineViewmodel {
             return;
         }
 
+        budgetForecastRepositoryAndFactory.addTermsUntil(forecast, new LocalDate(getYear(), 12, 31)); // we allways try to create for the year and all items
+
         final BudgetForecastTerm termForQ1 = getTermForQ(forecastItem, ForecastFrequency.Quarter.Q1);
-        if (termForQ1==null){
-            // TODO: What do we do?? Do we allow lines to be added in the sheet that were not in the manager?
-        } else {
+        if (termForQ1!=null && getAmountQ1()!=null) {
             termForQ1.setAmount(getAmountQ1());
         }
-
         final BudgetForecastTerm termForQ2 = getTermForQ(forecastItem, ForecastFrequency.Quarter.Q2);
-        if (termForQ2==null){
-            // TODO: What do we do?? Do we allow lines to be added in the sheet that were not in the manager?
-        } else {
+        if (termForQ2!=null && getAmountQ2()!=null) {
             termForQ2.setAmount(getAmountQ2());
         }
-
         final BudgetForecastTerm termForQ3 = getTermForQ(forecastItem, ForecastFrequency.Quarter.Q3);
-        if (termForQ3==null){
-            // TODO: What do we do?? Do we allow lines to be added in the sheet that were not in the manager?
-        } else {
+        if (termForQ3!=null && getAmountQ3()!=null) {
             termForQ3.setAmount(getAmountQ3());
         }
-
         final BudgetForecastTerm termForQ4 = getTermForQ(forecastItem, ForecastFrequency.Quarter.Q4);
-        if (termForQ4==null){
-            // TODO: What do we do?? Do we allow lines to be added in the sheet that were not in the manager?
-        } else {
+        if (termForQ4!=null && getAmountQ4()!=null) {   // termForQ4 should never be null actually
             termForQ4.setAmount(getAmountQ4());
         }
-
     }
 
     private BudgetForecastTerm getTermForQ(final BudgetForecastItem forecastItem, final ForecastFrequency.Quarter q) {

@@ -57,7 +57,7 @@ public class ForecastCreationManager {
     private LocalDate date;
 
     @CollectionLayout(defaultView = "table")
-    public List<ForecastLineViewmodel> getForecastLines2(){
+    public List<ForecastLineViewmodel> getForecastLines(){
         List<ForecastLineViewmodel> result = new ArrayList<>();
         final BudgetForecast forecastIfAny = budgetForecastRepositoryAndFactory.findUnique(getProject(), getDate());
         if (forecastIfAny!=null){
@@ -140,7 +140,7 @@ public class ForecastCreationManager {
     @Action(semantics = SemanticsOf.SAFE)
     public Blob download(final String filename){
         WorksheetSpec forecastLineSpec = new WorksheetSpec(ForecastLineViewmodel.class, "forecastLines");
-        WorksheetContent forecastLineContent = new WorksheetContent(getForecastLines2(), forecastLineSpec);
+        WorksheetContent forecastLineContent = new WorksheetContent(getForecastLines(), forecastLineSpec);
         return excelService.toExcel(Arrays.asList(forecastLineContent), filename);
     }
 
