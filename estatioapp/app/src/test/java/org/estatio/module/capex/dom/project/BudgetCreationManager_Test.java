@@ -25,7 +25,7 @@ public class BudgetCreationManager_Test {
 
         // given
         Project project = new Project();
-        BudgetCreationManager manager = new BudgetCreationManager(project);
+        BudgetCreationManager manager = new BudgetCreationManager(project,1);
         manager.projectBudgetRepository = mockProjectBudgetRepository;
 
         ProjectBudget budget = new ProjectBudget();
@@ -65,7 +65,7 @@ public class BudgetCreationManager_Test {
         project.getItems().add(i1);
         project.getItems().add(i2);
         project.getItems().add(i3);
-        BudgetCreationManager manager = new BudgetCreationManager(project);
+        BudgetCreationManager manager = new BudgetCreationManager(project, 1);
         manager.projectBudgetRepository = mockProjectBudgetRepository;
 
         ProjectBudget budget = new ProjectBudget(){

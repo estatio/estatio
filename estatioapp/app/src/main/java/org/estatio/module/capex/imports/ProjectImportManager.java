@@ -120,7 +120,7 @@ public class ProjectImportManager {
     }
 
     public String disableUpload(){
-        if (getProject().isApproved()) return "This project is approved and therefore cannot be changed";
+        if (getProject()!=null && getProject().isApproved()) return "This project is approved and therefore cannot be changed";
         return null;
     }
 

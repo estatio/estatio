@@ -435,7 +435,7 @@ public class Project extends UdoDomainObject<Project> implements
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public BudgetCreationManager editOrCreateBudget(){
-        return new BudgetCreationManager(this);
+        return new BudgetCreationManager(this, 1);
     }
 
     public boolean hideEditOrCreateBudget(){
@@ -445,9 +445,9 @@ public class Project extends UdoDomainObject<Project> implements
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public Project amendBudget(){
-        // TODO: implement
-        return null;
+    public BudgetCreationManager amendBudget(){
+        final int newVersion = getLatestCommittedBudget().getBudgetVersion() + 1;
+        return new BudgetCreationManager(this, newVersion);
     }
 
     public boolean hideAmendBudget(){
@@ -462,6 +462,11 @@ public class Project extends UdoDomainObject<Project> implements
         if (unApprovedBudget!=null){
             unApprovedBudget.setApprovedOn(approvalDate);
             unApprovedBudget.setApprovedBy(meService.me().getUsername());
+        }
+        // also commit if there is a committed budget already
+        if (getLatestCommittedBudget()!=null) {
+            unApprovedBudget.setCommittedBy(getLatestCommittedBudget().getCommittedBy());
+            unApprovedBudget.setCommittedOn(getLatestCommittedBudget().getCommittedOn());
         }
         return this;
     }

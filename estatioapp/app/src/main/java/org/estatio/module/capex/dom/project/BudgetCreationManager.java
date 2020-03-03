@@ -35,29 +35,51 @@ public class BudgetCreationManager {
 
     public BudgetCreationManager(){}
 
-    public BudgetCreationManager(final Project project){
+    public BudgetCreationManager(final Project project, final int version){
         this.project = project;
+        this.version = version;
     }
 
     public String title(){
-        return TitleBuilder.start().withName("Budget creation for ").withParent(getProject()).toString();
+        return TitleBuilder.start().withName("Budget creation for ").withParent(getProject()).withName("v.").withName(getVersion()).toString();
     }
 
     @Getter @Setter
     private Project project;
 
-    public List<BudgetLineViewmodel> getBudgetLines(){
+    @Getter @Setter
+    private int version;
 
+    public List<BudgetLineViewmodel> getBudgetLines(){
         // find or create budget and budget items
-        final ProjectBudget budget = projectBudgetRepository.findOrCreate(getProject(), 1);
-        Lists.newArrayList(project.getItems()).forEach(i->{
-            budget.findOrCreateBudgetItem(i);
-        });
+        ProjectBudget budget = projectBudgetRepository.findUnique(getProject(), getVersion());
+        if (budget==null){
+            budget = projectBudgetRepository.create(getProject(), getVersion());
+            if (getProject().getLatestCommittedBudget()!=null){
+                findOrCreateItems(budget, true);
+            } else {
+                findOrCreateItems(budget,false);
+            }
+        } else {
+            // probably superfluous
+            findOrCreateItems(budget, false);
+        }
         List<BudgetLineViewmodel> result = new ArrayList<>();
         Lists.newArrayList(budget.getItems()).forEach(bi->{
             result.add(new BudgetLineViewmodel(bi));
         });
         return result.stream().sorted(Comparator.comparing(BudgetLineViewmodel::getChargeReference)).collect(Collectors.toList());
+    }
+
+    void findOrCreateItems(final ProjectBudget budget, final boolean copyFromPrevious){
+        Lists.newArrayList(budget.getProject().getItems()).forEach(i->{
+            final ProjectBudgetItem newItem = projectBudgetItemRepository.findOrCreate(budget, i, null);
+            if (copyFromPrevious){
+                Lists.newArrayList(getProject().getLatestCommittedBudget().getItems()).forEach(pi->{
+                    if (pi.getProjectItem().equals(i)) newItem.setAmount(pi.getAmount());
+                });
+            }
+        });
     }
 
     @Action(semantics = SemanticsOf.SAFE)
@@ -74,7 +96,7 @@ public class BudgetCreationManager {
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public BudgetCreationManager upload(final Blob spreadSheet){
         excelService.fromExcel(spreadSheet, BudgetLineViewmodel.class, "budgetLines", Mode.RELAXED).forEach(imp->imp.importData(getProject()));
-        return new BudgetCreationManager(getProject());
+        return new BudgetCreationManager(getProject(), getVersion());
     }
 
     @Inject
@@ -82,6 +104,9 @@ public class BudgetCreationManager {
 
     @Inject
     ProjectBudgetRepository projectBudgetRepository;
+
+    @Inject
+    ProjectBudgetItemRepository projectBudgetItemRepository;
 
     @Inject
     ClockService clockService;

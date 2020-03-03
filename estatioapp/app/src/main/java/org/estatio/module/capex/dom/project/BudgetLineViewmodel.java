@@ -1,9 +1,6 @@
 package org.estatio.module.capex.dom.project;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
 import javax.inject.Inject;
 
@@ -28,6 +25,7 @@ public class BudgetLineViewmodel {
         this.chargeReference = budgetItem.getProjectItem().getCharge().getReference();
         this.amount = budgetItem.getAmount();
         this.projectReference = budgetItem.getProjectBudget().getProject().getReference();
+        this.budgetVersion = budgetItem.getProjectBudget().getBudgetVersion();
     }
 
     @Getter @Setter
@@ -40,7 +38,12 @@ public class BudgetLineViewmodel {
 
     @Getter @Setter
     @MemberOrder(sequence = "3")
+    private Integer budgetVersion;
+
+    @Getter @Setter
+    @MemberOrder(sequence = "4")
     private BigDecimal amount;
+
 
     public void importData(final Project project) {
         Project projectFromRef = null;
@@ -54,8 +57,28 @@ public class BudgetLineViewmodel {
 
         Project projectToUse = project!=null ? project : projectFromRef;
 
-        final ProjectBudget unapprovedFirstBudget = projectBudgetRepository.findOrCreate(projectToUse, 1);
-        if (unapprovedFirstBudget.getApprovedOn()!=null){
+        if (getBudgetVersion()==null) {
+            messageService2.raiseError("Budget version is mandatory");
+            return;
+        }
+
+        if (getBudgetVersion()!=1 && projectToUse.getLatestCommittedBudget()==null){
+            messageService2.raiseError(String.format("No committed budget found for %s; budget version should be 1", getProjectReference()));
+            return;
+        }
+
+        if (projectToUse.getProjectBudget()!=null && projectToUse.getProjectBudget().getBudgetVersion()!=getBudgetVersion()){
+            messageService2.raiseError(String.format("Budget for %s should have version %s", getProjectReference(), projectToUse.getProjectBudget().getBudgetVersion()));
+            return;
+        }
+
+        if (projectToUse.getLatestCommittedBudget()!=null && projectToUse.getLatestCommittedBudget().getBudgetVersion()+1!=getBudgetVersion()){
+            messageService2.raiseError(String.format("Budget for %s should have version %s", getProjectReference(), projectToUse.getLatestCommittedBudget().getBudgetVersion()+1));
+            return;
+        }
+
+        final ProjectBudget unapprovedBudget = projectBudgetRepository.findOrCreate(projectToUse, getBudgetVersion());
+        if (unapprovedBudget.getApprovedOn()!=null){
             messageService2.raiseError("You are trying to modify an approved budget");
             return;
         }
@@ -66,10 +89,10 @@ public class BudgetLineViewmodel {
             return;
         }
 
-        final ProjectBudgetItem projectBudgetItem = Lists.newArrayList(unapprovedFirstBudget.getItems()).stream()
+        final ProjectBudgetItem projectBudgetItem = Lists.newArrayList(unapprovedBudget.getItems()).stream()
                 .filter(bi -> bi.getProjectItem().getCharge().getReference().equals(getChargeReference()))
                 .findFirst().orElse(null);
-        if (projectBudgetItem!=null){
+        if (projectBudgetItem!=null && getAmount()!=null){
             projectBudgetItem.setAmount(getAmount());
         } else {
             // should not happen
