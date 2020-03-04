@@ -51,35 +51,12 @@ public class BudgetCreationManager {
     private int version;
 
     public List<BudgetLineViewmodel> getBudgetLines(){
-        // find or create budget and budget items
-        ProjectBudget budget = projectBudgetRepository.findUnique(getProject(), getVersion());
-        if (budget==null){
-            budget = projectBudgetRepository.create(getProject(), getVersion());
-            if (getProject().getLatestCommittedBudget()!=null){
-                findOrCreateItems(budget, true);
-            } else {
-                findOrCreateItems(budget,false);
-            }
-        } else {
-            // probably superfluous
-            findOrCreateItems(budget, false);
-        }
+        ProjectBudget budget = projectBudgetRepository.findOrCreate(getProject(), getVersion());
         List<BudgetLineViewmodel> result = new ArrayList<>();
         Lists.newArrayList(budget.getItems()).forEach(bi->{
             result.add(new BudgetLineViewmodel(bi));
         });
         return result.stream().sorted(Comparator.comparing(BudgetLineViewmodel::getChargeReference)).collect(Collectors.toList());
-    }
-
-    void findOrCreateItems(final ProjectBudget budget, final boolean copyFromPrevious){
-        Lists.newArrayList(budget.getProject().getItems()).forEach(i->{
-            final ProjectBudgetItem newItem = projectBudgetItemRepository.findOrCreate(budget, i, null);
-            if (copyFromPrevious){
-                Lists.newArrayList(getProject().getLatestCommittedBudget().getItems()).forEach(pi->{
-                    if (pi.getProjectItem().equals(i)) newItem.setAmount(pi.getAmount());
-                });
-            }
-        });
     }
 
     @Action(semantics = SemanticsOf.SAFE)

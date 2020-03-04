@@ -72,14 +72,14 @@ public class BudgetCreationManager_Test {
         manager.projectBudgetRepository = mockProjectBudgetRepository;
 
         ProjectBudget budget = new ProjectBudget(){
-            // (partly) immitates the 'real' process
-            @Override public ProjectBudget findOrCreateBudgetItem(final ProjectItem item) {
-                final ProjectBudgetItem bi = new ProjectBudgetItem();
-                bi.setProjectItem(item);
-                bi.setProjectBudget(this);
-                getItems().add(bi);
-                return null;
-            }
+//            // (partly) immitates the 'real' process
+//            @Override public ProjectBudget findOrCreateBudgetItem(final ProjectItem item) {
+//                final ProjectBudgetItem bi = new ProjectBudgetItem();
+//                bi.setProjectItem(item);
+//                bi.setProjectBudget(this);
+//                getItems().add(bi);
+//                return null;
+//            }
         };
         budget.setProject(project);
 

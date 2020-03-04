@@ -19,6 +19,7 @@
 package org.estatio.module.capex.dom.project;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.SortedSet;
@@ -167,13 +168,8 @@ public class ProjectBudget extends UdoDomainObject2<ProjectBudget> {
 
     @Programmatic
     public ProjectBudget createItem(final ProjectItem projectItem, final BigDecimal amount){
-        projectBudgetItemRepository.findOrCreate(this, projectItem, amount);
-        return this;
-    }
-
-    @Programmatic
-    public ProjectBudget findOrCreateBudgetItem(final ProjectItem item){
-        projectBudgetItemRepository.findOrCreate(this, item, null);
+        final ProjectBudgetItem item = projectBudgetItemRepository.findOrCreate(this, projectItem);
+        item.setAmount(amount);
         return this;
     }
 
@@ -183,6 +179,25 @@ public class ProjectBudget extends UdoDomainObject2<ProjectBudget> {
         return budgetItem != null ? budgetItem.getAmount() : null;
     }
 
+    @Programmatic
+    public void init(){
+        if (getProject().getLatestCommittedBudget()!=null){
+            findOrCreateItems(this, true);
+        } else {
+            findOrCreateItems(this,false);
+        }
+    }
+
+    private void findOrCreateItems(final ProjectBudget budget, final boolean copyFromPrevious){
+        Lists.newArrayList(budget.getProject().getItems()).forEach(i->{
+            final ProjectBudgetItem newItem = projectBudgetItemRepository.findOrCreate(budget, i);
+            if (copyFromPrevious){
+                Lists.newArrayList(getProject().getLatestCommittedBudget().getItems()).forEach(pi->{
+                    if (pi.getProjectItem().equals(i)) newItem.setAmount(pi.getAmount());
+                });
+            }
+        });
+    }
 
     @Override
     public ApplicationTenancy getApplicationTenancy() {

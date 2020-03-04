@@ -54,10 +54,8 @@ public class ProjectBudgetItemRepository extends UdoDomainRepositoryAndFactory<P
 
     public ProjectBudgetItem create(
             final ProjectBudget budget,
-            final ProjectItem projectItem,
-            @Nullable
-            final BigDecimal amount) {
-        ProjectBudgetItem budgetItem = new ProjectBudgetItem(budget, projectItem, amount);
+            final ProjectItem projectItem) {
+        ProjectBudgetItem budgetItem = new ProjectBudgetItem(budget, projectItem);
         serviceRegistry2.injectServicesInto(budgetItem);
         repositoryService.persistAndFlush(budgetItem);
         return budgetItem;
@@ -65,12 +63,10 @@ public class ProjectBudgetItemRepository extends UdoDomainRepositoryAndFactory<P
     
     public ProjectBudgetItem findOrCreate(
             final ProjectBudget budget,
-            final ProjectItem projectItem,
-            @Nullable
-            final BigDecimal amount) {
+            final ProjectItem projectItem) {
         ProjectBudgetItem budgetItem = findUnique(budget, projectItem);
         if(budgetItem == null) {
-            budgetItem = create(budget, projectItem, amount);
+            budgetItem = create(budget, projectItem);
         }
         return budgetItem;
     }

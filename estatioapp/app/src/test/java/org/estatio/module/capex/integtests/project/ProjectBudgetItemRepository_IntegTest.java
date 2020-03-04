@@ -65,15 +65,17 @@ public class ProjectBudgetItemRepository_IntegTest extends CapexModuleIntegTestA
         final ProjectItem projectItem = project.getItems().first();
         Assertions.assertThat(projectItem).isNotNull();
 
+        // when
+        // NOTE: implicitly we are testing ProjectBudgetItemRepository#findOrCreate already here as well ....
         final ProjectBudget budget = projectBudgetRepository.findOrCreate(project, 1);
-        Assertions.assertThat(projectBudgetItemRepository.listAll()).isEmpty();
+
 
         // when
         final ProjectBudgetItem budgetItem = projectBudgetItemRepository
-                .findOrCreate(budget, projectItem, null);
+                .findOrCreate(budget, projectItem);
 
         // then
-        Assertions.assertThat(projectBudgetItemRepository.listAll()).hasSize(1);
+        Assertions.assertThat(projectBudgetItemRepository.listAll()).hasSize(2);
         Assertions.assertThat(projectBudgetItemRepository.findUnique(budget, projectItem)).isEqualTo(budgetItem);
 
     }

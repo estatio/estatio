@@ -74,11 +74,10 @@ public class ProjectBudgetItem extends UdoDomainObject2<ProjectBudgetItem> {
         super("projectBudget, projectItem");
     }
 
-    public ProjectBudgetItem(final ProjectBudget budget, final ProjectItem projectItem, final BigDecimal amount) {
+    public ProjectBudgetItem(final ProjectBudget budget, final ProjectItem projectItem) {
         this();
         this.projectBudget = budget;
         this.projectItem = projectItem;
-        this.amount = amount;
     }
 
     public String title() {

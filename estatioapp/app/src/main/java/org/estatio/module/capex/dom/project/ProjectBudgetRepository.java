@@ -84,6 +84,7 @@ public class ProjectBudgetRepository extends UdoDomainRepositoryAndFactory<Proje
         ProjectBudget budget = new ProjectBudget(project, version);
         serviceRegistry2.injectServicesInto(budget);
         repositoryService.persistAndFlush(budget);
+        budget.init();
         return budget;
     }
 
