@@ -13,6 +13,7 @@
                     <row>
                         <col span="12">
                             <ns2:fieldSet name="Project item" id="projectItem">
+                                <ns2:action id="changeDescription" position="PANEL"/>
                                 <ns2:property id="project"/>
                                 <ns2:property id="description"/>
                             </ns2:fieldSet>

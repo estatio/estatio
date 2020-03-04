@@ -115,6 +115,16 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> {
 	@Getter @Setter
 	private String description;
 
+	@Action(semantics = SemanticsOf.IDEMPOTENT)
+	public ProjectItem changeDescription(final String description){
+		setDescription(description);
+		return this;
+	}
+
+	public String default0ChangeDescription(){
+		return getDescription();
+	}
+
 	@Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
 	@org.apache.isis.applib.annotation.Property(hidden = Where.EVERYWHERE)
 	@Getter @Setter
