@@ -19,6 +19,7 @@
 package org.estatio.module.capex.dom.project;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -517,6 +518,17 @@ public class Project extends UdoDomainObject<Project> implements
 
     public LocalDate default0CreateBudgetForecast(){
         return ForecastFrequency.QUARTERLY.getStartDateFor(clockService.now());
+    }
+
+    public List<LocalDate> choices0CreateBudgetForecast(){
+        List<LocalDate> result = new ArrayList<>();
+        LocalDate date = clockService.now();
+        result.add(ForecastFrequency.QUARTERLY.getStartDateFor(date));
+        for (int i = 0; i < 4; i++) {
+            result.add(ForecastFrequency.QUARTERLY.getNextStartDateFor(date));
+            date = ForecastFrequency.QUARTERLY.getNextStartDateFor(date);
+        }
+        return result.stream().sorted().collect(Collectors.toList());
     }
 
     public String disableCreateBudgetForecast(){

@@ -131,7 +131,7 @@ public class BudgetForecastRepositoryAndFactory extends UdoDomainRepositoryAndFa
             return term;
         } else {
             final LocalDate previousStartDate = item.getForecast().getFrequency()
-                    .getStartDateFor(nextStartDate.minusDays(1));
+                    .getPreviousStartDateFor(nextStartDate);
             BudgetForecastTerm previousIfAny = findUniqueTerm(item, previousStartDate);
             LocalDateInterval nextInterval = item.getForecast().getFrequency().getIntervalFor(nextStartDate);
             BudgetForecastTerm nextTerm = new BudgetForecastTerm();

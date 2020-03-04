@@ -1,10 +1,18 @@
 package org.estatio.module.capex.dom.project;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.jmock.Expectations;
+import org.jmock.auto.Mock;
+import org.joda.time.LocalDate;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+
+import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.module.charge.dom.Charge;
 
@@ -65,6 +73,33 @@ public class Project_Test {
 
         // then
         Assertions.assertThat(budgetAmountParent).isEqualTo(new BigDecimal("12.34"));
+
+    }
+
+    @Rule
+    public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
+
+    @Mock
+    ClockService mockClockService;
+
+    @Test
+    public void choices0CreateBudgetForecast_works() throws Exception {
+
+        // given
+        Project project = new Project();
+        project.clockService = mockClockService;
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockClockService).now();
+            will(returnValue(new LocalDate(2020,3,31)));
+        }});
+
+        // when
+        final List<LocalDate> choices = project.choices0CreateBudgetForecast();
+
+        // then
+        Assertions.assertThat(choices).hasSize(5);
 
     }
 

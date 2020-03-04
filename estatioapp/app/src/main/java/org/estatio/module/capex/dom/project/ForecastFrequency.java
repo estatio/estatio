@@ -25,6 +25,16 @@ public enum  ForecastFrequency {
         return interval.getStart().toLocalDate();
     }
 
+    public LocalDate getNextStartDateFor(final LocalDate date) {
+        Interval interval = CalendarUtils.intervalContaining(date, rrule);
+        return interval.getEnd().toLocalDate();
+    }
+
+    public LocalDate getPreviousStartDateFor(final LocalDate date) {
+        LocalDate startDate = getStartDateFor(date);
+        return getStartDateFor(startDate.minusDays(1));
+    }
+
     public LocalDateInterval getIntervalFor(final LocalDate date) {
         return new LocalDateInterval(CalendarUtils.intervalContaining(date, rrule));
     }

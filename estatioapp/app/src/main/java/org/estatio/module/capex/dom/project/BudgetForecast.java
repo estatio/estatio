@@ -139,15 +139,14 @@ public class BudgetForecast extends UdoDomainObject2<BudgetForecast> {
     @Action(semantics = SemanticsOf.SAFE, hidden = Where.ALL_TABLES)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION, hidden = Where.ALL_TABLES)
     public BudgetForecast getNext(){
-        final LocalDate endDate = getFrequency().getIntervalFor(getDate()).endDate(AbstractInterval.IntervalEnding.INCLUDING_END_DATE);
         return  budgetForecastRepositoryAndFactory.findUnique(getProject(),
-                getFrequency().getStartDateFor(endDate.plusDays(1)));
+                getFrequency().getNextStartDateFor(getDate()));
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION, hidden = Where.ALL_TABLES)
     public BudgetForecast getPrevious(){
-        return budgetForecastRepositoryAndFactory.findUnique(getProject(), getFrequency().getStartDateFor(getDate().minusDays(1)));
+        return budgetForecastRepositoryAndFactory.findUnique(getProject(), getFrequency().getPreviousStartDateFor(getDate()));
     }
 
     @Programmatic
