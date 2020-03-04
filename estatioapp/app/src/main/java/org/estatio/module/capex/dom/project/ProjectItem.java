@@ -115,6 +115,11 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> {
 	@Getter @Setter
 	private String description;
 
+	@Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
+	@org.apache.isis.applib.annotation.Property(hidden = Where.EVERYWHERE)
+	@Getter @Setter
+	private BigDecimal budgetedAmountOld;
+
 	@Action(semantics = SemanticsOf.SAFE)
 	@ActionLayout(contributed = Contributed.AS_ASSOCIATION)
 	public BigDecimal getBudgetedAmount(){
