@@ -452,6 +452,7 @@ public class Project extends UdoDomainObject<Project> implements
     }
 
     public boolean hideAmendBudget(){
+        if (getLatestCommittedBudget()==null) return true;
         return !hideCreateBudget();
     }
 
