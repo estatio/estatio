@@ -43,7 +43,7 @@ public class ForecastCreationManager {
 
     public ForecastCreationManager(final Project project, final LocalDate date){
         this.project = project;
-        this.date = date;
+        this.date = ForecastFrequency.QUARTERLY.getStartDateFor(date); // just in case ...
     }
 
     public String title(){
@@ -145,13 +145,13 @@ public class ForecastCreationManager {
     }
 
     public String default0Download(){
-        return "Budget forecast" + getProject().getReference() + " " + clockService.now().toString("dd-MM-yyyy") + ".xlsx";
+        return "Budget forecast" + getProject().getReference() + " " + getDate().toString("dd-MM-yyyy") + ".xlsx";
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public ForecastCreationManager upload(final Blob spreadSheet){
+    public BudgetForecast upload(final Blob spreadSheet){
         excelService.fromExcel(spreadSheet, ForecastLineViewmodel.class, "forecastLines", Mode.RELAXED).forEach(imp->imp.importData(getProject(), getDate()));
-        return new ForecastCreationManager(getProject(), getDate());
+        return budgetForecastRepositoryAndFactory.findUnique(getProject(), getDate());
     }
 
     @Inject

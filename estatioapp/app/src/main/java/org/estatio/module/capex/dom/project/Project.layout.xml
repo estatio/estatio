@@ -25,7 +25,7 @@
                                 <ns2:property id="endDate"/>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Budget" id="budget">
-                                <ns2:action id="editOrCreateBudget" position="PANEL"/>
+                                <ns2:action id="createBudget" position="PANEL"/>
                                 <ns2:action id="amendBudget" position="PANEL"/>
                                 <ns2:action id="approveBudget" position="PANEL"/>
                                 <ns2:action id="commitBudget" position="PANEL"/>

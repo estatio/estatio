@@ -68,6 +68,10 @@ public class ForecastLineViewmodel {
     public void importData(final Project project, final LocalDate forecastDate) {
 
         final BudgetForecast forecast = budgetForecastRepositoryAndFactory.findOrCreate(project, forecastDate);
+        if (forecast.getSubmittedOn()!=null) {
+            messageService2.raiseError(String.format("Forecast for %s is submitted and cannot be changed", forecast.getDate()));
+            return;
+        }
         final Charge charge = chargeRepository.findByReference(chargeReference);
         if (charge==null) {
             messageService2.raiseError(String.format("Charge with reference %s not found", getChargeReference()));

@@ -39,7 +39,9 @@ import com.google.common.collect.Lists;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
@@ -52,6 +54,7 @@ import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
+import org.incode.module.base.dom.valuetypes.AbstractInterval;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
 
@@ -133,15 +136,18 @@ public class BudgetForecast extends UdoDomainObject2<BudgetForecast> {
         return this;
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
+    @Action(semantics = SemanticsOf.SAFE, hidden = Where.ALL_TABLES)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION, hidden = Where.ALL_TABLES)
     public BudgetForecast getNext(){
-        return  budgetForecastRepositoryAndFactory.findUnique(getProject(), getFrequency().getStartDateFor(getDate().minusDays(1)));
+        final LocalDate endDate = getFrequency().getIntervalFor(getDate()).endDate(AbstractInterval.IntervalEnding.INCLUDING_END_DATE);
+        return  budgetForecastRepositoryAndFactory.findUnique(getProject(),
+                getFrequency().getStartDateFor(endDate.plusDays(1)));
     }
 
     @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION, hidden = Where.ALL_TABLES)
     public BudgetForecast getPrevious(){
-        final LocalDate endDate = getFrequency().getIntervalFor(getDate()).endDate();
-        return budgetForecastRepositoryAndFactory.findUnique(getProject(), getFrequency().getStartDateFor(endDate.plusDays(1)));
+        return budgetForecastRepositoryAndFactory.findUnique(getProject(), getFrequency().getStartDateFor(getDate().minusDays(1)));
     }
 
     @Programmatic

@@ -43,7 +43,6 @@ import javax.jdo.annotations.VersionStrategy;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.google.common.collect.Lists;
-import com.google.inject.internal.cglib.core.$ReflectUtils;
 
 import org.joda.time.LocalDate;
 
@@ -434,12 +433,13 @@ public class Project extends UdoDomainObject<Project> implements
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public BudgetCreationManager editOrCreateBudget(){
+    public BudgetCreationManager createBudget(){
         return new BudgetCreationManager(this, 1);
     }
 
-    public boolean hideEditOrCreateBudget(){
+    public boolean hideCreateBudget(){
         if (getProjectBudget()!=null && getProjectBudget().getApprovedOn()!=null) return true;
+        if (getLatestCommittedBudget()!=null) return true; // this is needed in case of an unapproved amendment
         return false;
     }
 
@@ -451,7 +451,7 @@ public class Project extends UdoDomainObject<Project> implements
     }
 
     public boolean hideAmendBudget(){
-        return !hideEditOrCreateBudget();
+        return !hideCreateBudget();
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
@@ -512,7 +512,7 @@ public class Project extends UdoDomainObject<Project> implements
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public ForecastCreationManager createBudgetForecast(final LocalDate date){
-        return new ForecastCreationManager(this, date);
+        return new ForecastCreationManager(this, ForecastFrequency.QUARTERLY.getStartDateFor(date));
     }
 
     public LocalDate default0CreateBudgetForecast(){
@@ -525,8 +525,8 @@ public class Project extends UdoDomainObject<Project> implements
     }
 
     public String validateCreateBudgetForecast(final LocalDate date){
-        final BudgetForecast forecastIfAny = budgetForecastRepositoryAndFactory.findUnique(this, date);
-        if (forecastIfAny!=null && forecastIfAny.getSubmittedOn()!=null) return String.format("Forecast for %s is submitted already", date.toString());
+        final BudgetForecast forecastIfAny = budgetForecastRepositoryAndFactory.findUnique(this, ForecastFrequency.QUARTERLY.getStartDateFor(date));
+        if (forecastIfAny!=null && forecastIfAny.getSubmittedOn()!=null) return String.format("Forecast for %s is submitted already", ForecastFrequency.QUARTERLY.getStartDateFor(date).toString());
         return null;
     }
 

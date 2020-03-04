@@ -90,7 +90,7 @@ public class BudgetCreationManager {
     }
 
     public String default0Download(){
-        return "Budget " + getProject().getReference() + " " + clockService.now().toString("dd-MM-yyyy") + ".xlsx";
+        return "Budget " + getProject().getReference() + " v" + getVersion() + " " + clockService.now().toString("dd-MM-yyyy") + ".xlsx";
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)

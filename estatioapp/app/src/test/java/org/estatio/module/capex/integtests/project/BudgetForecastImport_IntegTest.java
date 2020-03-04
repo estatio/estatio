@@ -42,7 +42,6 @@ import org.estatio.module.capex.dom.project.BudgetForecastItem;
 import org.estatio.module.capex.dom.project.BudgetForecastRepositoryAndFactory;
 import org.estatio.module.capex.dom.project.ForecastCreationManager;
 import org.estatio.module.capex.dom.project.Project;
-import org.estatio.module.capex.dom.project.ProjectBudget;
 import org.estatio.module.capex.dom.project.ProjectBudgetRepository;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
@@ -69,7 +68,7 @@ public class BudgetForecastImport_IntegTest extends CapexModuleIntegTestAbstract
     Project project;
 
     @Test
-    public void project_budget_import_works() throws Exception {
+    public void forecast_import_works() throws Exception {
 
         // given
         forecastDate = new LocalDate(2020, 4, 1);
@@ -113,7 +112,7 @@ public class BudgetForecastImport_IntegTest extends CapexModuleIntegTestAbstract
 
     public void setupApproveAndCommitBudget(){
 
-        final BudgetCreationManager manager = wrap(project).editOrCreateBudget();
+        final BudgetCreationManager manager = wrap(project).createBudget();
         assertThat(projectBudgetRepository.findByProject(project)).isEmpty();
 
         manager.getBudgetLines(); //TODO: this is to create a first budget, normally happens when called by UI; maybe 'initialize' otherwise ....
