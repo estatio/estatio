@@ -59,23 +59,11 @@ public class ForecastCreationManager {
     @CollectionLayout(defaultView = "table")
     public List<ForecastLineViewmodel> getForecastLines(){
         List<ForecastLineViewmodel> result = new ArrayList<>();
-        final BudgetForecast forecastIfAny = budgetForecastRepositoryAndFactory.findUnique(getProject(), getDate());
-        if (forecastIfAny!=null){
-            forecastIfAny.calculateAmounts(); //TODO: this is prone to error!! Change!
-            if (forecastIfAny.getSubmittedBy()!=null) return null; // Extra guard
-            Lists.newArrayList(forecastIfAny.getItems()).forEach(fi->{
-                result.addAll(linesForForecastItem(fi));
-            });
-        } else {
-            // create new forecast
-            final BudgetForecast newForecast = budgetForecastRepositoryAndFactory.findOrCreate(getProject(), getDate());
-            newForecast.calculateAmounts(); //TODO: this is prone to error!! Change!
-            Lists.newArrayList(newForecast.getItems()).forEach(fi->{
-                Lists.newArrayList(fi.getTerms()).forEach(ft->{
-                    result.addAll(linesForForecastItem(fi));
-                });
-            });
-        }
+        final BudgetForecast forecast = budgetForecastRepositoryAndFactory.findAndUpdateItemsIfNotSubmittedOrCreate(getProject(), getDate());
+        if (forecast.getSubmittedOn()!=null) return null; // Extra guard
+        Lists.newArrayList(forecast.getItems()).forEach(fi->{
+            result.addAll(linesForForecastItem(fi));
+        });
         return result.stream().sorted(Comparator.comparing(ForecastLineViewmodel::getChargeReference).thenComparing(
                 ForecastLineViewmodel::getYear)).collect(
                 Collectors.toList());

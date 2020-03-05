@@ -67,7 +67,7 @@ public class ForecastLineViewmodel {
 
     public void importData(final Project project, final LocalDate forecastDate) {
 
-        final BudgetForecast forecast = budgetForecastRepositoryAndFactory.findOrCreate(project, forecastDate);
+        final BudgetForecast forecast = budgetForecastRepositoryAndFactory.findAndUpdateItemsIfNotSubmittedOrCreate(project, forecastDate);
         if (forecast.getSubmittedOn()!=null) {
             messageService2.raiseError(String.format("Forecast for %s is submitted and cannot be changed", forecast.getDate()));
             return;

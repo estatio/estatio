@@ -88,7 +88,7 @@ public class BudgetForecastRepositoryAndFactory_IntegTest extends CapexModuleInt
 
         // when
         final LocalDate forecastDate = new LocalDate(2020, 1, 1);
-        final BudgetForecast forecast = budgetForecastRepositoryAndFactory.findOrCreate(project, forecastDate);
+        final BudgetForecast forecast = budgetForecastRepositoryAndFactory.findAndUpdateItemsIfNotSubmittedOrCreate(project, forecastDate);
 
         // then
         Assertions.assertThat(budgetForecastRepositoryAndFactory.listAll()).hasSize(1);
@@ -102,16 +102,16 @@ public class BudgetForecastRepositoryAndFactory_IntegTest extends CapexModuleInt
         final BudgetForecastItem firstForecastItem = forecast.getItems().first();
         Assertions.assertThat(firstForecastItem.getForecast()).isEqualTo(forecast);
         Assertions.assertThat(firstForecastItem.getProjectItem()).isEqualTo(project.getItems().first());
-        Assertions.assertThat(firstForecastItem.getAmount()).isEqualTo(BigDecimal.ZERO);
+        Assertions.assertThat(firstForecastItem.getAmount()).isEqualTo(BigDecimal.valueOf(101.5));
         Assertions.assertThat(firstForecastItem.getInvoicedAmountToDate()).isEqualTo(BigDecimal.ZERO);
-        Assertions.assertThat(firstForecastItem.getBudgetedAmountOnDate()).isEqualTo(BigDecimal.ZERO);
+        Assertions.assertThat(firstForecastItem.getBudgetedAmountOnDate()).isEqualTo(BigDecimal.valueOf(101.5));
 
         final BudgetForecastItem lastForecastItem = forecast.getItems().last();
         Assertions.assertThat(lastForecastItem.getForecast()).isEqualTo(forecast);
         Assertions.assertThat(lastForecastItem.getProjectItem()).isEqualTo(project.getItems().last());
-        Assertions.assertThat(lastForecastItem.getAmount()).isEqualTo(BigDecimal.ZERO);
+        Assertions.assertThat(lastForecastItem.getAmount()).isEqualTo(BigDecimal.valueOf(222.5));
         Assertions.assertThat(lastForecastItem.getInvoicedAmountToDate()).isEqualTo(BigDecimal.ZERO);
-        Assertions.assertThat(lastForecastItem.getBudgetedAmountOnDate()).isEqualTo(BigDecimal.ZERO);
+        Assertions.assertThat(lastForecastItem.getBudgetedAmountOnDate()).isEqualTo(BigDecimal.valueOf(222.5));
 
         Assertions.assertThat(firstForecastItem.getTerms()).hasSize(1);
         final BudgetForecastTerm firstTermOfForecastItem1 = firstForecastItem.getTerms().first();
@@ -134,7 +134,7 @@ public class BudgetForecastRepositoryAndFactory_IntegTest extends CapexModuleInt
 
         // given
         final LocalDate forecastDate = new LocalDate(2020, 1, 1);
-        final BudgetForecast forecast = budgetForecastRepositoryAndFactory.findOrCreate(project, forecastDate);
+        final BudgetForecast forecast = budgetForecastRepositoryAndFactory.findAndUpdateItemsIfNotSubmittedOrCreate(project, forecastDate);
         assetNumberOfTermsAndZeroAmount(forecast, 1);
 
         // when

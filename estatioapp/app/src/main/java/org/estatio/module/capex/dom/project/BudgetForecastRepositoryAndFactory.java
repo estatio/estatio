@@ -89,7 +89,7 @@ public class BudgetForecastRepositoryAndFactory extends UdoDomainRepositoryAndFa
             repositoryService.persistAndFlush(forecast);
 
             for (ProjectBudgetItem item : latestCommittedBudget.getItems()){
-                final BudgetForecastItem newForecastItem = findOrCreateItem(forecast, item.getProjectItem(), BigDecimal.ZERO,
+                final BudgetForecastItem newForecastItem = findAndUpdateIfNotSubmittedOrCreateItem(forecast, item.getProjectItem(), BigDecimal.ZERO,
                         BigDecimal.ZERO, BigDecimal.ZERO);
                 findOrCreateFirstTerm(newForecastItem);
             }
@@ -99,12 +99,14 @@ public class BudgetForecastRepositoryAndFactory extends UdoDomainRepositoryAndFa
         return forecast;
     }
 
-    public BudgetForecast findOrCreate(
+    public BudgetForecast findAndUpdateItemsIfNotSubmittedOrCreate(
             final Project project,
             final LocalDate date) {
         BudgetForecast forecast = findUnique(project, date);
         if(forecast == null) {
             forecast = create(project, date);
+        } else {
+            if (forecast!=null && forecast.getSubmittedOn()==null) forecast.calculateAmounts();
         }
         return forecast;
     }
@@ -168,10 +170,11 @@ public class BudgetForecastRepositoryAndFactory extends UdoDomainRepositoryAndFa
         BudgetForecastItem item = new BudgetForecastItem(forecast, projectItem, amount, budgetedAmount, invoicedAmount);
         serviceRegistry2.injectServicesInto(item);
         repositoryService.persistAndFlush(item);
+        item.calculateAmounts();
         return item;
     }
 
-    private BudgetForecastItem findOrCreateItem(
+    private BudgetForecastItem findAndUpdateIfNotSubmittedOrCreateItem(
             final BudgetForecast forecast,
             final ProjectItem projectItem,
             final BigDecimal amount,
@@ -181,6 +184,7 @@ public class BudgetForecastRepositoryAndFactory extends UdoDomainRepositoryAndFa
         if(item == null) {
             item = createItem(forecast, projectItem, amount, budgetedAmount, invoicedAmount);
         }
+        if (item.getForecast().getSubmittedOn()==null) item.calculateAmounts();
         return item;
     }
 
