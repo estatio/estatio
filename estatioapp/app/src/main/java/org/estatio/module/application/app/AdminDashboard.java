@@ -48,9 +48,11 @@ import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 import org.incode.module.slack.impl.SlackService;
 
 import org.estatio.module.application.contributions.Organisation_syncToCoda;
+import org.estatio.module.capex.app.project.Project_migrateBudget;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.coda.EstatioCodaModule;
 import org.estatio.module.coda.dom.doc.CodaDocHeadMenu;
 import org.estatio.module.coda.dom.hwm.CodaHwm;
@@ -82,6 +84,13 @@ public class AdminDashboard implements ViewModel {
 
     @Override
     public void viewModelInit(final String s) {
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public void migrateProjectBudgets(){
+        projectRepository.listAll().forEach(p->{
+            factoryService.mixin(Project_migrateBudget.class, p).$$();
+        });
     }
 
     public enum DocBlobArchiveCaller {
@@ -555,5 +564,8 @@ public class AdminDashboard implements ViewModel {
 
     @Inject
     CodaDocHeadMenu codaDocHeadMenu;
+
+    @Inject
+    ProjectRepository projectRepository;
 
 }
