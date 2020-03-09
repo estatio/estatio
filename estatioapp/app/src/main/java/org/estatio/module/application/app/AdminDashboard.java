@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
@@ -48,14 +49,18 @@ import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 import org.incode.module.slack.impl.SlackService;
 
 import org.estatio.module.application.contributions.Organisation_syncToCoda;
+import org.estatio.module.capex.app.taskreminder.TaskReminderService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.coda.EstatioCodaModule;
 import org.estatio.module.coda.dom.doc.CodaDocHeadMenu;
 import org.estatio.module.coda.dom.hwm.CodaHwm;
 import org.estatio.module.coda.dom.hwm.CodaHwmRepository;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.settings.dom.ApplicationSettingForEstatio;
 import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
 
@@ -499,6 +504,23 @@ public class AdminDashboard implements ViewModel {
         serviceInitializer.postConstruct();
     }
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void sendApprovalRemindersItaly(@Nullable final Person approver){
+        if (approver==null) {
+            taskReminderService.sendRemindersToAllItalianApprovers();
+        } else {
+            final List<Task> taskList = taskReminderService.findIncompleteItalianApprovalTasks().stream()
+                    .filter(t->t.getPersonAssignedTo()!=null)
+                    .filter(t -> t.getPersonAssignedTo().equals(approver))
+                    .collect(Collectors.toList());
+            taskReminderService.sendReminder(approver, taskList);
+        }
+    }
+
+    public List<Person> choices0SendApprovalRemindersItaly(){
+        return personRepository.allPersons();
+    }
+
     @Inject
     CodaCmpCodeService codaCmpCodeService;
 
@@ -556,4 +578,8 @@ public class AdminDashboard implements ViewModel {
     @Inject
     CodaDocHeadMenu codaDocHeadMenu;
 
+    @Inject
+    TaskReminderService taskReminderService;
+
+    @Inject PersonRepository personRepository;
 }

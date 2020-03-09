@@ -7,6 +7,9 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -39,6 +42,8 @@ import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 public class TaskReminderService {
 
     public static final String FROM_EMAIL_ADDRESS = "no-reply-reminders@ecpnv.com";
+
+    private static final Logger LOG = LoggerFactory.getLogger(TaskReminderService.class);
 
     @Programmatic
     private List<Person> getPersonsWithAssignedTasks() {
@@ -133,7 +138,7 @@ public class TaskReminderService {
     }
 
     @Programmatic
-    List<Task> findIncompleteItalianApprovalTasks(){
+    public List<Task> findIncompleteItalianApprovalTasks(){
         final List<IncomingInvoiceApprovalStateTransitionType> approvalStateTransitionTypes = Arrays
                 .asList(IncomingInvoiceApprovalStateTransitionType.APPROVE,
                         IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR,
@@ -158,6 +163,7 @@ public class TaskReminderService {
                 .map(task -> String.format("<li>%s</li>", deepLinkService.deepLinkFor(task)))
                 .collect(Collectors.joining())
                 + "</ul>";
+        LOG.info(String.format("Sending reminder to %s ", person.getReference()));
         emailService.send(Collections.singletonList(address.getEmailAddress()), Collections.emptyList(), Collections.emptyList(), FROM_EMAIL_ADDRESS, subject, body);
 
         tasks.forEach(task -> task.setRemindedOn(clockService.now()));
