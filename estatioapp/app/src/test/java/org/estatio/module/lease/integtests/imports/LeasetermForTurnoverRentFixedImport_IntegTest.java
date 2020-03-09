@@ -40,11 +40,12 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseTerm;
-import org.estatio.module.lease.fixtures.imports.TurnOverRentFixedImportFixture;
+import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
+import org.estatio.module.lease.fixtures.imports.TurnOverRentSweImportFixture;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRentFixed_enum;
-import org.estatio.module.lease.imports.LeaseTermForTurnOverRentFixedImport;
-import org.estatio.module.lease.imports.LeaseTermForTurnoverRentFixedImportManager;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
+import org.estatio.module.lease.imports.LeaseTermForTurnOverRentSweImport;
+import org.estatio.module.lease.imports.LeaseTermForTurnoverRentSweImportManager;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -58,9 +59,9 @@ public class LeasetermForTurnoverRentFixedImport_IntegTest extends LeaseModuleIn
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new TurnOverRentFixedImportFixture());
-                executionContext.executeChild(this, LeaseItemForTurnoverRentFixed_enum.HanPoison001Se.builder());
-                executionContext.executeChild(this, LeaseItemForTurnoverRentFixed_enum.HanTopModel002Se.builder());
+                executionContext.executeChild(this, new TurnOverRentSweImportFixture());
+                executionContext.executeChild(this, LeaseItemForTurnoverRent_enum.HanPoison001Se.builder());
+                executionContext.executeChild(this, LeaseItemForTurnoverRent_enum.HanTopModel002Se.builder());
                 fixtureResults = executionContext.getResults();
             }
         });
@@ -74,22 +75,30 @@ public class LeasetermForTurnoverRentFixedImport_IntegTest extends LeaseModuleIn
         // given
         han = Property_enum.HanSe.findUsing(serviceRegistry2);
         Property_maintainTurnOverRentSwe mixin = new Property_maintainTurnOverRentSwe(han);
+        final LeaseTermForTurnoverRent termPoison = (LeaseTermForTurnoverRent) LeaseItemForTurnoverRent_enum.HanPoison001Se.findUsing(serviceRegistry2).getTerms()
+                .first();
+        termPoison.setManualTurnoverRent(new BigDecimal("20000.00"));
+        final LeaseTermForTurnoverRent termTopmodel = (LeaseTermForTurnoverRent) LeaseItemForTurnoverRent_enum.HanTopModel002Se.findUsing(serviceRegistry2).getTerms()
+                .first();
+        termTopmodel.setManualTurnoverRent(new BigDecimal("2000.00"));
 
         // when
-        final LeaseTermForTurnoverRentFixedImportManager manager = wrap(mixin).maintainTurnoverRent(2011);
+        final LeaseTermForTurnoverRentSweImportManager manager = wrap(mixin).maintainTurnoverRent(2011);
 
         // then
         assertThat(manager.getTurnoverRentLines()).hasSize(2);
-        final LeaseTermForTurnOverRentFixedImport lineForPoison = manager.getTurnoverRentLines().get(0);
+        final LeaseTermForTurnOverRentSweImport lineForPoison = manager.getTurnoverRentLines().get(0);
         assertThat(lineForPoison.getLeaseReference()).isEqualTo(Lease_enum.HanPoison001Se.findUsing(serviceRegistry2).getReference());
         assertThat(lineForPoison.getStartDate()).isEqualTo(new LocalDate(2011,1,1));
         assertThat(lineForPoison.getEndDate()).isEqualTo(new LocalDate(2011,12,31));
         assertThat(lineForPoison.getValue()).isEqualTo(new BigDecimal("20000.00"));
+        assertThat(lineForPoison.getPercentage()).isEqualTo("7");
         assertThat(lineForPoison.getYear()).isEqualTo(2011);
-        final LeaseTermForTurnOverRentFixedImport lineForTopModel = manager.getTurnoverRentLines().get(1);
+        final LeaseTermForTurnOverRentSweImport lineForTopModel = manager.getTurnoverRentLines().get(1);
         assertThat(lineForTopModel.getLeaseReference()).isEqualTo(Lease_enum.HanTopModel002Se.findUsing(serviceRegistry2).getReference());
         assertThat(lineForTopModel.getStartDatePreviousYear()).isEqualTo(new LocalDate(2010,7,15));
         assertThat(lineForTopModel.getValuePreviousYear()).isEqualTo(new BigDecimal("2000.00"));
+        assertThat(lineForTopModel.getPercentage()).isNull();
         assertThat(lineForTopModel.getYear()).isEqualTo(2011);
         
     }
@@ -100,11 +109,11 @@ public class LeasetermForTurnoverRentFixedImport_IntegTest extends LeaseModuleIn
         // given
         Lease leaseForPoison = Lease_enum.HanPoison001Se.findUsing(serviceRegistry2);
         Lease leaseForTopmodel = Lease_enum.HanTopModel002Se.findUsing(serviceRegistry2);
-        LeaseItem itemForPoison = leaseForPoison.findFirstItemOfType(LeaseItemType.TURNOVER_RENT_FIXED);
-        LeaseItem itemForTopmodel = leaseForTopmodel.findFirstItemOfType(LeaseItemType.TURNOVER_RENT_FIXED);
+        LeaseItem itemForPoison = leaseForPoison.findFirstItemOfType(LeaseItemType.TURNOVER_RENT);
+        LeaseItem itemForTopmodel = leaseForTopmodel.findFirstItemOfType(LeaseItemType.TURNOVER_RENT);
         Blob excelSheet = (Blob) fixtureResults.get(0).getObject();
 
-        LeaseTermForTurnoverRentFixedImportManager manager = new LeaseTermForTurnoverRentFixedImportManager();
+        LeaseTermForTurnoverRentSweImportManager manager = new LeaseTermForTurnoverRentSweImportManager();
         manager.setYear(2011);
         manager.setProperty(han = Property_enum.HanSe.findUsing(serviceRegistry2));
 
@@ -118,17 +127,21 @@ public class LeasetermForTurnoverRentFixedImport_IntegTest extends LeaseModuleIn
         final LocalDate startDate2011 = new LocalDate(2011, 1, 1);
         final LocalDate endDate2011 = new LocalDate(2011, 12, 31);
 
-        final LeaseTerm term1Poison = itemForPoison.findTerm(startDate2010);
+        final LeaseTermForTurnoverRent term1Poison = (LeaseTermForTurnoverRent) itemForPoison.findTerm(startDate2010);
         assertThat(term1Poison).isNull(); // previous terms, when not found, are no longer created since ECP-806
-        final LeaseTerm term2Poison = itemForPoison.findTerm(startDate2011);
+        final LeaseTermForTurnoverRent term2Poison = (LeaseTermForTurnoverRent) itemForPoison.findTerm(startDate2011);
         assertThat(term2Poison.getEffectiveValue()).isEqualTo(new BigDecimal("21000.00"));
+        assertThat(term2Poison.getManualTurnoverRent()).isEqualTo(new BigDecimal("21000.00"));
+        assertThat(term2Poison.getTurnoverRentRule()).isEqualTo("8");
         assertThat(term2Poison.getEndDate()).isEqualTo(endDate2011);
 
-        final LeaseTerm term1Topmodel = itemForTopmodel.findTerm(new LocalDate(2010, 7,15));
+        final LeaseTermForTurnoverRent term1Topmodel = (LeaseTermForTurnoverRent) itemForTopmodel.findTerm(new LocalDate(2010, 7,15));
         assertThat(term1Topmodel.getEffectiveValue()).isEqualTo(new BigDecimal("2000.00"));
         assertThat(term1Topmodel.getEndDate()).isEqualTo(endDate2010);
-        final LeaseTerm term2Topmodel = itemForTopmodel.findTerm(startDate2011);
+        final LeaseTermForTurnoverRent term2Topmodel = (LeaseTermForTurnoverRent) itemForTopmodel.findTerm(startDate2011);
         assertThat(term2Topmodel.getEffectiveValue()).isEqualTo(new BigDecimal("2100.00"));
+        assertThat(term2Topmodel.getManualTurnoverRent()).isEqualTo(new BigDecimal("2100.00"));
+        assertThat(term2Topmodel.getTurnoverRentRule()).isEqualTo("3.6");
         assertThat(term2Topmodel.getEndDate()).isEqualTo(endDate2011);
     }
 

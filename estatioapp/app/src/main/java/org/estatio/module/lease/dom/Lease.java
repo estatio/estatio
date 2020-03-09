@@ -536,8 +536,8 @@ public class Lease
             case PROPERTY_TAX:
                 if (!charge.getReference().equals("PROPERTY_TAX")) messageService.warnUser("Are you sure? Charge normally is 'property tax' for type property tax");
                 break;
-            case TURNOVER_RENT_FIXED:
-                if (!charge.getReference().equals("TURNOVER_RENT")) messageService.warnUser("Are you sure? Charge normally is 'turnover rent' for type turnover rent fixed");
+            case TURNOVER_RENT:
+                if (!charge.getReference().equals("TURNOVER_RENT")) messageService.warnUser("Are you sure? Charge normally is 'turnover rent' for type turnover rent");
                 break;
             default:
                 messageService.warnUser(String.format("Are you sure? Items of type %s are normally are not entered manually.", type));

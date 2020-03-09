@@ -40,6 +40,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import static org.incode.module.base.integtests.VT.bd;
 import static org.incode.module.base.integtests.VT.bi;
 
 @AllArgsConstructor()
@@ -68,6 +69,14 @@ public enum LeaseItemForTurnoverRent_enum implements PersonaWithFinder<LeaseItem
                     new TermSpec(Lease_enum.OxfTopModel001Gb.getStartDate().withDayOfYear(1).plusYears(1), null, null, "5"),
                     new TermSpec(Lease_enum.OxfTopModel001Gb.getStartDate().withDayOfYear(1).plusYears(3), Lease_enum.OxfTopModel001Gb.getStartDate().withDayOfYear(1).plusYears(5), null, "6")
             }),
+    HanPoison001Se(Lease_enum.HanPoison001Se, bi(1), LeaseItemForRent_enum.HanPoison001Se,
+            new TermSpec[]{
+                    new TermSpec(Lease_enum.HanPoison001Se.getStartDate(), null, null, "7")
+            }),
+    HanTopModel002Se(Lease_enum.HanTopModel002Se, bi(1), LeaseItemForRent_enum.HanTopModel002Se,
+            new TermSpec[]{
+                    new TermSpec(Lease_enum.HanTopModel002Se.getStartDate(), null, null, "3.4")
+            })
     ;
 
     private final Lease_enum lease_d;

@@ -17,6 +17,7 @@
  */
 package org.estatio.module.lease.imports;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,23 +46,24 @@ import org.estatio.module.lease.dom.LeaseItemRepository;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTermForFixed;
+import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
-        objectType = "org.estatio.app.services.lease.turnoverrent.LeaseTermForTurnoverRentFixedImportManager"
+        objectType = "org.estatio.app.services.lease.turnoverrent.LeaseTermForTurnoverRentSweImportManager"
 )
-public class LeaseTermForTurnoverRentFixedImportManager {
+public class LeaseTermForTurnoverRentSweImportManager {
 
     public static final String LEASE_TERM_FOR_TURNOVER_RENT_SHEET_NAME = "lease terms";
 
     //region > constructor, title
-    public LeaseTermForTurnoverRentFixedImportManager() {
+    public LeaseTermForTurnoverRentSweImportManager() {
     }
 
-    public LeaseTermForTurnoverRentFixedImportManager(Property property, int year) {
+    public LeaseTermForTurnoverRentSweImportManager(Property property, int year) {
         this.property = property;
         this.year = year;
     }
@@ -94,36 +96,38 @@ public class LeaseTermForTurnoverRentFixedImportManager {
     @Action(semantics = SemanticsOf.SAFE)
     public Blob download() {
         final String fileName = "TurnoverRentBulkUpdate-" + getProperty().getReference() + "@" + getYear() + ".xlsx";
-        final List<LeaseTermForTurnOverRentFixedImport> lineItems = getTurnoverRentLines();
-        return excelService.toExcel(lineItems, LeaseTermForTurnOverRentFixedImport.class,
+        final List<LeaseTermForTurnOverRentSweImport> lineItems = getTurnoverRentLines();
+        return excelService.toExcel(lineItems, LeaseTermForTurnOverRentSweImport.class,
                 LEASE_TERM_FOR_TURNOVER_RENT_SHEET_NAME, fileName);
     }
 
-    public List<LeaseTermForTurnOverRentFixedImport> getTurnoverRentLines(){
+    public List<LeaseTermForTurnOverRentSweImport> getTurnoverRentLines(){
 
-        List<LeaseTermForTurnOverRentFixedImport> result = new ArrayList<>();
+        List<LeaseTermForTurnOverRentSweImport> result = new ArrayList<>();
         List<Lease> leasesForProperty = leaseRepository.findLeasesByProperty(getProperty());
         leasesForProperty.forEach(x->{
-            List<LeaseItem> torItems = leaseItemRepository.findLeaseItemsByType(x, LeaseItemType.TURNOVER_RENT_FIXED);
+            List<LeaseItem> torItems = leaseItemRepository.findLeaseItemsByType(x, LeaseItemType.TURNOVER_RENT);
             torItems.forEach(tor->{
-                LeaseTermForTurnOverRentFixedImport line = new LeaseTermForTurnOverRentFixedImport();
+                LeaseTermForTurnOverRentSweImport line = new LeaseTermForTurnOverRentSweImport();
                 line.setYear(getYear());
                 line.setLeaseReference(x.getReference());
                 line.setLeaseExternalReference(x.getExternalReference());
                 tor.getTerms().forEach(torTerm -> {
                     if (torTerm.getStartDate().getYear()==getYear()-1) {
-                        LeaseTermForFixed term = (LeaseTermForFixed) torTerm;
+                        LeaseTermForTurnoverRent term = (LeaseTermForTurnoverRent) torTerm;
                         line.setStartDatePreviousYear(term.getStartDate());
                         line.setEndDatePreviousYear(term.getEndDate());
-                        line.setValuePreviousYear(term.getValue());
+                        line.setValuePreviousYear(term.getManualTurnoverRent());
                     }
                     if (torTerm.getStartDate().getYear()==getYear()) {
-                        LeaseTermForFixed term = (LeaseTermForFixed) torTerm;
+                        LeaseTermForTurnoverRent term = (LeaseTermForTurnoverRent) torTerm;
                         line.setStartDate(term.getStartDate());
                         line.setEndDate(term.getEndDate());
-                        line.setValue(term.getValue());
+                        line.setValue(term.getManualTurnoverRent());
+                        line.setPercentage(new BigDecimal(term.getTurnoverRentRule())); // TODO: needs to refined to handle typos etc...?
                     }
                 });
+                // TODO: evaluate this - it will change when we return to regular turnover rent items !!
                 // every item should produce a line since autocreate is turned off (ECP-806)
                 if (line.getEndDatePreviousYear()==null && line.getStartDate()==null) {
                     line.setStartDate(startOfTheYear());
@@ -150,12 +154,12 @@ public class LeaseTermForTurnoverRentFixedImportManager {
     //region > upload (action)
 
     @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
-    public LeaseTermForTurnoverRentFixedImportManager upload(
+    public LeaseTermForTurnoverRentSweImportManager upload(
             @Parameter(fileAccept = ".xlsx")
             @ParameterLayout(named = "Excel spreadsheet")
             final Blob spreadsheet) {
-        List<LeaseTermForTurnOverRentFixedImport> lineItems =
-                excelService.fromExcel(spreadsheet, LeaseTermForTurnOverRentFixedImport.class,
+        List<LeaseTermForTurnOverRentSweImport> lineItems =
+                excelService.fromExcel(spreadsheet, LeaseTermForTurnOverRentSweImport.class,
                         LEASE_TERM_FOR_TURNOVER_RENT_SHEET_NAME);
         lineItems.forEach(x->x.importData());
         return this;
