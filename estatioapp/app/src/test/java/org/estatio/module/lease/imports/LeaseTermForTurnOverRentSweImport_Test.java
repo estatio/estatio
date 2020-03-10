@@ -294,7 +294,7 @@ public class LeaseTermForTurnOverRentSweImport_Test {
         context.checking(new Expectations(){{
             oneOf(mockLeaseRepository).findLeaseByReference("Some ref");
             will(returnValue(lease));
-            oneOf(mockMessageService).warnUser("Multiple lease items of type TURNOVER_RENT_FIXED found on lease with reference Some ref; could not update.");
+            oneOf(mockMessageService).warnUser("Multiple lease items of type TURNOVER_RENT found on lease with reference Some ref; could not update.");
         }});
 
         // when

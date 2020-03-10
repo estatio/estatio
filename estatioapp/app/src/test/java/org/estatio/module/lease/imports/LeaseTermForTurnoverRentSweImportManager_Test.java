@@ -254,4 +254,18 @@ public class LeaseTermForTurnoverRentSweImportManager_Test {
         Assertions.assertThat(line.getEndDate()).isEqualTo(endDateCurrentTerm);
     }
 
+    @Test
+    public void turnoverRentRuleStringToPercentage_test() throws Exception {
+
+        Assertions.assertThat(LeaseTermForTurnoverRentSweImportManager.turnoverRentRuleStringToPercentage(null)).isNull();
+        Assertions.assertThat(LeaseTermForTurnoverRentSweImportManager.turnoverRentRuleStringToPercentage("")).isNull();
+        Assertions.assertThat(LeaseTermForTurnoverRentSweImportManager.turnoverRentRuleStringToPercentage("0")).isEqualTo(BigDecimal.ZERO);
+        Assertions.assertThat(LeaseTermForTurnoverRentSweImportManager.turnoverRentRuleStringToPercentage("0;1.23")).isEqualTo(BigDecimal.ZERO);
+        Assertions.assertThat(LeaseTermForTurnoverRentSweImportManager.turnoverRentRuleStringToPercentage("0.1")).isEqualTo(new BigDecimal("0.1"));
+        Assertions.assertThat(LeaseTermForTurnoverRentSweImportManager.turnoverRentRuleStringToPercentage("0.1; 7.5")).isEqualTo(new BigDecimal("0.1"));
+        Assertions.assertThat(LeaseTermForTurnoverRentSweImportManager.turnoverRentRuleStringToPercentage("1.23")).isEqualTo(new BigDecimal("1.23"));
+        Assertions.assertThat(LeaseTermForTurnoverRentSweImportManager.turnoverRentRuleStringToPercentage("1.23;7.55;xxxx")).isEqualTo(new BigDecimal("1.23"));
+
+    }
+
 }

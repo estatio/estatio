@@ -31,6 +31,7 @@ import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.value.Blob;
@@ -124,7 +125,7 @@ public class LeaseTermForTurnoverRentSweImportManager {
                         line.setStartDate(term.getStartDate());
                         line.setEndDate(term.getEndDate());
                         line.setValue(term.getManualTurnoverRent());
-                        line.setPercentage(new BigDecimal(term.getTurnoverRentRule())); // TODO: needs to refined to handle typos etc...?
+                        line.setPercentage(turnoverRentRuleStringToPercentage(term.getTurnoverRentRule()));
                     }
                 });
                 // TODO: evaluate this - it will change when we return to regular turnover rent items !!
@@ -142,6 +143,13 @@ public class LeaseTermForTurnoverRentSweImportManager {
         });
 
         return result;
+    }
+
+    @Programmatic
+    public static BigDecimal turnoverRentRuleStringToPercentage(final String rentRule){
+        if (rentRule == null ) return null;
+        if (rentRule == "") return null;
+        return new BigDecimal(rentRule.replaceFirst(";.*$", ""));
     }
 
     LocalDate determineNextTermStartDate(final LocalDate endDatePreviousYear){

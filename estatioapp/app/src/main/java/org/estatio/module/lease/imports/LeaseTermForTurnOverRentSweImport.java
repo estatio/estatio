@@ -197,7 +197,9 @@ public class LeaseTermForTurnOverRentSweImport implements ExcelFixtureRowHandler
 
     }
 
+    @Programmatic
     public static String percentageToTurnoverRentRuleString(final BigDecimal percentage){
+        if (percentage==null) return null;
         return percentage.toString().replaceFirst("\\.0*$", "");
     }
 
