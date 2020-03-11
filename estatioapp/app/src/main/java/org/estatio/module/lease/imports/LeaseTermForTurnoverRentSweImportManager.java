@@ -20,6 +20,7 @@ package org.estatio.module.lease.imports;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -105,7 +106,10 @@ public class LeaseTermForTurnoverRentSweImportManager {
     public List<LeaseTermForTurnOverRentSweImport> getTurnoverRentLines(){
 
         List<LeaseTermForTurnOverRentSweImport> result = new ArrayList<>();
-        List<Lease> leasesForProperty = leaseRepository.findLeasesByProperty(getProperty());
+        List<Lease> leasesForProperty = leaseRepository.findLeasesByProperty(getProperty())
+                .stream()
+                .filter(l->l.getEffectiveInterval().contains(startOfTheYear()))
+                .collect(Collectors.toList());
         leasesForProperty.forEach(x->{
             List<LeaseItem> torItems = leaseItemRepository.findLeaseItemsByType(x, LeaseItemType.TURNOVER_RENT);
             torItems.forEach(tor->{

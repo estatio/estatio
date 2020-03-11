@@ -117,7 +117,7 @@ public class LeaseTermForTurnOverRentSweImport implements ExcelFixtureRowHandler
         if (getValuePreviousYear()!=null) {
             updateTerm(itemToUpdate, getStartDatePreviousYear(), getEndDatePreviousYear(), getValuePreviousYear());
         }
-        if (getValue()!=null) {
+        if (getValue()!=null || getPercentage()!=null) {
             updateOrCreateTerm(itemToUpdate, getStartDate(), getEndDate(), getValue(), getPercentage());
         }
 

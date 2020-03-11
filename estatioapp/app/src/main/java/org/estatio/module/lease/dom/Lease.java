@@ -43,8 +43,10 @@ import org.joda.time.Period;
 import org.joda.time.PeriodType;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
@@ -63,6 +65,9 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.managed.HasManagedIn;
+import org.incode.module.base.dom.managed.HasManagedInAndExternalReference;
+import org.incode.module.base.dom.managed.ManagedIn;
 import org.incode.module.base.dom.types.NotesType;
 import org.incode.module.base.dom.utils.JodaPeriodUtils;
 import org.incode.module.base.dom.utils.StringUtils;
@@ -177,10 +182,18 @@ import lombok.Setter;
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class Lease
         extends Agreement
-        implements WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {
+        implements WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted,
+        HasManagedIn {
 
     public Lease() {
         super(LeaseAgreementRoleTypeEnum.LANDLORD, LeaseAgreementRoleTypeEnum.TENANT);
+    }
+
+    @Override
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION, hidden = Where.EVERYWHERE)
+    public ManagedIn getManagedIn() {
+        if (getAtPath().startsWith("/SWE")) return ManagedIn.FASTNET;
+        return ManagedIn.ESTATIO;
     }
 
     public static class RemoveEvent extends ActionDomainEvent<Lease> {}
