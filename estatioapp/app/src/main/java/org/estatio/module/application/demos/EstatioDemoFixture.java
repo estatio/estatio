@@ -71,7 +71,7 @@ import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRe
 import org.estatio.module.lease.seed.DocFragment_enum;
 import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
 import org.estatio.module.party.fixtures.numerator.enums.NumeratorForOrganisation_enum;
-import org.estatio.module.party.fixtures.roles.enums.PartyRole_enum;
+import org.estatio.module.capex.fixtures.roles.enums.PartyRole_enum;
 import org.estatio.module.tax.EstatioTaxModule;
 import org.estatio.module.turnover.fixtures.data.TurnoverReportingConfig_enum;
 

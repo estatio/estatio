@@ -1,4 +1,4 @@
-package org.estatio.module.party.imports;
+package org.estatio.module.capex.imports;
 
 import java.util.List;
 
