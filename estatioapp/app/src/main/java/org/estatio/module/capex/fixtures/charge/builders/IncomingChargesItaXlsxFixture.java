@@ -1,4 +1,4 @@
-package org.estatio.module.charge.fixtures.incoming.builders;
+package org.estatio.module.capex.fixtures.charge.builders;
 
 import com.google.common.io.Resources;
 
