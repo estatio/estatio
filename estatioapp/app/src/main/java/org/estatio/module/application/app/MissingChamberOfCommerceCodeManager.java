@@ -1,4 +1,4 @@
-package org.estatio.module.party.app;
+package org.estatio.module.application.app;
 
 import java.util.ArrayList;
 import java.util.Arrays;
