@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.bankaccount.verification.triggers;
+package org.estatio.module.financial.dom.bankaccount.verification.triggers;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.IPartyRoleType;
@@ -18,16 +18,16 @@ import org.estatio.module.party.dom.role.IPartyRoleType;
  * This cannot be inlined (needs to be a mixin) because BankAccount does not know abouts its verification state machine
  */
 @Mixin(method = "act")
-public class BankAccount_proofUpdated extends BankAccount_triggerAbstract {
+public class BankAccount_rejectProof extends BankAccount_triggerAbstract {
 
     private final BankAccount bankAccount;
 
-    public BankAccount_proofUpdated(BankAccount bankAccount) {
-        super(bankAccount, BankAccountVerificationStateTransitionType.PROOF_UPDATED);
+    public BankAccount_rejectProof(BankAccount bankAccount) {
+        super(bankAccount, BankAccountVerificationStateTransitionType.REJECT_PROOF);
         this.bankAccount = bankAccount;
     }
 
-    public static class ActionDomainEvent extends BankAccount_triggerAbstract.ActionDomainEvent<BankAccount_proofUpdated> {}
+    public static class ActionDomainEvent extends BankAccount_triggerAbstract.ActionDomainEvent<BankAccount_rejectProof> {}
 
     @Action(
         domainEvent = ActionDomainEvent.class,
@@ -35,10 +35,11 @@ public class BankAccount_proofUpdated extends BankAccount_triggerAbstract {
     )
     @MemberOrder(sequence = "9")
     public BankAccount act(
+            @Nullable
             final IPartyRoleType role,
             @Nullable final Person personToAssignNextTo,
-            @Nullable final String comment) {
-        trigger(role, personToAssignNextTo, comment, null);
+            final String reason) {
+        trigger(role, personToAssignNextTo, reason, reason);
         return bankAccount;
     }
 
@@ -65,5 +66,6 @@ public class BankAccount_proofUpdated extends BankAccount_triggerAbstract {
     public List<Person> choices1Act(final IPartyRoleType roleType) {
         return choicesPersonToAssignNextTo(roleType);
     }
+
 
 }

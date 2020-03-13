@@ -21,11 +21,11 @@ import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
-import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
-import org.estatio.module.capex.dom.bankaccount.verification.BankAccount_verificationState;
-import org.estatio.module.capex.dom.bankaccount.verification.triggers.BankAccount_discard;
-import org.estatio.module.capex.dom.bankaccount.verification.triggers.BankAccount_proofUpdated;
-import org.estatio.module.capex.dom.bankaccount.verification.triggers.BankAccount_rejectProof;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationState;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccount_verificationState;
+import org.estatio.module.financial.dom.bankaccount.verification.triggers.BankAccount_discard;
+import org.estatio.module.financial.dom.bankaccount.verification.triggers.BankAccount_proofUpdated;
+import org.estatio.module.financial.dom.bankaccount.verification.triggers.BankAccount_rejectProof;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
@@ -49,7 +49,7 @@ import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState.NOT_VERIFIED;
+import static org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationState.NOT_VERIFIED;
 
 public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTestAbstract {
 

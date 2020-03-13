@@ -2,9 +2,9 @@ package org.estatio.module.capex.dom.bankaccount.verification.tasks;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
-import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
-import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationState;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransition;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
 import org.estatio.module.task.dom.dobj.DomainObject_tasksAbstract;
 import org.estatio.module.financial.dom.BankAccount;
 

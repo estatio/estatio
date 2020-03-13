@@ -42,12 +42,12 @@ import org.estatio.module.application.integtests.ApplicationModuleIntegTestAbstr
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
 import org.estatio.module.capex.contributions.BankAccount_attachPdfAsIbanProof;
-import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
-import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
-import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
-import org.estatio.module.capex.dom.bankaccount.verification.BankAccount_verificationState;
-import org.estatio.module.capex.dom.bankaccount.verification.triggers.BankAccount_rejectProof;
-import org.estatio.module.capex.dom.bankaccount.verification.triggers.BankAccount_verify;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationState;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransition;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccount_verificationState;
+import org.estatio.module.financial.dom.bankaccount.verification.triggers.BankAccount_rejectProof;
+import org.estatio.module.financial.dom.bankaccount.verification.triggers.BankAccount_verify;
 import org.estatio.module.task.dom.state.StateTransitionService;
 import org.estatio.module.task.dom.task.Task;
 import org.estatio.module.capex.integtests.document.IncomingDocumentPresentationSubscriber_IntegTest;
@@ -64,14 +64,14 @@ import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState.AWAITING_PROOF;
-import static org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState.NOT_VERIFIED;
-import static org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState.VERIFIED;
-import static org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType.INSTANTIATE;
-import static org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType.PROOF_UPDATED;
-import static org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType.REJECT_PROOF;
-import static org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType.RESET;
-import static org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType.VERIFY_BANK_ACCOUNT;
+import static org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationState.AWAITING_PROOF;
+import static org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationState.NOT_VERIFIED;
+import static org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationState.VERIFIED;
+import static org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransitionType.INSTANTIATE;
+import static org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransitionType.PROOF_UPDATED;
+import static org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransitionType.REJECT_PROOF;
+import static org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransitionType.RESET;
+import static org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransitionType.VERIFY_BANK_ACCOUNT;
 
 public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleIntegTestAbstract {
 

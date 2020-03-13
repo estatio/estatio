@@ -51,8 +51,8 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.base.dom.EstatioRole;
-import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
-import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationState;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.task.dom.state.State;
 import org.estatio.module.task.dom.state.StateTransition;
 import org.estatio.module.task.dom.state.StateTransitionType;

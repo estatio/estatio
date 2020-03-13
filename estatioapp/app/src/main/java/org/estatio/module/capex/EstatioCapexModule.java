@@ -16,7 +16,7 @@ import org.incode.module.document.DocumentModule;
 import org.estatio.canonical.EstatioCanonicalModule;
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
 import org.estatio.module.budget.EstatioBudgetModule;
-import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.capex.dom.coda.CodaElement;
 import org.estatio.module.capex.dom.coda.CodaMapping;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;

@@ -18,6 +18,8 @@ import org.estatio.module.capex.contributions.BankAccount_attachPdfAsIbanProof;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransition;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
 import org.estatio.module.task.dom.state.StateTransitionEvent;
 import org.estatio.module.task.dom.state.StateTransitionService;
 import org.estatio.module.financial.dom.BankAccount;

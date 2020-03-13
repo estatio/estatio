@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.bankaccount.verification;
+package org.estatio.module.financial.dom.bankaccount.verification;
 
 import java.util.Arrays;
 import java.util.Collections;

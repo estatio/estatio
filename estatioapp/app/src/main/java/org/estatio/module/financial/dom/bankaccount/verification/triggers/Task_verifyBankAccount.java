@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.bankaccount.verification.triggers;
+package org.estatio.module.financial.dom.bankaccount.verification.triggers;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -9,7 +9,7 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.capex.dom.order.approval.triggers.Task_mixinOrderAbstract;
 import org.estatio.module.task.dom.task.Task;
 import org.estatio.module.task.dom.task.Task_mixinActAbstract;
@@ -31,7 +31,7 @@ public class Task_verifyBankAccount
     }
 
     public static class ActionDomainEvent
-            extends Task_mixinOrderAbstract.ActionDomainEvent<Task_verifyBankAccount> {
+            extends Task_mixinActAbstract.ActionDomainEvent<Task_verifyBankAccount> {
         public Class<?> getStateTransitionClass() {
             return BankAccountVerificationStateTransition.class;
         }

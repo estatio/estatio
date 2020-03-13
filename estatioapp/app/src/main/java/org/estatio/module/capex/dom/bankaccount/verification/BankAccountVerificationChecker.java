@@ -7,6 +7,8 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationState;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.task.dom.state.StateTransitionService;
 import org.estatio.module.financial.dom.BankAccount;
 

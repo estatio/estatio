@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.bankaccount.verification;
+package org.estatio.module.financial.dom.bankaccount.verification;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
@@ -39,14 +39,14 @@ import lombok.Setter;
         @Query(
                 name = "findByDomainObject", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition "
+                        + "FROM org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransition "
                         + "WHERE bankAccount == :domainObject "
                         + "ORDER BY completedOn DESC, createdOn DESC " // completedOn should be sufficient, createdOn added for timing issue in integtests
         ),
         @Query(
                 name = "findByDomainObjectAndCompleted", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition "
+                        + "FROM org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransition "
                         + "WHERE bankAccount == :domainObject "
                         + "&& completed == :completed "
                         + "ORDER BY completedOn DESC "
@@ -54,7 +54,7 @@ import lombok.Setter;
         @Query(
                 name = "findByTask", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition "
+                        + "FROM org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransition "
                         + "WHERE task == :task "
         ),
 })

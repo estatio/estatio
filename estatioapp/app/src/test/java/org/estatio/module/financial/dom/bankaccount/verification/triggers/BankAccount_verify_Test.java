@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.bankaccount.verification.triggers;
+package org.estatio.module.financial.dom.bankaccount.verification.triggers;
 
 import java.util.List;
 

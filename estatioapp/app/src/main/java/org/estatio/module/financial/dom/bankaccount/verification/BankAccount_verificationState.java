@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.bankaccount.verification;
+package org.estatio.module.financial.dom.bankaccount.verification;
 
 import org.apache.isis.applib.annotation.Mixin;
 

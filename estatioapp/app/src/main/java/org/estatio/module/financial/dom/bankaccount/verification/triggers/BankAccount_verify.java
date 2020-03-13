@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.bankaccount.verification.triggers;
+package org.estatio.module.financial.dom.bankaccount.verification.triggers;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.module.capex.contributions.BankAccount_attachPdfAsIbanProof;
-import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
 import org.estatio.module.financial.dom.BankAccount;
 
 /**
