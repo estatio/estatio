@@ -1,4 +1,4 @@
-package org.estatio.module.party.imports;
+package org.estatio.module.agreement.imports;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,10 +31,11 @@ import org.estatio.module.lease.dom.LeaseStatus;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.imports.ChamberOfCommerceImportLine;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
-        objectType = "org.estatio.module.party.imports.ImportChamberOfCommerceCodesService"
+        objectType = "org.estatio.module.agreement.imports.ImportChamberOfCommerceCodesService"
 )
 public class ImportChamberOfCommerceCodesService {
 
