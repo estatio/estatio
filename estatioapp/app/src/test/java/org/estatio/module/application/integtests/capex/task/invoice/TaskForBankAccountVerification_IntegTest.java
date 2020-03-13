@@ -48,8 +48,8 @@ import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerifica
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccount_verificationState;
 import org.estatio.module.capex.dom.bankaccount.verification.triggers.BankAccount_rejectProof;
 import org.estatio.module.capex.dom.bankaccount.verification.triggers.BankAccount_verify;
-import org.estatio.module.capex.dom.state.StateTransitionService;
-import org.estatio.module.capex.dom.task.Task;
+import org.estatio.module.task.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.task.Task;
 import org.estatio.module.capex.integtests.document.IncomingDocumentPresentationSubscriber_IntegTest;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.financial.dom.BankAccount;

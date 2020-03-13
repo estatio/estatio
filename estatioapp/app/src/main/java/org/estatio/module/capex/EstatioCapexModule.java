@@ -35,7 +35,6 @@ import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectItem;
 import org.estatio.module.capex.dom.project.ProjectItemTerm;
 import org.estatio.module.capex.dom.project.ProjectRole;
-import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.seed.DocumentTypeFSForIbanProof;
 import org.estatio.module.capex.seed.DocumentTypeFSForIncoming;
 import org.estatio.module.invoice.EstatioInvoiceModule;
@@ -88,7 +87,6 @@ public class EstatioCapexModule extends ModuleAbstract {
                 deleteFrom(OrderApprovalStateTransition.class);
                 deleteFrom(BankAccountVerificationStateTransition.class);
                 deleteFrom(IncomingDocumentCategorisationStateTransition.class);
-                deleteFrom(Task.class);
 
                 deleteFrom(CodaMapping.class);
                 deleteFrom(CodaElement.class);

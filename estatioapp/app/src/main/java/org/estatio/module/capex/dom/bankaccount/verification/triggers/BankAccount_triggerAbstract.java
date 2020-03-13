@@ -3,7 +3,7 @@ package org.estatio.module.capex.dom.bankaccount.verification.triggers;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
-import org.estatio.module.capex.dom.triggers.DomainObject_triggerAbstract;
+import org.estatio.module.task.dom.triggers.DomainObject_triggerAbstract;
 import org.estatio.module.financial.dom.BankAccount;
 
 abstract class BankAccount_triggerAbstract

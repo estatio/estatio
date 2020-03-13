@@ -42,9 +42,9 @@ import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_re
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.capex.dom.project.ProjectRoleTypeEnum;
-import org.estatio.module.capex.dom.state.StateTransitionService;
-import org.estatio.module.capex.dom.task.Task;
-import org.estatio.module.capex.dom.task.TaskRepository;
+import org.estatio.module.task.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.task.Task;
+import org.estatio.module.task.dom.task.TaskRepository;
 import org.estatio.module.capex.fixtures.incominginvoice.enums.IncomingInvoice_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;

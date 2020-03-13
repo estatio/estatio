@@ -56,7 +56,8 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
-import org.estatio.module.capex.dom.task.Task;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.module.task.dom.task.Task;
 import org.estatio.module.coda.EstatioCodaModule;
 import org.estatio.module.coda.dom.doc.CodaDocHeadMenu;
 import org.estatio.module.coda.dom.hwm.CodaHwm;
@@ -65,18 +66,16 @@ import org.estatio.module.countryapptenancy.dom.CountryServiceForCurrentUser;
 import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
-import org.estatio.module.party.dom.NumeratorAtPathRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
-import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.party.dom.role.IPartyRoleType;
-import org.estatio.module.party.dom.role.PartyRoleRepository;
 import org.estatio.module.party.dom.role.PartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.estatio.module.settings.dom.ApplicationSettingForEstatio;
 import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
+import org.estatio.module.task.dom.state.StateTransitionService;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -568,6 +567,16 @@ public class AdminDashboard implements ViewModel {
         );
     }
 
+    @Action(restrictTo = RestrictTo.PROTOTYPING)
+    public void fixUpTransitionsForAllIncomingInvoices() {
+
+        final List<IncomingInvoice> incomingInvoices = incomingInvoiceRepository.listAll();
+        for (IncomingInvoice incomingInvoice : incomingInvoices) {
+            stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransition.class, null, null, null);
+        }
+
+    }
+
     // //////////////////////////////////////
 
     @Inject
@@ -643,4 +652,7 @@ public class AdminDashboard implements ViewModel {
 
     @Inject
     PartyRoleTypeRepository partyRoleTypeRepository;
+
+    @Inject
+    StateTransitionService stateTransitionService;
 }

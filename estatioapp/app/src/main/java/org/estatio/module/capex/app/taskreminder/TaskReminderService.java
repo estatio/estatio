@@ -22,18 +22,14 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
-import org.incode.module.document.dom.impl.paperclips.Paperclip;
 
 import org.estatio.module.application.spiimpl.email.EmailService2;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
-import org.estatio.module.capex.dom.state.StateTransition;
-import org.estatio.module.capex.dom.state.StateTransitionService;
-import org.estatio.module.capex.dom.task.Task;
-import org.estatio.module.capex.dom.task.TaskRepository;
+import org.estatio.module.task.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.task.Task;
+import org.estatio.module.task.dom.task.TaskRepository;
 import org.estatio.module.party.dom.Person;
-import org.estatio.module.party.dom.role.PartyRoleType;
-import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,

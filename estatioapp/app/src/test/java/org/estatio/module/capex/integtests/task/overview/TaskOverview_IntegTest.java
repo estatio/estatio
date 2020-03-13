@@ -19,8 +19,8 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.capex.app.taskreminder.TaskOverview;
 import org.estatio.module.capex.app.taskreminder.TaskReminderService;
-import org.estatio.module.capex.dom.task.Task;
-import org.estatio.module.capex.dom.task.TaskRepository;
+import org.estatio.module.task.dom.task.Task;
+import org.estatio.module.task.dom.task.TaskRepository;
 import org.estatio.module.capex.fixtures.incominginvoice.enums.IncomingInvoice_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;

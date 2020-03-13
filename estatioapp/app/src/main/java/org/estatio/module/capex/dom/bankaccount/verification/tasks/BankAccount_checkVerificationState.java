@@ -11,9 +11,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
-import org.estatio.module.capex.dom.dobj.DomainObject_checkStateAbstract;
-import org.estatio.module.capex.dom.state.StateTransitionRepositoryGeneric;
-import org.estatio.module.capex.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.dobj.DomainObject_checkStateAbstract;
+import org.estatio.module.task.dom.state.StateTransitionRepositoryGeneric;
+import org.estatio.module.task.dom.state.StateTransitionService;
 import org.estatio.module.financial.dom.BankAccount;
 
 /**

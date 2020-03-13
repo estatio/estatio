@@ -12,7 +12,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
-import org.estatio.module.capex.dom.task.TaskRepository;
+import org.estatio.module.task.dom.task.TaskRepository;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 

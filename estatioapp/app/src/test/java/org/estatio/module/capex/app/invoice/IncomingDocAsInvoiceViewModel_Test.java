@@ -28,7 +28,7 @@ import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
-import org.estatio.module.capex.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.state.StateTransitionService;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.financial.dom.BankAccount;

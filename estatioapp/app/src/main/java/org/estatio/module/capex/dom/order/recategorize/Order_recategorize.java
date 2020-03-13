@@ -34,8 +34,8 @@ import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalStateTransition;
-import org.estatio.module.capex.dom.state.StateTransitionService;
-import org.estatio.module.capex.dom.task.Task;
+import org.estatio.module.task.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.task.Task;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 
 /**

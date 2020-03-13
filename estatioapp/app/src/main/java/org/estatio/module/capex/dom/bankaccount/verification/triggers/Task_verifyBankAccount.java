@@ -11,8 +11,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.capex.dom.order.approval.triggers.Task_mixinOrderAbstract;
-import org.estatio.module.capex.dom.task.Task;
-import org.estatio.module.capex.dom.task.Task_mixinActAbstract;
+import org.estatio.module.task.dom.task.Task;
+import org.estatio.module.task.dom.task.Task_mixinActAbstract;
 import org.estatio.module.financial.dom.BankAccount;
 
 /**

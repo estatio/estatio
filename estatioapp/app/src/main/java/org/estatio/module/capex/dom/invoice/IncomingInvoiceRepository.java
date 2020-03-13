@@ -1,10 +1,6 @@
 package org.estatio.module.capex.dom.invoice;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.net.URL;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -12,15 +8,11 @@ import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
-import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.io.Resources;
 
 import org.datanucleus.identity.DatastoreIdImpl;
-import org.datanucleus.query.typesafe.ComparableExpression;
 import org.datanucleus.query.typesafe.TypesafeQuery;
 import org.datanucleus.store.rdbms.query.ForwardQueryResult;
 import org.joda.time.LocalDate;
@@ -36,7 +28,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
-import org.estatio.module.capex.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.util.CountryUtil;
 import org.estatio.module.capex.dom.util.DocumentNameUtil;
 import org.estatio.module.currency.dom.Currency;
