@@ -1,4 +1,4 @@
-package org.estatio.module.base.fixtures.security.perms.personas;
+package org.estatio.module.party.fixtures.security.perms.personas;
 
 import org.apache.isis.applib.annotation.Programmatic;
 

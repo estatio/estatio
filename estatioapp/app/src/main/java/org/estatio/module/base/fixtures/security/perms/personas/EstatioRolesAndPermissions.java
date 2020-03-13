@@ -19,6 +19,8 @@ package org.estatio.module.base.fixtures.security.perms.personas;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.estatio.module.party.fixtures.security.perms.personas.EstatioCapexUserRoleAndPermissions;
+
 @Programmatic
 public class EstatioRolesAndPermissions extends FixtureScript {
 
@@ -27,7 +29,6 @@ public class EstatioRolesAndPermissions extends FixtureScript {
         executionContext.executeChild(this, new EstatioAdminRoleAndPermissions());
         executionContext.executeChild(this, new EstatioUserRoleAndPermissions());
         executionContext.executeChild(this, new EstatioSuperuserRoleAndPermissions());
-        executionContext.executeChild(this, new EstatioCapexUserRoleAndPermissions());
     }
 
 }
