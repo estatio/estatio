@@ -15,7 +15,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.base.dom.Importable;
-import org.estatio.module.numerator.dom.NumeratorAtPathRepository;
+import org.estatio.module.party.dom.NumeratorAtPathRepository;
 
 import lombok.Getter;
 import lombok.Setter;

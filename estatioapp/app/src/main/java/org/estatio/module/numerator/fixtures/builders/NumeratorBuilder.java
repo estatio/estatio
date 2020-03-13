@@ -12,9 +12,7 @@ import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.numerator.dom.Numerator;
-import org.estatio.module.numerator.dom.NumeratorAtPathRepository;
 import org.estatio.module.numerator.dom.NumeratorRepository;
-import org.estatio.module.party.dom.PartyRepository;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
