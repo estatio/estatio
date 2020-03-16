@@ -33,9 +33,9 @@ import org.estatio.module.capex.dom.project.ProjectBudgetItem;
 import org.estatio.module.capex.dom.project.ProjectBudgetItemRepository;
 import org.estatio.module.capex.dom.project.ProjectBudgetRepository;
 import org.estatio.module.capex.dom.project.ProjectItem;
+import org.estatio.module.capex.fixtures.charge.builders.IncomingChargesItaXlsxFixture;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
-import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesItaXlsxFixture;
 import org.estatio.module.charge.fixtures.incoming.enums.IncomingCharge_enum;
 
 public class ProjectBudgetItemRepository_IntegTest extends CapexModuleIntegTestAbstract {

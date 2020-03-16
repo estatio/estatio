@@ -21,10 +21,10 @@ import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
 import org.estatio.module.base.dom.VisibilityEvaluator;
 import org.estatio.module.capex.dom.order.Order;
-import org.estatio.module.capex.dom.state.StateTransition;
-import org.estatio.module.capex.dom.state.StateTransitionService;
-import org.estatio.module.capex.dom.task.Task;
-import org.estatio.module.capex.dom.task.TaskRepository;
+import org.estatio.module.task.dom.state.StateTransition;
+import org.estatio.module.task.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.task.Task;
+import org.estatio.module.task.dom.task.TaskRepository;
 import org.estatio.module.party.dom.Person;
 
 import lombok.Getter;

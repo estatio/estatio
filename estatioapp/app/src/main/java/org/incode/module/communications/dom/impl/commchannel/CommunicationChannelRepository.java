@@ -109,7 +109,7 @@ public class CommunicationChannelRepository {
      */
     @Programmatic
     public PostalAddress upsertPostalAddress(
-            final Organisation organisation,
+            final CommunicationChannelOwner organisation,
             final String externalReferenceIfAny,
             final CommunicationChannelPurposeType purposeTypeIfAny,
             final String description,
@@ -155,7 +155,7 @@ public class CommunicationChannelRepository {
 
     @Programmatic
     public PhoneOrFaxNumber upsertPhoneNumber(
-            final Organisation organisation,
+            final CommunicationChannelOwner organisation,
             final String externalReferenceIfAny,
             final CommunicationChannelPurposeType purposeTypeIfAny,
             final String description,
@@ -168,7 +168,7 @@ public class CommunicationChannelRepository {
 
     @Programmatic
     public PhoneOrFaxNumber upsertFaxNumber(
-            final Organisation organisation,
+            final CommunicationChannelOwner organisation,
             final String externalReferenceIfAny,
             final CommunicationChannelPurposeType purposeTypeIfAny,
             final String description,
@@ -182,7 +182,7 @@ public class CommunicationChannelRepository {
     @Programmatic
     public PhoneOrFaxNumber upsertPhoneOrFaxNumber(
             final CommunicationChannelType communicationChannelType,
-            final Organisation organisation,
+            final CommunicationChannelOwner  organisation,
             final String externalReferenceIfAny,
             final CommunicationChannelPurposeType purposeTypeIfAny,
             final String description,
@@ -216,7 +216,7 @@ public class CommunicationChannelRepository {
 
     @Programmatic
     public EmailAddress upsertEmailAddress(
-            final Organisation organisation,
+            final CommunicationChannelOwner organisation,
             final String externalReferenceIfAny,
             final CommunicationChannelPurposeType purposeTypeIfAny,
             final String description,

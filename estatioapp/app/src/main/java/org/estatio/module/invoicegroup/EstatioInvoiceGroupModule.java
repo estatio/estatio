@@ -55,8 +55,6 @@ public final class EstatioInvoiceGroupModule extends ModuleAbstract {
                 String sql;
                 String table;
 
-                deleteFrom(EventSourceLinkForBreakOption.class);
-
                 // InvoiceAttribute
                 schema = schemaOf(InvoiceGroup.class);
                 table = "InvoiceGroupProperty";

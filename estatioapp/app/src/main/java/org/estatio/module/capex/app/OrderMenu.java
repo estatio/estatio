@@ -40,7 +40,7 @@ import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.imports.OrderProjectImportAdapter;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.numerator.dom.NumeratorAtPathRepository;
+import org.estatio.module.party.dom.NumeratorAtPathRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;

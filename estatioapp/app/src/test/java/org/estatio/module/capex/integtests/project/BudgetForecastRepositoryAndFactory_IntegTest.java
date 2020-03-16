@@ -40,9 +40,9 @@ import org.estatio.module.capex.dom.project.ForecastFrequency;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectBudget;
 import org.estatio.module.capex.dom.project.ProjectBudgetRepository;
+import org.estatio.module.capex.fixtures.charge.builders.IncomingChargesItaXlsxFixture;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
-import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesItaXlsxFixture;
 
 public class BudgetForecastRepositoryAndFactory_IntegTest extends CapexModuleIntegTestAbstract {
 
