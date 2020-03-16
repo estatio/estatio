@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
@@ -42,22 +43,39 @@ import org.apache.isis.core.metamodel.services.configinternal.ConfigurationServi
 import org.apache.isis.core.metamodel.specloader.ServiceInitializer;
 
 import org.isisaddons.module.publishmq.dom.servicespi.PublisherServiceUsingActiveMq;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.servletapi.dom.HttpSessionProvider;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
+import org.incode.module.country.dom.impl.Country;
 import org.incode.module.slack.impl.SlackService;
 
 import org.estatio.module.application.contributions.Organisation_syncToCoda;
+import org.estatio.module.capex.app.taskreminder.TaskReminderService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.module.task.dom.task.Task;
 import org.estatio.module.coda.EstatioCodaModule;
 import org.estatio.module.coda.dom.doc.CodaDocHeadMenu;
 import org.estatio.module.coda.dom.hwm.CodaHwm;
 import org.estatio.module.coda.dom.hwm.CodaHwmRepository;
+import org.estatio.module.countryapptenancy.dom.CountryServiceForCurrentUser;
+import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.OrganisationRepository;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.PersonRepository;
+import org.estatio.module.party.dom.role.IPartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.estatio.module.settings.dom.ApplicationSettingForEstatio;
 import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
+import org.estatio.module.task.dom.state.StateTransitionService;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -499,6 +517,68 @@ public class AdminDashboard implements ViewModel {
         serviceInitializer.postConstruct();
     }
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void sendApprovalRemindersItaly(@Nullable final Person approver){
+        if (approver==null) {
+            taskReminderService.sendRemindersToAllItalianApprovers();
+        } else {
+            final List<Task> taskList = taskReminderService.findIncompleteItalianApprovalTasks().stream()
+                    .filter(t->t.getPersonAssignedTo()!=null)
+                    .filter(t -> t.getPersonAssignedTo().equals(approver))
+                    .collect(Collectors.toList());
+            taskReminderService.sendReminder(approver, taskList);
+        }
+    }
+
+    public List<Person> choices0SendApprovalRemindersItaly(){
+        return personRepository.allPersons();
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(cssClassFa = "fa-wrench")
+    @MemberOrder(sequence = "98")
+    public MissingChamberOfCommerceCodeManager fixMissingChamberOfCommerceCodes(
+            final Country country,
+            final IPartyRoleType role,
+            final @ParameterLayout(named = "Start from bottom?") boolean reversed) {
+        final ApplicationTenancy applicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
+        List<Organisation> organisationsMissingCode = organisationRepository.findByAtPathMissingChamberOfCommerceCode(applicationTenancy.getPath())
+                .stream()
+                .filter(org -> org.hasPartyRoleType(role))
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toList(), lst -> {
+                            if (reversed)
+                                Collections.reverse(lst);
+                            return lst;
+                        }
+                ));
+
+        return new MissingChamberOfCommerceCodeManager(organisationsMissingCode);
+    }
+
+    public List<Country> choices0FixMissingChamberOfCommerceCodes() {
+        return countryServiceForCurrentUser.countriesForCurrentUser();
+    }
+
+    public List<PartyRoleType> choices1FixMissingChamberOfCommerceCodes() {
+        return Arrays.asList(
+                partyRoleTypeRepository.findByKey(LeaseAgreementRoleTypeEnum.TENANT.getKey()),
+                partyRoleTypeRepository.findByKey(IncomingInvoiceRoleTypeEnum.SUPPLIER.getKey())
+        );
+    }
+
+    @Action(restrictTo = RestrictTo.PROTOTYPING)
+    public void fixUpTransitionsForAllIncomingInvoices() {
+
+        final List<IncomingInvoice> incomingInvoices = incomingInvoiceRepository.listAll();
+        for (IncomingInvoice incomingInvoice : incomingInvoices) {
+            stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransition.class, null, null, null);
+        }
+
+    }
+
+    // //////////////////////////////////////
+
     @Inject
     CodaCmpCodeService codaCmpCodeService;
 
@@ -556,4 +636,23 @@ public class AdminDashboard implements ViewModel {
     @Inject
     CodaDocHeadMenu codaDocHeadMenu;
 
+    @Inject
+    TaskReminderService taskReminderService;
+
+    @Inject PersonRepository personRepository;
+
+    @Inject
+    OrganisationRepository organisationRepository;
+
+    @Inject
+    CountryServiceForCurrentUser countryServiceForCurrentUser;
+
+    @Inject
+    EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
+
+    @Inject
+    PartyRoleTypeRepository partyRoleTypeRepository;
+
+    @Inject
+    StateTransitionService stateTransitionService;
 }

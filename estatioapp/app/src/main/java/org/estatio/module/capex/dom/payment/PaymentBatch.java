@@ -94,11 +94,11 @@ import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStat
 import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalStateTransition;
 import org.estatio.module.capex.dom.payment.approval.triggers.PaymentBatch_complete;
-import org.estatio.module.capex.dom.state.State;
-import org.estatio.module.capex.dom.state.StateTransition;
-import org.estatio.module.capex.dom.state.StateTransitionService;
-import org.estatio.module.capex.dom.state.StateTransitionType;
-import org.estatio.module.capex.dom.state.Stateful;
+import org.estatio.module.task.dom.state.State;
+import org.estatio.module.task.dom.state.StateTransition;
+import org.estatio.module.task.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.state.StateTransitionType;
+import org.estatio.module.task.dom.state.Stateful;
 import org.estatio.module.capex.dom.util.InvoicePageRange;
 import org.estatio.module.capex.platform.pdfmanipulator.ExtractSpec;
 import org.estatio.module.capex.platform.pdfmanipulator.PdfManipulator;

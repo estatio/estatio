@@ -3,7 +3,7 @@ package org.estatio.module.capex.dom.invoice.approval;
 import java.util.Arrays;
 import java.util.List;
 
-import org.estatio.module.capex.dom.state.State;
+import org.estatio.module.task.dom.state.State;
 
 import lombok.Getter;
 

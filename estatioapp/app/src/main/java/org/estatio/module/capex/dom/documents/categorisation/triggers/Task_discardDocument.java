@@ -11,7 +11,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.module.capex.app.contributions.categorise.Task_categoriseDocumentAsOrder;
-import org.estatio.module.capex.dom.task.Task;
+import org.estatio.module.task.dom.task.Task;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Task does not know about the domain object it refers to.
