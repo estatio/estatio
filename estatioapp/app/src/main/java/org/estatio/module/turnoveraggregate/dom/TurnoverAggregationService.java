@@ -435,14 +435,6 @@ public class TurnoverAggregationService {
         return turnovers.stream().filter(t->interval.contains(t.getDate())).collect(Collectors.toList());
     }
 
-//    private List<Turnover> getTurnoversForInterval(
-//            final List<Turnover> turnovers,
-//            final LocalDateInterval interval) {
-//        return turnovers.stream()
-//                .filter(t -> interval.contains(t.getDate()))
-//                .collect(Collectors.toList());
-//    }
-
     public void calculatePurchaseCountAggregateForPeriod(
             final PurchaseCountAggregateForPeriod purchaseCountAggregateForPeriod,
             final LocalDate aggregationDate,
