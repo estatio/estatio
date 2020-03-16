@@ -22,7 +22,6 @@ import org.estatio.module.capex.dom.project.ProjectItemRepository;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.party.imports.OrganisationImport;
 
 import lombok.Getter;
 import lombok.Setter;

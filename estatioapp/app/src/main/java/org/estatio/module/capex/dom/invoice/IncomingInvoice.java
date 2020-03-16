@@ -66,8 +66,8 @@ import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.capex.app.IncomingInvoiceNotificationService;
 import org.estatio.module.capex.app.SupplierCreationService;
 import org.estatio.module.capex.app.invoice.IncomingInvoiceTemplateViewModel;
-import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
-import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationState;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.capex.dom.documents.BudgetItemChooser;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
@@ -82,11 +82,11 @@ import org.estatio.module.capex.dom.payment.PaymentLine;
 import org.estatio.module.capex.dom.payment.PaymentLineRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
-import org.estatio.module.capex.dom.state.State;
-import org.estatio.module.capex.dom.state.StateTransition;
-import org.estatio.module.capex.dom.state.StateTransitionService;
-import org.estatio.module.capex.dom.state.StateTransitionType;
-import org.estatio.module.capex.dom.state.Stateful;
+import org.estatio.module.task.dom.state.State;
+import org.estatio.module.task.dom.state.StateTransition;
+import org.estatio.module.task.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.state.StateTransitionType;
+import org.estatio.module.task.dom.state.Stateful;
 import org.estatio.module.capex.dom.util.CountryUtil;
 import org.estatio.module.capex.dom.util.FinancialAmountUtil;
 import org.estatio.module.capex.dom.util.PeriodUtil;
@@ -271,6 +271,7 @@ import lombok.Setter;
                 @Persistent(name = "bankAccount")
         })
 @Indices({
+        @Index(name = "IncomingInvoice_bankAccount_IDX", members = { "bankAccount" }),
         @Index(name = "IncomingInvoice_approvalState_IDX", members = { "approvalState" }),
         @Index(name = "IncomingInvoice_atPath_approvalState_IDX", members = { "applicationTenancyPath", "approvalState" }),
         @Index(name = "IncomingInvoice_approvalState_atPath_IDX", members = { "approvalState", "applicationTenancyPath" }),
@@ -882,6 +883,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final Project project,
             final BudgetItem budgetItem,
             final String period) {
+        if (hide7CompleteInvoiceItem()) return null; // increases speed when not capex ...
         return getProperty() == null ?
                 projectRepository.listAll()
                 : projectRepository.findByFixedAsset(getProperty())
@@ -914,6 +916,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Charge charge) {
+        if (hide8CompleteInvoiceItem()) return null; // increases speed when not capex ...
         return budgetItemChooser.choicesBudgetItemFor(getProperty(), charge);
     }
 

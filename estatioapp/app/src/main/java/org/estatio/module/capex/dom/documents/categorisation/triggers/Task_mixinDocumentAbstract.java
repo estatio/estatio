@@ -5,8 +5,8 @@ import javax.inject.Inject;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
-import org.estatio.module.capex.dom.task.Task;
-import org.estatio.module.capex.dom.task.Task_mixinActAbstract;
+import org.estatio.module.task.dom.task.Task;
+import org.estatio.module.task.dom.task.Task_mixinActAbstract;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Task does not know about the domain object it refers to.

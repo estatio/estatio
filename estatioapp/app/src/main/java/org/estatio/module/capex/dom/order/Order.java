@@ -95,10 +95,10 @@ import org.estatio.module.capex.dom.order.approval.OrderApprovalStateTransition;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
-import org.estatio.module.capex.dom.state.State;
-import org.estatio.module.capex.dom.state.StateTransition;
-import org.estatio.module.capex.dom.state.StateTransitionType;
-import org.estatio.module.capex.dom.state.Stateful;
+import org.estatio.module.task.dom.state.State;
+import org.estatio.module.task.dom.state.StateTransition;
+import org.estatio.module.task.dom.state.StateTransitionType;
+import org.estatio.module.task.dom.state.Stateful;
 import org.estatio.module.capex.dom.util.FinancialAmountUtil;
 import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.charge.dom.Applicability;
@@ -1362,6 +1362,29 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         if (stateTransitionClass == OrderApprovalStateTransition.class) {
             setApprovalState((OrderApprovalState) newState);
         }
+    }
+
+    @Column(allowsNull = "true", length = NotesType.Meta.MAX_LEN)
+    @PropertyLayout(multiLine = 5, hidden = Where.ALL_TABLES)
+    @Getter @Setter
+    private String comments;
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Order editComments(
+            @ParameterLayout(multiLine = 5)
+            final String comments
+    ) {
+        setComments(comments);
+        return this;
+    }
+
+    public String default0EditComments() {
+        return getComments();
+    }
+
+    public boolean hideComments(){
+        if (isItalian(this)) return false;
+        return true;
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)

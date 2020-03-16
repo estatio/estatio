@@ -13,7 +13,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
-import org.estatio.module.capex.dom.bankaccount.verification.triggers.BankAccount_verify;
+import org.estatio.module.financial.dom.bankaccount.verification.triggers.BankAccount_verify;
 import org.estatio.module.capex.dom.documents.categorisation.triggers.Document_categoriseAsPropertyInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;

@@ -67,6 +67,7 @@ public final class EstatioPartyModule extends ModuleAbstract {
 
     }
 
+    private static final ThreadLocal<Boolean> refData = ThreadLocal.withInitial(() -> false);
 
 
 }

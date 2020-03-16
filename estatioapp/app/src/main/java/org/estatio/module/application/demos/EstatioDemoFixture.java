@@ -49,7 +49,7 @@ import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.EstatioChargeModule;
 import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
-import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesItaXlsxFixture;
+import org.estatio.module.capex.fixtures.charge.builders.IncomingChargesItaXlsxFixture;
 import org.estatio.module.currency.EstatioCurrencyModule;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.guarantee.fixtures.enums.Guarantee_enum;
@@ -71,7 +71,7 @@ import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRe
 import org.estatio.module.lease.seed.DocFragment_enum;
 import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
 import org.estatio.module.party.fixtures.numerator.enums.NumeratorForOrganisation_enum;
-import org.estatio.module.party.fixtures.roles.enums.PartyRole_enum;
+import org.estatio.module.capex.fixtures.roles.enums.PartyRole_enum;
 import org.estatio.module.tax.EstatioTaxModule;
 import org.estatio.module.turnover.fixtures.data.TurnoverReportingConfig_enum;
 import org.estatio.module.turnover.fixtures.data.Turnover_enum;

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<local-project language="java" version="5.0.15206" xml-version="3" flavor="j2se">
+  <property name="show-groupids" value="false" />
+  <property name="show-as-module" value="false" />
+  <property name="show-profiles" value="false" />
+  <property name="publish-architecture-artifacts" value="true" />
+  <property name="force-classpath" value="false" />
+  <property name="project-type" value="maven" />
+  <property name="hide-externals" value="true" />
+  <property name="parse-archive-in-archive" value="false" />
+  <property name="include-injected-dependency" value="false" />
+  <property name="relative-to" value="const(THIS_FILE)" />
+  <property name="action-set-mod" value="1" />
+  <property name="detail-mode" value="true" />
+  <property name="hide-deprecated" value="false" />
+  <property name="resolve-name-clashes" value="true" />
+  <property name="project-excluded" />
+  <property name="show-needs-to-compile" value="false" />
+  <property name="show-poms" value="true" />
+  <property name="show-test-classes" value="false" />
+  <classpath>
+    <classpathentry kind="lib" path="estatioapp/app/target/estatio-app-1.0.0-SNAPSHOT.jar" module="estatio-app" displaymodule="estatio-app" />
+    <classpathentry kind="lib" path="estatioapp/webapp/target/classes" module="estatio-webapp" displaymodule="estatio-webapp" />
+  </classpath>
+  <pom-root-files>
+    <pom path="pom.xml" />
+  </pom-root-files>
+  <modules>
+    <module name="estatio-app" kind="jar" />
+    <module name="estatio-webapp" kind="war">
+      <requires name="estatio-app" kind="jar" />
+    </module>
+  </modules>
+  <modules-in-scope />
+  <restructuring>
+    <set version="3" name="Action list 1" hiview="Codemap" active="true" todo="false" list="0" />
+  </restructuring>
+  <sourcepaths>
+    <pathentry type="file" path="estatioapp/app/src/main/java" />
+  </sourcepaths>
+  <grid-set sep="." version="5.0.15206" />
+</local-project>

@@ -22,13 +22,13 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.project.ProjectRoleTypeEnum;
-import org.estatio.module.capex.dom.state.AdvancePolicy;
-import org.estatio.module.capex.dom.state.NextTransitionSearchStrategy;
-import org.estatio.module.capex.dom.state.StateTransitionEvent;
-import org.estatio.module.capex.dom.state.StateTransitionRepository;
-import org.estatio.module.capex.dom.state.StateTransitionServiceSupportAbstract;
-import org.estatio.module.capex.dom.state.StateTransitionType;
-import org.estatio.module.capex.dom.state.TaskAssignmentStrategy;
+import org.estatio.module.task.dom.state.AdvancePolicy;
+import org.estatio.module.task.dom.state.NextTransitionSearchStrategy;
+import org.estatio.module.task.dom.state.StateTransitionEvent;
+import org.estatio.module.task.dom.state.StateTransitionRepository;
+import org.estatio.module.task.dom.state.StateTransitionServiceSupportAbstract;
+import org.estatio.module.task.dom.state.StateTransitionType;
+import org.estatio.module.task.dom.state.TaskAssignmentStrategy;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
@@ -243,14 +243,14 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 if (incomingInvoice.getType() == null)
                     return null;
 
+                if (isItalian(incomingInvoice))
+                    return Arrays.asList(FixedAssetRoleTypeEnum.ASSET_MANAGER, PartyRoleTypeEnum.TECHNICIAN);
+
                 switch (incomingInvoice.getType()) {
-                    case CAPEX:
-                        if (isItalian(incomingInvoice))
-                            return Arrays.asList(FixedAssetRoleTypeEnum.ASSET_MANAGER, PartyRoleTypeEnum.TECHNICIAN);
+                case CAPEX:
                         return Collections.singletonList(ProjectRoleTypeEnum.PROJECT_MANAGER);
                     case PROPERTY_EXPENSES:
                     case SERVICE_CHARGES:
-                        return Collections.singletonList(FixedAssetRoleTypeEnum.ASSET_MANAGER);
                     case ITA_MANAGEMENT_COSTS:
                     case ITA_RECOVERABLE:
                         return Arrays.asList(FixedAssetRoleTypeEnum.ASSET_MANAGER);

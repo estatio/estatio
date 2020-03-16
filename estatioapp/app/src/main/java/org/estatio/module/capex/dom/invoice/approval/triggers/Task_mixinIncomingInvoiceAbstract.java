@@ -4,8 +4,8 @@ import javax.inject.Inject;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
-import org.estatio.module.capex.dom.task.Task;
-import org.estatio.module.capex.dom.task.Task_mixinActAbstract;
+import org.estatio.module.task.dom.task.Task;
+import org.estatio.module.task.dom.task.Task_mixinActAbstract;
 
 public abstract class Task_mixinIncomingInvoiceAbstract<M>
         extends

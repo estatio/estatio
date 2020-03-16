@@ -29,7 +29,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.module.numerator.dom.Numerator;
-import org.estatio.module.numerator.dom.NumeratorAtPathRepository;
+import org.estatio.module.party.dom.NumeratorAtPathRepository;
 import org.estatio.module.numerator.dom.NumeratorRepository;
 
 /**

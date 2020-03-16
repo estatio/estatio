@@ -4,11 +4,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+import javax.jdo.JDOHelper;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 
+import org.datanucleus.identity.DatastoreIdImpl;
 import org.datanucleus.query.typesafe.TypesafeQuery;
+import org.datanucleus.store.rdbms.query.ForwardQueryResult;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -22,7 +28,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
-import org.estatio.module.capex.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.util.CountryUtil;
 import org.estatio.module.capex.dom.util.DocumentNameUtil;
 import org.estatio.module.currency.dom.Currency;
@@ -207,6 +213,9 @@ public class IncomingInvoiceRepository {
                         "paymentMethod", paymentMethod));
     }
 
+
+
+
     @Programmatic
     public List<IncomingInvoice> findNotInAnyPaymentBatchByAtPathPrefixesAndApprovalStateAndPaymentMethod(
             final List<String> atPathPrefixes,
@@ -304,6 +313,43 @@ public class IncomingInvoiceRepository {
 
     }
 
+    @Programmatic
+    public boolean findCreditNotesInStateOf(
+            final BankAccount creditorBankAccount,
+            final List<IncomingInvoiceApprovalState> upstreamStates) {
+        final PersistenceManager jdoPersistenceManager = isisJdoSupport.getJdoPersistenceManager();
+        final String sql = constructSqlForCreditNotesInStateOf(upstreamStates);
+        final Query query = jdoPersistenceManager.newQuery("javax.jdo.query.SQL", sql);
+        try {
+            query.setResultClass(Integer.class);
+            final DatastoreIdImpl datastoreId = (DatastoreIdImpl) JDOHelper.getObjectId(creditorBankAccount);
+            final long idKeyAsObject = (long) datastoreId.getKeyAsObject();
+            final ForwardQueryResult result = (ForwardQueryResult) query.executeWithMap(ImmutableMap.of("bankAccountId", idKeyAsObject));
+            return !result.isEmpty();
+        } finally {
+            if (query!=null) query.closeAll();
+        }
+    }
+
+    String constructSqlForCreditNotesInStateOf(final List<IncomingInvoiceApprovalState> upstreamStates){
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT TOP 1 I.id FROM Invoice I WHERE I.bankAccountId = :bankAccountId AND I.netAmount < 0");
+        final int size = upstreamStates!=null ? upstreamStates.size() : -1;
+        if (size>0){
+            builder.append(" AND I.approvalState IN (");
+            builder.append("'");
+            builder.append(upstreamStates.get(0).toString());
+            builder.append("'");
+            for (int i = 1; i < size; i++) {
+                builder.append(", '");
+                builder.append(upstreamStates.get(i).toString());
+                builder.append("'");
+            }
+            builder.append(")");
+        }
+        return builder.toString();
+    }
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Programmatic
     public List<PaymentMethod> findUniquePaymentMethodsForSeller(final Party seller) {
@@ -333,7 +379,6 @@ public class IncomingInvoiceRepository {
                         "findTemplatesForSeller",
                         "seller", seller));
     }
-
     @Programmatic
     public IncomingInvoice create(
             final IncomingInvoiceType type,
@@ -392,9 +437,10 @@ public class IncomingInvoiceRepository {
 
         return invoice;
     }
-    // Note: this method uses a first match on invoicenumber, seller and invoicedate
 
+    // Note: this method uses a first match on invoicenumber, seller and invoicedate
     // which in practice can be assumed to be unique, though technically is not
+
     @Programmatic
     public IncomingInvoice upsert(
             final IncomingInvoiceType type,
@@ -486,7 +532,6 @@ public class IncomingInvoiceRepository {
     public void delete(final IncomingInvoice incomingInvoice) {
         repositoryService.removeAndFlush(incomingInvoice);
     }
-
     @Inject
     StateTransitionService stateTransitionService;
     @Inject
@@ -497,7 +542,7 @@ public class IncomingInvoiceRepository {
     ServiceRegistry2 serviceRegistry2;
     @Inject
     CurrencyRepository currencyRepository;
+
     @Inject
     InvoiceRepository invoiceRepository;
-
 }

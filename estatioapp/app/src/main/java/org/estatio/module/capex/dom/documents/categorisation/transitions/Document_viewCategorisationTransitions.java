@@ -9,7 +9,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
-import org.estatio.module.capex.dom.dobj.DomainObject_viewTransitionsAbstract;
+import org.estatio.module.task.dom.dobj.DomainObject_viewTransitionsAbstract;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 
 /**
