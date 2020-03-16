@@ -71,8 +71,8 @@ import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_re
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.project.Project;
-import org.estatio.module.capex.dom.state.StateTransitionService;
-import org.estatio.module.capex.dom.task.Task;
+import org.estatio.module.task.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.task.Task;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.coda.dom.doc.appsettings.ApplicationSettingKey;
 import org.estatio.module.financial.dom.BankAccount;

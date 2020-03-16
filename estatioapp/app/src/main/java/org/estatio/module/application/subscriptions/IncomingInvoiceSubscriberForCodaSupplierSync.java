@@ -14,9 +14,9 @@ import org.estatio.module.application.contributions.Organisation_syncToCoda;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_complete;
 import org.estatio.module.capex.dom.invoice.approval.triggers.Task_completeIncomingInvoice;
-import org.estatio.module.capex.dom.state.StateTransition;
-import org.estatio.module.capex.dom.state.StateTransitionService;
-import org.estatio.module.capex.dom.task.Task;
+import org.estatio.module.task.dom.state.StateTransition;
+import org.estatio.module.task.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.task.Task;
 import org.estatio.module.party.dom.Organisation;
 
 @DomainService(nature = NatureOfService.DOMAIN)

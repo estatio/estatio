@@ -16,7 +16,7 @@ import org.isisaddons.wicket.pdfjs.cpt.applib.PdfJsViewer;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.module.capex.dom.task.Task;
+import org.estatio.module.task.dom.task.Task;
 
 /**
  * Although this mixin could be inlined, probably want to keep separate because there's a chance that Task may move into its own module.

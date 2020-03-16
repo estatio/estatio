@@ -14,7 +14,7 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.capex.app.document.IncomingDocViewModel;
 import org.estatio.module.capex.dom.documents.categorisation.triggers.Document_categoriseAsPropertyInvoice;
 import org.estatio.module.capex.dom.documents.categorisation.triggers.Task_mixinDocumentAbstract;
-import org.estatio.module.capex.dom.task.Task;
+import org.estatio.module.task.dom.task.Task;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Task does not know about the domain object it refers to.

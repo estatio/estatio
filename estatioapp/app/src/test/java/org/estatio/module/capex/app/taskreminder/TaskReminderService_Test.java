@@ -2,12 +2,10 @@ package org.estatio.module.capex.app.taskreminder;
 
 import java.net.URI;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.Sets;
 
-import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -28,9 +26,9 @@ import org.estatio.module.application.spiimpl.email.EmailService2;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalStateTransition;
-import org.estatio.module.capex.dom.state.StateTransitionService;
-import org.estatio.module.capex.dom.task.Task;
-import org.estatio.module.capex.dom.task.TaskRepository;
+import org.estatio.module.task.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.task.Task;
+import org.estatio.module.task.dom.task.TaskRepository;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.PartyRoleType;
 

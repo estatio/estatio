@@ -36,6 +36,8 @@ import org.estatio.module.financial.dom.paperclips.PaperclipForBankAccount;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountTransaction;
 import org.estatio.module.party.EstatioPartyModule;
+import org.estatio.module.task.EstatioTaskModule;
+import org.estatio.module.turnover.EstatioTurnoverModule;
 
 @XmlRootElement(name = "module")
 public final class EstatioFinancialModule extends ModuleAbstract {
@@ -44,7 +46,7 @@ public final class EstatioFinancialModule extends ModuleAbstract {
 
     @Override
     public Set<Module> getDependencies() {
-        return Sets.newHashSet(new EstatioPartyModule());
+        return Sets.newHashSet(new EstatioTaskModule());
     }
 
 

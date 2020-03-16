@@ -43,18 +43,23 @@ import org.apache.isis.core.metamodel.services.configinternal.ConfigurationServi
 import org.apache.isis.core.metamodel.specloader.ServiceInitializer;
 
 import org.isisaddons.module.publishmq.dom.servicespi.PublisherServiceUsingActiveMq;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.servletapi.dom.HttpSessionProvider;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
+
 import org.incode.module.base.dom.managed.ManagedIn;
+import org.incode.module.country.dom.impl.Country;
 import org.incode.module.slack.impl.SlackService;
 
 import org.estatio.module.application.contributions.Organisation_syncToCoda;
 import org.estatio.module.capex.app.taskreminder.TaskReminderService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
-import org.estatio.module.capex.dom.task.Task;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.module.task.dom.task.Task;
 import org.estatio.module.coda.EstatioCodaModule;
 import org.estatio.module.coda.dom.doc.CodaDocHeadMenu;
 import org.estatio.module.coda.dom.hwm.CodaHwm;
@@ -63,11 +68,20 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.countryapptenancy.dom.CountryServiceForCurrentUser;
+import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
+import org.estatio.module.party.dom.role.IPartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.estatio.module.settings.dom.ApplicationSettingForEstatio;
 import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
+import org.estatio.module.task.dom.state.StateTransitionService;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -541,6 +555,51 @@ public class AdminDashboard implements ViewModel {
         });
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(cssClassFa = "fa-wrench")
+    @MemberOrder(sequence = "98")
+    public MissingChamberOfCommerceCodeManager fixMissingChamberOfCommerceCodes(
+            final Country country,
+            final IPartyRoleType role,
+            final @ParameterLayout(named = "Start from bottom?") boolean reversed) {
+        final ApplicationTenancy applicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
+        List<Organisation> organisationsMissingCode = organisationRepository.findByAtPathMissingChamberOfCommerceCode(applicationTenancy.getPath())
+                .stream()
+                .filter(org -> org.hasPartyRoleType(role))
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toList(), lst -> {
+                            if (reversed)
+                                Collections.reverse(lst);
+                            return lst;
+                        }
+                ));
+
+        return new MissingChamberOfCommerceCodeManager(organisationsMissingCode);
+    }
+
+    public List<Country> choices0FixMissingChamberOfCommerceCodes() {
+        return countryServiceForCurrentUser.countriesForCurrentUser();
+    }
+
+    public List<PartyRoleType> choices1FixMissingChamberOfCommerceCodes() {
+        return Arrays.asList(
+                partyRoleTypeRepository.findByKey(LeaseAgreementRoleTypeEnum.TENANT.getKey()),
+                partyRoleTypeRepository.findByKey(IncomingInvoiceRoleTypeEnum.SUPPLIER.getKey())
+        );
+    }
+
+    @Action(restrictTo = RestrictTo.PROTOTYPING)
+    public void fixUpTransitionsForAllIncomingInvoices() {
+
+        final List<IncomingInvoice> incomingInvoices = incomingInvoiceRepository.listAll();
+        for (IncomingInvoice incomingInvoice : incomingInvoices) {
+            stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransition.class, null, null, null);
+        }
+
+    }
+
+    // //////////////////////////////////////
+
     @Inject
     CodaCmpCodeService codaCmpCodeService;
 
@@ -601,7 +660,25 @@ public class AdminDashboard implements ViewModel {
     @Inject
     TaskReminderService taskReminderService;
 
-    @Inject PersonRepository personRepository;
+    @Inject
+    PersonRepository personRepository;
 
-    @Inject LeaseRepository leaseRepository;
+    @Inject
+    LeaseRepository leaseRepository;
+
+    @Inject
+    OrganisationRepository organisationRepository;
+
+    @Inject
+    CountryServiceForCurrentUser countryServiceForCurrentUser;
+
+    @Inject
+    EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
+
+    @Inject
+    PartyRoleTypeRepository partyRoleTypeRepository;
+
+    @Inject
+    StateTransitionService stateTransitionService;
+
 }

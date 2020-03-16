@@ -14,7 +14,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.capex.dom.payment.PaymentBatch;
 import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalStateTransitionType;
-import org.estatio.module.capex.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.state.StateTransitionService;
 
 /**
  * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case

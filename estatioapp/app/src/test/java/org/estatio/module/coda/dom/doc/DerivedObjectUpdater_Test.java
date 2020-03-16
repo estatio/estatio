@@ -11,8 +11,8 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
-import org.estatio.module.capex.dom.state.StateTransitionService;
-import org.estatio.module.capex.dom.task.Task;
+import org.estatio.module.task.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.task.Task;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

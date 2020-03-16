@@ -24,7 +24,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
-import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesItaXlsxFixture;
+import org.estatio.module.capex.fixtures.charge.builders.IncomingChargesItaXlsxFixture;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
