@@ -211,30 +211,33 @@ public class TurnoverAggregate_IntegTest extends TurnoverAggregateModuleIntegTes
         final List<TurnoverAggregation> aggregations = turnoverAggregationRepository.listAll();
         assertThat(aggregations).isNotEmpty();
         assertThat(aggregations.get(0).getTurnoverReportingConfig()).isEqualTo(occ5Cfg);
-        assertThat(aggregations.get(0).getDate()).isEqualTo(occ5.getStartDate().withDayOfMonth(1));
+        assertThat(aggregations.get(0).getDate()).isEqualTo(occ5Cfg.getEffectiveStartDate());
         assertThat(occ5Cfg.getAggregationPattern()).isEqualTo(AggregationPattern.ONE_TO_ONE);
         assertThat(aggregations.get(35).getTurnoverReportingConfig()).isEqualTo(occ5Cfg);
         assertThat(aggregations.get(35).getDate()).isEqualTo(oxfTopModelLease3.tenancyEndDate.plusMonths(23).withDayOfMonth(1));
+        // occ4Cfg
         assertThat(aggregations.get(36).getTurnoverReportingConfig()).isEqualTo(occ4Cfg);
-        assertThat(aggregations.get(36).getDate()).isEqualTo(occ4Cfg.getStartDate().withDayOfMonth(1));
-        assertThat(aggregations.get(42).getTurnoverReportingConfig()).isEqualTo(occ4Cfg);
-        assertThat(aggregations.get(42).getDate()).isEqualTo(occ4.getEffectiveEndDate().withDayOfMonth(1));
+        assertThat(aggregations.get(36).getDate()).isEqualTo(occ4Cfg.getEffectiveStartDate());
+        assertThat(aggregations.get(41).getTurnoverReportingConfig()).isEqualTo(occ4Cfg);
+        assertThat(aggregations.get(41).getDate()).isEqualTo(occ5Cfg.getEffectiveStartDate().minusMonths(1));
         assertThat(occ4Cfg.getAggregationPattern()).isEqualTo(AggregationPattern.MANY_TO_ONE);
-        assertThat(aggregations.get(43).getTurnoverReportingConfig()).isEqualTo(occ2Cfg);
+        // occ2Cfg
+        assertThat(aggregations.get(42).getTurnoverReportingConfig()).isEqualTo(occ2Cfg);
         assertThat(occ2Cfg.getAggregationPattern()).isEqualTo(AggregationPattern.ONE_TO_MANY_SAME_LEASE);
-        assertThat(aggregations.get(43).getDate()).isEqualTo(occ2.getStartDate().withDayOfMonth(1));
-        assertThat(aggregations.get(74).getTurnoverReportingConfig()).isEqualTo(occ2Cfg);
-        assertThat(aggregations.get(74).getDate()).isEqualTo(occ2.getEffectiveEndDate().withDayOfMonth(1));
-        assertThat(aggregations.get(75).getTurnoverReportingConfig()).isEqualTo(occ3Cfg);
-        assertThat(aggregations.get(75).getDate()).isEqualTo(occ3.getStartDate().withDayOfMonth(1));
-        assertThat(aggregations.get(75).getDate()).isEqualTo(new LocalDate(2017,4,1));
+        assertThat(aggregations.get(42).getDate()).isEqualTo(occ2Cfg.getEffectiveStartDate());
+        assertThat(aggregations.get(72).getTurnoverReportingConfig()).isEqualTo(occ2Cfg);
+        assertThat(aggregations.get(72).getDate()).isEqualTo(occ4Cfg.getEffectiveStartDate().minusMonths(1));
+        // occ3Cfg
+        assertThat(aggregations.get(73).getTurnoverReportingConfig()).isEqualTo(occ3Cfg);
+        assertThat(aggregations.get(73).getDate()).isEqualTo(occ3Cfg.getEffectiveStartDate());
         assertThat(occ3Cfg.getAggregationPattern()).isEqualTo(AggregationPattern.ONE_TO_MANY_SAME_LEASE);
-        assertThat(aggregations.get(106).getTurnoverReportingConfig()).isEqualTo(occ3Cfg);
-        assertThat(aggregations.get(106).getDate()).isEqualTo(occ3.getEffectiveEndDate().withDayOfMonth(1));
-        assertThat(aggregations.get(107).getTurnoverReportingConfig()).isEqualTo(occ1Cfg);
+        assertThat(aggregations.get(103).getTurnoverReportingConfig()).isEqualTo(occ3Cfg);
+        assertThat(aggregations.get(103).getDate()).isEqualTo(occ4Cfg.getEffectiveStartDate().minusMonths(1));
+        // occ1Cfg
+        assertThat(aggregations.get(104).getTurnoverReportingConfig()).isEqualTo(occ1Cfg);
         assertThat(occ1Cfg.getAggregationPattern()).isEqualTo(AggregationPattern.ONE_TO_ONE);
-        assertThat(aggregations.get(107).getDate()).isEqualTo(occ1.getStartDate().withDayOfMonth(1));
-        assertThat(aggregations.get(219).getDate()).isEqualTo(oxfTopModelLease1.getEffectiveInterval().endDate().withDayOfMonth(1));
+        assertThat(aggregations.get(104).getDate()).isEqualTo(occ1.getStartDate().withDayOfMonth(1)); // the startdate of the occ is before the startdate of the config (should not happen in reality)
+        assertThat(aggregations.get(215).getDate()).isEqualTo(occ4Cfg.getEffectiveStartDate().minusMonths(1));
     }
 
     @Test

@@ -288,23 +288,23 @@ public class TurnoverAggregate_Scenarios_IntegTest extends TurnoverAggregateModu
         transactionService.nextTransaction();
 
         // then
-        final TurnoverAggregation agg20190801Min2 = turnoverAggregationRepository.findUnique(
-                occ1Cfg_min2, new LocalDate(2019,8,1));
+        final TurnoverAggregation agg20190701Min2 = turnoverAggregationRepository.findUnique(
+                occ1Cfg_min2, new LocalDate(2019,7,1));
         assertThat(occ1_min2.getUnit().getName()).isEqualTo("Unit 1");
-        assertThat(agg20190801Min2.getAggregateToDate().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("293793.00"));
-        assertThat(agg20190801Min2.getAggregateToDate().getTurnoverCount()).isEqualTo(8);
-        assertThat(agg20190801Min2.getAggregateToDate().isComparable()).isTrue();
+        assertThat(agg20190701Min2.getAggregateToDate().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("255086.00"));
+        assertThat(agg20190701Min2.getAggregateToDate().getTurnoverCount()).isEqualTo(7);
+        assertThat(agg20190701Min2.getAggregateToDate().isComparable()).isTrue();
 
-        final TurnoverAggregation agg20190801Min2_2 = turnoverAggregationRepository.findUnique(
-                occ2Cfg_min2, new LocalDate(2019,8,1));
+        final TurnoverAggregation agg20190701Min2_2 = turnoverAggregationRepository.findUnique(
+                occ2Cfg_min2, new LocalDate(2019,7,1));
         assertThat(occ2_min2.getUnit().getName()).isEqualTo("Unit 2");
-        assertThat(agg20190801Min2_2.getAggregate9Month().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("38678.00"));
-        // assertThat(agg20190801Min2_2.getAggregate1Month().getGrossAmount()).isNull(); // Does not work with excel fixtures ??
+        assertThat(agg20190701Min2_2.getAggregate9Month().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("73246.00"));
+        // assertThat(agg20190701Min2_2.getAggregate1Month().getGrossAmount()).isNull(); // Does not work with excel fixtures ??
 
         final TurnoverAggregation agg20190801Min3 = turnoverAggregationRepository.findUnique(
                 occCfg_min3, new LocalDate(2019,8,1));
 
-        assertThat(agg20190801Min2).isNotNull();
+        assertThat(agg20190701Min2).isNotNull();
         assertThat(agg20190801Min3).isNotNull();
 
         final TurnoverAggregation agg20200101 = turnoverAggregationRepository.findUnique(

@@ -19,7 +19,6 @@ public class AggregationAnalysisReportForConfig {
         this.turnoverReportingConfig = turnoverReportingConfig;
         this.aggregationDates = new ArrayList<>();
         this.parallelConfigs = new ArrayList<>();
-        this.parallelOnSameUnit = new ArrayList<>();
         this.previousOnOtherUnit = new ArrayList<>();
         this.nextOnOtherUnit = new ArrayList<>();
         this.configsToIncludeInAggregation = new ArrayList<>();
@@ -29,8 +28,6 @@ public class AggregationAnalysisReportForConfig {
     private TurnoverReportingConfig turnoverReportingConfig;
 
     private List<LocalDate> aggregationDates;
-
-    private List<TurnoverReportingConfig> parallelOnSameUnit;
 
     private List<TurnoverReportingConfig> parallelConfigs;
 
