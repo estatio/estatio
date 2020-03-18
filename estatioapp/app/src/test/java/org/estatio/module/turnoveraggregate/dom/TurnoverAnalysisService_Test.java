@@ -287,7 +287,35 @@ public class TurnoverAnalysisService_Test {
         assertThat(r3.isToplevel()).isFalse();
     }
 
-    public static class AggregationDatesTests extends TurnoverAnalysisService_Test {
+    @Test
+    public void aggregation_dates_for_turnover_reporting_config_works() throws Exception {
+
+        // given
+        final LocalDate startDateToUse = new LocalDate(2019, 12, 15);
+        final LocalDate endDateToUse = new LocalDate(2020, 2, 11);
+        TurnoverAnalysisService service = new TurnoverAnalysisService(){
+            @Override LocalDate getEndDateToUse(final AggregationAnalysisReportForConfig report) {
+                return endDateToUse;
+            }
+            @Override LocalDate getStartDateToUse(final AggregationAnalysisReportForConfig report) {
+                return startDateToUse;
+            }
+        };
+        TurnoverReportingConfig config = new TurnoverReportingConfig();
+        AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
+        // when
+        final List<LocalDate> aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
+        // then
+        assertThat(aggregationDates).hasSize(3);
+        final LocalDate firstDayOfMonthStartDateToUse = startDateToUse.withDayOfMonth(1);
+        assertThat(aggregationDates.get(0)).isEqualTo(firstDayOfMonthStartDateToUse);
+        assertThat(aggregationDates.get(1)).isEqualTo(firstDayOfMonthStartDateToUse.plusMonths(1));
+        assertThat(aggregationDates.get(2)).isEqualTo(firstDayOfMonthStartDateToUse.plusMonths(2));
+        assertThat(aggregationDates.get(2)).isEqualTo(new LocalDate(2020,2,1));
+
+    }
+
+    public static class AggregationEndDateToUseTests extends TurnoverAnalysisService_Test {
 
         final LocalDate startOfTheMonth = new LocalDate(2020, 1, 1);
         final LocalDate endOfTheMonth = new LocalDate(2020, 1, 31);
@@ -321,304 +349,24 @@ public class TurnoverAnalysisService_Test {
             return next;
         }
 
-        @Test
-        public void scenario1_has_parent_current_lease_termination_end_of_the_month() throws Exception {
-            // given
-            lease.setTenancyEndDate(endOfTheMonth);
-            Lease next = nextLeaseWithStartDate(lease.getTenancyEndDate().plusDays(1));
-            AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
-            report.setNextLease(next);
-
-            // scen assertion
-            assertThat(occupancy.getLease().getNext()).isNotNull();
-            assertThat(occupancy.getLease().getEffectiveInterval().endDate().isBefore(endOfTheMonth)).isFalse();
-            assertThat(report.getNextLease()).isNotNull();
-            // when
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
-            // then
-            assertThat(aggregationDates).hasSize(2);
-            assertThat(aggregationDates).contains(occStartDate.withDayOfMonth(1));
-            assertThat(aggregationDates).contains(startOfTheMonth);
-            final LocalDate firstAggregationDateNext = next.tenancyStartDate.withDayOfMonth(1);
-            assertThat(aggregationDates).contains(firstAggregationDateNext.minusMonths(1)); // logic applied
-        }
-
-        @Test
-        public void scenario2_has_parent_current_lease_termination_end_of_the_month_plus_1_day() throws Exception {
-
-            // given
-            lease.setTenancyEndDate(endOfTheMonth.plusDays(1));
-            Lease next = nextLeaseWithStartDate(lease.getTenancyEndDate().plusDays(1));
-            AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
-            report.setNextLease(next);
-
-            // scen assertion
-            assertThat(occupancy.getLease().getNext()).isNotNull();
-            assertThat(occupancy.getLease().getEffectiveInterval().endDate().isBefore(endOfTheMonth)).isFalse();
-            // when
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
-            // then
-            assertThat(aggregationDates).hasSize(2); // still .. this is result of discussions users
-            assertThat(aggregationDates).contains(occStartDate.withDayOfMonth(1));
-            assertThat(aggregationDates).contains(startOfTheMonth);
-            final LocalDate firstAggregationDateNext = next.tenancyStartDate.withDayOfMonth(1);
-            assertThat(aggregationDates).contains(firstAggregationDateNext.minusMonths(1)); // logic applied
-
-        }
-
-        @Test
-        public void scenario3_has_parent_current_lease_termination_end_of_the_month_minus_1_day() throws Exception {
-
-            // given
-            lease.setTenancyEndDate(endOfTheMonth.minusDays(1));
-            Lease next = nextLeaseWithStartDate(lease.getTenancyEndDate().plusDays(1));
-            AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
-            report.setNextLease(next);
-
-            // scen assertion
-            assertThat(occupancy.getLease().getNext()).isNotNull();
-            assertThat(occupancy.getLease().getEffectiveInterval().endDate().isBefore(endOfTheMonth)).isTrue();
-            // when
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
-            // then
-            assertThat(aggregationDates).hasSize(1); // this is result of discussions users
-            assertThat(aggregationDates).contains(occStartDate.withDayOfMonth(1));
-            assertThat(aggregationDates).doesNotContain(startOfTheMonth);
-            final LocalDate firstAggregationDateNext = next.tenancyStartDate.withDayOfMonth(1);
-            assertThat(aggregationDates).contains(firstAggregationDateNext.minusMonths(1)); // logic applied
-
-        }
-
-        @Test
-        public void scenario4_has_parent_and_gap_to_next_lease() throws Exception {
-
-            // given
-            lease.setTenancyEndDate(endOfTheMonth.minusDays(1));
-            Lease next = nextLeaseWithStartDate(lease.getTenancyEndDate().plusDays(10));
-            AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
-            report.setNextLease(next);
-
-            // scen assertion
-            assertThat(occupancy.getLease().getNext()).isNotNull();
-            assertThat(occupancy.getLease().getEffectiveInterval().endDate().isBefore(endOfTheMonth)).isTrue();
-            assertThat(report.getNextLease().getTenancyStartDate().isAfter(endOfTheMonth)).isTrue();
-            // when
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
-            // then
-            assertThat(aggregationDates).hasSize(2); // this is result of discussions users
-            assertThat(aggregationDates).contains(occStartDate.withDayOfMonth(1));
-            assertThat(aggregationDates).contains(startOfTheMonth);
-            LocalDate firstAggregationDateNext = next.tenancyStartDate.withDayOfMonth(1);
-            assertThat(aggregationDates).contains(firstAggregationDateNext.minusMonths(1)); // logic applied
-
-            // and when adding a month to the gap
-            next.setTenancyStartDate(lease.getTenancyEndDate().plusMonths(1).plusDays(10));
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
-            // then
-            assertThat(aggregationDates).hasSize(3); // this is result of discussions users
-            assertThat(aggregationDates).contains(occStartDate.withDayOfMonth(1));
-            assertThat(aggregationDates).contains(startOfTheMonth);
-            assertThat(aggregationDates).contains(startOfTheMonth.plusMonths(1));
-            firstAggregationDateNext = next.tenancyStartDate.withDayOfMonth(1);
-            assertThat(aggregationDates).contains(firstAggregationDateNext.minusMonths(1)); // logic applied
-
-        }
-
-        @Test
-        public void scenario5_has_parent_and_next_on_same_unit() throws Exception {
-            // given
-            lease.setTenancyEndDate(endOfTheMonth);
-            Lease next = nextLeaseWithStartDate(lease.getTenancyEndDate().plusDays(1));
-            AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
-            report.setNextLease(next);
-            // normally
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
-            assertThat(aggregationDates).hasSize(2);
-
-            // when
-            TurnoverReportingConfig nextConfigOnSameUnit = new TurnoverReportingConfig();
-            nextConfigOnSameUnit.setStartDate(endOfTheMonth.minusDays(1));
-            nextConfigOnSameUnit.setFrequency(Frequency.MONTHLY);
-            report.setNextOnSameUnit(nextConfigOnSameUnit);
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
-            // then
-            assertThat(aggregationDates).hasSize(1);
-            assertThat(aggregationDates).contains(occStartDate.withDayOfMonth(1));
-            assertThat(aggregationDates).doesNotContain(startOfTheMonth);
-            LocalDate firstAggregationDateNextConfig = nextConfigOnSameUnit.getStartDate().withDayOfMonth(1);
-            assertThat(aggregationDates).doesNotContain(firstAggregationDateNextConfig); // logic applied
-
-            // and when startdate next config on same unit after next lease (SHOULD NOT HAPPEN)
-            nextConfigOnSameUnit.setStartDate(endOfTheMonth.plusMonths(5));
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
-            // then no influence
-            assertThat(aggregationDates).hasSize(2);
-            assertThat(aggregationDates).contains(occStartDate.withDayOfMonth(1));
-            assertThat(aggregationDates).contains(startOfTheMonth);
-            final LocalDate firstAggregationDateNext = next.getTenancyStartDate().withDayOfMonth(1);
-            assertThat(aggregationDates).contains(firstAggregationDateNext.minusMonths(1)); // logic applied
-        }
-
-        @Test
-        public void scenario5_has_parent_and_gap_and_next_on_same_unit() throws Exception {
-
-            // given
-            lease.setTenancyEndDate(endOfTheMonth.minusDays(1));
-            Lease next = nextLeaseWithStartDate(lease.getTenancyEndDate().plusMonths(1).plusDays(10));
-            AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
-            report.setNextLease(next);
-            // normally we fill the gap with current
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
-            assertThat(aggregationDates).hasSize(3);
-
-            // when
-            TurnoverReportingConfig nextConfigOnSameUnit = new TurnoverReportingConfig();
-            nextConfigOnSameUnit.setStartDate(endOfTheMonth.plusDays(1));
-            nextConfigOnSameUnit.setFrequency(Frequency.MONTHLY);
-            report.setNextOnSameUnit(nextConfigOnSameUnit);
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
-            // then fill gap with other
-            assertThat(aggregationDates).hasSize(2);
-            assertThat(aggregationDates).contains(occStartDate.withDayOfMonth(1));
-            assertThat(aggregationDates).contains(startOfTheMonth);
-            assertThat(aggregationDates).doesNotContain(startOfTheMonth.plusMonths(1));
-            LocalDate firstAggregationDateNextConfig = nextConfigOnSameUnit.getStartDate().withDayOfMonth(1);
-            assertThat(aggregationDates).doesNotContain(firstAggregationDateNextConfig); // logic applied
-
-            // and when
-            nextConfigOnSameUnit.setStartDate(endOfTheMonth);
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
-            // then fill gap with other
-            assertThat(aggregationDates).hasSize(1);
-            assertThat(aggregationDates).contains(occStartDate.withDayOfMonth(1));
-            firstAggregationDateNextConfig = nextConfigOnSameUnit.getStartDate().withDayOfMonth(1);
-            assertThat(aggregationDates).doesNotContain(firstAggregationDateNextConfig); // logic applied
-
-            // and when startdate next config on same unit  after next lease (SHOULD NOT HAPPEN)
-            nextConfigOnSameUnit.setStartDate(endOfTheMonth.plusMonths(5));
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
-            // then fill gap with current
-            assertThat(aggregationDates).hasSize(3);
-            assertThat(aggregationDates).contains(occStartDate.withDayOfMonth(1));
-            assertThat(aggregationDates).contains(startOfTheMonth);
-            assertThat(aggregationDates).contains(startOfTheMonth.plusMonths(1));
-            final LocalDate firstAggregationDateNext = next.getTenancyStartDate().withDayOfMonth(1);
-            assertThat(aggregationDates).contains(firstAggregationDateNext.minusMonths(1)); // logic applied
-        }
-
-        // we skip tests without gaps for next scenario's with parent
-        @Test
-        public void scenario5_has_parent_and_gap_and_next_on_other_unit() throws Exception {
-
-            // given
-            lease.setTenancyEndDate(endOfTheMonth.minusDays(1));
-            Lease next = nextLeaseWithStartDate(lease.getTenancyEndDate().plusMonths(1).plusDays(10));
-            AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
-            report.setNextLease(next);
-            // normally we get
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
-            assertThat(aggregationDates).hasSize(3);
-
-            // when
-            TurnoverReportingConfig nextConfigOnOtherUnit = new TurnoverReportingConfig();
-            nextConfigOnOtherUnit.setStartDate(endOfTheMonth.plusDays(1));
-            nextConfigOnOtherUnit.setFrequency(Frequency.MONTHLY);
-            report.getNextOnOtherUnit().add(nextConfigOnOtherUnit);
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
-            // then fill gap with other
-            assertThat(aggregationDates).hasSize(2);
-            assertThat(aggregationDates).contains(occStartDate.withDayOfMonth(1));
-            assertThat(aggregationDates).contains(startOfTheMonth);
-            assertThat(aggregationDates).doesNotContain(startOfTheMonth.plusMonths(1));
-            LocalDate firstAggregationDateNextConfigOtherUnit = nextConfigOnOtherUnit.getStartDate().withDayOfMonth(1);
-            assertThat(aggregationDates).doesNotContain(firstAggregationDateNextConfigOtherUnit);
-
-            // and when
-            nextConfigOnOtherUnit.setStartDate(endOfTheMonth);
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
-            // then fill gap with other
-            assertThat(aggregationDates).hasSize(1);
-            assertThat(aggregationDates).contains(occStartDate.withDayOfMonth(1));
-            firstAggregationDateNextConfigOtherUnit = nextConfigOnOtherUnit.getStartDate().withDayOfMonth(1);
-            assertThat(aggregationDates).doesNotContain(firstAggregationDateNextConfigOtherUnit);
-
-            // and when startdate next config on other unit after next lease (SHOULD NOT HAPPEN)
-            nextConfigOnOtherUnit.setStartDate(endOfTheMonth.plusMonths(5));
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
-            // then fill gap with current
-            assertThat(aggregationDates).hasSize(3);
-            assertThat(aggregationDates).contains(occStartDate.withDayOfMonth(1));
-            assertThat(aggregationDates).contains(startOfTheMonth);
-            assertThat(aggregationDates).contains(startOfTheMonth.plusMonths(1));
-            final LocalDate firstAggregationDateNext = next.getTenancyStartDate().withDayOfMonth(1);
-            assertThat(aggregationDates).contains(firstAggregationDateNext.minusMonths(1)); // logic applied
-        }
-
-        @Test
-        public void scenario6_has_parent_and_gap_and_parallel_config() throws Exception {
-
-            // given
-            lease.setTenancyEndDate(endOfTheMonth.minusDays(1));
-            Lease next = nextLeaseWithStartDate(lease.getTenancyEndDate().plusMonths(1).plusDays(10));
-            AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
-            report.setNextLease(next);
-            // normally we get
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
-            assertThat(aggregationDates).hasSize(3);
-
-            // when
-            TurnoverReportingConfig parConfig = new TurnoverReportingConfig();
-            final Occupancy parOcc = new Occupancy() {
-                @Override public LocalDateInterval getEffectiveInterval() {
-                    return new LocalDateInterval(null, null);
-                }
-            };
-            parConfig.setOccupancy(parOcc);
-            report.getParallelConfigs().add(parConfig);
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
-            // then fill gap with other
-            assertThat(aggregationDates).hasSize(2);
-            assertThat(aggregationDates).contains(occStartDate.withDayOfMonth(1));
-            assertThat(occupancy.getEffectiveEndDate()).isEqualTo(occEndDate);
-            assertThat(aggregationDates).contains(occEndDate.withDayOfMonth(1));
-            final LocalDate lastAggregationDateParConfig = occEndDate.withDayOfMonth(1);
-            assertThat(aggregationDates).contains(lastAggregationDateParConfig);
-
-            // and when
-            final Occupancy parOcc2 = new Occupancy() {
-                @Override public LocalDateInterval getEffectiveInterval() {
-                    return new LocalDateInterval(null, occEndDate.minusDays(1));
-                }
-            };
-            parConfig.setOccupancy(parOcc2);
-            parConfig.setStartDate(occStartDate);
-            assertThat(parConfig.getEndDate()).isEqualTo(occEndDate.minusDays(1));
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
-            // then fill gap with current
-            assertThat(aggregationDates).hasSize(3);
-        }
-
         @Rule
         public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
 
         @Mock ClockService mockClockService;
 
         @Test
-        public void scenario7_no_parent_toplevel_config() throws Exception {
-
+        public void scenario_top_level_config() throws Exception {
             // given
             final LocalDate now = new LocalDate(2020, 2, 15);
             AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
             assertThat(occupancy.getEffectiveEndDate()).isEqualTo(occEndDate);
             // when
             report.setToplevel(true);
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
+            LocalDate endDateToUse = service.getEndDateToUse(report);
             // then
-            assertThat(aggregationDates).hasSize(25);
-            assertThat(aggregationDates.get(0)).isEqualTo(occStartDate.withDayOfMonth(1));
-            assertThat(aggregationDates.get(24)).isEqualTo(occEndDate.withDayOfMonth(1).plusMonths(23));
+            assertThat(endDateToUse).isEqualTo(occEndDate.plusMonths(23));
 
-            // expect
+            // and expect
             context.checking(new Expectations() {{
                 oneOf(mockClockService).now();
                 will(returnValue(now));
@@ -632,41 +380,13 @@ public class TurnoverAnalysisService_Test {
             };
             service.clockService = mockClockService;
             config.setOccupancy(occWithoutEndDate);
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
+            endDateToUse = service.getEndDateToUse(report);
             // then
-            assertThat(aggregationDates).hasSize(26);
-            assertThat(aggregationDates.get(0)).isEqualTo(occStartDate.withDayOfMonth(1));
-            assertThat(aggregationDates.get(25)).isEqualTo(now.withDayOfMonth(1).plusMonths(23));
-
+            assertThat(endDateToUse).isEqualTo(now.plusMonths(23));
         }
 
         @Test
-        public void scenario7_no_parent_not_toplevel_default() throws Exception {
-
-            // given
-            AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
-            lease.setTenancyEndDate(new LocalDate(2020, 2, 15));
-            // when
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
-            // then
-            assertThat(aggregationDates).hasSize(3);
-            assertThat(aggregationDates.get(0)).isEqualTo(occStartDate.withDayOfMonth(1));
-            assertThat(aggregationDates.get(1)).isEqualTo(occEndDate.withDayOfMonth(1));
-            assertThat(aggregationDates.get(2)).isEqualTo(lease.getTenancyEndDate()
-                    .withDayOfMonth(1)); // the gap between occ enddate and lease enddate is filled
-
-            // and when
-            lease.setTenancyEndDate(occEndDate.minusMonths(1)); // Should not happen ....
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
-            // then
-            assertThat(aggregationDates).hasSize(2);
-            assertThat(aggregationDates.get(0)).isEqualTo(occStartDate.withDayOfMonth(1));
-            assertThat(aggregationDates.get(1)).isEqualTo(occEndDate.withDayOfMonth(1));
-
-        }
-
-        @Test
-        public void scenario7_no_parent_not_toplevel_next_on_same_unit() throws Exception {
+        public void no_parent_next_on_same_unit() throws Exception {
 
             // given
             AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
@@ -676,26 +396,22 @@ public class TurnoverAnalysisService_Test {
             report.setNextOnSameUnit(nextConfigOnSameUnit);
 
             // when
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
+            LocalDate endDateToUse = service.getEndDateToUse(report);
             // then
-            assertThat(aggregationDates).hasSize(2);
-            assertThat(aggregationDates.get(0)).isEqualTo(occStartDate.withDayOfMonth(1));
-            LocalDate firstAggregationDateNextConfig = nextConfigOnSameUnit.getStartDate().withDayOfMonth(1);
-            assertThat(aggregationDates.get(1)).isEqualTo(firstAggregationDateNextConfig.minusMonths(1));
+            LocalDate firstAggregationDateNextConfig = nextConfigOnSameUnit.getEffectiveStartDate();
+            assertThat(endDateToUse).isEqualTo(firstAggregationDateNextConfig.minusDays(1));
 
-            // when there is a gap
+            // when there is a gap we do not care
             nextConfigOnSameUnit.setStartDate(occEndDate.plusDays(1).plusMonths(1));
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
-            // then
-            assertThat(aggregationDates).hasSize(3);
-            assertThat(aggregationDates.get(0)).isEqualTo(occStartDate.withDayOfMonth(1));
-            firstAggregationDateNextConfig = nextConfigOnSameUnit.getStartDate().withDayOfMonth(1);
-            assertThat(aggregationDates.get(2)).isEqualTo(firstAggregationDateNextConfig.minusMonths(1));
+            endDateToUse = service.getEndDateToUse(report);
+            // then still same rule
+            firstAggregationDateNextConfig = nextConfigOnSameUnit.getEffectiveStartDate();
+            assertThat(endDateToUse).isEqualTo(firstAggregationDateNextConfig.minusDays(1));
 
         }
 
         @Test
-        public void scenario7_no_parent_not_toplevel_next_on_other_unit() throws Exception {
+        public void no_parent_next_on_other_unit() throws Exception {
 
             // given
             AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
@@ -703,19 +419,16 @@ public class TurnoverAnalysisService_Test {
             nextConfigOnOtherUnit.setStartDate(occEndDate.plusDays(1));
             nextConfigOnOtherUnit.setFrequency(Frequency.MONTHLY);
             report.getNextOnOtherUnit().add(nextConfigOnOtherUnit);
-
             // when
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
+            LocalDate endDateToUse = service.getEndDateToUse(report);
             // then
-            assertThat(aggregationDates).hasSize(2);
-            assertThat(aggregationDates.get(0)).isEqualTo(occStartDate.withDayOfMonth(1));
-            LocalDate firstAggregationDateNextConfig = nextConfigOnOtherUnit.getStartDate().withDayOfMonth(1);
-            assertThat(aggregationDates.get(1)).isEqualTo(firstAggregationDateNextConfig.minusMonths(1));
+            LocalDate firstAggregationDateNextConfig = nextConfigOnOtherUnit.getEffectiveStartDate();
+            assertThat(endDateToUse).isEqualTo(firstAggregationDateNextConfig.minusDays(1));
 
         }
 
         @Test
-        public void scenario8_no_parent_not_toplevel_par_configs() throws Exception {
+        public void no_parent_par_configs() throws Exception {
 
             // given
             AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
@@ -729,11 +442,9 @@ public class TurnoverAnalysisService_Test {
             report.getParallelConfigs().add(parConfigWithWithOutEndDate);
 
             // when
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
+            LocalDate endDateToUse = service.getEndDateToUse(report);
             // then
-            assertThat(aggregationDates).hasSize(2);
-            assertThat(aggregationDates.get(0)).isEqualTo(occStartDate.withDayOfMonth(1));
-            assertThat(aggregationDates.get(1)).isEqualTo(occEndDate.withDayOfMonth(1));
+            assertThat(endDateToUse).isEqualTo(occEndDate);
 
             // and when
             TurnoverReportingConfig parConfigWithWithEndDateLaterThanNextAggregationDate = new TurnoverReportingConfig();
@@ -746,11 +457,9 @@ public class TurnoverAnalysisService_Test {
             parConfigWithWithEndDateLaterThanNextAggregationDate.setOccupancy(parOcc2);
             report.getParallelConfigs().clear();
             report.getParallelConfigs().add(parConfigWithWithEndDateLaterThanNextAggregationDate);
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
+            endDateToUse = service.getEndDateToUse(report);
             // then
-            assertThat(aggregationDates).hasSize(2);
-            assertThat(aggregationDates.get(0)).isEqualTo(occStartDate.withDayOfMonth(1));
-            assertThat(aggregationDates.get(1)).isEqualTo(occEndDate.withDayOfMonth(1));
+            assertThat(endDateToUse).isEqualTo(occEndDate);
 
             // and when
             lease.setTenancyEndDate(occEndDate.plusDays(1));
@@ -764,13 +473,140 @@ public class TurnoverAnalysisService_Test {
             parConfigWithWithEndDateBeforeNextAggregationDate.setOccupancy(parOcc3);
             report.getParallelConfigs().clear();
             report.getParallelConfigs().add(parConfigWithWithEndDateBeforeNextAggregationDate);
-            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
+            endDateToUse = service.getEndDateToUse(report);
             // then
-            assertThat(aggregationDates).hasSize(3);
-            assertThat(aggregationDates.get(0)).isEqualTo(occStartDate.withDayOfMonth(1));
-            assertThat(aggregationDates.get(1)).isEqualTo(occEndDate.withDayOfMonth(1));
-            assertThat(aggregationDates.get(2)).isEqualTo(lease.getTenancyEndDate().withDayOfMonth(1));
+            assertThat(endDateToUse).isEqualTo(lease.getTenancyEndDate());
+
         }
+
+        @Test
+        public void no_parent_default() throws Exception {
+
+            // given
+            AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
+            lease.setTenancyEndDate(new LocalDate(2020, 2, 15));
+            // when
+            LocalDate endDateToUse = service.getEndDateToUse(report);
+            // then
+            assertThat(endDateToUse).isEqualTo(lease.tenancyEndDate);
+
+            // and when
+            lease.setTenancyEndDate(occEndDate.minusMonths(1)); // Should not happen ....
+            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
+            endDateToUse = service.getEndDateToUse(report);
+            // then
+            assertThat(endDateToUse).isEqualTo(occEndDate);
+
+        }
+
+        @Test
+        public void has_parent_next_on_same_unit() throws Exception {
+
+            // given
+            lease.setTenancyEndDate(endOfTheMonth);
+            Lease next = nextLeaseWithStartDate(lease.getTenancyEndDate().plusDays(1));
+            AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
+            report.setNextLease(next);
+            TurnoverReportingConfig nextConfigOnSameUnit = new TurnoverReportingConfig();
+            nextConfigOnSameUnit.setStartDate(endOfTheMonth.minusDays(1));
+            nextConfigOnSameUnit.setFrequency(Frequency.MONTHLY);
+            report.setNextOnSameUnit(nextConfigOnSameUnit);
+            // when
+            LocalDate endDateToUse = service.getEndDateToUse(report);
+            // then
+            final LocalDate firstAggregationDateNextConfig = nextConfigOnSameUnit.getStartDate().withDayOfMonth(1);
+            assertThat(endDateToUse).isEqualTo(firstAggregationDateNextConfig.minusDays(1));
+
+            // and when startdate next config on same unit after next lease (SHOULD NOT HAPPEN)
+            nextConfigOnSameUnit.setStartDate(endOfTheMonth.plusMonths(5));
+            aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
+            endDateToUse = service.getEndDateToUse(report);
+            // then
+            final LocalDate firstAggregationDateNextLease = next.getTenancyStartDate().withDayOfMonth(1);
+            assertThat(endDateToUse).isEqualTo(firstAggregationDateNextLease.minusDays(1));
+
+        }
+
+        @Test
+        public void has_parent_next_on_other_unit()  throws Exception {
+
+            // given
+            lease.setTenancyEndDate(endOfTheMonth.minusDays(1));
+            Lease next = nextLeaseWithStartDate(lease.getTenancyEndDate().plusMonths(1).plusDays(10));
+            AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
+            report.setNextLease(next);
+            TurnoverReportingConfig nextConfigOnOtherUnit = new TurnoverReportingConfig();
+            nextConfigOnOtherUnit.setStartDate(endOfTheMonth.plusDays(1));
+            nextConfigOnOtherUnit.setFrequency(Frequency.MONTHLY);
+            report.getNextOnOtherUnit().add(nextConfigOnOtherUnit);
+            // when
+            LocalDate endDateToUse = service.getEndDateToUse(report);
+            // then
+            final LocalDate firstAggregationDateNextConfigOtherUnit = nextConfigOnOtherUnit.getStartDate().withDayOfMonth(1);
+            assertThat(endDateToUse).isEqualTo(firstAggregationDateNextConfigOtherUnit.minusDays(1));
+
+            // and when startdate next config on other unit after next lease (SHOULD NOT HAPPEN)
+            nextConfigOnOtherUnit.setStartDate(endOfTheMonth.plusMonths(5));
+            endDateToUse = service.getEndDateToUse(report);
+            // then
+            final LocalDate firstAggregationDateNextLease = next.getTenancyStartDate().withDayOfMonth(1);
+            assertThat(endDateToUse).isEqualTo(firstAggregationDateNextLease.minusDays(1));
+
+        }
+
+        @Test
+        public void has_parent_par_configs() throws Exception {
+
+            // given
+            lease.setTenancyEndDate(endOfTheMonth.minusDays(1));
+            Lease next = nextLeaseWithStartDate(lease.getTenancyEndDate().plusMonths(1).plusDays(10));
+            AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
+            report.setNextLease(next);
+            TurnoverReportingConfig parConfig = new TurnoverReportingConfig();
+            final Occupancy parOcc = new Occupancy() {
+                @Override public LocalDateInterval getEffectiveInterval() {
+                    return new LocalDateInterval(null, null);
+                }
+            };
+            parConfig.setOccupancy(parOcc);
+            report.getParallelConfigs().add(parConfig);
+            // when
+            LocalDate endDateToUse = service.getEndDateToUse(report);
+            // then
+            assertThat(endDateToUse).isEqualTo(occEndDate);
+
+            // and when
+            final Occupancy parOcc2 = new Occupancy() {
+                @Override public LocalDateInterval getEffectiveInterval() {
+                    return new LocalDateInterval(null, occEndDate.minusDays(1));
+                }
+            };
+            parConfig.setOccupancy(parOcc2);
+            parConfig.setStartDate(occStartDate);
+            assertThat(parConfig.getEndDate()).isEqualTo(occEndDate.minusDays(1));
+            endDateToUse = service.getEndDateToUse(report);
+            // then
+            final LocalDate firstAggregationDateNextLease = next.getTenancyStartDate().withDayOfMonth(1);
+            assertThat(endDateToUse).isEqualTo(firstAggregationDateNextLease.minusDays(1));
+
+        }
+
+        @Test
+        public void has_parent_default() throws Exception {
+
+            // given
+            lease.setTenancyEndDate(endOfTheMonth.plusDays(1));
+            Lease next = nextLeaseWithStartDate(lease.getTenancyEndDate().plusDays(1));
+            AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
+            report.setNextLease(next);
+            // when
+            LocalDate endDateToUse = service.getEndDateToUse(report);
+            // then
+            final LocalDate firstAggregationDateNextLease = next.getTenancyStartDate().withDayOfMonth(1);
+            assertThat(endDateToUse).isEqualTo(firstAggregationDateNextLease.minusDays(1));
+
+        }
+
     }
 
     @Test

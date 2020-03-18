@@ -286,74 +286,9 @@ public class TurnoverAnalysisService {
     List<LocalDate> aggregationDatesForTurnoverReportingConfig(
             final AggregationAnalysisReportForConfig report) {
 
-        LocalDate startDateToUse;
-        LocalDate endDateToUse;
+        LocalDate startDateToUse = getStartDateToUse(report).withDayOfMonth(1); // the method should always return first day of month, but just in case ...
 
-        final TurnoverReportingConfig config = report.getTurnoverReportingConfig();
-        final Occupancy occupancy = config.getOccupancy();
-        final Lease currentLease = occupancy.getLease();
-
-        startDateToUse = getStartDateToUse(occupancy);
-
-        if (report.getNextLease()!=null){
-            final LocalDate startDateNextLease = report.getNextLease().getEffectiveInterval().startDate();
-            LocalDate firstAggDateNextLease = startDateNextLease.withDayOfMonth(1); // agreed with users: when the next lease starts in a month - even on the last day of the month - the aggregation will be on the next lease for that month
-            if (report.getNextOnSameUnit()!=null){
-                final LocalDate endDateDerivedOfNext = report.getNextOnSameUnit().getEffectiveStartDate().minusDays(1);
-                endDateToUse = endDateDerivedOfNext.isBefore(firstAggDateNextLease) ? endDateDerivedOfNext : firstAggDateNextLease.minusDays(1);
-            } else {
-                if (report.getNextOnOtherUnit().size()==1){
-                    final LocalDate endDateDerivedOfNext = report.getNextOnOtherUnit().get(0).getEffectiveStartDate()
-                            .minusDays(1);
-                    endDateToUse = endDateDerivedOfNext.isBefore(firstAggDateNextLease) ? endDateDerivedOfNext : firstAggDateNextLease.minusDays(1);
-                } else {
-                    if (report.getParallelConfigs().size()>0){
-                        // compare the end date of each with that of the current config. If one of them can 'fill the gap' then do not fill it with current one
-                        boolean configFound = false;
-                        for (TurnoverReportingConfig c : report.getParallelConfigs()){
-                            if (c.getEndDate()==null || c.getEndDate().isAfter(report.getTurnoverReportingConfig().getEndDate())){
-                                configFound = true;
-                            }
-                        }
-                        endDateToUse = configFound ? occupancy.getEffectiveEndDate() : firstAggDateNextLease.minusDays(1);
-                    } else {
-                        // fill the gap on this report
-                        endDateToUse = firstAggDateNextLease.minusDays(1);
-                    }
-                }
-            }
-        } else {
-            if (report.isToplevel()) {
-                endDateToUse = occupancy.getEffectiveEndDate() == null ? clockService.now().plusMonths(23) : occupancy.getEffectiveEndDate().plusMonths(23);
-            } else {
-                final LocalDate lastAggregationDate = occupancy.getEffectiveEndDate().withDayOfMonth(1);
-                LocalDate nextAggregationDateAfterOccupancyEndDate = lastAggregationDate.plusMonths(1);
-                if (report.getNextOnSameUnit()!=null){
-                    endDateToUse = report.getNextOnSameUnit().getEffectiveStartDate().minusDays(1);
-                } else {
-                    if (report.getNextOnOtherUnit().size()==1){
-                        endDateToUse = report.getNextOnOtherUnit().get(0).getEffectiveStartDate().minusDays(1);
-                    } else {
-                        if (report.getParallelConfigs().size()>0){
-                            // inspect the end date of each. If one of them can 'fill the gap' then do not fill it with current one
-                            boolean configFound = false;
-                            for (TurnoverReportingConfig c : report.getParallelConfigs()){
-                                if (c.getEndDate()==null || c.getOccupancy().getEffectiveEndDate().isAfter(lastAggregationDate)){
-                                    configFound = true;
-                                }
-                            }
-                            endDateToUse = configFound ? occupancy.getEffectiveEndDate() : currentLease.getEffectiveInterval().endDate(); // this is sqlAgent logic...
-                        } else {
-                            // fill the gap if any
-                            endDateToUse = currentLease.getEffectiveInterval().endDate()
-                                    .isAfter(occupancy.getEffectiveEndDate()) ?
-                                    currentLease.getEffectiveInterval().endDate() :
-                                    occupancy.getEffectiveEndDate();
-                        }
-                    }
-                }
-            }
-        }
+        LocalDate endDateToUse = getEndDateToUse(report);
 
         List<LocalDate> result = new ArrayList<>();
         while (!endDateToUse.isBefore(startDateToUse)) {
@@ -363,7 +298,76 @@ public class TurnoverAnalysisService {
         return result;
     }
 
-    private LocalDate getStartDateToUse(final Occupancy occupancy){
+    LocalDate getEndDateToUse(
+            final AggregationAnalysisReportForConfig report) {
+
+        final TurnoverReportingConfig config = report.getTurnoverReportingConfig();
+        final Occupancy occupancy = config.getOccupancy();
+        final Lease currentLease = occupancy.getLease();
+
+        if (report.isToplevel()) {
+            return occupancy.getEffectiveEndDate() == null ? clockService.now().plusMonths(23) : occupancy.getEffectiveEndDate().plusMonths(23);
+        }
+
+        if (report.getNextLease()==null){
+            if (report.getNextOnSameUnit()!=null){
+                return report.getNextOnSameUnit().getEffectiveStartDate().minusDays(1);
+            }
+
+            if (report.getNextOnOtherUnit().size()==1){
+                return report.getNextOnOtherUnit().get(0).getEffectiveStartDate().minusDays(1);
+            }
+
+            if (report.getParallelConfigs().size()>0) {
+                final LocalDate lastAggregationDate = occupancy.getEffectiveEndDate().withDayOfMonth(1);
+                // inspect the end date of each. If one of them can 'fill the gap' then do not fill it with current one
+                boolean configFound = false;
+                for (TurnoverReportingConfig c : report.getParallelConfigs()) {
+                    if (c.getEndDate() == null || c.getOccupancy().getEffectiveEndDate().isAfter(lastAggregationDate)) {
+                        configFound = true;
+                    }
+                }
+                return configFound ? occupancy.getEffectiveEndDate() : currentLease.getEffectiveInterval().endDate(); // this is sqlAgent logic...
+            }
+
+            // default - fill the gap if any
+            return currentLease.getEffectiveInterval().endDate().isAfter(occupancy.getEffectiveEndDate()) ?
+                    currentLease.getEffectiveInterval().endDate() :
+                    occupancy.getEffectiveEndDate();
+        } else {
+            // there is a next lease
+            final LocalDate startDateNextLease = report.getNextLease().getEffectiveInterval().startDate();
+            final LocalDate firstAggDateNextLease = startDateNextLease.withDayOfMonth(1); // agreed with users: when the next lease starts in a month - even on the last day of the month - the aggregation will be on the next lease for that month
+            if (report.getNextOnSameUnit()!=null){
+                final LocalDate endDateDerivedOfNext = report.getNextOnSameUnit().getEffectiveStartDate().minusDays(1);
+                return endDateDerivedOfNext.isBefore(firstAggDateNextLease) ? endDateDerivedOfNext : firstAggDateNextLease.minusDays(1);
+            }
+
+            if (report.getNextOnOtherUnit().size()==1){
+                final LocalDate endDateDerivedOfNext = report.getNextOnOtherUnit().get(0).getEffectiveStartDate()
+                        .minusDays(1);
+                return endDateDerivedOfNext.isBefore(firstAggDateNextLease) ? endDateDerivedOfNext : firstAggDateNextLease.minusDays(1);
+            }
+
+            if (report.getParallelConfigs().size()>0){
+                // compare the end date of each with that of the current config. If one of them can 'fill the gap' then do not fill it with current one
+                boolean configFound = false;
+                for (TurnoverReportingConfig c : report.getParallelConfigs()){
+                    if (c.getEndDate()==null || c.getEndDate().isAfter(report.getTurnoverReportingConfig().getEndDate())){
+                        configFound = true;
+                    }
+                }
+                return configFound ? occupancy.getEffectiveEndDate() : firstAggDateNextLease.minusDays(1);
+            }
+
+            // default fill the gap on this report
+            return firstAggDateNextLease.minusDays(1);
+        }
+
+    }
+
+    LocalDate getStartDateToUse(final AggregationAnalysisReportForConfig report){
+        final Occupancy occupancy = report.getTurnoverReportingConfig().getOccupancy();
         LocalDate occStartDateOrNull = null;
         try {
             occStartDateOrNull = occupancy.getEffectiveInterval().startDate();
