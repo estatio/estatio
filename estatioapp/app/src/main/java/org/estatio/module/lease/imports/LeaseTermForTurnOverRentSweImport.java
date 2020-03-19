@@ -204,11 +204,15 @@ public class LeaseTermForTurnOverRentSweImport implements ExcelFixtureRowHandler
             term.setTurnoverRentRule(percentageToTurnoverRentRuleString(percentage));
         } else {
             LeaseTermForTurnoverRent previousTerm = (LeaseTermForTurnoverRent) term.getPrevious();
-            if (previousTerm!=null) {
-                term.setTurnoverRentRule(previousTerm.getTurnoverRentRule());
-            } else {
-                messageService.warnUser(String.format("Percentage not set and no previous term found for lease %s; please correct", getLeaseReference()));
+            while(previousTerm!=null) {
+                if (previousTerm.getTurnoverRentRule()!=null) {
+                    term.setTurnoverRentRule(previousTerm.getTurnoverRentRule());
+                    return;
+                } else {
+                    previousTerm = (LeaseTermForTurnoverRent) previousTerm.getPrevious();
+                }
             }
+            messageService.warnUser(String.format("Percentage not set and no previous term found for lease %s; please correct", getLeaseReference()));
         }
     }
 
