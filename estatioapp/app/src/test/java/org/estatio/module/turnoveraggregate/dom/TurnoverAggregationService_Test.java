@@ -18,6 +18,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.currency.dom.Currency;
+import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 
@@ -201,12 +202,17 @@ public class TurnoverAggregationService_Test {
         // given
         TurnoverAggregationService service = new TurnoverAggregationService();
         final LocalDate aggregationDate = new LocalDate(2020, 1, 1);
+        TurnoverAggregation aggregation = new TurnoverAggregation();
+        aggregation.setDate(aggregationDate);
+        TurnoverReportingConfig config = new TurnoverReportingConfig();
+        config.setFrequency(Frequency.MONTHLY);
+        aggregation.setTurnoverReportingConfig(config);
         final TurnoverAggregateForPeriod afp = new TurnoverAggregateForPeriod();
 
         // when
         afp.setAggregationPeriod(AggregationPeriod.P_2M);
         List<Turnover> objects = prepareTestTurnovers(LocalDateInterval.including(aggregationDate, aggregationDate));
-        service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, objects);
+        service.calculateTurnoverAggregateForPeriod(afp, aggregation, objects);
 
         // then
         assertAggregateForPeriod(afp, new BigDecimal("1"), new BigDecimal("0.50"),1,false,
@@ -219,7 +225,7 @@ public class TurnoverAggregationService_Test {
             t.setGrossAmount(BigDecimal.ZERO);
             t.setNetAmount(BigDecimal.ZERO);
         });
-        service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, objects);
+        service.calculateTurnoverAggregateForPeriod(afp, aggregation, objects);
 
         // then
         assertAggregateForPeriod(afp, new BigDecimal("0"), new BigDecimal("0"),0,false,
@@ -227,14 +233,14 @@ public class TurnoverAggregationService_Test {
 
         // and when only this year
         List<Turnover> objectsCurYear = prepareTestTurnovers(LocalDateInterval.including(aggregationDate.minusMonths(11), aggregationDate));
-        service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, objectsCurYear);
+        service.calculateTurnoverAggregateForPeriod(afp, aggregation, objectsCurYear);
         // then
         assertAggregateForPeriod(afp, new BigDecimal("23"), new BigDecimal("22.00"),2,false,
                 null, null,null, null, false);
 
         // and when only last year
         List<Turnover> objectsPreviousYear = prepareTestTurnovers(LocalDateInterval.including(aggregationDate.minusYears(1).minusMonths(11), aggregationDate.minusYears(1)));
-        service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, objectsPreviousYear);
+        service.calculateTurnoverAggregateForPeriod(afp, aggregation, objectsPreviousYear);
         // then
         assertAggregateForPeriod(afp,  null,  null,null,null,
                 new BigDecimal("23"),new BigDecimal("22.00"),2, false, false);
@@ -243,14 +249,14 @@ public class TurnoverAggregationService_Test {
         List<Turnover> currentAndPrevYear = new ArrayList<>();
         currentAndPrevYear.addAll(objectsPreviousYear);
         currentAndPrevYear.addAll(objectsCurYear);
-        service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, currentAndPrevYear);
+        service.calculateTurnoverAggregateForPeriod(afp, aggregation, currentAndPrevYear);
         // then
         assertAggregateForPeriod(afp, new BigDecimal("23"), new BigDecimal("22.00"),2,false,
                 new BigDecimal("23"),new BigDecimal("22.00"),2, false, true);
 
         // and when for 12 M
         afp.setAggregationPeriod(AggregationPeriod.P_12M);
-        service.calculateTurnoverAggregateForPeriod(afp, aggregationDate, currentAndPrevYear);
+        service.calculateTurnoverAggregateForPeriod(afp, aggregation, currentAndPrevYear);
         // then
         assertAggregateForPeriod(afp, new BigDecimal("78"), new BigDecimal("72.00"),12,false,
                 new BigDecimal("78"),new BigDecimal("72.00"),12, false, true);
@@ -265,10 +271,15 @@ public class TurnoverAggregationService_Test {
         final TurnoverAggregateForPeriod aggregateForPeriod = new TurnoverAggregateForPeriod();
         aggregateForPeriod.setAggregationPeriod(AggregationPeriod.P_1M);
         final LocalDate aggregationDate = new LocalDate(2020, 1, 1);
+        TurnoverAggregation aggregation = new TurnoverAggregation();
+        aggregation.setDate(aggregationDate);
+        TurnoverReportingConfig config = new TurnoverReportingConfig();
+        config.setFrequency(Frequency.MONTHLY);
+        aggregation.setTurnoverReportingConfig(config);
         List<Turnover> turnovers = new ArrayList<>();
 
         // when
-        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregationDate, turnovers);
+        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregation, turnovers);
 
         // then
         assertAggregateForPeriod(aggregateForPeriod, null, null,null,null, null,null,null, null,false);
@@ -276,70 +287,70 @@ public class TurnoverAggregationService_Test {
         // and when
         Turnover turnoverWithNUlls = setUpTurnover(null, null, null, aggregationDate);
         turnovers.add(turnoverWithNUlls);
-        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregationDate, turnovers);
+        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregation, turnovers);
         // then
         assertAggregateForPeriod(aggregateForPeriod, null, null,0,false, null,null,null, null,false);
 
         // and when
         Turnover turnoverWithNUllsPY = setUpTurnover(null, null, null, aggregationDate.minusYears(1));
         turnovers.add(turnoverWithNUllsPY);
-        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregationDate, turnovers);
+        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregation, turnovers);
         // then
         assertAggregateForPeriod(aggregateForPeriod, null, null,0,false, null,null,0, false,false);
 
         // and when
         Turnover turnoverWithZeroCount = setUpTurnover(null, null, BigInteger.valueOf(0), aggregationDate);
         turnovers.add(turnoverWithZeroCount);
-        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregationDate, turnovers);
+        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregation, turnovers);
         // then
         assertAggregateForPeriod(aggregateForPeriod, null, null,0,false, null,null,0, false,false);
 
         // and when
         Turnover turnoverWithZeroCountPY = setUpTurnover(null, null, BigInteger.valueOf(0), aggregationDate.minusYears(1));
         turnovers.add(turnoverWithZeroCountPY);
-        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregationDate, turnovers);
+        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregation, turnovers);
         // then
         assertAggregateForPeriod(aggregateForPeriod, null, null,0,false, null,null,0, false,false);
 
         // and when
         Turnover turnoverWithZeroGross = setUpTurnover(new BigDecimal("0.00"), null, null, aggregationDate);
         turnovers.add(turnoverWithZeroGross);
-        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregationDate, turnovers);
+        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregation, turnovers);
         // then
         assertAggregateForPeriod(aggregateForPeriod, new BigDecimal("0.00"), null,0,false, null,null,0, false,false);
 
         // and when
         Turnover turnoverWithZeroNetPY = setUpTurnover(null, new BigDecimal("0.00"), null, aggregationDate.minusYears(1));
         turnovers.add(turnoverWithZeroNetPY);
-        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregationDate, turnovers);
+        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregation, turnovers);
         // then
         assertAggregateForPeriod(aggregateForPeriod, new BigDecimal("0.00"), null,0,false, null,new BigDecimal("0.00"),0, false,false);
 
         // and when
         Turnover turnoverWithZeroGrossPY = setUpTurnover(new BigDecimal("0.00"), null, null, aggregationDate.minusYears(1));
         turnovers.add(turnoverWithZeroGrossPY);
-        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregationDate, turnovers);
+        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregation, turnovers);
         // then
         assertAggregateForPeriod(aggregateForPeriod, new BigDecimal("0.00"), null,0,false, new BigDecimal("0.00"),new BigDecimal("0.00"),0, false,false);
 
         // and when
         Turnover turnoverWithZeroNet = setUpTurnover(null, new BigDecimal("0.00"), null, aggregationDate);
         turnovers.add(turnoverWithZeroNet);
-        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregationDate, turnovers);
+        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregation, turnovers);
         // then
         assertAggregateForPeriod(aggregateForPeriod, new BigDecimal("0.00"), new BigDecimal("0.00"),0,false, new BigDecimal("0.00"),new BigDecimal("0.00"),0, false,false);
 
         // and when
         Turnover turnoverWithNonZeroGross = setUpTurnover(new BigDecimal("0.01"), null, null, aggregationDate);
         turnovers.add(turnoverWithNonZeroGross);
-        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregationDate, turnovers);
+        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregation, turnovers);
         // then
         assertAggregateForPeriod(aggregateForPeriod, new BigDecimal("0.01"), new BigDecimal("0.00"),1,false, new BigDecimal("0.00"),new BigDecimal("0.00"),0, false,false);
 
         // and when
         Turnover turnoverWithNonZeroGrossPY = setUpTurnover(new BigDecimal("0.01"), null, null, aggregationDate.minusYears(1));
         turnovers.add(turnoverWithNonZeroGrossPY);
-        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregationDate, turnovers);
+        service.calculateTurnoverAggregateForPeriod(aggregateForPeriod, aggregation, turnovers);
         // then
         assertAggregateForPeriod(aggregateForPeriod, new BigDecimal("0.01"), new BigDecimal("0.00"),1,false, new BigDecimal("0.01"),new BigDecimal("0.00"),1, false,true);
 
@@ -545,10 +556,15 @@ public class TurnoverAggregationService_Test {
         TurnoverAggregationService service = new TurnoverAggregationService();
         final LocalDate aggregationDate = new LocalDate(2020, 1, 1);
         final TurnoverAggregateToDate tad = new TurnoverAggregateToDate();
+        TurnoverAggregation aggregation = new TurnoverAggregation();
+        aggregation.setDate(aggregationDate);
+        TurnoverReportingConfig config = new TurnoverReportingConfig();
+        config.setFrequency(Frequency.MONTHLY);
+        aggregation.setTurnoverReportingConfig(config);
 
         // when
         List<Turnover> objects = prepareTestTurnovers(LocalDateInterval.including(aggregationDate, aggregationDate));
-        service.calculateTurnoverAggregateToDate(tad, aggregationDate, objects);
+        service.calculateTurnoverAggregateToDate(tad, aggregation, objects);
 
         // then
         assertAggregateToDate(tad, new BigDecimal("1"), new BigDecimal("0.50"),1,false,
@@ -556,15 +572,16 @@ public class TurnoverAggregationService_Test {
 
         // and when 2 M only this year
         final LocalDate aggregationDate2M = new LocalDate(2020, 2, 1);
+        aggregation.setDate(aggregationDate2M);
         List<Turnover> objectsCurYear = prepareTestTurnovers(LocalDateInterval.including(aggregationDate2M.minusMonths(11), aggregationDate2M));
-        service.calculateTurnoverAggregateToDate(tad, aggregationDate2M, objectsCurYear);
+        service.calculateTurnoverAggregateToDate(tad, aggregation, objectsCurYear);
         // then
         assertAggregateToDate(tad, new BigDecimal("23"), new BigDecimal("22.00"),2,false,
                 null, null,null, null, false);
 
         // and when 2 M only last year
         List<Turnover> objectsLastYear = prepareTestTurnovers(LocalDateInterval.including(aggregationDate2M.minusYears(1).minusMonths(11), aggregationDate2M.minusYears(1)));
-        service.calculateTurnoverAggregateToDate(tad, aggregationDate2M, objectsLastYear);
+        service.calculateTurnoverAggregateToDate(tad, aggregation, objectsLastYear);
         // then
         assertAggregateToDate(tad,  null,  null, null,null,
                 new BigDecimal("23"), new BigDecimal("22.00"),2, false, false);
@@ -573,19 +590,20 @@ public class TurnoverAggregationService_Test {
         List<Turnover> currentAndPrevYear = new ArrayList<>();
         currentAndPrevYear.addAll(objectsLastYear);
         currentAndPrevYear.addAll(objectsCurYear);
-        service.calculateTurnoverAggregateToDate(tad, aggregationDate2M, currentAndPrevYear);
+        service.calculateTurnoverAggregateToDate(tad, aggregation, currentAndPrevYear);
         // then
         assertAggregateToDate(tad, new BigDecimal("23"), new BigDecimal("22.00"),2,false,
                 new BigDecimal("23"),new BigDecimal("22.00"),2, false, true);
 
         // and when for 12 M
         final LocalDate aggregationDate12M = new LocalDate(2020, 12, 1);
+        aggregation.setDate(aggregationDate12M);
         List<Turnover> currentAndPrevYearAll = new ArrayList<>();
         List<Turnover> objectsLastYearAll = prepareTestTurnovers(LocalDateInterval.including(aggregationDate12M.minusYears(1).minusMonths(11), aggregationDate12M.minusYears(1)));
         List<Turnover> objectsCurrentYearAll = prepareTestTurnovers(LocalDateInterval.including(aggregationDate12M.minusMonths(11), aggregationDate12M));
         currentAndPrevYearAll.addAll(objectsLastYearAll);
         currentAndPrevYearAll.addAll(objectsCurrentYearAll);
-        service.calculateTurnoverAggregateToDate(tad, aggregationDate12M, currentAndPrevYearAll);
+        service.calculateTurnoverAggregateToDate(tad, aggregation, currentAndPrevYearAll);
         // then
         assertAggregateToDate(tad, new BigDecimal("78"), new BigDecimal("72.00"),12,false,
                 new BigDecimal("78"),new BigDecimal("72.00"),12, false, true);
@@ -599,10 +617,15 @@ public class TurnoverAggregationService_Test {
         TurnoverAggregationService service = new TurnoverAggregationService();
         final TurnoverAggregateToDate aggregateToDate = new TurnoverAggregateToDate();
         final LocalDate aggregationDate = new LocalDate(2020, 1, 1);
+        TurnoverAggregation aggregation = new TurnoverAggregation();
+        aggregation.setDate(aggregationDate);
+        TurnoverReportingConfig config = new TurnoverReportingConfig();
+        config.setFrequency(Frequency.MONTHLY);
+        aggregation.setTurnoverReportingConfig(config);
         List<Turnover> turnovers = new ArrayList<>();
 
         // when
-        service.calculateTurnoverAggregateToDate(aggregateToDate, aggregationDate, turnovers);
+        service.calculateTurnoverAggregateToDate(aggregateToDate, aggregation, turnovers);
 
         // then
         assertAggregateToDate(aggregateToDate, null, null,null,null, null,null,null, null,false);
@@ -610,14 +633,14 @@ public class TurnoverAggregationService_Test {
         // and when
         Turnover turnoverWithNUlls = setUpTurnover(null, null, null, aggregationDate);
         turnovers.add(turnoverWithNUlls);
-        service.calculateTurnoverAggregateToDate(aggregateToDate, aggregationDate, turnovers);
+        service.calculateTurnoverAggregateToDate(aggregateToDate, aggregation, turnovers);
         // then
         assertAggregateToDate(aggregateToDate, null, null,0,false, null,null,null, null,false);
 
         // and when
         Turnover turnoverWithNUllsPY = setUpTurnover(null, null, null, aggregationDate.minusYears(1));
         turnovers.add(turnoverWithNUllsPY);
-        service.calculateTurnoverAggregateToDate(aggregateToDate, aggregationDate, turnovers);
+        service.calculateTurnoverAggregateToDate(aggregateToDate, aggregation, turnovers);
         // then
         assertAggregateToDate(aggregateToDate, null, null,0,false, null,null,0, false,false);
 
@@ -625,56 +648,56 @@ public class TurnoverAggregationService_Test {
         // and when
         Turnover turnoverWithZeroCount = setUpTurnover(null, null, BigInteger.valueOf(0), aggregationDate);
         turnovers.add(turnoverWithZeroCount);
-        service.calculateTurnoverAggregateToDate(aggregateToDate, aggregationDate, turnovers);
+        service.calculateTurnoverAggregateToDate(aggregateToDate, aggregation, turnovers);
         // then
         assertAggregateToDate(aggregateToDate, null, null,0,false, null,null,0, false,false);
 
         // and when
         Turnover turnoverWithZeroCountPY = setUpTurnover(null, null, BigInteger.valueOf(0), aggregationDate.minusYears(1));
         turnovers.add(turnoverWithZeroCountPY);
-        service.calculateTurnoverAggregateToDate(aggregateToDate, aggregationDate, turnovers);
+        service.calculateTurnoverAggregateToDate(aggregateToDate, aggregation, turnovers);
         // then
         assertAggregateToDate(aggregateToDate, null, null,0,false, null,null,0, false,false);
 
         // and when
         Turnover turnoverWithZeroGross = setUpTurnover(new BigDecimal("0.00"), null, null, aggregationDate);
         turnovers.add(turnoverWithZeroGross);
-        service.calculateTurnoverAggregateToDate(aggregateToDate, aggregationDate, turnovers);
+        service.calculateTurnoverAggregateToDate(aggregateToDate, aggregation, turnovers);
         // then
         assertAggregateToDate(aggregateToDate, new BigDecimal("0.00"), null,0,false, null,null,0, false,false);
 
         // and when
         Turnover turnoverWithZeroNetPY = setUpTurnover(null, new BigDecimal("0.00"), null, aggregationDate.minusYears(1));
         turnovers.add(turnoverWithZeroNetPY);
-        service.calculateTurnoverAggregateToDate(aggregateToDate, aggregationDate, turnovers);
+        service.calculateTurnoverAggregateToDate(aggregateToDate, aggregation, turnovers);
         // then
         assertAggregateToDate(aggregateToDate, new BigDecimal("0.00"), null,0,false, null,new BigDecimal("0.00"),0, false,false);
 
         // and when
         Turnover turnoverWithZeroGrossPY = setUpTurnover(new BigDecimal("0.00"), null, null, aggregationDate.minusYears(1));
         turnovers.add(turnoverWithZeroGrossPY);
-        service.calculateTurnoverAggregateToDate(aggregateToDate, aggregationDate, turnovers);
+        service.calculateTurnoverAggregateToDate(aggregateToDate, aggregation, turnovers);
         // then
         assertAggregateToDate(aggregateToDate, new BigDecimal("0.00"), null,0,false, new BigDecimal("0.00"),new BigDecimal("0.00"),0, false,false);
 
         // and when
         Turnover turnoverWithZeroNet = setUpTurnover(null, new BigDecimal("0.00"), null, aggregationDate);
         turnovers.add(turnoverWithZeroNet);
-        service.calculateTurnoverAggregateToDate(aggregateToDate, aggregationDate, turnovers);
+        service.calculateTurnoverAggregateToDate(aggregateToDate, aggregation, turnovers);
         // then
         assertAggregateToDate(aggregateToDate, new BigDecimal("0.00"), new BigDecimal("0.00"),0,false, new BigDecimal("0.00"),new BigDecimal("0.00"),0, false,false);
 
         // and when
         Turnover turnoverWithNonZeroGross = setUpTurnover(new BigDecimal("0.01"), null, null, aggregationDate);
         turnovers.add(turnoverWithNonZeroGross);
-        service.calculateTurnoverAggregateToDate(aggregateToDate, aggregationDate, turnovers);
+        service.calculateTurnoverAggregateToDate(aggregateToDate, aggregation, turnovers);
         // then
         assertAggregateToDate(aggregateToDate, new BigDecimal("0.01"), new BigDecimal("0.00"),1,false, new BigDecimal("0.00"),new BigDecimal("0.00"),0, false,false);
 
         // and when
         Turnover turnoverWithNonZeroGrossPY = setUpTurnover(new BigDecimal("0.01"), null, null, aggregationDate.minusYears(1));
         turnovers.add(turnoverWithNonZeroGrossPY);
-        service.calculateTurnoverAggregateToDate(aggregateToDate, aggregationDate, turnovers);
+        service.calculateTurnoverAggregateToDate(aggregateToDate, aggregation, turnovers);
         // then
         assertAggregateToDate(aggregateToDate, new BigDecimal("0.01"), new BigDecimal("0.00"),1,false, new BigDecimal("0.01"),new BigDecimal("0.00"),1, false,true);
 
@@ -723,6 +746,54 @@ public class TurnoverAggregationService_Test {
             cnt++;
         }
         return result;
+    }
+
+    @Test
+    public void determine_turnover_count_works() throws Exception {
+
+        // given
+        TurnoverAggregationService service = new TurnoverAggregationService();
+        List<Turnover> turnovers = new ArrayList<>();
+        // when
+        Integer turnoverCount = service.determineTurnoverCount(turnovers, Frequency.MONTHLY);
+        // then
+        assertThat(turnoverCount).isNull();
+
+        // and when
+        Turnover t1 = new Turnover();
+        t1.setDate(new LocalDate(2020,1,15));
+        turnovers.add(t1);
+        turnoverCount = service.determineTurnoverCount(turnovers, Frequency.MONTHLY);
+        // then
+        assertThat(turnoverCount).isNull();
+
+        // and when
+        t1.setGrossAmount(new BigDecimal("0.01"));
+        turnoverCount = service.determineTurnoverCount(turnovers, Frequency.MONTHLY);
+        // then
+        assertThat(turnoverCount).isEqualTo(1);
+
+        // and when
+        t1.setGrossAmount(null);
+        t1.setNetAmount(new BigDecimal("0.01"));
+        turnoverCount = service.determineTurnoverCount(turnovers, Frequency.MONTHLY);
+        // then
+        assertThat(turnoverCount).isEqualTo(1);
+
+        // and when
+        Turnover t2 = new Turnover();
+        t2.setDate(new LocalDate(2020,2,1));
+        t2.setGrossAmount(new BigDecimal("0.01"));
+        turnovers.add(t2);
+        turnoverCount = service.determineTurnoverCount(turnovers, Frequency.MONTHLY);
+        // then
+        assertThat(turnoverCount).isEqualTo(2);
+
+        // and when turnover dates in same month
+        t2.setDate(new LocalDate(2020,1,31));
+        turnoverCount = service.determineTurnoverCount(turnovers, Frequency.MONTHLY);
+        // then no double count
+        assertThat(turnoverCount).isEqualTo(1);
     }
 
 }

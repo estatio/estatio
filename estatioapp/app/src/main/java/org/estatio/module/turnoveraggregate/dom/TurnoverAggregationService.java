@@ -277,9 +277,10 @@ public class TurnoverAggregationService {
 
     void calculateTurnoverAggregateForPeriod(
             final TurnoverAggregateForPeriod turnoverAggregateForPeriod,
-            final LocalDate aggregationDate,
+            final TurnoverAggregation aggregation,
             final List<Turnover> turnovers) {
 
+        final LocalDate aggregationDate = aggregation.getDate();
         final List<Turnover> toCY = getTurnoversForAggregateForPeriod(turnoverAggregateForPeriod, aggregationDate, turnovers, false);
         final List<Turnover> toPY = getTurnoversForAggregateForPeriod(turnoverAggregateForPeriod, aggregationDate, turnovers, true);
 
@@ -287,18 +288,10 @@ public class TurnoverAggregationService {
 
         resetTurnoverAggregateForPeriod(turnoverAggregateForPeriod);
 
-        List<LocalDate> datesCounted = new ArrayList<>();
         toCY.forEach(t->{
             turnoverAggregateForPeriod.setGrossAmount(aggAmount(turnoverAggregateForPeriod.getGrossAmount(), t.getGrossAmount()));
             turnoverAggregateForPeriod.setNetAmount(aggAmount(turnoverAggregateForPeriod.getNetAmount(), t.getNetAmount()));
-            if ((t.getGrossAmount()!=null && t.getGrossAmount().compareTo(BigDecimal.ZERO) > 0) || (t.getNetAmount()!=null && t.getNetAmount().compareTo(BigDecimal.ZERO) > 0)) {
-                if (!datesCounted.contains(t.getDate())) {
-                    datesCounted.add(t.getDate());
-                    turnoverAggregateForPeriod.setTurnoverCount(turnoverAggregateForPeriod.getTurnoverCount() != null ?
-                            turnoverAggregateForPeriod.getTurnoverCount() + 1 :
-                            1);
-                }
-            }
+            turnoverAggregateForPeriod.setTurnoverCount(determineTurnoverCount(toCY, aggregation.getTurnoverReportingConfig().getFrequency()));
         });
         if (toCY.isEmpty()){
             turnoverAggregateForPeriod.setTurnoverCount(null);
@@ -308,19 +301,10 @@ public class TurnoverAggregationService {
             turnoverAggregateForPeriod.setNonComparableThisYear(containsNonComparableTurnover(toCY));
         }
 
-        datesCounted.clear();
         toPY.forEach(t->{
             turnoverAggregateForPeriod.setGrossAmountPreviousYear(aggAmount(turnoverAggregateForPeriod.getGrossAmountPreviousYear(), t.getGrossAmount()));
             turnoverAggregateForPeriod.setNetAmountPreviousYear(aggAmount(turnoverAggregateForPeriod.getNetAmountPreviousYear(), t.getNetAmount()));
-            if ((t.getGrossAmount()!=null && t.getGrossAmount().compareTo(BigDecimal.ZERO) > 0) || (t.getNetAmount()!=null && t.getNetAmount().compareTo(BigDecimal.ZERO) > 0)) {
-                if (!datesCounted.contains(t.getDate())) {
-                    datesCounted.add(t.getDate());
-                    turnoverAggregateForPeriod.setTurnoverCountPreviousYear(
-                            turnoverAggregateForPeriod.getTurnoverCountPreviousYear() != null ?
-                                    turnoverAggregateForPeriod.getTurnoverCountPreviousYear() + 1 :
-                                    1);
-                }
-            }
+            turnoverAggregateForPeriod.setTurnoverCountPreviousYear(determineTurnoverCount(toPY, aggregation.getTurnoverReportingConfig().getFrequency()));
         });
         if (toPY.isEmpty()){
             turnoverAggregateForPeriod.setTurnoverCountPreviousYear(null);
@@ -338,6 +322,20 @@ public class TurnoverAggregationService {
                 turnoverAggregateForPeriod.getNonComparablePreviousYear()
                 ));
 
+    }
+
+    Integer determineTurnoverCount(final List<Turnover> turnovers, final Frequency frequency){
+        if (frequency!=Frequency.MONTHLY) return null; // not implemented
+        List<LocalDate> firstDatesOfMonth = new ArrayList<>();
+        turnovers.forEach(t->{
+            if ((t.getGrossAmount()!=null && t.getGrossAmount().compareTo(BigDecimal.ZERO) > 0) || (t.getNetAmount()!=null && t.getNetAmount().compareTo(BigDecimal.ZERO) > 0)) {
+                final LocalDate firstDayOfMonthTurnoverDate = t.getDate().withDayOfMonth(1);
+                if (!firstDatesOfMonth.contains(firstDayOfMonthTurnoverDate)) {
+                    firstDatesOfMonth.add(firstDayOfMonthTurnoverDate);
+                }
+            }
+        });
+        return firstDatesOfMonth.isEmpty() ? null : firstDatesOfMonth.size();
     }
 
     List<Turnover> getTurnoversForAggregateForPeriod(
@@ -358,27 +356,20 @@ public class TurnoverAggregationService {
 
     public void calculateTurnoverAggregateToDate(
             final TurnoverAggregateToDate turnoverAggregateToDate,
-            final LocalDate aggregationDate,
+            final TurnoverAggregation aggregation,
             final List<Turnover> turnovers){
 
+        final LocalDate aggregationDate = aggregation.getDate();
         final List<Turnover> toCY = getTurnoversForAggregateToDate(aggregationDate, turnovers, false);
         final List<Turnover> toPY = getTurnoversForAggregateToDate(aggregationDate, turnovers, true);
         if (toCY.isEmpty() && toPY.isEmpty()) return;
 
         resetTurnoverAggregateToDate(turnoverAggregateToDate);
 
-        List<LocalDate> datesCounted = new ArrayList<>();
         toCY.forEach(t->{
             turnoverAggregateToDate.setGrossAmount(aggAmount(turnoverAggregateToDate.getGrossAmount(), t.getGrossAmount()));
             turnoverAggregateToDate.setNetAmount(aggAmount(turnoverAggregateToDate.getNetAmount(), t.getNetAmount()));
-            if ((t.getGrossAmount()!=null && t.getGrossAmount().compareTo(BigDecimal.ZERO) > 0) || (t.getNetAmount()!=null && t.getNetAmount().compareTo(BigDecimal.ZERO) > 0)) {
-                if (!datesCounted.contains(t.getDate())) {
-                    datesCounted.add(t.getDate());
-                    turnoverAggregateToDate.setTurnoverCount(turnoverAggregateToDate.getTurnoverCount() != null ?
-                            turnoverAggregateToDate.getTurnoverCount() + 1 :
-                            1);
-                }
-            }
+            turnoverAggregateToDate.setTurnoverCount(determineTurnoverCount(toCY, aggregation.getTurnoverReportingConfig().getFrequency()));
         });
         if (toCY.isEmpty()){
             turnoverAggregateToDate.setTurnoverCount(null);
@@ -388,19 +379,10 @@ public class TurnoverAggregationService {
             turnoverAggregateToDate.setNonComparableThisYear(containsNonComparableTurnover(toCY));
         }
 
-        datesCounted.clear();
         toPY.forEach(t->{
             turnoverAggregateToDate.setGrossAmountPreviousYear(aggAmount(turnoverAggregateToDate.getGrossAmountPreviousYear(), t.getGrossAmount()));
             turnoverAggregateToDate.setNetAmountPreviousYear(aggAmount(turnoverAggregateToDate.getNetAmountPreviousYear(), t.getNetAmount()));
-            if ((t.getGrossAmount()!=null && t.getGrossAmount().compareTo(BigDecimal.ZERO) > 0) || (t.getNetAmount()!=null && t.getNetAmount().compareTo(BigDecimal.ZERO) > 0)) {
-                if (!datesCounted.contains(t.getDate())) {
-                    datesCounted.add(t.getDate());
-                    turnoverAggregateToDate.setTurnoverCountPreviousYear(
-                            turnoverAggregateToDate.getTurnoverCountPreviousYear() != null ?
-                                    turnoverAggregateToDate.getTurnoverCountPreviousYear() + 1 :
-                                    1);
-                }
-            }
+            turnoverAggregateToDate.setTurnoverCountPreviousYear(determineTurnoverCount(toPY, aggregation.getTurnoverReportingConfig().getFrequency()));
         });
         if (toPY.isEmpty()){
             turnoverAggregateToDate.setTurnoverCountPreviousYear(null);

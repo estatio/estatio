@@ -88,7 +88,7 @@ public class TurnoverAggregateToDate {
 
     @Programmatic
     public void calculate(final TurnoverAggregation aggregation, final List<Turnover> turnovers) {
-        turnoverAggregationService.calculateTurnoverAggregateToDate(this, aggregation.getDate(), turnovers);
+        turnoverAggregationService.calculateTurnoverAggregateToDate(this, aggregation, turnovers);
     }
 
     @Programmatic

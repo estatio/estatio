@@ -87,7 +87,7 @@ public class TurnoverAnalysisService {
         return result;
     }
 
-    public void setCollectionOfConfigsToInclude(final List<AggregationAnalysisReportForConfig> reports){
+    void setCollectionOfConfigsToInclude(final List<AggregationAnalysisReportForConfig> reports){
 
         // first add the direct predecessors
         for (AggregationAnalysisReportForConfig report : reports){
@@ -279,7 +279,7 @@ public class TurnoverAnalysisService {
     }
 
     /**
-     * NOTE: this method should be a reflection of the talks with the users on the rules they prefer (https://docs.google.com/presentation/d/1LklFa3fdX7gl5BaHwmm7f0iERh6IGRuADxQxWy1scpA)
+     * NOTE: this method (and the methods called by it) should be a reflection of the talks with the users on the rules they prefer (https://docs.google.com/presentation/d/1LklFa3fdX7gl5BaHwmm7f0iERh6IGRuADxQxWy1scpA)
      * @param report
      * @return
      */
@@ -292,8 +292,16 @@ public class TurnoverAnalysisService {
 
         List<LocalDate> result = new ArrayList<>();
         while (!endDateToUse.isBefore(startDateToUse)) {
-            result.add(startDateToUse);
-            startDateToUse = startDateToUse.plusMonths(1);
+            switch (report.getTurnoverReportingConfig().getFrequency()){
+            case MONTHLY:
+                result.add(startDateToUse);
+                startDateToUse = startDateToUse.plusMonths(1);
+                break;
+            case YEARLY:
+            case DAILY:
+                // NOOP since (should be) called only by TurnoverAnalysisService#analyze which has TurnoverAggregationService#guard
+                return Collections.emptyList();
+            }
         }
         return result;
     }

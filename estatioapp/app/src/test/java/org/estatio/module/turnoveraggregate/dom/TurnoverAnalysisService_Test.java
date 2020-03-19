@@ -302,9 +302,10 @@ public class TurnoverAnalysisService_Test {
             }
         };
         TurnoverReportingConfig config = new TurnoverReportingConfig();
+        config.setFrequency(Frequency.MONTHLY);
         AggregationAnalysisReportForConfig report = new AggregationAnalysisReportForConfig(config);
         // when
-        final List<LocalDate> aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
+        List<LocalDate> aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
         // then
         assertThat(aggregationDates).hasSize(3);
         final LocalDate firstDayOfMonthStartDateToUse = startDateToUse.withDayOfMonth(1);
@@ -313,6 +314,11 @@ public class TurnoverAnalysisService_Test {
         assertThat(aggregationDates.get(2)).isEqualTo(firstDayOfMonthStartDateToUse.plusMonths(2));
         assertThat(aggregationDates.get(2)).isEqualTo(new LocalDate(2020,2,1));
 
+        // and when
+        config.setFrequency(Frequency.DAILY); // not supported yet
+        aggregationDates = service.aggregationDatesForTurnoverReportingConfig(report);
+        // then
+        assertThat(aggregationDates).isEmpty();
     }
 
     public static class AggregationEndDateToUseTests extends TurnoverAnalysisService_Test {
@@ -340,6 +346,7 @@ public class TurnoverAnalysisService_Test {
             config = new TurnoverReportingConfig();
             config.setOccupancy(occupancy);
             config.setStartDate(startOfTheMonth);
+            config.setFrequency(Frequency.MONTHLY);
         }
 
         private Lease nextLeaseWithStartDate(final LocalDate tenancyStartDate) {
