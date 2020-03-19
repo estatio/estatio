@@ -145,6 +145,62 @@ public class LeasetermForTurnoverRentFixedImport_IntegTest extends LeaseModuleIn
         assertThat(term2Topmodel.getEndDate()).isEqualTo(endDate2011);
     }
 
+    @Test
+    public void import_test_split_term() throws Exception {
+        // given
+        Lease leaseForTopmodel = Lease_enum.HanTopModel002Se.findUsing(serviceRegistry2);
+        LeaseItem itemForTopmodel = leaseForTopmodel.findFirstItemOfType(LeaseItemType.TURNOVER_RENT);
+        Blob excelSheet = (Blob) fixtureResults.get(0).getObject();
+
+        LeaseTermForTurnoverRentSweImportManager manager = new LeaseTermForTurnoverRentSweImportManager();
+        manager.setYear(2011);
+        manager.setProperty(han = Property_enum.HanSe.findUsing(serviceRegistry2));
+
+        // when
+        wrap(manager).upload(excelSheet);
+        transactionService2.nextTransaction();
+
+        // then
+        final LocalDate startDate2012 = new LocalDate(2012, 1, 1);
+        final LocalDate endDate2012 = new LocalDate(2012, 12, 31);
+        final LocalDate startDate2013 = new LocalDate(2013, 1, 1);
+        final LocalDate endDate2013 = new LocalDate(2013, 12, 31);
+
+        final LeaseTermForTurnoverRent term1Topmodel = (LeaseTermForTurnoverRent) itemForTopmodel.findTerm(startDate2012);
+        assertThat(term1Topmodel.getManualTurnoverRent()).isEqualTo(new BigDecimal("2200.00"));
+        assertThat(term1Topmodel.getTurnoverRentRule()).isEqualTo("3.6");
+        assertThat(term1Topmodel.getEndDate()).isEqualTo(endDate2012);
+        final LeaseTermForTurnoverRent term2Topmodel = (LeaseTermForTurnoverRent) itemForTopmodel.findTerm(startDate2013);
+        assertThat(term2Topmodel.getManualTurnoverRent()).isEqualTo(new BigDecimal("2300.00"));
+        assertThat(term2Topmodel.getTurnoverRentRule()).isEqualTo("3.6");
+        assertThat(term2Topmodel.getEndDate()).isEqualTo(endDate2013);
+    }
+
+    @Test
+    public void import_test_empty_percentage() throws Exception {
+        // given
+        Lease leaseForTopmodel = Lease_enum.HanTopModel002Se.findUsing(serviceRegistry2);
+        LeaseItem itemForTopmodel = leaseForTopmodel.findFirstItemOfType(LeaseItemType.TURNOVER_RENT);
+        Blob excelSheet = (Blob) fixtureResults.get(0).getObject();
+
+        LeaseTermForTurnoverRentSweImportManager manager = new LeaseTermForTurnoverRentSweImportManager();
+        manager.setYear(2011);
+        manager.setProperty(han = Property_enum.HanSe.findUsing(serviceRegistry2));
+
+        // when
+        wrap(manager).upload(excelSheet);
+        transactionService2.nextTransaction();
+
+        // then
+        final LocalDate startDate2014 = new LocalDate(2014, 1, 1);
+        final LocalDate endDate2014 = new LocalDate(2014, 12, 31);
+
+        final LeaseTermForTurnoverRent term2Topmodel = (LeaseTermForTurnoverRent) itemForTopmodel.findTerm(startDate2014);
+        assertThat(term2Topmodel.getManualTurnoverRent()).isEqualTo(new BigDecimal("2300.00"));
+        assertThat(term2Topmodel.getTurnoverRentRule()).isEqualTo("3.6");
+        assertThat(term2Topmodel.getEndDate()).isEqualTo(endDate2014);
+    }
+
     @Inject
     ServiceRegistry2 serviceRegistry2;
 

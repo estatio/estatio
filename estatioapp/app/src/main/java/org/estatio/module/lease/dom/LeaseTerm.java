@@ -460,7 +460,7 @@ public abstract class LeaseTerm
     public LeaseTerm split(
             final LocalDate splitDate) {
 
-        final LeaseTerm currentPrevous = this.getPrevious();
+        final LeaseTerm currentPrevious = this.getPrevious();
         final LeaseTerm currentNext = this.getNext();
 
         //decouple current next
