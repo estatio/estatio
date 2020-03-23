@@ -57,14 +57,17 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
-import org.estatio.module.task.dom.task.Task;
 import org.estatio.module.coda.EstatioCodaModule;
 import org.estatio.module.coda.dom.doc.CodaDocHeadMenu;
 import org.estatio.module.coda.dom.hwm.CodaHwm;
 import org.estatio.module.coda.dom.hwm.CodaHwmRepository;
 import org.estatio.module.countryapptenancy.dom.CountryServiceForCurrentUser;
 import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.lease.dom.InvoicingFrequency;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
@@ -76,6 +79,7 @@ import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.estatio.module.settings.dom.ApplicationSettingForEstatio;
 import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
 import org.estatio.module.task.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.task.Task;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -577,6 +581,32 @@ public class AdminDashboard implements ViewModel {
 
     }
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void closeOldAndOpenNewLeaseItem(@Nullable final org.estatio.module.asset.dom.Property property, final LocalDate startDate, final boolean removeinvoicesOldItem){
+        List<Lease> leases;
+        if (property!=null) {
+            leases = leaseRepository.findLeasesByProperty(property);
+
+        } else {
+            leases = leaseRepository.allLeases().stream()
+                    .filter(l->l.getAtPath().startsWith("/ITA"))
+                    .filter(l->l.getEffectiveInterval()!=null)
+                    .filter(l->l.getEffectiveInterval().contains(startDate))
+                    .collect(Collectors.toList());
+        }
+        leases.forEach(l -> {
+            factoryService.mixin(Lease_closeOldAndOpenNewLeaseItem.class, l)
+                    .act(startDate, LeaseItemType.RENT, InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE,
+                            removeinvoicesOldItem);
+            factoryService.mixin(Lease_closeOldAndOpenNewLeaseItem.class, l)
+                    .act(startDate, LeaseItemType.SERVICE_CHARGE, InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE,
+                            removeinvoicesOldItem);
+            factoryService.mixin(Lease_closeOldAndOpenNewLeaseItem.class, l)
+                    .act(startDate, LeaseItemType.SERVICE_CHARGE_INDEXABLE, InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE,
+                            removeinvoicesOldItem);
+        });
+    }
+
     // //////////////////////////////////////
 
     @Inject
@@ -655,4 +685,7 @@ public class AdminDashboard implements ViewModel {
 
     @Inject
     StateTransitionService stateTransitionService;
+
+    @Inject
+    LeaseRepository leaseRepository;
 }
