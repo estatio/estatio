@@ -126,6 +126,7 @@ public class LeasetermForTurnoverRentFixedImport_IntegTest extends LeaseModuleIn
         final LocalDate endDate2010 = new LocalDate(2010, 12, 31);
         final LocalDate startDate2011 = new LocalDate(2011, 1, 1);
         final LocalDate endDate2011 = new LocalDate(2011, 12, 31);
+        final LocalDate endDate2012 = new LocalDate(2012, 12, 31);
 
         final LeaseTermForTurnoverRent term1Poison = (LeaseTermForTurnoverRent) itemForPoison.findTerm(startDate2010);
         assertThat(term1Poison).isNull(); // previous terms, when not found, are no longer created since ECP-806
@@ -133,7 +134,7 @@ public class LeasetermForTurnoverRentFixedImport_IntegTest extends LeaseModuleIn
         assertThat(term2Poison.getEffectiveValue()).isEqualTo(new BigDecimal("21000.00"));
         assertThat(term2Poison.getManualTurnoverRent()).isEqualTo(new BigDecimal("21000.00"));
         assertThat(term2Poison.getTurnoverRentRule()).isEqualTo("8");
-        assertThat(term2Poison.getEndDate()).isEqualTo(endDate2011);
+        assertThat(term2Poison.getEndDate()).isEqualTo(endDate2012); // end date set to day before start date of next term
 
         final LeaseTermForTurnoverRent term1Topmodel = (LeaseTermForTurnoverRent) itemForTopmodel.findTerm(new LocalDate(2010, 7,15));
         assertThat(term1Topmodel.getEffectiveValue()).isEqualTo(new BigDecimal("2000.00"));
@@ -179,7 +180,9 @@ public class LeasetermForTurnoverRentFixedImport_IntegTest extends LeaseModuleIn
     @Test
     public void import_test_empty_percentage() throws Exception {
         // given
+        Lease leaseForPoison = Lease_enum.HanPoison001Se.findUsing(serviceRegistry2);
         Lease leaseForTopmodel = Lease_enum.HanTopModel002Se.findUsing(serviceRegistry2);
+        LeaseItem itemForPoison = leaseForPoison.findFirstItemOfType(LeaseItemType.TURNOVER_RENT);
         LeaseItem itemForTopmodel = leaseForTopmodel.findFirstItemOfType(LeaseItemType.TURNOVER_RENT);
         Blob excelSheet = (Blob) fixtureResults.get(0).getObject();
 
@@ -187,18 +190,31 @@ public class LeasetermForTurnoverRentFixedImport_IntegTest extends LeaseModuleIn
         manager.setYear(2011);
         manager.setProperty(han = Property_enum.HanSe.findUsing(serviceRegistry2));
 
+        final LocalDate startDate2012 = new LocalDate(2012, 1, 1);
+        final LocalDate endDate2012 = new LocalDate(2012, 12, 31);
+        LeaseTermForTurnoverRent termNoPercentage = (LeaseTermForTurnoverRent) itemForPoison.newTerm(startDate2012, endDate2012);
+        termNoPercentage.setManualTurnoverRent(new BigDecimal("22000.00"));
+        termNoPercentage.setTurnoverRentRule(null);
+
         // when
         wrap(manager).upload(excelSheet);
         transactionService2.nextTransaction();
 
         // then
+        final LocalDate startDate2013 = new LocalDate(2013, 1, 1);
+        final LocalDate endDate2013 = new LocalDate(2013, 12, 31);
         final LocalDate startDate2014 = new LocalDate(2014, 1, 1);
         final LocalDate endDate2014 = new LocalDate(2014, 12, 31);
 
-        final LeaseTermForTurnoverRent term2Topmodel = (LeaseTermForTurnoverRent) itemForTopmodel.findTerm(startDate2014);
-        assertThat(term2Topmodel.getManualTurnoverRent()).isEqualTo(new BigDecimal("2300.00"));
-        assertThat(term2Topmodel.getTurnoverRentRule()).isEqualTo("3.6");
-        assertThat(term2Topmodel.getEndDate()).isEqualTo(endDate2014);
+        final LeaseTermForTurnoverRent termPoison = (LeaseTermForTurnoverRent) itemForPoison.findTerm(startDate2013);
+        assertThat(termPoison.getManualTurnoverRent()).isEqualTo(new BigDecimal("23000.00"));
+        assertThat(termPoison.getTurnoverRentRule()).isEqualTo("8");
+        assertThat(termPoison.getEndDate()).isEqualTo(endDate2013);
+
+        final LeaseTermForTurnoverRent termTopmodel = (LeaseTermForTurnoverRent) itemForTopmodel.findTerm(startDate2014);
+        assertThat(termTopmodel.getManualTurnoverRent()).isEqualTo(new BigDecimal("2300.00"));
+        assertThat(termTopmodel.getTurnoverRentRule()).isEqualTo("3.6");
+        assertThat(termTopmodel.getEndDate()).isEqualTo(endDate2014);
     }
 
     @Inject
