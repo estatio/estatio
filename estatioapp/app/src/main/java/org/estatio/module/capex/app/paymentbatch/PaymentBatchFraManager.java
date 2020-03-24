@@ -130,9 +130,9 @@ public class PaymentBatchFraManager {
             semantics = SemanticsOf.IDEMPOTENT,
             publishing = Publishing.DISABLED
     )
-    public PaymentBatchFraManager autoCreateBatches() {
+    public PaymentBatchFraManager autoCreateBatches(@Nullable final LocalDate dueDateOnOrBefore) {
 
-        for (final IncomingInvoice payableInvoice : getPayableInvoicesNotInAnyBatchWithBankAccountAndBic()) {
+        for (final IncomingInvoice payableInvoice : getPayableInvoicesNotInAnyBatchWithBankAccountAndBic(dueDateOnOrBefore)) {
             final BankAccount uniqueBankAccountIfAny = debtorBankAccountService.uniqueDebtorAccountToPay(payableInvoice);
             if (uniqueBankAccountIfAny != null && uniqueBankAccountIfAny.getBic() != null) {
                 PaymentBatch paymentBatch = paymentBatchRepository.findOrCreateNewByDebtorBankAccount(uniqueBankAccountIfAny);
@@ -177,11 +177,22 @@ public class PaymentBatchFraManager {
         }
     }
 
-    private List<IncomingInvoice> getPayableInvoicesNotInAnyBatchWithBankAccountAndBic() {
-        return getPayableInvoicesNotInAnyBatch().stream()
-                .filter(pi -> pi.getBankAccount() != null && pi.getBankAccount().getBic() != null)
-                .filter(visibilityEvaluator::visibleToMe)
-                .collect(Collectors.toList());
+    private List<IncomingInvoice> getPayableInvoicesNotInAnyBatchWithBankAccountAndBic(final LocalDate dueDateOnOrBefore) {
+        List<IncomingInvoice> result;
+        if (dueDateOnOrBefore!=null) {
+            result = getPayableInvoicesNotInAnyBatch().stream()
+                    .filter(pi->pi.getDueDate()!=null)
+                    .filter(pi->!pi.getDueDate().isAfter(dueDateOnOrBefore))
+                    .filter(pi -> pi.getBankAccount() != null && pi.getBankAccount().getBic() != null)
+                    .filter(visibilityEvaluator::visibleToMe)
+                    .collect(Collectors.toList());
+        } else {
+            result = getPayableInvoicesNotInAnyBatch().stream()
+                    .filter(pi -> pi.getBankAccount() != null && pi.getBankAccount().getBic() != null)
+                    .filter(visibilityEvaluator::visibleToMe)
+                    .collect(Collectors.toList());
+        }
+        return result;
     }
 
 
