@@ -66,7 +66,6 @@ import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForMarketing_
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTax_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRentFixed_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
 import org.estatio.module.lease.seed.DocFragment_enum;
 import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
@@ -227,8 +226,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 LeaseItemForMarketing_enum.OxfTopModel001Gb,
                 LeaseItemForRent_enum.HanPoison001Se,
                 LeaseItemForRent_enum.HanTopModel002Se,
-                LeaseItemForTurnoverRentFixed_enum.HanPoison001Se,
-                LeaseItemForTurnoverRentFixed_enum.HanTopModel002Se,
+                LeaseItemForTurnoverRent_enum.HanPoison001Se,
+                LeaseItemForTurnoverRent_enum.HanTopModel002Se,
                 LeaseItemForRent_enum.RonTopModel001It,
                 LeaseItemForTax_enum.RonTopModel001It);
 

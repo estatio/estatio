@@ -57,6 +57,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.Chained;
+import org.incode.module.base.dom.managed.ManagedIn;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.dom.with.WithIntervalMutable;
@@ -412,6 +413,8 @@ public abstract class LeaseTerm
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public LeaseTerm verifyUntil(final LocalDate date) {
+        // guards for LeaseTerm#easeItem and LeaseItem#lease are in order not to break unit tests
+        if (getLeaseItem()!=null && getLeaseItem().getLease()!=null && getLeaseItem().getLease().getManagedIn()!= ManagedIn.ESTATIO) return this;
         LeaseTerm nextTerm = getNext();
         boolean autoCreateTerms = getLeaseItem().getType().autoCreateTerms();
         if (autoCreateTerms) {
@@ -457,7 +460,6 @@ public abstract class LeaseTerm
     public LeaseTerm split(
             final LocalDate splitDate) {
 
-        final LeaseTerm currentPrevous = this.getPrevious();
         final LeaseTerm currentNext = this.getNext();
 
         //decouple current next
@@ -540,7 +542,7 @@ public abstract class LeaseTerm
         LeaseTerm previousTerm = getPrevious();
         BigInteger sequence = BigInteger.ONE;
         if (previousTerm != null) {
-            sequence = previousTerm.getSequence().add(BigInteger.ONE);
+            sequence = previousTerm.getSequence()!=null ? previousTerm.getSequence().add(BigInteger.ONE) : BigInteger.ONE; //ECP-1107
             setFrequency(previousTerm.getFrequency());
         }
         setSequence(sequence);

@@ -1352,17 +1352,17 @@ public class Lease_Test {
 
             // and expect
             context.checking(new Expectations(){{
-                oneOf(mockMessageService).warnUser("Are you sure? Charge normally is 'turnover rent' for type turnover rent fixed");
+                oneOf(mockMessageService).warnUser("Are you sure? Charge normally is 'turnover rent' for type turnover rent");
             }});
             // when
-            lease.validateNewItem(LeaseItemType.TURNOVER_RENT_FIXED, null, charge, null, null, null);
+            lease.validateNewItem(LeaseItemType.TURNOVER_RENT, null, charge, null, null, null);
 
             // and expect nothing
             // when
             lease.validateNewItem(LeaseItemType.SERVICE_CHARGE, null, chargeForServiceCharges, null, null, null);
             lease.validateNewItem(LeaseItemType.MARKETING, null, chargeForMarketing, null, null, null);
             lease.validateNewItem(LeaseItemType.PROPERTY_TAX, null, chargeForPropertyTax, null, null, null);
-            lease.validateNewItem(LeaseItemType.TURNOVER_RENT_FIXED, null, chargeForTurnoverRent, null, null, null);
+            lease.validateNewItem(LeaseItemType.TURNOVER_RENT, null, chargeForTurnoverRent, null, null, null);
 
         }
 

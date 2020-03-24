@@ -717,7 +717,7 @@ public class FastnetImportService {
     }
 
     private void throwExceptionIfLeaseItemTypeIsNotYetImplemented(final LeaseItemType leaseItemType) {
-        if (!Arrays.asList(LeaseItemType.RENT_FIXED, LeaseItemType.TURNOVER_RENT_FIXED, LeaseItemType.SERVICE_CHARGE, LeaseItemType.PROPERTY_TAX, LeaseItemType.MARKETING, LeaseItemType.RENT_DISCOUNT_FIXED).contains(leaseItemType)) {
+        if (!Arrays.asList(LeaseItemType.RENT_FIXED, LeaseItemType.TURNOVER_RENT, LeaseItemType.SERVICE_CHARGE, LeaseItemType.PROPERTY_TAX, LeaseItemType.MARKETING, LeaseItemType.RENT_DISCOUNT_FIXED).contains(leaseItemType)) {
             throw new RuntimeException("Type  " + leaseItemType + " not yet supported");
         }
     }
@@ -742,7 +742,7 @@ public class FastnetImportService {
 
             return termForRentFixed;
 
-            case TURNOVER_RENT_FIXED:
+            case TURNOVER_RENT:
             LeaseTermForFixed termForTurnoverRent;
             termForTurnoverRent = (LeaseTermForFixed) leaseTerm;
             termForTurnoverRent.setValue(value);

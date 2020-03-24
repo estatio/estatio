@@ -22,8 +22,9 @@ import org.estatio.module.lease.dom.LeaseItemRepository;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTermForFixed;
+import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
 
-public class LeaseTermForTurnoverRentFixedImportManager_Test {
+public class LeaseTermForTurnoverRentSweImportManager_Test {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
@@ -46,7 +47,7 @@ public class LeaseTermForTurnoverRentFixedImportManager_Test {
         startDatePrevious = new LocalDate(2017, 1, 1);
         endDatePrevious = new LocalDate(2017, 12, 31);
 
-        LeaseTermForTurnoverRentFixedImportManager manager = new LeaseTermForTurnoverRentFixedImportManager();
+        LeaseTermForTurnoverRentSweImportManager manager = new LeaseTermForTurnoverRentSweImportManager();
         Property property = new Property();
         int year = 2018;
         manager.setProperty(property);
@@ -55,11 +56,11 @@ public class LeaseTermForTurnoverRentFixedImportManager_Test {
         manager.leaseRepository = mockLeaseRepository;
         Lease lease1 = new Lease();
         Lease lease2 = new Lease();
-        LeaseTermForFixed term1 = new LeaseTermForFixed();
+        LeaseTermForTurnoverRent term1 = new LeaseTermForTurnoverRent();
         term1.setStartDate(startDatePrevious);
         term1.setEndDate(endDatePrevious);
         final BigDecimal valuePreviousYear = new BigDecimal("1234.56");
-        term1.setValue(valuePreviousYear);
+        term1.setManualTurnoverRent(valuePreviousYear);
 
         SortedSet termsItem1 = new TreeSet();
         termsItem1.add(term1);
@@ -69,9 +70,9 @@ public class LeaseTermForTurnoverRentFixedImportManager_Test {
         context.checking(new Expectations() {{
             oneOf(mockLeaseRepository).findLeasesByProperty(property);
             will(returnValue(Arrays.asList(lease1, lease2)));
-            oneOf(mockLeaseItemRepository).findLeaseItemsByType(lease1, LeaseItemType.TURNOVER_RENT_FIXED);
+            oneOf(mockLeaseItemRepository).findLeaseItemsByType(lease1, LeaseItemType.TURNOVER_RENT);
             will(returnValue(Arrays.asList(mockLeaseItem1)));
-            oneOf(mockLeaseItemRepository).findLeaseItemsByType(lease2, LeaseItemType.TURNOVER_RENT_FIXED);
+            oneOf(mockLeaseItemRepository).findLeaseItemsByType(lease2, LeaseItemType.TURNOVER_RENT);
             will(returnValue(Arrays.asList(mockLeaseItem2)));
             oneOf(mockLeaseItem1).getTerms();
             will(returnValue(termsItem1));
@@ -80,18 +81,18 @@ public class LeaseTermForTurnoverRentFixedImportManager_Test {
         }});
 
         // when
-        final List<LeaseTermForTurnOverRentFixedImport> turnoverRentLines = manager.getTurnoverRentLines();
+        final List<LeaseTermForTurnOverRentSweImport> turnoverRentLines = manager.getTurnoverRentLines();
 
         // then
         Assertions.assertThat(turnoverRentLines).hasSize(2);
-        LeaseTermForTurnOverRentFixedImport line1 = turnoverRentLines.get(0);
+        LeaseTermForTurnOverRentSweImport line1 = turnoverRentLines.get(0);
         Assertions.assertThat(line1.getValuePreviousYear()).isEqualTo(valuePreviousYear);
         Assertions.assertThat(line1.getStartDatePreviousYear()).isEqualTo(startDatePrevious);
         Assertions.assertThat(line1.getEndDatePreviousYear()).isEqualTo(endDatePrevious);
         Assertions.assertThat(line1.getValue()).isNull();
         Assertions.assertThat(line1.getStartDate()).isEqualTo(new LocalDate(2018,1,1));
         Assertions.assertThat(line1.getEndDate()).isEqualTo(new LocalDate(2018,12,31));
-        LeaseTermForTurnOverRentFixedImport line2 = turnoverRentLines.get(1);
+        LeaseTermForTurnOverRentSweImport line2 = turnoverRentLines.get(1);
         Assertions.assertThat(line2.getValuePreviousYear()).isNull();
         Assertions.assertThat(line2.getStartDate()).isEqualTo(new LocalDate(2018,1,1));
         Assertions.assertThat(line2.getEndDate()).isEqualTo(new LocalDate(2018,12,31));
@@ -105,7 +106,7 @@ public class LeaseTermForTurnoverRentFixedImportManager_Test {
         startDatePrevious = new LocalDate(2017, 1, 1);
         endDatePrevious = new LocalDate(2017, 12, 30);
 
-        LeaseTermForTurnoverRentFixedImportManager manager = new LeaseTermForTurnoverRentFixedImportManager();
+        LeaseTermForTurnoverRentSweImportManager manager = new LeaseTermForTurnoverRentSweImportManager();
         Property property = new Property();
         int year = 2018;
         manager.setProperty(property);
@@ -113,11 +114,11 @@ public class LeaseTermForTurnoverRentFixedImportManager_Test {
         manager.leaseItemRepository = mockLeaseItemRepository;
         manager.leaseRepository = mockLeaseRepository;
         Lease lease1 = new Lease();
-        LeaseTermForFixed previousTerm = new LeaseTermForFixed();
+        LeaseTermForTurnoverRent previousTerm = new LeaseTermForTurnoverRent();
         previousTerm.setStartDate(startDatePrevious);
         previousTerm.setEndDate(endDatePrevious);
         final BigDecimal valuePreviousYear = new BigDecimal("1234.56");
-        previousTerm.setValue(valuePreviousYear);
+        previousTerm.setManualTurnoverRent(valuePreviousYear);
 
         SortedSet termsItem1 = new TreeSet();
         termsItem1.add(previousTerm);
@@ -126,18 +127,18 @@ public class LeaseTermForTurnoverRentFixedImportManager_Test {
         context.checking(new Expectations() {{
             oneOf(mockLeaseRepository).findLeasesByProperty(property);
             will(returnValue(Arrays.asList(lease1)));
-            oneOf(mockLeaseItemRepository).findLeaseItemsByType(lease1, LeaseItemType.TURNOVER_RENT_FIXED);
+            oneOf(mockLeaseItemRepository).findLeaseItemsByType(lease1, LeaseItemType.TURNOVER_RENT);
             will(returnValue(Arrays.asList(mockLeaseItem1)));
             oneOf(mockLeaseItem1).getTerms();
             will(returnValue(termsItem1));
         }});
 
         // when
-        final List<LeaseTermForTurnOverRentFixedImport> turnoverRentLines = manager.getTurnoverRentLines();
+        final List<LeaseTermForTurnOverRentSweImport> turnoverRentLines = manager.getTurnoverRentLines();
 
         // then
         Assertions.assertThat(turnoverRentLines).hasSize(1);
-        LeaseTermForTurnOverRentFixedImport line = turnoverRentLines.get(0);
+        LeaseTermForTurnOverRentSweImport line = turnoverRentLines.get(0);
         Assertions.assertThat(line.getValuePreviousYear()).isEqualTo(valuePreviousYear);
         Assertions.assertThat(line.getStartDatePreviousYear()).isEqualTo(startDatePrevious);
         Assertions.assertThat(line.getEndDatePreviousYear()).isEqualTo(endDatePrevious);
@@ -153,7 +154,7 @@ public class LeaseTermForTurnoverRentFixedImportManager_Test {
         startDatePrevious = new LocalDate(2017, 1, 1);
         endDatePrevious = new LocalDate(2018, 1, 1);
 
-        LeaseTermForTurnoverRentFixedImportManager manager = new LeaseTermForTurnoverRentFixedImportManager();
+        LeaseTermForTurnoverRentSweImportManager manager = new LeaseTermForTurnoverRentSweImportManager();
         Property property = new Property();
         int year = 2018;
         manager.setProperty(property);
@@ -161,11 +162,11 @@ public class LeaseTermForTurnoverRentFixedImportManager_Test {
         manager.leaseItemRepository = mockLeaseItemRepository;
         manager.leaseRepository = mockLeaseRepository;
         Lease lease1 = new Lease();
-        LeaseTermForFixed previousTerm = new LeaseTermForFixed();
+        LeaseTermForTurnoverRent previousTerm = new LeaseTermForTurnoverRent();
         previousTerm.setStartDate(startDatePrevious);
         previousTerm.setEndDate(endDatePrevious);
         final BigDecimal valuePreviousYear = new BigDecimal("1234.56");
-        previousTerm.setValue(valuePreviousYear);
+        previousTerm.setManualTurnoverRent(valuePreviousYear);
 
         SortedSet termsItem1 = new TreeSet();
         termsItem1.add(previousTerm);
@@ -174,18 +175,18 @@ public class LeaseTermForTurnoverRentFixedImportManager_Test {
         context.checking(new Expectations() {{
             oneOf(mockLeaseRepository).findLeasesByProperty(property);
             will(returnValue(Arrays.asList(lease1)));
-            oneOf(mockLeaseItemRepository).findLeaseItemsByType(lease1, LeaseItemType.TURNOVER_RENT_FIXED);
+            oneOf(mockLeaseItemRepository).findLeaseItemsByType(lease1, LeaseItemType.TURNOVER_RENT);
             will(returnValue(Arrays.asList(mockLeaseItem1)));
             oneOf(mockLeaseItem1).getTerms();
             will(returnValue(termsItem1));
         }});
 
         // when
-        final List<LeaseTermForTurnOverRentFixedImport> turnoverRentLines = manager.getTurnoverRentLines();
+        final List<LeaseTermForTurnOverRentSweImport> turnoverRentLines = manager.getTurnoverRentLines();
 
         // then
         Assertions.assertThat(turnoverRentLines).hasSize(1);
-        LeaseTermForTurnOverRentFixedImport line = turnoverRentLines.get(0);
+        LeaseTermForTurnOverRentSweImport line = turnoverRentLines.get(0);
         Assertions.assertThat(line.getValuePreviousYear()).isEqualTo(valuePreviousYear);
         Assertions.assertThat(line.getStartDatePreviousYear()).isEqualTo(startDatePrevious);
         Assertions.assertThat(line.getEndDatePreviousYear()).isEqualTo(endDatePrevious);
@@ -202,7 +203,7 @@ public class LeaseTermForTurnoverRentFixedImportManager_Test {
         endDatePrevious = new LocalDate(2018, 1, 1);
         final LocalDate startDateCurrentTerm = new LocalDate(2018, 1, 1);
 
-        LeaseTermForTurnoverRentFixedImportManager manager = new LeaseTermForTurnoverRentFixedImportManager();
+        LeaseTermForTurnoverRentSweImportManager manager = new LeaseTermForTurnoverRentSweImportManager();
         Property property = new Property();
         int year = 2018;
         manager.setProperty(property);
@@ -211,21 +212,21 @@ public class LeaseTermForTurnoverRentFixedImportManager_Test {
         manager.leaseRepository = mockLeaseRepository;
         Lease lease1 = new Lease();
 
-        LeaseTermForFixed previousTerm = new LeaseTermForFixed();
+        LeaseTermForTurnoverRent previousTerm = new LeaseTermForTurnoverRent();
         previousTerm.setStartDate(startDatePrevious);
         previousTerm.setEndDate(endDatePrevious);
         final BigDecimal valuePreviousYear = new BigDecimal("1234.56");
-        previousTerm.setValue(valuePreviousYear);
+        previousTerm.setManualTurnoverRent(valuePreviousYear);
 
         SortedSet termsItem1 = new TreeSet();
         termsItem1.add(previousTerm);
 
-        LeaseTermForFixed currentTerm = new LeaseTermForFixed();
+        LeaseTermForTurnoverRent currentTerm = new LeaseTermForTurnoverRent();
         currentTerm.setStartDate(startDateCurrentTerm);
         final LocalDate endDateCurrentTerm = new LocalDate(2018, 12, 31);
         currentTerm.setEndDate(endDateCurrentTerm);
         final BigDecimal valueCurrentYear = new BigDecimal("2345.67");
-        currentTerm.setValue(valueCurrentYear);
+        currentTerm.setManualTurnoverRent(valueCurrentYear);
 
         termsItem1.add(currentTerm);
 
@@ -233,24 +234,38 @@ public class LeaseTermForTurnoverRentFixedImportManager_Test {
         context.checking(new Expectations() {{
             oneOf(mockLeaseRepository).findLeasesByProperty(property);
             will(returnValue(Arrays.asList(lease1)));
-            oneOf(mockLeaseItemRepository).findLeaseItemsByType(lease1, LeaseItemType.TURNOVER_RENT_FIXED);
+            oneOf(mockLeaseItemRepository).findLeaseItemsByType(lease1, LeaseItemType.TURNOVER_RENT);
             will(returnValue(Arrays.asList(mockLeaseItem1)));
             oneOf(mockLeaseItem1).getTerms();
             will(returnValue(termsItem1));
         }});
 
         // when
-        final List<LeaseTermForTurnOverRentFixedImport> turnoverRentLines = manager.getTurnoverRentLines();
+        final List<LeaseTermForTurnOverRentSweImport> turnoverRentLines = manager.getTurnoverRentLines();
 
         // then
         Assertions.assertThat(turnoverRentLines).hasSize(1);
-        LeaseTermForTurnOverRentFixedImport line = turnoverRentLines.get(0);
+        LeaseTermForTurnOverRentSweImport line = turnoverRentLines.get(0);
         Assertions.assertThat(line.getValuePreviousYear()).isEqualTo(valuePreviousYear);
         Assertions.assertThat(line.getStartDatePreviousYear()).isEqualTo(startDatePrevious);
         Assertions.assertThat(line.getEndDatePreviousYear()).isEqualTo(endDatePrevious);
         Assertions.assertThat(line.getValue()).isEqualTo(valueCurrentYear);
         Assertions.assertThat(line.getStartDate()).isEqualTo(startDateCurrentTerm);
         Assertions.assertThat(line.getEndDate()).isEqualTo(endDateCurrentTerm);
+    }
+
+    @Test
+    public void turnoverRentRuleStringToPercentage_test() throws Exception {
+
+        Assertions.assertThat(LeaseTermForTurnoverRentSweImportManager.turnoverRentRuleStringToPercentage(null)).isNull();
+        Assertions.assertThat(LeaseTermForTurnoverRentSweImportManager.turnoverRentRuleStringToPercentage("")).isNull();
+        Assertions.assertThat(LeaseTermForTurnoverRentSweImportManager.turnoverRentRuleStringToPercentage("0")).isEqualTo(BigDecimal.ZERO);
+        Assertions.assertThat(LeaseTermForTurnoverRentSweImportManager.turnoverRentRuleStringToPercentage("0;1.23")).isEqualTo(BigDecimal.ZERO);
+        Assertions.assertThat(LeaseTermForTurnoverRentSweImportManager.turnoverRentRuleStringToPercentage("0.1")).isEqualTo(new BigDecimal("0.1"));
+        Assertions.assertThat(LeaseTermForTurnoverRentSweImportManager.turnoverRentRuleStringToPercentage("0.1; 7.5")).isEqualTo(new BigDecimal("0.1"));
+        Assertions.assertThat(LeaseTermForTurnoverRentSweImportManager.turnoverRentRuleStringToPercentage("1.23")).isEqualTo(new BigDecimal("1.23"));
+        Assertions.assertThat(LeaseTermForTurnoverRentSweImportManager.turnoverRentRuleStringToPercentage("1.23;7.55;xxxx")).isEqualTo(new BigDecimal("1.23"));
+
     }
 
 }

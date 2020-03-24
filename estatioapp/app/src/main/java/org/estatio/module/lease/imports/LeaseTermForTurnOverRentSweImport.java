@@ -29,6 +29,7 @@ import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermForFixed;
+import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
 import org.estatio.module.lease.dom.LeaseTermRepository;
 import org.estatio.module.lease.dom.LeaseTermStatus;
 
@@ -37,9 +38,9 @@ import lombok.Setter;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
-        objectType = "org.estatio.dom.viewmodels.LeaseTermForTurnOverRentFixedImport"
+        objectType = "org.estatio.dom.viewmodels.LeaseTermForTurnOverRentSweImport"
 )
-public class LeaseTermForTurnOverRentFixedImport implements ExcelFixtureRowHandler, Importable {
+public class LeaseTermForTurnOverRentSweImport implements ExcelFixtureRowHandler, Importable {
 
     @Getter @Setter
     @MemberOrder(sequence = "1")
@@ -74,7 +75,11 @@ public class LeaseTermForTurnOverRentFixedImport implements ExcelFixtureRowHandl
     private BigDecimal value;
 
     @Getter @Setter
-    @MemberOrder(sequence = "8")
+    @MemberOrder(sequence = "9")
+    private BigDecimal percentage;
+
+    @Getter @Setter
+    @MemberOrder(sequence = "10")
     private Integer year;
 
     @Programmatic
@@ -99,13 +104,13 @@ public class LeaseTermForTurnOverRentFixedImport implements ExcelFixtureRowHandl
             messageService.warnUser(reasonLineInValid());
             return Lists.newArrayList();
         }
-        if (leaseToUpdate.findItemsOfType(LeaseItemType.TURNOVER_RENT_FIXED).size()>1){
-            messageService.warnUser(String.format("Multiple lease items of type TURNOVER_RENT_FIXED found on lease with reference %s; could not update.", getLeaseReference()));
+        if (leaseToUpdate.findItemsOfType(LeaseItemType.TURNOVER_RENT).size()>1){
+            messageService.warnUser(String.format("Multiple lease items of type TURNOVER_RENT found on lease with reference %s; could not update.", getLeaseReference()));
             return Lists.newArrayList();
         }
-        LeaseItem itemToUpdate = leaseToUpdate.findFirstItemOfType(LeaseItemType.TURNOVER_RENT_FIXED);
+        LeaseItem itemToUpdate = leaseToUpdate.findFirstItemOfType(LeaseItemType.TURNOVER_RENT);
         if (itemToUpdate == null) {
-            messageService.warnUser(String.format("No lease item of type TURNOVER_RENT_FIXED found on lease with reference %s", getLeaseReference()));
+            messageService.warnUser(String.format("No lease item of type TURNOVER_RENT found on lease with reference %s", getLeaseReference()));
             return Lists.newArrayList();
         }
 
@@ -113,7 +118,7 @@ public class LeaseTermForTurnOverRentFixedImport implements ExcelFixtureRowHandl
             updateTerm(itemToUpdate, getStartDatePreviousYear(), getEndDatePreviousYear(), getValuePreviousYear());
         }
         if (getValue()!=null) {
-            updateOrCreateTerm(itemToUpdate, getStartDate(), getEndDate(), getValue());
+            updateOrCreateTerm(itemToUpdate, getStartDate(), getEndDate(), getValue(), getPercentage());
         }
 
         return Lists.newArrayList();
@@ -150,13 +155,9 @@ public class LeaseTermForTurnOverRentFixedImport implements ExcelFixtureRowHandl
         return builder.toString().isEmpty() ? null : builder.toString();
     }
 
-    void updateOrCreateTerm(final LeaseItem itemToUpdate, final LocalDate startDate, final LocalDate endDate, final BigDecimal value) {
-        LeaseTermForFixed termToUpdate = (LeaseTermForFixed) leaseTermRepository.findByLeaseItemAndStartDate(itemToUpdate, startDate);
-        final List<LeaseTerm> possibleOverlappingTerms = Lists.newArrayList(itemToUpdate.getTerms())
-                .stream()
-                .filter(term->term.getInterval().overlaps(new LocalDateInterval(startDate, endDate)))
-                .filter(term->term.getStatus()==LeaseTermStatus.APPROVED)
-                .collect(Collectors.toList());
+    void updateOrCreateTerm(final LeaseItem itemToUpdate, final LocalDate startDate, final LocalDate endDate, final BigDecimal value, final BigDecimal percentage) {
+        LeaseTermForTurnoverRent termToUpdate = (LeaseTermForTurnoverRent) leaseTermRepository.findByLeaseItemAndStartDate(itemToUpdate, startDate);
+        final List<LeaseTerm> possibleOverlappingTerms = getOverlappingTerms(itemToUpdate, startDate, endDate);
 
         if (!possibleOverlappingTerms.isEmpty() && possibleOverlappingTerms.size()>1){
 
@@ -168,7 +169,7 @@ public class LeaseTermForTurnOverRentFixedImport implements ExcelFixtureRowHandl
                 if (!possibleOverlappingTerms.isEmpty()){
                     LeaseTerm overlappingTerm = possibleOverlappingTerms.get(0);
                     if (overlappingTerm.getStartDate().isAfter(startDate)){
-                        termToUpdate = (LeaseTermForFixed) overlappingTerm;
+                        termToUpdate = (LeaseTermForTurnoverRent) overlappingTerm;
                     } else {
                         overlappingTerm.setEndDate(startDate.minusDays(1));
                     }
@@ -178,11 +179,13 @@ public class LeaseTermForTurnOverRentFixedImport implements ExcelFixtureRowHandl
             if (termToUpdate!=null){
                 termToUpdate.setStartDate(startDate);
                 termToUpdate.setEndDate(endDate);
-                termToUpdate.setValue(value);
+                termToUpdate.setManualTurnoverRent(value);
+                setPercentageOfTerm(termToUpdate, percentage);
                 termToUpdate.setStatus(LeaseTermStatus.APPROVED);
             } else {
-                LeaseTermForFixed newTerm = (LeaseTermForFixed) itemToUpdate.newTerm(startDate, endDate);
-                newTerm.setValue(value);
+                LeaseTermForTurnoverRent newTerm = (LeaseTermForTurnoverRent) itemToUpdate.newTerm(startDate, endDate);
+                newTerm.setManualTurnoverRent(value);
+                setPercentageOfTerm(newTerm, percentage);
                 newTerm.setStatus(LeaseTermStatus.APPROVED);
             }
 
@@ -190,16 +193,63 @@ public class LeaseTermForTurnOverRentFixedImport implements ExcelFixtureRowHandl
 
     }
 
+    void setPercentageOfTerm(LeaseTermForTurnoverRent term, BigDecimal percentage) {
+        if (percentage!=null) {
+            term.setTurnoverRentRule(percentageToTurnoverRentRuleString(percentage));
+        } else {
+            LeaseTermForTurnoverRent previousTerm = (LeaseTermForTurnoverRent) term.getPrevious();
+            while(previousTerm!=null) {
+                if (previousTerm.getTurnoverRentRule()!=null) {
+                    term.setTurnoverRentRule(previousTerm.getTurnoverRentRule());
+                    return;
+                } else {
+                    previousTerm = (LeaseTermForTurnoverRent) previousTerm.getPrevious();
+                }
+            }
+            messageService.warnUser(String.format("Percentage not set and no previous term found for lease %s; please correct", getLeaseReference()));
+        }
+    }
+
+    @Programmatic
+    public static String percentageToTurnoverRentRuleString(final BigDecimal percentage){
+        if (percentage==null) return null;
+        return percentage.toString().replaceFirst("\\.0*$", "");
+    }
+
+
     void updateTerm(final LeaseItem itemToUpdate, final LocalDate startDate, final LocalDate endDate, final BigDecimal value){
-        LeaseTermForFixed termToUpdate = (LeaseTermForFixed) leaseTermRepository.findByLeaseItemAndStartDate(itemToUpdate, startDate);
+        LeaseTermForTurnoverRent termToUpdate = (LeaseTermForTurnoverRent) leaseTermRepository.findByLeaseItemAndStartDate(itemToUpdate, startDate);
+        final List<LeaseTerm> possibleOverlappingTerms = getOverlappingTerms(itemToUpdate, startDate, endDate);
+
         if (termToUpdate!=null){
-            termToUpdate.setValue(value);
+            termToUpdate.setManualTurnoverRent(value);
             termToUpdate.setEndDate(endDate);
             termToUpdate.setStatus(LeaseTermStatus.APPROVED);
+        } else if (!possibleOverlappingTerms.isEmpty() && possibleOverlappingTerms.size()>1){
+            messageService.warnUser(String.format("Multiple overlapping previous terms found for lease %s; please correct", getLeaseReference()));
+        } else if (!possibleOverlappingTerms.isEmpty()){
+                LeaseTerm overlappingTerm = possibleOverlappingTerms.get(0);
+                if (overlappingTerm.getStartDate().isBefore(startDate)){
+                    termToUpdate = (LeaseTermForTurnoverRent) overlappingTerm.split(startDate);
+                    termToUpdate.setManualTurnoverRent(value);
+                    termToUpdate.setEndDate(endDate);
+                    termToUpdate.setStatus(LeaseTermStatus.APPROVED);
+                }
         } else {
             messageService.warnUser(String.format("Previous term not found for lease %s", getLeaseReference()));
         }
 
+    }
+
+    private List<LeaseTerm> getOverlappingTerms(
+            final LeaseItem itemToUpdate,
+            final LocalDate startDate,
+            final LocalDate endDate) {
+        return Lists.newArrayList(itemToUpdate.getTerms())
+                .stream()
+                .filter(term -> term.getInterval().overlaps(new LocalDateInterval(startDate, endDate)))
+                .filter(term -> term.getStatus() == LeaseTermStatus.APPROVED)
+                .collect(Collectors.toList());
     }
 
     @Inject

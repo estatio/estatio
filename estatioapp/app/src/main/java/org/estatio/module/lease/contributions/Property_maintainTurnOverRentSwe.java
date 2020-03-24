@@ -10,7 +10,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.lease.imports.LeaseTermForTurnoverRentFixedImportManager;
+import org.estatio.module.lease.imports.LeaseTermForTurnoverRentSweImportManager;
 
 @Mixin()
 public class Property_maintainTurnOverRentSwe {
@@ -22,10 +22,10 @@ public class Property_maintainTurnOverRentSwe {
     }
 
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public LeaseTermForTurnoverRentFixedImportManager maintainTurnoverRent(
+    public LeaseTermForTurnoverRentSweImportManager maintainTurnoverRent(
             final int year
     ) {
-        return new LeaseTermForTurnoverRentFixedImportManager(property, year);
+        return new LeaseTermForTurnoverRentSweImportManager(property, year);
     }
 
     public int default0MaintainTurnoverRent() {

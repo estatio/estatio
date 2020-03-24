@@ -47,6 +47,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.servletapi.dom.HttpSessionProvider;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
+
+import org.incode.module.base.dom.managed.ManagedIn;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.slack.impl.SlackService;
 
@@ -61,6 +63,10 @@ import org.estatio.module.coda.EstatioCodaModule;
 import org.estatio.module.coda.dom.doc.CodaDocHeadMenu;
 import org.estatio.module.coda.dom.hwm.CodaHwm;
 import org.estatio.module.coda.dom.hwm.CodaHwmRepository;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.countryapptenancy.dom.CountryServiceForCurrentUser;
 import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.lease.dom.InvoicingFrequency;
@@ -538,6 +544,21 @@ public class AdminDashboard implements ViewModel {
         return personRepository.allPersons();
     }
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public void repairTurnoverRentTermsSwe(){
+        final List<Lease> leasesSwe = leaseRepository.allLeases().stream()
+                .filter(l -> l.getManagedIn() == ManagedIn.FASTNET)
+                .collect(Collectors.toList());
+        leasesSwe.forEach(l->{
+            final List<LeaseItem> torItems = l.findItemsOfType(LeaseItemType.TURNOVER_RENT);
+            try {
+                torItems.forEach(li -> wrapperFactory.wrap(li).repairTurnoverRentTermsSwe());
+            } catch (Exception e){
+                System.out.println(String.format("Problem repairing turnover rent terms for %s", l.getReference()));
+            }
+        });
+    }
+
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "fa-wrench")
     @MemberOrder(sequence = "98")
@@ -669,7 +690,11 @@ public class AdminDashboard implements ViewModel {
     @Inject
     TaskReminderService taskReminderService;
 
-    @Inject PersonRepository personRepository;
+    @Inject
+    PersonRepository personRepository;
+
+    @Inject
+    LeaseRepository leaseRepository;
 
     @Inject
     OrganisationRepository organisationRepository;
@@ -686,6 +711,4 @@ public class AdminDashboard implements ViewModel {
     @Inject
     StateTransitionService stateTransitionService;
 
-    @Inject
-    LeaseRepository leaseRepository;
 }
