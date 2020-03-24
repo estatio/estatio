@@ -21,6 +21,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.capex.app.taskreminder.TaskReminderService;
 import org.estatio.module.invoice.dom.Invoice;
+import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
@@ -204,6 +205,7 @@ public class Lease_closeOldAndOpenNewLeaseItem {
         while (t!=null){
             final List<Invoice> invoicesForTerm = t.getInvoiceItems().stream()
                     .map(ii -> ii.getInvoice())
+                    .filter(i->i.getStatus()==InvoiceStatus.APPROVED || i.getStatus()==InvoiceStatus.NEW)
                     .filter(i -> !i.getDueDate().isBefore(startDateNewItem))
                     .distinct()
                     .collect(Collectors.toList());

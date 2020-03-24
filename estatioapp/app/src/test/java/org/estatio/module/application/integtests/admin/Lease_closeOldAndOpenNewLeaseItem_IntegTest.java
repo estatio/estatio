@@ -78,7 +78,7 @@ public class Lease_closeOldAndOpenNewLeaseItem_IntegTest extends ApplicationModu
                 newItemStartDate,
                 new LocalDate(2020, 4,2));
         invoiceMenu.allNewInvoices().stream().filter(i->i.getDueDate().equals(newItemStartDate)).forEach(i->i.approveAll());
-        invoiceMenu.allApprovedInvoices().stream().filter(i->i.getDueDate().equals(newItemStartDate)).forEach(i->i.invoiceAll(newItemStartDate, true));
+//        invoiceMenu.allApprovedInvoices().stream().filter(i->i.getDueDate().equals(newItemStartDate)).forEach(i->i.invoiceAll(newItemStartDate, true));
         final LeaseItem rentItemOld = LeaseItemForRent_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
         LeaseTermForIndexable currentTermOnRentItemOld = (LeaseTermForIndexable) rentItemOld.currentTerm(newItemStartDate);
 
