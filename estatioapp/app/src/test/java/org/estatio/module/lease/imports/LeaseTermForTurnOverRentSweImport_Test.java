@@ -354,4 +354,37 @@ public class LeaseTermForTurnOverRentSweImport_Test {
         assertThat(LeaseTermForTurnOverRentSweImport.percentageToTurnoverRentRuleString(new BigDecimal("8.01"))).isEqualTo("8.01");
     }
 
+    @Test
+    public void setPercentageOfTerm_works() throws Exception {
+
+        // given
+        LeaseTermForTurnOverRentSweImport importLine = new LeaseTermForTurnOverRentSweImport();
+        importLine.messageService = mockMessageService;
+        // when
+        final LeaseTermForTurnoverRent term = new LeaseTermForTurnoverRent();
+        final BigDecimal percentage = new BigDecimal("3.5");
+        importLine.setPercentageOfTerm(term, percentage);
+        // then
+        assertThat(term.getTurnoverRentRule()).isEqualTo(percentage.toString());
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockMessageService).warnUser(with(any(String.class)));
+        }});
+
+        // and when no percentage present and no previous terms
+        importLine.setPercentageOfTerm(term, null);
+
+        // and when there is a previous term somewhere with turnover rent rule
+        final LeaseTermForTurnoverRent previous = new LeaseTermForTurnoverRent();
+        final LeaseTermForTurnoverRent previousOfPrevious = new LeaseTermForTurnoverRent();
+        previousOfPrevious.setTurnoverRentRule(percentage.toString());
+        previous.setPrevious(previousOfPrevious);
+        term.setPrevious(previous);
+        importLine.setPercentageOfTerm(term, null);
+        // then
+        assertThat(term.getTurnoverRentRule()).isEqualTo(percentage.toString());
+
+    }
+
 }
