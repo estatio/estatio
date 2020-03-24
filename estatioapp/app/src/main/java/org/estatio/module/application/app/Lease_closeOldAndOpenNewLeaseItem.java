@@ -46,7 +46,7 @@ public class Lease_closeOldAndOpenNewLeaseItem {
         this.lease = lease;
     }
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE, hidden = Where.EVERYWHERE)
     public Lease act(
             final LocalDate startDateNewItem,
             final LeaseItemType type,
