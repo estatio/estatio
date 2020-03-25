@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd"
+          xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bs3:row>
+        <bs3:col span="12" unreferencedActions="true">
+            <cpt:domainObject/>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12">
+            <bs3:row>
+                <bs3:col span="12">
+                    <bs3:tabGroup>
+                        <bs3:tab name="General">
+                            <bs3:row>
+                                <bs3:col span="4">
+                                    <cpt:fieldSet name="Aggregation" id="aggregation">
+                                        <cpt:property id="turnoverReportingConfig"/>
+                                        <cpt:property id="currency"/>
+                                    </cpt:fieldSet>
+                                    <cpt:fieldSet name="Dates" id="dates">
+                                        <cpt:property id="date"/>
+                                        <cpt:property id="calculatedOn"/>
+                                    </cpt:fieldSet>
+                                    <cpt:fieldSet name="Comments" id="comments">
+                                        <cpt:property id="comments12MCY"/>
+                                        <cpt:property id="comments12MPY"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                                <bs3:col span="4">
+                                    <cpt:fieldSet name="Aggregation For Period" id="aggregationForPeriod">
+                                        <cpt:property id="aggregate1Month"/>
+                                        <cpt:property id="aggregate2Month"/>
+                                        <cpt:property id="aggregate3Month"/>
+                                        <cpt:property id="aggregate6Month"/>
+                                        <cpt:property id="aggregate9Month"/>
+                                        <cpt:property id="aggregate12Month"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                                <bs3:col span="4">
+                                    <cpt:fieldSet name="Year To Date" id="aggregationYearToDate">
+                                        <cpt:property id="aggregateToDate"/>
+                                    </cpt:fieldSet>
+                                    <cpt:fieldSet name="Purchase counts" id="purchaseCounts">
+                                        <cpt:property id="purchaseCountAggregate1Month"/>
+                                        <cpt:property id="purchaseCountAggregate3Month"/>
+                                        <cpt:property id="purchaseCountAggregate6Month"/>
+                                        <cpt:property id="purchaseCountAggregate12Month"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Other">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Other" id="other" unreferencedProperties="true"/>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Metadata">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Metadata" id="metadata">
+                                        <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                        <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                        <cpt:action id="downloadMetaModelXml" position="PANEL_DROPDOWN"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                    </bs3:tabGroup>
+                </bs3:col>
+            </bs3:row>
+            <bs3:row>
+                <bs3:col span="12">
+                    <cpt:collection id="turnovers"/>
+                </bs3:col>
+            </bs3:row>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12">
+            <bs3:tabGroup unreferencedCollections="true">
+                <bs3:tab name="_">
+                    <bs3:row>
+                        <bs3:col span="12"></bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+    </bs3:row>
+</bs3:grid>

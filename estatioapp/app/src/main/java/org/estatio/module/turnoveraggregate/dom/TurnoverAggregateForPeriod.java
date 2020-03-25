@@ -16,6 +16,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.util.TitleBuffer;
 
 import org.incode.module.base.dom.types.MoneyType;
 
@@ -42,6 +43,27 @@ import lombok.Setter;
         auditing = Auditing.DISABLED
 )
 public class TurnoverAggregateForPeriod {
+
+    public String title(){
+        TitleBuffer buffer = new TitleBuffer();
+        buffer.append(getAggregationPeriod().getName());
+        if (getGrossAmount()!=null) {
+            buffer.append("gross");
+            buffer.append(getGrossAmount());
+        }
+        if (getNetAmount()!=null) {
+            buffer.append("net");
+            buffer.append(getNetAmount());
+        }
+        if (getGrossAmount()==null && getNetAmount()==null && getGrossAmountPreviousYear()==null && getNetAmountPreviousYear()==null){
+            buffer.append("empty");
+        } else {
+            if (!isComparable()) {
+                buffer.append("non comparable");
+            }
+        }
+        return buffer.toString();
+    }
 
     @Getter @Setter
     @Column(allowsNull = "false")

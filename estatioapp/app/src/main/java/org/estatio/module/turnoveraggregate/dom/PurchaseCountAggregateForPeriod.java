@@ -16,6 +16,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.util.TitleBuffer;
 
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.turnover.dom.Turnover;
@@ -40,6 +41,20 @@ import lombok.Setter;
         auditing = Auditing.DISABLED
 )
 public class PurchaseCountAggregateForPeriod {
+
+    public String title(){
+        TitleBuffer buffer = new TitleBuffer();
+        buffer.append(getAggregationPeriod().getName());
+        buffer.append(getCount());
+        if (getCount()==null && getCountPreviousYear()==null){
+            buffer.append("empty");
+        } else {
+            if (!isComparable()) {
+                buffer.append("non comparable");
+            }
+        }
+        return buffer.toString();
+    }
 
     @Getter @Setter
     @Column(allowsNull = "false")

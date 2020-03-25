@@ -16,13 +16,12 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.util.TitleBuffer;
 
 import org.incode.module.base.dom.types.MoneyType;
 
 import org.estatio.module.lease.dom.occupancy.Occupancy;
-import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.Turnover;
-import org.estatio.module.turnover.dom.Type;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -44,6 +43,26 @@ import lombok.Setter;
         auditing = Auditing.DISABLED
 )
 public class TurnoverAggregateToDate {
+
+    public String title(){
+        TitleBuffer buffer = new TitleBuffer();
+        if (getGrossAmount()!=null) {
+            buffer.append("gross");
+            buffer.append(getGrossAmount());
+        }
+        if (getNetAmount()!=null) {
+            buffer.append("net");
+            buffer.append(getNetAmount());
+        }
+        if (getGrossAmount()==null && getNetAmount()==null && getGrossAmountPreviousYear()==null && getNetAmountPreviousYear()==null){
+            buffer.append("empty");
+        } else {
+            if (!isComparable()) {
+                buffer.append("non comparable");
+            }
+        }
+        return buffer.toString();
+    }
 
     @Getter @Setter
     @Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)

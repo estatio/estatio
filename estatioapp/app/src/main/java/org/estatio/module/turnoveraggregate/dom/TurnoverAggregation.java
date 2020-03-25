@@ -2,10 +2,8 @@ package org.estatio.module.turnoveraggregate.dom;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -28,7 +26,9 @@ import org.apache.isis.applib.annotation.Auditing;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Publishing;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.util.TitleBuffer;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
@@ -219,6 +219,7 @@ public class TurnoverAggregation {
 
     @Getter @Setter
     @Column(name = "turnoverAggregateToDateId", allowsNull = "false")
+    @PropertyLayout(named = "yearToDate")
     private TurnoverAggregateToDate aggregateToDate;
 
     /*
@@ -230,17 +231,21 @@ public class TurnoverAggregation {
 
     @Getter @Setter
     @Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
+    @PropertyLayout(hidden = Where.EVERYWHERE)
     private BigDecimal grossAmount1MCY_1;
 
     @Getter @Setter
+    @PropertyLayout(hidden = Where.EVERYWHERE)
     @Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
     private BigDecimal netAmount1MCY_1;
 
     @Getter @Setter
+    @PropertyLayout(hidden = Where.EVERYWHERE)
     @Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
     private BigDecimal grossAmount1MCY_2;
 
     @Getter @Setter
+    @PropertyLayout(hidden = Where.EVERYWHERE)
     @Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
     private BigDecimal netAmount1MCY_2;
 
