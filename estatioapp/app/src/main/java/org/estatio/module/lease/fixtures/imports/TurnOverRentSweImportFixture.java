@@ -9,7 +9,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.value.Blob;
 
 @Programmatic
-public class TurnOverRentFixedImportFixture extends FixtureScript {
+public class TurnOverRentSweImportFixture extends FixtureScript {
 
     @Override
     protected void execute(final ExecutionContext executionContext) {

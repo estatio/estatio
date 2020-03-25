@@ -8,7 +8,8 @@ import org.incode.module.base.dom.TitledEnum;
 public enum ManagedIn implements TitledEnum {
 
     ESTATIO("Estatio"),
-    CODA("Coda");
+    CODA("Coda"),
+    FASTNET("Fastnet");
 
     private String title;
 

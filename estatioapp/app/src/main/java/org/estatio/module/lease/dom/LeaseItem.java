@@ -21,12 +21,14 @@ package org.estatio.module.lease.dom;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+import javax.jdo.Transaction;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -63,9 +65,13 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.services.xactn.TransactionService3;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.managed.ManagedIn;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.dom.with.WithIntervalMutable;
@@ -802,6 +808,49 @@ public class LeaseItem
         private static final long serialVersionUID = 1L;
     }
 
+    //TODO: ECP-1107 this action can be removed after data conversion
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public LeaseItem repairTurnoverRentTermsSwe(){
+        if (getLease().getManagedIn()== ManagedIn.FASTNET && getType()==LeaseItemType.TURNOVER_RENT){ // just to be sure
+            System.out.println(String.format("Reparing turnover rent terms for %s", getLease().getReference()));
+            final List<LeaseTerm> termsSortedByDateReversed = Lists.newArrayList(this.getTerms()).stream()
+                    .sorted(Comparator.comparing(LeaseTerm::getStartDate, Comparator.reverseOrder())).collect(Collectors.toList());
+            final List<LeaseTerm> termsSortedByDate = Lists.newArrayList(this.getTerms()).stream()
+                    .sorted(Comparator.comparing(LeaseTerm::getStartDate)).collect(Collectors.toList());
+            // set sequence and next (normal sort order)
+            final BigInteger highestSequence = BigInteger.valueOf(termsSortedByDateReversed.size());
+            LeaseTermForTurnoverRent next = null;
+            for (LeaseTerm term : termsSortedByDateReversed){
+                LeaseTermForTurnoverRent castedTerm = (LeaseTermForTurnoverRent) term;
+                if (next!=null){
+                    castedTerm.setSequence(next.getSequence().subtract(BigInteger.ONE));
+                    castedTerm.setNext(next);
+                } else {
+                    castedTerm.setSequence(highestSequence);
+                }
+                repositoryService.persistAndFlush(castedTerm);
+                next = castedTerm;
+            }
+            LeaseTermForTurnoverRent previous = null;
+            for (LeaseTerm term : termsSortedByDate){
+                LeaseTermForTurnoverRent castedTerm = (LeaseTermForTurnoverRent) term;
+                if (previous!=null){
+                    castedTerm.setTurnoverRentRule(previous.getTurnoverRentRule());
+                    repositoryService.persistAndFlush(castedTerm);
+                }
+                previous = castedTerm;
+            }
+        }
+        return this;
+    }
+
+    public boolean hideRepairTurnoverRentTermsSwe(){
+        if (getLease().getManagedIn()== ManagedIn.FASTNET && getType()==LeaseItemType.TURNOVER_RENT) return false;
+        return true;
+    }
+
+
+
     // //////////////////////////////////////
 
     @Inject
@@ -814,5 +863,9 @@ public class LeaseItem
     EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
 
     @Inject LeaseItemSourceRepository leaseItemSourceRepository;
+
+    @Inject RepositoryService repositoryService;
+
+    @Inject TransactionService3 transactionService3;
 
 }
