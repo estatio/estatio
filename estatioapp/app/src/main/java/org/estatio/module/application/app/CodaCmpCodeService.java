@@ -15,7 +15,7 @@ public class CodaCmpCodeService {
     @Programmatic
     public List<String> listAll() {
         return Arrays.asList(
-                "IT01", "IT04", "IT05", "IT08", "IT09", "IT10", "IT11", "IT12"
+                "IT01", "IT04", "IT05", "IT07", "IT08", "IT09", "IT10", "IT11", "IT12"
         );
     }
 }
