@@ -1,7 +1,5 @@
 package org.estatio.module.turnoveraggregate.contributions;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
@@ -14,7 +12,6 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.module.lease.dom.occupancy.Occupancy;
-import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
 import org.estatio.module.turnover.dom.Type;
@@ -44,7 +41,7 @@ public class Occupancy_reviewAggregation {
         return clockService.now().withDayOfMonth(1).minusMonths(1);
     }
 
-    public String disableReviewAggregation(final LocalDate date){
+    public String disableReviewAggregation(){
         if (turnoverReportingConfigRepository
                 .findUnique(occupancy, Type.PRELIMINARY)==null) return "No configuration with aggregations found";
         return null;
