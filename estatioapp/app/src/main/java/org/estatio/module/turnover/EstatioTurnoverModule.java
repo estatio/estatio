@@ -33,6 +33,7 @@ import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 import org.estatio.module.lease.EstatioLeaseModule;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
+import org.estatio.module.turnover.dom.aggregation.TurnoverReportingConfigLink;
 
 @XmlRootElement(name = "module")
 public final class EstatioTurnoverModule extends ModuleAbstract {
@@ -50,6 +51,7 @@ public final class EstatioTurnoverModule extends ModuleAbstract {
             @Override
             protected void execute(final ExecutionContext executionContext) {
                 deleteFrom(Turnover.class);
+                deleteFrom(TurnoverReportingConfigLink.class);
                 deleteFrom(TurnoverReportingConfig.class);
             }
         };

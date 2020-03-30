@@ -22,6 +22,9 @@
                                 <cpt:property id="endDate"/>
                                 <cpt:property id="currency"/>
                             </cpt:fieldSet>
+                            <cpt:fieldSet name="Aggregation" id="aggregation">
+                                <cpt:property id="aggregationPattern"/>
+                            </cpt:fieldSet>
                             <cpt:fieldSet name="Reporter" id="reporter">
                                 <cpt:property id="reporter"/>
                             </cpt:fieldSet>
@@ -60,7 +63,13 @@
             </bs3:tabGroup>
         </bs3:col>
         <bs3:col span="8">
-            <cpt:collection id="turnovers" defaultView="table"/>
+            <cpt:collection id="turnovers" defaultView="table">
+                <cpt:action id="reviewAggregation"/>
+            </cpt:collection>
+            <cpt:collection id="configsToAggregateFor" defaultView="table">
+                <cpt:action id="addConfigToAggregateFor" position="PANEL"/>
+                <cpt:action id="removeConfigToAggregateFor" position="PANEL"/>
+            </cpt:collection>
         </bs3:col>
     </bs3:row>
     <bs3:row>

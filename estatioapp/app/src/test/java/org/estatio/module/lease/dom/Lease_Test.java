@@ -28,6 +28,7 @@ import java.util.TreeSet;
 
 import com.google.common.collect.Lists;
 
+import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -1363,6 +1364,52 @@ public class Lease_Test {
             lease.validateNewItem(LeaseItemType.MARKETING, null, chargeForMarketing, null, null, null);
             lease.validateNewItem(LeaseItemType.PROPERTY_TAX, null, chargeForPropertyTax, null, null, null);
             lease.validateNewItem(LeaseItemType.TURNOVER_RENT, null, chargeForTurnoverRent, null, null, null);
+
+        }
+
+        @Test
+        public void hasOverlappingOccupancies_works() throws Exception {
+
+            // given
+            Lease lease = new Lease();
+            Occupancy o1 = new Occupancy();
+            Unit u1 = new Unit();
+            u1.setName("u1");
+            o1.setUnit(u1);
+            Occupancy o2 = new Occupancy();
+            Unit u2 = new Unit();
+            u2.setName("u2");
+            o2.setUnit(u2);
+            o2.setStartDate(new LocalDate(2019,1,1));
+            Occupancy o3 = new Occupancy();
+            o3.setStartDate(new LocalDate(2019,7,15));
+
+            lease.getOccupancies().addAll(Arrays.asList(o1, o2, o3));
+            Assertions.assertThat(lease.getOccupancies()).hasSize(3);
+
+            // when
+            Assertions.assertThat(o1.getInterval().toString()).isEqualTo("----------/----------");
+            Assertions.assertThat(o2.getInterval().toString()).isEqualTo("2019-01-01/----------");
+            Assertions.assertThat(o3.getInterval().toString()).isEqualTo("2019-07-15/----------");
+            // then
+            assertThat(lease.hasOverlappingOccupancies()).isTrue();
+
+            // when
+            o1.setEndDate(new LocalDate(2018,12,31));
+            Assertions.assertThat(o1.getInterval().toString()).isEqualTo("----------/2019-01-01");
+            Assertions.assertThat(o2.getInterval().toString()).isEqualTo("2019-01-01/----------");
+            Assertions.assertThat(o3.getInterval().toString()).isEqualTo("2019-07-15/----------");
+            // then
+            assertThat(lease.hasOverlappingOccupancies()).isTrue();
+
+            // when
+            o2.setEndDate(new LocalDate(2019,1,2));
+            Assertions.assertThat(o1.getInterval().toString()).isEqualTo("----------/2019-01-01");
+            Assertions.assertThat(o2.getInterval().toString()).isEqualTo("2019-01-01/2019-01-03");
+            Assertions.assertThat(o3.getInterval().toString()).isEqualTo("2019-07-15/----------");
+
+            // then
+            assertThat(lease.hasOverlappingOccupancies()).isFalse();
 
         }
 

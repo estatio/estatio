@@ -181,6 +181,85 @@ public class TurnoverRepository_IntegTest extends TurnoverModuleIntegTestAbstrac
         Assertions.assertThat(turnovers.get(2)).isEqualTo(turnover2);
     }
 
+    @Test
+    public void findByConfigAndTypeAndFrequencyAndStatusInPeriod() throws Exception {
+
+        // given
+        final Occupancy occupancy = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2).getOccupancies().first();
+        final LocalDate turnoverDate = new LocalDate(2019, 1, 1);
+        final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
+        final LocalDateTime reportedAt = new LocalDateTime(2019, 1, 1, 12, 0);
+
+        // when
+        TurnoverReportingConfig config = turnoverReportingConfigRepository.findOrCreate(occupancy, Type.PRELIMINARY, null, occupancy.getStartDate(), Frequency.MONTHLY, euro);
+        Turnover turnover1 = turnoverRepository.create(config, turnoverDate, Type.PRELIMINARY, Frequency.MONTHLY, Status.APPROVED, reportedAt, "someone", euro, null, null, null, null, false);
+        Turnover turnover2 = turnoverRepository.create(config, turnoverDate.minusMonths(2), Type.PRELIMINARY, Frequency.MONTHLY, Status.APPROVED, reportedAt, "someone", euro, null, null, null, null, false);
+        Turnover turnover3 = turnoverRepository.create(config, turnoverDate.minusMonths(1), Type.PRELIMINARY, Frequency.MONTHLY, Status.APPROVED, reportedAt, "someone", euro, null, null, null, null, false);
+
+        // then
+        Assertions.assertThat(turnoverRepository.findByConfigAndTypeAndFrequencyAndStatusInPeriod(config, Type.PRELIMINARY, Frequency.MONTHLY, Status.NEW, turnoverDate, turnoverDate)).hasSize(0);
+        Assertions.assertThat(turnoverRepository.findByConfigAndTypeAndFrequencyAndStatusInPeriod(config, Type.PRELIMINARY, Frequency.DAILY, Status.APPROVED, turnoverDate, turnoverDate)).hasSize(0);
+        Assertions.assertThat(turnoverRepository.findByConfigAndTypeAndFrequencyAndStatusInPeriod(config, Type.AUDITED, Frequency.MONTHLY, Status.APPROVED, turnoverDate, turnoverDate)).hasSize(0);
+
+        final List<Turnover> list1 = turnoverRepository
+                .findByConfigAndTypeAndFrequencyAndStatusInPeriod(config, Type.PRELIMINARY, Frequency.MONTHLY,
+                        Status.APPROVED, turnoverDate, turnoverDate);
+        Assertions.assertThat(list1).hasSize(1);
+        Assertions.assertThat(list1).contains(turnover1);
+        Assertions.assertThat(list1).doesNotContain(turnover2);
+        Assertions.assertThat(list1).doesNotContain(turnover3);
+        final List<Turnover> list2 = turnoverRepository
+                .findByConfigAndTypeAndFrequencyAndStatusInPeriod(config, Type.PRELIMINARY, Frequency.MONTHLY,
+                        Status.APPROVED, turnoverDate.minusMonths(1), turnoverDate);
+        Assertions.assertThat(list2).hasSize(2);
+        Assertions.assertThat(list2).contains(turnover1);
+        Assertions.assertThat(list2).contains(turnover3);
+        Assertions.assertThat(list2).doesNotContain(turnover2);
+        Assertions.assertThat(turnoverRepository.findByConfigAndTypeAndFrequencyAndStatusInPeriod(config, Type.PRELIMINARY, Frequency.MONTHLY, Status.APPROVED, turnoverDate.minusMonths(2).plusDays(1), turnoverDate)).hasSize(2);
+        final List<Turnover> list3 = turnoverRepository
+                .findByConfigAndTypeAndFrequencyAndStatusInPeriod(config, Type.PRELIMINARY, Frequency.MONTHLY,
+                        Status.APPROVED, turnoverDate.minusMonths(2), turnoverDate);
+        Assertions.assertThat(list3).hasSize(3);
+        Assertions.assertThat(list3).contains(turnover1);
+        Assertions.assertThat(list3).contains(turnover2);
+        Assertions.assertThat(list3).contains(turnover3);
+        Assertions.assertThat(turnoverRepository.findByConfigAndTypeAndFrequencyAndStatusInPeriod(config, Type.PRELIMINARY, Frequency.MONTHLY, Status.APPROVED, turnoverDate.minusMonths(3), turnoverDate)).hasSize(3);
+    }
+
+    @Test
+    public void findApprovedByConfigAndTypeAndFrequency() throws Exception {
+
+        // given
+        final Occupancy occupancy = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry2).getOccupancies().first();
+        final LocalDate turnoverDate = new LocalDate(2019, 1, 1);
+        final Currency euro = Currency_enum.EUR.findUsing(serviceRegistry2);
+        final LocalDateTime reportedAt = new LocalDateTime(2019, 1, 1, 12, 0);
+
+        // when
+        TurnoverReportingConfig config = turnoverReportingConfigRepository.findOrCreate(occupancy, Type.PRELIMINARY, null, occupancy.getStartDate(), Frequency.MONTHLY, euro);
+
+        Turnover turnover1 = turnoverRepository.create(config, turnoverDate, Type.PRELIMINARY, Frequency.MONTHLY, Status.APPROVED, reportedAt, "someone", euro, null, null, null, null, false);
+        Turnover turnover2 = turnoverRepository.create(config, turnoverDate.minusMonths(2), Type.PRELIMINARY, Frequency.MONTHLY, Status.APPROVED, reportedAt, "someone", euro, null, null, null, null, false);
+        Turnover turnover3 = turnoverRepository.create(config, turnoverDate.minusMonths(1), Type.PRELIMINARY, Frequency.MONTHLY, Status.APPROVED, reportedAt, "someone", euro, null, null, null, null, false);
+        Turnover turnover4 = turnoverRepository.create(config, turnoverDate.minusMonths(1).minusDays(1), Type.PRELIMINARY, Frequency.DAILY, Status.APPROVED, reportedAt, "someone", euro, null, null, null, null, false);
+        Turnover turnover5 = turnoverRepository.create(config, turnoverDate.minusMonths(3), Type.PRELIMINARY, Frequency.MONTHLY, Status.NEW, reportedAt, "someone", euro, null, null, null, null, false);
+        Turnover turnover6 = turnoverRepository.create(config, turnoverDate.minusMonths(3), Type.AUDITED, Frequency.MONTHLY, Status.NEW, reportedAt, "someone", euro, null, null, null, null, false);
+        // then
+        Assertions.assertThat(turnoverRepository.findApprovedByConfigAndTypeAndFrequency(config, Type.PRELIMINARY, Frequency.MONTHLY)).hasSize(3);
+        Assertions.assertThat(turnoverRepository.findApprovedByConfigAndTypeAndFrequency(config, Type.PRELIMINARY, Frequency.DAILY)).hasSize(1);
+        Assertions.assertThat(turnoverRepository.findApprovedByConfigAndTypeAndFrequency(config, Type.AUDITED, Frequency.MONTHLY)).hasSize(0);
+
+        // and when
+        turnover5.setStatus(Status.APPROVED);
+        turnover6.setStatus(Status.APPROVED);
+        // then
+        Assertions.assertThat(turnoverRepository.findApprovedByConfigAndTypeAndFrequency(config, Type.PRELIMINARY, Frequency.MONTHLY)).hasSize(4);
+        Assertions.assertThat(turnoverRepository.findApprovedByConfigAndTypeAndFrequency(config, Type.PRELIMINARY, Frequency.DAILY)).hasSize(1);
+        Assertions.assertThat(turnoverRepository.findApprovedByConfigAndTypeAndFrequency(config, Type.AUDITED, Frequency.MONTHLY)).hasSize(1);
+
+    }
+
+
     @Inject TurnoverRepository turnoverRepository;
 
     @Inject TurnoverReportingConfigRepository turnoverReportingConfigRepository;

@@ -9,14 +9,23 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.services.background.BackgroundService2;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.services.user.UserService;
+
+import org.isisaddons.module.security.app.user.MeService;
 
 import org.estatio.module.turnover.dom.Status;
 import org.estatio.module.turnover.dom.Turnover;
 
 @Mixin
 public class Turnover_enter {
+
+    public static class TurnoverEnterEvent
+            extends ActionDomainEvent<Turnover> {}
 
     private final Turnover turnover;
 
@@ -39,6 +48,12 @@ public class Turnover_enter {
         turnover.setStatus(Status.APPROVED);
         turnover.setReportedBy(userService.getUser().getName());
         turnover.setReportedAt(clockService.nowAsLocalDateTime());
+
+        TurnoverEnterEvent event = new TurnoverEnterEvent();
+        event.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
+        event.setSource(turnover);
+        eventBusService.post(event);
+
         Turnover next = turnover.nextNew();
         return next!=null ? next : turnover;
     }
@@ -66,5 +81,9 @@ public class Turnover_enter {
     @Inject UserService userService;
 
     @Inject ClockService clockService;
+
+    @Inject EventBusService eventBusService;
+
+    @Inject MeService meService;
 
 }
