@@ -791,10 +791,16 @@ public enum IncomingInvoiceApprovalStateTransitionType
     }
 
     static boolean hasGrossAmountAboveThreshold(final IncomingInvoice incomingInvoice) {
+        //TODO: this hack with hardcoded party ref is ugly and brought in because currently we lack a better pattern  ECP-1173
+        if (incomingInvoice.getBuyer()!=null && incomingInvoice.getBuyer().getReference().equals("IT07")){
+            return incomingInvoice.getGrossAmount() != null && incomingInvoice.getGrossAmount().compareTo(thresholdIT07) > 0;
+        }
         return incomingInvoice.getGrossAmount() != null && incomingInvoice.getGrossAmount().compareTo(threshold) > 0;
     }
 
     static BigDecimal threshold = new BigDecimal("100000.00");
+
+    static BigDecimal thresholdIT07 = new BigDecimal("150000.00");
 
     static boolean hasPropertyInvoiceManager(final Property property) {
         return !Lists.newArrayList(property.getRoles()).stream()
