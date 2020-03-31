@@ -975,7 +975,7 @@ public class Lease
                 endDate,
                 tenancyStartDate,
                 tenancyEndDate,
-                this.primaryPartyAsOfElseCurrent(startDate),
+                this.primaryPartyAsOfElseCurrent(tenancyStartDate),
                 tenant);
 
         copyOccupancies(newLease, tenancyStartDate);
