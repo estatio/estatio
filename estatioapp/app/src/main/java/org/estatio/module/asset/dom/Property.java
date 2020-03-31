@@ -96,7 +96,12 @@ import lombok.Setter;
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.asset.dom.Property "
-                        + "WHERE reference == :reference")
+                        + "WHERE reference == :reference"),
+        @javax.jdo.annotations.Query(
+                name = "findByAtPath", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.asset.dom.Property "
+                        + "WHERE applicationTenancyPath.matches(:atPath)")
 })
 @DomainObject(autoCompleteRepository = PropertyRepository.class)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
