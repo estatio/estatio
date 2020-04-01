@@ -627,7 +627,7 @@ public class AdminDashboard implements ViewModel {
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public void closeOldAndOpenNewLeaseItem(@Nullable final org.estatio.module.asset.dom.Property property, final LocalDate startDate, final boolean removeinvoicesOldItem){
+    public void closeOldAndOpenNewLeaseItem(@Nullable final org.estatio.module.asset.dom.Property property, final LocalDate startDate, final boolean removeinvoicesOldItem, @Nullable final String excludeAtPathContains){
         List<Lease> leases;
         if (property!=null) {
             leases = leaseRepository.findLeasesByProperty(property);
@@ -638,6 +638,9 @@ public class AdminDashboard implements ViewModel {
                     .filter(l->l.getEffectiveInterval()!=null)
                     .filter(l->l.getEffectiveInterval().contains(startDate))
                     .collect(Collectors.toList());
+        }
+        if (excludeAtPathContains!=null){
+            leases = leases.stream().filter(l->!l.getAtPath().contains(excludeAtPathContains)).collect(Collectors.toList());
         }
         leases.forEach(l -> {
             factoryService.mixin(Lease_closeOldAndOpenNewLeaseItem.class, l)

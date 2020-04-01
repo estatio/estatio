@@ -13,13 +13,10 @@ import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.estatio.module.capex.app.taskreminder.TaskReminderService;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.lease.dom.InvoicingFrequency;
@@ -33,7 +30,6 @@ import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
-import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 
 @Mixin(method = "act")
 public class Lease_closeOldAndOpenNewLeaseItem {
@@ -66,6 +62,8 @@ public class Lease_closeOldAndOpenNewLeaseItem {
             for (LeaseItem item : activeItemsOfType) {
                 if (item.getInvoicedBy() == LeaseAgreementRoleTypeEnum.LANDLORD && item.getStatus()!= LeaseItemStatus.SUSPENDED && item.getStatus()!= LeaseItemStatus.TERMINATED) {
 
+                    item.verifyUntil(startDateNewItem);
+
                     switch (type) {
 
                     case RENT:
@@ -78,7 +76,6 @@ public class Lease_closeOldAndOpenNewLeaseItem {
                                         item.getInvoicingFrequency().title()
                                 )
                         );
-                        item.verifyUntil(startDateNewItem);
                         closeAndOpenNewRentItem(startDateNewItem, item, newInvoicingFrequency, removeInvoicesOldItem);
                         break;
 
@@ -92,7 +89,6 @@ public class Lease_closeOldAndOpenNewLeaseItem {
                                         item.getInvoicingFrequency().title()
                                 )
                         );
-                        item.verifyUntil(startDateNewItem);
                         closeAndOpenNewServiceChargeItem(startDateNewItem, item, newInvoicingFrequency,
                                 removeInvoicesOldItem);
                         break;
@@ -107,7 +103,6 @@ public class Lease_closeOldAndOpenNewLeaseItem {
                                         item.getInvoicingFrequency().title()
                                 )
                         );
-                        item.verifyUntil(startDateNewItem);
                         closeAndOpenNewServiceChargeIndexableItem(startDateNewItem, item, newInvoicingFrequency,
                                 removeInvoicesOldItem);
                         break;
@@ -149,6 +144,7 @@ public class Lease_closeOldAndOpenNewLeaseItem {
         final LeaseItem newRentItem = lease
                 .newItem(LeaseItemType.RENT, item.getInvoicedBy(), item.getCharge(), invoicingFrequency,
                         item.getPaymentMethod(), startDateNewItem);
+        if (item.getTax()!=null) newRentItem.setTax(item.getTax());
         final LeaseTermForIndexable newTermForIndexable = (LeaseTermForIndexable) newRentItem.newTerm(startDateNewItem, null);
         currentTermForIndexable.copyValuesTo(newTermForIndexable);
         // link new item to items that had old item as source
@@ -159,6 +155,7 @@ public class Lease_closeOldAndOpenNewLeaseItem {
         if (removeInvoicesOldItem) {
             removeInvoicesStartingWith(currentTerm, startDateNewItem);
         }
+        newRentItem.verifyUntil(startDateNewItem.plusMonths(2));
     }
 
     public void closeAndOpenNewServiceChargeIndexableItem(final LocalDate startDateNewItem, final LeaseItem item, final InvoicingFrequency invoicingFrequency, final boolean removeInvoicesOldItem){
@@ -172,12 +169,13 @@ public class Lease_closeOldAndOpenNewLeaseItem {
         final LeaseItem newServiceChargeIndexableItem = lease
                 .newItem(LeaseItemType.SERVICE_CHARGE_INDEXABLE, item.getInvoicedBy(), item.getCharge(), invoicingFrequency,
                         item.getPaymentMethod(), startDateNewItem);
+        if (item.getTax()!=null) newServiceChargeIndexableItem.setTax(item.getTax());
         final LeaseTermForIndexable newSCITerm = (LeaseTermForIndexable) newServiceChargeIndexableItem.newTerm(startDateNewItem, null);
         currentSCITerm.copyValuesTo(newSCITerm);
         if (removeInvoicesOldItem) {
             removeInvoicesStartingWith(currentTerm, startDateNewItem);
         }
-
+        newServiceChargeIndexableItem.verifyUntil(startDateNewItem.plusMonths(2));
     }
 
     public void closeAndOpenNewServiceChargeItem(final LocalDate startDateNewItem, final LeaseItem item, final InvoicingFrequency invoicingFrequency, final boolean removeInvoicesOldItem){
@@ -191,12 +189,13 @@ public class Lease_closeOldAndOpenNewLeaseItem {
         final LeaseItem newServiceChargeItem = lease
                 .newItem(LeaseItemType.SERVICE_CHARGE, item.getInvoicedBy(), item.getCharge(), invoicingFrequency,
                         item.getPaymentMethod(), startDateNewItem);
+        if (item.getTax()!=null) newServiceChargeItem.setTax(item.getTax());
         final LeaseTermForServiceCharge newSCTerm = (LeaseTermForServiceCharge) newServiceChargeItem.newTerm(startDateNewItem, null);
         currentSCTerm.copyValuesTo(newSCTerm);
         if (removeInvoicesOldItem) {
             removeInvoicesStartingWith(currentTerm, startDateNewItem);
         }
-
+        newServiceChargeItem.verifyUntil(startDateNewItem.plusMonths(2));
     }
 
     public void removeInvoicesStartingWith(final LeaseTerm term, final LocalDate startDateNewItem){
