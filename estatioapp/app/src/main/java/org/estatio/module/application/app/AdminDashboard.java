@@ -1,9 +1,11 @@
 package org.estatio.module.application.app;
 
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -11,6 +13,8 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
+
+import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -27,6 +31,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.RestrictTo;
@@ -50,12 +55,12 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.servletapi.dom.HttpSessionProvider;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
-import org.incode.module.base.dom.managed.ManagedIn;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.slack.impl.SlackService;
 
 import org.estatio.module.application.contributions.Organisation_syncToCoda;
+import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.capex.app.taskreminder.TaskReminderService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
@@ -68,12 +73,15 @@ import org.estatio.module.coda.dom.hwm.CodaHwm;
 import org.estatio.module.coda.dom.hwm.CodaHwmRepository;
 import org.estatio.module.countryapptenancy.dom.CountryServiceForCurrentUser;
 import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.fastnet.dom.RentRollLine;
+import org.estatio.module.fastnet.dom.RentRollLineRepository;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
@@ -90,7 +98,6 @@ import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
 import org.estatio.module.turnover.dom.Type;
 import org.estatio.module.turnoveraggregate.contributions.Lease_aggregateTurnovers;
-import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationService;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -568,21 +575,6 @@ public class AdminDashboard implements ViewModel {
         return personRepository.allPersons();
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
-    public void repairTurnoverRentTermsSwe(){
-        final List<Lease> leasesSwe = leaseRepository.allLeases().stream()
-                .filter(l -> l.getManagedIn() == ManagedIn.FASTNET)
-                .collect(Collectors.toList());
-        leasesSwe.forEach(l->{
-            final List<LeaseItem> torItems = l.findItemsOfType(LeaseItemType.TURNOVER_RENT);
-            try {
-                torItems.forEach(li -> wrapperFactory.wrap(li).repairTurnoverRentTermsSwe());
-            } catch (Exception e){
-                System.out.println(String.format("Problem repairing turnover rent terms for %s", l.getReference()));
-            }
-        });
-    }
-
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "fa-wrench")
     @MemberOrder(sequence = "98")
@@ -655,7 +647,80 @@ public class AdminDashboard implements ViewModel {
         });
     }
 
+    // TODO:  can be removed after data fix
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public AdminDashboard alignPercentagesSwedishTurnoverRentWithRentRollLines(){
+        final List<org.estatio.module.asset.dom.Property> sweProperties = propertyRepository.allProperties().stream()
+                .filter(p -> p.getDisposalDate() == null)
+                .filter(p -> p.getCountry().getReference().equals("SWE"))
+                .collect(Collectors.toList());
+        sweProperties.forEach(p->{
+            final LocalDate start2018 = new LocalDate(2018, 1, 1);
+            final List<Lease> leasesForProperty = leaseRepository
+                    .findByAssetAndActiveOnDate(p, start2018);
+            final List<Lease> sweLeasesAfterJan2018 = leaseRepository.findLeasesByProperty(p).stream()
+                    .filter(l->l.getStartDate()!=null)
+                    .filter(l->l.getStartDate().isAfter(start2018.minusDays(1)))
+                    .collect(Collectors.toList());
+            leasesForProperty.addAll(sweLeasesAfterJan2018);
+            leasesForProperty.stream().distinct().sorted(Comparator.comparing(Lease::getReference)).forEach(lease->{
+                final List<RentRollLine> rrlinesForLease = rentRollLineRepository
+                        .findByKeyToLeaseExternalReference(lease.getExternalReference())
+                        .stream()
+                        .sorted(Comparator.comparing(RentRollLine::getExportDate).reversed())
+                        .collect(Collectors.toList());
+                final String turnoverRentRuleString = percentageToTurnoverRentRuleString(percentageFromRentRoleLines(lease, rrlinesForLease));
+                final List<LeaseItem> torItems = lease.findItemsOfType(LeaseItemType.TURNOVER_RENT);
+                torItems.forEach(torItem->{
+                    if (!torItem.getTerms().isEmpty()) {
+                        final LeaseTermForTurnoverRent first = (LeaseTermForTurnoverRent) torItem.getTerms().first();
+                        LOG.info(String.format("Replacing turnover rentRule %s by %s for Lease %s",
+                                first.getTurnoverRentRule(), turnoverRentRuleString, lease.getReference()));
+                        Lists.newArrayList(torItem.getTerms()).forEach(term -> {
+                            LeaseTermForTurnoverRent castedTerm = (LeaseTermForTurnoverRent) term;
+                            castedTerm.setTurnoverRentRule(turnoverRentRuleString);
+                        });
+                    }
+                });
+            });
+        });
+
+
+        return this;
+    }
+
+    // TODO:  can be removed after data fix
+    BigDecimal percentageFromRentRoleLines(final Lease lease, final List<RentRollLine> rentRollLines){
+
+        final List<BigDecimal> percentagesFound = rentRollLines.stream().map(l -> l.getOmsattProc())
+                .distinct()
+                .collect(Collectors.toList());
+        if (percentagesFound.size()==1) return percentagesFound.get(0);
+        if (percentagesFound.size()>1) {
+            LOG.info(String.format("Multiple turnoverperentages found for lease %s with external reference %s", lease.getReference(), lease.getExternalReference()));
+            percentagesFound.forEach(p->{
+                LOG.info(String.format("Value %s", p.toString()));
+            });
+            final BigDecimal maxPercentage = percentagesFound.stream().sorted(Comparator.reverseOrder()).findFirst()
+                    .orElse(null);
+            LOG.info(String.format("Highest %s was chosen", maxPercentage.toString()));
+            return maxPercentage;
+        }
+        LOG.info(String.format("NO turnoverpercentage information found on rent roll lines for lease %s with external reference %s", lease.getReference(), lease.getExternalReference()));
+        return null;
+    }
+
+    @Programmatic
+    public static String percentageToTurnoverRentRuleString(final BigDecimal percentage){
+        if (percentage==null) return null;
+        return percentage.toString().replaceFirst("\\.0*$", "");
+    }
+
     // //////////////////////////////////////
+
+    @Inject RentRollLineRepository rentRollLineRepository;
+
+    @Inject PropertyRepository propertyRepository;
 
     @Inject
     CodaCmpCodeService codaCmpCodeService;
@@ -718,8 +783,6 @@ public class AdminDashboard implements ViewModel {
     BackgroundService2 backgroundService2;
 
     @Inject TurnoverReportingConfigRepository turnoverReportingConfigRepository;
-
-    @Inject TurnoverAggregationService turnoverAggregationService;
 
     @Inject
     TaskReminderService taskReminderService;
