@@ -47,7 +47,6 @@ import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemRepository;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.dom.LeaseTermForFixed;
 import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
 
 import lombok.Getter;
@@ -113,6 +112,7 @@ public class LeaseTermForTurnoverRentSweImportManager {
         leasesForProperty.forEach(x->{
             List<LeaseItem> torItems = leaseItemRepository.findLeaseItemsByType(x, LeaseItemType.TURNOVER_RENT);
             torItems.forEach(tor->{
+                tor.verifyUntil(endOfTheYear());
                 LeaseTermForTurnOverRentSweImport line = new LeaseTermForTurnOverRentSweImport();
                 line.setYear(getYear());
                 line.setLeaseReference(x.getReference());

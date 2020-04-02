@@ -659,7 +659,7 @@ public class AdminDashboard implements ViewModel {
             final List<Lease> leasesForProperty = leaseRepository
                     .findByAssetAndActiveOnDate(p, start2018);
             final List<Lease> sweLeasesAfterJan2018 = leaseRepository.findLeasesByProperty(p).stream()
-                    .filter(l->l.getStartDate()!=null)
+                    .filter(l->l.getStartDate()!=null) // just in case but does not happen in live data ...
                     .filter(l->l.getStartDate().isAfter(start2018.minusDays(1)))
                     .collect(Collectors.toList());
             leasesForProperty.addAll(sweLeasesAfterJan2018);
@@ -706,7 +706,11 @@ public class AdminDashboard implements ViewModel {
             LOG.info(String.format("Highest %s was chosen", maxPercentage.toString()));
             return maxPercentage;
         }
-        LOG.info(String.format("NO turnoverpercentage information found on rent roll lines for lease %s with external reference %s", lease.getReference(), lease.getExternalReference()));
+        if (!lease.findItemsOfType(LeaseItemType.TURNOVER_RENT).isEmpty()) {
+            LOG.info(String.format(
+                    "NO turnoverpercentage information found on rent roll lines for lease %s with external reference %s",
+                    lease.getReference(), lease.getExternalReference()));
+        }
         return null;
     }
 
