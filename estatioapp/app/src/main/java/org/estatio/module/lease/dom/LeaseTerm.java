@@ -57,7 +57,6 @@ import org.apache.isis.applib.annotation.Where;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.Chained;
-import org.incode.module.base.dom.managed.ManagedIn;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.dom.with.WithIntervalMutable;
@@ -413,8 +412,6 @@ public abstract class LeaseTerm
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public LeaseTerm verifyUntil(final LocalDate date) {
-        // guards for LeaseTerm#easeItem and LeaseItem#lease are in order not to break unit tests
-        if (getLeaseItem()!=null && getLeaseItem().getLease()!=null && getLeaseItem().getLease().getManagedIn()!= ManagedIn.ESTATIO) return this;
         LeaseTerm nextTerm = getNext();
         boolean autoCreateTerms = getLeaseItem().getType().autoCreateTerms();
         if (autoCreateTerms) {

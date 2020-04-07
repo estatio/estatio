@@ -66,7 +66,6 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.managed.HasManagedIn;
-import org.incode.module.base.dom.managed.HasManagedInAndExternalReference;
 import org.incode.module.base.dom.managed.ManagedIn;
 import org.incode.module.base.dom.types.NotesType;
 import org.incode.module.base.dom.utils.JodaPeriodUtils;
@@ -985,7 +984,7 @@ public class Lease
                 endDate,
                 tenancyStartDate,
                 tenancyEndDate,
-                this.primaryPartyAsOfElseCurrent(startDate),
+                this.primaryPartyAsOfElseCurrent(tenancyStartDate),
                 tenant);
 
         copyOccupancies(newLease, tenancyStartDate);

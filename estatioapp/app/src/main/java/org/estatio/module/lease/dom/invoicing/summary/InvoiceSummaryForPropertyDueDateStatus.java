@@ -25,6 +25,8 @@ import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
+import org.estatio.module.lease.dom.invoicing.NumeratorForOutgoingInvoicesRepository;
+import org.estatio.module.numerator.dom.Numerator;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -181,6 +183,13 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
     @Getter @Setter
     private BigDecimal grossAmount;
 
+    public String getLastInvoiceNumber() {
+        final Numerator numerator = numeratorRepository
+                .findInvoiceNumberNumerator(propertyRepository.findPropertyByAtPath(getAtPath()), getSeller()
+                );
+        return numerator.lastIncrementStr();
+    }
+
     @CollectionLayout(defaultView = "table")
     public List<InvoiceForLease> getInvoices() {
         return invoiceForLeaseRepository
@@ -204,5 +213,8 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
 
     @Inject
     InvoiceSummaryForPropertyDueDateStatusRepository invoiceSummaryForPropertyDueDateStatusRepository;
+
+    @Inject
+    NumeratorForOutgoingInvoicesRepository numeratorRepository;
 
 }
