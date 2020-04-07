@@ -13,6 +13,7 @@ import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
+import org.isisaddons.module.excel.dom.WorksheetSpec;
 import org.isisaddons.module.excel.dom.util.Mode;
 
 import org.estatio.module.capex.app.DebtorBankAccountService;
@@ -37,7 +38,22 @@ public class PaymentBatchItaUploadService {
             final Party ecpBuyerCompany,
             final Blob spreadsheet){
 
-        List<PaymentBatchItaImportLine> lines = excelService.fromExcel(spreadsheet, PaymentBatchItaImportLine.class, "Sheet 1", Mode.RELAXED);
+//        List<PaymentBatchItaImportLine> lines = excelService.fromExcel(spreadsheet, PaymentBatchItaImportLine.class, "Sheet 1", Mode.RELAXED);
+        List<List<?>> res = excelService.fromExcel(
+                spreadsheet,
+                sheetName -> {
+                    if(sheetName.startsWith("Sheet")) {
+                        return new WorksheetSpec(
+                                PaymentBatchItaImportLine.class,
+                                sheetName,
+                                Mode.RELAXED);
+                    }
+                    else
+                        messageService.warnUser(String.format("Sheet name has to start with Sheet. Sheet name found: %s", sheetName));
+                        return null;
+                }
+        );
+        List<PaymentBatchItaImportLine> lines = (List) res.get(0);
 
         BankAccount buyerBankAccount = debtorBankAccountService.uniqueDebtorAccountToPay(ecpBuyerCompany);
         if (buyerBankAccount!=null) {
