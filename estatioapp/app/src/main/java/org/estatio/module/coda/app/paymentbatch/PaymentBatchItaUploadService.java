@@ -38,18 +38,16 @@ public class PaymentBatchItaUploadService {
             final Party ecpBuyerCompany,
             final Blob spreadsheet){
 
-//        List<PaymentBatchItaImportLine> lines = excelService.fromExcel(spreadsheet, PaymentBatchItaImportLine.class, "Sheet 1", Mode.RELAXED);
         List<List<?>> res = excelService.fromExcel(
                 spreadsheet,
                 sheetName -> {
-                    if(sheetName.startsWith("Sheet")) {
+                    if(sheetName!=null) {
                         return new WorksheetSpec(
                                 PaymentBatchItaImportLine.class,
                                 sheetName,
                                 Mode.RELAXED);
                     }
                     else
-                        messageService.warnUser(String.format("Sheet name has to start with Sheet. Sheet name found: %s", sheetName));
                         return null;
                 }
         );
