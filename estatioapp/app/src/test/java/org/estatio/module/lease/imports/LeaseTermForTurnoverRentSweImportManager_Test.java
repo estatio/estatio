@@ -21,7 +21,6 @@ import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemRepository;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.dom.LeaseTermForFixed;
 import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
 
 public class LeaseTermForTurnoverRentSweImportManager_Test {
@@ -40,6 +39,9 @@ public class LeaseTermForTurnoverRentSweImportManager_Test {
     LocalDate startDatePrevious;
     LocalDate endDatePrevious;
 
+    final int maintenanceYear = 2018;
+    final LocalDate endDateMaintenanceYear = new LocalDate(2018,12,31);
+
     @Test
     public void getTurnoverRentLines_when_endate_previous_on_end_of_year_or_empty_works() throws Exception {
 
@@ -49,9 +51,8 @@ public class LeaseTermForTurnoverRentSweImportManager_Test {
 
         LeaseTermForTurnoverRentSweImportManager manager = new LeaseTermForTurnoverRentSweImportManager();
         Property property = new Property();
-        int year = 2018;
         manager.setProperty(property);
-        manager.setYear(year);
+        manager.setYear(maintenanceYear);
         manager.leaseItemRepository = mockLeaseItemRepository;
         manager.leaseRepository = mockLeaseRepository;
         Lease lease1 = new Lease();
@@ -74,8 +75,10 @@ public class LeaseTermForTurnoverRentSweImportManager_Test {
             will(returnValue(Arrays.asList(mockLeaseItem1)));
             oneOf(mockLeaseItemRepository).findLeaseItemsByType(lease2, LeaseItemType.TURNOVER_RENT);
             will(returnValue(Arrays.asList(mockLeaseItem2)));
+            oneOf(mockLeaseItem1).verifyUntil(endDateMaintenanceYear);
             oneOf(mockLeaseItem1).getTerms();
             will(returnValue(termsItem1));
+            oneOf(mockLeaseItem2).verifyUntil(endDateMaintenanceYear);
             oneOf(mockLeaseItem2).getTerms();
             will(returnValue(termsItem2));
         }});
@@ -108,9 +111,8 @@ public class LeaseTermForTurnoverRentSweImportManager_Test {
 
         LeaseTermForTurnoverRentSweImportManager manager = new LeaseTermForTurnoverRentSweImportManager();
         Property property = new Property();
-        int year = 2018;
         manager.setProperty(property);
-        manager.setYear(year);
+        manager.setYear(maintenanceYear);
         manager.leaseItemRepository = mockLeaseItemRepository;
         manager.leaseRepository = mockLeaseRepository;
         Lease lease1 = new Lease();
@@ -129,6 +131,7 @@ public class LeaseTermForTurnoverRentSweImportManager_Test {
             will(returnValue(Arrays.asList(lease1)));
             oneOf(mockLeaseItemRepository).findLeaseItemsByType(lease1, LeaseItemType.TURNOVER_RENT);
             will(returnValue(Arrays.asList(mockLeaseItem1)));
+            oneOf(mockLeaseItem1).verifyUntil(endDateMaintenanceYear);
             oneOf(mockLeaseItem1).getTerms();
             will(returnValue(termsItem1));
         }});
@@ -156,9 +159,8 @@ public class LeaseTermForTurnoverRentSweImportManager_Test {
 
         LeaseTermForTurnoverRentSweImportManager manager = new LeaseTermForTurnoverRentSweImportManager();
         Property property = new Property();
-        int year = 2018;
         manager.setProperty(property);
-        manager.setYear(year);
+        manager.setYear(maintenanceYear);
         manager.leaseItemRepository = mockLeaseItemRepository;
         manager.leaseRepository = mockLeaseRepository;
         Lease lease1 = new Lease();
@@ -177,6 +179,7 @@ public class LeaseTermForTurnoverRentSweImportManager_Test {
             will(returnValue(Arrays.asList(lease1)));
             oneOf(mockLeaseItemRepository).findLeaseItemsByType(lease1, LeaseItemType.TURNOVER_RENT);
             will(returnValue(Arrays.asList(mockLeaseItem1)));
+            oneOf(mockLeaseItem1).verifyUntil(endDateMaintenanceYear);
             oneOf(mockLeaseItem1).getTerms();
             will(returnValue(termsItem1));
         }});
@@ -205,9 +208,8 @@ public class LeaseTermForTurnoverRentSweImportManager_Test {
 
         LeaseTermForTurnoverRentSweImportManager manager = new LeaseTermForTurnoverRentSweImportManager();
         Property property = new Property();
-        int year = 2018;
         manager.setProperty(property);
-        manager.setYear(year);
+        manager.setYear(maintenanceYear);
         manager.leaseItemRepository = mockLeaseItemRepository;
         manager.leaseRepository = mockLeaseRepository;
         Lease lease1 = new Lease();
@@ -236,6 +238,7 @@ public class LeaseTermForTurnoverRentSweImportManager_Test {
             will(returnValue(Arrays.asList(lease1)));
             oneOf(mockLeaseItemRepository).findLeaseItemsByType(lease1, LeaseItemType.TURNOVER_RENT);
             will(returnValue(Arrays.asList(mockLeaseItem1)));
+            oneOf(mockLeaseItem1).verifyUntil(endDateMaintenanceYear);
             oneOf(mockLeaseItem1).getTerms();
             will(returnValue(termsItem1));
         }});

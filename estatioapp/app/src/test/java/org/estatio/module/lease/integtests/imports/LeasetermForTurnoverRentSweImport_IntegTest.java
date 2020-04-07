@@ -39,7 +39,6 @@ import org.estatio.module.lease.contributions.Property_maintainTurnOverRentSwe;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
-import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
 import org.estatio.module.lease.fixtures.imports.TurnOverRentSweImportFixture;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
@@ -98,7 +97,7 @@ public class LeasetermForTurnoverRentSweImport_IntegTest extends LeaseModuleInte
         assertThat(lineForTopModel.getLeaseReference()).isEqualTo(Lease_enum.HanTopModel002Se.findUsing(serviceRegistry2).getReference());
         assertThat(lineForTopModel.getStartDatePreviousYear()).isEqualTo(new LocalDate(2010,7,15));
         assertThat(lineForTopModel.getValuePreviousYear()).isEqualTo(new BigDecimal("2000.00"));
-        assertThat(lineForTopModel.getPercentage()).isNull();
+        assertThat(lineForTopModel.getPercentage()).isEqualTo(new BigDecimal("3.4"));
         assertThat(lineForTopModel.getYear()).isEqualTo(2011);
         
     }
