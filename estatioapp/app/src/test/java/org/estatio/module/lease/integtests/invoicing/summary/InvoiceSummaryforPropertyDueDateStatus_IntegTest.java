@@ -57,13 +57,14 @@ public class InvoiceSummaryforPropertyDueDateStatus_IntegTest extends LeaseModul
         public void happy_case() throws Exception {
 
             // given
-            InvoiceSummaryForPropertyDueDateStatus summary = findSummary();
+            InvoiceSummaryForPropertyDueDateStatus summary = findSummary(InvoiceStatus.NEW);
 
             // when
             String lastInvoiceNumberBefore = summary.getLastInvoiceNumber();
             InvoiceForLease invoice = summary.getInvoices().get(0);
             Invoice invoiceApproved = mixin(InvoiceForLease._approve.class, invoice).$$();
             Invoice invoiceInvoiced = mixin(InvoiceForLease._invoice.class, invoiceApproved).$$(invoiceApproved.getInvoiceDate());
+            summary = findSummary(InvoiceStatus.INVOICED);
             String lastInvoiceNumberAfter = summary.getLastInvoiceNumber();
 
             // then
@@ -76,12 +77,12 @@ public class InvoiceSummaryforPropertyDueDateStatus_IntegTest extends LeaseModul
     }
 
 
-    InvoiceSummaryForPropertyDueDateStatus findSummary() {
+    InvoiceSummaryForPropertyDueDateStatus findSummary(final InvoiceStatus status) {
 
         // clears out queryResultsCache
         transactionService.nextTransaction();
 
-        List<InvoiceSummaryForPropertyDueDateStatus> summaries = invoiceSummaryRepository.findInvoicesByStatus(InvoiceStatus.NEW);
+        List<InvoiceSummaryForPropertyDueDateStatus> summaries = invoiceSummaryRepository.findInvoicesByStatus(status);
         assertThat(summaries).hasSize(1);
         return summaries.get(0);
     }
