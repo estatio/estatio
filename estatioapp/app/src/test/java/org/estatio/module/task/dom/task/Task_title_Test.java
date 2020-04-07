@@ -20,7 +20,7 @@ public class Task_title_Test {
     public void setUp() throws Exception {
         partyRoleType = PartyRoleType.builder().key("PROJECT_MANAGER").build();
         person = Person.builder().username("jcapriata@abc.loc").build();
-        task = new Task(partyRoleType, person, "Feed the cat", LocalDateTime.now(), "cat.Cat") {
+        task = new Task(partyRoleType, person, "Feed the cat", LocalDateTime.now(), "cat.Cat", null) {
             @Override
             void appendTitleOfObject(final StringBuilder buf) {
                 buf.append("Tiddles");

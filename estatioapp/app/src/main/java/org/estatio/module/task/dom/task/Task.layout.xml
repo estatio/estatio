@@ -90,7 +90,7 @@
                                     <cpt:action id="viewTransition" position="RIGHT"/>
                                 </cpt:property>
                                 <cpt:property id="createdOn">
-                                    <cpt:named>Priority</cpt:named>
+<!--                                    <cpt:named>Priority</cpt:named>-->
                                     <cpt:action id="reprioritizeBringForward">
                                         <cpt:named>Bring forward</cpt:named>
                                     </cpt:action>
@@ -101,7 +101,10 @@
                                         <cpt:named>To date</cpt:named>
                                     </cpt:action>
                                 </cpt:property>
-                                
+
+                                <cpt:property id="priority">
+                                </cpt:property>
+
                                 <cpt:property id="note">
                                     <cpt:action id="editNote"/>
                                 </cpt:property>

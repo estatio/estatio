@@ -63,7 +63,7 @@ public class DerivedObjectUpdater_Test {
         ErrorSet errorSet = new ErrorSet();
         errorSet.add("We added new validation and this existing invoice is now invalid!");
 
-        Task task = new Task(null, null, "I am valid!", null, null);
+        Task task = new Task(null, null, "I am valid!", null, null, null);
         IncomingInvoiceApprovalStateTransition transition = new IncomingInvoiceApprovalStateTransition();
         transition.setTransitionType(IncomingInvoiceApprovalStateTransitionType.COMPLETE);
         transition.setTask(task);

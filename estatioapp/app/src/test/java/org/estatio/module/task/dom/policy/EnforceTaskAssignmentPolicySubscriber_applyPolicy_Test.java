@@ -85,7 +85,8 @@ public class EnforceTaskAssignmentPolicySubscriber_applyPolicy_Test {
         pendingTask = new Task(
                 roleTaskAssignedTo, personTaskAssignedTo,
                 "some description", LocalDateTime.now(),
-                "bankAccount.BankAccountVerificationStateTransition" // objectType of transition class
+                "bankAccount.BankAccountVerificationStateTransition", // objectType of transition class
+                null
         );
 
         pendingTransition.setTask(pendingTask);

@@ -59,8 +59,10 @@ public class IncomingInvoice_reject extends IncomingInvoice_triggerAbstract {
         }
 
         final IncomingInvoiceApprovalStateTransition transition = trigger(role, personToAssignNextTo, reason, reason);
-        if (transition.getTask() != null)
+        if (transition.getTask() != null) {
             transition.getTask().setToHighestPriority();
+            transition.getTask().setPriority(1);
+        }
 
         return objectToReturn();
     }
