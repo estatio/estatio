@@ -3,6 +3,7 @@ package org.estatio.module.application.app;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -95,6 +96,7 @@ import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
 import org.estatio.module.task.dom.state.StateTransitionService;
 import org.estatio.module.task.dom.task.Task;
 import org.estatio.module.turnover.dom.Frequency;
+import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
 import org.estatio.module.turnover.dom.Type;
 import org.estatio.module.turnoveraggregate.contributions.Lease_aggregateTurnovers;
@@ -546,7 +548,7 @@ public class AdminDashboard implements ViewModel {
         final List<Lease> leaseSelection = turnoverReportingConfigRepository.listAll().stream()
                 .filter(c -> c.getType() == Type.PRELIMINARY && c.getFrequency() == Frequency.MONTHLY)
                 .map(c -> c.getOccupancy().getLease())
-                .filter(l->l.getNext()==null)
+                .filter(l->l.getNext()==null || noConfigFor((Lease) l.getNext()))
                 .filter(l -> l.getEffectiveInterval().overlaps(LocalDateInterval.including(startDate, null)))
                 .collect(Collectors.toList());
         leaseSelection.forEach(l->{
@@ -558,7 +560,19 @@ public class AdminDashboard implements ViewModel {
             }
         });
     }
-    
+
+    private boolean noConfigFor(final Lease next) {
+        final List<TurnoverReportingConfig> configs = new ArrayList<>();
+        Lists.newArrayList(next.getOccupancies()).forEach(o->{
+            final List<TurnoverReportingConfig> byOccupancyAndType = turnoverReportingConfigRepository
+                    .findByOccupancyAndType(o, Type.PRELIMINARY);
+            if (!byOccupancyAndType.isEmpty()){
+                configs.addAll(byOccupancyAndType);
+            }
+        });
+        return configs.isEmpty();
+    }
+
     public void sendApprovalRemindersItaly(@Nullable final Person approver){
         if (approver==null) {
             taskReminderService.sendRemindersToAllItalianApprovers();
