@@ -1,11 +1,10 @@
 package org.estatio.module.application.app;
 
-import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,7 +30,6 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.RestrictTo;
@@ -60,7 +58,6 @@ import org.incode.module.country.dom.impl.Country;
 import org.incode.module.slack.impl.SlackService;
 
 import org.estatio.module.application.contributions.Organisation_syncToCoda;
-import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.capex.app.taskreminder.TaskReminderService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
@@ -75,15 +72,11 @@ import org.estatio.module.coda.dom.hwm.CodaHwm;
 import org.estatio.module.coda.dom.hwm.CodaHwmRepository;
 import org.estatio.module.countryapptenancy.dom.CountryServiceForCurrentUser;
 import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
-import org.estatio.module.fastnet.dom.RentRollLine;
-import org.estatio.module.fastnet.dom.RentRollLineRepository;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
-import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
@@ -97,6 +90,7 @@ import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
 import org.estatio.module.task.dom.state.StateTransitionService;
 import org.estatio.module.task.dom.task.Task;
 import org.estatio.module.turnover.dom.Frequency;
+import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
 import org.estatio.module.turnover.dom.Type;
 import org.estatio.module.turnoveraggregate.contributions.Lease_aggregateTurnovers;
@@ -548,7 +542,7 @@ public class AdminDashboard implements ViewModel {
         final List<Lease> leaseSelection = turnoverReportingConfigRepository.listAll().stream()
                 .filter(c -> c.getType() == Type.PRELIMINARY && c.getFrequency() == Frequency.MONTHLY)
                 .map(c -> c.getOccupancy().getLease())
-                .filter(l->l.getNext()==null)
+                .filter(l->l.getNext()==null || noConfigFor((Lease) l.getNext()))
                 .filter(l -> l.getEffectiveInterval().overlaps(LocalDateInterval.including(startDate, null)))
                 .collect(Collectors.toList());
         leaseSelection.forEach(l->{
@@ -560,7 +554,19 @@ public class AdminDashboard implements ViewModel {
             }
         });
     }
-    
+
+    private boolean noConfigFor(final Lease next) {
+        final List<TurnoverReportingConfig> configs = new ArrayList<>();
+        Lists.newArrayList(next.getOccupancies()).forEach(o->{
+            final List<TurnoverReportingConfig> byOccupancyAndType = turnoverReportingConfigRepository
+                    .findByOccupancyAndType(o, Type.PRELIMINARY);
+            if (!byOccupancyAndType.isEmpty()){
+                configs.addAll(byOccupancyAndType);
+            }
+        });
+        return configs.isEmpty();
+    }
+
     public void sendApprovalRemindersItaly(@Nullable final Person approver){
         if (approver==null) {
             taskReminderService.sendRemindersToAllItalianApprovers();
@@ -648,86 +654,7 @@ public class AdminDashboard implements ViewModel {
                             removeinvoicesOldItem);
         });
     }
-
-    // TODO:  can be removed after data fix
-    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
-    public AdminDashboard alignPercentagesSwedishTurnoverRentWithRentRollLines(){
-        final List<org.estatio.module.asset.dom.Property> sweProperties = propertyRepository.allProperties().stream()
-                .filter(p -> p.getDisposalDate() == null)
-                .filter(p -> p.getCountry().getReference().equals("SWE"))
-                .collect(Collectors.toList());
-        sweProperties.forEach(p->{
-            final LocalDate start2018 = new LocalDate(2018, 1, 1);
-            final List<Lease> leasesForProperty = leaseRepository
-                    .findByAssetAndActiveOnDate(p, start2018);
-            final List<Lease> sweLeasesAfterJan2018 = leaseRepository.findLeasesByProperty(p).stream()
-                    .filter(l->l.getStartDate()!=null) // just in case but does not happen in live data ...
-                    .filter(l->l.getStartDate().isAfter(start2018.minusDays(1)))
-                    .collect(Collectors.toList());
-            leasesForProperty.addAll(sweLeasesAfterJan2018);
-            leasesForProperty.stream().distinct().sorted(Comparator.comparing(Lease::getReference)).forEach(lease->{
-                final List<RentRollLine> rrlinesForLease = rentRollLineRepository
-                        .findByKeyToLeaseExternalReference(lease.getExternalReference())
-                        .stream()
-                        .sorted(Comparator.comparing(RentRollLine::getExportDate).reversed())
-                        .collect(Collectors.toList());
-                final String turnoverRentRuleString = percentageToTurnoverRentRuleString(percentageFromRentRoleLines(lease, rrlinesForLease));
-                final List<LeaseItem> torItems = lease.findItemsOfType(LeaseItemType.TURNOVER_RENT);
-                torItems.forEach(torItem->{
-                    if (!torItem.getTerms().isEmpty()) {
-                        final LeaseTermForTurnoverRent first = (LeaseTermForTurnoverRent) torItem.getTerms().first();
-                        LOG.info(String.format("Replacing turnover rentRule %s by %s for Lease %s",
-                                first.getTurnoverRentRule(), turnoverRentRuleString, lease.getReference()));
-                        Lists.newArrayList(torItem.getTerms()).forEach(term -> {
-                            LeaseTermForTurnoverRent castedTerm = (LeaseTermForTurnoverRent) term;
-                            castedTerm.setTurnoverRentRule(turnoverRentRuleString);
-                        });
-                    }
-                });
-            });
-        });
-
-
-        return this;
-    }
-
-    // TODO:  can be removed after data fix
-    BigDecimal percentageFromRentRoleLines(final Lease lease, final List<RentRollLine> rentRollLines){
-
-        final List<BigDecimal> percentagesFound = rentRollLines.stream().map(l -> l.getOmsattProc())
-                .distinct()
-                .collect(Collectors.toList());
-        if (percentagesFound.size()==1) return percentagesFound.get(0);
-        if (percentagesFound.size()>1) {
-            LOG.info(String.format("Multiple turnoverperentages found for lease %s with external reference %s", lease.getReference(), lease.getExternalReference()));
-            percentagesFound.forEach(p->{
-                LOG.info(String.format("Value %s", p.toString()));
-            });
-            final BigDecimal maxPercentage = percentagesFound.stream().sorted(Comparator.reverseOrder()).findFirst()
-                    .orElse(null);
-            LOG.info(String.format("Highest %s was chosen", maxPercentage.toString()));
-            return maxPercentage;
-        }
-        if (!lease.findItemsOfType(LeaseItemType.TURNOVER_RENT).isEmpty()) {
-            LOG.info(String.format(
-                    "NO turnoverpercentage information found on rent roll lines for lease %s with external reference %s",
-                    lease.getReference(), lease.getExternalReference()));
-        }
-        return null;
-    }
-
-    @Programmatic
-    public static String percentageToTurnoverRentRuleString(final BigDecimal percentage){
-        if (percentage==null) return null;
-        return percentage.toString().replaceFirst("\\.0*$", "");
-    }
-
-    // //////////////////////////////////////
-
-    @Inject RentRollLineRepository rentRollLineRepository;
-
-    @Inject PropertyRepository propertyRepository;
-
+    
     @Inject
     CodaCmpCodeService codaCmpCodeService;
 
