@@ -111,10 +111,6 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
         return uniqueMatch("findByReference", "reference", reference);
     }
 
-    public Property findPropertyByAtPath(final String atPath) {
-        return uniqueMatch("findByAtPath", "atPath", atPath);
-    }
-
     /**
      * For {@link Property} as per {@link DomainObject#autoCompleteRepository()}.
      */

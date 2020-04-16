@@ -25,8 +25,6 @@ import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.estatio.module.lease.dom.invoicing.NumeratorForOutgoingInvoicesRepository;
-import org.estatio.module.numerator.dom.Numerator;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -44,6 +42,8 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
+import org.estatio.module.lease.dom.invoicing.NumeratorForOutgoingInvoicesRepository;
+import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 
@@ -184,10 +184,15 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
     private BigDecimal grossAmount;
 
     public String getLastInvoiceNumber() {
-        final Numerator numerator = numeratorRepository
-                .findInvoiceNumberNumerator(propertyRepository.findPropertyByAtPath(getAtPath()), getSeller()
-                );
-        return numerator.lastIncrementStr();
+        final InvoiceForLease firstInvoice = getInvoices().stream().findFirst().orElse(null);
+        if (firstInvoice!=null && firstInvoice.getProperty()!=null) { // second guard should never be touched
+            final Numerator numerator = numeratorRepository
+                    .findInvoiceNumberNumerator(firstInvoice.getProperty(), getSeller()
+                    );
+            return numerator.lastIncrementStr();
+        } else {
+            return null;
+        }
     }
 
     @CollectionLayout(defaultView = "table")

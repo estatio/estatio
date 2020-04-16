@@ -21,7 +21,6 @@ package org.estatio.module.turnover.dom;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -37,13 +36,10 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.apache.isis.applib.services.eventbus.EventBusService;
-import org.apache.isis.applib.services.message.MessageService2;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.app.user.MeService;
-
-import org.incode.module.document.dom.impl.paperclips.Paperclip;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.currency.dom.Currency;
