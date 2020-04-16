@@ -7,8 +7,6 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
-import com.google.common.collect.Lists;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainObject;
@@ -48,9 +46,6 @@ public class TurnoverImportManager {
 
     @Getter @Setter
     private LocalDate date;
-
-    @Getter @Setter
-    private List<TurnoverImport> lines = Lists.newArrayList();
 
 
     public List<TurnoverImport> getLines(){

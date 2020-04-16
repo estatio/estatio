@@ -78,7 +78,6 @@ public class TurnoverMenu  {
         manager.setProperty(property);
         manager.setType(type);
         manager.setDate(turnoverDate);
-        manager.setLines(manager.getLines());
         return manager;
     }
 
