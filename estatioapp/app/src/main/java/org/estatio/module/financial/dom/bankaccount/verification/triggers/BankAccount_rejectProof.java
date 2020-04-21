@@ -9,6 +9,8 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.party.dom.Person;
@@ -39,7 +41,10 @@ public class BankAccount_rejectProof extends BankAccount_triggerAbstract {
             final IPartyRoleType role,
             @Nullable final Person personToAssignNextTo,
             final String reason) {
-        trigger(role, personToAssignNextTo, reason, reason);
+        final BankAccountVerificationStateTransition transition = trigger(role, personToAssignNextTo, reason, reason);
+        if (transition.getTask() != null) {
+            transition.getTask().setPriority(1);
+        }
         return bankAccount;
     }
 
