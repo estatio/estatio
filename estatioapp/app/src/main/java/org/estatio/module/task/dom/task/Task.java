@@ -68,14 +68,14 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.module.task.dom.task.Task "
                         + "WHERE completedBy == null "
-                        + "ORDER BY personAssignedTo, priority DESC NULLS LAST, createdOn ASC "),
+                        + "ORDER BY personAssignedTo, priority DESC, createdOn ASC "),
         @Query(
                 name = "findIncompleteByPersonAssignedTo", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.task.dom.task.Task "
                         + "WHERE completedBy      == null "
                         + "   && personAssignedTo == :personAssignedTo "
-                        + "ORDER BY priority DESC NULLS LAST, createdOn ASC "),
+                        + "ORDER BY priority DESC, createdOn ASC "),
         @Query(
                 name = "findIncompleteByPersonAssignedToAndCreatedOnBefore", language = "JDOQL",
                 value = "SELECT "
@@ -83,14 +83,14 @@ import lombok.Setter;
                         + "WHERE completedBy      == null "
                         + "   && personAssignedTo == :personAssignedTo "
                         + "   && createdOn        <  :createdOn "
-                        + "ORDER BY priority DESC NULLS LAST, createdOn DESC "),
+                        + "ORDER BY priority DESC, createdOn DESC "),
         @Query(
                 name = "findIncompleteByUnassigned", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.task.dom.task.Task "
                         + "WHERE completedBy      == null "
                         + "   && personAssignedTo == null "
-                        + "ORDER BY priority DESC NULLS LAST, createdOn DESC "),
+                        + "ORDER BY priority DESC, createdOn DESC "),
         @Query(
                 name = "findIncompleteByUnassignedForRoles", language = "JDOQL",
                 value = "SELECT "
@@ -98,7 +98,7 @@ import lombok.Setter;
                         + "WHERE completedBy      == null "
                         + "   && personAssignedTo == null "
                         + "   && :roleTypes.contains(assignedTo) "
-                        + "ORDER BY priority DESC NULLS LAST, createdOn DESC "),
+                        + "ORDER BY priority DESC, createdOn DESC "),
         @Query(
                 name = "findIncompleteByUnassignedForRolesAndCreatedOnAfter", language = "JDOQL",
                 value = "SELECT "
@@ -107,7 +107,7 @@ import lombok.Setter;
                         + "   && personAssignedTo == null "
                         + "   && :roleTypes.contains(assignedTo) "
                         + "   && createdOn        >  :createdOn "
-                        + "ORDER BY priority DESC NULLS LAST, createdOn ASC "),
+                        + "ORDER BY priority DESC, createdOn ASC "),
         @Query(
                 name = "findIncompleteByUnassignedForRolesAndCreatedOnBefore", language = "JDOQL",
                 value = "SELECT "
@@ -116,14 +116,14 @@ import lombok.Setter;
                         + "   && personAssignedTo == null "
                         + "   && :roleTypes.contains(assignedTo) "
                         + "   && createdOn        <  :createdOn "
-                        + "ORDER BY priority DESC NULLS LAST, createdOn DESC "),
+                        + "ORDER BY priority DESC, createdOn DESC "),
         @Query(
                 name = "findIncompleteByRole", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.task.dom.task.Task "
                         + "WHERE completedBy      == null "
                         + "   && assignedTo == :roleType "
-                        + "ORDER BY priority DESC NULLS LAST, createdOn DESC "),
+                        + "ORDER BY priority DESC, createdOn DESC "),
         @Query(
                 name = "findIncompleteByPersonAssignedToAndCreatedOnAfter", language = "JDOQL",
                 value = "SELECT "
@@ -131,7 +131,7 @@ import lombok.Setter;
                         + "WHERE completedBy      == null "
                         + "   && personAssignedTo == :personAssignedTo "
                         + "   && createdOn        >  :createdOn "
-                        + "ORDER BY priority DESC NULLS LAST, createdOn ASC ")
+                        + "ORDER BY priority DESC, createdOn ASC ")
 })
 @DomainObject(objectType = "task.Task")
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
