@@ -153,7 +153,9 @@
             <cpt:fieldSet name="Completion" id="completion">
                 <cpt:property id="completed"/>
                 <cpt:property id="completedBy"/>
-                <cpt:property id="completedOn"/>
+                <cpt:property id="completedOn">
+                    <cpt:named>completedOn (UTC time)</cpt:named>
+                </cpt:property>
                 <cpt:property id="comment"/>
             </cpt:fieldSet>
         </bs3:col>
