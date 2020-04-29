@@ -2,14 +2,22 @@ package org.estatio.module.financial.dom.bankaccount.verification;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.task.dom.state.AdvancePolicy;
 import org.estatio.module.task.dom.state.NextTransitionSearchStrategy;
 import org.estatio.module.task.dom.state.StateTransitionEvent;
@@ -85,8 +93,37 @@ public enum BankAccountVerificationStateTransitionType
             Arrays.asList(BankAccountVerificationState.AWAITING_PROOF, BankAccountVerificationState.DISCARDED),
             BankAccountVerificationState.NOT_VERIFIED,
             NextTransitionSearchStrategy.firstMatching(),
-            TaskAssignmentStrategy.to(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER),
-            AdvancePolicy.MANUAL),
+            null,
+            AdvancePolicy.MANUAL) {
+        @Override
+        public TaskAssignmentStrategy getTaskAssignmentStrategy() {
+            return (TaskAssignmentStrategy<
+                    BankAccount,
+                    BankAccountVerificationStateTransition,
+                    BankAccountVerificationStateTransitionType,
+                    BankAccountVerificationState>) (bankAccount, serviceRegistry2) -> {
+                if (bankAccount.getAtPath().startsWith("/FRA")) {
+                    final BankAccountVerificationStateTransition.IncomingInvoiceRepository repository =
+                            serviceRegistry2.lookupService(BankAccountVerificationStateTransition.IncomingInvoiceRepository.class);
+                    List<IncomingInvoice> invoices = repository.findByApprovalStateAndBankAccount(IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK, bankAccount);
+
+                    if (!invoices.isEmpty()) {
+                        for (IncomingInvoice invoice : invoices) {
+                            if (!invoice.getType().equals(IncomingInvoiceType.CORPORATE_EXPENSES)) {
+                                return Collections.singletonList(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER);
+                            }
+                        }
+                        return Collections.singletonList(PartyRoleTypeEnum.CORPORATE_MANAGER);
+                    } else {
+                        return Collections.singletonList(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER);
+                    }
+                }
+
+                return Collections.singletonList(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER);
+            };
+        }
+
+    },
     DISCARD(
             Arrays.asList(BankAccountVerificationState.NOT_VERIFIED, BankAccountVerificationState.AWAITING_PROOF),
             BankAccountVerificationState.DISCARDED,
@@ -197,6 +234,7 @@ public enum BankAccountVerificationStateTransitionType
 
         @Inject
         BankAccountVerificationStateTransition.Repository repository;
+
 
     }
 
