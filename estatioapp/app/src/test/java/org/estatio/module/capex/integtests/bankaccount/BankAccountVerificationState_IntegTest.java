@@ -2,6 +2,7 @@ package org.estatio.module.capex.integtests.bankaccount;
 
 import javax.inject.Inject;
 
+import org.estatio.module.task.dom.task.Task;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
@@ -47,6 +48,8 @@ import org.estatio.module.party.dom.role.PartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationState.NOT_VERIFIED;
@@ -130,6 +133,8 @@ public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTest
         assertThat(taskRepository.findIncompleteByRole(typeForTreasurer).size()).isEqualTo(0);
         assertThat(taskRepository.findIncompleteByRole(typeForIncInvoiceManager).size()).isEqualTo(2);
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
+        assertThat(taskRepository.findIncompleteByRole(typeForIncInvoiceManager).get(1).getDescription()).isEqualTo("Proof Updated (NO GOOD)");
+        assertThat(taskRepository.findIncompleteByRole(typeForIncInvoiceManager).get(1).getPriority()).isEqualTo(1);
 
         // and when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache

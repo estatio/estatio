@@ -179,6 +179,10 @@ public abstract class DomainObject_triggerAbstract<
                 currentTaskCommentIfAny, nextTaskDescriptionIfAny);
     }
 
+    protected final ST getPendingTransition() {
+        return stateTransitionService.pendingTransitionOf(getDomainObject(), stateTransitionClass);
+    }
+
     protected Person defaultPersonToAssignNextTo(final IPartyRoleType roleType) {
         if(requiredTransitionType == null) {
             return null;
