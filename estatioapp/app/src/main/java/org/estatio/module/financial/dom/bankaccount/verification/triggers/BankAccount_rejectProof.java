@@ -9,10 +9,9 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
-import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 
@@ -42,6 +41,9 @@ public class BankAccount_rejectProof extends BankAccount_triggerAbstract {
             @Nullable final Person personToAssignNextTo,
             final String reason) {
         final BankAccountVerificationStateTransition transition = trigger(role, personToAssignNextTo, reason, reason);
+        // The returned transition is the last completed transition and therefore has no task.
+        // We would like to ask:
+        // If you have a next transition that is not completed, we would like to the priority of that task
         if (transition.getTask() != null) {
             transition.getTask().setPriority(1);
         }

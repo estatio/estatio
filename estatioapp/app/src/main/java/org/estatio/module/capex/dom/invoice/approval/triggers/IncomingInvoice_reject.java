@@ -59,6 +59,9 @@ public class IncomingInvoice_reject extends IncomingInvoice_triggerAbstract {
         }
 
         final IncomingInvoiceApprovalStateTransition transition = trigger(role, personToAssignNextTo, reason, reason);
+        // The returned transition is the last completed transition and therefore has no task.
+        // We would like to ask:
+        // If you have a next transition that is not completed, we would like to the priority of that task
         if (transition.getTask() != null) {
             transition.getTask().setToHighestPriority();
             transition.getTask().setPriority(1);
