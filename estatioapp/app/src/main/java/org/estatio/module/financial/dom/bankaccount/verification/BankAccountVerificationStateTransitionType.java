@@ -113,7 +113,7 @@ public enum BankAccountVerificationStateTransitionType
                                 return Collections.singletonList(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER);
                             }
                         }
-                        return Collections.singletonList(PartyRoleTypeEnum.CORPORATE_MANAGER);
+                        return Collections.singletonList(PartyRoleTypeEnum.CORPORATE_ADMINISTRATOR);
                     } else {
                         return Collections.singletonList(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER);
                     }

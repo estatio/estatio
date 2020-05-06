@@ -64,10 +64,10 @@ public enum Person_enum
             new IPartyRoleType[] { PartyRoleTypeEnum.OFFICE_ADMINISTRATOR },
             new FixedAssetRoleSpec[] {}),
 
-    // corporate manager
-    KateCorporateManagerFr("KGELMAN", "Kate", "Gelman", null, true, FEMALE, Fr, Fr,
+    // corporate administrator
+    KateCorporateAdministratorFr("KGELMAN", "Kate", "Gelman", null, true, FEMALE, Fr, Fr,
             null, null,
-            new IPartyRoleType[] { PartyRoleTypeEnum.CORPORATE_MANAGER },
+            new IPartyRoleType[] { PartyRoleTypeEnum.CORPORATE_ADMINISTRATOR },
             new FixedAssetRoleSpec[] {}),
 
     // incoming invoice manager, property manager

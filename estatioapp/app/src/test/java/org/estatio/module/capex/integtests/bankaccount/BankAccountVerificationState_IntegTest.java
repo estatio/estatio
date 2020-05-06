@@ -79,7 +79,7 @@ public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTest
                         BankAccount_enum.TopModelFr,
                         Person_enum.BrunoTreasurerFr,
                         Person_enum.BertrandIncomingInvoiceManagerFr,
-                        Person_enum.KateCorporateManagerFr);
+                        Person_enum.KateCorporateAdministratorFr);
             }
         });
     }
@@ -116,9 +116,9 @@ public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTest
         PartyRoleType typeForTreasurer = partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.TREASURER.getKey());
         incomingInvoice.setType(IncomingInvoiceType.CORPORATE_EXPENSES);
         incomingInvoice.setApprovalState(IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK);
-        Person personKateCorporateManager = Person_enum.KateCorporateManagerFr.findUsing(serviceRegistry);
-        PartyRoleType typeForCorporateManager = partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.CORPORATE_MANAGER.getKey());
-        assertThat(taskRepository.findIncompleteByRole(typeForCorporateManager).size()).isEqualTo(0);
+        Person personKateCorporateAdmin = Person_enum.KateCorporateAdministratorFr.findUsing(serviceRegistry);
+        PartyRoleType typeForCorporateAdministrator = partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.CORPORATE_ADMINISTRATOR.getKey());
+        assertThat(taskRepository.findIncompleteByRole(typeForCorporateAdministrator).size()).isEqualTo(0);
 
         // when
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
@@ -128,17 +128,17 @@ public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTest
         // then
         assertBankAccountState(bankAccount, BankAccountVerificationState.AWAITING_PROOF);
         assertThat(taskRepository.findIncompleteByRole(typeForTreasurer).size()).isEqualTo(0);
-        assertThat(taskRepository.findIncompleteByRole(typeForCorporateManager).size()).isEqualTo(1);
+        assertThat(taskRepository.findIncompleteByRole(typeForCorporateAdministrator).size()).isEqualTo(1);
 
         // and when 'resurrecting'
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(personKateCorporateManager.getUsername(), (Runnable) () ->
+        sudoService.sudo(personKateCorporateAdmin.getUsername(), (Runnable) () ->
                 wrap(mixin(BankAccount_proofUpdated.class, bankAccount)).act(PartyRoleTypeEnum.TREASURER.findUsing(partyRoleTypeRepository), null, null));
 
         // then
         assertBankAccountState(bankAccount, BankAccountVerificationState.NOT_VERIFIED);
         assertThat(taskRepository.findIncompleteByRole(typeForTreasurer).size()).isEqualTo(1);
-        assertThat(taskRepository.findIncompleteByRole(typeForCorporateManager).size()).isEqualTo(0);
+        assertThat(taskRepository.findIncompleteByRole(typeForCorporateAdministrator).size()).isEqualTo(0);
     }
 
     @Test
