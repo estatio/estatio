@@ -230,6 +230,7 @@ public class Task implements Comparable<Task>, WithApplicationTenancy {
      */
     @Getter @Setter
     @Column(allowsNull = "true")
+    @PropertyLayout(named = "completedOn (UTC time)")
     private LocalDateTime completedOn;
 
     /**

@@ -108,6 +108,7 @@ public class IncomingInvoiceApprovalStateTransition
 
     @Getter @Setter
     @Column(allowsNull = "true")
+    @PropertyLayout(named = "completedOn (UTC time)")
     private LocalDateTime completedOn;
 
     @Getter @Setter
