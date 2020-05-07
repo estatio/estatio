@@ -2,7 +2,7 @@ package org.estatio.module.capex.integtests.bankaccount;
 
 import javax.inject.Inject;
 
-import org.estatio.module.task.dom.task.Task;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
@@ -80,7 +80,8 @@ public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTest
                         IncomingInvoice_enum.fakeInvoice2Pdf,
                         BankAccount_enum.TopModelFr,
                         Person_enum.BrunoTreasurerFr,
-                        Person_enum.BertrandIncomingInvoiceManagerFr);
+                        Person_enum.BertrandIncomingInvoiceManagerFr,
+                        Person_enum.KateCorporateAdministratorFr);
             }
         });
     }
@@ -108,6 +109,39 @@ public class BankAccountVerificationState_IntegTest extends CapexModuleIntegTest
 
     @Rule
     public TogglzRule togglzRule = TogglzRule.allDisabled(EstatioTogglzFeature.class);
+
+    @Test
+    public void corporate_invoice_update_proof_works() {
+
+        // given
+        Person personBrunoTreasurer = Person_enum.BrunoTreasurerFr.findUsing(serviceRegistry);
+        PartyRoleType typeForTreasurer = partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.TREASURER.getKey());
+        incomingInvoice.setType(IncomingInvoiceType.CORPORATE_EXPENSES);
+        incomingInvoice.setApprovalState(IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK);
+        Person personKateCorporateAdmin = Person_enum.KateCorporateAdministratorFr.findUsing(serviceRegistry);
+        PartyRoleType typeForCorporateAdministrator = partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.CORPORATE_ADMINISTRATOR.getKey());
+        assertThat(taskRepository.findIncompleteByRole(typeForCorporateAdministrator).size()).isEqualTo(0);
+
+        // when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(personBrunoTreasurer.getUsername(), (Runnable) () ->
+                wrap(mixin(BankAccount_rejectProof.class, bankAccount)).act(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository), null, "NO GOOD"));
+
+        // then
+        assertBankAccountState(bankAccount, BankAccountVerificationState.AWAITING_PROOF);
+        assertThat(taskRepository.findIncompleteByRole(typeForTreasurer).size()).isEqualTo(0);
+        assertThat(taskRepository.findIncompleteByRole(typeForCorporateAdministrator).size()).isEqualTo(1);
+
+        // and when 'resurrecting'
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(personKateCorporateAdmin.getUsername(), (Runnable) () ->
+                wrap(mixin(BankAccount_proofUpdated.class, bankAccount)).act(PartyRoleTypeEnum.TREASURER.findUsing(partyRoleTypeRepository), null, null));
+
+        // then
+        assertBankAccountState(bankAccount, BankAccountVerificationState.NOT_VERIFIED);
+        assertThat(taskRepository.findIncompleteByRole(typeForTreasurer).size()).isEqualTo(1);
+        assertThat(taskRepository.findIncompleteByRole(typeForCorporateAdministrator).size()).isEqualTo(0);
+    }
 
     @Test
     public void reject_then_discard_then_update_proof_works_test() {

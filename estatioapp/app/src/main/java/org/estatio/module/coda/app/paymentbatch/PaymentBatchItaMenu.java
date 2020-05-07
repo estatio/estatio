@@ -12,7 +12,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.value.Blob;
 
-import org.estatio.module.application.app.CodaCmpCodeService;
+import org.estatio.module.coda.app.CodaCmpCodeService;
 import org.estatio.module.capex.dom.payment.PaymentBatch;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;

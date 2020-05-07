@@ -237,7 +237,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 if (incomingInvoice.getBuyer() != null && hasPreferredManagerAndDirector(incomingInvoice.getBuyer())) {
                     return Collections.singletonList(PartyRoleTypeEnum.PREFERRED_MANAGER);
                 }
-                if (isItalian(incomingInvoice) && incomingInvoice.getProperty() == null)
+                if (isItalian(incomingInvoice) && incomingInvoice.getProperty() == null && !isInvoiceForIT07(incomingInvoice))
                     return Collections.singletonList(PartyRoleTypeEnum.CORPORATE_MANAGER);
                 // guard since EST-1508 type can be not set
                 if (incomingInvoice.getType() == null)
@@ -791,10 +791,20 @@ public enum IncomingInvoiceApprovalStateTransitionType
     }
 
     static boolean hasGrossAmountAboveThreshold(final IncomingInvoice incomingInvoice) {
+        if (isInvoiceForIT07(incomingInvoice)){
+            return incomingInvoice.getGrossAmount() != null && incomingInvoice.getGrossAmount().compareTo(thresholdIT07) > 0;
+        }
         return incomingInvoice.getGrossAmount() != null && incomingInvoice.getGrossAmount().compareTo(threshold) > 0;
     }
 
+    //TODO: this hack with hardcoded party ref is ugly and brought in because currently we lack a better pattern; ECP-1173 and  ECP-1181
+    static Boolean isInvoiceForIT07(final IncomingInvoice incomingInvoice){
+        return incomingInvoice.getBuyer()!=null && incomingInvoice.getBuyer().getReference().equals("IT07");
+    }
+
     static BigDecimal threshold = new BigDecimal("100000.00");
+
+    static BigDecimal thresholdIT07 = new BigDecimal("150000.00");
 
     static boolean hasPropertyInvoiceManager(final Property property) {
         return !Lists.newArrayList(property.getRoles()).stream()

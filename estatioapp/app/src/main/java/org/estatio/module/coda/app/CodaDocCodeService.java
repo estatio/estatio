@@ -1,4 +1,4 @@
-package org.estatio.module.application.app;
+package org.estatio.module.coda.app;
 
 import java.util.Arrays;
 import java.util.List;
