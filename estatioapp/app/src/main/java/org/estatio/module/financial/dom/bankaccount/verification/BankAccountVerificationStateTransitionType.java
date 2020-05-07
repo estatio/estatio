@@ -97,7 +97,7 @@ public enum BankAccountVerificationStateTransitionType
                     BankAccountVerificationStateTransition,
                     BankAccountVerificationStateTransitionType,
                     BankAccountVerificationState>) (bankAccount, serviceRegistry2) -> {
-                if (bankAccount.getAtPath().startsWith("/FRA")) {
+                if (!bankAccount.getAtPath().startsWith("/ITA")) {
                     final BankAccountVerificationStateTransition.IncomingInvoiceRepository repository =
                             serviceRegistry2.lookupService(BankAccountVerificationStateTransition.IncomingInvoiceRepository.class);
                     List<IncomingInvoice> invoices = repository.findByApprovalStateAndBankAccount(IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK, bankAccount);
