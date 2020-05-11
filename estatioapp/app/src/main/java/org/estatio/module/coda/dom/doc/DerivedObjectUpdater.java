@@ -26,6 +26,7 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
@@ -38,16 +39,17 @@ import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.project.Project;
-import org.estatio.module.task.dom.state.StateTransitionService;
-import org.estatio.module.task.dom.task.Task;
 import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.docflow.dom.DocFlowZipRepository;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
+import org.estatio.module.task.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.task.Task;
 import org.estatio.module.tax.dom.Tax;
 
 import static org.estatio.module.docflow.dom.DocFlowZipService.PAPERCLIP_ROLE_NAME_GENERATED;
@@ -311,7 +313,14 @@ public class DerivedObjectUpdater {
     }
 
     static Charge effectiveChargeOf(final CodaDocLine docLine) {
-        return docLine.isAnalysisAndProForma() ? null : docLine.getExtRefWorkTypeCharge();
+        if (docLine.isAnalysisAndProForma()) return null;
+
+        if (docLine.getAccountCodeEl5Charge()!=null){
+            return docLine.getAccountCodeEl5Charge();
+        } else {
+            return docLine.getExtRefWorkTypeCharge();
+        }
+
     }
 
     static Project effectiveProjectOf(final CodaDocLine docLine) {
@@ -331,15 +340,17 @@ public class DerivedObjectUpdater {
         final BigDecimal grossAmount = Util.add(netAmount, vatAmount);
         final LocalDate dueDate = docLine.getDueDate();
 
-        final Charge charge   = effectiveChargeOf(docLine);
+        final Charge charge = effectiveChargeOf(docLine);
         final Project project = effectiveProjectOf(docLine);
+        final BudgetItem budgetItem = docHead.getIncomingInvoiceType()==IncomingInvoiceType.ITA_RECOVERABLE ? deriveBudgetItem(incomingInvoice.getProperty(), incomingInvoice.getInvoiceDate(),
+                charge) : NULL_BUDGET_ITEM;
 
         final IncomingInvoiceItem item = incomingInvoice.addItemInternal(
                 docLine.getIncomingInvoiceType(),
                 charge,
                 docLine.getDescription(),
                 netAmount, vatAmount, grossAmount, NULL_TAX,
-                dueDate, periodFromDocHead, propertyFromDocHead, project, NULL_BUDGET_ITEM);
+                dueDate, periodFromDocHead, propertyFromDocHead, project, budgetItem);
 
         docLine.setIncomingInvoiceItem(item);
 
@@ -585,9 +596,23 @@ public class DerivedObjectUpdater {
         return bd != null ? bd : BigDecimal.ZERO;
     }
 
+    private Charge deriveChargeFromEl5(final String accountCodeEl5){
+        return chargeRepository.findByReference(accountCodeEl5);
+    }
+
+    private BudgetItem deriveBudgetItem(final Property property, final LocalDate invoiceDate, final Charge charge){
+        if (property==null || charge ==null || invoiceDate==null) return null;
+        return Lists.newArrayList(budgetRepository.findByPropertyAndStartDate(property, invoiceDate.withDayOfMonth(1).withMonthOfYear(1)).getItems()).stream().filter(i->i.getCharge().equals(charge)).findFirst().orElse(null);
+    }
 
     @Inject
     TitleService titleService;
+
+    @Inject
+    BudgetRepository budgetRepository;
+
+    @Inject
+    ChargeRepository chargeRepository;
 
     @Inject
     PaperclipRepository paperclipRepository;

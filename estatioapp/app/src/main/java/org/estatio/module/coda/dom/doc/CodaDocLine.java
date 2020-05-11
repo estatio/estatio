@@ -442,6 +442,12 @@ public class CodaDocLine implements Comparable<CodaDocLine>, HasAtPath {
     @Getter @Setter
     private String accountCodeEl5;
 
+    @Column(allowsNull = "true", name = "accountCodeEl5Charge")
+    @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
+    @PropertyLayout(named = "BudgetItemCharge")
+    @Getter @Setter
+    private Charge accountCodeEl5Charge;
+
     @Column(allowsNull = "false", length = 20)
     @Property(domainEvent = SummaryOnlyPropertyDomainEvent.class)
     @Getter @Setter
