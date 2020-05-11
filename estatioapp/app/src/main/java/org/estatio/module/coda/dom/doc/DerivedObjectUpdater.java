@@ -169,11 +169,15 @@ public class DerivedObjectUpdater {
 
                             chargeInSync = true;
                             invoiceItem.setCharge(chargeIfAny);
+                            // also update budgetItem if applicable
+                            invoiceItem.setBudgetItem(deriveBudgetItem(property, invoiceDate, chargeIfAny));
                         }
                         // case where charge was not present on previous, but is present on this one
                         if(!previousChargeIfAny.isPresent() && chargeIfAny != null && invoiceItem.getCharge()==null){
                             chargeInSync = true;
                             invoiceItem.setCharge(chargeIfAny);
+                            // also update budgetItem if applicable
+                            invoiceItem.setBudgetItem(deriveBudgetItem(property, invoiceDate, chargeIfAny));
                         }
 
                         // only overwrite project if value hasn't been modified in Estatio since originally sync'd
@@ -602,7 +606,7 @@ public class DerivedObjectUpdater {
 
     private BudgetItem deriveBudgetItem(final Property property, final LocalDate invoiceDate, final Charge charge){
         if (property==null || charge ==null || invoiceDate==null) return null;
-        return Lists.newArrayList(budgetRepository.findByPropertyAndStartDate(property, invoiceDate.withDayOfMonth(1).withMonthOfYear(1)).getItems()).stream().filter(i->i.getCharge().equals(charge)).findFirst().orElse(null);
+        return Lists.newArrayList(budgetRepository.findByPropertyAndDate(property, invoiceDate).getItems()).stream().filter(i->i.getCharge().equals(charge)).findFirst().orElse(null);
     }
 
     @Inject
