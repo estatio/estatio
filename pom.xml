@@ -22,7 +22,7 @@ language governing permissions and limitations under the License.
         <groupId>org.incode</groupId>
         <artifactId>incode-parent</artifactId>
         <!-- NB: also update incode-platform.version property below. -->
-        <version>1.17.0.20191014-0757-3407d35a</version>
+        <version>1.17.0.20200506-1627-60d07e27</version>
         <relativePath/>
     </parent>
 
