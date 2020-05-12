@@ -53,6 +53,9 @@
                 <mb3:serviceAction objectType="org.estatio.app.menus.party.PersonMenu" id="findPerson">
                     <cpt:named>Find Person</cpt:named>
                 </mb3:serviceAction>
+                <mb3:serviceAction objectType="org.estatio.app.menus.party.PersonMenu" id="findPersonsByRole">
+                    <cpt:named>Find Persons By Role</cpt:named>
+                </mb3:serviceAction>
                 <mb3:serviceAction objectType="org.estatio.app.menus.party.PersonMenu" id="allPersons">
                     <cpt:named>All Persons</cpt:named>
                 </mb3:serviceAction>

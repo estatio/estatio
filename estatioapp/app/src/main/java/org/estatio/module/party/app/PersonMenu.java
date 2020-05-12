@@ -33,6 +33,7 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.estatio.module.party.dom.role.PartyRoleType;
 import org.incode.module.base.dom.Dflt;
 import org.incode.module.country.dom.impl.Country;
 
@@ -93,6 +94,11 @@ public class PersonMenu {
         return person;
     }
 
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
+    @MemberOrder(sequence = "3")
+    public List<Person> findPersonsByRole(PartyRoleType partyRoleType) {
+        return personRepository.findByRoleType(partyRoleType);
+    }
 
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
