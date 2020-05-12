@@ -26,6 +26,7 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
@@ -606,7 +607,12 @@ public class DerivedObjectUpdater {
 
     private BudgetItem deriveBudgetItem(final Property property, final LocalDate invoiceDate, final Charge charge){
         if (property==null || charge ==null || invoiceDate==null) return null;
-        return Lists.newArrayList(budgetRepository.findByPropertyAndDate(property, invoiceDate).getItems()).stream().filter(i->i.getCharge().equals(charge)).findFirst().orElse(null);
+        final Budget budgetIfAny = budgetRepository.findByPropertyAndDate(property, invoiceDate);
+        if (budgetIfAny==null || budgetIfAny.getItems().size()==0) return null;
+        return Lists.newArrayList(budgetIfAny.getItems())
+                .stream()
+                .filter(i->i.getCharge().equals(charge))
+                .findFirst().orElse(null);
     }
 
     @Inject
