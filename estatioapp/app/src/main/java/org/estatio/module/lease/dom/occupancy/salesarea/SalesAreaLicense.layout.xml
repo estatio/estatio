@@ -15,6 +15,7 @@
                             <row>
                                 <col span="12">
                                     <ns2:fieldSet name="General" id="general">
+                                        <ns2:action id="createNext"/>
                                         <ns2:property id="reference"/>
                                         <ns2:property id="name"/>
                                         <ns2:property id="salesAreaNonFood"/>
@@ -82,13 +83,14 @@
             <ns2:fieldSet name="Dates" id="dates">
                 <ns2:property id="startDate"/>
                 <ns2:property id="endDate">
-                    <ns2:action id="changeDates" position="BELOW"/>
+                    <ns2:action id="changeDates" hidden="EVERYWHERE"/>
                 </ns2:property>
+                <ns2:property id="effectiveEndDate"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Related" id="related">
                 <ns2:property id="next"/>
                 <ns2:property id="previous">
-                    <ns2:action id="changePrevious" position="BELOW"/>
+                    <ns2:action id="changePrevious" hidden="EVERYWHERE"/>
                 </ns2:property>
             </ns2:fieldSet>
         </col>

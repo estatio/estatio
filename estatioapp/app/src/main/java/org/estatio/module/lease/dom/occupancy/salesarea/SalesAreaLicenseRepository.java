@@ -27,6 +27,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.agreement.dom.AgreementRepository;
@@ -56,8 +57,8 @@ public class SalesAreaLicenseRepository extends UdoDomainRepositoryAndFactory<Sa
             final LocalDate endDate,
             final Party tenant,
             final Party landlord,
-            final BigDecimal salesAreaFood,
             final BigDecimal salesAreaNonFood,
+            final BigDecimal salesAreaFood,
             final BigDecimal foodAndBeveragesArea
     ) {
         SalesAreaLicense license = new SalesAreaLicense();
@@ -67,8 +68,8 @@ public class SalesAreaLicenseRepository extends UdoDomainRepositoryAndFactory<Sa
         license.setName(name);
         license.setStartDate(startDate);
         license.setEndDate(endDate);
-        license.setSalesAreaFood(salesAreaFood);
         license.setSalesAreaNonFood(salesAreaNonFood);
+        license.setSalesAreaFood(salesAreaFood);
         license.setFoodAndBeveragesArea(foodAndBeveragesArea);
 
         // app tenancy derived from the tenant
@@ -94,6 +95,18 @@ public class SalesAreaLicenseRepository extends UdoDomainRepositoryAndFactory<Sa
                 SalesAreaLicenseTypeEnum.SALES_AREA_LICENSE), reference);
     }
 
+    public SalesAreaLicense findMostRecentForOccupancy(final Occupancy occupancy) {
+        return findByOccupancy(occupancy).stream().filter(x->x.getNext()==null).findFirst().orElse(null);
+    }
+
+    public List<SalesAreaLicense> findByOccupancy(final Occupancy occupancy) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        SalesAreaLicense.class,
+                        "findByOccupancy",
+                        "occupancy", occupancy));
+    }
+
     @Inject
     protected AgreementTypeRepository agreementTypeRepository;
 
@@ -105,5 +118,4 @@ public class SalesAreaLicenseRepository extends UdoDomainRepositoryAndFactory<Sa
 
     @Inject
     RepositoryService repositoryService;
-
 }

@@ -47,7 +47,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
             ld(2011, 1, 1), ld(2020, 12, 31),
             new OccupancySpec[] {
-                new OccupancySpec("001", "Poison", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), null, null, new BigDecimal("99.50"), null)
+                new OccupancySpec("001", "Poison", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), null, null, null, null)
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE
@@ -57,7 +57,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.MediaXGb,
             ld(2008, 1, 1), ld(2017, 12, 31),
             new OccupancySpec[] {
-                new OccupancySpec("002", "Mediax", NATIONAL, GBR, "ELECTRIC", "ELECTRIC", ld(2008, 1, 1), null, null, new BigDecimal("111.11"), null)
+                new OccupancySpec("002", "Mediax", NATIONAL, GBR, "ELECTRIC", "ELECTRIC", ld(2008, 1, 1), null, new BigDecimal("111.11"), null, null)
             },
             Person_enum.JohnSmithGb,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.CREATE
@@ -128,7 +128,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.TopModelGb,
             ld(2010, 7, 15), ld(2022, 7, 14),
             new OccupancySpec[] {
-                new OccupancySpec("001", "Topmodel", NATIONAL, GBR, "FASHION", "WOMEN", ld(2010, 7, 15), null, null, new BigDecimal("200.25"), null)
+                new OccupancySpec("001", "Topmodel", NATIONAL, GBR, "FASHION", "WOMEN", ld(2010, 7, 15), null, new BigDecimal("200.25"), null, null)
             },
             Person_enum.GinoVannelliGb,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.CREATE
@@ -341,8 +341,8 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
         String activity;
         LocalDate startDate;
         LocalDate endDate;
-        BigDecimal salesAreaFood;
         BigDecimal salesAreaNonFood;
+        BigDecimal salesAreaFood;
         BigDecimal foodAndBeveragesArea;
     }
 
@@ -406,7 +406,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
                                             x.brand, x.brandCoverage,
                                             f.objectFor(x.getCountryOfOrigin_d(), ec),
                                             x.sector, x.activity, x.startDate, x.endDate,
-                                            x.salesAreaFood, x.salesAreaNonFood, x.foodAndBeveragesArea)
+                                            x.salesAreaNonFood, x.salesAreaFood, x.foodAndBeveragesArea)
                                     )
                                     .collect(Collectors.toList()));
                 })

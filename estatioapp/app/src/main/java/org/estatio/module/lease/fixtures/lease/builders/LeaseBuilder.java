@@ -107,8 +107,8 @@ public final class LeaseBuilder
         String activity;
         LocalDate startDate;
         LocalDate endDate;
-        BigDecimal salesAreaFood;
         BigDecimal salesAreaNonFood;
+        BigDecimal salesAreaFood;
         BigDecimal foodAndBeveragesArea;
     }
     @Getter @Setter
@@ -181,7 +181,7 @@ public final class LeaseBuilder
             occupancy.setReportTurnover(Occupancy.OccupancyReportingType.YES);
             if (spec.salesAreaFood!=null || spec.salesAreaNonFood!=null || spec.foodAndBeveragesArea!=null) {
                 wrap(occupancy)
-                        .createSalesAreaLicense(spec.salesAreaFood, spec.salesAreaNonFood, spec.foodAndBeveragesArea);
+                        .createSalesAreaLicense(spec.salesAreaNonFood, spec.salesAreaFood, spec.foodAndBeveragesArea);
             }
             executionContext.addResult(this, occupancy);
         }

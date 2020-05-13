@@ -167,11 +167,6 @@ public class Occupancy
     @Getter @Setter
     private Lease lease;
 
-    @javax.jdo.annotations.Column(name = "salesAreaLicenseId", allowsNull = "true")
-    @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
-    @Getter @Setter
-    private SalesAreaLicense salesAreaLicense;
-
 
     @javax.jdo.annotations.Column(name = "unitId", allowsNull = "false")
     @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
@@ -431,13 +426,37 @@ public class Occupancy
         return this;
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public SalesAreaLicense getCurrentSalesAreaLicense(){
+        return salesAreaLicenseRepository.findMostRecentForOccupancy(this);
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public BigDecimal getSalesAreaNonFood(){
+        return getCurrentSalesAreaLicense() !=null ? getCurrentSalesAreaLicense().getSalesAreaNonFood() : null;
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public BigDecimal getSalesAreaFood(){
+        return getCurrentSalesAreaLicense() !=null ? getCurrentSalesAreaLicense().getSalesAreaFood() : null;
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public BigDecimal getFoodAndBeveragesArea(){
+        return getCurrentSalesAreaLicense() !=null ? getCurrentSalesAreaLicense().getFoodAndBeveragesArea() : null;
+    }
+
     @Action
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public Occupancy createSalesAreaLicense(
             @Nullable
-            final BigDecimal salesAreaFood,
-            @Nullable
             final BigDecimal salesAreaNonFood,
+            @Nullable
+            final BigDecimal salesAreaFood,
             @Nullable
             final BigDecimal foodAndBeveragesArea){
         final SalesAreaLicense salesAreaLicense = salesAreaLicenseRepository.newSalesAreaLicense(
@@ -448,15 +467,47 @@ public class Occupancy
                 getEndDate(),
                 lease.getSecondaryParty(),
                 lease.getPrimaryParty(),
-                salesAreaFood,
                 salesAreaNonFood,
+                salesAreaFood,
                 foodAndBeveragesArea);
-        setSalesAreaLicense(salesAreaLicense);
         return this;
     }
 
-    public String disableCreateSalesAreaLicense(){
-        return getSalesAreaLicense()!=null ? "There is already a license" : null;
+    public boolean hideCreateSalesAreaLicense(){
+        return getCurrentSalesAreaLicense()!=null ? true : false;
+    }
+
+    @Action
+    @ActionLayout(contributed = Contributed.AS_ACTION)
+    public Occupancy createNextSalesAreaLicense(
+            LocalDate startDate,
+            @Nullable
+            final BigDecimal salesAreaNonFood,
+            @Nullable
+            final BigDecimal salesAreaFood,
+            @Nullable
+            final BigDecimal foodAndBeveragesArea){
+        getCurrentSalesAreaLicense().createNext(startDate, salesAreaNonFood, salesAreaFood, foodAndBeveragesArea);
+        return this;
+    }
+
+    public boolean hideCreateNextSalesAreaLicense(){
+        return getCurrentSalesAreaLicense()==null ? true : false;
+    }
+
+    public String validateCreateNextSalesAreaLicense(
+            LocalDate startDate,
+            @Nullable
+            final BigDecimal salesAreaNonFood,
+            @Nullable
+            final BigDecimal salesAreaFood,
+            @Nullable
+            final BigDecimal foodAndBeveragesArea){
+        return getCurrentSalesAreaLicense().validateCreateNext(startDate, salesAreaNonFood, salesAreaFood, foodAndBeveragesArea);
+    }
+
+    public LocalDate default0CreateNextSalesAreaLicense(){
+        return getCurrentSalesAreaLicense().default0CreateNext();
     }
 
     @Inject

@@ -13,11 +13,9 @@
                     <row>
                         <col span="12">
                             <ns2:fieldSet name="General" id="general">
-                                <ns2:action id="createSalesAreaLicense"/>
                                 <ns2:action id="remove"/>
                                 <ns2:property id="lease"/>
                                 <ns2:property id="unit"/>
-                                <ns2:property id="salesAreaLicense"/>
                             </ns2:fieldSet>
                         </col>
                     </row>
@@ -64,6 +62,14 @@
                     <ns2:action id="verify" position="BELOW"/>
                     <ns2:action id="terminate" position="BELOW"/>
                 </ns2:property>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Sales Areas" id="salesareas">
+                <ns2:action id="createSalesAreaLicense"/>
+                <ns2:action id="createNextSalesAreaLicense"/>
+                <ns2:property id="currentSalesAreaLicense" hidden="ALL_TABLES"/>
+                <ns2:property id="salesAreaNonFood" hidden="ALL_TABLES"/>
+                <ns2:property id="salesAreaFood" hidden="ALL_TABLES"/>
+                <ns2:property id="foodAndBeveragesArea" hidden="ALL_TABLES"/>
             </ns2:fieldSet>
         </col>
         <col span="6">
