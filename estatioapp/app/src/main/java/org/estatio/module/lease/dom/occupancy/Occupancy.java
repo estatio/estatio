@@ -18,6 +18,7 @@
  */
 package org.estatio.module.lease.dom.occupancy;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -32,6 +33,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
@@ -55,6 +57,8 @@ import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.occupancy.salesarea.SalesAreaLicense;
+import org.estatio.module.lease.dom.occupancy.salesarea.SalesAreaLicenseRepository;
 import org.estatio.module.lease.dom.occupancy.tags.Activity;
 import org.estatio.module.lease.dom.occupancy.tags.ActivityRepository;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
@@ -162,6 +166,11 @@ public class Occupancy
     @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
     @Getter @Setter
     private Lease lease;
+
+    @javax.jdo.annotations.Column(name = "salesAreaLicenseId", allowsNull = "true")
+    @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
+    @Getter @Setter
+    private SalesAreaLicense salesAreaLicense;
 
 
     @javax.jdo.annotations.Column(name = "unitId", allowsNull = "false")
@@ -422,6 +431,34 @@ public class Occupancy
         return this;
     }
 
+    @Action
+    @ActionLayout(contributed = Contributed.AS_ACTION)
+    public Occupancy createSalesAreaLicense(
+            @Nullable
+            final BigDecimal salesAreaFood,
+            @Nullable
+            final BigDecimal salesAreaNonFood,
+            @Nullable
+            final BigDecimal foodAndBeveragesArea){
+        final SalesAreaLicense salesAreaLicense = salesAreaLicenseRepository.newSalesAreaLicense(
+                this,
+                getLease().getReference(),
+                getLease().getReference().concat("-SAL"),
+                getStartDate(),
+                getEndDate(),
+                lease.getSecondaryParty(),
+                lease.getPrimaryParty(),
+                salesAreaFood,
+                salesAreaNonFood,
+                foodAndBeveragesArea);
+        setSalesAreaLicense(salesAreaLicense);
+        return this;
+    }
+
+    public String disableCreateSalesAreaLicense(){
+        return getSalesAreaLicense()!=null ? "There is already a license" : null;
+    }
+
     @Inject
     BrandRepository brandRepository;
 
@@ -433,4 +470,7 @@ public class Occupancy
 
     @Inject
     UnitSizeRepository unitSizeRepository;
+
+    @Inject
+    SalesAreaLicenseRepository salesAreaLicenseRepository;
 }

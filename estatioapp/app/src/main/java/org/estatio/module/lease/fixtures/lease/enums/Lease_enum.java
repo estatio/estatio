@@ -1,5 +1,6 @@
 package org.estatio.module.lease.fixtures.lease.enums;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -46,7 +47,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
             ld(2011, 1, 1), ld(2020, 12, 31),
             new OccupancySpec[] {
-                new OccupancySpec("001", "Poison", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), null)
+                new OccupancySpec("001", "Poison", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), null, null, new BigDecimal("99.50"), null)
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE
@@ -56,7 +57,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.MediaXGb,
             ld(2008, 1, 1), ld(2017, 12, 31),
             new OccupancySpec[] {
-                new OccupancySpec("002", "Mediax", NATIONAL, GBR, "ELECTRIC", "ELECTRIC", ld(2008, 1, 1), null)
+                new OccupancySpec("002", "Mediax", NATIONAL, GBR, "ELECTRIC", "ELECTRIC", ld(2008, 1, 1), null, null, new BigDecimal("111.11"), null)
             },
             Person_enum.JohnSmithGb,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.CREATE
@@ -66,7 +67,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.MiracleGb,
             ld(2013, 11, 7), ld(2023, 11, 6),
             new OccupancySpec[] {
-                new OccupancySpec("005", "Miracle", NATIONAL, GBR, "FASHION", "ALL", ld(2013, 11, 7), null)
+                new OccupancySpec("005", "Miracle", NATIONAL, GBR, "FASHION", "ALL", ld(2013, 11, 7), null, null, null, null)
             },
             null, // no manager
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
@@ -76,7 +77,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.PoisonGb,
             ld(2011, 1, 1), ld(2020, 12, 31),
             new OccupancySpec[] {
-                new OccupancySpec("003", "Poison", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), null)
+                new OccupancySpec("003", "Poison", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), null, null, null, null)
             },
             Person_enum.JohnSmithGb,
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE
@@ -86,7 +87,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.PoisonGb,
             ld(2011, 1, 1), ld(2020, 12, 31),
             new OccupancySpec[] {
-        new OccupancySpec("010", "Poison", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), null)
+        new OccupancySpec("010", "Poison", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), null, null, null, null)
     },
     Person_enum.JohnSmithGb,
     InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE
@@ -96,7 +97,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.PoisonGb,
             ld(2011, 1, 1), ld(2020, 12, 31),
             new OccupancySpec[] {
-                    new OccupancySpec("011", "Poison", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), null)
+                    new OccupancySpec("011", "Poison", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), null, null, null, null)
             },
             Person_enum.JohnSmithGb,
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE
@@ -117,7 +118,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.PretGb,
             ld(2011, 7, 1), ld(2019, 1, 1),
             new OccupancySpec[] {
-                    new OccupancySpec("006", "Fix", BrandCoverage.REGIONAL, Country_enum.FRA, "FASHION", "ALL", ld(2011, 1, 1), null)
+                    new OccupancySpec("006", "Fix", BrandCoverage.REGIONAL, Country_enum.FRA, "FASHION", "ALL", ld(2011, 1, 1), null, null, null, null)
             },
             Person_enum.GinoVannelliGb,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
@@ -127,7 +128,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.HelloWorldGb, Organisation_enum.TopModelGb,
             ld(2010, 7, 15), ld(2022, 7, 14),
             new OccupancySpec[] {
-                new OccupancySpec("001", "Topmodel", NATIONAL, GBR, "FASHION", "WOMEN", ld(2010, 7, 15), null)
+                new OccupancySpec("001", "Topmodel", NATIONAL, GBR, "FASHION", "WOMEN", ld(2010, 7, 15), null, null, new BigDecimal("200.25"), null)
             },
             Person_enum.GinoVannelliGb,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.CREATE
@@ -137,7 +138,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
             ld(2011, 1, 1), ld(2020, 12, 31),
             new OccupancySpec[] {
-                new OccupancySpec("001", "Poison", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), null)
+                new OccupancySpec("001", "Poison", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), null, null, null, null)
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
@@ -147,7 +148,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.MiracleNl,
             ld(2011, 1, 1), ld(2015, 6, 30),
             new OccupancySpec[] {
-                new OccupancySpec("002", "Miracle", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), ld(2015, 6, 30))
+                new OccupancySpec("002", "Miracle", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), ld(2015, 6, 30), null, null, null)
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
@@ -157,7 +158,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.HelloWorldNl,
             ld(2015, 4, 1), ld(2020, 12, 31),
             new OccupancySpec[] {
-                new OccupancySpec("003", "Hello", INTERNATIONAL, NLD, "IT", "TELECOM", ld(2015, 4, 1), null)
+                new OccupancySpec("003", "Hello", INTERNATIONAL, NLD, "IT", "TELECOM", ld(2015, 4, 1), null, null, null, null)
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
@@ -167,8 +168,8 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.DagoBankNl,
             ld(2011, 1, 1), ld(2015, 6, 30),
             new OccupancySpec[] {
-                new OccupancySpec("004", "Dago Bank", INTERNATIONAL, NLD, "BANK", "LOANS", ld(2011, 1, 1), ld(2015, 6, 30)),
-                new OccupancySpec("007", "Dago Bank", INTERNATIONAL, NLD, "BANK", "LOANS", ld(2011, 1, 1), ld(2015, 6, 30))
+                new OccupancySpec("004", "Dago Bank", INTERNATIONAL, NLD, "BANK", "LOANS", ld(2011, 1, 1), ld(2015, 6, 30), null, null, null),
+                new OccupancySpec("007", "Dago Bank", INTERNATIONAL, NLD, "BANK", "LOANS", ld(2011, 1, 1), ld(2015, 6, 30), null, null, null)
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
@@ -178,7 +179,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.NlBankNl,
             ld(2015, 10, 1), ld(2020, 6, 30),
             new OccupancySpec[] {
-                new OccupancySpec("004", "Nl Bank", INTERNATIONAL, NLD, "BANK", "LOANS", ld(2015, 10, 1), null)
+                new OccupancySpec("004", "Nl Bank", INTERNATIONAL, NLD, "BANK", "LOANS", ld(2015, 10, 1), null, null, null, null)
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
@@ -188,7 +189,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.HyperNl,
             ld(2015, 4, 1), ld(2015, 6, 30),
             new OccupancySpec[] {
-                new OccupancySpec("005", "Nl Hypermarkt", INTERNATIONAL, NLD, "SUPERMARKET", "RETAIL", ld(2015, 4, 1), ld(2015, 6, 30))
+                new OccupancySpec("005", "Nl Hypermarkt", INTERNATIONAL, NLD, "SUPERMARKET", "RETAIL", ld(2015, 4, 1), ld(2015, 6, 30), null, null, null)
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
@@ -198,7 +199,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.DagoBankNl, // tenant looks wrong here...
             ld(2011, 1, 1), ld(2014, 12, 31),
             new OccupancySpec[] {
-                new OccupancySpec( "006", "Dago Bank", INTERNATIONAL, NLD, "BANK", "LOANS", ld(2011, 1, 1), ld(2014, 12, 31))
+                new OccupancySpec( "006", "Dago Bank", INTERNATIONAL, NLD, "BANK", "LOANS", ld(2011, 1, 1), ld(2014, 12, 31), null, null, null)
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.CREATE
@@ -208,7 +209,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.HelloWorldSe, Organisation_enum.PoisonSe,
             ld(2011, 1, 1), ld(2020, 12, 31),
             new OccupancySpec[] {
-                    new OccupancySpec("001", "Poison", INTERNATIONAL, SWE, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), null)
+                    new OccupancySpec("001", "Poison", INTERNATIONAL, SWE, "HEALT&BEAUTY", "PERFUMERIE", ld(2011, 1, 1), null, null, null, null)
             },
             Person_enum.JohnDoeSe,
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE
@@ -218,7 +219,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.HelloWorldSe, Organisation_enum.TopModelSe,
             ld(2010, 7, 15), ld(2022, 7, 14),
             new OccupancySpec[] {
-                    new OccupancySpec("002", "Topmodel", NATIONAL, SWE, "FASHION", "WOMEN", ld(2010, 7, 15), null)
+                    new OccupancySpec("002", "Topmodel", NATIONAL, SWE, "FASHION", "WOMEN", ld(2010, 7, 15), null, null, null, null)
             },
             Person_enum.GinoVannelliSe,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
@@ -228,7 +229,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.HelloWorldSe, Organisation_enum.OmsHyraSe,
             ld(2012, 6, 1), ld(2020, 5, 31),
             new OccupancySpec[] {
-                    new OccupancySpec("003", "Omshyra", NATIONAL, SWE, "RENTALS", "CARS", ld(2012, 6, 1), null)
+                    new OccupancySpec("003", "Omshyra", NATIONAL, SWE, "RENTALS", "CARS", ld(2012, 6, 1), null, null, null, null)
             },
             Person_enum.GinoVannelliSe,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
@@ -238,7 +239,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.HelloWorldSe, Organisation_enum.OmsHyraSe,
             ld(2012, 6, 1), ld(2020, 5, 31),
             new OccupancySpec[] {
-        new OccupancySpec("004", "Omshyra", NATIONAL, SWE, "RENTALS", "CARS", ld(2012, 6, 1), null)
+        new OccupancySpec("004", "Omshyra", NATIONAL, SWE, "RENTALS", "CARS", ld(2012, 6, 1), null, null, null, null)
     },
     Person_enum.GinoVannelliSe,
     InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
@@ -248,7 +249,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.HelloWorldIt, Organisation_enum.TopModelIt,
             ld(2010, 7, 15), ld(2022, 7, 14),
             new OccupancySpec[] {
-                    new OccupancySpec("001", "Topmodel", NATIONAL, ITA, "FASHION", "WOMEN", ld(2010, 7, 15), null)
+                    new OccupancySpec("001", "Topmodel", NATIONAL, ITA, "FASHION", "WOMEN", ld(2010, 7, 15), null, null, null, null)
             },
             Person_enum.RonRondelliIt,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
@@ -257,8 +258,8 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
             ld(2017, 1, 1), ld(2026, 12, 31),
             new OccupancySpec[] {
-                    new OccupancySpec("001", "123", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2005, 10, 28), ld(2017, 4, 16)),
-                    new OccupancySpec("002", "123", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2017, 4, 17), null)
+                    new OccupancySpec("001", "123", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2005, 10, 28), ld(2017, 4, 16), null, null, null),
+                    new OccupancySpec("002", "123", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2017, 4, 17), null, null, null, null)
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
@@ -266,8 +267,8 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
             ld(2014, 6, 1), ld(2024, 5, 31),
             new OccupancySpec[] {
-                    new OccupancySpec("001", "minute", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2014, 6, 1), null),
-                    new OccupancySpec("002", "minute", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2014, 6, 1), null)
+                    new OccupancySpec("001", "minute", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2014, 6, 1), null, null, null, null),
+                    new OccupancySpec("002", "minute", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2014, 6, 1), null, null, null, null)
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
@@ -275,7 +276,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
             ld(2014, 6, 1), ld(2024, 5, 31),
             new OccupancySpec[] {
-                    new OccupancySpec("001", "minute", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2019, 8, 12), null),
+                    new OccupancySpec("001", "minute", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2019, 8, 12), null, null, null, null),
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
@@ -283,7 +284,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
             ld(2011, 1, 16), ld(2021, 1, 15),
             new OccupancySpec[] {
-                    new OccupancySpec("008", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2016, 11, 10), ld(2017,8,31)),
+                    new OccupancySpec("008", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2016, 11, 10), ld(2017,8,31), null, null, null),
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
@@ -291,7 +292,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
             ld(1997, 9, 25), ld(2008, 9, 30),
             new OccupancySpec[] {
-                    new OccupancySpec("009", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(1997, 9, 25), ld(2008,9,30)),
+                    new OccupancySpec("009", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(1997, 9, 25), ld(2008,9,30), null, null, null),
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
@@ -299,7 +300,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
             ld(2008, 9, 22), ld(2013, 12, 31),
             new OccupancySpec[] {
-                    new OccupancySpec("009", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2008, 9, 22), ld(2013,12,31)),
+                    new OccupancySpec("009", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2008, 9, 22), ld(2013,12,31), null, null, null),
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
@@ -307,7 +308,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
             ld(2014, 1, 1), ld(2021, 12, 31),
             new OccupancySpec[] {
-                    new OccupancySpec("009", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2014, 1, 1), ld(2019,1,29)),
+                    new OccupancySpec("009", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2014, 1, 1), ld(2019,1,29), null, null, null),
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
@@ -315,7 +316,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
             ld(2010, 8, 1), ld(2016, 4, 10),
             new OccupancySpec[] {
-                    new OccupancySpec("010", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2010, 8, 1), ld(2016,4,10)),
+                    new OccupancySpec("010", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2010, 8, 1), ld(2016,4,10), null, null, null),
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
@@ -323,7 +324,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
             ld(2016, 4, 11), ld(2022, 6, 30),
             new OccupancySpec[] {
-                    new OccupancySpec("010", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2016, 4, 11), null),
+                    new OccupancySpec("010", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2016, 4, 11), null, null, null, null),
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
@@ -340,6 +341,9 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
         String activity;
         LocalDate startDate;
         LocalDate endDate;
+        BigDecimal salesAreaFood;
+        BigDecimal salesAreaNonFood;
+        BigDecimal foodAndBeveragesArea;
     }
 
     private final String ref;
@@ -401,7 +405,8 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
                                             property.findUnitByReference(unitReferenceFor(x.unitReferenceSuffix)),
                                             x.brand, x.brandCoverage,
                                             f.objectFor(x.getCountryOfOrigin_d(), ec),
-                                            x.sector, x.activity, x.startDate, x.endDate)
+                                            x.sector, x.activity, x.startDate, x.endDate,
+                                            x.salesAreaFood, x.salesAreaNonFood, x.foodAndBeveragesArea)
                                     )
                                     .collect(Collectors.toList()));
                 })

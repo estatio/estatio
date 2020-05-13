@@ -18,6 +18,7 @@
  */
 package org.estatio.module.lease.fixtures.lease.builders;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -106,6 +107,9 @@ public final class LeaseBuilder
         String activity;
         LocalDate startDate;
         LocalDate endDate;
+        BigDecimal salesAreaFood;
+        BigDecimal salesAreaNonFood;
+        BigDecimal foodAndBeveragesArea;
     }
     @Getter @Setter
     List<OccupancySpec> occupancySpecs = Lists.newArrayList();
@@ -175,8 +179,11 @@ public final class LeaseBuilder
             occupancy.setSectorName(spec.sector);
             occupancy.setActivityName(spec.activity);
             occupancy.setReportTurnover(Occupancy.OccupancyReportingType.YES);
+            if (spec.salesAreaFood!=null || spec.salesAreaNonFood!=null || spec.foodAndBeveragesArea!=null) {
+                wrap(occupancy)
+                        .createSalesAreaLicense(spec.salesAreaFood, spec.salesAreaNonFood, spec.foodAndBeveragesArea);
+            }
             executionContext.addResult(this, occupancy);
-
         }
 
         if(invoiceAddressCreationPolicy == InvoiceAddressCreationPolicy.CREATE) {

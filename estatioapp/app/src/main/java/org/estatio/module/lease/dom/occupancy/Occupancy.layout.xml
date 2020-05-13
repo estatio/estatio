@@ -13,9 +13,11 @@
                     <row>
                         <col span="12">
                             <ns2:fieldSet name="General" id="general">
+                                <ns2:action id="createSalesAreaLicense"/>
                                 <ns2:action id="remove"/>
                                 <ns2:property id="lease"/>
                                 <ns2:property id="unit"/>
+                                <ns2:property id="salesAreaLicense"/>
                             </ns2:fieldSet>
                         </col>
                     </row>
