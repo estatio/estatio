@@ -18,6 +18,7 @@
  */
 package org.estatio.module.lease.fixtures.lease.builders;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -50,12 +51,19 @@ import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.lease.dom.AgreementRoleCommunicationChannelTypeEnum;
+import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseType;
 import org.estatio.module.lease.dom.LeaseTypeRepository;
+import org.estatio.module.lease.dom.amendments.Amendment;
+import org.estatio.module.lease.dom.amendments.AmendmentItemForDiscountRepository;
+import org.estatio.module.lease.dom.amendments.AmendmentItemForFrequencyChangeRepository;
+import org.estatio.module.lease.dom.amendments.AmendmentRepository;
+import org.estatio.module.lease.dom.amendments.AmendmentState;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
@@ -109,6 +117,25 @@ public final class LeaseBuilder
     }
     @Getter @Setter
     List<OccupancySpec> occupancySpecs = Lists.newArrayList();
+
+    @AllArgsConstructor
+    @Data
+    public static class AmendmentSpec {
+        @Getter @Setter
+        LocalDate startDate;
+        LocalDate endDate;
+        BigDecimal discountPercentage;
+        LocalDate discountStartDate;
+        LocalDate discountEndDate;
+        List<LeaseItemType> discountAppliesTo;
+        InvoicingFrequency invoicingFrequencyOnLease;
+        InvoicingFrequency newInvoicingFrequency;
+        List<LeaseItemType> frequencyChangeAppliesTo;
+        LocalDate invoicingFrequencyStartDate;
+        LocalDate invoicingFrequencyEndDate;
+    }
+    @Getter @Setter
+    List<AmendmentSpec> amendmentSpecs = Lists.newArrayList();
 
     @Getter @Setter
     Party manager;
@@ -177,6 +204,13 @@ public final class LeaseBuilder
             occupancy.setReportTurnover(Occupancy.OccupancyReportingType.YES);
             executionContext.addResult(this, occupancy);
 
+        }
+        for (final AmendmentSpec spec : amendmentSpecs) {
+            final Amendment amendment = amendmentRepository
+                    .create(lease, AmendmentState.PROPOSED, spec.startDate, spec.endDate);
+            amendmentItemForDiscountRepository.create(amendment, spec.discountPercentage, spec.discountAppliesTo, spec.discountStartDate, spec.discountEndDate);
+            amendmentItemForFrequencyChangeRepository.create(amendment, spec.invoicingFrequencyOnLease, spec.newInvoicingFrequency, spec.frequencyChangeAppliesTo, spec.invoicingFrequencyStartDate, spec.invoicingFrequencyEndDate);
+            executionContext.addResult(this, amendment);
         }
 
         if(invoiceAddressCreationPolicy == InvoiceAddressCreationPolicy.CREATE) {
@@ -267,6 +301,15 @@ public final class LeaseBuilder
 
     @Inject
     CommunicationChannelRepository communicationChannelRepository;
+
+    @Inject
+    AmendmentRepository amendmentRepository;
+
+    @Inject
+    AmendmentItemForFrequencyChangeRepository amendmentItemForFrequencyChangeRepository;
+
+    @Inject
+    AmendmentItemForDiscountRepository amendmentItemForDiscountRepository;
 
 
 

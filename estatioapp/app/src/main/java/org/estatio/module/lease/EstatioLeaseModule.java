@@ -51,6 +51,9 @@ import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemSource;
 import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseType;
+import org.estatio.module.lease.dom.amendments.Amendment;
+import org.estatio.module.lease.dom.amendments.AmendmentItemForDiscount;
+import org.estatio.module.lease.dom.amendments.AmendmentItemForFrequencyChange;
 import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.breaks.EventSourceLinkForBreakOption;
@@ -144,6 +147,10 @@ public final class EstatioLeaseModule extends ModuleAbstract {
                 deleteFrom(Brand.class);
                 deleteFrom(Sector.class);
                 deleteFrom(UnitSize.class);
+
+                deleteFrom(AmendmentItemForDiscount.class);
+                deleteFrom(AmendmentItemForFrequencyChange.class);
+                deleteFrom(Amendment.class);
 
                 deleteFrom(Lease.class);
                 deleteFrom(LeaseType.class);
