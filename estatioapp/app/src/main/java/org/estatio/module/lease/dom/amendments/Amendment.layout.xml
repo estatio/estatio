@@ -19,6 +19,9 @@
                                         <ns2:property id="name"/>
                                         <ns2:property id="lease"/>
                                     </ns2:fieldSet>
+                                    <ns2:fieldSet name="Proposal type" id="proposalType">
+                                        <ns2:property id="proposalType"/>
+                                    </ns2:fieldSet>
                                     <ns2:fieldSet name="State" id="state">
                                         <ns2:property id="state"/>
                                     </ns2:fieldSet>

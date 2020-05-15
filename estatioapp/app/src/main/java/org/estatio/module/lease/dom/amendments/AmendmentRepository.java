@@ -51,8 +51,19 @@ public class AmendmentRepository {
     }
 
     @Programmatic
+    public Amendment findUnique(final Lease lease, final AmendmentProposalType proposalType) {
+        return repositoryService.uniqueMatch(
+                new QueryDefault<>(
+                        Amendment.class,
+                        "findByLeaseAndProposalType",
+                        "lease", lease,
+                        "proposalType", proposalType));
+    }
+
+    @Programmatic
     public Amendment create(
             final Lease lease,
+            final AmendmentProposalType proposalType,
             final AmendmentState state,
             final LocalDate startDate,
             final LocalDate endDate) {
@@ -62,6 +73,7 @@ public class AmendmentRepository {
         amendment.setName(lease.getReference().concat(NAME_SUFFIX));
         amendment.setType(agreementTypeRepository.find(AmendmentAgreementTypeEnum.AMENDMENT));
         amendment.setLease(lease);
+        amendment.setProposalType(proposalType);
         amendment.setState(state);
         amendment.setStartDate(startDate);
         amendment.setEndDate(endDate);
@@ -89,6 +101,4 @@ public class AmendmentRepository {
 
     @Inject
     AgreementRoleTypeRepository agreementRoleTypeRepository;
-
-
 }

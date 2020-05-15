@@ -62,6 +62,7 @@ import org.estatio.module.lease.dom.LeaseTypeRepository;
 import org.estatio.module.lease.dom.amendments.Amendment;
 import org.estatio.module.lease.dom.amendments.AmendmentItemForDiscountRepository;
 import org.estatio.module.lease.dom.amendments.AmendmentItemForFrequencyChangeRepository;
+import org.estatio.module.lease.dom.amendments.AmendmentProposalType;
 import org.estatio.module.lease.dom.amendments.AmendmentRepository;
 import org.estatio.module.lease.dom.amendments.AmendmentState;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -207,7 +208,7 @@ public final class LeaseBuilder
         }
         for (final AmendmentSpec spec : amendmentSpecs) {
             final Amendment amendment = amendmentRepository
-                    .create(lease, AmendmentState.PROPOSED, spec.startDate, spec.endDate);
+                    .create(lease, AmendmentProposalType.DUMMY_TYPE, AmendmentState.PROPOSED, spec.startDate, spec.endDate);
             amendmentItemForDiscountRepository.create(amendment, spec.discountPercentage, spec.discountAppliesTo, spec.discountStartDate, spec.discountEndDate);
             amendmentItemForFrequencyChangeRepository.create(amendment, spec.invoicingFrequencyOnLease, spec.newInvoicingFrequency, spec.frequencyChangeAppliesTo, spec.invoicingFrequencyStartDate, spec.invoicingFrequencyEndDate);
             executionContext.addResult(this, amendment);

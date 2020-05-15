@@ -33,11 +33,11 @@ public class Lease_createAmendment {
             @Nullable
             final BigDecimal discountPercentage,
             @Nullable
+            final List<LeaseItemType> discountAppliesTo,
+            @Nullable
             final LocalDate discountStartDate,
             @Nullable
             final LocalDate discountEndDate,
-            @Nullable
-            final List<LeaseItemType> discountAppliesTo,
             @Nullable
             final InvoicingFrequency invoicingFrequencyOnLease,
             @Nullable
@@ -49,10 +49,20 @@ public class Lease_createAmendment {
             @Nullable
             final LocalDate invoicingFrequencyEndDate
     ) {
-        final Amendment amendment = amendmentRepository.create(lease, AmendmentState.PROPOSED, startDate, endDate);
-        amendmentItemForDiscountRepository.create(amendment, discountPercentage, discountAppliesTo, discountStartDate, discountEndDate);
-        amendmentItemForFrequencyChangeRepository.create(amendment, invoicingFrequencyOnLease, newInvoicingFrequency, frequencyChangeAppliesTo, invoicingFrequencyStartDate, invoicingFrequencyEndDate);
+        // TODO: for the moment we can have just 1 immutable amendment per lease
+        if (amendmentRepository.findByLease(lease).isEmpty()) {
+            final Amendment amendment = amendmentRepository.create(lease, AmendmentProposalType.DUMMY_TYPE, AmendmentState.PROPOSED, startDate, endDate);
+            amendmentItemForDiscountRepository
+                    .create(amendment, discountPercentage, discountAppliesTo, discountStartDate, discountEndDate);
+            amendmentItemForFrequencyChangeRepository
+                    .create(amendment, invoicingFrequencyOnLease, newInvoicingFrequency, frequencyChangeAppliesTo,
+                            invoicingFrequencyStartDate, invoicingFrequencyEndDate);
+        }
         return lease;
+    }
+
+    public String disable$$(){
+        return amendmentRepository.findByLease(lease).isEmpty() ? null : "At the moment we allow 1 amendment per lease";
     }
 
     @Inject

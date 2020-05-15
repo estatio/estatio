@@ -31,6 +31,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.amendments.Amendment;
 import org.estatio.module.lease.dom.amendments.AmendmentAgreementTypeEnum;
+import org.estatio.module.lease.dom.amendments.AmendmentProposalType;
 import org.estatio.module.lease.dom.amendments.AmendmentRepository;
 import org.estatio.module.lease.dom.amendments.AmendmentState;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
@@ -60,7 +61,7 @@ public class AmendmentRepository_IntegTest extends LeaseModuleIntegTestAbstract 
         final AmendmentState state = AmendmentState.PROPOSED;
 
         // when
-        final Amendment amendment = amendmentRepository.create(lease, state, startDate, endDate);
+        final Amendment amendment = amendmentRepository.create(lease, AmendmentProposalType.DUMMY_TYPE, state, startDate, endDate);
 
         // then
         assertThat(amendment.getLease()).isEqualTo(lease);

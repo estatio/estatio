@@ -37,6 +37,7 @@ import org.estatio.module.lease.dom.amendments.AmendmentItemForDiscount;
 import org.estatio.module.lease.dom.amendments.AmendmentItemForDiscountRepository;
 import org.estatio.module.lease.dom.amendments.AmendmentItemForFrequencyChange;
 import org.estatio.module.lease.dom.amendments.AmendmentItemForFrequencyChangeRepository;
+import org.estatio.module.lease.dom.amendments.AmendmentProposalType;
 import org.estatio.module.lease.dom.amendments.AmendmentRepository;
 import org.estatio.module.lease.dom.amendments.AmendmentState;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
@@ -61,7 +62,7 @@ public class AmendmentItemRepositories_IntegTest extends LeaseModuleIntegTestAbs
 
         // given
         final Lease lease = Lease_enum.OxfMediaX002Gb.findUsing(serviceRegistry);
-        final Amendment amendment = amendmentRepository.create(lease, AmendmentState.PROPOSED, null, null);
+        final Amendment amendment = amendmentRepository.create(lease, AmendmentProposalType.DUMMY_TYPE, AmendmentState.PROPOSED, null, null);
         final BigDecimal discountPercentage = new BigDecimal("50.55");
         final LocalDate itemStartDate = new LocalDate(2020, 1, 15);
         final LocalDate itemEndDate = new LocalDate(2020, 3, 31);
@@ -86,7 +87,7 @@ public class AmendmentItemRepositories_IntegTest extends LeaseModuleIntegTestAbs
 
         // given
         final Lease lease = Lease_enum.OxfMediaX002Gb.findUsing(serviceRegistry);
-        final Amendment amendment = amendmentRepository.create(lease, AmendmentState.PROPOSED, null, null);
+        final Amendment amendment = amendmentRepository.create(lease, AmendmentProposalType.DUMMY_TYPE, AmendmentState.PROPOSED, null, null);
         final InvoicingFrequency freqOnLease = InvoicingFrequency.QUARTERLY_IN_ADVANCE;
         final InvoicingFrequency newFreq = InvoicingFrequency.MONTHLY_IN_ADVANCE;
         final LocalDate itemStartDate = new LocalDate(2020, 1, 15);

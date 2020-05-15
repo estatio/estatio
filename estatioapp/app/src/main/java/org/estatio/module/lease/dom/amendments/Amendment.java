@@ -12,6 +12,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
+import javax.jdo.annotations.Unique;
 
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
@@ -44,11 +45,18 @@ import lombok.Setter;
                         + "FROM org.estatio.module.lease.dom.amendments.Amendment "
                         + "WHERE lease == :lease "),
         @Query(
+                name = "findUnique", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.lease.dom.amendments.Amendment "
+                        + "WHERE lease == :lease && "
+                        + "proposalType == :proposalType"),
+        @Query(
                 name = "findByState", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.amendments.Amendment "
                         + "WHERE state == :state ")
 })
+@Unique(name = "Amendment_lease_proposalType_UNQ", members = {"lease", "proposalType"})
 @DomainObject(editing = Editing.DISABLED)
 public class Amendment extends Agreement {
 
@@ -59,6 +67,10 @@ public class Amendment extends Agreement {
     @Column(name = "leaseId", allowsNull = "false")
     @Getter @Setter
     private Lease lease;
+
+    @Column(allowsNull = "false")
+    @Getter @Setter
+    private AmendmentProposalType proposalType;
 
     @Column(allowsNull = "false")
     @Getter @Setter
