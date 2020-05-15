@@ -59,6 +59,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
@@ -95,6 +96,8 @@ import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.invoice.dom.PaymentMethod;
+import org.estatio.module.lease.dom.amendments.Amendment;
+import org.estatio.module.lease.dom.amendments.Lease_amendments;
 import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -1107,6 +1110,10 @@ public class Lease
         for (LeaseItem item : getItems()) {
             item.remove();
         }
+        final Lease_amendments mixin = factoryService.mixin(Lease_amendments.class, this);
+        for (Amendment amendment : mixin.$$()){
+            amendment.remove();
+        }
         remove(this);
     }
 
@@ -1192,6 +1199,8 @@ public class Lease
     private WrapperFactory wrapperFactory;
 
     @Inject MessageService messageService;
+
+    @Inject FactoryService factoryService;
 
 
 

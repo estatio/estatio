@@ -3,6 +3,7 @@ package org.estatio.module.lease.dom.amendments;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.Inheritance;
@@ -15,7 +16,9 @@ import javax.jdo.annotations.Query;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -75,5 +78,12 @@ public class Amendment extends Agreement {
     public ApplicationTenancy getApplicationTenancy() {
         return lease.getApplicationTenancy();
     }
+
+    @Programmatic
+    public void remove(){
+        repositoryService.removeAndFlush(this);
+    }
+
+    @Inject RepositoryService repositoryService;
 
 }
