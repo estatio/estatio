@@ -9,14 +9,14 @@ import org.estatio.module.lease.dom.LeaseItemType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AmendmentItem_Test {
+public class LeaseLeaseAmendmentItem_Test {
 
     @Test
     public void applicableToToString() {
         // given
         final List<LeaseItemType> types = Arrays.asList(LeaseItemType.RENT, LeaseItemType.SERVICE_CHARGE);
         // when, then
-        assertThat(AmendmentItem.applicableToToString(types)).isEqualTo("RENT,SERVICE_CHARGE");
+        assertThat(LeaseAmendmentItem.applicableToToString(types)).isEqualTo("RENT,SERVICE_CHARGE");
     }
 
     @Test
@@ -24,7 +24,7 @@ public class AmendmentItem_Test {
         // given
         final String string = "RENT,SERVICE_CHARGE";
         // when
-        final List<LeaseItemType> leaseItemTypes = AmendmentItem
+        final List<LeaseItemType> leaseItemTypes = LeaseAmendmentItem
                 .applicableToFromString(string);
         // then
         assertThat(leaseItemTypes).hasSize(2);

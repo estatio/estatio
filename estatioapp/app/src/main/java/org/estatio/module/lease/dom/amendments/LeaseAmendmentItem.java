@@ -11,14 +11,12 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
-import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
@@ -43,7 +41,7 @@ import lombok.Setter;
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.VALUE_MAP,
         column = "discriminator",
-        value = "amendments.AmendmentItem"
+        value = "amendments.LeaseAmendmentItem"
 )
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -52,27 +50,21 @@ import lombok.Setter;
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @Queries({
-        @Query(
-                name = "findByAmendmentAndType",
-                value = "SELECT "
-                        + "FROM org.estatio.module.lease.dom.amendments.AmendmentItem "
-                        + "WHERE amendment == :amendment "
-                        + "&& type == :type ")
 })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.dom.lease.LeaseItem"
+        objectType = "org.estatio.module.lease.dom.amendments.LeaseAmendmentItem"
 )
-@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
-public abstract class AmendmentItem extends UdoDomainObject2<AmendmentItem> {
+@DomainObjectLayout()
+public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendmentItem> {
 
-    public AmendmentItem() {
-        super("amendment, type");
+    public LeaseAmendmentItem() {
+        super("leaseAmendment, type");
     }
 
-    @Column(name = "amendmentId", allowsNull = "false")
+    @Column(name = "leaseAmendmentId", allowsNull = "false")
     @Getter @Setter
-    private Amendment amendment;
+    private LeaseAmendment leaseAmendment;
 
     @Column(allowsNull = "false")
     @Getter @Setter
@@ -87,14 +79,14 @@ public abstract class AmendmentItem extends UdoDomainObject2<AmendmentItem> {
     private String applicableTo;
 
     @Action(semantics = SemanticsOf.SAFE)
-    public AmendmentType getType(){
-        return this.getClass().isAssignableFrom(AmendmentItemForFrequencyChange.class) ? AmendmentType.INVOICING_FREQUENCY_CHANGE : AmendmentType.DISCOUNT;
+    public LeaseAmendmentItemType getType(){
+        return this.getClass().isAssignableFrom(LeaseAmendmentItemForFrequencyChange.class) ? LeaseAmendmentItemType.INVOICING_FREQUENCY_CHANGE : LeaseAmendmentItemType.DISCOUNT;
     }
 
     @Override
     @PropertyLayout(hidden = Where.EVERYWHERE)
     public ApplicationTenancy getApplicationTenancy() {
-        return amendment.getApplicationTenancy();
+        return leaseAmendment.getApplicationTenancy();
     }
 
     @Programmatic

@@ -47,7 +47,7 @@ public class LeaseAmendmentManager {
 
     public LeaseAmendmentManager(){}
 
-    public LeaseAmendmentManager(final Property property, final AmendmentProposalType proposal){
+    public LeaseAmendmentManager(final Property property, final LeaseAmendmentType proposal){
         this.property = property;
         this.proposalType = proposal;
     }
@@ -60,7 +60,7 @@ public class LeaseAmendmentManager {
     private Property property;
 
     @Getter
-    private AmendmentProposalType proposalType;
+    private LeaseAmendmentType proposalType;
 
     // INCSUP-535: Because of https://issues.apache.org/jira/browse/ISIS-2358, we use the session to preserve the state of the viewmodel
     public List<LeaseAmendmentImportLine> getLines() {
@@ -91,17 +91,17 @@ public class LeaseAmendmentManager {
                     .collect(Collectors.toList());
             LeaseAmendmentImportLine newLine = new LeaseAmendmentImportLine();
             newLine.setLeaseReference(lease.getReference());
-            newLine.setProposal(proposalType);
+            newLine.setLeaseAmendmentType(proposalType);
             if (!discountCandidates.isEmpty()){
                 newLine.setDiscountPercentage(proposalType.getDiscountPercentage());
                 newLine.setDiscountStartDate(proposalType.getDiscountStartDate());
                 newLine.setDiscountEndDate(proposalType.getDiscountEndDate());
-                newLine.setDiscountApplicableTo(AmendmentItem.applicableToToString(proposalType.getDiscountAppliesTo()));
+                newLine.setDiscountApplicableTo(LeaseAmendmentItem.applicableToToString(proposalType.getDiscountAppliesTo()));
             }
             if (!frequencyChangeCandidates.isEmpty()){
                 newLine.setFrequencyStartDate(proposalType.getFrequencyChangeStartDate());
                 newLine.setFrequencyEndDate(proposalType.getFrequencyChangeEndDate());
-                newLine.setFrequencyApplicableTo(AmendmentItem.applicableToToString(proposalType.getFrequencyChangeAppliesTo()));
+                newLine.setFrequencyApplicableTo(LeaseAmendmentItem.applicableToToString(proposalType.getFrequencyChangeAppliesTo()));
 
                 // TODO: now we pick the invoicing frequency from the first item encountered; .. this is cosmetics only and when we use the amendment proposal for import
                 final InvoicingFrequency freqOnLeaseItem = frequencyChangeCandidates.stream()
@@ -144,8 +144,8 @@ public class LeaseAmendmentManager {
         return this;
     }
 
-    private boolean hasChangingFrequency(final LeaseItem i, final AmendmentProposalType amendmentProposalType){
-        final AmendmentProposalType.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = amendmentProposalType.getFrequencyChanges()
+    private boolean hasChangingFrequency(final LeaseItem i, final LeaseAmendmentType leaseAmendmentType){
+        final LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = leaseAmendmentType.getFrequencyChanges()
                 .stream()
                 .filter(t -> t.x == i.getInvoicingFrequency())
                 .findFirst().orElse(null);

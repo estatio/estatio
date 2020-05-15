@@ -7,7 +7,7 @@
         </col>
     </row>
     <row>
-        <col span="4">
+        <col span="6">
             <row>
                 <col span="12">
                     <tabGroup>
@@ -15,25 +15,12 @@
                             <row>
                                 <col span="12">
                                     <ns2:fieldSet name="General" id="general">
-                                        <ns2:property id="reference"/>
-                                        <ns2:property id="name"/>
-                                        <ns2:property id="lease"/>
+                                        <ns2:property id="leaseAmendment"/>
+                                        <ns2:property id="type"/>
+                                        <ns2:property id="applicableTo"/>
                                     </ns2:fieldSet>
-                                    <ns2:fieldSet name="Proposal type" id="proposalType">
-                                        <ns2:property id="proposalType"/>
-                                    </ns2:fieldSet>
-                                    <ns2:fieldSet name="State" id="state">
-                                        <ns2:property id="state"/>
-                                    </ns2:fieldSet>
-                                </col>
-                            </row>
-                        </tab>
-                        <tab name="Application Tenancy">
-                            <row>
-                                <col span="12">
-                                    <ns2:fieldSet name="Application Level" id="applicationLevel">
-                                        <ns2:property id="applicationTenancy"/>
-                                        <ns2:property id="atPath"/>
+                                    <ns2:fieldSet name="Discount" id="discount">
+                                        <ns2:property id="discountPercentage"/>
                                     </ns2:fieldSet>
                                 </col>
                             </row>
@@ -66,14 +53,6 @@
                     </tabGroup>
                 </col>
             </row>
-            <row>
-                <col span="12">
-                    <ns2:fieldSet name="Parties" id="parties">
-                        <ns2:property id="primaryParty"/>
-                        <ns2:property id="secondaryParty"/>
-                    </ns2:fieldSet>
-                </col>
-            </row>
         </col>
         <col span="3">
             <ns2:fieldSet name="Dates" id="dates">
@@ -82,16 +61,8 @@
                     <ns2:action id="changeDates" position="BELOW"/>
                 </ns2:property>
             </ns2:fieldSet>
-            <ns2:fieldSet name="Related" id="related">
-                <ns2:property id="next"/>
-                <ns2:property id="previous">
-                    <ns2:action id="changePrevious" position="BELOW"/>
-                </ns2:property>
-            </ns2:fieldSet>
         </col>
-        <col span="5" unreferencedCollections="true">
-            <ns2:collection id="items"/>
-            <ns2:collection id="roles"/>
+        <col span="3" unreferencedCollections="true">
         </col>
     </row>
 </grid>

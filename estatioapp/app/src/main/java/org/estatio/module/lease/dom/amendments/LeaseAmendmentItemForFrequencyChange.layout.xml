@@ -15,7 +15,7 @@
                             <row>
                                 <col span="12">
                                     <ns2:fieldSet name="General" id="general">
-                                        <ns2:property id="amendment"/>
+                                        <ns2:property id="leaseAmendment"/>
                                         <ns2:property id="type"/>
                                         <ns2:property id="applicableTo"/>
                                     </ns2:fieldSet>

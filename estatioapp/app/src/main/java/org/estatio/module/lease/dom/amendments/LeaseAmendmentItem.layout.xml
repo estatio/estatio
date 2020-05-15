@@ -9,7 +9,7 @@
     <row>
         <col span="6">
             <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
-                <ns2:property id="amendment"/>
+                <ns2:property id="leaseAmendment"/>
                 <ns2:property id="type"/>
                 <ns2:property id="applicableTo"/>
                 <ns2:property id="startDate"/>

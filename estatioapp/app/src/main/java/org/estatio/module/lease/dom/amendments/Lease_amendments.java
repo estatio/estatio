@@ -23,11 +23,11 @@ public class Lease_amendments {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<Amendment> $$() {
-        return amendmentRepository.findByLease(lease);
+    public List<LeaseAmendment> $$() {
+        return leaseAmendmentRepository.findByLease(lease);
     }
 
     @Inject
-    AmendmentRepository amendmentRepository;
+    LeaseAmendmentRepository leaseAmendmentRepository;
 
 }

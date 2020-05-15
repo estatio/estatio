@@ -1,5 +1,6 @@
 package org.estatio.module.lease.dom.amendments;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -12,33 +13,31 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.LeaseItemType;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
-        repositoryFor = AmendmentItemForFrequencyChange.class
+        repositoryFor = LeaseAmendmentItemForDiscount.class
 )
-public class AmendmentItemForFrequencyChangeRepository {
+public class LeaseAmendmentItemForDiscountRepository {
 
     @Programmatic
-    public List<AmendmentItemForFrequencyChange> listAll() {
-        return repositoryService.allInstances(AmendmentItemForFrequencyChange.class);
+    public List<LeaseAmendmentItemForDiscount> listAll() {
+        return repositoryService.allInstances(LeaseAmendmentItemForDiscount.class);
     }
 
     @Programmatic
-    public AmendmentItemForFrequencyChange create(
-            final Amendment amendment,
-            final InvoicingFrequency invoicingFrequencyOnLease,
-            final InvoicingFrequency amendedInvoicingFrequency,
+    public LeaseAmendmentItemForDiscount create(
+            final LeaseAmendment leaseAmendment,
+            final BigDecimal discountPercentage,
             final List<LeaseItemType> applicableToTypes,
             final LocalDate startDate,
             final LocalDate endDate) {
-        final AmendmentItemForFrequencyChange amendmentItem = new AmendmentItemForFrequencyChange();
-        amendmentItem.setAmendment(amendment);
-        amendmentItem.setInvoicingFrequencyOnLease(invoicingFrequencyOnLease);
-        amendmentItem.setAmendedInvoicingFrequency(amendedInvoicingFrequency);
-        amendmentItem.setApplicableTo(AmendmentItem.applicableToToString(applicableToTypes));
+
+        final LeaseAmendmentItemForDiscount amendmentItem = new LeaseAmendmentItemForDiscount();
+        amendmentItem.setLeaseAmendment(leaseAmendment);
+        amendmentItem.setDiscountPercentage(discountPercentage);
+        amendmentItem.setApplicableTo(LeaseAmendmentItem.applicableToToString(applicableToTypes));
         amendmentItem.setStartDate(startDate);
         amendmentItem.setEndDate(endDate);
         serviceRegistry2.injectServicesInto(amendmentItem);

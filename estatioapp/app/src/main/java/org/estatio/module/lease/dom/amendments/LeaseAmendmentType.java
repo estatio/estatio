@@ -11,7 +11,7 @@ import org.estatio.module.lease.dom.LeaseItemType;
 
 import lombok.Getter;
 
-public enum AmendmentProposalType {
+public enum LeaseAmendmentType {
 
     COVID_FRA(
             new LocalDate(2020,6,1),
@@ -67,7 +67,7 @@ public enum AmendmentProposalType {
     @Getter
     private final LocalDate frequencyChangeEndDate;
 
-    AmendmentProposalType(
+    LeaseAmendmentType(
             final LocalDate amendmentStartDate,
             final BigDecimal discountPercentage,
             final List<LeaseItemType> discountAppliesTo,

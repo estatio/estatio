@@ -37,30 +37,30 @@ import lombok.Setter;
 @Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
 // no @DatastoreIdentity nor @Version, since inherited from supertype
-@Discriminator("org.estatio.module.lease.dom.amendments.Amendment")
+@Discriminator("org.estatio.module.lease.dom.amendments.LeaseAmendment")
 @Queries({
         @Query(
                 name = "findByLease", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.lease.dom.amendments.Amendment "
+                        + "FROM org.estatio.module.lease.dom.amendments.LeaseAmendment "
                         + "WHERE lease == :lease "),
         @Query(
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.lease.dom.amendments.Amendment "
+                        + "FROM org.estatio.module.lease.dom.amendments.LeaseAmendment "
                         + "WHERE lease == :lease && "
-                        + "proposalType == :proposalType"),
+                        + "leaseAmendmentType == :leaseAmendmentType"),
         @Query(
                 name = "findByState", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.lease.dom.amendments.Amendment "
+                        + "FROM org.estatio.module.lease.dom.amendments.LeaseAmendment "
                         + "WHERE state == :state ")
 })
-@Unique(name = "Amendment_lease_proposalType_UNQ", members = {"lease", "proposalType"})
+@Unique(name = "LeaseAmendment_lease_proposalType_UNQ", members = {"lease", "leaseAmendmentType"})
 @DomainObject(editing = Editing.DISABLED)
-public class Amendment extends Agreement {
+public class LeaseAmendment extends Agreement {
 
-    public Amendment() {
+    public LeaseAmendment() {
         super(LeaseAgreementRoleTypeEnum.LANDLORD, LeaseAgreementRoleTypeEnum.TENANT);
     }
 
@@ -70,15 +70,15 @@ public class Amendment extends Agreement {
 
     @Column(allowsNull = "false")
     @Getter @Setter
-    private AmendmentProposalType proposalType;
+    private LeaseAmendmentType leaseAmendmentType;
 
     @Column(allowsNull = "false")
     @Getter @Setter
-    private AmendmentState state;
+    private LeaseAmendmentState state;
 
     @Getter @Setter
-    @Persistent(mappedBy = "amendment", dependentElement = "true")
-    private SortedSet<AmendmentItem> items = new TreeSet<>();
+    @Persistent(mappedBy = "leaseAmendment", dependentElement = "true")
+    private SortedSet<LeaseAmendmentItem> items = new TreeSet<>();
 
     @Override
     @ActionLayout(hidden = Where.EVERYWHERE)

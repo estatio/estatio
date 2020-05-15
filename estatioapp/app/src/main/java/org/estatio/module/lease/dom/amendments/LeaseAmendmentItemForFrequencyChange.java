@@ -1,12 +1,12 @@
 package org.estatio.module.lease.dom.amendments;
 
-import java.math.BigDecimal;
-
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.SemanticsOf;
+
+import org.estatio.module.lease.dom.InvoicingFrequency;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,16 +15,21 @@ import lombok.Setter;
         schema = "dbo" // Isis' ObjectSpecId inferred from @Discriminator
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Discriminator("amendments.AmendmentItemForDiscount")
-public class AmendmentItemForDiscount extends AmendmentItem {
+@javax.jdo.annotations.Discriminator("amendments.LeaseAmendmentItemForFrequencyChange")
+public class LeaseAmendmentItemForFrequencyChange extends LeaseAmendmentItem {
 
-    @Column(allowsNull = "false", scale = 2)
+    @Column(allowsNull = "false")
     @Getter @Setter
-    private BigDecimal discountPercentage;
+    private InvoicingFrequency invoicingFrequencyOnLease;
+
+    @Column(allowsNull = "true")
+    @Getter @Setter
+    private InvoicingFrequency amendedInvoicingFrequency;
 
     @Action(semantics = SemanticsOf.SAFE)
     @Override
-    public AmendmentType getType(){
-        return AmendmentType.DISCOUNT;
+    public LeaseAmendmentItemType getType(){
+        return LeaseAmendmentItemType.INVOICING_FREQUENCY_CHANGE;
     }
+
 }

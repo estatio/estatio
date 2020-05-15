@@ -59,12 +59,12 @@ import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseType;
 import org.estatio.module.lease.dom.LeaseTypeRepository;
-import org.estatio.module.lease.dom.amendments.Amendment;
-import org.estatio.module.lease.dom.amendments.AmendmentItemForDiscountRepository;
-import org.estatio.module.lease.dom.amendments.AmendmentItemForFrequencyChangeRepository;
-import org.estatio.module.lease.dom.amendments.AmendmentProposalType;
-import org.estatio.module.lease.dom.amendments.AmendmentRepository;
-import org.estatio.module.lease.dom.amendments.AmendmentState;
+import org.estatio.module.lease.dom.amendments.LeaseAmendment;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForDiscountRepository;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForFrequencyChangeRepository;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentState;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentType;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
@@ -207,11 +207,13 @@ public final class LeaseBuilder
 
         }
         for (final AmendmentSpec spec : amendmentSpecs) {
-            final Amendment amendment = amendmentRepository
-                    .create(lease, AmendmentProposalType.DUMMY_TYPE, AmendmentState.PROPOSED, spec.startDate, spec.endDate);
-            amendmentItemForDiscountRepository.create(amendment, spec.discountPercentage, spec.discountAppliesTo, spec.discountStartDate, spec.discountEndDate);
-            amendmentItemForFrequencyChangeRepository.create(amendment, spec.invoicingFrequencyOnLease, spec.newInvoicingFrequency, spec.frequencyChangeAppliesTo, spec.invoicingFrequencyStartDate, spec.invoicingFrequencyEndDate);
-            executionContext.addResult(this, amendment);
+            final LeaseAmendment leaseAmendment = leaseAmendmentRepository
+                    .create(lease, LeaseAmendmentType.DUMMY_TYPE, LeaseAmendmentState.PROPOSED, spec.startDate, spec.endDate);
+            leaseAmendmentItemForDiscountRepository
+                    .create(leaseAmendment, spec.discountPercentage, spec.discountAppliesTo, spec.discountStartDate, spec.discountEndDate);
+            leaseAmendmentItemForFrequencyChangeRepository
+                    .create(leaseAmendment, spec.invoicingFrequencyOnLease, spec.newInvoicingFrequency, spec.frequencyChangeAppliesTo, spec.invoicingFrequencyStartDate, spec.invoicingFrequencyEndDate);
+            executionContext.addResult(this, leaseAmendment);
         }
 
         if(invoiceAddressCreationPolicy == InvoiceAddressCreationPolicy.CREATE) {
@@ -304,13 +306,13 @@ public final class LeaseBuilder
     CommunicationChannelRepository communicationChannelRepository;
 
     @Inject
-    AmendmentRepository amendmentRepository;
+    LeaseAmendmentRepository leaseAmendmentRepository;
 
     @Inject
-    AmendmentItemForFrequencyChangeRepository amendmentItemForFrequencyChangeRepository;
+    LeaseAmendmentItemForFrequencyChangeRepository leaseAmendmentItemForFrequencyChangeRepository;
 
     @Inject
-    AmendmentItemForDiscountRepository amendmentItemForDiscountRepository;
+    LeaseAmendmentItemForDiscountRepository leaseAmendmentItemForDiscountRepository;
 
 
 

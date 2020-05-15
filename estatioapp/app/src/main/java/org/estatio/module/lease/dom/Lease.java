@@ -96,7 +96,7 @@ import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.invoice.dom.PaymentMethod;
-import org.estatio.module.lease.dom.amendments.Amendment;
+import org.estatio.module.lease.dom.amendments.LeaseAmendment;
 import org.estatio.module.lease.dom.amendments.Lease_amendments;
 import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
@@ -1111,8 +1111,8 @@ public class Lease
             item.remove();
         }
         final Lease_amendments mixin = factoryService.mixin(Lease_amendments.class, this);
-        for (Amendment amendment : mixin.$$()){
-            amendment.remove();
+        for (LeaseAmendment leaseAmendment : mixin.$$()){
+            leaseAmendment.remove();
         }
         remove(this);
     }

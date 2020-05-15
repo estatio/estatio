@@ -1,6 +1,6 @@
 package org.estatio.module.lease.dom.amendments;
 
-public enum AmendmentState {
+public enum LeaseAmendmentState {
     PROPOSED,
     SIGNED,
     REJECTED_BY_TENANT,

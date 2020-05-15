@@ -21,73 +21,73 @@ import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
-        repositoryFor = Amendment.class
+        repositoryFor = LeaseAmendment.class
 )
-public class AmendmentRepository {
+public class LeaseAmendmentRepository {
 
     final public static String NAME_SUFFIX = "-AMND";
 
     @Programmatic
-    public List<Amendment> listAll() {
-        return repositoryService.allInstances(Amendment.class);
+    public List<LeaseAmendment> listAll() {
+        return repositoryService.allInstances(LeaseAmendment.class);
     }
 
     @Programmatic
-    public List<Amendment> findByLease(final Lease lease) {
+    public List<LeaseAmendment> findByLease(final Lease lease) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
-                        Amendment.class,
+                        LeaseAmendment.class,
                         "findByLease",
                         "lease", lease));
     }
 
     @Programmatic
-    public List<Amendment> findByState(final AmendmentState state) {
+    public List<LeaseAmendment> findByState(final LeaseAmendmentState state) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
-                        Amendment.class,
+                        LeaseAmendment.class,
                         "findByState",
                         "state", state));
     }
 
     @Programmatic
-    public Amendment findUnique(final Lease lease, final AmendmentProposalType proposalType) {
+    public LeaseAmendment findUnique(final Lease lease, final LeaseAmendmentType leaseAmendmentType) {
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
-                        Amendment.class,
-                        "findByLeaseAndProposalType",
+                        LeaseAmendment.class,
+                        "findUnique",
                         "lease", lease,
-                        "proposalType", proposalType));
+                        "leaseAmendmentType", leaseAmendmentType));
     }
 
     @Programmatic
-    public Amendment create(
+    public LeaseAmendment create(
             final Lease lease,
-            final AmendmentProposalType proposalType,
-            final AmendmentState state,
+            final LeaseAmendmentType leaseAmendmentType,
+            final LeaseAmendmentState state,
             final LocalDate startDate,
             final LocalDate endDate) {
 
-        final Amendment amendment = new Amendment();
-        amendment.setReference(lease.getReference());
-        amendment.setName(lease.getReference().concat(NAME_SUFFIX));
-        amendment.setType(agreementTypeRepository.find(AmendmentAgreementTypeEnum.AMENDMENT));
-        amendment.setLease(lease);
-        amendment.setProposalType(proposalType);
-        amendment.setState(state);
-        amendment.setStartDate(startDate);
-        amendment.setEndDate(endDate);
-        serviceRegistry2.injectServicesInto(amendment);
-        repositoryService.persistAndFlush(amendment);
+        final LeaseAmendment leaseAmendment = new LeaseAmendment();
+        leaseAmendment.setReference(lease.getReference());
+        leaseAmendment.setName(lease.getReference().concat(NAME_SUFFIX));
+        leaseAmendment.setType(agreementTypeRepository.find(LeaseAmendmentAgreementTypeEnum.LEASE_AMENDMENT));
+        leaseAmendment.setLease(lease);
+        leaseAmendment.setLeaseAmendmentType(leaseAmendmentType);
+        leaseAmendment.setState(state);
+        leaseAmendment.setStartDate(startDate);
+        leaseAmendment.setEndDate(endDate);
+        serviceRegistry2.injectServicesInto(leaseAmendment);
+        repositoryService.persistAndFlush(leaseAmendment);
 
         final AgreementRoleType artLandlord = agreementRoleTypeRepository
                         .find(LeaseAgreementRoleTypeEnum.LANDLORD);
-        amendment.newRole(artLandlord, lease.getPrimaryParty(), null ,null);
+        leaseAmendment.newRole(artLandlord, lease.getPrimaryParty(), null ,null);
         final AgreementRoleType artTenant = agreementRoleTypeRepository
                 .find(LeaseAgreementRoleTypeEnum.TENANT);
-        amendment.newRole(artTenant, lease.getSecondaryParty(), null ,null);
+        leaseAmendment.newRole(artTenant, lease.getSecondaryParty(), null ,null);
 
-        return amendment;
+        return leaseAmendment;
     }
 
     @Inject

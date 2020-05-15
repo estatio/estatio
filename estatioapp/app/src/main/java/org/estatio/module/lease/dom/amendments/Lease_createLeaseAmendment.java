@@ -16,11 +16,11 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItemType;
 
 @Mixin
-public class Lease_createAmendment {
+public class Lease_createLeaseAmendment {
 
     private final Lease lease;
 
-    public Lease_createAmendment(Lease lease) {
+    public Lease_createLeaseAmendment(Lease lease) {
         this.lease = lease;
     }
 
@@ -50,28 +50,29 @@ public class Lease_createAmendment {
             final LocalDate invoicingFrequencyEndDate
     ) {
         // TODO: for the moment we can have just 1 immutable amendment per lease
-        if (amendmentRepository.findByLease(lease).isEmpty()) {
-            final Amendment amendment = amendmentRepository.create(lease, AmendmentProposalType.DUMMY_TYPE, AmendmentState.PROPOSED, startDate, endDate);
-            amendmentItemForDiscountRepository
-                    .create(amendment, discountPercentage, discountAppliesTo, discountStartDate, discountEndDate);
-            amendmentItemForFrequencyChangeRepository
-                    .create(amendment, invoicingFrequencyOnLease, newInvoicingFrequency, frequencyChangeAppliesTo,
+        if (leaseAmendmentRepository.findByLease(lease).isEmpty()) {
+            final LeaseAmendment leaseAmendment = leaseAmendmentRepository
+                    .create(lease, LeaseAmendmentType.DUMMY_TYPE, LeaseAmendmentState.PROPOSED, startDate, endDate);
+            leaseAmendmentItemForDiscountRepository
+                    .create(leaseAmendment, discountPercentage, discountAppliesTo, discountStartDate, discountEndDate);
+            leaseAmendmentItemForFrequencyChangeRepository
+                    .create(leaseAmendment, invoicingFrequencyOnLease, newInvoicingFrequency, frequencyChangeAppliesTo,
                             invoicingFrequencyStartDate, invoicingFrequencyEndDate);
         }
         return lease;
     }
 
     public String disable$$(){
-        return amendmentRepository.findByLease(lease).isEmpty() ? null : "At the moment we allow 1 amendment per lease";
+        return leaseAmendmentRepository.findByLease(lease).isEmpty() ? null : "At the moment we allow 1 amendment per lease";
     }
 
     @Inject
-    AmendmentRepository amendmentRepository;
+    LeaseAmendmentRepository leaseAmendmentRepository;
 
     @Inject
-    AmendmentItemForDiscountRepository amendmentItemForDiscountRepository;
+    LeaseAmendmentItemForDiscountRepository leaseAmendmentItemForDiscountRepository;
 
     @Inject
-    AmendmentItemForFrequencyChangeRepository amendmentItemForFrequencyChangeRepository;
+    LeaseAmendmentItemForFrequencyChangeRepository leaseAmendmentItemForFrequencyChangeRepository;
 
 }

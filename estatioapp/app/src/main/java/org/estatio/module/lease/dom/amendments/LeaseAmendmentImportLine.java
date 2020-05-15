@@ -37,7 +37,7 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
 
     @Getter @Setter
     @MemberOrder(sequence = "1")
-    private AmendmentProposalType proposal;
+    private LeaseAmendmentType leaseAmendmentType;
 
     @Getter @Setter
     @MemberOrder(sequence = "2")
@@ -104,22 +104,22 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
     public List<Object> importData(final Object previousRow) {
 
         final Lease lease = fetchLease(leaseReference);
-        final Lease_createAmendment mixin = factoryService.mixin(Lease_createAmendment.class, lease);
+        final Lease_createLeaseAmendment mixin = factoryService.mixin(Lease_createLeaseAmendment.class, lease);
         wrapperFactory.wrap(mixin).$$(
                 startDate,
                 endDate,
                 discountPercentage,
-                AmendmentItem.applicableToFromString(discountApplicableTo),
+                LeaseAmendmentItem.applicableToFromString(discountApplicableTo),
                 discountStartDate,
                 discountEndDate,
                 invoicingFrequencyOnLease,
                 amendedInvoicingFrequency,
-                AmendmentItem.applicableToFromString(discountApplicableTo),
+                LeaseAmendmentItem.applicableToFromString(discountApplicableTo),
                 frequencyStartDate,
                 frequencyEndDate
         );
-        final Amendment amendment = amendmentRepository.findUnique(lease, proposal);
-        return Lists.newArrayList(amendment);
+        final LeaseAmendment leaseAmendment = leaseAmendmentRepository.findUnique(lease, leaseAmendmentType);
+        return Lists.newArrayList(leaseAmendment);
     }
 
     private Lease fetchLease(final String leaseReference) {
@@ -138,7 +138,7 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
     FactoryService factoryService;
 
     @Inject
-    AmendmentRepository amendmentRepository;
+    LeaseAmendmentRepository leaseAmendmentRepository;
 
     @Inject
     WrapperFactory wrapperFactory;
