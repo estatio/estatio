@@ -35,9 +35,11 @@ public enum LeaseAmendmentType {
                     LeaseItemType.MARKETING
             ),
             new LocalDate(2020,7,1),
-            new LocalDate(2020,12,31)),
+            new LocalDate(2020,12,31),
+            "CFRA"
+            ),
     DUMMY_TYPE(
-            null, null, null, null, null, null, null, null, null)
+            null, null, null, null, null, null, null, null, null, "DUM")
     ;
 
     @Getter
@@ -67,6 +69,9 @@ public enum LeaseAmendmentType {
     @Getter
     private final LocalDate frequencyChangeEndDate;
 
+    @Getter
+    private String ref_suffix;
+
     LeaseAmendmentType(
             final LocalDate amendmentStartDate,
             final BigDecimal discountPercentage,
@@ -76,7 +81,8 @@ public enum LeaseAmendmentType {
             final List<Tuple<InvoicingFrequency, InvoicingFrequency>> frequencyChanges,
             final List<LeaseItemType> frequencyChangeAppliesTo,
             final LocalDate frequencyChangeStartDate,
-            final LocalDate frequencyChangeEndDate) {
+            final LocalDate frequencyChangeEndDate,
+            final String ref_suffix) {
         this.amendmentStartDate = amendmentStartDate;
         this.discountPercentage = discountPercentage;
         this.discountAppliesTo = discountAppliesTo;
@@ -86,6 +92,7 @@ public enum LeaseAmendmentType {
         this.frequencyChangeAppliesTo = frequencyChangeAppliesTo;
         this.frequencyChangeStartDate = frequencyChangeStartDate;
         this.frequencyChangeEndDate = frequencyChangeEndDate;
+        this.ref_suffix = ref_suffix;
     }
 
     public static class Tuple<X, Y> {

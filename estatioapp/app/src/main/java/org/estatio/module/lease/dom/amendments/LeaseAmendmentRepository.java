@@ -25,8 +25,6 @@ import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 )
 public class LeaseAmendmentRepository {
 
-    final public static String NAME_SUFFIX = "-AMND";
-
     @Programmatic
     public List<LeaseAmendment> listAll() {
         return repositoryService.allInstances(LeaseAmendment.class);
@@ -88,8 +86,8 @@ public class LeaseAmendmentRepository {
             final LocalDate endDate) {
 
         final LeaseAmendment leaseAmendment = new LeaseAmendment();
-        leaseAmendment.setReference(lease.getReference());
-        leaseAmendment.setName(lease.getReference().concat(NAME_SUFFIX));
+        leaseAmendment.setReference(lease.getReference().concat(leaseAmendmentType.getRef_suffix()));
+        leaseAmendment.setName(lease.getReference().concat(leaseAmendmentType.getRef_suffix()));
         leaseAmendment.setType(agreementTypeRepository.find(LeaseAmendmentAgreementTypeEnum.LEASE_AMENDMENT));
         leaseAmendment.setLease(lease);
         leaseAmendment.setLeaseAmendmentType(leaseAmendmentType);

@@ -115,7 +115,7 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
                 discountEndDate,
                 invoicingFrequencyOnLease,
                 amendedInvoicingFrequency,
-                LeaseAmendmentItem.applicableToFromString(discountApplicableTo),
+                LeaseAmendmentItem.applicableToFromString(frequencyApplicableTo),
                 frequencyStartDate,
                 frequencyEndDate
         );

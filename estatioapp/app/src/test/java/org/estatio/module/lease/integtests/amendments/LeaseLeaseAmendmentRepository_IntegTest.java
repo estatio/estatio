@@ -70,8 +70,8 @@ public class LeaseLeaseAmendmentRepository_IntegTest extends LeaseModuleIntegTes
         assertThat(leaseAmendment.getStartDate()).isEqualTo(startDate);
         assertThat(leaseAmendment.getEndDate()).isEqualTo(endDate);
         assertThat(leaseAmendment.getType().getTitle()).isEqualTo(LeaseAmendmentAgreementTypeEnum.LEASE_AMENDMENT.getTitle());
-        assertThat(leaseAmendment.getReference()).isEqualTo(lease.getReference());
-        assertThat(leaseAmendment.getName()).isEqualTo(lease.getReference().concat(LeaseAmendmentRepository.NAME_SUFFIX));
+        assertThat(leaseAmendment.getReference()).isEqualTo(lease.getReference().concat(LeaseAmendmentType.DUMMY_TYPE.getRef_suffix()));
+        assertThat(leaseAmendment.getName()).isEqualTo(lease.getReference().concat(LeaseAmendmentType.DUMMY_TYPE.getRef_suffix()));
         assertThat(leaseAmendment.getAtPath()).isEqualTo(lease.getApplicationTenancyPath());
         assertThat(leaseAmendment.getApplicationTenancy()).isEqualTo(lease.getApplicationTenancy());
         assertThat(leaseAmendment.getRoles()).hasSize(2);

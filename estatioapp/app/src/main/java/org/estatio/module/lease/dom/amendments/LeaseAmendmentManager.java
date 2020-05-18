@@ -47,9 +47,9 @@ public class LeaseAmendmentManager {
 
     public LeaseAmendmentManager(){}
 
-    public LeaseAmendmentManager(final Property property, final LeaseAmendmentType proposal){
+    public LeaseAmendmentManager(final Property property, final LeaseAmendmentType leaseAmendmentType){
         this.property = property;
-        this.proposalType = proposal;
+        this.leaseAmendmentType = leaseAmendmentType;
     }
 
     public String title(){
@@ -60,7 +60,7 @@ public class LeaseAmendmentManager {
     private Property property;
 
     @Getter
-    private LeaseAmendmentType proposalType;
+    private LeaseAmendmentType leaseAmendmentType;
 
     // INCSUP-535: Because of https://issues.apache.org/jira/browse/ISIS-2358, we use the session to preserve the state of the viewmodel
     public List<LeaseAmendmentImportLine> getLines() {
@@ -79,35 +79,35 @@ public class LeaseAmendmentManager {
         List<LeaseAmendmentImportLine> result = new ArrayList<>();
         for (Lease lease : activeLeasesOnAmendmentStartdateForProperty()){
             final List<LeaseItem> discountCandidates = Lists.newArrayList(lease.getItems()).stream()
-                    .filter(i -> proposalType.getDiscountAppliesTo().contains(i.getType()))
-                    .filter(i->i.getEffectiveInterval().overlaps(LocalDateInterval.including(proposalType.getDiscountStartDate(), proposalType
+                    .filter(i -> leaseAmendmentType.getDiscountAppliesTo().contains(i.getType()))
+                    .filter(i->i.getEffectiveInterval().overlaps(LocalDateInterval.including(leaseAmendmentType.getDiscountStartDate(), leaseAmendmentType
                             .getDiscountEndDate())))
                     .collect(Collectors.toList());
             final List<LeaseItem> frequencyChangeCandidates = Lists.newArrayList(lease.getItems()).stream()
-                    .filter(i-> proposalType.getFrequencyChangeAppliesTo().contains(i.getType()))
-                    .filter(i->hasChangingFrequency(i, proposalType))
-                    .filter(i->i.getEffectiveInterval().overlaps(LocalDateInterval.including(proposalType.getFrequencyChangeStartDate(), proposalType
+                    .filter(i-> leaseAmendmentType.getFrequencyChangeAppliesTo().contains(i.getType()))
+                    .filter(i->hasChangingFrequency(i, leaseAmendmentType))
+                    .filter(i->i.getEffectiveInterval().overlaps(LocalDateInterval.including(leaseAmendmentType.getFrequencyChangeStartDate(), leaseAmendmentType
                             .getFrequencyChangeEndDate())))
                     .collect(Collectors.toList());
             LeaseAmendmentImportLine newLine = new LeaseAmendmentImportLine();
             newLine.setLeaseReference(lease.getReference());
-            newLine.setLeaseAmendmentType(proposalType);
+            newLine.setLeaseAmendmentType(leaseAmendmentType);
             if (!discountCandidates.isEmpty()){
-                newLine.setDiscountPercentage(proposalType.getDiscountPercentage());
-                newLine.setDiscountStartDate(proposalType.getDiscountStartDate());
-                newLine.setDiscountEndDate(proposalType.getDiscountEndDate());
-                newLine.setDiscountApplicableTo(LeaseAmendmentItem.applicableToToString(proposalType.getDiscountAppliesTo()));
+                newLine.setDiscountPercentage(leaseAmendmentType.getDiscountPercentage());
+                newLine.setDiscountStartDate(leaseAmendmentType.getDiscountStartDate());
+                newLine.setDiscountEndDate(leaseAmendmentType.getDiscountEndDate());
+                newLine.setDiscountApplicableTo(LeaseAmendmentItem.applicableToToString(leaseAmendmentType.getDiscountAppliesTo()));
             }
             if (!frequencyChangeCandidates.isEmpty()){
-                newLine.setFrequencyStartDate(proposalType.getFrequencyChangeStartDate());
-                newLine.setFrequencyEndDate(proposalType.getFrequencyChangeEndDate());
-                newLine.setFrequencyApplicableTo(LeaseAmendmentItem.applicableToToString(proposalType.getFrequencyChangeAppliesTo()));
+                newLine.setFrequencyStartDate(leaseAmendmentType.getFrequencyChangeStartDate());
+                newLine.setFrequencyEndDate(leaseAmendmentType.getFrequencyChangeEndDate());
+                newLine.setFrequencyApplicableTo(LeaseAmendmentItem.applicableToToString(leaseAmendmentType.getFrequencyChangeAppliesTo()));
 
                 // TODO: now we pick the invoicing frequency from the first item encountered; .. this is cosmetics only and when we use the amendment proposal for import
                 final InvoicingFrequency freqOnLeaseItem = frequencyChangeCandidates.stream()
                         .map(i -> i.getInvoicingFrequency()).findFirst().orElse(null);
                 newLine.setInvoicingFrequencyOnLease(freqOnLeaseItem);
-                final InvoicingFrequency amendedFreq = proposalType.getFrequencyChanges().stream()
+                final InvoicingFrequency amendedFreq = leaseAmendmentType.getFrequencyChanges().stream()
                         .filter(t -> t.x == freqOnLeaseItem).map(t -> t.y).findFirst().orElse(null);
                 newLine.setAmendedInvoicingFrequency(amendedFreq);
             }
@@ -154,7 +154,7 @@ public class LeaseAmendmentManager {
 
     @Programmatic
     public List<Lease> activeLeasesOnAmendmentStartdateForProperty(){
-        return leaseRepository.findByAssetAndActiveOnDate(property, proposalType.getAmendmentStartDate());
+        return leaseRepository.findByAssetAndActiveOnDate(property, leaseAmendmentType.getAmendmentStartDate());
     }
 
     @Inject

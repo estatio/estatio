@@ -125,10 +125,10 @@ public class Lease_closeOldAndOpenNewLeaseItem {
             final InvoicingFrequency oldInvoicingFrequency,
             final InvoicingFrequency invoicingFrequency,
             final boolean removeInvoicesOldItem){
-        if (!startDateNewItem.equals(new LocalDate(2020,4,1))) return "Currently only start date 2020-4-1 supported";
+//        if (!startDateNewItem.equals(new LocalDate(2020,4,1))) return "Currently only start date 2020-4-1 supported";
         if (!Arrays.asList(LeaseItemType.RENT, LeaseItemType.SERVICE_CHARGE, LeaseItemType.SERVICE_CHARGE_INDEXABLE).contains(type)) return "Currently only rent and service charges supported";
-        if (oldInvoicingFrequency!=InvoicingFrequency.QUARTERLY_IN_ADVANCE) return "Currently only old frequency Quarterly In Advance supported";
-        if (invoicingFrequency!=InvoicingFrequency.MONTHLY_IN_ADVANCE) return "Currently only new frequency Monthly In Advance supported";
+//        if (oldInvoicingFrequency!=InvoicingFrequency.QUARTERLY_IN_ADVANCE) return "Currently only old frequency Quarterly In Advance supported";
+//        if (invoicingFrequency!=InvoicingFrequency.MONTHLY_IN_ADVANCE) return "Currently only new frequency Monthly In Advance supported";
         return null;
     }
 

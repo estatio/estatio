@@ -14,6 +14,7 @@ import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.assertj.core.util.Lists;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -26,6 +27,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.lease.dom.LeaseItemType;
@@ -50,11 +53,6 @@ import lombok.Setter;
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @Queries({
-        @javax.jdo.annotations.Query(
-                name = "findByLeaseAmendment", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.lease.dom.amendments.LeaseAmendmentItem "
-                        + "WHERE leaseAmendment == :leaseAmendment")
 })
 @DomainObject(
         editing = Editing.DISABLED,
@@ -83,6 +81,22 @@ public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendment
     @Column(allowsNull = "false")
     private String applicableTo;
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public LeaseAmendmentItem changeApplicableTo(final List<LeaseItemType> leaseItemTypes){
+        setApplicableTo(LeaseAmendmentItem.applicableToToString(leaseItemTypes));
+        return this;
+    }
+
+    public List<LeaseItemType> default0ChangeApplicableTo(){
+        return LeaseAmendmentItem.applicableToFromString(getApplicableTo());
+    }
+
+    public String disableChangeApplicableTo(){
+        final String warning = String.format("Amendment in state of %s cannot be changed", getLeaseAmendment().getState());
+        return getLeaseAmendment().getState()==LeaseAmendmentState.PROPOSED ? null : warning;
+    }
+
+
     @Action(semantics = SemanticsOf.SAFE)
     public LeaseAmendmentItemType getType(){
         return this.getClass().isAssignableFrom(LeaseAmendmentItemForFrequencyChange.class) ? LeaseAmendmentItemType.INVOICING_FREQUENCY_CHANGE : LeaseAmendmentItemType.DISCOUNT;
@@ -108,12 +122,18 @@ public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendment
 
     @Programmatic
     public static List<LeaseItemType> applicableToFromString(final String applicableToString){
+        if (applicableToString==null || applicableToString.isEmpty()) return Lists.emptyList();
         List<LeaseItemType> result = new ArrayList<>();
         final String[] strings = applicableToString.split(",");
         for (String s : strings){
             result.add(LeaseItemType.valueOf(s));
         }
         return result;
+    }
+
+    @Programmatic
+    public LocalDateInterval getInterval() {
+        return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
 }

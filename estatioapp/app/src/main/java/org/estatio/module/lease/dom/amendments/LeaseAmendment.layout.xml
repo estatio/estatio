@@ -15,6 +15,7 @@
                             <row>
                                 <col span="12">
                                     <ns2:fieldSet name="General" id="general">
+                                        <ns2:action id="apply"/>
                                         <ns2:property id="reference"/>
                                         <ns2:property id="name"/>
                                         <ns2:property id="lease"/>

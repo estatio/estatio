@@ -809,7 +809,7 @@ public class LeaseItem
     @Inject
     private ChargeRepository chargeRepository;
 
-    @Inject
+    @Inject public
     LeaseTermRepository leaseTermRepository;
 
     @Inject

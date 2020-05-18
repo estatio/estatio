@@ -1170,7 +1170,7 @@ public class Lease
     // //////////////////////////////////////
 
     @Inject
-    LeaseItemRepository leaseItemRepository;
+    public LeaseItemRepository leaseItemRepository;
 
     @Inject
     OccupancyRepository occupancyRepository;

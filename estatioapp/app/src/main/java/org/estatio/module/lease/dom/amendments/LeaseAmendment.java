@@ -14,10 +14,13 @@ import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
@@ -76,6 +79,12 @@ public class LeaseAmendment extends Agreement {
     @Getter @Setter
     private LeaseAmendmentState state;
 
+    @Action(restrictTo = RestrictTo.PROTOTYPING)
+    public LeaseAmendment changeState(final LeaseAmendmentState state){
+        setState(state);
+        return this;
+    }
+
     @Getter @Setter
     @Persistent(mappedBy = "leaseAmendment", dependentElement = "true")
     private SortedSet<LeaseAmendmentItem> items = new TreeSet<>();
@@ -96,6 +105,20 @@ public class LeaseAmendment extends Agreement {
         repositoryService.removeAndFlush(this);
     }
 
-    @Inject RepositoryService repositoryService;
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public LeaseAmendment apply(){
+        leaseAmendmentService.apply(this);
+        return this;
+    }
+
+    public String disableApply(){
+        return getState()!=LeaseAmendmentState.APPROVED ? "Only approved amendments can be applied" : null;
+    }
+
+    @Inject
+    RepositoryService repositoryService;
+
+    @Inject
+    LeaseAmendmentService leaseAmendmentService;
 
 }
