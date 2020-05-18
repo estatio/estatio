@@ -52,7 +52,7 @@ public class LeaseLeaseAmendmentRepository_IntegTest extends LeaseModuleIntegTes
     }
 
     @Test
-    public void xxx() throws Exception {
+    public void upsert_and_finders_work() throws Exception {
 
         // given
         final Lease lease = Lease_enum.OxfMediaX002Gb.findUsing(serviceRegistry);
@@ -61,8 +61,8 @@ public class LeaseLeaseAmendmentRepository_IntegTest extends LeaseModuleIntegTes
         final LeaseAmendmentState state = LeaseAmendmentState.PROPOSED;
 
         // when
-        final LeaseAmendment leaseAmendment = leaseAmendmentRepository
-                .create(lease, LeaseAmendmentType.DUMMY_TYPE, state, startDate, endDate);
+        LeaseAmendment leaseAmendment = leaseAmendmentRepository
+                .upsert(lease, LeaseAmendmentType.DUMMY_TYPE, state, startDate, endDate);
 
         // then
         assertThat(leaseAmendment.getLease()).isEqualTo(lease);
@@ -89,6 +89,17 @@ public class LeaseLeaseAmendmentRepository_IntegTest extends LeaseModuleIntegTes
         // then
         assertThat(resultForState).hasSize(1);
         assertThat(resultForState.get(0)).isEqualTo(leaseAmendment);
+
+        // and when
+        final LeaseAmendmentState adaptedState = LeaseAmendmentState.REJECTED_BY_TENANT;
+        final LocalDate adaptedStartDate = new LocalDate(2020, 1, 16);
+        final LocalDate adaptedEndDate = new LocalDate(2020, 4, 1);
+        leaseAmendment = leaseAmendmentRepository.upsert(lease, LeaseAmendmentType.DUMMY_TYPE,
+                adaptedState, adaptedStartDate, adaptedEndDate);
+        // then
+        assertThat(leaseAmendment.getState()).isEqualTo(adaptedState);
+        assertThat(leaseAmendment.getStartDate()).isEqualTo(adaptedStartDate);
+        assertThat(leaseAmendment.getEndDate()).isEqualTo(adaptedEndDate);
 
     }
 

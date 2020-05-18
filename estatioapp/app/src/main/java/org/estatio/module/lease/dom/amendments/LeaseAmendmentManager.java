@@ -140,7 +140,7 @@ public class LeaseAmendmentManager {
     }
 
     public LeaseAmendmentManager apply(){
-        // TODO: implement
+        getLines().forEach(l->l.importData());
         return this;
     }
 

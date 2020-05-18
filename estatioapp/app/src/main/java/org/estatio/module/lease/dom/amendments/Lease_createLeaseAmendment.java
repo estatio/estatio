@@ -26,6 +26,7 @@ public class Lease_createLeaseAmendment {
 
     @Action()
     public Lease $$(
+            final LeaseAmendmentType leaseAmendmentType,
             @Nullable
             final LocalDate startDate,
             @Nullable
@@ -49,30 +50,49 @@ public class Lease_createLeaseAmendment {
             @Nullable
             final LocalDate invoicingFrequencyEndDate
     ) {
-        // TODO: for the moment we can have just 1 immutable amendment per lease
-        if (leaseAmendmentRepository.findByLease(lease).isEmpty()) {
+        if (leaseAmendmentRepository.findUnique(lease, leaseAmendmentType)==null) {
             final LeaseAmendment leaseAmendment = leaseAmendmentRepository
-                    .create(lease, LeaseAmendmentType.DUMMY_TYPE, LeaseAmendmentState.PROPOSED, startDate, endDate);
-            leaseAmendmentItemForDiscountRepository
+                    .upsert(lease, leaseAmendmentType, LeaseAmendmentState.PROPOSED, startDate, endDate);
+            leaseAmendmentItemRepository
                     .create(leaseAmendment, discountPercentage, discountAppliesTo, discountStartDate, discountEndDate);
-            leaseAmendmentItemForFrequencyChangeRepository
+            leaseAmendmentItemRepository
                     .create(leaseAmendment, invoicingFrequencyOnLease, newInvoicingFrequency, frequencyChangeAppliesTo,
                             invoicingFrequencyStartDate, invoicingFrequencyEndDate);
         }
         return lease;
     }
 
-    public String disable$$(){
-        return leaseAmendmentRepository.findByLease(lease).isEmpty() ? null : "At the moment we allow 1 amendment per lease";
+    public String validate$$(
+            final LeaseAmendmentType leaseAmendmentType,
+            @Nullable
+            final LocalDate startDate,
+            @Nullable
+            final LocalDate endDate,
+            @Nullable
+            final BigDecimal discountPercentage,
+            @Nullable
+            final List<LeaseItemType> discountAppliesTo,
+            @Nullable
+            final LocalDate discountStartDate,
+            @Nullable
+            final LocalDate discountEndDate,
+            @Nullable
+            final InvoicingFrequency invoicingFrequencyOnLease,
+            @Nullable
+            final InvoicingFrequency newInvoicingFrequency,
+            @Nullable
+            final List<LeaseItemType> frequencyChangeAppliesTo,
+            @Nullable
+            final LocalDate invoicingFrequencyStartDate,
+            @Nullable
+            final LocalDate invoicingFrequencyEndDate){
+        return leaseAmendmentRepository.findUnique(lease, leaseAmendmentType)==null ? null : String.format("There is already an amendment for type %s", leaseAmendmentType);
     }
 
     @Inject
     LeaseAmendmentRepository leaseAmendmentRepository;
 
     @Inject
-    LeaseAmendmentItemForDiscountRepository leaseAmendmentItemForDiscountRepository;
-
-    @Inject
-    LeaseAmendmentItemForFrequencyChangeRepository leaseAmendmentItemForFrequencyChangeRepository;
+    LeaseAmendmentItemRepository leaseAmendmentItemRepository;
 
 }

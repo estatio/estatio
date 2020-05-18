@@ -34,9 +34,8 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.amendments.LeaseAmendment;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForDiscount;
-import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForDiscountRepository;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForFrequencyChange;
-import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForFrequencyChangeRepository;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemRepository;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentType;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentState;
@@ -45,7 +44,7 @@ import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class LeaseLeaseAmendmentItemRepositories_IntegTest extends LeaseModuleIntegTestAbstract {
+public class LeaseLeaseAmendmentItemRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Before
     public void setupData() {
@@ -58,18 +57,18 @@ public class LeaseLeaseAmendmentItemRepositories_IntegTest extends LeaseModuleIn
     }
 
     @Test
-    public void create_discount_item_works() throws Exception {
+    public void upsert_discount_item_works() throws Exception {
 
         // given
         final Lease lease = Lease_enum.OxfMediaX002Gb.findUsing(serviceRegistry);
         final LeaseAmendment leaseAmendment = leaseAmendmentRepository
-                .create(lease, LeaseAmendmentType.DUMMY_TYPE, LeaseAmendmentState.PROPOSED, null, null);
+                .upsert(lease, LeaseAmendmentType.DUMMY_TYPE, LeaseAmendmentState.PROPOSED, null, null);
         final BigDecimal discountPercentage = new BigDecimal("50.55");
         final LocalDate itemStartDate = new LocalDate(2020, 1, 15);
         final LocalDate itemEndDate = new LocalDate(2020, 3, 31);
 
         // when
-        final LeaseAmendmentItemForDiscount amendmentItemForDiscount = leaseAmendmentItemForDiscountRepository.create(
+        LeaseAmendmentItemForDiscount amendmentItemForDiscount = leaseAmendmentItemRepository.upsert(
                 leaseAmendment,
                 discountPercentage,
                 Arrays.asList(LeaseItemType.RENT, LeaseItemType.SERVICE_CHARGE, LeaseItemType.MARKETING),
@@ -82,23 +81,39 @@ public class LeaseLeaseAmendmentItemRepositories_IntegTest extends LeaseModuleIn
         assertThat(amendmentItemForDiscount.getStartDate()).isEqualTo(itemStartDate);
         assertThat(amendmentItemForDiscount.getEndDate()).isEqualTo(itemEndDate);
 
+        // and when
+        final BigDecimal apdaptedDiscountPercentage = new BigDecimal("51.00");
+        final LocalDate adaptedItemStartDate = new LocalDate(2020, 1, 16);
+        final LocalDate adaptedItemEndDate = new LocalDate(2020, 4, 1);
+        amendmentItemForDiscount = leaseAmendmentItemRepository.upsert(
+                leaseAmendment,
+                apdaptedDiscountPercentage,
+                Arrays.asList(LeaseItemType.RENT, LeaseItemType.SERVICE_CHARGE),
+                adaptedItemStartDate, adaptedItemEndDate);
+        // then
+        assertThat(amendmentItemForDiscount.getDiscountPercentage()).isEqualTo(apdaptedDiscountPercentage);
+        assertThat(amendmentItemForDiscount.getApplicableTo()).isEqualTo("RENT,SERVICE_CHARGE");
+        assertThat(amendmentItemForDiscount.getStartDate()).isEqualTo(adaptedItemStartDate);
+        assertThat(amendmentItemForDiscount.getEndDate()).isEqualTo(adaptedItemEndDate);
+
+
     }
 
     @Test
-    public void create_frequency_change_item_works() throws Exception {
+    public void upsert_frequency_change_item_works() throws Exception {
 
         // given
         final Lease lease = Lease_enum.OxfMediaX002Gb.findUsing(serviceRegistry);
         final LeaseAmendment leaseAmendment = leaseAmendmentRepository
-                .create(lease, LeaseAmendmentType.DUMMY_TYPE, LeaseAmendmentState.PROPOSED, null, null);
+                .upsert(lease, LeaseAmendmentType.DUMMY_TYPE, LeaseAmendmentState.PROPOSED, null, null);
         final InvoicingFrequency freqOnLease = InvoicingFrequency.QUARTERLY_IN_ADVANCE;
         final InvoicingFrequency newFreq = InvoicingFrequency.MONTHLY_IN_ADVANCE;
         final LocalDate itemStartDate = new LocalDate(2020, 1, 15);
         final LocalDate itemEndDate = new LocalDate(2020, 3, 31);
 
         // when
-        final LeaseAmendmentItemForFrequencyChange amendmentItemForDiscount = leaseAmendmentItemForFrequencyChangeRepository
-                .create(
+        LeaseAmendmentItemForFrequencyChange itemForFrequencyChange = leaseAmendmentItemRepository
+                .upsert(
                 leaseAmendment,
                 freqOnLease,
                 newFreq,
@@ -106,20 +121,35 @@ public class LeaseLeaseAmendmentItemRepositories_IntegTest extends LeaseModuleIn
                 itemStartDate, itemEndDate);
 
         // then
-        assertThat(amendmentItemForDiscount.getLeaseAmendment()).isEqualTo(leaseAmendment);
-        assertThat(amendmentItemForDiscount.getInvoicingFrequencyOnLease()).isEqualTo(freqOnLease);
-        assertThat(amendmentItemForDiscount.getAmendedInvoicingFrequency()).isEqualTo(newFreq);
-        assertThat(amendmentItemForDiscount.getApplicableTo()).isEqualTo("RENT,SERVICE_CHARGE,MARKETING");
-        assertThat(amendmentItemForDiscount.getStartDate()).isEqualTo(itemStartDate);
-        assertThat(amendmentItemForDiscount.getEndDate()).isEqualTo(itemEndDate);
+        assertThat(itemForFrequencyChange.getLeaseAmendment()).isEqualTo(leaseAmendment);
+        assertThat(itemForFrequencyChange.getInvoicingFrequencyOnLease()).isEqualTo(freqOnLease);
+        assertThat(itemForFrequencyChange.getAmendedInvoicingFrequency()).isEqualTo(newFreq);
+        assertThat(itemForFrequencyChange.getApplicableTo()).isEqualTo("RENT,SERVICE_CHARGE,MARKETING");
+        assertThat(itemForFrequencyChange.getStartDate()).isEqualTo(itemStartDate);
+        assertThat(itemForFrequencyChange.getEndDate()).isEqualTo(itemEndDate);
+
+        // and when
+        final InvoicingFrequency adaptedFreqOnLease = InvoicingFrequency.QUARTERLY_IN_ARREARS;
+        final InvoicingFrequency adaptedNewFreq = InvoicingFrequency.MONTHLY_IN_ARREARS;
+        final LocalDate adaptedItemStartDate = new LocalDate(2020, 1, 16);
+        final LocalDate adaptedItemEndDate = new LocalDate(2020, 4, 1);
+        itemForFrequencyChange = leaseAmendmentItemRepository.upsert(
+                leaseAmendment,
+                adaptedFreqOnLease,
+                adaptedNewFreq,
+                Arrays.asList(LeaseItemType.RENT, LeaseItemType.SERVICE_CHARGE),
+                adaptedItemStartDate, adaptedItemEndDate);
+        // then
+        assertThat(itemForFrequencyChange.getInvoicingFrequencyOnLease()).isEqualTo(adaptedFreqOnLease);
+        assertThat(itemForFrequencyChange.getAmendedInvoicingFrequency()).isEqualTo(adaptedNewFreq);
+        assertThat(itemForFrequencyChange.getApplicableTo()).isEqualTo("RENT,SERVICE_CHARGE");
+        assertThat(itemForFrequencyChange.getStartDate()).isEqualTo(adaptedItemStartDate);
+        assertThat(itemForFrequencyChange.getEndDate()).isEqualTo(adaptedItemEndDate);
 
     }
 
     @Inject LeaseAmendmentRepository leaseAmendmentRepository;
 
     @Inject
-    LeaseAmendmentItemForDiscountRepository leaseAmendmentItemForDiscountRepository;
-
-    @Inject
-    LeaseAmendmentItemForFrequencyChangeRepository leaseAmendmentItemForFrequencyChangeRepository;
+    LeaseAmendmentItemRepository leaseAmendmentItemRepository;
 }

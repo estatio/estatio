@@ -106,6 +106,7 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
         final Lease lease = fetchLease(leaseReference);
         final Lease_createLeaseAmendment mixin = factoryService.mixin(Lease_createLeaseAmendment.class, lease);
         wrapperFactory.wrap(mixin).$$(
+                leaseAmendmentType,
                 startDate,
                 endDate,
                 discountPercentage,

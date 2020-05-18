@@ -60,8 +60,7 @@ import org.estatio.module.lease.dom.LeaseRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseType;
 import org.estatio.module.lease.dom.LeaseTypeRepository;
 import org.estatio.module.lease.dom.amendments.LeaseAmendment;
-import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForDiscountRepository;
-import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForFrequencyChangeRepository;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemRepository;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentState;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentType;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
@@ -209,9 +208,9 @@ public final class LeaseBuilder
         for (final AmendmentSpec spec : amendmentSpecs) {
             final LeaseAmendment leaseAmendment = leaseAmendmentRepository
                     .create(lease, LeaseAmendmentType.DUMMY_TYPE, LeaseAmendmentState.PROPOSED, spec.startDate, spec.endDate);
-            leaseAmendmentItemForDiscountRepository
+            leaseAmendmentItemRepository
                     .create(leaseAmendment, spec.discountPercentage, spec.discountAppliesTo, spec.discountStartDate, spec.discountEndDate);
-            leaseAmendmentItemForFrequencyChangeRepository
+            leaseAmendmentItemRepository
                     .create(leaseAmendment, spec.invoicingFrequencyOnLease, spec.newInvoicingFrequency, spec.frequencyChangeAppliesTo, spec.invoicingFrequencyStartDate, spec.invoicingFrequencyEndDate);
             executionContext.addResult(this, leaseAmendment);
         }
@@ -309,10 +308,7 @@ public final class LeaseBuilder
     LeaseAmendmentRepository leaseAmendmentRepository;
 
     @Inject
-    LeaseAmendmentItemForFrequencyChangeRepository leaseAmendmentItemForFrequencyChangeRepository;
-
-    @Inject
-    LeaseAmendmentItemForDiscountRepository leaseAmendmentItemForDiscountRepository;
+    LeaseAmendmentItemRepository leaseAmendmentItemRepository;
 
 
 

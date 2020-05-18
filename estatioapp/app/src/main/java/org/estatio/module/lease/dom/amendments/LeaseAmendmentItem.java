@@ -50,6 +50,11 @@ import lombok.Setter;
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByLeaseAmendment", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.lease.dom.amendments.LeaseAmendmentItem "
+                        + "WHERE leaseAmendment == :leaseAmendment")
 })
 @DomainObject(
         editing = Editing.DISABLED,

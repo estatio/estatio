@@ -61,6 +61,25 @@ public class LeaseAmendmentRepository {
     }
 
     @Programmatic
+    public LeaseAmendment upsert(
+            final Lease lease,
+            final LeaseAmendmentType leaseAmendmentType,
+            final LeaseAmendmentState state,
+            final LocalDate startDate,
+            final LocalDate endDate
+    ){
+        final LeaseAmendment amendment = findUnique(lease, leaseAmendmentType);
+        if (amendment ==null){
+            return create(lease, leaseAmendmentType, state, startDate, endDate);
+        } else {
+            amendment.setState(state);
+            amendment.setStartDate(startDate);
+            amendment.setEndDate(endDate);
+            return amendment;
+        }
+    }
+
+    @Programmatic
     public LeaseAmendment create(
             final Lease lease,
             final LeaseAmendmentType leaseAmendmentType,
