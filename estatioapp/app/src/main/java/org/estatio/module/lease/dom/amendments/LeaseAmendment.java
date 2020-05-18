@@ -56,7 +56,7 @@ import lombok.Setter;
                         + "FROM org.estatio.module.lease.dom.amendments.LeaseAmendment "
                         + "WHERE state == :state ")
 })
-@Unique(name = "LeaseAmendment_lease_proposalType_UNQ", members = {"lease", "leaseAmendmentType"})
+@Unique(name = "LeaseAmendment_lease_leaseAmendmentType_UNQ", members = {"lease", "leaseAmendmentType"})
 @DomainObject(editing = Editing.DISABLED)
 public class LeaseAmendment extends Agreement {
 
