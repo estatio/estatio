@@ -99,6 +99,7 @@ public class LeaseAmendmentService {
                 item.setEndDate(endDate);
                 final LeaseTermForFixed leaseTerm = (LeaseTermForFixed) item.newTerm(item.getStartDate(), item.getEndDate());
                 // TODO: naive implementation not taking indexation into account
+                // TODO: should apply a verify first
                 final BigDecimal valueForDate = li.valueForDate(startDate);
                 if (valueForDate.abs().compareTo(BigDecimal.ZERO)>0){
                     final BigDecimal discountTermValue = valueForDate

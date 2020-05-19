@@ -36,7 +36,7 @@ public enum LeaseAmendmentType {
             ),
             new LocalDate(2020,7,1),
             new LocalDate(2020,12,31),
-            "CFRA"
+            "A"
             ),
     DUMMY_TYPE(
             null, null, null, null, null, null, null, null, null, "DUM")

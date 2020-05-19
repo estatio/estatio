@@ -507,6 +507,19 @@ public class Lease
     @Getter @Setter
     private SortedSet<LeaseItem> items = new TreeSet<>();
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @CollectionLayout(defaultView = "table", paged = 999)
+    public SortedSet<LeaseItem> getCurrentAndFutureItems(){
+        SortedSet<LeaseItem> result = new TreeSet<>();
+        final List<LeaseItem> activeAndFutureItems = Lists.newArrayList(getItems())
+                .stream()
+                .filter(li -> li.isCurrent() || (li.getStartDate() != null && li.getStartDate()
+                        .isAfter(clockService.now())))
+                .collect(Collectors.toList());
+        result.addAll(activeAndFutureItems);
+        return result;
+    }
+
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public LeaseItem newItem(
             final LeaseItemType type,

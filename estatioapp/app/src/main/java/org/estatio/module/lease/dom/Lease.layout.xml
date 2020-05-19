@@ -57,6 +57,7 @@
                                         <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
                                         <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
                                         <ns2:property id="id"/>
+                                        <ns2:property id="managedIn"/>
                                         <ns2:property id="versionSequence"/>
                                         <ns2:property id="datanucleusId"/>
                                         <ns2:property id="datanucleusVersionLong"/>
@@ -123,11 +124,27 @@
             </ns2:fieldSet>
         </col>
         <col span="6">
-            <ns2:collection id="items">
-                <ns2:action id="approveAllTermsOfThisLease"/>
-                <ns2:action id="changePaymentMethodForAll" />
-                <ns2:action id="newItem"/>
-            </ns2:collection>
+            <tabGroup>
+                <tab name="current and future items">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="currentAndFutureItems">
+                                <ns2:action id="approveAllTermsOfThisLease"/>
+                                <ns2:action id="changePaymentMethodForAll" />
+                                <ns2:action id="newItem"/>
+                            </ns2:collection>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="all items">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="items">
+                            </ns2:collection>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
             <ns2:collection id="roles">
                 <ns2:action id="newRole"/>
             </ns2:collection>
