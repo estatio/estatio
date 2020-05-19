@@ -91,7 +91,7 @@ public class LeaseLeaseAmendmentRepository_IntegTest extends LeaseModuleIntegTes
         assertThat(resultForState.get(0)).isEqualTo(leaseAmendment);
 
         // and when
-        final LeaseAmendmentState adaptedState = LeaseAmendmentState.REJECTED_BY_TENANT;
+        final LeaseAmendmentState adaptedState = LeaseAmendmentState.SIGNED;
         final LocalDate adaptedStartDate = new LocalDate(2020, 1, 16);
         final LocalDate adaptedEndDate = new LocalDate(2020, 4, 1);
         leaseAmendment = leaseAmendmentRepository.upsert(lease, LeaseAmendmentType.DUMMY_TYPE,

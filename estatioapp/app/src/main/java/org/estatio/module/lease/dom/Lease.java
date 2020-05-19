@@ -97,6 +97,7 @@ import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.amendments.LeaseAmendment;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
 import org.estatio.module.lease.dom.amendments.Lease_amendments;
 import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
@@ -268,8 +269,17 @@ public class Lease
     public Property getProperty() {
         if (!getOccupancies().isEmpty()) {
             return getOccupancies().first().getUnit().getProperty();
+        } else {
+            if (getStatus()==LeaseStatus.PREVIEW){
+                final LeaseAmendment amendment = getAmendmentByLeasePreview();
+                return amendment !=null ? amendment.getLease().getProperty() : null;
+            }
         }
         return null;
+    }
+
+    private LeaseAmendment getAmendmentByLeasePreview() {
+        return leaseAmendmentRepository.findByLeasePreview(this);
     }
 
     // //////////////////////////////////////
@@ -1127,6 +1137,10 @@ public class Lease
         for (LeaseAmendment leaseAmendment : mixin.$$()){
             leaseAmendment.remove();
         }
+        final LeaseAmendment amendmentIfAny = getAmendmentByLeasePreview();
+        if (amendmentIfAny!=null){
+            amendmentIfAny.setLeasePreview(null);
+        }
         remove(this);
     }
 
@@ -1214,6 +1228,8 @@ public class Lease
     @Inject MessageService messageService;
 
     @Inject FactoryService factoryService;
+
+    @Inject LeaseAmendmentRepository leaseAmendmentRepository;
 
 
 

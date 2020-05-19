@@ -17,13 +17,19 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
+import org.estatio.module.agreement.dom.role.AgreementRoleType;
+import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.application.app.Lease_closeOldAndOpenNewLeaseItem;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseStatus;
 import org.estatio.module.lease.dom.LeaseTermForFixed;
+import org.estatio.module.party.dom.Party;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -33,7 +39,7 @@ public class LeaseAmendmentService {
 
     public static Logger LOG = LoggerFactory.getLogger(LeaseAmendmentService.class);
 
-    public void apply(final LeaseAmendment leaseAmendment) {
+    public void apply(final LeaseAmendment leaseAmendment, final boolean preview) {
 
         // Only implementation for the moment
         if (leaseAmendment.getLeaseAmendmentType()!=LeaseAmendmentType.COVID_FRA) {
@@ -41,7 +47,7 @@ public class LeaseAmendmentService {
             return;
         }
 
-        final Lease lease = leaseAmendment.getLease();
+        final Lease lease = preview ? leaseAmendment.getLeasePreview() : leaseAmendment.getLease();
         final LeaseAmendmentItemForDiscount leaseAmendmentItemForDiscount = Lists
                 .newArrayList(leaseAmendment.getItems()).stream()
                 .filter(lai -> lai.getClass().isAssignableFrom(LeaseAmendmentItemForDiscount.class))
@@ -138,8 +144,61 @@ public class LeaseAmendmentService {
         }
     }
 
+    public Lease getLeasePreviewFor(final LeaseAmendment amendment){
+        Lease leasePreview = getCopyForPreview(amendment);
+        amendment.setLeasePreview(leasePreview);
+        apply(amendment, true);
+        return leasePreview;
+    }
+
+    Lease getCopyForPreview(final LeaseAmendment amendment){
+        Lease orginalLease = amendment.getLease();
+        LocalDate referenceDate = amendment.getEffectiveStartDate();
+        orginalLease.verifyUntil(amendment.getEffectiveEndDate());
+
+        Lease leaseCopy = new Lease();
+        leaseCopy.setStatus(LeaseStatus.PREVIEW);
+        leaseCopy.setReference(amendment.getReference());
+        leaseCopy.setStartDate(orginalLease.getStartDate());
+        leaseCopy.setTenancyStartDate(orginalLease.getTenancyStartDate());
+        leaseCopy.setEndDate(orginalLease.getEndDate());
+        leaseCopy.setTenancyEndDate(orginalLease.getTenancyEndDate());
+        leaseCopy.setApplicationTenancyPath(orginalLease.getApplicationTenancyPath());
+        leaseCopy.setLeaseType(orginalLease.getLeaseType());
+        leaseCopy.setType(orginalLease.getType());
+        serviceRegistry2.injectServicesInto(leaseCopy);
+        final Party tenant = orginalLease.getSecondaryParty();
+        if (tenant != null) {
+            final AgreementRoleType artLandlord = agreementRoleTypeRepository.find(LeaseAgreementRoleTypeEnum.TENANT);
+            leaseCopy.newRole(artLandlord, tenant, null, null);
+        }
+        final Party landlord = orginalLease.getPrimaryParty();
+        if (landlord != null) {
+            final AgreementRoleType artLandlord = agreementRoleTypeRepository.find(LeaseAgreementRoleTypeEnum.LANDLORD);
+            leaseCopy.newRole(artLandlord, landlord, null, null);
+        }
+        for (LeaseItem item : orginalLease.getItems()){
+            if (referenceDate==null || item.getEffectiveInterval().contains(referenceDate) || (item.getStartDate()!=null && item.getStartDate().isAfter(referenceDate))) {
+                LeaseItem newItem = leaseCopy.newItem(
+                        item.getType(),
+                        item.getInvoicedBy(),
+                        item.getCharge(),
+                        item.getInvoicingFrequency(),
+                        item.getPaymentMethod(),
+                        item.getStartDate()
+                );
+                item.copyTerms(referenceDate, newItem);
+            }
+        }
+        return leaseCopy;
+    }
+
     @Inject MessageService messageService;
 
     @Inject FactoryService factoryService;
+
+    @Inject ServiceRegistry2 serviceRegistry2;
+
+    @Inject AgreementRoleTypeRepository agreementRoleTypeRepository;
 
 }

@@ -1,5 +1,6 @@
 package org.estatio.module.lease.dom.amendments;
 
+import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -13,6 +14,10 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
+
+import com.google.common.collect.Lists;
+
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -54,6 +59,11 @@ import lombok.Setter;
                         + "WHERE lease == :lease && "
                         + "leaseAmendmentType == :leaseAmendmentType"),
         @Query(
+                name = "findByLeasePreview", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.lease.dom.amendments.LeaseAmendment "
+                        + "WHERE leasePreview == :leasePreview "),
+        @Query(
                 name = "findByState", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.amendments.LeaseAmendment "
@@ -85,6 +95,10 @@ public class LeaseAmendment extends Agreement {
         return this;
     }
 
+    @Column(name = "leasePreviewId", allowsNull = "true")
+    @Getter @Setter
+    private Lease leasePreview;
+
     @Getter @Setter
     @Persistent(mappedBy = "leaseAmendment", dependentElement = "true")
     private SortedSet<LeaseAmendmentItem> items = new TreeSet<>();
@@ -107,12 +121,49 @@ public class LeaseAmendment extends Agreement {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public LeaseAmendment apply(){
-        leaseAmendmentService.apply(this);
+        leaseAmendmentService.apply(this, false);
         return this;
     }
 
     public String disableApply(){
-        return getState()!=LeaseAmendmentState.APPROVED ? "Only approved amendments can be applied" : null;
+        return getState()!=LeaseAmendmentState.SIGNED ? "Only signed amendments can be applied" : null;
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public LeaseAmendment createLeasePreview(){
+        leaseAmendmentService.getLeasePreviewFor(this);
+        leaseAmendmentService.apply(this, true);
+        return this;
+    }
+
+    public String disableCreateLeasePreview(){
+        return getLeasePreview()!=null ? "There is already a lease preview. We support 1 preview at the moment." : null;
+    }
+
+    @Programmatic
+    public LocalDate getEffectiveStartDate(){
+        final Optional<LocalDate> min = Lists.newArrayList(getItems()).stream()
+                .map(ai -> ai.getStartDate())
+                .min(LocalDate::compareTo);
+        if (min.isPresent()) {
+            return min.get();
+        } else {
+            // SHOULD BE IMPOSSIBLE
+            return null;
+        }
+    }
+
+    @Programmatic
+    public LocalDate getEffectiveEndDate(){
+        final Optional<LocalDate> max = Lists.newArrayList(getItems()).stream()
+                .map(ai -> ai.getEndDate())
+                .max(LocalDate::compareTo);
+        if (max.isPresent()) {
+            return max.get();
+        } else {
+            // SHOULD BE IMPOSSIBLE
+            return null;
+        }
     }
 
     @Inject

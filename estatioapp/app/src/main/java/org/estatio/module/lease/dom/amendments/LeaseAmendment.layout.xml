@@ -20,6 +20,9 @@
                                         <ns2:property id="name"/>
                                         <ns2:property id="lease"/>
                                     </ns2:fieldSet>
+                                    <ns2:fieldSet name="Preview" id="preview">
+                                        <ns2:property id="leasePreview"/>
+                                    </ns2:fieldSet>
                                     <ns2:fieldSet name="Amendment type" id="leaseAmendmentType">
                                         <ns2:property id="leaseAmendmentType"/>
                                     </ns2:fieldSet>

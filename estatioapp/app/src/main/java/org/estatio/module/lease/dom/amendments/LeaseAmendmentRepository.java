@@ -58,6 +58,15 @@ public class LeaseAmendmentRepository {
                         "leaseAmendmentType", leaseAmendmentType));
     }
 
+    public LeaseAmendment findByLeasePreview(final Lease leasePreview) {
+        // Unique match since we allow max 1 preview per amendment
+        return repositoryService.uniqueMatch(
+                new QueryDefault<>(
+                        LeaseAmendment.class,
+                        "findByLeasePreview",
+                        "leasePreview", leasePreview));
+    }
+
     @Programmatic
     public LeaseAmendment upsert(
             final Lease lease,
