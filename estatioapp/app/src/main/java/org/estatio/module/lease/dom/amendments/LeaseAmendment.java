@@ -1,8 +1,10 @@
 package org.estatio.module.lease.dom.amendments;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -30,6 +32,8 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.agreement.dom.Agreement;
 import org.estatio.module.lease.dom.Lease;
@@ -132,7 +136,6 @@ public class LeaseAmendment extends Agreement {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public LeaseAmendment createLeasePreview(){
         leaseAmendmentService.getLeasePreviewFor(this);
-        leaseAmendmentService.apply(this, true);
         return this;
     }
 
@@ -164,6 +167,16 @@ public class LeaseAmendment extends Agreement {
             // SHOULD BE IMPOSSIBLE
             return null;
         }
+    }
+
+    @Programmatic
+    public LocalDateInterval getEffectiveInterval(){
+        return LocalDateInterval.including(getEffectiveStartDate(), getEffectiveEndDate());
+    }
+
+    @Programmatic
+    public List<LeaseAmendmentItem> findItemsOfType(final LeaseAmendmentItemType type){
+        return Lists.newArrayList(getItems()).stream().filter(lai->lai.getType()==type).collect(Collectors.toList());
     }
 
     @Inject

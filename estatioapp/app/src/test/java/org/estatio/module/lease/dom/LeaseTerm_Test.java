@@ -410,6 +410,8 @@ public class LeaseTerm_Test {
                 public BigDecimal valueForDate(LocalDate dueDate) {
                     return null;
                 }
+
+                @Override public void negateAmountsAndApplyPercentage(final BigDecimal discountPercentage) { }
             };
             assertThat(leaseTerm.getChangeDates()).isNotNull();
         }
@@ -435,6 +437,8 @@ public class LeaseTerm_Test {
             public BigDecimal valueForDate(LocalDate dueDate) {
                 return null;
             }
+
+            @Override public void negateAmountsAndApplyPercentage(final BigDecimal discountPercentage) { }
         }
     }
 

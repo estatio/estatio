@@ -170,4 +170,18 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
         t.setShortfall(getShortfall());
     }
 
+    @Override
+    @Programmatic
+    public void negateAmountsAndApplyPercentage(final BigDecimal discountPercentage){
+        if (getBudgetedValue()!=null) {
+            setBudgetedValue(applyPercentage(getBudgetedValue(), discountPercentage).negate());
+        }
+        if (getAuditedValue()!=null){
+            setAuditedValue(applyPercentage(getAuditedValue(), discountPercentage).negate());
+        }
+        if (getManualServiceChargeValue()!=null){
+            setManualServiceChargeValue(applyPercentage(getManualServiceChargeValue(), discountPercentage).negate());
+        }
+    }
+
 }

@@ -44,7 +44,7 @@ import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class LeaseLeaseAmendmentItemRepository_IntegTest extends LeaseModuleIntegTestAbstract {
+public class LeaseAmendmentItemRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Before
     public void setupData() {
@@ -62,7 +62,7 @@ public class LeaseLeaseAmendmentItemRepository_IntegTest extends LeaseModuleInte
         // given
         final Lease lease = Lease_enum.OxfMediaX002Gb.findUsing(serviceRegistry);
         final LeaseAmendment leaseAmendment = leaseAmendmentRepository
-                .upsert(lease, LeaseAmendmentType.DUMMY_TYPE, LeaseAmendmentState.PROPOSED, null, null);
+                .upsert(lease, LeaseAmendmentType.DEMO_TYPE, LeaseAmendmentState.PROPOSED, null, null);
         final BigDecimal discountPercentage = new BigDecimal("50.55");
         final LocalDate itemStartDate = new LocalDate(2020, 1, 15);
         final LocalDate itemEndDate = new LocalDate(2020, 3, 31);
@@ -105,7 +105,7 @@ public class LeaseLeaseAmendmentItemRepository_IntegTest extends LeaseModuleInte
         // given
         final Lease lease = Lease_enum.OxfMediaX002Gb.findUsing(serviceRegistry);
         final LeaseAmendment leaseAmendment = leaseAmendmentRepository
-                .upsert(lease, LeaseAmendmentType.DUMMY_TYPE, LeaseAmendmentState.PROPOSED, null, null);
+                .upsert(lease, LeaseAmendmentType.DEMO_TYPE, LeaseAmendmentState.PROPOSED, null, null);
         final InvoicingFrequency freqOnLease = InvoicingFrequency.QUARTERLY_IN_ADVANCE;
         final InvoicingFrequency newFreq = InvoicingFrequency.MONTHLY_IN_ADVANCE;
         final LocalDate itemStartDate = new LocalDate(2020, 1, 15);

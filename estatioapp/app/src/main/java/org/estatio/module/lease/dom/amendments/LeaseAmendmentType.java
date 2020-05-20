@@ -13,8 +13,8 @@ import lombok.Getter;
 
 public enum LeaseAmendmentType {
 
-    COVID_FRA(
-            new LocalDate(2020,6,1),
+    COVID_FRA_50_PERC(
+            new LocalDate(2020,3,16), // min date because of lease selection
             new BigDecimal("50.00"),
             Arrays.asList(
                     LeaseItemType.RENT,
@@ -23,6 +23,7 @@ public enum LeaseAmendmentType {
             ),
             new LocalDate(2020,3,16),
             new LocalDate(2020,5,10),
+            "FR2052",
             Arrays.asList(
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE),
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ARREARS)
@@ -38,8 +39,34 @@ public enum LeaseAmendmentType {
             new LocalDate(2020,12,31),
             "A"
             ),
-    DUMMY_TYPE(
-            null, null, null, null, null, null, null, null, null, "DUM")
+    COVID_FRA_100_PERC(
+            new LocalDate(2020,4,1),
+            new BigDecimal("100.00"),
+            Arrays.asList(
+                    LeaseItemType.RENT,
+                    LeaseItemType.RENT_DISCOUNT,
+                    LeaseItemType.RENT_DISCOUNT_FIXED
+            ),
+            new LocalDate(2020,4,1),
+            new LocalDate(2020,6,30),
+            "FR2052",
+            Arrays.asList(
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE),
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ARREARS)
+            ),
+            Arrays.asList(
+                    LeaseItemType.RENT,
+                    LeaseItemType.RENT_DISCOUNT,
+                    LeaseItemType.RENT_DISCOUNT_FIXED,
+                    LeaseItemType.SERVICE_CHARGE,
+                    LeaseItemType.MARKETING
+            ),
+            new LocalDate(2020,7,1),
+            new LocalDate(2020,12,31),
+            "A"
+    ),
+    DEMO_TYPE(
+            new LocalDate(2020,1,1), null, null, null, null, "dummy_charge_ref", null, null, null, null, "-DEM")
     ;
 
     @Getter
@@ -56,6 +83,9 @@ public enum LeaseAmendmentType {
 
     @Getter
     private final LocalDate discountEndDate;
+
+    @Getter
+    private final String chargeReferenceForDiscountItem;
 
     @Getter
     private final List<Tuple<InvoicingFrequency, InvoicingFrequency>> frequencyChanges;
@@ -78,6 +108,7 @@ public enum LeaseAmendmentType {
             final List<LeaseItemType> discountAppliesTo,
             final LocalDate discountStartDate,
             final LocalDate discountEndDate,
+            final String chargeReferenceForDiscountItem,
             final List<Tuple<InvoicingFrequency, InvoicingFrequency>> frequencyChanges,
             final List<LeaseItemType> frequencyChangeAppliesTo,
             final LocalDate frequencyChangeStartDate,
@@ -88,6 +119,7 @@ public enum LeaseAmendmentType {
         this.discountAppliesTo = discountAppliesTo;
         this.discountStartDate = discountStartDate;
         this.discountEndDate = discountEndDate;
+        this.chargeReferenceForDiscountItem = chargeReferenceForDiscountItem;
         this.frequencyChanges = frequencyChanges;
         this.frequencyChangeAppliesTo = frequencyChangeAppliesTo;
         this.frequencyChangeStartDate = frequencyChangeStartDate;

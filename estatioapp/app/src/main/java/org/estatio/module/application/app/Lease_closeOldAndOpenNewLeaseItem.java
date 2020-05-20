@@ -222,6 +222,7 @@ public class Lease_closeOldAndOpenNewLeaseItem {
     @Inject
     RepositoryService repositoryService;
 
-    @Inject LeaseItemSourceRepository leaseItemSourceRepository;
+    @Inject
+    LeaseItemSourceRepository leaseItemSourceRepository;
 
 }

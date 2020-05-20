@@ -189,6 +189,12 @@ public class LeaseTermForDeposit extends LeaseTerm {
         t.setIncludeVat(this.isIncludeVat());
     }
 
+    @Override
+    @Programmatic
+    public void negateAmountsAndApplyPercentage(final BigDecimal discountPercentage){
+        // NOT implemented
+    }
+
     @Inject
     ClockService clockService;
 

@@ -20,6 +20,7 @@ import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentType;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.lease.builders.LeaseBuilder;
 import org.estatio.module.lease.fixtures.numerators.enums.PropertyOwnerNumerator_enum;
@@ -150,7 +151,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
                 new OccupancySpec("001", "Topmodel", NATIONAL, GBR, "FASHION", "WOMEN", ld(2010, 7, 15), null)
             },
             new AmendmentSpec[]{
-                new AmendmentSpec(new LocalDate(2020,1,1), null, new BigDecimal("50"), new LocalDate(2020,2,15), new LocalDate(2020, 3, 31), Arrays.asList(LeaseItemType.RENT, LeaseItemType.SERVICE_CHARGE), InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ARREARS, Arrays.asList(LeaseItemType.RENT), new LocalDate(2020,4,1), new LocalDate(2020, 12, 31))
+                new AmendmentSpec(LeaseAmendmentType.DEMO_TYPE, new LocalDate(2020,1,1), null, new BigDecimal("50"), new LocalDate(2020,3,16), new LocalDate(2020,5,10), Arrays.asList(LeaseItemType.RENT, LeaseItemType.RENT_DISCOUNT, LeaseItemType.RENT_DISCOUNT_FIXED), InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ARREARS, Arrays.asList(LeaseItemType.RENT, LeaseItemType.SERVICE_CHARGE), new LocalDate(2020,7,1), new LocalDate(2020, 12, 31))
             },
             Person_enum.GinoVannelliGb,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.CREATE
@@ -410,6 +411,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     @AllArgsConstructor
     @Data
     public static class AmendmentSpec {
+        LeaseAmendmentType leaseAmendmentType;
         LocalDate startDate;
         LocalDate endDate;
         BigDecimal discountPercentage;
@@ -491,6 +493,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
                     f.setAmendmentSpecs(
                             Arrays.stream(Lease_enum.this.getAmendmentSpecs())
                                     .map(x -> new LeaseBuilder.AmendmentSpec(
+                                            x.leaseAmendmentType,
                                             x.startDate,
                                             x.endDate,
                                             x.discountPercentage,

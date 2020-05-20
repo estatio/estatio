@@ -20,6 +20,7 @@ package org.estatio.module.lease.dom;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -592,6 +593,9 @@ public abstract class LeaseTerm
         target.setFrequency(getFrequency());
     }
 
+    @Programmatic
+    public abstract void negateAmountsAndApplyPercentage(final BigDecimal discountPercentage);
+
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.IDEMPOTENT, invokeOn = InvokeOn.OBJECT_AND_COLLECTION)
@@ -642,6 +646,12 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
+    @Programmatic
+    public static BigDecimal applyPercentage(final BigDecimal value, final BigDecimal percentage){
+        return value.multiply(percentage).divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
+    }
+
+
     @Override
     public String toString() {
         return getInterval().toString() + " / ";
@@ -654,5 +664,4 @@ public abstract class LeaseTerm
 
     @Inject
     public LeaseTermRepository leaseTermRepository;
-
 }

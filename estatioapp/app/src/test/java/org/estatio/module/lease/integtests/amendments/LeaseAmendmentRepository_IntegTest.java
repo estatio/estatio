@@ -39,7 +39,7 @@ import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class LeaseLeaseAmendmentRepository_IntegTest extends LeaseModuleIntegTestAbstract {
+public class LeaseAmendmentRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Before
     public void setupData() {
@@ -62,7 +62,7 @@ public class LeaseLeaseAmendmentRepository_IntegTest extends LeaseModuleIntegTes
 
         // when
         LeaseAmendment leaseAmendment = leaseAmendmentRepository
-                .upsert(lease, LeaseAmendmentType.DUMMY_TYPE, state, startDate, endDate);
+                .upsert(lease, LeaseAmendmentType.DEMO_TYPE, state, startDate, endDate);
 
         // then
         assertThat(leaseAmendment.getLease()).isEqualTo(lease);
@@ -70,8 +70,8 @@ public class LeaseLeaseAmendmentRepository_IntegTest extends LeaseModuleIntegTes
         assertThat(leaseAmendment.getStartDate()).isEqualTo(startDate);
         assertThat(leaseAmendment.getEndDate()).isEqualTo(endDate);
         assertThat(leaseAmendment.getType().getTitle()).isEqualTo(LeaseAmendmentAgreementTypeEnum.LEASE_AMENDMENT.getTitle());
-        assertThat(leaseAmendment.getReference()).isEqualTo(lease.getReference().concat(LeaseAmendmentType.DUMMY_TYPE.getRef_suffix()));
-        assertThat(leaseAmendment.getName()).isEqualTo(lease.getReference().concat(LeaseAmendmentType.DUMMY_TYPE.getRef_suffix()));
+        assertThat(leaseAmendment.getReference()).isEqualTo(lease.getReference().concat(LeaseAmendmentType.DEMO_TYPE.getRef_suffix()));
+        assertThat(leaseAmendment.getName()).isEqualTo(lease.getReference().concat(LeaseAmendmentType.DEMO_TYPE.getRef_suffix()));
         assertThat(leaseAmendment.getAtPath()).isEqualTo(lease.getApplicationTenancyPath());
         assertThat(leaseAmendment.getApplicationTenancy()).isEqualTo(lease.getApplicationTenancy());
         assertThat(leaseAmendment.getRoles()).hasSize(2);
@@ -94,7 +94,7 @@ public class LeaseLeaseAmendmentRepository_IntegTest extends LeaseModuleIntegTes
         final LeaseAmendmentState adaptedState = LeaseAmendmentState.SIGNED;
         final LocalDate adaptedStartDate = new LocalDate(2020, 1, 16);
         final LocalDate adaptedEndDate = new LocalDate(2020, 4, 1);
-        leaseAmendment = leaseAmendmentRepository.upsert(lease, LeaseAmendmentType.DUMMY_TYPE,
+        leaseAmendment = leaseAmendmentRepository.upsert(lease, LeaseAmendmentType.DEMO_TYPE,
                 adaptedState, adaptedStartDate, adaptedEndDate);
         // then
         assertThat(leaseAmendment.getState()).isEqualTo(adaptedState);

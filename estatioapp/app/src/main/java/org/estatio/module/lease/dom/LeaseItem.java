@@ -757,6 +757,13 @@ public class LeaseItem
         }
     }
 
+    @Programmatic
+    public void negateAmountsAndApplyPercentageOnTerms(final BigDecimal discountPercentage) {
+        for (LeaseTerm term : getTerms()){
+            term.negateAmountsAndApplyPercentage(discountPercentage);
+        }
+    }
+
     // //////////////////////////////////////
 
     @Programmatic

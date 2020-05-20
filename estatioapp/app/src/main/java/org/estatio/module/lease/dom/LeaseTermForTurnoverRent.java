@@ -252,6 +252,13 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         t.setContractualRent(getContractualRent());
     }
 
+    @Override
+    @Programmatic
+    public void negateAmountsAndApplyPercentage(final BigDecimal discountPercentage){
+        // NOT implemented
+    }
+
+
     // //////////////////////////////////////
 
     public static class RentRuleType {

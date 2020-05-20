@@ -105,7 +105,6 @@ public final class LeaseBuilder
     @AllArgsConstructor
     @Data
     public static class OccupancySpec {
-        @Getter @Setter
         Unit unit;
         String brand;
         BrandCoverage brandCoverage;
@@ -121,7 +120,7 @@ public final class LeaseBuilder
     @AllArgsConstructor
     @Data
     public static class AmendmentSpec {
-        @Getter @Setter
+        LeaseAmendmentType leaseAmendmentType;
         LocalDate startDate;
         LocalDate endDate;
         BigDecimal discountPercentage;
@@ -207,7 +206,7 @@ public final class LeaseBuilder
         }
         for (final AmendmentSpec spec : amendmentSpecs) {
             final LeaseAmendment leaseAmendment = leaseAmendmentRepository
-                    .create(lease, LeaseAmendmentType.DUMMY_TYPE, LeaseAmendmentState.PROPOSED, spec.startDate, spec.endDate);
+                    .create(lease, spec.leaseAmendmentType, LeaseAmendmentState.PROPOSED, spec.startDate, spec.endDate);
             leaseAmendmentItemRepository
                     .create(leaseAmendment, spec.discountPercentage, spec.discountAppliesTo, spec.discountStartDate, spec.discountEndDate);
             leaseAmendmentItemRepository

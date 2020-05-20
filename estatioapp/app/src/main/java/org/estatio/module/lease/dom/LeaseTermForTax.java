@@ -343,6 +343,12 @@ public class LeaseTermForTax extends LeaseTerm {
         t.setTaxPercentage(getTaxPercentage());
     }
 
+    @Override
+    @Programmatic
+    public void negateAmountsAndApplyPercentage(final BigDecimal discountPercentage){
+        // NOT implemented
+    }
+
     // //////////////////////////////////////
 
     @Inject

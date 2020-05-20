@@ -63,6 +63,15 @@ public class LeaseTermForFixed extends LeaseTerm {
         return value != null && value.compareTo(BigDecimal.ZERO) > 0;
     }
 
+    @Override
+    @Programmatic
+    public void negateAmountsAndApplyPercentage(final BigDecimal discountPercentage){
+        // TODO: check if this makes sense as there is no override on copyValuesTo
+        if (getValue()!=null){
+            setValue(applyPercentage(getValue(), discountPercentage).negate());
+        }
+    }
+
     // //////////////////////////////////////
 
     @Override
