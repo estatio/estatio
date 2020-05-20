@@ -121,6 +121,7 @@
                     <ns2:action id="resumeAll" position="BELOW"/>
                     <ns2:action id="renew" position="BELOW"/>
                 </ns2:property>
+                <ns2:property id="originalLease"/>
             </ns2:fieldSet>
         </col>
         <col span="6">
@@ -128,7 +129,7 @@
                 <tab name="current and future items">
                     <row>
                         <col span="12">
-                            <ns2:collection id="currentAndFutureItems">
+                            <ns2:collection id="recentAndFutureItems">
                                 <ns2:action id="approveAllTermsOfThisLease"/>
                                 <ns2:action id="changePaymentMethodForAll" />
                                 <ns2:action id="newItem"/>

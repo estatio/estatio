@@ -519,15 +519,27 @@ public class Lease
 
     @Action(semantics = SemanticsOf.SAFE)
     @CollectionLayout(defaultView = "table", paged = 999)
-    public SortedSet<LeaseItem> getCurrentAndFutureItems(){
+    public SortedSet<LeaseItem> getRecentAndFutureItems(){
         SortedSet<LeaseItem> result = new TreeSet<>();
         final List<LeaseItem> activeAndFutureItems = Lists.newArrayList(getItems())
                 .stream()
-                .filter(li -> li.isCurrent() || (li.getStartDate() != null && li.getStartDate()
+                .filter(li -> li.getEffectiveInterval().overlaps(LocalDateInterval.including(clockService.now().minusYears(1), clockService.now())) || (li.getStartDate() != null && li.getStartDate()
                         .isAfter(clockService.now())))
                 .collect(Collectors.toList());
         result.addAll(activeAndFutureItems);
         return result;
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public Lease getOriginalLease(){
+        final LeaseAmendment amendment = leaseAmendmentRepository.findByLeasePreview(this);
+        if (amendment==null) return null;
+        return amendment.getLease();
+    }
+
+    public boolean hideOriginalLease(){
+        return this.status!=LeaseStatus.PREVIEW;
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
