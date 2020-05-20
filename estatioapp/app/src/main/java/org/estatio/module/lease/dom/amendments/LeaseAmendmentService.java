@@ -28,7 +28,6 @@ import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemSource;
 import org.estatio.module.lease.dom.LeaseItemSourceRepository;
-import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseStatus;
 import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.party.dom.Party;
@@ -106,33 +105,36 @@ public class LeaseAmendmentService {
         newDiscountItem.setEndDate(endDateToUse);
         sourceItem.copyTerms(newDiscountItem.getStartDate(), newDiscountItem);
         newDiscountItem.negateAmountsAndApplyPercentageOnTerms(leaseAmendmentItemForDiscount.getDiscountPercentage());
-        // TODO: apply percentage
     }
 
-    void applyFrequencyChange(final Lease lease,
-            final LeaseAmendmentItemForFrequencyChange leaseAmendmentItemForFrequencyChange){
-        for (LeaseItemType leaseItemType : LeaseAmendmentItem.applicableToFromString(leaseAmendmentItemForFrequencyChange.getApplicableTo())){
-            switch (leaseItemType){
-            case RENT:
-                factoryService.mixin(Lease_closeOldAndOpenNewLeaseItem.class, lease).act(leaseAmendmentItemForFrequencyChange.getStartDate(), LeaseItemType.RENT, leaseAmendmentItemForFrequencyChange.getInvoicingFrequencyOnLease(), leaseAmendmentItemForFrequencyChange.getAmendedInvoicingFrequency(), false);
-                factoryService.mixin(Lease_closeOldAndOpenNewLeaseItem.class, lease).act(leaseAmendmentItemForFrequencyChange.getEndDate().plusDays(1), LeaseItemType.RENT, leaseAmendmentItemForFrequencyChange.getAmendedInvoicingFrequency(), leaseAmendmentItemForFrequencyChange.getInvoicingFrequencyOnLease(), false);
-                break;
-            case SERVICE_CHARGE:
-                factoryService.mixin(Lease_closeOldAndOpenNewLeaseItem.class, lease).act(leaseAmendmentItemForFrequencyChange.getStartDate(), LeaseItemType.SERVICE_CHARGE, leaseAmendmentItemForFrequencyChange.getInvoicingFrequencyOnLease(), leaseAmendmentItemForFrequencyChange.getAmendedInvoicingFrequency(), false);
-                factoryService.mixin(Lease_closeOldAndOpenNewLeaseItem.class, lease).act(leaseAmendmentItemForFrequencyChange.getEndDate().plusDays(1), LeaseItemType.SERVICE_CHARGE, leaseAmendmentItemForFrequencyChange.getAmendedInvoicingFrequency(), leaseAmendmentItemForFrequencyChange.getInvoicingFrequencyOnLease(), false);
-                break;
-            case SERVICE_CHARGE_INDEXABLE:
-                factoryService.mixin(Lease_closeOldAndOpenNewLeaseItem.class, lease).act(leaseAmendmentItemForFrequencyChange.getStartDate(), LeaseItemType.SERVICE_CHARGE_INDEXABLE, leaseAmendmentItemForFrequencyChange.getInvoicingFrequencyOnLease(), leaseAmendmentItemForFrequencyChange.getAmendedInvoicingFrequency(), false);
-                factoryService.mixin(Lease_closeOldAndOpenNewLeaseItem.class, lease).act(leaseAmendmentItemForFrequencyChange.getEndDate().plusDays(1), LeaseItemType.SERVICE_CHARGE_INDEXABLE, leaseAmendmentItemForFrequencyChange.getAmendedInvoicingFrequency(), leaseAmendmentItemForFrequencyChange.getInvoicingFrequencyOnLease(), false);
-                break;
-            case MARKETING:
-                factoryService.mixin(Lease_closeOldAndOpenNewLeaseItem.class, lease).act(leaseAmendmentItemForFrequencyChange.getStartDate(), LeaseItemType.MARKETING, leaseAmendmentItemForFrequencyChange.getInvoicingFrequencyOnLease(), leaseAmendmentItemForFrequencyChange.getAmendedInvoicingFrequency(), false);
-                factoryService.mixin(Lease_closeOldAndOpenNewLeaseItem.class, lease).act(leaseAmendmentItemForFrequencyChange.getEndDate().plusDays(1), LeaseItemType.MARKETING, leaseAmendmentItemForFrequencyChange.getAmendedInvoicingFrequency(), leaseAmendmentItemForFrequencyChange.getInvoicingFrequencyOnLease(), false);
-                break;
+    void applyFrequencyChange(final Lease lease, final LeaseAmendmentItemForFrequencyChange leaseAmendmentItemForFrequencyChange){
+        final List<LeaseItem> itemsToIncludeForFrequencyChange = Lists.newArrayList(lease.getItems()).stream()
+                .filter(li -> LeaseAmendmentItem
+                        .applicableToFromString(leaseAmendmentItemForFrequencyChange.getApplicableTo())
+                        .contains(li.getType()))
+                .filter(li->li.getInvoicingFrequency()==leaseAmendmentItemForFrequencyChange.getInvoicingFrequencyOnLease())
+                .filter(li->li.getEffectiveInterval().overlaps(leaseAmendmentItemForFrequencyChange.getInterval()))
+                .collect(Collectors.toList());
+        for (LeaseItem originalItem : itemsToIncludeForFrequencyChange){
+            switch (originalItem.getType()){
+                case RENT:
+                case SERVICE_CHARGE:
+                case SERVICE_CHARGE_INDEXABLE:
+                case MARKETING:
+                    final LeaseItem firstNewItem = closeOriginalAndOpenNewLeaseItem(
+                            leaseAmendmentItemForFrequencyChange.getStartDate(),
+                            originalItem,
+                            leaseAmendmentItemForFrequencyChange.getAmendedInvoicingFrequency());
+
+                    if (firstNewItem!=null){
+                        closeOriginalAndOpenNewLeaseItem(leaseAmendmentItemForFrequencyChange.getEndDate().plusDays(1),
+                                firstNewItem,
+                                leaseAmendmentItemForFrequencyChange.getInvoicingFrequencyOnLease());
+                    }
             default:
                 final String warning = String
                         .format("Applying frequency change on lease %s for type %s is not (yet) supported",
-                                lease.getReference(), leaseItemType);
+                                lease.getReference(), originalItem.getType());
                 messageService.warnUser(
                         warning);
                 LOG.error(warning);
@@ -142,60 +144,66 @@ public class LeaseAmendmentService {
     }
 
     public Lease getLeasePreviewFor(final LeaseAmendment amendment){
-        Lease leasePreview = getCopyForPreview(amendment);
+        Lease leasePreview = getLeaseCopyForPreview(
+                amendment.getLease(),
+                amendment.getEffectiveStartDate(),
+                amendment.getEffectiveEndDate(),
+                amendment.getReference());
         amendment.setLeasePreview(leasePreview);
         apply(amendment, true);
         return leasePreview;
     }
 
-    Lease getCopyForPreview(final LeaseAmendment amendment){
-        Lease orginalLease = amendment.getLease();
-        LocalDate referenceDate = amendment.getEffectiveStartDate();
-        orginalLease.verifyUntil(amendment.getEffectiveEndDate());
+    public Lease getLeaseCopyForPreview(final Lease originalLease, final LocalDate referenceDate, final LocalDate verificationDate, final String previewLeaseReference){
+
+        originalLease.verifyUntil(verificationDate);
 
         Lease leaseCopy = new Lease();
         leaseCopy.setStatus(LeaseStatus.PREVIEW);
-        leaseCopy.setReference(amendment.getReference());
-        leaseCopy.setStartDate(orginalLease.getStartDate());
-        leaseCopy.setTenancyStartDate(orginalLease.getTenancyStartDate());
-        leaseCopy.setEndDate(orginalLease.getEndDate());
-        leaseCopy.setTenancyEndDate(orginalLease.getTenancyEndDate());
-        leaseCopy.setApplicationTenancyPath(orginalLease.getApplicationTenancyPath());
-        leaseCopy.setLeaseType(orginalLease.getLeaseType());
-        leaseCopy.setType(orginalLease.getType());
+        leaseCopy.setReference(previewLeaseReference);
+        leaseCopy.setStartDate(originalLease.getStartDate());
+        leaseCopy.setTenancyStartDate(originalLease.getTenancyStartDate());
+        leaseCopy.setEndDate(originalLease.getEndDate());
+        leaseCopy.setTenancyEndDate(originalLease.getTenancyEndDate());
+        leaseCopy.setApplicationTenancyPath(originalLease.getApplicationTenancyPath());
+        leaseCopy.setLeaseType(originalLease.getLeaseType());
+        leaseCopy.setType(originalLease.getType());
         serviceRegistry2.injectServicesInto(leaseCopy);
-        final Party tenant = orginalLease.getSecondaryParty();
+        final Party tenant = originalLease.getSecondaryParty();
         if (tenant != null) {
             final AgreementRoleType artLandlord = agreementRoleTypeRepository.find(LeaseAgreementRoleTypeEnum.TENANT);
             leaseCopy.newRole(artLandlord, tenant, null, null);
         }
-        final Party landlord = orginalLease.getPrimaryParty();
+        final Party landlord = originalLease.getPrimaryParty();
         if (landlord != null) {
             final AgreementRoleType artLandlord = agreementRoleTypeRepository.find(LeaseAgreementRoleTypeEnum.LANDLORD);
             leaseCopy.newRole(artLandlord, landlord, null, null);
         }
-        for (LeaseItem item : orginalLease.getItems()){
-            if (referenceDate==null || item.getEffectiveInterval().contains(referenceDate) || (item.getStartDate()!=null && item.getStartDate().isAfter(referenceDate))) {
+        for (LeaseItem originalItem : originalLease.getItems()){
+            if (referenceDate==null || originalItem.getEffectiveInterval().contains(referenceDate) || (originalItem.getStartDate()!=null && originalItem.getStartDate().isAfter(referenceDate))) {
                 LeaseItem newItem = leaseCopy.newItem(
-                        item.getType(),
-                        item.getInvoicedBy(),
-                        item.getCharge(),
-                        item.getInvoicingFrequency(),
-                        item.getPaymentMethod(),
-                        item.getStartDate()
+                        originalItem.getType(),
+                        originalItem.getInvoicedBy(),
+                        originalItem.getCharge(),
+                        originalItem.getInvoicingFrequency(),
+                        originalItem.getPaymentMethod(),
+                        originalItem.getStartDate()
                 );
-                item.copyTerms(referenceDate, newItem);
+                newItem.setEndDate(originalItem.getEndDate());
+                originalItem.copyTerms(referenceDate, newItem);
+                //TODO: NOTE THAT WE COPY ALL ITEM TYPES BUT NOT THEIR SOURCES; this adds complications and may not be needed for reporting / forecasting
+                // ANOTHER APPROACH would be to not copy these itemtypes at all ...
             }
         }
         return leaseCopy;
     }
 
-    public void closeOriginalAndOpenNewLeaseItem(final LocalDate startDateNewItem, final LeaseItem originalItem, final InvoicingFrequency invoicingFrequency){
+    public LeaseItem closeOriginalAndOpenNewLeaseItem(final LocalDate startDateNewItem, final LeaseItem originalItem, final InvoicingFrequency invoicingFrequency){
         final Lease lease = originalItem.getLease();
         final LeaseTerm currentTerm = originalItem.currentTerm(startDateNewItem);
         if (currentTerm == null){
             LOG.info(String.format("No current rent term found for lease %s", lease.getReference()));
-            return;
+            return null;
         }
         final LeaseItem newItem = lease
                 .newItem(originalItem.getType(), originalItem.getInvoicedBy(), originalItem.getCharge(), invoicingFrequency,
@@ -213,6 +221,7 @@ public class LeaseAmendmentService {
         sourceItems.stream()
                 .map(lis->lis.getItem()).forEach(li->li.newSourceItem(newItem));
         newItem.verifyUntil(startDateNewItem.plusMonths(2)); // TODO: this looks very random .... maybe derive from amendment item?
+        return newItem;
     }
 
     @Inject MessageService messageService;
