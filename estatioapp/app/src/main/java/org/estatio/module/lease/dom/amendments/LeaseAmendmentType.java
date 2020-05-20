@@ -37,7 +37,7 @@ public enum LeaseAmendmentType {
             ),
             new LocalDate(2020,7,1),
             new LocalDate(2020,12,31),
-            "A"
+            "-A"
             ),
     COVID_FRA_100_PERC(
             new LocalDate(2020,4,1),
@@ -63,7 +63,7 @@ public enum LeaseAmendmentType {
             ),
             new LocalDate(2020,7,1),
             new LocalDate(2020,12,31),
-            "A"
+            "-A"
     ),
     DEMO_TYPE(
             new LocalDate(2020,1,1), null, null, null, null, "ITA_DISCOUNT", null, null, null, null, "-DEM")
