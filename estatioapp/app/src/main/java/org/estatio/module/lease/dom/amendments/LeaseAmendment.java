@@ -33,6 +33,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.agreement.dom.Agreement;
@@ -79,6 +80,15 @@ public class LeaseAmendment extends Agreement {
 
     public LeaseAmendment() {
         super(LeaseAgreementRoleTypeEnum.LANDLORD, LeaseAgreementRoleTypeEnum.TENANT);
+    }
+
+    @Override
+    public String title() {
+        return TitleBuilder.start()
+                .withName("Lease amendment")
+                .withName(getName())
+                .withReference(getReference())
+                .toString();
     }
 
     @Column(name = "leaseId", allowsNull = "false")

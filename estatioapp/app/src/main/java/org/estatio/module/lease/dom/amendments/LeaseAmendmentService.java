@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
@@ -225,8 +224,6 @@ public class LeaseAmendmentService {
     }
 
     @Inject MessageService messageService;
-
-    @Inject FactoryService factoryService;
 
     @Inject ServiceRegistry2 serviceRegistry2;
 

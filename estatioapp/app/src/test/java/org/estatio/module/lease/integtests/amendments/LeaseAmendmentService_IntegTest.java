@@ -37,6 +37,7 @@ import org.estatio.module.lease.dom.LeaseStatus;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentService;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
@@ -52,6 +53,7 @@ public class LeaseAmendmentService_IntegTest extends LeaseModuleIntegTestAbstrac
                 executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
                 executionContext.executeChild(this, LeaseItemForRent_enum.OxfTopModel001Gb.builder());
                 executionContext.executeChild(this, LeaseItemForDeposit_enum.OxfTopModel001Gb.builder());
+                executionContext.executeChild(this, LeaseItemForDiscount_enum.OxfTopModel001Gb.builder());
             }
         });
     }
@@ -118,6 +120,31 @@ public class LeaseAmendmentService_IntegTest extends LeaseModuleIntegTestAbstrac
         assertThat(leaseItemSourceRepository.findByItem(depositItem).stream().map(s->s.getSourceItem()).collect(
                 Collectors.toList())).contains(secondNewItem);
 
+    }
+
+    @Test
+    public void closeOriginalAndOpenNewLeaseItem_works_for_discount_fixed() throws Exception {
+
+        final LocalDate splitDate;
+
+        // given
+        Lease oxfLease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+        final LeaseItem originalDiscountItem = LeaseItemForDiscount_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+        splitDate = new LocalDate(originalDiscountItem.getTerms().first().getStartDate().plusYears(1));
+        assertThat(oxfLease.findItemsOfType(LeaseItemType.RENT_DISCOUNT_FIXED)).hasSize(1);
+
+        // when
+        final LeaseItem firstNewItem = leaseAmendmentService
+                        .closeOriginalAndOpenNewLeaseItem(splitDate, originalDiscountItem,
+                                InvoicingFrequency.MONTHLY_IN_ADVANCE);
+
+        // then
+        assertThat(oxfLease.findItemsOfType(LeaseItemType.RENT_DISCOUNT_FIXED)).hasSize(2);
+        assertThat(oxfLease.findItemsOfType(LeaseItemType.RENT_DISCOUNT_FIXED)).contains(firstNewItem);
+        assertThat(originalDiscountItem.getEndDate()).isEqualTo(splitDate.minusDays(1));
+        assertThat(firstNewItem.getStartDate()).isEqualTo(splitDate);
+        assertThat(firstNewItem.getInvoicingFrequency()).isEqualTo(InvoicingFrequency.MONTHLY_IN_ADVANCE);
+        assertThat(firstNewItem.getTerms()).hasSize(1);
     }
 
     @Test

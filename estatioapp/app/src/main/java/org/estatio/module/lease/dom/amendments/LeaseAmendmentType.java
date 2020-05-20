@@ -66,7 +66,7 @@ public enum LeaseAmendmentType {
             "A"
     ),
     DEMO_TYPE(
-            new LocalDate(2020,1,1), null, null, null, null, "dummy_charge_ref", null, null, null, null, "-DEM")
+            new LocalDate(2020,1,1), null, null, null, null, "ITA_DISCOUNT", null, null, null, null, "-DEM")
     ;
 
     @Getter
