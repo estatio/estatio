@@ -117,10 +117,8 @@ public class LeaseAmendmentManager {
         return this;
     }
 
-    @Action(commandPersistence = CommandPersistence.NOT_PERSISTED, associateWith = "lines", associateWithSequence = "1")
-    public Blob download(
-            @Nullable final String fileName,
-            @Nullable final List<LeaseAmendmentImportLine> lines){
+    @Action(commandPersistence = CommandPersistence.NOT_PERSISTED)
+    public Blob download(@Nullable final String fileName){
         String fileNameToUse;
         if (fileName==null) {
             fileNameToUse = "Amendments.xlsx";
@@ -131,7 +129,7 @@ public class LeaseAmendmentManager {
                 fileNameToUse = fileName;
             }
         }
-        return excelService.toExcel(lines, LeaseAmendmentImportLine.class, "lines", fileNameToUse);
+        return excelService.toExcel(getLines(), LeaseAmendmentImportLine.class, "lines", fileNameToUse);
     }
 
     public LeaseAmendmentManager upload(final Blob excelsheet){
@@ -141,9 +139,9 @@ public class LeaseAmendmentManager {
         return this;
     }
 
-    @Action(associateWith = "lines", associateWithSequence = "2")
-    public LeaseAmendmentManager apply(@Nullable final List<LeaseAmendmentImportLine> lines){
-        lines.forEach(l->l.importData());
+    @Action()
+    public LeaseAmendmentManager apply(){
+        getLines().forEach(l->l.importData());
         return this;
     }
 
