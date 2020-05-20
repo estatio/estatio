@@ -31,7 +31,6 @@ import org.estatio.module.lease.dom.LeaseItemSourceRepository;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseStatus;
 import org.estatio.module.lease.dom.LeaseTerm;
-import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(
@@ -191,26 +190,29 @@ public class LeaseAmendmentService {
         return leaseCopy;
     }
 
-    public void closeAndOpenNewRentItem(final LocalDate startDateNewItem, final LeaseItem item, final InvoicingFrequency invoicingFrequency){
-        final Lease lease = item.getLease();
-        final LeaseTerm currentTerm = item.currentTerm(startDateNewItem);
+    public void closeOriginalAndOpenNewLeaseItem(final LocalDate startDateNewItem, final LeaseItem originalItem, final InvoicingFrequency invoicingFrequency){
+        final Lease lease = originalItem.getLease();
+        final LeaseTerm currentTerm = originalItem.currentTerm(startDateNewItem);
         if (currentTerm == null){
             LOG.info(String.format("No current rent term found for lease %s", lease.getReference()));
             return;
         }
-        LeaseTermForIndexable currentTermForIndexable = (LeaseTermForIndexable) currentTerm;
-        item.changeDates(item.getStartDate(), startDateNewItem.minusDays(1));
-        final LeaseItem newRentItem = lease
-                .newItem(LeaseItemType.RENT, item.getInvoicedBy(), item.getCharge(), invoicingFrequency,
-                        item.getPaymentMethod(), startDateNewItem);
-        if (item.getTax()!=null) newRentItem.setTax(item.getTax());
-        final LeaseTermForIndexable newTermForIndexable = (LeaseTermForIndexable) newRentItem.newTerm(startDateNewItem, null);
-        currentTermForIndexable.copyValuesTo(newTermForIndexable);
+        final LeaseItem newItem = lease
+                .newItem(originalItem.getType(), originalItem.getInvoicedBy(), originalItem.getCharge(), invoicingFrequency,
+                        originalItem.getPaymentMethod(), startDateNewItem);
+        newItem.setEndDate(originalItem.getEndDate());
+        if (originalItem.getTax()!=null) newItem.setTax(originalItem.getTax());
+
+        // NOTE: the order matters! We take endate of original
+        originalItem.changeDates(originalItem.getStartDate(), startDateNewItem.minusDays(1));
+
+        final LeaseTerm newTerm = newItem.newTerm(startDateNewItem, null);
+        currentTerm.copyValuesTo(newTerm);
         // link new item to items that had old item as source
-        final List<LeaseItemSource> sourceItems = leaseItemSourceRepository.findBySourceItem(item);
+        final List<LeaseItemSource> sourceItems = leaseItemSourceRepository.findBySourceItem(originalItem);
         sourceItems.stream()
-                .map(lis->lis.getItem()).forEach(li->li.newSourceItem(newRentItem));
-        newRentItem.verifyUntil(startDateNewItem.plusMonths(2));
+                .map(lis->lis.getItem()).forEach(li->li.newSourceItem(newItem));
+        newItem.verifyUntil(startDateNewItem.plusMonths(2)); // TODO: this looks very random .... maybe derive from amendment item?
     }
 
     @Inject MessageService messageService;
