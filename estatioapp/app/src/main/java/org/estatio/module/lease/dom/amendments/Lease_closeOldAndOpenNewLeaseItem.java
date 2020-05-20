@@ -1,4 +1,4 @@
-package org.estatio.module.application.app;
+package org.estatio.module.lease.dom.amendments;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +23,6 @@ import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItem;
-import org.estatio.module.lease.dom.LeaseItemSource;
 import org.estatio.module.lease.dom.LeaseItemSourceRepository;
 import org.estatio.module.lease.dom.LeaseItemStatus;
 import org.estatio.module.lease.dom.LeaseItemType;
@@ -76,7 +75,7 @@ public class Lease_closeOldAndOpenNewLeaseItem {
                                         item.getInvoicingFrequency().title()
                                 )
                         );
-                        closeAndOpenNewRentItem(startDateNewItem, item, newInvoicingFrequency, removeInvoicesOldItem);
+                        leaseAmendmentService.closeAndOpenNewRentItem(startDateNewItem, item, newInvoicingFrequency);
                         break;
 
                     case SERVICE_CHARGE:
@@ -130,32 +129,6 @@ public class Lease_closeOldAndOpenNewLeaseItem {
 //        if (oldInvoicingFrequency!=InvoicingFrequency.QUARTERLY_IN_ADVANCE) return "Currently only old frequency Quarterly In Advance supported";
 //        if (invoicingFrequency!=InvoicingFrequency.MONTHLY_IN_ADVANCE) return "Currently only new frequency Monthly In Advance supported";
         return null;
-    }
-
-
-    public void closeAndOpenNewRentItem(final LocalDate startDateNewItem, final LeaseItem item, final InvoicingFrequency invoicingFrequency, final boolean removeInvoicesOldItem){
-        final LeaseTerm currentTerm = item.currentTerm(startDateNewItem);
-        if (currentTerm == null){
-            LOG.info(String.format("No current rent term found for lease %s", lease.getReference()));
-            return;
-        }
-        LeaseTermForIndexable currentTermForIndexable = (LeaseTermForIndexable) currentTerm;
-        item.changeDates(item.getStartDate(), startDateNewItem.minusDays(1));
-        final LeaseItem newRentItem = lease
-                .newItem(LeaseItemType.RENT, item.getInvoicedBy(), item.getCharge(), invoicingFrequency,
-                        item.getPaymentMethod(), startDateNewItem);
-        if (item.getTax()!=null) newRentItem.setTax(item.getTax());
-        final LeaseTermForIndexable newTermForIndexable = (LeaseTermForIndexable) newRentItem.newTerm(startDateNewItem, null);
-        currentTermForIndexable.copyValuesTo(newTermForIndexable);
-        // link new item to items that had old item as source
-        final List<LeaseItemSource> sourceItems = leaseItemSourceRepository.findBySourceItem(item);
-        sourceItems.stream()
-        .map(lis->lis.getItem()).forEach(li->li.newSourceItem(newRentItem));
-
-        if (removeInvoicesOldItem) {
-            removeInvoicesStartingWith(currentTerm, startDateNewItem);
-        }
-        newRentItem.verifyUntil(startDateNewItem.plusMonths(2));
     }
 
     public void closeAndOpenNewServiceChargeIndexableItem(final LocalDate startDateNewItem, final LeaseItem item, final InvoicingFrequency invoicingFrequency, final boolean removeInvoicesOldItem){
@@ -224,5 +197,8 @@ public class Lease_closeOldAndOpenNewLeaseItem {
 
     @Inject
     LeaseItemSourceRepository leaseItemSourceRepository;
+
+    @Inject
+    LeaseAmendmentService leaseAmendmentService;
 
 }

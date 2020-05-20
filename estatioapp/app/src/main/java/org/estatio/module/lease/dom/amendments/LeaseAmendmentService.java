@@ -20,14 +20,18 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.agreement.dom.role.AgreementRoleType;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
-import org.estatio.module.application.app.Lease_closeOldAndOpenNewLeaseItem;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
+import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseItemSource;
+import org.estatio.module.lease.dom.LeaseItemSourceRepository;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseStatus;
+import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(
@@ -187,6 +191,28 @@ public class LeaseAmendmentService {
         return leaseCopy;
     }
 
+    public void closeAndOpenNewRentItem(final LocalDate startDateNewItem, final LeaseItem item, final InvoicingFrequency invoicingFrequency){
+        final Lease lease = item.getLease();
+        final LeaseTerm currentTerm = item.currentTerm(startDateNewItem);
+        if (currentTerm == null){
+            LOG.info(String.format("No current rent term found for lease %s", lease.getReference()));
+            return;
+        }
+        LeaseTermForIndexable currentTermForIndexable = (LeaseTermForIndexable) currentTerm;
+        item.changeDates(item.getStartDate(), startDateNewItem.minusDays(1));
+        final LeaseItem newRentItem = lease
+                .newItem(LeaseItemType.RENT, item.getInvoicedBy(), item.getCharge(), invoicingFrequency,
+                        item.getPaymentMethod(), startDateNewItem);
+        if (item.getTax()!=null) newRentItem.setTax(item.getTax());
+        final LeaseTermForIndexable newTermForIndexable = (LeaseTermForIndexable) newRentItem.newTerm(startDateNewItem, null);
+        currentTermForIndexable.copyValuesTo(newTermForIndexable);
+        // link new item to items that had old item as source
+        final List<LeaseItemSource> sourceItems = leaseItemSourceRepository.findBySourceItem(item);
+        sourceItems.stream()
+                .map(lis->lis.getItem()).forEach(li->li.newSourceItem(newRentItem));
+        newRentItem.verifyUntil(startDateNewItem.plusMonths(2));
+    }
+
     @Inject MessageService messageService;
 
     @Inject FactoryService factoryService;
@@ -196,5 +222,7 @@ public class LeaseAmendmentService {
     @Inject AgreementRoleTypeRepository agreementRoleTypeRepository;
 
     @Inject ChargeRepository chargeRepository;
+
+    @Inject LeaseItemSourceRepository leaseItemSourceRepository;
 
 }
