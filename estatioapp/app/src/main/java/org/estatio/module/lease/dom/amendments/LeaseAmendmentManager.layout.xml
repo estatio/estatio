@@ -19,18 +19,16 @@
             </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="6">
-            <cpt:fieldSet name="Proposal Type" id="proposalType">
-                <cpt:property id="proposalType"/>
+            <cpt:fieldSet name="Lease amendment type" id="leaseAmendmentType">
+                <cpt:property id="leaseAmendmentType"/>
             </cpt:fieldSet>
         </bs3:col>
     </bs3:row>
     <bs3:row>
         <bs3:col span="12">
             <cpt:collection id="lines">
-                <cpt:action id="generateLines" position="PANEL"/>
                 <cpt:action id="download" position="PANEL"/>
-                <cpt:action id="upload" position="PANEL"/>
-                <cpt:action id="apply" position="PANEL"/>
+                <cpt:action id="importAmendments" position="PANEL"/>
             </cpt:collection>
         </bs3:col>
     </bs3:row>

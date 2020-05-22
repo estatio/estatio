@@ -1,8 +1,10 @@
 package org.estatio.module.lease.dom.amendments;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
-import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -12,6 +14,8 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
@@ -19,6 +23,8 @@ import org.estatio.module.lease.dom.LeaseItemRepository;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseTermForFixed;
 import org.estatio.module.lease.dom.LeaseTermRepository;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LeaseAmendmentService_Test {
 
@@ -82,7 +88,51 @@ public class LeaseAmendmentService_Test {
         service.applyDiscount(lease, amendmentItem);
 
         // then
-        Assertions.assertThat(rentDiscountTerm.getValue()).isEqualTo(new BigDecimal("-50.28"));
+        assertThat(rentDiscountTerm.getValue()).isEqualTo(new BigDecimal("-50.28"));
+
+    }
+
+    @Test
+    public void findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate_when_no_items_on_lease() throws Exception {
+
+        // given
+        LeaseAmendmentService service = new LeaseAmendmentService();
+        Lease lease = new Lease();
+
+        // when
+        final LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = service
+                .findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(lease, LeaseAmendmentType.COVID_FRA_50_PERC);
+
+        // then
+        assertThat(tuple).isNull();
+
+    }
+
+    @Test
+    public void findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate_when_applicable_items_on_lease() throws Exception {
+
+        // given
+        LeaseAmendmentService service = new LeaseAmendmentService();
+        LeaseItem rentItem = new LeaseItem(){
+            @Override public LocalDateInterval getEffectiveInterval() {
+                return LocalDateInterval.including(LeaseAmendmentType.COVID_FRA_50_PERC.getDiscountStartDate(), LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChangeEndDate());
+            }
+        };
+        rentItem.setType(LeaseItemType.RENT);
+        rentItem.setInvoicingFrequency(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(1).x);
+        Lease lease = new Lease(){
+            @Override public SortedSet<LeaseItem> getItems() {
+                return new TreeSet<>(Arrays.asList(
+                        rentItem
+                ));
+            }
+        };
+
+        // when
+        final LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = service
+                .findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(lease, LeaseAmendmentType.COVID_FRA_50_PERC);
+        // then
+        assertThat(tuple).isEqualTo(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(1));
 
     }
 

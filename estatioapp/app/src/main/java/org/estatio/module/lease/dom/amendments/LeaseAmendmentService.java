@@ -17,6 +17,8 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
 import org.estatio.module.agreement.dom.role.AgreementRoleType;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.charge.dom.Charge;
@@ -221,6 +223,39 @@ public class LeaseAmendmentService {
                 .map(lis->lis.getItem()).forEach(li->li.newSourceItem(newItem));
         newItem.verifyUntil(startDateNewItem.plusMonths(2)); // TODO: this looks very random .... maybe derive from amendment item?
         return newItem;
+    }
+
+    public LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(final LeaseAmendment amendment){
+        return findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(amendment.getLease(), amendment.getLeaseAmendmentType());
+    }
+
+    public LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(final Lease lease, final LeaseAmendmentType leaseAmendmentType){
+        final LeaseItem firstFrequencyChangeCandidateItem = Lists.newArrayList(lease.getItems()).stream()
+                .filter(i->leaseAmendmentType.getFrequencyChangeAppliesTo()!=null)
+                .filter(i-> leaseAmendmentType.getFrequencyChangeAppliesTo().contains(i.getType()))
+                .filter(i->hasChangingFrequency(i, leaseAmendmentType))
+                .filter(i->i.getEffectiveInterval()!=null)
+                .filter(i->i.getEffectiveInterval().overlaps(
+                        LocalDateInterval
+                                .including(leaseAmendmentType.getFrequencyChangeStartDate(),leaseAmendmentType
+                                        .getFrequencyChangeEndDate())))
+                .findFirst().orElse(null);
+        return firstFrequencyChangeCandidateItem!=null ? getTuple(firstFrequencyChangeCandidateItem, leaseAmendmentType) : null;
+    }
+
+    boolean hasChangingFrequency(final LeaseItem i, final LeaseAmendmentType leaseAmendmentType){
+        final LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = leaseAmendmentType.getFrequencyChanges()
+                .stream()
+                .filter(t -> t.x == i.getInvoicingFrequency())
+                .findFirst().orElse(null);
+        return tuple != null;
+    }
+
+    LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency>  getTuple(final LeaseItem i, final LeaseAmendmentType leaseAmendmentType){
+        return leaseAmendmentType.getFrequencyChanges()
+                .stream()
+                .filter(t -> t.x == i.getInvoicingFrequency())
+                .findFirst().orElse(null);
     }
 
     @Inject MessageService messageService;

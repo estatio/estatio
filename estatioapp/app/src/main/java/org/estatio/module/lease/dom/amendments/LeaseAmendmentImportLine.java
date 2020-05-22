@@ -35,6 +35,33 @@ import lombok.Setter;
 )
 public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importable {
 
+    public LeaseAmendmentImportLine(){};
+
+    public LeaseAmendmentImportLine(final LeaseAmendment leaseAmendment){
+        this();
+        this.leaseAmendmentType = leaseAmendment.getLeaseAmendmentType();
+        this.leaseAmendmentState = leaseAmendment.getState();
+        this.leaseReference = leaseAmendment.getLease().getReference();
+        this.startDate = leaseAmendment.getStartDate();
+        this.endDate = leaseAmendment.getEndDate();
+        final LeaseAmendmentItemForDiscount discountItem = (LeaseAmendmentItemForDiscount) leaseAmendment.findItemsOfType(LeaseAmendmentItemType.DISCOUNT)
+                .stream().findFirst().orElse(null);
+        if (discountItem!=null) {
+            this.discountPercentage = discountItem.getDiscountPercentage();
+            this.discountApplicableTo = discountItem.getApplicableTo();
+            this.discountStartDate = discountItem.getStartDate();
+            this.discountEndDate = discountItem.getEndDate();
+        }
+        final LeaseAmendmentItemForFrequencyChange freqItem = (LeaseAmendmentItemForFrequencyChange) leaseAmendment.findItemsOfType(LeaseAmendmentItemType.INVOICING_FREQUENCY_CHANGE)
+                .stream().findFirst().orElse(null);
+        if (freqItem!=null) {
+            this.invoicingFrequencyOnLease = freqItem.getInvoicingFrequencyOnLease();
+            this.amendedInvoicingFrequency = freqItem.getAmendedInvoicingFrequency();
+            this.frequencyChangeApplicableTo = freqItem.getApplicableTo();
+            this.frequencyChangeStartDate = freqItem.getStartDate();
+            this.frequencyChangeEndDate = freqItem.getEndDate();
+        }
+    }
 
     @Getter @Setter
     @MemberOrder(sequence = "1")
@@ -82,15 +109,15 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
 
     @Getter @Setter
     @MemberOrder(sequence = "12")
-    private String frequencyApplicableTo;
+    private String frequencyChangeApplicableTo;
 
     @Getter @Setter
     @MemberOrder(sequence = "13")
-    private LocalDate frequencyStartDate;
+    private LocalDate frequencyChangeStartDate;
 
     @Getter @Setter
     @MemberOrder(sequence = "14")
-    private LocalDate frequencyEndDate;
+    private LocalDate frequencyChangeEndDate;
 
 
     @Programmatic
@@ -107,23 +134,17 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
     @Programmatic
     @Override
     public List<Object> importData(final Object previousRow) {
-
         final Lease lease = fetchLease(leaseReference);
-        final Lease_createLeaseAmendment mixin = factoryService.mixin(Lease_createLeaseAmendment.class, lease);
-        wrapperFactory.wrap(mixin).$$(
-                leaseAmendmentType,
-                startDate,
-                endDate,
-                discountPercentage,
-                LeaseAmendmentItem.applicableToFromString(discountApplicableTo),
-                discountStartDate,
-                discountEndDate,
-                invoicingFrequencyOnLease,
-                amendedInvoicingFrequency,
-                LeaseAmendmentItem.applicableToFromString(frequencyApplicableTo),
-                frequencyStartDate,
-                frequencyEndDate
-        );
+        final LeaseAmendment amendment = leaseAmendmentRepository.upsert(lease, leaseAmendmentType, leaseAmendmentState, startDate, endDate);
+        if (discountPercentage!=null && discountApplicableTo!=null && discountStartDate!=null && discountEndDate!=null) {
+            amendment.upsertItem(discountPercentage, LeaseAmendmentItem.applicableToFromString(discountApplicableTo), discountStartDate, discountEndDate);
+        }
+        if (invoicingFrequencyOnLease!=null && amendedInvoicingFrequency !=null && frequencyChangeApplicableTo !=null && frequencyChangeStartDate
+                !=null && frequencyChangeEndDate !=null) {
+            amendment.upsertItem(invoicingFrequencyOnLease, amendedInvoicingFrequency, LeaseAmendmentItem.applicableToFromString(
+                    frequencyChangeApplicableTo),
+                    frequencyChangeStartDate, frequencyChangeEndDate);
+        }
         final LeaseAmendment leaseAmendment = leaseAmendmentRepository.findUnique(lease, leaseAmendmentType);
         return Lists.newArrayList(leaseAmendment);
     }

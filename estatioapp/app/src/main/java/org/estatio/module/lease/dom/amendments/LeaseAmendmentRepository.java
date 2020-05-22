@@ -76,10 +76,11 @@ public class LeaseAmendmentRepository {
             final LocalDate endDate
     ){
         final LeaseAmendment amendment = findUnique(lease, leaseAmendmentType);
+        LeaseAmendmentState stateToUse = state !=null ? state : LeaseAmendmentState.PROPOSED;
         if (amendment ==null){
-            return create(lease, leaseAmendmentType, state, startDate, endDate);
+            return create(lease, leaseAmendmentType, stateToUse, startDate, endDate);
         } else {
-            amendment.setState(state);
+            amendment.setState(stateToUse);
             amendment.setStartDate(startDate);
             amendment.setEndDate(endDate);
             return amendment;

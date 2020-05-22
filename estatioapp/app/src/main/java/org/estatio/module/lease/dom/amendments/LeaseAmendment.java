@@ -1,5 +1,6 @@
 package org.estatio.module.lease.dom.amendments;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -37,8 +38,10 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.agreement.dom.Agreement;
+import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.dom.LeaseItemType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -189,10 +192,29 @@ public class LeaseAmendment extends Agreement {
         return Lists.newArrayList(getItems()).stream().filter(lai->lai.getType()==type).collect(Collectors.toList());
     }
 
+    @Programmatic
+    public LeaseAmendment upsertItem(final BigDecimal discountPercentage, final List<LeaseItemType> discountAppliesTo, final LocalDate discountStartDate, final LocalDate discountEndDate) {
+        leaseAmendmentItemRepository.upsert(this, discountPercentage, discountAppliesTo, discountStartDate, discountEndDate);
+        return this;
+    }
+
+    @Programmatic
+    public LeaseAmendment upsertItem(
+            final InvoicingFrequency invoicingFrequencyOnLease,
+            final InvoicingFrequency newInvoicingFrequency,
+            final List<LeaseItemType> frequencyChangeAppliesTo,
+            final LocalDate frequencyChangeStartDate,
+            final LocalDate frequencyChangeEndDate) {
+        leaseAmendmentItemRepository.upsert(this, invoicingFrequencyOnLease, newInvoicingFrequency,frequencyChangeAppliesTo, frequencyChangeStartDate, frequencyChangeEndDate);
+        return null;
+    }
+
     @Inject
     RepositoryService repositoryService;
 
     @Inject
     LeaseAmendmentService leaseAmendmentService;
+
+    @Inject LeaseAmendmentItemRepository leaseAmendmentItemRepository;
 
 }
