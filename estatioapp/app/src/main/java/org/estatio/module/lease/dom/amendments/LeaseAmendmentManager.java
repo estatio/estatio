@@ -79,13 +79,16 @@ public class LeaseAmendmentManager {
         List<LeaseAmendmentImportLine> result = new ArrayList<>();
         for (Lease lease : activeLeasesOnAmendmentStartdateForProperty()){
             final List<LeaseItem> discountCandidates = Lists.newArrayList(lease.getItems()).stream()
+                    .filter(i->leaseAmendmentType.getDiscountAppliesTo()!=null)
                     .filter(i -> leaseAmendmentType.getDiscountAppliesTo().contains(i.getType()))
                     .filter(i->i.getEffectiveInterval().overlaps(LocalDateInterval.including(leaseAmendmentType.getDiscountStartDate(), leaseAmendmentType
                             .getDiscountEndDate())))
                     .collect(Collectors.toList());
             final List<LeaseItem> frequencyChangeCandidates = Lists.newArrayList(lease.getItems()).stream()
+                    .filter(i->leaseAmendmentType.getFrequencyChangeAppliesTo()!=null)
                     .filter(i-> leaseAmendmentType.getFrequencyChangeAppliesTo().contains(i.getType()))
                     .filter(i->hasChangingFrequency(i, leaseAmendmentType))
+                    .filter(i->i.getEffectiveInterval()!=null)
                     .filter(i->i.getEffectiveInterval().overlaps(LocalDateInterval.including(leaseAmendmentType.getFrequencyChangeStartDate(), leaseAmendmentType
                             .getFrequencyChangeEndDate())))
                     .collect(Collectors.toList());
