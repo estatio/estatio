@@ -80,6 +80,7 @@ public class LeaseAmendmentRepository {
         if (amendment ==null){
             return create(lease, leaseAmendmentType, stateToUse, startDate, endDate);
         } else {
+            if (amendment.getState()==LeaseAmendmentState.APPLIED) return amendment;
             amendment.setState(stateToUse);
             amendment.setStartDate(startDate);
             amendment.setEndDate(endDate);

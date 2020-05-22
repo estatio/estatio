@@ -15,8 +15,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.factory.FactoryService;
-import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.excel.dom.ExcelFixture;
 import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
@@ -126,7 +124,6 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
         return importData(previousRow);
     }
 
-    // REVIEW: other import view models have @Action annotation here...  but in any case, is this view model actually ever surfaced in the UI?
     public List<Object> importData() {
         return importData(null);
     }
@@ -135,7 +132,12 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
     @Override
     public List<Object> importData(final Object previousRow) {
         final Lease lease = fetchLease(leaseReference);
+        if (leaseAmendmentState==LeaseAmendmentState.APPLIED){
+            throw new ApplicationException(String.format("State %s for lease %s not allowed.", leaseAmendmentState, leaseReference));
+        }
         final LeaseAmendment amendment = leaseAmendmentRepository.upsert(lease, leaseAmendmentType, leaseAmendmentState, startDate, endDate);
+        if (amendment.getState()==LeaseAmendmentState.APPLIED) return Lists.newArrayList(amendment);
+        
         if (discountPercentage!=null && discountApplicableTo!=null && discountStartDate!=null && discountEndDate!=null) {
             amendment.upsertItem(discountPercentage, LeaseAmendmentItem.applicableToFromString(discountApplicableTo), discountStartDate, discountEndDate);
         }
@@ -162,11 +164,6 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
     LeaseRepository leaseRepository;
 
     @Inject
-    FactoryService factoryService;
-
-    @Inject
     LeaseAmendmentRepository leaseAmendmentRepository;
 
-    @Inject
-    WrapperFactory wrapperFactory;
 }

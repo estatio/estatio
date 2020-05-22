@@ -209,6 +209,17 @@ public class LeaseAmendment extends Agreement {
         return null;
     }
 
+    @Override
+    public String disableChangeDates(){
+        final String warning = String.format("Amendment in state of %s cannot be changed", getState());
+        return amendmentDataIsImmutable() ? warning : null;
+    }
+
+    @Programmatic
+    public boolean amendmentDataIsImmutable() {
+        return getState()!=LeaseAmendmentState.PROPOSED;
+    }
+
     @Inject
     RepositoryService repositoryService;
 
@@ -216,5 +227,4 @@ public class LeaseAmendment extends Agreement {
     LeaseAmendmentService leaseAmendmentService;
 
     @Inject LeaseAmendmentItemRepository leaseAmendmentItemRepository;
-
 }

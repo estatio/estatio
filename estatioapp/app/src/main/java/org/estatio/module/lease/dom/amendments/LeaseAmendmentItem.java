@@ -93,9 +93,28 @@ public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendment
 
     public String disableChangeApplicableTo(){
         final String warning = String.format("Amendment in state of %s cannot be changed", getLeaseAmendment().getState());
-        return getLeaseAmendment().getState()==LeaseAmendmentState.PROPOSED ? null : warning;
+        return getLeaseAmendment().amendmentDataIsImmutable() ? warning : null;
     }
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public LeaseAmendmentItem changeDates(final LocalDate startDate, final LocalDate endDate){
+        setStartDate(startDate);
+        setEndDate(endDate);
+        return this;
+    }
+
+    public LocalDate default0ChangeDates(){
+        return getStartDate();
+    }
+
+    public LocalDate default1ChangeDates(){
+        return getEndDate();
+    }
+
+    public String disableChangeDates(){
+        final String warning = String.format("Amendment in state of %s cannot be changed", getLeaseAmendment().getState());
+        return getLeaseAmendment().amendmentDataIsImmutable() ? warning : null;
+    }
 
     @Action(semantics = SemanticsOf.SAFE)
     public LeaseAmendmentItemType getType(){

@@ -17,10 +17,14 @@
                                     <ns2:fieldSet name="General" id="general">
                                         <ns2:property id="leaseAmendment"/>
                                         <ns2:property id="type"/>
-                                        <ns2:property id="applicableTo"/>
+                                        <ns2:property id="applicableTo">
+                                            <ns2:action id="changeApplicableTo" position="PANEL"/>
+                                        </ns2:property>
                                     </ns2:fieldSet>
                                     <ns2:fieldSet name="Discount" id="discount">
-                                        <ns2:property id="discountPercentage"/>
+                                        <ns2:property id="discountPercentage">
+                                            <ns2:action id="changeDiscountPercentage" position="PANEL"/>
+                                        </ns2:property>
                                     </ns2:fieldSet>
                                 </col>
                             </row>

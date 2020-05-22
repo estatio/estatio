@@ -26,6 +26,26 @@ public class LeaseAmendmentItemForFrequencyChange extends LeaseAmendmentItem {
     @Getter @Setter
     private InvoicingFrequency amendedInvoicingFrequency;
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public LeaseAmendmentItemForFrequencyChange changeFrequencies(final InvoicingFrequency invoicingFrequencyOnLease, final InvoicingFrequency amendedInvoicingFrequency){
+        setInvoicingFrequencyOnLease(invoicingFrequencyOnLease);
+        setAmendedInvoicingFrequency(amendedInvoicingFrequency);
+        return this;
+    }
+
+    public InvoicingFrequency default0ChangeFrequencies(){
+        return getInvoicingFrequencyOnLease();
+    }
+
+    public InvoicingFrequency default1ChangeFrequencies(){
+        return getAmendedInvoicingFrequency();
+    }
+
+    public String disableChangeFrequencies(){
+        final String warning = String.format("Amendment in state of %s cannot be changed", getLeaseAmendment().getState());
+        return getLeaseAmendment().amendmentDataIsImmutable() ? warning : null;
+    }
+
     @Action(semantics = SemanticsOf.SAFE)
     @Override
     public LeaseAmendmentItemType getType(){

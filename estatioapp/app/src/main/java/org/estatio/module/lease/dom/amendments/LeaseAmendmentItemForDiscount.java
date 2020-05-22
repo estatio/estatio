@@ -35,7 +35,7 @@ public class LeaseAmendmentItemForDiscount extends LeaseAmendmentItem {
 
     public String disableChangeDiscountPercentage(){
         final String warning = String.format("Amendment in state of %s cannot be changed", getLeaseAmendment().getState());
-        return getLeaseAmendment().getState()==LeaseAmendmentState.PROPOSED ? null : warning;
+        return getLeaseAmendment().amendmentDataIsImmutable() ? warning : null;
     }
 
     @Action(semantics = SemanticsOf.SAFE)

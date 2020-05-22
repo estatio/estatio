@@ -17,9 +17,12 @@
                                     <ns2:fieldSet name="General" id="general">
                                         <ns2:property id="leaseAmendment"/>
                                         <ns2:property id="type"/>
-                                        <ns2:property id="applicableTo"/>
+                                        <ns2:property id="applicableTo">
+                                            <ns2:action id="changeApplicableTo" position="PANEL"/>
+                                        </ns2:property>
                                     </ns2:fieldSet>
                                     <ns2:fieldSet name="Frequency Change" id="frequencychange">
+                                        <ns2:action id="changeFrequencies" position="PANEL"/>
                                         <ns2:property id="invoicingFrequencyOnLease"/>
                                         <ns2:property id="amendedInvoicingFrequency"/>
                                     </ns2:fieldSet>

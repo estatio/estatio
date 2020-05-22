@@ -38,6 +38,7 @@ public class LeaseAmendmentItemRepository {
                 .filter(li -> li.getClass().isAssignableFrom(LeaseAmendmentItemForFrequencyChange.class))
                 .map(LeaseAmendmentItemForFrequencyChange.class::cast)
                 .findFirst().orElse(null);
+        if (leaseAmendment.getState()==LeaseAmendmentState.APPLIED) return item;
         if (item==null){
             return create(leaseAmendment, invoicingFrequencyOnLease, amendedInvoicingFrequency, applicableToTypes, startDate, endDate);
         } else {
@@ -84,6 +85,7 @@ public class LeaseAmendmentItemRepository {
                 .filter(li -> li.getClass().isAssignableFrom(LeaseAmendmentItemForDiscount.class))
                 .map(LeaseAmendmentItemForDiscount.class::cast)
                 .findFirst().orElse(null);
+        if (leaseAmendment.getState()==LeaseAmendmentState.APPLIED) return item;
         if (item==null){
             return create(leaseAmendment, discountPercentage, applicableToTypes, startDate, endDate);
         } else {
