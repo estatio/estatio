@@ -35,56 +35,61 @@ import lombok.Setter;
 )
 public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importable {
 
+
     @Getter @Setter
     @MemberOrder(sequence = "1")
     private LeaseAmendmentType leaseAmendmentType;
 
     @Getter @Setter
     @MemberOrder(sequence = "2")
-    private String leaseReference;
+    private LeaseAmendmentState leaseAmendmentState;
 
     @Getter @Setter
     @MemberOrder(sequence = "3")
-    private LocalDate startDate;
+    private String leaseReference;
 
     @Getter @Setter
     @MemberOrder(sequence = "4")
-    private LocalDate endDate;
+    private LocalDate startDate;
 
     @Getter @Setter
     @MemberOrder(sequence = "5")
-    private BigDecimal discountPercentage;
+    private LocalDate endDate;
 
     @Getter @Setter
     @MemberOrder(sequence = "6")
-    private String discountApplicableTo;
+    private BigDecimal discountPercentage;
 
     @Getter @Setter
     @MemberOrder(sequence = "7")
-    private LocalDate discountStartDate;
+    private String discountApplicableTo;
 
     @Getter @Setter
     @MemberOrder(sequence = "8")
-    private LocalDate discountEndDate;
+    private LocalDate discountStartDate;
 
     @Getter @Setter
     @MemberOrder(sequence = "9")
-    private InvoicingFrequency invoicingFrequencyOnLease;
+    private LocalDate discountEndDate;
 
     @Getter @Setter
     @MemberOrder(sequence = "10")
-    private InvoicingFrequency amendedInvoicingFrequency;
+    private InvoicingFrequency invoicingFrequencyOnLease;
 
     @Getter @Setter
     @MemberOrder(sequence = "11")
-    private String frequencyApplicableTo;
+    private InvoicingFrequency amendedInvoicingFrequency;
 
     @Getter @Setter
     @MemberOrder(sequence = "12")
-    private LocalDate frequencyStartDate;
+    private String frequencyApplicableTo;
 
     @Getter @Setter
     @MemberOrder(sequence = "13")
+    private LocalDate frequencyStartDate;
+
+    @Getter @Setter
+    @MemberOrder(sequence = "14")
     private LocalDate frequencyEndDate;
 
 

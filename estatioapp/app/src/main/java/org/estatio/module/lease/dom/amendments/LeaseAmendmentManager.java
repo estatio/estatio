@@ -90,6 +90,7 @@ public class LeaseAmendmentManager {
                             .getFrequencyChangeEndDate())))
                     .collect(Collectors.toList());
             LeaseAmendmentImportLine newLine = new LeaseAmendmentImportLine();
+            newLine.setLeaseAmendmentState(LeaseAmendmentState.PROPOSED);
             newLine.setLeaseReference(lease.getReference());
             newLine.setLeaseAmendmentType(leaseAmendmentType);
             if (!discountCandidates.isEmpty()){
