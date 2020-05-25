@@ -777,6 +777,14 @@ public class LeaseItem
         return results;
     }
 
+    @Programmatic
+    public boolean hasTermsOverlapping(final LocalDateInterval interval) {
+        for (LeaseTerm term : getTerms()){
+            if (term.getInterval().overlaps(interval)) return true;
+        }
+        return false;
+    }
+
     // //////////////////////////////////////
 
     public static class Predicates {

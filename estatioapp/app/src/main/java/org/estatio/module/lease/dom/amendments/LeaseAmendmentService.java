@@ -102,6 +102,9 @@ public class LeaseAmendmentService {
         LocalDate endDateToUse = sourceItem.getEndDate()==null || sourceItem.getEndDate().isAfter(leaseAmendmentItemForDiscount.getEndDate()) ? leaseAmendmentItemForDiscount.getEndDate() : sourceItem.getEndDate();
         Lease lease = sourceItem.getLease();
         lease.verifyUntil(endDateToUse.plusDays(1));
+        // prevent an item copy from being created when no terms for the discount period
+        if (!sourceItem.hasTermsOverlapping(LocalDateInterval.including(leaseAmendmentItemForDiscount.getStartDate(), leaseAmendmentItemForDiscount.getEndDate()))) return;
+
         final Charge chargeFromAmendmentType = chargeRepository.findByReference(
                 leaseAmendmentItemForDiscount.getLeaseAmendment().getLeaseAmendmentType()
                         .getChargeReferenceForDiscountItem());
