@@ -47,6 +47,7 @@ public class LeaseAmendmentService {
         if (!Arrays.asList(
                 LeaseAmendmentType.COVID_FRA_50_PERC,
                 LeaseAmendmentType.COVID_FRA_100_PERC,
+                LeaseAmendmentType.COVID_ITA_FREQ_CHANGE,
                 LeaseAmendmentType.DEMO_TYPE).
                 contains(leaseAmendment.getLeaseAmendmentType())
         ) {
@@ -97,6 +98,7 @@ public class LeaseAmendmentService {
         LocalDate startDateToUse = sourceItem.getStartDate()==null || sourceItem.getStartDate().isBefore(leaseAmendmentItemForDiscount.getStartDate()) ? leaseAmendmentItemForDiscount.getStartDate() : sourceItem.getStartDate();
         LocalDate endDateToUse = sourceItem.getEndDate()==null || sourceItem.getEndDate().isAfter(leaseAmendmentItemForDiscount.getEndDate()) ? leaseAmendmentItemForDiscount.getEndDate() : sourceItem.getEndDate();
         Lease lease = sourceItem.getLease();
+        lease.verifyUntil(endDateToUse);
         final Charge chargeFromAmendmentType = chargeRepository.findByReference(
                 leaseAmendmentItemForDiscount.getLeaseAmendment().getLeaseAmendmentType()
                         .getChargeReferenceForDiscountItem());
@@ -132,14 +134,15 @@ public class LeaseAmendmentService {
                                 firstNewItem,
                                 leaseAmendmentItemForFrequencyChange.getInvoicingFrequencyOnLease());
                     }
-            default:
-                final String warning = String
-                        .format("Applying frequency change on lease %s for type %s is not (yet) supported",
-                                lease.getReference(), originalItem.getType());
-                messageService.warnUser(
-                        warning);
-                LOG.error(warning);
-                break;
+                    break;
+                default:
+                    final String warning = String
+                            .format("Applying frequency change on lease %s for type %s is not (yet) supported",
+                                    lease.getReference(), originalItem.getType());
+                    messageService.warnUser(
+                            warning);
+                    LOG.error(warning);
+                    break;
             }
         }
     }
@@ -201,6 +204,7 @@ public class LeaseAmendmentService {
 
     public LeaseItem closeOriginalAndOpenNewLeaseItem(final LocalDate startDateNewItem, final LeaseItem originalItem, final InvoicingFrequency invoicingFrequency){
         final Lease lease = originalItem.getLease();
+        lease.verifyUntil(startDateNewItem);
         final LeaseTerm currentTerm = originalItem.currentTerm(startDateNewItem);
         if (currentTerm == null){
             LOG.info(String.format("No current rent term found for lease %s", lease.getReference()));
