@@ -1,6 +1,7 @@
 package org.estatio.module.lease.dom.amendments;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -111,6 +112,10 @@ public class LeaseAmendment extends Agreement {
         return this;
     }
 
+    public List<LeaseAmendmentState> choices0ChangeState(){
+        return Arrays.asList(LeaseAmendmentState.PROPOSED, LeaseAmendmentState.SIGNED);
+    }
+
     public String disableChangeState(){
         return getState()==LeaseAmendmentState.APPLIED ? "The status is applied" : null;
     }
@@ -156,6 +161,7 @@ public class LeaseAmendment extends Agreement {
     }
 
     public String disableCreateLeasePreview(){
+        if (getState()==LeaseAmendmentState.APPLIED) return "This amendment is applied";
         return getLeasePreview()!=null ? "There is already a lease preview. We support 1 preview at the moment." : null;
     }
 

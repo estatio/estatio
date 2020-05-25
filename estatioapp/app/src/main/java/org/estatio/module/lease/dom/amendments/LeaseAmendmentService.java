@@ -124,6 +124,8 @@ public class LeaseAmendmentService {
         for (LeaseItem originalItem : itemsToIncludeForFrequencyChange){
             switch (originalItem.getType()){
                 case RENT:
+                case RENT_DISCOUNT:
+                case RENT_DISCOUNT_FIXED:
                 case SERVICE_CHARGE:
                 case SERVICE_CHARGE_INDEXABLE:
                 case MARKETING:
