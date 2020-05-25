@@ -50,6 +50,7 @@
                                         <ns2:property id="datanucleusId"/>
                                         <ns2:property id="datanucleusVersionLong"/>
                                         <ns2:property id="datanucleusVersionTimestamp"/>
+                                        <ns2:property id="atPath" hidden="EVERYWHERE"/>
                                     </ns2:fieldSet>
                                 </col>
                             </row>

@@ -28,6 +28,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
@@ -60,6 +61,10 @@ import lombok.Setter;
 )
 @DomainObjectLayout()
 public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendmentItem> {
+
+    public String title(){
+        return TitleBuilder.start().withParent(getLeaseAmendment()).withName(getType()).toString();
+    }
 
     public LeaseAmendmentItem() {
         super("leaseAmendment, type");

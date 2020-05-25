@@ -14,7 +14,7 @@
                 <ns2:property id="applicableTo"/>
                 <ns2:property id="startDate"/>
                 <ns2:property id="endDate"/>
-                <ns2:property id="applicationLevelPath" hidden="EVERYWHERE"/>
+                <ns2:property id="atPath" hidden="EVERYWHERE"/>
             </ns2:fieldSet>
         </col>
     </row>
