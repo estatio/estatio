@@ -253,6 +253,80 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             Person_enum.RonRondelliIt,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
+    Oxf123("OXF-123", null, "123 Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
+            ld(2017, 1, 1), ld(2026, 12, 31),
+            new OccupancySpec[] {
+                    new OccupancySpec("001", "123", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2005, 10, 28), ld(2017, 4, 16)),
+                    new OccupancySpec("002", "123", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2017, 4, 17), null)
+            },
+            Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
+    Oxfmin2("OXF-MIN2", null, "minute Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
+            ld(2014, 6, 1), ld(2024, 5, 31),
+            new OccupancySpec[] {
+                    new OccupancySpec("001", "minute", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2014, 6, 1), null),
+                    new OccupancySpec("002", "minute", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2014, 6, 1), null)
+            },
+            Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
+    Oxfmin3("OXF-MIN3", null, "minute Lease next", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
+            ld(2014, 6, 1), ld(2024, 5, 31),
+            new OccupancySpec[] {
+                    new OccupancySpec("001", "minute", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2019, 8, 12), null),
+            },
+            Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
+    Oxfriu("OXF-RIU", null, "riu Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
+            ld(2011, 1, 16), ld(2021, 1, 15),
+            new OccupancySpec[] {
+                    new OccupancySpec("008", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2016, 11, 10), ld(2017,8,31)),
+            },
+            Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
+    OxfLek("OXF-LEK", null, "lek Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
+            ld(1997, 9, 25), ld(2008, 9, 30),
+            new OccupancySpec[] {
+                    new OccupancySpec("009", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(1997, 9, 25), ld(2008,9,30)),
+            },
+            Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
+    OxfLek1("OXF-LEK1", null, "lek Lease 1", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
+            ld(2008, 9, 22), ld(2013, 12, 31),
+            new OccupancySpec[] {
+                    new OccupancySpec("009", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2008, 9, 22), ld(2013,12,31)),
+            },
+            Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
+    OxfLek2("OXF-LEK2", null, "lek Lease 2", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
+            ld(2014, 1, 1), ld(2021, 12, 31),
+            new OccupancySpec[] {
+                    new OccupancySpec("009", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2014, 1, 1), ld(2019,1,29)),
+            },
+            Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
+    OxfLif("OXF-LIF", null, "lif Lease", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
+            ld(2010, 8, 1), ld(2016, 4, 10),
+            new OccupancySpec[] {
+                    new OccupancySpec("010", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2010, 8, 1), ld(2016,4,10)),
+            },
+            Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
+    OxfLif1("OXF-LIF1", null, "lif Lease 1", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
+            ld(2016, 4, 11), ld(2022, 6, 30),
+            new OccupancySpec[] {
+                    new OccupancySpec("010", "riu", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2016, 4, 11), null),
+            },
+            Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
     ;
 
     @AllArgsConstructor

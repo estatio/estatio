@@ -63,6 +63,8 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.services.xactn.TransactionService3;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -814,5 +816,9 @@ public class LeaseItem
     EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
 
     @Inject LeaseItemSourceRepository leaseItemSourceRepository;
+
+    @Inject RepositoryService repositoryService;
+
+    @Inject TransactionService3 transactionService3;
 
 }

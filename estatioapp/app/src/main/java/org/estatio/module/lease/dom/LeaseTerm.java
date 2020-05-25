@@ -457,7 +457,6 @@ public abstract class LeaseTerm
     public LeaseTerm split(
             final LocalDate splitDate) {
 
-        final LeaseTerm currentPrevous = this.getPrevious();
         final LeaseTerm currentNext = this.getNext();
 
         //decouple current next
@@ -540,7 +539,7 @@ public abstract class LeaseTerm
         LeaseTerm previousTerm = getPrevious();
         BigInteger sequence = BigInteger.ONE;
         if (previousTerm != null) {
-            sequence = previousTerm.getSequence().add(BigInteger.ONE);
+            sequence = previousTerm.getSequence()!=null ? previousTerm.getSequence().add(BigInteger.ONE) : BigInteger.ONE; //ECP-1107
             setFrequency(previousTerm.getFrequency());
         }
         setSequence(sequence);

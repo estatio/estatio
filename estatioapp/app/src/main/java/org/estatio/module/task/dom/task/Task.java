@@ -19,22 +19,10 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.google.common.collect.Lists;
 
+import org.apache.isis.applib.annotation.*;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.InvokeOn;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.metamodel.MetaModelService3;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.services.user.UserService;
@@ -80,14 +68,14 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.module.task.dom.task.Task "
                         + "WHERE completedBy == null "
-                        + "ORDER BY personAssignedTo, createdOn ASC "),
+                        + "ORDER BY personAssignedTo, priority DESC, createdOn ASC "),
         @Query(
                 name = "findIncompleteByPersonAssignedTo", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.task.dom.task.Task "
                         + "WHERE completedBy      == null "
                         + "   && personAssignedTo == :personAssignedTo "
-                        + "ORDER BY createdOn ASC "),
+                        + "ORDER BY priority DESC, createdOn ASC "),
         @Query(
                 name = "findIncompleteByPersonAssignedToAndCreatedOnBefore", language = "JDOQL",
                 value = "SELECT "
@@ -95,14 +83,14 @@ import lombok.Setter;
                         + "WHERE completedBy      == null "
                         + "   && personAssignedTo == :personAssignedTo "
                         + "   && createdOn        <  :createdOn "
-                        + "ORDER BY createdOn DESC "),
+                        + "ORDER BY priority DESC, createdOn DESC "),
         @Query(
                 name = "findIncompleteByUnassigned", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.task.dom.task.Task "
                         + "WHERE completedBy      == null "
                         + "   && personAssignedTo == null "
-                        + "ORDER BY createdOn DESC "),
+                        + "ORDER BY priority DESC, createdOn DESC "),
         @Query(
                 name = "findIncompleteByUnassignedForRoles", language = "JDOQL",
                 value = "SELECT "
@@ -110,7 +98,7 @@ import lombok.Setter;
                         + "WHERE completedBy      == null "
                         + "   && personAssignedTo == null "
                         + "   && :roleTypes.contains(assignedTo) "
-                        + "ORDER BY createdOn DESC "),
+                        + "ORDER BY priority DESC, createdOn DESC "),
         @Query(
                 name = "findIncompleteByUnassignedForRolesAndCreatedOnAfter", language = "JDOQL",
                 value = "SELECT "
@@ -119,7 +107,7 @@ import lombok.Setter;
                         + "   && personAssignedTo == null "
                         + "   && :roleTypes.contains(assignedTo) "
                         + "   && createdOn        >  :createdOn "
-                        + "ORDER BY createdOn ASC "),
+                        + "ORDER BY priority DESC, createdOn ASC "),
         @Query(
                 name = "findIncompleteByUnassignedForRolesAndCreatedOnBefore", language = "JDOQL",
                 value = "SELECT "
@@ -128,14 +116,14 @@ import lombok.Setter;
                         + "   && personAssignedTo == null "
                         + "   && :roleTypes.contains(assignedTo) "
                         + "   && createdOn        <  :createdOn "
-                        + "ORDER BY createdOn DESC "),
+                        + "ORDER BY priority DESC, createdOn DESC "),
         @Query(
                 name = "findIncompleteByRole", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.task.dom.task.Task "
                         + "WHERE completedBy      == null "
                         + "   && assignedTo == :roleType "
-                        + "ORDER BY createdOn DESC "),
+                        + "ORDER BY priority DESC, createdOn DESC "),
         @Query(
                 name = "findIncompleteByPersonAssignedToAndCreatedOnAfter", language = "JDOQL",
                 value = "SELECT "
@@ -143,7 +131,7 @@ import lombok.Setter;
                         + "WHERE completedBy      == null "
                         + "   && personAssignedTo == :personAssignedTo "
                         + "   && createdOn        >  :createdOn "
-                        + "ORDER BY createdOn ASC ")
+                        + "ORDER BY priority DESC, createdOn ASC ")
 })
 @DomainObject(objectType = "task.Task")
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
@@ -156,12 +144,14 @@ public class Task implements Comparable<Task>, WithApplicationTenancy {
             final Person personAssignedTo,
             final String description,
             final LocalDateTime createdOn,
-            final String transitionObjectType) {
+            final String transitionObjectType,
+            final Integer priority) {
         this.assignedTo = assignedTo;
         this.personAssignedTo = personAssignedTo;
         this.description = trimIfRequired(description, DescriptionType.Meta.MAX_LEN);
         this.createdOn = createdOn;
         this.transitionObjectType = transitionObjectType;
+        this.priority = priority;
     }
 
     private static String trimIfRequired(final String str, final int maxLen) {
@@ -187,6 +177,10 @@ public class Task implements Comparable<Task>, WithApplicationTenancy {
     void appendTitleOfObject(final StringBuilder buf) {
         buf.append(titleService.titleOf(getObject()));
     }
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private Integer priority;
 
     @Getter @Setter
     @Column(allowsNull = "false", name = "assignedToId")
@@ -230,6 +224,7 @@ public class Task implements Comparable<Task>, WithApplicationTenancy {
      */
     @Getter @Setter
     @Column(allowsNull = "true")
+    @PropertyLayout(named = "completedOn (UTC time)")
     private LocalDateTime completedOn;
 
     /**

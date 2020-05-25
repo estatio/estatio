@@ -66,7 +66,6 @@ import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForMarketing_
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTax_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRentFixed_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
 import org.estatio.module.lease.seed.DocFragment_enum;
 import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
@@ -74,6 +73,7 @@ import org.estatio.module.party.fixtures.numerator.enums.NumeratorForOrganisatio
 import org.estatio.module.capex.fixtures.roles.enums.PartyRole_enum;
 import org.estatio.module.tax.EstatioTaxModule;
 import org.estatio.module.turnover.fixtures.data.TurnoverReportingConfig_enum;
+import org.estatio.module.turnover.fixtures.data.Turnover_enum;
 
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Global;
 
@@ -227,8 +227,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 LeaseItemForMarketing_enum.OxfTopModel001Gb,
                 LeaseItemForRent_enum.HanPoison001Se,
                 LeaseItemForRent_enum.HanTopModel002Se,
-                LeaseItemForTurnoverRentFixed_enum.HanPoison001Se,
-                LeaseItemForTurnoverRentFixed_enum.HanTopModel002Se,
+                LeaseItemForTurnoverRent_enum.HanPoison001Se,
+                LeaseItemForTurnoverRent_enum.HanTopModel002Se,
                 LeaseItemForRent_enum.RonTopModel001It,
                 LeaseItemForTax_enum.RonTopModel001It);
 
@@ -246,6 +246,10 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 TurnoverReportingConfig_enum.BudPoison001NlAudit,
                 TurnoverReportingConfig_enum.BudMiracle002NlAudit,
                 TurnoverReportingConfig_enum.BudDago004NlAudit);
+
+        ec.executeChildren(this,
+                Turnover_enum.OxfTopModel001Gb202001,
+                Turnover_enum.OxfTopModel001Gb201901);
 
         ec.executeChildren(this,
                 Budget_enum.OxfBudget2015,

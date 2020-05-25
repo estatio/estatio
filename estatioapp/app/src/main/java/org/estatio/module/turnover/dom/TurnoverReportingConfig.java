@@ -8,16 +8,24 @@ import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Index;
+import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.VersionStrategy;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.core.commons.lang.ArrayExtensions;
+import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.util.TitleBuffer;
+import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -30,6 +38,7 @@ import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.party.dom.Person;
+import org.estatio.module.turnover.dom.aggregation.AggregationPattern;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -47,6 +56,11 @@ import lombok.Setter;
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
                 name = "TurnoverReportingConfig_occupancy_type_UNQ", members = { "occupancy", "type" })
+})
+@Indices({
+        @Index(
+                name = "TurnoverReportingConfig_occupancy_type_frequency_IDX",
+                members = {"occupancy", "type", "frequency"}),
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -75,15 +89,32 @@ import lombok.Setter;
                         + "FROM org.estatio.module.turnover.dom.TurnoverReportingConfig "
                         + "WHERE occupancy == :occupancy && "
                         + "type == :type"),
+        @javax.jdo.annotations.Query(
+                name = "findByOccupancyAndTypeAndFrequency", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.turnover.dom.TurnoverReportingConfig "
+                        + "WHERE occupancy == :occupancy && "
+                        + "type == :type && "
+                        + "frequency == :frequency"),
 })
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "org.estatio.module.turnover.dom.TurnoverReportingConfig"
 )
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
+@XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
 
     public TurnoverReportingConfig(){
         super("occupancy, type");
+    }
+
+    public String title(){
+        TitleBuffer buffer = new TitleBuffer();
+        buffer.append(getOccupancy());
+        buffer.append(getType());
+        buffer.append(getFrequency());
+        return buffer.toString();
     }
 
     public TurnoverReportingConfig(
@@ -127,10 +158,19 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
     @Column(name = "currencyId", allowsNull = "false")
     private Currency currency;
 
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private AggregationPattern aggregationPattern;
+
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    @PropertyLayout(hidden = Where.EVERYWHERE)
+    private Boolean aggregationInitialized;
+
     @Action(semantics = SemanticsOf.SAFE)
     public LocalDate getEndDate(){
 
-        LocalDate endDateToUse = ArrayExtensions.coalesce(occupancy.getEndDate(), occupancy.getLease().getTenancyEndDate());
+        LocalDate endDateToUse = occupancy.getEffectiveEndDate();
         if (endDateToUse==null) return null;
 
         return endDateToUse.isAfter(getStartDate()) ? endDateToUse : getStartDate(); // ECP-962: prevents bad occupancy and / or lease data to produce wrong illegal interval on turnover reporting config
@@ -171,7 +211,13 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
 
     @Programmatic
     public boolean isActiveOnDate(final LocalDate date){
+        LocalDate startDateToUse = getEffectiveStartDate();
+        LocalDateInterval interval = LocalDateInterval.including(startDateToUse, getEndDate());
+        return interval.contains(date);
+    }
 
+    @Programmatic
+    public LocalDate getEffectiveStartDate() {
         LocalDate startDateToUse;
         switch (getFrequency()){
 
@@ -186,8 +232,7 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
             default:
                 startDateToUse = getStartDate();
         }
-        LocalDateInterval interval = LocalDateInterval.including(startDateToUse, getEndDate());
-        return interval.contains(date);
+        return startDateToUse;
     }
 
     @Programmatic

@@ -43,8 +43,10 @@ import org.joda.time.Period;
 import org.joda.time.PeriodType;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
@@ -63,6 +65,8 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.managed.HasManagedIn;
+import org.incode.module.base.dom.managed.ManagedIn;
 import org.incode.module.base.dom.types.NotesType;
 import org.incode.module.base.dom.utils.JodaPeriodUtils;
 import org.incode.module.base.dom.utils.StringUtils;
@@ -177,10 +181,18 @@ import lombok.Setter;
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class Lease
         extends Agreement
-        implements WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {
+        implements WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted,
+        HasManagedIn {
 
     public Lease() {
         super(LeaseAgreementRoleTypeEnum.LANDLORD, LeaseAgreementRoleTypeEnum.TENANT);
+    }
+
+    @Override
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION, hidden = Where.EVERYWHERE)
+    public ManagedIn getManagedIn() {
+        if (getAtPath().startsWith("/SWE")) return ManagedIn.FASTNET;
+        return ManagedIn.ESTATIO;
     }
 
     public static class RemoveEvent extends ActionDomainEvent<Lease> {}
@@ -428,6 +440,16 @@ public class Lease
     @Getter @Setter
     private SortedSet<Occupancy> occupancies = new TreeSet<>();
 
+    @Programmatic
+    public boolean hasOverlappingOccupancies(){
+        for (Occupancy O : this.getOccupancies()){
+            for (Occupancy O2 : this.getOccupancies() ){
+                if (O!=O2 && O.getInterval().overlaps(O2.getInterval())) return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * The action to relate a lease to a unit. A lease can occupy unlimited
      * units.
@@ -536,8 +558,8 @@ public class Lease
             case PROPERTY_TAX:
                 if (!charge.getReference().equals("PROPERTY_TAX")) messageService.warnUser("Are you sure? Charge normally is 'property tax' for type property tax");
                 break;
-            case TURNOVER_RENT_FIXED:
-                if (!charge.getReference().equals("TURNOVER_RENT")) messageService.warnUser("Are you sure? Charge normally is 'turnover rent' for type turnover rent fixed");
+            case TURNOVER_RENT:
+                if (!charge.getReference().equals("TURNOVER_RENT")) messageService.warnUser("Are you sure? Charge normally is 'turnover rent' for type turnover rent");
                 break;
             default:
                 messageService.warnUser(String.format("Are you sure? Items of type %s are normally are not entered manually.", type));
@@ -962,7 +984,7 @@ public class Lease
                 endDate,
                 tenancyStartDate,
                 tenancyEndDate,
-                this.primaryPartyAsOfElseCurrent(startDate),
+                this.primaryPartyAsOfElseCurrent(tenancyStartDate),
                 tenant);
 
         copyOccupancies(newLease, tenancyStartDate);

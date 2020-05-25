@@ -149,7 +149,7 @@ public class StateTransitionRepositoryGeneric {
 
         final PartyRoleType roleAssignTo =
                 iRoleAssignTo.findOrCreateUsing(partyRoleTypeRepository);
-        final Task task = new Task(roleAssignTo, assignToIfAny, taskDescription, createdOn, transitionObjectType);
+        final Task task = new Task(roleAssignTo, assignToIfAny, taskDescription, createdOn, transitionObjectType, null);
 
         repositoryService.persist(task);
         return task;

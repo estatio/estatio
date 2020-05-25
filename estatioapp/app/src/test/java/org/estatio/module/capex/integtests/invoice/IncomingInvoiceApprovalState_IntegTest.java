@@ -395,6 +395,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
     public void payable_non_italian_invoice_can_be_rejected() throws Exception {
 
         // given
+        PartyRoleType typeForIncInvoiceManager = partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.getKey());
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.BertrandIncomingInvoiceManagerFr.getRef().toLowerCase(), (Runnable) () ->
                 wrap(incomingInvoice).changePaymentMethod(PaymentMethod.CREDIT_CARD));
@@ -415,6 +416,8 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
 
         // then
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.NEW);
+        assertThat(taskRepository.findIncompleteByRole(typeForIncInvoiceManager).get(1).getDescription()).isEqualTo("Complete (test)");
+        assertThat(taskRepository.findIncompleteByRole(typeForIncInvoiceManager).get(1).getPriority()).isEqualTo(1);
 
     }
 

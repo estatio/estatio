@@ -35,6 +35,7 @@ import org.estatio.module.guarantee.EstatioGuaranteeModule;
 import org.estatio.module.link.EstatioLinkModule;
 import org.estatio.module.registration.EstatioRegistrationModule;
 import org.estatio.module.turnover.EstatioTurnoverModule;
+import org.estatio.module.turnoveraggregate.EstatioTurnoverAggregateModule;
 
 /**
  * A "global" module for the entire app (=big ball of mud, stuff to decouple)
@@ -54,7 +55,8 @@ public final class EstatioApplicationModule extends ModuleAbstract {
                 new EstatioLinkModule(),
                 new EstatioCodaModule(),
                 new EstatioDocFlowModule(),
-                new EstatioTurnoverModule()
+//                new EstatioTurnoverModule(),
+                new EstatioTurnoverAggregateModule()
         );
     }
 

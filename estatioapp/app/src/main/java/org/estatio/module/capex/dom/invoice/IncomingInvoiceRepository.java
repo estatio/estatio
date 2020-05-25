@@ -202,6 +202,18 @@ public class IncomingInvoiceRepository {
                         "bankAccount", bankAccount));
     }
 
+    @Programmatic
+    public List<IncomingInvoice> findByApprovalStateAndBankAccount(
+            final IncomingInvoiceApprovalState approvalState,
+            final BankAccount bankAccount) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoice.class,
+                        "findByApprovalStateAndBankAccount",
+                        "approvalState", approvalState,
+                        "bankAccount", bankAccount));
+    }
+
     List<IncomingInvoice> findNotInAnyPaymentBatchByApprovalStateAndPaymentMethod(
             final IncomingInvoiceApprovalState approvalState,
             final PaymentMethod paymentMethod) {

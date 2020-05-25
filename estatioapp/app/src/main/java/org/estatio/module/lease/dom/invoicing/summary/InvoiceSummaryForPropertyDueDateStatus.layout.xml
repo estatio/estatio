@@ -51,6 +51,7 @@
         <col span="3">
             <ns2:fieldSet name="Stats" id="stats">
                 <ns2:property id="total"/>
+                <ns2:property id="lastInvoiceNumber"/>
             </ns2:fieldSet>
         </col>
         <col span="3">

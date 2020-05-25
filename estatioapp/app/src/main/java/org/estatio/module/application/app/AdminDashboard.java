@@ -2,6 +2,7 @@ package org.estatio.module.application.app;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -12,8 +13,12 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
+import com.google.common.collect.Lists;
+
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.ViewModel;
 import org.apache.isis.applib.annotation.Action;
@@ -30,6 +35,7 @@ import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.background.BackgroundService2;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.config.ConfigurationProperty;
 import org.apache.isis.applib.services.config.ConfigurationService;
@@ -47,6 +53,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.servletapi.dom.HttpSessionProvider;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.slack.impl.SlackService;
 
@@ -57,14 +64,19 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
-import org.estatio.module.task.dom.task.Task;
 import org.estatio.module.coda.EstatioCodaModule;
+import org.estatio.module.coda.app.CodaCmpCodeService;
+import org.estatio.module.coda.app.CodaDocCodeService;
 import org.estatio.module.coda.dom.doc.CodaDocHeadMenu;
 import org.estatio.module.coda.dom.hwm.CodaHwm;
 import org.estatio.module.coda.dom.hwm.CodaHwmRepository;
 import org.estatio.module.countryapptenancy.dom.CountryServiceForCurrentUser;
 import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.lease.dom.InvoicingFrequency;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
@@ -76,6 +88,12 @@ import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.estatio.module.settings.dom.ApplicationSettingForEstatio;
 import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
 import org.estatio.module.task.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.task.Task;
+import org.estatio.module.turnover.dom.Frequency;
+import org.estatio.module.turnover.dom.TurnoverReportingConfig;
+import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
+import org.estatio.module.turnover.dom.Type;
+import org.estatio.module.turnoveraggregate.contributions.Lease_aggregateTurnovers;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -85,6 +103,8 @@ import lombok.Setter;
         objectType = "org.estatio.module.application.app.AdminDashboard"
 )
 public class AdminDashboard implements ViewModel {
+
+    public static Logger LOG = LoggerFactory.getLogger(AdminDashboard.class);
 
     public static final String KEY_ESTATIO_MOTD = "estatio.motd";
     public static final String KEY_MINIO_ARCHIVE_FOR_CALLER = "docBlobServer.caller";
@@ -518,6 +538,35 @@ public class AdminDashboard implements ViewModel {
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void aggregateAllTurnovers(@Nullable final LocalDate startDate, @Nullable final LocalDate endDate, final boolean maintainOnly){
+        final List<Lease> leaseSelection = turnoverReportingConfigRepository.listAll().stream()
+                .filter(c -> c.getType() == Type.PRELIMINARY && c.getFrequency() == Frequency.MONTHLY)
+                .map(c -> c.getOccupancy().getLease())
+                .filter(l->l.getNext()==null || noConfigFor((Lease) l.getNext()))
+                .filter(l -> l.getEffectiveInterval().overlaps(LocalDateInterval.including(startDate, null)))
+                .collect(Collectors.toList());
+        leaseSelection.forEach(l->{
+            try {
+                backgroundService2.executeMixin(Lease_aggregateTurnovers.class, l).$$(startDate, endDate, maintainOnly);
+            } catch (Exception e){
+                LOG.warn(String.format("Problem with aggregation for lease %s", l.getReference()));
+                LOG.warn(e.getMessage());
+            }
+        });
+    }
+
+    private boolean noConfigFor(final Lease next) {
+        final List<TurnoverReportingConfig> configs = new ArrayList<>();
+        Lists.newArrayList(next.getOccupancies()).forEach(o->{
+            final List<TurnoverReportingConfig> byOccupancyAndType = turnoverReportingConfigRepository
+                    .findByOccupancyAndType(o, Type.PRELIMINARY);
+            if (!byOccupancyAndType.isEmpty()){
+                configs.addAll(byOccupancyAndType);
+            }
+        });
+        return configs.isEmpty();
+    }
+
     public void sendApprovalRemindersItaly(@Nullable final Person approver){
         if (approver==null) {
             taskReminderService.sendRemindersToAllItalianApprovers();
@@ -577,8 +626,35 @@ public class AdminDashboard implements ViewModel {
 
     }
 
-    // //////////////////////////////////////
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void closeOldAndOpenNewLeaseItem(@Nullable final org.estatio.module.asset.dom.Property property, final LocalDate startDate, final boolean removeinvoicesOldItem, @Nullable final String excludeAtPathContains){
+        List<Lease> leases;
+        if (property!=null) {
+            leases = leaseRepository.findLeasesByProperty(property);
 
+        } else {
+            leases = leaseRepository.allLeases().stream()
+                    .filter(l->l.getAtPath().startsWith("/ITA"))
+                    .filter(l->l.getEffectiveInterval()!=null)
+                    .filter(l->l.getEffectiveInterval().contains(startDate))
+                    .collect(Collectors.toList());
+        }
+        if (excludeAtPathContains!=null){
+            leases = leases.stream().filter(l->!l.getAtPath().contains(excludeAtPathContains)).collect(Collectors.toList());
+        }
+        leases.forEach(l -> {
+            factoryService.mixin(Lease_closeOldAndOpenNewLeaseItem.class, l)
+                    .act(startDate, LeaseItemType.RENT, InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE,
+                            removeinvoicesOldItem);
+            factoryService.mixin(Lease_closeOldAndOpenNewLeaseItem.class, l)
+                    .act(startDate, LeaseItemType.SERVICE_CHARGE, InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE,
+                            removeinvoicesOldItem);
+            factoryService.mixin(Lease_closeOldAndOpenNewLeaseItem.class, l)
+                    .act(startDate, LeaseItemType.SERVICE_CHARGE_INDEXABLE, InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE,
+                            removeinvoicesOldItem);
+        });
+    }
+    
     @Inject
     CodaCmpCodeService codaCmpCodeService;
 
@@ -637,9 +713,18 @@ public class AdminDashboard implements ViewModel {
     CodaDocHeadMenu codaDocHeadMenu;
 
     @Inject
+    BackgroundService2 backgroundService2;
+
+    @Inject TurnoverReportingConfigRepository turnoverReportingConfigRepository;
+
+    @Inject
     TaskReminderService taskReminderService;
 
-    @Inject PersonRepository personRepository;
+    @Inject
+    PersonRepository personRepository;
+
+    @Inject
+    LeaseRepository leaseRepository;
 
     @Inject
     OrganisationRepository organisationRepository;
@@ -655,4 +740,5 @@ public class AdminDashboard implements ViewModel {
 
     @Inject
     StateTransitionService stateTransitionService;
+
 }

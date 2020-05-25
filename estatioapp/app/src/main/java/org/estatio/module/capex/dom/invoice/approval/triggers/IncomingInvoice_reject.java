@@ -20,6 +20,9 @@ import org.estatio.module.capex.dom.payment.PaymentLineRepository;
 import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.IPartyRoleType;
+import org.estatio.module.task.dom.state.StateTransitionRepository;
+import org.estatio.module.task.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.state.StateTransitionType;
 
 /**
  * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case
@@ -59,8 +62,15 @@ public class IncomingInvoice_reject extends IncomingInvoice_triggerAbstract {
         }
 
         final IncomingInvoiceApprovalStateTransition transition = trigger(role, personToAssignNextTo, reason, reason);
-        if (transition.getTask() != null)
-            transition.getTask().setToHighestPriority();
+        // The returned transition is the last completed transition and therefore has no task.
+        // If you have a next transition that is not completed, set the priority of that task
+        final IncomingInvoiceApprovalStateTransition transitionNotCompleted = getPendingTransition();
+        if (transitionNotCompleted != null) {
+            if (transitionNotCompleted.getTask() != null) {
+                transitionNotCompleted.getTask().setToHighestPriority();
+                transitionNotCompleted.getTask().setPriority(1);
+            }
+        }
 
         return objectToReturn();
     }
@@ -109,5 +119,8 @@ public class IncomingInvoice_reject extends IncomingInvoice_triggerAbstract {
 
     @Inject
     TitleService titleService;
+
+    @Inject
+    protected StateTransitionService stateTransitionService;
 
 }
