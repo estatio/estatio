@@ -1230,6 +1230,7 @@ public class Lease
     }
 
     public boolean hideRemove() {
+        if (getStatus()==LeaseStatus.PREVIEW) return false;
         return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
     }
 

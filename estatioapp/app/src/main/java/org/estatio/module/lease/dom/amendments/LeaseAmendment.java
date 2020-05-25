@@ -27,7 +27,6 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.repository.RepositoryService;
@@ -106,10 +105,14 @@ public class LeaseAmendment extends Agreement {
     @Getter @Setter
     private LeaseAmendmentState state;
 
-    @Action(restrictTo = RestrictTo.PROTOTYPING)
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public LeaseAmendment changeState(final LeaseAmendmentState state){
         setState(state);
         return this;
+    }
+
+    public String disableChangeState(){
+        return getState()==LeaseAmendmentState.APPLIED ? "The status is applied" : null;
     }
 
     @Column(name = "leasePreviewId", allowsNull = "true")

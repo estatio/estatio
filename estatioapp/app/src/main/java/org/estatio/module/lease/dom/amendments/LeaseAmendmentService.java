@@ -55,7 +55,10 @@ public class LeaseAmendmentService {
             return;
         }
 
+        if (!preview && leaseAmendment.getLeasePreview()!=null) leaseAmendment.getLeasePreview().remove(String.format("Applying amendment %s", leaseAmendment.getReference()));
+
         final Lease lease = preview ? leaseAmendment.getLeasePreview() : leaseAmendment.getLease();
+
         final LeaseAmendmentItemForDiscount leaseAmendmentItemForDiscount = Lists
                 .newArrayList(leaseAmendment.getItems()).stream()
                 .filter(lai -> lai.getClass().isAssignableFrom(LeaseAmendmentItemForDiscount.class))
