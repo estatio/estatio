@@ -132,6 +132,7 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.Lease "
                         + "WHERE externalReference.indexOf(:externalReference) >= 0 "
+                        + "&& status != LeaseStatus.PREVIEW "
                         + "ORDER BY externalReference DESC "), // somehow DESC in JDOQL does not yield the expected results, so now trying to order in repo
         @javax.jdo.annotations.Query(
                 name = "matchByReferenceOrName", language = "JDOQL",
@@ -141,12 +142,14 @@ import lombok.Setter;
                         + "|| name.matches(:referenceOrName) "
                         + "|| externalReference.matches(:referenceOrName)) "
                         + "&& (:includeTerminated || tenancyEndDate == null || tenancyEndDate >= :date) "
+                        + "&& status != LeaseStatus.PREVIEW "
                         + "ORDER BY reference"),
         @javax.jdo.annotations.Query(
                 name = "findByProperty", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.Lease "
                         + "WHERE occupancies.contains(occ) "
+                        + "&& status != LeaseStatus.PREVIEW "
                         + "&& (occ.unit.property == :property) "
                         + "VARIABLES "
                         + "org.estatio.module.lease.dom.occupancy.Occupancy occ "
@@ -156,6 +159,7 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.Lease "
                         + "WHERE (occupancies.contains(occ) "
+                        + "&& status != LeaseStatus.PREVIEW "
                         + "&& (occ.brand == :brand)) "
                         + "&& (:includeTerminated || tenancyEndDate == null || tenancyEndDate >= :date) "
                         + "VARIABLES "
@@ -166,6 +170,7 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.Lease "
                         + "WHERE occupancies.contains(occ) "
+                        + "&& status != LeaseStatus.PREVIEW "
                         + "&& (tenancyStartDate == null || tenancyStartDate <= :activeOnDate) "
                         + "&& (tenancyEndDate == null || tenancyEndDate >= :activeOnDate) "
                         + "&& (occ.unit.property == :asset) "
@@ -177,8 +182,9 @@ import lombok.Setter;
                 value = "SELECT " +
                         "FROM org.estatio.module.lease.dom.Lease " +
                         "WHERE " +
-                        "endDate != null && (endDate >= :rangeStartDate && endDate < :rangeEndDate) " +
-                        "ORDER BY endDate")
+                        "endDate != null && (endDate >= :rangeStartDate && endDate < :rangeEndDate) "
+                        + " && status != LeaseStatus.PREVIEW "
+                        + " ORDER BY endDate")
 })
 @DomainObject(autoCompleteRepository = LeaseRepository.class)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
@@ -656,7 +662,12 @@ public class Lease
     }
 
     public List<Agreement> autoComplete0ChangePrevious(final String searchPhrase) {
-        return agreementRepository.findByTypeAndReferenceOrName(getType(), StringUtils.wildcardToCaseInsensitiveRegex("*".concat(searchPhrase).concat("*")));
+        return agreementRepository.findByTypeAndReferenceOrName(getType(), StringUtils.wildcardToCaseInsensitiveRegex("*".concat(searchPhrase).concat("*")))
+                .stream()
+                .filter(l->l.getClass().isAssignableFrom(Lease.class))
+                .map(Lease.class::cast)
+                .filter(l->l.getStatus()!=LeaseStatus.PREVIEW)
+                .collect(Collectors.toList());
     }
 
     @Programmatic
