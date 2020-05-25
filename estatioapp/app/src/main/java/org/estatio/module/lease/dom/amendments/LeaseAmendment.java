@@ -88,7 +88,7 @@ public class LeaseAmendment extends Agreement {
     @Override
     public String title() {
         return TitleBuilder.start()
-                .withName("Lease amendment")
+                .withName("Amendment")
                 .withName(getName())
                 .withReference(getReference())
                 .toString();

@@ -7,6 +7,7 @@ import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseStatus;
 
 @Mixin
 public class Lease_createLeaseAmendment {
@@ -37,6 +38,10 @@ public class Lease_createLeaseAmendment {
     public String validate$$(
             final LeaseAmendmentType leaseAmendmentType){
         return leaseAmendmentRepository.findUnique(lease, leaseAmendmentType)==null ? null : String.format("There is already an amendment for type %s", leaseAmendmentType);
+    }
+
+    public boolean hide$$(){
+        return lease.getStatus()== LeaseStatus.PREVIEW;
     }
 
     @Inject

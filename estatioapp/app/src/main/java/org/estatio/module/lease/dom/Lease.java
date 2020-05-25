@@ -71,6 +71,7 @@ import org.incode.module.base.dom.managed.ManagedIn;
 import org.incode.module.base.dom.types.NotesType;
 import org.incode.module.base.dom.utils.JodaPeriodUtils;
 import org.incode.module.base.dom.utils.StringUtils;
+import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.agreement.dom.Agreement;
@@ -196,6 +197,17 @@ public class Lease
 
     public Lease() {
         super(LeaseAgreementRoleTypeEnum.LANDLORD, LeaseAgreementRoleTypeEnum.TENANT);
+    }
+
+    @Override
+    public String title() {
+        if (getStatus()==LeaseStatus.PREVIEW){
+            return TitleBuilder.start()
+                    .withName("LEASE PREVIEW")
+                    .withReference(getReference())
+                    .toString();
+        }
+        return super.title();
     }
 
     @Override
@@ -325,6 +337,10 @@ public class Lease
         return getLeaseType();
     }
 
+    public boolean hideChange(){
+        return getStatus() == LeaseStatus.PREVIEW;
+    }
+
     @Column(allowsNull = "true", length = NotesType.Meta.MAX_LEN)
     @PropertyLayout(multiLine = 5, hidden = Where.ALL_TABLES)
     @Getter @Setter
@@ -430,7 +446,16 @@ public class Lease
         return getTenancyEndDate();
     }
 
+    public boolean hideChangeTenancyDates() {
+        return getStatus()==LeaseStatus.PREVIEW;
+    }
+
     // //////////////////////////////////////
+
+    @Override
+    public boolean hideChangeDates() {
+        return getStatus()==LeaseStatus.PREVIEW;
+    }
 
     @Override
     public String disableChangeDates() {
@@ -483,6 +508,10 @@ public class Lease
         Occupancy occupancy = occupancyRepository.newOccupancy(this, unit, startDate);
         occupancies.add(occupancy);
         return occupancy;
+    }
+
+    public boolean hideNewOccupancy(){
+        return getStatus()== LeaseStatus.PREVIEW;
     }
 
     public LocalDate default0NewOccupancy() {
@@ -561,6 +590,10 @@ public class Lease
         return leaseItem;
     }
 
+    public boolean hideNewItem(){
+        return getStatus()==LeaseStatus.PREVIEW;
+    }
+
     public List<Charge> choices2NewItem() {
         return chargeRepository.outgoingChargesForCountry(this.getApplicationTenancy());
     }
@@ -626,6 +659,10 @@ public class Lease
         return this;
     }
 
+    public boolean hideChangePaymentMethodForAll(){
+        return getStatus()==LeaseStatus.PREVIEW;
+    }
+
     public Agreement changePrevious(
             @Parameter(optionality = Optionality.OPTIONAL)
             final Agreement previousAgreement) {
@@ -668,6 +705,10 @@ public class Lease
                 .map(Lease.class::cast)
                 .filter(l->l.getStatus()!=LeaseStatus.PREVIEW)
                 .collect(Collectors.toList());
+    }
+
+    public boolean hideChangePrevious(){
+        return getStatus()==LeaseStatus.PREVIEW;
     }
 
     @Programmatic
@@ -771,6 +812,10 @@ public class Lease
         return null;
     }
 
+    public boolean hidePaidBy() {
+        return getStatus()==LeaseStatus.PREVIEW;
+    }
+
     public List<BankMandate> choices0PaidBy() {
         return existingBankMandatesForTenant();
     }
@@ -844,6 +889,10 @@ public class Lease
             return "There are no bank accounts available for this tenant";
         }
         return null;
+    }
+
+    public boolean hideNewMandate() {
+        return getStatus()==LeaseStatus.PREVIEW;
     }
 
     public List<BankAccount> choices0NewMandate() {
@@ -933,6 +982,10 @@ public class Lease
         return this;
     }
 
+    public boolean hideTerminate(){
+        return getStatus()==LeaseStatus.PREVIEW;
+    }
+
     public LocalDate default0Terminate() {
         return getClockService().now();
     }
@@ -995,6 +1048,10 @@ public class Lease
         Lease newLease = copyToNewLease(reference, name, tenant, getStartDate(), getEndDate(), tenancyStartDate, null, true);
         this.terminate(LocalDateInterval.endDateFromStartDate(tenancyStartDate));
         return newLease;
+    }
+
+    public boolean hideAssign(){
+        return getStatus()==LeaseStatus.PREVIEW;
     }
 
     public LocalDate default3Assign() {
@@ -1115,6 +1172,10 @@ public class Lease
         return newLease;
     }
 
+    public boolean hideRenew(){
+        return getStatus()==LeaseStatus.PREVIEW;
+    }
+
     public String default0Renew() {
         return getReference();
     }
@@ -1177,6 +1238,11 @@ public class Lease
             return "Cannot remove lease that has successor";
         }
         return null;
+    }
+
+    @Override
+    public boolean hideNewRole(){
+        return getStatus()== LeaseStatus.PREVIEW;
     }
 
     @Programmatic
