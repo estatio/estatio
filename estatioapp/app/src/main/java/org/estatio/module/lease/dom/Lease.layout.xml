@@ -126,7 +126,7 @@
         </col>
         <col span="6">
             <tabGroup>
-                <tab name="current and future items">
+                <tab name="recent and future items">
                     <row>
                         <col span="12">
                             <ns2:collection id="recentAndFutureItems">

@@ -98,7 +98,7 @@ public class LeaseAmendmentService {
         LocalDate startDateToUse = sourceItem.getStartDate()==null || sourceItem.getStartDate().isBefore(leaseAmendmentItemForDiscount.getStartDate()) ? leaseAmendmentItemForDiscount.getStartDate() : sourceItem.getStartDate();
         LocalDate endDateToUse = sourceItem.getEndDate()==null || sourceItem.getEndDate().isAfter(leaseAmendmentItemForDiscount.getEndDate()) ? leaseAmendmentItemForDiscount.getEndDate() : sourceItem.getEndDate();
         Lease lease = sourceItem.getLease();
-        lease.verifyUntil(endDateToUse);
+        lease.verifyUntil(endDateToUse.plusDays(1));
         final Charge chargeFromAmendmentType = chargeRepository.findByReference(
                 leaseAmendmentItemForDiscount.getLeaseAmendment().getLeaseAmendmentType()
                         .getChargeReferenceForDiscountItem());
@@ -160,7 +160,7 @@ public class LeaseAmendmentService {
 
     public Lease getLeaseCopyForPreview(final Lease originalLease, final LocalDate referenceDate, final LocalDate verificationDate, final String previewLeaseReference){
 
-        originalLease.verifyUntil(verificationDate);
+        originalLease.verifyUntil(verificationDate.plusDays(1));
 
         Lease leaseCopy = new Lease();
         leaseCopy.setStatus(LeaseStatus.PREVIEW);
@@ -204,10 +204,10 @@ public class LeaseAmendmentService {
 
     public LeaseItem closeOriginalAndOpenNewLeaseItem(final LocalDate startDateNewItem, final LeaseItem originalItem, final InvoicingFrequency invoicingFrequency){
         final Lease lease = originalItem.getLease();
-        lease.verifyUntil(startDateNewItem);
+        lease.verifyUntil(startDateNewItem.plusDays(1));
         final LeaseTerm currentTerm = originalItem.currentTerm(startDateNewItem);
         if (currentTerm == null){
-            LOG.info(String.format("No current rent term found for lease %s", lease.getReference()));
+            LOG.warn(String.format("No current rent term found for lease %s", lease.getReference()));
             return null;
         }
         final LeaseItem newItem = lease
