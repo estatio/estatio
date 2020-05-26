@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
@@ -23,12 +24,15 @@ import org.estatio.module.agreement.dom.role.AgreementRoleType;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
+import org.estatio.module.invoice.dom.InvoiceRunType;
+import org.estatio.module.lease.contributions.Lease_calculate;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemSource;
 import org.estatio.module.lease.dom.LeaseItemSourceRepository;
+import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseStatus;
 import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.party.dom.Party;
@@ -78,6 +82,10 @@ public class LeaseAmendmentService {
         }
         if (!preview) {
             leaseAmendment.setState(LeaseAmendmentState.APPLIED);
+        }
+        if (preview && leaseAmendment.getLeaseAmendmentType().getPreviewInvoicingStartDate()!=null && leaseAmendment.getLeaseAmendmentType().getPreviewInvoicingEndDate()!=null){
+            List<LeaseItemType> typesForCalculation = Arrays.asList(LeaseItemType.RENT, LeaseItemType.RENT_DISCOUNT, LeaseItemType.RENT_DISCOUNT_FIXED, LeaseItemType.SERVICE_CHARGE, LeaseItemType.MARKETING, LeaseItemType.SERVICE_CHARGE_INDEXABLE, LeaseItemType.SERVICE_CHARGE_DISCOUNT_FIXED);
+            factoryService.mixin(Lease_calculate.class, lease).exec(InvoiceRunType.NORMAL_RUN, typesForCalculation, leaseAmendment.getLeaseAmendmentType().getPreviewInvoicingStartDate(), leaseAmendment.getLeaseAmendmentType().getPreviewInvoicingStartDate(), leaseAmendment.getLeaseAmendmentType().getPreviewInvoicingEndDate().plusDays(1));
         }
     }
 
@@ -279,5 +287,7 @@ public class LeaseAmendmentService {
     @Inject ChargeRepository chargeRepository;
 
     @Inject LeaseItemSourceRepository leaseItemSourceRepository;
+
+    @Inject FactoryService factoryService;
 
 }

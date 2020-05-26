@@ -42,6 +42,7 @@ import org.incode.module.base.dom.valuetypes.AbstractInterval.IntervalEnding;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.base.dom.UdoDomainService;
+import org.estatio.module.lease.dom.amendments.PersistedCalculationResultRepository;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.base.platform.docfragment.FragmentRenderService;
 import org.estatio.module.charge.dom.Charge;
@@ -174,7 +175,13 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
                                 for (LeaseTerm leaseTerm : leaseTerms) {
                                     final List<CalculationResult> results;
                                     results = calculateDueDateRange(leaseTerm, parameters);
-                                    createInvoiceItems(leaseTerm, parameters, results);
+                                    if (lease.getStatus()==LeaseStatus.PREVIEW){
+                                        // for PREVIEW we persist results only
+                                        persistedCalculationResultRepository.deleteIfAnyAndRecreate(results, leaseTerm);
+                                    } else {
+                                        createInvoiceItems(leaseTerm, parameters,
+                                                results);
+                                    }
                                 }
                             }
                         }
@@ -370,6 +377,9 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
 
     @Inject
     private LeaseRepository leaseRepository;
+
+    @Inject
+    PersistedCalculationResultRepository persistedCalculationResultRepository;
 
 
     public static LocalDateInterval attemptToCalculateRightSideLeftover(final LocalDateInterval ldi1, final LocalDateInterval ldi2){

@@ -54,6 +54,7 @@ import org.estatio.module.lease.dom.LeaseType;
 import org.estatio.module.lease.dom.amendments.LeaseAmendment;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForDiscount;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForFrequencyChange;
+import org.estatio.module.lease.dom.amendments.PersistedCalculationResult;
 import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.breaks.EventSourceLinkForBreakOption;
@@ -132,6 +133,8 @@ public final class EstatioLeaseModule extends ModuleAbstract {
                         discriminatorValueOf(InvoiceForLease.class)
                 );
                 this.isisJdoSupport.executeUpdate(sql);
+
+                deleteFrom(PersistedCalculationResult.class);
 
                 deleteFrom(InvoiceItemForLease.class);
                 deleteFrom(InvoiceForLease.class);

@@ -37,8 +37,9 @@ public enum LeaseAmendmentType {
             ),
             new LocalDate(2020,7,1),
             new LocalDate(2020,12,31),
-            "-A"
-            ),
+            "-A",
+            new LocalDate(2020,1,1),
+            new LocalDate(2020,12,31)),
     COVID_FRA_100_PERC(
             new LocalDate(2020,4,1),
             new BigDecimal("100.00"),
@@ -63,8 +64,9 @@ public enum LeaseAmendmentType {
             ),
             new LocalDate(2020,7,1),
             new LocalDate(2020,12,31),
-            "-A"
-    ),
+            "-A",
+            new LocalDate(2020,1,1),
+            new LocalDate(2020,12,31)),
     COVID_ITA_FREQ_CHANGE(
             new LocalDate(2020,7,1),
             null,
@@ -85,10 +87,13 @@ public enum LeaseAmendmentType {
             ),
             new LocalDate(2020,7,1),
             new LocalDate(2020,12,31),
-            "-A"
-    ),
+            "-A",
+            new LocalDate(2020,7,1),
+            new LocalDate(2020,12,31)),
     DEMO_TYPE(
-            new LocalDate(2020,1,1), null, null, null, null, "ITA_DISCOUNT", null, null, null, null, "-DEM")
+            new LocalDate(2020,1,1), null, null, null, null, "ITA_DISCOUNT", null, null, null, null, "-DEM",
+            null,
+            null)
     ;
 
     @Getter
@@ -124,6 +129,12 @@ public enum LeaseAmendmentType {
     @Getter
     private String ref_suffix;
 
+    @Getter
+    private final LocalDate previewInvoicingStartDate;
+
+    @Getter
+    private final LocalDate previewInvoicingEndDate;
+
     LeaseAmendmentType(
             final LocalDate amendmentStartDate,
             final BigDecimal discountPercentage,
@@ -135,7 +146,9 @@ public enum LeaseAmendmentType {
             final List<LeaseItemType> frequencyChangeAppliesTo,
             final LocalDate frequencyChangeStartDate,
             final LocalDate frequencyChangeEndDate,
-            final String ref_suffix) {
+            final String ref_suffix,
+            final LocalDate previewInvoicingStartDate,
+            final LocalDate previewInvoicingEndDate) {
         this.amendmentStartDate = amendmentStartDate;
         this.discountPercentage = discountPercentage;
         this.discountAppliesTo = discountAppliesTo;
@@ -147,6 +160,8 @@ public enum LeaseAmendmentType {
         this.frequencyChangeStartDate = frequencyChangeStartDate;
         this.frequencyChangeEndDate = frequencyChangeEndDate;
         this.ref_suffix = ref_suffix;
+        this.previewInvoicingStartDate = previewInvoicingStartDate;
+        this.previewInvoicingEndDate = previewInvoicingEndDate;
     }
 
     public static class Tuple<X, Y> {
