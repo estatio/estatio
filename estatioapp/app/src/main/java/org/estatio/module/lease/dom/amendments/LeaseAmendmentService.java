@@ -225,7 +225,7 @@ public class LeaseAmendmentService {
         lease.verifyUntil(startDateNewItem.plusDays(1));
         final LeaseTerm currentTerm = originalItem.currentTerm(startDateNewItem);
         if (currentTerm == null){
-            LOG.warn(String.format("No current rent term found for lease %s", lease.getReference()));
+            LOG.warn(String.format("No current rent term found for lease %s, type %s, starting on %s", lease.getReference(), originalItem.getType(), startDateNewItem.toString()));
             return null;
         }
         final LeaseItem newItem = lease

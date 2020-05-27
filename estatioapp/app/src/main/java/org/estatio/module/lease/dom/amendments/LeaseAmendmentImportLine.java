@@ -15,6 +15,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.background.BackgroundService2;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.excel.dom.ExcelFixture;
@@ -149,7 +150,7 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
                     frequencyChangeStartDate, frequencyChangeEndDate);
         }
         final LeaseAmendment leaseAmendment = leaseAmendmentRepository.findUnique(lease, leaseAmendmentType);
-        wrapperFactory.wrap(leaseAmendment).createOrRenewLeasePreview();
+        backgroundService2.execute(leaseAmendment).createOrRenewLeasePreview();
         return Lists.newArrayList(leaseAmendment);
     }
 
@@ -169,5 +170,7 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
     LeaseAmendmentRepository leaseAmendmentRepository;
 
     @Inject WrapperFactory wrapperFactory;
+
+    @Inject BackgroundService2 backgroundService2;
 
 }
