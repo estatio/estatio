@@ -25,6 +25,7 @@
                                         <ns2:property id="discountPercentage">
                                             <ns2:action id="changeDiscountPercentage" position="PANEL"/>
                                         </ns2:property>
+                                        <ns2:property id="calculatedDiscountAmount"/>
                                     </ns2:fieldSet>
                                 </col>
                             </row>
