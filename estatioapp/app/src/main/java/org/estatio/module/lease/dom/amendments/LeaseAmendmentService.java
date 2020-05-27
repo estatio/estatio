@@ -164,6 +164,7 @@ public class LeaseAmendmentService {
     }
 
     public Lease getLeasePreviewFor(final LeaseAmendment amendment){
+        if (amendment.getItems().isEmpty()) return null;
         Lease leasePreview = getLeaseCopyForPreview(
                 amendment.getLease(),
                 amendment.getEffectiveStartDate(),

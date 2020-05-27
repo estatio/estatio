@@ -100,6 +100,8 @@ import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.amendments.LeaseAmendment;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
 import org.estatio.module.lease.dom.amendments.Lease_amendments;
+import org.estatio.module.lease.dom.amendments.Lease_invoiceCalculations;
+import org.estatio.module.lease.dom.amendments.PersistedCalculationResult;
 import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -1214,6 +1216,11 @@ public class Lease
         }
         for (Occupancy occupancy : getOccupancies()){
             occupancy.remove();
+        }
+        if (getStatus()==LeaseStatus.PREVIEW) {
+            for (PersistedCalculationResult result : factoryService.mixin(Lease_invoiceCalculations.class, this).$$()) {
+                result.remove();
+            }
         }
         for (LeaseItem item : getItems()) {
             item.remove();

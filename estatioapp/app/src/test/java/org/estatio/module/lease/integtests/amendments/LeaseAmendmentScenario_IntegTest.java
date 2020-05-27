@@ -86,7 +86,7 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
 
 
         // when
-        amendment.createLeasePreview();
+        amendment.createOrRenewLeasePreview();
 
         // then
         assertThat(originalRentItem.getTerms()).hasSize(11);

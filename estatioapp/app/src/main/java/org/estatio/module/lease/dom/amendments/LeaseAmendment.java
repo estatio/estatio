@@ -155,14 +155,15 @@ public class LeaseAmendment extends Agreement {
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public LeaseAmendment createLeasePreview(){
+    public LeaseAmendment createOrRenewLeasePreview(){
+        if (getLeasePreview()!=null) getLeasePreview().remove("Replacing preview");
         leaseAmendmentService.getLeasePreviewFor(this);
         return this;
     }
 
-    public String disableCreateLeasePreview(){
+    public String disableCreateOrRenewLeasePreview(){
         if (getState()==LeaseAmendmentState.APPLIED) return "This amendment is applied";
-        return getLeasePreview()!=null ? "There is already a lease preview. We support 1 preview at the moment." : null;
+        return null;
     }
 
     @Programmatic
@@ -173,7 +174,7 @@ public class LeaseAmendment extends Agreement {
         if (min.isPresent()) {
             return min.get();
         } else {
-            // SHOULD BE IMPOSSIBLE
+            // only when there are no items
             return null;
         }
     }
@@ -186,7 +187,7 @@ public class LeaseAmendment extends Agreement {
         if (max.isPresent()) {
             return max.get();
         } else {
-            // SHOULD BE IMPOSSIBLE
+            // only when there are no items
             return null;
         }
     }

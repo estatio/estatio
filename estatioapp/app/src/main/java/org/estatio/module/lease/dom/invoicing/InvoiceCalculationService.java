@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -176,8 +177,11 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
                                     final List<CalculationResult> results;
                                     results = calculateDueDateRange(leaseTerm, parameters);
                                     if (lease.getStatus()==LeaseStatus.PREVIEW){
-                                        // for PREVIEW we persist results only
-                                        persistedCalculationResultRepository.deleteIfAnyAndRecreate(results, leaseTerm);
+                                        // for PREVIEW we persist results only; also we filter results with 0 value
+                                        persistedCalculationResultRepository.deleteIfAnyAndRecreate(
+                                                results.stream().filter(r->r.value().compareTo(BigDecimal.ZERO)!=0).collect(
+                                                        Collectors.toList()),
+                                                leaseTerm);
                                     } else {
                                         createInvoiceItems(leaseTerm, parameters,
                                                 results);

@@ -59,4 +59,5 @@ public class PersistedCalculationResultRepository {
 
     @Inject
     ServiceRegistry2 serviceRegistry2;
+
 }
