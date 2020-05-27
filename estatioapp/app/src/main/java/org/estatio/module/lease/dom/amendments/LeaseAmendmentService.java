@@ -201,7 +201,7 @@ public class LeaseAmendmentService {
             leaseCopy.newRole(artLandlord, landlord, null, null);
         }
         for (LeaseItem originalItem : originalLease.getItems()){
-            if (referenceDate==null || originalItem.getEffectiveInterval().contains(referenceDate) || (originalItem.getStartDate()!=null && originalItem.getStartDate().isAfter(referenceDate))) {
+            if (referenceDate==null || (originalItem.getEffectiveInterval()!=null && originalItem.getEffectiveInterval().contains(referenceDate)) || (originalItem.getStartDate()!=null && originalItem.getStartDate().isAfter(referenceDate))) {
                 LeaseItem newItem = leaseCopy.newItem(
                         originalItem.getType(),
                         originalItem.getInvoicedBy(),

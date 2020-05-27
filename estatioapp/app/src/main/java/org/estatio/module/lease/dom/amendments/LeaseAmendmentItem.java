@@ -101,6 +101,11 @@ public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendment
         return getLeaseAmendment().amendmentDataIsImmutable() ? warning : null;
     }
 
+    @Programmatic
+    public List<LeaseItemType> getApplicableToAsList(){
+        return applicableToFromString(getApplicableTo());
+    }
+
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public LeaseAmendmentItem changeDates(final LocalDate startDate, final LocalDate endDate){
         setStartDate(startDate);
