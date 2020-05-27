@@ -51,6 +51,7 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
             this.discountApplicableTo = discountItem.getApplicableTo();
             this.discountStartDate = discountItem.getStartDate();
             this.discountEndDate = discountItem.getEndDate();
+            this.calculatedDiscountAmount = discountItem.getCalculatedDiscountAmount();
         }
         final LeaseAmendmentItemForFrequencyChange freqItem = (LeaseAmendmentItemForFrequencyChange) leaseAmendment.findItemsOfType(LeaseAmendmentItemType.INVOICING_FREQUENCY_CHANGE)
                 .stream().findFirst().orElse(null);
@@ -89,34 +90,38 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
 
     @Getter @Setter
     @MemberOrder(sequence = "7")
-    private String discountApplicableTo;
+    private BigDecimal calculatedDiscountAmount;
 
     @Getter @Setter
     @MemberOrder(sequence = "8")
-    private LocalDate discountStartDate;
+    private String discountApplicableTo;
 
     @Getter @Setter
     @MemberOrder(sequence = "9")
-    private LocalDate discountEndDate;
+    private LocalDate discountStartDate;
 
     @Getter @Setter
     @MemberOrder(sequence = "10")
-    private InvoicingFrequency invoicingFrequencyOnLease;
+    private LocalDate discountEndDate;
 
     @Getter @Setter
     @MemberOrder(sequence = "11")
-    private InvoicingFrequency amendedInvoicingFrequency;
+    private InvoicingFrequency invoicingFrequencyOnLease;
 
     @Getter @Setter
     @MemberOrder(sequence = "12")
-    private String frequencyChangeApplicableTo;
+    private InvoicingFrequency amendedInvoicingFrequency;
 
     @Getter @Setter
     @MemberOrder(sequence = "13")
-    private LocalDate frequencyChangeStartDate;
+    private String frequencyChangeApplicableTo;
 
     @Getter @Setter
     @MemberOrder(sequence = "14")
+    private LocalDate frequencyChangeStartDate;
+
+    @Getter @Setter
+    @MemberOrder(sequence = "15")
     private LocalDate frequencyChangeEndDate;
 
 

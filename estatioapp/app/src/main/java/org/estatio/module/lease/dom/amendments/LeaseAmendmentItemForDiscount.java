@@ -61,15 +61,19 @@ public class LeaseAmendmentItemForDiscount extends LeaseAmendmentItem {
         for (LeaseItem leaseItem : leaseItemsPossiblyInvolved){
             final String chargeReferenceForDiscountItemIfAny = getLeaseAmendment().getLeaseAmendmentType()
                     .getChargeReferenceForDiscountItem();
-            // try to filter by chargeReferenceForDiscount
-            if (chargeReferenceForDiscountItemIfAny!=null && leaseItem.getCharge().getReference().equals(chargeReferenceForDiscountItemIfAny)){
+            // TODO: this is theoretically not watertight, but should cover current use cases
+            // try to filter by chargeReferenceForDiscount and lease item dates
+            if (chargeReferenceForDiscountItemIfAny!=null
+                    && leaseItem.getCharge().getReference().equals(chargeReferenceForDiscountItemIfAny)
+                    && leaseItem.getStartDate().equals(getStartDate()) //taking start- and end date into account will filter existing discount items with same charge as well
+                    && leaseItem.getEndDate().equals(getEndDate())
+            ){
                 for (LeaseTerm term : leaseItem.getTerms()){
                     for (PersistedCalculationResult calcResult : persistedCalculationResultRepository.findByLeaseTerm(term)){
-                        result.add(calcResult.getValue());
+                        result = result.add(calcResult.getValue());
                     }
                 }
             }
-            // TODO: try to derive otherwise ??? (since we have a fallback for demo purposes on original item's charge) Should not be needed for production anyway ...
         }
         return result;
     }
