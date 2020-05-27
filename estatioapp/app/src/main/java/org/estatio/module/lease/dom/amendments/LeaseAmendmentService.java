@@ -51,6 +51,7 @@ public class LeaseAmendmentService {
         if (!Arrays.asList(
                 LeaseAmendmentType.COVID_FRA_50_PERC,
                 LeaseAmendmentType.COVID_FRA_100_PERC,
+                LeaseAmendmentType.COVID_FRA_FREQ_CHANGE,
                 LeaseAmendmentType.COVID_ITA_FREQ_CHANGE,
                 LeaseAmendmentType.DEMO_TYPE).
                 contains(leaseAmendment.getLeaseAmendmentType())

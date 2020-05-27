@@ -37,7 +37,7 @@ public enum LeaseAmendmentType {
             ),
             new LocalDate(2020,7,1),
             new LocalDate(2020,12,31),
-            "-A",
+            "-A50",
             new LocalDate(2020,1,1),
             new LocalDate(2020,12,31)),
     COVID_FRA_100_PERC(
@@ -64,8 +64,31 @@ public enum LeaseAmendmentType {
             ),
             new LocalDate(2020,7,1),
             new LocalDate(2020,12,31),
-            "-A",
+            "-A100",
             new LocalDate(2020,1,1),
+            new LocalDate(2020,12,31)),
+    COVID_FRA_FREQ_CHANGE(
+            new LocalDate(2020,7,1),
+            null,
+            null,
+            null,
+            null,
+            null,
+            Arrays.asList(
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE),
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ARREARS)
+            ),
+            Arrays.asList(
+                    LeaseItemType.RENT,
+                    LeaseItemType.RENT_DISCOUNT,
+                    LeaseItemType.RENT_DISCOUNT_FIXED,
+                    LeaseItemType.SERVICE_CHARGE,
+                    LeaseItemType.MARKETING
+            ),
+            new LocalDate(2020,7,1),
+            new LocalDate(2020,12,31),
+            "-AF",
+            new LocalDate(2020,7,1),
             new LocalDate(2020,12,31)),
     COVID_ITA_FREQ_CHANGE(
             new LocalDate(2020,7,1),
@@ -87,7 +110,7 @@ public enum LeaseAmendmentType {
             ),
             new LocalDate(2020,7,1),
             new LocalDate(2020,12,31),
-            "-A",
+            "-AF",
             new LocalDate(2020,7,1),
             new LocalDate(2020,12,31)),
     DEMO_TYPE(
