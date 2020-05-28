@@ -251,7 +251,7 @@ public class LeaseAmendmentService {
         // NOTE: the order matters! We take endate of original
         originalItem.changeDates(originalItem.getStartDate(), startDateNewItem.minusDays(1));
         if (lease.getStatus()!=LeaseStatus.PREVIEW) {
-            final String message = String.format("Item of type %s and invoicing frequency %s closed on date %s", originalItem.getType(), originalItem.getInvoicingFrequency(), lease.getReference(), originalItem.getEndDate());
+            final String message = String.format("Item of type %s and invoicing frequency %s for lease %s closed on date %s", originalItem.getType(), originalItem.getInvoicingFrequency(), lease.getReference(), originalItem.getEndDate());
             LOG.info(message);
             final String message1 = String.format("Item of type %s and invoicing frequency %s for lease %s created with interval %s", newItem.getType(), newItem.getInvoicingFrequency(), lease.getReference(), newItem.getInterval().toString());
             LOG.info(message1);
