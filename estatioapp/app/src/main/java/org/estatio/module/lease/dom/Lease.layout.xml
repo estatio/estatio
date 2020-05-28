@@ -122,6 +122,7 @@
                     <ns2:action id="renew" position="BELOW"/>
                 </ns2:property>
                 <ns2:property id="originalLease"/>
+                <ns2:property id="amendment"/>
             </ns2:fieldSet>
         </col>
         <col span="6">

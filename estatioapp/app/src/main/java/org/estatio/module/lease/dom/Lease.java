@@ -580,6 +580,19 @@ public class Lease
         return this.status!=LeaseStatus.PREVIEW;
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public LeaseAmendment getAmendment(){
+        final LeaseAmendment amendment = leaseAmendmentRepository.findByLeasePreview(this);
+        if (amendment==null) return null;
+        return amendment;
+    }
+
+    public boolean hideAmendment(){
+        return this.status!=LeaseStatus.PREVIEW;
+    }
+
+
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public LeaseItem newItem(
             final LeaseItemType type,
